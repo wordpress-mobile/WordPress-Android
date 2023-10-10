@@ -732,6 +732,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             return;
         }
 
+        // These two views contain all the other views except the progress bar
+        // hide container views when comment is null (will happen when opened from a notification).
         if (comment == null) {
             if (note != null) {
                 showCommentWhenNullable(binding, replyBinding, actionBinding, note);
@@ -741,10 +743,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
-    /**
-     * These two views contain all the other views except the progress bar
-     * hide container views when comment is null (will happen when opened from a notification)
-     */
     private void showCommentWhenNullable(
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
