@@ -247,9 +247,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return new GapMarkerViewHolder(new ReaderGapMarkerView(context));
 
             case VIEW_TYPE_XPOST:
-                postView = mReaderImprovementsFeatureConfig.isEnabled()
-                        ? LayoutInflater.from(context).inflate(R.layout.reader_cardview_xpost_new, parent, false)
-                        : LayoutInflater.from(context).inflate(R.layout.reader_cardview_xpost, parent, false);
+                final int layoutRestId = mReaderImprovementsFeatureConfig.isEnabled()
+                        ? R.layout.reader_cardview_xpost_new : R.layout.reader_cardview_xpost;
+                postView = LayoutInflater.from(context).inflate(layoutRestId, parent, false);
                 return new ReaderXPostViewHolder(postView);
             case VIEW_TYPE_REMOVED_POST:
                 final int layoutResId = mReaderImprovementsFeatureConfig.isEnabled()
