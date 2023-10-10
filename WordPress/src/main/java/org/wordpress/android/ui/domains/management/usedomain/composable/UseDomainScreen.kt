@@ -1,20 +1,20 @@
 package org.wordpress.android.ui.domains.management.usedomain.composable
 
 import android.content.res.Configuration
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -92,15 +92,15 @@ private fun DomainCards(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.padding(top = 24.dp)) {
-        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Column {
+        val arrangement = Arrangement.spacedBy(16.dp)
+        if (isPortrait) {
+            Column(verticalArrangement = arrangement) {
                 NewDomainCard(onNewDomainCardSelected)
-                ExistingDomainCard(onExistingDomainCardSelected, modifier = Modifier.padding(top = 16.dp))
+                ExistingDomainCard(onExistingDomainCardSelected)
             }
         } else {
-            Row {
+            Row(horizontalArrangement = arrangement) {
                 NewDomainCard(onNewDomainCardSelected, modifier = Modifier.weight(1f))
-                Spacer(modifier = Modifier.width(16.dp))
                 ExistingDomainCard(onExistingDomainCardSelected, modifier = Modifier.weight(1f))
             }
         }
@@ -110,10 +110,14 @@ private fun DomainCards(
 @Composable
 private fun ScreenHeader(modifier: Modifier = Modifier) {
     Text(
-        text = stringResource(id = R.string.use_domain_screen_header),
-        style = MaterialTheme.typography.h4.copy(
-            color = MaterialTheme.colors.onSurface
+        text = stringResource(
+            id = if (isPortrait) {
+                R.string.use_domain_screen_header_double_line
+            } else {
+                R.string.use_domain_screen_header_single_line
+            }
         ),
+        style = MaterialTheme.typography.h4.copy(color = MaterialTheme.colors.onSurface),
         modifier = modifier
     )
 }
@@ -235,6 +239,8 @@ private fun DomainOptionCard(
     }
 }
 
+private val isPortrait: Boolean @Composable get() = LocalConfiguration.current.orientation == ORIENTATION_PORTRAIT
+
 @Preview(name = "Light mode", locale = "en")
 @Preview(name = "Dark mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(name = "Small screen", device = Devices.NEXUS_5)
@@ -242,7 +248,7 @@ private fun DomainOptionCard(
 @Composable
 fun UseDomainScreenPreview() {
     AppTheme {
-        UseDomainScreen({},{},{})
+        UseDomainScreen({}, {}, {})
     }
 }
 

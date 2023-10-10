@@ -4756,7 +4756,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Domain Management - Use Domain Screen -->
     <string name="use_domain_screen_title">Use Domain</string>
-    <string name="use_domain_screen_header">Choose how to\nuse your domain</string>
+    <string name="use_domain_screen_header_single_line">Choose how to use your domain</string>
+    <string name="use_domain_screen_header_double_line">Choose how to\nuse your domain</string>
     <string name="use_domain_screen_description">Don\'t worry, you can easily add a site later.</string>
     <string name="use_domain_screen_new_domain_card_title">Just buy a domain</string>
     <string name="use_domain_screen_new_domain_card_description">Add a site later.</string>
