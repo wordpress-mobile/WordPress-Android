@@ -184,7 +184,6 @@
     <dimen name="text_sz_extra_extra_large">32sp</dimen>
     <dimen name="text_sz_extra_extra_extra_large">34sp</dimen>
 
-    <dimen name="avatar_sz_extra_extra_small">20dp</dimen>
     <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">40dp</dimen>
@@ -193,7 +192,8 @@
     <dimen name="avatar_sz_extra_large">72dp</dimen>
     <dimen name="avatar_sz_login_epilogue">72dp</dimen>
     <dimen name="avatar_sz_extra_small_with_padding">26dp</dimen>
-    <dimen name="avatar_sz_extra_small_background_padding">1dp</dimen>
+    <dimen name="avatar_sz_extra_extra_small_with_padding">22dp</dimen>
+    <dimen name="avatar_background_padding">1dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
     <dimen name="blavatar_sz_extra_large">72dp</dimen>
