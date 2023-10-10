@@ -1413,18 +1413,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         requireActivity().invalidateOptionsMenu();
     }
 
-    /**
-     * As we are using CommentDetailFragment in a ViewPager, and we also use nested fragments within
-     * CommentDetailFragment itself:
-     * It is important to have a live reference to the Comment Container layout at the moment this layout is
-     * inflated (onCreateView), so we can make sure we set its ID correctly once we have an actual Comment object
-     * to populate it with. Otherwise, we could be searching and finding the container for _another fragment/page
-     * in the viewpager_, which would cause strange results (changing the views for a different fragment than we
-     * intended to).
-     * <p>
-     * FYI: The above comment is slightly outdated as the Comment Container layout is now a binding, there is no live
-     * reference the Comment Container layout anymore.
-     */
     private void addDetailFragment(
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull CommentActionFooterBinding actionBinding,
