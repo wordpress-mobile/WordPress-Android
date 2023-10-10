@@ -630,7 +630,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mToolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(mToolbar);
 
-        customizeToolbar();
 
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -820,6 +819,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mStorageUtilsViewModel.start(savedInstanceState == null);
 
         mEditorJetpackSocialViewModel.start(mSite, mEditPostRepository);
+
+        customizeToolbar();
     }
 
     private void customizeToolbar() {

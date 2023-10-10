@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-13 01:26:36+0000
+Translation-Revision-Date: 2023-09-27 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: ko_KR
 -->
 <resources>
+    <string name="my_site_dashboard_no_cards_message_description">개인 설정 버튼을 눌러 더 많은 카드를 표시하세요.</string>
+    <string name="my_site_dashboard_no_cards_message_title">모든 카드가 숨겨짐</string>
+    <string name="personalization_screen_next_steps_card_description">앱으로 사이트를 최대한 활용하는 방법을 알아보세요.</string>
+    <string name="personalization_screen_activity_log_card_description">사이트에서 최근에 취한 조치입니다.</string>
+    <string name="personalization_screen_pages_card_description">사이트 페이지 개요입니다.</string>
+    <string name="personalization_screen_blogging_prompts_card_description">블로그 글에 대한 일일 아이디어입니다.</string>
+    <string name="personalization_screen_blogging_prompts_card_title">블로깅 프롬프트</string>
+    <string name="personalization_screen_blaze_card_description">블로그 글을 홍보하고 현재 캠페인을 확인하세요.</string>
+    <string name="personalization_screen_scheduled_posts_card_description">공개 예정인 글입니다.</string>
+    <string name="personalization_screen_draft_posts_card_description">최근 임시글입니다.</string>
+    <string name="personalization_screen_stats_card_description">조회수, 방문자 수 및 좋아요 개수</string>
+    <string name="personalize_card_content_description">눌러서 홈 탭 개인 설정</string>
+    <string name="personalize_card_text">홈 탭 개인 설정</string>
+    <string name="partial_media_access_prompt_change_settings">설정 변경</string>
+    <string name="partial_media_access_prompt_select_more">더 많이 선택</string>
+    <string name="partial_media_access_prompt_text">접근 권한을 부여한 선택한 사진과 비디오만 사용할 수 있습니다.</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">모든 캠페인 보기</string>
+    <string name="dashboard_activity_card_menu_all_activity">모든 활동</string>
+    <string name="dashboard_pages_card_more_menu_all_pages">모든 페이지</string>
+    <string name="gutenberg_native_choose_a_file">파일 선택</string>
+    <string name="gutenberg_native_add_image_or_video">이미지 또는 비디오 추가</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">예약된 글 모두 보기</string>
+    <string name="my_site_post_card_menu_view_all_drafts">모든 임시글 보기</string>
+    <string name="my_site_todays_stats_menu_view_stats">통계 보기</string>
+    <string name="my_site_dashboard_card_more_menu_hide_card">숨기기</string>
+    <string name="contact_support_first_message_hint">질문에 답변해 드릴 수 없는 경우에는 담당 팀에 지원 티켓을 접수하도록 도와드리겠습니다!</string>
+    <string name="contact_support_first_message_hi">안녕하세요. 젯팩 AI 도우미입니다.</string>
     <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">웹 브라우저에서 유료 서비스 블록의 고급 설정에 접근하세요.</string>
     <string name="contact_support_bot_ticket_comment_answer">답변:</string>
     <string name="contact_support_bot_ticket_comment_question">질문:</string>
@@ -31,7 +58,6 @@ Language: ko_KR
     <string name="campaign_detail_error_title">문제가 발생했습니다.</string>
     <string name="campaign_listing_page_error_title">문제가 발생했습니다.</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> 문제가 발생했습니다. 캠페인을 가져올 수 없습니다.</string>
-    <string name="domain_transfer_card_menu_hide_this">숨기기</string>
     <string name="domain_transfer_card_cta">도메인 이전</string>
     <string name="domain_transfer_card_caption">아시다시피 Google 도메인이 Squarespace에 매각되었습니다. 지금 도메인을 워드프레스닷컴으로 이전하면 모든 이전 수수료와 도메인 1년 추가 등록을 결제해 드립니다.</string>
     <string name="domain_transfer_card_sub_title">Google 도메인 되찾기</string>
@@ -95,7 +121,6 @@ Language: ko_KR
     <string name="dashboard_card_plans_checkout_success_info">도메인이 올바르게 작동하기 시작하려면 최대 30분이 걸릴 수 있습니다.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">새 도메인(&lt;b&gt;%s&lt;/b&gt;)을 설정하는 중입니다.</string>
     <string name="dashboard_card_plans_checkout_success_title">모든 준비를 마쳤습니다!</string>
-    <string name="dashboard_card_plans_menu_hide_this">숨기기</string>
     <string name="dashboard_card_plans_sub_title">첫해에 무료 도메인을 이용하고, 사이트에서 광고를 제거하고, 저장 공간을 늘리세요.</string>
     <string name="dashboard_card_plans_title">무료 도메인이 제공되는 연간 요금제</string>
     <string name="virtual_homepage_learn_more">템플릿에 대해 더 알아보기</string>
@@ -122,9 +147,7 @@ Language: ko_KR
     <string name="wp_jp_static_poster_title_plural">젯팩\u00A0앱에서 %s과(와) 함께 워드프레스를 사용하세요.</string>
     <string name="wp_jp_static_poster_title">젯팩\u00A0앱에서 %s과(와) 함께 워드프레스를 사용하세요.</string>
     <string name="gutenberg_native_unlabeled_color_s">레이블이 없는 색상입니다. %s</string>
-    <string name="dashboard_activity_card_footer_link">모든 활동 보기</string>
     <string name="dashboard_activity_card_title">최근 활동</string>
-    <string name="dashboard_card_domain_title">사용자 정의 도메인 찾기</string>
     <string name="site_creation_search_domain_example_body">위의 예와 같이 사용자가 웹 브라우저에서 도메인을 통해 사이트를 찾고 방문할 수 있습니다.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">키워드로 검색</string>
@@ -149,8 +172,6 @@ Language: ko_KR
     <string name="dashboard_pages_card_create_another_page_description">모바일 친화적인 맞춤형 레이아웃으로 시작</string>
     <string name="dashboard_pages_card_create_another_page_button">다른 페이지 생성</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">사이트에 페이지 추가</string>
-    <string name="dashboard_card_domain_menu_hide_this">숨기기</string>
-    <string name="dashboard_card_domain_sub_title">찾고 공유하고 팔로우하기 쉬운 사이트 주소로 웹 코너에 대한 권리를 주장하세요.</string>
     <string name="blogging_reminders_notifications_permission_caption">블로깅 알림을 사용하려면 푸시 알림을 켜야 합니다.</string>
     <string name="blogging_reminders_notifications_permission_title">푸시 알림 켜기</string>
     <string name="site_creation_domain_button_continue_with_subdomain">하위 도메인으로 계속</string>
@@ -215,7 +236,6 @@ Language: ko_KR
     <string name="free">무료</string>
     <string name="help_buttons_screen_title">도움말</string>
     <string name="gutenberg_native_blocks_menu">블록 메뉴</string>
-    <string name="promote_blaze_card_menu_hide_this">숨기기</string>
     <string name="promote_blaze_card_sub_title">수백만 개 사이트에 작업을 표시하세요.</string>
     <string name="promote_blaze_card_title">Blaze로 콘텐츠 홍보</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">닫기</string>
@@ -284,7 +304,6 @@ Language: ko_KR
     <string name="weeks_quantity_other">%d주</string>
     <string name="weeks_quantity_one">1주</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt;부터</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">숨기기</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">나중에 다시 알림</string>
     <string name="jetpack_feature_card_content_phase_three">곧 통계, 리더, 알림 및 기타 기능이 젯팩 모바일 앱으로 이동됩니다.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">젯팩 앱으로 전환</string>
@@ -622,7 +641,6 @@ Language: ko_KR
     <string name="my_site_menu_tab_title">메뉴</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">검색어에 워드프레스닷컴 도메인에 지원되지 않는 문자가 있습니다. 허용되는 문자는 A–Z, a–z, 0–9입니다.</string>
     <string name="my_site_error_within_card_subtitle">인터넷 연결을 확인하고 페이지를 새로 고치세요.</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">통계로 이동</string>
     <string name="my_site_todays_stat_card_title">오늘의 통계</string>
     <string name="error_edit_notification">알림 콘텐츠를 업데이트하는 중에 오류가 발생했습니다.</string>
     <string name="reader_comment_menu_edit">편집</string>
@@ -633,8 +651,6 @@ Language: ko_KR
     <string name="gutenberg_native_tiled_gallery_settings">바둑판식 갤러리 설정</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">레이아웃 선택 화면으로 이동</string>
     <string name="gutenberg_native_gallery_style">갤러리 스타일</string>
-    <string name="sharing_connect_via_web_warning_positive_button">웹으로 이동</string>
-    <string name="sharing_facebook_warning_message">워드프레스닷컴 웹사이트에서 페이스북 계정을 연결할 수 있습니다. 완료하면 워드프레스 앱으로 돌아가서 공유 설정을 변경하세요.</string>
     <string name="about_automattic_app_icon_description">앱 아이콘</string>
     <string name="about_automattic_back_icon_description">뒤로 아이콘</string>
     <string name="about_automattic_logo_description">Automattic 로고</string>
@@ -693,8 +709,6 @@ Language: ko_KR
     <string name="gutenberg_native_featured_image">특성 이미지</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">클립보드에서 URL 복사, %s</string>
     <string name="me_btn_about">워드프레스 소개</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">예약된 글로 이동</string>
-    <string name="my_site_post_card_link_go_to_drafts">임시글로 이동</string>
     <string name="my_site_post_card_link_create_post">글 작성</string>
     <string name="my_site_create_next_post_excerpt">정기적으로 글을 작성하면 잠재 고객 유치에 도움이 됩니다!</string>
     <string name="my_site_create_next_post_title">다음 글 작성</string>
@@ -937,6 +951,7 @@ Language: ko_KR
     <string name="gutenberg_native_padding">안쪽 여백</string>
     <string name="gutenberg_native_four">4</string>
     <string name="gutenberg_native_featured">추천</string>
+    <string name="gutenberg_native_add_image">이미지 추가</string>
     <string name="gutenberg_native_custom_url">사용자 정의 URL</string>
     <string name="gutenberg_native_create_embed">임베드 생성</string>
     <string name="gutenberg_native_column_d">열 %d</string>
@@ -1060,7 +1075,6 @@ Language: ko_KR
     <string name="gutenberg_native_audio_file">오디오 파일</string>
     <string name="gutenberg_native_audio_caption_s">오디오 캡션. %s</string>
     <string name="gutenberg_native_audio_caption_empty">오디오 캡션. 비었음</string>
-    <string name="gutenberg_native_add_audio">오디오 추가</string>
     <string name="continue_with_wpcom">워드프레스닷컴을 통해 로그인하거나 가입</string>
     <string name="photo_picker_use_audio">이 오디오 사용</string>
     <string name="photo_picker_choose_audio">기기에서 오디오 선택</string>
@@ -1261,9 +1275,7 @@ Language: ko_KR
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">파일 저장을 실패했습니다.\n옵션을 열려면 누르시기 바랍니다.</string>
     <string name="gutenberg_native_edit_file">파일 편집하기</string>
     <string name="gutenberg_native_copy_file_url">파일 URL 복사하기</string>
-    <string name="gutenberg_native_choose_a_file">파일 선택하기</string>
     <string name="new_site_creation_domain_header_title">도메인 선택하기</string>
-    <string name="my_site_btn_jetpack_settings">젯팩 설정</string>
     <string name="my_site_header_jetpack">젯팩</string>
     <string name="reader_btn_following_comments">이메일로 대화 팔로우 중</string>
     <string name="reader_btn_follow_comments">이메일로 대화 팔로우</string>
@@ -1826,11 +1838,8 @@ Language: ko_KR
     <string name="gutenberg_native_choose_from_device">기기에서 선택</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">알 수 없는 오류가 발생했습니다. 다시 시도하세요.</string>
     <string name="gutenberg_native_alt_text">대체 텍스트</string>
-    <string name="gutenberg_native_add_video">비디오 추가</string>
     <string name="gutenberg_native_add_url">URL 추가</string>
     <string name="gutenberg_native_add_alt_text">대체 텍스트 추가</string>
-    <string name="gutenberg_native_add_image_or_video">이미지 또는 비디오 추가</string>
-    <string name="gutenberg_native_add_image">이미지 추가</string>
     <string name="gutenberg_native_add_block_here">블록을 여기에 추가</string>
     <string name="gutenberg_native_add_description">설명 추가</string>
     <string name="reader_empty_saved_posts_content_description">“글을 목록에 저장하려면 글 저장 버튼을 탭합니다.”</string>
@@ -2121,9 +2130,6 @@ Language: ko_KR
     <string name="quick_start_dialog_enable_sharing_message">새 글을 소셜 미디어 계정에 자동으로 공유합니다.</string>
     <string name="quick_start_dialog_check_stats_title">사이트 통계 확인</string>
     <string name="quick_start_dialog_check_stats_message">사이트의 성과를 최신 상태로 유지하세요.</string>
-    <string name="quick_start_dialog_remove_next_steps_message">다음 단계를 제거하면 이 사이트의 모든 둘러보기가 숨겨집니다. 이 작업은 되돌릴 수 없습니다.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">다음 단계 제거</string>
-    <string name="quick_start_remove_next_steps_menu_title">제거</string>
     <string name="quick_start_task_skip_menu_title">작업 건너뛰기</string>
     <string name="notification_channel_reminder_title">알림</string>
     <string name="stats_select_next_period_description">다음 기간 선택</string>
@@ -2723,7 +2729,6 @@ Language: ko_KR
     <string name="share_intent_pick_site">사이트 선택</string>
     <string name="share_action_media">미디어 라이브러리에 추가</string>
     <string name="share_action_post">새 글에 추가</string>
-    <string name="share_media_permission_required">이미지 또는 비디오 공유에 필요한 권한</string>
     <string name="invalid_ip_or_range">잘못된 IP 또는 IP 범위</string>
     <string name="deleting_media_dlg">삭제 중</string>
     <string name="confirm_delete_media_video">이 비디오를 삭제하시겠어요?</string>
@@ -3513,9 +3518,6 @@ Language: ko_KR
     <string name="add_new_category">새로운 카테고리를 추가</string>
     <string name="view_in_browser">브라우저에서 표시</string>
     <string name="remove_account">사이트 제거</string>
-    <string name="toast_comment_unedited">코멘트를 변경할 수 없습니다.</string>
-    <string name="content_required">댓글 본문은 필수 항목입니다.</string>
-    <string name="sure_to_cancel_edit_comment">이 코멘트 수정을 취소하시겠습니까?</string>
     <string name="saving_changes">변경 사항을 저장 중</string>
     <string name="trash">휴지통</string>
     <string name="dlg_confirm_trash_comments">휴지통에 보내겠습니까?</string>
@@ -3543,7 +3545,6 @@ Language: ko_KR
     <string name="learn_more">추가 정보</string>
     <string name="post_not_found">게시물을 로딩중 에러가 발생했습니다. 새로고침 후 다시 시도하세요.</string>
     <string name="plugin_not_found">이 플러그인에 접속하는 동안 오류가 발생했습니다.</string>
-    <string name="cancel_edit">편집을 취소</string>
     <string name="connection_error">연결 오류</string>
     <string name="select_categories">카테고리를 선택</string>
     <string name="share_link">링크 공유</string>

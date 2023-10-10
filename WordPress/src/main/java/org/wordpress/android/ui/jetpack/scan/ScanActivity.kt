@@ -31,11 +31,9 @@ class ScanActivity : AppCompatActivity(), ScrollableViewInitializedListener {
 
     private var binding: ScanActivityBinding? = null
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        (supportFragmentManager.findFragmentById(R.id.fragment_container_view) as? ScanFragment)?.let {
-            it.onNewIntent(intent)
-        }
+        (supportFragmentManager.findFragmentById(R.id.fragment_container_view) as? ScanFragment)?.onNewIntent(intent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

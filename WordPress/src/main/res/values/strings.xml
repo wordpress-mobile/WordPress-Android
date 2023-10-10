@@ -2445,8 +2445,8 @@
 
     <!-- Jetpack Social and sharing -->
     <string name="sharing">Social</string>
-    <string name="sharing_disabled">Sharing module disabled</string>
-    <string name="sharing_disabled_description">You cannot access your sharing settings because your Sharing Jetpack module is disabled.</string>
+    <string name="sharing_disabled">Social module disabled</string>
+    <string name="sharing_disabled_description">You cannot access your social sharing settings because your Jetpack Social module is disabled.</string>
     <string name="connections_label">Jetpack Social Connections</string>
     <string name="connections_description">Connect your favorite social media services to automatically share new posts with friends.</string>
     <string name="connected_accounts_label">Connected accounts</string>
@@ -2510,7 +2510,7 @@
 
     <!-- Some JP Social connections can only be connected via web at this time -->
     <!-- translators: %s is replaced with an external service name, such as "Facebook" or "Mastodon". -->
-    <string name="sharing_connect_via_web_warning_message">You can connect your %s account on the WordPress.com website. When you\'re done, return to the app to change your Sharing settings.</string>
+    <string name="sharing_connect_via_web_warning_message">You can connect your %s account on the WordPress.com website. When you\'re done, return to the app to change your Social settings.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Go to web</string>
 
     <!--Theme Browser-->
@@ -3201,7 +3201,7 @@
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
     <string name="quick_start_dialog_enable_sharing_message" tools:ignore="UnusedResources">Automatically share new posts to your social media accounts.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing" tools:ignore="UnusedResources">Tap %1$s Sharing %2$s to continue</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing" tools:ignore="UnusedResources">Tap %1$s Social %2$s to continue</string>
     <string name="quick_start_dialog_enable_sharing_title" tools:ignore="UnusedResources">Enable post sharing</string>
     <string name="quick_start_dialog_follow_sites_message" translatable="false">@string/quick_start_list_follow_site_subtitle</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Select %1$s Reader %2$s to find other sites.</string>
@@ -3399,6 +3399,7 @@
     <!-- Site Creation : Domains -->
     <string name="site_creation_domain_cost">per year</string>
     <string name="site_creation_domain_cost_sale">for the first year</string>
+    <string name="site_creation_domain_free_with_annual_plan">Free for the first year with annual paid plans</string>
     <string name="site_creation_domain_tag_best_alternative">Best Alternative</string>
     <string name="site_creation_domain_tag_recommended">Recommended</string>
     <string name="site_creation_domain_tag_sale">Sale</string>
@@ -4728,5 +4729,13 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="my_site_dashboard_no_cards_message_description">Tap the personalise button to show more cards.</string>
 
     <string name="pages_no_site_something_went_wrong">Uh oh, something went wrong. Please try again later.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block cannot be rendered because it is deeply nested. Tap here for more details.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks nested deeper than %d levels may not render properly in the mobile editor. For this reason, we recommend flattening the content by ungrouping the block or editing the block using your web browser.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks nested deeper than %d levels may not render properly in the mobile editor. For this reason, we recommend flattening the content by ungrouping the block or editing the block using the web editor.</string>
+    <string name="gutenberg_native_deeply_nested_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Deeply nested block</string>
+    <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Synced patterns</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap here to show more details.</string>
+    <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ungroup block</string>
+    <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Warning message</string>
 
 </resources>

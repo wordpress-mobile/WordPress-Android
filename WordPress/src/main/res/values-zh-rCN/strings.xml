@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-07 09:54:07+0000
+Translation-Revision-Date: 2023-09-27 13:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: zh_CN
 -->
 <resources>
+    <string name="my_site_dashboard_no_cards_message_description">轻点个性化按钮，显示更多卡片。</string>
+    <string name="my_site_dashboard_no_cards_message_title">所有卡片已隐藏</string>
+    <string name="personalization_screen_next_steps_card_description">了解如何通过这一应用程序充分利用您的站点。</string>
+    <string name="personalization_screen_activity_log_card_description">您站点近期的操作记录。</string>
+    <string name="personalization_screen_pages_card_description">您站点页面的概览。</string>
+    <string name="personalization_screen_blogging_prompts_card_description">适用于您的博文的每日创意。</string>
+    <string name="personalization_screen_blogging_prompts_card_title">博客提示</string>
+    <string name="personalization_screen_blaze_card_description">推广文章并查看当前的广告活动。</string>
+    <string name="personalization_screen_scheduled_posts_card_description">您即将发布的已排定文章。</string>
+    <string name="personalization_screen_draft_posts_card_description">您最近的文章草稿</string>
+    <string name="personalization_screen_stats_card_description">浏览次数、访客人数和点赞数</string>
+    <string name="personalize_card_content_description">轻点以对您的“首页”选项卡进行个性化</string>
+    <string name="personalize_card_text">对您的“首页”选项卡进行个性化</string>
+    <string name="partial_media_access_prompt_change_settings">更改设置</string>
+    <string name="partial_media_access_prompt_select_more">选择更多</string>
+    <string name="partial_media_access_prompt_text">仅可访问您允许访问的特定照片和视频。</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">查看所有广告活动</string>
+    <string name="dashboard_activity_card_menu_all_activity">所有动态</string>
+    <string name="dashboard_pages_card_more_menu_all_pages">所有页面</string>
+    <string name="gutenberg_native_choose_a_file">选择文件</string>
+    <string name="gutenberg_native_add_image_or_video">添加图片或视频</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">查看所有已排定的文章</string>
+    <string name="my_site_post_card_menu_view_all_drafts">查看所有草稿</string>
+    <string name="my_site_todays_stats_menu_view_stats">查看统计信息</string>
+    <string name="my_site_dashboard_card_more_menu_hide_card">隐藏此内容</string>
+    <string name="contact_support_first_message_hint">如果我不能回答您的问题，我会帮您向我们的团队提交一张支持申请单！</string>
+    <string name="contact_support_first_message_hi">你好，我是 Jetpack AI Assistant。</string>
     <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">访问您的 Web 浏览器上的这一“付费墙”区块，进行高级设置。</string>
     <string name="contact_support_bot_ticket_comment_answer">答案：</string>
     <string name="contact_support_bot_ticket_comment_question">问题：</string>
@@ -31,7 +58,6 @@ Language: zh_CN
     <string name="campaign_detail_error_title">出错了</string>
     <string name="campaign_listing_page_error_title">出错了</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> 出错了，无法获取活动</string>
-    <string name="domain_transfer_card_menu_hide_this">隐藏此内容</string>
     <string name="domain_transfer_card_cta">转移域名</string>
     <string name="domain_transfer_card_caption">如您所知，Google Domains 业务和资产已出售给 Squarespace。 立即将您的域名转移到 WordPress.com，我们将为您支付所有转移费用，还会额外为您免除一年的域名注册费用。</string>
     <string name="domain_transfer_card_sub_title">重新获取您的 Google 域名</string>
@@ -94,7 +120,6 @@ Language: zh_CN
     <string name="dashboard_card_plans_checkout_success_info">您的域名最多可能需要 30 分钟时间才能开始正常运行。</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">正在设置您的新域名 &lt;b&gt;%s&lt;/b&gt;。</string>
     <string name="dashboard_card_plans_checkout_success_title">一切准备就绪！</string>
-    <string name="dashboard_card_plans_menu_hide_this">隐藏此内容</string>
     <string name="dashboard_card_plans_sub_title">首年可获得免费域名，删除您站点上的广告并增加存储空间。</string>
     <string name="dashboard_card_plans_title">年度套餐附免费域名</string>
     <string name="virtual_homepage_learn_more">了解更多关于模板的信息</string>
@@ -120,9 +145,7 @@ Language: zh_CN
     <string name="wp_jp_static_poster_title_plural">在 Jetpack\u00A0应用中结合使用 WordPress 和 %s。</string>
     <string name="wp_jp_static_poster_title">在 Jetpack\u00A0应用中结合使用 WordPress 和 %s。</string>
     <string name="gutenberg_native_unlabeled_color_s">未标记的颜色 %s</string>
-    <string name="dashboard_activity_card_footer_link">查看所有动态</string>
     <string name="dashboard_activity_card_title">近期的动态</string>
-    <string name="dashboard_card_domain_title">查找自定义域名</string>
     <string name="site_creation_search_domain_example_body">如以上示例所示，域名允许访客从其 Web 浏览器查找和访问您的站点。</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">使用关键字搜索</string>
@@ -147,8 +170,6 @@ Language: zh_CN
     <string name="dashboard_pages_card_create_another_page_description">从适用于移动设备的定制布局开始</string>
     <string name="dashboard_pages_card_create_another_page_button">创建其他页面</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">向您的站点添加页面</string>
-    <string name="dashboard_card_domain_menu_hide_this">隐藏此内容</string>
-    <string name="dashboard_card_domain_sub_title">通过易于查找、共享和关注的站点地址，在网络上创建自己的一席之地。</string>
     <string name="blogging_reminders_notifications_permission_caption">要使用博客发布提醒，您需要开启推送通知。</string>
     <string name="blogging_reminders_notifications_permission_title">开启推送通知</string>
     <string name="site_creation_domain_button_continue_with_subdomain">继续使用子域名</string>
@@ -213,7 +234,6 @@ Language: zh_CN
     <string name="free">免费</string>
     <string name="help_buttons_screen_title">帮助</string>
     <string name="gutenberg_native_blocks_menu">区块菜单</string>
-    <string name="promote_blaze_card_menu_hide_this">隐藏此内容</string>
     <string name="promote_blaze_card_sub_title">在数以百万计的站点上展示您的作品。</string>
     <string name="promote_blaze_card_title">使用 Blaze 推广您的内容</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">关闭</string>
@@ -282,7 +302,6 @@ Language: zh_CN
     <string name="weeks_quantity_other">%d 周</string>
     <string name="weeks_quantity_one">1 周</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">从&lt;b&gt;第一天&lt;/b&gt;开始</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">隐藏此内容</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">稍后提醒我</string>
     <string name="jetpack_feature_card_content_phase_three">统计信息、阅读器、通知和其他功能即将移至 Jetpack 移动应用。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">切换到 Jetpack 应用</string>
@@ -620,7 +639,6 @@ Language: zh_CN
     <string name="my_site_menu_tab_title">菜单</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">您的搜索中包含 WordPress.com 域名不支持的字符。 允许使用以下字符：A–Z、a–z、0–9。</string>
     <string name="my_site_error_within_card_subtitle">请检查您网络连接并刷新页面。</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">转至统计数据</string>
     <string name="my_site_todays_stat_card_title">今日统计</string>
     <string name="error_edit_notification">更新通知内容时发生错误</string>
     <string name="reader_comment_menu_edit">编辑</string>
@@ -631,8 +649,6 @@ Language: zh_CN
     <string name="gutenberg_native_tiled_gallery_settings">平铺图片库设置</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">导航至布局选择界面</string>
     <string name="gutenberg_native_gallery_style">画廊样式</string>
-    <string name="sharing_connect_via_web_warning_positive_button">转到网页</string>
-    <string name="sharing_facebook_warning_message">您可以在 WordPress.com 网站上连接您的 Facebook 账户。 完成后，返回 WordPress 应用程序更改您的共享设置。</string>
     <string name="about_automattic_app_icon_description">应用程序图标</string>
     <string name="about_automattic_back_icon_description">返回图标</string>
     <string name="about_automattic_logo_description">Automattic 徽标</string>
@@ -691,8 +707,6 @@ Language: zh_CN
     <string name="gutenberg_native_featured_image">特色图片</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">从剪贴板复制 URL，%s</string>
     <string name="me_btn_about">关于 WordPress</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">转到已排定文章</string>
-    <string name="my_site_post_card_link_go_to_drafts">转到草稿</string>
     <string name="my_site_post_card_link_create_post">撰写文章</string>
     <string name="my_site_create_next_post_excerpt">定期发表有助于吸引受众！</string>
     <string name="my_site_create_next_post_title">撰写下一篇文章</string>
@@ -933,6 +947,7 @@ Language: zh_CN
     <string name="gutenberg_native_padding">内边距</string>
     <string name="gutenberg_native_four">四</string>
     <string name="gutenberg_native_featured">文章特色图片</string>
+    <string name="gutenberg_native_add_image">添加图片</string>
     <string name="gutenberg_native_custom_url">自定义 URL</string>
     <string name="gutenberg_native_create_embed">创建嵌入</string>
     <string name="gutenberg_native_column_d">列 %d</string>
@@ -1056,7 +1071,6 @@ Language: zh_CN
     <string name="gutenberg_native_audio_file">音频文件</string>
     <string name="gutenberg_native_audio_caption_s">音频说明。 %s</string>
     <string name="gutenberg_native_audio_caption_empty">音频说明。 空</string>
-    <string name="gutenberg_native_add_audio">添加音频</string>
     <string name="continue_with_wpcom">使用 WordPress.com 登录或注册</string>
     <string name="photo_picker_use_audio">使用此音频</string>
     <string name="photo_picker_choose_audio">从设备中选择音频</string>
@@ -1257,9 +1271,7 @@ Language: zh_CN
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">无法保存文件。\n请轻点以查看选项。</string>
     <string name="gutenberg_native_edit_file">编辑文件</string>
     <string name="gutenberg_native_copy_file_url">复制文件 URL</string>
-    <string name="gutenberg_native_choose_a_file">选择文件</string>
     <string name="new_site_creation_domain_header_title">选择域</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack设置</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">通过电子邮件关注对话</string>
     <string name="reader_btn_follow_comments">通过电子邮件关注对话</string>
@@ -1822,11 +1834,8 @@ Language: zh_CN
     <string name="gutenberg_native_choose_from_device">从设备中选择</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">发生了未知错误。请重试。</string>
     <string name="gutenberg_native_alt_text">替代文本</string>
-    <string name="gutenberg_native_add_video">添加视频</string>
     <string name="gutenberg_native_add_url">添加 URL</string>
     <string name="gutenberg_native_add_alt_text">添加alt文字</string>
-    <string name="gutenberg_native_add_image_or_video">添加图片或视频</string>
-    <string name="gutenberg_native_add_image">添加图片</string>
     <string name="gutenberg_native_add_block_here">在此处添加区块</string>
     <string name="gutenberg_native_add_description">添加描述</string>
     <string name="reader_empty_saved_posts_content_description">轻按“添加以保存文章”按钮，将文章保存到您的列表中。</string>
@@ -2117,9 +2126,6 @@ Language: zh_CN
     <string name="quick_start_dialog_enable_sharing_message">自动将新文章共享到社交媒体账户。</string>
     <string name="quick_start_dialog_check_stats_title">查看站点统计信息</string>
     <string name="quick_start_dialog_check_stats_message">及时了解您站点的表现。</string>
-    <string name="quick_start_dialog_remove_next_steps_message">删除“后续步骤”将隐藏此站点中的所有导览。此操作无法撤销。</string>
-    <string name="quick_start_dialog_remove_next_steps_title">删除后续步骤</string>
-    <string name="quick_start_remove_next_steps_menu_title">删除此</string>
     <string name="quick_start_task_skip_menu_title">跳过任务</string>
     <string name="notification_channel_reminder_title">提示</string>
     <string name="stats_select_next_period_description">选择下一时间段</string>
@@ -2718,7 +2724,6 @@ Language: zh_CN
     <string name="share_intent_pick_site">选择站点</string>
     <string name="share_action_media">添加到媒体库</string>
     <string name="share_action_post">添加到新文章</string>
-    <string name="share_media_permission_required">分享图片或视频所需的权限</string>
     <string name="invalid_ip_or_range">IP 或 IP 范围无效</string>
     <string name="deleting_media_dlg">正在删除</string>
     <string name="confirm_delete_media_video">是否删除此视频？</string>
@@ -3508,9 +3513,6 @@ Language: zh_CN
     <string name="add_new_category">添加新分类</string>
     <string name="view_in_browser">在浏览器中查看</string>
     <string name="remove_account">删除站点</string>
-    <string name="toast_comment_unedited">评论没有改变</string>
-    <string name="content_required">评论正文为必填项</string>
-    <string name="sure_to_cancel_edit_comment">是否确定要取消编辑该评论?</string>
     <string name="saving_changes">正在保存更改</string>
     <string name="trash">删除</string>
     <string name="dlg_confirm_trash_comments">确定删除？</string>
@@ -3538,7 +3540,6 @@ Language: zh_CN
     <string name="learn_more">了解更多</string>
     <string name="post_not_found">抱歉，尝试加载文章时出现错误。请刷新文章列表再试.</string>
     <string name="plugin_not_found">访问该插件时发生错误</string>
-    <string name="cancel_edit">取消编辑</string>
     <string name="connection_error">连接错误</string>
     <string name="select_categories">选择分类</string>
     <string name="share_link">分享链接</string>

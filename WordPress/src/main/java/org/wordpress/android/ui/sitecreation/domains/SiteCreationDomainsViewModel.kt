@@ -48,7 +48,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.config.PlansInSiteCreationFeatureConfig
-import org.wordpress.android.util.extensions.isOnSale
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -304,7 +303,9 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 }
             }
 
-            data.forEachIndexed { index, domain ->
+            val sortedDomains = sortDomains(data)
+
+            sortedDomains.forEachIndexed { index, domain ->
                 val itemUiState = createAvailableItemUiState(domain, index)
                 items.add(itemUiState)
             }
@@ -312,15 +313,24 @@ class SiteCreationDomainsViewModel @Inject constructor(
         return items
     }
 
+    /**
+     *  First two paid domains, become Recommended, and Best Alternative
+     *  First Free domain listed after two paid domains
+     *  Then remaining paid domains
+     */
+    private fun sortDomains(domains: List<DomainModel>): List<DomainModel> {
+        return domains.partition { !it.isFree }.let { (paidDomains, freeDomains) ->
+            paidDomains.take(2) + freeDomains + paidDomains.drop(2)
+        }
+    }
+
     private fun createAvailableItemUiState(domain: DomainModel, index: Int): ListItemUiState {
         return when (plansInSiteCreationFeatureConfig.isEnabled()) {
             true -> {
-                val product = products[domain.productId]
                 New.DomainUiState(
                     domain.domainName,
                     cost = when {
                         domain.isFree -> Cost.Free
-                        product.isOnSale() -> Cost.OnSale(product?.combinedSaleCostDisplay.orEmpty(), domain.cost)
                         else -> Cost.Paid(domain.cost)
                     },
                     isSelected = domain.domainName == selectedDomain?.domainName,
@@ -331,7 +341,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
                             1 -> Tag.BestAlternative
                             else -> null
                         },
-                        if (product.isOnSale()) Tag.Sale else null,
                     ),
                 )
             }
@@ -517,8 +526,11 @@ private fun createSearchInputUiState(
                 sealed class Cost(val title: UiString) {
                     object Free : Cost(UiStringRes(R.string.free))
 
-                    data class Paid(private val titleCost: String) : Cost(UiStringText(titleCost)) {
-                        val subtitle = UiStringRes(R.string.site_creation_domain_cost)
+                    data class Paid(private val titleCost: String) : Cost(
+                        UiStringText(titleCost)
+                    ) {
+                        val strikeoutTitle = UiStringText(titleCost)
+                        val subtitle = UiStringRes(R.string.site_creation_domain_free_with_annual_plan)
                     }
 
                     data class OnSale(private val titleCost: String, private val strikeoutTitleCost: String) : Cost(

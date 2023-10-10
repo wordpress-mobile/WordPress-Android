@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-07 09:54:08+0000
+Translation-Revision-Date: 2023-09-28 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: ja_JP
 -->
 <resources>
+    <string name="my_site_dashboard_no_cards_message_description">パーソナライズボタンをタップして他のカードを表示します。</string>
+    <string name="my_site_dashboard_no_cards_message_title">カードがすべて非表示になりました</string>
+    <string name="personalization_screen_next_steps_card_description">アプリでサイトを最大限に活用する方法を学びます。</string>
+    <string name="personalization_screen_activity_log_card_description">サイトでの最近のアクション。</string>
+    <string name="personalization_screen_pages_card_description">サイトページの概要。</string>
+    <string name="personalization_screen_blogging_prompts_card_description">ブログ投稿向けの日々のアイデア。</string>
+    <string name="personalization_screen_blogging_prompts_card_title">ブログのプロンプト</string>
+    <string name="personalization_screen_blaze_card_description">投稿を宣伝して実施中のキャンペーンを確認できます。</string>
+    <string name="personalization_screen_scheduled_posts_card_description">予約済みの今後の投稿。</string>
+    <string name="personalization_screen_draft_posts_card_description">最新の投稿の下書き。</string>
+    <string name="personalization_screen_stats_card_description">表示数、訪問者数、いいねの数</string>
+    <string name="personalize_card_content_description">タップしてホームタブをパーソナライズします</string>
+    <string name="personalize_card_text">ホームタブをパーソナライズ</string>
+    <string name="partial_media_access_prompt_change_settings">設定を変更</string>
+    <string name="partial_media_access_prompt_select_more">さらに選択</string>
+    <string name="partial_media_access_prompt_text">アクセスを付与された選択済みの写真と動画のみ使用できます。</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">すべてのキャンペーンを表示</string>
+    <string name="dashboard_activity_card_menu_all_activity">すべてのアクティビティ</string>
+    <string name="dashboard_pages_card_more_menu_all_pages">固定ページ一覧</string>
+    <string name="gutenberg_native_choose_a_file">ファイルを選択</string>
+    <string name="gutenberg_native_add_image_or_video">画像または動画を追加</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">すべての予約済みの投稿を表示する</string>
+    <string name="my_site_post_card_menu_view_all_drafts">すべての下書きを表示する</string>
+    <string name="my_site_todays_stats_menu_view_stats">統計情報を表示する</string>
+    <string name="my_site_dashboard_card_more_menu_hide_card">このアイテムを非表示</string>
+    <string name="contact_support_first_message_hint">問題が解決しない場合は、当社のチームがサポートチケットを開くお手伝いをいたします。</string>
+    <string name="contact_support_first_message_hi">こんにちは。Jetpack AI アシスタントです。</string>
     <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">詳細設定を行うには、Web ブラウザーでこの有料区分ブロックにアクセスしてください。</string>
     <string name="contact_support_bot_ticket_comment_answer">回答:</string>
     <string name="contact_support_bot_ticket_comment_question">質問:</string>
@@ -31,7 +58,6 @@ Language: ja_JP
     <string name="campaign_detail_error_title">エラーが発生しました</string>
     <string name="campaign_listing_page_error_title">エラーが発生しました</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> エラーが発生しました。キャンペーンを取得できませんでした</string>
-    <string name="domain_transfer_card_menu_hide_this">非表示</string>
     <string name="domain_transfer_card_cta">ドメインを移管する</string>
     <string name="domain_transfer_card_caption">ご存知かもしれませんが、Google Domains は Squarespace に売却されました。 今すぐドメインを WordPress.com に移管していただければ、移管費用に加え、ドメイン登録料も当社が負担いたします。</string>
     <string name="domain_transfer_card_sub_title">Google ドメインを再利用する</string>
@@ -95,7 +121,6 @@ Language: ja_JP
     <string name="dashboard_card_plans_checkout_success_info">ドメインが正常に使用可能になるまでに最大で30分かかる場合があります。</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">新しいドメイン &lt;b&gt;%s&lt;/b&gt; の設定中です。</string>
     <string name="dashboard_card_plans_checkout_success_title">準備完了 !</string>
-    <string name="dashboard_card_plans_menu_hide_this">非表示</string>
     <string name="dashboard_card_plans_sub_title">初年度は無料でドメインを取得でき、サイト上の広告が削除され、ストレージが増えます。</string>
     <string name="dashboard_card_plans_title">年間プランではドメイン名が無料で利用できます</string>
     <string name="virtual_homepage_learn_more">テンプレートについての詳細</string>
@@ -121,9 +146,7 @@ Language: ja_JP
     <string name="wp_jp_static_poster_title_plural">Jetpack\u00A0app で WordPress と %sを利用できます。</string>
     <string name="wp_jp_static_poster_title">Jetpack\u00A0app で WordPress と %sを利用できます。</string>
     <string name="gutenberg_native_unlabeled_color_s">ラベルない色。 %s</string>
-    <string name="dashboard_activity_card_footer_link">すべてのアクティビティを表示する</string>
     <string name="dashboard_activity_card_title">最近のアクティビティ</string>
-    <string name="dashboard_card_domain_title">カスタムドメインを探す</string>
     <string name="site_creation_search_domain_example_body">上記の例のように、ドメインを使用するとユーザーは、Web ブラウザーからサイトを見つけてアクセスできます。</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">キーワードで検索</string>
@@ -148,8 +171,6 @@ Language: ja_JP
     <string name="dashboard_pages_card_create_another_page_description">カスタムメイドのスマートフォンに対応したレイアウトから始める</string>
     <string name="dashboard_pages_card_create_another_page_button">別のページを作成</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">サイトにページを追加</string>
-    <string name="dashboard_card_domain_menu_hide_this">非表示</string>
-    <string name="dashboard_card_domain_sub_title">見つけやすく、共有やフォローがしやすいサイトアドレスを使って自分のサイトであることを示しましょう。</string>
     <string name="blogging_reminders_notifications_permission_caption">ブログ投稿のリマインダーを使用するには、プッシュ通知を有効にする必要があります</string>
     <string name="blogging_reminders_notifications_permission_title">プッシュ通知を有効にする</string>
     <string name="site_creation_domain_button_continue_with_subdomain">サブドメインで続行</string>
@@ -214,7 +235,6 @@ Language: ja_JP
     <string name="free">無料</string>
     <string name="help_buttons_screen_title">ヘルプ</string>
     <string name="gutenberg_native_blocks_menu">ブロックのメニュー</string>
-    <string name="promote_blaze_card_menu_hide_this">非表示</string>
     <string name="promote_blaze_card_sub_title">何百万ものサイトに作品を表示しましょう。</string>
     <string name="promote_blaze_card_title">Blaze を使ってコンテンツを宣伝</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">閉じる</string>
@@ -283,7 +303,6 @@ Language: ja_JP
     <string name="weeks_quantity_other">%d週</string>
     <string name="weeks_quantity_one">1週</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt; から</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">非表示</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">後で再通知</string>
     <string name="jetpack_feature_card_content_phase_three">統計、Reader、通知などの機能は、まもなく Jetpack モバイルアプリに移動します。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Jetpack アプリに切り替える</string>
@@ -621,7 +640,6 @@ Language: ja_JP
     <string name="my_site_menu_tab_title">メニュー</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">検索内容に WordPress.com のドメインではサポートされていない文字が含まれています。 サポートされている文字は A–Z、a–z、0–9です。</string>
     <string name="my_site_error_within_card_subtitle">インターネット接続を確認してページを更新してください。</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">統計情報を表示</string>
     <string name="my_site_todays_stat_card_title">今日の統計情報</string>
     <string name="error_edit_notification">通知内容の更新中にエラーが発生しました</string>
     <string name="reader_comment_menu_edit">編集</string>
@@ -632,8 +650,6 @@ Language: ja_JP
     <string name="gutenberg_native_tiled_gallery_settings">タイルギャラリー設定</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">レイアウト選択画面に移動します</string>
     <string name="gutenberg_native_gallery_style">ギャラリースタイル</string>
-    <string name="sharing_connect_via_web_warning_positive_button">ウェブに移動</string>
-    <string name="sharing_facebook_warning_message">WordPress.com サイトでお使いの Facebook アカウントを接続できます。 完了したら WordPress.com アプリに戻り「共有」設定を変更します。</string>
     <string name="about_automattic_app_icon_description">アプリアイコン</string>
     <string name="about_automattic_back_icon_description">「戻る」アイコン</string>
     <string name="about_automattic_logo_description">Automattic ロゴ</string>
@@ -692,8 +708,6 @@ Language: ja_JP
     <string name="gutenberg_native_featured_image">アイキャッチ画像</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">クリップボードから URL (%s) をコピーします</string>
     <string name="me_btn_about">WordPress について</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">予約済みの投稿に移動</string>
-    <string name="my_site_post_card_link_go_to_drafts">下書きに移動</string>
     <string name="my_site_post_card_link_create_post">投稿を作成</string>
     <string name="my_site_create_next_post_excerpt">定期的に投稿することで、読者を増やすことができます。</string>
     <string name="my_site_create_next_post_title">次の投稿を作成</string>
@@ -934,6 +948,7 @@ Language: ja_JP
     <string name="gutenberg_native_padding">パディング</string>
     <string name="gutenberg_native_four">4</string>
     <string name="gutenberg_native_featured">おすすめ</string>
+    <string name="gutenberg_native_add_image">画像を追加</string>
     <string name="gutenberg_native_custom_url">カスタム URL</string>
     <string name="gutenberg_native_create_embed">埋め込みを作成</string>
     <string name="gutenberg_native_column_d">カラム %d</string>
@@ -1057,7 +1072,6 @@ Language: ja_JP
     <string name="gutenberg_native_audio_file">音声ファイル</string>
     <string name="gutenberg_native_audio_caption_s">音声キャプション。 %s</string>
     <string name="gutenberg_native_audio_caption_empty">音声キャプション。 空</string>
-    <string name="gutenberg_native_add_audio">音声を追加</string>
     <string name="continue_with_wpcom">WordPress.com でログインまたは登録</string>
     <string name="photo_picker_use_audio">この音声を使用</string>
     <string name="photo_picker_choose_audio">端末から音声を選択</string>
@@ -1258,9 +1272,7 @@ Language: ja_JP
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">ファイルの保存に失敗しました。\nタップすると、オプションが表示されます。</string>
     <string name="gutenberg_native_edit_file">ファイルを編集</string>
     <string name="gutenberg_native_copy_file_url">ファイルの URL をコピー</string>
-    <string name="gutenberg_native_choose_a_file">ファイルを選択</string>
     <string name="new_site_creation_domain_header_title">ドメインを選択</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack 設定</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">メールで会話をフォロー中</string>
     <string name="reader_btn_follow_comments">メールで会話をフォロー</string>
@@ -1823,11 +1835,8 @@ Language: ja_JP
     <string name="gutenberg_native_choose_from_device">端末から選択</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">不明なエラーが発生しました。もう一度お試しください。</string>
     <string name="gutenberg_native_alt_text">代替テキスト</string>
-    <string name="gutenberg_native_add_video">動画を追加</string>
     <string name="gutenberg_native_add_url">URL を追加</string>
     <string name="gutenberg_native_add_alt_text">代替テキストを追加</string>
-    <string name="gutenberg_native_add_image_or_video">画像または動画を追加</string>
-    <string name="gutenberg_native_add_image">画像を追加</string>
     <string name="gutenberg_native_add_block_here">ここにブロックを追加</string>
     <string name="gutenberg_native_add_description">説明を追加</string>
     <string name="reader_empty_saved_posts_content_description">「Add to Save Posts」ボタンをタップし、投稿をリストに保存します。</string>
@@ -2118,9 +2127,6 @@ Language: ja_JP
     <string name="quick_start_dialog_enable_sharing_message">新しい投稿を自分のソーシャルメディアアカウントと自動的に共有しましょう。</string>
     <string name="quick_start_dialog_check_stats_title">サイト統計情報を確認</string>
     <string name="quick_start_dialog_check_stats_message">サイトのパフォーマンスを把握しましょう。</string>
-    <string name="quick_start_dialog_remove_next_steps_message">「次のステップ」を削除すると、このサイトのすべてのツアーが非表示になります。この操作を元に戻すことはできません。</string>
-    <string name="quick_start_dialog_remove_next_steps_title">次のステップを削除</string>
-    <string name="quick_start_remove_next_steps_menu_title">これを削除</string>
     <string name="quick_start_task_skip_menu_title">タスクをスキップ</string>
     <string name="notification_channel_reminder_title">リマインダー</string>
     <string name="stats_select_next_period_description">次の期間を選択</string>
@@ -2720,7 +2726,6 @@ Language: ja_JP
     <string name="share_intent_pick_site">サイトの選択</string>
     <string name="share_action_media">メディアライブラリに追加</string>
     <string name="share_action_post">新規投稿に追加</string>
-    <string name="share_media_permission_required">画像または動画を共有するために必要な権限</string>
     <string name="invalid_ip_or_range">無効な IP または IP 範囲</string>
     <string name="deleting_media_dlg">削除中</string>
     <string name="confirm_delete_media_video">この動画を削除しますか ?</string>
@@ -3510,9 +3515,6 @@ Language: ja_JP
     <string name="add_new_category">新規カテゴリーを追加</string>
     <string name="view_in_browser">ブラウザで表示</string>
     <string name="remove_account">サイトを削除</string>
-    <string name="toast_comment_unedited">コメントが変更されていません</string>
-    <string name="content_required">コメント欄は必須項目です</string>
-    <string name="sure_to_cancel_edit_comment">このコメントの修正を中止しますか ?</string>
     <string name="saving_changes">変更を保存中</string>
     <string name="trash">ゴミ箱</string>
     <string name="dlg_confirm_trash_comments">ゴミ箱に移動しますか ?</string>
@@ -3540,7 +3542,6 @@ Language: ja_JP
     <string name="learn_more">さらに詳しく</string>
     <string name="post_not_found">投稿を読み込む際にエラーが発生しました。再読み込みしてもう一度お試しください。</string>
     <string name="plugin_not_found">プラグインへのアクセス中にエラーが発生しました</string>
-    <string name="cancel_edit">編集をキャンセル</string>
     <string name="connection_error">接続エラー</string>
     <string name="select_categories">カテゴリーを選択</string>
     <string name="share_link">リンクを共有</string>

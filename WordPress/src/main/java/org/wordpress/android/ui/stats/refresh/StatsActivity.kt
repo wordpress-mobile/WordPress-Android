@@ -50,12 +50,10 @@ class StatsActivity : LocaleAwareActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        intent?.let {
-            val siteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, -1)
-            if (siteId > -1) {
-                viewModel.start(intent, restart = true)
-            }
+    override fun onNewIntent(intent: Intent) {
+        val siteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, -1)
+        if (siteId > -1) {
+            viewModel.start(intent, restart = true)
         }
         super.onNewIntent(intent)
     }

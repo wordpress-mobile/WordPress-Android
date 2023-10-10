@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2021-08-01 11:11:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: da_DK
 -->
 <resources>
@@ -222,15 +222,11 @@ Language: da_DK
     <string name="new_media">Nyt medie</string>
     <string name="wordpress_blog">WordPress-blog</string>
     <string name="image_settings">Billedeindstillinger</string>
-    <string name="content_required">Kommentar er påkrævet</string>
-    <string name="toast_comment_unedited">Kommentar er ikke ændret</string>
     <string name="local_draft">Lokal kladde</string>
-    <string name="cancel_edit">Fortryd redigering</string>
     <string name="reader_title_applog">Applikationslog</string>
     <string name="horizontal_alignment">Vandret justering</string>
     <string name="link_enter_url_text">Linktekst (valgfri)</string>
     <string name="local_changes">Lokale ændringer</string>
-    <string name="sure_to_cancel_edit_comment">Annuller redigering af denne kommentar?</string>
     <string name="http_authorization_required">Godkendelse påkrævet</string>
     <string name="remove_account">Fjern websted</string>
     <string name="media_error_no_permission">Du har ikke tilladelse til at se mediebiblioteket</string>
