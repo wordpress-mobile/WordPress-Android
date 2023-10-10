@@ -243,6 +243,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
             case ALL:
             case UNSPAM:
             case UNTRASH:
+            case UNREPLIED:
                 return "approve";
         }
     }
