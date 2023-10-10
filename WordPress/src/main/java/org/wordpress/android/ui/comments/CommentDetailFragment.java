@@ -735,9 +735,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         // These two views contain all the other views except the progress bar
         // hide container views when comment is null (will happen when opened from a notification).
         if (comment == null) {
-            if (note != null) {
-                showCommentWhenNullable(binding, replyBinding, actionBinding, note);
-            }
+            showCommentWhenNullable(binding, replyBinding, actionBinding, note);
         } else {
             showCommentWhenNonNull(binding, replyBinding, actionBinding, site, comment, note);
         }
@@ -747,32 +745,34 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @NonNull CommentActionFooterBinding actionBinding,
-            @NonNull Note note
+            @Nullable Note note
     ) {
         binding.nestedScrollView.setVisibility(View.GONE);
         binding.layoutBottom.setVisibility(View.GONE);
 
-        SiteModel site = mSiteStore.getSiteBySiteId(note.getSiteId());
-        if (site == null) {
-            // This should not exist, we should clean that screen so a note without a site/comment
-            // can be displayed
-            site = createDummyWordPressComSite(note.getSiteId());
-        }
+        if (note != null) {
+            SiteModel site = mSiteStore.getSiteBySiteId(note.getSiteId());
+            if (site == null) {
+                // This should not exist, we should clean that screen so a note without a site/comment
+                // can be displayed
+                site = createDummyWordPressComSite(note.getSiteId());
+            }
 
-        // Check if the comment is already in our store
-        CommentModel comment = mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, note.getCommentId());
-        if (comment != null) {
-            // It exists, then show it as a "Notification"
-            showCommentAsNotification(binding, replyBinding, actionBinding, site, comment, note);
-        } else {
-            // It's not in our store yet, request it.
-            RemoteCommentPayload payload = new RemoteCommentPayload(site, note.getCommentId());
-            mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
-            setProgressVisible(binding, true);
+            // Check if the comment is already in our store
+            CommentModel comment = mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, note.getCommentId());
+            if (comment != null) {
+                // It exists, then show it as a "Notification"
+                showCommentAsNotification(binding, replyBinding, actionBinding, site, comment, note);
+            } else {
+                // It's not in our store yet, request it.
+                RemoteCommentPayload payload = new RemoteCommentPayload(site, note.getCommentId());
+                mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
+                setProgressVisible(binding, true);
 
-            // Show a "temporary" comment built from the note data, the view will be refreshed once the
-            // comment has been fetched.
-            showCommentAsNotification(binding, replyBinding, actionBinding, site, null, note);
+                // Show a "temporary" comment built from the note data, the view will be refreshed once the
+                // comment has been fetched.
+                showCommentAsNotification(binding, replyBinding, actionBinding, site, null, note);
+            }
         }
     }
 
