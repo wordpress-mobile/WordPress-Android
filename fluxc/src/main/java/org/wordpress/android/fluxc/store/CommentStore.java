@@ -520,11 +520,19 @@ public class CommentStore extends Store {
         emitChange(event);
     }
 
-    private void fetchComment(RemoteCommentPayload payload) {
+    private void fetchComment(@NonNull RemoteCommentPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
-            mCommentRestClient.fetchComment(payload.site, payload.remoteCommentId, payload.comment);
+            mCommentRestClient.fetchComment(payload.site, getPrioritizedRemoteCommentId(payload), payload.comment);
         } else {
-            mCommentXMLRPCClient.fetchComment(payload.site, payload.remoteCommentId, payload.comment);
+            mCommentXMLRPCClient.fetchComment(payload.site, getPrioritizedRemoteCommentId(payload), payload.comment);
+        }
+    }
+
+    private long getPrioritizedRemoteCommentId(@NonNull RemoteCommentPayload payload) {
+        if (payload.comment != null) {
+            return payload.comment.getRemoteCommentId();
+        } else {
+            return payload.remoteCommentId;
         }
     }
 
