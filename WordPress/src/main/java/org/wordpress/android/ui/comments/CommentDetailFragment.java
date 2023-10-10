@@ -734,13 +734,13 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         if (comment == null) {
             // Hide container views when comment is null (will happen when opened from a notification).
-            showCommentWhenNullable(binding, replyBinding, actionBinding, note);
+            showCommentWhenNull(binding, replyBinding, actionBinding, note);
         } else {
             showCommentWhenNonNull(binding, replyBinding, actionBinding, site, comment, note);
         }
     }
 
-    private void showCommentWhenNullable(
+    private void showCommentWhenNull(
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @NonNull CommentActionFooterBinding actionBinding,
