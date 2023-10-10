@@ -52,8 +52,7 @@ public class CommentRestClient extends BaseWPComRestClient {
             @Named("regular") RequestQueue requestQueue,
             AccessToken accessToken,
             UserAgent userAgent,
-            LikesUtilsProvider likesUtilsProvider
-    ) {
+            LikesUtilsProvider likesUtilsProvider) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mLikesUtilsProvider = likesUtilsProvider;
     }
@@ -83,8 +82,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(
                                 CommentErrorUtils.commentErrorToFetchCommentsPayload(error, site)));
                     }
-                }
-        );
+                });
         add(request);
     }
 
@@ -112,8 +110,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(CommentActionBuilder.newPushedCommentAction(
                                 CommentErrorUtils.commentErrorToPushCommentPayload(error, comment)));
                     }
-                }
-        );
+                });
         add(request);
     }
 
@@ -141,8 +138,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
                     }
-                }
-        );
+                });
         add(request);
     }
 
@@ -150,8 +146,7 @@ public class CommentRestClient extends BaseWPComRestClient {
             final long siteId,
             final long commentId,
             final boolean requestNextPage,
-            final int pageLength
-    ) {
+            final int pageLength) {
         String url = WPCOMREST.sites.site(siteId).comments.comment(commentId).likes.getUrlV1_2();
 
         Map<String, String> params = new HashMap<>();
@@ -161,8 +156,7 @@ public class CommentRestClient extends BaseWPComRestClient {
             Map<String, String> pageOffsetParams = mLikesUtilsProvider.getPageOffsetParams(
                     LikeType.COMMENT_LIKE,
                     siteId,
-                    commentId
-            );
+                    commentId);
             if (pageOffsetParams != null) {
                 params.putAll(pageOffsetParams);
             }
@@ -177,8 +171,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                                 response,
                                 siteId,
                                 commentId,
-                                LikeType.COMMENT_LIKE
-                        );
+                                LikeType.COMMENT_LIKE);
 
                         FetchedCommentLikesResponsePayload payload = new FetchedCommentLikesResponsePayload(
                                 likes,
@@ -200,12 +193,9 @@ public class CommentRestClient extends BaseWPComRestClient {
                                         siteId,
                                         commentId,
                                         requestNextPage,
-                                        true
-                                )
-                        ));
+                                        true)));
                     }
-                }
-        );
+                });
         add(request);
     }
 
@@ -237,8 +227,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(CommentActionBuilder.newDeletedCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
                     }
-                }
-        );
+                });
         add(request);
     }
 
@@ -265,8 +254,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, reply)));
                     }
-                }
-        );
+                });
         add(request);
     }
 
@@ -293,8 +281,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(CommentActionBuilder.newCreatedNewCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
                     }
-                }
-        );
+                });
         add(request);
     }
 
@@ -332,8 +319,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(CommentActionBuilder.newLikedCommentAction(
                                 CommentErrorUtils.commentErrorToFetchCommentPayload(error, comment)));
                     }
-                }
-        );
+                });
         add(request);
     }
 
