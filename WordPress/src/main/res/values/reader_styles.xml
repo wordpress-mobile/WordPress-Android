@@ -308,6 +308,14 @@
         <item name="android:layout_height">@dimen/avatar_sz_medium</item>
     </style>
 
+    <style name="ReaderImageView.Avatar.OvalSurfaceBackground" parent="ReaderImageView">
+        <item name="android:layout_width">@dimen/avatar_sz_medium</item>
+        <item name="android:layout_height">@dimen/avatar_sz_medium</item>
+        <item name="android:padding">@dimen/avatar_background_padding</item>
+        <item name="android:background">@drawable/bg_oval_surface</item>
+        <item name="android:foreground">@drawable/post_detail_avatar_internal_border</item>
+    </style>
+
     <style name="ReaderImageView.Avatar.Small" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/avatar_sz_small</item>
         <item name="android:layout_height">@dimen/avatar_sz_small</item>
@@ -323,6 +331,7 @@
         <item name="android:layout_height">@dimen/avatar_sz_extra_small_with_padding</item>
         <item name="android:padding">@dimen/avatar_background_padding</item>
         <item name="android:background">@drawable/bg_oval_surface</item>
+        <item name="android:foreground">@drawable/post_detail_avatar_internal_border</item>
     </style>
 
     <style name="ReaderImageView.Avatar.ExtraExtraSmall.OvalSurfaceBackground" parent="ReaderImageView">
@@ -330,6 +339,7 @@
         <item name="android:layout_height">@dimen/avatar_sz_extra_extra_small_with_padding</item>
         <item name="android:padding">@dimen/avatar_background_padding</item>
         <item name="android:background">@drawable/bg_oval_surface</item>
+        <item name="android:foreground">@drawable/post_detail_avatar_internal_border</item>
     </style>
 
     <style name="ReaderImageView.Avatar.ExtraLarge" parent="ReaderImageView">
