@@ -23,6 +23,7 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -92,7 +93,7 @@ public class CommentStoreUnitTest {
 
     @Test
     public void testFailToGetCommentBySiteAndRemoteId() {
-        assertEquals(null, CommentSqlUtils.getCommentBySiteAndRemoteId(new SiteModel(), 42));
+        assertNull(CommentSqlUtils.getCommentBySiteAndRemoteId(new SiteModel(), 42));
     }
 
 
