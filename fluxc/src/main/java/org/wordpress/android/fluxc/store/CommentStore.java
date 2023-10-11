@@ -258,8 +258,9 @@ public class CommentStore extends Store {
         return CommentSqlUtils.getCommentsCountForSite(site, statuses);
     }
 
+    @Nullable
     @SuppressWarnings("UnusedReturnValue")
-    public CommentModel getCommentBySiteAndRemoteId(SiteModel site, long remoteCommentId) {
+    public CommentModel getCommentBySiteAndRemoteId(@NonNull SiteModel site, long remoteCommentId) {
         return CommentSqlUtils.getCommentBySiteAndRemoteId(site, remoteCommentId);
     }
 

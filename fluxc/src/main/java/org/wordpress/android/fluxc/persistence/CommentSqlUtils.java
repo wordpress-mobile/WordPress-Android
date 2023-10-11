@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.persistence;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.wellsql.generated.CommentModelTable;
@@ -163,7 +164,8 @@ public class CommentSqlUtils {
         return results.get(0);
     }
 
-    public static CommentModel getCommentBySiteAndRemoteId(SiteModel site, long remoteCommentId) {
+    @Nullable
+    public static CommentModel getCommentBySiteAndRemoteId(@NonNull SiteModel site, long remoteCommentId) {
         List<CommentModel> results = WellSql.select(CommentModel.class)
                                             .where()
                                             .equals(CommentModelTable.REMOTE_COMMENT_ID, remoteCommentId)
