@@ -459,7 +459,6 @@ class CommentsRestClientTest {
         )
 
         assertThat(payload.isError).isFalse
-        val commentResponse = payload.response!!
         assertThat(urlCaptor.lastValue).isEqualTo(
                 "https://public-api.wordpress.com/rest/v1.1/sites/" +
                         "${site.siteId}/comments/${comment.remoteCommentId}/likes/new/"
