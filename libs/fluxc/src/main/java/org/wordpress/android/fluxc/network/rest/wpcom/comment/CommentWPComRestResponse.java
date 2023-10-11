@@ -3,18 +3,18 @@ package org.wordpress.android.fluxc.network.rest.wpcom.comment;
 import java.util.List;
 
 public class CommentWPComRestResponse {
-    public class CommentsWPComRestResponse {
+    public static class CommentsWPComRestResponse {
         public List<CommentWPComRestResponse> comments;
     }
 
-    public class Post {
+    public static class Post {
         public long ID;
         public String title;
         public String type;
         public String link;
     }
 
-    public class Author {
+    public static class Author {
         public long ID;
         public String email; // can be boolean "false" if not set
         public String name;
