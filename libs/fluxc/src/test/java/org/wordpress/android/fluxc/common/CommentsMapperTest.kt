@@ -43,7 +43,10 @@ class CommentsMapperTest {
 
     @Test
     fun `xmlrpc dto list is converted to entity list`() {
-        val commentList = getDefaultCommentList(false).map { it.copy(id = 0, authorProfileImageUrl = null) }
+        val commentList = getDefaultCommentList(false).map { it.copy(
+            id = 0,
+            authorProfileImageUrl = null
+        ) }
         val site = SiteModel().apply {
             id = commentList.first().localSiteId
             selfHostedSiteId = commentList.first().remoteSiteId
@@ -120,27 +123,27 @@ class CommentsMapperTest {
         val entity = this
         return CommentWPComRestResponse().apply {
             ID = entity.remoteCommentId
-            URL = entity.url
+            URL = entity.url ?: ""
             author = Author().apply {
                 ID = entity.authorId
-                URL = entity.authorUrl
-                avatar_URL = entity.authorProfileImageUrl
-                email = entity.authorEmail
-                name = entity.authorName
+                URL = entity.authorUrl ?: ""
+                avatar_URL = entity.authorProfileImageUrl ?: ""
+                email = entity.authorEmail ?: ""
+                name = entity.authorName ?: ""
             }
-            content = entity.content
-            date = entity.datePublished
+            content = entity.content ?: ""
+            date = entity.datePublished ?: ""
             i_like = entity.iLike
             parent = CommentParent().apply {
                 ID = entity.parentId
             }
             post = Post().apply {
                 type = "post"
-                title = entity.postTitle
+                title = entity.postTitle ?: ""
                 link = "https://public-api.wordpress.com/rest/v1.1/sites/185464053/posts/85"
                 ID = entity.remotePostId
             }
-            status = entity.status
+            status = entity.status ?: ""
         }
     }
 
@@ -188,22 +191,22 @@ class CommentsMapperTest {
 
     private fun getDefaultComment(allowNulls: Boolean): CommentEntity {
         return CommentEntity(
-                id = 0,
-                remoteCommentId = 10,
-                remotePostId = 100,
-                authorId = 44,
+                id = 0L,
+                remoteCommentId = 10L,
+                remotePostId = 100L,
+                authorId = 44L,
                 localSiteId = 10_000,
-                remoteSiteId = 100_000,
-                authorUrl = if (allowNulls) null else "https://test-debug-site.wordpress.com",
-                authorName = if (allowNulls) null else "authorname",
-                authorEmail = if (allowNulls) null else "email@wordpress.com",
-                authorProfileImageUrl = if (allowNulls) null else "https://gravatar.com/avatar/111222333",
-                postTitle = if (allowNulls) null else "again",
+                remoteSiteId = 100_000L,
+                authorUrl = if (allowNulls) "" else "https://test-debug-site.wordpress.com",
+                authorName = if (allowNulls) "" else "authorname",
+                authorEmail = if (allowNulls) "" else "email@wordpress.com",
+                authorProfileImageUrl = if (allowNulls) "" else "https://gravatar.com/avatar/111222333",
+                postTitle = if (allowNulls) "" else "again",
                 status = APPROVED.toString(),
-                datePublished = if (allowNulls) null else "2021-05-12T15:10:40+02:00",
+                datePublished = if (allowNulls) "" else "2021-05-12T15:10:40+02:00",
                 publishedTimestamp = 1_000_000,
-                content = if (allowNulls) null else "content example",
-                url = if (allowNulls) null else "https://test-debug-site.wordpress.com/2021/02/25/again/#comment-137",
+                content = if (allowNulls) "" else "content example",
+                url = if (allowNulls) "" else "https://test-debug-site.wordpress.com/2021/02/25/again/#comment-137",
                 hasParent = true,
                 parentId = 1_000L,
                 iLike = false
@@ -213,10 +216,10 @@ class CommentsMapperTest {
     private fun getDefaultCommentList(allowNulls: Boolean): CommentEntityList {
         val comment = getDefaultComment(allowNulls)
         return listOf(
-                comment.copy(id = 1, remoteCommentId = 10, datePublished = "2021-07-24T00:51:43+02:00"),
-                comment.copy(id = 2, remoteCommentId = 20, datePublished = "2021-07-24T00:51:43+02:00"),
-                comment.copy(id = 3, remoteCommentId = 30, datePublished = "2021-07-24T00:51:43+02:00"),
-                comment.copy(id = 4, remoteCommentId = 40, datePublished = "2021-07-24T00:51:43+02:00")
+                comment.copy(id = 1L, remoteCommentId = 10L, datePublished = "2021-07-24T00:51:43+02:00"),
+                comment.copy(id = 2L, remoteCommentId = 20L, datePublished = "2021-07-24T00:51:43+02:00"),
+                comment.copy(id = 3L, remoteCommentId = 30L, datePublished = "2021-07-24T00:51:43+02:00"),
+                comment.copy(id = 4L, remoteCommentId = 40L, datePublished = "2021-07-24T00:51:43+02:00")
         )
     }
 }
