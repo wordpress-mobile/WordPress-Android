@@ -31,7 +31,7 @@ class CommentSqlUtilsTest {
 
     @Before
     fun setUp() {
-        val appContext = RuntimeEnvironment.application.applicationContext
+        val appContext = RuntimeEnvironment.getApplication().applicationContext
         val config: WellSqlConfig = SingleStoreWellSqlConfigForTests(
                 appContext,
                 listOf(

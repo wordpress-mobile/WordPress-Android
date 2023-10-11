@@ -29,7 +29,7 @@ import static org.junit.Assert.assertTrue;
 public class CommentStoreUnitTest {
     @Before
     public void setUp() {
-        Context appContext = RuntimeEnvironment.application.getApplicationContext();
+        Context appContext = RuntimeEnvironment.getApplication().getApplicationContext();
         WellSqlConfig config = new WellSqlConfig(appContext);
         WellSql.init(config);
         config.reset();
