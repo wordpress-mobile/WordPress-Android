@@ -77,12 +77,12 @@ class CommentsRestClientTest {
     fun `fetchCommentsPage returns fetched page`() = test {
         val response = getDefaultDto()
 
-        val commentsReponse = response.CommentsWPComRestResponse()
-        commentsReponse.comments = listOf(response, response, response)
+        val commentsResponse = response.CommentsWPComRestResponse()
+        commentsResponse.comments = listOf(response, response, response)
 
         whenever(commentsMapper.commentDtoToEntity(response, site)).thenReturn(response.toEntity())
 
-        initFetchPageResponse(commentsReponse)
+        initFetchPageResponse(commentsResponse)
 
         val payload = restClient.fetchCommentsPage(
                 site = site,
@@ -94,7 +94,7 @@ class CommentsRestClientTest {
         assertThat(payload.isError).isFalse
 
         val comments = payload.response!!
-        assertThat(comments.size).isEqualTo(commentsReponse.comments.size)
+        assertThat(comments.size).isEqualTo(commentsResponse.comments.size)
         assertThat(urlCaptor.lastValue).isEqualTo(
                 "https://public-api.wordpress.com/rest/v1.1/sites/${site.siteId}/comments/"
         )
