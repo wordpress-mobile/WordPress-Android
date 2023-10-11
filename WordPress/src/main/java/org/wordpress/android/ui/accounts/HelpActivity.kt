@@ -112,7 +112,7 @@ class HelpActivity : LocaleAwareActivity() {
                 showContactUs()
             }
 
-            if(BuildConfig.DEBUG) {
+            if(BuildConfig.DEBUG && BuildConfig.ENABLE_DEBUG_SETTINGS) {
                 enableDebugSettings()
             }
 
