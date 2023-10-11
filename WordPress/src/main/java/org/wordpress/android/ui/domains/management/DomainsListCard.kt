@@ -1,8 +1,16 @@
 package org.wordpress.android.ui.domains.management
 
 import android.content.res.Configuration
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,12 +20,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -31,7 +42,7 @@ import java.time.LocalDate
 fun DomainListCard(uiState: DomainCardUiState) {
     OutlinedCard(
         modifier = Modifier.fillMaxWidth(),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
     ) {
         Row(
             verticalAlignment = CenterVertically,
@@ -47,10 +58,14 @@ fun DomainListCard(uiState: DomainCardUiState) {
                     style = MaterialTheme.typography.bodyLarge,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = uiState.title,
-                    color = MaterialTheme.colorScheme.secondary,
-                )
+                uiState.title?.also {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.outline,
+                    )
+                } ?: run {
+                    PendingGhostStrip(100.dp)
+                }
                 Spacer(modifier = Modifier.height(8.dp))
                 StatusRow(
                     status = uiState.status,
@@ -62,14 +77,14 @@ fun DomainListCard(uiState: DomainCardUiState) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_chevron_right_white_24dp),
                 contentDescription = "",
-                tint = MaterialTheme.colorScheme.secondary,
+                tint = MaterialTheme.colorScheme.outline,
             )
         }
         uiState.notice?.let {
             Divider(thickness = Dp.Hairline)
             Text(
                 text = it,
-                color = MaterialTheme.colorScheme.secondary,
+                color = MaterialTheme.colorScheme.outline,
                 modifier = Modifier
                     .padding(16.dp),
             )
@@ -77,6 +92,31 @@ fun DomainListCard(uiState: DomainCardUiState) {
     }
 }
 
+@Composable
+fun PendingGhostStrip(width: Dp) {
+    val infiniteTransition = rememberInfiniteTransition(label = "Pending ghost strip transition")
+    val color by infiniteTransition.animateColor(
+        initialValue = MaterialTheme.colorScheme.outline,
+        targetValue = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f),
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000, easing = EaseInOut),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "Pending ghost strip color"
+    )
+    Box(
+        modifier = Modifier
+            .width(width)
+            .height(lineHeightDp)
+            .background(color)
+    )
+}
+
+private val lineHeightDp
+    @Composable
+    get() = with(LocalDensity.current) {
+        LocalTextStyle.current.lineHeight.toDp()
+    }
 
 @Preview(showBackground = true, widthDp = 360)
 @Preview(showBackground = true, widthDp = 360, uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -97,6 +137,18 @@ fun DomainListCardPreview() {
                 domain = "domain.cool",
                 title = "A cool website",
                 status = Expired,
+                expiry = LocalDate.of(2024,8,15),
+            ))
+            DomainListCard(uiState = DomainCardUiState(
+                domain = "domain.cool",
+                title = null,
+                status = null,
+                expiry = LocalDate.of(2024,8,15),
+            ))
+            DomainListCard(uiState = DomainCardUiState(
+                domain = "domain.cool",
+                title = "A cool website",
+                status = null,
                 expiry = LocalDate.of(2024,8,15),
             ))
         }

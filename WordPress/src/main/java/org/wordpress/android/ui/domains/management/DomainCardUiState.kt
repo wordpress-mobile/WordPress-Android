@@ -14,8 +14,8 @@ import java.time.LocalDate
  */
 data class DomainCardUiState(
     val domain: String,
-    val title: String,
-    val status: DomainStatus,
+    val title: String?,
+    val status: DomainStatus?,
     val expiry: LocalDate,
 
 ) {
@@ -69,7 +69,7 @@ enum class DomainStatus {
             )
             InProgress -> StatusUiState(
                 R.string.domain_management_status_in_progress,
-                MaterialTheme.colorScheme.secondary,
+                MaterialTheme.colorScheme.outline,
                 MaterialTheme.colorScheme.onSurface,
             )
             ActionRequired -> StatusUiState(
@@ -88,12 +88,12 @@ enum class DomainStatus {
             )
             Renew -> StatusUiState(
                 R.string.domain_management_status_renew,
-                MaterialTheme.colorScheme.secondary,
+                MaterialTheme.colorScheme.outline,
                 MaterialTheme.colorScheme.onSurface,
             )
             VerifyEmail -> StatusUiState(
                 R.string.domain_management_status_verify_email,
-                MaterialTheme.colorScheme.secondary,
+                MaterialTheme.colorScheme.outline,
                 MaterialTheme.colorScheme.onSurface,
             )
             Active -> StatusUiState(
