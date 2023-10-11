@@ -1,8 +1,14 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-23.4
+23.5
 -----
 
+
+23.4
+-----
+* [*] Block Editor: Prevent crash from invalid media URLs [https://github.com/WordPress/gutenberg/pull/54834]
+* [*] Block Editor: Limit inner blocks nesting depth to avoid call stack size exceeded crash [https://github.com/WordPress/gutenberg/pull/54382]
+* [**] Block Editor: Fallback to Twitter provider when embedding X URLs [https://github.com/WordPress/gutenberg/pull/54876]
 
 23.3
 -----

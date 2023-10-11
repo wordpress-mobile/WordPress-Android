@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-06 15:54:25+0000
+Translation-Revision-Date: 2023-10-03 17:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">Dégrouper le bloc</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">Appuyez ici pour afficher plus de détails.</string>
+    <string name="gutenberg_native_synced_patterns">Compositions synchronisées</string>
+    <string name="gutenberg_native_deeply_nested_block">Bloc profondément imbriqué</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Les blocs imbriqués à un niveau supérieur à %d peuvent ne pas s’afficher correctement dans l’éditeur mobile. Pour cette raison, nous vous recommandons d’aplatir le contenu en dégroupant le bloc ou en le modifiant à l’aide de l’éditeur web.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Les blocs imbriqués à un niveau supérieur à %d peuvent ne pas s’afficher correctement dans l’éditeur mobile. Pour cette raison, nous vous recommandons d’aplatir le contenu en dégroupant le bloc ou en le modifiant à l’aide de votre navigateur web.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Le bloc ne peut pas être affiché car il est profondément imbriqué. Appuyez ici pour plus de détails.</string>
+    <string name="pages_no_site_something_went_wrong">Oups, un problème est survenu. Veuillez réessayer plus tard.</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Aller sur le web</string>
+    <string name="my_site_dashboard_no_cards_message_description">Appuyez sur le bouton de personnalisation pour afficher d’autres cartes.</string>
+    <string name="my_site_dashboard_no_cards_message_title">Toutes les cartes sont masquées</string>
+    <string name="personalization_screen_next_steps_card_description">Découvrez comment exploiter pleinement votre site grâce à l’application.</string>
+    <string name="personalization_screen_activity_log_card_description">Actions récentes effectuées sur votre site.</string>
+    <string name="personalization_screen_pages_card_description">Aperçu des pages de votre site.</string>
+    <string name="personalization_screen_blogging_prompts_card_description">Idées quotidiennes pour vos articles de blog.</string>
+    <string name="personalization_screen_blogging_prompts_card_title">Invites pour bloguer</string>
+    <string name="personalization_screen_blaze_card_description">Faites la promotion d’un article et découvrez les campagnes en cours.</string>
+    <string name="personalization_screen_scheduled_posts_card_description">Vos articles planifiés à venir.</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Articles planifiés</string>
+    <string name="personalization_screen_draft_posts_card_description">Vos brouillons d’articles récents.</string>
+    <string name="personalization_screen_draft_posts_card_title">Brouillons d’articles</string>
+    <string name="personalization_screen_stats_card_description">Vues, visiteurs et mentions J’aime</string>
+    <string name="personalization_screen_footer_cards">Le contenu des cartes peut varier en fonction de l’activité sur votre site.</string>
+    <string name="personalization_screen_description">Ajouter ou masquer des cartes</string>
+    <string name="personalization_screen_title">Personnaliser l’onglet Accueil</string>
+    <string name="personalize_card_content_description">Appuyer pour personnaliser l’onglet Accueil</string>
+    <string name="personalize_card_text">Personnaliser l’onglet Accueil</string>
+    <string name="partial_media_access_prompt_change_settings">Modifier les réglages</string>
+    <string name="partial_media_access_prompt_select_more">En sélectionner plus</string>
+    <string name="partial_media_access_prompt_text">Seules les photos et vidéos sélectionnées auxquelles vous avez donné accès sont disponibles.</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Afficher toutes les campagnes</string>
+    <string name="dashboard_activity_card_menu_all_activity">Toute l’activité</string>
+    <string name="dashboard_pages_card_more_menu_all_pages">Toutes les pages</string>
+    <string name="gutenberg_native_choose_a_file">Choisir un fichier</string>
+    <string name="gutenberg_native_add_image_or_video">Ajouter une image ou une vidéo</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">Afficher tous les articles planifiés</string>
+    <string name="my_site_post_card_menu_view_all_drafts">Afficher tous les brouillons</string>
+    <string name="my_site_todays_stats_menu_view_stats">Afficher les statistiques</string>
+    <string name="my_site_dashboard_card_more_menu_hide_card">Masquer ceci</string>
+    <string name="contact_support_first_message_hint">Si je ne peux pas répondre à votre question, je vous aiderai à ouvrir un ticket d’assistance auprès de notre équipe !</string>
+    <string name="contact_support_first_message_hi">Bonjour, je suis l’assistant d’IA de Jetpack.</string>
     <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">Accédez à ce bloc Paywall sur votre navigateur Web pour les réglages avancés.</string>
     <string name="contact_support_bot_ticket_comment_answer">Réponse :</string>
     <string name="contact_support_bot_ticket_comment_question">Question :</string>
@@ -31,7 +72,6 @@ Language: fr
     <string name="campaign_detail_error_title">Un problème est survenu</string>
     <string name="campaign_listing_page_error_title">Un problème est survenu</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Un problème est survenu. Impossible d’extraire les campagnes.</string>
-    <string name="domain_transfer_card_menu_hide_this">Masquer ceci</string>
     <string name="domain_transfer_card_cta">Transférer vos domaines</string>
     <string name="domain_transfer_card_caption">Comme vous le savez peut-être, Google Domains a été vendu à Squarespace. Transférez gratuitement vos domaines vers WordPress.com dès maintenant et bénéficiez gratuitement d’une année supplémentaire d’enregistrement de domaine.</string>
     <string name="domain_transfer_card_sub_title">Récupérer vos domaines Google</string>
@@ -94,7 +134,6 @@ Language: fr
     <string name="dashboard_card_plans_checkout_success_info">Un délai de 30 minutes peut être nécessaire pour que votre domaine soit opérationnel.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Votre nouveau domaine &lt;b&gt;%s&lt;/b&gt; est en cours de configuration.</string>
     <string name="dashboard_card_plans_checkout_success_title">Tout est prêt !</string>
-    <string name="dashboard_card_plans_menu_hide_this">Masquer ceci</string>
     <string name="dashboard_card_plans_sub_title">Obtenez un domaine gratuit la première année, supprimez les publicités sur votre site et augmentez votre stockage.</string>
     <string name="dashboard_card_plans_title">Domaine gratuit avec un plan annuel</string>
     <string name="virtual_homepage_learn_more">En savoir plus sur les modèles</string>
@@ -121,9 +160,7 @@ Language: fr
     <string name="wp_jp_static_poster_title_plural">Utilisez WordPress avec %s dans l’application Jetpack\u00A0.</string>
     <string name="wp_jp_static_poster_title">Utilisez WordPress avec %s dans l’application Jetpack\u00A0.</string>
     <string name="gutenberg_native_unlabeled_color_s">Couleur sans libellé. %s</string>
-    <string name="dashboard_activity_card_footer_link">Voir toute l’activité</string>
     <string name="dashboard_activity_card_title">Activité récente</string>
-    <string name="dashboard_card_domain_title">Trouver un domaine personnalisé</string>
     <string name="site_creation_search_domain_example_body">Comme le montre l’exemple ci-dessus, un domaine permet aux internautes de trouver et de visiter votre site depuis leur navigateur Web.</string>
     <string name="site_creation_search_domain_example_title">NomDeVotreSite.com</string>
     <string name="site_creation_domain_search_input_hint">Effectuer une recherche à l’aide de mots-clés</string>
@@ -148,8 +185,6 @@ Language: fr
     <string name="dashboard_pages_card_create_another_page_description">Commencez par des mises en page sur mesure et adaptées aux appareils mobiles</string>
     <string name="dashboard_pages_card_create_another_page_button">Créer une autre page</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Ajouter des pages à votre site</string>
-    <string name="dashboard_card_domain_menu_hide_this">Masquer ceci</string>
-    <string name="dashboard_card_domain_sub_title">Affirmez votre présence sur Internet avec une adresse Web facile à trouver, à partager et à suivre.</string>
     <string name="blogging_reminders_notifications_permission_caption">Pour utiliser les rappels de blog, vous devez activer les notifications push.</string>
     <string name="blogging_reminders_notifications_permission_title">Activer les notifications push</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Continuer avec le sous-domaine</string>
@@ -214,7 +249,6 @@ Language: fr
     <string name="free">Gratuit</string>
     <string name="help_buttons_screen_title">Aide</string>
     <string name="gutenberg_native_blocks_menu">Menu Blocs</string>
-    <string name="promote_blaze_card_menu_hide_this">Masquer ceci</string>
     <string name="promote_blaze_card_sub_title">Diffusez votre contenu sur des millions de sites.</string>
     <string name="promote_blaze_card_title">Promouvoir du contenu avec Blaze</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Fermer</string>
@@ -283,7 +317,6 @@ Language: fr
     <string name="weeks_quantity_other">%d semaines</string>
     <string name="weeks_quantity_one">1 semaine</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Depuis le &lt;b&gt;jour 1&lt;/b&gt;</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Masquer ceci</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Me rappeler ultérieurement</string>
     <string name="jetpack_feature_card_content_phase_three">Les statistiques, le lecteur, les notifications et d’autres fonctionnalités seront bientôt transférées vers l’application mobile Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Passer à l’application Jetpack</string>
@@ -621,7 +654,6 @@ Language: fr
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Votre recherche contient des caractères non pris en charge dans les domaines WordPress.com. Les caractères sont les seuls autorisés : A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Vérifiez votre connexion Internet et actualisez la page.</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Accéder aux statistiques</string>
     <string name="my_site_todays_stat_card_title">Statistiques du jour</string>
     <string name="error_edit_notification">Une erreur s’est produite lors de la mise à jour du contenu de la notification</string>
     <string name="reader_comment_menu_edit">Modifier</string>
@@ -632,8 +664,7 @@ Language: fr
     <string name="gutenberg_native_tiled_gallery_settings">Réglages de la mosaïque d’images</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Ouvrir l’écran de sélection de la mise en page</string>
     <string name="gutenberg_native_gallery_style">Style de la galerie</string>
-    <string name="sharing_facebook_warning_positive_button">Aller sur le web</string>
-    <string name="sharing_facebook_warning_message">Vous pouvez connecter votre compte Facebook sur le site Web de WordPress.com. Lorsque vous avez terminé, revenez à l’application WordPress pour modifier vos paramètres de partage.</string>
+    <string name="sharing_connect_via_web_warning_message">Vous pouvez connecter votre compte %s sur le site WordPress.com. Lorsque vous aurez terminé, retournez dans l’application pour modifier vos options de partage.</string>
     <string name="about_automattic_app_icon_description">Icône de l’application</string>
     <string name="about_automattic_back_icon_description">Icône Retour</string>
     <string name="about_automattic_logo_description">Logo Automattic</string>
@@ -692,8 +723,6 @@ Language: fr
     <string name="gutenberg_native_featured_image">Image à la une</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Copiez l’URL à partir du presse-papier, %s</string>
     <string name="me_btn_about">À propos de WordPress</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Accéder aux articles programmés</string>
-    <string name="my_site_post_card_link_go_to_drafts">Accéder aux brouillons</string>
     <string name="my_site_post_card_link_create_post">Créer un article</string>
     <string name="my_site_create_next_post_excerpt">Publier régulièrement vous aidera à élargir votre audience !</string>
     <string name="my_site_create_next_post_title">Créer votre prochain article</string>
@@ -935,6 +964,7 @@ Language: fr
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_four">Quatre</string>
     <string name="gutenberg_native_featured">À la Une</string>
+    <string name="gutenberg_native_add_image">Ajouter une image</string>
     <string name="gutenberg_native_custom_url">URL personnalisée</string>
     <string name="gutenberg_native_create_embed">Embarquer un contenu</string>
     <string name="gutenberg_native_column_d">Colonne %d</string>
@@ -1058,7 +1088,7 @@ Language: fr
     <string name="gutenberg_native_audio_file">fichier audio</string>
     <string name="gutenberg_native_audio_caption_s">Légende audio. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Légende audio. Vide</string>
-    <string name="gutenberg_native_add_audio">AJOUTER UN FICHIER AUDIO</string>
+    <string name="gutenberg_native_add_audio">Ajouter un fichier audio</string>
     <string name="continue_with_wpcom">Se connecter ou s’inscrire avec WordPress.com</string>
     <string name="photo_picker_use_audio">Utiliser ce fichier audio</string>
     <string name="photo_picker_choose_audio">Choisir le fichier audio depuis l’appareil</string>
@@ -1259,9 +1289,7 @@ Language: fr
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">L’enregistrement des fichiers a échoué.\nVeuillez toucher pour accéder aux options.</string>
     <string name="gutenberg_native_edit_file">Modifier le fichier</string>
     <string name="gutenberg_native_copy_file_url">Copier l’URL du fichier</string>
-    <string name="gutenberg_native_choose_a_file">Choisir un fichier</string>
     <string name="new_site_creation_domain_header_title">Choisir un domaine</string>
-    <string name="my_site_btn_jetpack_settings">Réglages de Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Suivi de la discussion par e-mail</string>
     <string name="reader_btn_follow_comments">Suivre la discussion par e-mail</string>
@@ -1824,11 +1852,9 @@ Language: fr
     <string name="gutenberg_native_choose_from_device">Choisir depuis l’appareil</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Une erreur inconnue est survenue. Veuillez réessayer.</string>
     <string name="gutenberg_native_alt_text">Texte alternatif</string>
-    <string name="gutenberg_native_add_video">AJOUTER UNE VIDÉO</string>
+    <string name="gutenberg_native_add_video">Ajouter une vidéo</string>
     <string name="gutenberg_native_add_url">Ajouter une URL</string>
     <string name="gutenberg_native_add_alt_text">Ajouter du texte alternatif</string>
-    <string name="gutenberg_native_add_image_or_video">AJOUTER UNE IMAGE OU UNE VIDÉO</string>
-    <string name="gutenberg_native_add_image">AJOUTER UNE IMAGE</string>
     <string name="gutenberg_native_add_block_here">AJOUTER UN BLOC ICI</string>
     <string name="gutenberg_native_add_description">Ajouter une description</string>
     <string name="reader_empty_saved_posts_content_description">Touchez le bouton Ajouter pour enregistrer les articles pour enregistrer un article dans votre liste.</string>
@@ -2119,9 +2145,6 @@ Language: fr
     <string name="quick_start_dialog_enable_sharing_message">Partager automatiquement les nouveaux articles sur vos comptes de réseaux sociaux.</string>
     <string name="quick_start_dialog_check_stats_title">Découvrez les statistiques de votre site</string>
     <string name="quick_start_dialog_check_stats_message">Restez au courant des performances de votre site.</string>
-    <string name="quick_start_dialog_remove_next_steps_message">« Retirer les étapes suivantes » cachera tous les accompagnements sur ce site. Cette action ne peut pas être annulée.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Retirer les étapes suivantes</string>
-    <string name="quick_start_remove_next_steps_menu_title">Retirer ceci</string>
     <string name="quick_start_task_skip_menu_title">Sauter la tâche</string>
     <string name="notification_channel_reminder_title">Rappel</string>
     <string name="stats_select_next_period_description">Sélectionner la période suivante</string>
@@ -2721,7 +2744,6 @@ Language: fr
     <string name="share_intent_pick_site">Sélectionner un site</string>
     <string name="share_action_media">Ajouter à la bibliothèque de médias</string>
     <string name="share_action_post">Ajouter à un nouvel article</string>
-    <string name="share_media_permission_required">Permissions obligatoires pour partager des images ou des vidéos</string>
     <string name="invalid_ip_or_range">Adresse IP ou plage d’IP non valide</string>
     <string name="deleting_media_dlg">Suppression</string>
     <string name="confirm_delete_media_video">Supprimer cette vidéo ?</string>
@@ -3511,9 +3533,6 @@ Language: fr
     <string name="add_new_category">Ajouter une nouvelle catégorie</string>
     <string name="view_in_browser">Voir dans le navigateur</string>
     <string name="remove_account">Supprimer le site</string>
-    <string name="toast_comment_unedited">Le commentaire n\'a pas été modifié</string>
-    <string name="content_required">Commentaire requis</string>
-    <string name="sure_to_cancel_edit_comment">Annuler l\'édition de ce commentaire ?</string>
     <string name="saving_changes">Enregistrement des modifications</string>
     <string name="trash">Corbeille</string>
     <string name="dlg_confirm_trash_comments">Mettre à la corbeille ?</string>
@@ -3541,7 +3560,6 @@ Language: fr
     <string name="learn_more">En savoir plus</string>
     <string name="post_not_found">Une erreur s\'est produite en chargeant cet article. Actualisez vos articles et essayez de nouveau.</string>
     <string name="plugin_not_found">Une erreur s’est produite en accédant à cette extension.</string>
-    <string name="cancel_edit">Annuler la modification</string>
     <string name="connection_error">Erreur de connexion</string>
     <string name="select_categories">Sélectionner les catégories</string>
     <string name="share_link">Lien de partage</string>

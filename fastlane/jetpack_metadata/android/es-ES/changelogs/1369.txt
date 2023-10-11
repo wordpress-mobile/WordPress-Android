@@ -1,6 +1,0 @@
-23.2:
-- Nuevo canal de soporte por chat con bot de servicio
-- Ver, localizar y eliminar el bloque de Jetpack Paywall
-- Se ha descrito el bloque de enlace a redes sociales seleccionado
-- Se han corregido fallos en el editor de bloques y en el insertador de bloques
-- Crear tickets de soporte de errores durante el cierre de cuentas

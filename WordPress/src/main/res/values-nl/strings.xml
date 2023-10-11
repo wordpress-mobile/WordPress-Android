@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-06 15:54:26+0000
+Translation-Revision-Date: 2023-10-03 15:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: nl
 -->
 <resources>
+    <string name="my_site_dashboard_no_cards_message_description">Tik op de knop Personaliseren om meer kaarten weer te geven.</string>
+    <string name="personalization_screen_next_steps_card_description">Ontdek hoe je het meeste uit je site haalt met deze app.</string>
+    <string name="personalization_screen_activity_log_card_description">Recente acties op je site.</string>
+    <string name="personalization_screen_pages_card_description">Overzicht van je sitepagina\'s.</string>
+    <string name="personalization_screen_blogging_prompts_card_description">Dagelijkse ideeën voor je blogberichten.</string>
+    <string name="personalization_screen_blogging_prompts_card_title">Blogmeldingen</string>
+    <string name="personalization_screen_blaze_card_description">Promoot een bericht en zie huidige campagnes.</string>
+    <string name="personalization_screen_scheduled_posts_card_description">Je ingeplande berichten.</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Ingeplande berichten</string>
+    <string name="personalization_screen_draft_posts_card_title">Conceptberichten</string>
+    <string name="personalization_screen_stats_card_description">Weergaven, bezoekers en likes</string>
+    <string name="personalization_screen_description">Kaarten toevoegen of verbergen</string>
+    <string name="personalization_screen_title">Startpagina personaliseren</string>
+    <string name="personalize_card_content_description">Tik om je startpagina te personaliseren</string>
+    <string name="personalize_card_text">Personaliseer je startpagina</string>
+    <string name="partial_media_access_prompt_change_settings">Wijzig instellingen</string>
+    <string name="partial_media_access_prompt_select_more">Meer selecteren</string>
+    <string name="partial_media_access_prompt_text">Alleen de geselecteerde foto\'s en video\'s waar je toegang voor hebt zijn beschikbaar.</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Alle campagnes weergeven</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">Alle ingeplande berichten bekijken</string>
+    <string name="my_site_post_card_menu_view_all_drafts">Alle concepten weergeven</string>
+    <string name="my_site_todays_stats_menu_view_stats">Statistieken weergeven</string>
+    <string name="my_site_dashboard_card_more_menu_hide_card">Dit verbergen</string>
+    <string name="contact_support_first_message_hint">Als ik je vraag niet kan beantwoorden, help ik je een ondersteuningsticket aan te maken bij ons team!</string>
+    <string name="contact_support_first_message_hi">Hoi, ik ben de Jetpack AI-assistent.</string>
     <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">Krijg toegang tot deze betaalmuurblokkering in je webbrowser voor geavanceerde instellingen.</string>
     <string name="contact_support_bot_ticket_comment_start">Transcriptie Jetpack Mobile Bot:</string>
     <string name="contact_support_bot_ticket_error">Fout bij het indienen van het ondersteuningsticket</string>
@@ -24,7 +49,6 @@ Language: nl
     <string name="campaign_detail_error_title">Er is iets fout gegaan</string>
     <string name="campaign_listing_page_error_title">Er is iets fout gegaan</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Er is iets fout gegaan, er kunnen geen campagnes worden opgehaald</string>
-    <string name="domain_transfer_card_menu_hide_this">Dit verbergen</string>
     <string name="domain_transfer_card_cta">Je domeinen overdragen</string>
     <string name="domain_transfer_card_caption">Zoals je misschien weet is Google Domains verkocht aan Squarespace. Draag nu je domeinen over aan WordPress.com, en we betalen alle overdrachtskosten plus een extra jaar van je domeinregistratie.</string>
     <string name="domain_transfer_card_sub_title">Je Google-domeinen opnieuw opeisen</string>
@@ -71,7 +95,6 @@ Language: nl
     <string name="dashboard_card_plans_checkout_success_info">Het kan tot 30 minuten duren voor je domein correct werkt.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Je nieuwe domein, &lt;b&gt;%s&lt;/b&gt;, wordt ingesteld.</string>
     <string name="dashboard_card_plans_checkout_success_title">Helemaal klaar om te gaan!</string>
-    <string name="dashboard_card_plans_menu_hide_this">Dit verbergen</string>
     <string name="dashboard_card_plans_sub_title">Ontvang een gratis domein voor eerste jaar, verwijder advertenties van je website en krijg meer opslagruimte.</string>
     <string name="dashboard_card_plans_title">Gratis domein bij een jaarabonnement</string>
     <string name="virtual_homepage_learn_more">Meer informatie over sjablonen</string>
@@ -98,9 +121,7 @@ Language: nl
     <string name="wp_jp_static_poster_title_plural">Gebruik WordPress met %s in de Jetpack\u00A0app.</string>
     <string name="wp_jp_static_poster_title">Gebruik WordPress met %s in de Jetpack\u00A0app.</string>
     <string name="gutenberg_native_unlabeled_color_s">Niet-gelabelde kleur. %s</string>
-    <string name="dashboard_activity_card_footer_link">Alle activiteit bekijken</string>
     <string name="dashboard_activity_card_title">Recente activiteit</string>
-    <string name="dashboard_card_domain_title">Een aangepast domein zoeken</string>
     <string name="site_creation_search_domain_example_body">Zoals je kunt zien in het bovenstaande voorbeeld, helpt een domein mensen bij het vinden en bezoeken van jouw site vanuit hun internetbrowser.</string>
     <string name="site_creation_search_domain_example_title">JouwSiteNaam.com</string>
     <string name="site_creation_domain_search_input_hint">Zoeken op trefwoorden</string>
@@ -125,8 +146,6 @@ Language: nl
     <string name="dashboard_pages_card_create_another_page_description">Ga aan de slag met op maat gemaakte lay-outs die geschikt zijn voor mobiele apparaten</string>
     <string name="dashboard_pages_card_create_another_page_button">Nog een pagina aanmaken</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Voeg pagina\'s toe aan je site</string>
-    <string name="dashboard_card_domain_menu_hide_this">Dit verbergen</string>
-    <string name="dashboard_card_domain_sub_title">Eis je eigen hoekje van het internet op met een site-adres dat eenvoudig te vinden, te delen en te volgen is.</string>
     <string name="blogging_reminders_notifications_permission_caption">Als je blog herinneringen wilt gebruiken, moet je berichtgeving inschakelen.</string>
     <string name="blogging_reminders_notifications_permission_title">Zet berichtgeving aan</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Doorgaan met subdomein</string>
@@ -191,7 +210,6 @@ Language: nl
     <string name="free">Gratis</string>
     <string name="help_buttons_screen_title">Hulp</string>
     <string name="gutenberg_native_blocks_menu">Blokkenmenu</string>
-    <string name="promote_blaze_card_menu_hide_this">Dit verbergen</string>
     <string name="promote_blaze_card_sub_title">Stel je werk tentoon op miljoenen sites.</string>
     <string name="promote_blaze_card_title">Promoot je content met Blaze</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Sluiten</string>
@@ -260,7 +278,6 @@ Language: nl
     <string name="weeks_quantity_other">%d weken</string>
     <string name="weeks_quantity_one">1 week</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">Vanaf &lt;b&gt;DayOne&lt;/b&gt;</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Dit verbergen</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Herinner mij hier later aan</string>
     <string name="jetpack_feature_card_content_phase_three">Statistieken, Lezer, Meldingen en andere functies worden binnenkort verplaatst naar de mobiele Jetpack-app.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Schakel over naar de Jetpack-app</string>
@@ -598,7 +615,6 @@ Language: nl
     <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Je zoekopdracht bevat karakters die niet worden ondersteund in WordPress.com domeinen. De volgende tekens zijn toegestaan: A-Z, a-z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Controleer je internetverbinding en vernieuw de pagina.</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Ga naar de statistieken</string>
     <string name="my_site_todays_stat_card_title">Statistieken van vandaag</string>
     <string name="error_edit_notification">Er is een fout opgetreden bij het updaten van de inhoud van de melding</string>
     <string name="reader_comment_menu_edit">Bewerken</string>
@@ -609,8 +625,7 @@ Language: nl
     <string name="gutenberg_native_tiled_gallery_settings">Getegelde galerij instellingen</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navigeert naar het lay-out selectiescherm</string>
     <string name="gutenberg_native_gallery_style">Galerij stijl</string>
-    <string name="sharing_facebook_warning_positive_button">Ga naar het web</string>
-    <string name="sharing_facebook_warning_message">Je kunt je Facebook account koppelen op de WordPress.com site. Als je klaar bent, keer je terug naar de WordPress app om je instellingen voor delen te wijzigen.</string>
+    <string name="sharing_connect_via_web_warning_message">Je kan verbinding maken met je %s-account op de WordPress.com-website. Wanneer je klaar bent, ga je terug naar de app om je Deelinstellingen te wijzigen.</string>
     <string name="about_automattic_app_icon_description">App pictogram</string>
     <string name="about_automattic_back_icon_description">Terug pictogram</string>
     <string name="about_automattic_logo_description">Automattic logo</string>
@@ -669,8 +684,6 @@ Language: nl
     <string name="gutenberg_native_featured_image">Uitgelichte afbeelding</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Kopieer URL van het klembord, %s</string>
     <string name="me_btn_about">Over WordPress</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Ga naar geplande berichten</string>
-    <string name="my_site_post_card_link_go_to_drafts">Ga naar concepten</string>
     <string name="my_site_post_card_link_create_post">Maak een bericht</string>
     <string name="my_site_create_next_post_excerpt">Regelmatig publiceren helpt je publiek opbouwen!</string>
     <string name="my_site_create_next_post_title">Maak je volgende bericht aan</string>
@@ -913,6 +926,7 @@ Language: nl
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_four">Vier</string>
     <string name="gutenberg_native_featured">Uitgelicht</string>
+    <string name="gutenberg_native_add_image">Afbeelding toevoegen</string>
     <string name="gutenberg_native_custom_url">Aangepaste URL</string>
     <string name="gutenberg_native_create_embed">Maak insluiting</string>
     <string name="gutenberg_native_column_d">Kolom %d</string>
@@ -1036,7 +1050,7 @@ Language: nl
     <string name="gutenberg_native_audio_file">audiobestand</string>
     <string name="gutenberg_native_audio_caption_s">Audio bijschrift. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Audio bijschrift. Leeg</string>
-    <string name="gutenberg_native_add_audio">AUDIO TOEVOEGEN</string>
+    <string name="gutenberg_native_add_audio">Audio toevoegen</string>
     <string name="continue_with_wpcom">Log in of meld je aan bij WordPress.com</string>
     <string name="photo_picker_use_audio">Gebruik deze audio</string>
     <string name="photo_picker_choose_audio">Kies video van apparaat</string>
@@ -1237,9 +1251,7 @@ Language: nl
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Opslaan van bestanden mislukt.\nTik voor opties.</string>
     <string name="gutenberg_native_edit_file">Bewerk bestand</string>
     <string name="gutenberg_native_copy_file_url">Kopieer bestands URL</string>
-    <string name="gutenberg_native_choose_a_file">KIES EEN BESTAND</string>
     <string name="new_site_creation_domain_header_title">Kies een domein</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack Instellingen</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Conversatie wordt gevolgd per e-mail</string>
     <string name="reader_btn_follow_comments">Volg conversatie per e-mail</string>
@@ -1802,11 +1814,9 @@ Language: nl
     <string name="gutenberg_native_choose_from_device">Kiezen op apparaat</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Er is een onbekende fout opgetreden. Probeer het nog eens.</string>
     <string name="gutenberg_native_alt_text">Alt. tekst</string>
-    <string name="gutenberg_native_add_video">VIDEO TOEVOEGEN</string>
+    <string name="gutenberg_native_add_video">Video toevoegen</string>
     <string name="gutenberg_native_add_url">URL toevoegen</string>
     <string name="gutenberg_native_add_alt_text">Alt tekst toevoegen</string>
-    <string name="gutenberg_native_add_image_or_video">AFBEELDING OF VIDEO TOEVOEGEN</string>
-    <string name="gutenberg_native_add_image">AFBEELDING TOEVOEGEN</string>
     <string name="gutenberg_native_add_block_here">BLOK HIER TOEVOEGEN</string>
     <string name="gutenberg_native_add_description">Beschrijving toevoegen</string>
     <string name="reader_empty_saved_posts_content_description">Tik op de knop \'Toevoegen om berichten op te slaan\' om een bericht op te slaan in je lijst.</string>
@@ -2097,9 +2107,6 @@ Language: nl
     <string name="quick_start_dialog_enable_sharing_message">Deel nieuwe berichten automatisch op je socialmedia-accounts.</string>
     <string name="quick_start_dialog_check_stats_title">Controleer je site-statistieken</string>
     <string name="quick_start_dialog_check_stats_message">Houd de prestaties van je site bij.</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Door \'Volgende stappen\' te verwijderen, worden alle rondleidingen op deze site verborgen. Deze actie kan niet ongedaan worden gemaakt.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Volgende stappen verwijderen</string>
-    <string name="quick_start_remove_next_steps_menu_title">Verwijder dit</string>
     <string name="quick_start_task_skip_menu_title">Taak overslaan</string>
     <string name="notification_channel_reminder_title">Herinnering</string>
     <string name="stats_select_next_period_description">Volgende periode selecteren</string>
@@ -2699,7 +2706,6 @@ Language: nl
     <string name="share_intent_pick_site">Site kiezen</string>
     <string name="share_action_media">Toevoegen aan mediabibliotheek</string>
     <string name="share_action_post">Toevoegen aan nieuw bericht</string>
-    <string name="share_media_permission_required">Machtigingen vereist om afbeeldingen of video\'s te delen</string>
     <string name="invalid_ip_or_range">Onjuist IP of IP-reeks</string>
     <string name="deleting_media_dlg">Verwijderen…</string>
     <string name="confirm_delete_media_video">Deze video verwijderen?</string>
@@ -3489,9 +3495,6 @@ Language: nl
     <string name="add_new_category">Nieuwe categorie toevoegen</string>
     <string name="view_in_browser">Weergeven in browser</string>
     <string name="remove_account">Site verwijderen</string>
-    <string name="toast_comment_unedited">Reactie is niet gewijzigd</string>
-    <string name="content_required">Reactie is vereist</string>
-    <string name="sure_to_cancel_edit_comment">Bewerken van deze reactie annuleren?</string>
     <string name="saving_changes">Wijzigingen aan het opslaan</string>
     <string name="trash">Prullenbak</string>
     <string name="dlg_confirm_trash_comments">Verplaatsen naar de prullenbak?</string>
@@ -3519,7 +3522,6 @@ Language: nl
     <string name="learn_more">Meer informatie</string>
     <string name="post_not_found">Er heeft zich een fout voorgedaan bij het laden van het bericht. Ververs je berichten en probeer het opnieuw.</string>
     <string name="plugin_not_found">Er is een fout opgetreden bij het openen van deze plugin</string>
-    <string name="cancel_edit">Bewerken annuleren</string>
     <string name="connection_error">Verbindingsfout</string>
     <string name="select_categories">Categorieën selecteren</string>
     <string name="share_link">Deel link</string>

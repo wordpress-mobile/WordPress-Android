@@ -1,4 +1,0 @@
-23.2:
-- Der Block für Links zu sozialen Netzwerken enthält einen Überblick, damit du sehen kannst, wenn er ausgewählt wird.
-- Im Block-Editor sollte die App nicht mehr abstürzen, sobald du einen untergeordneten Spaltenblock in einen Gruppenblock umwandelst.
-- Im Block-Inserter kannst du jetzt nach einem Blocktyp suchen, ohne dass die App abstürzt.

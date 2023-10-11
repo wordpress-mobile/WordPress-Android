@@ -1,4 +1,4 @@
-* [*] Block editor: Fix the obscurred "Insert from URL" input for media blocks when using a device in landscape orientation. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6143]
-* [**] Block editor: Updated placeholder text colors for block-based themes [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6182]
-* [**] [Jetpack-only] Add a "Personalize Home Tab" button to the bottom of the My Site Dashboard that opens a new screen where you can customize which dashboard cards are visible. You can now also hide any of the dashboard cards directly from My Site Dashboard using the "more" menu. [https://github.com/wordpress-mobile/WordPress-Android/pull/19178]
-
+We’ve been squashing bugs!
+- You can now embed URLs from X without getting a broken link.
+- When you use an invalid media URL, the app displays an error message instead of crashing.
+- In the block editor, the app will no longer crash when you nest too many blocks within blocks.

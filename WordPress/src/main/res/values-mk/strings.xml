@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2015-01-28 14:24:38+0000
 Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: mk
 -->
 <resources>
@@ -77,7 +77,6 @@ Language: mk
     <string name="error_refresh_posts">Напсите неможат да се ажурират во моментот</string>
     <string name="gallery_error">Неможе да биде превземена медиата.</string>
     <string name="connection_error">Грешка во поврзувањето</string>
-    <string name="cancel_edit">Откажи промени</string>
     <string name="post_not_found">Настана грешка при вчитување на написот. Освежи ги написите и обиди се повторно.</string>
     <string name="learn_more">Научи повеќе</string>
     <string name="create_a_link">Креирај врска</string>
@@ -90,9 +89,6 @@ Language: mk
     <string name="comment_status_approved">Одобрено</string>
     <string name="comment_status_unapproved">Чекање</string>
     <string name="saving_changes">Зачувување на подесувањата</string>
-    <string name="sure_to_cancel_edit_comment">Откажи измените на коментарот?</string>
-    <string name="content_required">Коментарот е задолжителен</string>
-    <string name="toast_comment_unedited">Коментарот не е променет</string>
     <string name="image_settings">Подесувања на сликата</string>
     <string name="wordpress_blog">WordPress блог</string>
     <string name="select_categories">Избери категории</string>

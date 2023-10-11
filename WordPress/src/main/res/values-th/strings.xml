@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-12-01 04:20:36+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.7
+Generator: GlotPress/4.0.0-alpha.9
 Language: th
 -->
 <resources>
@@ -263,9 +263,6 @@ Language: th
     <string name="dlg_confirm_trash_comments">ต้องการส่งไปถังขยะ?</string>
     <string name="trash">ถังขยะ</string>
     <string name="saving_changes">บันทึกการเปลี่ยนแปลง</string>
-    <string name="sure_to_cancel_edit_comment">ต้องการยกเลิกการแก้ไขความเห็นนี้?</string>
-    <string name="content_required">ต้องการความเห็น</string>
-    <string name="toast_comment_unedited">ยังไม่เปลี่ยนความเห็น</string>
     <string name="comment_status_approved">อนุมัติแล้ว</string>
     <string name="comment_status_unapproved">รอการตรวจสอบ</string>
     <string name="comment_status_spam">สแปม</string>
@@ -276,7 +273,6 @@ Language: th
     <string name="mnu_comment_trash">ถังขยะ</string>
     <string name="comment_status_trash">ถังขยะ</string>
     <string name="connection_error">การเชื่อมต่อผิดพลาด</string>
-    <string name="cancel_edit">ยกเลิกการแก้ไข</string>
     <string name="post_settings">การตั้งค่าเรื่อง</string>
     <string name="link_enter_url_text">ลิงก์ข้อความ (ทางเลือก)</string>
     <string name="create_a_link">สร้างลิงก์</string>

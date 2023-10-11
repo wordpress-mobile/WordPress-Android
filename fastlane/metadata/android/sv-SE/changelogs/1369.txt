@@ -1,4 +1,0 @@
-23.2:
-- Blocket Sociala länkar inkluderar nu en ytterkant så att du kan se när det är valt.
-- Vid arbete i blockredigeraren ska appen inte längre krascha om du omvandlar ett inbäddat kolumnblock till ett gruppblock.
-- Du kan nu söka efter en blocktyp i blockinfogaren utan att appen kraschar.
