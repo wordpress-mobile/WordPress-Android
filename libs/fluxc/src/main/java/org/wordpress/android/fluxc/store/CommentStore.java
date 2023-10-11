@@ -584,7 +584,7 @@ public class CommentStore extends Store {
         emitChange(event);
     }
 
-    private void fetchCommentLikes(FetchCommentLikesPayload payload) {
+    private void fetchCommentLikes(@NonNull FetchCommentLikesPayload payload) {
         mCommentRestClient.fetchCommentLikes(
                 payload.siteId,
                 payload.remoteCommentId,
