@@ -234,13 +234,11 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void likeComment(final SiteModel site, long remoteCommentId, @Nullable final CommentModel comment,
-                            boolean like) {
-        // Prioritize CommentModel over comment id.
-        if (comment != null) {
-            remoteCommentId = comment.getRemoteCommentId();
-        }
-
+    public void likeComment(
+            @NonNull final SiteModel site,
+            long remoteCommentId,
+            @Nullable final CommentModel comment,
+            boolean like) {
         String url;
         if (like) {
             url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).likes.new_.getUrlV1_1();
