@@ -26,6 +26,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
+@Suppress("LongParameterList")
 @Singleton
 class CommentsXMLRPCClient @Inject constructor(
     dispatcher: Dispatcher?,
