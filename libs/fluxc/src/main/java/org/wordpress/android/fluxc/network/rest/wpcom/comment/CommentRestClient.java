@@ -190,7 +190,10 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void createNewReply(final SiteModel site, final CommentModel comment, final CommentModel reply) {
+    public void createNewReply(
+            @NonNull final SiteModel site,
+            @NonNull final CommentModel comment,
+            @NonNull final CommentModel reply) {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(comment.getRemoteCommentId())
                 .replies.new_.getUrlV1_1();
         Map<String, Object> params = new HashMap<>();
@@ -209,7 +212,10 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void createNewComment(final SiteModel site, final PostModel post, final CommentModel comment) {
+    public void createNewComment(
+            @NonNull final SiteModel site,
+            @NonNull final PostModel post,
+            @NonNull final CommentModel comment) {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId())
                 .replies.new_.getUrlV1_1();
         Map<String, Object> params = new HashMap<>();
