@@ -273,6 +273,7 @@ public class CommentStore extends Store {
 
     @Override
     @Subscribe(threadMode = ThreadMode.ASYNC)
+    @SuppressWarnings("rawtypes")
     public void onAction(Action action) {
         IAction actionType = action.getType();
         if (!(actionType instanceof CommentAction)) {
