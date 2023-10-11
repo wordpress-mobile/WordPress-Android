@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.utils;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.model.CommentModel;
-import org.wordpress.android.fluxc.model.LikeModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
@@ -42,7 +41,7 @@ public class CommentErrorUtils {
             boolean hasMore
     ) {
         FetchedCommentLikesResponsePayload payload = new FetchedCommentLikesResponsePayload(
-                new ArrayList<LikeModel>(),
+                new ArrayList<>(),
                 siteId,
                 commentId,
                 requestNextPage,
