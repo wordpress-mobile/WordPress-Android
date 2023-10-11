@@ -427,7 +427,7 @@ public class CommentStore extends Store {
         emitChange(event);
     }
 
-    private void deleteComment(RemoteCommentPayload payload) {
+    private void deleteComment(@NonNull RemoteCommentPayload payload) {
         // If the comment is stored locally, we want to update it locally (needed because in some
         // cases we use this to update comments by remote id).
         CommentModel comment = payload.comment;
@@ -435,9 +435,9 @@ public class CommentStore extends Store {
             getCommentBySiteAndRemoteId(payload.site, payload.remoteCommentId);
         }
         if (payload.site.isUsingWpComRestApi()) {
-            mCommentRestClient.deleteComment(payload.site, payload.remoteCommentId, comment);
+            mCommentRestClient.deleteComment(payload.site, getPrioritizedRemoteCommentId(payload), comment);
         } else {
-            mCommentXMLRPCClient.deleteComment(payload.site, payload.remoteCommentId, comment);
+            mCommentXMLRPCClient.deleteComment(payload.site, getPrioritizedRemoteCommentId(payload), comment);
         }
     }
 
