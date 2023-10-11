@@ -262,7 +262,8 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         }
     }
 
-    private CommentStatus getCommentStatusFromXMLRPCStatusString(String stringStatus) {
+    @NonNull
+    private CommentStatus getCommentStatusFromXMLRPCStatusString(@NonNull String stringStatus) {
         if ("approve".equals(stringStatus)) {
             return CommentStatus.APPROVED;
         } else if ("hold".equals(stringStatus)) {
