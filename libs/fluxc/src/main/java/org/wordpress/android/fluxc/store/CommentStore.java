@@ -556,7 +556,7 @@ public class CommentStore extends Store {
         emitChange(event);
     }
 
-    private void likeComment(RemoteLikeCommentPayload payload) {
+    private void likeComment(@NonNull RemoteLikeCommentPayload payload) {
         // If the comment is stored locally, we want to update it locally (needed because in some
         // cases we use this to update comments by remote id).
         CommentModel comment = payload.comment;
@@ -564,7 +564,7 @@ public class CommentStore extends Store {
             getCommentBySiteAndRemoteId(payload.site, payload.remoteCommentId);
         }
         if (payload.site.isUsingWpComRestApi()) {
-            mCommentRestClient.likeComment(payload.site, payload.remoteCommentId, comment, payload.like);
+            mCommentRestClient.likeComment(payload.site, getPrioritizedRemoteCommentId(payload), comment, payload.like);
         } else {
             OnCommentChanged event = new OnCommentChanged(0);
             event.causeOfChange = CommentAction.LIKE_COMMENT;
