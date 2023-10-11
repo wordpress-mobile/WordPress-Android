@@ -2,6 +2,7 @@
 
 package org.wordpress.android.ui.posts
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
@@ -15,6 +16,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
+import androidx.appcompat.widget.AppCompatSpinner
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -141,7 +143,7 @@ class PostsListActivity : LocaleAwareActivity(),
 
     private lateinit var postsPagerAdapter: PostsPagerAdapter
     private lateinit var searchActionButton: MenuItem
-    private lateinit var toggleViewLayoutMenuItem: MenuItem
+    private lateinit var authorFiltertMenuItem: MenuItem
 
     private var restorePreviousSearch = false
 
@@ -228,17 +230,6 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     private fun PostListActivityBinding.setupContent() {
-        val authorSelectionAdapter = AuthorSelectionAdapter(this@PostsListActivity)
-        postListAuthorSelection.adapter = authorSelectionAdapter
-
-        postListAuthorSelection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                viewModel.updateAuthorFilterSelection(id)
-            }
-        }
-
         // Just a safety measure - there shouldn't by any existing listeners since this method is called just once.
         postPager.clearOnPageChangeListeners()
 
@@ -430,22 +421,6 @@ class PostsListActivity : LocaleAwareActivity(),
         } else {
             fabButton.hide()
         }
-
-        val authorSelectionVisibility = if (state.isAuthorFilterVisible) View.VISIBLE else View.GONE
-        postListAuthorSelection.visibility = authorSelectionVisibility
-        postListTabLayoutFadingEdge.visibility = authorSelectionVisibility
-
-        val tabLayoutPaddingStart =
-            if (state.isAuthorFilterVisible) {
-                resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
-            } else 0
-        tabLayout.setPaddingRelative(tabLayoutPaddingStart, 0, 0, 0)
-        val authorSelectionAdapter = postListAuthorSelection.adapter as AuthorSelectionAdapter
-        authorSelectionAdapter.updateItems(state.authorFilterItems)
-
-        authorSelectionAdapter.getIndexOfSelection(state.authorFilterSelection)?.let { selectionIndex ->
-            postListAuthorSelection.setSelection(selectionIndex)
-        }
     }
 
     private fun showSnackBar(holder: SnackbarMessageHolder) {
@@ -537,8 +512,8 @@ class PostsListActivity : LocaleAwareActivity(),
         if (item.itemId == AndroidR.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
-        } else if (item.itemId == R.id.toggle_post_list_item_layout) {
-            viewModel.toggleViewLayout()
+        } else if (item.itemId == R.id.toggle_post_list_author_filter) {
+            // todo: implement the logic to open/close the author filter
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -547,21 +522,17 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.posts_list_toggle_view_layout, menu)
-        toggleViewLayoutMenuItem = menu.findItem(R.id.toggle_post_list_item_layout)
-        viewModel.viewLayoutTypeMenuUiState.observe(this, { menuUiState ->
-            menuUiState?.let {
-                updateMenuIcon(menuUiState.iconRes, toggleViewLayoutMenuItem)
-                updateMenuTitle(menuUiState.title, toggleViewLayoutMenuItem)
-            }
-        })
-
+        authorFiltertMenuItem = menu.findItem(R.id.toggle_post_list_author_filter)
+        // todo: set the author filter icon on selection change
         searchActionButton = menu.findItem(R.id.toggle_post_search)
 
         initSearchFragment()
         binding.initSearchView()
+        initAuthorFilter()
         return true
     }
 
+    @SuppressLint("CommitTransaction")
     private fun initSearchFragment() {
         val searchFragmentTag = "search_fragment"
 
@@ -576,6 +547,9 @@ class PostsListActivity : LocaleAwareActivity(),
         }
     }
 
+    private fun initAuthorFilter() {
+        // todo: Implement the logic for the author filter spinner
+    }
     private fun PostListActivityBinding.initSearchView() {
         searchActionButton.setOnActionExpandListener(object : OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
@@ -608,7 +582,7 @@ class PostsListActivity : LocaleAwareActivity(),
         })
 
         viewModel.isSearchExpanded.observe(this@PostsListActivity) { isExpanded ->
-            toggleViewLayoutMenuItem.isVisible = !isExpanded
+            authorFiltertMenuItem.isVisible = !isExpanded
             toggleSearch(isExpanded)
         }
     }
