@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.persistence;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.annotation.Nullable;
+
 import com.wellsql.generated.CommentModelTable;
 import com.wellsql.generated.LikeModelTable;
 import com.yarolegovich.wellsql.ConditionClauseBuilder;
@@ -86,7 +88,7 @@ public class CommentSqlUtils {
     }
 
     public static int removeCommentGaps(SiteModel site, List<CommentModel> comments, int maxEntriesInResponse,
-                                        int requestOffset, CommentStatus... statuses) {
+                                        int requestOffset, @Nullable CommentStatus... statuses) {
         if (site == null || comments == null || comments.isEmpty()) {
             return 0;
         }
