@@ -96,7 +96,7 @@ class CommentsRestClientTest {
         assertThat(payload.isError).isFalse
 
         val comments = payload.response!!
-        assertThat(comments.size).isEqualTo(commentsResponse.comments.size)
+        assertThat(comments.size).isEqualTo(commentsResponse.comments?.size)
         assertThat(urlCaptor.lastValue).isEqualTo(
                 "https://public-api.wordpress.com/rest/v1.1/sites/${site.siteId}/comments/"
         )
@@ -600,10 +600,10 @@ class CommentsRestClientTest {
 
     private fun getDefaultDto(): CommentWPComRestResponse {
         return CommentWPComRestResponse().apply {
-            ID = 137
+            ID = 137L
             URL = "https://test-site.wordpress.com/2021/02/25/again/#comment-137"
             author = Author().apply {
-                ID = 0
+                ID = 0L
                 URL = "https://debugging-test.wordpress.com"
                 avatar_URL = "https://gravatar.com/avatar/avatarurl"
                 email = "email@mydomain.com"
@@ -612,9 +612,9 @@ class CommentsRestClientTest {
             content = "example content"
             date = "2021-05-12T15:10:40+02:00"
             i_like = true
-            parent = CommentParent().apply { ID = 41 }
+            parent = CommentParent().apply { ID = 41L }
             post = Post().apply {
-                ID = 85
+                ID = 85L
                 link = "https://public-api.wordpress.com/rest/v1.1/sites/11111111/posts/85"
                 title = "again"
                 type = "post"
@@ -627,31 +627,31 @@ class CommentsRestClientTest {
         return CommentLikeWPComRestResponse().apply {
             success = true
             i_like = iLike
-            like_count = 100
+            like_count = 100L
         }
     }
 
     private fun CommentWPComRestResponse.toEntity(): CommentEntity {
         val dto = this
         return CommentEntity(
-                id = 0,
+                id = 0L,
                 remoteCommentId = dto.ID,
-                remotePostId = dto.post.ID,
-                authorId = dto.author.ID,
+                remotePostId = dto.post?.ID ?: 0L,
+                authorId = dto.author?.ID ?: 0L,
                 localSiteId = 10,
-                remoteSiteId = 200,
-                authorUrl = dto.author.URL,
-                authorName = dto.author.name,
-                authorEmail = dto.author.email,
-                authorProfileImageUrl = dto.author.avatar_URL,
-                postTitle = dto.post.title,
+                remoteSiteId = 200L,
+                authorUrl = dto.author?.URL,
+                authorName = dto.author?.name,
+                authorEmail = dto.author?.email,
+                authorProfileImageUrl = dto.author?.avatar_URL,
+                postTitle = dto.post?.title,
                 status = dto.status,
                 datePublished = dto.date,
-                publishedTimestamp = 132456,
+                publishedTimestamp = 132456L,
                 content = dto.content,
                 url = dto.URL,
                 hasParent = dto.parent != null,
-                parentId = dto.parent.ID,
+                parentId = dto.parent?.ID ?: 0L,
                 iLike = dto.i_like
         )
     }
