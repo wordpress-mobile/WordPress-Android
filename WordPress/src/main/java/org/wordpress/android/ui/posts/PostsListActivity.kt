@@ -14,10 +14,8 @@ import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.snackbar.Snackbar
@@ -57,7 +55,6 @@ import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
@@ -634,16 +631,16 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     // Menu PostListViewLayoutType handling
-
-    private fun updateMenuIcon(@DrawableRes iconRes: Int, menuItem: MenuItem) {
-        ContextCompat.getDrawable(this, iconRes)?.let { drawable ->
-            menuItem.setIcon(drawable)
-        }
-    }
-
-    private fun updateMenuTitle(title: UiString, menuItem: MenuItem): MenuItem? {
-        return menuItem.setTitle(uiHelpers.getTextOfUiString(this@PostsListActivity, title))
-    }
+    // todo: implement the logic to change the author filter icon on selection change
+//    private fun updateMenuIcon(@DrawableRes iconRes: Int, menuItem: MenuItem) {
+//        ContextCompat.getDrawable(this, iconRes)?.let { drawable ->
+//            menuItem.setIcon(drawable)
+//        }
+//    }
+//
+//    private fun updateMenuTitle(title: UiString, menuItem: MenuItem): MenuItem? {
+//        return menuItem.setTitle(uiHelpers.getTextOfUiString(this@PostsListActivity, title))
+//    }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
         viewModel.onBottomSheetPublishButtonClicked()
