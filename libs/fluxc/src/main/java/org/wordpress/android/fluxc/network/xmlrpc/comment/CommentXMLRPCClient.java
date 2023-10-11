@@ -297,7 +297,10 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         return comments;
     }
 
-    private CommentModel commentResponseToComment(Object commentObject, SiteModel site) {
+    @Nullable
+    private CommentModel commentResponseToComment(
+            @NonNull Object commentObject,
+            @NonNull SiteModel site) {
         if (!(commentObject instanceof HashMap)) {
             return null;
         }
