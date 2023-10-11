@@ -278,7 +278,10 @@ public class CommentRestClient extends BaseWPComRestClient {
         return comments;
     }
 
-    private CommentModel commentResponseToComment(CommentWPComRestResponse response, SiteModel site) {
+    @NonNull
+    private CommentModel commentResponseToComment(
+            @NonNull CommentWPComRestResponse response,
+            @NonNull SiteModel site) {
         CommentModel comment = new CommentModel();
 
         comment.setRemoteCommentId(response.ID);
