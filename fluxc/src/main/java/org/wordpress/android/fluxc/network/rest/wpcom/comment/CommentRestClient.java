@@ -168,12 +168,10 @@ public class CommentRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void deleteComment(final SiteModel site, long remoteCommentId, @Nullable final CommentModel comment) {
-        // Prioritize CommentModel over comment id.
-        if (comment != null) {
-            remoteCommentId = comment.getRemoteCommentId();
-        }
-
+    public void deleteComment(
+            @NonNull final SiteModel site,
+            long remoteCommentId,
+            @Nullable final CommentModel comment) {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.comment(remoteCommentId).delete.getUrlV1_1();
         final WPComGsonRequest<CommentWPComRestResponse> request = WPComGsonRequest.buildPostRequest(
                 url, null, CommentWPComRestResponse.class,
