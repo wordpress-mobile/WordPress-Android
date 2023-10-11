@@ -45,6 +45,7 @@ class CommentsXMLRPCClientTest {
     private var countDownLatch: CountDownLatch? = null
 
     @Before
+    @Suppress("UNCHECKED_CAST")
     fun setUp() {
         dispatcher = Mockito.mock(Dispatcher::class.java)
         requestQueue = Mockito.mock(RequestQueue::class.java)
