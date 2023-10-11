@@ -13,10 +13,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
-import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
-import androidx.appcompat.widget.AppCompatSpinner
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -51,7 +49,6 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissBy
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostListType.SEARCH
-import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
@@ -300,13 +297,13 @@ class PostsListActivity : LocaleAwareActivity(),
         viewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory).get(PostListMainViewModel::class.java)
         viewModel.start(site, initPreviewState, currentBottomSheetPostId, editPostRepository)
 
-        viewModel.viewState.observe(this@PostsListActivity, { state ->
+        viewModel.viewState.observe(this@PostsListActivity) { state ->
             state?.let {
                 loadViewState(state)
             }
-        })
+        }
 
-        viewModel.postListAction.observe(this@PostsListActivity, { postListAction ->
+        viewModel.postListAction.observe(this@PostsListActivity) { postListAction ->
             postListAction?.let { action ->
                 handlePostListAction(
                     this@PostsListActivity,
@@ -317,33 +314,33 @@ class PostsListActivity : LocaleAwareActivity(),
                     blazeFeatureUtils
                 )
             }
-        })
-        viewModel.selectTab.observe(this@PostsListActivity, { tabIndex ->
+        }
+        viewModel.selectTab.observe(this@PostsListActivity) { tabIndex ->
             tabIndex?.let {
                 tabLayout.getTabAt(tabIndex)?.select()
             }
-        })
-        viewModel.scrollToLocalPostId.observe(this@PostsListActivity, { targetLocalPostId ->
+        }
+        viewModel.scrollToLocalPostId.observe(this@PostsListActivity) { targetLocalPostId ->
             targetLocalPostId?.let {
                 postsPagerAdapter.getItemAtPosition(postPager.currentItem)?.scrollToTargetPost(targetLocalPostId)
             }
-        })
-        viewModel.snackBarMessage.observe(this@PostsListActivity, {
+        }
+        viewModel.snackBarMessage.observe(this@PostsListActivity) {
             it?.let { snackBarHolder -> showSnackBar(snackBarHolder) }
-        })
-        viewModel.toastMessage.observe(this@PostsListActivity, {
+        }
+        viewModel.toastMessage.observe(this@PostsListActivity) {
             it?.show(this@PostsListActivity)
-        })
-        viewModel.previewState.observe(this@PostsListActivity, {
+        }
+        viewModel.previewState.observe(this@PostsListActivity) {
             progressDialog = progressDialogHelper.updateProgressDialogState(
                 this@PostsListActivity,
                 progressDialog,
                 it.progressDialogUiState,
                 uiHelpers
             )
-        })
+        }
         setupActions()
-        viewModel.openPrepublishingBottomSheet.observeEvent(this@PostsListActivity, {
+        viewModel.openPrepublishingBottomSheet.observeEvent(this@PostsListActivity) {
             val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
             if (fragment == null) {
                 val prepublishingFragment = newInstance(
@@ -353,7 +350,7 @@ class PostsListActivity : LocaleAwareActivity(),
                 )
                 prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
             }
-        })
+        }
 
         setupFabEvents()
     }
@@ -367,22 +364,21 @@ class PostsListActivity : LocaleAwareActivity(),
         observeBottomSheet(
             bloggingRemindersViewModel.isBottomSheetShowing,
             this,
-            BLOGGING_REMINDERS_FRAGMENT_TAG,
-            {
-                if (!this.isFinishing) {
-                    this.supportFragmentManager
-                } else {
-                    null
-                }
+            BLOGGING_REMINDERS_FRAGMENT_TAG
+        ) {
+            if (!this.isFinishing) {
+                this.supportFragmentManager
+            } else {
+                null
             }
-        )
+        }
     }
 
     private fun setupActions() {
-        viewModel.dialogAction.observe(this@PostsListActivity, {
+        viewModel.dialogAction.observe(this@PostsListActivity) {
             it?.show(this@PostsListActivity, supportFragmentManager, uiHelpers)
-        })
-        viewModel.postUploadAction.observe(this@PostsListActivity, {
+        }
+        viewModel.postUploadAction.observe(this@PostsListActivity) {
             it?.let { uploadAction ->
                 handleUploadAction(
                     uploadAction,
@@ -394,25 +390,25 @@ class PostsListActivity : LocaleAwareActivity(),
                     bloggingRemindersViewModel.onPublishingPost(site.id, isFirstTimePublishing)
                 }
             }
-        })
+        }
     }
 
     private fun PostListActivityBinding.setupFabEvents() {
-        viewModel.onFabClicked.observeEvent(this@PostsListActivity, {
+        viewModel.onFabClicked.observeEvent(this@PostsListActivity) {
             postListCreateMenuViewModel.onFabClicked()
-        })
+        }
 
-        viewModel.onFabLongPressedForCreateMenu.observeEvent(this@PostsListActivity, {
+        viewModel.onFabLongPressedForCreateMenu.observeEvent(this@PostsListActivity) {
             postListCreateMenuViewModel.onFabLongPressed()
             Toast.makeText(fabButton.context, R.string.create_post_story_fab_tooltip, Toast.LENGTH_SHORT).show()
-        })
+        }
 
-        viewModel.onFabLongPressedForPostList.observe(this@PostsListActivity, {
+        viewModel.onFabLongPressedForPostList.observe(this@PostsListActivity) {
             if (fabButton.isHapticFeedbackEnabled) {
                 fabButton.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             }
             Toast.makeText(fabButton.context, R.string.create_post_fab_tooltip, Toast.LENGTH_SHORT).show()
-        })
+        }
     }
 
     private fun PostListActivityBinding.loadViewState(state: PostListMainViewState) {
