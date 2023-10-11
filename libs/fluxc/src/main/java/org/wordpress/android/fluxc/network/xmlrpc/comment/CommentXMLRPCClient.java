@@ -123,12 +123,10 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void deleteComment(final SiteModel site, long remoteCommentId, @Nullable final CommentModel comment) {
-        // Prioritize CommentModel over comment id.
-        if (comment != null) {
-            remoteCommentId = comment.getRemoteCommentId();
-        }
-
+    public void deleteComment(
+            @NonNull final SiteModel site,
+            long remoteCommentId,
+            @Nullable final CommentModel comment) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
