@@ -260,6 +260,7 @@ public class CommentStore extends Store {
         return CommentSqlUtils.getCommentsCountForSite(site, statuses);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public CommentModel getCommentBySiteAndRemoteId(SiteModel site, long remoteCommentId) {
         return CommentSqlUtils.getCommentBySiteAndRemoteId(site, remoteCommentId);
     }
