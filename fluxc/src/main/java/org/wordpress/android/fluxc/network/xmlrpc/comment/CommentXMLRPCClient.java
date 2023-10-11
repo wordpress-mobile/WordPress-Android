@@ -279,7 +279,10 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         }
     }
 
-    private List<CommentModel> commentsResponseToCommentList(Object response, SiteModel site) {
+    @NonNull
+    private List<CommentModel> commentsResponseToCommentList(
+            @NonNull Object response,
+            @NonNull SiteModel site) {
         List<CommentModel> comments = new ArrayList<>();
         if (!(response instanceof Object[])) {
             return comments;
