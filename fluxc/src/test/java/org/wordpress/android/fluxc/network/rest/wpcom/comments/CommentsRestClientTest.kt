@@ -30,7 +30,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentLikeWPComRestResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentParent
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestResponse.Author
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestResponse.CommentsWPComRestResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestResponse.Post
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentsRestClient
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
@@ -77,7 +79,7 @@ class CommentsRestClientTest {
     fun `fetchCommentsPage returns fetched page`() = test {
         val response = getDefaultDto()
 
-        val commentsResponse = response.CommentsWPComRestResponse()
+        val commentsResponse = CommentsWPComRestResponse()
         commentsResponse.comments = listOf(response, response, response)
 
         whenever(commentsMapper.commentDtoToEntity(response, site)).thenReturn(response.toEntity())

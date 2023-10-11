@@ -11,6 +11,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.comments.CommentsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentParent
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestResponse.Author
+import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestResponse.Post
 import org.wordpress.android.fluxc.persistence.comments.CommentEntityList
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.utils.DateTimeUtilsWrapper
