@@ -67,8 +67,9 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                 site.getXmlRpcUrl(), XMLRPC.GET_COMMENTS, params,
                 (Listener<Object>) response -> {
                     List<CommentModel> comments = commentsResponseToCommentList(response, site);
-                    FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(comments, site, number,
-                            offset, status);
+                    FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(
+                            comments, site, number, offset, status
+                    );
                     mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(payload));
                 },
                 error -> mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(
