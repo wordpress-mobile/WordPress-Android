@@ -99,10 +99,10 @@ public class CommentStore extends Store {
         @NonNull public final SiteModel site;
         public final int number;
         public final int offset;
-        public final CommentStatus requestedStatus;
+        @Nullable public final CommentStatus requestedStatus;
 
         public FetchCommentsResponsePayload(@NonNull List<CommentModel> comments, @NonNull SiteModel site, int number,
-                                            int offset, CommentStatus status) {
+                                            int offset, @Nullable CommentStatus status) {
             this.comments = comments;
             this.site = site;
             this.number = number;
@@ -206,7 +206,7 @@ public class CommentStore extends Store {
         public int rowsAffected;
         public int offset;
         public CommentAction causeOfChange;
-        public CommentStatus requestedStatus;
+        @Nullable public CommentStatus requestedStatus;
         public List<Integer> changedCommentsLocalIds = new ArrayList<>();
         public OnCommentChanged(int rowsAffected) {
             this.rowsAffected = rowsAffected;
@@ -482,8 +482,8 @@ public class CommentStore extends Store {
         if (!payload.isError()) {
             // Find comments that were deleted or moved to a different status on the server and remove them from
             // local DB.
-            CommentSqlUtils.removeCommentGaps(payload.site, payload.comments, payload.number, payload.offset,
-                    payload.requestedStatus);
+            CommentSqlUtils.removeCommentGaps(
+                    payload.site, payload.comments, payload.number, payload.offset, payload.requestedStatus);
 
             for (CommentModel comment : payload.comments) {
                 rowsAffected += CommentSqlUtils.insertOrUpdateComment(comment);

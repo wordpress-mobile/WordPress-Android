@@ -69,8 +69,9 @@ public class CommentRestClient extends BaseWPComRestClient {
                 url, params, CommentsWPComRestResponse.class,
                 response -> {
                     List<CommentModel> comments = commentsResponseToCommentList(response, site);
-                    FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(comments, site, number,
-                            offset, status);
+                    FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(
+                            comments, site, number, offset, status
+                    );
                     mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(payload));
                 },
 
