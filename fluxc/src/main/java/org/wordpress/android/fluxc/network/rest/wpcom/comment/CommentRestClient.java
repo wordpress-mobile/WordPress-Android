@@ -264,7 +264,10 @@ public class CommentRestClient extends BaseWPComRestClient {
 
     // Private methods
 
-    private List<CommentModel> commentsResponseToCommentList(CommentsWPComRestResponse response, SiteModel site) {
+    @NonNull
+    private List<CommentModel> commentsResponseToCommentList(
+            @NonNull CommentsWPComRestResponse response,
+            @NonNull SiteModel site) {
         List<CommentModel> comments = new ArrayList<>();
         if (response.comments != null) {
             for (CommentWPComRestResponse restComment : response.comments) {
