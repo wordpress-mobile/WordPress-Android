@@ -22,6 +22,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
+@Suppress("LongParameterList")
 @Singleton
 class CommentsRestClient @Inject constructor(
     appContext: Context?,
