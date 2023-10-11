@@ -157,7 +157,10 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
     /**
      * Create a new reply to a Comment
      */
-    public void createNewReply(final SiteModel site, final CommentModel comment, final CommentModel reply) {
+    public void createNewReply(
+            @NonNull final SiteModel site,
+            @NonNull final CommentModel comment,
+            @NonNull final CommentModel reply) {
         // Comment parameters
         Map<String, Object> replyParams = new HashMap<>(5);
 
@@ -183,7 +186,10 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
     /**
      * Create a new comment to a Post
      */
-    public void createNewComment(final SiteModel site, final PostModel post, final CommentModel comment) {
+    public void createNewComment(
+            @NonNull final SiteModel site,
+            @NonNull final PostModel post,
+            @NonNull final CommentModel comment) {
         // Comment parameters
         Map<String, Object> commentParams = new HashMap<>(5);
         commentParams.put("content", comment.getContent());
@@ -204,8 +210,12 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
 
     // Private methods
 
-    private void newComment(final SiteModel site, long remotePostId, final CommentModel comment, final long parentId,
-                            Map<String, Object> commentParams) {
+    private void newComment(
+            @NonNull final SiteModel site,
+            long remotePostId,
+            @NonNull final CommentModel comment,
+            final long parentId,
+            @NonNull Map<String, Object> commentParams) {
         List<Object> params = new ArrayList<>(5);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
