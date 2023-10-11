@@ -263,17 +263,19 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
     }
 
     @NonNull
+    @SuppressWarnings("DuplicateBranchesInSwitch")
     private CommentStatus getCommentStatusFromXMLRPCStatusString(@NonNull String stringStatus) {
-        if ("approve".equals(stringStatus)) {
-            return CommentStatus.APPROVED;
-        } else if ("hold".equals(stringStatus)) {
-            return CommentStatus.UNAPPROVED;
-        } else if ("spam".equals(stringStatus)) {
-            return CommentStatus.SPAM;
-        } else if ("trash".equals(stringStatus)) {
-            return CommentStatus.TRASH;
-        } else { // Defaults (don't exist in XMLRPC)
-            return CommentStatus.APPROVED;
+        switch (stringStatus) {
+            case "approve":
+                return CommentStatus.APPROVED;
+            case "hold":
+                return CommentStatus.UNAPPROVED;
+            case "spam":
+                return CommentStatus.SPAM;
+            case "trash":
+                return CommentStatus.TRASH;
+            default: // Defaults (don't exist in XMLRPC)
+                return CommentStatus.APPROVED;
         }
     }
 
