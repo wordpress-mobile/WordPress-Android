@@ -55,6 +55,7 @@ public class CommentStore extends Store {
             this.offset = offset;
         }
 
+        @SuppressWarnings("unused")
         public FetchCommentsPayload(@NonNull SiteModel site, @NonNull CommentStatus status, int number, int offset) {
             this.site = site;
             this.status = status;
@@ -88,6 +89,7 @@ public class CommentStore extends Store {
             this.like = like;
         }
 
+        @SuppressWarnings("unused")
         public RemoteLikeCommentPayload(@NonNull SiteModel site, long remoteCommentId, boolean like) {
             super(site, remoteCommentId);
             this.like = like;
