@@ -587,19 +587,17 @@ public class CommentStore extends Store {
                 payload.hasMore
         );
         if (!payload.isError()) {
-            if (payload.likes != null) {
-                if (!payload.isRequestNextPage) {
-                    CommentSqlUtils.deleteCommentLikesAndPurgeExpired(payload.siteId, payload.commentRemoteId);
-                }
-
-                for (LikeModel like : payload.likes) {
-                    CommentSqlUtils.insertOrUpdateCommentLikes(payload.siteId, payload.commentRemoteId, like);
-                }
-                event.commentLikes.addAll(CommentSqlUtils.getCommentLikesByCommentId(
-                        payload.siteId,
-                        payload.commentRemoteId
-                ));
+            if (!payload.isRequestNextPage) {
+                CommentSqlUtils.deleteCommentLikesAndPurgeExpired(payload.siteId, payload.commentRemoteId);
             }
+
+            for (LikeModel like : payload.likes) {
+                CommentSqlUtils.insertOrUpdateCommentLikes(payload.siteId, payload.commentRemoteId, like);
+            }
+            event.commentLikes.addAll(CommentSqlUtils.getCommentLikesByCommentId(
+                    payload.siteId,
+                    payload.commentRemoteId
+            ));
         } else {
             List<LikeModel> cachedLikes = CommentSqlUtils.getCommentLikesByCommentId(
                     payload.siteId,
