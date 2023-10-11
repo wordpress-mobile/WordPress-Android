@@ -26,10 +26,8 @@ import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.CommentSqlUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -341,27 +339,6 @@ public class CommentStore extends Store {
     @Override
     public void onRegister() {
         AppLog.d(T.API, this.getClass().getName() + ": onRegister");
-    }
-
-    public CommentModel instantiateCommentModel(SiteModel site) {
-        CommentModel comment = new CommentModel();
-        comment.setLocalSiteId(site.getId());
-        // Init with defaults
-        comment.setContent("");
-        comment.setDatePublished(DateTimeUtils.iso8601UTCFromDate(new Date()));
-        comment.setStatus(CommentStatus.APPROVED.toString());
-        comment.setAuthorName("");
-        comment.setAuthorEmail("");
-        comment.setAuthorUrl("");
-        comment.setUrl("");
-        // Insert in the DB
-        comment = CommentSqlUtils.insertCommentForResult(comment);
-
-        if (comment.getId() == -1) {
-            comment = null;
-        }
-
-        return comment;
     }
 
     // Private methods
