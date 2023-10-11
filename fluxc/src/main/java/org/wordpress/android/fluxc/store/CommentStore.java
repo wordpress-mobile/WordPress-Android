@@ -119,11 +119,12 @@ public class CommentStore extends Store {
     }
 
     public static class RemoteCreateCommentPayload extends Payload<CommentError> {
-        public final SiteModel site;
-        public final CommentModel comment;
-        public final CommentModel reply;
-        public final PostModel post;
+        @NonNull public final SiteModel site;
+        @NonNull public final CommentModel comment;
+        @Nullable public final CommentModel reply;
+        @Nullable public final PostModel post;
 
+        // Create a new comment on a specific Post
         public RemoteCreateCommentPayload(@NonNull SiteModel site, @NonNull PostModel post,
                                           @NonNull CommentModel comment) {
             this.site = site;
@@ -132,6 +133,7 @@ public class CommentStore extends Store {
             this.reply = null;
         }
 
+        // Create a new reply to a specific Comment
         public RemoteCreateCommentPayload(@NonNull SiteModel site, @NonNull CommentModel comment,
                                           @NonNull CommentModel reply) {
             this.site = site;
@@ -360,21 +362,25 @@ public class CommentStore extends Store {
 
     // Private methods
 
-    private void createNewComment(RemoteCreateCommentPayload payload) {
-        if (payload.reply == null) {
+    private void createNewComment(@NonNull RemoteCreateCommentPayload payload) {
+        if (payload.post != null && payload.reply == null) {
             // Create a new comment on a specific Post
             if (payload.site.isUsingWpComRestApi()) {
                 mCommentRestClient.createNewComment(payload.site, payload.post, payload.comment);
             } else {
                 mCommentXMLRPCClient.createNewComment(payload.site, payload.post, payload.comment);
             }
-        } else {
+        } else if (payload.reply != null && payload.post == null) {
             // Create a new reply to a specific Comment
             if (payload.site.isUsingWpComRestApi()) {
                 mCommentRestClient.createNewReply(payload.site, payload.comment, payload.reply);
             } else {
                 mCommentXMLRPCClient.createNewReply(payload.site, payload.comment, payload.reply);
             }
+        } else {
+            throw new IllegalStateException(
+                    "Either post or reply must be not null and both can't be not null at the same time!"
+            );
         }
     }
 
