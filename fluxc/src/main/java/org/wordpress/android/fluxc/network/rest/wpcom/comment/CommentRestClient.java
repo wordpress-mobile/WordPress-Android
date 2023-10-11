@@ -296,6 +296,7 @@ public class CommentRestClient extends BaseWPComRestClient {
         comment.setPublishedTimestamp(DateTimeUtils.timestampFromIso8601(response.date));
 
         if (response.author != null) {
+            comment.setAuthorId(response.author.ID);
             comment.setAuthorUrl(response.author.URL);
             comment.setAuthorName(StringEscapeUtils.unescapeHtml4(response.author.name));
             if ("false".equals(response.author.email)) {
@@ -309,10 +310,6 @@ public class CommentRestClient extends BaseWPComRestClient {
         if (response.post != null) {
             comment.setRemotePostId(response.post.ID);
             comment.setPostTitle(StringEscapeUtils.unescapeHtml4(response.post.title));
-        }
-
-        if (response.author != null) {
-            comment.setAuthorId(response.author.ID);
         }
 
         if (response.parent != null) {
