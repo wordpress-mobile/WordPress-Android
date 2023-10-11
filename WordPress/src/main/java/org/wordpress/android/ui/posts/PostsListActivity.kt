@@ -246,10 +246,9 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     private fun PostListActivityBinding.initCreateMenuViewModel(tabIndex: Int, actionsShownByDefault: Boolean) {
-        postListCreateMenuViewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)
-            .get(PostListCreateMenuViewModel::class.java)
+        postListCreateMenuViewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)[PostListCreateMenuViewModel::class.java]
 
-        postListCreateMenuViewModel.isBottomSheetShowing.observeEvent(this@PostsListActivity, { isBottomSheetShowing ->
+        postListCreateMenuViewModel.isBottomSheetShowing.observeEvent(this@PostsListActivity) { isBottomSheetShowing ->
             var createMenuFragment = supportFragmentManager.findFragmentByTag(PostListCreateMenuFragment.TAG)
             if (createMenuFragment == null) {
                 if (isBottomSheetShowing) {
@@ -262,14 +261,14 @@ class PostsListActivity : LocaleAwareActivity(),
                     createMenuFragment.dismiss()
                 }
             }
-        })
+        }
 
-        postListCreateMenuViewModel.fabUiState.observe(this@PostsListActivity, { fabUiState ->
+        postListCreateMenuViewModel.fabUiState.observe(this@PostsListActivity) { fabUiState ->
             val message = resources.getString(fabUiState.CreateContentMessageId)
             fabButton.contentDescription = message
-        })
+        }
 
-        postListCreateMenuViewModel.createAction.observe(this@PostsListActivity, { createAction ->
+        postListCreateMenuViewModel.createAction.observe(this@PostsListActivity) { createAction ->
             when (createAction) {
                 ActionType.CREATE_NEW_POST -> viewModel.newPost()
                 ActionType.CREATE_NEW_STORY -> viewModel.newStoryPost()
@@ -279,7 +278,7 @@ class PostsListActivity : LocaleAwareActivity(),
                 ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD -> Unit // Do nothing
                 null -> Unit // Do nothing
             }
-        })
+        }
 
         // Notification opens in Drafts tab
         tabLayout.getTabAt(tabIndex)?.select()
@@ -291,7 +290,7 @@ class PostsListActivity : LocaleAwareActivity(),
         initPreviewState: PostListRemotePreviewState,
         currentBottomSheetPostId: LocalId
     ) {
-        viewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory).get(PostListMainViewModel::class.java)
+        viewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)[PostListMainViewModel::class.java]
         viewModel.start(site, initPreviewState, currentBottomSheetPostId, editPostRepository)
 
         viewModel.viewState.observe(this@PostsListActivity) { state ->
@@ -356,7 +355,7 @@ class PostsListActivity : LocaleAwareActivity(),
         bloggingRemindersViewModel = ViewModelProvider(
             this,
             viewModelFactory
-        ).get(BloggingRemindersViewModel::class.java)
+        )[BloggingRemindersViewModel::class.java]
 
         observeBottomSheet(
             bloggingRemindersViewModel.isBottomSheetShowing,
