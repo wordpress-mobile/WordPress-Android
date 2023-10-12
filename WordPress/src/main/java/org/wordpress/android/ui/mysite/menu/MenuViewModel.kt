@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -31,6 +32,7 @@ import org.wordpress.android.util.LONG_DURATION_MS
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SHORT_DURATION_MS
 import org.wordpress.android.util.SnackbarItem
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -38,6 +40,8 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
+
+const val MENU_ITEM_TRACKING_PARAMETER = "item"
 
 @HiltViewModel
 class MenuViewModel @Inject constructor(
@@ -52,6 +56,7 @@ class MenuViewModel @Inject constructor(
     private val contextProvider: ContextProvider,
     private val uiHelpers: UiHelpers,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ScopedViewModel(bgDispatcher) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val navigation = _onNavigation
@@ -65,7 +70,7 @@ class MenuViewModel @Inject constructor(
     val refreshAppLanguage: LiveData<String> = _refreshAppLanguage
 
     private val _uiState = MutableStateFlow(MenuViewState(items = emptyList()))
-     val uiState: StateFlow<MenuViewState> = _uiState
+    val uiState: StateFlow<MenuViewState> = _uiState
 
     private val _snackbar = MutableSharedFlow<SnackbarMessage>()
     val snackBar = _snackbar.asSharedFlow()
@@ -104,7 +109,8 @@ class MenuViewModel @Inject constructor(
         }.toList()
 
         _uiState.value = MenuViewState(
-            items = applyFocusPointIfNeeded(currentItems))
+            items = applyFocusPointIfNeeded(currentItems)
+        )
 
         rebuildSiteItemsForJetpackCapabilities(site)
     }
@@ -136,7 +142,7 @@ class MenuViewModel @Inject constructor(
     private fun onClick(action: ListItemAction) {
         clearQuickStartEvent()
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
-            when(action){
+            when (action) {
                 ListItemAction.PAGES -> {
                     quickStartRepository.completeTask(QuickStartStore.QuickStartNewSiteTask.REVIEW_PAGES)
                 }
@@ -145,6 +151,7 @@ class MenuViewModel @Inject constructor(
                         QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING
                     )
                 }
+
                 ListItemAction.STATS -> {
                     quickStartRepository.completeTask(
                         quickStartRepository.quickStartType.getTaskFromString(
@@ -163,12 +170,15 @@ class MenuViewModel @Inject constructor(
 
                 else -> {}
             }
-            // todo: add the tracking logic here
+            analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.MORE_MENU_ITEM_TAPPED,
+                mapOf(MENU_ITEM_TRACKING_PARAMETER to action.trackingLabel)
+            )
             _onNavigation.postValue(Event(listItemActionHandler.handleAction(action, selectedSite)))
         }
     }
 
-    private fun applyFocusPointIfNeeded(items: List<MenuItemState>) : List<MenuItemState> {
+    private fun applyFocusPointIfNeeded(items: List<MenuItemState>): List<MenuItemState> {
         return quickStartEvent?.let {
             val showFocusPointOn = convertQuickStartTaskToListItemAction(it.task)
             items.map { item ->
