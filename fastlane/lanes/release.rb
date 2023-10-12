@@ -23,7 +23,7 @@ platform :android do
       Code Freeze:
       • New release branch from #{DEFAULT_BRANCH}: release/#{next_release_version}
       • Current release version and build code: #{current_release_version} (#{current_build_code}).
-      • New release version and build code: #{first_beta_version} (#{next_build_code}).
+      • New release version and build code: #{code_freeze_beta_version} (#{next_build_code}).
 
       Do you want to continue?
 
@@ -44,7 +44,7 @@ platform :android do
     # Bump the version and build code
     UI.message 'Bumping beta version and build code...'
     VERSION_FILE.write_version(
-      version_name: first_beta_version,
+      version_name: code_freeze_beta_version,
       version_code: next_build_code
     )
     commit_version_bump

@@ -105,15 +105,15 @@ end
 # Returns the beta version that is used by the code freeze
 # It first increments the minor number, which also resets the build number to 0
 # It then bumps the build number so the -rc-1 can be appended to the code freeze version
-def first_beta_version
+def code_freeze_beta_version
   # Read the current release version from the .xcconfig file and parse it into an AppVersion object
   current_version = VERSION_FORMATTER.parse(VERSION_FILE.read_version_name)
   # Calculate the next major version number
   next_minor_version = VERSION_CALCULATOR.next_minor_version(version: current_version)
   # Calculate the next build number
-  first_beta_version = VERSION_CALCULATOR.next_build_number(version: next_minor_version)
+  code_freeze_beta_version = VERSION_CALCULATOR.next_build_number(version: next_minor_version)
   # Return the formatted release version
-  VERSION_FORMATTER.beta_version(first_beta_version)
+  VERSION_FORMATTER.beta_version(code_freeze_beta_version)
 end
 
 # Returns the beta version of the app in the format `1.2-rc-1`
