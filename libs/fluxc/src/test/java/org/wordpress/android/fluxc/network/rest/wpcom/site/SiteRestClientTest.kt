@@ -549,6 +549,46 @@ class SiteRestClientTest {
         }
     }
 
+    @Test
+    fun `given a network error, when all domains are requested, then return api error`() = test {
+        val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NETWORK_ERROR))
+        initAllDomainsResponse(error = error)
+
+        val response = restClient.fetchAllDomains(noWpCom = true)
+        assert(response is Response.Error)
+        with((response as Response.Error).error) {
+            assertThat(type).isEqualTo(GenericErrorType.NETWORK_ERROR)
+            assertThat(message).isNull()
+        }
+    }
+
+    @Test
+    fun `given timeout, when all domains are requested, then return timeout error`() = test {
+        val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.TIMEOUT))
+        initAllDomainsResponse(error = error)
+
+        val response = restClient.fetchAllDomains(noWpCom = true)
+        assert(response is Response.Error)
+        with((response as Response.Error).error) {
+            assertThat(type).isEqualTo(GenericErrorType.TIMEOUT)
+            assertThat(message).isNull()
+        }
+    }
+
+    @Test
+    fun `given not authenticated, when all domains are requested, then retun auth required error`() = test {
+        val tokenErrorMessage = "An active access token must be used to query information about the current user."
+        val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NOT_AUTHENTICATED, tokenErrorMessage))
+        initAllDomainsResponse(error = error)
+
+        val response = restClient.fetchAllDomains(noWpCom = true)
+        assert(response is Response.Error)
+        with((response as Response.Error).error) {
+            assertThat(type).isEqualTo(GenericErrorType.NOT_AUTHENTICATED)
+            assertThat(message).isEqualTo(tokenErrorMessage)
+        }
+    }
+
     private suspend fun initSiteResponse(
         data: SiteWPComRestResponse? = null,
         error: WPComGsonNetworkError? = null
