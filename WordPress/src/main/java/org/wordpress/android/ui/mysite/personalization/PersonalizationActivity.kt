@@ -179,7 +179,7 @@ class PersonalizationActivity : AppCompatActivity() {
                 if (activeShortcuts.isNotEmpty()) {
                     item {
                         Text(
-                            modifier = Modifier.padding(start = 16.dp),
+                            modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
                             text = stringResource(id = R.string.personalization_screen_tab_shortcuts_active_shortcuts),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
@@ -200,7 +200,7 @@ class PersonalizationActivity : AppCompatActivity() {
                 if (inactiveShortcuts.isNotEmpty()) {
                     item {
                         Text(
-                            modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp),
+                            modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 8.dp),
                             text = stringResource(
                                 id = R.string.personalization_screen_tab_shortcuts_inactive_shortcuts
                             ),
