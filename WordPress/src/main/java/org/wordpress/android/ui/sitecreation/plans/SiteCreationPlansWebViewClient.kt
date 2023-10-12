@@ -18,15 +18,20 @@ class SiteCreationPlansWebViewClient(
         fun onPlanSelected(url: String)
     }
 
-    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest) : Boolean {
+    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
         if (canNavigateTo(request.url)) return false
-        if (request.isRedirect) {
-            listener.onPlanSelected(request.url.toString())
+        val urlString = request.url.toString()
+        if (urlString.contains(PLAN_SLUG)) {
+            listener.onPlanSelected(urlString)
         }
         return true
     }
 
     private fun canNavigateTo(uri: Uri) = navigationDelegate.canNavigateTo(uri.toUrl())
+
+    companion object {
+        private const val PLAN_SLUG = "plan_slug"
+    }
 }
 
 @Parcelize
