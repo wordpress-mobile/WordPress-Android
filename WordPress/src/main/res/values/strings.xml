@@ -280,6 +280,7 @@
     <string name="multiple_status_label_delimiter" translatable="false">\u0020·\u0020</string>
     <string name="post_list_toggle_item_layout_cards_view">Switch to cards view</string>
     <string name="post_list_toggle_item_layout_list_view">Switch to list view</string>
+    <string name="post_list_toggle_author_filter">Filter by author</string>
     <string name="post_waiting_for_connection_publish">We\'ll publish the post when your device is back online.</string>
     <string name="post_waiting_for_connection_pending">We\'ll submit your post for review when your device is back online.</string>
     <string name="post_waiting_for_connection_scheduled">We\'ll schedule your post when your device is back online.</string>

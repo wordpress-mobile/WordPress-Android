@@ -3,15 +3,15 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/toggle_post_list_author_filter"
+        android:icon="@drawable/ic_multiple_users_white_24dp"
+        android:title="@string/post_list_toggle_author_filter"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/toggle_post_search"
         android:icon="@drawable/ic_search_white_24dp"
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         android:title="@string/search"/>
-
-    <item
-        android:id="@+id/toggle_post_list_item_layout"
-        android:icon="@drawable/ic_view_post_compact_white_24dp"
-        android:title="@string/post_list_toggle_item_layout_list_view"
-        app:showAsAction="always"/>
 </menu>
