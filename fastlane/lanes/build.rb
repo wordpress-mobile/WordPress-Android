@@ -1,4 +1,11 @@
 platform :android do
+
+  lane :test_env do
+    ENV['PROJECT_NAME'] = ''
+    ENV['HAS_ALPHA_VERSION'] = `true`
+    Fastlane::Helper::Android::VersionHelper.get_release_version
+  end
+
   #####################################################################################
   # build_and_upload_release
   # -----------------------------------------------------------------------------------
