@@ -21,18 +21,18 @@ class QuickLinkRibbonViewHolder(
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
                 adapter = QuickLinksItemAdapter()
             }
+            this.addItemDecoration(
+                MaterialDividerItemDecoration(
+                    this.context,
+                    DividerItemDecoration.VERTICAL
+                ).apply {
+                    isLastItemDecorated = false
+                }
+            )
         }
     }
 
     fun bind(quickLinksItem: QuickLinksItem) = with(binding) {
-        quickLinksItemList.addItemDecoration(
-            MaterialDividerItemDecoration(
-                quickLinksItemList.context,
-                DividerItemDecoration.VERTICAL
-            ).apply {
-                isLastItemDecorated = false
-            }
-        )
         (quickLinksItemList.adapter as QuickLinksItemAdapter).update(quickLinksItem.quickLinkItems)
         if (quickLinksItem.showMoreFocusPoint) {
             quickLinksItemList.smoothScrollToPosition(quickLinksItemList.adapter!!.itemCount - 1)
