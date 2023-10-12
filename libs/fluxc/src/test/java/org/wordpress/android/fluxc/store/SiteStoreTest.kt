@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.PARSE_ER
 import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
+import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PlansResponse
@@ -38,7 +39,10 @@ import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.persistence.domains.DomainDao
 import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
+import org.wordpress.android.fluxc.store.SiteStore.AllDomainsError
+import org.wordpress.android.fluxc.store.SiteStore.AllDomainsErrorType
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload
+import org.wordpress.android.fluxc.store.SiteStore.FetchedAllDomainsPayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload
@@ -72,8 +76,10 @@ class SiteStoreTest {
     @Mock lateinit var jetpackSocialDao: JetpackSocialDao
     @Mock lateinit var jetpackSocialMapper: JetpackSocialMapper
     @Mock lateinit var domainsSuccessResponse: Response.Success<DomainsResponse>
+    @Mock lateinit var allDomainsSuccessResponse: Response.Success<AllDomainsResponse>
     @Mock lateinit var plansSuccessResponse: Response.Success<PlansResponse>
     @Mock lateinit var domainsErrorResponse: Response.Error<DomainsResponse>
+    @Mock lateinit var allDomainsErrorResponse: Response.Error<AllDomainsResponse>
     @Mock lateinit var plansErrorResponse: Response.Error<PlansResponse>
     private lateinit var siteStore: SiteStore
 
@@ -486,5 +492,31 @@ class SiteStoreTest {
         val onSitePlansFetched = siteStore.fetchSitePlans(site)
 
         assertThat(onSitePlansFetched.error.type).isEqualTo(PlansError(PlansErrorType.GENERIC_ERROR, null).type)
+    }
+
+    @Test
+    fun `fetchAllDomains from WPCom endpoint`() = test {
+        whenever(siteRestClient.fetchAllDomains()).thenReturn(allDomainsSuccessResponse)
+        whenever(allDomainsSuccessResponse.data).thenReturn(AllDomainsResponse(listOf()))
+
+        val onAllDomainsFetched = siteStore.fetchAllDomains()
+
+        assertThat(onAllDomainsFetched.domains).isNotNull
+        assertThat(onAllDomainsFetched.error).isNull()
+        assertThat(onAllDomainsFetched).isEqualTo(FetchedAllDomainsPayload(onAllDomainsFetched.domains))
+    }
+
+    @Test
+    fun `fetchAllDomains error from WPCom endpoint returns error`() = test {
+        val site = SiteModel()
+        site.setIsWPCom(true)
+
+        whenever(siteRestClient.fetchAllDomains()).thenReturn(allDomainsErrorResponse)
+        whenever(allDomainsErrorResponse.error).thenReturn(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
+
+        val onAllDomainsFetched = siteStore.fetchAllDomains()
+
+        val expectedErrorType = AllDomainsError(AllDomainsErrorType.GENERIC_ERROR, null).type
+        assertThat(onAllDomainsFetched.error.type).isEqualTo(expectedErrorType)
     }
 }

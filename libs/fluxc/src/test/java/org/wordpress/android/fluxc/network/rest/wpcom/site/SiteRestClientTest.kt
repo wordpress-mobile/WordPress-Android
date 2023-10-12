@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.network.rest.wpcom.site
 
 import com.android.volley.RequestQueue
 import com.android.volley.VolleyError
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -16,6 +18,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.UnitTestUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
@@ -526,6 +529,66 @@ class SiteRestClientTest {
         assertThat(options).containsEntry("site_creation_flow", siteCreationFlow)
     }
 
+    @Test
+    fun `when all domains are requested, then the correct response is built`() = test {
+        val allDomainsJson = "wp/all-domains/all-domains.json"
+        val json = UnitTestUtils.getStringFromResourceFile(javaClass, allDomainsJson)
+        val responseType = object : TypeToken<AllDomainsResponse>() {}.type
+        val response = GsonBuilder().create().fromJson(json, responseType) as AllDomainsResponse
+
+        initAllDomainsResponse(data = response)
+
+        val responseModel = restClient.fetchAllDomains(noWpCom = true)
+        assert(responseModel is Success)
+        with((responseModel as Success).data) {
+            assertThat(domains).hasSize(2)
+            assertThat(domains[0].domain).isEqualTo("some.test.domain")
+            assertThat(domains[0].wpcomDomain).isFalse
+            assertThat(domains[1].domain).isEqualTo("some.test.domain 2")
+            assertThat(domains[1].wpcomDomain).isTrue
+        }
+    }
+
+    @Test
+    fun `given a network error, when all domains are requested, then return api error`() = test {
+        val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NETWORK_ERROR))
+        initAllDomainsResponse(error = error)
+
+        val response = restClient.fetchAllDomains(noWpCom = true)
+        assert(response is Response.Error)
+        with((response as Response.Error).error) {
+            assertThat(type).isEqualTo(GenericErrorType.NETWORK_ERROR)
+            assertThat(message).isNull()
+        }
+    }
+
+    @Test
+    fun `given timeout, when all domains are requested, then return timeout error`() = test {
+        val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.TIMEOUT))
+        initAllDomainsResponse(error = error)
+
+        val response = restClient.fetchAllDomains(noWpCom = true)
+        assert(response is Response.Error)
+        with((response as Response.Error).error) {
+            assertThat(type).isEqualTo(GenericErrorType.TIMEOUT)
+            assertThat(message).isNull()
+        }
+    }
+
+    @Test
+    fun `given not authenticated, when all domains are requested, then retun auth required error`() = test {
+        val tokenErrorMessage = "An active access token must be used to query information about the current user."
+        val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NOT_AUTHENTICATED, tokenErrorMessage))
+        initAllDomainsResponse(error = error)
+
+        val response = restClient.fetchAllDomains(noWpCom = true)
+        assert(response is Response.Error)
+        with((response as Response.Error).error) {
+            assertThat(type).isEqualTo(GenericErrorType.NOT_AUTHENTICATED)
+            assertThat(message).isEqualTo(tokenErrorMessage)
+        }
+    }
+
     private suspend fun initSiteResponse(
         data: SiteWPComRestResponse? = null,
         error: WPComGsonNetworkError? = null
@@ -559,6 +622,13 @@ class SiteRestClientTest {
         error: WPComGsonNetworkError? = null
     ): Response<SitesFeaturesRestResponse> {
         return initGetResponse(SitesFeaturesRestResponse::class.java, data ?: mock(), error)
+    }
+
+    private suspend fun initAllDomainsResponse(
+        data: AllDomainsResponse? = null,
+        error: WPComGsonNetworkError? = null
+    ): Response<AllDomainsResponse> {
+        return initGetResponse(AllDomainsResponse::class.java, data ?: mock(), error)
     }
 
     private suspend fun <T> initGetResponse(
