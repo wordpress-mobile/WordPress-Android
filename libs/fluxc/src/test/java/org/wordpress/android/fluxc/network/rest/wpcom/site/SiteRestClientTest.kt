@@ -39,6 +39,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.COMING_SOON
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.util.DateTimeUtils
 import kotlin.test.assertNotNull
 
 @RunWith(MockitoJUnitRunner::class)
@@ -546,6 +547,12 @@ class SiteRestClientTest {
             assertThat(domains).hasSize(4)
             assertThat(domains[0].domain).isEqualTo("some.test.domain")
             assertThat(domains[0].wpcomDomain).isFalse
+            assertThat(domains[0].registrationDate).isEqualTo(
+                DateTimeUtils.dateUTCFromIso8601("2009-03-26T21:20:53+00:00")
+            )
+            assertThat(domains[0].expiry).isEqualTo(
+                DateTimeUtils.dateUTCFromIso8601("2024-03-24T00:00:00+00:00")
+            )
             assertThat(domains[0].domainStatus).isNotNull
             assertThat(domains[0].domainStatus?.status).isEqualTo("Active")
             assertThat(domains[0].domainStatus?.statusType).isEqualTo(SUCCESS)
