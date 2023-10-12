@@ -280,6 +280,10 @@
         <item name="android:minHeight">@dimen/min_touch_target_sz</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="wpShowFollowButtonCaption">false</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
     </style>
 
     <style name="Reader.Button.Error" parent="WordPress.Button.Primary">
