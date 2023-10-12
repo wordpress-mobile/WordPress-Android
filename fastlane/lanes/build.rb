@@ -22,7 +22,7 @@ platform :android do
 
       ensure_git_status_clean unless is_ci
 
-      UI.message("Building version #{current_release_version} (#{current_build_code}) for upload to Release Channel\n")
+      UI.important("Building version #{current_release_version} (#{current_build_code}) for upload to Release Channel")
 
       unless options[:skip_confirm]
         UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
@@ -61,7 +61,7 @@ platform :android do
 
       ensure_git_status_clean unless is_ci
 
-      UI.message("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel\n")
+      UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
 
       unless options[:skip_confirm]
         UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
@@ -94,7 +94,7 @@ platform :android do
 
       ensure_git_status_clean unless is_ci
 
-      UI.message("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel\n")
+      UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
 
       unless options[:skip_confirm]
         UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')

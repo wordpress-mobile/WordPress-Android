@@ -29,7 +29,7 @@ platform :android do
 
     MESSAGE
 
-    UI.message(message)
+    UI.important(message)
 
     unless options[:skip_confirm]
       UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
@@ -39,7 +39,7 @@ platform :android do
     UI.message 'Creating release branch...'
     Fastlane::Helper::GitHelper.create_branch("release/#{next_release_version}", from: DEFAULT_BRANCH)
     ensure_git_branch(branch: '^release/')
-    UI.message "Done! New release branch is: #{git_branch}"
+    UI.success "Done! New release branch is: #{git_branch}"
 
     # Bump the version and build code
     UI.message 'Bumping beta version and build code...'
@@ -48,7 +48,7 @@ platform :android do
       version_code: next_build_code
     )
     commit_version_bump
-    UI.message "Done! New Beta Version: #{current_beta_version}. New Build Code: #{current_build_code}"
+    UI.success "Done! New Beta Version: #{current_beta_version}. New Build Code: #{current_build_code}"
 
     new_version = current_release_version
 
@@ -94,7 +94,7 @@ platform :android do
 
     new_version = current_release_version
 
-    UI.message("Completing code freeze for: #{new_version}\n")
+    UI.important("Completing code freeze for: #{new_version}")
 
     unless options[:skip_confirm]
       UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
@@ -148,7 +148,7 @@ platform :android do
 
     MESSAGE
 
-    UI.message(message)
+    UI.important(message)
 
     unless options[:skip_confirm]
       UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
@@ -164,7 +164,7 @@ platform :android do
       version_code: next_build_code
     )
     commit_version_bump
-    UI.message "Done! New Beta Version: #{current_beta_version}. New Build Code: #{current_build_code}"
+    UI.success "Done! New Beta Version: #{current_beta_version}. New Build Code: #{current_build_code}"
 
     release_branch = "release/#{current_release_version}"
     release_version = current_version_name
@@ -215,7 +215,7 @@ platform :android do
 
     MESSAGE
 
-    UI.message(message)
+    UI.important(message)
 
     unless options[:skip_confirm]
       UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
@@ -228,7 +228,7 @@ platform :android do
     # Create the hotfix branch
     UI.message 'Creating hotfix branch...'
     Fastlane::Helper::GitHelper.create_branch("release/#{new_version}", from: previous_version)
-    UI.message "Done! New hotfix branch is: #{git_branch}"
+    UI.success "Done! New hotfix branch is: #{git_branch}"
 
     # Bump the hotfix version and build code and write it to the `version.properties` file
     UI.message 'Bumping hotfix version and build code...'
@@ -237,7 +237,7 @@ platform :android do
       version_code: new_build_code
     )
     commit_version_bump
-    UI.message "Done! New Release Version: #{current_release_version}. New Build Code: #{current_build_code}"
+    UI.success "Done! New Release Version: #{current_release_version}. New Build Code: #{current_build_code}"
 
     push_to_git_remote(tags: false)
   end
@@ -258,7 +258,12 @@ platform :android do
     ensure_git_branch(branch: '^release/')
     ensure_git_status_clean unless is_ci
 
-    UI.message = "Triggering hotfix build for version: #{current_release_version}"
+    UI.important("Triggering hotfix build for version: #{current_release_version}")
+
+    unless options[:skip_confirm]
+      UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
+    end
+
     trigger_release_build(branch_to_build: "release/#{current_release_version}")
   end
 
@@ -281,7 +286,7 @@ platform :android do
     ensure_git_status_clean
     ensure_git_branch(branch: '^release/')
 
-    UI.message("Finalizing release: #{current_release_version}\n")
+    UI.important("Finalizing release: #{current_release_version}")
 
     unless options[:skip_confirm]
       UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
@@ -305,7 +310,7 @@ platform :android do
       version_code: next_build_code
     )
     commit_version_bump
-    UI.message "Done! New Release Version: #{current_release_version}. New Build Code: #{current_build_code}"
+    UI.success "Done! New Release Version: #{current_release_version}. New Build Code: #{current_build_code}"
 
     version_name = current_release_version
     build_code = current_build_code
