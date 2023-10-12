@@ -2098,10 +2098,13 @@ open class SiteStore @Inject constructor(
         emitChange(event)
     }
 
-    suspend fun fetchAllDomains(noWpCom: Boolean = true): FetchedAllDomainsPayload =
+    suspend fun fetchAllDomains(
+        noWpCom: Boolean = true,
+        resolveStatus: Boolean = true
+    ): FetchedAllDomainsPayload =
         coroutineEngine.withDefaultContext(T.API, this, "Fetch all domains") {
             return@withDefaultContext when (val response =
-                siteRestClient.fetchAllDomains(noWpCom)) {
+                siteRestClient.fetchAllDomains(noWpCom, resolveStatus)) {
                 is Success -> {
                     val domains = response.data.domains
                     FetchedAllDomainsPayload(domains)
