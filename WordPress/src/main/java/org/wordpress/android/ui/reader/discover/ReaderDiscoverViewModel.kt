@@ -117,7 +117,31 @@ class ReaderDiscoverViewModel @Inject constructor(
         // Get the correct repository
         readerDiscoverDataProvider.start()
 
-        // Listen to changes to the discover feed
+        observeDiscoverFeed()
+        observeFollowStatus()
+
+        // TODO reader improvements: Consider using Channel/Flow
+        readerDiscoverDataProvider.communicationChannel.observeForever(communicationChannelObserver)
+
+        _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
+            val target = event.peekContent()
+            if (target is ShowSitePickerForResult) {
+                pendingReblogPost = target.post
+            }
+            _navigationEvents.value = event
+        }
+
+        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
+            _snackbarEvents.value = event
+        }
+
+        _preloadPostEvents.addSource(readerPostCardActionsHandler.preloadPostEvents) { event ->
+            _preloadPostEvents.value = event
+        }
+    }
+
+    private fun observeDiscoverFeed() {
+        // listen to changes to the discover feed
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             launch {
                 val userTags = getFollowedTagsUseCase.get()
@@ -142,7 +166,9 @@ class ReaderDiscoverViewModel @Inject constructor(
                 }
             }
         }
+    }
 
+    private fun observeFollowStatus() {
         // listen to changes on follow status for updating the reader recommended blogs state immediately
         _uiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { data ->
             val currentUiState: DiscoverUiState.ContentUiState = _uiState.value as? DiscoverUiState.ContentUiState
@@ -172,25 +198,6 @@ class ReaderDiscoverViewModel @Inject constructor(
             if (hasChangedCards) {
                 _uiState.value = currentUiState.copy(cards = mutableCards)
             }
-        }
-
-        // TODO reader improvements: Consider using Channel/Flow
-        readerDiscoverDataProvider.communicationChannel.observeForever(communicationChannelObserver)
-
-        _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
-            val target = event.peekContent()
-            if (target is ShowSitePickerForResult) {
-                pendingReblogPost = target.post
-            }
-            _navigationEvents.value = event
-        }
-
-        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
-            _snackbarEvents.value = event
-        }
-
-        _preloadPostEvents.addSource(readerPostCardActionsHandler.preloadPostEvents) { event ->
-            _preloadPostEvents.value = event
         }
     }
 
