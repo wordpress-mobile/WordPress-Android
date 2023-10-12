@@ -253,6 +253,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
         if (!NetworkUtils.checkConnection(getContext())) {
             return;
         }
+        // disable follow button until API call returns
+        mFollowButton.setEnabled(false);
 
         final boolean isAskingToFollow;
         if (mIsFeed) {
@@ -260,6 +262,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
         } else {
             isAskingToFollow = !ReaderBlogTable.isFollowedBlog(mBlogId);
         }
+
+        mFollowButton.setIsFollowed(isAskingToFollow);
 
         if (mFollowListener != null) {
             if (isAskingToFollow) {
@@ -273,24 +277,19 @@ public class ReaderSiteHeaderView extends LinearLayout {
             }
         }
 
-        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (getContext() == null) {
-                    return;
-                }
-                mFollowButton.setEnabled(true);
-                if (!succeeded) {
-                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
-                            : R.string.reader_toast_err_unfollow_blog;
-                    ToastUtils.showToast(getContext(), errResId);
-                    mFollowButton.setIsFollowed(!isAskingToFollow);
-                }
+        ReaderActions.ActionListener listener = succeeded -> {
+            if (getContext() == null) {
+                return;
+            }
+            mFollowButton.setEnabled(true);
+            if (!succeeded) {
+                int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
+                        : R.string.reader_toast_err_unfollow_blog;
+                ToastUtils.showToast(getContext(), errResId);
+                mFollowButton.setIsFollowed(!isAskingToFollow);
             }
         };
 
-        // disable follow button until API call returns
-        mFollowButton.setEnabled(false);
 
         boolean result;
         if (mIsFeed) {
@@ -313,8 +312,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
             );
         }
 
-        if (result) {
-            mFollowButton.setIsFollowed(isAskingToFollow);
+        if (!result) {
+            mFollowButton.setIsFollowed(!isAskingToFollow);
         }
     }
 }
