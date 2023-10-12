@@ -62,6 +62,7 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.Dis
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
@@ -140,6 +141,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     private val fakeNavigationFeed = MutableLiveData<Event<ReaderNavigationEvents>>()
     private val fakeSnackBarFeed = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val fakePreloadPostFeed = MutableLiveData<Event<PreLoadPostContent>>()
+    private val fakeFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
 
     private lateinit var viewModel: ReaderDiscoverViewModel
 
@@ -164,6 +166,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         whenever(readerPostCardActionsHandler.navigationEvents).thenReturn(fakeNavigationFeed)
         whenever(readerPostCardActionsHandler.snackbarEvents).thenReturn(fakeSnackBarFeed)
         whenever(readerPostCardActionsHandler.preloadPostEvents).thenReturn(fakePreloadPostFeed)
+        whenever(readerPostCardActionsHandler.followStatusUpdated).thenReturn(fakeFollowStatusChangedFeed)
         whenever(readerUtilsWrapper.getTagFromTagName(anyOrNull(), anyOrNull())).thenReturn(mock())
         whenever(menuUiStateBuilder.buildMoreMenuItems(anyOrNull(), any(), anyOrNull())).thenReturn(mock())
         whenever(
@@ -834,7 +837,8 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
                     feedId = it.feedId,
                     onItemClicked = onItemClicked,
                     onFollowClicked = onFollowClicked,
-                    isFollowed = it.isFollowing
+                    isFollowed = it.isFollowing,
+                    isFollowEnabled = true,
                 )
             }
         )
