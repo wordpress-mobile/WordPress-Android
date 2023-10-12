@@ -311,12 +311,12 @@ fun ShortcutStateRow(
                 else ColorFilter.tint(MaterialTheme.colors.onSurface)
 
             )
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(12.dp))
             Text(
                 text = uiStringText(state.label),
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.high),
                 modifier = Modifier
                     .padding(end = 8.dp),
             )
