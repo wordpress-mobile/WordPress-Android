@@ -285,12 +285,12 @@ fun MySiteListItem(item: MenuItemState.MenuListItem, modifier: Modifier = Modifi
                 colorFilter =
                 if (item.disablePrimaryIconTint) null else ColorFilter.tint(MaterialTheme.colors.onSurface)
             )
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(12.dp))
             Text(
                 text = uiStringText(item.primaryText),
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.high),
                 modifier = Modifier
                     .padding(start = 8.dp, end = 8.dp),
             )
