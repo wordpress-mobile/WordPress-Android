@@ -483,15 +483,16 @@
     </style>
 
     <style name="ReaderTextView.Post.New.Title">
-        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleMedium</item>
-        <item name="android:lineSpacingMultiplier">1.5</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleLarge</item>
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">3</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <style name="ReaderTextView.Post.New.Excerpt" parent="ReaderTextView">
-        <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
         <item name="android:lineSpacingMultiplier">1.333333</item>
         <item name="android:maxLines">3</item>
         <item name="android:ellipsize">end</item>
@@ -499,7 +500,7 @@
     </style>
 
     <style name="ReaderTextView.Post.New.FooterActionItem">
-        <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/on_surface_primary_selector</item>
@@ -510,7 +511,7 @@
     </style>
 
     <style name="ReaderTextView.Post.New.Interactions">
-        <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:alpha">@dimen/material_emphasis_medium</item>
         <item name="android:textAlignment">viewStart</item>
