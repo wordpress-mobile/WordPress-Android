@@ -137,7 +137,7 @@ class PostsListActivity : LocaleAwareActivity(),
 
     private lateinit var postsPagerAdapter: PostsPagerAdapter
     private lateinit var searchActionButton: MenuItem
-    private lateinit var authorFiltertMenuItem: MenuItem
+    private lateinit var authorFilterMenuItem: MenuItem
 
     private var restorePreviousSearch = false
 
@@ -514,7 +514,7 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.posts_list_toggle_view_layout, menu)
-        authorFiltertMenuItem = menu.findItem(R.id.toggle_post_list_author_filter)
+        authorFilterMenuItem = menu.findItem(R.id.toggle_post_list_author_filter)
         // todo: set the author filter icon on selection change
         searchActionButton = menu.findItem(R.id.toggle_post_search)
 
@@ -574,7 +574,7 @@ class PostsListActivity : LocaleAwareActivity(),
         })
 
         viewModel.isSearchExpanded.observe(this@PostsListActivity) { isExpanded ->
-            authorFiltertMenuItem.isVisible = !isExpanded
+            authorFilterMenuItem.isVisible = !isExpanded
             toggleSearch(isExpanded)
         }
     }
