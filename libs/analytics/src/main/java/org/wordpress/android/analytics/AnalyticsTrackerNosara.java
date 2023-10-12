@@ -2623,6 +2623,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "personalization_screen_shortcut_hide_quick_link_tapped";
             case PERSONALIZATION_SCREEN_SHORTCUT_SHOW_QUICK_LINK_TAPPED:
                 return "personalization_screen_shortcut_show_quick_link_tapped";
+            case MORE_MENU_ITEM_TAPPED:
+                return "more_menu_item_tapped";
+            case QUICK_LINK_ITEM_TAPPED:
+                return "quick_link_item_tapped";
         }
         return null;
     }

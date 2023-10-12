@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
@@ -23,9 +24,12 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Named
+
+const val QUICK_LINK_TRACKING_PARAMETER = "quick_link"
 
 class QuickLinksItemViewModelSlice @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -35,7 +39,8 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     private val listItemActionHandler: ListItemActionHandler,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val quickStartRepository: QuickStartRepository
+    private val quickStartRepository: QuickStartRepository,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     lateinit var scope: CoroutineScope
 
@@ -123,7 +128,10 @@ class QuickLinksItemViewModelSlice @Inject constructor(
 
     private fun onClick(action: ListItemAction) {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
-            // add the tracking logic here
+            analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.QUICK_LINK_ITEM_TAPPED,
+                mapOf(QUICK_LINK_TRACKING_PARAMETER to action.trackingLabel)
+            )
             _onNavigation.postValue(Event(listItemActionHandler.handleAction(action, selectedSite)))
         } ?: run {
             _onSnackbarMessage.postValue(
