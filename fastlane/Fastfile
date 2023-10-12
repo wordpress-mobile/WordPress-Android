@@ -111,7 +111,7 @@ def first_beta_version
   # Calculate the next major version number
   next_minor_version = VERSION_CALCULATOR.next_minor_version(version: current_version)
   # Calculate the next build number
-  first_beta_version = VERSION_CALCULATOR.next_build_number(version: first_beta_version)
+  first_beta_version = VERSION_CALCULATOR.next_build_number(version: next_minor_version)
   # Return the formatted release version
   VERSION_FORMATTER.beta_version(first_beta_version)
 end
