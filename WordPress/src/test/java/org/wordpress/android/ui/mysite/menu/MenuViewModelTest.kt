@@ -30,6 +30,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.JetpackMigrationLanguageUtil
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 
 @ExperimentalCoroutinesApi
@@ -46,6 +47,7 @@ class MenuViewModelTest : BaseUnitTest() {
     private val refreshAppLanguageObserver: Observer<String> = mock()
     private val contextProvider: ContextProvider = mock()
     private val uiHelpers: UiHelpers = mock()
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper = mock()
 
     private lateinit var viewModel: MenuViewModel
 
@@ -69,7 +71,8 @@ class MenuViewModelTest : BaseUnitTest() {
             siteItemsBuilder,
             contextProvider,
             uiHelpers,
-            testDispatcher()
+            testDispatcher(),
+            analyticsTrackerWrapper
         )
 
         viewModel.refreshAppLanguage.observeForever(refreshAppLanguageObserver)
