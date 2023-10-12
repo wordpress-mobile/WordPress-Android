@@ -143,6 +143,37 @@ class ReaderDiscoverViewModel @Inject constructor(
             }
         }
 
+        // listen to changes on follow status for updating the reader recommended blogs state immediately
+        _uiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { data ->
+            val currentUiState: DiscoverUiState.ContentUiState = _uiState.value as? DiscoverUiState.ContentUiState
+                ?: return@addSource
+            val mutableCards = currentUiState.cards.toMutableList()
+            var hasChangedCards = false
+
+            for (i in mutableCards.indices) {
+                val card = mutableCards[i] as? ReaderCardUiState.ReaderRecommendedBlogsCardUiState ?: continue
+                val mutableBlogs = card.blogs.toMutableList()
+                var hasChangedBlogs = false
+
+                for (j in mutableBlogs.indices) {
+                    val blog = mutableBlogs[j]
+                    if (blog.blogId == data.blogId && blog.feedId == data.feedId) {
+                        mutableBlogs[j] = blog.copy(isFollowed = data.following, isFollowEnabled = data.isChangeFinal)
+                        hasChangedBlogs = true
+                    }
+                }
+
+                if (hasChangedBlogs) {
+                    mutableCards[i] = card.copy(blogs = mutableBlogs)
+                    hasChangedCards = true
+                }
+            }
+
+            if (hasChangedCards) {
+                _uiState.value = currentUiState.copy(cards = mutableCards)
+            }
+        }
+
         // TODO reader improvements: Consider using Channel/Flow
         readerDiscoverDataProvider.communicationChannel.observeForever(communicationChannelObserver)
 
