@@ -543,9 +543,9 @@ class SiteRestClientTest {
         with((responseModel as Success).data) {
             assertThat(domains).hasSize(2)
             assertThat(domains[0].domain).isEqualTo("some.test.domain")
-            assertThat(domains[0].wpcomDomain).isFalse()
+            assertThat(domains[0].wpcomDomain).isFalse
             assertThat(domains[1].domain).isEqualTo("some.test.domain 2")
-            assertThat(domains[1].wpcomDomain).isTrue()
+            assertThat(domains[1].wpcomDomain).isTrue
         }
     }
 
