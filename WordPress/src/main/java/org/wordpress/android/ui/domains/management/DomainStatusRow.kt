@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainStatus
+import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -34,20 +35,20 @@ import java.time.format.FormatStyle
 @Composable
 fun StatusRow(
     status: DomainStatus?,
-    expiry: LocalDate,
+    expiry: LocalDate?,
     modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        status?.also {
-            BulletPoint(color = status.statusUiState.indicatorColor)
+        status?.also { status ->
+            BulletPoint(color = status.indicatorColor)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = stringResource(id = status.statusUiState.text),
-                color = status.statusUiState.textColor,
-                style = if (status.statusUiState.isBold) {
+                text = status.status ?: "Unknown",
+                color = status.textColor,
+                style = if (status.isBold) {
                     LocalTextStyle.current.copy(fontWeight = FontWeight.Bold)
                 } else {
                     LocalTextStyle.current
@@ -56,12 +57,16 @@ fun StatusRow(
         } ?: run {
             PendingGhostStrip(80.dp)
         }
-        Text(
-            text = "Expires ${expiry.mediumFormat}",
-            textAlign = TextAlign.End,
-            color = MaterialTheme.colorScheme.outline,
-            modifier = Modifier.weight(1f),
-        )
+        Spacer(modifier = Modifier.weight(1f))
+        expiry?.also { expiry ->
+            Text(
+                text = "Expires ${expiry.mediumFormat}",
+                textAlign = TextAlign.End,
+                color = MaterialTheme.colorScheme.outline,
+            )
+        } ?: run {
+            PendingGhostStrip(width = 120.dp)
+        }
     }
 }
 
@@ -81,27 +86,30 @@ private val LocalDate.mediumFormat
     get() = format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
 
 
-class PreviewStatusProvider: PreviewParameterProvider<DomainStatus> {
+class PreviewStatusProvider: PreviewParameterProvider<StatusType> {
     override val values
-        get() = DomainStatus.values().asSequence()
+        get() = StatusType.values().asSequence()
 }
 
 @Preview(showBackground = true, widthDp = 296)
 @Preview(showBackground = true, widthDp = 296, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun DomainStatusRowPreview(
-    @PreviewParameter(PreviewStatusProvider::class) status: DomainStatus,
+    @PreviewParameter(PreviewStatusProvider::class) statusType: StatusType,
 ) {
     M3Theme {
         Column (Modifier.padding(8.dp)) {
             StatusRow(
-                status = status,
+                status = DomainStatus(statusType.titleName, statusType),
                 expiry = LocalDate.of(2024,8,15),
                 modifier = Modifier.fillMaxWidth(),
             )
         }
     }
 }
+
+val StatusType.titleName
+    get() = name.lowercase().replaceFirstChar(Char::titlecase)
 
 @Preview(showBackground = true, widthDp = 296)
 @Preview(showBackground = true, widthDp = 296, uiMode = Configuration.UI_MODE_NIGHT_YES)
