@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -88,7 +87,7 @@ public class CommentSqlUtils {
             return 0;
         }
 
-        Collections.sort(comments, new Comparator<CommentModel>() {
+        comments.sort(new Comparator<CommentModel>() {
             @Override
             public int compare(CommentModel o1, CommentModel o2) {
                 long x = o2.getPublishedTimestamp();
