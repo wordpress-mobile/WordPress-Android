@@ -9,27 +9,13 @@ import java.time.LocalDate
 
 /**
  * This file is temporary, before the view model is implemented, to aid in developing the card ui.
- *
- * The statuses are also not yet clear, so these should be considered place-holders for now.
  */
 data class DomainCardUiState(
     val domain: String,
     val title: String?,
     val status: DomainStatus?,
     val expiry: LocalDate,
-
-) {
-    val notice
-        get() = when (status) {
-            // TODO: update these with the appropriate text
-            DomainStatus.Error -> "Placeholder text: There has been an error"
-            DomainStatus.InProgress -> "In progress..."
-            DomainStatus.ActionRequired -> "This domain requires explicit user consent to complete the registration. Please check the email sent for further details."
-            DomainStatus.Expired -> "Placeholder text: the domain has expired."
-            DomainStatus.ExpiringSoon -> "Placeholder text: The domain is expiring soon."
-            else -> null
-        }
-}
+)
 
 data class StatusUiState(
     @StringRes val text: Int,

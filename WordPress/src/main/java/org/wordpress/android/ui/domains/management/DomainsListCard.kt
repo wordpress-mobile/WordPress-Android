@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -78,15 +77,6 @@ fun DomainListCard(uiState: DomainCardUiState) {
                 painter = painterResource(id = R.drawable.ic_chevron_right_white_24dp),
                 contentDescription = "",
                 tint = MaterialTheme.colorScheme.outline,
-            )
-        }
-        uiState.notice?.let {
-            Divider(thickness = Dp.Hairline)
-            Text(
-                text = it,
-                color = MaterialTheme.colorScheme.outline,
-                modifier = Modifier
-                    .padding(16.dp),
             )
         }
     }
