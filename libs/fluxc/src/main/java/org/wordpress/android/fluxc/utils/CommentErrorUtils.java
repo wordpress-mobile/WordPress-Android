@@ -74,6 +74,19 @@ public class CommentErrorUtils {
                 case INVALID_RESPONSE:
                     errorType = CommentErrorType.INVALID_RESPONSE;
                     break;
+                case TIMEOUT:
+                case NO_CONNECTION:
+                case NETWORK_ERROR:
+                case NOT_FOUND:
+                case CENSORED:
+                case SERVER_ERROR:
+                case INVALID_SSL_CERTIFICATE:
+                case HTTP_AUTH_ERROR:
+                case AUTHORIZATION_REQUIRED:
+                case NOT_AUTHENTICATED:
+                case PARSE_ERROR:
+                case UNKNOWN:
+                    break;
             }
         }
         if (error instanceof WPComGsonNetworkError) {
