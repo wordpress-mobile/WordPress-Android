@@ -89,7 +89,7 @@ public class CommentSqlUtils {
         comments.sort((o1, o2) -> {
             long x = o2.getPublishedTimestamp();
             long y = o1.getPublishedTimestamp();
-            return (x < y) ? -1 : ((x == y) ? 0 : 1);
+            return Long.compare(x, y);
         });
 
         ArrayList<Long> remoteIds = new ArrayList<>();
