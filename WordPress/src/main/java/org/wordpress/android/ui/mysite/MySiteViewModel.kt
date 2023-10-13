@@ -699,6 +699,8 @@ class MySiteViewModel @Inject constructor(
         // Hide actionable empty view image when screen height is under specified min height.
         val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
                 displayUtilsWrapper.getWindowPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
+
+        val shouldShowAccountSettings = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
         return NoSites(
             tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
             siteInfoToolbarViewParams = SiteInfoToolbarViewParams(
@@ -711,8 +713,7 @@ class MySiteViewModel @Inject constructor(
             shouldShowImage = shouldShowImage,
             avatartUrl = accountUrl,
             accountName = accountName,
-            shouldShowAccountSettings = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
-
+            shouldShowAccountSettings = shouldShowAccountSettings
         )
     }
 

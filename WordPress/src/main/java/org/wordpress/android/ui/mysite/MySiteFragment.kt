@@ -242,11 +242,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.showAvatarSettingsView(state: State.NoSites) {
         if (state.shouldShowAccountSettings) {
-            noSitesView.avatarContainer.visibility = View.VISIBLE
+            noSitesView.avatarAccountSettings.visibility = View.VISIBLE
             noSitesView.meDisplayName.text = state.accountName
             loadGravatar(state.avatartUrl)
             noSitesView.avatarAccountSettings.setOnClickListener { viewModel.onAvatarPressed() }
-        } else noSitesView.avatarContainer.visibility = View.GONE
+        } else noSitesView.avatarAccountSettings.visibility = View.GONE
     }
 
     private fun MySiteFragmentBinding.loadGravatar(avatarUrl: String?) =
