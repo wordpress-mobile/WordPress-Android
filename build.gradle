@@ -79,7 +79,7 @@ ext {
     squareupKotlinPoetVersion = '1.6.0'
     squareupOkioVersion = '3.2.0'
     squareupRetrofitVersion = '2.9.0'
-    uCropVersion = '2.2.8'
+    uCropVersion = '2.2.8-native'
     zendeskVersion = '5.1.2'
 
     // react native
