@@ -1,4 +1,0 @@
-23.3:
-- Benachrichtigungen werden nun anders angezeigt, wenn du über eine URL Medien in Blöcke einfügst.
-- Platzhaltertext und tatsächlicher Inhalt können in blockbasierten Themes nun leichter unterschieden werden.
-- Dashboard-Karten für „Meine Website“ können über den Button „Startseiten-Tab personalisieren“ angepasst werden.
