@@ -31,12 +31,15 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import org.wordpress.android.fluxc.network.rest.wpcom.site.NewSiteResponse.BlogDetails
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType.ERROR
+import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType.SUCCESS
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType
 import org.wordpress.android.fluxc.store.SiteStore.SiteFilter.WPCOM
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.COMING_SOON
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.util.DateTimeUtils
 import kotlin.test.assertNotNull
 
 @RunWith(MockitoJUnitRunner::class)
@@ -538,14 +541,32 @@ class SiteRestClientTest {
 
         initAllDomainsResponse(data = response)
 
-        val responseModel = restClient.fetchAllDomains(noWpCom = true)
+        val responseModel = restClient.fetchAllDomains()
         assert(responseModel is Success)
         with((responseModel as Success).data) {
-            assertThat(domains).hasSize(2)
+            assertThat(domains).hasSize(4)
             assertThat(domains[0].domain).isEqualTo("some.test.domain")
             assertThat(domains[0].wpcomDomain).isFalse
-            assertThat(domains[1].domain).isEqualTo("some.test.domain 2")
+            assertThat(domains[0].registrationDate).isEqualTo(
+                DateTimeUtils.dateUTCFromIso8601("2009-03-26T21:20:53+00:00")
+            )
+            assertThat(domains[0].expiry).isEqualTo(
+                DateTimeUtils.dateUTCFromIso8601("2024-03-24T00:00:00+00:00")
+            )
+            assertThat(domains[0].domainStatus).isNotNull
+            assertThat(domains[0].domainStatus?.status).isEqualTo("Active")
+            assertThat(domains[0].domainStatus?.statusType).isEqualTo(SUCCESS)
+            assertThat(domains[1].domain).isEqualTo("some.test.domain.with.status.weight")
             assertThat(domains[1].wpcomDomain).isTrue
+            assertThat(domains[1].domainStatus).isNotNull
+            assertThat(domains[1].domainStatus?.status).isEqualTo("Expiring soon")
+            assertThat(domains[1].domainStatus?.statusType).isEqualTo(ERROR)
+            assertThat(domains[1].domainStatus?.statusWeight).isEqualTo(1000)
+            assertThat(domains[2].domain).isEqualTo("some.test.domain.with.action.required")
+            assertThat(domains[2].domainStatus).isNotNull
+            assertThat(domains[2].domainStatus?.actionRequired).isTrue
+            assertThat(domains[3].domain).isEqualTo("some.test.domain.no.domain.status")
+            assertThat(domains[3].domainStatus).isNull()
         }
     }
 
@@ -554,7 +575,7 @@ class SiteRestClientTest {
         val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NETWORK_ERROR))
         initAllDomainsResponse(error = error)
 
-        val response = restClient.fetchAllDomains(noWpCom = true)
+        val response = restClient.fetchAllDomains()
         assert(response is Response.Error)
         with((response as Response.Error).error) {
             assertThat(type).isEqualTo(GenericErrorType.NETWORK_ERROR)
@@ -567,7 +588,7 @@ class SiteRestClientTest {
         val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.TIMEOUT))
         initAllDomainsResponse(error = error)
 
-        val response = restClient.fetchAllDomains(noWpCom = true)
+        val response = restClient.fetchAllDomains()
         assert(response is Response.Error)
         with((response as Response.Error).error) {
             assertThat(type).isEqualTo(GenericErrorType.TIMEOUT)
@@ -581,7 +602,7 @@ class SiteRestClientTest {
         val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NOT_AUTHENTICATED, tokenErrorMessage))
         initAllDomainsResponse(error = error)
 
-        val response = restClient.fetchAllDomains(noWpCom = true)
+        val response = restClient.fetchAllDomains()
         assert(response is Response.Error)
         with((response as Response.Error).error) {
             assertThat(type).isEqualTo(GenericErrorType.NOT_AUTHENTICATED)
