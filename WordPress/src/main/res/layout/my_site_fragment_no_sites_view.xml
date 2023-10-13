@@ -74,7 +74,7 @@
                     tools:visibility="visible" />
             </FrameLayout>
 
-            <ImageButton
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/go_to_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
