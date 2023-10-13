@@ -254,14 +254,20 @@ public class CommentStore extends Store {
      * @param statuses Array of status or CommentStatus.ALL to get all of them.
      * @param limit Maximum number of comments to return. 0 is unlimited.
      */
+    @NonNull
     @SuppressLint("WrongConstant")
-    public List<CommentModel> getCommentsForSite(SiteModel site, boolean orderByDateAscending, int limit,
-                                                 CommentStatus... statuses) {
+    public List<CommentModel> getCommentsForSite(
+            @NonNull SiteModel site,
+            boolean orderByDateAscending,
+            int limit,
+            @NonNull CommentStatus... statuses) {
         @Order int order = orderByDateAscending ? SelectQuery.ORDER_ASCENDING : SelectQuery.ORDER_DESCENDING;
         return CommentSqlUtils.getCommentsForSite(site, order, limit, statuses);
     }
 
-    public int getNumberOfCommentsForSite(SiteModel site, CommentStatus... statuses) {
+    public int getNumberOfCommentsForSite(
+            @NonNull SiteModel site,
+            @NonNull CommentStatus... statuses) {
         return CommentSqlUtils.getCommentsCountForSite(site, statuses);
     }
 
