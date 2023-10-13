@@ -192,9 +192,9 @@ public class CommentStore extends Store {
     }
 
     public static class CommentError implements OnChangedError {
-        public CommentErrorType type;
-        public String message;
-        public CommentError(CommentErrorType type, @NonNull String message) {
+        @NonNull public CommentErrorType type;
+        @NonNull public String message;
+        public CommentError(@NonNull CommentErrorType type, @NonNull String message) {
             this.type = type;
             this.message = message;
         }
