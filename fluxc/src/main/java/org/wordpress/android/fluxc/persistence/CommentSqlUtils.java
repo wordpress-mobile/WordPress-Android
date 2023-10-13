@@ -280,11 +280,10 @@ public class CommentSqlUtils {
         return numDeleted;
     }
 
-    public static int insertOrUpdateCommentLikes(long siteId, long remoteCommentId, LikeModel like) {
-        if (null == like) {
-            return 0;
-        }
-
+    public static int insertOrUpdateCommentLikes(
+            long siteId,
+            long remoteCommentId,
+            @NonNull LikeModel like) {
         List<LikeModel> likeResult;
 
         // If the like already exists and has an id, we want to update it.
