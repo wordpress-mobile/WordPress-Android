@@ -1,4 +1,0 @@
-23.3:
-Kami mengubah cara peringatan muncul ketika Anda menyisipkan media ke dalam blok dari URL. Kami menyukainya.
-
-Kini lebih mudah membedakan antara teks placeholder dan konten aktual dalam tema berbasis blok.
