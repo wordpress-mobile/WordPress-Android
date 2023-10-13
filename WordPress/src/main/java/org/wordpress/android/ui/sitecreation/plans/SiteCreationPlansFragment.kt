@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitecreation.plans
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,8 +34,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.components.MainTopAppBar
@@ -68,11 +72,20 @@ class SiteCreationPlansFragment : Fragment(), SiteCreationPlansWebViewClientList
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.start(requireNotNull(requireArguments().getParcelableCompat(ARG_STATE)))
+        viewModel.actionEvents.onEach(this::handleActionEvents).launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun handleActionEvents(actionEvent: SiteCreationPlansActionEvent) {
+        when (actionEvent) {
+            is SiteCreationPlansActionEvent.CreateSite -> {
+                (requireActivity() as PlansScreenListener).onPlanSelected(actionEvent.planModel)
+            }
+        }
     }
 
     // SiteCreationWebViewClient
-    override fun onPlanSelected(url: String) {
-        viewModel.onPlanSelected(url)
+    override fun onPlanSelected(uri: Uri) {
+        viewModel.onPlanSelected(uri)
     }
 
     override fun onWebViewPageLoaded() {
