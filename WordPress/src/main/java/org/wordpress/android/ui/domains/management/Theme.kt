@@ -14,7 +14,6 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import org.wordpress.android.ui.compose.theme.AppColor
 
-
 private val localColors = staticCompositionLocalOf { extraPaletteLight }
 
 @Composable
