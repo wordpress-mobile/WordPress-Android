@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-07-25 02:40:35+0000
+Translation-Revision-Date: 2023-10-11 22:41:48+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.9
 Language: sr_RS
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">Разгрупиши блок</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Заказани чланци</string>
+    <string name="personalization_screen_scheduled_posts_card_description">Ваши предстојећи заказани чланци.</string>
+    <string name="personalization_screen_draft_posts_card_description">Ваши недавни нацрти чланака.</string>
+    <string name="personalization_screen_draft_posts_card_title">Нацрти чланака</string>
+    <string name="personalization_screen_description">Додај или сакриј картице</string>
+    <string name="partial_media_access_prompt_select_more">Означи више</string>
+    <string name="partial_media_access_prompt_change_settings">Измени подешавања</string>
+    <string name="gutenberg_native_choose_a_file">Одабери датотеку</string>
+    <string name="my_site_post_card_menu_view_all_drafts">Види све нацрте</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">Види све заказане чланке</string>
+    <string name="gutenberg_native_add_image_or_video">Додај слику или видео запис</string>
+    <string name="dashboard_pages_card_more_menu_all_pages">Све странице</string>
+    <string name="dashboard_activity_card_menu_all_activity">Сва активност</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Види све кампање</string>
+    <string name="my_site_todays_stats_menu_view_stats">Види статистику</string>
+    <string name="my_site_dashboard_card_more_menu_hide_card">Сакриј ово</string>
+    <string name="contact_support_bot_ticket_comment_answer">Одговор:</string>
+    <string name="contact_support_bot_ticket_comment_question">Питање:</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Направи</string>
     <string name="budget_campaign_stats">Буџет</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Искључи обавештења</string>
@@ -108,6 +127,7 @@ Language: sr_RS
     <string name="gutenberg_native_audio_file">Датотека звучног записа</string>
     <string name="photo_picker_use_audio">Употреби овај звучни запис</string>
     <string name="photo_picker_choose_audio">Одабери звучни запис са уређаја</string>
+    <string name="gutenberg_native_add_audio">Додај звучни запис</string>
     <string name="threat_status_fixed">Поправљено</string>
     <string name="threat_found_header">Пронађено</string>
     <string name="pick_audio">Одабери звучни запис</string>
@@ -428,6 +448,7 @@ Language: sr_RS
     <string name="editor_uploading_page">Ваша страница се отпрема</string>
     <string name="editor_page_saved_locally">Страница сачувана на уређају</string>
     <string name="editor_page_saved_online">Страница сачувана онлајн</string>
+    <string name="gutenberg_native_warning_message">Порука упозорења</string>
     <string name="gutenberg_native_show_post_content">Прикажи садржај чланка</string>
     <string name="gutenberg_native_only_show_excerpt">Прикажи само одломак </string>
     <string name="gutenberg_native_link_to">Повежи са</string>
@@ -527,6 +548,7 @@ Language: sr_RS
     <string name="gutenberg_native_add_description">Додај опис</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Јавила се непозната грешка. Молимо вас да покушате поново касније.</string>
     <string name="gutenberg_native_add_alt_text">Додај алтернативни текст</string>
+    <string name="gutenberg_native_add_video">Додај видео запис</string>
     <string name="notifications_tab_dialog_switch_desc">Обавештења</string>
     <string name="main_switch_default_title_off">Искључи</string>
     <string name="main_switch_default_title_on">Укључи</string>
@@ -1383,6 +1405,7 @@ Language: sr_RS
     <string name="tabbar_accessibility_label_notifications">Обавештења. Управљајте обавештењима.</string>
     <string name="tabbar_accessibility_label_reader">Читач. Прати садржај са других веб места.</string>
     <string name="button_not_now">Не сада</string>
+    <string name="my_site_btn_sharing">Друштвене мреже</string>
     <string name="editor_draft_saved_locally">Нацрт сачуван на уређају</string>
     <string name="editor_draft_saved_online">Нацрт сачуван онлајн</string>
     <string name="editor_post_saved_locally">Чланак сачуван на уређају</string>

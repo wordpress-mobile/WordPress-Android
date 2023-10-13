@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-03 11:54:07+0000
+Translation-Revision-Date: 2023-10-04 13:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">לבטל הקבצה של בלוק</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">להצגת פרטים נוספים יש להקיש כאן.</string>
+    <string name="gutenberg_native_synced_patterns">מקבצים מסונכרנים</string>
+    <string name="gutenberg_native_deeply_nested_block">בלוק בקינון עמוק</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">בעורך לנייד ייתכן עיבוד לא תקין של בלוקים בקינון עמוק מ-%d רמות. מסיבה זו מומלץ \'לשטח\' את התוכן על ידי ביטול הקבצת הבלוק או לערוך את הבלוק בעזרת עורך האינטרנט.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">בעורך לנייד ייתכן עיבוד לא תקין של בלוקים בקינון עמוק מ-%d רמות. מסיבה זו מומלץ \'לשטח\' את התוכן על ידי ביטול הקבצת הבלוק או לערוך את הבלוק בעזרת דפדפן האינטרנט.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">לא ניתן לעבד את הבלוק בגלל קינון עמוק. לקבלת פרטים נוספים יש להקיש כאן.</string>
+    <string name="pages_no_site_something_went_wrong">אופס, משהו השתבש. נא לנסות שוב מאוחר יותר.</string>
     <string name="sharing_connect_via_web_warning_positive_button">מעבר לאתר בדפדפן</string>
     <string name="my_site_dashboard_no_cards_message_description">יש להקיש על הכפתור המותאם אישית כדי להציג כרטיסים נוספים.</string>
     <string name="my_site_dashboard_no_cards_message_title">כל הכרטיסים מוסתרים</string>

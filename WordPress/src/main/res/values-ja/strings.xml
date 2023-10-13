@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-28 11:54:08+0000
+Translation-Revision-Date: 2023-10-04 11:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.9
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">グループ解除ブロック</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">こちらをタップすると詳細が表示されます。</string>
+    <string name="gutenberg_native_synced_patterns">同期済みパターン</string>
+    <string name="gutenberg_native_deeply_nested_block">深くネストされたブロック</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">%dレベルよりも深くネストされたブロックは、モバイルエディターで適切にレンダリングされない場合があります。 このため、ブロックのグループを解除するか Web エディターでブロックを編集して、コンテンツをフラット化することをお勧めします。</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%dレベルよりも深くネストされたブロックは、モバイルエディターで適切にレンダリングされない場合があります。 このため、ブロックのグループを解除するか Web ブラウザーでブロックを編集して、コンテンツをフラット化することをお勧めします。</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">ブロックは深くネストされているためレンダリングできません。 こちらをタップして詳細を表示。</string>
+    <string name="pages_no_site_something_went_wrong">エラーが発生しました。 後でもう一度お試しください。</string>
+    <string name="sharing_connect_via_web_warning_positive_button">ウェブに移動</string>
     <string name="my_site_dashboard_no_cards_message_description">パーソナライズボタンをタップして他のカードを表示します。</string>
     <string name="my_site_dashboard_no_cards_message_title">カードがすべて非表示になりました</string>
     <string name="personalization_screen_next_steps_card_description">アプリでサイトを最大限に活用する方法を学びます。</string>
@@ -15,8 +24,13 @@ Language: ja_JP
     <string name="personalization_screen_blogging_prompts_card_title">ブログのプロンプト</string>
     <string name="personalization_screen_blaze_card_description">投稿を宣伝して実施中のキャンペーンを確認できます。</string>
     <string name="personalization_screen_scheduled_posts_card_description">予約済みの今後の投稿。</string>
+    <string name="personalization_screen_scheduled_posts_card_title">予約済みの投稿</string>
     <string name="personalization_screen_draft_posts_card_description">最新の投稿の下書き。</string>
+    <string name="personalization_screen_draft_posts_card_title">投稿を下書きする</string>
     <string name="personalization_screen_stats_card_description">表示数、訪問者数、いいねの数</string>
+    <string name="personalization_screen_footer_cards">サイトで発生した内容に基づいて、さまざまなコンテンツがカードに表示されることがあります</string>
+    <string name="personalization_screen_description">カードを追加または非表示にします</string>
+    <string name="personalization_screen_title">ホームタブをパーソナライズする</string>
     <string name="personalize_card_content_description">タップしてホームタブをパーソナライズします</string>
     <string name="personalize_card_text">ホームタブをパーソナライズ</string>
     <string name="partial_media_access_prompt_change_settings">設定を変更</string>
@@ -650,6 +664,7 @@ Language: ja_JP
     <string name="gutenberg_native_tiled_gallery_settings">タイルギャラリー設定</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">レイアウト選択画面に移動します</string>
     <string name="gutenberg_native_gallery_style">ギャラリースタイル</string>
+    <string name="sharing_connect_via_web_warning_message">WordPress.com サイトでお使いの%sアカウントを接続できます。 完了したらアプリに戻り「共有」設定を変更します。</string>
     <string name="about_automattic_app_icon_description">アプリアイコン</string>
     <string name="about_automattic_back_icon_description">「戻る」アイコン</string>
     <string name="about_automattic_logo_description">Automattic ロゴ</string>
