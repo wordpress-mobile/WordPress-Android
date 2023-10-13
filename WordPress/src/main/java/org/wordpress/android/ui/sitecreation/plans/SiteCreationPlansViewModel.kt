@@ -5,10 +5,8 @@ import android.text.TextUtils
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -29,9 +27,6 @@ class SiteCreationPlansViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<SiteCreationPlansUiState>(SiteCreationPlansUiState.Preparing)
     val uiState = _uiState as StateFlow<SiteCreationPlansUiState>
-
-    private val _actionEvents = Channel<SiteCreationPlansActionEvent>(Channel.BUFFERED)
-    val actionEvents = _actionEvents.receiveAsFlow()
 
     private lateinit var domainName: DomainModel
 
@@ -137,12 +132,6 @@ class SiteCreationPlansViewModel @Inject constructor(
     private fun postUiState(state: SiteCreationPlansUiState) {
         viewModelScope.launch {
             _uiState.value = state
-        }
-    }
-
-    private fun postActionEvent(actionEvent: SiteCreationPlansActionEvent) {
-        viewModelScope.launch {
-            _actionEvents.send(actionEvent)
         }
     }
 

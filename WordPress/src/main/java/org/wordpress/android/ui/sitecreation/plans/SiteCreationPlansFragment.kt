@@ -33,13 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
@@ -72,19 +68,6 @@ class SiteCreationPlansFragment : Fragment(), SiteCreationPlansWebViewClientList
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.start(requireNotNull(requireArguments().getParcelableCompat(ARG_STATE)))
-        viewModel.actionEvents.onEach(this::handleActionEvents).launchIn(viewLifecycleOwner.lifecycleScope)
-    }
-
-    private fun handleActionEvents(actionEvent: SiteCreationPlansActionEvent) {
-        when (actionEvent) {
-            is SiteCreationPlansActionEvent.FinishActivity -> requireActivity().finish()
-            is SiteCreationPlansActionEvent.LaunchExternalBrowser -> {
-                ActivityLauncher.openUrlExternal(
-                    requireContext(),
-                    actionEvent.url
-                )
-            }
-        }
     }
 
     // SiteCreationWebViewClient
