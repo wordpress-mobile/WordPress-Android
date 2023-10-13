@@ -710,7 +710,8 @@ class MySiteViewModel @Inject constructor(
             ),
             shouldShowImage = shouldShowImage,
             avatartUrl = accountUrl,
-            accountName = accountName
+            accountName = accountName,
+            shouldShowAccountSettings = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
 
         )
     }
@@ -1312,7 +1313,8 @@ class MySiteViewModel @Inject constructor(
             override val siteInfoToolbarViewParams: SiteInfoToolbarViewParams,
             val shouldShowImage: Boolean,
             val avatartUrl:String? = null,
-            val accountName:String? = null
+            val accountName:String? = null,
+            val shouldShowAccountSettings: Boolean = false
         ) : State()
     }
 

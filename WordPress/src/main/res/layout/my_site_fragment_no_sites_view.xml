@@ -28,7 +28,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/avatar_account_settings"
-        android:visibility="visible"
+        android:visibility="gone"
         android:padding="@dimen/margin_large">
 
         <FrameLayout

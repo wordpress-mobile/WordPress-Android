@@ -233,13 +233,20 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             noSitesView.actionableEmptyView.setVisible(true)
             noSitesView.actionableEmptyView.image.setVisible(state.shouldShowImage)
             viewModel.onActionableEmptyViewVisible()
-            loadGravatar(state.avatartUrl)
-            noSitesView.meDisplayName.text = state.accountName
-            noSitesView.avatarAccountSettings.setOnClickListener { viewModel.onAvatarPressed() }
+            showAvatarSettingsView(state)
         }
         siteTitle = getString(R.string.my_site_section_screen_title)
         updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
         appbarMain.setExpanded(false, true)
+    }
+
+    private fun MySiteFragmentBinding.showAvatarSettingsView(state: State.NoSites) {
+        if (state.shouldShowAccountSettings) {
+            noSitesView.avatarContainer.visibility = View.VISIBLE
+            noSitesView.meDisplayName.text = state.accountName
+            loadGravatar(state.avatartUrl)
+            noSitesView.avatarAccountSettings.setOnClickListener { viewModel.onAvatarPressed() }
+        } else noSitesView.avatarContainer.visibility = View.GONE
     }
 
     private fun MySiteFragmentBinding.loadGravatar(avatarUrl: String?) =
@@ -353,7 +360,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     companion object {
-        @JvmField var TAG: String = MySiteFragment::class.java.simpleName
+        @JvmField
+        var TAG: String = MySiteFragment::class.java.simpleName
         private const val PASS_TO_TAB_FRAGMENT_DELAY = 300L
         private const val MAX_PERCENT = 100
         fun newInstance(): MySiteFragment {
