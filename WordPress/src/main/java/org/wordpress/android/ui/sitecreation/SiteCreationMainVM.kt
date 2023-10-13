@@ -269,6 +269,11 @@ class SiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
+    fun onPlanSelection(plan: PlanModel) {
+        siteCreationState = siteCreationState.copy(plan = plan)
+        wizardManager.showNextStep()
+    }
+
     fun screenTitleForWizardStep(step: SiteCreationStep): SiteCreationScreenTitle {
         val stepPosition = wizardManager.stepPosition(step)
         val stepCount = wizardManager.stepsCount
