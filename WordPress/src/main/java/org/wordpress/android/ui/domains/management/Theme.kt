@@ -15,21 +15,6 @@ import androidx.compose.ui.graphics.Color
 import org.wordpress.android.ui.compose.theme.AppColor
 
 
-data class ExtraColors(
-    val success: Color,
-    val warning: Color,
-)
-
-private val extraPaletteLight = ExtraColors(
-    success = AppColor.JetpackGreen50,
-    warning = AppColor.Orange50,
-)
-
-private val extraPaletteDark = ExtraColors(
-    success = AppColor.JetpackGreen30,
-    warning = AppColor.Orange40,
-)
-
 private val localColors = staticCompositionLocalOf { extraPaletteLight }
 
 @Composable
@@ -70,6 +55,27 @@ fun M3ThemeWithoutBackground(
 
 // Provide extra semantic colors
 
+private val extraPaletteLight = ExtraColors(
+    success = AppColor.JetpackGreen50,
+    warning = AppColor.Orange50,
+    neutral = AppColor.Gray50,
+    ghost = Color(0xFF2B2B55)
+)
+
+private val extraPaletteDark = ExtraColors(
+    success = AppColor.JetpackGreen30,
+    warning = AppColor.Orange40,
+    neutral = AppColor.Gray30,
+    ghost = Color.White
+)
+
+data class ExtraColors(
+    val success: Color,
+    val warning: Color,
+    val neutral: Color,
+    val ghost: Color,
+)
+
 @Suppress("UnusedReceiverParameter")
 val ColorScheme.warning
     @Composable
@@ -81,6 +87,18 @@ val ColorScheme.success
     @Composable
     @ReadOnlyComposable
     get() = localColors.current.success
+
+@Suppress("UnusedReceiverParameter")
+val ColorScheme.neutral
+    @Composable
+    @ReadOnlyComposable
+    get() = localColors.current.neutral
+
+@Suppress("UnusedReceiverParameter")
+val ColorScheme.ghost
+    @Composable
+    @ReadOnlyComposable
+    get() = localColors.current.ghost
 
 @Composable
 private fun ContentInSurface(
