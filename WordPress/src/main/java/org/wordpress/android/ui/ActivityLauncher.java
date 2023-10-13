@@ -344,6 +344,12 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void viewMySite(Context context) {
+        Intent intent = new Intent(context, WPMainActivity.class);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_MY_SITE);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+    }
     public static void viewReader(Context context) {
         Intent intent = new Intent(context, WPMainActivity.class);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
