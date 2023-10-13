@@ -27,7 +27,7 @@ import java.util.List;
 import static org.wordpress.android.fluxc.model.LikeModel.TIMESTAMP_THRESHOLD;
 
 public class CommentSqlUtils {
-    public static int insertOrUpdateComment(CommentModel comment) {
+    public static int insertOrUpdateComment(@Nullable CommentModel comment) {
         if (comment == null) {
             return 0;
         }
