@@ -38,8 +38,9 @@ public class CommentErrorUtils {
         return payload;
     }
 
+    @NonNull
     public static FetchedCommentLikesResponsePayload commentErrorToFetchedCommentLikesPayload(
-            BaseNetworkError error,
+            @NonNull BaseNetworkError error,
             long siteId,
             long commentId,
             boolean requestNextPage,
