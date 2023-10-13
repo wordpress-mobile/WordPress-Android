@@ -20,7 +20,7 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '2.4.0'
     automatticTracksVersion = '3.3.0'
-    gutenbergMobileVersion = 'v1.105.0'
+    gutenbergMobileVersion = 'v1.106.0'
     wordPressAztecVersion = 'v1.8.0'
     wordPressFluxCVersion = 'trunk-f3ba57a9f1d9be24a4f43f929c6d98bfd8539df2'
     wordPressLoginVersion = '1.6.0'
@@ -97,7 +97,7 @@ ext {
     androidxTestExtJunitVersion = '1.1.5'
     androidxTestUiAutomatorVersion = '2.2.0'
     screengrabVersion = '2.1.1'
-    squareupMockWebServerVersion = '4.9.3'
+    squareupMockWebServerVersion = '4.11.0'
     wiremockVersion = '2.26.3'
     wiremockHttpClientVersion = '4.3.5.1'
 
