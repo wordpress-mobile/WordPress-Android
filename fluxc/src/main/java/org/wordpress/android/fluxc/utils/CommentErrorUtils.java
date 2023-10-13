@@ -57,8 +57,10 @@ public class CommentErrorUtils {
         return payload;
     }
 
-    public static RemoteCommentResponsePayload commentErrorToPushCommentPayload(BaseNetworkError error,
-                                                                                CommentModel comment) {
+    @NonNull
+    public static RemoteCommentResponsePayload commentErrorToPushCommentPayload(
+            @NonNull BaseNetworkError error,
+            @NonNull CommentModel comment) {
         RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
         payload.error = new CommentError(genericToCommentError(error), getErrorMessage(error));
         return payload;
