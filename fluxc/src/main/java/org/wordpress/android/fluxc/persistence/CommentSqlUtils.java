@@ -227,6 +227,7 @@ public class CommentSqlUtils {
         return (int) getCommentsQueryForSite(site, statuses).count();
     }
 
+    @SuppressWarnings("resource")
     public static int deleteCommentLikesAndPurgeExpired(long siteId, long remoteCommentId) {
         int numDeleted = WellSql.delete(LikeModel.class)
                                 .where()
