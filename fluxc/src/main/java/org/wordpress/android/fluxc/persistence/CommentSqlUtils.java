@@ -177,16 +177,18 @@ public class CommentSqlUtils {
         return results.get(0);
     }
 
-    private static SelectQuery<CommentModel> getCommentsQueryForSite(SiteModel site, CommentStatus... statuses) {
+    @NonNull
+    private static SelectQuery<CommentModel> getCommentsQueryForSite(
+            @NonNull SiteModel site,
+            @NonNull CommentStatus... statuses) {
         return getCommentsQueryForSite(site, 0, statuses);
     }
 
-    private static SelectQuery<CommentModel> getCommentsQueryForSite(SiteModel site, int limit,
-                                                                     CommentStatus... statuses) {
-        if (site == null) {
-            return null;
-        }
-
+    @NonNull
+    private static SelectQuery<CommentModel> getCommentsQueryForSite(
+            @NonNull SiteModel site,
+            int limit,
+            @NonNull CommentStatus... statuses) {
         SelectQuery<CommentModel> query = WellSql.select(CommentModel.class);
 
         if (limit > 0) {
@@ -204,26 +206,28 @@ public class CommentSqlUtils {
         return selectQueryBuilder.endGroup().endWhere();
     }
 
-    public static List<CommentModel> getCommentsForSite(SiteModel site, @Order int order, CommentStatus... statuses) {
+    @NonNull
+    public static List<CommentModel> getCommentsForSite(
+            @NonNull SiteModel site,
+            @Order int order,
+            @NonNull CommentStatus... statuses) {
         return getCommentsForSite(site, order, 0, statuses);
     }
 
-    public static List<CommentModel> getCommentsForSite(SiteModel site, @Order int order, int limit,
-                                                        CommentStatus... statuses) {
-        if (site == null) {
-            return Collections.emptyList();
-        }
-
+    @NonNull
+    public static List<CommentModel> getCommentsForSite(
+            @NonNull SiteModel site,
+            @Order int order,
+            int limit,
+            @NonNull CommentStatus... statuses) {
         return getCommentsQueryForSite(site, limit, statuses)
                 .orderBy(CommentModelTable.DATE_PUBLISHED, order)
                 .getAsModel();
     }
 
-    public static int getCommentsCountForSite(SiteModel site, CommentStatus... statuses) {
-        if (site == null) {
-            return 0;
-        }
-
+    public static int getCommentsCountForSite(
+            @NonNull SiteModel site,
+            @NonNull CommentStatus... statuses) {
         return (int) getCommentsQueryForSite(site, statuses).count();
     }
 
