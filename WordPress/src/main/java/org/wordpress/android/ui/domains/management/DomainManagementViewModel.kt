@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.domains.usecases.AllDomains
+import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -18,15 +20,25 @@ import javax.inject.Named
 class DomainManagementViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val fetchAllDomainsUseCase: FetchAllDomainsUseCase,
 ) : ScopedViewModel(mainDispatcher) {
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: Flow<ActionEvent> = _actionEvents
 
-    private val _uiStateFlow = MutableStateFlow(UiState.Initial)
+    private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow = _uiStateFlow.asStateFlow()
 
     init {
         analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN)
+        launch {
+            fetchAllDomainsUseCase.execute().let {
+                _uiStateFlow.value = when (it) {
+                    AllDomains.Empty -> UiState.Empty
+                    AllDomains.Error -> UiState.Error
+                    is AllDomains.Success -> UiState.Loaded(it.domains)
+                }
+            }
+        }
     }
 
 
@@ -34,11 +46,13 @@ class DomainManagementViewModel @Inject constructor(
         object DomainTapped: ActionEvent()
     }
 
-    sealed class UiState(
-        val domains: List<AllDomainsDomain>,
-    ) {
-        object Initial: UiState(
+    sealed class UiState {
+        sealed class Populated(val domains: List<AllDomainsDomain>): UiState()
+        object Initial: Populated(
             domains = List(2) { AllDomainsDomain() }
         )
+        class Loaded(domains: List<AllDomainsDomain>): Populated(domains)
+        object Empty: UiState()
+        object Error: UiState()
     }
 }
