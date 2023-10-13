@@ -155,6 +155,7 @@ public class CommentSqlUtils {
         return WellSql.delete(CommentModel.class).execute();
     }
 
+    @Nullable
     public static CommentModel getCommentByLocalCommentId(int localId) {
         List<CommentModel> results = WellSql.select(CommentModel.class)
                                             .where().equals(CommentModelTable.ID, localId).endWhere().getAsModel();
