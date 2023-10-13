@@ -33,8 +33,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.domains.management.DomainStatus.Active
-import org.wordpress.android.ui.domains.management.DomainStatus.Expired
+import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainStatus
+import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
 import java.time.LocalDate
 
 @Composable
@@ -52,10 +52,14 @@ fun DomainListCard(uiState: DomainCardUiState) {
             Column(
                 modifier = Modifier.weight(1f),
             ) {
-                Text(
-                    text = uiState.domain,
-                    style = MaterialTheme.typography.bodyLarge,
-                )
+                uiState.domain?.also { domain ->
+                    Text(
+                        text = domain,
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                } ?: run {
+                    PendingGhostStrip(width = 100.dp)
+                }
                 Spacer(modifier = Modifier.height(4.dp))
                 uiState.title?.also {
                     Text(
@@ -120,20 +124,20 @@ fun DomainListCardPreview() {
             DomainListCard(uiState = DomainCardUiState(
                 domain = "domain.cool",
                 title = "A cool website",
-                status = Active,
+                status = DomainStatus(StatusType.SUCCESS.titleName, StatusType.SUCCESS),
                 expiry = LocalDate.of(2024,8,15),
             ))
             DomainListCard(uiState = DomainCardUiState(
                 domain = "domain.cool",
                 title = "A cool website",
-                status = Expired,
+                status = DomainStatus(StatusType.ERROR.titleName, StatusType.ERROR),
                 expiry = LocalDate.of(2024,8,15),
             ))
             DomainListCard(uiState = DomainCardUiState(
-                domain = "domain.cool",
+                domain = null,
                 title = null,
                 status = null,
-                expiry = LocalDate.of(2024,8,15),
+                expiry = null,
             ))
             DomainListCard(uiState = DomainCardUiState(
                 domain = "domain.cool",
