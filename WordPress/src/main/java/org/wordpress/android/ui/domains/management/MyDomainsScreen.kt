@@ -43,7 +43,11 @@ fun MyDomainsScreen(uiState: DomainManagementViewModel.UiState) {
             modifier = Modifier.padding(it),
         ){
             MyDomainsSearchInput()
-            MyDomainsList(uiState.domains)
+            when (uiState) {
+                is DomainManagementViewModel.UiState.Populated ->
+                    MyDomainsList(uiState.domains)
+                else -> {}
+            }
         }
     }
 }
