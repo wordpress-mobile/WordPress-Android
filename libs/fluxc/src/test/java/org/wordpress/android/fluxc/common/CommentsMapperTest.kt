@@ -161,11 +161,11 @@ class CommentsMapperTest {
             authorEmail = entity.authorEmail
             authorProfileImageUrl = entity.authorProfileImageUrl
             postTitle = entity.postTitle
-            status = entity.status
-            datePublished = entity.datePublished
+            status = entity.status ?: ""
+            datePublished = entity.datePublished ?: ""
             publishedTimestamp = entity.publishedTimestamp
-            content = entity.content
-            url = entity.authorProfileImageUrl
+            content = entity.content ?: ""
+            url = entity.authorProfileImageUrl ?: ""
             hasParent = entity.hasParent
             parentId = entity.parentId
             iLike = entity.iLike
