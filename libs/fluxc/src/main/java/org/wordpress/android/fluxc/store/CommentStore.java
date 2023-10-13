@@ -277,6 +277,7 @@ public class CommentStore extends Store {
         return CommentSqlUtils.getCommentBySiteAndRemoteId(site, remoteCommentId);
     }
 
+    @Nullable
     public CommentModel getCommentByLocalId(int localId) {
         return CommentSqlUtils.getCommentByLocalCommentId(localId);
     }
