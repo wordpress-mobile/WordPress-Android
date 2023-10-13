@@ -117,7 +117,31 @@ class ReaderDiscoverViewModel @Inject constructor(
         // Get the correct repository
         readerDiscoverDataProvider.start()
 
-        // Listen to changes to the discover feed
+        observeDiscoverFeed()
+        observeFollowStatus()
+
+        // TODO reader improvements: Consider using Channel/Flow
+        readerDiscoverDataProvider.communicationChannel.observeForever(communicationChannelObserver)
+
+        _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
+            val target = event.peekContent()
+            if (target is ShowSitePickerForResult) {
+                pendingReblogPost = target.post
+            }
+            _navigationEvents.value = event
+        }
+
+        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
+            _snackbarEvents.value = event
+        }
+
+        _preloadPostEvents.addSource(readerPostCardActionsHandler.preloadPostEvents) { event ->
+            _preloadPostEvents.value = event
+        }
+    }
+
+    private fun observeDiscoverFeed() {
+        // listen to changes to the discover feed
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             launch {
                 val userTags = getFollowedTagsUseCase.get()
@@ -142,24 +166,38 @@ class ReaderDiscoverViewModel @Inject constructor(
                 }
             }
         }
+    }
 
-        // TODO reader improvements: Consider using Channel/Flow
-        readerDiscoverDataProvider.communicationChannel.observeForever(communicationChannelObserver)
+    private fun observeFollowStatus() {
+        // listen to changes on follow status for updating the reader recommended blogs state immediately
+        _uiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { data ->
+            val currentUiState: DiscoverUiState.ContentUiState = _uiState.value as? DiscoverUiState.ContentUiState
+                ?: return@addSource
+            val mutableCards = currentUiState.cards.toMutableList()
+            var hasChangedCards = false
 
-        _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
-            val target = event.peekContent()
-            if (target is ShowSitePickerForResult) {
-                pendingReblogPost = target.post
+            for (i in mutableCards.indices) {
+                val card = mutableCards[i] as? ReaderCardUiState.ReaderRecommendedBlogsCardUiState ?: continue
+                val mutableBlogs = card.blogs.toMutableList()
+                var hasChangedBlogs = false
+
+                for (j in mutableBlogs.indices) {
+                    val blog = mutableBlogs[j]
+                    if (blog.blogId == data.blogId && blog.feedId == data.feedId) {
+                        mutableBlogs[j] = blog.copy(isFollowed = data.following, isFollowEnabled = data.isChangeFinal)
+                        hasChangedBlogs = true
+                    }
+                }
+
+                if (hasChangedBlogs) {
+                    mutableCards[i] = card.copy(blogs = mutableBlogs)
+                    hasChangedCards = true
+                }
             }
-            _navigationEvents.value = event
-        }
 
-        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
-            _snackbarEvents.value = event
-        }
-
-        _preloadPostEvents.addSource(readerPostCardActionsHandler.preloadPostEvents) { event ->
-            _preloadPostEvents.value = event
+            if (hasChangedCards) {
+                _uiState.value = currentUiState.copy(cards = mutableCards)
+            }
         }
     }
 

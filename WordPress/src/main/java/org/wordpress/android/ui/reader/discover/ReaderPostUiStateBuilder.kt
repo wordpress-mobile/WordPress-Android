@@ -303,6 +303,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                     description = it.description.ifEmpty { null },
                     iconUrl = it.imageUrl,
                     isFollowed = it.isFollowing,
+                    isFollowEnabled = true,
                     onFollowClicked = onFollowClicked,
                     onItemClicked = onItemClicked
                 )

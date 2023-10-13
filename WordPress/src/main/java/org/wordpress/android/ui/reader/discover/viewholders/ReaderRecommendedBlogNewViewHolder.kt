@@ -30,6 +30,7 @@ class ReaderRecommendedBlogNewViewHolder(
         binding: ReaderRecommendedBlogItemNewBinding
     ) {
         with(binding.siteFollowButton) {
+            isEnabled = uiState.isFollowEnabled
             setIsFollowed(uiState.isFollowed)
             contentDescription = context.getString(uiState.followContentDescription.stringRes)
             setOnClickListener {
