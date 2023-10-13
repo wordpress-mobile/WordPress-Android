@@ -71,11 +71,7 @@ public class CommentSqlUtils {
                       .execute();
     }
 
-    public static int removeComments(SiteModel site) {
-        if (site == null) {
-            return 0;
-        }
-
+    public static int removeComments(@NonNull SiteModel site) {
         return WellSql.delete(CommentModel.class)
                       .where().equals(CommentModelTable.LOCAL_SITE_ID, site.getId()).endWhere()
                       .execute();
