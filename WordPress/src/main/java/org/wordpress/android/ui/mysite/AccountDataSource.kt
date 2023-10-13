@@ -27,7 +27,8 @@ class AccountDataSource @Inject constructor(
         when (isRefresh) {
             null, true -> {
                 val url = accountStore.account?.avatarUrl.orEmpty()
-                val name = accountStore.account?.displayName.orEmpty()
+                val name =
+                    accountStore.account?.displayName?.ifEmpty { accountStore.account?.userName.orEmpty() }.orEmpty()
                 setState(AccountData(url,name))
             }
             false -> Unit // Do nothing
