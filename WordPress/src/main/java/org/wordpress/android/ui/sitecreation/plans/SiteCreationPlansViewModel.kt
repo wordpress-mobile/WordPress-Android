@@ -5,8 +5,10 @@ import android.text.TextUtils
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -28,6 +30,9 @@ class SiteCreationPlansViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<SiteCreationPlansUiState>(SiteCreationPlansUiState.Preparing)
     val uiState = _uiState as StateFlow<SiteCreationPlansUiState>
 
+    private val _actionEvents = Channel<SiteCreationPlansActionEvent>(Channel.BUFFERED)
+    val actionEvents = _actionEvents.receiveAsFlow()
+
     private lateinit var domainName: DomainModel
 
     fun start(siteCreationState: SiteCreationState) {
@@ -35,8 +40,17 @@ class SiteCreationPlansViewModel @Inject constructor(
         showPlans()
     }
 
-    fun onPlanSelected(url: String) {
-        AppLog.d(AppLog.T.PLANS, url)
+    fun onPlanSelected(uri: Uri) {
+        AppLog.d(AppLog.T.PLANS, uri.toString())
+
+        val planModel = PlanModel(
+            productId = uri.getQueryParameter(PLAN_ID_PARAM)?.toInt(),
+            productSlug = uri.getQueryParameter(PLAN_SLUG_PARAM),
+            productName = "",
+            isCurrentPlan = false,
+            hasDomainCredit = false
+        )
+        postActionEvent(SiteCreationPlansActionEvent.CreateSite(planModel))
     }
 
     fun onUrlLoaded() {
@@ -135,6 +149,12 @@ class SiteCreationPlansViewModel @Inject constructor(
         }
     }
 
+    private fun postActionEvent(actionEvent: SiteCreationPlansActionEvent) {
+        viewModelScope.launch {
+            _actionEvents.send(actionEvent)
+        }
+    }
+
     companion object {
         const val WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php"
         const val WPCOM_DOMAIN = ".wordpress.com"
@@ -150,6 +170,5 @@ class SiteCreationPlansViewModel @Inject constructor(
 }
 
 sealed class SiteCreationPlansActionEvent {
-    object FinishActivity : SiteCreationPlansActionEvent()
-    data class LaunchExternalBrowser(val url: String) : SiteCreationPlansActionEvent()
+    data class CreateSite(val planModel: PlanModel) : SiteCreationPlansActionEvent()
 }
