@@ -61,7 +61,7 @@ public class CommentSqlUtils {
         }
     }
 
-    public static int removeComment(CommentModel comment) {
+    public static int removeComment(@Nullable CommentModel comment) {
         if (comment == null) {
             return 0;
         }
