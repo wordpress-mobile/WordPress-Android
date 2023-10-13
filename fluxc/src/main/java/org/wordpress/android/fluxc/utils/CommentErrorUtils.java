@@ -27,8 +27,10 @@ public class CommentErrorUtils {
         return payload;
     }
 
-    public static FetchCommentsResponsePayload commentErrorToFetchCommentsPayload(BaseNetworkError error,
-                                                                                  SiteModel site) {
+    @NonNull
+    public static FetchCommentsResponsePayload commentErrorToFetchCommentsPayload(
+            @NonNull BaseNetworkError error,
+            @NonNull SiteModel site) {
         FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(
                 new ArrayList<>(), site, 0, 0, null
         );
