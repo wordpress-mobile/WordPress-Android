@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -100,12 +101,18 @@ public class CommentSqlUtils {
         long startOfRange = comments.get(0).getPublishedTimestamp();
         long endOfRange = comments.get(comments.size() - 1).getPublishedTimestamp();
 
+        List<CommentStatus> sourceStatuses;
+        if (statuses != null) {
+            sourceStatuses = Arrays.asList(statuses);
+        } else {
+            sourceStatuses = Collections.emptyList();
+        }
         ArrayList<CommentStatus> targetStatuses = new ArrayList<>();
-        if (Arrays.asList(statuses).contains(CommentStatus.ALL)) {
+        if (sourceStatuses.contains(CommentStatus.ALL)) {
             targetStatuses.add(CommentStatus.APPROVED);
             targetStatuses.add(CommentStatus.UNAPPROVED);
         } else {
-            targetStatuses.addAll(Arrays.asList(statuses));
+            targetStatuses.addAll(sourceStatuses);
         }
 
         int numOfDeletedComments = 0;
