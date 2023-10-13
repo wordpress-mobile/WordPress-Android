@@ -44,6 +44,8 @@ import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
+import org.wordpress.android.ui.sitecreation.plans.PlanModel
+import org.wordpress.android.ui.sitecreation.plans.PlansScreenListener
 import org.wordpress.android.ui.sitecreation.plans.SiteCreationPlansFragment
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel
@@ -72,6 +74,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     IntentsScreenListener,
     SiteNameScreenListener,
     DomainsScreenListener,
+    PlansScreenListener,
     OnHelpClickedListener,
     BasicDialogPositiveClickInterface,
     BasicDialogNegativeClickInterface {
@@ -220,6 +223,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     override fun onDomainSelected(domain: DomainModel) {
         mainViewModel.onDomainsScreenFinished(domain)
+    }
+
+    override fun onPlanSelected(plan: PlanModel) {
+        mainViewModel.onPlanSelection(plan)
     }
 
     override fun onHelpClicked(origin: Origin) {
