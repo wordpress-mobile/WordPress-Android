@@ -307,6 +307,7 @@ public class CommentSqlUtils {
         }
     }
 
+    @NonNull
     public static List<LikeModel> getCommentLikesByCommentId(long siteId, long remoteCommentId) {
         return WellSql.select(LikeModel.class)
                       .where()
