@@ -1,16 +1,15 @@
 package org.wordpress.android.ui.sitecreation.plans
 
-import android.os.Parcelable
+import android.net.Uri
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
-import kotlinx.parcelize.Parcelize
 import org.wordpress.android.util.ErrorManagedWebViewClient
 
 class SiteCreationPlansWebViewClient(
     private val listener: SiteCreationPlansWebViewClientListener
 ) : ErrorManagedWebViewClient(listener) {
     interface SiteCreationPlansWebViewClientListener : ErrorManagedWebViewClientListener {
-        fun onPlanSelected(url: String)
+        fun onPlanSelected(uri: Uri)
     }
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
@@ -18,7 +17,7 @@ class SiteCreationPlansWebViewClient(
 
         val urlString = request.url.toString()
         if (urlString.contains(PLAN_SLUG)) {
-            listener.onPlanSelected(urlString)
+            listener.onPlanSelected(request.url)
         }
         return true
     }
@@ -28,12 +27,3 @@ class SiteCreationPlansWebViewClient(
         private const val JETPACK_APP_PLANS_PATH = "https://wordpress.com/jetpack-app/plans"
     }
 }
-
-@Parcelize
-data class PlanModel(
-    val productId: Int?,
-    val productSlug: String?,
-    val productName: String?,
-    val isCurrentPlan: Boolean,
-    val hasDomainCredit: Boolean
-) : Parcelable
