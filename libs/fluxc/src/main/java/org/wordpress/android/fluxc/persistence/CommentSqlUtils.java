@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -87,13 +86,10 @@ public class CommentSqlUtils {
             return 0;
         }
 
-        comments.sort(new Comparator<CommentModel>() {
-            @Override
-            public int compare(CommentModel o1, CommentModel o2) {
-                long x = o2.getPublishedTimestamp();
-                long y = o1.getPublishedTimestamp();
-                return (x < y) ? -1 : ((x == y) ? 0 : 1);
-            }
+        comments.sort((o1, o2) -> {
+            long x = o2.getPublishedTimestamp();
+            long y = o1.getPublishedTimestamp();
+            return (x < y) ? -1 : ((x == y) ? 0 : 1);
         });
 
         ArrayList<Long> remoteIds = new ArrayList<>();
