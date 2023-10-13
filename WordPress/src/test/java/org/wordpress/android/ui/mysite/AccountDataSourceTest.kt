@@ -9,28 +9,28 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.AccountData
 
 @ExperimentalCoroutinesApi
-class CurrentAvatarSourceTest : BaseUnitTest() {
+class AccountDataSourceTest : BaseUnitTest() {
     @Mock
     lateinit var accountStore: AccountStore
 
     @Mock
     lateinit var accountModel: AccountModel
-    private lateinit var currentAvatarSource: CurrentAvatarSource
+    private lateinit var accountDataSource: AccountDataSource
     private lateinit var isRefreshing: MutableList<Boolean>
 
     @Before
     fun setUp() {
-        currentAvatarSource = CurrentAvatarSource(accountStore)
+        accountDataSource = AccountDataSource(accountStore)
         isRefreshing = mutableListOf()
     }
 
     @Test
     fun `current avatar is empty on start`() = test {
-        var result: CurrentAvatarUrl? = null
-        currentAvatarSource.build(testScope()).observeForever {
+        var result: AccountData? = null
+        accountDataSource.build(testScope()).observeForever {
             it?.let { result = it }
         }
 
@@ -43,30 +43,30 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
         val avatarUrl = "avatar.jpg"
         whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
 
-        var result: CurrentAvatarUrl? = null
-        currentAvatarSource.build(testScope()).observeForever {
+        var result: AccountData? = null
+        accountDataSource.build(testScope()).observeForever {
             it?.let { result = it }
         }
 
-        currentAvatarSource.refresh()
+        accountDataSource.refresh()
 
         assertThat(result!!.url).isEqualTo(avatarUrl)
     }
 
     @Test
     fun `when buildSource is invoked, then refresh is true`() = test {
-        currentAvatarSource.refresh.observeForever { isRefreshing.add(it) }
+        accountDataSource.refresh.observeForever { isRefreshing.add(it) }
 
-        currentAvatarSource.build(testScope())
+        accountDataSource.build(testScope())
 
         assertThat(isRefreshing.last()).isTrue
     }
 
     @Test
     fun `when refresh is invoked, then refresh is true`() = test {
-        currentAvatarSource.refresh.observeForever { isRefreshing.add(it) }
+        accountDataSource.refresh.observeForever { isRefreshing.add(it) }
 
-        currentAvatarSource.refresh()
+        accountDataSource.refresh()
 
         assertThat(isRefreshing.last()).isTrue
     }
@@ -76,10 +76,10 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
         whenever(accountStore.account).thenReturn(accountModel)
         val avatarUrl = "avatar.jpg"
         whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
-        currentAvatarSource.refresh.observeForever { isRefreshing.add(it) }
+        accountDataSource.refresh.observeForever { isRefreshing.add(it) }
 
-        currentAvatarSource.build(testScope()).observeForever { }
-        currentAvatarSource.refresh()
+        accountDataSource.build(testScope()).observeForever { }
+        accountDataSource.refresh()
 
         assertThat(isRefreshing.last()).isFalse
     }

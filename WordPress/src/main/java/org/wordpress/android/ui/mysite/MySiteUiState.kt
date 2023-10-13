@@ -5,9 +5,9 @@ import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.AccountData
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
@@ -30,7 +30,7 @@ data class MySiteUiState(
     val blazeCardUpdate: PartialState.BlazeCardUpdate? = null,
 ) {
     sealed class PartialState {
-        data class CurrentAvatarUrl(val url: String, val name:String) : PartialState()
+        data class AccountData(val url: String, val name:String) : PartialState()
         data class SelectedSite(val site: SiteModel?) : PartialState()
         data class ShowSiteIconProgressBar(val showSiteIconProgressBar: Boolean) : PartialState()
         data class DomainCreditAvailable(val isDomainCreditAvailable: Boolean) : PartialState()
@@ -61,7 +61,7 @@ data class MySiteUiState(
         val uiState = updateSnackbarStatusToShowOnlyOnce(partialState)
 
         return when (partialState) {
-            is CurrentAvatarUrl -> uiState.copy(currentAvatarUrl = partialState.url, avatarName = partialState.name)
+            is AccountData -> uiState.copy(currentAvatarUrl = partialState.url, avatarName = partialState.name)
             is SelectedSite -> uiState.copy(site = partialState.site)
             is ShowSiteIconProgressBar -> uiState.copy(showSiteIconProgressBar = partialState.showSiteIconProgressBar)
             is DomainCreditAvailable -> uiState.copy(isDomainCreditAvailable = partialState.isDomainCreditAvailable)

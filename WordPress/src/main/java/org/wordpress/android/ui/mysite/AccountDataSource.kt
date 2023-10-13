@@ -6,29 +6,29 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.AccountData
 import javax.inject.Inject
 
-class CurrentAvatarSource @Inject constructor(
+class AccountDataSource @Inject constructor(
     private val accountStore: AccountStore
-) : SiteIndependentSource<CurrentAvatarUrl> {
+) : SiteIndependentSource<AccountData> {
     override val refresh = MutableLiveData(false)
 
-    override fun build(coroutineScope: CoroutineScope): LiveData<CurrentAvatarUrl> {
-        val result = MediatorLiveData<CurrentAvatarUrl>()
+    override fun build(coroutineScope: CoroutineScope): LiveData<AccountData> {
+        val result = MediatorLiveData<AccountData>()
         result.addSource(refresh) { result.refreshData(refresh.value) }
         refresh()
         return result
     }
 
-    private fun MediatorLiveData<CurrentAvatarUrl>.refreshData(
+    private fun MediatorLiveData<AccountData>.refreshData(
         isRefresh: Boolean? = null
     ) {
         when (isRefresh) {
             null, true -> {
                 val url = accountStore.account?.avatarUrl.orEmpty()
                 val name = accountStore.account?.displayName.orEmpty()
-                setState(CurrentAvatarUrl(url,name))
+                setState(AccountData(url,name))
             }
             false -> Unit // Do nothing
         }
