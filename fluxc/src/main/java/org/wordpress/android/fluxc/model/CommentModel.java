@@ -54,9 +54,6 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
         mId = id;
     }
 
-    // not stored in db - denotes the hierarchical level of this comment
-    public transient int level = 0;
-
     public long getRemoteCommentId() {
         return mRemoteCommentId;
     }
