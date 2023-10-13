@@ -86,8 +86,8 @@ fun DomainListCard(uiState: DomainCardUiState) {
 fun PendingGhostStrip(width: Dp) {
     val infiniteTransition = rememberInfiniteTransition(label = "Pending ghost strip transition")
     val color by infiniteTransition.animateColor(
-        initialValue = MaterialTheme.colorScheme.outline,
-        targetValue = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f),
+        initialValue = MaterialTheme.colorScheme.ghost.copy(alpha = 0.06f),
+        targetValue = MaterialTheme.colorScheme.ghost.copy(alpha = 0.1f),
         animationSpec = infiniteRepeatable(
             animation = tween(1000, easing = EaseInOut),
             repeatMode = RepeatMode.Reverse,
