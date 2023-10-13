@@ -339,7 +339,7 @@ class MySiteViewModel @Inject constructor(
 
                 state
             } else {
-                buildNoSiteState()
+                buildNoSiteState(currentAvatarUrl, avatarName)
             }
 
             bloggingPromptCardViewModelSlice.onSiteChanged(site?.id)
@@ -348,7 +348,7 @@ class MySiteViewModel @Inject constructor(
 
             domainTransferCardViewModel.onSiteChanged(site?.id, state as? SiteSelected)
 
-            UiModel(currentAvatarUrl.orEmpty(), state)
+            UiModel(currentAvatarUrl.orEmpty(), avatarName, state)
         }
     }
 
@@ -695,7 +695,7 @@ class MySiteViewModel @Inject constructor(
         MySiteTabType.ALL -> emptyList()
     }
 
-    private fun buildNoSiteState(): NoSites {
+    private fun buildNoSiteState(accountUrl:String?, accountName: String?): NoSites {
         // Hide actionable empty view image when screen height is under specified min height.
         val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
                 displayUtilsWrapper.getWindowPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
@@ -708,7 +708,10 @@ class MySiteViewModel @Inject constructor(
                 appBarLiftOnScroll = true
 
             ),
-            shouldShowImage = shouldShowImage
+            shouldShowImage = shouldShowImage,
+            avatartUrl = accountUrl,
+            accountName = accountName
+
         )
     }
 
@@ -1287,6 +1290,7 @@ class MySiteViewModel @Inject constructor(
 
     data class UiModel(
         val accountAvatarUrl: String,
+        val accountName: String?,
         val state: State
     )
 
@@ -1306,7 +1310,9 @@ class MySiteViewModel @Inject constructor(
         data class NoSites(
             override val tabsUiState: TabsUiState,
             override val siteInfoToolbarViewParams: SiteInfoToolbarViewParams,
-            val shouldShowImage: Boolean
+            val shouldShowImage: Boolean,
+            val avatartUrl:String? = null,
+            val accountName:String? = null
         ) : State()
     }
 
