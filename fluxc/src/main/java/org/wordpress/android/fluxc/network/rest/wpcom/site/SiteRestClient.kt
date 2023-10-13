@@ -837,9 +837,12 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
-    suspend fun fetchAllDomains(noWpCom: Boolean = true): Response<AllDomainsResponse> {
+    suspend fun fetchAllDomains(noWpCom: Boolean = true, resolveStatus: Boolean = true): Response<AllDomainsResponse> {
         val url = WPCOMREST.all_domains.urlV1_1
-        val params = mapOf("no_wpcom" to noWpCom.toString())
+        val params = mapOf(
+            "no_wpcom" to noWpCom.toString(),
+            "resolve_status" to resolveStatus.toString()
+        )
         return wpComGsonRequestBuilder.syncGetRequest(this, url, params, AllDomainsResponse::class.java)
     }
     suspend fun fetchSiteDomains(site: SiteModel): Response<DomainsResponse> {
