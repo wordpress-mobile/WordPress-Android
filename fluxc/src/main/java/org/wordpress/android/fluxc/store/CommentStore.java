@@ -215,16 +215,22 @@ public class CommentStore extends Store {
     }
 
     public static class OnCommentLikesChanged extends OnChanged<CommentError> {
-        public CommentAction causeOfChange;
+        @NonNull public CommentAction causeOfChange;
         public final long siteId;
         public final long commentId;
-        public List<LikeModel> commentLikes = new ArrayList<>();
+        @NonNull public List<LikeModel> commentLikes = new ArrayList<>();
         public final boolean hasMore;
 
-        public OnCommentLikesChanged(long siteId, long commentId, boolean hasMore) {
+        public OnCommentLikesChanged(
+                long siteId,
+                long commentId,
+                boolean hasMore,
+                @NonNull CommentAction causeOfChange
+        ) {
             this.siteId = siteId;
             this.commentId = commentId;
             this.hasMore = hasMore;
+            this.causeOfChange = causeOfChange;
         }
     }
 
@@ -570,11 +576,12 @@ public class CommentStore extends Store {
         );
     }
 
-    private void handleFetchedCommentLikes(FetchedCommentLikesResponsePayload payload) {
+    private void handleFetchedCommentLikes(@NonNull FetchedCommentLikesResponsePayload payload) {
         OnCommentLikesChanged event = new OnCommentLikesChanged(
                 payload.siteId,
                 payload.commentRemoteId,
-                payload.hasMore
+                payload.hasMore,
+                CommentAction.FETCHED_COMMENT_LIKES
         );
         if (!payload.isError()) {
             if (!payload.isRequestNextPage) {
@@ -596,7 +603,6 @@ public class CommentStore extends Store {
             event.commentLikes.addAll(cachedLikes);
         }
 
-        event.causeOfChange = CommentAction.FETCHED_COMMENT_LIKES;
         event.error = payload.error;
         emitChange(event);
     }
