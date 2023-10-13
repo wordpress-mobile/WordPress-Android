@@ -28,12 +28,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/avatar_account_settings"
-        android:visibility="gone"
-        android:padding="@dimen/margin_large">
+        android:background="@drawable/bg_rectangle_black_60_radius_2dp"
+        android:layout_margin="@dimen/actionable_empty_view_text_margin_horizontal"
+        android:visibility="visible"
+        android:clickable="true"
+        android:padding="@dimen/margin_large"
+        android:focusable="true">
 
         <FrameLayout
             android:id="@+id/frame_avatar"
             android:layout_width="wrap_content"
+            android:clickable="false"
             android:layout_height="wrap_content">
 
             <FrameLayout
@@ -46,19 +51,20 @@
 
                 <ImageView
                     android:id="@+id/me_avatar"
-                    android:layout_width="@dimen/avatar_sz_inner_circle"
-                    android:layout_height="@dimen/avatar_sz_inner_circle"
+                    android:layout_width="@dimen/avatar_sz_small"
+                    android:layout_height="@dimen/avatar_sz_small"
+                    android:clickable="false"
                     android:contentDescription="@string/reader_avatar_desc" />
             </FrameLayout>
 
             <ProgressBar
                 android:id="@+id/avatar_progress"
-                android:layout_width="@dimen/avatar_sz_inner_circle"
-                android:layout_height="@dimen/avatar_sz_inner_circle"
+                android:layout_width="@dimen/avatar_sz_small"
+                android:layout_height="@dimen/avatar_sz_small"
                 android:layout_gravity="center"
                 android:background="@drawable/bg_oval_black_translucent_50"
-                android:clickable="true"
-                android:focusable="true"
+                android:clickable="false"
+                android:focusable="false"
                 android:indeterminate="true"
                 android:padding="@dimen/margin_large"
                 android:visibility="gone"
@@ -73,6 +79,7 @@
             android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_toEndOf="@+id/frame_avatar"
             android:ellipsize="end"
+            android:clickable="false"
             android:maxLines="1"
             app:autoSizeMaxTextSize="@dimen/my_site_name_label_single_line_text_size"
             app:autoSizeMinTextSize="@dimen/my_site_name_label_double_line_text_size"
@@ -84,7 +91,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginBottom="@dimen/margin_extra_large"
             android:layout_below="@id/me_display_name"
             android:layout_toEndOf="@id/frame_avatar"
             android:ellipsize="end"
@@ -92,7 +98,24 @@
             android:maxLines="1"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?attr/wpColorOnSurfaceMedium"
+            android:clickable="false"
             tools:text="@string/account_and_settings" />
+
+        <ImageButton
+            android:id="@+id/switch_site"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/ripple_oval"
+            android:contentDescription="@string/my_site_btn_switch_site"
+            android:padding="@dimen/margin_large"
+            android:clickable="false"
+            android:src="@drawable/ic_chevron_right_white_24dp"
+            app:tint="?attr/wpColorOnSurfaceMedium" />
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
