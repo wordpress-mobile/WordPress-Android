@@ -77,9 +77,13 @@ public class CommentSqlUtils {
                       .execute();
     }
 
-    public static int removeCommentGaps(SiteModel site, List<CommentModel> comments, int maxEntriesInResponse,
-                                        int requestOffset, @Nullable CommentStatus... statuses) {
-        if (site == null || comments == null || comments.isEmpty()) {
+    public static int removeCommentGaps(
+            @NonNull SiteModel site,
+            @NonNull List<CommentModel> comments,
+            int maxEntriesInResponse,
+            int requestOffset,
+            @Nullable CommentStatus... statuses) {
+        if (comments.isEmpty()) {
             return 0;
         }
 
