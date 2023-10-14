@@ -43,9 +43,12 @@ class SiteCreationPlansViewModel @Inject constructor(
     fun onPlanSelected(uri: Uri) {
         AppLog.d(AppLog.T.PLANS, uri.toString())
 
+        val planId = uri.getQueryParameter(PLAN_ID_PARAM)?.toInt() ?: 0
+        val planSlug = uri.getQueryParameter(PLAN_SLUG_PARAM).orEmpty()
+
         val planModel = PlanModel(
-            productId = uri.getQueryParameter(PLAN_ID_PARAM)?.toInt(),
-            productSlug = uri.getQueryParameter(PLAN_SLUG_PARAM),
+            productId = planId,
+            productSlug = planSlug,
             productName = "",
             isCurrentPlan = false,
             hasDomainCredit = false
