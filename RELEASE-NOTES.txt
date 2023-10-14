@@ -2,7 +2,7 @@
 
 23.5
 -----
-
+* [**] Reader: Improvement of core UI elements, including feed cards, tag and site headers, buttons and recommendation sections.
 
 23.4
 -----
