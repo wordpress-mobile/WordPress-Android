@@ -13,12 +13,14 @@ class SiteCreationPlansWebViewClient(
     }
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-        if (request.url.toString().startsWith(JETPACK_APP_PLANS_PATH)) return false
-
-        val urlString = request.url.toString()
-        if (urlString.contains(PLAN_SLUG)) {
-            listener.onPlanSelected(request.url)
+        if (request.url.toString().startsWith(JETPACK_APP_PLANS_PATH)) {
+            val planSlug = request.url.getQueryParameter(PLAN_SLUG).orEmpty()
+            if (planSlug.isNotBlank()) {
+                listener.onPlanSelected(request.url)
+            }
+            return false
         }
+
         return true
     }
 
