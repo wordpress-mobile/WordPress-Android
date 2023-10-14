@@ -1,0 +1,5 @@
+23.4:
+Kami terus melenyapkan bug!
+- Anda kini dapat menyematkan URL dari X tanpa khawatir akan mendapatkan tautan yang rusak.
+- Ketika Anda menggunakan URL media yang tidak valid, aplikasi akan menampilkan pesan error alih-alih mengalami crash.
+- Di editor blok, aplikasi tidak akan lagi mengalami crash jika Anda membenamkan terlalu banyak blok di dalam blok.

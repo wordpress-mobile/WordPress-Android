@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-27 13:54:08+0000
+Translation-Revision-Date: 2023-10-09 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.9
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">取消区块分组</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">轻点此处以显示更多详细信息。</string>
+    <string name="gutenberg_native_synced_patterns">已同步的样板</string>
+    <string name="gutenberg_native_deeply_nested_block">深度嵌套区块</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">嵌套深度超过 %d 层级的区块在移动端编辑器中可能无法正常渲染。  因此，我们建议取消区块分组或使用 Web 编辑器编辑区块，以使内容扁平化。</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">嵌套深度超过 %d 层级的区块在移动端编辑器中可能无法正常渲染。  因此，我们建议取消区块分组或使用 Web 浏览器编辑区块，以使内容扁平化。</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">区块深度嵌套，因此无法渲染。 轻点此处以了解更多详细信息。</string>
+    <string name="pages_no_site_something_went_wrong">糟糕，出错了。 请稍后重试。</string>
+    <string name="sharing_connect_via_web_warning_positive_button">转到网页</string>
     <string name="my_site_dashboard_no_cards_message_description">轻点个性化按钮，显示更多卡片。</string>
     <string name="my_site_dashboard_no_cards_message_title">所有卡片已隐藏</string>
     <string name="personalization_screen_next_steps_card_description">了解如何通过这一应用程序充分利用您的站点。</string>
@@ -15,8 +24,13 @@ Language: zh_CN
     <string name="personalization_screen_blogging_prompts_card_title">博客提示</string>
     <string name="personalization_screen_blaze_card_description">推广文章并查看当前的广告活动。</string>
     <string name="personalization_screen_scheduled_posts_card_description">您即将发布的已排定文章。</string>
+    <string name="personalization_screen_scheduled_posts_card_title">已排定的文章</string>
     <string name="personalization_screen_draft_posts_card_description">您最近的文章草稿</string>
+    <string name="personalization_screen_draft_posts_card_title">文章草稿</string>
     <string name="personalization_screen_stats_card_description">浏览次数、访客人数和点赞数</string>
+    <string name="personalization_screen_footer_cards">卡片可能会显示不同的内容，具体取决于您站点上的情况</string>
+    <string name="personalization_screen_description">添加或隐藏卡片</string>
+    <string name="personalization_screen_title">对“首页”选项卡进行个性化</string>
     <string name="personalize_card_content_description">轻点以对您的“首页”选项卡进行个性化</string>
     <string name="personalize_card_text">对您的“首页”选项卡进行个性化</string>
     <string name="partial_media_access_prompt_change_settings">更改设置</string>
@@ -649,6 +663,7 @@ Language: zh_CN
     <string name="gutenberg_native_tiled_gallery_settings">平铺图片库设置</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">导航至布局选择界面</string>
     <string name="gutenberg_native_gallery_style">画廊样式</string>
+    <string name="sharing_connect_via_web_warning_message">您可以在 WordPress.com 网站上连接您的 %s 账户。 完成后，请返回应用程序更改您的共享设置。</string>
     <string name="about_automattic_app_icon_description">应用程序图标</string>
     <string name="about_automattic_back_icon_description">返回图标</string>
     <string name="about_automattic_logo_description">Automattic 徽标</string>

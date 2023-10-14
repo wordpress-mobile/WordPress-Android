@@ -98,7 +98,7 @@ platform :android do
   lane :update_appstore_strings do |options|
     # If no `app:` is specified, call this for both WordPress and Jetpack
     apps = options[:app].nil? ? %i[wordpress jetpack] : Array(options[:app]&.downcase&.to_sym)
-    version = options.fetch(:version, android_get_app_version)
+    version = options.fetch(:version, current_release_version)
 
     apps.each do |app|
       app_values = APP_SPECIFIC_VALUES[app]
@@ -142,12 +142,11 @@ platform :android do
     app = get_app_name_option!(options)
     package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
     metadata_dir = File.join(FASTLANE_FOLDER, APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
-    version_code = android_get_release_version['code']
 
     upload_to_play_store(
       package_name: package_name,
       track: 'production',
-      version_code: version_code, # Apparently required by fastlane… even if the "Main Store Listing" isn't be attached to a specific build ¯\_(ツ)_/¯
+      version_code: current_build_code, # Apparently required by fastlane… even if the "Main Store Listing" isn't be attached to a specific build ¯\_(ツ)_/¯
       metadata_path: metadata_dir,
       skip_upload_apk: true,
       skip_upload_aab: true,
@@ -173,8 +172,8 @@ platform :android do
   desc 'Downloads translated metadata from GlotPress'
   lane :download_metadata_strings do |options|
     skip_release_notes = options.fetch(:skip_release_notes, false)
-    version = skip_release_notes ? nil : options.fetch(:version, android_get_app_version)
-    build_number = skip_release_notes ? nil : options.fetch(:build_number, android_get_release_version['code'])
+    version = skip_release_notes ? nil : options.fetch(:version, current_release_version)
+    build_number = skip_release_notes ? nil : options.fetch(:build_number, current_build_code)
 
     skip_commit = options.fetch(:skip_commit, false)
     skip_git_push = options.fetch(:skip_git_push, false)

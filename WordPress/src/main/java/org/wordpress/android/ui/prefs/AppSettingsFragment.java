@@ -45,7 +45,6 @@ import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
 import org.wordpress.android.models.JetpackPoweredScreen;
-import org.wordpress.android.ui.debug.DebugSettingsActivity;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
@@ -163,8 +162,6 @@ public class AppSettingsFragment extends PreferenceFragment
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_device_settings))
                 .setOnPreferenceClickListener(this);
-        findPreference(getString(R.string.pref_key_debug_settings))
-                .setOnPreferenceClickListener(this);
 
         mOptimizedImage =
                 (WPSwitchPreference) WPPrefUtils
@@ -225,10 +222,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
-        }
-
-        if (!BuildConfig.ENABLE_DEBUG_SETTINGS) {
-            removeDebugSettingsCategory();
         }
 
         if (!mMySiteDashboardTabsFeatureConfig.isEnabled()) {
@@ -312,14 +305,6 @@ public class AppSettingsFragment extends PreferenceFragment
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(experimentalPreferenceCategory);
-    }
-
-    private void removeDebugSettingsCategory() {
-        Preference experimentalPreference =
-                findPreference(getString(R.string.pref_key_debug_settings));
-        PreferenceScreen preferenceScreen =
-                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
-        preferenceScreen.removePreference(experimentalPreference);
     }
 
     private void removeWhatsNewPreference() {
@@ -439,8 +424,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         if (preferenceKey.equals(getString(R.string.pref_key_device_settings))) {
             return handleDevicePreferenceClick();
-        } else if (preferenceKey.equals(getString(R.string.pref_key_debug_settings))) {
-            return handleDebugSettingsPreferenceClick();
         } else if (preference == mPrivacySettings) {
             return handlePrivacyClick();
         } else if (preference == mWhatsNew) {
@@ -563,11 +546,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         // update Reader tags as they need be localized
         ReaderUpdateServiceStarter.startService(WordPress.getContext(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
-    }
-
-    private boolean handleDebugSettingsPreferenceClick() {
-        startActivity(new Intent(getActivity(), DebugSettingsActivity.class));
-        return true;
     }
 
     private boolean handleDevicePreferenceClick() {
