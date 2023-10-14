@@ -98,7 +98,7 @@ class SiteCreationProgressViewModel @Inject constructor(
         if (siteCreationState.result is Created) {
             check(siteCreationState.result !is Completed) { "Unexpected state on progress screen." }
             // reuse the previously blog when returning with the same domain
-            if (siteCreationState.domain == domain) {
+            if (siteCreationState.domain == domain && siteCreationState.plan == plan) {
                 site = siteCreationState.result.site
                 if (siteCreationState.result is InCart) {
                     createCart()
@@ -176,7 +176,7 @@ class SiteCreationProgressViewModel @Inject constructor(
             SUCCESS -> {
                 site = mapPayloadToSiteModel(event.payload)
                 _onFreeSiteCreated.postValue(site) // MainVM will navigate forward if the domain is free
-                if (!domain.isFree) {
+                if (!domain.isFree && plan.productId != 0) {
                     createCart()
                 }
             }
