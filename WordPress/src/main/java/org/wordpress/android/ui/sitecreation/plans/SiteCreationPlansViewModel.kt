@@ -94,8 +94,6 @@ class SiteCreationPlansViewModel @Inject constructor(
             authority(AUTHORITY)
             appendPath(JETPACK_APP_PATH)
             appendPath(PLANS_PATH)
-            appendQueryParameter(PLAN_ID_PARAM, "")
-            appendQueryParameter(PLAN_SLUG_PARAM, "")
             if (!domainName.isFree) {
                 appendQueryParameter(PAID_DOMAIN_NAME, domainName.domainName)
             }
