@@ -108,7 +108,7 @@ class SiteCreationProgressViewModel @Inject constructor(
         }
         this.siteCreationState = siteCreationState
         domain = requireNotNull(siteCreationState.domain) { "domain required to create a site" }
-        plan = requireNotNull(siteCreationState.plan) { "plan purchased to create a site" }
+        plan = requireNotNull(siteCreationState.plan) { "plan required to create a site" }
 
         runLoadingAnimationUi()
         startCreateSiteService()
