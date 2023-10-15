@@ -262,6 +262,11 @@ class SiteCreationMainVM @Inject constructor(
                 siteCreationState = siteCreationState.copy(domain = null)
             }
         }
+        if (wizardStep == SiteCreationStep.PLANS) {
+            siteCreationState.plan?.let {
+                siteCreationState = siteCreationState.copy(plan = null)
+            }
+        }
     }
 
     fun onDomainsScreenFinished(domain: DomainModel) {
@@ -271,6 +276,18 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onPlanSelection(plan: PlanModel) {
         siteCreationState = siteCreationState.copy(plan = plan)
+        if (plan.productSlug == "free_plan") {
+            // if they select a paid domain, then choose a free plan, with free domain on plan selection screen
+            siteCreationState = siteCreationState.copy(
+                domain = DomainModel(
+                    domainName = plan.productName.orEmpty(),
+                    isFree = true,
+                    cost = "",
+                    productId = 0,
+                    supportsPrivacy = false
+                )
+            )
+        }
         wizardManager.showNextStep()
     }
 

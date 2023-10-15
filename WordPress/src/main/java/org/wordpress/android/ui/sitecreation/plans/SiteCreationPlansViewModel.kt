@@ -45,11 +45,12 @@ class SiteCreationPlansViewModel @Inject constructor(
 
         val planId = uri.getQueryParameter(PLAN_ID_PARAM)?.toInt() ?: 0
         val planSlug = uri.getQueryParameter(PLAN_SLUG_PARAM).orEmpty()
+        val domainName = uri.getQueryParameter(PAID_DOMAIN_NAME).orEmpty()
 
         val planModel = PlanModel(
             productId = planId,
             productSlug = planSlug,
-            productName = "",
+            productName = domainName, // using domainName here
             isCurrentPlan = false,
             hasDomainCredit = false
         )
