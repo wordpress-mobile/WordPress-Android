@@ -21,6 +21,7 @@ import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.plans.PlanModel
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.CartError
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.ConnectionError
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressViewModel.SiteProgressUiState.Error.GenericError
@@ -63,6 +64,7 @@ class SiteCreationProgressViewModel @Inject constructor(
 
     private lateinit var siteCreationState: SiteCreationState
     private lateinit var domain: DomainModel
+    private lateinit var plan: PlanModel
     private lateinit var site: SiteModel
 
     private var lastReceivedServiceState: SiteCreationServiceState? = null
@@ -96,7 +98,7 @@ class SiteCreationProgressViewModel @Inject constructor(
         if (siteCreationState.result is Created) {
             check(siteCreationState.result !is Completed) { "Unexpected state on progress screen." }
             // reuse the previously blog when returning with the same domain
-            if (siteCreationState.domain == domain) {
+            if (siteCreationState.domain == domain && siteCreationState.plan == plan) {
                 site = siteCreationState.result.site
                 if (siteCreationState.result is InCart) {
                     createCart()
@@ -106,6 +108,7 @@ class SiteCreationProgressViewModel @Inject constructor(
         }
         this.siteCreationState = siteCreationState
         domain = requireNotNull(siteCreationState.domain) { "domain required to create a site" }
+        plan = requireNotNull(siteCreationState.plan) { "plan purchased to create a site" }
 
         runLoadingAnimationUi()
         startCreateSiteService()
@@ -173,7 +176,7 @@ class SiteCreationProgressViewModel @Inject constructor(
             SUCCESS -> {
                 site = mapPayloadToSiteModel(event.payload)
                 _onFreeSiteCreated.postValue(site) // MainVM will navigate forward if the domain is free
-                if (!domain.isFree) {
+                if (!domain.isFree && plan.productId != 0) {
                     createCart()
                 }
             }
@@ -207,6 +210,7 @@ class SiteCreationProgressViewModel @Inject constructor(
             domain.domainName,
             domain.supportsPrivacy,
             false,
+            planProductId = plan.productId
         )
 
         if (event.isError) {

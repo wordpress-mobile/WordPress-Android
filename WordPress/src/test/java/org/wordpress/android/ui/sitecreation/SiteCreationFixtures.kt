@@ -14,6 +14,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationResult.Completed
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
+import org.wordpress.android.ui.sitecreation.plans.PlanModel
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.CREATE_SITE
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.FAILURE
@@ -26,6 +27,7 @@ const val URL_CUSTOM = "$SUB_DOMAIN.host.com"
 const val SITE_SLUG = "${SUB_DOMAIN}host0.wordpress.com"
 val FREE_DOMAIN = DomainModel(URL, true, "", 1, false)
 val PAID_DOMAIN = DomainModel(URL_CUSTOM, false, "$1", 2, true)
+val PLAN_MODEL = PlanModel(1009, "paid_plan", "Personal", isCurrentPlan = false, hasDomainCredit = false)
 
 const val SITE_REMOTE_ID = 1L
 
@@ -33,6 +35,7 @@ val SITE_CREATION_STATE = SiteCreationState(
     segmentId = 1,
     siteDesign = defaultTemplateSlug,
     domain = FREE_DOMAIN,
+    plan = PLAN_MODEL
 )
 
 val SITE_MODEL = SiteModel().apply { siteId = SITE_REMOTE_ID; url = SITE_SLUG }
