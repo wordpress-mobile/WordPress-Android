@@ -45,12 +45,11 @@ class SiteCreationPlansViewModel @Inject constructor(
 
         val planId = uri.getQueryParameter(PLAN_ID_PARAM)?.toInt() ?: 0
         val planSlug = uri.getQueryParameter(PLAN_SLUG_PARAM).orEmpty()
-        val domainName = uri.getQueryParameter(PAID_DOMAIN_NAME).orEmpty()
 
         val planModel = PlanModel(
             productId = planId,
             productSlug = planSlug,
-            productName = domainName, // using domainName here
+            productName = domainName.domainName,
             isCurrentPlan = false,
             hasDomainCredit = false
         )
@@ -90,18 +89,16 @@ class SiteCreationPlansViewModel @Inject constructor(
     }
 
     private fun createURL(): String {
-        val uriBuilder =  Uri.Builder().apply {
+        val uriBuilder = Uri.Builder().apply {
             scheme(SCHEME)
             authority(AUTHORITY)
             appendPath(JETPACK_APP_PATH)
             appendPath(PLANS_PATH)
-            appendQueryParameter(PLAN_ID_PARAM, "")
-            appendQueryParameter(PLAN_SLUG_PARAM, "")
+            if (!domainName.isFree) {
+                appendQueryParameter(PAID_DOMAIN_NAME, domainName.domainName)
+            }
         }
 
-        if (!domainName.isFree) uriBuilder.apply {
-            appendQueryParameter(PAID_DOMAIN_NAME, domainName.domainName)
-        }
 
         return uriBuilder.build().toString()
     }
