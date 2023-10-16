@@ -26,7 +26,7 @@ public class SelfHostedEndpointFinder {
     public static final int TIMEOUT_MS = 60000;
 
     @NonNull private final Dispatcher mDispatcher;
-    private final DiscoveryXMLRPCClient mDiscoveryXMLRPCClient;
+    @NonNull private final DiscoveryXMLRPCClient mDiscoveryXMLRPCClient;
     private final DiscoveryWPAPIRestClient mDiscoveryWPAPIRestClient;
 
     public enum DiscoveryError implements OnChangedError {
@@ -70,7 +70,8 @@ public class SelfHostedEndpointFinder {
     }
 
     @Inject public SelfHostedEndpointFinder(
-            @NonNull Dispatcher dispatcher, DiscoveryXMLRPCClient discoveryXMLRPCClient,
+            @NonNull Dispatcher dispatcher,
+            @NonNull DiscoveryXMLRPCClient discoveryXMLRPCClient,
             DiscoveryWPAPIRestClient discoveryWPAPIRestClient) {
         mDispatcher = dispatcher;
         mDiscoveryXMLRPCClient = discoveryXMLRPCClient;
