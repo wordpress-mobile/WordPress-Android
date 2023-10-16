@@ -80,7 +80,8 @@ public class DiscoveryXMLRPCClient extends BaseXMLRPCClient {
     /**
      * Peform a system.listMethods call on the given URL.
      */
-    public Object[] listMethods(String url) throws DiscoveryException {
+    @Nullable
+    public Object[] listMethods(@NonNull String url) throws DiscoveryException {
         if (!UrlUtils.isValidUrlAndHostNotNull(url)) {
             AppLog.e(AppLog.T.NUX, "Invalid URL: " + url);
             throw new DiscoveryException(DiscoveryError.INVALID_URL, url);
