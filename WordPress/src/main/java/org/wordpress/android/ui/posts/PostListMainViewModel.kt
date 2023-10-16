@@ -626,4 +626,8 @@ class PostListMainViewModel @Inject constructor(
             _onFabLongPressedForPostList.postValue(Event(Unit))
         }
     }
+
+    fun refreshUiStateForAuthorFilter() {
+        _viewState.value = _viewState.value?.copy()
+    }
 }
