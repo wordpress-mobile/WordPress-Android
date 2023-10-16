@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.BuildConfig;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -44,10 +45,10 @@ public class SelfHostedEndpointFinder {
     public static class DiscoveryException extends Exception {
         private static final long serialVersionUID = -300904137122546854L;
 
-        public final DiscoveryError discoveryError;
-        public final String failedUrl;
+        @NonNull public final DiscoveryError discoveryError;
+        @Nullable public final String failedUrl;
 
-        DiscoveryException(DiscoveryError failureType, String failedUrl) {
+        DiscoveryException(@NonNull DiscoveryError failureType, @Nullable String failedUrl) {
             this.discoveryError = failureType;
             this.failedUrl = failedUrl;
         }
