@@ -250,7 +250,8 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     private fun PostListActivityBinding.initCreateMenuViewModel(tabIndex: Int, actionsShownByDefault: Boolean) {
-        postListCreateMenuViewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)[PostListCreateMenuViewModel::class.java]
+        postListCreateMenuViewModel =
+            ViewModelProvider(this@PostsListActivity, viewModelFactory)[PostListCreateMenuViewModel::class.java]
 
         postListCreateMenuViewModel.isBottomSheetShowing.observeEvent(this@PostsListActivity) { isBottomSheetShowing ->
             var createMenuFragment = supportFragmentManager.findFragmentByTag(PostListCreateMenuFragment.TAG)
