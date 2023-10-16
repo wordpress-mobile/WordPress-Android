@@ -85,7 +85,7 @@ fun MyDomainsList(domains: List<AllDomainsDomain>) {
             DomainListCard(
                 uiState = DomainCardUiState(
                     domain = it.domain,
-                    title = null,
+                    title = it.blogName,
                     status = it.domainStatus,
                     expiry = it.expiry?.time?.let { epoch ->
                         LocalDate.from(Instant.ofEpochMilli(epoch))
