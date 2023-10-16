@@ -31,10 +31,11 @@ import static org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFi
 
 @Singleton
 public class DiscoveryXMLRPCClient extends BaseXMLRPCClient {
-    @Inject public DiscoveryXMLRPCClient(Dispatcher dispatcher,
-                                 @Named("custom-ssl") RequestQueue requestQueue,
-                                 UserAgent userAgent,
-                                 HTTPAuthManager httpAuthManager) {
+    @Inject public DiscoveryXMLRPCClient(
+            Dispatcher dispatcher,
+            @Named("custom-ssl") RequestQueue requestQueue,
+            UserAgent userAgent,
+            HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
@@ -63,8 +64,8 @@ public class DiscoveryXMLRPCClient extends BaseXMLRPCClient {
                     throw new DiscoveryException(DiscoveryError.XMLRPC_FORBIDDEN, url);
                 }
             } else if (e.getCause() instanceof NoConnectionError
-                    && e.getCause().getCause() instanceof SSLHandshakeException
-                    && e.getCause().getCause().getCause() instanceof CertificateException) {
+                       && e.getCause().getCause() instanceof SSLHandshakeException
+                       && e.getCause().getCause().getCause() instanceof CertificateException) {
                 // In the event of an SSL handshake error we should stop attempting discovery
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
             }
@@ -104,8 +105,8 @@ public class DiscoveryXMLRPCClient extends BaseXMLRPCClient {
                     throw new DiscoveryException(DiscoveryError.XMLRPC_FORBIDDEN, url);
                 }
             } else if (e.getCause() instanceof NoConnectionError
-                    && e.getCause().getCause() instanceof SSLHandshakeException
-                    && e.getCause().getCause().getCause() instanceof CertificateException) {
+                       && e.getCause().getCause() instanceof SSLHandshakeException
+                       && e.getCause().getCause().getCause() instanceof CertificateException) {
                 // In the event of an SSL handshake error we should stop attempting discovery
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
             } else if (e.getCause() instanceof ServerError) {
