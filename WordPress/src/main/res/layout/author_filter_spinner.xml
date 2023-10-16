@@ -3,6 +3,6 @@
     android:id="@+id/toolbarSpinner"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:background="@null"
     android:spinnerMode="dropdown" />
 
