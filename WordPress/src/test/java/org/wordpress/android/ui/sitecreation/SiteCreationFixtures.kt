@@ -27,15 +27,23 @@ const val URL_CUSTOM = "$SUB_DOMAIN.host.com"
 const val SITE_SLUG = "${SUB_DOMAIN}host0.wordpress.com"
 val FREE_DOMAIN = DomainModel(URL, true, "", 1, false)
 val PAID_DOMAIN = DomainModel(URL_CUSTOM, false, "$1", 2, true)
-val PLAN_MODEL = PlanModel(1009, "paid_plan", "Personal", isCurrentPlan = false, hasDomainCredit = false)
+val PAID_PLAN = PlanModel(1009, "paid_plan", "Personal", isCurrentPlan = false, hasDomainCredit = false)
+val FREE_PLAN = PlanModel(0, "free_plan", "", isCurrentPlan = false, hasDomainCredit = false)
 
 const val SITE_REMOTE_ID = 1L
 
 val SITE_CREATION_STATE = SiteCreationState(
     segmentId = 1,
     siteDesign = defaultTemplateSlug,
+    domain = PAID_DOMAIN,
+    plan = PAID_PLAN
+)
+
+val SITE_CREATION_STATE_FREE = SiteCreationState(
+    segmentId = 1,
+    siteDesign = defaultTemplateSlug,
     domain = FREE_DOMAIN,
-    plan = PLAN_MODEL
+    plan = FREE_PLAN
 )
 
 val SITE_MODEL = SiteModel().apply { siteId = SITE_REMOTE_ID; url = SITE_SLUG }
