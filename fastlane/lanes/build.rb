@@ -34,7 +34,7 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version_name = current_version_name
-    build_bundle(app: app, version: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
+    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
     upload_build_to_play_store(app: app, version: version_name, track: 'production')
 
@@ -106,7 +106,7 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version_name = current_version_name
-    build_bundle(app: app, version: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
+    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
     upload_build_to_play_store(app: app, version: version_name, track: 'beta') if options[:upload_to_play_store]
 
@@ -262,7 +262,7 @@ platform :android do
     app = get_app_name_option!(options)
 
     if version_name.nil?
-      UI.message("Version specified for #{app} bundle is nil. Skipping ahead")
+      UI.message("Version name specified for #{app} bundle is nil. Skipping ahead")
       next
     end
 
