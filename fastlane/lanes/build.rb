@@ -36,9 +36,9 @@ platform :android do
     version_name = current_version_name
     build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
-    upload_build_to_play_store(app: app, version: version_name, track: 'production')
+    upload_build_to_play_store(app: app, version_name: version_name, track: 'production')
 
-    create_gh_release(app: app, version: version_name) if options[:create_release]
+    create_gh_release(app: app, version_name: version_name) if options[:create_release]
   end
 
   #####################################################################################
@@ -108,9 +108,9 @@ platform :android do
     version_name = current_version_name
     build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
-    upload_build_to_play_store(app: app, version: version_name, track: 'beta') if options[:upload_to_play_store]
+    upload_build_to_play_store(app: app, version_name: version_name, track: 'beta') if options[:upload_to_play_store]
 
-    create_gh_release(app: app, version: version_name, prerelease: true) if options[:create_release]
+    create_gh_release(app: app, version_name: version_name, prerelease: true) if options[:create_release]
   end
 
   #####################################################################################
@@ -119,7 +119,7 @@ platform :android do
   # This lane uploads the build to Play Store for the given version to the given track
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane upload_build_to_play_store app:<wordpress|jetpack> version:<version> track:<track>
+  # bundle exec fastlane upload_build_to_play_store app:<wordpress|jetpack> version_name:<version_name> track:<track>
   #
   # Example:
   # bundle exec fastlane upload_build_to_play_store app:wordpress version_name:15.0 track:production
