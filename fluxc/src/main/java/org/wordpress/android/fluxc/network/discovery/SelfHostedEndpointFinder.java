@@ -25,7 +25,7 @@ import javax.inject.Inject;
 public class SelfHostedEndpointFinder {
     public static final int TIMEOUT_MS = 60000;
 
-    private final Dispatcher mDispatcher;
+    @NonNull private final Dispatcher mDispatcher;
     private final DiscoveryXMLRPCClient mDiscoveryXMLRPCClient;
     private final DiscoveryWPAPIRestClient mDiscoveryWPAPIRestClient;
 
@@ -70,7 +70,7 @@ public class SelfHostedEndpointFinder {
     }
 
     @Inject public SelfHostedEndpointFinder(
-            Dispatcher dispatcher, DiscoveryXMLRPCClient discoveryXMLRPCClient,
+            @NonNull Dispatcher dispatcher, DiscoveryXMLRPCClient discoveryXMLRPCClient,
             DiscoveryWPAPIRestClient discoveryWPAPIRestClient) {
         mDispatcher = dispatcher;
         mDiscoveryXMLRPCClient = discoveryXMLRPCClient;
