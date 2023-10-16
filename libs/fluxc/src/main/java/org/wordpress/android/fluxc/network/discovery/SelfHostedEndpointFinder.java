@@ -27,7 +27,7 @@ public class SelfHostedEndpointFinder {
 
     @NonNull private final Dispatcher mDispatcher;
     @NonNull private final DiscoveryXMLRPCClient mDiscoveryXMLRPCClient;
-    private final DiscoveryWPAPIRestClient mDiscoveryWPAPIRestClient;
+    @NonNull private final DiscoveryWPAPIRestClient mDiscoveryWPAPIRestClient;
 
     public enum DiscoveryError implements OnChangedError {
         INVALID_URL,
@@ -72,7 +72,7 @@ public class SelfHostedEndpointFinder {
     @Inject public SelfHostedEndpointFinder(
             @NonNull Dispatcher dispatcher,
             @NonNull DiscoveryXMLRPCClient discoveryXMLRPCClient,
-            DiscoveryWPAPIRestClient discoveryWPAPIRestClient) {
+            @NonNull DiscoveryWPAPIRestClient discoveryWPAPIRestClient) {
         mDispatcher = dispatcher;
         mDiscoveryXMLRPCClient = discoveryXMLRPCClient;
         mDiscoveryWPAPIRestClient = discoveryWPAPIRestClient;
