@@ -30,7 +30,7 @@ public class DiscoveryWPAPIRestClient extends BaseWPAPIRestClient {
         super(dispatcher, requestQueue, userAgent);
     }
 
-    public String discoverWPAPIBaseURL(String url) throws SelfHostedEndpointFinder.DiscoveryException {
+    public String discoverWPAPIBaseURL(String url) {
         BaseRequestFuture<String> future = BaseRequestFuture.newFuture();
         WPAPIHeadRequest request = new WPAPIHeadRequest(url, future, future);
         add(request);
