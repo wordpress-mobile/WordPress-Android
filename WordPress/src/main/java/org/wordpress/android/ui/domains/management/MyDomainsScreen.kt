@@ -1,17 +1,23 @@
 package org.wordpress.android.ui.domains.management
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,7 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.ui.compose.components.MainTopAppBar
@@ -46,10 +54,16 @@ fun MyDomainsScreen(uiState: DomainManagementViewModel.UiState) {
         Column (
             modifier = Modifier.padding(it),
         ){
-            MyDomainsSearchInput()
+            val listState = rememberLazyListState()
+
+            val elevation = animateDpAsState(
+                targetValue = if (listState.canScrollBackward) 4.dp else 0.dp,
+                label = "Search Input Elevation",
+            )
+            MyDomainsSearchInput(elevation.value)
             when (uiState) {
                 is DomainManagementViewModel.UiState.Populated ->
-                    MyDomainsList(uiState.domains)
+                    MyDomainsList(uiState.domains, listState)
                 else -> {}
             }
         }
@@ -57,34 +71,43 @@ fun MyDomainsScreen(uiState: DomainManagementViewModel.UiState) {
 }
 
 @Composable
-fun MyDomainsSearchInput() {
+fun MyDomainsSearchInput(elevation: Dp) {
     var queryString by rememberSaveable { mutableStateOf("") }
 
-    OutlinedTextField(
-        value = queryString,
-        onValueChange = { queryString = it },
-        placeholder = { Text("Search your domains") },
-        shape = RoundedCornerShape(50),
-        leadingIcon = {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_search_white_24dp),
-                contentDescription = "",
-                tint = MaterialTheme.colorScheme.outline,
-            )
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    )
+    Surface (shadowElevation = elevation, modifier = Modifier.zIndex(1f)) {
+        OutlinedTextField(
+            value = queryString,
+            onValueChange = { queryString = it },
+            placeholder = { Text("Search your domains") },
+            shape = RoundedCornerShape(50),
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_search_white_24dp),
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.outline,
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        )
+    }
 }
 
 
 @Composable
-fun MyDomainsList(domains: List<AllDomainsDomain>) {
+fun MyDomainsList(
+    domains: List<AllDomainsDomain>,
+    listState: LazyListState,
+) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.padding(horizontal = 16.dp),
+        state = listState,
     ) {
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
         items(items = domains) {
             DomainListCard(
                 uiState = DomainCardUiState(
