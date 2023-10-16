@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:drawable="@drawable/ic_like_outline_new_24dp" android:state_enabled="false" android:state_selected="false" />
+    <item android:drawable="@drawable/ic_like_fill_new_24dp" android:state_enabled="false" android:state_selected="true" />
+    <item android:drawable="@drawable/ic_like_fill_new_24dp" android:state_enabled="true" android:state_selected="true" />
+    <item android:drawable="@drawable/ic_like_outline_new_24dp" />
+
+</selector>

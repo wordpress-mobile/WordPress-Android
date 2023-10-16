@@ -20,6 +20,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewStub
 import android.webkit.CookieManager
 import android.webkit.WebView
 import android.widget.ImageView.ScaleType.CENTER_CROP
@@ -29,12 +30,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.appcompat.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -48,6 +51,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
@@ -59,6 +63,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
+import org.wordpress.android.databinding.ReaderIncludePostDetailFooterBinding
+import org.wordpress.android.databinding.ReaderIncludePostDetailFooterNewBinding
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -134,6 +140,7 @@ import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISS
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
+import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
@@ -179,7 +186,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private var moreMenuPopup: ListPopupWindow? = null
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var scrollView: WPScrollView
-    private lateinit var layoutFooter: ViewGroup
     private lateinit var readerWebView: ReaderWebView
     private lateinit var readerProgressBar: ProgressBar
 
@@ -204,6 +210,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var globalRelatedPostsView: ReaderSimplePostContainerView
     private lateinit var localRelatedPostsView: ReaderSimplePostContainerView
 
+    private lateinit var layoutFooterBinding: PostDetailFooterBarBinding
+
     private var postSlugsResolutionUnderway: Boolean = false
     private var hasAlreadyUpdatedPost: Boolean = false
     private var isWebViewPaused: Boolean = false
@@ -219,6 +227,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private val viewModel: ReaderPostDetailViewModel by viewModels()
     private lateinit var conversationViewModel: ConversationNotificationsViewModel
+
+    private var binding: ReaderFragmentPostDetailBinding? = null
 
     @Inject
     internal lateinit var accountStore: AccountStore
@@ -267,6 +277,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
+    @Inject
+    lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -347,7 +360,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false)
+        val viewBinding = ReaderFragmentPostDetailBinding.inflate(inflater, container, false).also { binding = it }
+        val view = viewBinding.root
 
         initSwipeRefreshLayout(view)
         initAppBar(view)
@@ -455,14 +469,36 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun initLayoutFooter(view: View) {
-        layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
-        val elevationOverlayProvider = ElevationOverlayProvider(layoutFooter.context)
-        val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
-        val elevatedSurfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
-            appbarElevation
-        )
-        layoutFooter.setBackgroundColor(elevatedSurfaceColor)
-        layoutFooter.visibility = View.INVISIBLE
+        val isReaderImprovementsEnabled = readerImprovementsFeatureConfig.isEnabled()
+        view.findViewById<ViewStub>(R.id.layout_post_detail_footer).apply {
+            layoutResource = if (isReaderImprovementsEnabled) {
+                R.layout.reader_include_post_detail_footer_new
+            } else {
+                R.layout.reader_include_post_detail_footer
+            }
+
+            setOnInflateListener { _, inflated ->
+                layoutFooterBinding = if (isReaderImprovementsEnabled) {
+                    ReaderIncludePostDetailFooterNewBinding.bind(inflated).mapBinding().apply {
+                        // the new bar should hide on scroll
+                        val params = root.layoutParams as CoordinatorLayout.LayoutParams
+                        params.behavior = HideBottomViewOnScrollBehavior<View>()
+                    }
+                } else {
+                    ReaderIncludePostDetailFooterBinding.bind(inflated).mapBinding().apply {
+                        // the old bar should have the elevated surface color background
+                        val elevationOverlayProvider = ElevationOverlayProvider(root.context)
+                        val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
+                        val elevatedSurfaceColor = elevationOverlayProvider
+                            .compositeOverlayWithThemeSurfaceColorIfNeeded(appbarElevation)
+                        root.setBackgroundColor(elevatedSurfaceColor)
+                    }
+                }
+                layoutFooterBinding.root.isInvisible = true
+            }
+        }.also { stub ->
+            stub.inflate()
+        }
     }
 
     private fun initSignInButton(view: View) {
@@ -495,11 +531,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        val binding = ReaderFragmentPostDetailBinding.bind(view)
 
         initLikeFacesRecycler(savedInstanceState)
         initCommentSnippetRecycler(savedInstanceState)
-        initViewModel(binding, savedInstanceState)
+        binding?.let { initViewModel(it, savedInstanceState) }
         restoreState(savedInstanceState)
 
         showPost()
@@ -781,10 +816,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         updateFeaturedImage(state.featuredImageUiState, binding)
         updateExcerptFooter(state.excerptFooterUiState)
 
-        with(binding.layoutPostDetailFooter) {
-            updateActionButton(state.postId, state.blogId, state.actions.likeAction, countLikes)
+        with(layoutFooterBinding) {
+            updateActionButton(state.postId, state.blogId, state.actions.likeAction, like)
             updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
-            updateActionButton(state.postId, state.blogId, state.actions.commentsAction, countComments)
+            updateActionButton(state.postId, state.blogId, state.actions.commentsAction, comment)
             updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
         }
 
@@ -802,7 +837,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             if (handleDirectOperation()) return
 
             scrollView.visibility = View.VISIBLE
-            layoutFooter.visibility = View.VISIBLE
+            layoutFooterBinding.root.visibility = View.VISIBLE
         }
     }
 
@@ -983,13 +1018,18 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             binding.layoutPostDetailContainer,
             uiHelpers.getTextOfUiString(requireContext(), this.message),
             Snackbar.LENGTH_LONG
-        )
+        ).setAnchorView(layoutFooterBinding.root)
         if (this.buttonTitle != null) {
             snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), this.buttonTitle)) {
                 this.buttonAction.invoke()
             }
         }
         snackbar.show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
     override fun onDestroy() {
@@ -1007,33 +1047,34 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onPrepareMenu(menu: Menu) {
-        // browse & share require the post to have a URL (some feed-based posts don't have one)
+        val isReaderImprovementsEnabled = readerImprovementsFeatureConfig.isEnabled()
+
         val postHasUrl = viewModel.post?.hasUrl() == true
-        val mnuBrowse = menu.findItem(R.id.menu_browse)
-        if (mnuBrowse != null) {
-            mnuBrowse.isVisible = postHasUrl || viewModel.interceptedUri != null
+        val menuBrowse = menu.findItem(R.id.menu_browse)
+        menuBrowse?.isVisible = if (!isReaderImprovementsEnabled) {
+            // browse require the post to have a URL (some feed-based posts don't have one) or an intercepted URI
+            postHasUrl || viewModel.interceptedUri != null
+        } else {
+            // in the Reader improvements we are only showing this as a fallback for posts with intercepted URI only
+            !postHasUrl && viewModel.interceptedUri != null
         }
-        val mnuShare = menu.findItem(R.id.menu_share)
-        if (mnuShare != null) {
-            mnuShare.isVisible = postHasUrl
-        }
+
+        val menuShare = menu.findItem(R.id.menu_share)
+        // share should not be shown as a TopBar item after Reader improvements (only in the "more" menu)
+        menuShare?.isVisible = postHasUrl && !isReaderImprovementsEnabled
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
         R.id.menu_browse -> {
+            val interceptedUri = viewModel.interceptedUri
             if (viewModel.hasPost) {
                 readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
                 ReaderActivityLauncher.openPost(context, viewModel.post)
-            } else if (viewModel.interceptedUri != null) {
-                readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, viewModel.interceptedUri!!)
-                ReaderActivityLauncher.openUrl(activity, viewModel.interceptedUri, OpenUrlType.EXTERNAL)
+            } else if (interceptedUri != null) {
+                readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, interceptedUri)
+                ReaderActivityLauncher.openUrl(activity, interceptedUri, OpenUrlType.EXTERNAL)
                 requireActivity().finish()
             }
-            true
-        }
-        R.id.menu_share -> {
-            readerTracker.track(AnalyticsTracker.Stat.SHARED_ITEM)
-            ReaderActivityLauncher.sharePost(context, viewModel.post)
             true
         }
         R.id.menu_more -> {
@@ -1518,7 +1559,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         readerWebView.setIsPrivatePost(post.isPrivate)
         readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))
         readerProgressBar.visibility = View.VISIBLE
-        renderer = ReaderPostRenderer(readerWebView, viewModel.post, readerCssProvider)
+        renderer = ReaderPostRenderer(
+            readerWebView,
+            viewModel.post,
+            readerCssProvider,
+            readerImprovementsFeatureConfig.isEnabled()
+        )
 
         // if the post is from private atomic site postpone render until we have a special access cookie
         if (post.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
@@ -1781,6 +1827,32 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             AniUtils.animateTopBar(appBar, show)
         }
     }
+
+    private data class PostDetailFooterBarBinding(
+        val root: ViewGroup,
+        val bookmark: View,
+        val reblog: View,
+        val comment: View,
+        val like: View,
+    )
+
+    private fun ReaderIncludePostDetailFooterBinding.mapBinding(): PostDetailFooterBarBinding =
+        PostDetailFooterBarBinding(
+            root,
+            bookmark,
+            reblog,
+            countComments,
+            countLikes,
+        )
+
+    private fun ReaderIncludePostDetailFooterNewBinding.mapBinding(): PostDetailFooterBarBinding =
+        PostDetailFooterBarBinding(
+            root,
+            bookmark,
+            reblog,
+            comment,
+            like,
+        )
 
     companion object {
         private const val ON_PAGE_FINISHED_DELAY_MILLIS = 300L

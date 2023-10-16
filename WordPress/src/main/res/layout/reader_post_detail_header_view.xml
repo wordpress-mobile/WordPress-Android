@@ -47,7 +47,7 @@
 
     <org.wordpress.android.ui.reader.views.ReaderFollowButton
         android:id="@+id/header_follow_button"
-        style="@style/Reader.Follow.Button.PostDetail"
+        style="@style/Reader.Follow.Button.New"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"

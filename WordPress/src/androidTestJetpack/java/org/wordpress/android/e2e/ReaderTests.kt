@@ -47,9 +47,12 @@ class ReaderTests : BaseTest() {
         ReaderPage()
             .tapFollowingTab()
             .openBlogOrPost(TITLE_LONGREADS_BLOG)
+            .openMoreMenu()
             .bookmarkPost()
             .verifyPostBookmarked()
+            .openMoreMenu()
             .removeBookmarkPost()
+            .openMoreMenu()
             .verifyPostNotBookmarked()
             .goBackToReader()
     }
