@@ -45,6 +45,7 @@ class SiteCreationPlansViewModel @Inject constructor(
 
         val planId = uri.getQueryParameter(PLAN_ID_PARAM)?.toInt() ?: 0
         val planSlug = uri.getQueryParameter(PLAN_SLUG_PARAM).orEmpty()
+        val domainNameFromRedirectUrl = uri.getQueryParameter(DOMAIN_NAME)
 
         val planModel = PlanModel(
             productId = planId,
@@ -52,7 +53,7 @@ class SiteCreationPlansViewModel @Inject constructor(
             isCurrentPlan = false,
             hasDomainCredit = false
         )
-        postActionEvent(SiteCreationPlansActionEvent.CreateSite(planModel))
+        postActionEvent(SiteCreationPlansActionEvent.CreateSite(planModel, domainNameFromRedirectUrl))
     }
 
     fun onUrlLoaded() {
@@ -166,6 +167,7 @@ class SiteCreationPlansViewModel @Inject constructor(
         const val PLAN_ID_PARAM = "plan_id"
         const val PLAN_SLUG_PARAM = "plan_slug"
         const val PAID_DOMAIN_NAME = "paid_domain_name"
+        const val DOMAIN_NAME = "domain_name"
     }
 }
 
