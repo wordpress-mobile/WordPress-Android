@@ -38,6 +38,8 @@ fun MyDomainsScreen(uiState: DomainManagementViewModel.UiState) {
                 title = "My Domains",
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = {},
+                backgroundColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface,
             )
         },
     ) {
