@@ -55,8 +55,15 @@ public class DiscoveryWPAPIRestClient extends BaseWPAPIRestClient {
         BaseRequestFuture<RootWPAPIRestResponse> future = BaseRequestFuture.newFuture();
         OnWPAPIErrorListener errorListener = future::onErrorResponse;
 
-        WPAPIGsonRequest request = new WPAPIGsonRequest<>(Request.Method.GET, wpApiBaseUrl, null, null,
-                RootWPAPIRestResponse.class, future, errorListener);
+        WPAPIGsonRequest<RootWPAPIRestResponse> request = new WPAPIGsonRequest<>(
+                Request.Method.GET,
+                wpApiBaseUrl,
+                null,
+                null,
+                RootWPAPIRestResponse.class,
+                future,
+                errorListener
+        );
         add(request);
         try {
             RootWPAPIRestResponse response = future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
