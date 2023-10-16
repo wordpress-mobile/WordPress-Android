@@ -57,7 +57,8 @@ public class DiscoveryWPAPIRestClient extends BaseWPAPIRestClient {
         return null;
     }
 
-    public String verifyWPAPIV2Support(String wpApiBaseUrl) {
+    @Nullable
+    public String verifyWPAPIV2Support(@NonNull String wpApiBaseUrl) {
         BaseRequestFuture<RootWPAPIRestResponse> future = BaseRequestFuture.newFuture();
         OnWPAPIErrorListener errorListener = future::onErrorResponse;
 
