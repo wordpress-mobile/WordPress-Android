@@ -23,9 +23,10 @@ import static org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFi
 
 @Singleton
 public class DiscoveryWPAPIRestClient extends BaseWPAPIRestClient {
-    @Inject public DiscoveryWPAPIRestClient(Dispatcher dispatcher,
-                                    @Named("custom-ssl") RequestQueue requestQueue,
-                                    UserAgent userAgent) {
+    @Inject public DiscoveryWPAPIRestClient(
+            Dispatcher dispatcher,
+            @Named("custom-ssl") RequestQueue requestQueue,
+            UserAgent userAgent) {
         super(dispatcher, requestQueue, userAgent);
     }
 
@@ -61,7 +62,7 @@ public class DiscoveryWPAPIRestClient extends BaseWPAPIRestClient {
             RootWPAPIRestResponse response = future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
             if (!response.getNamespaces().contains("wp/v2")) {
                 AppLog.i(AppLog.T.NUX, "Site does not have the full WP-API available "
-                        + "(missing wp/v2 namespace)");
+                                       + "(missing wp/v2 namespace)");
                 return null;
             } else {
                 AppLog.i(AppLog.T.NUX, "Found valid WP-API endpoint! - " + wpApiBaseUrl);
