@@ -79,7 +79,7 @@ public class SelfHostedEndpointFinder {
         mDiscoveryWPAPIRestClient = discoveryWPAPIRestClient;
     }
 
-    public void findEndpoint(final String url) {
+    public void findEndpoint(@NonNull final String url) {
         new Thread(() -> {
             try {
                 String wpRestEndpoint = "";
@@ -102,7 +102,8 @@ public class SelfHostedEndpointFinder {
         }).start();
     }
 
-    private String verifyOrDiscoverXMLRPCEndpoint(final String siteUrl) throws DiscoveryException {
+    @Nullable
+    private String verifyOrDiscoverXMLRPCEndpoint(@NonNull final String siteUrl) throws DiscoveryException {
         if (TextUtils.isEmpty(siteUrl)) {
             throw new DiscoveryException(DiscoveryError.INVALID_URL, siteUrl);
         }
@@ -158,6 +159,7 @@ public class SelfHostedEndpointFinder {
         return urlsToTry;
     }
 
+    @Nullable
     private String verifyXMLRPCUrl(@NonNull final String siteUrl) throws DiscoveryException {
         // Ordered set of Strings that contains the URLs we want to try
         final LinkedHashSet<String> urlsToTry = getOrderedVerifyUrlsToTry(siteUrl);
@@ -190,7 +192,8 @@ public class SelfHostedEndpointFinder {
     // Attempts to retrieve the XML-RPC url for a self-hosted site.
     // See diagrams here https://github.com/wordpress-mobile/WordPress-Android/issues/3805 for details about the
     // whole process.
-    private String discoverXMLRPCEndpoint(String siteUrl) throws DiscoveryException {
+    @Nullable
+    private String discoverXMLRPCEndpoint(@NonNull String siteUrl) throws DiscoveryException {
         // Ordered set of Strings that contains the URLs we want to try
         final Set<String> urlsToTry = new LinkedHashSet<>();
 
@@ -357,7 +360,8 @@ public class SelfHostedEndpointFinder {
         return false;
     }
 
-    private String discoverWPRESTEndpoint(String url) throws DiscoveryException {
+    @Nullable
+    private String discoverWPRESTEndpoint(@NonNull String url) throws DiscoveryException {
         if (TextUtils.isEmpty(url)) {
             throw new DiscoveryException(DiscoveryError.INVALID_URL, url);
         }

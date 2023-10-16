@@ -1011,7 +1011,7 @@ public class AccountStore extends Store {
         emitChange(event);
     }
 
-    private void discoverEndPoint(String payload) {
+    private void discoverEndPoint(@NonNull String payload) {
         mSelfHostedEndpointFinder.findEndpoint(payload);
     }
 
