@@ -274,7 +274,7 @@ class SiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
-    fun onPlanSelection(plan: PlanModel) {
+    fun onPlanSelection(plan: PlanModel, domainName: String?) {
         siteCreationState = siteCreationState.copy(plan = plan)
         wizardManager.showNextStep()
     }

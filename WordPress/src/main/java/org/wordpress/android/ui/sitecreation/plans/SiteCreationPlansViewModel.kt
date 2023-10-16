@@ -170,5 +170,5 @@ class SiteCreationPlansViewModel @Inject constructor(
 }
 
 sealed class SiteCreationPlansActionEvent {
-    data class CreateSite(val planModel: PlanModel) : SiteCreationPlansActionEvent()
+    data class CreateSite(val planModel: PlanModel, val domainName: String?) : SiteCreationPlansActionEvent()
 }

@@ -225,8 +225,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.onDomainsScreenFinished(domain)
     }
 
-    override fun onPlanSelected(plan: PlanModel) {
-        mainViewModel.onPlanSelection(plan)
+    override fun onPlanSelected(plan: PlanModel, domainName: String?) {
+        mainViewModel.onPlanSelection(plan, domainName)
     }
 
     override fun onHelpClicked(origin: Origin) {
