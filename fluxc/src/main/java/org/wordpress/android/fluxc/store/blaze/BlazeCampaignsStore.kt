@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store.blaze
 
+import kotlinx.coroutines.flow.map
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
@@ -38,15 +39,20 @@ class BlazeCampaignsStore @Inject constructor(
         }
     }
 
+    fun observeBlazeCampaigns(site: SiteModel) = campaignsDao.observeCampaigns(site.siteId)
+
     suspend fun getMostRecentBlazeCampaign(site: SiteModel): BlazeCampaignModel? {
         return coroutineEngine.withDefaultContext(
             AppLog.T.API,
             this,
             "get most recent blaze campaign"
         ) {
-            campaignsDao.getMostRecentCampaignForSite(site.siteId)
+            campaignsDao.getMostRecentCampaignForSite(site.siteId)?.toDomainModel()
         }
     }
+
+    fun observeMostRecentBlazeCampaign(site: SiteModel) = campaignsDao.observeMostRecentCampaignForSite(site.siteId)
+        .map { it?.toDomainModel() }
 
     private suspend fun storeBlazeCampaigns(
         site: SiteModel,
