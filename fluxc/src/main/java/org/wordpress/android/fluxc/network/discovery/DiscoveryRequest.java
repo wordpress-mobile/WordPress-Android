@@ -17,7 +17,7 @@ public class DiscoveryRequest extends BaseRequest<String> {
 
     private final Listener<String> mListener;
 
-    public DiscoveryRequest(String url, Listener<String> listener, BaseErrorListener errorListener) {
+    public DiscoveryRequest(@NonNull String url, Listener<String> listener, BaseErrorListener errorListener) {
         super(Method.GET, url, errorListener);
         mListener = listener;
     }
