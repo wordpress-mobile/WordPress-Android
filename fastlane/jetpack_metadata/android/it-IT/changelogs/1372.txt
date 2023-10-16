@@ -1,4 +1,0 @@
-23.3:
-- Abbiamo modificato il modo in cui vengono visualizzati gli avvisi quando inserisci elementi multimediali nei blocchi da un URL.
-- È più semplice distinguere tra il testo del segnaposto e il contenuto effettivo presenti nei temi basati su blocchi.
-- Le schede della bacheca Il mio sito possono essere personalizzate utilizzando il pulsante "Personalizza la scheda home".

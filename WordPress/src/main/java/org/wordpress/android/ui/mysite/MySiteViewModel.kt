@@ -21,12 +21,14 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_CHECK_STATS_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_UPLOAD_MEDIA_LABEL
@@ -339,7 +341,7 @@ class MySiteViewModel @Inject constructor(
 
                 state
             } else {
-                buildNoSiteState()
+                buildNoSiteState(currentAvatarUrl, avatarName)
             }
 
             bloggingPromptCardViewModelSlice.onSiteChanged(site?.id)
@@ -348,7 +350,7 @@ class MySiteViewModel @Inject constructor(
 
             domainTransferCardViewModel.onSiteChanged(site?.id, state as? SiteSelected)
 
-            UiModel(currentAvatarUrl.orEmpty(), state)
+            UiModel(currentAvatarUrl.orEmpty(), avatarName, state)
         }
     }
 
@@ -695,10 +697,12 @@ class MySiteViewModel @Inject constructor(
         MySiteTabType.ALL -> emptyList()
     }
 
-    private fun buildNoSiteState(): NoSites {
+    private fun buildNoSiteState(accountUrl:String?, accountName: String?): NoSites {
         // Hide actionable empty view image when screen height is under specified min height.
         val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
                 displayUtilsWrapper.getWindowPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
+
+        val shouldShowAccountSettings = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
         return NoSites(
             tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
             siteInfoToolbarViewParams = SiteInfoToolbarViewParams(
@@ -708,7 +712,10 @@ class MySiteViewModel @Inject constructor(
                 appBarLiftOnScroll = true
 
             ),
-            shouldShowImage = shouldShowImage
+            shouldShowImage = shouldShowImage,
+            avatartUrl = accountUrl,
+            accountName = accountName,
+            shouldShowAccountSettings = shouldShowAccountSettings
         )
     }
 
@@ -1285,8 +1292,16 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    @Subscribe(threadMode = MAIN)
+    fun onAccountChanged(event: OnAccountChanged) {
+        if (event.accountInfosChanged && event.causeOfChange == AccountAction.FETCH_SETTINGS) {
+            refresh()
+        }
+    }
+
     data class UiModel(
         val accountAvatarUrl: String,
+        val accountName: String?,
         val state: State
     )
 
@@ -1306,7 +1321,10 @@ class MySiteViewModel @Inject constructor(
         data class NoSites(
             override val tabsUiState: TabsUiState,
             override val siteInfoToolbarViewParams: SiteInfoToolbarViewParams,
-            val shouldShowImage: Boolean
+            val shouldShowImage: Boolean,
+            val avatartUrl:String? = null,
+            val accountName:String? = null,
+            val shouldShowAccountSettings: Boolean = false
         ) : State()
     }
 

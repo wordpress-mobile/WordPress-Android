@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         app:contentScrim="?attr/colorSurface"
-        app:layout_scrollFlags="scroll|exitUntilCollapsed"
+        app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
         app:scrimVisibleHeightTrigger="@dimen/scrim_visible_height_trigger"
         app:titleEnabled="false">
 

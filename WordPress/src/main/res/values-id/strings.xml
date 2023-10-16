@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-03 09:54:07+0000
+Translation-Revision-Date: 2023-10-05 08:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">Batalkan pengelompokan blok</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">Ketuk di sini untuk menampilkan detail selengkapnya.</string>
+    <string name="gutenberg_native_synced_patterns">Pola tersinkron</string>
+    <string name="gutenberg_native_deeply_nested_block">Blok bertingkat terlalu dalam</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Blok bertingkat yang kedalamannya melebihi %d level mungkin tidak dapat ditampilkan dengan benar di editor seluler. Karenanya, kami menyarankan Anda untuk meratakan konten dengan membatalkan pengelompokan blok atau mengedit blok melalui editor web.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blok bertingkat yang kedalamannya melebihi %d level mungkin tidak dapat ditampilkan dengan benar di editor seluler. Karenanya, kami menyarankan Anda untuk meratakan konten dengan membatalkan pengelompokan blok atau mengedit blok melalui browser web.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Blok tidak dapat ditampilkan karena bertingkat terlalu dalam. Ketuk di sini untuk detail selengkapnya.</string>
+    <string name="pages_no_site_something_went_wrong">Ups, ada yang salah. Silakan coba lagi nanti.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Kunjungi situs</string>
     <string name="my_site_dashboard_no_cards_message_description">Ketuk tombol personalisasi untuk menampilkan lebih banyak kartu.</string>
     <string name="my_site_dashboard_no_cards_message_title">Semua kartu disembunyikan</string>
@@ -39,6 +47,7 @@ Language: id
     <string name="my_site_dashboard_card_more_menu_hide_card">Sembunyikan ini</string>
     <string name="contact_support_first_message_hint">Jika saya tidak mampu menjawab pertanyaan Anda, saya akan membantu Anda membuka tiket dukungan dengan tim kami.</string>
     <string name="contact_support_first_message_hi">Hai, saya adalah Asisten AI Jetpack.</string>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">Akses blok Paywall di browser untuk pengaturan lanjutan.</string>
     <string name="contact_support_bot_ticket_comment_answer">Jawaban:</string>
     <string name="contact_support_bot_ticket_comment_question">Pertanyaan:</string>
     <string name="contact_support_bot_ticket_comment_start">Transkrip Bot Seluler Jetpack:</string>
@@ -53,6 +62,7 @@ Language: id
     <string name="contact_support_question_one">Apa alamat situs saya?</string>
     <string name="contact_support_suggestions">Tidak yakin ingin menanyakan apa?</string>
     <string name="contact_support_get_support">Hubungi dukungan</string>
+    <string name="contact_support_first_message">Apa yang bisa saya bantu?</string>
     <string name="contact_support_input_placeholder">Mengirimkan pesan…</string>
     <string name="post_settings_jetpack_social_share_message_clear">Hapus</string>
     <string name="jetpack_social_social_shares_remaining">Tersisa %1$d kesempatan berbagi pos ke media sosial</string>
@@ -137,6 +147,7 @@ Language: id
     <string name="account_closure_dialog_error_chargebacked_site">Akun pengguna ini tidak dapat ditutup jika ada proses penagihan balik yang belum terselesaikan.</string>
     <string name="account_closure_dialog_error_atomic_site">Akun pengguna ini tidak dapat segera ditutup karena memiliki pembelian aktif. Hubungi tim dukungan kami untuk menyelesaikan penghapusan akun.</string>
     <string name="account_closure_dialog_error_unauthorized">Anda tidak berwenang untuk menutup akun.</string>
+    <string name="account_closure_dialog_error_title">Tidak dapat menutup akun secara otomatis!</string>
     <string name="account_closure_dialog_title">Konfirmasi Penutupan Akun …</string>
     <string name="account_closure_dialog_message">Untuk mengonfirmasi, silakan masukkan lagi nama pengguna Anda sebelum menutup.</string>
     <string name="close_account">Tutup Akun</string>
@@ -1695,6 +1706,7 @@ Language: id
     <string name="app_theme_light">Terang</string>
     <string name="app_theme">Tampilan</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Baru-baru ini Anda membuat perubahan pada halaman ini namun tidak menyimpannya. Pilih versi untuk dimuat:\n\n</string>
+    <string name="gutenberg_native_warning_message">Pesan peringatan</string>
     <string name="gutenberg_native_show_post_content">Tampilkan konten pos</string>
     <string name="gutenberg_native_only_show_excerpt">Hanya tampilkan kutipan</string>
     <string name="gutenberg_native_link_to">Tautan Ke</string>

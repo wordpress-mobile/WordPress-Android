@@ -14,7 +14,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import javax.inject.Inject
 
 class MySiteSourceManager @Inject constructor(
-    private val currentAvatarSource: CurrentAvatarSource,
+    private val accountDataSource: AccountDataSource,
     private val domainRegistrationSource: DomainRegistrationSource,
     private val quickStartCardSource: QuickStartCardSource,
     private val scanAndBackupSource: ScanAndBackupSource,
@@ -30,7 +30,7 @@ class MySiteSourceManager @Inject constructor(
         selectedSiteSource,
         siteIconProgressSource,
         quickStartCardSource,
-        currentAvatarSource,
+        accountDataSource,
         domainRegistrationSource,
         scanAndBackupSource,
         cardsSource,
@@ -95,7 +95,7 @@ class MySiteSourceManager @Inject constructor(
 
     private fun refreshSubsetOfAllSources() {
         selectedSiteSource.updateSiteSettingsIfNecessary()
-        currentAvatarSource.refresh()
+        accountDataSource.refresh()
         if (selectedSiteRepository.hasSelectedSite()) quickStartCardSource.refresh()
     }
 

@@ -1633,9 +1633,11 @@
     <string name="reader_dot_separator" translatable="false">\u0020\u2022\u0020</string>
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
     <string name="reader_expandable_tags_view_overflow_indicator_expand_title" translatable="false">%1$s+</string>
+    <string name="reader_expandable_tags_view_overflow_indicator_expand_title_new" translatable="false">+%1$s</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Hide</string>
     <string name="reader_discover_interests_header">You might like</string>
     <string name="reader_discover_recommended_blogs_header">Sites to follow</string>
+    <string name="reader_discover_recommended_header_new">You might like</string>
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
     <string name="reader_discover_empty_title">Welcome!</string>
@@ -2080,6 +2082,8 @@
     <string name="reader_btn_share">Share</string>
     <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_unfollow">Following</string>
+    <string name="reader_secondary_bookmark">Save</string>
+    <string name="reader_secondary_bookmarked">Saved</string>
     <string name="reader_add_bookmark">Add to saved posts</string>
     <string name="reader_remove_bookmark">Remove from saved posts</string>
     <string name="reader_bookmark_snack_btn">View All</string>
@@ -2118,6 +2122,8 @@
     <string name="reader_label_comments_closed">Comments are closed</string>
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_label_follow_count">%,d Followers</string>
+    <string name="reader_label_followers_count">%s followers</string>
+    <string name="reader_label_followers_count_single">1 follower</string>
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="reader_label_local_related_posts">More from %s</string>
@@ -3418,6 +3424,7 @@
     <string name="notification_new_site_creation_title">Create Site</string>
     <string name="notification_new_site_creation_failed">There was a problem</string>
     <string name="notification_new_site_creation_creating_site_subtitle">We\'re creating your new site</string>
+    <string name="site_creation_plans_selection_title">Select a plan</string>
 
     <!-- Site Creation : Domains - Updated designs -->
     <string name="site_creation_domain_header_subtitle">Search for a short and memorable domain to help people find and visit your site.</string>
@@ -4737,5 +4744,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap here to show more details.</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ungroup block</string>
     <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Warning message</string>
+    <string name="account_and_settings">Account and Settings</string>
 
 </resources>

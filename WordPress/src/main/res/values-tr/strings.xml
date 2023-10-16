@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-03 15:54:08+0000
+Translation-Revision-Date: 2023-10-04 15:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">Bloku gruptan çıkar</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">Daha fazla ayrıntı görüntülemek için buraya dokunun.</string>
+    <string name="gutenberg_native_synced_patterns">Senkronize edilmiş desenler</string>
+    <string name="gutenberg_native_deeply_nested_block">Derin şekilde iç içe geçmiş blok</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">%d seviyelerinden daha derin bir şekilde iç içe geçmiş bloklar, mobil düzenleyicide düzgün şekilde oluşmayabilir. Bu nedenle, bloku gruplamadan çıkararak veya web düzenleyicisini kullanarak bloku düzenleme yoluyla içeriği düzleştirmenizi öneririz.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%d seviyelerinden daha derin bir şekilde iç içe geçmiş bloklar, mobil düzenleyicide düzgün şekilde oluşmayabilir. Bu nedenle, bloku gruplamadan çıkararak veya web tarayıcınızı kullanarak bloku düzenleme yoluyla içeriği düzleştirmenizi öneririz.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Blok derin bir şekilde iç içe geçtiği için işlenemez. Daha fazla ayrıntı için buraya dokunun.</string>
+    <string name="pages_no_site_something_went_wrong">Hay aksi, bir sorun oluştu. Lütfen daha sonra tekrar deneyin.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Webe git</string>
     <string name="my_site_dashboard_no_cards_message_description">Daha fazla kart görüntülemek için kişiselleştirme düğmesine dokunun.</string>
     <string name="my_site_dashboard_no_cards_message_title">Tüm kartlar gizli</string>
@@ -1698,6 +1706,7 @@ Language: tr
     <string name="app_theme_light">Açık</string>
     <string name="app_theme">Görünüm</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Yakın zamanda bu sayfada değişiklikler yaptınız ancak değişiklikleri kaydetmediniz. Yüklenecek sürümü seçin:\n\n</string>
+    <string name="gutenberg_native_warning_message">Uyarı mesajı</string>
     <string name="gutenberg_native_show_post_content">Gönderi içeriğini göster</string>
     <string name="gutenberg_native_only_show_excerpt">Sadece alıntı göster</string>
     <string name="gutenberg_native_link_to">Şuna Bağlantı:</string>
