@@ -22,6 +22,7 @@ import javax.inject.Singleton;
 
 import static org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.TIMEOUT_MS;
 
+@SuppressWarnings("CommentedOutCode")
 @Singleton
 public class DiscoveryWPAPIRestClient extends BaseWPAPIRestClient {
     @Inject public DiscoveryWPAPIRestClient(
