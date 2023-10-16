@@ -78,27 +78,24 @@ public class SelfHostedEndpointFinder {
     }
 
     public void findEndpoint(final String url) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String wpRestEndpoint = "";
-                    if (BuildConfig.ENABLE_WPAPI) {
-                        wpRestEndpoint = discoverWPRESTEndpoint(url);
-                    }
-                    // TODO: Eventually make the XML-RPC discovery only run if WP-API discovery fails
-                    String xmlRpcEndpoint = verifyOrDiscoverXMLRPCEndpoint(url);
-                    DiscoveryResultPayload payload = new DiscoveryResultPayload(xmlRpcEndpoint, wpRestEndpoint);
-                    mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoveryResultAction(payload));
-                } catch (DiscoveryException e) {
-                    // TODO: Handle tracking of XMLRPCDiscoveryException
-                    // If a DiscoveryException is caught this high up, it means that either:
-                    // 1. The discovery process has completed, and did not turn up a valid WordPress.com site
-                    // 2. Discovery was halted early because the given site requires SSL validation, or HTTP AUTH login,
-                    // or is a WordPress.com site, or is a completely invalid URL
-                    DiscoveryResultPayload payload = new DiscoveryResultPayload(e.discoveryError, e.failedUrl);
-                    mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoveryResultAction(payload));
+        new Thread(() -> {
+            try {
+                String wpRestEndpoint = "";
+                if (BuildConfig.ENABLE_WPAPI) {
+                    wpRestEndpoint = discoverWPRESTEndpoint(url);
                 }
+                // TODO: Eventually make the XML-RPC discovery only run if WP-API discovery fails
+                String xmlRpcEndpoint = verifyOrDiscoverXMLRPCEndpoint(url);
+                DiscoveryResultPayload payload = new DiscoveryResultPayload(xmlRpcEndpoint, wpRestEndpoint);
+                mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoveryResultAction(payload));
+            } catch (DiscoveryException e) {
+                // TODO: Handle tracking of XMLRPCDiscoveryException
+                // If a DiscoveryException is caught this high up, it means that either:
+                // 1. The discovery process has completed, and did not turn up a valid WordPress.com site
+                // 2. Discovery was halted early because the given site requires SSL validation, or HTTP AUTH login,
+                // or is a WordPress.com site, or is a completely invalid URL
+                DiscoveryResultPayload payload = new DiscoveryResultPayload(e.discoveryError, e.failedUrl);
+                mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoveryResultAction(payload));
             }
         }).start();
     }
