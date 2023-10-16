@@ -49,7 +49,6 @@ class SiteCreationPlansViewModel @Inject constructor(
         val planModel = PlanModel(
             productId = planId,
             productSlug = planSlug,
-            productName = domainName.domainName,
             isCurrentPlan = false,
             hasDomainCredit = false
         )

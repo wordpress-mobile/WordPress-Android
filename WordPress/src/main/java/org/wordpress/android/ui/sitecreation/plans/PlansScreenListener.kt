@@ -11,7 +11,6 @@ interface PlansScreenListener {
 data class PlanModel(
     val productId: Int?,
     val productSlug: String?,
-    val productName: String?,
     val isCurrentPlan: Boolean,
     val hasDomainCredit: Boolean
 ) : Parcelable
