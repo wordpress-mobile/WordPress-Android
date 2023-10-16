@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-03 15:54:07+0000
+Translation-Revision-Date: 2023-10-04 13:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: it
@@ -10,10 +10,10 @@ Language: it
     <string name="gutenberg_native_tap_here_to_show_more_details">Tocca qui per visualizzare ulteriori dettagli.</string>
     <string name="gutenberg_native_synced_patterns">Pattern sincronizzati</string>
     <string name="gutenberg_native_deeply_nested_block">Blocco con molti livelli di nidificazione</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">I blocchi con molti più livelli di nidificazione rispetto ai %d livelli potrebbero non essere visualizzati correttamente nell\'editor per dispositivi mobili. Per questo motivo, consigliamo di uniformare i contenuti separando o modificando il blocco utilizzando l\'editor web.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">I blocchi con molti più livelli di nidificazione rispetto ai %d livelli potrebbero non essere visualizzati correttamente nell\'editor per dispositivi mobili. Per questo motivo, consigliamo di uniformare i contenuti separando o modificando il blocco utilizzando il browser web.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">I blocchi con più di %d livelli di nidificazione potrebbero non essere visualizzati correttamente nell\'editor per dispositivi mobili. Per questo motivo, consigliamo di uniformare i contenuti separando il blocco o modificandolo tramite l\'editor web.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">I blocchi con più di %d livelli di nidificazione potrebbero non essere visualizzati correttamente nell\'editor per dispositivi mobili. Per questo motivo consigliamo di uniformare i contenuti separando il blocco o modificandolo tramite il browser web.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Il blocco non può essere visualizzato perché ha troppi livelli di nidificazione. Tocca qui per ulteriori dettagli.</string>
-    <string name="pages_no_site_something_went_wrong">Ops, si è verificato un problema. Riprova più tardi.</string>
+    <string name="pages_no_site_something_went_wrong">Oh oh, si è verificato un problema. Riprova più tardi.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Vai al web</string>
     <string name="my_site_dashboard_no_cards_message_description">Tocca il pulsante Personalizza per visualizzare più schede.</string>
     <string name="my_site_dashboard_no_cards_message_title">Tutte le schede sono nascoste</string>

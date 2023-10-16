@@ -21,7 +21,7 @@ class ReaderRecommendedBlogViewHolder(
             siteName.text = name
             siteUrl.text = url
             uiHelpers.setTextOrHide(siteDescription, description)
-            siteFollowIcon.apply {
+            siteFollowButton.apply {
                 setIsFollowed(isFollowed)
                 contentDescription = context.getString(followContentDescription.stringRes)
                 setOnClickListener {

@@ -248,7 +248,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                     post.isFollowedByCurrentUser = data.following
                     updateFollowButtonUiState(
                         currentUiState = currentUiState,
-                        isFollowed = post.isFollowedByCurrentUser
+                        isFollowed = post.isFollowedByCurrentUser,
+                        isFollowEnabled = data.isChangeFinal
                     )
                 }
             }
@@ -442,7 +443,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             findPost(it.postId, it.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
                     readerPostMoreButtonUiStateBuilder.buildMoreMenuItemsBlocking(
-                        post, this@ReaderPostDetailViewModel::onButtonClicked
+                        post, false, this@ReaderPostDetailViewModel::onButtonClicked
                     )
                 } else {
                     null
@@ -601,12 +602,13 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun updateFollowButtonUiState(
         currentUiState: ReaderPostDetailsUiState,
-        isFollowed: Boolean
+        isFollowed: Boolean,
+        isFollowEnabled: Boolean,
     ) {
         val updatedFollowButtonUiState = currentUiState
             .headerUiState
             .followButtonUiState
-            .copy(isFollowed = isFollowed)
+            .copy(isFollowed = isFollowed, isEnabled = isFollowEnabled)
 
         val updatedHeaderUiState = currentUiState
             .headerUiState

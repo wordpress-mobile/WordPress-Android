@@ -76,10 +76,6 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getReaderCardsPageHandle()
         set(pageHandle) = AppPrefs.setReaderCardsPageHandle(pageHandle)
 
-    var readerDiscoverWelcomeBannerShown: Boolean
-        get() = AppPrefs.getReaderDiscoverWelcomeBannerShown()
-        set(showBanner) = AppPrefs.setReaderDiscoverWelcomeBannerShown(showBanner)
-
     var shouldShowStoriesIntro: Boolean
         get() = AppPrefs.shouldShowStoriesIntro()
         set(shouldShow) = AppPrefs.setShouldShowStoriesIntro(shouldShow)

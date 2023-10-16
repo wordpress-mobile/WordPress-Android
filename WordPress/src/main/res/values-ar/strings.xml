@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-03 13:54:08+0000
+Translation-Revision-Date: 2023-10-04 13:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.9
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">مكوّن الترقية</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">اضغط هنا لعرض مزيد من التفاصيل.</string>
+    <string name="gutenberg_native_synced_patterns">الأنماط التي تمت مزامنتها</string>
+    <string name="gutenberg_native_deeply_nested_block">مكوّن متداخل بشكل عميق</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">قد لا تظهر المكوّنات المتداخلة بشكل أكثر عمقًا من %d من المستويات بشكل صحيح في محرر الهاتف المحمول. لهذا السبب، نوصي بتهيئة المحتوى عن طريق إلغاء تجميع المكوّن أو تحرير المكوّن باستخدام محرر الويب.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">قد لا تظهر المكوّنات المتداخلة بشكل أكثر عمقًا من %d من المستويات بشكل صحيح في محرر الهاتف المحمول. لهذا السبب، نوصي بتهيئة المحتوى عن طريق إلغاء تجميع المكوّن أو تحرير المكوّن باستخدام متصفح الويب لديك.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">يتعذر عرض المكوّن نظرًا إلى تداخله بشكل عميق. اضغط هنا للحصول على مزيد من التفاصيل.</string>
+    <string name="pages_no_site_something_went_wrong">حسنًا، حدث خطأ. ترجى المحاولة مرة أخرى لاحقًا.</string>
     <string name="sharing_connect_via_web_warning_positive_button">الانتقال إلى الويب</string>
     <string name="my_site_dashboard_no_cards_message_description">انقر على زر \"تخصيص\" لإظهار مزيد من البطاقات.</string>
     <string name="my_site_dashboard_no_cards_message_title">كل البطاقات مخفية</string>

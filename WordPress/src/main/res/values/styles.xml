@@ -35,7 +35,7 @@
         <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
         <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
 
-        <item name="followButtonStyle">@style/Reader.Follow.Button</item>
+        <item name="followButtonStyle">@style/Reader.Follow.Button.New</item>
 
         <item name="wpColorError">@color/error</item>
         <item name="wpColorSuccess">@color/green_50</item>

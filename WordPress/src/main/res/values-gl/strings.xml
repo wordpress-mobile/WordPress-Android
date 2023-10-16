@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-02 17:15:19+0000
+Translation-Revision-Date: 2023-10-11 00:13:21+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: gl_ES
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">Desagrupar o bloque</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">Toca aquí para mostrar máis detalles.</string>
+    <string name="gutenberg_native_synced_patterns">Padróns sincronizados</string>
+    <string name="gutenberg_native_deeply_nested_block">Bloque profundamente aniñado</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">É posible que os bloques aniñados a máis de %d niveis non se amosen correctamente no editor móbil. Por este motivo, recomendamos aplanar o contido desagrupando o bloque ou editando o bloque mediante o editor web.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">O bloque non se pode renderizar porque está profundamente aniñado. Toca aquí para obter máis detalles.</string>
+    <string name="pages_no_site_something_went_wrong">Algo saíu mal. Por favor inténtao de novo máis tarde.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">É posible que os bloques aniñados a máis de %d niveis non se amosen correctamente no editor móbil. Por este motivo, recomendamos aplanar o contido desagrupando o bloque ou editando o bloque co teu navegador web.</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Ir á web</string>
+    <string name="my_site_dashboard_no_cards_message_description">Toca o botón personalizar para amosar máis tarxetas.</string>
+    <string name="my_site_dashboard_no_cards_message_title">Todas as tarxetas están ocultas</string>
+    <string name="personalization_screen_next_steps_card_description">Aprende a sacar o máximo proveito do teu sitio coa aplicación.</string>
+    <string name="personalization_screen_activity_log_card_description">Accións recentes realizadas no teu sitio.</string>
+    <string name="personalization_screen_pages_card_description">Visión xeral das páxinas do teu sitio.</string>
+    <string name="personalization_screen_blogging_prompts_card_description">Ideas diarias para as publicacións do teu blog.</string>
+    <string name="personalization_screen_blogging_prompts_card_title">Indicacións de blogue</string>
+    <string name="personalization_screen_blaze_card_description">Promociona unha publicación e consulta as campañas actuais.</string>
+    <string name="personalization_screen_scheduled_posts_card_description">As túas próximas publicacións programadas.</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Publicacións programadas</string>
+    <string name="personalization_screen_draft_posts_card_description">Os teus borradores de publicacións máis recentes.</string>
+    <string name="personalization_screen_draft_posts_card_title">Borradores de publicacións</string>
+    <string name="personalization_screen_stats_card_description">Vistas, visitantes e gústame</string>
+    <string name="personalization_screen_footer_cards">As tarxetas poden amosar contido diferente dependendo do que estea a suceder co teu sitio</string>
+    <string name="personalization_screen_description">Engadir ou ocultar tarxetas</string>
+    <string name="personalization_screen_title">Personaliza a pestana de inicio</string>
+    <string name="personalize_card_content_description">Toca para personalizar a túa pestana de inicio</string>
+    <string name="personalize_card_text">Personaliza a túa pestana de inicio</string>
+    <string name="partial_media_access_prompt_change_settings">Cambiar os axustes</string>
+    <string name="partial_media_access_prompt_select_more">Selecciona Máis</string>
+    <string name="partial_media_access_prompt_text">Só están dispoñibles as fotos e os vídeos seleccionados aos que deches acceso.</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Ver todas as campañas</string>
+    <string name="dashboard_activity_card_menu_all_activity">Toda a actividade</string>
+    <string name="dashboard_pages_card_more_menu_all_pages">Todas as páxinas</string>
+    <string name="gutenberg_native_choose_a_file">Elixe un arquivo</string>
+    <string name="gutenberg_native_add_image_or_video">Engade unha imaxe ou un vídeo</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">Ver todas as publicacións programadas</string>
+    <string name="my_site_post_card_menu_view_all_drafts">Ver todos os borradores</string>
+    <string name="my_site_todays_stats_menu_view_stats">Ver as estatísticas</string>
+    <string name="my_site_dashboard_card_more_menu_hide_card">Ocultar isto</string>
+    <string name="contact_support_first_message_hint">Se non podo responder á túa pregunta, axudareiche a abrir un ticket de asistencia co noso equipo.</string>
+    <string name="contact_support_first_message_hi">Ola, son o asistente da IA de Jetpack.</string>
     <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">Accede a este bloque de Paywall no teu navegador web para axustes avanzados.</string>
     <string name="contact_support_bot_ticket_comment_answer">Resposta:</string>
     <string name="contact_support_bot_ticket_comment_question">Pregunta:</string>

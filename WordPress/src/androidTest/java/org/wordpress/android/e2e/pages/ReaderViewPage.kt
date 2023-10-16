@@ -18,7 +18,9 @@ class ReaderViewPage {
     private val recyclerView = UiScrollable(UiSelector().resourceId(buildResourceId("recycler_view")))
     private val savePostsForLater = device.findObject(UiSelector().text("Save Posts for Later"))
     private val okButton = device.findObject(UiSelector().text("OK"))
-    private val bookmarkButtonSelector = UiSelector().resourceId(buildResourceId("bookmark"))
+    private val postMoreMenuSelector = UiSelector().resourceId(buildResourceId("more_menu"))
+    private val bookmarkMenuAction = device.findObject(UiSelector().text("Save"))
+    private val removeBookmarkMenuAction = device.findObject(UiSelector().text("Saved"))
 
     private fun buildResourceId(id: String): String {
         val packageName = InstrumentationRegistry.getInstrumentation().targetContext.packageName
@@ -63,7 +65,7 @@ class ReaderViewPage {
     }
 
     fun bookmarkPost(): ReaderViewPage {
-        tapBookmarkButton()
+        tapBookmarkMenuAction()
         // Dismiss save posts locally dialog.
         if (savePostsForLater.exists()) {
             okButton.clickAndWaitForNewWindow()
@@ -72,15 +74,26 @@ class ReaderViewPage {
     }
 
     fun removeBookmarkPost(): ReaderViewPage {
-        tapBookmarkButton()
+        tapRemoveBookmarkMenuAction()
         return this
     }
 
-    private fun tapBookmarkButton() {
-        // Scroll to the bookmark button.
-        recyclerView.scrollIntoView(bookmarkButtonSelector)
+    fun openMoreMenu(): ReaderViewPage {
+        // Scroll to the more menu button.
+        recyclerView.scrollIntoView(postMoreMenuSelector)
+        // Tap the more menu button.
+        device.findObject(postMoreMenuSelector).clickAndWaitForNewWindow()
+        return this
+    }
+
+    private fun tapBookmarkMenuAction() {
         // Tap the bookmark button.
-        device.findObject(bookmarkButtonSelector).clickAndWaitForNewWindow()
+        bookmarkMenuAction.clickAndWaitForNewWindow()
+    }
+
+    private fun tapRemoveBookmarkMenuAction() {
+        // Tap the bookmark button.
+        removeBookmarkMenuAction.clickAndWaitForNewWindow()
     }
 
     fun goBackToReader(): ReaderPage {
@@ -128,7 +141,7 @@ class ReaderViewPage {
     }
 
     fun verifyPostNotBookmarked(): ReaderViewPage {
-        val isBookmarked = device.findObject(bookmarkButtonSelector).isSelected
+        val isBookmarked = bookmarkMenuAction.isSelected
         TestCase.assertFalse("The bookmark button is selected", isBookmarked)
         return this
     }

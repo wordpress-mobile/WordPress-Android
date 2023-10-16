@@ -63,16 +63,7 @@
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <org.wordpress.android.ui.ActionableEmptyView
-        android:id="@+id/actionable_empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/toolbar_height"
-        android:visibility="gone"
-        app:aevButton="@string/my_site_add_new_site"
-        app:aevImage="@drawable/img_illustration_site_wordpress_camera_pencils_226dp"
-        app:aevSubtitle="@string/my_site_create_new_site"
-        app:aevTitle="@string/my_site_create_new_site_title"
-        tools:visibility="visible" />
+    <include layout="@layout/my_site_fragment_no_sites_view"
+        android:id="@+id/no_sites_view"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -157,12 +157,12 @@
 
     </RelativeLayout>
 
-    <include
+    <ViewStub
         android:id="@+id/layout_post_detail_footer"
-        layout="@layout/reader_include_post_detail_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
+        android:layout_gravity="bottom"
+        tools:layout="@layout/reader_include_post_detail_footer_new" />
 
     <!-- container for webView custom view - this is where fullscreen video will appear -->
     <FrameLayout

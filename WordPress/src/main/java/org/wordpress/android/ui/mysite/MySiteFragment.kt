@@ -40,6 +40,7 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
@@ -78,6 +79,7 @@ import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import org.wordpress.android.viewmodel.observeEvent
@@ -98,10 +100,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     lateinit var uiHelpers: UiHelpers
 
     @Inject
-    lateinit var imageManager: ImageManager
+    lateinit var meGravatarLoader: MeGravatarLoader
 
     @Inject
-    lateinit var meGravatarLoader: MeGravatarLoader
+    lateinit var imageManager: ImageManager
 
     @Inject
     lateinit var accountStore: AccountStore
@@ -378,7 +380,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.setupActionableEmptyView() {
-        actionableEmptyView.button.setOnClickListener { viewModel.onAddSitePressed() }
+        noSitesView.actionableEmptyView.button.setOnClickListener { viewModel.onAddSitePressed() }
     }
 
     @Suppress("DEPRECATION", "LongMethod")
@@ -534,6 +536,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             state.siteMenuCardsAndItems
         }
         (recyclerView.adapter as? MySiteAdapter)?.submitList(cardAndItems)
+
+        if (noSitesView.actionableEmptyView.isVisible) {
+            noSitesView.actionableEmptyView.setVisible(false)
+            viewModel.onActionableEmptyViewGone()
+        }
     }
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
@@ -574,6 +581,49 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
     }
 
+    private fun MySiteFragmentBinding.updateSiteInfoToolbarView(siteInfoToolbarViewParams: SiteInfoToolbarViewParams) {
+        showHeader(siteInfoToolbarViewParams.headerVisible)
+        val appBarHeight = resources.getDimension(siteInfoToolbarViewParams.appBarHeight).toInt()
+        appbarMain.layoutParams.height = appBarHeight
+        appbarMain.isLiftOnScroll = siteInfoToolbarViewParams.appBarLiftOnScroll
+        appbarMain.requestLayout()
+    }
+
+    private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
+        tabLayout.setVisible(state.tabsUiState.showTabs)
+        if (!noSitesView.actionableEmptyView.isVisible) {
+            noSitesView.actionableEmptyView.setVisible(true)
+            noSitesView.actionableEmptyView.image.setVisible(state.shouldShowImage)
+            viewModel.onActionableEmptyViewVisible()
+            showAvatarSettingsView(state)
+        }
+        siteTitle = getString(R.string.my_site_section_screen_title)
+        updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
+        appbarMain.setExpanded(false, true)
+    }
+
+    private fun MySiteFragmentBinding.showAvatarSettingsView(state: State.NoSites) {
+        if (state.shouldShowAccountSettings) {
+            noSitesView.avatarAccountSettings.visibility = View.VISIBLE
+            noSitesView.meDisplayName.text = state.accountName
+            loadGravatar(state.avatartUrl)
+            noSitesView.avatarAccountSettings.setOnClickListener { viewModel.onAvatarPressed() }
+        } else noSitesView.avatarAccountSettings.visibility = View.GONE
+    }
+
+    private fun MySiteFragmentBinding.loadGravatar(avatarUrl: String?) =
+        avatarUrl?.let {
+            noSitesView.meAvatar.let {
+                meGravatarLoader.load(
+                    false,
+                    meGravatarLoader.constructGravatarUrl(avatarUrl),
+                    null,
+                    it,
+                    ImageType.USER,
+                    null
+                )
+            }
+        }
 
     @Suppress("ComplexMethod", "LongMethod")
     fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
@@ -844,7 +894,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     companion object {
-        @JvmField var TAG: String = MySiteFragment::class.java.simpleName
+        @JvmField
+        var TAG: String = MySiteFragment::class.java.simpleName
         private const val CHECK_REFRESH_DELAY = 300L
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"

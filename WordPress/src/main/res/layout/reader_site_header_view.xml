@@ -57,6 +57,7 @@
                 android:id="@+id/text_blog_follow_count"
                 style="@style/ReaderTextView.Site.Header.Caption"
                 android:layout_width="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/follow_button"
                 android:layout_toEndOf="@+id/image_blavatar"
