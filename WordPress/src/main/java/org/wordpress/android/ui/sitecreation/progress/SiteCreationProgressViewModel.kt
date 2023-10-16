@@ -173,7 +173,7 @@ class SiteCreationProgressViewModel @Inject constructor(
             SUCCESS -> {
                 site = mapPayloadToSiteModel(event.payload)
                 _onFreeSiteCreated.postValue(site) // MainVM will navigate forward if the domain is free
-                if (!domain.isFree && siteCreationState.plan?.productId != 0) {
+                if (siteCreationState.plan?.productId != 0) {
                     createCart()
                 }
             }
