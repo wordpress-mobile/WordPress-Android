@@ -1,5 +1,8 @@
 package org.wordpress.android.fluxc.network.discovery;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
@@ -42,7 +45,8 @@ public class DiscoveryXMLRPCClient extends BaseXMLRPCClient {
     /**
      * Obtain the HTML response from a GET request for the given URL.
      */
-    public String getResponse(String url) throws DiscoveryException {
+    @Nullable
+    public String getResponse(@NonNull String url) throws DiscoveryException {
         BaseRequestFuture<String> future = BaseRequestFuture.newFuture();
         DiscoveryRequest request = new DiscoveryRequest(url, future, future);
         add(request);
