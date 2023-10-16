@@ -20,6 +20,7 @@ import org.wordpress.android.databinding.MySiteInfoHeaderCardBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment
 import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.SiteInfoToolbarViewParams
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartP
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import org.wordpress.android.viewmodel.observeEvent
@@ -45,6 +47,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     @Inject
     lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var meGravatarLoader: MeGravatarLoader
 
     @Inject
     lateinit var imageManager: ImageManager
@@ -134,7 +139,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.setupActionableEmptyView() {
-        actionableEmptyView.button.setOnClickListener { viewModel.onAddSitePressed() }
+        noSitesView.actionableEmptyView.button.setOnClickListener { viewModel.onAddSitePressed() }
     }
 
     private fun MySiteFragmentBinding.setupObservers() {
@@ -178,8 +183,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
         tabLayout.setVisible(state.tabsUiState.showTabs)
         updateTabs(state.tabsUiState)
-        if (actionableEmptyView.isVisible) {
-            actionableEmptyView.setVisible(false)
+        if (noSitesView.actionableEmptyView.isVisible) {
+            noSitesView.actionableEmptyView.setVisible(false)
             viewModel.onActionableEmptyViewGone()
         }
         if (state.siteInfoHeaderState.hasUpdates || !header.isVisible) {
@@ -224,15 +229,39 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
         tabLayout.setVisible(state.tabsUiState.showTabs)
-        if (!actionableEmptyView.isVisible) {
-            actionableEmptyView.setVisible(true)
-            actionableEmptyView.image.setVisible(state.shouldShowImage)
+        if (!noSitesView.actionableEmptyView.isVisible) {
+            noSitesView.actionableEmptyView.setVisible(true)
+            noSitesView.actionableEmptyView.image.setVisible(state.shouldShowImage)
             viewModel.onActionableEmptyViewVisible()
+            showAvatarSettingsView(state)
         }
         siteTitle = getString(R.string.my_site_section_screen_title)
         updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
         appbarMain.setExpanded(false, true)
     }
+
+    private fun MySiteFragmentBinding.showAvatarSettingsView(state: State.NoSites) {
+        if (state.shouldShowAccountSettings) {
+            noSitesView.avatarAccountSettings.visibility = View.VISIBLE
+            noSitesView.meDisplayName.text = state.accountName
+            loadGravatar(state.avatartUrl)
+            noSitesView.avatarAccountSettings.setOnClickListener { viewModel.onAvatarPressed() }
+        } else noSitesView.avatarAccountSettings.visibility = View.GONE
+    }
+
+    private fun MySiteFragmentBinding.loadGravatar(avatarUrl: String?) =
+        avatarUrl?.let {
+            noSitesView.meAvatar.let {
+                meGravatarLoader.load(
+                    false,
+                    meGravatarLoader.constructGravatarUrl(avatarUrl),
+                    null,
+                    it,
+                    ImageType.USER,
+                    null
+                )
+            }
+        }
 
     private fun MySiteFragmentBinding.showHeader(visibility: Boolean) {
         header.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
@@ -331,7 +360,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     companion object {
-        @JvmField var TAG: String = MySiteFragment::class.java.simpleName
+        @JvmField
+        var TAG: String = MySiteFragment::class.java.simpleName
         private const val PASS_TO_TAB_FRAGMENT_DELAY = 300L
         private const val MAX_PERCENT = 100
         fun newInstance(): MySiteFragment {

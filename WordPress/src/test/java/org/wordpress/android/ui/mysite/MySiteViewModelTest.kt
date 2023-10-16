@@ -65,9 +65,9 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.AccountData
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
@@ -296,6 +296,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var trackWithTabSource: MutableList<MySiteTrackWithTabSource>
     private lateinit var tabNavigation: MutableList<TabNavigation>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
+    private val userName = "Username"
     private val siteLocalId = 1
     private val siteUrl = "http://site.com"
     private val siteIcon = "http://site.com/icon.jpg"
@@ -320,7 +321,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             backupAvailable = false
         )
     )
-    private val currentAvatar = MutableLiveData(CurrentAvatarUrl(""))
+    private val currentAvatar = MutableLiveData(AccountData("",""))
     private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
     private val activeTask = MutableLiveData<QuickStartTask>()
     private val quickStartTabStep = MutableLiveData<QuickStartTabStep?>()
@@ -592,7 +593,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `model is empty with no selected site`() {
         onSiteSelected.value = null
-        currentAvatar.value = CurrentAvatarUrl("")
+        currentAvatar.value = AccountData("","")
 
         assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
     }
@@ -678,7 +679,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `account avatar url value is emitted and updated from the source`() {
         initSelectedSite()
 
-        currentAvatar.value = CurrentAvatarUrl(avatarUrl)
+        currentAvatar.value = AccountData(avatarUrl,userName)
 
         assertThat(uiModels.last().accountAvatarUrl).isEqualTo(avatarUrl)
     }
