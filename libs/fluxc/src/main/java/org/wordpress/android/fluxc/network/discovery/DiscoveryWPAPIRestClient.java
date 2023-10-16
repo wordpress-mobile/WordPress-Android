@@ -1,5 +1,8 @@
 package org.wordpress.android.fluxc.network.discovery;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 
@@ -32,7 +35,8 @@ public class DiscoveryWPAPIRestClient extends BaseWPAPIRestClient {
         super(dispatcher, requestQueue, userAgent);
     }
 
-    public String discoverWPAPIBaseURL(String url) {
+    @Nullable
+    public String discoverWPAPIBaseURL(@NonNull String url) {
         BaseRequestFuture<String> future = BaseRequestFuture.newFuture();
         WPAPIHeadRequest request = new WPAPIHeadRequest(url, future, future);
         add(request);
