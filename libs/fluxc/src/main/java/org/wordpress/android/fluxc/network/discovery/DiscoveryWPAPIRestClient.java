@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.OnWPAPIErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequest;
 import org.wordpress.android.util.AppLog;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -67,7 +68,8 @@ public class DiscoveryWPAPIRestClient extends BaseWPAPIRestClient {
         add(request);
         try {
             RootWPAPIRestResponse response = future.get(TIMEOUT_MS, TimeUnit.MILLISECONDS);
-            if (!response.getNamespaces().contains("wp/v2")) {
+            List<String> namespaces = response.getNamespaces();
+            if (namespaces != null && !namespaces.contains("wp/v2")) {
                 AppLog.i(AppLog.T.NUX, "Site does not have the full WP-API available "
                                        + "(missing wp/v2 namespace)");
                 return null;
