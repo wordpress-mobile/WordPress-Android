@@ -78,7 +78,7 @@ public class DiscoveryXMLRPCClient extends BaseXMLRPCClient {
     }
 
     /**
-     * Peform a system.listMethods call on the given URL.
+     * Perform a system.listMethods call on the given URL.
      */
     @Nullable
     public Object[] listMethods(@NonNull String url) throws DiscoveryException {
