@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.domains.management
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -96,7 +98,8 @@ fun MyDomainsList(domains: List<AllDomainsDomain>) {
     }
 }
 
-@Preview
+@Preview(device = Devices.PIXEL_3A)
+@Preview(device = Devices.PIXEL_3A, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewMyDomainsScreen() {
     M3Theme {
