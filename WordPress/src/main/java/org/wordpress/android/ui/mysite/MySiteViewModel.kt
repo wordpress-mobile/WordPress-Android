@@ -186,7 +186,8 @@ class MySiteViewModel @Inject constructor(
         quickStartRepository.quickStartMenuStep
     ) { quickLinks, quickStartMenuStep ->
         if (quickLinks != null &&
-            quickStartMenuStep != null) {
+            quickStartMenuStep != null
+        ) {
             return@merge quickLinksItemViewModelSlice.updateToShowMoreFocusPointIfNeeded(quickLinks, quickStartMenuStep)
         }
         return@merge quickLinks
@@ -268,42 +269,42 @@ class MySiteViewModel @Inject constructor(
             result.filter { it.siteId == null || it.state.site != null }.mapSafe { it.state }
         }
 
-    val uiModel: LiveData<UiModel> = merge(state, quickLinks) { cards, quickLinks ->
-        val nonNullCards = cards ?: return@merge UiModel("", buildNoSiteState())
+    val uiModel: LiveData<State> = merge(state, quickLinks) { cards, quickLinks ->
+        val nonNullCards = cards ?: return@merge buildNoSiteState(cards?.currentAvatarUrl, cards?.avatarName)
         with(nonNullCards) {
-                val state = if (site != null) {
-                    cardsUpdate?.checkAndShowSnackbarError()
-                    val state = buildSiteSelectedStateAndScroll(
-                        site,
-                        showSiteIconProgressBar,
-                        activeTask,
-                        isDomainCreditAvailable,
-                        quickStartCategories,
-                        backupAvailable,
-                        scanAvailable,
-                        cardsUpdate,
-                        bloggingPromptsUpdate,
-                        blazeCardUpdate,
-                        quickLinks
-                    )
-                    trackCardsAndItemsShownIfNeeded(state)
+            val state = if (site != null) {
+                cardsUpdate?.checkAndShowSnackbarError()
+                val state = buildSiteSelectedStateAndScroll(
+                    site,
+                    showSiteIconProgressBar,
+                    activeTask,
+                    isDomainCreditAvailable,
+                    quickStartCategories,
+                    backupAvailable,
+                    scanAvailable,
+                    cardsUpdate,
+                    bloggingPromptsUpdate,
+                    blazeCardUpdate,
+                    quickLinks
+                )
+                trackCardsAndItemsShownIfNeeded(state)
 
-                    bloggingPromptCardViewModelSlice.onDashboardCardsUpdated(
-                        viewModelScope,
-                        state.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card.BloggingPromptCard>()
-                    )
-                    state
-                } else {
-                    buildNoSiteState(currentAvatarUrl, avatarName)
-                }
-                bloggingPromptCardViewModelSlice.onSiteChanged(site?.id)
-
-                dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
-
-                domainTransferCardViewModel.onSiteChanged(site?.id, state as? SiteSelected)
-
-                UiModel(currentAvatarUrl.orEmpty(), avatarName, state)
+                bloggingPromptCardViewModelSlice.onDashboardCardsUpdated(
+                    viewModelScope,
+                    state.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card.BloggingPromptCard>()
+                )
+                state
+            } else {
+                buildNoSiteState(currentAvatarUrl, avatarName)
             }
+            bloggingPromptCardViewModelSlice.onSiteChanged(site?.id)
+
+            dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
+
+            domainTransferCardViewModel.onSiteChanged(site?.id, state as? SiteSelected)
+
+            state
+        }
     }
 
     private fun CardsUpdate.checkAndShowSnackbarError() {
@@ -436,7 +437,7 @@ class MySiteViewModel @Inject constructor(
                 ),
                 domainTransferCardBuilderParams = domainTransferCardViewModel.buildDomainTransferCardParams(
                     site,
-                    uiModel.value?.state as? SiteSelected
+                    uiModel.value as? SiteSelected
                 ),
                 blazeCardBuilderParams = blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate),
                 dashboardCardPlansBuilderParams = DashboardCardPlansBuilderParams(
@@ -554,7 +555,7 @@ class MySiteViewModel @Inject constructor(
         _onNavigation.value = Event(SiteNavigationAction.OpenJetpackPoweredBottomSheet)
     }
 
-    private fun buildNoSiteState(accountUrl:String?, accountName: String?): NoSites {
+    private fun buildNoSiteState(accountUrl: String?, accountName: String?): NoSites {
         // Hide actionable empty view image when screen height is under specified min height.
         val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
                 displayUtilsWrapper.getWindowPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
@@ -562,7 +563,7 @@ class MySiteViewModel @Inject constructor(
         val shouldShowAccountSettings = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
         return NoSites(
             shouldShowImage = shouldShowImage,
-            avatartUrl = accountUrl,
+            avatarUrl = accountUrl,
             accountName = accountName,
             shouldShowAccountSettings = shouldShowAccountSettings
         )
@@ -653,7 +654,7 @@ class MySiteViewModel @Inject constructor(
         checkAndShowJetpackFullPluginInstallOnboarding()
         checkAndShowQuickStartNotice()
         bloggingPromptCardViewModelSlice.onResume()
-        dashboardCardPlansUtils.onResume(uiModel.value?.state as? SiteSelected)
+        dashboardCardPlansUtils.onResume(uiModel.value as? SiteSelected)
         quickLinksItemViewModelSlice.onResume()
     }
 
@@ -881,16 +882,16 @@ class MySiteViewModel @Inject constructor(
 
     private fun onDashboardCardPlansClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        dashboardCardPlansUtils.trackCardTapped(uiModel.value?.state as? SiteSelected)
+        dashboardCardPlansUtils.trackCardTapped(uiModel.value as? SiteSelected)
         _onNavigation.value = Event(SiteNavigationAction.OpenFreeDomainSearch(selectedSite))
     }
 
     private fun onDashboardCardPlansMoreMenuClick() {
-        dashboardCardPlansUtils.trackCardMoreMenuTapped(uiModel.value?.state as? SiteSelected)
+        dashboardCardPlansUtils.trackCardMoreMenuTapped(uiModel.value as? SiteSelected)
     }
 
     private fun onDashboardCardPlansHideMenuItemClick() {
-        dashboardCardPlansUtils.trackCardHiddenByUser(uiModel.value?.state as? SiteSelected)
+        dashboardCardPlansUtils.trackCardHiddenByUser(uiModel.value as? SiteSelected)
         selectedSiteRepository.getSelectedSite()?.let {
             dashboardCardPlansUtils.hideCard(it.siteId)
         }
@@ -969,12 +970,6 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    data class UiModel(
-        val accountAvatarUrl: String,
-        val accountName: String?,
-        val state: State
-    )
-
     sealed class State {
         data class SiteSelected(
             val siteInfoHeader: SiteInfoHeaderCard,
@@ -984,8 +979,8 @@ class MySiteViewModel @Inject constructor(
 
         data class NoSites(
             val shouldShowImage: Boolean,
-            val avatartUrl:String? = null,
-            val accountName:String? = null,
+            val avatarUrl: String? = null,
+            val accountName: String? = null,
             val shouldShowAccountSettings: Boolean = false
         ) : State()
     }

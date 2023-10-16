@@ -61,7 +61,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardC
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.AccountData
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
@@ -73,7 +72,6 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconPr
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
-import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
@@ -280,7 +278,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice
 
     private lateinit var viewModel: MySiteViewModel
-    private lateinit var uiModels: MutableList<UiModel>
+    private lateinit var uiModels: MutableList<MySiteViewModel.State>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var textInputDialogModels: MutableList<TextInputDialogModel>
     private lateinit var dialogModels: MutableList<SiteDialogModel>
@@ -518,14 +516,14 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteSelected.value = null
         currentAvatar.value = AccountData("","")
 
-        assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
+        assertThat(uiModels.last()).isInstanceOf(NoSites::class.java)
     }
 
     @Test
     fun `model contains header of selected site`() {
         initSelectedSite()
 
-        assertThat(uiModels.last().state).isInstanceOf(SiteSelected::class.java)
+        assertThat(uiModels.last()).isInstanceOf(SiteSelected::class.java)
 
         assertThat(getSiteInfoHeaderCard()).isInstanceOf(SiteInfoHeaderCard::class.java)
     }
@@ -549,11 +547,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `account avatar url value is emitted and updated from the source`() {
-        initSelectedSite()
-
         currentAvatar.value = AccountData(avatarUrl,userName)
 
-        assertThat(uiModels.last().accountAvatarUrl).isEqualTo(avatarUrl)
+        assertThat((uiModels.last() as NoSites).avatarUrl).isEqualTo(avatarUrl)
     }
 
     @Test
@@ -582,8 +578,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         onSiteSelected.value = null
 
-        assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
-        assertThat((uiModels.last().state as NoSites).shouldShowImage).isTrue
+        assertThat(uiModels.last()).isInstanceOf(NoSites::class.java)
+        assertThat((uiModels.last() as NoSites).shouldShowImage).isTrue
     }
 
     @Test
@@ -593,8 +589,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         onSiteSelected.value = null
 
-        assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
-        assertThat((uiModels.last().state as NoSites).shouldShowImage).isFalse
+        assertThat(uiModels.last()).isInstanceOf(NoSites::class.java)
+        assertThat((uiModels.last() as NoSites).shouldShowImage).isFalse
     }
 
     @Test
@@ -603,8 +599,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         onSiteSelected.value = null
 
-        assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
-        assertThat((uiModels.last().state as NoSites).shouldShowImage).isFalse
+        assertThat(uiModels.last()).isInstanceOf(NoSites::class.java)
+        assertThat((uiModels.last() as NoSites).shouldShowImage).isFalse
     }
 
     /* EMPTY VIEW - ADD SITE */
@@ -1002,7 +998,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         cardsUpdate.value = cardsUpdate.value?.copy(showStaleMessage = false)
 
-        assertThat((uiModels.last().state as SiteSelected)
+        assertThat((uiModels.last() as SiteSelected)
             .dashboardCardsAndItems.filterIsInstance(InfoItem::class.java))
             .isEmpty()
     }
@@ -1013,7 +1009,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         cardsUpdate.value = cardsUpdate.value?.copy(showStaleMessage = true)
 
-        assertThat((uiModels.last().state as SiteSelected)
+        assertThat((uiModels.last() as SiteSelected)
             .dashboardCardsAndItems.filterIsInstance(InfoItem::class.java))
             .isNotEmpty
     }
@@ -1244,7 +1240,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given selected site, when dashboard cards and items, then dashboard cards exists`() {
         initSelectedSite()
 
-        val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+        val items = (uiModels.last() as SiteSelected).dashboardCardsAndItems
 
         assertThat(items.filterIsInstance(MySiteCardAndItem.Card::class.java)).isNotEmpty
     }
@@ -1254,7 +1250,7 @@ class MySiteViewModelTest : BaseUnitTest() {
        // setUpSiteItemBuilder()
         initSelectedSite()
 
-        val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+        val items = (uiModels.last() as SiteSelected).dashboardCardsAndItems
 
         assertThat(items.filterIsInstance(ListItem::class.java)).isEmpty()
     }
@@ -1264,7 +1260,7 @@ class MySiteViewModelTest : BaseUnitTest() {
       //  setUpSiteItemBuilder()
         initSelectedSite()
 
-        val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+        val items = (uiModels.last() as SiteSelected).dashboardCardsAndItems
 
         assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty
     }
@@ -1275,7 +1271,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+        val items = (uiModels.last() as SiteSelected).siteMenuCardsAndItems
 
         assertThat(items.filterIsInstance(QuickStartCard::class.java)).isEmpty()
     }
@@ -1284,7 +1280,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         setUpSiteItemBuilder()
         initSelectedSite()
 
-        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+        val items = (uiModels.last() as SiteSelected).siteMenuCardsAndItems
 
         assertThat(items.filterIsInstance(ListItem::class.java)).isNotEmpty
     }
@@ -1295,7 +1291,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+        val items = (uiModels.last() as SiteSelected).siteMenuCardsAndItems
 
         assertThat(items.filterIsInstance(QuickStartCard::class.java)).isEmpty()
     }
@@ -1305,7 +1301,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite()
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
-        val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+        val items = (uiModels.last() as SiteSelected).dashboardCardsAndItems
 
         assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isNotEmpty
     }
@@ -1315,7 +1311,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite()
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
-        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+        val items = (uiModels.last() as SiteSelected).siteMenuCardsAndItems
 
         assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isEmpty()
     }
@@ -1450,15 +1446,15 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun findJetpackBadgeListItem() = getSiteMenuTabLastItems().filterIsInstance(JetpackBadge::class.java)
 
-    private fun getLastItems() = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+    private fun getLastItems() = (uiModels.last() as SiteSelected).dashboardCardsAndItems
 
-    private fun getMenuItems() = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+    private fun getMenuItems() = (uiModels.last() as SiteSelected).siteMenuCardsAndItems
 
-    private fun getDashboardTabLastItems() = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+    private fun getDashboardTabLastItems() = (uiModels.last() as SiteSelected).dashboardCardsAndItems
 
-    private fun getSiteMenuTabLastItems() = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+    private fun getSiteMenuTabLastItems() = (uiModels.last() as SiteSelected).siteMenuCardsAndItems
 
-    private fun getSiteInfoHeaderCard() = (uiModels.last().state as SiteSelected).siteInfoHeader
+    private fun getSiteInfoHeaderCard() = (uiModels.last() as SiteSelected).siteInfoHeader
 
     @Suppress("LongParameterList")
     private fun initSelectedSite(

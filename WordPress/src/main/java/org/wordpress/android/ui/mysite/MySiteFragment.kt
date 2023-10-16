@@ -40,7 +40,6 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
@@ -387,7 +386,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner) { uiModel ->
             hideRefreshIndicatorIfNeeded()
-            when (val state = uiModel.state) {
+            when (val state = uiModel) {
                 is State.SiteSelected -> loadData(state)
                 is State.NoSites -> loadEmptyView(state)
             }
@@ -539,20 +538,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
         if (noSitesView.actionableEmptyView.isVisible) {
             noSitesView.actionableEmptyView.setVisible(false)
-            viewModel.onActionableEmptyViewGone()
-        }
-    }
-
-    private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
-        recyclerView.setVisible(false)
-
-        if (!actionableEmptyView.isVisible) {
-            actionableEmptyView.setVisible(true)
-            actionableEmptyView.image.setVisible(state.shouldShowImage)
-            viewModel.onActionableEmptyViewVisible()
         }
 
-        siteTitle = getString(R.string.my_site_section_screen_title)
+        if(noSitesView.avatarAccountSettings.isVisible){
+            noSitesView.avatarAccountSettings.setVisible(false)
+        }
     }
 
     private fun MySiteInfoHeaderCardBinding.loadMySiteDetails(siteInfoHeader: SiteInfoHeaderCard) {
@@ -581,16 +571,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
     }
 
-    private fun MySiteFragmentBinding.updateSiteInfoToolbarView(siteInfoToolbarViewParams: SiteInfoToolbarViewParams) {
-        showHeader(siteInfoToolbarViewParams.headerVisible)
-        val appBarHeight = resources.getDimension(siteInfoToolbarViewParams.appBarHeight).toInt()
-        appbarMain.layoutParams.height = appBarHeight
-        appbarMain.isLiftOnScroll = siteInfoToolbarViewParams.appBarLiftOnScroll
-        appbarMain.requestLayout()
-    }
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
-        tabLayout.setVisible(state.tabsUiState.showTabs)
         if (!noSitesView.actionableEmptyView.isVisible) {
             noSitesView.actionableEmptyView.setVisible(true)
             noSitesView.actionableEmptyView.image.setVisible(state.shouldShowImage)
@@ -598,7 +580,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             showAvatarSettingsView(state)
         }
         siteTitle = getString(R.string.my_site_section_screen_title)
-        updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
         appbarMain.setExpanded(false, true)
     }
 
@@ -606,7 +587,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         if (state.shouldShowAccountSettings) {
             noSitesView.avatarAccountSettings.visibility = View.VISIBLE
             noSitesView.meDisplayName.text = state.accountName
-            loadGravatar(state.avatartUrl)
+            loadGravatar(state.avatarUrl)
             noSitesView.avatarAccountSettings.setOnClickListener { viewModel.onAvatarPressed() }
         } else noSitesView.avatarAccountSettings.visibility = View.GONE
     }
