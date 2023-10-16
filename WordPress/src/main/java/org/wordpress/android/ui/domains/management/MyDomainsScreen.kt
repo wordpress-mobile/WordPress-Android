@@ -27,8 +27,8 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import java.time.Instant
-import java.time.LocalDate
+import java.time.ZoneId
+import java.util.Date
 
 @Composable
 fun MyDomainsScreen(uiState: DomainManagementViewModel.UiState) {
@@ -89,14 +89,14 @@ fun MyDomainsList(domains: List<AllDomainsDomain>) {
                     domain = it.domain,
                     title = it.blogName,
                     status = it.domainStatus,
-                    expiry = it.expiry?.time?.let { epoch ->
-                        LocalDate.from(Instant.ofEpochMilli(epoch))
-                    },
+                    expiry = it.expiry?.toLocalDate(),
                 )
             )
         }
     }
 }
+private fun Date.toLocalDate(zoneId: ZoneId = ZoneId.systemDefault()) =
+    toInstant().atZone(zoneId).toLocalDate()
 
 @Preview(device = Devices.PIXEL_3A)
 @Preview(device = Devices.PIXEL_3A, uiMode = UI_MODE_NIGHT_YES)
