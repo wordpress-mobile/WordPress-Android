@@ -3,6 +3,8 @@ package org.wordpress.android.fluxc.network.discovery;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
+import androidx.annotation.NonNull;
+
 import org.wordpress.android.util.AppLog;
 
 import java.util.regex.Matcher;
@@ -51,7 +53,8 @@ public class DiscoveryUtils {
     /**
      * Append 'xmlrpc.php' if missing in the URL
      */
-    public static String appendXMLRPCPath(String url) {
+    @NonNull
+    public static String appendXMLRPCPath(@NonNull String url) {
         // Don't use 'ends' here! Some hosting wants parameters passed to baseURL/xmlrpc-php?my-authcode=XXX
         if (url.contains("xmlrpc.php")) {
             return url;
