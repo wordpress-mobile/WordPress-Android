@@ -36,13 +36,17 @@ val DomainStatus.statusText
 val DomainStatus.textColor
 @Composable
 get() = when (statusType) {
-    StatusType.ERROR -> MaterialTheme.colorScheme.error
+    StatusType.ERROR,
+    StatusType.UNKNOWN,
+    null -> MaterialTheme.colorScheme.error
     else -> LocalTextStyle.current.color
 }
 
 val DomainStatus.isBold
 @Composable
 get() = when (statusType) {
-    StatusType.ERROR -> true
+    StatusType.ERROR,
+    StatusType.UNKNOWN,
+    null -> true
     else -> false
 }
