@@ -129,7 +129,8 @@ public class DiscoveryUtils {
      *
      * @return String XML-RPC url
      */
-    public static String getXMLRPCPingback(String html) {
+    @Nullable
+    public static String getXMLRPCPingback(@Nullable String html) {
         Pattern pingbackLink = Pattern.compile(
                 "<link\\s*?rel=\"pingback\"\\s*?href=\"(.*?)\"",
                 Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
