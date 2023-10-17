@@ -85,7 +85,7 @@ class SitePreviewViewModel @Inject constructor(
         siteDesign = siteCreationState.siteDesign
         result = siteCreationState.result
         isFree = requireNotNull(siteCreationState.domain).isFree
-        domainName = getCleanUrl(result.site.url)
+        domainName = getCleanUrl(result.site.url) ?: ""
         startPreLoadingWebView()
         if (result is CreatedButNotFetched) {
             launch {
