@@ -552,6 +552,9 @@ dependencies {
     // - Jetpack Compose - UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test-junit4"
     implementation "androidx.compose.material3:material3:$androidxComposeMaterial3Version"
+
+    // Microsoft Clarity SDK
+    implementation "com.microsoft.clarity:clarity:$microsoftClarityVersion"
 }
 
 configurations.all {

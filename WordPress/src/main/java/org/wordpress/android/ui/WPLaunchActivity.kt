@@ -4,6 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.microsoft.clarity.Clarity
+import com.microsoft.clarity.ClarityConfig
+import com.microsoft.clarity.models.LogLevel
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.main.WPMainActivity
@@ -20,6 +24,13 @@ class WPLaunchActivity : LocaleAwareActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val config = ClarityConfig(
+            projectId = BuildConfig.CLARITY_ID,
+            logLevel = LogLevel.Debug,
+        )
+        Clarity.initialize(applicationContext, config)
+
         if (isMissingSplits(this)) {
             // There are missing splits. Display a warning message.
             showMissingSplitsDialog()

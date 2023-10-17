@@ -104,6 +104,9 @@ ext {
     // other
     androidDesugarVersion = '1.1.8'
     wordPressLintVersion = '1.1.0'
+
+    // Clarity
+    microsoftClarityVersion = '1.3.3'
 }
 
 allprojects {
