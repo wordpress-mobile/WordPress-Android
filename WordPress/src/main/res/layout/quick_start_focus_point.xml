@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <org.wordpress.android.widgets.QuickStartFocusPoint
+        android:id="@+id/my_site_item_quick_start_focus_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center"
+        android:contentDescription="@string/quick_start_focus_point_description"
+        android:elevation="@dimen/quick_start_focus_point_elevation"
+        android:gravity="end"
+        android:textAlignment="viewEnd"
+        android:layout_marginEnd="@dimen/design_fab_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:size="small" />
+</androidx.constraintlayout.widget.ConstraintLayout>

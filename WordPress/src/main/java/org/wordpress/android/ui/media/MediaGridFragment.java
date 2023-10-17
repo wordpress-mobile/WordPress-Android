@@ -56,6 +56,7 @@ import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SnackbarItem;
+import org.wordpress.android.util.SnackbarItem.Info;
 import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -253,11 +254,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 R.string.quick_start_dialog_upload_media_message_short_plus,
                 R.drawable.ic_plus_white_12dp
         );
-        mSnackbarSequencer.enqueue(
-                new SnackbarItem(
-                        new SnackbarItem.Info(getSnackbarParent(), new UiStringText(title), Snackbar.LENGTH_LONG)
-                )
-        );
+        new Handler().postDelayed(() -> mSnackbarSequencer.enqueue(
+                new SnackbarItem(new Info(getSnackbarParent(), new UiStringText(title), Snackbar.LENGTH_LONG))
+        ), 500L);
     }
 
     private View getSnackbarParent() {

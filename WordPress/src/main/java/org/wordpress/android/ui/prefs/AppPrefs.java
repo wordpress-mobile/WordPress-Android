@@ -201,7 +201,10 @@ public class AppPrefs {
         SHOULD_HIDE_TODAY_STATS_DASHBOARD_CARD,
         SHOULD_HIDE_POST_DASHBOARD_CARD,
         SHOULD_HIDE_NEXT_STEPS_DASHBOARD_CARD,
-        SHOULD_HIDE_GET_TO_KNOW_THE_APP_DASHBOARD_CARD
+        SHOULD_HIDE_GET_TO_KNOW_THE_APP_DASHBOARD_CARD,
+
+        SHOULD_SHOW_SITE_ITEM_AS_QUICK_LINK_IN_DASHBOARD,
+        SHOULD_SHOW_DEFAULT_QUICK_LINK_IN_DASHBOARD,
     }
 
     /**
@@ -374,7 +377,7 @@ public class AppPrefs {
     }
 
     public static void putLong(final PrefKey key, final long value) {
-        prefs().edit().putLong(key.name(), value) .apply();
+        prefs().edit().putLong(key.name(), value).apply();
     }
 
     private static int getInt(PrefKey key, int def) {
@@ -1772,5 +1775,31 @@ public class AppPrefs {
 
     public static Boolean getShouldHideGetToKnowTheAppDashboardCard(final long siteId) {
         return prefs().getBoolean(getSiteIdHideGetToKnowTheAppDashboardCardKey(siteId), false);
+    }
+
+    public static void setShouldShowSiteItemAsQuickLink(final String siteItem, final long siteId,
+                                                        final boolean isHidden) {
+        prefs().edit().putBoolean(getShouldShowSiteItemAsQuickLinkKey(siteItem, siteId), isHidden).apply();
+    }
+
+    @NonNull private static String getShouldShowSiteItemAsQuickLinkKey(String siteItem, long siteId) {
+        return DeletablePrefKey.SHOULD_SHOW_SITE_ITEM_AS_QUICK_LINK_IN_DASHBOARD.name() + siteItem + siteId;
+    }
+
+    public static Boolean getShouldShowSiteItemAsQuickLink(String siteItem, final long siteId) {
+        return prefs().getBoolean(getShouldShowSiteItemAsQuickLinkKey(siteItem, siteId), false);
+    }
+
+    public static void setShouldShowDefaultQuickLink(final String siteItem, final long siteId,
+                                                        final boolean shouldShow) {
+        prefs().edit().putBoolean(getShouldShowDefaultQuickLinkKey(siteItem, siteId), shouldShow).apply();
+    }
+
+    @NonNull private static String getShouldShowDefaultQuickLinkKey(String siteItem, long siteId) {
+        return DeletablePrefKey.SHOULD_SHOW_DEFAULT_QUICK_LINK_IN_DASHBOARD.name() + siteItem + siteId;
+    }
+
+    public static Boolean getShouldShowDefaultQuickLink(String siteItem, final long siteId) {
+        return prefs().getBoolean(getShouldShowDefaultQuickLinkKey(siteItem, siteId), true);
     }
 }

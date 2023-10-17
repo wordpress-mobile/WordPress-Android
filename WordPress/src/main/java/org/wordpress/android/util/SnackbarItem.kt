@@ -9,8 +9,8 @@ import java.lang.ref.WeakReference
 
 // Taken from com.google.android.material.snackbar.SnackbarManager.java
 // Did not find a way to get them directly from the android framework for now
-private const val SHORT_DURATION_MS = 1500L
-private const val LONG_DURATION_MS = 2750L
+const val SHORT_DURATION_MS = 1500L
+const val LONG_DURATION_MS = 2750L
 
 const val INDEFINITE_SNACKBAR_NOT_ALLOWED = "Snackbar.LENGTH_INDEFINITE not allowed in getSnackbarDurationMs."
 
