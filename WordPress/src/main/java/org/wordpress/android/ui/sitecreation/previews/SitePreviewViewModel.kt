@@ -31,6 +31,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -84,7 +85,7 @@ class SitePreviewViewModel @Inject constructor(
         siteDesign = siteCreationState.siteDesign
         result = siteCreationState.result
         isFree = requireNotNull(siteCreationState.domain).isFree
-        domainName = requireNotNull(siteCreationState.domain).domainName
+        domainName = getCleanUrl(result.site.url) ?: ""
         startPreLoadingWebView()
         if (result is CreatedButNotFetched) {
             launch {
@@ -158,6 +159,8 @@ class SitePreviewViewModel @Inject constructor(
             updateUiState(SitePreviewWebErrorUiState(isFree, createSitePreviewData()))
         }
     }
+
+    private fun getCleanUrl(url: String) = StringUtils.removeTrailingSlash(urlUtils.removeScheme(url))
 
     private fun createSitePreviewData(): UrlData {
         val url = domainName
