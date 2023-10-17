@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
@@ -11,6 +12,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,8 +38,13 @@ public class WPAPIHeadRequest extends BaseRequest<String> {
     @NonNull
     @Override
     protected Response<String> parseNetworkResponse(@NonNull NetworkResponse response) {
-        mResponseLinkHeader = response.headers.get("Link");
-        return Response.success("", HttpHeaderParser.parseCacheHeaders(response));
+        Map<String, String> headers = response.headers;
+        if (headers != null) {
+            mResponseLinkHeader = headers.get("Link");
+            return Response.success("", HttpHeaderParser.parseCacheHeaders(response));
+        } else {
+            return Response.error(new ParseError(new Exception("No headers in response")));
+        }
     }
 
     @NonNull
