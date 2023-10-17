@@ -55,7 +55,7 @@ fun getAuthorFilterItems(
             ME -> AuthorFilterListItemUIState.Me(avatarUrl, selection == value)
             EVERYONE -> AuthorFilterListItemUIState.Everyone(
                 selection == value,
-                R.drawable.bg_oval_neutral_30_multiple_users_white_40dp
+                R.drawable.ic_people_white_24dp
             )
         }
     }

@@ -3,9 +3,10 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/toggle_post_list_author_filter"
+        android:id="@+id/author_filter_menu_item"
         android:icon="@drawable/ic_multiple_users_white_24dp"
         android:title="@string/post_list_toggle_author_filter"
+        app:actionLayout="@layout/author_filter_spinner"
         app:showAsAction="always"/>
 
     <item

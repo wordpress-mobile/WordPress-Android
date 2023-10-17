@@ -13,6 +13,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
+import android.widget.AdapterView
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -47,6 +49,7 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissBy
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostListType.SEARCH
+import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
@@ -137,7 +140,8 @@ class PostsListActivity : LocaleAwareActivity(),
 
     private lateinit var postsPagerAdapter: PostsPagerAdapter
     private lateinit var searchActionButton: MenuItem
-    private lateinit var authorFiltertMenuItem: MenuItem
+    private lateinit var authorFilterMenuItem: MenuItem
+    private lateinit var authorFilterSpinner: Spinner
 
     private var restorePreviousSearch = false
 
@@ -246,10 +250,10 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     private fun PostListActivityBinding.initCreateMenuViewModel(tabIndex: Int, actionsShownByDefault: Boolean) {
-        postListCreateMenuViewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)
-            .get(PostListCreateMenuViewModel::class.java)
+        postListCreateMenuViewModel =
+            ViewModelProvider(this@PostsListActivity, viewModelFactory)[PostListCreateMenuViewModel::class.java]
 
-        postListCreateMenuViewModel.isBottomSheetShowing.observeEvent(this@PostsListActivity, { isBottomSheetShowing ->
+        postListCreateMenuViewModel.isBottomSheetShowing.observeEvent(this@PostsListActivity) { isBottomSheetShowing ->
             var createMenuFragment = supportFragmentManager.findFragmentByTag(PostListCreateMenuFragment.TAG)
             if (createMenuFragment == null) {
                 if (isBottomSheetShowing) {
@@ -262,14 +266,14 @@ class PostsListActivity : LocaleAwareActivity(),
                     createMenuFragment.dismiss()
                 }
             }
-        })
+        }
 
-        postListCreateMenuViewModel.fabUiState.observe(this@PostsListActivity, { fabUiState ->
+        postListCreateMenuViewModel.fabUiState.observe(this@PostsListActivity) { fabUiState ->
             val message = resources.getString(fabUiState.CreateContentMessageId)
             fabButton.contentDescription = message
-        })
+        }
 
-        postListCreateMenuViewModel.createAction.observe(this@PostsListActivity, { createAction ->
+        postListCreateMenuViewModel.createAction.observe(this@PostsListActivity) { createAction ->
             when (createAction) {
                 ActionType.CREATE_NEW_POST -> viewModel.newPost()
                 ActionType.CREATE_NEW_STORY -> viewModel.newStoryPost()
@@ -279,7 +283,7 @@ class PostsListActivity : LocaleAwareActivity(),
                 ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD -> Unit // Do nothing
                 null -> Unit // Do nothing
             }
-        })
+        }
 
         // Notification opens in Drafts tab
         tabLayout.getTabAt(tabIndex)?.select()
@@ -291,7 +295,7 @@ class PostsListActivity : LocaleAwareActivity(),
         initPreviewState: PostListRemotePreviewState,
         currentBottomSheetPostId: LocalId
     ) {
-        viewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory).get(PostListMainViewModel::class.java)
+        viewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)[PostListMainViewModel::class.java]
         viewModel.start(site, initPreviewState, currentBottomSheetPostId, editPostRepository)
 
         viewModel.viewState.observe(this@PostsListActivity) { state ->
@@ -356,7 +360,7 @@ class PostsListActivity : LocaleAwareActivity(),
         bloggingRemindersViewModel = ViewModelProvider(
             this,
             viewModelFactory
-        ).get(BloggingRemindersViewModel::class.java)
+        )[BloggingRemindersViewModel::class.java]
 
         observeBottomSheet(
             bloggingRemindersViewModel.isBottomSheetShowing,
@@ -413,6 +417,21 @@ class PostsListActivity : LocaleAwareActivity(),
             fabButton.show()
         } else {
             fabButton.hide()
+        }
+
+        // The author selection is in the toolbar, which doesn't get initialized until
+        // after loadViewState is invoked. After the toolbar is initialized, the state is
+        // updated and the adapter can be set properly. The visibility of the author filter
+        // is handled in the viewModel itself
+        if (::authorFilterMenuItem.isInitialized && ::authorFilterSpinner.isInitialized) {
+            authorFilterMenuItem.isVisible = state.isAuthorFilterVisible
+
+            val authorSelectionAdapter = authorFilterSpinner.adapter as AuthorSelectionAdapter
+            authorSelectionAdapter.updateItems(state.authorFilterItems)
+
+            authorSelectionAdapter.getIndexOfSelection(state.authorFilterSelection)?.let { selectionIndex ->
+                authorFilterSpinner.setSelection(selectionIndex)
+            }
         }
     }
 
@@ -505,8 +524,7 @@ class PostsListActivity : LocaleAwareActivity(),
         if (item.itemId == AndroidR.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
-        } else if (item.itemId == R.id.toggle_post_list_author_filter) {
-            // todo: implement the logic to open/close the author filter
+        } else if (item.itemId == R.id.author_filter_menu_item) {
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -514,14 +532,13 @@ class PostsListActivity : LocaleAwareActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.posts_list_toggle_view_layout, menu)
-        authorFiltertMenuItem = menu.findItem(R.id.toggle_post_list_author_filter)
-        // todo: set the author filter icon on selection change
+        menuInflater.inflate(R.menu.posts_list_menu, menu)
+        authorFilterMenuItem = menu.findItem(R.id.author_filter_menu_item)
         searchActionButton = menu.findItem(R.id.toggle_post_search)
 
         initSearchFragment()
         binding.initSearchView()
-        initAuthorFilter()
+        initAuthorFilter(authorFilterMenuItem)
         return true
     }
 
@@ -540,8 +557,31 @@ class PostsListActivity : LocaleAwareActivity(),
         }
     }
 
-    private fun initAuthorFilter() {
-        // todo: Implement the logic for the author filter spinner
+    private fun initAuthorFilter(menuItem: MenuItem) {
+        // Get the action view (Spinner) from the menu item
+        val actionView = menuItem.actionView
+        if (actionView is Spinner) {
+            authorFilterSpinner = actionView
+            val authorSelectionAdapter = AuthorSelectionAdapter(this@PostsListActivity)
+            authorFilterSpinner.adapter = authorSelectionAdapter
+
+            // Set a listener if needed
+            authorFilterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parentView: AdapterView<*>?,
+                    selectedItemView: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    viewModel.updateAuthorFilterSelection(id)
+                }
+
+                override fun onNothingSelected(parentView: AdapterView<*>?) {
+                    // Do nothing here
+                }
+            }
+            viewModel.refreshUiStateForAuthorFilter()
+        }
     }
     private fun PostListActivityBinding.initSearchView() {
         searchActionButton.setOnActionExpandListener(object : OnActionExpandListener {
@@ -575,7 +615,7 @@ class PostsListActivity : LocaleAwareActivity(),
         })
 
         viewModel.isSearchExpanded.observe(this@PostsListActivity) { isExpanded ->
-            authorFiltertMenuItem.isVisible = !isExpanded
+            authorFilterMenuItem.isVisible = !isExpanded
             toggleSearch(isExpanded)
         }
     }
@@ -629,18 +669,6 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun onDismissByOutsideTouch(instanceTag: String) {
         viewModel.onDismissByOutsideTouchForBasicDialog(instanceTag)
     }
-
-    // Menu PostListViewLayoutType handling
-    // todo: implement the logic to change the author filter icon on selection change
-//    private fun updateMenuIcon(@DrawableRes iconRes: Int, menuItem: MenuItem) {
-//        ContextCompat.getDrawable(this, iconRes)?.let { drawable ->
-//            menuItem.setIcon(drawable)
-//        }
-//    }
-//
-//    private fun updateMenuTitle(title: UiString, menuItem: MenuItem): MenuItem? {
-//        return menuItem.setTitle(uiHelpers.getTextOfUiString(this@PostsListActivity, title))
-//    }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
         viewModel.onBottomSheetPublishButtonClicked()
