@@ -89,13 +89,14 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     // to monitor multiple uploads
     private ConcurrentHashMap<Integer, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
 
-    @Inject public MediaRestClient(Context appContext,
-                           Dispatcher dispatcher,
-                           @Named("regular") RequestQueue requestQueue,
-                           @Named("regular") OkHttpClient okHttpClient,
-                           AccessToken accessToken,
-                           UserAgent userAgent,
-                           MediaResponseUtils mediaResponseUtils) {
+    @Inject public MediaRestClient(
+            Context appContext,
+            Dispatcher dispatcher,
+            @Named("regular") RequestQueue requestQueue,
+            @Named("regular") OkHttpClient okHttpClient,
+            AccessToken accessToken,
+            UserAgent userAgent,
+            MediaResponseUtils mediaResponseUtils) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mOkHttpClient = okHttpClient;
         mMediaResponseUtils = mediaResponseUtils;
@@ -143,8 +144,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         mediaError.logMessage = errorMessage;
                         notifyMediaPushed(site, media, mediaError);
                     }
-                }
-        ));
+                }));
     }
 
     /**
@@ -176,7 +176,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         // Abort upload if it exceeds the site upload limit
         if (site.hasMaxUploadSize() && body.contentLength() > site.getMaxUploadSize()) {
             String errorMessage = "Media size of " + body.contentLength() + " exceeds site limit of "
-                             + site.getMaxUploadSize();
+                                  + site.getMaxUploadSize();
             AppLog.d(T.MEDIA, errorMessage);
             MediaError error = new MediaError(MediaErrorType.EXCEEDS_FILESIZE_LIMIT);
             error.logMessage = errorMessage;
@@ -188,7 +188,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         double maxFilesizeForMemoryLimit = MediaUtils.getMaxFilesizeForMemoryLimit(site.getMemoryLimit());
         if (site.hasMemoryLimit() && body.contentLength() > maxFilesizeForMemoryLimit) {
             String errorMessage = "Media size of " + body.contentLength() + " exceeds safe memory limit of "
-                             + maxFilesizeForMemoryLimit + " for this site";
+                                  + maxFilesizeForMemoryLimit + " for this site";
             AppLog.d(T.MEDIA, errorMessage);
             MediaError error = new MediaError(MediaErrorType.EXCEEDS_MEMORY_LIMIT);
             error.logMessage = errorMessage;
@@ -199,7 +199,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         // Abort upload if it exceeds the space quota limit for the site
         if (site.hasDiskSpaceQuotaInformation() && body.contentLength() > site.getSpaceAvailable()) {
             String errorMessage = "Media size of " + body.contentLength() + " exceeds disk space quota remaining  "
-                             + site.getSpaceAvailable() + " for this site";
+                                  + site.getSpaceAvailable() + " for this site";
             AppLog.d(T.MEDIA, errorMessage);
             MediaError error = new MediaError(MediaErrorType.EXCEEDS_SITE_SPACE_QUOTA_LIMIT);
             error.logMessage = errorMessage;
@@ -299,7 +299,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
     /**
      * Gets a list of media items given the offset on a WP.com site.
-     *
+     * <p>
      * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
@@ -341,8 +341,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         mediaError.logMessage = error.apiError;
                         notifyMediaListFetched(site, mediaError, mimeType);
                     }
-                }
-        ));
+                }));
     }
 
     /**
@@ -384,8 +383,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         mediaError.logMessage = error.apiError;
                         notifyMediaFetched(site, media, mediaError);
                     }
-                }
-            ));
+                }));
     }
 
     /**
@@ -430,8 +428,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         mediaError.logMessage = error.apiError;
                         notifyMediaDeleted(site, media, mediaError);
                     }
-                }
-            ));
+                }));
     }
 
     public void cancelUpload(final MediaModel media) {
@@ -457,7 +454,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     private void removeCallFromCurrentUploadsMap(int id) {
         mCurrentUploadCalls.remove(id);
         AppLog.d(T.MEDIA, "mediaRestClient: removed id: " + id + " from current uploads, remaining: "
-                + mCurrentUploadCalls.size());
+                          + mCurrentUploadCalls.size());
     }
 
     public void uploadStockMedia(@NonNull final SiteModel site,
@@ -616,11 +613,13 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     /**
      * The current REST API call (v1.1) accepts 'title', 'description', 'caption', 'alt',
      * and 'parent_id' for all media. Audio media also accepts 'artist' and 'album' attributes.
-     *
+     * <p>
      * ref https://developer.wordpress.com/docs/api/1.1/post/sites/%24site/media/
      */
     private Map<String, Object> getEditRequestParams(final MediaModel media) {
-        if (media == null) return null;
+        if (media == null) {
+            return null;
+        }
 
         MediaFields[] fieldsToUpdate = media.getFieldsToUpdate();
 
