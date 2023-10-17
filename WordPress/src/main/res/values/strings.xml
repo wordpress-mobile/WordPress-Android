@@ -2699,6 +2699,7 @@
     <string name="domains_search_for_a_domain_button">Search for a domain</string>
 
     <!-- Domain Management -->
+    <string name="domain_management_expires">Expires %1$s</string>
     <string name="domain_management_status_complete_setup">Complete Setup</string>
     <string name="domain_management_status_failed">Failed</string>
     <string name="domain_management_status_error">Error</string>
