@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response.Listener;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -28,8 +27,6 @@ import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListene
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload;
@@ -121,29 +118,23 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         String url = WPCOMREST.sites.site(site.getSiteId()).media.item(media.getMediaId()).getUrlV1_1();
 
         add(WPComGsonRequest.buildPostRequest(url, getEditRequestParams(media), MediaWPComRestResponse.class,
-                new Listener<MediaWPComRestResponse>() {
-                    @Override
-                    public void onResponse(MediaWPComRestResponse response) {
-                        MediaModel responseMedia = mMediaResponseUtils.getMediaFromRestResponse(response);
-                        if (responseMedia != null) {
-                            AppLog.v(T.MEDIA, "media changes pushed for " + responseMedia.getTitle());
-                            responseMedia.setLocalSiteId(site.getId());
-                            notifyMediaPushed(site, responseMedia, null);
-                        } else {
-                            MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                            error.logMessage = "Parsed media is null";
-                            notifyMediaPushed(site, media, error);
-                        }
+                response -> {
+                    MediaModel responseMedia = mMediaResponseUtils.getMediaFromRestResponse(response);
+                    if (responseMedia != null) {
+                        AppLog.v(T.MEDIA, "media changes pushed for " + responseMedia.getTitle());
+                        responseMedia.setLocalSiteId(site.getId());
+                        notifyMediaPushed(site, responseMedia, null);
+                    } else {
+                        MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                        error.logMessage = "Parsed media is null";
+                        notifyMediaPushed(site, media, error);
                     }
-                }, new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        String errorMessage = "error editing remote media: " + error;
-                        AppLog.e(T.MEDIA, errorMessage);
-                        MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                        mediaError.logMessage = errorMessage;
-                        notifyMediaPushed(site, media, mediaError);
-                    }
+                }, error -> {
+                    String errorMessage = "error editing remote media: " + error;
+                    AppLog.e(T.MEDIA, errorMessage);
+                    MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
+                    mediaError.logMessage = errorMessage;
+                    notifyMediaPushed(site, media, mediaError);
                 }));
     }
 
@@ -314,33 +305,27 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
         String url = WPCOMREST.sites.site(site.getSiteId()).media.getUrlV1_1();
         add(WPComGsonRequest.buildGetRequest(url, params, MultipleMediaResponse.class,
-                new Listener<MultipleMediaResponse>() {
-                    @Override
-                    public void onResponse(MultipleMediaResponse response) {
-                        List<MediaModel> mediaList =
-                                mMediaResponseUtils.getMediaListFromRestResponse(response, site.getId());
-                        if (mediaList != null) {
-                            AppLog.v(T.MEDIA, "Fetched media list for site with size: " + mediaList.size());
-                            boolean canLoadMore = mediaList.size() == number;
-                            notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore, mimeType);
-                        } else {
-                            String errorMessage = "could not parse Fetch all media response: " + response;
-                            AppLog.w(T.MEDIA, errorMessage);
-                            MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                            error.logMessage = errorMessage;
-                            notifyMediaListFetched(site, error, mimeType);
-                        }
+                response -> {
+                    List<MediaModel> mediaList =
+                            mMediaResponseUtils.getMediaListFromRestResponse(response, site.getId());
+                    if (mediaList != null) {
+                        AppLog.v(T.MEDIA, "Fetched media list for site with size: " + mediaList.size());
+                        boolean canLoadMore = mediaList.size() == number;
+                        notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore, mimeType);
+                    } else {
+                        String errorMessage = "could not parse Fetch all media response: " + response;
+                        AppLog.w(T.MEDIA, errorMessage);
+                        MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                        error.logMessage = errorMessage;
+                        notifyMediaListFetched(site, error, mimeType);
                     }
-                }, new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        String errorMessage = "VolleyError Fetching media: " + error;
-                        AppLog.e(T.MEDIA, errorMessage);
-                        MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                        mediaError.message = error.message;
-                        mediaError.logMessage = error.apiError;
-                        notifyMediaListFetched(site, mediaError, mimeType);
-                    }
+                }, error -> {
+                    String errorMessage = "VolleyError Fetching media: " + error;
+                    AppLog.e(T.MEDIA, errorMessage);
+                    MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
+                    mediaError.message = error.message;
+                    mediaError.logMessage = error.apiError;
+                    notifyMediaListFetched(site, mediaError, mimeType);
                 }));
     }
 
@@ -358,31 +343,25 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
         String url = WPCOMREST.sites.site(site.getSiteId()).media.item(media.getMediaId()).getUrlV1_1();
         add(WPComGsonRequest.buildGetRequest(url, null, MediaWPComRestResponse.class,
-                new Listener<MediaWPComRestResponse>() {
-                    @Override
-                    public void onResponse(MediaWPComRestResponse response) {
-                        MediaModel responseMedia = mMediaResponseUtils.getMediaFromRestResponse(response);
-                        if (responseMedia != null) {
-                            responseMedia.setLocalSiteId(site.getId());
-                            AppLog.v(T.MEDIA, "Fetched media with ID: " + media.getMediaId());
-                            notifyMediaFetched(site, responseMedia, null);
-                        } else {
-                            String message = "could not parse Fetch media response, ID: " + media.getMediaId();
-                            AppLog.w(T.MEDIA, message);
-                            MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                            error.logMessage = message;
-                            notifyMediaFetched(site, media, error);
-                        }
+                response -> {
+                    MediaModel responseMedia = mMediaResponseUtils.getMediaFromRestResponse(response);
+                    if (responseMedia != null) {
+                        responseMedia.setLocalSiteId(site.getId());
+                        AppLog.v(T.MEDIA, "Fetched media with ID: " + media.getMediaId());
+                        notifyMediaFetched(site, responseMedia, null);
+                    } else {
+                        String message = "could not parse Fetch media response, ID: " + media.getMediaId();
+                        AppLog.w(T.MEDIA, message);
+                        MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                        error.logMessage = message;
+                        notifyMediaFetched(site, media, error);
                     }
-                }, new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        AppLog.e(T.MEDIA, "VolleyError Fetching media: " + error);
-                        MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                        mediaError.message = error.message;
-                        mediaError.logMessage = error.apiError;
-                        notifyMediaFetched(site, media, mediaError);
-                    }
+                }, error -> {
+                    AppLog.e(T.MEDIA, "VolleyError Fetching media: " + error);
+                    MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
+                    mediaError.message = error.message;
+                    mediaError.logMessage = error.apiError;
+                    notifyMediaFetched(site, media, mediaError);
                 }));
     }
 
@@ -400,34 +379,28 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
         String url = WPCOMREST.sites.site(site.getSiteId()).media.item(media.getMediaId()).delete.getUrlV1_1();
         add(WPComGsonRequest.buildPostRequest(url, null, MediaWPComRestResponse.class,
-                new Listener<MediaWPComRestResponse>() {
-                    @Override
-                    public void onResponse(MediaWPComRestResponse response) {
-                        MediaModel deletedMedia = mMediaResponseUtils.getMediaFromRestResponse(response);
-                        if (deletedMedia != null) {
-                            AppLog.v(T.MEDIA, "deleted media: " + media.getTitle());
-                            notifyMediaDeleted(site, media, null);
-                        } else {
-                            String message = "could not parse delete media response, ID: " + media.getMediaId();
-                            AppLog.w(T.MEDIA, message);
-                            MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                            error.logMessage = message;
-                            notifyMediaDeleted(site, media, error);
-                        }
+                response -> {
+                    MediaModel deletedMedia = mMediaResponseUtils.getMediaFromRestResponse(response);
+                    if (deletedMedia != null) {
+                        AppLog.v(T.MEDIA, "deleted media: " + media.getTitle());
+                        notifyMediaDeleted(site, media, null);
+                    } else {
+                        String message = "could not parse delete media response, ID: " + media.getMediaId();
+                        AppLog.w(T.MEDIA, message);
+                        MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                        error.logMessage = message;
+                        notifyMediaDeleted(site, media, error);
                     }
-                }, new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        AppLog.e(T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
-                        MediaErrorType mediaErrorType = MediaErrorType.fromBaseNetworkError(error);
-                        if (mediaErrorType == MediaErrorType.NOT_FOUND) {
-                            AppLog.i(T.MEDIA, "Attempted to delete media that does not exist remotely.");
-                        }
-                        MediaError mediaError = new MediaError(mediaErrorType);
-                        mediaError.message = error.message;
-                        mediaError.logMessage = error.apiError;
-                        notifyMediaDeleted(site, media, mediaError);
+                }, error -> {
+                    AppLog.e(T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
+                    MediaErrorType mediaErrorType = MediaErrorType.fromBaseNetworkError(error);
+                    if (mediaErrorType == MediaErrorType.NOT_FOUND) {
+                        AppLog.i(T.MEDIA, "Attempted to delete media that does not exist remotely.");
                     }
+                    MediaError mediaError = new MediaError(mediaErrorType);
+                    mediaError.message = error.message;
+                    mediaError.logMessage = error.apiError;
+                    notifyMediaDeleted(site, media, mediaError);
                 }));
     }
 
@@ -475,24 +448,18 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         body.put("external_ids", jsonBody);
 
         WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, body, MultipleMediaResponse.class,
-                new com.android.volley.Response.Listener<MultipleMediaResponse>() {
-                    @Override
-                    public void onResponse(MultipleMediaResponse response) {
-                        // response is a list of media, exactly like that of MediaRestClient.fetchMediaList()
-                        List<MediaModel> mediaList =
-                                mMediaResponseUtils.getMediaListFromRestResponse(response, site.getId());
-                        UploadedStockMediaPayload payload = new UploadedStockMediaPayload(site, mediaList);
-                        mDispatcher.dispatch(MediaActionBuilder.newUploadedStockMediaAction(payload));
-                    }
-                }, new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        AppLog.e(AppLog.T.MEDIA, "VolleyError uploading stock media: " + error);
-                        UploadStockMediaError mediaError = new UploadStockMediaError(
-                                UploadStockMediaErrorType.fromNetworkError(error), error.message);
-                        UploadedStockMediaPayload payload = new UploadedStockMediaPayload(site, mediaError);
-                        mDispatcher.dispatch(MediaActionBuilder.newUploadedStockMediaAction(payload));
-                    }
+                response -> {
+                    // response is a list of media, exactly like that of MediaRestClient.fetchMediaList()
+                    List<MediaModel> mediaList =
+                            mMediaResponseUtils.getMediaListFromRestResponse(response, site.getId());
+                    UploadedStockMediaPayload payload = new UploadedStockMediaPayload(site, mediaList);
+                    mDispatcher.dispatch(MediaActionBuilder.newUploadedStockMediaAction(payload));
+                }, error -> {
+                    AppLog.e(T.MEDIA, "VolleyError uploading stock media: " + error);
+                    UploadStockMediaError mediaError = new UploadStockMediaError(
+                            UploadStockMediaErrorType.fromNetworkError(error), error.message);
+                    UploadedStockMediaPayload payload = new UploadedStockMediaPayload(site, mediaError);
+                    mDispatcher.dispatch(MediaActionBuilder.newUploadedStockMediaAction(payload));
                 });
 
         add(request);
