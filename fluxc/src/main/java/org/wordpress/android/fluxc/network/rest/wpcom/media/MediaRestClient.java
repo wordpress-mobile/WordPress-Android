@@ -455,8 +455,16 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     // response is a list of media, exactly like that of MediaRestClient.fetchMediaList()
                     List<MediaModel> mediaList =
                             mMediaResponseUtils.getMediaListFromRestResponse(response, site.getId());
-                    UploadedStockMediaPayload payload = new UploadedStockMediaPayload(site, mediaList);
-                    mDispatcher.dispatch(MediaActionBuilder.newUploadedStockMediaAction(payload));
+                    if (mediaList != null) {
+                        UploadedStockMediaPayload payload = new UploadedStockMediaPayload(site, mediaList);
+                        mDispatcher.dispatch(MediaActionBuilder.newUploadedStockMediaAction(payload));
+                    } else {
+                        AppLog.e(T.MEDIA, "Media list is null: " + response);
+                        UploadStockMediaError mediaError = new UploadStockMediaError(
+                                UploadStockMediaErrorType.GENERIC_ERROR, "Media list is null");
+                        UploadedStockMediaPayload payload = new UploadedStockMediaPayload(site, mediaError);
+                        mDispatcher.dispatch(MediaActionBuilder.newUploadedStockMediaAction(payload));
+                    }
                 }, error -> {
                     AppLog.e(T.MEDIA, "VolleyError uploading stock media: " + error);
                     UploadStockMediaError mediaError = new UploadStockMediaError(
