@@ -189,7 +189,7 @@ class CommentsMapperTest {
         )
     }
 
-    private fun getDefaultComment(allowNulls: Boolean): CommentEntity {
+    private fun getDefaultComment(withEmpty: Boolean): CommentEntity {
         return CommentEntity(
                 id = 0L,
                 remoteCommentId = 10L,
@@ -197,24 +197,25 @@ class CommentsMapperTest {
                 authorId = 44L,
                 localSiteId = 10_000,
                 remoteSiteId = 100_000L,
-                authorUrl = if (allowNulls) "" else "https://test-debug-site.wordpress.com",
-                authorName = if (allowNulls) "" else "authorname",
-                authorEmail = if (allowNulls) "" else "email@wordpress.com",
-                authorProfileImageUrl = if (allowNulls) "" else "https://gravatar.com/avatar/111222333",
-                postTitle = if (allowNulls) "" else "again",
+                authorUrl = if (withEmpty) "" else "https://test-debug-site.wordpress.com",
+                authorName = if (withEmpty) "" else "authorname",
+                authorEmail = if (withEmpty) "" else "email@wordpress.com",
+                authorProfileImageUrl = if (withEmpty) "" else "https://gravatar.com/avatar/111222333",
+                postTitle = if (withEmpty) "" else "again",
                 status = APPROVED.toString(),
-                datePublished = if (allowNulls) "" else "2021-05-12T15:10:40+02:00",
+                datePublished = if (withEmpty) "" else "2021-05-12T15:10:40+02:00",
                 publishedTimestamp = 1_000_000,
-                content = if (allowNulls) "" else "content example",
-                url = if (allowNulls) "" else "https://test-debug-site.wordpress.com/2021/02/25/again/#comment-137",
+                content = if (withEmpty) "" else "content example",
+                url = if (withEmpty) "" else "https://test-debug-site.wordpress.com/2021/02/25/again/#comment-137",
                 hasParent = true,
                 parentId = 1_000L,
                 iLike = false
         )
     }
 
-    private fun getDefaultCommentList(allowNulls: Boolean): CommentEntityList {
-        val comment = getDefaultComment(allowNulls)
+    @Suppress("SameParameterValue")
+    private fun getDefaultCommentList(withEmpty: Boolean): CommentEntityList {
+        val comment = getDefaultComment(withEmpty)
         return listOf(
                 comment.copy(id = 1L, remoteCommentId = 10L, datePublished = "2021-07-24T00:51:43+02:00"),
                 comment.copy(id = 2L, remoteCommentId = 20L, datePublished = "2021-07-24T00:51:43+02:00"),
