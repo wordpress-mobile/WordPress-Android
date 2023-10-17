@@ -447,7 +447,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         body.put("service", "pexels");
         body.put("external_ids", jsonBody);
 
-        WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, body, MultipleMediaResponse.class,
+        WPComGsonRequest<MultipleMediaResponse> request = WPComGsonRequest.buildPostRequest(
+                url,
+                body,
+                MultipleMediaResponse.class,
                 response -> {
                     // response is a list of media, exactly like that of MediaRestClient.fetchMediaList()
                     List<MediaModel> mediaList =
