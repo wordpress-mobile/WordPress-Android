@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-21 08:23:22+0000
+Translation-Revision-Date: 2023-10-11 08:57:23+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.9
 Language: cs_CZ
 -->
 <resources>
+    <string name="blaze_campaigns_card_footer_label">Vytvořit kampaň</string>
+    <string name="privacy_banner_save">Uložit</string>
+    <string name="privacy_banner_settings">Nastavení</string>
+    <string name="privacy_banner_analytics_description">Umožňují nám optimalizovat výkon shromažďováním informací o tom, jak uživatelé pracují s našimi mobilními aplikacemi.</string>
+    <string name="privacy_banner_analytics">Analytika</string>
+    <string name="privacy_banner_title">Správa soukromí</string>
     <string name="social_item_message_title">Zpráva</string>
     <string name="virtual_homepage_title">Úvodní stránka</string>
     <string name="wp_jetpack_individual_plugin_overlay_multiple_sites_content_item_multiple_plugins">&lt;b&gt;%1$s&lt;/b&gt; používá %2$s jednotlivé pluginy Jetpack</string>
@@ -468,6 +474,7 @@ Language: cs_CZ
     <string name="gutenberg_native_tiled_gallery_settings">Nastavení dlaždicové galerie</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Přejde na obrazovku výběru rozvržení</string>
     <string name="gutenberg_native_gallery_style">Styl galerie</string>
+    <string name="sharing_connect_via_web_warning_message">Účet %s můžete připojit na webu WordPress.com. Po dokončení se vraťte do aplikace a změňte nastavení sdílení.</string>
     <string name="about_automattic_app_icon_description">Ikona aplikace</string>
     <string name="about_automattic_back_icon_description">Ikona zpět</string>
     <string name="about_automattic_logo_description">Automattic logo</string>
@@ -1504,6 +1511,7 @@ Language: cs_CZ
     <string name="editor_page_saved_locally">Stránka byla uložena v zařízení</string>
     <string name="editor_page_saved_locally_failed_media">Příspěvek selhal při nahrávání médií a byl uložen lokálně na zařízení</string>
     <string name="editor_uploading_page">Vaše stránka se nahrává</string>
+    <string name="gutenberg_native_warning_message">Varovná zpráva</string>
     <string name="gutenberg_native_show_post_content">Zobrazit obsah příspěvku</string>
     <string name="gutenberg_native_link_settings">Nastavení odkazu</string>
     <string name="gutenberg_native_link_to">Odkaz na</string>

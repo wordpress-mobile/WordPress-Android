@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,12 +20,11 @@ import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.extensions.ViewExtensionsKt;
 
 import java.lang.ref.WeakReference;
 
@@ -99,12 +97,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     public void onBindViewHolder(TagViewHolder holder, int position) {
         final ReaderTag tag = mTags.get(position);
         holder.mTxtTagName.setText(tag.getLabel());
-        holder.mBtnRemove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                performDeleteTag(tag);
-            }
-        });
+        holder.mRemoveFollowButton.setOnClickListener(v -> performDeleteTag(tag));
     }
 
     private void performDeleteTag(@NonNull ReaderTag tag) {
@@ -138,14 +131,13 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
 
     class TagViewHolder extends RecyclerView.ViewHolder {
         private final TextView mTxtTagName;
-        private final ImageButton mBtnRemove;
+        private final ReaderFollowButton mRemoveFollowButton;
 
         TagViewHolder(View view) {
             super(view);
             mTxtTagName = (TextView) view.findViewById(R.id.text_topic);
-            mBtnRemove = (ImageButton) view.findViewById(R.id.btn_remove);
-            ReaderUtils.setBackgroundToRoundRipple(mBtnRemove);
-            ViewExtensionsKt.expandTouchTargetArea(mBtnRemove, R.dimen.reader_remove_button_extra_padding, false);
+            mRemoveFollowButton = (ReaderFollowButton) view.findViewById(R.id.remove_button);
+            mRemoveFollowButton.setIsFollowed(true);
         }
     }
 

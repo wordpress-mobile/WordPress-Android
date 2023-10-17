@@ -983,6 +983,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_menu_opened";
             case OPENED_MEDIA_LIBRARY:
                 return "site_menu_opened";
+            case OPENED_QUICK_LINK_RIBBON_MORE:
+                return "site_menu_opened";
             case OPENED_BLOG_SETTINGS:
                 return "site_menu_opened";
             case OPENED_ACCOUNT_SETTINGS:
@@ -1944,6 +1946,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_LINK_RIBBON_PAGES_TAPPED:
             case QUICK_LINK_RIBBON_POSTS_TAPPED:
             case QUICK_LINK_RIBBON_MEDIA_TAPPED:
+            case QUICK_LINK_RIBBON_MORE_TAPPED:
             case QUICK_LINK_RIBBON_STATS_TAPPED:
                 return "quick_action_ribbon_tapped";
             case AUTO_UPLOAD_POST_INVOKED:
@@ -2616,6 +2619,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "personalization_screen_card_hide_tapped";
             case PERSONALIZATION_SCREEN_CARD_SHOW_TAPPED:
                 return "personalization_screen_card_show_tapped";
+            case PERSONALIZATION_SCREEN_SHORTCUT_HIDE_QUICK_LINK_TAPPED:
+                return "personalization_screen_shortcut_hide_quick_link_tapped";
+            case PERSONALIZATION_SCREEN_SHORTCUT_SHOW_QUICK_LINK_TAPPED:
+                return "personalization_screen_shortcut_show_quick_link_tapped";
+            case MORE_MENU_ITEM_TAPPED:
+                return "more_menu_item_tapped";
+            case QUICK_LINK_ITEM_TAPPED:
+                return "quick_link_item_tapped";
         }
         return null;
     }

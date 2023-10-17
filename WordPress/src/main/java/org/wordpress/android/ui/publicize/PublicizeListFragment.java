@@ -2,6 +2,7 @@ package org.wordpress.android.ui.publicize;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -297,9 +298,9 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
                 requireContext(),
                 R.string.quick_start_dialog_enable_sharing_message_short_connections
         );
-        mSnackbarSequencer.enqueue(
+        new Handler().postDelayed(() -> mSnackbarSequencer.enqueue(
                 new SnackbarItem(new Info(mRecycler, new UiStringText(title), Snackbar.LENGTH_LONG))
-        );
+        ), 500L);
     }
 
     @Override

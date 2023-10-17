@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-03 15:54:07+0000
+Translation-Revision-Date: 2023-10-05 08:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.9
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">取消區塊群組</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">點選此處以顯示更多詳細資訊。</string>
+    <string name="gutenberg_native_synced_patterns">同步的版面配置</string>
+    <string name="gutenberg_native_deeply_nested_block">向下內嵌區塊</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">向下內嵌超過 %d 層的區塊，在行動編輯器中可能無法正常轉譯。 因此我們建議藉由取消區塊群組，或使用你的網頁編輯器編輯區塊來減少內容。</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">向下內嵌超過 %d 層的區塊，在行動編輯器中可能無法正常轉譯。 因此我們建議藉由取消區塊群組，或使用你的網頁瀏覽器編輯區塊來減少內容。</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">由於區塊已向下內嵌，故無法轉譯。 點選以瞭解更多詳細資訊。</string>
+    <string name="pages_no_site_something_went_wrong">糟糕，發生錯誤… 請稍後再試。</string>
     <string name="sharing_connect_via_web_warning_positive_button">前往網頁</string>
     <string name="my_site_dashboard_no_cards_message_description">點選個人化按鈕，顯示更多卡片。</string>
     <string name="my_site_dashboard_no_cards_message_title">已隱藏所有卡片</string>

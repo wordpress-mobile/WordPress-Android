@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-09-27 10:54:08+0000
+Translation-Revision-Date: 2023-10-05 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.9
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">블록 그룹 해제</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">자세히 알아보려면 여기를 누르세요.</string>
+    <string name="gutenberg_native_synced_patterns">동기화된 패턴</string>
+    <string name="gutenberg_native_deeply_nested_block">깊숙이 중첩된 블록</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">%d 레벨보다 깊숙이 중첩된 블록은 모바일 편집기에서 올바르게 렌더링되지 않을 수 있습니다. 따라서 블록 그룹 해제를 통해 콘텐츠를 평평하게 하거나 웹 편집기를 사용하여 블록을 편집하는 것이 좋습니다.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%d 레벨보다 깊숙이 중첩된 블록은 모바일 편집기에서 올바르게 렌더링되지 않을 수 있습니다. 따라서 블록 그룹 해제를 통해 콘텐츠를 평평하게 하거나 웹 브라우저를 사용하여 블록을 편집하는 것이 좋습니다.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">깊숙이 중첩되어서 블록을 렌더링할 수 없습니다. 자세히 알아보려면 여기를 누르세요.</string>
+    <string name="pages_no_site_something_went_wrong">죄송합니다. 문제가 발생했습니다. 나중에 다시 시도하세요.</string>
+    <string name="sharing_connect_via_web_warning_positive_button">웹으로 이동</string>
     <string name="my_site_dashboard_no_cards_message_description">개인 설정 버튼을 눌러 더 많은 카드를 표시하세요.</string>
     <string name="my_site_dashboard_no_cards_message_title">모든 카드가 숨겨짐</string>
     <string name="personalization_screen_next_steps_card_description">앱으로 사이트를 최대한 활용하는 방법을 알아보세요.</string>
@@ -15,8 +24,13 @@ Language: ko_KR
     <string name="personalization_screen_blogging_prompts_card_title">블로깅 프롬프트</string>
     <string name="personalization_screen_blaze_card_description">블로그 글을 홍보하고 현재 캠페인을 확인하세요.</string>
     <string name="personalization_screen_scheduled_posts_card_description">공개 예정인 글입니다.</string>
+    <string name="personalization_screen_scheduled_posts_card_title">예약된 글</string>
     <string name="personalization_screen_draft_posts_card_description">최근 임시글입니다.</string>
+    <string name="personalization_screen_draft_posts_card_title">임시글</string>
     <string name="personalization_screen_stats_card_description">조회수, 방문자 수 및 좋아요 개수</string>
+    <string name="personalization_screen_footer_cards">사이트에서 발생하는 상황에 따라 다른 콘텐츠가 카드에 표시될 수 있습니다.</string>
+    <string name="personalization_screen_description">카드 추가 또는 숨기기</string>
+    <string name="personalization_screen_title">홈 탭 개인 설정</string>
     <string name="personalize_card_content_description">눌러서 홈 탭 개인 설정</string>
     <string name="personalize_card_text">홈 탭 개인 설정</string>
     <string name="partial_media_access_prompt_change_settings">설정 변경</string>
@@ -651,6 +665,7 @@ Language: ko_KR
     <string name="gutenberg_native_tiled_gallery_settings">바둑판식 갤러리 설정</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">레이아웃 선택 화면으로 이동</string>
     <string name="gutenberg_native_gallery_style">갤러리 스타일</string>
+    <string name="sharing_connect_via_web_warning_message">워드프레스닷컴 웹사이트에서 %s 계정을 연결할 수 있습니다. 완료하면 앱으로 돌아가서 공유 설정을 변경하세요.</string>
     <string name="about_automattic_app_icon_description">앱 아이콘</string>
     <string name="about_automattic_back_icon_description">뒤로 아이콘</string>
     <string name="about_automattic_logo_description">Automattic 로고</string>

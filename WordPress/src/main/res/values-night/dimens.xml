@@ -6,6 +6,7 @@
        native reader dimens
    -->
     <dimen name="reader_card_elevation">1dp</dimen>
+    <dimen name="reader_card_elevation_new">0dp</dimen>
     <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
         @dimen/disabled_alpha
     </item>

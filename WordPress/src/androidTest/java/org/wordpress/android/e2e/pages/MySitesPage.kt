@@ -75,22 +75,18 @@ class MySitesPage {
     }
 
     fun goToSettings() {
-        goToMenuTab()
         clickItemWithText(R.string.my_site_btn_site_settings)
     }
 
     fun goToPosts() {
-        goToMenuTab()
         clickSiteMenuItem(R.string.my_site_btn_blog_posts)
     }
 
     fun goToActivityLog() {
-        goToMenuTab()
         clickItemWithText(R.string.activity_log)
     }
 
     fun goToScan() {
-        goToMenuTab()
         clickItemWithText(R.string.scan)
     }
 
@@ -145,14 +141,11 @@ class MySitesPage {
     }
 
     fun goToBackup() {
-        goToMenuTab()
-
         // Using RecyclerViewActions.click doesn't work for some reason when quick actions are displayed.
         clickItemWithText(R.string.backup)
     }
 
     fun goToStats(): StatsPage {
-        goToMenuTab()
         val statsButton = Espresso.onView(
             Matchers.allOf(
                 ViewMatchers.withText(R.string.stats),
@@ -170,7 +163,6 @@ class MySitesPage {
     }
 
     fun goToMedia() {
-        goToMenuTab()
         clickSiteMenuItem(R.string.media)
     }
 
@@ -230,13 +222,6 @@ class MySitesPage {
                 )
             )
         )
-
-        fun goToMenuTab() {
-            WPSupportUtils.selectItemWithTitleInTabLayout(
-                WPSupportUtils.getTranslatedString(R.string.my_site_menu_tab_title),
-                R.id.tab_layout
-            )
-        }
 
         fun setChecked(checked: Boolean, id: Int): ViewAction {
             return object : ViewAction {

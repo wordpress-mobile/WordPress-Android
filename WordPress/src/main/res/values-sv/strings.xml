@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-03 13:54:08+0000
+Translation-Revision-Date: 2023-10-04 13:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">Avgruppera block</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">Tryck här för att visa mer information.</string>
+    <string name="gutenberg_native_synced_patterns">Synkroniserade mönster</string>
+    <string name="gutenberg_native_deeply_nested_block">Djupt inbäddat block</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Block som är inbäddade djupare än %d kanske inte renderas korrekt i den mobila redigeraren. Av den här anledningen rekommenderar vi att du plattar ut innehållet genom att avgruppera blocket eller att du redigerar blocket med webbredigeraren.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Block som är inbäddade djupare än %d kanske inte renderas korrekt i den mobila redigeraren. Av den här anledningen rekommenderar vi att du plattar ut innehållet genom att avgruppera blocket eller att du redigerar blocket i din webbläsare.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Blocket kan inte renderas eftersom det är djupt inbäddat. Tryck här för mer information.</string>
+    <string name="pages_no_site_something_went_wrong">Hoppsan, något gick fel. Försök igen senare.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Gå till webben</string>
     <string name="my_site_dashboard_no_cards_message_description">Tryck på anpassningsknappen för att visa fler kort.</string>
     <string name="my_site_dashboard_no_cards_message_title">Alla kort är dolda</string>

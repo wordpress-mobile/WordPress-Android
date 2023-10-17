@@ -207,11 +207,13 @@ class PostListFragment : ViewPagerFragment() {
         recyclerView?.layoutManager = LinearLayoutManager(context)
         recyclerView?.adapter = postListAdapter
 
-        swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
-            if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
-                swipeRefreshLayout?.isRefreshing = false
-            } else {
-                viewModel.swipeToRefresh()
+        swipeRefreshLayout?.let {
+            swipeToRefreshHelper = buildSwipeToRefreshHelper(it) {
+                if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
+                    it.isRefreshing = false
+                } else {
+                    viewModel.swipeToRefresh()
+                }
             }
         }
         return view

@@ -76,10 +76,6 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getReaderCardsPageHandle()
         set(pageHandle) = AppPrefs.setReaderCardsPageHandle(pageHandle)
 
-    var readerDiscoverWelcomeBannerShown: Boolean
-        get() = AppPrefs.getReaderDiscoverWelcomeBannerShown()
-        set(showBanner) = AppPrefs.setReaderDiscoverWelcomeBannerShown(showBanner)
-
     var shouldShowStoriesIntro: Boolean
         get() = AppPrefs.shouldShowStoriesIntro()
         set(shouldShow) = AppPrefs.setShouldShowStoriesIntro(shouldShow)
@@ -408,6 +404,18 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getShouldHideGetToKnowTheAppDashboardCard(siteId: Long): Boolean =
         AppPrefs.getShouldHideGetToKnowTheAppDashboardCard(siteId)
+
+    fun setShouldShowSiteItemAsQuickLink(siteItem: String, siteId: Long, shouldShow: Boolean) =
+        AppPrefs.setShouldShowSiteItemAsQuickLink(siteItem, siteId, shouldShow)
+
+    fun getShouldShowSiteItemAsQuickLink(siteItem: String, siteId: Long): Boolean =
+        AppPrefs.getShouldShowSiteItemAsQuickLink(siteItem, siteId)
+
+    fun setShouldShowDefaultQuickLink(siteItem: String, siteId: Long, shouldShow: Boolean) =
+        AppPrefs.setShouldShowDefaultQuickLink(siteItem, siteId, shouldShow)
+
+    fun getShouldShowDefaultQuickLink(siteItem: String, siteId: Long): Boolean =
+        AppPrefs.getShouldShowDefaultQuickLink(siteItem, siteId)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 

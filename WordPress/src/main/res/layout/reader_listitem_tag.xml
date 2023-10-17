@@ -27,14 +27,10 @@
         android:textAppearance="?attr/textAppearanceSubtitle1"
         tools:text="text_topic" />
 
-    <ImageButton
-        android:id="@+id/btn_remove"
+    <org.wordpress.android.ui.reader.views.ReaderFollowButton
+        android:id="@+id/remove_button"
+        style="@style/Reader.Follow.Button.New"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:background="?attr/selectableItemBackground"
-        android:contentDescription="@string/remove"
-        android:padding="@dimen/margin_small"
-        android:src="@drawable/ic_reader_following_white_24dp"
-        app:tint="?attr/wpColorOnSurfaceMedium" />
+        android:contentDescription="@string/remove" />
 </LinearLayout>

@@ -8,7 +8,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -63,13 +62,8 @@ class BloggingPromptsCardTrackHelper @Inject constructor(
         }
     }
 
-    fun onResume(currentTab: MySiteTabType) {
-        if (currentTab == MySiteTabType.DASHBOARD) {
-            onDashboardRefreshed()
-        } else {
-            // moved away from dashboard, no longer waiting to track
-            waitingToTrack.set(false)
-        }
+    fun onResume() {
+        onDashboardRefreshed()
     }
 
     fun onSiteChanged(siteId: Int?) {

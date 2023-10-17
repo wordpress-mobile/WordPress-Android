@@ -45,19 +45,22 @@ class SiteItemsBuilder @Inject constructor(
             ListItem(
                 R.drawable.ic_posts_white_24dp,
                 UiStringRes(R.string.my_site_btn_blog_posts),
-                onClick = ListItemInteraction.create(POSTS, params.onClick)
+                onClick = ListItemInteraction.create(POSTS, params.onClick),
+                listItemAction = POSTS
             ),
             siteListItemBuilder.buildPagesItemIfAvailable(params.site, params.onClick, showPagesFocusPoint),
             ListItem(
                 R.drawable.ic_media_white_24dp,
                 UiStringRes(R.string.media),
                 onClick = ListItemInteraction.create(MEDIA, params.onClick),
-                showFocusPoint = showMediaFocusPoint
+                showFocusPoint = showMediaFocusPoint,
+                listItemAction = MEDIA
             ),
             ListItem(
                 R.drawable.ic_comment_white_24dp,
                 UiStringRes(R.string.my_site_btn_comments),
-                onClick = ListItemInteraction.create(COMMENTS, params.onClick)
+                onClick = ListItemInteraction.create(COMMENTS, params.onClick),
+                listItemAction = COMMENTS
             )
         )
     }
@@ -78,7 +81,8 @@ class SiteItemsBuilder @Inject constructor(
                 R.drawable.ic_stats_alt_white_24dp,
                 UiStringRes(R.string.stats),
                 onClick = ListItemInteraction.create(ListItemAction.STATS, params.onClick),
-                showFocusPoint = showStatsFocusPoint
+                showFocusPoint = showStatsFocusPoint,
+                listItemAction = ListItemAction.STATS
             ),
             siteListItemBuilder.buildBlazeItemIfAvailable(params.isBlazeEligible, params.onClick)
         )

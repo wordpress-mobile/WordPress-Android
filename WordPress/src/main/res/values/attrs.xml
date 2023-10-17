@@ -103,10 +103,6 @@
         ReaderFollowButton attributes
     -->
     <declare-styleable name="ReaderFollowButton">
-        <attr name="wpReaderFollowButtonType" format="enum">
-            <enum name="followSite" value="0" />
-            <enum name="followComments" value="1" />
-        </attr>
         <attr name="wpShowFollowButtonCaption" format="boolean" />
     </declare-styleable>
 
@@ -175,6 +171,9 @@
         it's not worth replacing the FilteredRecyclerView with something else now. Therefore we
         opted for a simple flag which hides the filtering options from the FilteredRecyclerView -->
         <attr name="wpHideAppBarLayout" format="boolean"/>
+        <!-- Optional: Default is true. Include a default spacing between items, which can act as
+         a divider in case the RecyclerView background is different than each item's background-->
+        <attr name="wpIncludeDefaultSpacing" format="boolean"/>
     </declare-styleable>
 
     <!--

@@ -34,6 +34,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.INTENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.PLANS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.PROGRESS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_DESIGNS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_NAME
@@ -43,6 +44,9 @@ import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
+import org.wordpress.android.ui.sitecreation.plans.PlanModel
+import org.wordpress.android.ui.sitecreation.plans.PlansScreenListener
+import org.wordpress.android.ui.sitecreation.plans.SiteCreationPlansFragment
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressFragment
@@ -70,6 +74,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     IntentsScreenListener,
     SiteNameScreenListener,
     DomainsScreenListener,
+    PlansScreenListener,
     OnHelpClickedListener,
     BasicDialogPositiveClickInterface,
     BasicDialogNegativeClickInterface {
@@ -220,6 +225,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.onDomainsScreenFinished(domain)
     }
 
+    override fun onPlanSelected(plan: PlanModel) {
+        mainViewModel.onPlanSelection(plan)
+    }
+
     override fun onHelpClicked(origin: Origin) {
         ActivityLauncher.viewHelp(this, origin, null, null)
     }
@@ -235,6 +244,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
                 HomePagePickerFragment.newInstance(target.wizardState.siteIntent)
             }
             DOMAINS -> SiteCreationDomainsFragment.newInstance(screenTitle)
+            PLANS -> SiteCreationPlansFragment.newInstance(target.wizardState)
             PROGRESS -> SiteCreationProgressFragment.newInstance(target.wizardState)
             SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState)
         }
