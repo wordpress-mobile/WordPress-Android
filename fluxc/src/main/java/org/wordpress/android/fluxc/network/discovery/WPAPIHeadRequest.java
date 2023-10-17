@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.discovery;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
@@ -16,32 +17,38 @@ import java.util.regex.Pattern;
 public class WPAPIHeadRequest extends BaseRequest<String> {
     private static final Pattern LINK_PATTERN = Pattern.compile("^<(.*)>; rel=\"https://api.w.org/\"$");
 
-    private final Listener<String> mListener;
-    private String mResponseLinkHeader;
+    @NonNull private final Listener<String> mListener;
+    @Nullable private String mResponseLinkHeader;
 
-    public WPAPIHeadRequest(String url, Listener<String> listener, BaseErrorListener errorListener) {
+    public WPAPIHeadRequest(
+            @NonNull String url,
+            @NonNull Listener<String> listener,
+            @NonNull BaseErrorListener errorListener) {
         super(Method.HEAD, url, errorListener);
         mListener = listener;
     }
 
     @Override
-    protected void deliverResponse(String response) {
+    protected void deliverResponse(@NonNull String response) {
         mListener.onResponse(extractEndpointFromLinkHeader(mResponseLinkHeader));
     }
 
+    @NonNull
     @Override
-    protected Response<String> parseNetworkResponse(NetworkResponse response) {
+    protected Response<String> parseNetworkResponse(@NonNull NetworkResponse response) {
         mResponseLinkHeader = response.headers.get("Link");
         return Response.success("", HttpHeaderParser.parseCacheHeaders(response));
     }
 
+    @NonNull
     @Override
     public BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error) {
         // no op
         return new WPAPINetworkError(error, null);
     }
 
-    private static String extractEndpointFromLinkHeader(String linkHeader) {
+    @Nullable
+    private static String extractEndpointFromLinkHeader(@Nullable String linkHeader) {
         if (linkHeader != null) {
             Matcher matcher = LINK_PATTERN.matcher(linkHeader);
             if (matcher.find()) {
