@@ -29,6 +29,10 @@ val DomainStatus.indicatorColor
         null ->  MaterialTheme.colorScheme.error
     }
 
+val DomainStatus.statusText
+    @Composable
+    get() = status ?: stringResource(id = R.string.error)
+
 val DomainStatus.textColor
 @Composable
 get() = when (statusType) {
