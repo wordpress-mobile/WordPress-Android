@@ -129,7 +129,8 @@ public class SelfHostedEndpointFinder {
         return xmlrpcUrl;
     }
 
-    private LinkedHashSet<String> getOrderedVerifyUrlsToTry(String siteUrl) throws DiscoveryException {
+    @NonNull
+    private LinkedHashSet<String> getOrderedVerifyUrlsToTry(@NonNull String siteUrl) throws DiscoveryException {
         LinkedHashSet<String> urlsToTry = new LinkedHashSet<>();
         final String sanitizedSiteUrlHttps = sanitizeSiteUrl(siteUrl, true);
         final String sanitizedSiteUrlHttp = sanitizeSiteUrl(siteUrl, false);
