@@ -284,6 +284,7 @@ public class SelfHostedEndpointFinder {
     /**
      * Returns RSD URL based on regex match.
      */
+    @Nullable
     private String getRSDMetaTagHrefRegEx(@NonNull String html) {
         Matcher matcher = RSD_LINK.matcher(html);
         if (matcher.find()) {
