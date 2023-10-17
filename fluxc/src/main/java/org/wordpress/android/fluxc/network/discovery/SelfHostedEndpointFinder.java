@@ -61,16 +61,16 @@ public class SelfHostedEndpointFinder {
     }
 
     public static class DiscoveryResultPayload extends Payload<DiscoveryError> {
-        public String xmlRpcEndpoint;
-        public String wpRestEndpoint;
-        public String failedEndpoint;
+        @Nullable public String xmlRpcEndpoint;
+        @Nullable public String wpRestEndpoint;
+        @Nullable public String failedEndpoint;
 
-        public DiscoveryResultPayload(String xmlRpcEndpoint, String wpRestEndpoint) {
+        public DiscoveryResultPayload(@NonNull String xmlRpcEndpoint, @Nullable String wpRestEndpoint) {
             this.xmlRpcEndpoint = xmlRpcEndpoint;
             this.wpRestEndpoint = wpRestEndpoint;
         }
 
-        public DiscoveryResultPayload(DiscoveryError discoveryError, String failedEndpoint) {
+        public DiscoveryResultPayload(@NonNull DiscoveryError discoveryError, @Nullable String failedEndpoint) {
             this.error = discoveryError;
             this.failedEndpoint = failedEndpoint;
         }
