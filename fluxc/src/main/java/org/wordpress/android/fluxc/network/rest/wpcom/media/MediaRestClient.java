@@ -263,7 +263,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
                     MediaError error = parseUploadError(response, site);
 
-                    if (null != error && error.type == MediaErrorType.BAD_REQUEST) {
+                    if (error.type == MediaErrorType.BAD_REQUEST) {
                         AppLog.e(T.MEDIA, "media upload error message: " + error.message);
                     }
 
@@ -468,7 +468,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     //
     // Helper methods to dispatch media actions
     //
-    private MediaError parseUploadError(Response response, SiteModel siteModel) {
+    @NonNull
+    private MediaError parseUploadError(
+            @NonNull Response response,
+            @NonNull SiteModel siteModel) {
         MediaError mediaError = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
         mediaError.statusCode = response.code();
         mediaError.logMessage = response.message();
