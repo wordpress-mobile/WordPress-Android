@@ -14,7 +14,8 @@ public class DiscoveryUtils {
     /**
      * Strip known unnecessary paths from XML-RPC URL and remove trailing slashes
      */
-    public static String stripKnownPaths(String url) {
+    @NonNull
+    public static String stripKnownPaths(@NonNull String url) {
         // Remove 'wp-login.php' if available in the URL
         String sanitizedURL = truncateUrl(url, "wp-login.php");
 
@@ -40,7 +41,8 @@ public class DiscoveryUtils {
      * @param marker the marker to begin the truncation from
      * @return new string truncated to the begining of the marker or the input string if marker is not found
      */
-    public static String truncateUrl(String url, String marker) {
+    @NonNull
+    public static String truncateUrl(@NonNull String url, @NonNull String marker) {
         if (TextUtils.isEmpty(marker) || !url.contains(marker)) {
             return url;
         }
