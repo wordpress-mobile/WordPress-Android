@@ -194,7 +194,7 @@ platform :android do
       download_universal_apk_from_google_play(
           package_name: package_name,
           version_code: build_code,
-          destination: signed_apk_path(app, build_code),
+          destination: signed_apk_path(app, current_version_name),
           json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
       )
     end
