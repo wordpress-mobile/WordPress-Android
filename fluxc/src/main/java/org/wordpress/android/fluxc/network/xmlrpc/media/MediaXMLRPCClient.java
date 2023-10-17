@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListener;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
@@ -101,39 +100,33 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         List<Object> params = getBasicParams(site, media);
         params.add(getEditMediaFields(media));
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.EDIT_POST, params,
-                new Listener<Object>() {
-                    @Override
-                    public void onResponse(Object response) {
-                        // response should be a boolean indicating result of push request
-                        if (response == null || !(response instanceof Boolean) || !(Boolean) response) {
-                            String message = "could not parse XMLRPC.EDIT_MEDIA response: " + response;
-                            AppLog.w(T.MEDIA, message);
-                            MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                            error.logMessage = message;
-                            notifyMediaPushed(site, media, error);
-                            return;
-                        }
-
-                        // success!
-                        AppLog.i(T.MEDIA, "Media updated on remote: " + media.getTitle());
-                        notifyMediaPushed(site, media, null);
+                (Listener<Object>) response -> {
+                    // response should be a boolean indicating result of push request
+                    if (response == null || !(response instanceof Boolean) || !(Boolean) response) {
+                        String message = "could not parse XMLRPC.EDIT_MEDIA response: " + response;
+                        AppLog.w(T.MEDIA, message);
+                        MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                        error.logMessage = message;
+                        notifyMediaPushed(site, media, error);
+                        return;
                     }
-                }, new BaseErrorListener() {
-            @Override
-            public void onErrorResponse(@NonNull BaseNetworkError error) {
-                String errorMessage = "error response to XMLRPC.EDIT_MEDIA request: " + error;
-                AppLog.e(T.MEDIA, errorMessage);
-                if (is404Response(error)) {
-                    AppLog.e(T.MEDIA, "media does not exist, no need to report error");
+
+                    // success!
+                    AppLog.i(T.MEDIA, "Media updated on remote: " + media.getTitle());
                     notifyMediaPushed(site, media, null);
-                } else {
-                    MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                    mediaError.message = error.message;
-                    mediaError.logMessage = errorMessage;
-                    notifyMediaPushed(site, media, mediaError);
-                }
-            }
-        }));
+                }, error -> {
+                    String errorMessage = "error response to XMLRPC.EDIT_MEDIA request: " + error;
+                    AppLog.e(T.MEDIA, errorMessage);
+                    if (is404Response(error)) {
+                        AppLog.e(T.MEDIA, "media does not exist, no need to report error");
+                        notifyMediaPushed(site, media, null);
+                    } else {
+                        MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
+                        mediaError.message = error.message;
+                        mediaError.logMessage = errorMessage;
+                        notifyMediaPushed(site, media, mediaError);
+                    }
+                }));
     }
 
     /**
@@ -285,33 +278,27 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         params.add(queryParams);
 
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_LIBRARY, params,
-                new Listener<Object[]>() {
-                    @Override
-                    public void onResponse(Object[] response) {
-                        List<MediaModel> mediaList = getMediaListFromXmlrpcResponse(response, site.getId());
-                        if (mediaList != null) {
-                            AppLog.v(T.MEDIA, "Fetched media list for site via XMLRPC.GET_MEDIA_LIBRARY");
-                            boolean canLoadMore = mediaList.size() == number;
-                            notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore, mimeType);
-                        } else {
-                            String message = "could not parse XMLRPC.GET_MEDIA_LIBRARY response: "
-                                             + Arrays.toString(response);
-                            AppLog.w(T.MEDIA, message);
-                            MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                            error.logMessage = "XMLRPC: " + message;
-                            notifyMediaListFetched(site, error, mimeType);
-                        }
+                response -> {
+                    List<MediaModel> mediaList = getMediaListFromXmlrpcResponse(response, site.getId());
+                    if (mediaList != null) {
+                        AppLog.v(T.MEDIA, "Fetched media list for site via XMLRPC.GET_MEDIA_LIBRARY");
+                        boolean canLoadMore = mediaList.size() == number;
+                        notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore, mimeType);
+                    } else {
+                        String message = "could not parse XMLRPC.GET_MEDIA_LIBRARY response: "
+                                         + Arrays.toString(response);
+                        AppLog.w(T.MEDIA, message);
+                        MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                        error.logMessage = "XMLRPC: " + message;
+                        notifyMediaListFetched(site, error, mimeType);
                     }
-                }, new BaseErrorListener() {
-            @Override
-            public void onErrorResponse(@NonNull BaseNetworkError error) {
-                String message = "XMLRPC.GET_MEDIA_LIBRARY error response:";
-                AppLog.e(T.MEDIA, message, error.volleyError);
-                MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                mediaError.logMessage = "XMLRPC: " + message;
-                notifyMediaListFetched(site, mediaError, mimeType);
-            }
-        }));
+                }, error -> {
+                    String message = "XMLRPC.GET_MEDIA_LIBRARY error response:";
+                    AppLog.e(T.MEDIA, message, error.volleyError);
+                    MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
+                    mediaError.logMessage = "XMLRPC: " + message;
+                    notifyMediaListFetched(site, mediaError, mimeType);
+                }));
     }
 
     public void fetchMedia(final SiteModel site, final MediaModel media) {
@@ -336,55 +323,49 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
         List<Object> params = getBasicParams(site, media);
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_ITEM, params,
-                new Listener<Object>() {
-                    @Override
-                    public void onResponse(Object response) {
-                        AppLog.v(T.MEDIA, "Fetched media for site via XMLRPC.GET_MEDIA_ITEM");
-                        MediaModel responseMedia = getMediaFromXmlrpcResponse((HashMap) response);
-                        if (responseMedia != null) {
-                            AppLog.v(T.MEDIA, "Fetched media with remoteId= " + media.getMediaId()
-                                              + " localId=" + media.getId());
-                            // Retain local IDs
-                            responseMedia.setId(media.getId());
-                            responseMedia.setLocalSiteId(site.getId());
-                            responseMedia.setLocalPostId(media.getLocalPostId());
-                            responseMedia.setMarkedLocallyAsFeatured(media.getMarkedLocallyAsFeatured());
+                (Listener<Object>) response -> {
+                    AppLog.v(T.MEDIA, "Fetched media for site via XMLRPC.GET_MEDIA_ITEM");
+                    MediaModel responseMedia = getMediaFromXmlrpcResponse((HashMap) response);
+                    if (responseMedia != null) {
+                        AppLog.v(T.MEDIA, "Fetched media with remoteId= " + media.getMediaId()
+                                          + " localId=" + media.getId());
+                        // Retain local IDs
+                        responseMedia.setId(media.getId());
+                        responseMedia.setLocalSiteId(site.getId());
+                        responseMedia.setLocalPostId(media.getLocalPostId());
+                        responseMedia.setMarkedLocallyAsFeatured(media.getMarkedLocallyAsFeatured());
 
-                            if (isFreshUpload) {
-                                notifyMediaUploaded(responseMedia, null);
-                            } else {
-                                notifyMediaFetched(site, responseMedia, null);
-                            }
+                        if (isFreshUpload) {
+                            notifyMediaUploaded(responseMedia, null);
                         } else {
-                            String message = "could not parse Fetch media response, ID: " + media.getMediaId();
-                            AppLog.w(T.MEDIA, message);
-                            MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                            error.logMessage = "XMLRPC: " + message;
-                            if (isFreshUpload) {
-                                notifyMediaUploaded(media, error);
-                            } else {
-                                notifyMediaFetched(site, media, error);
-                            }
+                            notifyMediaFetched(site, responseMedia, null);
+                        }
+                    } else {
+                        String message = "could not parse Fetch media response, ID: " + media.getMediaId();
+                        AppLog.w(T.MEDIA, message);
+                        MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                        error.logMessage = "XMLRPC: " + message;
+                        if (isFreshUpload) {
+                            notifyMediaUploaded(media, error);
+                        } else {
+                            notifyMediaFetched(site, media, error);
                         }
                     }
-                }, new BaseErrorListener() {
-            @Override
-            public void onErrorResponse(@NonNull BaseNetworkError error) {
-                String message = "XMLRPC.GET_MEDIA_ITEM error response: " + error;
-                AppLog.e(T.MEDIA, message);
-                if (isFreshUpload) {
-                    // we tried to fetch a media that's just uploaded but failed, so we should return
-                    // an upload error and not a fetch error as initially parsing the upload response failed
-                    MediaError mediaError = new MediaError(MediaErrorType.PARSE_ERROR);
-                    mediaError.logMessage = "XMLRPC: " + message;
-                    notifyMediaUploaded(media, mediaError);
-                } else {
-                    MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                    mediaError.logMessage = "XMLRPC: " + message;
-                    notifyMediaFetched(site, media, mediaError);
-                }
-            }
-        }));
+                }, error -> {
+                    String message = "XMLRPC.GET_MEDIA_ITEM error response: " + error;
+                    AppLog.e(T.MEDIA, message);
+                    if (isFreshUpload) {
+                        // we tried to fetch a media that's just uploaded but failed, so we should return
+                        // an upload error and not a fetch error as initially parsing the upload response failed
+                        MediaError mediaError = new MediaError(MediaErrorType.PARSE_ERROR);
+                        mediaError.logMessage = "XMLRPC: " + message;
+                        notifyMediaUploaded(media, mediaError);
+                    } else {
+                        MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
+                        mediaError.logMessage = "XMLRPC: " + message;
+                        notifyMediaFetched(site, media, mediaError);
+                    }
+                }));
     }
 
     public void deleteMedia(final SiteModel site, final MediaModel media) {
@@ -398,33 +379,27 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
         List<Object> params = getBasicParams(site, media);
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.DELETE_POST, params,
-                new Listener<Object>() {
-                    @Override
-                    public void onResponse(Object response) {
-                        // response should be a boolean indicating result of push request
-                        if (response == null || !(response instanceof Boolean) || !(Boolean) response) {
-                            String message = "could not parse XMLRPC.DELETE_MEDIA response: " + response;
-                            AppLog.w(T.MEDIA, message);
-                            MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                            error.logMessage = "XMLRPC: " + message;
-                            notifyMediaDeleted(site, media, error);
-                            return;
-                        }
-
-                        AppLog.v(T.MEDIA, "Successful response from XMLRPC.DELETE_MEDIA");
-                        notifyMediaDeleted(site, media, null);
+                (Listener<Object>) response -> {
+                    // response should be a boolean indicating result of push request
+                    if (response == null || !(response instanceof Boolean) || !(Boolean) response) {
+                        String message = "could not parse XMLRPC.DELETE_MEDIA response: " + response;
+                        AppLog.w(T.MEDIA, message);
+                        MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                        error.logMessage = "XMLRPC: " + message;
+                        notifyMediaDeleted(site, media, error);
+                        return;
                     }
-                }, new BaseErrorListener() {
-            @Override
-            public void onErrorResponse(@NonNull BaseNetworkError error) {
-                String message = "Error response from XMLRPC.DELETE_MEDIA:" + error;
-                AppLog.e(T.MEDIA, message);
-                MediaErrorType mediaErrorType = MediaErrorType.fromBaseNetworkError(error);
-                MediaError mediaError = new MediaError(mediaErrorType);
-                mediaError.logMessage = "XMLRPC: " + message;
-                notifyMediaDeleted(site, media, mediaError);
-            }
-        }));
+
+                    AppLog.v(T.MEDIA, "Successful response from XMLRPC.DELETE_MEDIA");
+                    notifyMediaDeleted(site, media, null);
+                }, error -> {
+                    String message = "Error response from XMLRPC.DELETE_MEDIA:" + error;
+                    AppLog.e(T.MEDIA, message);
+                    MediaErrorType mediaErrorType = MediaErrorType.fromBaseNetworkError(error);
+                    MediaError mediaError = new MediaError(mediaErrorType);
+                    mediaError.logMessage = "XMLRPC: " + message;
+                    notifyMediaDeleted(site, media, mediaError);
+                }));
     }
 
     public void cancelUpload(final MediaModel media) {
