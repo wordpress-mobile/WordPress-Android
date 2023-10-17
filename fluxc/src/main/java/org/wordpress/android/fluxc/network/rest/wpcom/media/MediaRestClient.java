@@ -587,7 +587,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * The current REST API call (v1.1) accepts 'title', 'description', 'caption', 'alt',
      * and 'parent_id' for all media. Audio media also accepts 'artist' and 'album' attributes.
      * <p>
-     * ref https://developer.wordpress.com/docs/api/1.1/post/sites/%24site/media/
+     * @see <a href="https://developer.wordpress.com/docs/api/1.1/post/sites/%24site/media/">documentation</a>
      */
     private Map<String, Object> getEditRequestParams(final MediaModel media) {
         if (media == null) {
