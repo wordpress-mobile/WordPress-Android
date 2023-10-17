@@ -102,7 +102,7 @@ public class DiscoveryUtils {
     /**
      * Check whether given network error is a 401 Unauthorized HTTP error
      */
-    public static boolean isHTTPAuthErrorMessage(Exception e) {
+    public static boolean isHTTPAuthErrorMessage(@Nullable Exception e) {
         return e != null && e.getMessage() != null && e.getMessage().contains("401");
     }
 
