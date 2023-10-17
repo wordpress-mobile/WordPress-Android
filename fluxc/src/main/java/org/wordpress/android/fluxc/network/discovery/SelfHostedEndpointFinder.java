@@ -25,6 +25,12 @@ import javax.inject.Inject;
 
 public class SelfHostedEndpointFinder {
     public static final int TIMEOUT_MS = 60000;
+    /**
+     * Regex pattern for matching the RSD link found in most WordPress sites.
+     */
+    private static final Pattern RSD_LINK = Pattern.compile(
+            "<link\\s*?rel=\"EditURI\"\\s*?type=\"application/rsd\\+xml\"\\s*?title=\"RSD\"\\s*?href=\"(.*?)\"",
+            Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
     @NonNull private final Dispatcher mDispatcher;
     @NonNull private final DiscoveryXMLRPCClient mDiscoveryXMLRPCClient;
@@ -274,13 +280,6 @@ public class SelfHostedEndpointFinder {
             throw new DiscoveryException(DiscoveryError.MISSING_XMLRPC_METHOD, xmlrpcUrl);
         }
     }
-
-    /**
-     * Regex pattern for matching the RSD link found in most WordPress sites.
-     */
-    private static final Pattern RSD_LINK = Pattern.compile(
-            "<link\\s*?rel=\"EditURI\"\\s*?type=\"application/rsd\\+xml\"\\s*?title=\"RSD\"\\s*?href=\"(.*?)\"",
-            Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
     /**
      * Returns RSD URL based on regex match.
