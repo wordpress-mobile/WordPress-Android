@@ -40,7 +40,7 @@ public class DiscoveryUtils {
      * Truncate a string beginning at the marker
      * @param url input string
      * @param marker the marker to begin the truncation from
-     * @return new string truncated to the begining of the marker or the input string if marker is not found
+     * @return new string truncated to the beginning of the marker or the input string if marker is not found
      */
     @NonNull
     public static String truncateUrl(@NonNull String url, @NonNull String marker) {
