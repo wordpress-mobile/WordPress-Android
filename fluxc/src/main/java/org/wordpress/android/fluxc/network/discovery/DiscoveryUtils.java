@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.util.AppLog;
 
@@ -68,7 +69,7 @@ public class DiscoveryUtils {
     /**
      * Verify that the response of system.listMethods matches the expected list of available XML-RPC methods
      */
-    public static boolean validateListMethodsResponse(Object[] availableMethods) {
+    public static boolean validateListMethodsResponse(@Nullable Object[] availableMethods) {
         if (availableMethods == null) {
             AppLog.e(AppLog.T.NUX, "The response of system.listMethods was empty!");
             return false;
