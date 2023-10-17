@@ -285,7 +285,7 @@ fun MySiteListItem(item: MenuItemState.MenuListItem, modifier: Modifier = Modifi
                 colorFilter =
                 if (item.disablePrimaryIconTint) null else ColorFilter.tint(MaterialTheme.colors.onSurface)
             )
-            Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(16.dp))
             Text(
                 text = uiStringText(item.primaryText),
                 fontSize = 16.sp,
