@@ -111,7 +111,8 @@ public class DiscoveryUtils {
      *
      * @return XML-RPC endpoint for the specified site, or null if unable to discover endpoint.
      */
-    public static String getXMLRPCApiLink(String html) {
+    @Nullable
+    public static String getXMLRPCApiLink(@Nullable String html) {
         Pattern xmlrpcLink = Pattern.compile("<api\\s*?name=\"WordPress\".*?apiLink=\"(.*?)\"",
                 Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         if (html != null) {
