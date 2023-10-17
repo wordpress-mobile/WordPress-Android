@@ -13,11 +13,15 @@ import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
  * {@link AuthenticationAction#AUTHENTICATE_ERROR} events.
  */
 public class DiscoveryXMLRPCRequest extends XMLRPCRequest {
-    DiscoveryXMLRPCRequest(@NonNull String url, XMLRPC method, Listener<? super Object[]> listener,
-                           BaseErrorListener errorListener) {
+    DiscoveryXMLRPCRequest(
+            @NonNull String url,
+            @NonNull XMLRPC method,
+            @NonNull Listener<? super Object[]> listener,
+            @NonNull BaseErrorListener errorListener) {
         super(url, method, null, listener, errorListener);
     }
 
+    @NonNull
     @Override
     public BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error) {
         // no op
