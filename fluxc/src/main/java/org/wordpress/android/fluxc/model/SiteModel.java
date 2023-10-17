@@ -1114,11 +1114,11 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         this.mPlanActiveFeatures = planActiveFeatures;
     }
 
-    public boolean isSingleUserSite() {
+    public Boolean isSingleUserSite() {
         return mIsSingleUserSite;
     }
 
-    public void setIsSingleUserSite(boolean isSingleUserSite) {
+    public void setIsSingleUserSite(Boolean isSingleUserSite) {
         mIsSingleUserSite = isSingleUserSite;
     }
 }
