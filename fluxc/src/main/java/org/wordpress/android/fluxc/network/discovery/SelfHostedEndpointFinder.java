@@ -293,7 +293,8 @@ public class SelfHostedEndpointFinder {
         return null;
     }
 
-    private String sanitizeSiteUrl(String siteUrl, boolean addHttps) throws DiscoveryException {
+    @NonNull
+    private String sanitizeSiteUrl(@NonNull String siteUrl, boolean addHttps) throws DiscoveryException {
         // Remove padding whitespace
         String url = siteUrl.trim();
 
