@@ -108,7 +108,7 @@ public class SelfHostedEndpointFinder {
         }).start();
     }
 
-    @Nullable
+    @NonNull
     private String verifyOrDiscoverXMLRPCEndpoint(@NonNull final String siteUrl) throws DiscoveryException {
         if (TextUtils.isEmpty(siteUrl)) {
             throw new DiscoveryException(DiscoveryError.INVALID_URL, siteUrl);
@@ -199,7 +199,7 @@ public class SelfHostedEndpointFinder {
     // Attempts to retrieve the XML-RPC url for a self-hosted site.
     // See diagrams here https://github.com/wordpress-mobile/WordPress-Android/issues/3805 for details about the
     // whole process.
-    @Nullable
+    @NonNull
     private String discoverXMLRPCEndpoint(@NonNull String siteUrl) throws DiscoveryException {
         // Ordered set of Strings that contains the URLs we want to try
         final Set<String> urlsToTry = new LinkedHashSet<>();
@@ -269,7 +269,7 @@ public class SelfHostedEndpointFinder {
         }
 
         if (URLUtil.isValidUrl(xmlrpcUrl)) {
-            if (checkXMLRPCEndpointValidity(xmlrpcUrl)) {
+            if (xmlrpcUrl != null && checkXMLRPCEndpointValidity(xmlrpcUrl)) {
                 // Endpoint found and works fine.
                 return xmlrpcUrl;
             }
@@ -322,7 +322,7 @@ public class SelfHostedEndpointFinder {
         return url;
     }
 
-    private boolean checkXMLRPCEndpointValidity(String url) throws DiscoveryException {
+    private boolean checkXMLRPCEndpointValidity(@NonNull String url) throws DiscoveryException {
         try {
             Object[] methods = mDiscoveryXMLRPCClient.listMethods(url);
             if (methods == null) {
