@@ -186,6 +186,9 @@ public class Authenticator {
         private static final String SITE_URL_FIELD_NAME = "blog_url";
         private static final String SCOPE_FIELD_NAME = "scope";
         private static final String SITE_ID_FIELD_NAME = "blog_id";
+        private static final String DATA = "data";
+        private static final String USER_ID = "user_id";
+        private static final String TWO_STEP_WEBAUTHN_NONCE = "two_step_webauthn_nonce";
 
         private String mTokenType;
         private String mScope;
@@ -195,12 +198,15 @@ public class Authenticator {
         private String mUserId;
         private String twoStepWebauthnNonce;
 
-        public Token(String accessToken, String siteUrl, String siteId, String scope, String tokenType) {
+        public Token(String accessToken, String siteUrl, String siteId, String scope,
+                     String tokenType, String userId, String twoStepWebauthnNonce) {
             mAccessToken = accessToken;
             mSiteUrl = siteUrl;
             mSiteId = siteId;
             mScope = scope;
             mTokenType = tokenType;
+            mUserId = userId;
+            this.twoStepWebauthnNonce = twoStepWebauthnNonce;
         }
 
         public String getAccessToken() {
@@ -216,9 +222,11 @@ public class Authenticator {
         }
 
         public static Token fromJSONObject(JSONObject tokenJSON) throws JSONException {
+            JSONObject data = tokenJSON.getJSONObject(DATA);
             return new Token(tokenJSON.getString(ACCESS_TOKEN_FIELD_NAME), tokenJSON.getString(SITE_URL_FIELD_NAME),
-                    tokenJSON.getString(SITE_ID_FIELD_NAME), tokenJSON.getString(SCOPE_FIELD_NAME), tokenJSON.getString(
-                    TOKEN_TYPE_FIELD_NAME));
+                    tokenJSON.getString(SITE_ID_FIELD_NAME), tokenJSON.getString(SCOPE_FIELD_NAME),
+                    tokenJSON.getString(TOKEN_TYPE_FIELD_NAME),
+                    data.getString(USER_ID), data.getString(TWO_STEP_WEBAUTHN_NONCE));
         }
     }
 
