@@ -339,7 +339,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     /**
      * Gets a list of media items whose media IDs match the provided list.
      */
-    public void fetchMedia(final SiteModel site, final MediaModel media) {
+    public void fetchMedia(@NonNull final SiteModel site, @Nullable final MediaModel media) {
         if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
@@ -589,7 +589,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
-    private void notifyMediaFetched(SiteModel site, MediaModel media, MediaError error) {
+    private void notifyMediaFetched(
+            @NonNull SiteModel site,
+            @Nullable MediaModel media,
+            @Nullable MediaError error) {
         MediaPayload payload = new MediaPayload(site, media, error);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaAction(payload));
     }

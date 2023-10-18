@@ -840,7 +840,7 @@ public class MediaStore extends Store {
         }
     }
 
-    private void performFetchMedia(MediaPayload payload) {
+    private void performFetchMedia(@NonNull MediaPayload payload) {
         if (payload.site == null || payload.media == null) {
             // null or empty media list -or- list contains a null value
             notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.FETCH_MEDIA, payload.media);
