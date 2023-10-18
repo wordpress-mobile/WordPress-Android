@@ -139,9 +139,9 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @Inject Dispatcher mDispatcher;
     @Inject DisplayUtilsWrapper mDisplayUtilsWrapper;
 
+    protected WPWebViewViewModel mViewModel;
     private ActionableEmptyView mActionableEmptyView;
     private ViewGroup mFullScreenProgressLayout;
-    private WPWebViewViewModel mViewModel;
     private PreviewModeSelectorPopup mPreviewModeSelectorPopup;
     private ElevationOverlayProvider mElevationOverlayProvider;
     private View mNavBarContainer;
