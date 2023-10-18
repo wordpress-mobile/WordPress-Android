@@ -216,13 +216,21 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                                 fetchMedia(site, media, true);
                             } else {
                                 MediaModel responseMedia = getMediaFromXmlrpcResponse(responseMap);
-                                // Retain local IDs
-                                responseMedia.setId(media.getId());
-                                responseMedia.setLocalSiteId(site.getId());
-                                responseMedia.setLocalPostId(media.getLocalPostId());
-                                responseMedia.setMarkedLocallyAsFeatured(media.getMarkedLocallyAsFeatured());
+                                if (responseMedia != null) {
+                                    // Retain local IDs
+                                    responseMedia.setId(media.getId());
+                                    responseMedia.setLocalSiteId(site.getId());
+                                    responseMedia.setLocalPostId(media.getLocalPostId());
+                                    responseMedia.setMarkedLocallyAsFeatured(media.getMarkedLocallyAsFeatured());
 
-                                notifyMediaUploaded(responseMedia, null);
+                                    notifyMediaUploaded(responseMedia, null);
+                                } else {
+                                    String message = "could not parse Upload media response, ID: " + media.getMediaId();
+                                    AppLog.w(T.MEDIA, message);
+                                    MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                                    error.logMessage = "XMLRPC: " + message;
+                                    notifyMediaUploaded(media, error);
+                                }
                             }
                         } else {
                             String message = "error uploading media - malformed response: " + response.message();
@@ -521,9 +529,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return responseMedia;
     }
 
+    @Nullable
     @SuppressWarnings("rawtypes")
-    private MediaModel getMediaFromXmlrpcResponse(Map response) {
-        if (response == null || response.isEmpty()) {
+    private MediaModel getMediaFromXmlrpcResponse(@NonNull Map response) {
+        if (response.isEmpty()) {
             return null;
         }
 
