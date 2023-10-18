@@ -752,7 +752,7 @@ public class MediaStore extends Store {
     // Helper methods that choose the appropriate network client to perform an action
     //
 
-    private void performPushMedia(MediaPayload payload) {
+    private void performPushMedia(@NonNull MediaPayload payload) {
         if (payload.media == null) {
             // null or empty media list -or- list contains a null value
             notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.PUSH_MEDIA, null);
