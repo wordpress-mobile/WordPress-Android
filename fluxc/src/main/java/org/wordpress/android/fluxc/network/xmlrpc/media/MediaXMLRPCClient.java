@@ -102,7 +102,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.EDIT_POST, params,
                 (Listener<Object>) response -> {
                     // response should be a boolean indicating result of push request
-                    if (response == null || !(response instanceof Boolean) || !(Boolean) response) {
+                    if (!(response instanceof Boolean) || !(Boolean) response) {
                         String message = "could not parse XMLRPC.EDIT_MEDIA response: " + response;
                         AppLog.w(T.MEDIA, message);
                         MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
@@ -381,7 +381,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.DELETE_POST, params,
                 (Listener<Object>) response -> {
                     // response should be a boolean indicating result of push request
-                    if (response == null || !(response instanceof Boolean) || !(Boolean) response) {
+                    if (!(response instanceof Boolean) || !(Boolean) response) {
                         String message = "could not parse XMLRPC.DELETE_MEDIA response: " + response;
                         AppLog.w(T.MEDIA, message);
                         MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
