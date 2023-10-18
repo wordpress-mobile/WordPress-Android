@@ -130,7 +130,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     /**
-     * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.uploadFile
+     * @see <a href="https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.uploadFile">documentation</a>
      */
     public void uploadMedia(final SiteModel site, final MediaModel media) {
         URL xmlrpcUrl;
@@ -263,7 +263,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     /**
-     * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaLibrary
+     * @see <a href="https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaLibrary">documentation</a>
      */
     public void fetchMediaList(final SiteModel site, final int number, final int offset, final MimeType.Type mimeType) {
         List<Object> params = getBasicParams(site, null);
@@ -306,7 +306,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     /**
-     * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaItem
+     * @see <a href="https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaItem">documentation</a>
      */
     private void fetchMedia(final SiteModel site, final MediaModel media, final boolean isFreshUpload) {
         if (media == null) {
