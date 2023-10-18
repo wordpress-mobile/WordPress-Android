@@ -3,23 +3,45 @@ package org.wordpress.android.ui.domains.management
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainStatus
 import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
 import java.time.LocalDate
+import java.time.ZoneId
+import java.util.Date
 
 /**
  * This file is temporary, before the view model is implemented, to aid in developing the card ui.
  */
-data class DomainCardUiState(
-    val domain: String?,
-    val title: String?,
-    val status: DomainStatus?,
-    val expiry: LocalDate?,
-)
+sealed class DomainCardUiState {
+    object Initial: DomainCardUiState()
+    data class Loaded(
+        val domain: String?,
+        val title: String?,
+        val statusUiState: StatusRowUiState,
+    ): DomainCardUiState()
+
+    companion object {
+        @Composable
+        fun fromDomain(domain: AllDomainsDomain?) = (domain ?: AllDomainsDomain()).let {
+            val domainStatus = it.domainStatus ?: DomainStatus()
+            Loaded(
+                domain = it.domain,
+                title = it.blogName,
+                statusUiState = StatusRowUiState.Loaded(
+                    indicatorColor = domainStatus.indicatorColor,
+                    statusText = domainStatus.statusText,
+                    textColor = domainStatus.textColor,
+                    isBold = domainStatus.isBold,
+                    expiry = it.expiry?.toLocalDate(),
+                )
+            )
+        }
+    }
+}
 
 sealed class StatusRowUiState {
     object Initial: StatusRowUiState()
@@ -32,6 +54,8 @@ sealed class StatusRowUiState {
     ): StatusRowUiState()
 }
 
+private fun Date.toLocalDate(zoneId: ZoneId = ZoneId.systemDefault()) =
+    toInstant().atZone(zoneId).toLocalDate()
 val DomainStatus.indicatorColor
     @Composable
     get() = when (statusType) {
