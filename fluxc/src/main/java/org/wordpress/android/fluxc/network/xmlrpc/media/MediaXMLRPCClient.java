@@ -115,7 +115,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     // success!
                     AppLog.i(T.MEDIA, "Media updated on remote: " + media.getTitle());
                     notifyMediaPushed(site, media, null);
-                }, error -> {
+                },
+                error -> {
                     String errorMessage = "error response to XMLRPC.EDIT_MEDIA request: " + error;
                     AppLog.e(T.MEDIA, errorMessage);
                     if (is404Response(error)) {
@@ -298,7 +299,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                         error.logMessage = "XMLRPC: " + message;
                         notifyMediaListFetched(site, error, mimeType);
                     }
-                }, error -> {
+                },
+                error -> {
                     String message = "XMLRPC.GET_MEDIA_LIBRARY error response:";
                     AppLog.e(T.MEDIA, message, error.volleyError);
                     MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
@@ -361,7 +363,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                             notifyMediaFetched(site, media, error);
                         }
                     }
-                }, error -> {
+                },
+                error -> {
                     String message = "XMLRPC.GET_MEDIA_ITEM error response: " + error;
                     AppLog.e(T.MEDIA, message);
                     if (isFreshUpload) {
@@ -402,7 +405,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
                     AppLog.v(T.MEDIA, "Successful response from XMLRPC.DELETE_MEDIA");
                     notifyMediaDeleted(site, media, null);
-                }, error -> {
+                },
+                error -> {
                     String message = "Error response from XMLRPC.DELETE_MEDIA:" + error;
                     AppLog.e(T.MEDIA, message);
                     MediaErrorType mediaErrorType = MediaErrorType.fromBaseNetworkError(error);
