@@ -125,4 +125,5 @@ public class SiteWPComRestResponse implements Response {
     public Quota quota;
     public ZendeskSiteMeta zendesk_site_meta;
     public boolean was_ecommerce_trial;
+    public boolean single_user_site;
 }
