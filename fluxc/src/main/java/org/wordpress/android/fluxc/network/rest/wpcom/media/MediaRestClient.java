@@ -100,7 +100,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     }
 
     @Override
-    public void onProgress(MediaModel media, float progress) {
+    public void onProgress(@NonNull MediaModel media, float progress) {
         if (mCurrentUploadCalls.containsKey(media.getId())) {
             notifyMediaProgress(media, Math.min(progress, 0.99f));
         }
@@ -542,7 +542,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         mDispatcher.dispatch(MediaActionBuilder.newPushedMediaAction(payload));
     }
 
-    private void notifyMediaProgress(MediaModel media, float progress) {
+    private void notifyMediaProgress(@NonNull MediaModel media, float progress) {
         ProgressPayload payload = new ProgressPayload(media, progress, false, null);
         mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload));
     }
@@ -597,11 +597,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * <p>
      * @see <a href="https://developer.wordpress.com/docs/api/1.1/post/sites/%24site/media/">documentation</a>
      */
-    private Map<String, Object> getEditRequestParams(final MediaModel media) {
-        if (media == null) {
-            return null;
-        }
-
+    @NonNull
+    private Map<String, Object> getEditRequestParams(@NonNull final MediaModel media) {
         MediaFields[] fieldsToUpdate = media.getFieldsToUpdate();
 
         final Map<String, Object> params = new HashMap<>();

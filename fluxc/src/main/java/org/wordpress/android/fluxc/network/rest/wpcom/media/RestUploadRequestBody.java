@@ -30,9 +30,12 @@ public class RestUploadRequestBody extends BaseUploadRequestBody {
     private static final String MEDIA_ATTRIBUTES_KEY = "attrs[0]";
     private static final String MEDIA_PARAM_FORMAT = MEDIA_ATTRIBUTES_KEY + "[%s]";
 
-    private final MultipartBody mMultipartBody;
+    @NonNull private final MultipartBody mMultipartBody;
 
-    public RestUploadRequestBody(MediaModel media, Map<String, Object> params, ProgressListener listener) {
+    public RestUploadRequestBody(
+            @NonNull MediaModel media,
+            @NonNull Map<String, Object> params,
+            @NonNull ProgressListener listener) {
         super(media, listener);
         mMultipartBody = buildMultipartBody(params);
     }
@@ -52,6 +55,7 @@ public class RestUploadRequestBody extends BaseUploadRequestBody {
         return -1L;
     }
 
+    @NonNull
     @Override
     public MediaType contentType() {
         return mMultipartBody.contentType();
@@ -65,7 +69,8 @@ public class RestUploadRequestBody extends BaseUploadRequestBody {
         bufferedSink.flush();
     }
 
-    private MultipartBody buildMultipartBody(Map<String, Object> params) {
+    @NonNull
+    private MultipartBody buildMultipartBody(@NonNull Map<String, Object> params) {
         MediaModel media = getMedia();
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
