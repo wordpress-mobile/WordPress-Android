@@ -233,7 +233,7 @@ class PostListMainViewModel @Inject constructor(
      * This behavior is consistent with Calypso as of 11/4/2019.
      */
     private val isFilteringByAuthorSupported: Boolean by lazy {
-        site.isWPCom && site.hasCapabilityEditOthersPosts
+        site.isWPCom && site.hasCapabilityEditOthersPosts && !site.isSingleUserSite
     }
 
     init {
@@ -288,6 +288,7 @@ class PostListMainViewModel @Inject constructor(
         )
 
         _authorSelectionUpdated.value = authorFilterSelection
+      //  Log.i(javaClass.simpleName, "***=> Is site single user site: ${site.isSingleUserSite}")
         _viewState.value = PostListMainViewState(
             isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()) &&
                     isSearchExpanded.value != true,
