@@ -20,18 +20,18 @@ class PurchaseDomainViewModel @Inject constructor(
     val actionEvents: Flow<ActionEvent> = _actionEvents
 
     init {
-        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_SHOWN)
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_SHOWN)
     }
 
     fun onNewDomainSelected() {
-        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED)
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED)
         launch {
             _actionEvents.emit(ActionEvent.GoToDomainPurchasing)
         }
     }
 
     fun onExistingDomainSelected() {
-        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED)
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED)
         launch {
             _actionEvents.emit(ActionEvent.GoToExistingDomain)
         }

@@ -2627,12 +2627,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "more_menu_item_tapped";
             case QUICK_LINK_ITEM_TAPPED:
                 return "quick_link_item_tapped";
-            case DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_SHOWN:
-                return "domain_management_use_domain_screen_shown";
-            case DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED:
-                return "domain_management_use_domain_screen_new_domain_tapped";
-            case DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED:
-                return "domain_management_use_domain_screen_existing_domain_tapped";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_SHOWN:
+                return "domain_management_purchase_domain_screen_shown";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED:
+                return "domain_management_purchase_domain_screen_new_domain_tapped";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED:
+                return "domain_management_purchase_domain_screen_existing_domain_tapped";
         }
         return null;
     }
