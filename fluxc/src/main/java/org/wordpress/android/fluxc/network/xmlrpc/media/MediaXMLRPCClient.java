@@ -133,7 +133,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     /**
      * @see <a href="https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.uploadFile">documentation</a>
      */
-    public void uploadMedia(final SiteModel site, final MediaModel media) {
+    public void uploadMedia(@NonNull final SiteModel site, @Nullable final MediaModel media) {
         URL xmlrpcUrl;
         try {
             xmlrpcUrl = new URL(site.getXmlRpcUrl());
@@ -311,7 +311,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
      * @see <a href="https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaItem">documentation</a>
      */
     @SuppressWarnings("rawtypes")
-    private void fetchMedia(final SiteModel site, final MediaModel media, final boolean isFreshUpload) {
+    private void fetchMedia(
+            @NonNull final SiteModel site,
+            @Nullable final MediaModel media,
+            final boolean isFreshUpload) {
         if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
@@ -448,7 +451,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload));
     }
 
-    private void notifyMediaUploaded(MediaModel media, MediaError error) {
+    private void notifyMediaUploaded(@Nullable MediaModel media, @Nullable MediaError error) {
         if (media != null) {
             media.setUploadState(error == null ? MediaUploadState.UPLOADED : MediaUploadState.FAILED);
             removeCallFromCurrentUploadsMap(media.getId());

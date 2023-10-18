@@ -142,7 +142,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     /**
      * Uploads a single media item to a WP.com site.
      */
-    public void uploadMedia(final SiteModel site, final MediaModel media) {
+    public void uploadMedia(@NonNull final SiteModel site, @Nullable final MediaModel media) {
         if (media == null || media.getId() == 0) {
             // we can't have a MediaModel without an ID - otherwise we can't keep track of them.
             MediaError error = new MediaError(MediaErrorType.INVALID_ID);
@@ -551,7 +551,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload));
     }
 
-    private void notifyMediaUploaded(MediaModel media, MediaError error) {
+    private void notifyMediaUploaded(@Nullable MediaModel media, @Nullable MediaError error) {
         if (media != null) {
             media.setUploadState(error == null ? MediaUploadState.UPLOADED : MediaUploadState.FAILED);
             removeCallFromCurrentUploadsMap(media.getId());
