@@ -40,7 +40,6 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils.observeBottomSheet
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel
-import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -66,7 +65,6 @@ import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.observeEvent
-import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel
 import javax.inject.Inject
 import android.R as AndroidR
 
@@ -136,7 +134,6 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun getEditPostRepository() = editPostRepository
 
     private lateinit var viewModel: PostListMainViewModel
-    private lateinit var postListCreateMenuViewModel: PostListCreateMenuViewModel
 
     private lateinit var postsPagerAdapter: PostsPagerAdapter
     private lateinit var searchActionButton: MenuItem
@@ -213,7 +210,7 @@ class PostsListActivity : LocaleAwareActivity(),
             setupContent()
             initViewModel(initPreviewState, currentBottomSheetPostId)
             initBloggingReminders()
-            initCreateMenuViewModel(tabIndex, actionsShownByDefault)
+            initTabLayout(tabIndex)
             loadIntentData(intent)
         }
     }
@@ -249,46 +246,9 @@ class PostsListActivity : LocaleAwareActivity(),
         postPager.adapter = postsPagerAdapter
     }
 
-    private fun PostListActivityBinding.initCreateMenuViewModel(tabIndex: Int, actionsShownByDefault: Boolean) {
-        postListCreateMenuViewModel =
-            ViewModelProvider(this@PostsListActivity, viewModelFactory)[PostListCreateMenuViewModel::class.java]
-
-        postListCreateMenuViewModel.isBottomSheetShowing.observeEvent(this@PostsListActivity) { isBottomSheetShowing ->
-            var createMenuFragment = supportFragmentManager.findFragmentByTag(PostListCreateMenuFragment.TAG)
-            if (createMenuFragment == null) {
-                if (isBottomSheetShowing) {
-                    createMenuFragment = PostListCreateMenuFragment.newInstance()
-                    createMenuFragment.show(supportFragmentManager, PostListCreateMenuFragment.TAG)
-                }
-            } else {
-                if (!isBottomSheetShowing) {
-                    createMenuFragment as PostListCreateMenuFragment
-                    createMenuFragment.dismiss()
-                }
-            }
-        }
-
-        postListCreateMenuViewModel.fabUiState.observe(this@PostsListActivity) { fabUiState ->
-            val message = resources.getString(fabUiState.CreateContentMessageId)
-            fabButton.contentDescription = message
-        }
-
-        postListCreateMenuViewModel.createAction.observe(this@PostsListActivity) { createAction ->
-            when (createAction) {
-                ActionType.CREATE_NEW_POST -> viewModel.newPost()
-                ActionType.CREATE_NEW_STORY -> viewModel.newStoryPost()
-                ActionType.CREATE_NEW_PAGE -> Unit // Do nothing
-                ActionType.NO_ACTION -> Unit // Do nothing
-                ActionType.ANSWER_BLOGGING_PROMPT -> Unit // Do nothing
-                ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD -> Unit // Do nothing
-                null -> Unit // Do nothing
-            }
-        }
-
-        // Notification opens in Drafts tab
+    private fun PostListActivityBinding.initTabLayout(tabIndex: Int) {
+       // Notification opens in Drafts tab
         tabLayout.getTabAt(tabIndex)?.select()
-
-        postListCreateMenuViewModel.start(site, actionsShownByDefault)
     }
 
     private fun PostListActivityBinding.initViewModel(
@@ -396,7 +356,7 @@ class PostsListActivity : LocaleAwareActivity(),
 
     private fun PostListActivityBinding.setupFabEvents() {
         viewModel.onFabClicked.observeEvent(this@PostsListActivity) {
-            postListCreateMenuViewModel.onFabClicked()
+            // todo implement fab clicked
         }
 
         viewModel.onFabLongPressedForPostList.observe(this@PostsListActivity) {
@@ -468,7 +428,6 @@ class PostsListActivity : LocaleAwareActivity(),
     public override fun onResume() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.POSTS)
-        postListCreateMenuViewModel.onResume()
     }
 
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
