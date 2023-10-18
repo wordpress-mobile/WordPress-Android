@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_AUTHOR_FILTER_CHANGED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_CREATE_POST_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANGED
 import org.wordpress.android.fluxc.Dispatcher
@@ -67,6 +68,8 @@ private val FAB_VISIBLE_POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, T
 val POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
 private const val TRACKS_SELECTED_TAB = "selected_tab"
 private const val TRACKS_SELECTED_AUTHOR_FILTER = "author_filter_selection"
+private const val TRACKS_ACTION = "action"
+private const val TRACKS_CREATE_NEW_POST = "create_new_post"
 
 class PostListMainViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -365,6 +368,10 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun fabClicked() {
+        analyticsTracker.track(POST_LIST_CREATE_POST_TAPPED,
+            mapOf(TRACKS_ACTION to TRACKS_CREATE_NEW_POST )
+        )
+
         postActionHandler.newPost()
     }
 
