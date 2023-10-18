@@ -2,6 +2,9 @@ package org.wordpress.android.fluxc.persistence;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.wellsql.generated.CommentModelTable;
 import com.wellsql.generated.LikeModelTable;
 import com.yarolegovich.wellsql.ConditionClauseBuilder;
@@ -59,12 +62,6 @@ public class CommentSqlUtils {
         }
     }
 
-    public static CommentModel insertCommentForResult(CommentModel comment) {
-        WellSql.insert(comment).asSingleTransaction(true).execute();
-
-        return comment;
-    }
-
     public static int removeComment(CommentModel comment) {
         if (comment == null) {
             return 0;
@@ -86,7 +83,7 @@ public class CommentSqlUtils {
     }
 
     public static int removeCommentGaps(SiteModel site, List<CommentModel> comments, int maxEntriesInResponse,
-                                        int requestOffset, CommentStatus... statuses) {
+                                        int requestOffset, @Nullable CommentStatus... statuses) {
         if (site == null || comments == null || comments.isEmpty()) {
             return 0;
         }
@@ -167,7 +164,8 @@ public class CommentSqlUtils {
         return results.get(0);
     }
 
-    public static CommentModel getCommentBySiteAndRemoteId(SiteModel site, long remoteCommentId) {
+    @Nullable
+    public static CommentModel getCommentBySiteAndRemoteId(@NonNull SiteModel site, long remoteCommentId) {
         List<CommentModel> results = WellSql.select(CommentModel.class)
                                             .where()
                                             .equals(CommentModelTable.REMOTE_COMMENT_ID, remoteCommentId)
