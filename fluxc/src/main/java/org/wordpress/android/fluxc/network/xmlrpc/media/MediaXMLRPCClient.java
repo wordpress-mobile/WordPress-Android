@@ -567,9 +567,13 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return media;
     }
 
+    @Nullable
     @SuppressWarnings("rawtypes")
-    private String getFileUrlForSize(String mediaUrl, Map metadataMap, String size) {
-        if (metadataMap == null || TextUtils.isEmpty(mediaUrl) || !mediaUrl.contains("/")) {
+    private String getFileUrlForSize(
+            @NonNull String mediaUrl,
+            @NonNull Map metadataMap,
+            @NonNull String size) {
+        if (TextUtils.isEmpty(mediaUrl) || !mediaUrl.contains("/")) {
             return null;
         }
 
@@ -587,11 +591,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return baseURL + fileName;
     }
 
+    @Nullable
     @SuppressWarnings("rawtypes")
-    private String getFileForSize(Map metadataMap, String size) {
-        if (metadataMap == null) {
-            return null;
-        }
+    private String getFileForSize(
+            @NonNull Map metadataMap,
+            @NonNull String size) {
         Object sizesObject = metadataMap.get("sizes");
         if (sizesObject instanceof Map) {
             Map sizesMap = (Map) sizesObject;
