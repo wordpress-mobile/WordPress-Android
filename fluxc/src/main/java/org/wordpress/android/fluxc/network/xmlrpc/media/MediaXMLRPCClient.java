@@ -74,7 +74,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     private static final String[] REQUIRED_UPLOAD_RESPONSE_FIELDS = {
             "attachment_id", "parent", "title", "caption", "description", "thumbnail", "date_created_gmt", "link"};
 
-    private final OkHttpClient mOkHttpClient;
+    @NonNull private final OkHttpClient mOkHttpClient;
     // this will hold which media is being uploaded by which call, in order to be able
     // to monitor multiple uploads
     private final ConcurrentHashMap<Integer, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
@@ -82,7 +82,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     @Inject public MediaXMLRPCClient(
             Dispatcher dispatcher,
             @Named("custom-ssl") RequestQueue requestQueue,
-            @Named("custom-ssl") OkHttpClient okHttpClient,
+            @NonNull @Named("custom-ssl") OkHttpClient okHttpClient,
             UserAgent userAgent,
             HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);
