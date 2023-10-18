@@ -51,7 +51,6 @@ class PasskeyRestClient @Inject constructor(
                 body = parameters,
                 onSuccess = {
                     cont.resumeWith(Result.success(it.asChallengeInfo))
-
                 },
                 onFailure = {
                     val exception = Exception(it.message)
