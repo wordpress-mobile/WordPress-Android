@@ -376,7 +376,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     /**
      * Deletes media from a WP.com site whose media ID is in the provided list.
      */
-    public void deleteMedia(final SiteModel site, final MediaModel media) {
+    public void deleteMedia(@NonNull final SiteModel site, @Nullable final MediaModel media) {
         if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
@@ -597,7 +597,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaAction(payload));
     }
 
-    private void notifyMediaDeleted(SiteModel site, MediaModel media, MediaError error) {
+    private void notifyMediaDeleted(
+            @NonNull SiteModel site,
+            @Nullable MediaModel media,
+            @Nullable MediaError error) {
         MediaPayload payload = new MediaPayload(site, media, error);
         mDispatcher.dispatch(MediaActionBuilder.newDeletedMediaAction(payload));
     }
