@@ -23,7 +23,6 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
-import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
@@ -47,8 +46,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
-    @Mock
-    lateinit var siteUtilsWrapper: SiteUtilsWrapper
     private lateinit var viewModel: PostListMainViewModel
 
     @Before
@@ -58,7 +55,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
         }
 
         whenever(editPostRepository.postChanged).thenReturn(MutableLiveData(Event(PostModel())))
-        whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(true)
 
         viewModel = PostListMainViewModel(
             dispatcher = dispatcher,
@@ -75,9 +71,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
             postListEventListenerFactory = mock(),
             uploadStarter = uploadStarter,
             uploadActionUseCase = mock(),
-            savePostToDbUseCase = savePostToDbUseCase,
-            jetpackFeatureRemovalPhaseHelper = mock(),
-            siteUtilsWrapper = siteUtilsWrapper
+            savePostToDbUseCase = savePostToDbUseCase
         )
     }
 
@@ -207,25 +201,5 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
         // assert
         verify(savePostToDbUseCase, times(1)).savePostToDb(any(), any())
-    }
-
-    @Test
-    fun `if onFabClicked then _onFabClicked is called`() {
-        whenever(site.isWPCom).thenReturn(true)
-
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
-        viewModel.fabClicked()
-
-        assertThat(viewModel.onFabClicked.value?.peekContent()).isNotNull
-    }
-
-    @Test
-    fun `if onFabLongPressed then onFabLongPressedForCreateMenu is called`() {
-        whenever(site.isWPCom).thenReturn(true)
-
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
-        viewModel.onFabLongPressed()
-
-        assertThat(viewModel.onFabLongPressedForCreateMenu.value?.peekContent()).isNotNull
     }
 }
