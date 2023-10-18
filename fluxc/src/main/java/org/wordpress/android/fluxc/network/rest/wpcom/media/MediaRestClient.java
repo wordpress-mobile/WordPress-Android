@@ -413,7 +413,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 }));
     }
 
-    public void cancelUpload(final MediaModel media) {
+    public void cancelUpload(@Nullable final MediaModel media) {
         if (media == null) {
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
             error.logMessage = "Null media on cancel upload";
@@ -605,7 +605,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         mDispatcher.dispatch(MediaActionBuilder.newDeletedMediaAction(payload));
     }
 
-    private void notifyMediaUploadCanceled(MediaModel media) {
+    private void notifyMediaUploadCanceled(@NonNull MediaModel media) {
         ProgressPayload payload = new ProgressPayload(media, 0.f, false, true);
         mDispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload));
     }
