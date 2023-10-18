@@ -32,7 +32,6 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
@@ -48,7 +47,6 @@ import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -85,9 +83,7 @@ class PostListMainViewModel @Inject constructor(
     private val savePostToDbUseCase: SavePostToDbUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val uploadStarter: UploadStarter,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val siteUtilsWrapper: SiteUtilsWrapper
+    private val uploadStarter: UploadStarter
 ) : ViewModel(), CoroutineScope {
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
@@ -146,12 +142,6 @@ class PostListMainViewModel @Inject constructor(
 
     private val _searchQuery = MutableLiveData<String?>()
     val searchQuery: LiveData<String?> = _searchQuery
-
-    private val _onFabClicked = MutableLiveData<Event<Unit>>()
-    val onFabClicked: LiveData<Event<Unit>> = _onFabClicked
-
-    private val _onFabLongPressedForPostList = MutableLiveData<Event<Unit>>()
-    val onFabLongPressedForPostList: LiveData<Event<Unit>> = _onFabLongPressedForPostList
 
     private val uploadStatusTracker = PostModelUploadStatusTracker(
         uploadStore = uploadStore,
@@ -288,7 +278,6 @@ class PostListMainViewModel @Inject constructor(
         )
 
         _authorSelectionUpdated.value = authorFilterSelection
-      //  Log.i(javaClass.simpleName, "***=> Is site single user site: ${site.isSingleUserSite}")
         _viewState.value = PostListMainViewState(
             isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()) &&
                     isSearchExpanded.value != true,
@@ -376,19 +365,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun fabClicked() {
-        if (siteUtilsWrapper.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
-            _onFabClicked.postValue(Event(Unit))
-        } else {
-            newPost()
-        }
-    }
-
-    fun newPost() {
         postActionHandler.newPost()
-    }
-
-    fun newStoryPost() {
-        postActionHandler.newStoryPost()
     }
 
     fun updateAuthorFilterSelection(selectionId: Long) {
@@ -615,10 +592,6 @@ class PostListMainViewModel @Inject constructor(
         editPostRepository.getEditablePost()?.let {
             postActionHandler.publishPost(it)
         }
-    }
-
-    fun onFabLongPressed() {
-        _onFabLongPressedForPostList.postValue(Event(Unit))
     }
 
     fun refreshUiStateForAuthorFilter() {
