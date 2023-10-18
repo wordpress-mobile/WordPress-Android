@@ -309,7 +309,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 }));
     }
 
-    public void fetchMedia(final SiteModel site, final MediaModel media) {
+    public void fetchMedia(@NonNull final SiteModel site, @Nullable final MediaModel media) {
         fetchMedia(site, media, false);
     }
 
@@ -488,7 +488,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
-    private void notifyMediaFetched(SiteModel site, MediaModel media, MediaError error) {
+    private void notifyMediaFetched(
+            @NonNull SiteModel site,
+            @Nullable MediaModel media,
+            @Nullable MediaError error) {
         MediaPayload payload = new MediaPayload(site, media, error);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaAction(payload));
     }
