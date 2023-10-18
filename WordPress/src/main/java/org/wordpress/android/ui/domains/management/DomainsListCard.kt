@@ -33,9 +33,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainStatus
 import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
 import java.time.LocalDate
+import java.time.ZoneId
+import java.util.Date
 
 @Composable
 fun DomainListCard(uiState: DomainCardUiState) {
@@ -52,29 +55,38 @@ fun DomainListCard(uiState: DomainCardUiState) {
             Column(
                 modifier = Modifier.weight(1f),
             ) {
-                uiState.domain?.also { domain ->
-                    Text(
-                        text = domain,
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-                } ?: run {
-                    PendingGhostStrip(width = 100.dp)
+                when (uiState) {
+                    DomainCardUiState.Initial -> {
+                        PendingGhostStrip(width = 100.dp)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        PendingGhostStrip(100.dp)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        StatusRow(
+                            uiState = StatusRowUiState.Initial,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                    is DomainCardUiState.Loaded -> {
+                        uiState.domain?.let { domain ->
+                            Text(
+                                text = domain,
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        uiState.title?.let {
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.outline,
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        StatusRow(
+                            uiState = uiState.statusUiState,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
                 }
-                Spacer(modifier = Modifier.height(4.dp))
-                uiState.title?.also {
-                    Text(
-                        text = it,
-                        color = MaterialTheme.colorScheme.outline,
-                    )
-                } ?: run {
-                    PendingGhostStrip(100.dp)
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                StatusRow(
-                    status = uiState.status,
-                    expiry = uiState.expiry,
-                    modifier = Modifier.fillMaxWidth(),
-                )
             }
             Spacer(modifier = Modifier.width(16.dp))
             Icon(
@@ -116,35 +128,47 @@ private val lineHeightDp
 @Preview(showBackground = true, widthDp = 360, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun DomainListCardPreview() {
+    val expiry = LocalDate.of(2024,8,15).asLegacyDate()
+
     M3Theme {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.padding(16.dp),
         ) {
-            DomainListCard(uiState = DomainCardUiState(
-                domain = "domain.cool",
-                title = "A cool website",
-                status = DomainStatus(StatusType.SUCCESS.titleName, StatusType.SUCCESS),
-                expiry = LocalDate.of(2024,8,15),
-            ))
-            DomainListCard(uiState = DomainCardUiState(
-                domain = "domain.cool",
-                title = "A cool website",
-                status = DomainStatus(StatusType.ERROR.titleName, StatusType.ERROR),
-                expiry = LocalDate.of(2024,8,15),
-            ))
-            DomainListCard(uiState = DomainCardUiState(
-                domain = null,
-                title = null,
-                status = null,
-                expiry = null,
-            ))
-            DomainListCard(uiState = DomainCardUiState(
-                domain = "domain.cool",
-                title = "A cool website",
-                status = null,
-                expiry = LocalDate.of(2024,8,15),
-            ))
+            DomainListCard(uiState = DomainCardUiState.Initial)
+            DomainListCard(
+                uiState = DomainCardUiState.fromDomain(
+                    domain = AllDomainsDomain(
+                        domain = "domain.cool",
+                        blogName = "A cool website",
+                        domainStatus = DomainStatus(StatusType.SUCCESS.titleName, StatusType.SUCCESS),
+                        expiry = expiry,
+                    )
+                )
+            )
+            DomainListCard(
+                uiState = DomainCardUiState.fromDomain(
+                    domain = AllDomainsDomain(
+                        domain = "domain.cool",
+                        blogName = "A cool website",
+                        domainStatus = DomainStatus(StatusType.ERROR.titleName, StatusType.ERROR),
+                        expiry = expiry,
+                    )
+                )
+            )
+            DomainListCard(
+                uiState = DomainCardUiState.fromDomain(
+                    domain = AllDomainsDomain(
+                        domain = "domain.cool",
+                        blogName = "A cool website",
+                        domainStatus = null,
+                        expiry = expiry,
+                    )
+                )
+            )
         }
     }
 }
+
+private fun LocalDate.asLegacyDate(zoneId: ZoneId = ZoneId.systemDefault()) =
+    Date.from(atStartOfDay(zoneId).toInstant())
