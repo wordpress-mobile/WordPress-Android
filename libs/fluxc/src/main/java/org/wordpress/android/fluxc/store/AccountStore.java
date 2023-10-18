@@ -1284,34 +1284,34 @@ public class AccountStore extends Store {
 
     private void authenticate(final AuthenticatePayload payload) {
         mAuthenticator.authenticate(payload.username, payload.password, payload.twoStepCode,
-                payload.shouldSendTwoStepSms, new Authenticator.Listener() {
-                    @Override
-                    public void onResponse(Token token) {
-                        // Check if token exists, if not, check for security key
-                        if (token.getAccessToken() != null) {
-                            mAccessToken.set(token.getAccessToken());
-                            if (payload.nextAction != null) {
-                                mDispatcher.dispatch(payload.nextAction);
-                            }
-                            emitChange(new OnAuthenticationChanged());
-                        } else if (token.getUserId() != null) {
-                            //TODO: Trigger security key request
-                        } else {
-                            OnAuthenticationChanged event = new OnAuthenticationChanged();
-                            event.error = new AuthenticationError(AuthenticationErrorType.GENERIC_ERROR, "");
-                        }
-                    }
-                }, new Authenticator.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        AppLog.e(T.API, "Authentication error");
-                        OnAuthenticationChanged event = new OnAuthenticationChanged();
-                        event.error = new AuthenticationError(
-                                Authenticator.volleyErrorToAuthenticationError(volleyError),
-                                Authenticator.volleyErrorToErrorMessage(volleyError));
-                        emitChange(event);
-                    }
-                });
+                payload.shouldSendTwoStepSms,
+                token -> handleAuthResponse(token, payload),
+                this::handleAuthError);
+    }
+
+    private void handleAuthError(VolleyError volleyError) {
+        AppLog.e(T.API, "Authentication error");
+        OnAuthenticationChanged event = new OnAuthenticationChanged();
+        event.error = new AuthenticationError(
+                Authenticator.volleyErrorToAuthenticationError(volleyError),
+                Authenticator.volleyErrorToErrorMessage(volleyError));
+        emitChange(event);
+    }
+
+    private void handleAuthResponse(Token token, AuthenticatePayload payload) {
+        // Check if token exists, if not, check for security key
+        if (token.getAccessToken() != null) {
+            mAccessToken.set(token.getAccessToken());
+            if (payload.nextAction != null) {
+                mDispatcher.dispatch(payload.nextAction);
+            }
+            emitChange(new OnAuthenticationChanged());
+        } else if (token.getUserId() != null) {
+            //TODO: Trigger security key request
+        } else {
+            OnAuthenticationChanged event = new OnAuthenticationChanged();
+            event.error = new AuthenticationError(AuthenticationErrorType.GENERIC_ERROR, "");
+        }
     }
 
     private void handleSentAuthEmail(final AuthEmailResponsePayload payload) {
