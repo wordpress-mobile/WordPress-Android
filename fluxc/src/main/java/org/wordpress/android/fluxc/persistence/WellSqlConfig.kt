@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 196
+        return 197
     }
 
     override fun getDbName(): String {
@@ -1989,6 +1989,9 @@ open class WellSqlConfig : DefaultWellConfig {
                             "RANGE_ID TEXT NOT NULL," +
                             "_id INTEGER PRIMARY KEY AUTOINCREMENT)"
                     )
+                }
+                196 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_SINGLE_USER_SITE BOOLEAN")
                 }
             }
         }
