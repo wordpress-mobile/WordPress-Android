@@ -779,7 +779,7 @@ public class MediaStore extends Store {
         emitChange(onMediaUploaded);
     }
 
-    private void performUploadMedia(UploadMediaPayload payload) {
+    private void performUploadMedia(@NonNull UploadMediaPayload payload) {
         MalformedMediaArgSubType argError = MediaUtils.getMediaValidationErrorType(payload.media);
 
         if (argError.getType() != Type.NO_ERROR) {
