@@ -39,12 +39,15 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
     private static final String APPEND_XML =
             "</base64></value></member></struct></value></param></params></methodCall>";
 
-    private final String mPrependString;
+    @NonNull private final String mPrependString;
     private long mMediaSize;
     private long mContentSize = -1;
     private long mMediaBytesWritten = 0;
 
-    public XmlrpcUploadRequestBody(MediaModel media, ProgressListener listener, SiteModel site) {
+    public XmlrpcUploadRequestBody(
+            @NonNull MediaModel media,
+            @NonNull ProgressListener listener,
+            @NonNull SiteModel site) {
         super(media, listener);
 
         // TODO: we should use the XMLRPCSerializer instead of doing this
@@ -69,6 +72,7 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
         return (float) mMediaBytesWritten / mMediaSize;
     }
 
+    @NonNull
     @Override
     public MediaType contentType() {
         return MEDIA_TYPE;
