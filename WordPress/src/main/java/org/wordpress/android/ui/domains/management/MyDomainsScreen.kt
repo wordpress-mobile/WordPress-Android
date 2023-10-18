@@ -52,7 +52,10 @@ fun MyDomainsScreen(uiState: UiState) {
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = {},
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(
+                        onClick = {},
+                        enabled = uiState is PopulatedList.Loaded,
+                    ) {
                         Icon(
                             Icons.Default.Add,
                             contentDescription = stringResource(R.string.domain_management_purchase_a_domain)
@@ -73,7 +76,10 @@ fun MyDomainsScreen(uiState: UiState) {
                 targetValue = if (listState.canScrollBackward) 4.dp else 0.dp,
                 label = "Search Input Elevation",
             )
-            MyDomainsSearchInput(elevation.value)
+            MyDomainsSearchInput(
+                elevation.value,
+                enabled = uiState is PopulatedList.Loaded,
+            )
             when (uiState) {
                 is PopulatedList ->
                     MyDomainsList(listUiState = uiState, listState = listState)
@@ -85,7 +91,6 @@ fun MyDomainsScreen(uiState: UiState) {
 }
 
 @Composable
-fun MyDomainsSearchInput(elevation: Dp) {
 fun ErrorScreen() {
     Column (
         verticalArrangement = Arrangement.Center,
@@ -104,12 +109,19 @@ fun ErrorScreen() {
         )
     }
 }
+
+@Composable
+fun MyDomainsSearchInput(
+    elevation: Dp,
+    enabled: Boolean = false,
+) {
     var queryString by rememberSaveable { mutableStateOf("") }
 
     Surface (shadowElevation = elevation, modifier = Modifier.zIndex(1f)) {
         OutlinedTextField(
             value = queryString,
             onValueChange = { queryString = it },
+            enabled = enabled,
             placeholder = { Text(stringResource(R.string.domain_management_search_your_domains)) },
             shape = RoundedCornerShape(50),
             leadingIcon = {
