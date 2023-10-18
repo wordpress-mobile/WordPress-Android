@@ -90,7 +90,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     @Override
-    public void onProgress(MediaModel media, float progress) {
+    public void onProgress(@NonNull MediaModel media, float progress) {
         if (mCurrentUploadCalls.containsKey(media.getId())) {
             notifyMediaProgress(media, Math.min(progress, 0.99f));
         }
@@ -439,7 +439,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         mDispatcher.dispatch(MediaActionBuilder.newPushedMediaAction(payload));
     }
 
-    private void notifyMediaProgress(MediaModel media, float progress) {
+    private void notifyMediaProgress(@NonNull MediaModel media, float progress) {
         ProgressPayload payload = new ProgressPayload(media, progress, false, null);
         mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload));
     }
