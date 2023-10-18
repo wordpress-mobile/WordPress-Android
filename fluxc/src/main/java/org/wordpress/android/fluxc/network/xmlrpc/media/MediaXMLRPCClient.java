@@ -671,7 +671,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return mediaFields;
     }
 
-    private boolean is404Response(BaseNetworkError error) {
+    private boolean is404Response(@NonNull BaseNetworkError error) {
         if (error.isGeneric() && error.type == BaseRequest.GenericErrorType.NOT_FOUND) {
             return true;
         }
