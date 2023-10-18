@@ -416,6 +416,13 @@ public class MediaStore extends Store {
                     return MediaErrorType.SERVER_ERROR;
                 case TIMEOUT:
                     return MediaErrorType.TIMEOUT;
+                case NO_CONNECTION:
+                case NETWORK_ERROR:
+                case CENSORED:
+                case INVALID_SSL_CERTIFICATE:
+                case HTTP_AUTH_ERROR:
+                case INVALID_RESPONSE:
+                case UNKNOWN:
                 default:
                     return MediaErrorType.GENERIC_ERROR;
             }
