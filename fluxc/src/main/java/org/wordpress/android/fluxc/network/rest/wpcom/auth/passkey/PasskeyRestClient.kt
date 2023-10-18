@@ -61,6 +61,7 @@ class PasskeyRestClient @Inject constructor(
         }
     }
 
+    @Suppress("LongParameterList")
     suspend fun authenticateWebauthnSignature(
         userId: Long,
         clientId: Long,
