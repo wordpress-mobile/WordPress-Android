@@ -150,9 +150,6 @@ class PostListMainViewModel @Inject constructor(
     private val _onFabClicked = MutableLiveData<Event<Unit>>()
     val onFabClicked: LiveData<Event<Unit>> = _onFabClicked
 
-    private val _onFabLongPressedForCreateMenu = MutableLiveData<Event<Unit>>()
-    val onFabLongPressedForCreateMenu: LiveData<Event<Unit>> = _onFabLongPressedForCreateMenu
-
     private val _onFabLongPressedForPostList = MutableLiveData<Event<Unit>>()
     val onFabLongPressedForPostList: LiveData<Event<Unit>> = _onFabLongPressedForPostList
 
@@ -620,11 +617,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun onFabLongPressed() {
-        if (siteUtilsWrapper.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
-            _onFabLongPressedForCreateMenu.postValue(Event(Unit))
-        } else {
-            _onFabLongPressedForPostList.postValue(Event(Unit))
-        }
+        _onFabLongPressedForPostList.postValue(Event(Unit))
     }
 
     fun refreshUiStateForAuthorFilter() {

@@ -399,11 +399,6 @@ class PostsListActivity : LocaleAwareActivity(),
             postListCreateMenuViewModel.onFabClicked()
         }
 
-        viewModel.onFabLongPressedForCreateMenu.observeEvent(this@PostsListActivity) {
-            postListCreateMenuViewModel.onFabLongPressed()
-            Toast.makeText(fabButton.context, R.string.create_post_story_fab_tooltip, Toast.LENGTH_SHORT).show()
-        }
-
         viewModel.onFabLongPressedForPostList.observe(this@PostsListActivity) {
             if (fabButton.isHapticFeedbackEnabled) {
                 fabButton.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
