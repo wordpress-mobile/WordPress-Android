@@ -799,7 +799,7 @@
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
-            android:name=".ui.domains.management.usedomain.UseDomainActivity"
+            android:name=".ui.domains.management.purchasedomain.UseDomainActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Services -->

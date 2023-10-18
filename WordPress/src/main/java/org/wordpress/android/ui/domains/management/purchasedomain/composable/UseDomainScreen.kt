@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.domains.management.usedomain.composable
+package org.wordpress.android.ui.domains.management.purchasedomain.composable
 
 import android.content.res.Configuration
 import android.content.res.Configuration.ORIENTATION_PORTRAIT

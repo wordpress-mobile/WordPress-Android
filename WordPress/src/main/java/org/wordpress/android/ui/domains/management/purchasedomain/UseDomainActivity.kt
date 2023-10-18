@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.domains.management.usedomain
+package org.wordpress.android.ui.domains.management.purchasedomain
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -9,10 +9,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.domains.management.usedomain.UseDomainViewModel.ActionEvent.GoBack
-import org.wordpress.android.ui.domains.management.usedomain.UseDomainViewModel.ActionEvent.GoToDomainPurchasing
-import org.wordpress.android.ui.domains.management.usedomain.UseDomainViewModel.ActionEvent.GoToExistingDomain
-import org.wordpress.android.ui.domains.management.usedomain.composable.UseDomainScreen
+import org.wordpress.android.ui.domains.management.purchasedomain.UseDomainViewModel.ActionEvent.GoBack
+import org.wordpress.android.ui.domains.management.purchasedomain.UseDomainViewModel.ActionEvent.GoToDomainPurchasing
+import org.wordpress.android.ui.domains.management.purchasedomain.UseDomainViewModel.ActionEvent.GoToExistingDomain
+import org.wordpress.android.ui.domains.management.purchasedomain.composable.UseDomainScreen
 
 private typealias NotImplemented = Unit
 

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.domains.management.usedomain
+package org.wordpress.android.ui.domains.management.purchasedomain
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

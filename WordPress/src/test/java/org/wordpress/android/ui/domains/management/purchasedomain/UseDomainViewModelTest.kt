@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.domains.management.usedomain
+package org.wordpress.android.ui.domains.management.purchasedomain
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -14,10 +14,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_SHOWN
-import org.wordpress.android.ui.domains.management.usedomain.UseDomainViewModel.ActionEvent
-import org.wordpress.android.ui.domains.management.usedomain.UseDomainViewModel.ActionEvent.GoBack
-import org.wordpress.android.ui.domains.management.usedomain.UseDomainViewModel.ActionEvent.GoToDomainPurchasing
-import org.wordpress.android.ui.domains.management.usedomain.UseDomainViewModel.ActionEvent.GoToExistingDomain
+import org.wordpress.android.ui.domains.management.purchasedomain.UseDomainViewModel.ActionEvent
+import org.wordpress.android.ui.domains.management.purchasedomain.UseDomainViewModel.ActionEvent.GoBack
+import org.wordpress.android.ui.domains.management.purchasedomain.UseDomainViewModel.ActionEvent.GoToDomainPurchasing
+import org.wordpress.android.ui.domains.management.purchasedomain.UseDomainViewModel.ActionEvent.GoToExistingDomain
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
