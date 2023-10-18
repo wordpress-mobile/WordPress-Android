@@ -662,9 +662,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             }
 
             if (volleyError.getCause() instanceof XMLRPCFault) {
-                if (((XMLRPCFault) volleyError.getCause()).getFaultCode() == HttpURLConnection.HTTP_NOT_FOUND) {
-                    return true;
-                }
+                return ((XMLRPCFault) volleyError.getCause()).getFaultCode() == HttpURLConnection.HTTP_NOT_FOUND;
             }
         }
 
