@@ -84,7 +84,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     @NonNull private final MediaResponseUtils mMediaResponseUtils;
     // this will hold which media is being uploaded by which call, in order to be able
     // to monitor multiple uploads
-    private final ConcurrentHashMap<Integer, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
+    @NonNull private final ConcurrentHashMap<Integer, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
 
     @Inject public MediaRestClient(
             Context appContext,
