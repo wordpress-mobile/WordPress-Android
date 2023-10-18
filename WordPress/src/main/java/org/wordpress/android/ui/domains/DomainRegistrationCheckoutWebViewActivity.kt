@@ -8,7 +8,6 @@ import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.widget.Toolbar
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
