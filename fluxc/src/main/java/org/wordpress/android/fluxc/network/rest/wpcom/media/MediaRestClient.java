@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.volley.RequestQueue;
 import com.google.gson.Gson;
@@ -106,7 +107,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
     }
 
-    public void pushMedia(final SiteModel site, final MediaModel media) {
+    public void pushMedia(@NonNull final SiteModel site, @Nullable final MediaModel media) {
         if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
@@ -537,7 +538,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         return mediaError;
     }
 
-    private void notifyMediaPushed(SiteModel site, MediaModel media, MediaError error) {
+    private void notifyMediaPushed(
+            @NonNull SiteModel site,
+            @Nullable MediaModel media,
+            @Nullable MediaError error) {
         MediaPayload payload = new MediaPayload(site, media, error);
         mDispatcher.dispatch(MediaActionBuilder.newPushedMediaAction(payload));
     }
