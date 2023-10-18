@@ -28,6 +28,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -44,14 +45,14 @@ fun MyDomainsScreen(uiState: UiState) {
     Scaffold(
         topBar = {
             MainTopAppBar(
-                title = "My Domains",
+                title = stringResource(R.string.domain_management_my_domains),
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = {},
                 actions = {
                     IconButton(onClick = {}) {
                         Icon(
                             Icons.Default.Add,
-                            contentDescription = "purchase a domain"
+                            contentDescription = stringResource(R.string.domain_management_purchase_a_domain)
                         )
                     }
                 },
@@ -87,7 +88,7 @@ fun MyDomainsSearchInput(elevation: Dp) {
         OutlinedTextField(
             value = queryString,
             onValueChange = { queryString = it },
-            placeholder = { Text("Search your domains") },
+            placeholder = { Text(stringResource(R.string.domain_management_search_your_domains)) },
             shape = RoundedCornerShape(50),
             leadingIcon = {
                 Icon(

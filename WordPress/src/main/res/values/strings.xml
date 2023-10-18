@@ -2700,6 +2700,9 @@
 
     <!-- Domain Management -->
     <string name="domain_management_expires">Expires %1$s</string>
+    <string name="domain_management_my_domains">My Domains</string>
+    <string name="domain_management_purchase_a_domain">Purchase a domain</string>
+    <string name="domain_management_search_your_domains">Search your domains</string>
 
     <!-- Automated Transfer Eligibility Errors -->
     <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
