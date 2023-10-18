@@ -50,6 +50,7 @@ public class Authenticator {
     public static final String GRANT_TYPE_PARAM_NAME = "grant_type";
     public static final String USERNAME_PARAM_NAME = "username";
     public static final String PASSWORD_PARAM_NAME = "password";
+    public static final String WITH_AUTH_TYPES = "with_auth_types";
 
     public static final String PASSWORD_GRANT_TYPE = "password";
     public static final String BEARER_GRANT_TYPE = "bearer";
@@ -90,8 +91,12 @@ public class Authenticator {
         mAppSecrets = secrets;
     }
 
-    public void authenticate(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS,
-                             Listener listener, ErrorListener errorListener) {
+    public void authenticate(String username,
+                             String password,
+                             String twoStepCode,
+                             boolean shouldSendTwoStepSMS,
+                             Listener listener,
+                             ErrorListener errorListener) {
         TokenRequest tokenRequest = makeRequest(username, password, twoStepCode, shouldSendTwoStepSMS, listener,
                 errorListener);
         mRequestQueue.add(tokenRequest);
@@ -153,6 +158,7 @@ public class Authenticator {
             mParams.put(USERNAME_PARAM_NAME, username);
             mParams.put(PASSWORD_PARAM_NAME, password);
             mParams.put(GRANT_TYPE_PARAM_NAME, PASSWORD_GRANT_TYPE);
+            mParams.put(WITH_AUTH_TYPES, "true");
 
             if (!TextUtils.isEmpty(twoStepCode)) {
                 mParams.put("wpcom_otp", twoStepCode);
@@ -186,6 +192,8 @@ public class Authenticator {
         private String mAccessToken;
         private String mSiteUrl;
         private String mSiteId;
+        private String mUserId;
+        private String twoStepWebauthnNonce;
 
         public Token(String accessToken, String siteUrl, String siteId, String scope, String tokenType) {
             mAccessToken = accessToken;
@@ -201,6 +209,10 @@ public class Authenticator {
 
         public String toString() {
             return getAccessToken();
+        }
+
+        public String getUserId() {
+            return mUserId;
         }
 
         public static Token fromJSONObject(JSONObject tokenJSON) throws JSONException {
