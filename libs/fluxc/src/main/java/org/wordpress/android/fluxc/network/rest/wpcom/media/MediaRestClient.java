@@ -80,7 +80,7 @@ import okhttp3.ResponseBody;
  */
 @Singleton
 public class MediaRestClient extends BaseWPComRestClient implements ProgressListener {
-    private final OkHttpClient mOkHttpClient;
+    @NonNull private final OkHttpClient mOkHttpClient;
     private final MediaResponseUtils mMediaResponseUtils;
     // this will hold which media is being uploaded by which call, in order to be able
     // to monitor multiple uploads
@@ -90,7 +90,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             Context appContext,
             Dispatcher dispatcher,
             @Named("regular") RequestQueue requestQueue,
-            @Named("regular") OkHttpClient okHttpClient,
+            @NonNull @Named("regular") OkHttpClient okHttpClient,
             AccessToken accessToken,
             UserAgent userAgent,
             MediaResponseUtils mediaResponseUtils) {
