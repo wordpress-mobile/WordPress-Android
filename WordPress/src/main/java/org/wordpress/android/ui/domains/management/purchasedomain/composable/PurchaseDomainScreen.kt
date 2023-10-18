@@ -56,7 +56,7 @@ fun PurchaseDomainScreen(
                 label = "AppBarElevation"
             )
             MainTopAppBar(
-                title = stringResource(id = R.string.use_domain_screen_title),
+                title = stringResource(id = R.string.purchase_domain_screen_title),
                 navigationIcon = NavigationIcons.BackIcon,
                 elevation = elevation.value,
                 onNavigationIconClick = onBackPressed
@@ -112,9 +112,9 @@ private fun ScreenHeader(modifier: Modifier = Modifier) {
     Text(
         text = stringResource(
             id = if (isPortrait) {
-                R.string.use_domain_screen_header_double_line
+                R.string.purchase_domain_screen_header_double_line
             } else {
-                R.string.use_domain_screen_header_single_line
+                R.string.purchase_domain_screen_header_single_line
             }
         ),
         style = MaterialTheme.typography.h4.copy(color = MaterialTheme.colors.onSurface),
@@ -125,7 +125,7 @@ private fun ScreenHeader(modifier: Modifier = Modifier) {
 @Composable
 private fun ScreenDescription(modifier: Modifier = Modifier) {
     Text(
-        text = stringResource(id = R.string.use_domain_screen_description),
+        text = stringResource(id = R.string.purchase_domain_screen_description),
         style = MaterialTheme.typography.body1.copy(
             color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
         ),
@@ -136,7 +136,7 @@ private fun ScreenDescription(modifier: Modifier = Modifier) {
 @Composable
 private fun DiscountNotice(modifier: Modifier = Modifier) {
     Text(
-        text = stringResource(id = R.string.use_domain_screen_discount_notice),
+        text = stringResource(id = R.string.purchase_domain_screen_discount_notice),
         style = MaterialTheme.typography.body2.copy(
             color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
         ),
@@ -151,9 +151,9 @@ private fun NewDomainCard(
 ) {
     DomainOptionCard(
         icon = R.drawable.ic_domains_white_24dp,
-        title = R.string.use_domain_screen_new_domain_card_title,
-        description = R.string.use_domain_screen_new_domain_card_description,
-        button = R.string.use_domain_screen_new_domain_card_button,
+        title = R.string.purchase_domain_screen_new_domain_card_title,
+        description = R.string.purchase_domain_screen_new_domain_card_description,
+        button = R.string.purchase_domain_screen_new_domain_card_button,
         onOptionSelected = onNewDomainCardSelected,
         modifier = modifier,
     )
@@ -166,9 +166,9 @@ private fun ExistingDomainCard(
 ) {
     DomainOptionCard(
         icon = R.drawable.ic_themes_white_24dp,
-        title = R.string.use_domain_screen_existing_domain_card_title,
-        description = R.string.use_domain_screen_existing_domain_card_description,
-        button = R.string.use_domain_screen_existing_domain_card_button,
+        title = R.string.purchase_domain_screen_existing_domain_card_title,
+        description = R.string.purchase_domain_screen_existing_domain_card_description,
+        button = R.string.purchase_domain_screen_existing_domain_card_button,
         onOptionSelected = onExistingDomainCardSelected,
         modifier = modifier,
     )
