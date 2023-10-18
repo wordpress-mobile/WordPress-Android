@@ -36,7 +36,6 @@ class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity(), DomainReg
     }
 
     private fun cancelCheckout() {
-        mViewModel.track(Stat.WEBVIEW_DISMISSED)
         onCheckoutSuccess()
     }
 
