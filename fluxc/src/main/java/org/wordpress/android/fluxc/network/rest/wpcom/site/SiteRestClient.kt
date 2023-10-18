@@ -837,6 +837,14 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
+    suspend fun fetchAllDomains(noWpCom: Boolean = true, resolveStatus: Boolean = true): Response<AllDomainsResponse> {
+        val url = WPCOMREST.all_domains.urlV1_1
+        val params = mapOf(
+            "no_wpcom" to noWpCom.toString(),
+            "resolve_status" to resolveStatus.toString()
+        )
+        return wpComGsonRequestBuilder.syncGetRequest(this, url, params, AllDomainsResponse::class.java)
+    }
     suspend fun fetchSiteDomains(site: SiteModel): Response<DomainsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).domains.urlV1_1
         return wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), DomainsResponse::class.java)
@@ -1195,6 +1203,7 @@ class SiteRestClient @Inject constructor(
         site.origin = SiteModel.ORIGIN_WPCOM_REST
         site.planActiveFeatures = (from.plan?.features?.active?.joinToString(",")).orEmpty()
         site.wasEcommerceTrial = from.was_ecommerce_trial
+        site.setIsSingleUserSite(from.single_user_site)
         return site
     }
 
@@ -1257,7 +1266,7 @@ class SiteRestClient @Inject constructor(
         private const val NEW_SITE_TIMEOUT_MS = 90000
         private const val SITE_FIELDS = "ID,URL,name,description,jetpack,jetpack_connection,visible,is_private," +
                 "options,plan,capabilities,quota,icon,meta,zendesk_site_meta,organization_id," +
-                "was_ecommerce_trial"
+                "was_ecommerce_trial,single_user_site"
         private const val FIELDS = "fields"
         private const val FILTERS = "filters"
     }
