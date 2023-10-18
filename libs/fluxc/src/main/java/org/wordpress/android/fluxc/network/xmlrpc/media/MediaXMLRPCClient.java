@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -96,7 +97,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }
     }
 
-    public void pushMedia(final SiteModel site, final MediaModel media) {
+    public void pushMedia(@NonNull final SiteModel site, @Nullable final MediaModel media) {
         List<Object> params = getBasicParams(site, media);
         params.add(getEditMediaFields(media));
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.EDIT_POST, params,
@@ -434,7 +435,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     // Helper methods to dispatch media actions
     //
 
-    private void notifyMediaPushed(SiteModel site, MediaModel media, MediaError error) {
+    private void notifyMediaPushed(
+            @NonNull SiteModel site,
+            @Nullable MediaModel media,
+            @Nullable MediaError error) {
         MediaPayload payload = new MediaPayload(site, media, error);
         mDispatcher.dispatch(MediaActionBuilder.newPushedMediaAction(payload));
     }
@@ -638,7 +642,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return false;
     }
 
-    private Map<String, Object> getEditMediaFields(final MediaModel media) {
+    @Nullable
+    private Map<String, Object> getEditMediaFields(@Nullable final MediaModel media) {
         if (media == null) {
             return null;
         }
