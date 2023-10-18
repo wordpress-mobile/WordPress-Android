@@ -197,6 +197,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         AppLog.d(T.MEDIA, "starting upload for: " + media.getId());
         call.enqueue(new Callback() {
             @Override
+            @SuppressWarnings("rawtypes")
             public void onResponse(@NonNull Call call, @NonNull Response response) {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     // HTTP_OK code doesn't mean the upload is successful, XML-RPC API returns code 200 with an
@@ -308,6 +309,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     /**
      * @see <a href="https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaItem">documentation</a>
      */
+    @SuppressWarnings("rawtypes")
     private void fetchMedia(final SiteModel site, final MediaModel media, final boolean isFreshUpload) {
         if (media == null) {
             // caller may be expecting a notification
@@ -487,6 +489,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     //
 
     // media list responses should be of type Object[] with each media item in the array represented by a HashMap
+    @SuppressWarnings("rawtypes")
     private List<MediaModel> getMediaListFromXmlrpcResponse(Object[] response, int localSiteId) {
         if (response == null) {
             return null;
@@ -507,6 +510,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return responseMedia;
     }
 
+    @SuppressWarnings("rawtypes")
     private MediaModel getMediaFromXmlrpcResponse(Map response) {
         if (response == null || response.isEmpty()) {
             return null;
@@ -543,6 +547,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return media;
     }
 
+    @SuppressWarnings("rawtypes")
     private String getFileUrlForSize(String mediaUrl, Map metadataMap, String size) {
         if (metadataMap == null || TextUtils.isEmpty(mediaUrl) || !mediaUrl.contains("/")) {
             return null;
@@ -562,6 +567,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return baseURL + fileName;
     }
 
+    @SuppressWarnings("rawtypes")
     private String getFileForSize(Map metadataMap, String size) {
         if (metadataMap == null) {
             return null;
@@ -601,6 +607,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return mediaError;
     }
 
+    @SuppressWarnings("rawtypes")
     private static Map getMapFromUploadResponse(Response response) throws XMLRPCException {
         try {
             ResponseBody responseBody = response.body();
@@ -621,6 +628,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return null;
     }
 
+    @SuppressWarnings("rawtypes")
     private static boolean isDeprecatedUploadResponse(Map responseMap) {
         for (String requiredResponseField : REQUIRED_UPLOAD_RESPONSE_FIELDS) {
             if (!responseMap.containsKey(requiredResponseField)) {
