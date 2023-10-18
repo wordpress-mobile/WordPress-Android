@@ -130,7 +130,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         error.logMessage = "Parsed media is null";
                         notifyMediaPushed(site, media, error);
                     }
-                }, error -> {
+                },
+                error -> {
                     String errorMessage = "error editing remote media: " + error;
                     AppLog.e(T.MEDIA, errorMessage);
                     MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
@@ -324,7 +325,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         error.logMessage = errorMessage;
                         notifyMediaListFetched(site, error, mimeType);
                     }
-                }, error -> {
+                },
+                error -> {
                     String errorMessage = "VolleyError Fetching media: " + error;
                     AppLog.e(T.MEDIA, errorMessage);
                     MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
@@ -361,7 +363,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         error.logMessage = message;
                         notifyMediaFetched(site, media, error);
                     }
-                }, error -> {
+                },
+                error -> {
                     AppLog.e(T.MEDIA, "VolleyError Fetching media: " + error);
                     MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                     mediaError.message = error.message;
@@ -396,7 +399,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         error.logMessage = message;
                         notifyMediaDeleted(site, media, error);
                     }
-                }, error -> {
+                },
+                error -> {
                     AppLog.e(T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
                     MediaErrorType mediaErrorType = MediaErrorType.fromBaseNetworkError(error);
                     if (mediaErrorType == MediaErrorType.NOT_FOUND) {
@@ -470,7 +474,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         UploadedStockMediaPayload payload = new UploadedStockMediaPayload(site, mediaError);
                         mDispatcher.dispatch(MediaActionBuilder.newUploadedStockMediaAction(payload));
                     }
-                }, error -> {
+                },
+                error -> {
                     AppLog.e(T.MEDIA, "VolleyError uploading stock media: " + error);
                     UploadStockMediaError mediaError = new UploadStockMediaError(
                             UploadStockMediaErrorType.fromNetworkError(error), error.message);
@@ -607,6 +612,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * The current REST API call (v1.1) accepts 'title', 'description', 'caption', 'alt',
      * and 'parent_id' for all media. Audio media also accepts 'artist' and 'album' attributes.
      * <p>
+     *
      * @see <a href="https://developer.wordpress.com/docs/api/1.1/post/sites/%24site/media/">documentation</a>
      */
     @NonNull
