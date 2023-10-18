@@ -604,7 +604,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return null;
     }
 
-    private MediaError getMediaErrorFromXMLRPCException(XMLRPCException exception) {
+    @NonNull
+    private MediaError getMediaErrorFromXMLRPCException(@NonNull XMLRPCException exception) {
         MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
         mediaError.message = exception.getLocalizedMessage();
         mediaError.logMessage = exception.getMessage();
