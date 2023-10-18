@@ -416,7 +416,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 }));
     }
 
-    public void cancelUpload(final MediaModel media) {
+    public void cancelUpload(@Nullable final MediaModel media) {
         if (media == null) {
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
             error.logMessage = "XMLRPC: empty media on cancel upload";
@@ -504,7 +504,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         mDispatcher.dispatch(MediaActionBuilder.newDeletedMediaAction(payload));
     }
 
-    private void notifyMediaUploadCanceled(MediaModel media) {
+    private void notifyMediaUploadCanceled(@NonNull MediaModel media) {
         ProgressPayload payload = new ProgressPayload(media, 0.f, false, true);
         mDispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload));
     }
