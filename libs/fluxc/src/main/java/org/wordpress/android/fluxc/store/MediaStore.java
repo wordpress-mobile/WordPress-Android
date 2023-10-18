@@ -58,12 +58,14 @@ public class MediaStore extends Store {
      * Actions: FETCH(ED)_MEDIA, PUSH(ED)_MEDIA, UPLOADED_MEDIA, DELETE(D)_MEDIA, UPDATE_MEDIA, and REMOVE_MEDIA
      */
     public static class MediaPayload extends Payload<MediaError> {
-        public SiteModel site;
-        public MediaModel media;
-        public MediaPayload(SiteModel site, MediaModel media) {
+        @NonNull public SiteModel site;
+        @Nullable public MediaModel media;
+
+        public MediaPayload(@NonNull SiteModel site, @NonNull MediaModel media) {
             this(site, media, null);
         }
-        public MediaPayload(SiteModel site, MediaModel media, MediaError error) {
+
+        public MediaPayload(@NonNull SiteModel site, @Nullable MediaModel media, @Nullable MediaError error) {
             this.site = site;
             this.media = media;
             this.error = error;
@@ -794,6 +796,12 @@ public class MediaStore extends Store {
     }
 
     private void performUploadMedia(@NonNull UploadMediaPayload payload) {
+        if (payload.media == null) {
+            // null or empty media list -or- list contains a null value
+            notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.UPLOAD_MEDIA, null);
+            return;
+        }
+
         MalformedMediaArgSubType argError = MediaUtils.getMediaValidationErrorType(payload.media);
 
         if (argError.getType() != Type.NO_ERROR) {
@@ -855,9 +863,9 @@ public class MediaStore extends Store {
     }
 
     private void performFetchMedia(@NonNull MediaPayload payload) {
-        if (payload.site == null || payload.media == null) {
+        if (payload.media == null) {
             // null or empty media list -or- list contains a null value
-            notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.FETCH_MEDIA, payload.media);
+            notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.FETCH_MEDIA, null);
             return;
         }
 
@@ -1005,21 +1013,15 @@ public class MediaStore extends Store {
         emitChange(onMediaChanged);
     }
 
-    private void notifyMediaError(MediaErrorType errorType, String errorMessage, MediaAction cause,
-                                  List<MediaModel> media) {
-        OnMediaChanged mediaChange = new OnMediaChanged(cause, media);
-        mediaChange.error = new MediaError(errorType, errorMessage);
-        emitChange(mediaChange);
-    }
-
-    private void notifyMediaError(MediaErrorType errorType, MediaAction cause, MediaModel media) {
-        notifyMediaError(errorType, null, cause, media);
-    }
-
-    private void notifyMediaError(MediaErrorType errorType, String errorMessage, MediaAction cause, MediaModel media) {
+    private void notifyMediaError(
+            @NonNull MediaErrorType errorType,
+            @NonNull MediaAction cause,
+            @Nullable MediaModel media) {
         List<MediaModel> mediaList = new ArrayList<>();
         mediaList.add(media);
-        notifyMediaError(errorType, errorMessage, cause, mediaList);
+        OnMediaChanged mediaChange = new OnMediaChanged(cause, mediaList);
+        mediaChange.error = new MediaError(errorType, null);
+        emitChange(mediaChange);
     }
 
     private void performUploadStockMedia(UploadStockMediaPayload payload) {
