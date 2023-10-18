@@ -274,19 +274,10 @@ class SiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
-    fun onPlanSelection(plan: PlanModel) {
+    fun onPlanSelection(plan: PlanModel, domainName: String?) {
         siteCreationState = siteCreationState.copy(plan = plan)
-        if (plan.productSlug == "free_plan") {
-            // if they select a paid domain, then choose a free plan, with free domain on plan selection screen
-            siteCreationState = siteCreationState.copy(
-                domain = DomainModel(
-                    domainName = plan.productName.orEmpty(),
-                    isFree = true,
-                    cost = "",
-                    productId = 0,
-                    supportsPrivacy = false
-                )
-            )
+        domainName?.let {
+            siteCreationState = siteCreationState.copy(domain = siteCreationState.domain?.copy(domainName = it))
         }
         wizardManager.showNextStep()
     }
@@ -334,7 +325,7 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onFreeSiteCreated(site: SiteModel) {
         siteCreationState = siteCreationState.copy(result = CreatedButNotFetched.NotInLocalDb(site))
-        if (checkNotNull(siteCreationState.domain).isFree) {
+        if (siteCreationState.plan?.productSlug == "free_plan") {
             wizardManager.showNextStep()
         }
     }

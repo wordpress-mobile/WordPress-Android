@@ -19,4 +19,5 @@ enum class ListItemAction (val trackingLabel: String) {
     COMMENTS("comments"),
     BLAZE("blaze"),
     ME("me"),
+    MORE("more"),
 }

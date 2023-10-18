@@ -34,11 +34,11 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version_name = current_version_name
-    build_bundle(app: app, version: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
+    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
-    upload_build_to_play_store(app: app, version: version_name, track: 'production')
+    upload_build_to_play_store(app: app, version_name: version_name, track: 'production')
 
-    create_gh_release(app: app, version: version_name) if options[:create_release]
+    create_gh_release(app: app, version_name: version_name) if options[:create_release]
   end
 
   #####################################################################################
@@ -106,11 +106,11 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version_name = current_version_name
-    build_bundle(app: app, version: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
+    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
-    upload_build_to_play_store(app: app, version: version_name, track: 'beta') if options[:upload_to_play_store]
+    upload_build_to_play_store(app: app, version_name: version_name, track: 'beta') if options[:upload_to_play_store]
 
-    create_gh_release(app: app, version: version_name, prerelease: true) if options[:create_release]
+    create_gh_release(app: app, version_name: version_name, prerelease: true) if options[:create_release]
   end
 
   #####################################################################################
@@ -119,7 +119,7 @@ platform :android do
   # This lane uploads the build to Play Store for the given version to the given track
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane upload_build_to_play_store app:<wordpress|jetpack> version:<version> track:<track>
+  # bundle exec fastlane upload_build_to_play_store app:<wordpress|jetpack> version_name:<version_name> track:<track>
   #
   # Example:
   # bundle exec fastlane upload_build_to_play_store app:wordpress version_name:15.0 track:production
@@ -194,7 +194,7 @@ platform :android do
       download_universal_apk_from_google_play(
           package_name: package_name,
           version_code: build_code,
-          destination: signed_apk_path(app, build_code),
+          destination: signed_apk_path(app, current_version_name),
           json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
       )
     end
@@ -262,7 +262,7 @@ platform :android do
     app = get_app_name_option!(options)
 
     if version_name.nil?
-      UI.message("Version specified for #{app} bundle is nil. Skipping ahead")
+      UI.message("Version name specified for #{app} bundle is nil. Skipping ahead")
       next
     end
 

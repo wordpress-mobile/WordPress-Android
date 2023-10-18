@@ -2704,6 +2704,9 @@
     <string name="domains_free_plan_get_your_domain_caption">Domains purchased on this site will redirect visitors to &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_search_for_a_domain_button">Search for a domain</string>
 
+    <!-- Domain Management -->
+    <string name="domain_management_expires">Expires %1$s</string>
+
     <!-- Automated Transfer Eligibility Errors -->
     <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Plugin feature requires a custom domain.</string>
@@ -4712,9 +4715,13 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="personalize_card_content_description">Tap to personalize your home tab</string>
 
     <!-- Personalization Screen -->
-    <string name="personalization_screen_title">Personalize home tab</string>
-    <string name="personalization_screen_description">Add or hide Cards</string>
-    <string name="personalization_screen_footer_cards">Cards may show different content depending on what\'s happening with your site</string>
+    <string name="personalization_screen_title"> Personalize home tab</string>
+    <string name="personalization_screen_cards_tab_title">Cards</string>
+    <string name="personalization_screen_shortcuts_tab_title">Shortcuts</string>
+    <string name="personalization_screen_tab_cards_description">Add or hide Cards</string>
+    <string name="personalization_screen_tab_cards_footer_cards">Cards may show different content depending on what\'s happening with your site</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">Active Shortcuts</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Inactive Shortcuts</string>
     <string name="personalization_screen_stats_card_title" translatable="false">@string/my_site_todays_stat_card_title</string>
     <string name="personalization_screen_stats_card_description">Views, Visitors and likes</string>
     <string name="personalization_screen_draft_posts_card_title">Draft posts</string>
@@ -4731,6 +4738,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="personalization_screen_activity_log_card_description">Recent actions taken on your site.</string>
     <string name="personalization_screen_next_steps_card_title" translatable="false">@string/quick_start_sites</string>
     <string name="personalization_screen_next_steps_card_description">Learn how to make the most of your site with the app.</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Add or Remove shortcuts</string>
 
     <string name="my_site_dashboard_no_cards_message_title">All cards are hidden</string>
     <string name="my_site_dashboard_no_cards_message_description">Tap the personalise button to show more cards.</string>
