@@ -203,7 +203,6 @@ class PostsListActivity : LocaleAwareActivity(),
                 LocalId(savedInstanceState.getInt(STATE_KEY_BOTTOMSHEET_POST_ID, 0))
             }
 
-            val actionsShownByDefault = intent.getBooleanExtra(ACTIONS_SHOWN_BY_DEFAULT, false)
             val tabIndex = intent.getIntExtra(TAB_INDEX, PostListType.PUBLISHED.ordinal)
 
             setupActionBar()
@@ -236,7 +235,11 @@ class PostsListActivity : LocaleAwareActivity(),
         }
 
         fabButton.setOnLongClickListener {
-            viewModel.onFabLongPressed()
+            if (fabButton.isHapticFeedbackEnabled) {
+                fabButton.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            }
+
+            Toast.makeText(fabButton.context, R.string.create_post_fab_tooltip, Toast.LENGTH_SHORT).show()
             return@setOnLongClickListener true
         }
 
@@ -312,8 +315,6 @@ class PostsListActivity : LocaleAwareActivity(),
                 prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
             }
         }
-
-        setupFabEvents()
     }
 
     private fun initBloggingReminders() {
@@ -351,19 +352,6 @@ class PostsListActivity : LocaleAwareActivity(),
                     bloggingRemindersViewModel.onPublishingPost(site.id, isFirstTimePublishing)
                 }
             }
-        }
-    }
-
-    private fun PostListActivityBinding.setupFabEvents() {
-        viewModel.onFabClicked.observeEvent(this@PostsListActivity) {
-            // todo implement fab clicked
-        }
-
-        viewModel.onFabLongPressedForPostList.observe(this@PostsListActivity) {
-            if (fabButton.isHapticFeedbackEnabled) {
-                fabButton.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-            }
-            Toast.makeText(fabButton.context, R.string.create_post_fab_tooltip, Toast.LENGTH_SHORT).show()
         }
     }
 
