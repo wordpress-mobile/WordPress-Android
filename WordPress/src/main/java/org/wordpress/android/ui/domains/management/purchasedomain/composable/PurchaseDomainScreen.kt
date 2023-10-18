@@ -19,10 +19,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +39,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.domains.management.success
 
 @Composable
 fun PurchaseDomainScreen(
@@ -59,14 +60,16 @@ fun PurchaseDomainScreen(
                 title = stringResource(id = R.string.purchase_domain_screen_title),
                 navigationIcon = NavigationIcons.BackIcon,
                 elevation = elevation.value,
-                onNavigationIconClick = onBackPressed
+                onNavigationIconClick = onBackPressed,
+                backgroundColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface,
             )
         },
         content = {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colors.surface)
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(it)
             ) {
                 Column(
@@ -117,7 +120,7 @@ private fun ScreenHeader(modifier: Modifier = Modifier) {
                 R.string.purchase_domain_screen_header_single_line
             }
         ),
-        style = MaterialTheme.typography.h4.copy(color = MaterialTheme.colors.onSurface),
+        style = MaterialTheme.typography.headlineLarge.copy(color = MaterialTheme.colorScheme.onSurface),
         modifier = modifier
     )
 }
@@ -126,8 +129,8 @@ private fun ScreenHeader(modifier: Modifier = Modifier) {
 private fun ScreenDescription(modifier: Modifier = Modifier) {
     Text(
         text = stringResource(id = R.string.purchase_domain_screen_description),
-        style = MaterialTheme.typography.body1.copy(
-            color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+        style = MaterialTheme.typography.bodyLarge.copy(
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
         ),
         modifier = modifier.padding(top = 8.dp)
     )
@@ -137,8 +140,8 @@ private fun ScreenDescription(modifier: Modifier = Modifier) {
 private fun DiscountNotice(modifier: Modifier = Modifier) {
     Text(
         text = stringResource(id = R.string.purchase_domain_screen_discount_notice),
-        style = MaterialTheme.typography.body2.copy(
-            color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+        style = MaterialTheme.typography.bodyMedium.copy(
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
         ),
         modifier = modifier.padding(top = 16.dp),
     )
@@ -188,7 +191,7 @@ private fun DomainOptionCard(
             .border(
                 width = 0.5.dp,
                 shape = RoundedCornerShape(12.dp),
-                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
             )
             .fillMaxWidth()
             .padding(16.dp)
@@ -196,41 +199,44 @@ private fun DomainOptionCard(
         Icon(
             painter = painterResource(id = icon),
             contentDescription = decorativeIconContentDescription,
-            tint = MaterialTheme.colors.primary,
+            tint = MaterialTheme.colorScheme.success,
             modifier = Modifier.size(36.dp)
         )
         Text(
             modifier = Modifier.padding(top = 16.dp),
             text = stringResource(id = title),
-            style = MaterialTheme.typography.h5.copy(
-                color = MaterialTheme.colors.onSurface
+            style = MaterialTheme.typography.headlineSmall.copy(
+                color = MaterialTheme.colorScheme.onSurface
             )
         )
         Text(
             text = stringResource(id = description),
-            style = MaterialTheme.typography.body1.copy(
-                color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+            style = MaterialTheme.typography.bodyLarge.copy(
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             ),
             modifier = Modifier.padding(top = 8.dp)
         )
         Button(
             onClick = onOptionSelected,
             shape = MaterialTheme.shapes.small.copy(CornerSize(36.dp)),
-            elevation = ButtonDefaults.elevation(
+            elevation = ButtonDefaults.buttonElevation(
                 defaultElevation = 0.dp,
                 pressedElevation = 0.dp,
                 disabledElevation = 0.dp,
                 hoveredElevation = 0.dp,
                 focusedElevation = 0.dp
             ),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.success
+            ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = 16.dp)
         ) {
             Text(
                 text = stringResource(button),
                 modifier = Modifier.padding(vertical = 4.dp),
-                style = MaterialTheme.typography.body1.copy(
+                style = MaterialTheme.typography.bodyLarge.copy(
                     color = Color.White,
                 ),
                 fontWeight = FontWeight.Medium

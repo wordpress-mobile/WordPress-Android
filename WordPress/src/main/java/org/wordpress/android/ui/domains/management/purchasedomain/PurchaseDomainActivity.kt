@@ -9,6 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.domains.management.M3Theme
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoBack
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToDomainPurchasing
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingDomain
@@ -23,7 +24,7 @@ class PurchaseDomainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppTheme {
+            M3Theme {
                 PurchaseDomainScreen(
                     onNewDomainCardSelected = viewModel::onNewDomainSelected,
                     onExistingDomainCardSelected = viewModel::onExistingDomainSelected,
