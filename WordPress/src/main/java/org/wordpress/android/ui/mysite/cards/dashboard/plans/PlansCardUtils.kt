@@ -36,6 +36,7 @@ class PlansCardUtils @Inject constructor(
     ): Boolean {
         return buildConfigWrapper.isJetpackApp &&
                 !isCardHiddenByUser(siteModel.siteId) &&
+                (siteModel.isWPCom || siteModel.isWPComAtomic) &&
                 siteModel.hasFreePlan &&
                 siteModel.isAdmin &&
                 !siteModel.isWpForTeamsSite
