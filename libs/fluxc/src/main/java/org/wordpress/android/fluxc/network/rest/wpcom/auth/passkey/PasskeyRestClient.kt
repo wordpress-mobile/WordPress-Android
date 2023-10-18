@@ -13,15 +13,15 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErro
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
-import kotlin.Exception
 import kotlin.coroutines.suspendCoroutine
 
 @Singleton
 class PasskeyRestClient @Inject constructor(
     context: Context,
     dispatcher: Dispatcher,
-    requestQueue: RequestQueue,
+    @Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(
