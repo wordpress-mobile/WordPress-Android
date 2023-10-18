@@ -267,7 +267,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     /**
      * @see <a href="https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaLibrary">documentation</a>
      */
-    public void fetchMediaList(final SiteModel site, final int number, final int offset, final MimeType.Type mimeType) {
+    public void fetchMediaList(
+            @NonNull final SiteModel site,
+            final int number,
+            final int offset,
+            @Nullable final MimeType.Type mimeType) {
         List<Object> params = getBasicParams(site, null);
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("number", number);
@@ -461,17 +465,21 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site,
-                                        @NonNull List<MediaModel> media,
-                                        boolean loadedMore,
-                                        boolean canLoadMore,
-                                        MimeType.Type mimeType) {
+    private void notifyMediaListFetched(
+            @NonNull SiteModel site,
+            @NonNull List<MediaModel> media,
+            boolean loadedMore,
+            boolean canLoadMore,
+            @Nullable MimeType.Type mimeType) {
         FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, media,
                 loadedMore, canLoadMore, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site, MediaError error, MimeType.Type mimeType) {
+    private void notifyMediaListFetched(
+            @NonNull SiteModel site,
+            @NonNull MediaError error,
+            @Nullable MimeType.Type mimeType) {
         FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, error, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
