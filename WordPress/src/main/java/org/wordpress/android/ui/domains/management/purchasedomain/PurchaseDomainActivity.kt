@@ -9,22 +9,22 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.domains.management.purchasedomain.UseDomainViewModel.ActionEvent.GoBack
-import org.wordpress.android.ui.domains.management.purchasedomain.UseDomainViewModel.ActionEvent.GoToDomainPurchasing
-import org.wordpress.android.ui.domains.management.purchasedomain.UseDomainViewModel.ActionEvent.GoToExistingDomain
-import org.wordpress.android.ui.domains.management.purchasedomain.composable.UseDomainScreen
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoBack
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToDomainPurchasing
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingDomain
+import org.wordpress.android.ui.domains.management.purchasedomain.composable.PurchaseDomainScreen
 
 private typealias NotImplemented = Unit
 
 @AndroidEntryPoint
-class UseDomainActivity : AppCompatActivity() {
-    private val viewModel: UseDomainViewModel by viewModels()
+class PurchaseDomainActivity : AppCompatActivity() {
+    private val viewModel: PurchaseDomainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                UseDomainScreen(
+                PurchaseDomainScreen(
                     onNewDomainCardSelected = viewModel::onNewDomainSelected,
                     onExistingDomainCardSelected = viewModel::onExistingDomainSelected,
                     onBackPressed = viewModel::onBackPressed,
@@ -38,7 +38,7 @@ class UseDomainActivity : AppCompatActivity() {
         viewModel.actionEvents.onEach(this::handleActionEvents).launchIn(lifecycleScope)
     }
 
-    private fun handleActionEvents(actionEvent: UseDomainViewModel.ActionEvent) {
+    private fun handleActionEvents(actionEvent: PurchaseDomainViewModel.ActionEvent) {
         when (actionEvent) {
             GoBack -> onBackPressedDispatcher.onBackPressed()
             GoToDomainPurchasing -> NotImplemented

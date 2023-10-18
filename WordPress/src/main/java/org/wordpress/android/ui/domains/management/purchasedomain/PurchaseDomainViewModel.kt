@@ -12,7 +12,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
-class UseDomainViewModel @Inject constructor(
+class PurchaseDomainViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : ScopedViewModel(mainDispatcher) {

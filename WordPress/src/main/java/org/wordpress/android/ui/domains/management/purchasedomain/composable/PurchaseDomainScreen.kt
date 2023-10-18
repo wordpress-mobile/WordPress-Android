@@ -41,7 +41,7 @@ import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
-fun UseDomainScreen(
+fun PurchaseDomainScreen(
     onNewDomainCardSelected: () -> Unit,
     onExistingDomainCardSelected: () -> Unit,
     onBackPressed: () -> Unit,
@@ -246,9 +246,9 @@ private val isPortrait: Boolean @Composable get() = LocalConfiguration.current.o
 @Preview(name = "Small screen", device = Devices.NEXUS_5)
 @Preview(name = "Landscape orientation", device = Devices.AUTOMOTIVE_1024p)
 @Composable
-fun UseDomainScreenPreview() {
+fun PurchaseDomainScreenPreview() {
     AppTheme {
-        UseDomainScreen({}, {}, {})
+        PurchaseDomainScreen({}, {}, {})
     }
 }
 

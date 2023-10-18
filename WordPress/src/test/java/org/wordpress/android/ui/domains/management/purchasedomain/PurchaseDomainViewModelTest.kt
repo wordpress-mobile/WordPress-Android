@@ -14,22 +14,22 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_USE_DOMAIN_SCREEN_SHOWN
-import org.wordpress.android.ui.domains.management.purchasedomain.UseDomainViewModel.ActionEvent
-import org.wordpress.android.ui.domains.management.purchasedomain.UseDomainViewModel.ActionEvent.GoBack
-import org.wordpress.android.ui.domains.management.purchasedomain.UseDomainViewModel.ActionEvent.GoToDomainPurchasing
-import org.wordpress.android.ui.domains.management.purchasedomain.UseDomainViewModel.ActionEvent.GoToExistingDomain
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoBack
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToDomainPurchasing
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingDomain
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
-class UseDomainViewModelTest : BaseUnitTest() {
+class PurchaseDomainViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var analyticsTracker: AnalyticsTrackerWrapper
-    private lateinit var viewModel: UseDomainViewModel
+    private lateinit var viewModel: PurchaseDomainViewModel
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        viewModel = UseDomainViewModel(
+        viewModel = PurchaseDomainViewModel(
             mainDispatcher = testDispatcher(),
             analyticsTracker = analyticsTracker
         )
