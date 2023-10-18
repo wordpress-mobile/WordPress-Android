@@ -50,7 +50,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -287,18 +286,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_LIBRARY, params,
                 response -> {
                     List<MediaModel> mediaList = getMediaListFromXmlrpcResponse(response, site.getId());
-                    if (mediaList != null) {
-                        AppLog.v(T.MEDIA, "Fetched media list for site via XMLRPC.GET_MEDIA_LIBRARY");
-                        boolean canLoadMore = mediaList.size() == number;
-                        notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore, mimeType);
-                    } else {
-                        String message = "could not parse XMLRPC.GET_MEDIA_LIBRARY response: "
-                                         + Arrays.toString(response);
-                        AppLog.w(T.MEDIA, message);
-                        MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                        error.logMessage = "XMLRPC: " + message;
-                        notifyMediaListFetched(site, error, mimeType);
-                    }
+                    AppLog.v(T.MEDIA, "Fetched media list for site via XMLRPC.GET_MEDIA_LIBRARY");
+                    boolean canLoadMore = mediaList.size() == number;
+                    notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore, mimeType);
                 },
                 error -> {
                     String message = "XMLRPC.GET_MEDIA_LIBRARY error response:";
@@ -514,12 +504,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     //
 
     // media list responses should be of type Object[] with each media item in the array represented by a HashMap
+    @NonNull
     @SuppressWarnings("rawtypes")
-    private List<MediaModel> getMediaListFromXmlrpcResponse(Object[] response, int localSiteId) {
-        if (response == null) {
-            return null;
-        }
-
+    private List<MediaModel> getMediaListFromXmlrpcResponse(@NonNull Object[] response, int localSiteId) {
         List<MediaModel> responseMedia = new ArrayList<>();
         for (Object mediaObject : response) {
             if (!(mediaObject instanceof HashMap)) {
@@ -531,7 +518,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 responseMedia.add(media);
             }
         }
-
         return responseMedia;
     }
 
