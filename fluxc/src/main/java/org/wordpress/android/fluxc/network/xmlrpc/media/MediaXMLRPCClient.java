@@ -77,7 +77,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     @NonNull private final OkHttpClient mOkHttpClient;
     // this will hold which media is being uploaded by which call, in order to be able
     // to monitor multiple uploads
-    private final ConcurrentHashMap<Integer, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
+    @NonNull private final ConcurrentHashMap<Integer, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
 
     @Inject public MediaXMLRPCClient(
             Dispatcher dispatcher,
