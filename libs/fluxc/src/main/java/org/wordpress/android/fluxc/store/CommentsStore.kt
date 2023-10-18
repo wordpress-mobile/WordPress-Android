@@ -50,6 +50,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.AppLog.T.COMMENTS
+import java.lang.IllegalStateException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -677,19 +678,24 @@ class CommentsStore @Inject constructor(
                     "Comments Unification project proceeds",
             replaceWith = ReplaceWith("use createNewComment suspend fun directly")
     )
+    @Suppress("UseCheckOrError")
     private suspend fun onCreateNewComment(payload: RemoteCreateCommentPayload): OnCommentChanged {
-        val response = if (payload.reply == null) {
+        val response = if (payload.post != null && payload.reply == null) {
             // Create a new comment on a specific Post
             createNewComment(
                     payload.site,
                     commentsMapper.commentLegacyModelToEntity(payload.comment)
             )
-        } else {
+        } else if (payload.reply != null && payload.post == null) {
             // Create a new reply to a specific Comment
             createNewReply(
                     payload.site,
                     commentsMapper.commentLegacyModelToEntity(payload.comment),
                     commentsMapper.commentLegacyModelToEntity(payload.reply)
+            )
+        } else {
+            throw IllegalStateException(
+                "Either post or reply must be not null and both can't be not null at the same time!"
             )
         }
 

@@ -45,6 +45,7 @@ class CommentsXMLRPCClientTest {
     private var countDownLatch: CountDownLatch? = null
 
     @Before
+    @Suppress("UNCHECKED_CAST")
     fun setUp() {
         dispatcher = Mockito.mock(Dispatcher::class.java)
         requestQueue = Mockito.mock(RequestQueue::class.java)
@@ -357,7 +358,7 @@ class CommentsXMLRPCClientTest {
     }
 
     @Test
-    fun `createNewReply returns udpated reply`() = test {
+    fun `createNewReply returns updated reply`() = test {
         mockedResponse = """
             <?xml version="1.0" encoding="UTF-8"?>
             <methodResponse>
@@ -386,7 +387,7 @@ class CommentsXMLRPCClientTest {
     }
 
     @Test
-    fun `createNewComment returns udpated comment`() = test {
+    fun `createNewComment returns updated comment`() = test {
         mockedResponse = """
             <?xml version="1.0" encoding="UTF-8"?>
             <methodResponse>

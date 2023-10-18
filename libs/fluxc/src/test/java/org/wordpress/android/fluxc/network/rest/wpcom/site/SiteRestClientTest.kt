@@ -93,7 +93,7 @@ class SiteRestClientTest {
                 mapOf(
                         "fields" to "ID,URL,name,description,jetpack,jetpack_connection," +
                                 "visible,is_private,options,plan,capabilities,quota,icon,meta,zendesk_site_meta," +
-                                "organization_id,was_ecommerce_trial"
+                                "organization_id,was_ecommerce_trial,single_user_site"
                 )
         )
     }
@@ -145,7 +145,7 @@ class SiteRestClientTest {
                         "filters" to "wpcom",
                         "fields" to "ID,URL,name,description,jetpack,jetpack_connection," +
                                 "visible,is_private,options,plan,capabilities,quota,icon,meta,zendesk_site_meta," +
-                                "organization_id,was_ecommerce_trial"
+                                "organization_id,was_ecommerce_trial,single_user_site"
                 )
         )
     }
@@ -174,7 +174,7 @@ class SiteRestClientTest {
             mapOf(
                 "fields" to "ID,URL,name,description,jetpack,jetpack_connection," +
                     "visible,is_private,options,plan,capabilities,quota,icon,meta,zendesk_site_meta," +
-                    "organization_id,was_ecommerce_trial"
+                    "organization_id,was_ecommerce_trial,single_user_site"
             )
         )
     }
