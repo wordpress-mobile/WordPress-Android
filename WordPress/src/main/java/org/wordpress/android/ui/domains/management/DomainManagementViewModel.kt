@@ -25,7 +25,7 @@ class DomainManagementViewModel @Inject constructor(
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: Flow<ActionEvent> = _actionEvents
 
-    private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
+    private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.PopulatedList.Initial)
     val uiStateFlow = _uiStateFlow.asStateFlow()
 
     init {
@@ -35,23 +35,21 @@ class DomainManagementViewModel @Inject constructor(
                 _uiStateFlow.value = when (it) {
                     AllDomains.Empty -> UiState.Empty
                     AllDomains.Error -> UiState.Error
-                    is AllDomains.Success -> UiState.Loaded(it.domains)
+                    is AllDomains.Success -> UiState.PopulatedList.Loaded(it.domains)
                 }
             }
         }
     }
-
 
     sealed class ActionEvent {
         object DomainTapped: ActionEvent()
     }
 
     sealed class UiState {
-        sealed class Populated(val domains: List<AllDomainsDomain>): UiState()
-        object Initial: Populated(
-            domains = List(2) { AllDomainsDomain() }
-        )
-        class Loaded(domains: List<AllDomainsDomain>): Populated(domains)
+        sealed class PopulatedList: UiState() {
+            object Initial: PopulatedList()
+            data class Loaded(val domains: List<AllDomainsDomain>): PopulatedList()
+        }
         object Empty: UiState()
         object Error: UiState()
     }

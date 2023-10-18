@@ -35,14 +35,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import java.time.ZoneId
-import java.util.Date
+import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState
+import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.PopulatedList
 
 @Composable
-fun MyDomainsScreen(uiState: DomainManagementViewModel.UiState) {
+fun MyDomainsScreen(uiState: UiState) {
     Scaffold(
         topBar = {
             MainTopAppBar(
@@ -73,8 +72,8 @@ fun MyDomainsScreen(uiState: DomainManagementViewModel.UiState) {
             )
             MyDomainsSearchInput(elevation.value)
             when (uiState) {
-                is DomainManagementViewModel.UiState.Populated ->
-                    MyDomainsList(uiState.domains, listState)
+                is PopulatedList ->
+                    MyDomainsList(listUiState = uiState, listState = listState)
                 else -> {}
             }
         }
@@ -108,7 +107,7 @@ fun MyDomainsSearchInput(elevation: Dp) {
 
 @Composable
 fun MyDomainsList(
-    domains: List<AllDomainsDomain>,
+    listUiState: PopulatedList,
     listState: LazyListState,
 ) {
     LazyColumn(
@@ -119,26 +118,27 @@ fun MyDomainsList(
         item {
             Spacer(modifier = Modifier.height(16.dp))
         }
-        items(items = domains) {
-            DomainListCard(
-                uiState = DomainCardUiState(
-                    domain = it.domain,
-                    title = it.blogName,
-                    status = it.domainStatus,
-                    expiry = it.expiry?.toLocalDate(),
-                )
-            )
+        when (listUiState) {
+            PopulatedList.Initial ->
+                repeat(2) {
+                    item {
+                        DomainListCard(uiState = DomainCardUiState.Initial)
+                    }
+                }
+            is PopulatedList.Loaded -> {
+                items(items = listUiState.domains) {
+                    DomainListCard(uiState = DomainCardUiState.fromDomain(domain = it))
+                }
+            }
         }
     }
 }
-private fun Date.toLocalDate(zoneId: ZoneId = ZoneId.systemDefault()) =
-    toInstant().atZone(zoneId).toLocalDate()
 
 @Preview(device = Devices.PIXEL_3A)
 @Preview(device = Devices.PIXEL_3A, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewMyDomainsScreen() {
     M3Theme {
-        MyDomainsScreen(DomainManagementViewModel.UiState.Initial)
+        MyDomainsScreen(PopulatedList.Initial)
     }
 }
