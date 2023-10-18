@@ -512,6 +512,7 @@ public class AccountStore extends Store {
         INVALID_REQUEST,
         INVALID_TOKEN,
         NEEDS_2FA,
+        NEEDS_SECURITY_KEY,
         UNSUPPORTED_GRANT_TYPE,
         UNSUPPORTED_RESPONSE_TYPE,
         UNKNOWN_TOKEN,
@@ -1286,11 +1287,19 @@ public class AccountStore extends Store {
                 payload.shouldSendTwoStepSms, new Authenticator.Listener() {
                     @Override
                     public void onResponse(Token token) {
-                        mAccessToken.set(token.getAccessToken());
-                        if (payload.nextAction != null) {
-                            mDispatcher.dispatch(payload.nextAction);
+                        // Check if token exists, if not, check for security key
+                        if (token.getAccessToken() != null) {
+                            mAccessToken.set(token.getAccessToken());
+                            if (payload.nextAction != null) {
+                                mDispatcher.dispatch(payload.nextAction);
+                            }
+                            emitChange(new OnAuthenticationChanged());
+                        } else if (token.getUserId() != null) {
+                            //TODO: Trigger security key request
+                        } else {
+                            OnAuthenticationChanged event = new OnAuthenticationChanged();
+                            event.error = new AuthenticationError(AuthenticationErrorType.GENERIC_ERROR, "");
                         }
-                        emitChange(new OnAuthenticationChanged());
                     }
                 }, new Authenticator.ErrorListener() {
                     @Override
