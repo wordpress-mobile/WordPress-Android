@@ -618,8 +618,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return mediaError;
     }
 
+    @Nullable
     @SuppressWarnings("rawtypes")
-    private static Map getMapFromUploadResponse(Response response) throws XMLRPCException {
+    private static Map getMapFromUploadResponse(@NonNull Response response) throws XMLRPCException {
         try {
             ResponseBody responseBody = response.body();
             if (responseBody == null) {
