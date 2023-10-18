@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,6 +41,7 @@ import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.PopulatedList
+import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.Error
 
 @Composable
 fun MyDomainsScreen(uiState: UiState) {
@@ -74,6 +77,7 @@ fun MyDomainsScreen(uiState: UiState) {
             when (uiState) {
                 is PopulatedList ->
                     MyDomainsList(listUiState = uiState, listState = listState)
+                is Error -> ErrorScreen()
                 else -> {}
             }
         }
@@ -82,6 +86,24 @@ fun MyDomainsScreen(uiState: UiState) {
 
 @Composable
 fun MyDomainsSearchInput(elevation: Dp) {
+fun ErrorScreen() {
+    Column (
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        Text(
+            text = "Couldn't Update",
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.outline,
+        )
+        Text(
+            text = "Check that you're online and refresh.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.outline,
+        )
+    }
+}
     var queryString by rememberSaveable { mutableStateOf("") }
 
     Surface (shadowElevation = elevation, modifier = Modifier.zIndex(1f)) {
@@ -138,5 +160,13 @@ fun MyDomainsList(
 fun PreviewMyDomainsScreen() {
     M3Theme {
         MyDomainsScreen(PopulatedList.Initial)
+    }
+}
+@Preview(device = Devices.PIXEL_3A)
+@Preview(device = Devices.PIXEL_3A, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun PreviewMyDomainsScreenError() {
+    M3Theme {
+        MyDomainsScreen(Error)
     }
 }
