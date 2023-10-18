@@ -47,7 +47,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -615,8 +615,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 AppLog.e(T.MEDIA, "Failed to parse XMLRPC.wpUploadFile response - body was empty: " + response);
                 return null;
             }
-            String data = new String(responseBody.bytes(), "UTF-8");
-            InputStream is = new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8")));
+            String data = new String(responseBody.bytes(), StandardCharsets.UTF_8);
+            InputStream is = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
             Object responseObject = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
             if (responseObject instanceof Map) {
                 return (Map) responseObject;
