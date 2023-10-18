@@ -295,7 +295,11 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
-    public void fetchMediaList(final SiteModel site, final int number, final int offset, final MimeType.Type mimeType) {
+    public void fetchMediaList(
+            @NonNull final SiteModel site,
+            final int number,
+            final int offset,
+            @Nullable final MimeType.Type mimeType) {
         final Map<String, String> params = new HashMap<>();
         params.put("number", String.valueOf(number));
         if (offset > 0) {
@@ -561,17 +565,21 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         mDispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site,
-                                        @NonNull List<MediaModel> media,
-                                        boolean loadedMore,
-                                        boolean canLoadMore,
-                                        MimeType.Type mimeType) {
+    private void notifyMediaListFetched(
+            @NonNull SiteModel site,
+            @NonNull List<MediaModel> media,
+            boolean loadedMore,
+            boolean canLoadMore,
+            @Nullable MimeType.Type mimeType) {
         FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, media,
                 loadedMore, canLoadMore, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site, MediaError error, MimeType.Type mimeType) {
+    private void notifyMediaListFetched(
+            @NonNull SiteModel site,
+            @NonNull MediaError error,
+            @Nullable MimeType.Type mimeType) {
         FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, error, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }

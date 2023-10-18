@@ -816,7 +816,7 @@ public class MediaStore extends Store {
         }
     }
 
-    private void performFetchMediaList(FetchMediaListPayload payload) {
+    private void performFetchMediaList(@NonNull FetchMediaListPayload payload) {
         int offset = 0;
         if (payload.loadMore) {
             List<String> list = new ArrayList<>();
