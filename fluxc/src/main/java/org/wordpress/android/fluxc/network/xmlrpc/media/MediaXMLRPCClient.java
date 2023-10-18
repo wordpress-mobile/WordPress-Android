@@ -692,15 +692,13 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     @NonNull
-    private List<Object> getBasicParams(final SiteModel site, final MediaModel media) {
+    private List<Object> getBasicParams(@NonNull final SiteModel site, @Nullable final MediaModel media) {
         List<Object> params = new ArrayList<>();
-        if (site != null) {
-            params.add(site.getSelfHostedSiteId());
-            params.add(site.getUsername());
-            params.add(site.getPassword());
-            if (media != null) {
-                params.add(media.getMediaId());
-            }
+        params.add(site.getSelfHostedSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+        if (media != null) {
+            params.add(media.getMediaId());
         }
         return params;
     }
