@@ -97,6 +97,14 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     public void pushMedia(@NonNull final SiteModel site, @Nullable final MediaModel media) {
+        if (media == null) {
+            // caller may be expecting a notification
+            MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
+            error.logMessage = "Pushed media is null";
+            notifyMediaPushed(site, null, error);
+            return;
+        }
+
         List<Object> params = getBasicParams(site, media);
         params.add(getEditMediaFields(media));
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.EDIT_POST, params,
