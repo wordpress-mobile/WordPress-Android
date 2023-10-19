@@ -33,10 +33,10 @@ class SiteCreationPlansViewModel @Inject constructor(
     private val _actionEvents = Channel<SiteCreationPlansActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
-    private lateinit var domainName: DomainModel
+    private lateinit var domain: DomainModel
 
     fun start(siteCreationState: SiteCreationState) {
-        domainName = requireNotNull(siteCreationState.domain)
+        domain = requireNotNull(siteCreationState.domain)
         showPlans()
     }
 
@@ -94,8 +94,8 @@ class SiteCreationPlansViewModel @Inject constructor(
             authority(AUTHORITY)
             appendPath(JETPACK_APP_PATH)
             appendPath(PLANS_PATH)
-            if (!domainName.isFree) {
-                appendQueryParameter(PAID_DOMAIN_NAME, domainName.domainName)
+            if (!domain.isFree) {
+                appendQueryParameter(PAID_DOMAIN_NAME, domain.domainName)
             }
         }
 
