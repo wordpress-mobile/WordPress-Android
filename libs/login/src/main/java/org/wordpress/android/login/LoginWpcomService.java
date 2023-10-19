@@ -303,7 +303,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
                 } else {
                     setState(LoginStep.FAILURE_2FA);
                 }
-
+                break;
             case NEEDS_SECURITY_KEY:
                 // login credentials were correct anyway so, offer to save to SmartLock
                 signalCredentialsOK();
@@ -313,7 +313,6 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
                 } else {
                     setState(LoginStep.FAILURE_SECURITY_KEY);
                 }
-
                 break;
             case EMAIL_LOGIN_NOT_ALLOWED:
                 setState(LoginStep.FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL);
