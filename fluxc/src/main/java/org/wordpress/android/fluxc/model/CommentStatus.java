@@ -1,5 +1,8 @@
 package org.wordpress.android.fluxc.model;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.Locale;
 
 public enum CommentStatus {
@@ -22,7 +25,8 @@ public enum CommentStatus {
         return this.name().toLowerCase(Locale.US);
     }
 
-    public static CommentStatus fromString(String string) {
+    @NonNull
+    public static CommentStatus fromString(@Nullable String string) {
         if (string != null) {
             for (CommentStatus v : CommentStatus.values()) {
                 if (string.equalsIgnoreCase(v.name())) {

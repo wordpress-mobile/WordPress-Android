@@ -23,13 +23,15 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(RobolectricTestRunner.class)
 public class CommentStoreUnitTest {
     @Before
     public void setUp() {
-        Context appContext = RuntimeEnvironment.application.getApplicationContext();
+        Context appContext = RuntimeEnvironment.getApplication().getApplicationContext();
         WellSqlConfig config = new WellSqlConfig(appContext);
         WellSql.init(config);
         config.reset();
@@ -50,7 +52,11 @@ public class CommentStoreUnitTest {
 
         // Get comment by site and remote id
         CommentModel queriedComment = CommentSqlUtils.getCommentBySiteAndRemoteId(siteModel, remoteCommentId);
-        assertEquals("Best ponies come from the future.", queriedComment.getContent());
+        if (queriedComment != null) {
+            assertEquals("Best ponies come from the future.", queriedComment.getContent());
+        } else {
+            fail("Failed to instantiate new comment model!");
+        }
     }
 
     @Test
@@ -62,20 +68,32 @@ public class CommentStoreUnitTest {
 
         // Get comment by site and remote id
         CommentModel queriedComment = CommentSqlUtils.getCommentBySiteAndRemoteId(siteModel, 10);
-        assertEquals("Pony #10", queriedComment.getContent());
+        if (queriedComment != null) {
+            assertEquals("Pony #10", queriedComment.getContent());
+        } else {
+            fail("Failed to instantiate new comment model!");
+        }
 
         // Get comment by site and remote id
         queriedComment = CommentSqlUtils.getCommentBySiteAndRemoteId(siteModel, 11);
-        assertEquals("Pony #11", queriedComment.getContent());
+        if (queriedComment != null) {
+            assertEquals("Pony #11", queriedComment.getContent());
+        } else {
+            fail("Failed to instantiate new comment model!");
+        }
 
         // Get comment by site and remote id
         queriedComment = CommentSqlUtils.getCommentBySiteAndRemoteId(siteModel, 12);
-        assertEquals("Pony #12", queriedComment.getContent());
+        if (queriedComment != null) {
+            assertEquals("Pony #12", queriedComment.getContent());
+        } else {
+            fail("Failed to instantiate new comment model!");
+        }
     }
 
     @Test
     public void testFailToGetCommentBySiteAndRemoteId() {
-        assertEquals(null, CommentSqlUtils.getCommentBySiteAndRemoteId(new SiteModel(), 42));
+        assertNull(CommentSqlUtils.getCommentBySiteAndRemoteId(new SiteModel(), 42));
     }
 
 
