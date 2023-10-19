@@ -78,12 +78,19 @@ public class MediaStore extends Store {
     public static class UploadMediaPayload extends MediaPayload {
         public final boolean stripLocation;
 
-        public UploadMediaPayload(SiteModel site, MediaModel media, boolean stripLocation) {
+        public UploadMediaPayload(
+                @NonNull SiteModel site,
+                @Nullable MediaModel media,
+                boolean stripLocation) {
             super(site, media, null);
             this.stripLocation = stripLocation;
         }
 
-        public UploadMediaPayload(SiteModel site, MediaModel media, MediaError error, boolean stripLocation) {
+        public UploadMediaPayload(
+                @NonNull SiteModel site,
+                @Nullable MediaModel media,
+                @Nullable MediaError error,
+                boolean stripLocation) {
             super(site, media, error);
             this.stripLocation = stripLocation;
         }
