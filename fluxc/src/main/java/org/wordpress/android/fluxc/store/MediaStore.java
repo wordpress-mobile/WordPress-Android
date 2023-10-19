@@ -100,23 +100,30 @@ public class MediaStore extends Store {
      * Actions: FETCH_MEDIA_LIST
      */
     public static class FetchMediaListPayload extends Payload<BaseNetworkError> {
-        public SiteModel site;
+        @NonNull public SiteModel site;
         public boolean loadMore;
-        public MimeType.Type mimeType;
+        @Nullable public MimeType.Type mimeType;
         public int number = DEFAULT_NUM_MEDIA_PER_FETCH;
 
         @SuppressWarnings("unused")
-        public FetchMediaListPayload(SiteModel site) {
+        public FetchMediaListPayload(@NonNull SiteModel site) {
             this.site = site;
         }
 
-        public FetchMediaListPayload(SiteModel site, int number, boolean loadMore) {
+        public FetchMediaListPayload(
+                @NonNull SiteModel site,
+                int number,
+                boolean loadMore) {
             this.site = site;
             this.loadMore = loadMore;
             this.number = number;
         }
 
-        public FetchMediaListPayload(SiteModel site, int number, boolean loadMore, MimeType.Type mimeType) {
+        public FetchMediaListPayload(
+                @NonNull SiteModel site,
+                int number,
+                boolean loadMore,
+                @NonNull MimeType.Type mimeType) {
             this.site = site;
             this.loadMore = loadMore;
             this.mimeType = mimeType;
