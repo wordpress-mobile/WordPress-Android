@@ -578,13 +578,13 @@ public class MediaStore extends Store {
     public MediaModel instantiateMediaModel() {
         MediaModel media = new MediaModel();
 
-        media = MediaSqlUtils.insertMediaForResult(media);
+        MediaModel insertedMedia = MediaSqlUtils.insertMediaForResult(media);
 
-        if (media.getId() == -1) {
-            media = null;
+        if (insertedMedia.getId() == -1) {
+            return null;
         }
 
-        return media;
+        return insertedMedia;
     }
 
     public List<MediaModel> getAllSiteMedia(SiteModel siteModel) {
