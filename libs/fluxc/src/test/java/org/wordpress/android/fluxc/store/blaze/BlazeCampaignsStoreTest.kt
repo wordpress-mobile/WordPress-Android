@@ -13,19 +13,19 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.AudienceList
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsError
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetchedPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsUtils
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.Campaign
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.CampaignStats
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.ContentConfig
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
+import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
 
@@ -84,7 +84,8 @@ private val BLAZE_CAMPAIGNS_RESPONSE = BlazeCampaignsResponse(
     totalPages = TOTAL_PAGES
 )
 
-private val BLAZE_CAMPAIGN_MODEL = BlazeCampaignModel(
+private val BLAZE_CAMPAIGN_MODEL = BlazeCampaignEntity(
+    siteId = SITE_ID,
     campaignId = CAMPAIGN_ID,
     title = TITLE,
     imageUrl = IMAGE_URL,
@@ -96,7 +97,7 @@ private val BLAZE_CAMPAIGN_MODEL = BlazeCampaignModel(
     clicks = CLICKS
 )
 private val BLAZE_CAMPAIGNS_MODEL = BlazeCampaignsModel(
-    campaigns = listOf(BLAZE_CAMPAIGN_MODEL),
+    campaigns = listOf(BLAZE_CAMPAIGN_MODEL.toDomainModel()),
     page = PAGE,
     totalItems = TOTAL_ITEMS,
     totalPages = TOTAL_PAGES
