@@ -1307,10 +1307,13 @@ public class AccountStore extends Store {
             }
             emitChange(new OnAuthenticationChanged());
         } else if (token.getUserId() != null) {
-            //TODO: Trigger security key request
+            OnAuthenticationChanged event = new OnAuthenticationChanged();
+            event.error = new AuthenticationError(AuthenticationErrorType.NEEDS_SECURITY_KEY, "");
+            emitChange(event);
         } else {
             OnAuthenticationChanged event = new OnAuthenticationChanged();
             event.error = new AuthenticationError(AuthenticationErrorType.GENERIC_ERROR, "");
+            emitChange(event);
         }
     }
 
