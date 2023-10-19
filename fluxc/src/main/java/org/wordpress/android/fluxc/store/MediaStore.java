@@ -626,14 +626,17 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getSiteImages(siteModel);
     }
 
+    @SuppressWarnings("unused")
     public List<MediaModel> getSiteVideos(SiteModel siteModel) {
         return MediaSqlUtils.getSiteVideos(siteModel);
     }
 
+    @SuppressWarnings("unused")
     public List<MediaModel> getSiteAudio(SiteModel siteModel) {
         return MediaSqlUtils.getSiteAudio(siteModel);
     }
 
+    @SuppressWarnings("unused")
     public List<MediaModel> getSiteDocuments(SiteModel siteModel) {
         return MediaSqlUtils.getSiteDocuments(siteModel);
     }
@@ -703,6 +706,7 @@ public class MediaStore extends Store {
         return MediaSqlUtils.matchPostMedia(postModel.getId());
     }
 
+    @SuppressWarnings("unused")
     public List<MediaModel> getMediaForPostWithState(PostImmutableModel postModel, MediaUploadState expectedState) {
         return MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.UPLOAD_STATE,
                 expectedState);
