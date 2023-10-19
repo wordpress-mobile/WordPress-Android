@@ -35,7 +35,8 @@ class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity(), DomainReg
     }
 
     private fun cancelCheckout() {
-        onCheckoutSuccess()
+        setResult(RESULT_CANCELED)
+        finish()
     }
 
     private fun setupNavigationButton() {
