@@ -15,7 +15,6 @@ import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.MotionEvent
 import android.view.View
-import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -261,14 +260,14 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         }
 
         authorSelectionAdapter = AuthorSelectionAdapter(activity)
-        pagesAuthorSelection.adapter = authorSelectionAdapter
-        pagesAuthorSelection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                viewModel.updateAuthorFilterSelection(id)
-            }
-        }
+//        pagesAuthorSelection.adapter = authorSelectionAdapter
+//        pagesAuthorSelection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onNothingSelected(parent: AdapterView<*>) {}
+//
+//            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+//                viewModel.updateAuthorFilterSelection(id)
+//            }
+//        }
     }
 
     private fun PagesFragmentBinding.initializeSearchView() {
@@ -344,20 +343,14 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
         viewModel.authorUIState.observe(activity) { state ->
             state?.let {
-                uiHelpers.updateVisibility(pagesAuthorSelection, state.isAuthorFilterVisible)
-                uiHelpers.updateVisibility(pagesTabLayoutFadingEdge, state.isAuthorFilterVisible)
+//                uiHelpers.updateVisibility(pagesAuthorSelection, state.isAuthorFilterVisible)
+//                uiHelpers.updateVisibility(pagesTabLayoutFadingEdge, state.isAuthorFilterVisible)
 
-                val tabLayoutPaddingStart =
-                    if (state.isAuthorFilterVisible) {
-                        resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
-                    } else 0
-                tabLayout.setPaddingRelative(tabLayoutPaddingStart, 0, 0, 0)
-
-                authorSelectionAdapter.updateItems(state.authorFilterItems)
-
-                authorSelectionAdapter.getIndexOfSelection(state.authorFilterSelection)?.let { selectionIndex ->
-                    pagesAuthorSelection.setSelection(selectionIndex)
-                }
+//                authorSelectionAdapter.updateItems(state.authorFilterItems)
+//
+//                authorSelectionAdapter.getIndexOfSelection(state.authorFilterSelection)?.let { selectionIndex ->
+//                    pagesAuthorSelection.setSelection(selectionIndex)
+//                }
             }
         }
 
@@ -617,7 +610,6 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     private fun PagesFragmentBinding.hideSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.VISIBLE
         tabLayout.visibility = View.VISIBLE
-        tabContainer.visibility = View.VISIBLE
         searchFrame.visibility = View.GONE
         if (myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.collapseActionView()
@@ -630,7 +622,6 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     private fun PagesFragmentBinding.showSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.GONE
         tabLayout.visibility = View.GONE
-        tabContainer.visibility = View.GONE
         searchFrame.visibility = View.VISIBLE
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
