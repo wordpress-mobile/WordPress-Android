@@ -28,10 +28,11 @@
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -43,7 +44,8 @@
                 android:id="@+id/frame_avatar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="false">
+                android:clickable="false"
+                android:layout_centerVertical="true">
 
                 <FrameLayout
                     android:id="@+id/avatar_container"
@@ -89,20 +91,14 @@
                 android:src="@drawable/ic_chevron_right_white_24dp"
                 app:tint="?attr/wpColorOnSurfaceMedium" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/me_username"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/me_display_name"
-                android:layout_marginStart="@dimen/margin_extra_large"
-                android:layout_toEndOf="@id/frame_avatar"
-                android:clickable="false"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@string/account_and_settings"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?attr/wpColorOnSurfaceMedium"
-                tools:text="@string/account_and_settings" />
+                android:orientation="vertical"
+                android:layout_centerInParent="true"
+                android:layout_toEndOf="@+id/frame_avatar"
+                android:layout_toStartOf="@+id/go_to_settings">
+
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/me_display_name"
@@ -110,15 +106,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_extra_large"
-                android:layout_toEndOf="@+id/frame_avatar"
-                android:layout_toStartOf="@+id/go_to_settings"
                 android:clickable="false"
                 android:ellipsize="end"
                 android:maxLines="1"
                 app:autoSizeMaxTextSize="@dimen/my_site_name_label_single_line_text_size"
                 app:autoSizeMinTextSize="@dimen/my_site_name_label_double_line_text_size"
                 app:autoSizeTextType="uniform"
-                tools:text="Full Name" />
+                tools:text="Full Name"/>
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/me_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_extra_large"
+                    android:clickable="false"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/account_and_settings"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="?attr/wpColorOnSurfaceMedium"
+                    tools:text="@string/account_and_settings" />
+
+            </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
 

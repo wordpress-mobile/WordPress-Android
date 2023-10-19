@@ -244,6 +244,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         if (state.shouldShowAccountSettings) {
             noSitesView.avatarAccountSettings.visibility = View.VISIBLE
             noSitesView.meDisplayName.text = state.accountName
+            if (state.accountName.isNullOrEmpty()) {
+                noSitesView.meDisplayName.visibility = View.GONE
+            } else {
+                noSitesView.meDisplayName.visibility = View.VISIBLE
+            }
             loadGravatar(state.avatartUrl)
             noSitesView.avatarAccountSettings.setOnClickListener { viewModel.onAvatarPressed() }
         } else noSitesView.avatarAccountSettings.visibility = View.GONE
