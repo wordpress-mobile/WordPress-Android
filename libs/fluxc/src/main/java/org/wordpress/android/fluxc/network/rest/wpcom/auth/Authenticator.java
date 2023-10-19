@@ -196,7 +196,7 @@ public class Authenticator {
         private String mSiteUrl;
         private String mSiteId;
         private String mUserId;
-        private String twoStepWebauthnNonce;
+        private String mTwoStepWebauthnNonce;
 
         public Token(String accessToken, String siteUrl, String siteId, String scope,
                      String tokenType, String userId, String twoStepWebauthnNonce) {
@@ -206,7 +206,7 @@ public class Authenticator {
             mScope = scope;
             mTokenType = tokenType;
             mUserId = userId;
-            this.twoStepWebauthnNonce = twoStepWebauthnNonce;
+            mTwoStepWebauthnNonce = twoStepWebauthnNonce;
         }
 
         public String getAccessToken() {
