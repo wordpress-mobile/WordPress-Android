@@ -59,6 +59,8 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         FAILURE_EMAIL_WRONG_PASSWORD,
         FAILURE_2FA,
         FAILURE_SOCIAL_2FA,
+        FAILURE_SECURITY_KEY,
+        FAILURE_SOCIAL_SECURITY_KEY,
         FAILURE_FETCHING_ACCOUNT,
         FAILURE_CANNOT_ADD_DUPLICATE_SITE,
         FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL,
@@ -300,6 +302,16 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
                     setState(LoginStep.FAILURE_SOCIAL_2FA);
                 } else {
                     setState(LoginStep.FAILURE_2FA);
+                }
+
+            case NEEDS_SECURITY_KEY:
+                // login credentials were correct anyway so, offer to save to SmartLock
+                signalCredentialsOK();
+
+                if (mIsSocialLogin) {
+                    setState(LoginStep.FAILURE_SOCIAL_SECURITY_KEY);
+                } else {
+                    setState(LoginStep.FAILURE_SECURITY_KEY);
                 }
 
                 break;
