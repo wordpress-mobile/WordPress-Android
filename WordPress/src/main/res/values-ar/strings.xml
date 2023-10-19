@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-04 13:54:07+0000
+Translation-Revision-Date: 2023-10-18 14:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
-Generator: GlotPress/4.0.0-alpha.9
+Generator: GlotPress/4.0.0-alpha.11
 Language: ar
 -->
 <resources>
+    <string name="account_and_settings">الحساب والإعدادات</string>
+    <string name="site_creation_plans_selection_title">تحديد خطة</string>
+    <string name="site_creation_domain_free_with_annual_plan">مجاني للعام الأول مع الخطط السنوية المدفوعة</string>
+    <string name="reader_label_followers_count_single">متابع واحد</string>
+    <string name="reader_secondary_bookmarked">تم الحفظ</string>
+    <string name="reader_secondary_bookmark">حفظ</string>
+    <string name="reader_discover_recommended_header_new">ربما ينال إعجابك</string>
     <string name="gutenberg_native_ungroup_block">مكوّن الترقية</string>
     <string name="gutenberg_native_tap_here_to_show_more_details">اضغط هنا لعرض مزيد من التفاصيل.</string>
     <string name="gutenberg_native_synced_patterns">الأنماط التي تمت مزامنتها</string>
@@ -124,8 +131,8 @@ Language: ar
     <string name="privacy_banner_analytics_description">اسمح لنا بتحسين الأداء عن طريق جمع المعلومات حول كيفية تفاعل المستخدمين مع تطبيقاتنا للهواتف المحمولة.</string>
     <string name="privacy_banner_analytics">التحليلات</string>
     <string name="privacy_banner_title">إدارة الخصوصية</string>
-    <string name="tabbar_accessibility_label_me">أنا. Manage your profile details.</string>
     <string name="privacy_banner_description">تُمثِّل خصوصيتك أهمية بالغة بالنسبة إلينا وكانت دومًا كذلك. إننا نستخدم بياناتك الشخصية ونخزّنها ونعالجها لتحسين تطبيقنا (وتجربتك) بطرق متنوعة. إننا بحاجة إلى بعض استخدامات بياناتك بشكل كلي لكي تسير الأمور على ما يرام، إلى جانب استخدامات أخرى يمكنك تحسينها من إعداداتك.</string>
+    <string name="tabbar_accessibility_label_me">أنا. Manage your profile details.</string>
     <string name="social_item_message_title">رسالة</string>
     <string name="gutenberg_native_block_ungrouped">تم إلغاء تجميع المكوّنات</string>
     <string name="gutenberg_native_block_grouped">تم تجميع المكوّنات</string>
@@ -662,7 +669,7 @@ Language: ar
     <string name="gutenberg_native_tiled_gallery_settings">إعدادات المعرض المتجانب</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">ينتقل إلى شاشة اختيار التخطيط</string>
     <string name="gutenberg_native_gallery_style">نمط المعرض</string>
-    <string name="sharing_connect_via_web_warning_message">يمكنك ربط حسابك على %s على موقع ووردبريس.كوم على الويب. عند الانتهاء، ارجع إلى التطبيق لتغيير إعدادات \"المشاركة\" الخاصة بك.</string>
+    <string name="sharing_connect_via_web_warning_message">يمكنك ربط حسابك على %s على موقع ووردبريس.كوم على الويب. عند الانتهاء من ذلك، ارجع إلى التطبيق لتغيير إعدادات \"شبكات التواصل الاجتماعي\".</string>
     <string name="about_automattic_app_icon_description">أيقونة التطبيق</string>
     <string name="about_automattic_back_icon_description">أيقونة الرجوع</string>
     <string name="about_automattic_logo_description">شعار شركة Automattic</string>
@@ -2307,9 +2314,9 @@ Language: ar
     <string name="quick_start_dialog_view_site_title">عرض موقعك</string>
     <string name="quick_start_dialog_share_site_title">مشاركة موقعك</string>
     <string name="quick_start_dialog_share_site_message">اتصل بحساباتك على وسائل التواصل الاجتماعي – سيشارك موقعك مقالات جديدة تلقائيًّا.</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">أقر على %1$s مشاركة %2$s للمتابعة</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">أنقر على %1$s الروابط %2$s لإضافة حساباتك على وسائل التواصل الاجتماعي</string>
     <string name="quick_start_dialog_view_site_message">قم بمعاينة موقعك لرؤية ما سيراه الزائرون.</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">النقر على ⁦%1$s⁩ من شبكات التواصل الاجتماعي ⁦%2$s⁩ للاستمرار</string>
     <string name="quick_start_dialog_publish_post_title">نشر مقالة</string>
     <string name="quick_start_dialog_publish_post_message_short">انقر على %1$sإنشاء مقالة%2$s لإنشاء مقالة جديدة</string>
     <string name="quick_start_dialog_need_help_button_negative">لا شكرًا</string>
@@ -2531,9 +2538,8 @@ Language: ar
     <string name="permissions_denied_message">يبدو أنك أوقفت الأذونات المطلوبة لهذه الميزة.&lt;br/&gt;&lt;br/&gt;لتغيير هذا، قم بتحرير أذوناتك وتأكد من تمكين &lt;strong&gt;%s&lt;/strong&gt;.</string>
     <string name="permissions_denied_title">أذونات</string>
     <string name="plugin_caption_featured">بارز</string>
-    <string name="sharing_disabled_description">لا يمكنك الوصول إلى إعدادات المشاركة الخاصة بك بسبب تعطيل وحدة Jetpack النمطية للمشاركة الخاصة بك.</string>
-    <string name="sharing_disabled">تم تعطيل الوحدة النمطية للمشاركة</string>
     <string name="version_with_name_param">الإصدار %s</string>
+    <string name="sharing_disabled">تم تعطيل الوحدة النمطية لشبكات التواصل الاجتماعي</string>
     <string name="notification_sound_has_invalid_path">يتضمن الصوت المختار مسارًا غير صالح. يُرجى اختيار صوت آخر.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d من الصفحات / المقالات متبقٍّ</string>
@@ -3486,6 +3492,7 @@ Language: ar
     <string name="reader_hint_add_tag_or_url">أدخل رابط URL أو موضوعًا للمتابعة</string>
     <string name="reader_page_followed_tags">مواضيع تمّت متابعتها</string>
     <string name="reader_page_followed_blogs">مواقع تمّت متابعتها</string>
+    <string name="reader_label_followers_count">%s من المتابعين</string>
     <string name="help">المساعدة</string>
     <string name="ssl_certificate_error">شهادة SSL غير صالحة</string>
     <string name="ssl_certificate_ask_trust">إذا كنت عادة تتصل بهذا الموقع بدون أي مشاكل، فربما يعني هذا الخطأ أن شخصًا ما يحاول سرقة هذا الموقع, وينبغي ألا تقوم بالاستمرار. هل ترغب في الوثوق بالشهادة على أي حال؟</string>
