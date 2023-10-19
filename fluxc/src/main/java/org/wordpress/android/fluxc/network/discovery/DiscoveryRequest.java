@@ -15,20 +15,24 @@ public class DiscoveryRequest extends BaseRequest<String> {
     private static final String PROTOCOL_CHARSET = "utf-8";
     private static final String PROTOCOL_CONTENT_TYPE = String.format("text/xml; charset=%s", PROTOCOL_CHARSET);
 
-    private final Listener<String> mListener;
+    @NonNull private final Listener<String> mListener;
 
-    public DiscoveryRequest(String url, Listener<String> listener, BaseErrorListener errorListener) {
+    public DiscoveryRequest(
+            @NonNull String url,
+            @NonNull Listener<String> listener,
+            @NonNull BaseErrorListener errorListener) {
         super(Method.GET, url, errorListener);
         mListener = listener;
     }
 
     @Override
-    protected void deliverResponse(String response) {
+    protected void deliverResponse(@NonNull String response) {
         mListener.onResponse(response);
     }
 
+    @NonNull
     @Override
-    protected Response<String> parseNetworkResponse(NetworkResponse response) {
+    protected Response<String> parseNetworkResponse(@NonNull NetworkResponse response) {
         String parsed;
         try {
             parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
@@ -38,12 +42,14 @@ public class DiscoveryRequest extends BaseRequest<String> {
         return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));
     }
 
+    @NonNull
     @Override
     public BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error) {
         // no op
         return error;
     }
 
+    @NonNull
     @Override
     public String getBodyContentType() {
         return PROTOCOL_CONTENT_TYPE;
