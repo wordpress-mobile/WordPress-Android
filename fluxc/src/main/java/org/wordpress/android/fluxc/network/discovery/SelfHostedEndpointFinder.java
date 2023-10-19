@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.BuildConfig;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -24,10 +25,16 @@ import javax.inject.Inject;
 
 public class SelfHostedEndpointFinder {
     public static final int TIMEOUT_MS = 60000;
+    /**
+     * Regex pattern for matching the RSD link found in most WordPress sites.
+     */
+    private static final Pattern RSD_LINK = Pattern.compile(
+            "<link\\s*?rel=\"EditURI\"\\s*?type=\"application/rsd\\+xml\"\\s*?title=\"RSD\"\\s*?href=\"(.*?)\"",
+            Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
-    private final Dispatcher mDispatcher;
-    private final DiscoveryXMLRPCClient mDiscoveryXMLRPCClient;
-    private final DiscoveryWPAPIRestClient mDiscoveryWPAPIRestClient;
+    @NonNull private final Dispatcher mDispatcher;
+    @NonNull private final DiscoveryXMLRPCClient mDiscoveryXMLRPCClient;
+    @NonNull private final DiscoveryWPAPIRestClient mDiscoveryWPAPIRestClient;
 
     public enum DiscoveryError implements OnChangedError {
         INVALID_URL,
@@ -44,65 +51,65 @@ public class SelfHostedEndpointFinder {
     public static class DiscoveryException extends Exception {
         private static final long serialVersionUID = -300904137122546854L;
 
-        public final DiscoveryError discoveryError;
-        public final String failedUrl;
+        @NonNull public final DiscoveryError discoveryError;
+        @Nullable public final String failedUrl;
 
-        DiscoveryException(DiscoveryError failureType, String failedUrl) {
+        DiscoveryException(@NonNull DiscoveryError failureType, @Nullable String failedUrl) {
             this.discoveryError = failureType;
             this.failedUrl = failedUrl;
         }
     }
 
     public static class DiscoveryResultPayload extends Payload<DiscoveryError> {
-        public String xmlRpcEndpoint;
-        public String wpRestEndpoint;
-        public String failedEndpoint;
+        @Nullable public String xmlRpcEndpoint;
+        @Nullable public String wpRestEndpoint;
+        @Nullable public String failedEndpoint;
 
-        public DiscoveryResultPayload(String xmlRpcEndpoint, String wpRestEndpoint) {
+        public DiscoveryResultPayload(@NonNull String xmlRpcEndpoint, @Nullable String wpRestEndpoint) {
             this.xmlRpcEndpoint = xmlRpcEndpoint;
             this.wpRestEndpoint = wpRestEndpoint;
         }
 
-        public DiscoveryResultPayload(DiscoveryError discoveryError, String failedEndpoint) {
+        public DiscoveryResultPayload(@NonNull DiscoveryError discoveryError, @Nullable String failedEndpoint) {
             this.error = discoveryError;
             this.failedEndpoint = failedEndpoint;
         }
     }
 
-    @Inject public SelfHostedEndpointFinder(Dispatcher dispatcher, DiscoveryXMLRPCClient discoveryXMLRPCClient,
-                                    DiscoveryWPAPIRestClient discoveryWPAPIRestClient) {
+    @Inject public SelfHostedEndpointFinder(
+            @NonNull Dispatcher dispatcher,
+            @NonNull DiscoveryXMLRPCClient discoveryXMLRPCClient,
+            @NonNull DiscoveryWPAPIRestClient discoveryWPAPIRestClient) {
         mDispatcher = dispatcher;
         mDiscoveryXMLRPCClient = discoveryXMLRPCClient;
         mDiscoveryWPAPIRestClient = discoveryWPAPIRestClient;
     }
 
-    public void findEndpoint(final String url) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String wpRestEndpoint = "";
-                    if (BuildConfig.ENABLE_WPAPI) {
-                        wpRestEndpoint = discoverWPRESTEndpoint(url);
-                    }
-                    // TODO: Eventually make the XML-RPC discovery only run if WP-API discovery fails
-                    String xmlRpcEndpoint = verifyOrDiscoverXMLRPCEndpoint(url);
-                    DiscoveryResultPayload payload = new DiscoveryResultPayload(xmlRpcEndpoint, wpRestEndpoint);
-                    mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoveryResultAction(payload));
-                } catch (DiscoveryException e) {
-                    // TODO: Handle tracking of XMLRPCDiscoveryException
-                    // If a DiscoveryException is caught this high up, it means that either:
-                    // 1. The discovery process has completed, and did not turn up a valid WordPress.com site
-                    // 2. Discovery was halted early because the given site requires SSL validation, or HTTP AUTH login,
-                    // or is a WordPress.com site, or is a completely invalid URL
-                    DiscoveryResultPayload payload = new DiscoveryResultPayload(e.discoveryError, e.failedUrl);
-                    mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoveryResultAction(payload));
+    public void findEndpoint(@NonNull final String url) {
+        new Thread(() -> {
+            try {
+                String wpRestEndpoint = "";
+                if (BuildConfig.ENABLE_WPAPI) {
+                    wpRestEndpoint = discoverWPRESTEndpoint(url);
                 }
+                // TODO: Eventually make the XML-RPC discovery only run if WP-API discovery fails
+                String xmlRpcEndpoint = verifyOrDiscoverXMLRPCEndpoint(url);
+                DiscoveryResultPayload payload = new DiscoveryResultPayload(xmlRpcEndpoint, wpRestEndpoint);
+                mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoveryResultAction(payload));
+            } catch (DiscoveryException e) {
+                // TODO: Handle tracking of XMLRPCDiscoveryException
+                // If a DiscoveryException is caught this high up, it means that either:
+                // 1. The discovery process has completed, and did not turn up a valid WordPress.com site
+                // 2. Discovery was halted early because the given site requires SSL validation, or HTTP AUTH login,
+                // or is a WordPress.com site, or is a completely invalid URL
+                DiscoveryResultPayload payload = new DiscoveryResultPayload(e.discoveryError, e.failedUrl);
+                mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoveryResultAction(payload));
             }
         }).start();
     }
 
-    private String verifyOrDiscoverXMLRPCEndpoint(final String siteUrl) throws DiscoveryException {
+    @NonNull
+    private String verifyOrDiscoverXMLRPCEndpoint(@NonNull final String siteUrl) throws DiscoveryException {
         if (TextUtils.isEmpty(siteUrl)) {
             throw new DiscoveryException(DiscoveryError.INVALID_URL, siteUrl);
         }
@@ -128,7 +135,8 @@ public class SelfHostedEndpointFinder {
         return xmlrpcUrl;
     }
 
-    private LinkedHashSet<String> getOrderedVerifyUrlsToTry(String siteUrl) throws DiscoveryException {
+    @NonNull
+    private LinkedHashSet<String> getOrderedVerifyUrlsToTry(@NonNull String siteUrl) throws DiscoveryException {
         LinkedHashSet<String> urlsToTry = new LinkedHashSet<>();
         final String sanitizedSiteUrlHttps = sanitizeSiteUrl(siteUrl, true);
         final String sanitizedSiteUrlHttp = sanitizeSiteUrl(siteUrl, false);
@@ -158,6 +166,7 @@ public class SelfHostedEndpointFinder {
         return urlsToTry;
     }
 
+    @Nullable
     private String verifyXMLRPCUrl(@NonNull final String siteUrl) throws DiscoveryException {
         // Ordered set of Strings that contains the URLs we want to try
         final LinkedHashSet<String> urlsToTry = getOrderedVerifyUrlsToTry(siteUrl);
@@ -190,7 +199,8 @@ public class SelfHostedEndpointFinder {
     // Attempts to retrieve the XML-RPC url for a self-hosted site.
     // See diagrams here https://github.com/wordpress-mobile/WordPress-Android/issues/3805 for details about the
     // whole process.
-    private String discoverXMLRPCEndpoint(String siteUrl) throws DiscoveryException {
+    @NonNull
+    private String discoverXMLRPCEndpoint(@NonNull String siteUrl) throws DiscoveryException {
         // Ordered set of Strings that contains the URLs we want to try
         final Set<String> urlsToTry = new LinkedHashSet<>();
 
@@ -259,7 +269,7 @@ public class SelfHostedEndpointFinder {
         }
 
         if (URLUtil.isValidUrl(xmlrpcUrl)) {
-            if (checkXMLRPCEndpointValidity(xmlrpcUrl)) {
+            if (xmlrpcUrl != null && checkXMLRPCEndpointValidity(xmlrpcUrl)) {
                 // Endpoint found and works fine.
                 return xmlrpcUrl;
             }
@@ -272,16 +282,10 @@ public class SelfHostedEndpointFinder {
     }
 
     /**
-     * Regex pattern for matching the RSD link found in most WordPress sites.
-     */
-    private static final Pattern RSD_LINK = Pattern.compile(
-            "<link\\s*?rel=\"EditURI\"\\s*?type=\"application/rsd\\+xml\"\\s*?title=\"RSD\"\\s*?href=\"(.*?)\"",
-            Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-
-    /**
      * Returns RSD URL based on regex match.
      */
-    private String getRSDMetaTagHrefRegEx(@NonNull String html) throws DiscoveryException {
+    @Nullable
+    private String getRSDMetaTagHrefRegEx(@NonNull String html) {
         Matcher matcher = RSD_LINK.matcher(html);
         if (matcher.find()) {
             return matcher.group(1);
@@ -289,7 +293,8 @@ public class SelfHostedEndpointFinder {
         return null;
     }
 
-    private String sanitizeSiteUrl(String siteUrl, boolean addHttps) throws DiscoveryException {
+    @NonNull
+    private String sanitizeSiteUrl(@NonNull String siteUrl, boolean addHttps) throws DiscoveryException {
         // Remove padding whitespace
         String url = siteUrl.trim();
 
@@ -317,7 +322,7 @@ public class SelfHostedEndpointFinder {
         return url;
     }
 
-    private boolean checkXMLRPCEndpointValidity(String url) throws DiscoveryException {
+    private boolean checkXMLRPCEndpointValidity(@NonNull String url) throws DiscoveryException {
         try {
             Object[] methods = mDiscoveryXMLRPCClient.listMethods(url);
             if (methods == null) {
@@ -357,7 +362,8 @@ public class SelfHostedEndpointFinder {
         return false;
     }
 
-    private String discoverWPRESTEndpoint(String url) throws DiscoveryException {
+    @Nullable
+    private String discoverWPRESTEndpoint(@NonNull String url) throws DiscoveryException {
         if (TextUtils.isEmpty(url)) {
             throw new DiscoveryException(DiscoveryError.INVALID_URL, url);
         }
