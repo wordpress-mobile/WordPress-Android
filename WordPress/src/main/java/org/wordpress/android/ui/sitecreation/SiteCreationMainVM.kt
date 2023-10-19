@@ -308,10 +308,7 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun onCheckoutResult(event: DomainRegistrationCompletedEvent?) {
-        if (event == null) {
-            wizardManager.setCurrentStepIndex(SiteCreationStep.values().size - 2) // plans has six steps
-            return onBackPressed()
-        }
+        if (event == null) return onBackPressed()
         domainsRegistrationTracker.trackDomainsPurchaseDomainSuccess(isSiteCreation = true)
         siteCreationState = siteCreationState.run {
             check(result is CreatedButNotFetched.InCart)
