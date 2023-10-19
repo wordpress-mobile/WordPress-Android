@@ -21,14 +21,13 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 import static org.wordpress.android.fluxc.model.LikeModel.TIMESTAMP_THRESHOLD;
 
 public class CommentSqlUtils {
-    public static int insertOrUpdateComment(CommentModel comment) {
+    public static int insertOrUpdateComment(@Nullable CommentModel comment) {
         if (comment == null) {
             return 0;
         }
@@ -62,7 +61,7 @@ public class CommentSqlUtils {
         }
     }
 
-    public static int removeComment(CommentModel comment) {
+    public static int removeComment(@Nullable CommentModel comment) {
         if (comment == null) {
             return 0;
         }
@@ -72,29 +71,26 @@ public class CommentSqlUtils {
                       .execute();
     }
 
-    public static int removeComments(SiteModel site) {
-        if (site == null) {
-            return 0;
-        }
-
+    public static int removeComments(@NonNull SiteModel site) {
         return WellSql.delete(CommentModel.class)
                       .where().equals(CommentModelTable.LOCAL_SITE_ID, site.getId()).endWhere()
                       .execute();
     }
 
-    public static int removeCommentGaps(SiteModel site, List<CommentModel> comments, int maxEntriesInResponse,
-                                        int requestOffset, @Nullable CommentStatus... statuses) {
-        if (site == null || comments == null || comments.isEmpty()) {
+    public static int removeCommentGaps(
+            @NonNull SiteModel site,
+            @NonNull List<CommentModel> comments,
+            int maxEntriesInResponse,
+            int requestOffset,
+            @Nullable CommentStatus... statuses) {
+        if (comments.isEmpty()) {
             return 0;
         }
 
-        Collections.sort(comments, new Comparator<CommentModel>() {
-            @Override
-            public int compare(CommentModel o1, CommentModel o2) {
-                long x = o2.getPublishedTimestamp();
-                long y = o1.getPublishedTimestamp();
-                return (x < y) ? -1 : ((x == y) ? 0 : 1);
-            }
+        comments.sort((o1, o2) -> {
+            long x = o2.getPublishedTimestamp();
+            long y = o1.getPublishedTimestamp();
+            return Long.compare(x, y);
         });
 
         ArrayList<Long> remoteIds = new ArrayList<>();
@@ -105,12 +101,18 @@ public class CommentSqlUtils {
         long startOfRange = comments.get(0).getPublishedTimestamp();
         long endOfRange = comments.get(comments.size() - 1).getPublishedTimestamp();
 
+        List<CommentStatus> sourceStatuses;
+        if (statuses != null) {
+            sourceStatuses = Arrays.asList(statuses);
+        } else {
+            sourceStatuses = Collections.emptyList();
+        }
         ArrayList<CommentStatus> targetStatuses = new ArrayList<>();
-        if (Arrays.asList(statuses).contains(CommentStatus.ALL)) {
+        if (sourceStatuses.contains(CommentStatus.ALL)) {
             targetStatuses.add(CommentStatus.APPROVED);
             targetStatuses.add(CommentStatus.UNAPPROVED);
         } else {
-            targetStatuses.addAll(Arrays.asList(statuses));
+            targetStatuses.addAll(sourceStatuses);
         }
 
         int numOfDeletedComments = 0;
@@ -155,6 +157,7 @@ public class CommentSqlUtils {
         return WellSql.delete(CommentModel.class).execute();
     }
 
+    @Nullable
     public static CommentModel getCommentByLocalCommentId(int localId) {
         List<CommentModel> results = WellSql.select(CommentModel.class)
                                             .where().equals(CommentModelTable.ID, localId).endWhere().getAsModel();
@@ -177,16 +180,18 @@ public class CommentSqlUtils {
         return results.get(0);
     }
 
-    private static SelectQuery<CommentModel> getCommentsQueryForSite(SiteModel site, CommentStatus... statuses) {
+    @NonNull
+    private static SelectQuery<CommentModel> getCommentsQueryForSite(
+            @NonNull SiteModel site,
+            @NonNull CommentStatus... statuses) {
         return getCommentsQueryForSite(site, 0, statuses);
     }
 
-    private static SelectQuery<CommentModel> getCommentsQueryForSite(SiteModel site, int limit,
-                                                                     CommentStatus... statuses) {
-        if (site == null) {
-            return null;
-        }
-
+    @NonNull
+    private static SelectQuery<CommentModel> getCommentsQueryForSite(
+            @NonNull SiteModel site,
+            int limit,
+            @NonNull CommentStatus... statuses) {
         SelectQuery<CommentModel> query = WellSql.select(CommentModel.class);
 
         if (limit > 0) {
@@ -204,29 +209,32 @@ public class CommentSqlUtils {
         return selectQueryBuilder.endGroup().endWhere();
     }
 
-    public static List<CommentModel> getCommentsForSite(SiteModel site, @Order int order, CommentStatus... statuses) {
+    @NonNull
+    public static List<CommentModel> getCommentsForSite(
+            @NonNull SiteModel site,
+            @Order int order,
+            @NonNull CommentStatus... statuses) {
         return getCommentsForSite(site, order, 0, statuses);
     }
 
-    public static List<CommentModel> getCommentsForSite(SiteModel site, @Order int order, int limit,
-                                                        CommentStatus... statuses) {
-        if (site == null) {
-            return Collections.emptyList();
-        }
-
+    @NonNull
+    public static List<CommentModel> getCommentsForSite(
+            @NonNull SiteModel site,
+            @Order int order,
+            int limit,
+            @NonNull CommentStatus... statuses) {
         return getCommentsQueryForSite(site, limit, statuses)
                 .orderBy(CommentModelTable.DATE_PUBLISHED, order)
                 .getAsModel();
     }
 
-    public static int getCommentsCountForSite(SiteModel site, CommentStatus... statuses) {
-        if (site == null) {
-            return 0;
-        }
-
+    public static int getCommentsCountForSite(
+            @NonNull SiteModel site,
+            @NonNull CommentStatus... statuses) {
         return (int) getCommentsQueryForSite(site, statuses).count();
     }
 
+    @SuppressWarnings("resource")
     public static int deleteCommentLikesAndPurgeExpired(long siteId, long remoteCommentId) {
         int numDeleted = WellSql.delete(LikeModel.class)
                                 .where()
@@ -272,11 +280,10 @@ public class CommentSqlUtils {
         return numDeleted;
     }
 
-    public static int insertOrUpdateCommentLikes(long siteId, long remoteCommentId, LikeModel like) {
-        if (null == like) {
-            return 0;
-        }
-
+    public static int insertOrUpdateCommentLikes(
+            long siteId,
+            long remoteCommentId,
+            @NonNull LikeModel like) {
         List<LikeModel> likeResult;
 
         // If the like already exists and has an id, we want to update it.
@@ -300,6 +307,7 @@ public class CommentSqlUtils {
         }
     }
 
+    @NonNull
     public static List<LikeModel> getCommentLikesByCommentId(long siteId, long remoteCommentId) {
         return WellSql.select(LikeModel.class)
                       .where()

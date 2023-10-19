@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.utils;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.model.CommentModel;
@@ -17,15 +18,19 @@ import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePaylo
 import java.util.ArrayList;
 
 public class CommentErrorUtils {
-    public static RemoteCommentResponsePayload commentErrorToFetchCommentPayload(BaseNetworkError error,
-                                                                                 @Nullable CommentModel comment) {
+    @NonNull
+    public static RemoteCommentResponsePayload commentErrorToFetchCommentPayload(
+            @NonNull BaseNetworkError error,
+            @Nullable CommentModel comment) {
         RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
         payload.error = new CommentError(genericToCommentError(error), getErrorMessage(error));
         return payload;
     }
 
-    public static FetchCommentsResponsePayload commentErrorToFetchCommentsPayload(BaseNetworkError error,
-                                                                                  SiteModel site) {
+    @NonNull
+    public static FetchCommentsResponsePayload commentErrorToFetchCommentsPayload(
+            @NonNull BaseNetworkError error,
+            @NonNull SiteModel site) {
         FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(
                 new ArrayList<>(), site, 0, 0, null
         );
@@ -33,8 +38,9 @@ public class CommentErrorUtils {
         return payload;
     }
 
+    @NonNull
     public static FetchedCommentLikesResponsePayload commentErrorToFetchedCommentLikesPayload(
-            BaseNetworkError error,
+            @NonNull BaseNetworkError error,
             long siteId,
             long commentId,
             boolean requestNextPage,
@@ -51,25 +57,25 @@ public class CommentErrorUtils {
         return payload;
     }
 
-    public static RemoteCommentResponsePayload commentErrorToPushCommentPayload(BaseNetworkError error,
-                                                                                CommentModel comment) {
+    @NonNull
+    public static RemoteCommentResponsePayload commentErrorToPushCommentPayload(
+            @NonNull BaseNetworkError error,
+            @NonNull CommentModel comment) {
         RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
         payload.error = new CommentError(genericToCommentError(error), getErrorMessage(error));
         return payload;
     }
 
-    public static CommentError networkToCommentError(BaseNetworkError error) {
+    @NonNull
+    public static CommentError networkToCommentError(@NonNull BaseNetworkError error) {
         return new CommentError(genericToCommentError(error), getErrorMessage(error));
     }
 
-    private static CommentErrorType genericToCommentError(BaseNetworkError error) {
+    @NonNull
+    private static CommentErrorType genericToCommentError(@NonNull BaseNetworkError error) {
         CommentErrorType errorType = CommentErrorType.GENERIC_ERROR;
-        if (error.isGeneric()) {
-            switch (error.type) {
-                case INVALID_RESPONSE:
-                    errorType = CommentErrorType.INVALID_RESPONSE;
-                    break;
-            }
+        if (error.isGeneric() && error.type == GenericErrorType.INVALID_RESPONSE) {
+            errorType = CommentErrorType.INVALID_RESPONSE;
         }
         if (error instanceof WPComGsonNetworkError) {
             WPComGsonNetworkError wpComGsonNetworkError = (WPComGsonNetworkError) error;
@@ -101,7 +107,8 @@ public class CommentErrorUtils {
         return errorType;
     }
 
-    private static String getErrorMessage(BaseNetworkError error) {
+    @NonNull
+    private static String getErrorMessage(@NonNull BaseNetworkError error) {
         return error.message;
     }
 }

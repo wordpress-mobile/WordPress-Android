@@ -192,9 +192,9 @@ public class CommentStore extends Store {
     }
 
     public static class CommentError implements OnChangedError {
-        public CommentErrorType type;
-        public String message;
-        public CommentError(CommentErrorType type, @NonNull String message) {
+        @NonNull public CommentErrorType type;
+        @NonNull public String message;
+        public CommentError(@NonNull CommentErrorType type, @NonNull String message) {
             this.type = type;
             this.message = message;
         }
@@ -205,25 +205,32 @@ public class CommentStore extends Store {
     public static class OnCommentChanged extends OnChanged<CommentError> {
         public int rowsAffected;
         public int offset;
-        public CommentAction causeOfChange;
+        @NonNull public CommentAction causeOfChange;
         @Nullable public CommentStatus requestedStatus;
-        public List<Integer> changedCommentsLocalIds = new ArrayList<>();
-        public OnCommentChanged(int rowsAffected) {
+        @NonNull public List<Integer> changedCommentsLocalIds = new ArrayList<>();
+        public OnCommentChanged(int rowsAffected, @NonNull CommentAction causeOfChange) {
             this.rowsAffected = rowsAffected;
+            this.causeOfChange = causeOfChange;
         }
     }
 
     public static class OnCommentLikesChanged extends OnChanged<CommentError> {
-        public CommentAction causeOfChange;
+        @NonNull public CommentAction causeOfChange;
         public final long siteId;
         public final long commentId;
-        public List<LikeModel> commentLikes = new ArrayList<>();
+        @NonNull public List<LikeModel> commentLikes = new ArrayList<>();
         public final boolean hasMore;
 
-        public OnCommentLikesChanged(long siteId, long commentId, boolean hasMore) {
+        public OnCommentLikesChanged(
+                long siteId,
+                long commentId,
+                boolean hasMore,
+                @NonNull CommentAction causeOfChange
+        ) {
             this.siteId = siteId;
             this.commentId = commentId;
             this.hasMore = hasMore;
+            this.causeOfChange = causeOfChange;
         }
     }
 
@@ -247,14 +254,20 @@ public class CommentStore extends Store {
      * @param statuses Array of status or CommentStatus.ALL to get all of them.
      * @param limit Maximum number of comments to return. 0 is unlimited.
      */
+    @NonNull
     @SuppressLint("WrongConstant")
-    public List<CommentModel> getCommentsForSite(SiteModel site, boolean orderByDateAscending, int limit,
-                                                 CommentStatus... statuses) {
+    public List<CommentModel> getCommentsForSite(
+            @NonNull SiteModel site,
+            boolean orderByDateAscending,
+            int limit,
+            @NonNull CommentStatus... statuses) {
         @Order int order = orderByDateAscending ? SelectQuery.ORDER_ASCENDING : SelectQuery.ORDER_DESCENDING;
         return CommentSqlUtils.getCommentsForSite(site, order, limit, statuses);
     }
 
-    public int getNumberOfCommentsForSite(SiteModel site, CommentStatus... statuses) {
+    public int getNumberOfCommentsForSite(
+            @NonNull SiteModel site,
+            @NonNull CommentStatus... statuses) {
         return CommentSqlUtils.getCommentsCountForSite(site, statuses);
     }
 
@@ -264,6 +277,7 @@ public class CommentStore extends Store {
         return CommentSqlUtils.getCommentBySiteAndRemoteId(site, remoteCommentId);
     }
 
+    @Nullable
     public CommentModel getCommentByLocalId(int localId) {
         return CommentSqlUtils.getCommentByLocalCommentId(localId);
     }
@@ -366,9 +380,8 @@ public class CommentStore extends Store {
         }
     }
 
-    private void handleCreatedNewComment(RemoteCommentResponsePayload payload) {
-        OnCommentChanged event = new OnCommentChanged(1);
-        event.causeOfChange = CommentAction.CREATE_NEW_COMMENT;
+    private void handleCreatedNewComment(@NonNull RemoteCommentResponsePayload payload) {
+        OnCommentChanged event = new OnCommentChanged(1, CommentAction.CREATE_NEW_COMMENT);
 
         // Update the comment from the DB
         if (!payload.isError()) {
@@ -381,37 +394,33 @@ public class CommentStore extends Store {
         emitChange(event);
     }
 
-    private void updateComment(CommentModel payload) {
+    private void updateComment(@NonNull CommentModel payload) {
         int rowsAffected = 0;
         if (!payload.isError()) {
             rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload);
         }
-        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        OnCommentChanged event = new OnCommentChanged(rowsAffected, CommentAction.UPDATE_COMMENT);
         event.changedCommentsLocalIds.add(payload.getId());
-        event.causeOfChange = CommentAction.UPDATE_COMMENT;
         emitChange(event);
     }
 
-    private void removeComment(CommentModel payload) {
+    private void removeComment(@NonNull CommentModel payload) {
         int rowsAffected = CommentSqlUtils.removeComment(payload);
-        OnCommentChanged event = new OnCommentChanged(rowsAffected);
-        event.causeOfChange = CommentAction.REMOVE_COMMENT;
+        OnCommentChanged event = new OnCommentChanged(rowsAffected, CommentAction.REMOVE_COMMENT);
         event.changedCommentsLocalIds.add(payload.getId());
         emitChange(event);
     }
 
-    private void removeComments(SiteModel payload) {
+    private void removeComments(@NonNull SiteModel payload) {
         int rowsAffected = CommentSqlUtils.removeComments(payload);
-        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        OnCommentChanged event = new OnCommentChanged(rowsAffected, CommentAction.REMOVE_COMMENTS);
         // Doesn't make sense to update here event.changedCommentsLocalIds
-        event.causeOfChange = CommentAction.REMOVE_COMMENTS;
         emitChange(event);
     }
 
     private void removeAllComments() {
         int rowsAffected = CommentSqlUtils.deleteAllComments();
-        OnCommentChanged event = new OnCommentChanged(rowsAffected);
-        event.causeOfChange = CommentAction.REMOVE_ALL_COMMENTS;
+        OnCommentChanged event = new OnCommentChanged(rowsAffected, CommentAction.REMOVE_ALL_COMMENTS);
         emitChange(event);
     }
 
@@ -429,12 +438,11 @@ public class CommentStore extends Store {
         }
     }
 
-    private void handleDeletedCommentResponse(RemoteCommentResponsePayload payload) {
-        OnCommentChanged event = new OnCommentChanged(0);
+    private void handleDeletedCommentResponse(@NonNull RemoteCommentResponsePayload payload) {
+        OnCommentChanged event = new OnCommentChanged(0, CommentAction.DELETE_COMMENT);
         if (payload.comment != null) {
             event.changedCommentsLocalIds.add(payload.comment.getId());
         }
-        event.causeOfChange = CommentAction.DELETE_COMMENT;
         event.error = payload.error;
         if (!payload.isError()) {
             // Delete once means "send to trash", so we don't want to remove it from the DB, just update it's
@@ -458,9 +466,9 @@ public class CommentStore extends Store {
         }
     }
 
-    private void handleFetchCommentsResponse(FetchCommentsResponsePayload payload) {
+    private void handleFetchCommentsResponse(@NonNull FetchCommentsResponsePayload payload) {
         int rowsAffected = 0;
-        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        OnCommentChanged event = new OnCommentChanged(rowsAffected, CommentAction.FETCH_COMMENTS);
         if (!payload.isError()) {
             // Find comments that were deleted or moved to a different status on the server and remove them from
             // local DB.
@@ -472,7 +480,6 @@ public class CommentStore extends Store {
                 event.changedCommentsLocalIds.add(comment.getId());
             }
         }
-        event.causeOfChange = CommentAction.FETCH_COMMENTS;
         event.error = payload.error;
         event.requestedStatus = payload.requestedStatus;
         event.offset = payload.offset;
@@ -487,23 +494,21 @@ public class CommentStore extends Store {
                 mCommentXMLRPCClient.pushComment(payload.site, payload.comment);
             }
         } else {
-            OnCommentChanged event = new OnCommentChanged(0);
-            event.causeOfChange = CommentAction.PUSH_COMMENT;
+            OnCommentChanged event = new OnCommentChanged(0, CommentAction.PUSH_COMMENT);
             event.error = new CommentError(CommentErrorType.INVALID_INPUT, "Comment can't be null");
             emitChange(event);
         }
     }
 
-    private void handlePushCommentResponse(RemoteCommentResponsePayload payload) {
+    private void handlePushCommentResponse(@NonNull RemoteCommentResponsePayload payload) {
         int rowsAffected = 0;
         if (!payload.isError()) {
             rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
         }
-        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        OnCommentChanged event = new OnCommentChanged(rowsAffected, CommentAction.PUSH_COMMENT);
         if (payload.comment != null) {
             event.changedCommentsLocalIds.add(payload.comment.getId());
         }
-        event.causeOfChange = CommentAction.PUSH_COMMENT;
         event.error = payload.error;
         emitChange(event);
     }
@@ -524,16 +529,15 @@ public class CommentStore extends Store {
         }
     }
 
-    private void handleFetchCommentResponse(RemoteCommentResponsePayload payload) {
+    private void handleFetchCommentResponse(@NonNull RemoteCommentResponsePayload payload) {
         int rowsAffected = 0;
         if (!payload.isError()) {
             rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
         }
-        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        OnCommentChanged event = new OnCommentChanged(rowsAffected, CommentAction.FETCH_COMMENT);
         if (payload.comment != null) {
             event.changedCommentsLocalIds.add(payload.comment.getId());
         }
-        event.causeOfChange = CommentAction.FETCH_COMMENT;
         event.error = payload.error;
         emitChange(event);
     }
@@ -548,8 +552,7 @@ public class CommentStore extends Store {
         if (payload.site.isUsingWpComRestApi()) {
             mCommentRestClient.likeComment(payload.site, getPrioritizedRemoteCommentId(payload), comment, payload.like);
         } else {
-            OnCommentChanged event = new OnCommentChanged(0);
-            event.causeOfChange = CommentAction.LIKE_COMMENT;
+            OnCommentChanged event = new OnCommentChanged(0, CommentAction.LIKE_COMMENT);
             if (payload.comment != null) {
                 event.changedCommentsLocalIds.add(payload.comment.getId());
             }
@@ -558,16 +561,15 @@ public class CommentStore extends Store {
         }
     }
 
-    private void handleLikedCommentResponse(RemoteCommentResponsePayload payload) {
+    private void handleLikedCommentResponse(@NonNull RemoteCommentResponsePayload payload) {
         int rowsAffected = 0;
         if (!payload.isError()) {
             rowsAffected = CommentSqlUtils.insertOrUpdateComment(payload.comment);
         }
-        OnCommentChanged event = new OnCommentChanged(rowsAffected);
+        OnCommentChanged event = new OnCommentChanged(rowsAffected, CommentAction.LIKE_COMMENT);
         if (payload.comment != null) {
             event.changedCommentsLocalIds.add(payload.comment.getId());
         }
-        event.causeOfChange = CommentAction.LIKE_COMMENT;
         event.error = payload.error;
         emitChange(event);
     }
@@ -581,11 +583,12 @@ public class CommentStore extends Store {
         );
     }
 
-    private void handleFetchedCommentLikes(FetchedCommentLikesResponsePayload payload) {
+    private void handleFetchedCommentLikes(@NonNull FetchedCommentLikesResponsePayload payload) {
         OnCommentLikesChanged event = new OnCommentLikesChanged(
                 payload.siteId,
                 payload.commentRemoteId,
-                payload.hasMore
+                payload.hasMore,
+                CommentAction.FETCHED_COMMENT_LIKES
         );
         if (!payload.isError()) {
             if (!payload.isRequestNextPage) {
@@ -607,7 +610,6 @@ public class CommentStore extends Store {
             event.commentLikes.addAll(cachedLikes);
         }
 
-        event.causeOfChange = CommentAction.FETCHED_COMMENT_LIKES;
         event.error = payload.error;
         emitChange(event);
     }
