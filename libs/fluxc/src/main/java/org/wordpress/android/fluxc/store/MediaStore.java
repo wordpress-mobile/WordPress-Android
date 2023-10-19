@@ -783,6 +783,7 @@ public class MediaStore extends Store {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void notifyMediaUploadError(MediaErrorType errorType, String errorMessage, MediaModel media,
                                         String logMessage, MalformedMediaArgSubType argErrorType) {
         OnMediaUploaded onMediaUploaded = new OnMediaUploaded(media, 1, false, false);
