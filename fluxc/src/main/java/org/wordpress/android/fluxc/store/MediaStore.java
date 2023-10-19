@@ -274,7 +274,7 @@ public class MediaStore extends Store {
             if (type == MediaErrorType.BAD_REQUEST) {
                 String[] splitMsg = message.split("\\|", 2);
 
-                if (null != splitMsg && splitMsg.length > 1) {
+                if (splitMsg.length > 1) {
                     String userMessage = splitMsg[1];
 
                     if (TextUtils.isEmpty(userMessage)) {
