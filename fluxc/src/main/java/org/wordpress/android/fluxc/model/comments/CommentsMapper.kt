@@ -64,11 +64,11 @@ class CommentsMapper @Inject constructor(
             this.authorEmail = entity.authorEmail
             this.authorProfileImageUrl = entity.authorProfileImageUrl
             this.postTitle = entity.postTitle
-            this.status = entity.status
-            this.datePublished = entity.datePublished
+            this.status = entity.status ?: ""
+            this.datePublished = entity.datePublished ?: ""
             this.publishedTimestamp = entity.publishedTimestamp
-            this.content = entity.content
-            this.url = entity.url
+            this.content = entity.content ?: ""
+            this.url = entity.url ?: ""
             this.hasParent = entity.hasParent
             this.parentId = entity.parentId
             this.iLike = entity.iLike

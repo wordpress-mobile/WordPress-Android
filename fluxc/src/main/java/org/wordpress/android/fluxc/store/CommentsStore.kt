@@ -654,8 +654,7 @@ class CommentsStore @Inject constructor(
     )
     private suspend fun onPushComment(payload: RemoteCommentPayload): OnCommentChanged {
         if (payload.comment == null) {
-            return OnCommentChanged(0).apply {
-                this.causeOfChange = CommentAction.PUSH_COMMENT
+            return OnCommentChanged(0, CommentAction.PUSH_COMMENT).apply {
                 this.error = CommentError(INVALID_INPUT, "Comment can't be null")
             }
         }
@@ -715,9 +714,8 @@ class CommentsStore @Inject constructor(
         status: CommentStatus? = null,
         offset: Int? = null
     ): OnCommentChanged {
-        return OnCommentChanged(rowsAffected).apply {
+        return OnCommentChanged(rowsAffected, actionType).apply {
             this.changedCommentsLocalIds.addAll(commentLocalIds)
-            this.causeOfChange = actionType
             this.error = error
             status?.let {
                 this.requestedStatus = it
