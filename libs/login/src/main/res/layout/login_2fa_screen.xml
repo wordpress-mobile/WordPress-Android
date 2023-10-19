@@ -23,6 +23,15 @@
         android:inputType="numberDecimal" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_security_key_button"
+        style="@style/Widget.LoginFlow.Button.Tertiary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/margin_none"
+        android:paddingStart="@dimen/margin_none"
+        tools:text="@string/login_text_security_key" />
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/login_otp_button"
         style="@style/Widget.LoginFlow.Button.Tertiary"
         android:layout_width="wrap_content"

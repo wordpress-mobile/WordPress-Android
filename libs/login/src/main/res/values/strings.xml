@@ -23,6 +23,7 @@
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
     <string name="login_text_otp">Text me a code instead</string>
+    <string name="login_text_security_key">Continue with security key</string>
     <string name="login_text_otp_another">Text me another code instead</string>
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
     <string name="email_not_registered_wpcom">Hmm, we can\'t find a WordPress.com account connected to this email address.</string>
