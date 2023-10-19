@@ -309,13 +309,13 @@ public class MediaStore extends Store {
         public MediaAction cause;
         public List<MediaModel> mediaList;
         public OnMediaChanged(MediaAction cause) {
-            this(cause, new ArrayList<MediaModel>(), null);
+            this(cause, new ArrayList<>(), null);
         }
         public OnMediaChanged(MediaAction cause, @NonNull List<MediaModel> mediaList) {
             this(cause, mediaList, null);
         }
         public OnMediaChanged(MediaAction cause, MediaError error) {
-            this(cause, new ArrayList<MediaModel>(), error);
+            this(cause, new ArrayList<>(), error);
         }
         public OnMediaChanged(MediaAction cause, @NonNull List<MediaModel> mediaList, MediaError error) {
             this.cause = cause;
