@@ -169,15 +169,25 @@ public class MediaStore extends Store {
      * Actions: UPLOADED_MEDIA, CANCELED_MEDIA_UPLOAD
      */
     public static class ProgressPayload extends Payload<MediaError> {
-        public MediaModel media;
+        @Nullable public MediaModel media;
         public float progress;
         public boolean completed;
         public boolean canceled;
-        public ProgressPayload(MediaModel media, float progress, boolean completed, boolean canceled) {
+
+        public ProgressPayload(
+                @NonNull MediaModel media,
+                float progress,
+                boolean completed,
+                boolean canceled) {
             this(media, progress, completed, null);
             this.canceled = canceled;
         }
-        public ProgressPayload(MediaModel media, float progress, boolean completed, MediaError error) {
+
+        public ProgressPayload(
+                @Nullable MediaModel media,
+                float progress,
+                boolean completed,
+                @Nullable MediaError error) {
             this.media = media;
             this.progress = progress;
             this.completed = completed;
@@ -753,7 +763,7 @@ public class MediaStore extends Store {
     // Action implementations
     //
 
-    void updateMedia(MediaModel media, boolean emit) {
+    void updateMedia(@Nullable MediaModel media, boolean emit) {
         OnMediaChanged event = new OnMediaChanged(MediaAction.UPDATE_MEDIA);
 
         if (media == null) {
