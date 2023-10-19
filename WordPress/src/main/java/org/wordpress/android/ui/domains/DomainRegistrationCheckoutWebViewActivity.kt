@@ -35,7 +35,8 @@ class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity(), DomainReg
     }
 
     private fun cancelCheckout() {
-        onCheckoutSuccess()
+        setResult(RESULT_CANCELED, intent)
+        finish()
     }
 
     private fun setupNavigationButton() {
@@ -99,10 +100,10 @@ class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity(), DomainReg
 
         override fun parseResult(resultCode: Int, intent: Intent?): DomainRegistrationCompletedEvent? {
             val data = intent?.takeIf { it.hasExtra(REGISTRATION_DOMAIN_NAME) && it.hasExtra(REGISTRATION_EMAIL) }
-            if (resultCode == RESULT_OK && data != null) {
+            if ((resultCode == RESULT_OK || resultCode == RESULT_CANCELED) && data != null) {
                 val domainName = data.getStringExtra(REGISTRATION_DOMAIN_NAME).orEmpty()
                 val email = data.getStringExtra(REGISTRATION_EMAIL).orEmpty()
-                return DomainRegistrationCompletedEvent(domainName, email)
+                return DomainRegistrationCompletedEvent(domainName, email, resultCode == RESULT_CANCELED)
             }
             return null
         }
