@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_AUTHOR_FILTER_CHANGED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_CREATE_POST_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANGED
 import org.wordpress.android.fluxc.Dispatcher
@@ -32,7 +33,6 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
@@ -48,7 +48,6 @@ import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -69,6 +68,8 @@ private val FAB_VISIBLE_POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, T
 val POST_LIST_PAGES = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
 private const val TRACKS_SELECTED_TAB = "selected_tab"
 private const val TRACKS_SELECTED_AUTHOR_FILTER = "author_filter_selection"
+private const val TRACKS_ACTION = "action"
+private const val TRACKS_CREATE_NEW_POST = "create_new_post"
 
 class PostListMainViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -85,9 +86,7 @@ class PostListMainViewModel @Inject constructor(
     private val savePostToDbUseCase: SavePostToDbUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val uploadStarter: UploadStarter,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val siteUtilsWrapper: SiteUtilsWrapper
+    private val uploadStarter: UploadStarter
 ) : ViewModel(), CoroutineScope {
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
@@ -146,15 +145,6 @@ class PostListMainViewModel @Inject constructor(
 
     private val _searchQuery = MutableLiveData<String?>()
     val searchQuery: LiveData<String?> = _searchQuery
-
-    private val _onFabClicked = MutableLiveData<Event<Unit>>()
-    val onFabClicked: LiveData<Event<Unit>> = _onFabClicked
-
-    private val _onFabLongPressedForCreateMenu = MutableLiveData<Event<Unit>>()
-    val onFabLongPressedForCreateMenu: LiveData<Event<Unit>> = _onFabLongPressedForCreateMenu
-
-    private val _onFabLongPressedForPostList = MutableLiveData<Event<Unit>>()
-    val onFabLongPressedForPostList: LiveData<Event<Unit>> = _onFabLongPressedForPostList
 
     private val uploadStatusTracker = PostModelUploadStatusTracker(
         uploadStore = uploadStore,
@@ -291,7 +281,6 @@ class PostListMainViewModel @Inject constructor(
         )
 
         _authorSelectionUpdated.value = authorFilterSelection
-      //  Log.i(javaClass.simpleName, "***=> Is site single user site: ${site.isSingleUserSite}")
         _viewState.value = PostListMainViewState(
             isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()) &&
                     isSearchExpanded.value != true,
@@ -379,19 +368,11 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun fabClicked() {
-        if (siteUtilsWrapper.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
-            _onFabClicked.postValue(Event(Unit))
-        } else {
-            newPost()
-        }
-    }
+        analyticsTracker.track(POST_LIST_CREATE_POST_TAPPED,
+            mapOf(TRACKS_ACTION to TRACKS_CREATE_NEW_POST )
+        )
 
-    fun newPost() {
         postActionHandler.newPost()
-    }
-
-    fun newStoryPost() {
-        postActionHandler.newStoryPost()
     }
 
     fun updateAuthorFilterSelection(selectionId: Long) {
@@ -617,14 +598,6 @@ class PostListMainViewModel @Inject constructor(
     fun onBottomSheetPublishButtonClicked() {
         editPostRepository.getEditablePost()?.let {
             postActionHandler.publishPost(it)
-        }
-    }
-
-    fun onFabLongPressed() {
-        if (siteUtilsWrapper.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
-            _onFabLongPressedForCreateMenu.postValue(Event(Unit))
-        } else {
-            _onFabLongPressedForPostList.postValue(Event(Unit))
         }
     }
 
