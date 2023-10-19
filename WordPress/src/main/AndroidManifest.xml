@@ -798,6 +798,10 @@
             android:name=".ui.jetpackplugininstall.fullplugin.install.JetpackFullPluginInstallActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
+        <activity
+            android:name=".ui.domains.management.purchasedomain.PurchaseDomainActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+
         <!-- Services -->
         <service
             android:name=".ui.uploads.UploadService"

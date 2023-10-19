@@ -13,8 +13,10 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
@@ -61,6 +63,7 @@ object NavigationIcons {
  * @param navigationIcon The composable to be used as navigation icon, preferably one of the default options from
  * [NavigationIcons]. It can be an composable function providing an [Icon] as well, since it is used inside an
  * [IconButton]. Note that leaving this field null will cause the navigation icon to not be shown.
+ * @param elevation The elevation of this MainTopAppBar.
  * @param onNavigationIconClick The lambda to be invoked when the navigation icon is pressed.
  * @param actions The actions displayed at the end of the TopAppBar. This should typically be IconButtons
  */
@@ -69,14 +72,17 @@ fun MainTopAppBar(
     title: String?,
     modifier: Modifier = Modifier,
     navigationIcon: NavigationIcon? = null,
+    elevation: Dp = 0.dp,
+    backgroundColor: Color = MaterialTheme.colors.surface,
+    contentColor: Color = MaterialTheme.colors.onSurface,
     onNavigationIconClick: () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
         modifier = modifier,
-        backgroundColor = MaterialTheme.colors.surface,
-        contentColor = MaterialTheme.colors.onSurface,
-        elevation = 0.dp,
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        elevation = elevation,
         title = title?.let {
             withFullContentAlpha {
                 Text(title)
