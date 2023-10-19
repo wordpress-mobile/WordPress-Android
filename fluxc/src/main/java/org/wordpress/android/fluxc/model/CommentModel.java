@@ -1,5 +1,8 @@
 package org.wordpress.android.fluxc.model;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
@@ -11,6 +14,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import java.io.Serializable;
 
 @Table
+@SuppressWarnings("NotNullFieldNotInitialized")
 public class CommentModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
     private static final long serialVersionUID = 3454722213760369852L;
 
@@ -23,19 +27,19 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
     @Column private long mRemoteSiteId;
 
     // Comment author
-    @Column private String mAuthorUrl;
-    @Column private String mAuthorName;
-    @Column private String mAuthorEmail;
+    @Nullable @Column private String mAuthorUrl;
+    @Nullable @Column private String mAuthorName;
+    @Nullable @Column private String mAuthorEmail;
     @Column private long mAuthorId;
-    @Column private String mAuthorProfileImageUrl;
+    @Nullable @Column private String mAuthorProfileImageUrl;
 
     // Comment data
-    @Column private String mPostTitle;
-    @Column private String mStatus;
-    @Column private String mDatePublished;
+    @Nullable @Column private String mPostTitle;
+    @NonNull @Column private String mStatus;
+    @NonNull @Column private String mDatePublished;
     @Column private long mPublishedTimestamp;
-    @Column private String mContent;
-    @Column private String mUrl;
+    @NonNull @Column private String mContent;
+    @NonNull @Column private String mUrl;
 
     // Parent Comment Data
     @Column private boolean mHasParent;
@@ -54,9 +58,6 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
         mId = id;
     }
 
-    // not stored in db - denotes the hierarchical level of this comment
-    public transient int level = 0;
-
     public long getRemoteCommentId() {
         return mRemoteCommentId;
     }
@@ -73,67 +74,75 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
         mRemotePostId = remotePostId;
     }
 
+    @Nullable
     public String getAuthorUrl() {
         return mAuthorUrl;
     }
 
-    public void setAuthorUrl(String authorUrl) {
+    public void setAuthorUrl(@Nullable String authorUrl) {
         this.mAuthorUrl = authorUrl;
     }
 
+    @Nullable
     public String getAuthorName() {
         return mAuthorName;
     }
 
-    public void setAuthorName(String authorName) {
+    public void setAuthorName(@Nullable String authorName) {
         this.mAuthorName = authorName;
     }
 
+    @Nullable
     public String getAuthorEmail() {
         return mAuthorEmail;
     }
 
-    public void setAuthorEmail(String authorEmail) {
+    public void setAuthorEmail(@Nullable String authorEmail) {
         this.mAuthorEmail = authorEmail;
     }
 
+    @Nullable
     public String getAuthorProfileImageUrl() {
         return mAuthorProfileImageUrl;
     }
 
-    public void setAuthorProfileImageUrl(String authorProfileImageUrl) {
+    public void setAuthorProfileImageUrl(@Nullable String authorProfileImageUrl) {
         this.mAuthorProfileImageUrl = authorProfileImageUrl;
     }
 
+    @Nullable
     public String getPostTitle() {
         return mPostTitle;
     }
 
-    public void setPostTitle(String postTitle) {
+    public void setPostTitle(@Nullable String postTitle) {
         this.mPostTitle = postTitle;
     }
 
+    @NonNull
     public String getStatus() {
         return mStatus;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(@NonNull String status) {
         this.mStatus = status;
     }
 
+    @NonNull
     public String getDatePublished() {
         return mDatePublished;
     }
 
-    public void setDatePublished(String datePublished) {
+    public void setDatePublished(@NonNull String datePublished) {
         this.mDatePublished = datePublished;
     }
 
+    @NonNull
     public String getContent() {
         return mContent;
     }
 
-    public void setContent(String content) {
+    public void setContent(@NonNull String content) {
         this.mContent = content;
     }
 
@@ -169,11 +178,12 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
         mILike = iLike;
     }
 
+    @NonNull
     public String getUrl() {
         return mUrl;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(@NonNull String url) {
         mUrl = url;
     }
 
