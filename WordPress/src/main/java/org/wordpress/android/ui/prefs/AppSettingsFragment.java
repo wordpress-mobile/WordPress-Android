@@ -48,7 +48,6 @@ import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet.LocalePickerCallback;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
@@ -67,7 +66,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig;
 import org.wordpress.android.viewmodel.ContextProvider;
 
 import java.util.Collections;
@@ -108,7 +106,6 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject ContextProvider mContextProvider;
     @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
-    @Inject MySiteDashboardTabsFeatureConfig mMySiteDashboardTabsFeatureConfig;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject LocaleProvider mLocaleProvider;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mOpenWebLinksWithJetpackHelper;
@@ -154,9 +151,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mAppThemePreference = (ListPreference) findPreference(getString(R.string.pref_key_app_theme));
         mAppThemePreference.setOnPreferenceChangeListener(this);
-
-        mInitialScreenPreference = (ListPreference) findPreference(getString(R.string.pref_key_initial_screen));
-        mInitialScreenPreference.setOnPreferenceChangeListener(this);
 
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
@@ -224,16 +218,8 @@ public class AppSettingsFragment extends PreferenceFragment
             removeExperimentalCategory();
         }
 
-        if (!mMySiteDashboardTabsFeatureConfig.isEnabled()) {
-            removeInitialScreen();
-        }
-
         if (!mOpenWebLinksWithJetpackHelper.shouldShowAppSetting()) {
             removeOpenWebLinksWithJetpack();
-        }
-
-        if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
-            removeInitialScreen();
         }
 
         final boolean showPrivacySettings = getActivity()
@@ -319,13 +305,6 @@ public class AppSettingsFragment extends PreferenceFragment
         preferenceScreen.addPreference(mWhatsNew);
     }
 
-    private void removeInitialScreen() {
-        Preference initialScreenPreference =
-                findPreference(getString(R.string.pref_key_initial_screen));
-        PreferenceScreen preferenceScreen =
-                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
-        preferenceScreen.removePreference(initialScreenPreference);
-    }
 
     private void removeOpenWebLinksWithJetpack() {
         Preference openWebLinksWithJetpackPreference =
@@ -491,13 +470,6 @@ public class AppSettingsFragment extends PreferenceFragment
                     .singletonMap(TRACK_STYLE, (String) newValue));
             // restart activity to make sure changes are applied to PreferenceScreen
             getActivity().recreate();
-        } else if (preference == mInitialScreenPreference) {
-            String trackValue = newValue.equals(MySiteTabType.SITE_MENU.getLabel())
-                    ? MySiteTabType.SITE_MENU.getTrackingLabel()
-                    : MySiteTabType.DASHBOARD.getTrackingLabel();
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("selected", trackValue);
-            AnalyticsTracker.track(Stat.APP_SETTINGS_INITIAL_SCREEN_CHANGED, properties);
         } else if (preference == mReportCrashPref) {
             AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED, Collections
                     .singletonMap(TRACK_ENABLED, newValue));

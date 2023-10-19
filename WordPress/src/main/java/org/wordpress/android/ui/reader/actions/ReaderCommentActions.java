@@ -2,6 +2,8 @@ package org.wordpress.android.ui.reader.actions;
 
 import android.text.TextUtils;
 
+import androidx.annotation.Nullable;
+
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
@@ -39,7 +41,7 @@ public class ReaderCommentActions {
      * add the passed comment text to the passed post - caller must pass a unique "fake" comment id
      * to give the comment that's generated locally
      */
-    public static ReaderComment submitPostComment(final ReaderPost post,
+    public static ReaderComment submitPostComment(final @Nullable ReaderPost post,
                                                   final long fakeCommentId,
                                                   final String commentText,
                                                   final long replyToCommentId,

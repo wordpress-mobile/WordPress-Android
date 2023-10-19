@@ -1,4 +1,0 @@
-23.3:
-- Vi har ändrat hur aviseringar visas när du infogar media i block från en URL.
-- Det är enklare att se skillnaden mellan platshållartext och faktiskt innehåll i blockbaserade teman.
-- Adminpanelskorten för Min webbplats kan anpassas med knappen "Anpassa Hem-fliken".

@@ -14,6 +14,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.DISMISS
+import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.DISMISS_FOR_JETPACK_REMOVAL
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.SHOW_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.START_SITE_CONNECTION_FLOW
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.START_SITE_CREATION_FLOW
@@ -61,6 +62,7 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
         START_SITE_CONNECTION_FLOW -> startSiteConnectionFlow()
         SHOW_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY -> showJetpackIndividualPluginOverlay()
         DISMISS -> dismiss()
+        DISMISS_FOR_JETPACK_REMOVAL -> dismissForJetpackRemoval()
     }
 
     private fun startSiteCreationFlow() {
@@ -75,6 +77,11 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
 
     private fun dismiss() {
         ActivityLauncher.viewReader(this)
+        finish()
+    }
+
+    private fun dismissForJetpackRemoval() {
+        ActivityLauncher.viewMySite(this)
         finish()
     }
 

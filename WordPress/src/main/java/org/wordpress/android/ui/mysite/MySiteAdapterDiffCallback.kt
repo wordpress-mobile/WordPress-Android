@@ -1,36 +1,36 @@
 package org.wordpress.android.ui.mysite
 
 import androidx.recyclerview.widget.DiffUtil
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.BlazeCampaignsCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.PromoteWithBlazeCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainTransferCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorWithinCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackSwitchMenu
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PersonalizeCardModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainTransferCardModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.PromoteWithBlazeCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.BlazeCampaignsCardModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorWithinCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard
 
 @Suppress("ComplexMethod")
 object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
     override fun areItemsTheSame(oldItem: MySiteCardAndItem, updatedItem: MySiteCardAndItem): Boolean {
         return oldItem.type == updatedItem.type && when {
-            oldItem is QuickLinkRibbon && updatedItem is QuickLinkRibbon -> true
+            oldItem is QuickLinksItem && updatedItem is QuickLinksItem -> true
             oldItem is DomainRegistrationCard && updatedItem is DomainRegistrationCard -> true
             oldItem is QuickStartCard && updatedItem is QuickStartCard -> true
             oldItem is InfoItem && updatedItem is InfoItem -> oldItem.title == updatedItem.title

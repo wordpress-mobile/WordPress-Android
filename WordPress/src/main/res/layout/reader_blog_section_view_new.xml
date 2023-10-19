@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/blog_section_image_blog_avatar"
+        style="@style/ReaderImageView.Avatar.OvalSurfaceBackground"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:importantForAccessibility="no"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/blog_section_text_blog_name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:src="@drawable/ic_blaze_overlay_image"
+        tools:ignore="RtlSymmetry" />
+
+    <ImageView
+        android:id="@+id/blog_section_image_author_avatar"
+        style="@style/ReaderImageView.Avatar.ExtraExtraSmall.OvalSurfaceBackground"
+        android:importantForAccessibility="no"
+        app:layout_constraintEnd_toEndOf="@id/blog_section_image_blog_avatar"
+        app:layout_constraintBottom_toBottomOf="@id/blog_section_image_blog_avatar"
+        tools:ignore="RtlSymmetry"
+        tools:src="@drawable/login_prologue_third_asset_three" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/blog_section_text_blog_name"
+        style="@style/ReaderTextView.PostDetail.BlogSection.Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:includeFontPadding="false"
+        app:layout_constraintStart_toEndOf="@id/blog_section_image_blog_avatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/blog_section_text_author"
+        tools:text="My Blog Name" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/blog_section_text_author"
+        style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_extra_small"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textAlignment="viewStart"
+        app:layout_constraintStart_toStartOf="@id/blog_section_text_blog_name"
+        app:layout_constraintEnd_toStartOf="@id/blog_section_dot_separator"
+        app:layout_constraintTop_toBottomOf="@id/blog_section_text_blog_name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        tools:text="Author Name" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/blog_section_dot_separator"
+        style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:text="@string/reader_dot_separator"
+        android:textAlignment="viewStart"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/blog_section_text_author"
+        app:layout_constraintEnd_toStartOf="@id/blog_section_text_dateline"
+        app:layout_constraintTop_toTopOf="@id/blog_section_text_author"
+        app:layout_constraintBottom_toBottomOf="@id/blog_section_text_author"
+        app:layout_constrainedWidth="true"
+        tools:visibility="visible"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/blog_section_text_dateline"
+        style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        app:layout_constraintStart_toEndOf="@id/blog_section_dot_separator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/blog_section_text_author"
+        app:layout_constraintBottom_toBottomOf="@id/blog_section_text_author"
+        app:layout_constrainedWidth="true"
+        tools:text="1h ago" />
+</androidx.constraintlayout.widget.ConstraintLayout>

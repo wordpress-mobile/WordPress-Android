@@ -12,7 +12,5 @@ sealed class ReaderPostDetailsHeaderViewUiState {
         val blogSectionUiState: ReaderBlogSectionUiState,
         val followButtonUiState: FollowButtonUiState,
         val dateLine: String
-    ) : ReaderPostDetailsHeaderViewUiState() {
-        val dotSeparatorVisibility: Boolean = authorName != null
-    }
+    ) : ReaderPostDetailsHeaderViewUiState()
 }

@@ -5,18 +5,15 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistration
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
-import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import javax.inject.Inject
 
 class CardsBuilder @Inject constructor(
     private val quickStartCardBuilder: QuickStartCardBuilder,
-    private val quickLinkRibbonBuilder: QuickLinkRibbonBuilder,
     private val dashboardCardsBuilder: CardsBuilder,
     private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
 ) {
@@ -25,14 +22,9 @@ class CardsBuilder @Inject constructor(
         domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,
         quickStartCardBuilderParams: QuickStartCardBuilderParams,
         dashboardCardsBuilderParams: DashboardCardsBuilderParams,
-        quickLinkRibbonBuilderParams: QuickLinkRibbonBuilderParams,
         jetpackInstallFullPluginCardBuilderParams: JetpackInstallFullPluginCardBuilderParams,
-        isMySiteTabsEnabled: Boolean
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
-        if (isMySiteTabsEnabled) {
-            cards.add(quickLinkRibbonBuilder.build(quickLinkRibbonBuilderParams))
-        }
         jetpackInstallFullPluginCardBuilder.build(jetpackInstallFullPluginCardBuilderParams)?.let {
             cards.add(it)
         }

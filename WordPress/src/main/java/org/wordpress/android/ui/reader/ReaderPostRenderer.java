@@ -50,9 +50,11 @@ public class ReaderPostRenderer {
     private String mRenderedHtml;
     private ImageSizeMap mAttachmentSizes;
     private ReaderCssProvider mCssProvider;
+    private boolean mUseSansSerifForContent = false;
 
     @SuppressLint("SetJavaScriptEnabled")
-    public ReaderPostRenderer(ReaderWebView webView, ReaderPost post, ReaderCssProvider cssProvider) {
+    public ReaderPostRenderer(ReaderWebView webView, ReaderPost post, ReaderCssProvider cssProvider,
+                              boolean useSansSerifForContent) {
         if (webView == null) {
             throw new IllegalArgumentException("ReaderPostRenderer requires a webView");
         }
@@ -60,6 +62,7 @@ public class ReaderPostRenderer {
             throw new IllegalArgumentException("ReaderPostRenderer requires a post");
         }
 
+        mUseSansSerifForContent = useSansSerifForContent;
         mPost = post;
         mWeakWebView = new WeakReference<>(webView);
         mResourceVars = new ReaderResourceVars(webView.getContext());
@@ -367,8 +370,13 @@ public class ReaderPostRenderer {
         sbHtml.append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
               .append("<style type='text/css'>");
         appendMappedColors(sbHtml);
+
+        String contentFontFamily = mUseSansSerifForContent ? "sans-serif" : "'Noto Serif', serif";
               // force font style and 1px margin from the right to avoid elements being cut off
-        sbHtml.append(" body.reader-full-post__story-content { font-family: 'Noto Serif', serif; font-weight: 400; ")
+        sbHtml.append(" body.reader-full-post__story-content { font-family: ")
+              .append(contentFontFamily)
+              .append("; ")
+              .append("font-weight: 400; ")
               .append("font-size: 16px; margin: 0px; padding: 0px; margin-right: 1px; }")
               .append(" p, div, li { line-height: 1.6em; font-size: 100%; }")
               .append(" body, p, div { max-width: 100% !important; word-wrap: break-word; }")

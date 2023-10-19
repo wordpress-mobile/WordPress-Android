@@ -60,10 +60,8 @@
 
     <org.wordpress.android.ui.reader.views.ReaderFollowButton
         android:id="@+id/follow_button"
-        style="@style/Reader.Follow.Button.Icon"
+        style="@style/Reader.Follow.Button.New"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_marginEnd="@dimen/margin_medium"/>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

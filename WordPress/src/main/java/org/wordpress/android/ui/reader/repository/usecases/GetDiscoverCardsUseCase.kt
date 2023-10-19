@@ -11,10 +11,8 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
-import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.util.AppLog.T.READER
 import javax.inject.Inject
@@ -27,7 +25,6 @@ class GetDiscoverCardsUseCase @Inject constructor(
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     private val appLogWrapper: AppLogWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
     suspend fun get(): ReaderDiscoverCards = withContext(ioDispatcher) {
@@ -67,10 +64,6 @@ class GetDiscoverCardsUseCase @Inject constructor(
                         }
                     }
                 }
-            }
-
-            if (cards.isNotEmpty() && !appPrefsWrapper.readerDiscoverWelcomeBannerShown) {
-                cards.add(0, WelcomeBannerCard)
             }
         }
         return@withContext ReaderDiscoverCards(cards)

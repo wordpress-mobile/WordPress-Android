@@ -109,7 +109,6 @@ android {
         buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "true"
         buildConfigField "boolean", "QUICK_START_DYNAMIC_CARDS", "false"
         buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
-        buildConfigField "boolean", "MY_SITE_DASHBOARD_TABS", "false"
         buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
@@ -117,7 +116,6 @@ android {
         buildConfigField "boolean", "SITE_NAME", "false"
         buildConfigField "boolean", "LANDING_SCREEN_REVAMP", "true"
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
-        buildConfigField "boolean", "QUICK_START_EXISTING_USERS_V2", "false"
         buildConfigField "boolean", "QRCODE_AUTH_FLOW", "false"
         buildConfigField "boolean", "BETA_SITE_DESIGNS", "false"
         buildConfigField "boolean", "JETPACK_POWERED", "true"
@@ -145,6 +143,7 @@ android {
         buildConfigField "boolean", "CONTACT_SUPPORT_CHATBOT", "false"
         buildConfigField "boolean", "ENABLE_DOMAIN_MANAGEMENT_FEATURE", "false"
         buildConfigField "boolean", "PLANS_IN_SITE_CREATION", "false"
+        buildConfigField "boolean", "READER_IMPROVEMENTS", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -154,7 +153,6 @@ android {
         buildConfigField "boolean", "ENABLE_CREATE_FAB", "true"
         buildConfigField "boolean", "ENABLE_FOLLOWED_SITES_SETTINGS", "true"
         buildConfigField "boolean", "ENABLE_WHATS_NEW_FEATURE", "true"
-        buildConfigField "boolean", "ENABLE_MY_SITE_DASHBOARD_TABS", "true"
         buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"
         buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
         buildConfigField "boolean", "BLAZE_MANAGE_CAMPAIGNS", "false"
@@ -201,7 +199,6 @@ android {
             buildConfigField "boolean", "ENABLE_CREATE_FAB", "true"
             buildConfigField "boolean", "ENABLE_FOLLOWED_SITES_SETTINGS", "true"
             buildConfigField "boolean", "ENABLE_WHATS_NEW_FEATURE", "true"
-            buildConfigField "boolean", "ENABLE_MY_SITE_DASHBOARD_TABS", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
             buildConfigField "boolean", "ENABLE_QRCODE_AUTH_FLOW", "true"

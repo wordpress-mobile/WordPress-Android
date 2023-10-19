@@ -38,6 +38,7 @@ import org.wordpress.android.ui.sitecreation.RESULT_IN_CART
 import org.wordpress.android.ui.sitecreation.SERVICE_ERROR
 import org.wordpress.android.ui.sitecreation.SERVICE_SUCCESS
 import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE
+import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE_FREE
 import org.wordpress.android.ui.sitecreation.SITE_REMOTE_ID
 import org.wordpress.android.ui.sitecreation.SITE_SLUG
 import org.wordpress.android.ui.sitecreation.SiteCreationState
@@ -103,7 +104,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
 
     @Test
     fun `on start emits service event for free domains with isFree true`() = test {
-        startViewModel(SITE_CREATION_STATE)
+        startViewModel(SITE_CREATION_STATE_FREE)
         val request = assertNotNull(viewModel.startCreateSiteService.value).serviceData
         assertTrue(request.isFree)
     }
@@ -131,7 +132,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
 
     @Test
     fun `on start changes the loading text with animation after delay`() = test {
-        startViewModel()
+        startViewModelFree()
         advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
         verify(uiStateObserver).onChanged(check<Loading> { it.animate })
     }
@@ -188,7 +189,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
 
     @Test
     fun `on service success propagates site`() {
-        startViewModel()
+        startViewModelFree()
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
         verify(onRemoteSiteCreatedObserver).onChanged(argThat {
             assertEquals(SITE_REMOTE_ID, siteId)
@@ -305,6 +306,10 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     }
 
     private fun startViewModel(state: SiteCreationState = SITE_CREATION_STATE) {
+        viewModel.start(state)
+    }
+
+    private fun startViewModelFree(state: SiteCreationState = SITE_CREATION_STATE_FREE) {
         viewModel.start(state)
     }
 
