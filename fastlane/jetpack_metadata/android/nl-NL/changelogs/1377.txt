@@ -1,0 +1,5 @@
+23.4:
+We hebben wat bugs geplet!
+- Je kan nu URL's van X insluiten zonder dat de link breekt.
+- Wanneer je een ongeldige media-URL gebruikt, geeft de app een foutmelding weer in plaats van te crashen.
+- In de blokeditor crasht de app niet meer wanneer je te veel blokken in blokken nest.

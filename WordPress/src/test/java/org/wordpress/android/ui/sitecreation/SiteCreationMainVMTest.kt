@@ -200,6 +200,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun `on site created updates result`() = test {
         viewModel.onDomainsScreenFinished(FREE_DOMAIN)
+        viewModel.onPlanSelection(FREE_PLAN, domainName = SITE_SLUG )
         viewModel.onFreeSiteCreated(SITE_MODEL)
         assertThat(currentWizardState(viewModel).result).isEqualTo(RESULT_NOT_IN_LOCAL_DB)
     }
@@ -208,6 +209,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     fun `on site created for free domain shows next step`() {
         viewModel.onDomainsScreenFinished(FREE_DOMAIN).run { clearInvocations(wizardManager) }
         viewModel.onFreeSiteCreated(SITE_MODEL)
+        viewModel.onPlanSelection(FREE_PLAN, domainName = SITE_SLUG)
         verify(wizardManager).showNextStep()
     }
 

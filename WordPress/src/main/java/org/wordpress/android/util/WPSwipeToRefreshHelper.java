@@ -3,6 +3,8 @@ package org.wordpress.android.util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.material.elevation.ElevationOverlayProvider;
 
 import org.wordpress.android.R;
@@ -22,8 +24,10 @@ public class WPSwipeToRefreshHelper {
      *                           via the swipe gesture.
      */
     @SuppressLint("ResourceType")
-    public static SwipeToRefreshHelper buildSwipeToRefreshHelper(CustomSwipeRefreshLayout swipeRefreshLayout,
-                                                                 RefreshListener listener) {
+    public static SwipeToRefreshHelper buildSwipeToRefreshHelper(
+            @NonNull CustomSwipeRefreshLayout swipeRefreshLayout,
+            RefreshListener listener
+    ) {
         Context context = swipeRefreshLayout.getContext();
 
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(context);

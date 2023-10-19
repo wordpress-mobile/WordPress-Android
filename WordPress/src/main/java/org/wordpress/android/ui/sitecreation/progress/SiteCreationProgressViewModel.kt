@@ -172,8 +172,12 @@ class SiteCreationProgressViewModel @Inject constructor(
             IDLE, CREATE_SITE -> Unit
             SUCCESS -> {
                 site = mapPayloadToSiteModel(event.payload)
-                _onFreeSiteCreated.postValue(site) // MainVM will navigate forward if the domain is free
-                if (!domain.isFree) {
+
+                val isFreePlan = siteCreationState.plan?.productSlug == "free_plan"
+
+                if (isFreePlan) {
+                    _onFreeSiteCreated.postValue(site) // MainVM will navigate forward if the domain is free
+                } else {
                     createCart()
                 }
             }
@@ -207,6 +211,7 @@ class SiteCreationProgressViewModel @Inject constructor(
             domain.domainName,
             domain.supportsPrivacy,
             false,
+            planProductId = siteCreationState.plan?.productId
         )
 
         if (event.isError) {

@@ -1,0 +1,126 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/no_sites_constraint_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/actionable_empty_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/toolbar_height"
+        android:visibility="gone"
+        app:aevButton="@string/my_site_add_new_site"
+        app:aevImage="@drawable/img_illustration_site_wordpress_camera_pencils_226dp"
+        app:aevSubtitle="@string/my_site_create_new_site"
+        app:aevTitle="@string/my_site_create_new_site_title"
+        app:layout_constraintBottom_toTopOf="@+id/avatar_account_settings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <RelativeLayout
+        android:id="@+id/avatar_account_settings"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_large"
+            android:background="@drawable/bg_rectangle_black_60_radius_2dp">
+
+            <FrameLayout
+                android:id="@+id/frame_avatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false">
+
+                <FrameLayout
+                    android:id="@+id/avatar_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/me_profile_photo"
+                    android:padding="@dimen/margin_small">
+
+                    <ImageView
+                        android:id="@+id/me_avatar"
+                        android:layout_width="@dimen/avatar_sz_small"
+                        android:layout_height="@dimen/avatar_sz_small"
+                        android:clickable="false"
+                        android:contentDescription="@string/reader_avatar_desc" />
+                </FrameLayout>
+
+                <ProgressBar
+                    android:id="@+id/avatar_progress"
+                    android:layout_width="@dimen/avatar_sz_small"
+                    android:layout_height="@dimen/avatar_sz_small"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_oval_black_translucent_50"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:indeterminate="true"
+                    android:padding="@dimen/margin_large"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+            </FrameLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/go_to_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:clickable="false"
+                android:contentDescription="@string/account_and_settings"
+                android:padding="@dimen/margin_large"
+                android:src="@drawable/ic_chevron_right_white_24dp"
+                app:tint="?attr/wpColorOnSurfaceMedium" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/me_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/me_display_name"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_toEndOf="@id/frame_avatar"
+                android:clickable="false"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/account_and_settings"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?attr/wpColorOnSurfaceMedium"
+                tools:text="@string/account_and_settings" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/me_display_name"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_toEndOf="@+id/frame_avatar"
+                android:layout_toStartOf="@+id/go_to_settings"
+                android:clickable="false"
+                android:ellipsize="end"
+                android:maxLines="1"
+                app:autoSizeMaxTextSize="@dimen/my_site_name_label_single_line_text_size"
+                app:autoSizeMinTextSize="@dimen/my_site_name_label_double_line_text_size"
+                app:autoSizeTextType="uniform"
+                tools:text="Full Name" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

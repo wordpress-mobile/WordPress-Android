@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ import com.google.android.material.appbar.AppBarLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.FilterCriteria;
+import org.wordpress.android.ui.utils.RecyclerViewExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -151,6 +153,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     private void init(@NonNull Context context, @Nullable AttributeSet attrs) {
         inflate(getContext(), R.layout.filtered_list_component, this);
 
+        boolean includeDefaultSpacing = true;
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(
                     attrs,
@@ -165,16 +168,21 @@ public class FilteredRecyclerView extends RelativeLayout {
 
                 mHideAppBarLayout = a.getBoolean(
                         R.styleable.FilteredRecyclerView_wpHideAppBarLayout, false);
+
+                includeDefaultSpacing = a.getBoolean(R.styleable.FilteredRecyclerView_wpIncludeDefaultSpacing, true);
             } finally {
                 a.recycle();
             }
         }
 
-        int spacingHorizontal = 0;
-        int spacingVertical = DisplayUtils.dpToPx(getContext(), 1);
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
+
+        if (includeDefaultSpacing) {
+            int spacingHorizontal = 0;
+            int spacingVertical = DisplayUtils.dpToPx(getContext(), 1);
+            mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
+        }
 
         mToolbar = findViewById(R.id.toolbar_with_spinner);
         mAppBarLayout = findViewById(R.id.app_bar_layout);
@@ -411,6 +419,12 @@ public class FilteredRecyclerView extends RelativeLayout {
         if (mRecyclerView == null) return;
 
         mRecyclerView.addItemDecoration(decor);
+    }
+
+    public void addItemDivider(@DrawableRes int dividerRes) {
+        if (mRecyclerView == null) return;
+
+        RecyclerViewExtensionsKt.addItemDivider(mRecyclerView, dividerRes);
     }
 
     public void addOnScrollListener(RecyclerView.OnScrollListener listener) {

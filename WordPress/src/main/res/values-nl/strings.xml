@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-03 15:54:07+0000
+Translation-Revision-Date: 2023-10-04 15:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.9
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_ungroup_block">Groeperen blok ongedaan maken</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details">Tik hier voor meer informatie.</string>
+    <string name="gutenberg_native_deeply_nested_block">Diep genesteld blok</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Blokken die dieper dan %d niveaus genesteld zijn worden mogelijk niet goed weergegeven in de mobiele editor. Hierom raden we aan de content platter te maken door het blok niet te groeperen of het blok te bewerken in je webbrowser.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blokken die dieper dan %d niveaus genesteld zijn worden mogelijk niet goed weergegeven in de mobiele editor. Hierom raden we aan de content platter te maken door het blok niet te groeperen of het blok te bewerken in je webbrowser.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Blok kan niet worden gerenderd omdat het diep is genesteld. Tik voor meer detail.</string>
+    <string name="pages_no_site_something_went_wrong">Oeps, er is iets fout gegaan… Probeer het later opnieuw.</string>
     <string name="my_site_dashboard_no_cards_message_description">Tik op de knop Personaliseren om meer kaarten weer te geven.</string>
     <string name="personalization_screen_next_steps_card_description">Ontdek hoe je het meeste uit je site haalt met deze app.</string>
     <string name="personalization_screen_activity_log_card_description">Recente acties op je site.</string>

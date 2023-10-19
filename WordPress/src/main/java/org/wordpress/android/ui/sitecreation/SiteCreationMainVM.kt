@@ -32,6 +32,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.plans.PlanModel
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
@@ -59,6 +60,7 @@ data class SiteCreationState(
     val segmentId: Long? = null,
     val siteDesign: String? = null,
     val domain: DomainModel? = null,
+    val plan: PlanModel? = null,
     val result: SiteCreationResult = NotCreated,
 ) : WizardState, Parcelable
 
@@ -260,10 +262,23 @@ class SiteCreationMainVM @Inject constructor(
                 siteCreationState = siteCreationState.copy(domain = null)
             }
         }
+        if (wizardStep == SiteCreationStep.PLANS) {
+            siteCreationState.plan?.let {
+                siteCreationState = siteCreationState.copy(plan = null)
+            }
+        }
     }
 
     fun onDomainsScreenFinished(domain: DomainModel) {
         siteCreationState = siteCreationState.copy(domain = domain)
+        wizardManager.showNextStep()
+    }
+
+    fun onPlanSelection(plan: PlanModel, domainName: String?) {
+        siteCreationState = siteCreationState.copy(plan = plan)
+        domainName?.let {
+            siteCreationState = siteCreationState.copy(domain = siteCreationState.domain?.copy(domainName = it))
+        }
         wizardManager.showNextStep()
     }
 
@@ -310,7 +325,7 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onFreeSiteCreated(site: SiteModel) {
         siteCreationState = siteCreationState.copy(result = CreatedButNotFetched.NotInLocalDb(site))
-        if (checkNotNull(siteCreationState.domain).isFree) {
+        if (siteCreationState.plan?.productSlug == "free_plan") {
             wizardManager.showNextStep()
         }
     }

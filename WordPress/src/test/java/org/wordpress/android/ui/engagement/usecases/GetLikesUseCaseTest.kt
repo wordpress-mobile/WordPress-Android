@@ -343,9 +343,9 @@ class GetLikesUseCaseTest : BaseUnitTest() {
                 OnCommentLikesChanged(
                     siteId,
                     commentId,
-                    false
+                    false,
+                    FETCHED_COMMENT_LIKES
                 ).apply {
-                    causeOfChange = FETCHED_COMMENT_LIKES
                     error = CommentError(
                         CommentErrorType.AUTHORIZATION_REQUIRED,
                         "Error occurred"
@@ -387,9 +387,9 @@ class GetLikesUseCaseTest : BaseUnitTest() {
                 OnCommentLikesChanged(
                     siteId,
                     commentId,
-                    false
+                    false,
+                    FETCHED_COMMENT_LIKES
                 ).apply {
-                    causeOfChange = FETCHED_COMMENT_LIKES
                     error = CommentError(
                         CommentErrorType.AUTHORIZATION_REQUIRED,
                         errorMessage
@@ -431,9 +431,9 @@ class GetLikesUseCaseTest : BaseUnitTest() {
                 OnCommentLikesChanged(
                     siteId,
                     commentId,
-                    false
+                    false,
+                    FETCHED_COMMENT_LIKES
                 ).apply {
-                    causeOfChange = FETCHED_COMMENT_LIKES
                     error = CommentError(
                         CommentErrorType.AUTHORIZATION_REQUIRED,
                         errorMessage
@@ -476,9 +476,9 @@ class GetLikesUseCaseTest : BaseUnitTest() {
                 OnCommentLikesChanged(
                     siteId,
                     commentId,
-                    false
+                    false,
+                    FETCHED_COMMENT_LIKES
                 ).apply {
-                    causeOfChange = FETCHED_COMMENT_LIKES
                     commentLikes = likeData
                 }
             )
@@ -512,9 +512,9 @@ class GetLikesUseCaseTest : BaseUnitTest() {
                 OnCommentLikesChanged(
                     siteId,
                     commentId,
-                    false
+                    false,
+                    FETCHED_COMMENT_LIKES
                 ).apply {
-                    causeOfChange = FETCHED_COMMENT_LIKES
                     commentLikes = likeData
                 }
             )

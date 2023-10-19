@@ -1633,9 +1633,11 @@
     <string name="reader_dot_separator" translatable="false">\u0020\u2022\u0020</string>
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
     <string name="reader_expandable_tags_view_overflow_indicator_expand_title" translatable="false">%1$s+</string>
+    <string name="reader_expandable_tags_view_overflow_indicator_expand_title_new" translatable="false">+%1$s</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Hide</string>
     <string name="reader_discover_interests_header">You might like</string>
     <string name="reader_discover_recommended_blogs_header">Sites to follow</string>
+    <string name="reader_discover_recommended_header_new">You might like</string>
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
     <string name="reader_discover_empty_title">Welcome!</string>
@@ -2080,6 +2082,8 @@
     <string name="reader_btn_share">Share</string>
     <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_unfollow">Following</string>
+    <string name="reader_secondary_bookmark">Save</string>
+    <string name="reader_secondary_bookmarked">Saved</string>
     <string name="reader_add_bookmark">Add to saved posts</string>
     <string name="reader_remove_bookmark">Remove from saved posts</string>
     <string name="reader_bookmark_snack_btn">View All</string>
@@ -2118,6 +2122,8 @@
     <string name="reader_label_comments_closed">Comments are closed</string>
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_label_follow_count">%,d Followers</string>
+    <string name="reader_label_followers_count">%s followers</string>
+    <string name="reader_label_followers_count_single">1 follower</string>
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="reader_label_local_related_posts">More from %s</string>
@@ -3424,6 +3430,7 @@
     <string name="notification_new_site_creation_title">Create Site</string>
     <string name="notification_new_site_creation_failed">There was a problem</string>
     <string name="notification_new_site_creation_creating_site_subtitle">We\'re creating your new site</string>
+    <string name="site_creation_plans_selection_title">Select a plan</string>
 
     <!-- Site Creation : Domains - Updated designs -->
     <string name="site_creation_domain_header_subtitle">Search for a short and memorable domain to help people find and visit your site.</string>
@@ -4711,9 +4718,13 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="personalize_card_content_description">Tap to personalize your home tab</string>
 
     <!-- Personalization Screen -->
-    <string name="personalization_screen_title">Personalize home tab</string>
-    <string name="personalization_screen_description">Add or hide Cards</string>
-    <string name="personalization_screen_footer_cards">Cards may show different content depending on what\'s happening with your site</string>
+    <string name="personalization_screen_title"> Personalize home tab</string>
+    <string name="personalization_screen_cards_tab_title">Cards</string>
+    <string name="personalization_screen_shortcuts_tab_title">Shortcuts</string>
+    <string name="personalization_screen_tab_cards_description">Add or hide Cards</string>
+    <string name="personalization_screen_tab_cards_footer_cards">Cards may show different content depending on what\'s happening with your site</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">Active Shortcuts</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Inactive Shortcuts</string>
     <string name="personalization_screen_stats_card_title" translatable="false">@string/my_site_todays_stat_card_title</string>
     <string name="personalization_screen_stats_card_description">Views, Visitors and likes</string>
     <string name="personalization_screen_draft_posts_card_title">Draft posts</string>
@@ -4730,6 +4741,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="personalization_screen_activity_log_card_description">Recent actions taken on your site.</string>
     <string name="personalization_screen_next_steps_card_title" translatable="false">@string/quick_start_sites</string>
     <string name="personalization_screen_next_steps_card_description">Learn how to make the most of your site with the app.</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Add or Remove shortcuts</string>
 
     <string name="my_site_dashboard_no_cards_message_title">All cards are hidden</string>
     <string name="my_site_dashboard_no_cards_message_description">Tap the personalise button to show more cards.</string>
@@ -4743,5 +4755,18 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap here to show more details.</string>
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ungroup block</string>
     <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Warning message</string>
+    <string name="account_and_settings">Account and Settings</string>
 
+    <!-- Domain Management - Purchase Domain Screen -->
+    <string name="purchase_domain_screen_title">Purchase Domain</string>
+    <string name="purchase_domain_screen_header_single_line">Choose how to use your domain</string>
+    <string name="purchase_domain_screen_header_double_line">Choose how to\nuse your domain</string>
+    <string name="purchase_domain_screen_description">Don\'t worry, you can easily add a site later.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">Just buy a domain</string>
+    <string name="purchase_domain_screen_new_domain_card_description">Add a site later.</string>
+    <string name="purchase_domain_screen_new_domain_card_button">Get Domain</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">Existing Wordpress.com site</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">Use with a site you already started.</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">Choose Site</string>
+    <string name="purchase_domain_screen_discount_notice">*A free domain for one year is included with all paid annual plans.</string>
 </resources>

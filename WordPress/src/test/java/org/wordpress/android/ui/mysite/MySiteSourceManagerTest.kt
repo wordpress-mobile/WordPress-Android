@@ -37,7 +37,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     lateinit var scanAndBackupSource: ScanAndBackupSource
 
     @Mock
-    lateinit var currentAvatarSource: CurrentAvatarSource
+    lateinit var accountDataSource: AccountDataSource
 
     @Mock
     lateinit var cardsSource: CardsSource
@@ -82,7 +82,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(true)
 
         mySiteSourceManager = MySiteSourceManager(
-            currentAvatarSource,
+            accountDataSource,
             domainRegistrationSource,
             quickStartCardSource,
             scanAndBackupSource,
@@ -99,7 +99,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
             selectedSiteSource,
             siteIconProgressSource,
             quickStartCardSource,
-            currentAvatarSource,
+            accountDataSource,
             domainRegistrationSource,
             scanAndBackupSource,
             cardsSource
@@ -109,18 +109,18 @@ class MySiteSourceManagerTest : BaseUnitTest() {
             selectedSiteSource,
             siteIconProgressSource,
             quickStartCardSource,
-            currentAvatarSource,
+            accountDataSource,
             domainRegistrationSource,
             scanAndBackupSource,
         )
 
         siteIndependentMySiteSources = listOf(
-            currentAvatarSource
+            accountDataSource
         )
 
         selectRefreshedMySiteSources = listOf(
             quickStartCardSource,
-            currentAvatarSource
+            accountDataSource
         )
 
         siteDependentMySiteSources = allRefreshedMySiteSources.filterNot(SiteIndependentSource::class.java::isInstance)
@@ -250,7 +250,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     fun `given site selected, when on resume, then refresh current avatar`() {
         mySiteSourceManager.onResume(true)
 
-        verify(currentAvatarSource).refresh()
+        verify(accountDataSource).refresh()
     }
 
     @Test

@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
+import android.icu.text.CompactDecimalFormat;
+import android.icu.text.NumberFormat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,7 @@ import org.wordpress.android.util.PhotonUtils.Quality;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 
@@ -35,6 +38,8 @@ import javax.inject.Inject;
  * count, and follow button
  */
 public class ReaderSiteHeaderView extends LinearLayout {
+    private static final int MINIMUM_NUMBER_FOLLOWERS_FORMAT = 10000;
+
     private final int mBlavatarSz;
 
     public interface OnBlogInfoLoadedListener {
@@ -53,6 +58,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
     @Inject AccountStore mAccountStore;
     @Inject ImageManager mImageManager;
     @Inject ReaderTracker mReaderTracker;
+    @Inject ReaderImprovementsFeatureConfig mReaderImprovementsFeatureConfig;
 
     public ReaderSiteHeaderView(Context context) {
         this(context, null);
@@ -70,8 +76,15 @@ public class ReaderSiteHeaderView extends LinearLayout {
     }
 
     private void initView(Context context) {
-        View view = inflate(context, R.layout.reader_site_header_view, this);
+        final int layoutRes;
+        if (mReaderImprovementsFeatureConfig.isEnabled()) {
+            layoutRes = R.layout.reader_site_header_view_new;
+        } else {
+            layoutRes = R.layout.reader_site_header_view;
+        }
+        final View view = inflate(context, layoutRes, this);
         mFollowButton = view.findViewById(R.id.follow_button);
+        view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 
     public void setOnFollowListener(OnFollowListener listener) {
@@ -162,14 +175,18 @@ public class ReaderSiteHeaderView extends LinearLayout {
             txtDescription.setVisibility(View.GONE);
         }
 
-        mImageManager.loadIntoCircle(blavatarImg,
-                SiteUtils.getSiteImageType(blogInfo.isP2orA8C(), BlavatarShape.CIRCULAR),
-                PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.HIGH));
+        if (mReaderImprovementsFeatureConfig.isEnabled()) {
+            final String imageUrl = blogInfo.getImageUrl();
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                showBlavatarImage(blogInfo, blavatarImg);
+            } else {
+                blavatarImg.setVisibility(View.GONE);
+            }
+        } else {
+            showBlavatarImage(blogInfo, blavatarImg);
+        }
 
-        txtFollowCount.setText(String.format(
-                LocaleManager.getSafeLocale(getContext()),
-                getContext().getString(R.string.reader_label_follow_count),
-                blogInfo.numSubscribers));
+        loadFollowCount(blogInfo, txtFollowCount);
 
         if (!mAccountStore.hasAccessToken()) {
             mFollowButton.setVisibility(View.GONE);
@@ -193,10 +210,51 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
     }
 
+    private void loadFollowCount(ReaderBlog blogInfo, TextView txtFollowCount) {
+        if (mReaderImprovementsFeatureConfig.isEnabled()) {
+            final CompactDecimalFormat compactDecimalFormat =
+                    CompactDecimalFormat.getInstance(LocaleManager.getSafeLocale(getContext()),
+                            CompactDecimalFormat.CompactStyle.SHORT);
+
+            final int followersStringRes;
+            if (blogInfo.numSubscribers == 1) {
+                followersStringRes = R.string.reader_label_followers_count_single;
+            } else {
+                followersStringRes = R.string.reader_label_followers_count;
+            }
+
+            final String formattedNumberSubscribers;
+            // Reference: pcdRpT-3BI-p2#comment-5978
+            if (blogInfo.numSubscribers >= MINIMUM_NUMBER_FOLLOWERS_FORMAT) {
+                formattedNumberSubscribers = compactDecimalFormat.format(blogInfo.numSubscribers);
+            } else {
+                formattedNumberSubscribers = NumberFormat.getInstance().format(blogInfo.numSubscribers);
+            }
+            txtFollowCount.setText(String.format(
+                    LocaleManager.getSafeLocale(getContext()),
+                    getContext().getString(followersStringRes), formattedNumberSubscribers)
+            );
+        } else {
+            txtFollowCount.setText(String.format(
+                    LocaleManager.getSafeLocale(getContext()),
+                    getContext().getString(R.string.reader_label_follow_count),
+                    blogInfo.numSubscribers));
+        }
+    }
+
+    private void showBlavatarImage(ReaderBlog blogInfo, ImageView blavatarImg) {
+        blavatarImg.setVisibility(View.VISIBLE);
+        mImageManager.loadIntoCircle(blavatarImg,
+                SiteUtils.getSiteImageType(blogInfo.isP2orA8C(), BlavatarShape.CIRCULAR),
+                PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.HIGH));
+    }
+
     private void toggleFollowStatus(final View followButton, final String source) {
         if (!NetworkUtils.checkConnection(getContext())) {
             return;
         }
+        // disable follow button until API call returns
+        mFollowButton.setEnabled(false);
 
         final boolean isAskingToFollow;
         if (mIsFeed) {
@@ -204,6 +262,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
         } else {
             isAskingToFollow = !ReaderBlogTable.isFollowedBlog(mBlogId);
         }
+
+        mFollowButton.setIsFollowed(isAskingToFollow);
 
         if (mFollowListener != null) {
             if (isAskingToFollow) {
@@ -217,24 +277,19 @@ public class ReaderSiteHeaderView extends LinearLayout {
             }
         }
 
-        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (getContext() == null) {
-                    return;
-                }
-                mFollowButton.setEnabled(true);
-                if (!succeeded) {
-                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
-                            : R.string.reader_toast_err_unfollow_blog;
-                    ToastUtils.showToast(getContext(), errResId);
-                    mFollowButton.setIsFollowed(!isAskingToFollow);
-                }
+        ReaderActions.ActionListener listener = succeeded -> {
+            if (getContext() == null) {
+                return;
+            }
+            mFollowButton.setEnabled(true);
+            if (!succeeded) {
+                int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
+                        : R.string.reader_toast_err_unfollow_blog;
+                ToastUtils.showToast(getContext(), errResId);
+                mFollowButton.setIsFollowed(!isAskingToFollow);
             }
         };
 
-        // disable follow button until API call returns
-        mFollowButton.setEnabled(false);
 
         boolean result;
         if (mIsFeed) {
@@ -257,8 +312,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
             );
         }
 
-        if (result) {
-            mFollowButton.setIsFollowed(isAskingToFollow);
+        if (!result) {
+            mFollowButton.setIsFollowed(!isAskingToFollow);
         }
     }
 }

@@ -1,4 +1,0 @@
-23.3:
-- Mudamos a forma como os alertas aparecem ao inserir mídia em blocos a partir de uma URL.
-- Ficou mais fácil diferenciar o texto de espaço reservado do conteúdo nos temas com bloco.
-- Cartões do painel Meu site podem ser personalizados com o botão "Personalizar a guia Início".
