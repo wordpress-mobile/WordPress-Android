@@ -135,16 +135,18 @@ public class MediaStore extends Store {
      * Actions: FETCHED_MEDIA_LIST
      */
     public static class FetchMediaListResponsePayload extends Payload<MediaError> {
-        public SiteModel site;
-        public List<MediaModel> mediaList;
+        @NonNull public SiteModel site;
+        @NonNull public List<MediaModel> mediaList;
         public boolean loadedMore;
         public boolean canLoadMore;
-        public MimeType.Type mimeType;
-        public FetchMediaListResponsePayload(SiteModel site,
-                                             @NonNull List<MediaModel> mediaList,
-                                             boolean loadedMore,
-                                             boolean canLoadMore,
-                                             MimeType.Type mimeType) {
+        @Nullable public MimeType.Type mimeType;
+
+        public FetchMediaListResponsePayload(
+                @NonNull SiteModel site,
+                @NonNull List<MediaModel> mediaList,
+                boolean loadedMore,
+                boolean canLoadMore,
+                @Nullable MimeType.Type mimeType) {
             this.site = site;
             this.mediaList = mediaList;
             this.loadedMore = loadedMore;
@@ -152,7 +154,10 @@ public class MediaStore extends Store {
             this.mimeType = mimeType;
         }
 
-        public FetchMediaListResponsePayload(SiteModel site, MediaError error, MimeType.Type mimeType) {
+        public FetchMediaListResponsePayload(
+                @NonNull SiteModel site,
+                @NonNull MediaError error,
+                @Nullable MimeType.Type mimeType) {
             this.mediaList = new ArrayList<>();
             this.site = site;
             this.error = error;
