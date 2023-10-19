@@ -96,6 +96,7 @@ public class MediaStore extends Store {
         public MimeType.Type mimeType;
         public int number = DEFAULT_NUM_MEDIA_PER_FETCH;
 
+        @SuppressWarnings("unused")
         public FetchMediaListPayload(SiteModel site) {
             this.site = site;
         }
