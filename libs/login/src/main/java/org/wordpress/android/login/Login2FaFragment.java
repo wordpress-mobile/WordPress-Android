@@ -190,7 +190,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         mSecurityKeyButton = rootView.findViewById(R.id.login_security_key_button);
         mSecurityKeyButton.setOnClickListener(view -> {
-
+            mAnalyticsListener.trackContinueWithSecurityKeyClicked();
+            doAuthWithSecurityKeyAction();
         });
     }
 
@@ -328,6 +329,14 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             payload.shouldSendTwoStepSms = shouldSendTwoStepSMS;
             mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
         }
+    }
+
+    private void doAuthWithSecurityKeyAction() {
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            return;
+        }
+
+
     }
 
     private String getAuthCodeFromClipboard() {

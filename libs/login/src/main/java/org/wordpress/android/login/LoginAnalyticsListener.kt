@@ -55,6 +55,7 @@ interface LoginAnalyticsListener {
     fun trackConnectedSiteInfoSucceeded(properties: Map<String, *>)
     fun trackFailure(message: String?)
     fun trackSendCodeWithTextClicked()
+    fun trackContinueWithSecurityKeyClicked()
     fun trackSubmit2faCodeClicked()
     fun trackSubmitClicked()
     fun trackRequestMagicLinkClick()
