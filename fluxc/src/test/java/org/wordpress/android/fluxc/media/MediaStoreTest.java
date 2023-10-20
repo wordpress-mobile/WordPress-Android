@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsConfiguration;
 import org.wordpress.android.fluxc.network.rest.wpapi.media.ApplicationPasswordsMediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.wpv2.WPComV2MediaRestClient;
@@ -43,12 +42,15 @@ import static org.wordpress.android.fluxc.media.MediaTestUtils.insertRandomMedia
 
 @RunWith(RobolectricTestRunner.class)
 public class MediaStoreTest {
+    @SuppressWarnings("KotlinInternalInJava")
     private MediaStore mMediaStore = new MediaStore(new Dispatcher(),
             Mockito.mock(MediaRestClient.class),
             Mockito.mock(MediaXMLRPCClient.class),
             Mockito.mock(WPComV2MediaRestClient.class),
             Mockito.mock(ApplicationPasswordsMediaRestClient.class),
-            Mockito.mock(ApplicationPasswordsConfiguration.class));
+            Mockito.mock(org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords
+                    .ApplicationPasswordsConfiguration.class)
+    );
 
     @Before
     public void setUp() {
