@@ -639,6 +639,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         if (myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.collapseActionView()
         }
+        authorFilterMenuItem.isVisible = true
+        authorFilterSpinner.visibility = View.VISIBLE
         appbarMain.getTag(R.id.pages_non_search_recycler_view_id_tag_key)?.let {
             appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(it as Int)
         }
@@ -648,6 +650,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         pagesPager.visibility = View.GONE
         tabLayout.visibility = View.GONE
         searchFrame.visibility = View.VISIBLE
+        authorFilterMenuItem.isVisible = false
+        authorFilterSpinner.visibility = View.GONE
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
         }
