@@ -117,6 +117,32 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class AuthSecurityKeyPayload extends Payload<BaseNetworkError> {
+        public long userId;
+        public long clientId;
+        public String secret;
+        public String twoStepNonce;
+        public byte[] credentialId;
+        public byte[] clientDataJson;
+        public byte[] authenticatorData;
+        public byte[] signature;
+        public byte[] userHandle;
+
+        public AuthSecurityKeyPayload(long userId, long clientId, String secret, String twoStepNonce,
+                                      byte[] credentialId, byte[] clientDataJson, byte[] authenticatorData,
+                                      byte[] signature, byte[] userHandle) {
+            this.userId = userId;
+            this.clientId = clientId;
+            this.secret = secret;
+            this.twoStepNonce = twoStepNonce;
+            this.credentialId = credentialId;
+            this.clientDataJson = clientDataJson;
+            this.authenticatorData = authenticatorData;
+            this.signature = signature;
+            this.userHandle = userHandle;
+        }
+    }
+
     public enum AuthEmailPayloadScheme {
         WORDPRESS("wordpress"),
         WOOCOMMERCE("woocommerce"),
