@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryResultPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
+import org.wordpress.android.fluxc.store.AccountStore.AuthSecurityKeyPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 
@@ -25,5 +26,7 @@ public enum AuthenticationAction implements IAction {
     @Action(payloadType = DiscoveryResultPayload.class)
     DISCOVERY_RESULT,
     @Action(payloadType = AuthEmailResponsePayload.class)
-    SENT_AUTH_EMAIL
+    SENT_AUTH_EMAIL,
+    @Action(payloadType = AuthSecurityKeyPayload.class)
+    AUTHENTICATE_SECURITY_KEY
 }
