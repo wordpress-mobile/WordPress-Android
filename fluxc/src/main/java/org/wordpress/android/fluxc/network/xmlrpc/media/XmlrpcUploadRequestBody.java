@@ -114,8 +114,7 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
 
         // write file to xml
 
-        FileInputStream fis = new FileInputStream(getMedia().getFilePath());
-        try {
+        try (FileInputStream fis = new FileInputStream(getMedia().getFilePath())) {
             byte[] buffer = new byte[3600]; // you must use a 24bit multiple
             int length;
             String chunk;
@@ -124,8 +123,6 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
                 mMediaBytesWritten += length;
                 bufferedSink.writeUtf8(chunk);
             }
-        } finally {
-            fis.close();
         }
 
         // write remainder or XML
