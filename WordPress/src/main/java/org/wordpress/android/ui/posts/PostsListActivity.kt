@@ -474,9 +474,9 @@ class PostsListActivity : LocaleAwareActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.posts_list_menu, menu)
+        menuInflater.inflate(R.menu.posts_and_pages_list_menu, menu)
         authorFilterMenuItem = menu.findItem(R.id.author_filter_menu_item)
-        searchActionButton = menu.findItem(R.id.toggle_post_search)
+        searchActionButton = menu.findItem(R.id.toggle_search)
 
         initSearchFragment()
         binding.initSearchView()

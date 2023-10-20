@@ -10,7 +10,7 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/toggle_post_search"
+        android:id="@+id/toggle_search"
         android:icon="@drawable/ic_search_white_24dp"
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView"

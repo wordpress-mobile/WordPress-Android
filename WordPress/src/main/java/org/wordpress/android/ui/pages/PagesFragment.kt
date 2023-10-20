@@ -264,14 +264,6 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         }
 
         authorSelectionAdapter = AuthorSelectionAdapter(activity)
-//        pagesAuthorSelection.adapter = authorSelectionAdapter
-//        pagesAuthorSelection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//            override fun onNothingSelected(parent: AdapterView<*>) {}
-//
-//            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-//                viewModel.updateAuthorFilterSelection(id)
-//            }
-//        }
     }
 
     private fun PagesFragmentBinding.initializeSearchView() {
@@ -582,8 +574,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     @Suppress("OVERRIDE_DEPRECATION")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.posts_list_menu, menu)
-        actionMenuItem = checkNotNull(menu.findItem(R.id.toggle_post_search)) {
+        inflater.inflate(R.menu.posts_and_pages_list_menu, menu)
+        actionMenuItem = checkNotNull(menu.findItem(R.id.toggle_search)) {
             "Menu does not contain mandatory search item"
         }
         authorFilterMenuItem = checkNotNull(menu.findItem(R.id.author_filter_menu_item)) {
