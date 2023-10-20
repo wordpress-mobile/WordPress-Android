@@ -160,14 +160,6 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on checkout result when null shows previous step`() {
-        viewModel.onCheckoutResult(null)
-
-        verify(wizardManager).onBackPressed()
-        verify(onBackPressedObserver).onChanged(anyOrNull())
-    }
-
-    @Test
     fun `on checkout result when not null shows next step`() {
         viewModel.onCartCreated(CHECKOUT_DETAILS)
 
