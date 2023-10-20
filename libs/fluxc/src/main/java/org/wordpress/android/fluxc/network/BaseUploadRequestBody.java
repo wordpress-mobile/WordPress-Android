@@ -19,10 +19,10 @@ import okio.Sink;
 
 /**
  * Wrapper for {@link okhttp3.MultipartBody} that reports upload progress as body data is written.
- *
+ * <p>
  * A {@link ProgressListener} is required, use {@link okhttp3.MultipartBody} if progress is not needed.
- *
- * ref http://stackoverflow.com/questions/35528751/okhttp-3-tracking-multipart-upload-progress
+ * <p>
+ * @see <a href="http://stackoverflow.com/questions/35528751/okhttp-3-tracking-multipart-upload-progress">doc</a>
  */
 public abstract class BaseUploadRequestBody extends RequestBody {
     /**
