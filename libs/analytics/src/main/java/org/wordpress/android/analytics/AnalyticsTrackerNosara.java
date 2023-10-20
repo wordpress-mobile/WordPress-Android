@@ -2635,6 +2635,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domain_management_purchase_domain_screen_new_domain_tapped";
             case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED:
                 return "domain_management_purchase_domain_screen_existing_domain_tapped";
+            case DOMAIN_MANAGEMENT_SEARCH_FOR_A_DOMAIN_SCREEN_SHOWN:
+                return "domain_management_search_for_a_domain_screen_shown";
         }
         return null;
     }
