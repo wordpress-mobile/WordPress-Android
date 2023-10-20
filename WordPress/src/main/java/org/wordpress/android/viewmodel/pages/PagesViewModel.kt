@@ -993,7 +993,7 @@ class PagesViewModel
      * This behavior is consistent with Calypso and Posts as of 11/4/2019.
      */
     private val isFilteringByAuthorSupported: Boolean by lazy {
-        site.isWPCom && site.hasCapabilityEditOthersPages
+        site.isWPCom && site.hasCapabilityEditOthersPages && !site.isSingleUserSite
     }
 
     @SuppressLint("NullSafeMutableLiveData")
