@@ -54,7 +54,7 @@ public class MediaStoreTest {
 
     @Before
     public void setUp() {
-        Context context = RuntimeEnvironment.application.getApplicationContext();
+        Context context = RuntimeEnvironment.getApplication().getApplicationContext();
         WellSqlConfig config = new SingleStoreWellSqlConfigForTests(context, MediaModel.class);
         WellSql.init(config);
         config.reset();
