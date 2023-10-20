@@ -14,9 +14,12 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
@@ -31,7 +34,10 @@ object NavigationIcons {
     val BackIcon: NavigationIcon = {
         Icon(
             Icons.Default.ArrowBack,
-            contentDescription = stringResource(R.string.navigate_up_desc)
+            contentDescription = stringResource(R.string.navigate_up_desc),
+            modifier = Modifier.graphicsLayer(
+                scaleX = if (LocalLayoutDirection.current == LayoutDirection.Rtl) -1f else 1f,
+            ),
         )
     }
 
@@ -72,11 +78,11 @@ fun MainTopAppBar(
     title: String?,
     modifier: Modifier = Modifier,
     navigationIcon: NavigationIcon? = null,
-    elevation: Dp = 0.dp,
+    onNavigationIconClick: () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {},
     backgroundColor: Color = MaterialTheme.colors.surface,
     contentColor: Color = MaterialTheme.colors.onSurface,
-    onNavigationIconClick: () -> Unit = {},
-    actions: @Composable RowScope.() -> Unit = {}
+    elevation: Dp = 0.dp,
 ) {
     TopAppBar(
         modifier = modifier,

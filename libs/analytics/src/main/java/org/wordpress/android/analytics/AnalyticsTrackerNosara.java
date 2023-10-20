@@ -1927,6 +1927,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domain_credit_suggestion_queried";
             case DOMAIN_CREDIT_NAME_SELECTED:
                 return "domain_credit_name_selected";
+            case DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN:
+                return "domain_management_my_domains_screen_shown";
             case DOMAINS_DASHBOARD_VIEWED:
                 return "domains_dashboard_viewed";
             case DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED:

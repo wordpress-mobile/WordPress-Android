@@ -2706,6 +2706,23 @@
 
     <!-- Domain Management -->
     <string name="domain_management_expires">Expires %1$s</string>
+    <string name="domain_management_my_domains">My Domains</string>
+    <string name="domain_management_purchase_a_domain">Purchase a domain</string>
+    <string name="domain_management_search_your_domains">Search your domains</string>
+    <string name="domain_management_open_domain_details">Open domain details</string>
+
+    <!-- Domain Management - Purchase Domain Screen -->
+    <string name="purchase_domain_screen_title">Purchase Domain</string>
+    <string name="purchase_domain_screen_header_single_line">Choose how to use your domain</string>
+    <string name="purchase_domain_screen_header_double_line">Choose how to\nuse your domain</string>
+    <string name="purchase_domain_screen_description">Don\'t worry, you can easily add a site later.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">Just buy a domain</string>
+    <string name="purchase_domain_screen_new_domain_card_description">Add a site later.</string>
+    <string name="purchase_domain_screen_new_domain_card_button">Get Domain</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">Existing Wordpress.com site</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">Use with a site you already started.</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">Choose Site</string>
+    <string name="purchase_domain_screen_discount_notice">*A free domain for one year is included with all paid annual plans.</string>
 
     <!-- Automated Transfer Eligibility Errors -->
     <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
@@ -4753,17 +4770,4 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ungroup block</string>
     <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Warning message</string>
     <string name="account_and_settings">Account and Settings</string>
-
-    <!-- Domain Management - Purchase Domain Screen -->
-    <string name="purchase_domain_screen_title">Purchase Domain</string>
-    <string name="purchase_domain_screen_header_single_line">Choose how to use your domain</string>
-    <string name="purchase_domain_screen_header_double_line">Choose how to\nuse your domain</string>
-    <string name="purchase_domain_screen_description">Don\'t worry, you can easily add a site later.</string>
-    <string name="purchase_domain_screen_new_domain_card_title">Just buy a domain</string>
-    <string name="purchase_domain_screen_new_domain_card_description">Add a site later.</string>
-    <string name="purchase_domain_screen_new_domain_card_button">Get Domain</string>
-    <string name="purchase_domain_screen_existing_domain_card_title">Existing Wordpress.com site</string>
-    <string name="purchase_domain_screen_existing_domain_card_description">Use with a site you already started.</string>
-    <string name="purchase_domain_screen_existing_domain_card_button">Choose Site</string>
-    <string name="purchase_domain_screen_discount_notice">*A free domain for one year is included with all paid annual plans.</string>
 </resources>
