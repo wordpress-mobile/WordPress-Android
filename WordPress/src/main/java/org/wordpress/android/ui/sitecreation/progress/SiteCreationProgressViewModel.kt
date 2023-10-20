@@ -172,8 +172,12 @@ class SiteCreationProgressViewModel @Inject constructor(
             IDLE, CREATE_SITE -> Unit
             SUCCESS -> {
                 site = mapPayloadToSiteModel(event.payload)
-                _onFreeSiteCreated.postValue(site) // MainVM will navigate forward if the domain is free
-                if (!domain.isFree && siteCreationState.plan?.productId != 0) {
+
+                val isFreePlan = siteCreationState.plan?.productSlug == "free_plan"
+
+                if (isFreePlan) {
+                    _onFreeSiteCreated.postValue(site) // MainVM will navigate forward if the domain is free
+                } else {
                     createCart()
                 }
             }
@@ -215,7 +219,7 @@ class SiteCreationProgressViewModel @Inject constructor(
             updateUiStateAsync(CartError)
         } else {
             AppLog.d(T.SITE_CREATION, "Successful cart creation: ${event.cartDetails}")
-            _onCartCreated.postValue(CheckoutDetails(site, domain.domainName))
+            _onCartCreated.postValue(CheckoutDetails(site, domain.domainName, showCloseButton = true))
         }
     }
 

@@ -2,15 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/quick_link_item"
-        style="@style/MySiteQuickLinkRibbon"
-        android:layout_width="wrap_content"
+        style="@style/MySiteQuickLinkItem"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/quick_link_ribbon_margin"
         tools:text="@string/my_site_btn_site_pages"
         tools:icon="@drawable/ic_pages_white_24dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,7 +17,7 @@
 
     <org.wordpress.android.widgets.QuickStartFocusPoint
         android:id="@+id/quick_link_item_quick_start_focus_point"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:contentDescription="@string/quick_start_focus_point_description"
         android:elevation="@dimen/quick_start_focus_point_elevation"

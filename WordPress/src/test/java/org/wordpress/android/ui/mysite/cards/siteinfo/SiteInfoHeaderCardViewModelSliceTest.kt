@@ -30,7 +30,6 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
 @Suppress("LargeClass")
@@ -53,9 +52,6 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
     lateinit var quickStartRepository: QuickStartRepository
 
     @Mock
-    lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
-
-    @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
     @Mock
@@ -72,8 +68,6 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
     private lateinit var textInputDialogModels: MutableList<MySiteViewModel.TextInputDialogModel>
     private lateinit var dialogModels: MutableList<SiteDialogModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
-    private lateinit var trackWithTabSource: MutableList<MySiteViewModel.MySiteTrackWithTabSource>
-    private lateinit var tabNavigation: MutableList<MySiteViewModel.TabNavigation>
 
     private val siteLocalId = 1
     private val siteUrl = "http://site.com"
@@ -96,8 +90,7 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
             wpMediaUtilsWrapper,
             mediaUtilsWrapper,
             fluxCUtilsWrapper,
-            contextProvider,
-            mySiteDashboardTabsFeatureConfig
+            contextProvider
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
@@ -105,9 +98,6 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
         textInputDialogModels = mutableListOf()
         dialogModels = mutableListOf()
         navigationActions = mutableListOf()
-        trackWithTabSource = mutableListOf()
-        tabNavigation = mutableListOf()
-
 
         viewModelSlice.onSnackbarMessage.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
@@ -127,11 +117,6 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
         viewModelSlice.onNavigation.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
                 navigationActions.add(it)
-            }
-        }
-        viewModelSlice.onTrackWithTabSource.observeForever { event ->
-            event?.getContentIfNotHandled()?.let {
-                trackWithTabSource.add(it)
             }
         }
 

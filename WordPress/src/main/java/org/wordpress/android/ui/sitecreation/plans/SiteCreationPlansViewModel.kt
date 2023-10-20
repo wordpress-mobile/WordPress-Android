@@ -33,10 +33,10 @@ class SiteCreationPlansViewModel @Inject constructor(
     private val _actionEvents = Channel<SiteCreationPlansActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
-    private lateinit var domainName: DomainModel
+    private lateinit var domain: DomainModel
 
     fun start(siteCreationState: SiteCreationState) {
-        domainName = requireNotNull(siteCreationState.domain)
+        domain = requireNotNull(siteCreationState.domain)
         showPlans()
     }
 
@@ -45,15 +45,15 @@ class SiteCreationPlansViewModel @Inject constructor(
 
         val planId = uri.getQueryParameter(PLAN_ID_PARAM)?.toInt() ?: 0
         val planSlug = uri.getQueryParameter(PLAN_SLUG_PARAM).orEmpty()
+        val domainNameFromRedirectUrl = uri.getQueryParameter(DOMAIN_NAME_PARAM)
 
         val planModel = PlanModel(
             productId = planId,
             productSlug = planSlug,
-            productName = domainName.domainName,
             isCurrentPlan = false,
             hasDomainCredit = false
         )
-        postActionEvent(SiteCreationPlansActionEvent.CreateSite(planModel))
+        postActionEvent(SiteCreationPlansActionEvent.CreateSite(planModel, domainNameFromRedirectUrl))
     }
 
     fun onUrlLoaded() {
@@ -94,8 +94,8 @@ class SiteCreationPlansViewModel @Inject constructor(
             authority(AUTHORITY)
             appendPath(JETPACK_APP_PATH)
             appendPath(PLANS_PATH)
-            if (!domainName.isFree) {
-                appendQueryParameter(PAID_DOMAIN_NAME, domainName.domainName)
+            if (!domain.isFree) {
+                appendQueryParameter(PAID_DOMAIN_NAME, domain.domainName)
             }
         }
 
@@ -166,10 +166,11 @@ class SiteCreationPlansViewModel @Inject constructor(
         const val PLANS_PATH = "plans"
         const val PLAN_ID_PARAM = "plan_id"
         const val PLAN_SLUG_PARAM = "plan_slug"
+        const val DOMAIN_NAME_PARAM = "domain_name"
         const val PAID_DOMAIN_NAME = "paid_domain_name"
     }
 }
 
 sealed class SiteCreationPlansActionEvent {
-    data class CreateSite(val planModel: PlanModel) : SiteCreationPlansActionEvent()
+    data class CreateSite(val planModel: PlanModel, val domainName: String?) : SiteCreationPlansActionEvent()
 }

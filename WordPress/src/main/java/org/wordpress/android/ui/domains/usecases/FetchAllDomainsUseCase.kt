@@ -11,10 +11,8 @@ class FetchAllDomainsUseCase  @Inject constructor(
         val result = siteStore.fetchAllDomains()
         return when {
             result.isError -> AllDomains.Error
-            result.domains.isNullOrEmpty() -> return AllDomains.Empty
-            else -> result.domains?.run {
-                AllDomains.Success(this)
-            } ?: AllDomains.Empty
+            result.domains.isNullOrEmpty() -> AllDomains.Empty
+            else -> AllDomains.Success(requireNotNull(result.domains))
         }
     }
 }

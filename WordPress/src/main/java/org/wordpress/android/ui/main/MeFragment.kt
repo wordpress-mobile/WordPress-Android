@@ -238,6 +238,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
         if (BuildConfig.IS_JETPACK_APP && domainManagementFeatureConfig.isEnabled()) {
             domainManagementContainer.visibility = VISIBLE
+            domainManagementContainer.setOnClickListener {
+                context?.let { ActivityLauncher.openDomainManagement(it) }
+            }
         }
     }
 

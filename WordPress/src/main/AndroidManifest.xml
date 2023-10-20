@@ -96,6 +96,12 @@
             android:theme="@style/Wordpress.BottomBar"
             android:label="" />
 
+        <activity
+            android:name=".ui.mysite.menu.MenuActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:label="@string/my_site_section_screen_title"
+            android:exported="false" />
+
         <!-- Account activities -->
         <activity
             android:name=".ui.main.MeActivity"
@@ -790,6 +796,14 @@
         <!-- Jetpack full plugin install -->
         <activity
             android:name=".ui.jetpackplugininstall.fullplugin.install.JetpackFullPluginInstallActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+
+        <!-- Domain Management -->
+        <activity
+            android:name=".ui.domains.management.DomainManagementActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity
+            android:name=".ui.domains.management.purchasedomain.PurchaseDomainActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Services -->

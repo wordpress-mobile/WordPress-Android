@@ -23,7 +23,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class PersonalizationViewModelTest : BaseUnitTest() {
+class DashboardCardPersonalizationViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
@@ -36,7 +36,7 @@ class PersonalizationViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
-    private lateinit var viewModel: PersonalizationViewModel
+    private lateinit var viewModelSlice: DashboardCardPersonalizationViewModelSlice
 
     private val site = SiteModel().apply { siteId = 123L }
     private val localSiteId = 456
@@ -54,7 +54,7 @@ class PersonalizationViewModelTest : BaseUnitTest() {
         whenever(bloggingRemindersStore.bloggingRemindersModel(localSiteId))
             .thenReturn(flowOf(userSetBloggingRemindersModel))
 
-        viewModel = PersonalizationViewModel(
+        viewModelSlice = DashboardCardPersonalizationViewModelSlice(
             bgDispatcher = testDispatcher(),
             appPrefsWrapper = appPrefsWrapper,
             selectedSiteRepository = selectedSiteRepository,
@@ -62,9 +62,11 @@ class PersonalizationViewModelTest : BaseUnitTest() {
             analyticsTrackerWrapper = analyticsTrackerWrapper
         )
 
-        viewModel.uiState.observeForever {
+        viewModelSlice.uiState.observeForever {
             uiStateList.add(it)
         }
+
+        viewModelSlice.initialize(testScope())
     }
 
     @Test
@@ -72,7 +74,7 @@ class PersonalizationViewModelTest : BaseUnitTest() {
         val isStatsCardHidden = false
         whenever(appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(site.siteId)).thenReturn(isStatsCardHidden)
 
-        viewModel.start()
+        viewModelSlice.start(123L)
         val statsCardState = uiStateList.last().find { it.cardType == CardType.STATS }
 
         assertTrue(statsCardState!!.enabled)
@@ -82,7 +84,7 @@ class PersonalizationViewModelTest : BaseUnitTest() {
     fun `given draft post card is not hidden, when cards are fetched, then state is checked`() {
         whenever(appPrefsWrapper.getShouldHidePostDashboardCard(123L, PostCardType.DRAFT.name)).thenReturn(false)
 
-        viewModel.start()
+        viewModelSlice.start(123L)
         val statsCardState = uiStateList.last().find { it.cardType == CardType.DRAFT_POSTS }
 
         assertTrue(statsCardState!!.enabled)
@@ -92,7 +94,7 @@ class PersonalizationViewModelTest : BaseUnitTest() {
     fun `given scheduled post card is not hidden, when cards are fetched, then state is checked`() {
         whenever(appPrefsWrapper.getShouldHidePostDashboardCard(123L, PostCardType.SCHEDULED.name)).thenReturn(false)
 
-        viewModel.start()
+        viewModelSlice.start(123L)
         val statsCardState = uiStateList.last().find { it.cardType == CardType.SCHEDULED_POSTS }
 
         assertTrue(statsCardState!!.enabled)
@@ -102,7 +104,7 @@ class PersonalizationViewModelTest : BaseUnitTest() {
     fun `given pages card is not hidden, when cards are fetched, then state is checked`() {
         whenever(appPrefsWrapper.getShouldHidePagesDashboardCard(123L)).thenReturn(false)
 
-        viewModel.start()
+        viewModelSlice.start(123L)
         val statsCardState = uiStateList.last().find { it.cardType == CardType.PAGES }
 
         assertTrue(statsCardState!!.enabled)
@@ -112,7 +114,7 @@ class PersonalizationViewModelTest : BaseUnitTest() {
     fun `given activity log card is not hidden, when cards are fetched, then state is checked`() {
         whenever(appPrefsWrapper.getShouldHideActivityDashboardCard(123L)).thenReturn(false)
 
-        viewModel.start()
+        viewModelSlice.start(123L)
         val statsCardState = uiStateList.last().find { it.cardType == CardType.ACTIVITY_LOG }
 
         assertTrue(statsCardState!!.enabled)
@@ -122,7 +124,7 @@ class PersonalizationViewModelTest : BaseUnitTest() {
     fun `given blaze card is not hidden, when cards are fetched, then state is checked`() {
         whenever(appPrefsWrapper.hideBlazeCard(123L)).thenReturn(false)
 
-        viewModel.start()
+        viewModelSlice.start(123L)
         val statsCardState = uiStateList.last().find { it.cardType == CardType.BLAZE }
 
         assertTrue(statsCardState!!.enabled)
@@ -133,7 +135,7 @@ class PersonalizationViewModelTest : BaseUnitTest() {
         whenever(bloggingRemindersStore.bloggingRemindersModel(localSiteId))
             .thenReturn(flowOf(userSetBloggingRemindersModel.copy(isPromptsCardEnabled = false)))
 
-        viewModel.start()
+        viewModelSlice.start(123L)
         val statsCardState = uiStateList.last().find { it.cardType == CardType.BLOGGING_PROMPTS }
 
         assertFalse(statsCardState!!.enabled)
@@ -145,9 +147,9 @@ class PersonalizationViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(site.siteId)).thenReturn(true)
 
 
-        viewModel.start()
+        viewModelSlice.start(123L)
         val statsCardStateBefore = uiStateList.last().find { it.cardType == cardType }
-        viewModel.onCardToggled(cardType, true)
+        viewModelSlice.onCardToggled(cardType, true)
         val statsCardState = uiStateList.last().find { it.cardType == cardType }
 
         assertFalse(statsCardStateBefore!!.enabled)
@@ -158,8 +160,8 @@ class PersonalizationViewModelTest : BaseUnitTest() {
     fun `when stats card state is toggled, then pref is updated`() {
         val cardType = CardType.STATS
 
-        viewModel.start()
-        viewModel.onCardToggled(cardType, true)
+        viewModelSlice.start(123L)
+        viewModelSlice.onCardToggled(cardType, true)
 
         verify(appPrefsWrapper).setShouldHideTodaysStatsDashboardCard(site.siteId, false)
     }
@@ -168,8 +170,8 @@ class PersonalizationViewModelTest : BaseUnitTest() {
     fun `when draft posts card state is toggled, then pref is updated`() {
         val cardType = CardType.DRAFT_POSTS
 
-        viewModel.start()
-        viewModel.onCardToggled(cardType, true)
+        viewModelSlice.start(123L)
+        viewModelSlice.onCardToggled(cardType, true)
 
         verify(appPrefsWrapper).setShouldHidePostDashboardCard(site.siteId, PostCardType.DRAFT.name, false)
     }
@@ -178,8 +180,8 @@ class PersonalizationViewModelTest : BaseUnitTest() {
     fun `when scheduled posts card state is toggled, then pref is updated`() {
         val cardType = CardType.SCHEDULED_POSTS
 
-        viewModel.start()
-        viewModel.onCardToggled(cardType, true)
+        viewModelSlice.start(123L)
+        viewModelSlice.onCardToggled(cardType, true)
 
         verify(appPrefsWrapper).setShouldHidePostDashboardCard(site.siteId, PostCardType.SCHEDULED.name, false)
     }
@@ -188,8 +190,8 @@ class PersonalizationViewModelTest : BaseUnitTest() {
     fun `when pages card state is toggled, then pref is updated`() {
         val cardType = CardType.PAGES
 
-        viewModel.start()
-        viewModel.onCardToggled(cardType, true)
+        viewModelSlice.start(123L)
+        viewModelSlice.onCardToggled(cardType, true)
 
         verify(appPrefsWrapper).setShouldHidePagesDashboardCard(site.siteId, false)
     }
@@ -198,8 +200,8 @@ class PersonalizationViewModelTest : BaseUnitTest() {
     fun `when activity log card state is toggled, then pref is updated`() {
         val cardType = CardType.ACTIVITY_LOG
 
-        viewModel.start()
-        viewModel.onCardToggled(cardType, true)
+        viewModelSlice.start(123L)
+        viewModelSlice.onCardToggled(cardType, true)
 
         verify(appPrefsWrapper).setShouldHideActivityDashboardCard(site.siteId, false)
     }
@@ -208,8 +210,8 @@ class PersonalizationViewModelTest : BaseUnitTest() {
     fun `when blaze card state is toggled, then pref is updated`() {
         val cardType = CardType.BLAZE
 
-        viewModel.start()
-        viewModel.onCardToggled(cardType, true)
+        viewModelSlice.start(123L)
+        viewModelSlice.onCardToggled(cardType, true)
 
         verify(appPrefsWrapper).setShouldHideBlazeCard(site.siteId, false)
     }
@@ -218,8 +220,8 @@ class PersonalizationViewModelTest : BaseUnitTest() {
     fun `when blogging prompts card state is toggled, then pref is updated`() = test {
         val cardType = CardType.BLOGGING_PROMPTS
 
-        viewModel.start()
-        viewModel.onCardToggled(cardType, true)
+        viewModelSlice.start(123L)
+        viewModelSlice.onCardToggled(cardType, true)
 
         verify(bloggingRemindersStore).updateBloggingReminders(
             userSetBloggingRemindersModel.copy(isPromptsCardEnabled = true)
@@ -230,8 +232,8 @@ class PersonalizationViewModelTest : BaseUnitTest() {
     fun `given card disabled, when card state is toggled, then event is tracked`() {
         val cardType = CardType.STATS
 
-        viewModel.start()
-        viewModel.onCardToggled(cardType, true)
+        viewModelSlice.start(123L)
+        viewModelSlice.onCardToggled(cardType, true)
 
         verify(analyticsTrackerWrapper).track(
             AnalyticsTracker.Stat.PERSONALIZATION_SCREEN_CARD_SHOW_TAPPED,
@@ -244,8 +246,8 @@ class PersonalizationViewModelTest : BaseUnitTest() {
         val cardType = CardType.STATS
         whenever(appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(site.siteId)).thenReturn(false)
 
-        viewModel.start()
-        viewModel.onCardToggled(cardType, false)
+        viewModelSlice.start(123L)
+        viewModelSlice.onCardToggled(cardType, false)
 
         verify(analyticsTrackerWrapper).track(
             AnalyticsTracker.Stat.PERSONALIZATION_SCREEN_CARD_HIDE_TAPPED,

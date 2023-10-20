@@ -78,7 +78,7 @@ class SiteCreationPlansFragment : Fragment(), SiteCreationPlansWebViewClientList
     private fun handleActionEvents(actionEvent: SiteCreationPlansActionEvent) {
         when (actionEvent) {
             is SiteCreationPlansActionEvent.CreateSite -> {
-                (requireActivity() as PlansScreenListener).onPlanSelected(actionEvent.planModel)
+                (requireActivity() as PlansScreenListener).onPlanSelected(actionEvent.planModel, actionEvent.domainName)
             }
         }
     }

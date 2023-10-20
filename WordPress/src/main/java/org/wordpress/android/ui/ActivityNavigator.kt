@@ -11,7 +11,10 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 import org.wordpress.android.ui.blaze.blazepromote.ARG_BLAZE_FLOW_SOURCE
 import org.wordpress.android.ui.blaze.blazepromote.ARG_BLAZE_SHOULD_SHOW_OVERLAY
 import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity
+import org.wordpress.android.ui.mysite.menu.KEY_QUICK_START_EVENT
+import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
+import org.wordpress.android.ui.quickstart.QuickStartEvent
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -63,5 +66,17 @@ class ActivityNavigator @Inject constructor() {
 
     fun openDashboardPersonalization(context: Context) {
         context.startActivity(Intent(context, PersonalizationActivity::class.java))
+    }
+
+    fun openUnifiedMySiteMenu(context: Context, quickStartEvent: QuickStartEvent? = null) {
+        if (quickStartEvent != null) {
+            context.startActivity(
+                Intent(context, MenuActivity::class.java).apply {
+                    putExtra(KEY_QUICK_START_EVENT, quickStartEvent)
+                }
+            )
+            return
+        }
+        context.startActivity(Intent(context, MenuActivity::class.java))
     }
 }

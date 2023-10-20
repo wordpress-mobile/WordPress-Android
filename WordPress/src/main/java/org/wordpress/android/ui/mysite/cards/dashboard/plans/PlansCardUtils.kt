@@ -10,7 +10,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -53,8 +52,8 @@ class PlansCardUtils @Inject constructor(
         dashboardUpdateDebounceJob = scope.launch(bgDispatcher) {
             val isVisible = siteSelected
                 ?.dashboardCardsAndItems
-                ?.any {
-                        card -> card is DashboardPlansCard
+                ?.any { card ->
+                    card is DashboardPlansCard
                 } ?: false
 
             // add a delay (debouncing mechanism)
@@ -72,13 +71,8 @@ class PlansCardUtils @Inject constructor(
         }
     }
 
-    fun onResume(currentTab: MySiteTabType, siteSelected: SiteSelected?) {
-        if (currentTab == MySiteTabType.DASHBOARD) {
-            onDashboardRefreshed(siteSelected)
-        } else {
-            // moved away from dashboard, no longer waiting to track
-            waitingToTrack.set(false)
-        }
+    fun onResume(siteSelected: SiteSelected?) {
+        onDashboardRefreshed(siteSelected)
     }
 
     fun onSiteChanged(siteId: Int?, siteSelected: SiteSelected?) {
@@ -101,6 +95,7 @@ class PlansCardUtils @Inject constructor(
             mapOf(POSITION_INDEX to positionIndex(siteSelected))
         )
     }
+
     fun trackCardHiddenByUser(siteSelected: SiteSelected?) {
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_HIDDEN,
@@ -111,7 +106,7 @@ class PlansCardUtils @Inject constructor(
     private fun trackCardShown(positionIndex: Int) {
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_SHOWN,
-            mapOf(POSITION_INDEX to  positionIndex)
+            mapOf(POSITION_INDEX to positionIndex)
         )
     }
 

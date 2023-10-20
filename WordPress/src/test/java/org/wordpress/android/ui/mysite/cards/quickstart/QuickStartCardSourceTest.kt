@@ -38,8 +38,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
-import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -79,12 +77,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     lateinit var buildConfigWrapper: BuildConfigWrapper
 
     @Mock
-    lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
-
-    @Mock
-    lateinit var quickStartExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
-
-    @Mock
     lateinit var quickStartTracker: QuickStartTracker
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
@@ -103,7 +95,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         site.id = siteLocalId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(appPrefsWrapper.getLastSelectedQuickStartTypeForSite(any())).thenReturn(NewSiteQuickStartType)
-        whenever(quickStartExistingUsersV2FeatureConfig.isEnabled()).thenReturn(false)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         quickStartRepository = QuickStartRepository(
             testDispatcher(),
@@ -117,10 +108,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
             htmlCompat,
             contextProvider,
             htmlMessageUtils,
-            quickStartTracker,
-            buildConfigWrapper,
-            mySiteDashboardTabsFeatureConfig,
-            quickStartExistingUsersV2FeatureConfig
+            quickStartTracker
         )
         quickStartCardSource = QuickStartCardSource(
             quickStartRepository,
@@ -220,8 +208,8 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     fun `requestNextStepOfTask clears current active task`() = test {
         initQuickStartInProgress()
 
-        quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
-        quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
+        quickStartRepository.setActiveTask(QuickStartStore.QuickStartNewSiteTask.FOLLOW_SITE)
+        quickStartRepository.requestNextStepOfTask(QuickStartStore.QuickStartNewSiteTask.FOLLOW_SITE)
 
         val update = result.last()
         assertThat(update.activeTask).isNull()
@@ -354,6 +342,9 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(quickStartType, siteLocalId.toLong()))
             .thenReturn(nextUncompletedTask)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormat(anyOrNull())).thenReturn("")
+        whenever(resourceProvider.getString(any())).thenReturn("")
+        whenever(resourceProvider.getString(any(), any())).thenReturn("")
+        whenever(htmlCompat.fromHtml(any(), any())).thenReturn(" ")
         initBuild()
     }
 

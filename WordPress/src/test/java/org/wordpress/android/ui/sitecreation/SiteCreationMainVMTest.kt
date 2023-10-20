@@ -160,14 +160,6 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on checkout result when null shows previous step`() {
-        viewModel.onCheckoutResult(null)
-
-        verify(wizardManager).onBackPressed()
-        verify(onBackPressedObserver).onChanged(anyOrNull())
-    }
-
-    @Test
     fun `on checkout result when not null shows next step`() {
         viewModel.onCartCreated(CHECKOUT_DETAILS)
 
@@ -200,6 +192,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun `on site created updates result`() = test {
         viewModel.onDomainsScreenFinished(FREE_DOMAIN)
+        viewModel.onPlanSelection(FREE_PLAN, domainName = SITE_SLUG )
         viewModel.onFreeSiteCreated(SITE_MODEL)
         assertThat(currentWizardState(viewModel).result).isEqualTo(RESULT_NOT_IN_LOCAL_DB)
     }
@@ -208,6 +201,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     fun `on site created for free domain shows next step`() {
         viewModel.onDomainsScreenFinished(FREE_DOMAIN).run { clearInvocations(wizardManager) }
         viewModel.onFreeSiteCreated(SITE_MODEL)
+        viewModel.onPlanSelection(FREE_PLAN, domainName = SITE_SLUG)
         verify(wizardManager).showNextStep()
     }
 
