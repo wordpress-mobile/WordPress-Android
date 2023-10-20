@@ -44,6 +44,7 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
     private long mContentSize = -1;
     private long mMediaBytesWritten = 0;
 
+    @SuppressWarnings("deprecation")
     public XmlrpcUploadRequestBody(
             @NonNull MediaModel media,
             @NonNull ProgressListener listener,
