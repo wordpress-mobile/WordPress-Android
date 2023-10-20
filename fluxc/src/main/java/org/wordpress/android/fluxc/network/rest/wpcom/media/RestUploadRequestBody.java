@@ -70,6 +70,7 @@ public class RestUploadRequestBody extends BaseUploadRequestBody {
     }
 
     @NonNull
+    @SuppressWarnings("deprecation")
     private MultipartBody buildMultipartBody(@NonNull Map<String, Object> params) {
         MediaModel media = getMedia();
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
