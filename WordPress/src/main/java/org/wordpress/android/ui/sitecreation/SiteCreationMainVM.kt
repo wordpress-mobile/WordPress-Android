@@ -308,8 +308,13 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun onCheckoutResult(event: DomainRegistrationCompletedEvent?) {
-        if (event == null) return onBackPressed()
-        domainsRegistrationTracker.trackDomainsPurchaseDomainSuccess(isSiteCreation = true)
+        if (event == null) return
+        if (event.canceled) {
+            // Checkout canceled. A site with free domain will be created. Update the isFree parameter of the domain.
+            siteCreationState = siteCreationState.copy(domain = siteCreationState.domain?.copy(isFree = true))
+        } else {
+            domainsRegistrationTracker.trackDomainsPurchaseDomainSuccess(isSiteCreation = true)
+        }
         siteCreationState = siteCreationState.run {
             check(result is CreatedButNotFetched.InCart)
             copy(
