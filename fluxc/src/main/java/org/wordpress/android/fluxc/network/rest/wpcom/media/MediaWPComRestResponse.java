@@ -12,13 +12,13 @@ import java.util.List;
 public class MediaWPComRestResponse implements Response {
     public static final String DELETED_STATUS = "deleted";
 
-    public class MultipleMediaResponse {
+    public static class MultipleMediaResponse {
         public List<MediaWPComRestResponse> media;
         public List<String> errors;
         public int found;
     }
 
-    public class Thumbnails {
+    public static class Thumbnails {
         public String thumbnail;
         public String medium;
         public String large;
