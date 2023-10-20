@@ -92,6 +92,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     ArrayList<Integer> mOldSitesIDs;
 
     private Button mOtpButton;
+    private Button mSecurityKeyButton;
     private String mEmailAddress;
     private String mIdToken;
     private String mNonce;
@@ -185,6 +186,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                     doAuthAction(R.string.requesting_otp, "", true);
                 }
             }
+        });
+
+        mSecurityKeyButton = rootView.findViewById(R.id.login_security_key_button);
+        mSecurityKeyButton.setOnClickListener(view -> {
+
         });
     }
 
