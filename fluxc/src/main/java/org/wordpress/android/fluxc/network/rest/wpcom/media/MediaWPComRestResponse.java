@@ -22,7 +22,6 @@ public class MediaWPComRestResponse implements Response {
         public String thumbnail;
         public String medium;
         public String large;
-        public String post_thumbnail;
         public String fmt_std;
     }
 
