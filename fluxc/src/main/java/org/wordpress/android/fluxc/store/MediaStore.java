@@ -199,15 +199,15 @@ public class MediaStore extends Store {
      * Actions: CANCEL_MEDIA_UPLOAD
      */
     public static class CancelMediaPayload extends Payload<BaseNetworkError> {
-        public SiteModel site;
-        public MediaModel media;
+        @NonNull public SiteModel site;
+        @NonNull public MediaModel media;
         public boolean delete;
 
-        public CancelMediaPayload(SiteModel site, MediaModel media) {
+        public CancelMediaPayload(@NonNull SiteModel site, @NonNull MediaModel media) {
             this(site, media, true);
         }
 
-        public CancelMediaPayload(SiteModel site, MediaModel media, boolean delete) {
+        public CancelMediaPayload(@NonNull SiteModel site, @NonNull MediaModel media, boolean delete) {
             this.site = site;
             this.media = media;
             this.delete = delete;
@@ -919,10 +919,6 @@ public class MediaStore extends Store {
     }
 
     private void performCancelUpload(@NonNull CancelMediaPayload payload) {
-        if (payload.media == null) {
-            return;
-        }
-
         MediaModel media = payload.media;
         if (payload.delete) {
             MediaSqlUtils.deleteMedia(media);

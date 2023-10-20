@@ -329,10 +329,6 @@ public class UploadStore extends Store {
     }
 
     private void handleCancelMedia(@NonNull CancelMediaPayload payload) {
-        if (payload.media == null) {
-            return;
-        }
-
         // If the cancel action has the delete flag, the corresponding MediaModel will be deleted once this action
         // reaches the MediaStore, along with the MediaUploadModel (because of the FOREIGN KEY association)
         // Otherwise, we should mark the MediaUploadModel as FAILED
