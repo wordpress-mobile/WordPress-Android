@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -94,7 +95,7 @@ fun DomainListCard(uiState: DomainCardUiState) {
             } else {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_chevron_right_white_24dp),
-                    contentDescription = "",
+                    contentDescription = stringResource(R.string.domain_management_open_domain_details),
                     tint = MaterialTheme.colorScheme.outline,
                 )
             }
