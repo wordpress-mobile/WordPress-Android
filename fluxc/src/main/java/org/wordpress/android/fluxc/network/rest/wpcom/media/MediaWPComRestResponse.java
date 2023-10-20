@@ -14,8 +14,6 @@ public class MediaWPComRestResponse implements Response {
 
     public static class MultipleMediaResponse {
         public List<MediaWPComRestResponse> media;
-        public List<String> errors;
-        public int found;
     }
 
     public static class Thumbnails {
