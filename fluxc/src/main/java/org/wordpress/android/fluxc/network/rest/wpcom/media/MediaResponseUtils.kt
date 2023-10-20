@@ -13,15 +13,16 @@ class MediaResponseUtils
     /**
      * Creates a [MediaModel] list from a WP.com REST response to a request for all media.
      */
-    fun getMediaListFromRestResponse(from: MultipleMediaResponse?, localSiteId: Int): List<MediaModel>? {
-        return from?.media?.mapNotNull { getMediaFromRestResponse(it)?.apply { this.localSiteId = localSiteId } }
+    fun getMediaListFromRestResponse(from: MultipleMediaResponse, localSiteId: Int): List<MediaModel> {
+        return from.media.mapNotNull {
+            getMediaFromRestResponse(it).apply { this.localSiteId = localSiteId }
+        }
     }
 
     /**
      * Creates a [MediaModel] from a WP.com REST response to a fetch request.
      */
-    fun getMediaFromRestResponse(from: MediaWPComRestResponse?): MediaModel? {
-        if (from == null) return null
+    fun getMediaFromRestResponse(from: MediaWPComRestResponse): MediaModel {
         val media = MediaModel()
         media.mediaId = from.ID
         media.uploadDate = from.date
