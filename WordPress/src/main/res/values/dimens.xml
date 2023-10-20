@@ -520,7 +520,6 @@
     <dimen name="post_list_row_skeleton_view_date_height">16dp</dimen>
 
     <!-- author spinner for pages and posts lists -->
-    <dimen name="author_spinner_width">60dp</dimen>
     <dimen name="author_spinner_avatar_size">24dp</dimen>
     <dimen name="author_spinner_avatar_padding">1dp</dimen>
     <dimen name="author_spinner_dropdown_avatar_horizontal_margin">13dp</dimen>
