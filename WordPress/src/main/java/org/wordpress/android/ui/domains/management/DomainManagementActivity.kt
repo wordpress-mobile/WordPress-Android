@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
@@ -19,7 +20,10 @@ class DomainManagementActivity: AppCompatActivity() {
         setContent {
             M3Theme {
                 val uiState by viewModel.uiStateFlow.collectAsState()
-                MyDomainsScreen(uiState)
+                MyDomainsScreen(
+                    uiState = uiState,
+                    onAddDomainClicked = viewModel::onAddDomainClicked
+                )
             }
         }
 
@@ -29,6 +33,7 @@ class DomainManagementActivity: AppCompatActivity() {
     private fun handleActionEvents(actionEvent: DomainManagementViewModel.ActionEvent) {
         when (actionEvent)  {
             DomainManagementViewModel.ActionEvent.DomainTapped -> {}
+            DomainManagementViewModel.ActionEvent.AddDomainTapped -> ActivityLauncher.openNewDomainSearch(this)
         }
     }
 }

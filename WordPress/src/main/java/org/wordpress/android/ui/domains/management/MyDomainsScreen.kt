@@ -48,7 +48,10 @@ import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiS
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.Empty
 
 @Composable
-fun MyDomainsScreen(uiState: UiState) {
+fun MyDomainsScreen(
+    uiState: UiState,
+    onAddDomainClicked: () -> Unit
+) {
     Scaffold(
         topBar = {
             MainTopAppBar(
@@ -57,7 +60,7 @@ fun MyDomainsScreen(uiState: UiState) {
                 onNavigationIconClick = {},
                 actions = {
                     IconButton(
-                        onClick = {},
+                        onClick = onAddDomainClicked,
                         enabled = uiState is PopulatedList.Loaded || uiState is Empty,
                     ) {
                         Icon(
@@ -225,7 +228,7 @@ fun MyDomainsList(
 @Composable
 fun PreviewMyDomainsScreen() {
     M3Theme {
-        MyDomainsScreen(PopulatedList.Initial)
+        MyDomainsScreen(PopulatedList.Initial, onAddDomainClicked = {})
     }
 }
 @Preview(device = Devices.PIXEL_3A, group = "Error / Offline")
@@ -233,7 +236,7 @@ fun PreviewMyDomainsScreen() {
 @Composable
 fun PreviewMyDomainsScreenError() {
     M3Theme {
-        MyDomainsScreen(Error)
+        MyDomainsScreen(Error, onAddDomainClicked = {})
     }
 }
 
@@ -242,6 +245,6 @@ fun PreviewMyDomainsScreenError() {
 @Composable
 fun PreviewMyDomainsScreenEmpty() {
     M3Theme {
-        MyDomainsScreen(Empty)
+        MyDomainsScreen(Empty, onAddDomainClicked = {})
     }
 }
