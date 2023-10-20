@@ -566,7 +566,7 @@ class PagesViewModelTest : BaseUnitTest() {
         val wpcomSite = SiteModel()
         wpcomSite.setIsWPCom(true)
         wpcomSite.hasCapabilityEditOthersPages = true
-        wpcomSite.setIsSingleUserSite(true)
+        wpcomSite.setIsSingleUserSite(false)
         setUpPageStoreWithASinglePage(wpcomSite)
 
         whenever(appPrefsWrapper.postListAuthorSelection).thenReturn(EVERYONE)
