@@ -89,11 +89,15 @@ fun DomainListCard(uiState: DomainCardUiState) {
                 }
             }
             Spacer(modifier = Modifier.width(16.dp))
-            Icon(
-                painter = painterResource(id = R.drawable.ic_chevron_right_white_24dp),
-                contentDescription = "",
-                tint = MaterialTheme.colorScheme.outline,
-            )
+            if (uiState == DomainCardUiState.Initial) {
+                Spacer(modifier = Modifier.width(24.dp))
+            } else {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_chevron_right_white_24dp),
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.outline,
+                )
+            }
         }
     }
 }
