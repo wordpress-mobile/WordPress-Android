@@ -257,9 +257,11 @@ public class MediaStore extends Store {
         public String message;
         public int statusCode;
         public String logMessage;
+
         public MediaError(MediaErrorType type) {
             this.type = type;
         }
+
         public MediaError(MediaErrorType type, String message) {
             this.type = type;
             this.message = message;
@@ -331,6 +333,7 @@ public class MediaStore extends Store {
     public static class UploadStockMediaError implements OnChangedError {
         public UploadStockMediaErrorType type;
         public String message;
+
         public UploadStockMediaError(UploadStockMediaErrorType type, String message) {
             this.type = type;
             this.message = message;
@@ -340,15 +343,19 @@ public class MediaStore extends Store {
     public static class OnMediaChanged extends OnChanged<MediaError> {
         public MediaAction cause;
         public List<MediaModel> mediaList;
+
         public OnMediaChanged(MediaAction cause) {
             this(cause, new ArrayList<>(), null);
         }
+
         public OnMediaChanged(MediaAction cause, @NonNull List<MediaModel> mediaList) {
             this(cause, mediaList, null);
         }
+
         public OnMediaChanged(MediaAction cause, MediaError error) {
             this(cause, new ArrayList<>(), error);
         }
+
         public OnMediaChanged(MediaAction cause, @NonNull List<MediaModel> mediaList, MediaError error) {
             this.cause = cause;
             this.mediaList = mediaList;
@@ -360,11 +367,13 @@ public class MediaStore extends Store {
         public SiteModel site;
         public boolean canLoadMore;
         public MimeType.Type mimeType;
+
         public OnMediaListFetched(SiteModel site, boolean canLoadMore, MimeType.Type mimeType) {
             this.site = site;
             this.canLoadMore = canLoadMore;
             this.mimeType = mimeType;
         }
+
         public OnMediaListFetched(SiteModel site, MediaError error, MimeType.Type mimeType) {
             this.site = site;
             this.error = error;
@@ -377,6 +386,7 @@ public class MediaStore extends Store {
         public float progress;
         public boolean completed;
         public boolean canceled;
+
         public OnMediaUploaded(MediaModel media, float progress, boolean completed, boolean canceled) {
             this.media = media;
             this.progress = progress;
@@ -394,6 +404,7 @@ public class MediaStore extends Store {
             this.site = site;
             this.mediaList = mediaList;
         }
+
         public OnStockMediaUploaded(@NonNull SiteModel site, @NonNull UploadStockMediaError error) {
             this.site = site;
             this.error = error;
@@ -624,6 +635,7 @@ public class MediaStore extends Store {
     }
 
     public static final List<String> NOT_DELETED_STATES = new ArrayList<>();
+
     static {
         NOT_DELETED_STATES.add(MediaUploadState.DELETING.toString());
         NOT_DELETED_STATES.add(MediaUploadState.FAILED.toString());
@@ -843,8 +855,7 @@ public class MediaStore extends Store {
                     argError.getType().getErrorLogDescription(),
                     payload.media,
                     message,
-                    argError
-            );
+                    argError);
             return;
         }
 
