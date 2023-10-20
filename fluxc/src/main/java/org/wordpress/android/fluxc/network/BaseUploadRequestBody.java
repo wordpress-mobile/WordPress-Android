@@ -97,7 +97,7 @@ public abstract class BaseUploadRequestBody extends RequestBody {
         private long mBytesWritten = 0;
         private long mLastTimeOnProgressCalled = 0;
 
-        public CountingSink(Sink delegate) {
+        public CountingSink(@NonNull Sink delegate) {
             super(delegate);
         }
 
