@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
+import org.wordpress.android.fluxc.store.AccountStore.AuthSecurityKeyPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
@@ -336,7 +337,10 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             return;
         }
 
-
+        AuthSecurityKeyPayload payload = new AuthSecurityKeyPayload(0, 0, "",
+                "", new byte[0], new byte[0], new byte[0], new byte[0],
+                new byte[0]);
+        mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateSecurityKeyAction(payload));
     }
 
     private String getAuthCodeFromClipboard() {
