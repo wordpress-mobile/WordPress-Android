@@ -76,7 +76,10 @@ public class RestUploadRequestBody extends BaseUploadRequestBody {
 
         // add media attributes
         for (String key : params.keySet()) {
-            builder.addFormDataPart(String.format(MEDIA_PARAM_FORMAT, key), params.get(key).toString());
+            Object value = params.get(key);
+            if (value != null) {
+                builder.addFormDataPart(String.format(MEDIA_PARAM_FORMAT, key), value.toString());
+            }
         }
 
         // add media file data
