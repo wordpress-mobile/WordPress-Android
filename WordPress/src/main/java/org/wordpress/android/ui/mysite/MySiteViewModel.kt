@@ -19,14 +19,12 @@ import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_VIEW_SITE_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
@@ -960,13 +958,6 @@ class MySiteViewModel @Inject constructor(
                     mySiteSourceManager.refreshBloggingPrompts(true)
                 }
             }
-        }
-    }
-
-    @Subscribe(threadMode = MAIN)
-    fun onAccountChanged(event: OnAccountChanged) {
-        if (event.accountInfosChanged && event.causeOfChange == AccountAction.FETCH_SETTINGS) {
-            refresh()
         }
     }
 

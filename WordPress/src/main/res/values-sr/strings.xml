@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-11 22:41:48+0000
+Translation-Revision-Date: 2023-10-15 10:29:52+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.9
+Generator: GlotPress/4.0.0-alpha.11
 Language: sr_RS
 -->
 <resources>
     <string name="gutenberg_native_ungroup_block">Разгрупиши блок</string>
+    <string name="gutenberg_native_synced_patterns">Синхронизоване мустре</string>
+    <string name="gutenberg_native_deeply_nested_block">Дубоко угњежден блок</string>
+    <string name="pages_no_site_something_went_wrong">Охо, нешто је пошло по злу. Молимо покушајте поново касније.</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Иди на веб</string>
     <string name="personalization_screen_scheduled_posts_card_title">Заказани чланци</string>
     <string name="personalization_screen_scheduled_posts_card_description">Ваши предстојећи заказани чланци.</string>
     <string name="personalization_screen_draft_posts_card_description">Ваши недавни нацрти чланака.</string>
     <string name="personalization_screen_draft_posts_card_title">Нацрти чланака</string>
+    <string name="my_site_dashboard_no_cards_message_title">Све кртице су скривене</string>
+    <string name="personalization_screen_stats_card_description">Прегледи, посетиоци и свиђања</string>
     <string name="personalization_screen_description">Додај или сакриј картице</string>
     <string name="partial_media_access_prompt_select_more">Означи више</string>
     <string name="partial_media_access_prompt_change_settings">Измени подешавања</string>
+    <string name="personalization_screen_title">Персонализуј почетни језичак</string>
     <string name="gutenberg_native_choose_a_file">Одабери датотеку</string>
     <string name="my_site_post_card_menu_view_all_drafts">Види све нацрте</string>
     <string name="my_site_post_card_menu_view_all_scheduled_posts">Види све заказане чланке</string>
@@ -25,6 +32,30 @@ Language: sr_RS
     <string name="my_site_dashboard_card_more_menu_hide_card">Сакриј ово</string>
     <string name="contact_support_bot_ticket_comment_answer">Одговор:</string>
     <string name="contact_support_bot_ticket_comment_question">Питање:</string>
+    <string name="contact_support_question_five">Заборавио сам своје информације за логовање</string>
+    <string name="contact_support_question_four">Зашто не могу да се улогујем?</string>
+    <string name="contact_support_question_three">Не могу да отпремим фотографије/видео записе</string>
+    <string name="contact_support_question_two">Упомоћ, сајт ми је пао!</string>
+    <string name="contact_support_question_one">Која је адреса мог сајта?</string>
+    <string name="contact_support_suggestions">Нисте сигурни шта да питате?</string>
+    <string name="contact_support_get_support">Контактирајте подршку</string>
+    <string name="contact_support_input_placeholder">Пошаљи поруку…</string>
+    <string name="contact_support_first_message">Око чега Вам могу помоћи?</string>
+    <string name="post_settings_jetpack_social_share_message_clear">Очисти</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d преосталих друштвених дељења</string>
+    <string name="missing_splits_dialog_button">ЗАТВОРИ</string>
+    <string name="missing_splits_dialog_title">Неуспела инсталација</string>
+    <string name="campaign_detail_error_title">Нешто је пошло по злу</string>
+    <string name="campaign_listing_page_error_title">Нешто је пошло по злу</string>
+    <string name="domain_transfer_card_cta">Пренеси своје домене</string>
+    <string name="domain_transfer_card_title">Новости</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Повежи налоге</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Дељења на друштвеним мрежама</string>
+    <string name="prepublishing_nudges_social_action">Дељења на друштвеним мрежама</string>
+    <string name="sharing">Друштвене мреже</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Дељење на %1$d налога</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Дељење на %1$d од %2$d налога</string>
+    <string name="jetpack_social_social_shares_title_single_account">Дељње на %1$s</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Направи</string>
     <string name="budget_campaign_stats">Буџет</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Искључи обавештења</string>
@@ -893,7 +924,6 @@ Language: sr_RS
     <string name="quick_start_list_create_site_title">Креирај свој сајт</string>
     <string name="quick_start_dialog_view_site_title">Види свој сајт</string>
     <string name="quick_start_dialog_share_site_title">Подели свој сајт</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Додирни %1$s Дељење %2$s за наставак</string>
     <string name="quick_start_dialog_publish_post_title">Објави чланак</string>
     <string name="quick_start_dialog_need_help_button_negative">Не, хвала</string>
     <string name="quick_start_dialog_follow_sites_title">Повежи са другим веб местима</string>
@@ -1088,7 +1118,6 @@ Language: sr_RS
     <string name="version_with_name_param">Издање %s</string>
     <string name="permissions_denied_title">Допуштења</string>
     <string name="plugin_caption_featured">Издвојено</string>
-    <string name="sharing_disabled">Модул дељења је онемогућен</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">Преостало %1$d страница / чланака</string>
     <string name="uploading_subtitle_pages_only_one">Преостала 1 страница</string>
