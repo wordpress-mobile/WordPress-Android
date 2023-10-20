@@ -43,7 +43,7 @@ import static org.wordpress.android.fluxc.media.MediaTestUtils.insertRandomMedia
 @RunWith(RobolectricTestRunner.class)
 public class MediaStoreTest {
     @SuppressWarnings("KotlinInternalInJava")
-    private MediaStore mMediaStore = new MediaStore(new Dispatcher(),
+    private final MediaStore mMediaStore = new MediaStore(new Dispatcher(),
             Mockito.mock(MediaRestClient.class),
             Mockito.mock(MediaXMLRPCClient.class),
             Mockito.mock(WPComV2MediaRestClient.class),
