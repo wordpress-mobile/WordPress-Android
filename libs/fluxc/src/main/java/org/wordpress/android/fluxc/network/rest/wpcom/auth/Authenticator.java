@@ -116,10 +116,9 @@ public class Authenticator {
         return new BearerRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), code, listener, errorListener);
     }
 
-    public SecurityKeyChallengeRequest makeRequest(String userId, String twoStepNonce,
-                                                   Listener listener, ErrorListener errorListener) {
-        return new SecurityKeyChallengeRequest(userId, mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), twoStepNonce,
-                listener, errorListener);
+    public SecurityKeyChallengeRequest makeRequest(String userId, String twoStepNonce) {
+        return new SecurityKeyChallengeRequest(userId, mAppSecrets.getAppId(),
+                mAppSecrets.getAppSecret(), twoStepNonce);
     }
 
     private static class TokenRequest extends Request<Token> {
