@@ -38,6 +38,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.SecurityKeyChallengeRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.PasskeyRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
@@ -1343,9 +1344,18 @@ public class AccountStore extends Store {
     }
 
     private void handleSecurityKeyCredentials(final PushSecurityKeyPayload payload) {
-        mAuthenticator.makeRequest(payload.userId, payload.twoStepNonce,
-                token -> {},
-                this::handleAuthError);
+        SecurityKeyChallengeRequest request = mAuthenticator.makeRequest(payload.userId, payload.twoStepNonce);
+        mPasskeyRestClient.requestWebauthnChallenge(
+                request.mUserId, request.mClientId,
+                request.mAppSecret, request.mTwoStepNonce,
+                info -> {
+
+                    return null;
+                },
+                error -> {
+
+                    return null;
+                });
     }
 
     private boolean checkError(AccountRestPayload payload, String log) {
