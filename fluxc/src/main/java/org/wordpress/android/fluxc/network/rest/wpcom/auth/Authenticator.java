@@ -180,16 +180,14 @@ public class Authenticator {
         }
     }
 
-    public static class SecurityKeyRequest {
-        public Long userId;
-        public Long clientId;
-        public String secret;
+    public static class SecurityKeyRequest extends TokenRequest {
+        public String userId;
         public String twoStepNonce;
 
-        public SecurityKeyRequest(String userId, String clientId, String secret, String twoStepNonce) {
-            this.userId = Long.parseLong(userId);
-            this.clientId = Long.parseLong(clientId);
-            this.secret = secret;
+        public SecurityKeyRequest(String userId, String appId, String appSecret, String twoStepNonce
+                                 , Listener listener, ErrorListener errorListener) {
+            super(appId, appSecret, listener, errorListener);
+            this.userId = userId;
             this.twoStepNonce = twoStepNonce;
         }
     }
