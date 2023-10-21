@@ -116,6 +116,12 @@ public class Authenticator {
         return new BearerRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), code, listener, errorListener);
     }
 
+    public SecurityKeyChallengeRequest makeRequest(String userId, String twoStepNonce,
+                                                   Listener listener, ErrorListener errorListener) {
+        return new SecurityKeyChallengeRequest(userId, mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), twoStepNonce,
+                listener, errorListener);
+    }
+
     private static class TokenRequest extends Request<Token> {
         private final Listener mListener;
         protected Map<String, String> mParams = new HashMap<>();
@@ -180,11 +186,11 @@ public class Authenticator {
         }
     }
 
-    public static class SecurityKeyRequest extends TokenRequest {
+    public static class SecurityKeyChallengeRequest extends TokenRequest {
         public String userId;
         public String twoStepNonce;
 
-        public SecurityKeyRequest(String userId, String appId, String appSecret, String twoStepNonce
+        public SecurityKeyChallengeRequest(String userId, String appId, String appSecret, String twoStepNonce
                                  , Listener listener, ErrorListener errorListener) {
             super(appId, appSecret, listener, errorListener);
             this.userId = userId;
