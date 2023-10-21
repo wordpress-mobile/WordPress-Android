@@ -31,6 +31,7 @@ class PasskeyRestClient @Inject constructor(
     accessToken,
     userAgent
 ) {
+    @Suppress("LongParameterList")
     fun requestWebauthnChallenge(
         userId: String,
         clientId: String,
