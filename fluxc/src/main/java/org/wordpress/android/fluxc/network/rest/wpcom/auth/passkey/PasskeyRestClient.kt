@@ -31,33 +31,28 @@ class PasskeyRestClient @Inject constructor(
     accessToken,
     userAgent
 ) {
-    suspend fun requestWebauthnChallenge(
-        userId: Long,
-        clientId: Long,
+    fun requestWebauthnChallenge(
+        userId: String,
+        clientId: String,
         secret: String,
-        twoStepNonce: String
-    ): WebauthnChallengeInfo {
+        twoStepNonce: String,
+        onSuccess: (response: WebauthnChallengeInfo) -> Unit,
+        onFailure: (error: WPComGsonNetworkError) -> Unit
+    ) {
         val parameters = mapOf(
-            "user_id" to userId.toString(),
-            "client_id" to clientId.toString(),
+            "user_id" to userId,
+            "client_id" to clientId,
             "client_secret" to secret,
             "auth_type" to "webauthn",
             "two_step_nonce" to twoStepNonce
         )
 
-        return suspendCoroutine { cont ->
-            triggerAccountRequest(
-                url = webauthnChallengeEndpointUrl,
-                body = parameters,
-                onSuccess = {
-                    cont.resumeWith(Result.success(it.asChallengeInfo))
-                },
-                onFailure = {
-                    val exception = Exception(it.message)
-                    cont.resumeWith(Result.failure(exception))
-                }
-            )
-        }
+        triggerAccountRequest(
+            url = webauthnChallengeEndpointUrl,
+            body = parameters,
+            onSuccess = { onSuccess(it.asChallengeInfo) },
+            onFailure = onFailure
+        )
     }
 
     @Suppress("LongParameterList")
