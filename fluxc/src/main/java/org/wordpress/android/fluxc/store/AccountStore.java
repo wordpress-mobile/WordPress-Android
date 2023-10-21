@@ -1017,7 +1017,6 @@ public class AccountStore extends Store {
             case AUTHENTICATE_SECURITY_KEY:
                 handleSecurityKeyCredentials((PushSecurityKeyPayload) payload);
                 break;
-
         }
     }
 
@@ -1349,11 +1348,9 @@ public class AccountStore extends Store {
                 request.mUserId, request.mClientId,
                 request.mAppSecret, request.mTwoStepNonce,
                 info -> {
-
                     return null;
                 },
                 error -> {
-
                     return null;
                 });
     }
