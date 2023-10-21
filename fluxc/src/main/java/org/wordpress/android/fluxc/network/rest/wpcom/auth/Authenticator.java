@@ -180,6 +180,20 @@ public class Authenticator {
         }
     }
 
+    public static class SecurityKeyRequest {
+        public Long userId;
+        public Long clientId;
+        public String secret;
+        public String twoStepNonce;
+
+        public SecurityKeyRequest(String userId, String clientId, String secret, String twoStepNonce) {
+            this.userId = Long.parseLong(userId);
+            this.clientId = Long.parseLong(clientId);
+            this.secret = secret;
+            this.twoStepNonce = twoStepNonce;
+        }
+    }
+
     public static class Token {
         private static final String TOKEN_TYPE_FIELD_NAME = "token_type";
         private static final String ACCESS_TOKEN_FIELD_NAME = "access_token";
