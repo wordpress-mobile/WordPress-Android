@@ -186,15 +186,17 @@ public class Authenticator {
         }
     }
 
-    public static class SecurityKeyChallengeRequest extends TokenRequest {
-        public String userId;
-        public String twoStepNonce;
+    public static class SecurityKeyChallengeRequest {
+        public String mUserId;
+        public String mClientId;
+        public String mAppSecret;
+        public String mTwoStepNonce;
 
-        public SecurityKeyChallengeRequest(String userId, String appId, String appSecret, String twoStepNonce
-                                 , Listener listener, ErrorListener errorListener) {
-            super(appId, appSecret, listener, errorListener);
-            this.userId = userId;
-            this.twoStepNonce = twoStepNonce;
+        public SecurityKeyChallengeRequest(String userId, String appId, String appSecret, String twoStepNonce) {
+            this.mUserId = userId;
+            this.mClientId = appId;
+            this.mAppSecret = appSecret;
+            this.mTwoStepNonce = twoStepNonce;
         }
     }
 
