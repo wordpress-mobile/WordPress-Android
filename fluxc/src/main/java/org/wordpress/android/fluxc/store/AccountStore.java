@@ -117,29 +117,13 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class AuthSecurityKeyPayload extends Payload<BaseNetworkError> {
-        public long userId;
-        public long clientId;
-        public String secret;
+    public static class PushSecurityKeyPayload extends Payload<BaseNetworkError> {
+        public String userId;
         public String twoStepNonce;
-        public byte[] credentialId;
-        public byte[] clientDataJson;
-        public byte[] authenticatorData;
-        public byte[] signature;
-        public byte[] userHandle;
 
-        public AuthSecurityKeyPayload(long userId, long clientId, String secret, String twoStepNonce,
-                                      byte[] credentialId, byte[] clientDataJson, byte[] authenticatorData,
-                                      byte[] signature, byte[] userHandle) {
+        public PushSecurityKeyPayload(String userId, String twoStepNonce) {
             this.userId = userId;
-            this.clientId = clientId;
-            this.secret = secret;
             this.twoStepNonce = twoStepNonce;
-            this.credentialId = credentialId;
-            this.clientDataJson = clientDataJson;
-            this.authenticatorData = authenticatorData;
-            this.signature = signature;
-            this.userHandle = userHandle;
         }
     }
 
@@ -1030,7 +1014,7 @@ public class AccountStore extends Store {
                 handleSentAuthEmail((AuthEmailResponsePayload) payload);
                 break;
             case AUTHENTICATE_SECURITY_KEY:
-                handleSecurityKeyCredentials((AuthSecurityKeyPayload) payload);
+                handleSecurityKeyCredentials((PushSecurityKeyPayload) payload);
                 break;
 
         }
@@ -1358,8 +1342,10 @@ public class AccountStore extends Store {
         }
     }
 
-    private void handleSecurityKeyCredentials(final AuthSecurityKeyPayload payload) {
-
+    private void handleSecurityKeyCredentials(final PushSecurityKeyPayload payload) {
+        mAuthenticator.makeRequest(payload.userId, payload.twoStepNonce,
+                token -> {},
+                this::handleAuthError);
     }
 
     private boolean checkError(AccountRestPayload payload, String log) {
