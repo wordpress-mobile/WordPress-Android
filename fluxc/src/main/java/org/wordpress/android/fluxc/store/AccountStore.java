@@ -1029,6 +1029,10 @@ public class AccountStore extends Store {
             case SENT_AUTH_EMAIL:
                 handleSentAuthEmail((AuthEmailResponsePayload) payload);
                 break;
+            case AUTHENTICATE_SECURITY_KEY:
+                handleSecurityKeyCredentials((AuthSecurityKeyPayload) payload);
+                break;
+
         }
     }
 
@@ -1352,6 +1356,10 @@ public class AccountStore extends Store {
             OnAuthEmailSent event = new OnAuthEmailSent(payload.isSignup);
             emitChange(event);
         }
+    }
+
+    private void handleSecurityKeyCredentials(final AuthSecurityKeyPayload payload) {
+
     }
 
     private boolean checkError(AccountRestPayload payload, String log) {
