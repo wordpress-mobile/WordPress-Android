@@ -115,7 +115,7 @@ class PostListItemUiStateHelper @Inject constructor(
             ),
         )
         val defaultActions = createDefaultViewActions(buttonTypes, onButtonClicked)
-        val compactActions = createCompactViewActions(buttonTypes, onButtonClicked)
+        val moreActions = createMoreActions(buttonTypes, onButtonClicked)
 
         val remotePostId = RemotePostId(RemoteId(post.remotePostId))
         val localPostId = LocalPostId(LocalId(post.id))
@@ -162,7 +162,7 @@ class PostListItemUiStateHelper @Inject constructor(
             remotePostId = remotePostId,
             localPostId = localPostId,
             title = title,
-            excerpt = getExcerpt(post = post),
+            excerpt = excerpt,
             imageUrl = featuredImageUrl,
             postInfo = postInfo,
             statuses = statuses,
@@ -182,7 +182,7 @@ class PostListItemUiStateHelper @Inject constructor(
         return PostListItemUiState(
             data = itemUiData,
             actions = defaultActions,
-            compactActions = compactActions,
+            moreActions = moreActions,
             onSelected = onSelected
         )
     }
@@ -335,13 +335,12 @@ class PostListItemUiStateHelper @Inject constructor(
         hasUnhandledConflicts: Boolean,
         hasAutoSave: Boolean
     ): List<UiString> {
-        val labels = getErrorAndProgressStatuses(
+        return getErrorAndProgressStatuses(
             uploadUiState,
             postStatus,
             hasUnhandledConflicts,
             hasAutoSave
         )
-        return labels
     }
 
     private fun getErrorLabel(uploadUiState: UploadFailed, postStatus: PostStatus): UiString? {
@@ -515,7 +514,7 @@ class PostListItemUiStateHelper @Inject constructor(
         }
     }
 
-    private fun createCompactViewActions(
+    private fun createMoreActions(
         buttonTypes: List<PostListButtonType>,
         onButtonClicked: (PostListButtonType) -> Unit
     ): PostListItemAction.MoreItem {
