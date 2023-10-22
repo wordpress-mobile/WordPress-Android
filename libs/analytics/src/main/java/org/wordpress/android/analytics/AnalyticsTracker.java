@@ -1073,7 +1073,8 @@ public final class AnalyticsTracker {
         PERSONALIZATION_SCREEN_SHORTCUT_SHOW_QUICK_LINK_TAPPED,
         PERSONALIZATION_SCREEN_SHORTCUT_HIDE_QUICK_LINK_TAPPED,
         QUICK_LINK_ITEM_TAPPED,
-        MORE_MENU_ITEM_TAPPED
+        MORE_MENU_ITEM_TAPPED,
+        POST_LIST_CREATE_POST_TAPPED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
