@@ -72,7 +72,7 @@
     <dimen name="bottom_nav_bar_badge_size">12dp</dimen>
 
     <!-- featured image in post list -->
-    <dimen name="postlist_featured_image_height">48dp</dimen>
+    <dimen name="postlist_featured_image_height">64dp</dimen>
 
     <!-- left/right margin for content such as Me fragment, My Site fragment -->
     <dimen name="content_margin_normal">@dimen/margin_extra_large</dimen>

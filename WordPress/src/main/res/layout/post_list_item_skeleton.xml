@@ -56,8 +56,8 @@
 
             <View
                 android:id="@+id/skeleton_image"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/postlist_featured_image_height"
+                android:layout_height="@dimen/postlist_featured_image_height"
                 android:layout_marginTop="@dimen/margin_small"
                 android:layout_marginEnd="@dimen/margin_extra_large"
                 android:background="@color/gray_30"
