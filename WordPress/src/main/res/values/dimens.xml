@@ -774,4 +774,5 @@
     <dimen name="switch_thumb_size">20dp</dimen>
     <dimen name="switch_horizontal_padding">7dp</dimen>
     <dimen name="switch_vertical_padding">4dp</dimen>
+    <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 </resources>
