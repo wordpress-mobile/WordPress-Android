@@ -335,7 +335,7 @@ class PostListMainViewModel @Inject constructor(
             }
 
             _isSearchExpanded.value = true
-            _viewState.value = _viewState.value?.copy(isFabVisible = false)
+            _viewState.value = _viewState.value?.copy(isFabVisible = false, isAuthorFilterVisible = false)
         }
     }
 
@@ -346,7 +346,8 @@ class PostListMainViewModel @Inject constructor(
         launch {
             delay(delay)
             withContext(mainDispatcher) {
-                _viewState.value = _viewState.value?.copy(isFabVisible = true)
+                _viewState.value =
+                    _viewState.value?.copy(isFabVisible = true, isAuthorFilterVisible = isFilteringByAuthorSupported)
             }
         }
     }
