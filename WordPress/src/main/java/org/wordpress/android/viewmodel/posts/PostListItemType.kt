@@ -13,7 +13,7 @@ sealed class PostListItemType {
     class PostListItemUiState(
         val data: PostListItemUiStateData,
         val actions: List<PostListItemAction>,
-        val compactActions: PostListItemAction.MoreItem,
+        val moreActions: PostListItemAction.MoreItem,
         val onSelected: () -> Unit
     ) : PostListItemType()
 
