@@ -16,7 +16,6 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.ImageView.ScaleType
 import android.widget.PopupMenu
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -27,6 +26,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
+import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.extensions.expandTouchTargetArea
@@ -241,7 +242,15 @@ sealed class PostListItemViewHolder(
             imageManager.cancelRequestAndClearImageView(featuredImageView)
         } else {
             featuredImageView.visibility = View.VISIBLE
-            imageManager.load(featuredImageView, ImageType.PHOTO, imageUrl, ScaleType.CENTER_CROP)
+            imageManager.loadImageWithCorners(
+                featuredImageView,
+                ImageType.PHOTO_ROUNDED_CORNERS,
+                imageUrl,
+                uiHelpers.getPxOfUiDimen(
+                    WordPress.getContext(),
+                    UiDimen.UIDimenRes(R.dimen.my_site_post_item_image_corner_radius)
+                )
+            )
         }
         loadedFeaturedImgUrl = imageUrl
     }
