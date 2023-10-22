@@ -80,6 +80,7 @@ class PostListItemUiStateHelper @Inject constructor(
     @Suppress("LongParameterList", "LongMethod")
     fun createPostListItemUiState(
         authorFilterSelection: AuthorFilterSelection,
+        isFilteringByAuthorSupported: Boolean,
         post: PostModel,
         site: SiteModel,
         unhandledConflicts: Boolean,
@@ -131,7 +132,8 @@ class PostListItemUiStateHelper @Inject constructor(
             post.authorDisplayName,
             authorFilterSelection,
             isSearch,
-            post
+            post,
+            isFilteringByAuthorSupported
         )
         val statuses = getStatuses(
             postStatus = postStatus,
@@ -194,7 +196,8 @@ class PostListItemUiStateHelper @Inject constructor(
         displayName: String?,
         authorFilterSelection: AuthorFilterSelection,
         isSearch: Boolean,
-        post: PostModel
+        post: PostModel,
+        isAuthorFilterVisible: Boolean
     ): List<PostInfo> {
         val postInfo: MutableList<PostInfo> = mutableListOf()
         postInfo.addAll(getPostInfoLabels(postStatus, post, isSearch))
@@ -203,7 +206,7 @@ class PostListItemUiStateHelper @Inject constructor(
             postInfo.add(PostInfo(UiStringText(formattedDate)))
         }
 
-        if (authorFilterSelection == EVERYONE && !displayName.isNullOrBlank()) {
+        if (isAuthorFilterVisible && authorFilterSelection == EVERYONE && !displayName.isNullOrBlank()) {
             postInfo.add(PostInfo(UiStringText(displayName)))
         }
 
