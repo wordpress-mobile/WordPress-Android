@@ -1371,6 +1371,7 @@ public class AccountStore extends Store {
                     return null;
                 },
                 error -> {
+                    //TODO: Handle error
                     return null;
                 });
     }
