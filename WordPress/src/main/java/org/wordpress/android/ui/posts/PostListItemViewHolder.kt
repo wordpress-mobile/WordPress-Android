@@ -230,7 +230,7 @@ sealed class PostListItemViewHolder(
     private fun getMenuItemTitleWithIcon(context: Context, item: PostListItemAction): SpannableStringBuilder {
         var icon: Drawable? = setTint(
             context,
-            context.getDrawable(item.buttonType.iconResId)!!, item.buttonType.colorAttrId
+            ContextCompat.getDrawable(context, item.buttonType.iconResId)!!, item.buttonType.colorAttrId
         )
         // If there's no icon, we insert a transparent one to keep the title aligned with the items which have icons.
         if (icon == null) icon = ColorDrawable(Color.TRANSPARENT)
