@@ -1760,6 +1760,7 @@
     <string name="post_status_post_scheduled">Scheduled</string>
     <string name="post_status_post_trashed">Trashed</string>
     <string name="post_status_post_published">Published</string>
+    <string name="post_status_post_edited">Edited</string>
 
     <string-array name="post_settings_statuses" translatable="false">
         <item>@string/post_status_publish_post</item>
