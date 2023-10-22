@@ -92,8 +92,7 @@ class PostListViewModel @Inject constructor(
             dispatcher = dispatcher,
             postStore = postStore,
             postFetcher = connector.postFetcher,
-            transform = this::transformPostModelToPostListItemUiState,
-            postListType = connector.postListType
+            transform = this::transformPostModelToPostListItemUiState
         )
     }
 
