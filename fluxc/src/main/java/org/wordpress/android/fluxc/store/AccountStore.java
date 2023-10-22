@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryResultPayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountFetchUsernameSuggestionsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
@@ -41,6 +42,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEma
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.SecurityKeyChallengeRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.PasskeyRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.WebauthnChallengeInfo;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
 import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
 import org.wordpress.android.util.AppLog;
@@ -115,16 +117,6 @@ public class AccountStore extends Store {
         public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
                                 AuthEmailPayloadSource source) {
             this(emailOrUsername, isSignup, (AuthEmailFlow) flow, (AuthEmailSource) source);
-        }
-    }
-
-    public static class PushSecurityKeyPayload extends Payload<BaseNetworkError> {
-        public String userId;
-        public String twoStepNonce;
-
-        public PushSecurityKeyPayload(String userId, String twoStepNonce) {
-            this.userId = userId;
-            this.twoStepNonce = twoStepNonce;
         }
     }
 
@@ -336,6 +328,32 @@ public class AccountStore extends Store {
         EMAIL_POST,
         EMAIL_POST_FREQUENCY,
         NOTIFICATION_POST
+    }
+
+    public static class PushSecurityKeyPayload extends Payload<BaseNetworkError> {
+        public String userId;
+        public String twoStepNonce;
+
+        public PushSecurityKeyPayload(String userId, String twoStepNonce) {
+            this.userId = userId;
+            this.twoStepNonce = twoStepNonce;
+        }
+    }
+
+    public static class OnWebauthnChallengeReceived extends OnChanged<OnWebauthnChallengeError> {
+        public WebauthnChallengeInfo challengeInfo;
+
+        public OnWebauthnChallengeReceived(WebauthnChallengeInfo challengeInfo) {
+            this.challengeInfo = challengeInfo;
+        }
+    }
+
+    public static class OnWebauthnChallengeError implements OnChangedError {
+        public WPComGsonNetworkError error;
+
+        public OnWebauthnChallengeError(WPComGsonNetworkError error) {
+            this.error = error;
+        }
     }
 
     /**
@@ -1348,6 +1366,8 @@ public class AccountStore extends Store {
                 request.mUserId, request.mClientId,
                 request.mAppSecret, request.mTwoStepNonce,
                 info -> {
+                    OnWebauthnChallengeReceived event = new OnWebauthnChallengeReceived(info);
+                    emitChange(event);
                     return null;
                 },
                 error -> {
