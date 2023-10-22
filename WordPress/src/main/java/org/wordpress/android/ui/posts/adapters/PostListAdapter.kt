@@ -11,9 +11,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.ui.posts.PostListItemViewHolder
-import org.wordpress.android.ui.posts.PostListViewLayoutType
-import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
-import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
@@ -24,10 +21,8 @@ import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiStat
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 
 private const val VIEW_TYPE_POST = 0
-private const val VIEW_TYPE_POST_COMPACT = 1
 private const val VIEW_TYPE_ENDLIST_INDICATOR = 2
 private const val VIEW_TYPE_LOADING = 3
-private const val VIEW_TYPE_LOADING_COMPACT = 4
 
 class PostListAdapter(
     context: Context,
@@ -35,23 +30,12 @@ class PostListAdapter(
     private val uiHelpers: UiHelpers
 ) : PagedListAdapter<PostListItemType, ViewHolder>(PostListDiffItemCallback) {
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
-    private var itemLayoutType: PostListViewLayoutType = PostListViewLayoutType.defaultValue
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is EndListIndicatorItem -> VIEW_TYPE_ENDLIST_INDICATOR
-            is PostListItemUiState -> {
-                when (itemLayoutType) {
-                    STANDARD -> VIEW_TYPE_POST
-                    COMPACT -> VIEW_TYPE_POST_COMPACT
-                }
-            }
-            is LoadingItem, null -> {
-                when (itemLayoutType) {
-                    STANDARD -> VIEW_TYPE_LOADING
-                    COMPACT -> VIEW_TYPE_LOADING_COMPACT
-                }
-            }
+            is PostListItemUiState ->  VIEW_TYPE_POST
+            is LoadingItem, null -> VIEW_TYPE_LOADING
         }
     }
 
@@ -66,15 +50,8 @@ class PostListAdapter(
                 val view = layoutInflater.inflate(R.layout.post_list_item_skeleton, parent, false)
                 LoadingViewHolder(view)
             }
-            VIEW_TYPE_LOADING_COMPACT -> {
-                val view = layoutInflater.inflate(R.layout.post_list_item_skeleton_compact, parent, false)
-                LoadingViewHolder(view)
-            }
             VIEW_TYPE_POST -> {
                 PostListItemViewHolder.Standard(parent, imageManager, uiHelpers)
-            }
-            VIEW_TYPE_POST_COMPACT -> {
-                PostListItemViewHolder.Compact(parent, imageManager, uiHelpers)
             }
             else -> {
                 // Fail fast if a new view type is added so the we can handle it
@@ -102,15 +79,6 @@ class PostListAdapter(
             // getItem returns the item, or NULL, if a null placeholder is at the specified position.
             item?.let { holder.onBind((item as LoadingItem)) }
         }
-    }
-
-    fun updateItemLayoutType(updatedItemLayoutType: PostListViewLayoutType): Boolean {
-        if (updatedItemLayoutType == itemLayoutType) {
-            return false
-        }
-        itemLayoutType = updatedItemLayoutType
-        notifyDataSetChanged()
-        return true
     }
 
     private class LoadingViewHolder(view: View) : ViewHolder(view) {
