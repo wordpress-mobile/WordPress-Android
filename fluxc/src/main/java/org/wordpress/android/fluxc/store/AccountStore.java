@@ -340,14 +340,14 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class OnWebauthnChallengeReceived extends OnChanged<OnWebauthnChallengeError> {
+    public static class OnWebauthnChallengeReceived extends OnChanged<WebauthnChallengeError> {
         public WebauthnChallengeInfo challengeInfo;
     }
 
-    public static class OnWebauthnChallengeError implements OnChangedError {
+    public static class WebauthnChallengeError implements OnChangedError {
         public WPComGsonNetworkError error;
 
-        public OnWebauthnChallengeError(WPComGsonNetworkError error) {
+        public WebauthnChallengeError(WPComGsonNetworkError error) {
             this.error = error;
         }
     }
@@ -1369,7 +1369,7 @@ public class AccountStore extends Store {
                 },
                 error -> {
                     OnWebauthnChallengeReceived event = new OnWebauthnChallengeReceived();
-                    event.error = new OnWebauthnChallengeError(error);
+                    event.error = new WebauthnChallengeError(error);
                     emitChange(event);
                     return null;
                 });
