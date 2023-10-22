@@ -23,8 +23,8 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadFailed
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadQueued
@@ -579,25 +579,25 @@ class PostListItemUiStateHelperTest {
     @Test
     fun `private label shown for private posts`() {
         val state = createPostListItemUiState(post = createPostModel(status = POST_STATE_PRIVATE))
-        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_status_post_private))
+        assertThat(state.data.postInfo).contains(PostInfo(UiStringRes(R.string.post_status_post_private), true))
     }
 
     @Test
     fun `pending review label shown for posts pending review`() {
         val state = createPostListItemUiState(post = createPostModel(status = POST_STATE_PENDING))
-        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_status_pending_review))
+        assertThat(state.data.postInfo).contains(PostInfo(UiStringRes(R.string.post_status_pending_review), true))
     }
 
     @Test
     fun `local draft label shown for local posts`() {
         val state = createPostListItemUiState(post = createPostModel(isLocalDraft = true))
-        assertThat(state.data.statuses).contains(UiStringRes(R.string.local_draft))
+        assertThat(state.data.postInfo).contains(PostInfo(UiStringRes(R.string.local_draft), true))
     }
 
     @Test
     fun `locally changed label shown for locally changed posts`() {
         val state = createPostListItemUiState(post = createPostModel(isLocallyChanged = true))
-        assertThat(state.data.statuses).contains(UiStringRes(R.string.local_changes))
+        assertThat(state.data.postInfo).contains(PostInfo(UiStringRes(R.string.local_changes), true))
     }
 
     @Test
@@ -819,8 +819,8 @@ class PostListItemUiStateHelperTest {
         val state = createPostListItemUiState(
             post = createPostModel(isLocallyChanged = true, status = POST_STATE_PRIVATE)
         )
-        assertThat(state.data.statuses).contains(UiStringRes(R.string.local_changes))
-        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_status_post_private))
+        assertThat(state.data.postInfo).contains(PostInfo(UiStringRes(R.string.local_changes), true))
+        assertThat(state.data.postInfo).contains(PostInfo(UiStringRes(R.string.post_status_post_private), true))
     }
 
     @Test
@@ -991,9 +991,9 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat(state.data.postInfo!!.size).isEqualTo(2)
-        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
-        assertThat(state.data.postInfo!![1]).isEqualTo(UiStringText(authorDisplayName))
+        assertThat(state.data.postInfo!!.size).isEqualTo(3)
+        assertThat(state.data.postInfo!![1].label).isEqualTo(UiStringText(FORMATTER_DATE))
+        assertThat(state.data.postInfo!![2].label).isEqualTo(UiStringText(authorDisplayName))
     }
 
     @Test
@@ -1006,8 +1006,8 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat(state.data.postInfo!!.size).isEqualTo(1)
-        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
+        assertThat(state.data.postInfo!!.size).isEqualTo(2)
+        assertThat(state.data.postInfo!![1].label).isEqualTo(UiStringText(FORMATTER_DATE))
     }
 
     @Test
@@ -1020,8 +1020,8 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat(state.data.postInfo!!.size).isEqualTo(1)
-        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
+        assertThat(state.data.postInfo!!.size).isEqualTo(2)
+        assertThat(state.data.postInfo!![1].label).isEqualTo(UiStringText(FORMATTER_DATE))
     }
 
     @Test
@@ -1036,9 +1036,9 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat(state.data.postInfo!!.size).isEqualTo(2)
-        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
-        assertThat(state.data.postInfo!![1]).isEqualTo(UiStringText(authorDisplayName))
+        assertThat(state.data.postInfo!!.size).isEqualTo(3)
+        assertThat(state.data.postInfo!![1].label).isEqualTo((UiStringText(FORMATTER_DATE)))
+        assertThat(state.data.postInfo!![2].label).isEqualTo(UiStringText(authorDisplayName))
     }
 
     @Test
@@ -1053,8 +1053,8 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat(state.data.postInfo!!.size).isEqualTo(1)
-        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
+        assertThat(state.data.postInfo!!.size).isEqualTo(2)
+        assertThat(state.data.postInfo!![1].label).isEqualTo(UiStringText(FORMATTER_DATE))
     }
 
     @Test
@@ -1068,8 +1068,8 @@ class PostListItemUiStateHelperTest {
 
         // Assert
         assertThat(state.data.postInfo!!.size).isEqualTo(2)
-        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
-        assertThat(state.data.postInfo!![1]).isEqualTo(UiStringRes(R.string.post_status_post_private))
+        assertThat(state.data.postInfo!![0].label).isEqualTo(UiStringRes(R.string.post_status_post_private))
+        assertThat(state.data.postInfo!![1].label).isEqualTo(UiStringText(FORMATTER_DATE))
     }
 
     @Test
@@ -1080,7 +1080,7 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.local_draft))
+        assertThat(state.data.postInfo).contains(PostInfo(UiStringRes(R.string.local_draft), true))
     }
 
     @Test
@@ -1091,7 +1091,8 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.post_status_sticky))
+        assertThat(state.data.postInfo).contains(PostInfo(UiStringRes(R.string.post_status_sticky), true))
+        assertThat(state.data.statuses).isEmpty()
     }
 
     @Test
@@ -1102,8 +1103,8 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_status_post_private))
-        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_status_sticky))
+        assertThat(state.data.postInfo).contains(PostInfo(UiStringRes(R.string.post_status_post_private), true))
+        assertThat(state.data.postInfo).contains(PostInfo(UiStringRes(R.string.post_status_sticky), true))
     }
 
     private fun createPostModel(
@@ -1124,6 +1125,7 @@ class PostListItemUiStateHelperTest {
 
     private fun createPostListItemUiState(
         authorFilterSelection: AuthorFilterSelection = AuthorFilterSelection.EVERYONE,
+        isFilteringByAuthorSupported: Boolean = true,
         post: PostModel = PostModel(),
         site: SiteModel = SiteModel(),
         unhandledConflicts: Boolean = false,
@@ -1148,7 +1150,8 @@ class PostListItemUiStateHelperTest {
         onAction = onAction,
         performingCriticalAction = performingCriticalAction,
         uploadStatusTracker = uploadStatusTracker,
-        isSearch = isSearch
+        isSearch = isSearch,
+        isFilteringByAuthorSupported = isFilteringByAuthorSupported
     )
 
     private fun createFailedUploadUiState(
