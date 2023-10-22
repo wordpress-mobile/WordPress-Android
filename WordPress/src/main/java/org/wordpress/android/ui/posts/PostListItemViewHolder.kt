@@ -9,6 +9,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
@@ -35,6 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import android.R as AndroidR
 
 const val POST_LIST_ICON_PADDING = 8
+const val MAX_TITLE_LINES = 3
 
 sealed class PostListItemViewHolder(
     @LayoutRes layout: Int,
@@ -108,6 +110,29 @@ sealed class PostListItemViewHolder(
             container.background = null
         } else {
             container.background = selectableBackground
+        }
+
+        if ((data.title != null && data.title != noTitle) && data.excerpt != null) {
+            titleTextView.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    // Remove the listener to avoid multiple callbacks
+                    titleTextView.viewTreeObserver.removeOnPreDrawListener(this)
+
+                    // Get the layout of the title text
+                    val titleLayout = titleTextView.layout
+
+                    // Check if the title occupies more than 3 lines
+                    val titleLines = titleLayout.lineCount
+                    if (titleLines >= MAX_TITLE_LINES) {
+                        // If the title occupies more than 3 lines, hide the excerpt
+                        excerptTextView.visibility = View.GONE
+                    } else {
+                        // If the title occupies 3 lines or less, show the excerpt
+                        excerptTextView.visibility = View.VISIBLE
+                    }
+                    return true
+                }
+            })
         }
     }
 
