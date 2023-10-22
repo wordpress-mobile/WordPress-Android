@@ -1708,4 +1708,13 @@
     <style name="MediaPickerPartialAccessTextButton" parent="TextAppearance.Material3.LabelLarge">
         <item name="android:textColor">@color/primary_emphasis_medium_selector</item>
     </style>
+
+    <!-- Post List Item -->
+    <style name="PostList.Item.Title" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+    </style>
+
+    <style name="PostList.Item.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+    </style>
 </resources>

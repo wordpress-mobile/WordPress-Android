@@ -515,6 +515,7 @@
     <dimen name="post_list_row_skeleton_view_title_height">20dp</dimen>
     <dimen name="post_list_row_skeleton_view_excerpt_height">16dp</dimen>
     <dimen name="post_list_row_skeleton_view_date_height">16dp</dimen>
+    <dimen name="post_list_row_skeleton_view_post_info_height">14dp</dimen>
 
     <!-- author spinner for pages and posts lists -->
     <dimen name="author_spinner_width">60dp</dimen>
