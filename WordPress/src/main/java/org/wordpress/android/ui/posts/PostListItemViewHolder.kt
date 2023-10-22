@@ -26,7 +26,6 @@ import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateData
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
-import org.wordpress.android.widgets.WPTextView
 import java.util.concurrent.atomic.AtomicBoolean
 import android.R as AndroidR
 
@@ -39,9 +38,9 @@ sealed class PostListItemViewHolder(
     private val uiHelpers: UiHelpers
 ) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     private val featuredImageView: ImageView = itemView.findViewById(R.id.image_featured)
-    private val titleTextView: WPTextView = itemView.findViewById(R.id.title)
-    private val postInfoTextView: WPTextView = itemView.findViewById(R.id.post_info)
-    private val statusesTextView: WPTextView = itemView.findViewById(R.id.statuses_label)
+    private val titleTextView: TextView = itemView.findViewById(R.id.title)
+    private val postInfoTextView: TextView = itemView.findViewById(R.id.post_info)
+    private val statusesTextView: TextView = itemView.findViewById(R.id.statuses_label)
     private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
     private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
     private val container: ConstraintLayout = itemView.findViewById(R.id.container)
@@ -143,7 +142,7 @@ sealed class PostListItemViewHolder(
     }
 
     private fun updateStatusesLabel(
-        view: WPTextView,
+        view: TextView,
         statuses: List<UiString>,
         delimiter: UiString,
         @ColorRes color: Int?
