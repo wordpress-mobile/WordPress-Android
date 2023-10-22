@@ -2,6 +2,10 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +27,7 @@ import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
+import org.wordpress.android.viewmodel.posts.PostInfo
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateData
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
@@ -49,6 +54,8 @@ sealed class PostListItemViewHolder(
         AndroidR.attr.selectableItemBackground
     )
 
+    private val noTitle = UiString.UiStringRes(R.string.untitled_in_parentheses)
+    private val delimiter = " · "
     /**
      * Url of an image loaded in the `featuredImageView`.
      */
@@ -104,12 +111,40 @@ sealed class PostListItemViewHolder(
         }
     }
 
-    private fun updatePostInfoLabel(view: TextView, uiStrings: List<UiString>?) {
-        val concatenatedText = uiStrings?.joinToString(separator = "  ·  ") {
+    private fun updatePostInfoLabel(view: TextView, postInfoList: List<PostInfo>?) {
+        if (!postInfoList.containsTrueShowColor()) {
+            updatePostInfoWithoutColor(view, postInfoList?.map { it.label })
+            return
+        }
+
+        val spannableStringBuilder = SpannableStringBuilder()
+
+        postInfoList?.let { list ->
+            list.forEachIndexed { index, postInfo ->
+                if (index > 0) {
+                    spannableStringBuilder.append(delimiter)
+                }
+                if (postInfo.showColor) {
+                    spannableStringBuilder.append(getSpannableLabel(view, postInfo.label, postInfo.labelColor))
+                } else {
+                    spannableStringBuilder.append(uiHelpers.getTextOfUiString(view.context, postInfo.label))
+                }
+            }
+        }
+        uiHelpers.setTextOrHide(view, SpannableString.valueOf(spannableStringBuilder))
+    }
+
+    private fun updatePostInfoWithoutColor(view: TextView, uiStrings: List<UiString>?) {
+        val concatenatedText = uiStrings?.joinToString(separator = delimiter) {
             uiHelpers.getTextOfUiString(view.context, it)
         }
         uiHelpers.setTextOrHide(view, concatenatedText)
     }
+
+    private fun List<PostInfo>?.containsTrueShowColor(): Boolean {
+        return this?.any { it.showColor } ?: false
+    }
+
 
     // todo: Will come back to this when hooking up more actions
 //    protected fun onMoreClicked(actions: List<PostListItemAction>, v: View) {
@@ -206,4 +241,15 @@ sealed class PostListItemViewHolder(
 //        ssb.setSpan(imageSpan, 1, 2, 0)
 //        return ssb
 //    }
+    private fun getSpannableLabel(view: TextView, label: UiString, colorResId: Int): SpannableString {
+        val originalText = uiHelpers.getTextOfUiString(view.context, label)
+        val spannableString = SpannableString(originalText)
+
+        // Set the color for a specific range of characters
+        val color = view.context.getColor(colorResId)
+        val colorSpan = ForegroundColorSpan(color)
+        spannableString.setSpan(colorSpan, 0, originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        return spannableString
+    }
 }
