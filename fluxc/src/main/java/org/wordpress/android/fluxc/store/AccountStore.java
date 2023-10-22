@@ -342,10 +342,6 @@ public class AccountStore extends Store {
 
     public static class OnWebauthnChallengeReceived extends OnChanged<OnWebauthnChallengeError> {
         public WebauthnChallengeInfo challengeInfo;
-
-        public OnWebauthnChallengeReceived(WebauthnChallengeInfo challengeInfo) {
-            this.challengeInfo = challengeInfo;
-        }
     }
 
     public static class OnWebauthnChallengeError implements OnChangedError {
@@ -1366,12 +1362,15 @@ public class AccountStore extends Store {
                 request.mUserId, request.mClientId,
                 request.mAppSecret, request.mTwoStepNonce,
                 info -> {
-                    OnWebauthnChallengeReceived event = new OnWebauthnChallengeReceived(info);
+                    OnWebauthnChallengeReceived event = new OnWebauthnChallengeReceived();
+                    event.challengeInfo = info;
                     emitChange(event);
                     return null;
                 },
                 error -> {
-                    //TODO: Handle error
+                    OnWebauthnChallengeReceived event = new OnWebauthnChallengeReceived();
+                    event.error = new OnWebauthnChallengeError(error);
+                    emitChange(event);
                     return null;
                 });
     }
