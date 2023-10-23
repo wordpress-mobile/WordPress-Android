@@ -52,7 +52,7 @@ fun MyDomainsScreen(uiState: UiState) {
     Scaffold(
         topBar = {
             MainTopAppBar(
-                title = stringResource(R.string.domain_management_my_domains),
+                title = stringResource(R.string.domain_management_my_domains_title),
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = {},
                 actions = {
@@ -102,12 +102,12 @@ fun ErrorScreen() {
         modifier = Modifier.fillMaxSize(),
     ) {
         Text(
-            text = "Couldn't Update",
+            text = stringResource(R.string.domain_management_error_title),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.outline,
         )
         Text(
-            text = "Check that you're online and refresh.",
+            text = stringResource(R.string.domain_management_error_subtitle),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.outline,
         )
@@ -122,17 +122,17 @@ fun EmptyScreen(onFindDomainTapped: () -> Unit) {
         modifier = Modifier.fillMaxSize(),
     ) {
         Text(
-            text = "You don't have any domains",
+            text = stringResource(R.string.domain_management_empty_title),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.outline,
         )
         Text(
-            text = "...yet. Tap below to find your perfect domain.",
+            text = stringResource(R.string.domain_management_empty_subtitle),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.outline,
         )
         PrimaryButton(
-            text = "Find a domain",
+            text = stringResource(R.string.domain_management_empty_find_domain),
             onClick = onFindDomainTapped,
             modifier = Modifier
                 .fillMaxWidth()
