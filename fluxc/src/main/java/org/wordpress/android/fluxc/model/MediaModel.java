@@ -120,6 +120,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     private MediaFields[] mFieldsToUpdate = MediaFields.values();
 
     @Override
+    @SuppressWarnings("ConditionCoveredByFurtherCondition")
     public boolean equals(Object other) {
         if (this == other) return true;
         if (other == null || !(other instanceof MediaModel)) return false;
