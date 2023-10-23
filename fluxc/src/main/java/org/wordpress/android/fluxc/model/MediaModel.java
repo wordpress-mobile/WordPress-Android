@@ -104,7 +104,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         CAPTION("caption"),
         ALT("alt");
 
-        private String mFieldName;
+        private final String mFieldName;
 
         // Constructor
         MediaFields(String fieldName) {
