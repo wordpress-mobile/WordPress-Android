@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.media;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.network.Response;
 
@@ -20,30 +21,30 @@ public class MediaWPComRestResponse implements Response {
     }
 
     public static class Thumbnails {
-        public String thumbnail;
-        public String medium;
-        public String large;
-        public String fmt_std;
+        @Nullable public String thumbnail;
+        @Nullable public String medium;
+        @Nullable public String large;
+        @Nullable public String fmt_std;
     }
 
     public long ID;
-    public String date;
+    @NonNull public String date;
     public long post_ID;
     public long author_ID;
-    public String URL;
-    public String guid;
-    public String file;
-    public String extension;
-    public String mime_type;
-    public String title;
-    public String caption;
-    public String description;
-    public String alt;
-    public Thumbnails thumbnails;
+    @NonNull public String URL;
+    @NonNull public String guid;
+    @NonNull public String file;
+    @NonNull public String extension;
+    @NonNull public String mime_type;
+    @NonNull public String title;
+    @NonNull public String caption;
+    @NonNull public String description;
+    @NonNull public String alt;
+    @Nullable public Thumbnails thumbnails;
     public int height;
     public int width;
     public int length;
-    public String videopress_guid;
+    @Nullable public String videopress_guid;
     public boolean videopress_processing_done;
-    public String status;
+    @Nullable public String status;
 }

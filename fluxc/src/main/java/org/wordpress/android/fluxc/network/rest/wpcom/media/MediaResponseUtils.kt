@@ -37,17 +37,17 @@ class MediaResponseUtils
         media.caption = StringEscapeUtils.unescapeHtml4(from.caption)
         media.description = StringEscapeUtils.unescapeHtml4(from.description)
         media.alt = StringEscapeUtils.unescapeHtml4(from.alt)
-        if (from.thumbnails != null) {
-            if (!TextUtils.isEmpty(from.thumbnails.fmt_std)) {
-                media.thumbnailUrl = from.thumbnails.fmt_std
+        from.thumbnails?.let {
+            if (!TextUtils.isEmpty(it.fmt_std)) {
+                media.thumbnailUrl = it.fmt_std
             } else {
-                media.thumbnailUrl = from.thumbnails.thumbnail
+                media.thumbnailUrl = it.thumbnail
             }
-            if (!TextUtils.isEmpty(from.thumbnails.large)) {
-                media.fileUrlLargeSize = from.thumbnails.large
+            if (!TextUtils.isEmpty(it.large)) {
+                media.fileUrlLargeSize = it.large
             }
-            if (!TextUtils.isEmpty(from.thumbnails.medium)) {
-                media.fileUrlMediumSize = from.thumbnails.medium
+            if (!TextUtils.isEmpty(it.medium)) {
+                media.fileUrlMediumSize = it.medium
             }
         }
         media.height = from.height
