@@ -247,8 +247,8 @@ public class Authenticator {
         }
 
         public static Token fromJSONObject(JSONObject tokenJSON) throws JSONException {
-            JSONObject data = tokenJSON.getJSONObject(DATA);
-            if (data.isNull(USER_ID) || data.isNull(TWO_STEP_WEBAUTHN_NONCE)) {
+            JSONObject data = tokenJSON.optJSONObject(DATA);
+            if (data != null) {
                 return new Token(data.getString(USER_ID), data.getString(TWO_STEP_WEBAUTHN_NONCE));
             }
 
