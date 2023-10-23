@@ -450,6 +450,16 @@ public class AccountStore extends Store {
         public String username;
     }
 
+    public static class OnSecurityKeyAuthStarted extends OnChanged<AuthenticationError> {
+        public String userId;
+        public String webauthnNonce;
+
+        public OnSecurityKeyAuthStarted(String userId, String webauthnNonce) {
+            this.userId = userId;
+            this.webauthnNonce = webauthnNonce;
+        }
+    }
+
     public static class OnUsernameSuggestionsFetched extends OnChanged<AccountFetchUsernameSuggestionsError> {
         public List<String> suggestions;
     }
@@ -1335,8 +1345,8 @@ public class AccountStore extends Store {
             }
             emitChange(new OnAuthenticationChanged());
         } else if (token.getUserId() != null) {
-            OnAuthenticationChanged event = new OnAuthenticationChanged();
-            event.error = new AuthenticationError(AuthenticationErrorType.NEEDS_SECURITY_KEY, "");
+            OnSecurityKeyAuthStarted event = new OnSecurityKeyAuthStarted(token.getUserId(),
+                    token.getWebauthnNonce());
             emitChange(event);
         } else {
             OnAuthenticationChanged event = new OnAuthenticationChanged();
