@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -32,6 +31,7 @@ class PasskeyRestClient @Inject constructor(
     accessToken,
     userAgent
 ) {
+    @Suppress("LongParameterList")
     fun requestWebauthnInitialData(
         clientId: String,
         secret: String,
