@@ -39,8 +39,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.SecurityKeyChallengeRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.WebauthnRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.PasskeyRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.WebauthnChallengeInfo;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
@@ -331,12 +331,12 @@ public class AccountStore extends Store {
     }
 
     public static class PushSecurityKeyPayload extends Payload<BaseNetworkError> {
-        public String userId;
-        public String twoStepNonce;
+        public String username;
+        public String password;
 
-        public PushSecurityKeyPayload(String userId, String twoStepNonce) {
-            this.userId = userId;
-            this.twoStepNonce = twoStepNonce;
+        public PushSecurityKeyPayload(String username, String password) {
+            this.username = username;
+            this.password = password;
         }
     }
 
@@ -1357,10 +1357,30 @@ public class AccountStore extends Store {
     }
 
     private void handleSecurityKeyCredentials(final PushSecurityKeyPayload payload) {
-        SecurityKeyChallengeRequest request = mAuthenticator.makeRequest(payload.userId, payload.twoStepNonce);
+        WebauthnRequest request = mAuthenticator.makeRequest(payload.username, payload.password);
+        mPasskeyRestClient.requestWebauthnInitialData(
+                request.mClientId,
+                request.mAppSecret,
+                request.mUsername,
+                request.mPassword,
+                userData -> {
+                    requestWebauthnChallenge(String.valueOf(userData.getUserId()), userData.getWebauthnNonce(),
+                            request.mClientId, request.mAppSecret);
+                    return null;
+                },
+                error -> {
+                    OnWebauthnChallengeReceived event = new OnWebauthnChallengeReceived();
+                    event.error = new WebauthnChallengeError(error);
+                    emitChange(event);
+                    return null;
+                });
+    }
+
+    private void requestWebauthnChallenge(String userId, String webauthnNonce,
+                                          String clientId, String secret) {
         mPasskeyRestClient.requestWebauthnChallenge(
-                request.mUserId, request.mClientId,
-                request.mAppSecret, request.mTwoStepNonce,
+                userId, clientId,
+                secret, webauthnNonce,
                 info -> {
                     OnWebauthnChallengeReceived event = new OnWebauthnChallengeReceived();
                     event.challengeInfo = info;
