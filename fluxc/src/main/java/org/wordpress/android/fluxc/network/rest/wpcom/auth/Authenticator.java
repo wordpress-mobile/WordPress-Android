@@ -217,15 +217,17 @@ public class Authenticator {
         private String mUserId;
         private String mTwoStepWebauthnNonce;
 
-        public Token(String accessToken, String siteUrl, String siteId, String scope,
-                     String tokenType, String userId, String twoStepWebauthnNonce) {
+        public Token(String accessToken, String siteUrl, String siteId, String scope, String tokenType) {
             mAccessToken = accessToken;
             mSiteUrl = siteUrl;
             mSiteId = siteId;
             mScope = scope;
             mTokenType = tokenType;
+        }
+
+        public Token(String userId, String webAuthTwoStepNonce) {
             mUserId = userId;
-            mTwoStepWebauthnNonce = twoStepWebauthnNonce;
+            mTwoStepWebauthnNonce = webAuthTwoStepNonce;
         }
 
         public String getAccessToken() {
@@ -241,12 +243,14 @@ public class Authenticator {
         }
 
         public static Token fromJSONObject(JSONObject tokenJSON) throws JSONException {
-            // TODO: check if this is really necessary or can be accessed easily
             JSONObject data = tokenJSON.getJSONObject(DATA);
+            if (data.isNull(USER_ID) || data.isNull(TWO_STEP_WEBAUTHN_NONCE)) {
+                return new Token(data.getString(USER_ID), data.getString(TWO_STEP_WEBAUTHN_NONCE));
+            }
+
             return new Token(tokenJSON.getString(ACCESS_TOKEN_FIELD_NAME), tokenJSON.getString(SITE_URL_FIELD_NAME),
                     tokenJSON.getString(SITE_ID_FIELD_NAME), tokenJSON.getString(SCOPE_FIELD_NAME),
-                    tokenJSON.getString(TOKEN_TYPE_FIELD_NAME),
-                    data.getString(USER_ID), data.getString(TWO_STEP_WEBAUTHN_NONCE));
+                    tokenJSON.getString(TOKEN_TYPE_FIELD_NAME));
         }
     }
 
