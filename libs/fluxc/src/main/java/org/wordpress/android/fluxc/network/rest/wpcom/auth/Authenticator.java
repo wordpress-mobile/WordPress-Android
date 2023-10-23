@@ -242,6 +242,10 @@ public class Authenticator {
             return mUserId;
         }
 
+        public String getWebauthnNonce() {
+            return mTwoStepWebauthnNonce;
+        }
+
         public static Token fromJSONObject(JSONObject tokenJSON) throws JSONException {
             JSONObject data = tokenJSON.getJSONObject(DATA);
             if (data.isNull(USER_ID) || data.isNull(TWO_STEP_WEBAUTHN_NONCE)) {
