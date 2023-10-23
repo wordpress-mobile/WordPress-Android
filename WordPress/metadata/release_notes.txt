@@ -1,3 +1,2 @@
-* [*] Block Editor: Split formatted text on triple Enter [https://github.com/WordPress/gutenberg/pull/53354]
-* [*] Block Editor: Quote block: Ensure border is visible with block-based themes in dark [https://github.com/WordPress/gutenberg/pull/54964]
-
+In the block editor, you can now split or exit a formatted block by pressing the “enter” key three times.
+The left-hand border is always visible for quote blocks, too, even in block-based themes on dark mode. And you can quote us on that.

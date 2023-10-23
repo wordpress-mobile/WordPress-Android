@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-02 20:44:45+0000
+Translation-Revision-Date: 2023-10-18 10:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.9
+Generator: GlotPress/4.0.0-alpha.11
 Language: de
 -->
 <resources>
+    <string name="account_and_settings">Konto und Einstellungen</string>
+    <string name="site_creation_plans_selection_title">Tarif auswählen</string>
+    <string name="site_creation_domain_free_with_annual_plan">Bei kostenpflichtigen Jahrestarifen im ersten Jahr kostenlos</string>
+    <string name="reader_label_followers_count_single">1 Follower</string>
+    <string name="reader_secondary_bookmarked">Gespeichert</string>
+    <string name="reader_secondary_bookmark">Speichern</string>
+    <string name="reader_discover_recommended_header_new">Das gefällt dir vielleicht</string>
     <string name="gutenberg_native_ungroup_block">Block entgruppieren</string>
     <string name="gutenberg_native_tap_here_to_show_more_details">Hier tippen, um mehr Details anzuzeigen.</string>
     <string name="gutenberg_native_synced_patterns">Synchronisierte Vorlagen</string>
@@ -665,7 +672,7 @@ Language: de
     <string name="gutenberg_native_tiled_gallery_settings">Einstellungen für gekachelte Galerien</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navigiert zum Layout-Auswahlbildschirm</string>
     <string name="gutenberg_native_gallery_style">Galerie-Stil</string>
-    <string name="sharing_connect_via_web_warning_message">Du kannst dein %s-Konto auf der WordPress.com-Website verbinden. Wenn du fertig bist, kehre zur WordPress-App zurück, um deine Teilen-Einstellungen zu ändern.</string>
+    <string name="sharing_connect_via_web_warning_message">Du kannst dein %s-Konto auf der WordPress.com-Website verbinden. Wenn du fertig bist, kehre zur App zurück, um deine Social-Einstellungen zu ändern.</string>
     <string name="about_automattic_app_icon_description">App-Icon</string>
     <string name="about_automattic_back_icon_description">Zurück-Icon</string>
     <string name="about_automattic_logo_description">Automattic-Logo</string>
@@ -2313,7 +2320,7 @@ Language: de
     <string name="quick_start_dialog_view_site_title">Deine Website ansehen</string>
     <string name="quick_start_dialog_view_site_message">Zeige eine Vorschau deiner Website an, um zu sehen, wie sie deinen Besuchern angezeigt wird.</string>
     <string name="quick_start_dialog_share_site_title">Website teilen</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tippe auf %1$s Teilen %2$s, um fortzufahren</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tippe auf %1$sSocial%2$s, um fortzufahren.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tippe auf die %1$s Verbindungen %2$s, um deine Social-Media-Konten hinzuzufügen</string>
     <string name="quick_start_dialog_share_site_message">Verknüpfe deine Social Media-Konten, sodass deine Website automatisch neue Beiträge teilt.</string>
     <string name="quick_start_dialog_publish_post_title">Beitrag veröffentlichen</string>
@@ -2537,8 +2544,8 @@ Language: de
     <string name="permissions_denied_message">Es sieht so aus, als hättest du die für diese Funktion erforderlichen Berechtigungen deaktiviert.&lt;br/&gt;&lt;br/&gt;Um dies zu ändern, bearbeite deine Berechtigungen und stelle sicher, dass &lt;strong&gt;%s&lt;/strong&gt; aktiviert ist.</string>
     <string name="permissions_denied_title">Berechtigungen</string>
     <string name="plugin_caption_featured">Vorgestellt</string>
-    <string name="sharing_disabled_description">Du kannst nicht auf deine Teilen-Einstellungen zugreifen, da dein Sharing Jetpack-Modul deaktiviert ist.</string>
-    <string name="sharing_disabled">Sharing-Modul deaktiviert</string>
+    <string name="sharing_disabled_description">Du kannst nicht auf deine Teilen-Einstellungen für soziale Medien zugreifen, da dein Jetpack Social-Modul deaktiviert ist.</string>
+    <string name="sharing_disabled">Social-Modul deaktiviert</string>
     <string name="version_with_name_param">Version %s</string>
     <string name="notification_sound_has_invalid_path">Der Pfad für den ausgewählten Ton ist ungültig. Bitte wähle einen anderen.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
@@ -3488,6 +3495,7 @@ Language: de
     <string name="reader_toast_err_already_follow_blog">Du folgst dieser Website bereits</string>
     <string name="reader_toast_err_get_blog_info">Diese Website kann nicht angezeigt werden</string>
     <string name="reader_label_followed_blog">Website wird verfolgt</string>
+    <string name="reader_label_followers_count">%s Follower</string>
     <string name="reader_hint_add_tag_or_url">Gib eine URL oder ein Thema ein, der/dem du folgen möchtest</string>
     <string name="reader_page_followed_blogs">Abonnierte Websites</string>
     <string name="reader_page_followed_tags">Abonnierte Themen</string>
