@@ -239,8 +239,10 @@ class PostListItemUiStateHelper @Inject constructor(
         when (postStatus) {
             UNKNOWN -> if (isSearch) labels.add(PostInfo(UiStringRes(R.string.unknown)))
             PUBLISHED -> labels.add(PostInfo(UiStringRes(R.string.post_status_post_published)))
-            DRAFT -> if (isSearch) labels.add(PostInfo(UiStringRes(R.string.post_status_draft)))
-            PENDING -> if (isSearch) labels.add(PostInfo(UiStringRes(R.string.post_status_post_edited)))
+            DRAFT -> if (isSearch) labels.add(PostInfo(UiStringRes(R.string.post_status_draft))) else labels.add(
+                PostInfo(UiStringRes(R.string.post_status_post_edited))
+            )
+            PENDING -> if (isSearch) labels.add(PostInfo(UiStringRes(R.string.post_status_pending_review)))
             TRASHED -> labels.add(PostInfo(UiStringRes(R.string.post_status_post_trashed)))
             SCHEDULED -> labels.add(PostInfo(UiStringRes(R.string.post_status_post_scheduled)))
             PRIVATE -> if (isSearch) labels.add(PostInfo(UiStringRes(R.string.post_status_post_private)))
