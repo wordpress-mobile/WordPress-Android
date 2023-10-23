@@ -74,6 +74,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private static final String ARG_2FA_USER_ID = "ARG_2FA_USER_ID";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
+    private static final String ARG_WEBAUTHN_NONCE = "WEBAUTHN_NONCE";
     private static final int LENGTH_NONCE_AUTHENTICATOR = 6;
     private static final int LENGTH_NONCE_BACKUP = 8;
     private static final int LENGTH_NONCE_SMS = 7;
@@ -99,6 +100,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private String mIdToken;
     private String mNonce;
     private String mNonceAuthenticator;
+    private String mWebauthnNonce;
     private String mNonceBackup;
     private String mNonceSms;
     private String mPassword;
@@ -116,6 +118,18 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
         args.putString(ARG_PASSWORD, password);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static Login2FaFragment newInstanceSecurityKey(String emailAddress, String password,
+                                                          String userId, String webauthnNonce) {
+        Login2FaFragment fragment = new Login2FaFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_EMAIL_ADDRESS, emailAddress);
+        args.putString(ARG_PASSWORD, password);
+        args.putString(ARG_2FA_USER_ID, userId);
+        args.putString(ARG_WEBAUTHN_NONCE, webauthnNonce);
         fragment.setArguments(args);
         return fragment;
     }
@@ -243,6 +257,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mIsSocialLogin = getArguments().getBoolean(ARG_2FA_IS_SOCIAL);
         mIsSocialLoginConnect = getArguments().getBoolean(ARG_2FA_IS_SOCIAL_CONNECT);
         mService = getArguments().getString(ARG_2FA_SOCIAL_SERVICE);
+        mWebauthnNonce = getArguments().getString(ARG_WEBAUTHN_NONCE);
 
         if (savedInstanceState != null) {
             // Overwrite argument nonce values with saved state values on device rotation.
