@@ -76,6 +76,8 @@ import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.model.asDomainModel
+import org.wordpress.android.fluxc.model.jetpacksocial.JetpackSocial
+import org.wordpress.android.fluxc.model.jetpacksocial.JetpackSocialMapper
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
@@ -85,6 +87,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
+import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainPriceResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
@@ -108,6 +111,7 @@ import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException
 import org.wordpress.android.fluxc.persistence.domains.DomainDao
+import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.NON_PRIVATE_AT_SITE
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.SITE_MISSING_FROM_STORE
@@ -148,6 +152,8 @@ open class SiteStore @Inject constructor(
     private val siteSqlUtils: SiteSqlUtils,
     private val jetpackCPConnectedSitesDao: JetpackCPConnectedSitesDao,
     private val domainDao: DomainDao,
+    private val jetpackSocialDao: JetpackSocialDao,
+    private val jetpackSocialMapper: JetpackSocialMapper,
     private val coroutineEngine: CoroutineEngine
 ) : Store(dispatcher) {
     @Inject internal lateinit var applicationPasswordsManagerProvider: Provider<ApplicationPasswordsManager>
@@ -273,6 +279,14 @@ open class SiteStore @Inject constructor(
         constructor(site: SiteModel, error: SiteError?) : this(site) {
             this.error = error
         }
+    }
+
+    sealed class FetchedJetpackSocialResult {
+        data class Success(
+            @JvmField val jetpackSocial: JetpackSocial,
+        ) : FetchedJetpackSocialResult()
+
+        data class Error(val error: SiteError): FetchedJetpackSocialResult()
     }
 
     data class DesignateMobileEditorForAllSitesResponsePayload(
@@ -476,6 +490,11 @@ open class SiteStore @Inject constructor(
             this.error = error
         }
     }
+
+    data class AllDomainsError @JvmOverloads constructor(
+        @JvmField val type: AllDomainsErrorType,
+        @JvmField val message: String? = null,
+    ) : OnChangedError
 
     data class SiteError @JvmOverloads constructor(
         @JvmField val type: SiteErrorType,
@@ -744,6 +763,14 @@ open class SiteStore @Inject constructor(
         }
     }
 
+    data class FetchedAllDomainsPayload(
+        @JvmField val domains: List<AllDomainsDomain>? = null
+    ) : Payload<AllDomainsError>() {
+        constructor(error: AllDomainsError) : this() {
+            this.error = error
+        }
+    }
+
     data class FetchedDomainsPayload(
         @JvmField val site: SiteModel,
         @JvmField val domains: List<Domain>? = null
@@ -871,6 +898,10 @@ open class SiteStore @Inject constructor(
 
     enum class SiteErrorType {
         INVALID_SITE, UNKNOWN_SITE, DUPLICATE_SITE, INVALID_RESPONSE, UNAUTHORIZED, NOT_AUTHENTICATED, GENERIC_ERROR
+    }
+
+    enum class AllDomainsErrorType {
+        UNAUTHORIZED, GENERIC_ERROR
     }
 
     enum class SuggestDomainErrorType {
@@ -2067,6 +2098,27 @@ open class SiteStore @Inject constructor(
         emitChange(event)
     }
 
+    suspend fun fetchAllDomains(
+        noWpCom: Boolean = true,
+        resolveStatus: Boolean = true
+    ): FetchedAllDomainsPayload =
+        coroutineEngine.withDefaultContext(T.API, this, "Fetch all domains") {
+            return@withDefaultContext when (val response =
+                siteRestClient.fetchAllDomains(noWpCom, resolveStatus)) {
+                is Success -> {
+                    val domains = response.data.domains
+                    FetchedAllDomainsPayload(domains)
+                }
+                is Error -> {
+                    val errorType = when (response.error.apiError) {
+                        "authorization_required" -> AllDomainsErrorType.UNAUTHORIZED
+                        else -> AllDomainsErrorType.GENERIC_ERROR
+                    }
+                    val domainsError = AllDomainsError(errorType, response.error.message)
+                    FetchedAllDomainsPayload(domainsError)
+                }
+            }
+        }
     suspend fun fetchSiteDomains(siteModel: SiteModel): FetchedDomainsPayload =
             coroutineEngine.withDefaultContext(T.API, this, "Fetch site domains") {
                 return@withDefaultContext when (val response =
@@ -2098,6 +2150,22 @@ open class SiteStore @Inject constructor(
             result.map { it.toDomainModel() }
         }
     }
+
+    suspend fun fetchJetpackSocial(siteModel: SiteModel): FetchedJetpackSocialResult =
+        coroutineEngine.withDefaultContext(T.API, this, "Fetch Jetpack Social") {
+            when (val response = siteRestClient.fetchJetpackSocial(siteModel.siteId)) {
+                is Success -> {
+                    val entity = jetpackSocialMapper.mapEntity(response.data, siteModel.id)
+                    jetpackSocialDao.insert(entity)
+                    val domain = jetpackSocialMapper.mapDomain(entity)
+                    FetchedJetpackSocialResult.Success(domain)
+                }
+                is Error -> {
+                    val error = SiteError(SiteErrorType.GENERIC_ERROR, response.error.message)
+                    FetchedJetpackSocialResult.Error(error)
+                }
+            }
+        }
 
     suspend fun deleteApplicationPassword(site: SiteModel): OnApplicationPasswordDeleted =
         coroutineEngine.withDefaultContext(T.API, this, "Delete Application Password") {

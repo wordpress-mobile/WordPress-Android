@@ -23,6 +23,11 @@ import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
 open class WellSqlConfig : DefaultWellConfig {
     companion object {
         const val ADDON_WOOCOMMERCE = "WC"
+
+        // The maximum value of a host parameter number is SQLITE_MAX_VARIABLE_NUMBER, which defaults to 999 for
+        // SQLite versions prior to 3.32.0 (2020-05-22) or 32766 for SQLite versions after 3.32.0.
+        // @see https://www.sqlite.org/limits.html
+        const val SQLITE_MAX_VARIABLE_NUMBER = 999
     }
 
     constructor(context: Context) : super(context)
@@ -36,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 184
+        return 197
     }
 
     override fun getDbName(): String {
@@ -1903,6 +1908,91 @@ open class WellSqlConfig : DefaultWellConfig {
                 183 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCProductModel ADD COMPOSITE_COMPONENTS TEXT")
                 }
+                184 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCProductModel ADD SPECIAL_STOCK_STATUS TEXT")
+                }
+                185 -> migrate(version) {
+                    // renaming tables is not supported by SQLite in some versions, so we need to:
+                    // 1. create a new table
+                    // 2. copy data from old table to new table, mapping to the new column names
+                    // 3. drop the old table
+                    // 4. rename the new table to the old table name
+                    db.execSQL(
+                        "CREATE TABLE IF NOT EXISTS EditorTheme_new (" +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "LOCAL_SITE_ID INTEGER," +
+                            "STYLESHEET TEXT," +
+                            "VERSION TEXT," +
+                            "RAW_STYLES TEXT," +
+                            "RAW_FEATURES TEXT," +
+                            "HAS_BLOCK_TEMPLATES INTEGER," +
+                            "IS_BLOCK_BASED_THEME INTEGER," +
+                            "GALLERY_WITH_IMAGE_BLOCKS INTEGER," +
+                            "QUOTE_BLOCK_V2 INTEGER," +
+                            "LIST_BLOCK_V2 INTEGER)"
+                    )
+
+                    db.execSQL(
+                        "INSERT INTO EditorTheme_new (" +
+                            "_id, LOCAL_SITE_ID, STYLESHEET, VERSION, RAW_STYLES, RAW_FEATURES, " +
+                            "HAS_BLOCK_TEMPLATES, IS_BLOCK_BASED_THEME, GALLERY_WITH_IMAGE_BLOCKS, " +
+                            "QUOTE_BLOCK_V2, LIST_BLOCK_V2) " +
+                            "SELECT " +
+                            "_id, LOCAL_SITE_ID, STYLESHEET, VERSION, RAW_STYLES, RAW_FEATURES, " +
+                            "0, IS_FSETHEME, GALLERY_WITH_IMAGE_BLOCKS, " +
+                            "QUOTE_BLOCK_V2, LIST_BLOCK_V2 " +
+                            "FROM EditorTheme"
+                    )
+
+                    db.execSQL("DROP TABLE EditorTheme")
+                    db.execSQL("ALTER TABLE EditorTheme_new RENAME TO EditorTheme")
+                }
+                186 -> migrate(version) {
+                    db.execSQL("ALTER TABLE AccountModel ADD USER_IP_COUNTRY_CODE TEXT")
+                }
+                187 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD PUBLISHED_STATUS INTEGER")
+                }
+                188 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD CAN_BLAZE BOOLEAN")
+                }
+                189 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD PLAN_ACTIVE_FEATURES TEXT")
+                }
+                190 -> migrate(version) {
+                    db.execSQL("ALTER TABLE PostModel ADD AUTO_SHARE_MESSAGE TEXT")
+                    db.execSQL("ALTER TABLE PostModel ADD AUTO_SHARE_ID INTEGER")
+                }
+                191 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCRevenueStatsModel ADD RANGE_ID INTEGER")
+                }
+                192 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD WAS_ECOMMERCE_TRIAL BOOLEAN")
+                    db.execSQL("ALTER TABLE SiteModel ADD PLAN_PRODUCT_SLUG TEXT")
+                }
+                193 -> migrate(version) {
+                    db.execSQL("ALTER TABLE PostModel ADD PUBLICIZE_SKIP_CONNECTIONS_JSON TEXT")
+                }
+                194 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS DynamicCard")
+                }
+                195 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCRevenueStatsModel")
+                    db.execSQL(
+                        "CREATE TABLE WCRevenueStatsModel(" +
+                            "LOCAL_SITE_ID INTEGER," +
+                            "INTERVAL TEXT NOT NULL," +
+                            "START_DATE TEXT NOT NULL," +
+                            "END_DATE TEXT NOT NULL," +
+                            "DATA TEXT NOT NULL," +
+                            "TOTAL TEXT NOT NULL," +
+                            "RANGE_ID TEXT NOT NULL," +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT)"
+                    )
+                }
+                196 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_SINGLE_USER_SITE BOOLEAN")
+                }
             }
         }
         db.setTransactionSuccessful()
@@ -1937,13 +2027,13 @@ open class WellSqlConfig : DefaultWellConfig {
     }
 
     /**
-     * For debug builds we want a cursor window size of 5MB so we can test for any problems caused by
-     * a larger size. Once we're confident this works we'll return 5MB in release builds to hopefully
-     * reduce the number of SQLiteBlobTooBigExceptions. Note that this is only called on API 28 and
-     * above since earlier versions don't allow adjusting the cursor window size.
+     * Increase the cursor window size to 5MB for devices running API 28 and above. This should
+     * reduce the number of SQLiteBlobTooBigExceptions.
+     * NOTE: this is only called on API 28 and above since earlier versions don't allow adjusting
+     * the cursor window size.
      */
     @Suppress("MagicNumber")
-    override fun getCursorWindowSize() = if (BuildConfig.DEBUG) (1024L * 1024L * 5L) else 0L
+    override fun getCursorWindowSize() = (1024L * 1024L * 5L)
 
     /**
      * Drop and create all tables

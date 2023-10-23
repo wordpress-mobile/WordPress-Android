@@ -9,6 +9,8 @@ plugins {
 android {
     useLibrary 'org.apache.http.legacy'
 
+    namespace "org.wordpress.android.fluxc"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
@@ -24,6 +26,7 @@ android {
         }
         consumerProguardFiles 'proguard-rules.pro'
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -31,8 +34,17 @@ android {
         }
     }
 
+    lint {
+        lintConfig file("${project.rootDir}/config/lint/lint.xml")
+        enable += 'UnknownNullness'
+    }
+
     testOptions {
         unitTests.includeAndroidResources = true
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 }
 
@@ -128,7 +140,6 @@ project.afterEvaluate {
 
                 groupId "org.wordpress"
                 artifactId "fluxc"
-                artifact tasks.named("androidSourcesJar") // This task is added by 'publish-to-s3' plugin
                 // version is set by 'publish-to-s3' plugin
             }
         }

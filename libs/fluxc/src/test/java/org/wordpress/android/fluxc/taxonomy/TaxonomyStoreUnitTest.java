@@ -29,12 +29,15 @@ import static org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_T
 
 @RunWith(RobolectricTestRunner.class)
 public class TaxonomyStoreUnitTest {
-    private TaxonomyStore mTaxonomyStore = new TaxonomyStore(new Dispatcher(), Mockito.mock(TaxonomyRestClient.class),
-            Mockito.mock(TaxonomyXMLRPCClient.class));
+    private final TaxonomyStore mTaxonomyStore = new TaxonomyStore(
+            new Dispatcher(),
+            Mockito.mock(TaxonomyRestClient.class),
+            Mockito.mock(TaxonomyXMLRPCClient.class)
+    );
 
     @Before
     public void setUp() {
-        Context appContext = RuntimeEnvironment.application.getApplicationContext();
+        Context appContext = RuntimeEnvironment.getApplication().getApplicationContext();
 
         WellSqlConfig config = new SingleStoreWellSqlConfigForTests(appContext, TermModel.class);
         WellSql.init(config);
@@ -42,16 +45,8 @@ public class TaxonomyStoreUnitTest {
     }
 
     @Test
-    public void testInsertNullTerm() {
-        assertEquals(0, TaxonomySqlUtils.insertOrUpdateTerm(null));
-
-        assertEquals(0, TaxonomyTestUtils.getTermsCount());
-    }
-
-    @Test
     public void testSimpleInsertionAndRetrieval() {
-        TermModel termModel = new TermModel();
-        termModel.setRemoteTermId(42);
+        TermModel termModel = new TermModel(TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY);
         TaxonomySqlUtils.insertOrUpdateTerm(termModel);
 
         assertEquals(1, TaxonomyTestUtils.getTermsCount());
@@ -182,7 +177,8 @@ public class TaxonomyStoreUnitTest {
         assertEquals(4, TaxonomyTestUtils.getTermsCount());
         assertEquals(2, mTaxonomyStore.getCategoriesForSite(site).size());
 
-        TaxonomySqlUtils.clearTaxonomyForSite(site, DEFAULT_TAXONOMY_CATEGORY);
+        int deletedTermModels = TaxonomySqlUtils.clearTaxonomyForSite(site, DEFAULT_TAXONOMY_CATEGORY);
+        assertEquals(2, deletedTermModels);
 
         assertEquals(0, mTaxonomyStore.getCategoriesForSite(site).size());
         assertEquals(2, TaxonomyTestUtils.getTermsCount());

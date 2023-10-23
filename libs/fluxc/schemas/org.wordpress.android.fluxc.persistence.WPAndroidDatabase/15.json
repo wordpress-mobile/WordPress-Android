@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 15,
-    "identityHash": "456f6549d7dc0d015412f7aecbf728d5",
+    "identityHash": "69627ce308934aad803fb99a12447b66",
     "entities": [
       {
         "tableName": "BloggingReminders",
@@ -426,7 +426,7 @@
       },
       {
         "tableName": "BloggingPrompts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `siteLocalId` INTEGER NOT NULL, `text` TEXT NOT NULL, `date` TEXT NOT NULL, `isAnswered` INTEGER NOT NULL, `respondentsCount` INTEGER NOT NULL, `attribution` TEXT NOT NULL, `respondentsAvatars` TEXT NOT NULL, `answeredLink` TEXT NOT NULL, PRIMARY KEY(`date`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `siteLocalId` INTEGER NOT NULL, `text` TEXT NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, `date` TEXT NOT NULL, `isAnswered` INTEGER NOT NULL, `respondentsCount` INTEGER NOT NULL, `attribution` TEXT NOT NULL, `respondentsAvatars` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -443,6 +443,18 @@
           {
             "fieldPath": "text",
             "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "content",
+            "columnName": "content",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -475,17 +487,11 @@
             "columnName": "respondentsAvatars",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "answeredLink",
-            "columnName": "answeredLink",
-            "affinity": "TEXT",
-            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "date"
+            "id"
           ],
           "autoGenerate": false
         },
@@ -574,32 +580,6 @@
         "primaryKey": {
           "columnNames": [
             "key"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "BlazeStatus",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`siteId` INTEGER NOT NULL, `isEligible` INTEGER NOT NULL, PRIMARY KEY(`siteId`))",
-        "fields": [
-          {
-            "fieldPath": "siteId",
-            "columnName": "siteId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isEligible",
-            "columnName": "isEligible",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "siteId"
           ],
           "autoGenerate": false
         },
@@ -698,7 +678,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '456f6549d7dc0d015412f7aecbf728d5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '69627ce308934aad803fb99a12447b66')"
     ]
   }
 }

@@ -48,7 +48,7 @@ public class XMLRPCRequest extends BaseRequest<Object> {
         AUTH_REQUIRED
     }
 
-    public XMLRPCRequest(String url, XMLRPC method, List<Object> params, Listener<? super Object[]> listener,
+    public XMLRPCRequest(@NonNull String url, XMLRPC method, List<Object> params, Listener<? super Object[]> listener,
                          BaseErrorListener errorListener) {
         super(Method.POST, url, errorListener);
         mListener = listener;

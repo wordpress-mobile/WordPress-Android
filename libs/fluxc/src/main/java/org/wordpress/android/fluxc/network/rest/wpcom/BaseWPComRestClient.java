@@ -2,13 +2,15 @@ package org.wordpress.android.fluxc.network.rest.wpcom;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
+import org.wordpress.android.fluxc.network.AcceptHeaderStrategy;
 import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.OnAuthFailedListener;
 import org.wordpress.android.fluxc.network.BaseRequest.OnParseErrorListener;
@@ -34,6 +36,7 @@ public abstract class BaseWPComRestClient {
     protected final Context mAppContext;
     protected final Dispatcher mDispatcher;
     protected UserAgent mUserAgent;
+    protected AcceptHeaderStrategy mAcceptHeaderStrategy;
 
     private OnAuthFailedListener mOnAuthFailedListener;
     private OnParseErrorListener mOnParseErrorListener;
@@ -41,11 +44,17 @@ public abstract class BaseWPComRestClient {
 
     public BaseWPComRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                                AccessToken accessToken, UserAgent userAgent) {
+        this(appContext, dispatcher, requestQueue, accessToken, userAgent, null);
+    }
+    public BaseWPComRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
+                               AccessToken accessToken, UserAgent userAgent,
+                               AcceptHeaderStrategy acceptHeaderStrategy) {
         mRequestQueue = requestQueue;
         mDispatcher = dispatcher;
         mAccessToken = accessToken;
         mUserAgent = userAgent;
         mAppContext = appContext;
+        mAcceptHeaderStrategy = acceptHeaderStrategy;
         mOnAuthFailedListener = new OnAuthFailedListener() {
             @Override
             public void onAuthFailed(AuthenticateErrorPayload authError) {
@@ -121,6 +130,7 @@ public abstract class BaseWPComRestClient {
         if (request.shouldCache() && request.shouldForceUpdate()) {
             mRequestQueue.getCache().invalidate(request.mUri.toString(), true);
         }
+        addAcceptHeaderIfNeeded(request);
         return mRequestQueue.add(request);
     }
 
@@ -134,11 +144,18 @@ public abstract class BaseWPComRestClient {
         }
     }
 
-    private @NotNull String getLocaleParamName(@NotNull String url) {
+    private void addAcceptHeaderIfNeeded(BaseRequest request) {
+        if (mAcceptHeaderStrategy == null) return;
+
+        request.addHeader(mAcceptHeaderStrategy.getHeader(), mAcceptHeaderStrategy.getValue());
+    }
+
+
+    private @NonNull String getLocaleParamName(@NonNull String url) {
         return url.contains(WPCOM_V2_PREFIX) ? LOCALE_PARAM_NAME_FOR_V2 : LOCALE_PARAM_NAME_FOR_V1;
     }
 
-    protected @Nullable HttpUrl getHttpUrlWithLocale(@NotNull String url) {
+    protected @Nullable HttpUrl getHttpUrlWithLocale(@NonNull String url) {
         HttpUrl httpUrl = HttpUrl.parse(url);
 
         if (null != httpUrl) {

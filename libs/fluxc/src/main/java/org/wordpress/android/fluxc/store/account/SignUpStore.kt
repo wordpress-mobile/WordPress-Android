@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.store.signup
+package org.wordpress.android.fluxc.store.account
 
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.network.rest.wpcom.account.signup.SignUpRestClient

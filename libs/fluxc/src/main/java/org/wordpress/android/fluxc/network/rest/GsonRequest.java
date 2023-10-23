@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.network.rest;
 
+import androidx.annotation.Nullable;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -10,7 +12,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
-import org.jetbrains.annotations.Nullable;
 import org.wordpress.android.fluxc.logging.FluxCCrashLogger;
 import org.wordpress.android.fluxc.logging.FluxCCrashLoggerProvider;
 import org.wordpress.android.fluxc.network.BaseRequest;
