@@ -37,7 +37,7 @@ data class MediaWPRESTResponse(
     data class MediaDetails(
         val width: Int,
         val height: Int,
-        val file: String,
+        val file: String?,
         val sizes: Sizes?
     )
 
@@ -70,7 +70,7 @@ fun MediaWPRESTResponse.toMediaModel(localSiteId: Int): MediaModel {
     mediaModel.url = sourceURL
     mediaModel.guid = guid.rendered
     mediaModel.fileName = mediaDetails.file
-    mediaModel.fileExtension = mediaDetails.file.substringAfterLast('.', "")
+    mediaModel.fileExtension = mediaDetails.file?.substringAfterLast('.', "")
     mediaModel.mimeType = mimeType
     mediaModel.title = StringEscapeUtils.unescapeHtml4(title.rendered)
     mediaModel.caption = StringEscapeUtils.unescapeHtml4(caption.rendered)

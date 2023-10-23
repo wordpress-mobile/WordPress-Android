@@ -6,6 +6,8 @@
 /devices/new/
 /devices/$deviceId#String/delete/
 
+/geo/
+
 /is-available/blog/
 /is-available/email/
 /is-available/username/
@@ -17,13 +19,17 @@
 /me/domain-contact-information/
 /me/settings/
 /me/sites/
+/me/sites/features
 /me/send-verification-email/
 /me/social-login/connect/
 /me/username/
+/me/account/close/
 
 /me/transactions/supported-countries/
 /me/transactions/
 /me/shopping-cart/$site
+
+/me/account/close
 
 /notifications/
 /notifications/$note_id
@@ -36,6 +42,8 @@
 /read/site/$site#String/comment_email_subscriptions/$action#String
 /read/site/$site#String/post_email_subscriptions/$action#String
 /read/site/$site#String/post_email_subscriptions/update
+
+/all-domains
 
 /domains/suggestions
 /domains/supported-countries/

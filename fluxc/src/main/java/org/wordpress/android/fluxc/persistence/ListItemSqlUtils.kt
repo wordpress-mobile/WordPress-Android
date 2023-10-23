@@ -5,6 +5,7 @@ import com.wellsql.generated.ListModelTable
 import com.yarolegovich.wellsql.SelectQuery
 import com.yarolegovich.wellsql.WellSql
 import org.wordpress.android.fluxc.model.list.ListItemModel
+import org.wordpress.android.fluxc.persistence.WellSqlConfig.Companion.SQLITE_MAX_VARIABLE_NUMBER
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -73,11 +74,14 @@ class ListItemSqlUtils @Inject constructor() {
             return
         }
 
-        WellSql.delete(ListItemModel::class.java)
+        val batches = listIds.chunked(SQLITE_MAX_VARIABLE_NUMBER - remoteItemIds.count())
+        batches.forEach {
+            WellSql.delete(ListItemModel::class.java)
                 .where()
-                .isIn(ListItemModelTable.LIST_ID, listIds)
+                .isIn(ListItemModelTable.LIST_ID, it)
                 .isIn(ListItemModelTable.REMOTE_ITEM_ID, remoteItemIds)
                 .endWhere()
                 .execute()
+        }
     }
 }
