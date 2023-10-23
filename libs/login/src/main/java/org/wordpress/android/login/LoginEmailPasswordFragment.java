@@ -40,7 +40,6 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import java.util.ArrayList;
 
 import dagger.android.support.AndroidSupportInjection;
-import kotlin.Suppress;
 
 public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener {
@@ -392,6 +391,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 onLoginFinished(false);
                 // consume the state so we don't relauch the 2FA dialog if user backs up
                 LoginWpcomService.clearLoginServiceState();
+                break;
             case FAILURE_FETCHING_ACCOUNT:
                 onLoginFinished(false);
                 showError(getString(R.string.error_fetch_my_profile));
