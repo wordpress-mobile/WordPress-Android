@@ -19,7 +19,7 @@ class DomainManagementActivity: AppCompatActivity() {
         setContent {
             M3Theme {
                 val uiState by viewModel.uiStateFlow.collectAsState()
-                MyDomainsScreen(uiState)
+                MyDomainsScreen(uiState, viewModel::onDomainTapped)
             }
         }
 
@@ -27,8 +27,9 @@ class DomainManagementActivity: AppCompatActivity() {
     }
 
     private fun handleActionEvents(actionEvent: DomainManagementViewModel.ActionEvent) {
-        when (actionEvent)  {
-            DomainManagementViewModel.ActionEvent.DomainTapped -> {}
+        when (actionEvent) {
+            is DomainManagementViewModel.ActionEvent.DomainTapped -> {
+            }
         }
     }
 }

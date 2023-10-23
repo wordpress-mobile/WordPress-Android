@@ -52,8 +52,14 @@ class DomainManagementViewModel @Inject constructor(
         }
     }
 
+    fun onDomainTapped(domain: String) {
+        launch {
+            _actionEvents.emit(ActionEvent.DomainTapped(domain))
+        }
+    }
+
     sealed class ActionEvent {
-        object DomainTapped: ActionEvent()
+        class DomainTapped(val domain: String): ActionEvent()
     }
 
     sealed class UiState {
