@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -31,6 +32,32 @@ class PasskeyRestClient @Inject constructor(
     accessToken,
     userAgent
 ) {
+    fun requestWebauthnInitialData(
+        clientId: String,
+        secret: String,
+        username: String,
+        password: String,
+        onSuccess: (response: WebauthnUserData) -> Unit,
+        onFailure: (error: WPComGsonNetworkError) -> Unit
+    ) {
+        val parameters = mapOf(
+            "client_id" to clientId,
+            "client_secret" to secret,
+            "grant_type" to "password",
+            "username" to username,
+            "password" to password,
+            "wpcom_supports_2fa" to true,
+            "with_auth_types" to true
+        )
+
+        triggerAccountRequest(
+            url = wpcomTokenEndpoint,
+            body = parameters,
+            onSuccess = { onSuccess(it.asWebauthnUserData) },
+            onFailure = onFailure
+        )
+    }
+
     @Suppress("LongParameterList")
     fun requestWebauthnChallenge(
         userId: String,
@@ -143,7 +170,18 @@ class PasskeyRestClient @Inject constructor(
             ?.let { this["bearer_token"] as? String }
             .orEmpty()
 
+    private val Map<String, Any>.asWebauthnUserData: WebauthnUserData
+        get() {
+            val data = this["data"] as Map<*, *>
+            return WebauthnUserData(
+                userId = data["user_id"] as Long,
+                webauthnNonce = data["two_step_nonce_webauthn"] as String
+            )
+        }
+
     companion object {
+        private const val wpcomOauthPrefix = "https://public-api.wordpress.com/oauth2"
+        private const val wpcomTokenEndpoint = "$wpcomOauthPrefix/token"
         private const val baseURLWithAction = "wp-login.php?action"
         private const val challengeEndpoint = "webauthn-challenge-endpoint"
         private const val authEndpoint = "webauthn-authentication-endpoint"
