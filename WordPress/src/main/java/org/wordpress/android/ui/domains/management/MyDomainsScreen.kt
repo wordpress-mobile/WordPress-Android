@@ -58,7 +58,7 @@ fun MyDomainsScreen(uiState: UiState) {
                 actions = {
                     IconButton(
                         onClick = {},
-                        enabled = uiState is PopulatedList.Loaded,
+                        enabled = uiState is PopulatedList.Loaded || uiState is Empty,
                     ) {
                         Icon(
                             Icons.Default.Add,
