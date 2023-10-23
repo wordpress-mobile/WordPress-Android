@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
+import org.wordpress.android.fluxc.store.AccountStore.OnWebauthnChallengeReceived;
 import org.wordpress.android.fluxc.store.AccountStore.PushSecurityKeyPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialAuthPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
@@ -336,8 +337,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
-
-        PushSecurityKeyPayload payload = new PushSecurityKeyPayload(mUserId, mNonce);
+        //TODO: Check if security key is available, if not, trigger PushSecurityKeyPayload
+        PushSecurityKeyPayload payload = new PushSecurityKeyPayload(mEmailAddress, mPassword);
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateSecurityKeyAction(payload));
     }
 
@@ -553,5 +554,15 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mLabel.setText(getString(R.string.enter_verification_code_sms, mPhoneNumber));
         mOtpButton.setText(getString(R.string.login_text_otp_another));
         mSentSmsCode = true;
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWebauthnChallengeReceived(OnWebauthnChallengeReceived event) {
+        if (event.isError()) {
+            //TODO: Handle error
+            return;
+        }
+        mLoginListener.signSecurityKey(event.challengeInfo);
     }
 }
