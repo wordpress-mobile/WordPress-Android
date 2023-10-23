@@ -22,6 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.fluxc.store.AccountStore.OnSecurityKeyAuthStarted;
 import org.wordpress.android.login.LoginWpcomService.LoginState;
 import org.wordpress.android.login.LoginWpcomService.OnCredentialsOK;
 import org.wordpress.android.login.util.AvatarHelper;
@@ -39,6 +40,7 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import java.util.ArrayList;
 
 import dagger.android.support.AndroidSupportInjection;
+import kotlin.Suppress;
 
 public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener {
@@ -343,6 +345,13 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSecurityKeyAuthStarted(OnSecurityKeyAuthStarted event) {
+        mLoginListener.needsSecurityKey(event.userId, event.webauthnNonce);
+    }
+
+
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onLoginStateUpdated(LoginState loginState) {
         AppLog.i(T.NUX, "Received state: " + loginState.getStepName());
@@ -378,6 +387,11 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 // consume the state so we don't relauch the 2FA dialog if user backs up
                 LoginWpcomService.clearLoginServiceState();
                 break;
+            case FAILURE_SECURITY_KEY:
+                // TODO: remove this, not necessary
+                onLoginFinished(false);
+                // consume the state so we don't relauch the 2FA dialog if user backs up
+                LoginWpcomService.clearLoginServiceState();
             case FAILURE_FETCHING_ACCOUNT:
                 onLoginFinished(false);
                 showError(getString(R.string.error_fetch_my_profile));
