@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.model;
 
+import androidx.annotation.Nullable;
+
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
@@ -121,7 +123,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
 
     @Override
     @SuppressWarnings("ConditionCoveredByFurtherCondition")
-    public boolean equals(Object other) {
+    public boolean equals(@Nullable Object other) {
         if (this == other) return true;
         if (other == null || !(other instanceof MediaModel)) return false;
 
