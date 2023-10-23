@@ -189,6 +189,7 @@ class PostListItemUiStateHelper @Inject constructor(
         )
     }
 
+    @Suppress("LongParameterList")
     private fun getPostInfoLabels(
         postStatus: PostStatus,
         formattedDate: String,

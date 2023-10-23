@@ -258,15 +258,4 @@ sealed class PostListItemViewHolder(
         ssb.setSpan(imageSpan, 1, 2, 0)
         return ssb
     }
-    private fun getSpannableLabel(view: TextView, label: UiString, colorResId: Int): SpannableString {
-        val originalText = uiHelpers.getTextOfUiString(view.context, label)
-        val spannableString = SpannableString(originalText)
-
-        // Set the color for a specific range of characters
-        val color = view.context.getColor(colorResId)
-        val colorSpan = ForegroundColorSpan(color)
-        spannableString.setSpan(colorSpan, 0, originalText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        return spannableString
-    }
 }
