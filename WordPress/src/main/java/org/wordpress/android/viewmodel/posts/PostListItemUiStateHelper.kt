@@ -126,17 +126,17 @@ class PostListItemUiStateHelper @Inject constructor(
         val title =
             if (baseTitle == UiStringRes(R.string.untitled_in_parentheses) && excerpt != null) null else baseTitle
 
-        val postInfo = getPostInfo(
+        val postInfo = getPostInfoLabels(
             postStatus,
             formattedDate,
             post.authorDisplayName,
             authorFilterSelection,
             isSearch,
-            post,
             isFilteringByAuthorSupported
         )
         val statuses = getStatuses(
             postStatus = postStatus,
+            post = post,
             uploadUiState = uploadUiState,
             hasUnhandledConflicts = unhandledConflicts,
             hasAutoSave = hasAutoSave
@@ -189,67 +189,36 @@ class PostListItemUiStateHelper @Inject constructor(
         )
     }
 
-    @Suppress("LongParameterList")
-    private fun getPostInfo(
+    private fun getPostInfoLabels(
         postStatus: PostStatus,
         formattedDate: String,
         displayName: String?,
         authorFilterSelection: AuthorFilterSelection,
         isSearch: Boolean,
-        post: PostModel,
         isAuthorFilterVisible: Boolean
-    ): List<PostInfo> {
-        val postInfo: MutableList<PostInfo> = mutableListOf()
-        postInfo.addAll(getPostInfoLabels(postStatus, post, isSearch))
+    ): List<UiString> {
+        val uiStrings: MutableList<UiString> = mutableListOf()
 
         if (formattedDate.isNotBlank()) {
-            postInfo.add(PostInfo(UiStringText(formattedDate)))
+            uiStrings.add(UiStringText(formattedDate))
         }
-
         if (isAuthorFilterVisible && authorFilterSelection == EVERYONE && !displayName.isNullOrBlank()) {
-            postInfo.add(PostInfo(UiStringText(displayName)))
+            uiStrings.add(UiStringText(displayName))
         }
 
-        return postInfo
-    }
-
-    private fun getPostInfoLabels (
-        postStatus: PostStatus,
-        post: PostModel,
-        isSearch: Boolean
-    ): List<PostInfo> {
-        val labels = mutableListOf<PostInfo>()
-
-        if (post.isLocalDraft) {
-            labels.add(PostInfo(UiStringRes(R.string.local_draft), true))
-        } else if (post.isLocallyChanged) {
-            labels.add(PostInfo(UiStringRes(R.string.local_changes), true))
+        if (isSearch) {
+            val postStatusText = when (postStatus) {
+                UNKNOWN -> R.string.unknown
+                PUBLISHED -> R.string.post_status_post_published
+                DRAFT -> R.string.post_status_draft
+                PRIVATE -> R.string.post_status_post_private
+                PENDING -> R.string.post_status_pending_review
+                TRASHED -> R.string.post_status_post_trashed
+                SCHEDULED -> R.string.post_status_post_scheduled
+            }
+            uiStrings.add(UiStringRes(postStatusText))
         }
-
-        if (postStatus == PRIVATE && !isSearch) {
-            labels.add(PostInfo(UiStringRes(R.string.post_status_post_private), true))
-        }
-        if (postStatus == PENDING && !isSearch) {
-            labels.add(PostInfo(UiStringRes(R.string.post_status_pending_review), true))
-        }
-        if (post.sticky) {
-            labels.add(PostInfo(UiStringRes(R.string.post_status_sticky), true))
-        }
-
-        when (postStatus) {
-            UNKNOWN -> if (isSearch) labels.add(PostInfo(UiStringRes(R.string.unknown)))
-            PUBLISHED -> labels.add(PostInfo(UiStringRes(R.string.post_status_post_published)))
-            DRAFT -> if (isSearch) labels.add(PostInfo(UiStringRes(R.string.post_status_draft))) else labels.add(
-                PostInfo(UiStringRes(R.string.post_status_post_edited))
-            )
-            PENDING -> if (isSearch) labels.add(PostInfo(UiStringRes(R.string.post_status_pending_review)))
-            TRASHED -> labels.add(PostInfo(UiStringRes(R.string.post_status_post_trashed)))
-            SCHEDULED -> labels.add(PostInfo(UiStringRes(R.string.post_status_post_scheduled)))
-            PRIVATE -> if (isSearch) labels.add(PostInfo(UiStringRes(R.string.post_status_post_private)))
-            else -> {}
-        }
-
-        return labels
+        return uiStrings
     }
 
     private fun getTitle(post: PostModel): UiString {
@@ -337,16 +306,36 @@ class PostListItemUiStateHelper @Inject constructor(
 
     private fun getStatuses(
         postStatus: PostStatus,
+        post: PostModel,
         uploadUiState: PostUploadUiState,
         hasUnhandledConflicts: Boolean,
         hasAutoSave: Boolean
     ): List<UiString> {
-        return getErrorAndProgressStatuses(
+        val labels = getErrorAndProgressStatuses(
             uploadUiState,
             postStatus,
             hasUnhandledConflicts,
             hasAutoSave
         )
+
+        // we want to show either single error/progress label or 0-n info labels.
+        if (labels.isEmpty()) {
+            if (post.isLocalDraft) {
+                labels.add(UiStringRes(R.string.local_draft))
+            } else if (post.isLocallyChanged) {
+                labels.add(UiStringRes(R.string.local_changes))
+            }
+            if (postStatus == PRIVATE) {
+                labels.add(UiStringRes(R.string.post_status_post_private))
+            }
+            if (postStatus == PENDING) {
+                labels.add(UiStringRes(R.string.post_status_pending_review))
+            }
+            if (post.sticky) {
+                labels.add(UiStringRes(R.string.post_status_sticky))
+            }
+        }
+        return labels
     }
 
     private fun getErrorLabel(uploadUiState: UploadFailed, postStatus: PostStatus): UiString? {

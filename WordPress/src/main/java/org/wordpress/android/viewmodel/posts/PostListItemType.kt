@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.posts
 import androidx.annotation.ColorRes
 import org.wordpress.android.fluxc.model.LocalOrRemoteId
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.viewmodel.pages.STATE_INFO_COLOR
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
@@ -27,19 +26,13 @@ data class PostListItemUiStateData(
     val title: UiString?,
     val excerpt: UiString?,
     val imageUrl: String?,
-    val postInfo: List<PostInfo>?,
+    val postInfo: List<UiString>?,
     @ColorRes val statusesColor: Int?,
     val statuses: List<UiString>,
     val statusesDelimiter: UiString,
     val progressBarUiState: ProgressBarUiState,
     val showOverlay: Boolean,
     val disableRippleEffect: Boolean
-)
-
-data class PostInfo(
-    val label: UiString,
-    val showColor: Boolean = false,
-    @ColorRes val labelColor: Int = STATE_INFO_COLOR
 )
 
 sealed class PostListItemAction(val buttonType: PostListButtonType, val onButtonClicked: (PostListButtonType) -> Unit) {

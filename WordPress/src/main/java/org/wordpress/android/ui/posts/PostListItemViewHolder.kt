@@ -35,7 +35,6 @@ import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
-import org.wordpress.android.viewmodel.posts.PostInfo
 import org.wordpress.android.viewmodel.posts.PostListItemAction
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateData
@@ -151,38 +150,11 @@ sealed class PostListItemViewHolder(
         moreButton.setOnClickListener { onMoreClicked(actions, moreButton) }
     }
 
-    private fun updatePostInfoLabel(view: TextView, postInfoList: List<PostInfo>?) {
-        if (!postInfoList.containsTrueShowColor()) {
-            updatePostInfoWithoutColor(view, postInfoList?.map { it.label })
-            return
-        }
-
-        val spannableStringBuilder = SpannableStringBuilder()
-
-        postInfoList?.let { list ->
-            list.forEachIndexed { index, postInfo ->
-                if (index > 0) {
-                    spannableStringBuilder.append(delimiter)
-                }
-                if (postInfo.showColor) {
-                    spannableStringBuilder.append(getSpannableLabel(view, postInfo.label, postInfo.labelColor))
-                } else {
-                    spannableStringBuilder.append(uiHelpers.getTextOfUiString(view.context, postInfo.label))
-                }
-            }
-        }
-        uiHelpers.setTextOrHide(view, SpannableString.valueOf(spannableStringBuilder))
-    }
-
-    private fun updatePostInfoWithoutColor(view: TextView, uiStrings: List<UiString>?) {
-        val concatenatedText = uiStrings?.joinToString(separator = delimiter) {
+    private fun updatePostInfoLabel(view: TextView, uiStrings: List<UiString>?) {
+        val concatenatedText = uiStrings?.joinToString(separator = "  ·  ") {
             uiHelpers.getTextOfUiString(view.context, it)
         }
         uiHelpers.setTextOrHide(view, concatenatedText)
-    }
-
-    private fun List<PostInfo>?.containsTrueShowColor(): Boolean {
-        return this?.any { it.showColor } ?: false
     }
 
     protected fun onMoreClicked(actions: List<PostListItemAction>, v: View) {
