@@ -15,6 +15,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,9 +41,11 @@ import androidx.compose.ui.zIndex
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
+import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.PopulatedList
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.Error
+import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.Empty
 
 @Composable
 fun MyDomainsScreen(uiState: UiState) {
@@ -83,8 +87,8 @@ fun MyDomainsScreen(uiState: UiState) {
             when (uiState) {
                 is PopulatedList ->
                     MyDomainsList(listUiState = uiState, listState = listState)
-                is Error -> ErrorScreen()
-                else -> {}
+                Error -> ErrorScreen()
+                Empty -> EmptyScreen {}
             }
         }
     }
@@ -109,6 +113,52 @@ fun ErrorScreen() {
         )
     }
 }
+
+@Composable
+fun EmptyScreen(onFindDomainTapped: () -> Unit) {
+    Column (
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        Text(
+            text = "You don't have any domains",
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.outline,
+        )
+        Text(
+            text = "...yet. Tap below to find your perfect domain.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.outline,
+        )
+        PrimaryButton(
+            text = "Find a domain",
+            onClick = onFindDomainTapped,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        )
+    }
+}
+
+@Composable
+fun PrimaryButton(
+    onClick: () -> Unit,
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(
+            contentColor = AppColor.White,
+        ),
+    ) {
+        Text(text)
+    }
+}
+
+
 
 @Composable
 fun MyDomainsSearchInput(
@@ -166,19 +216,28 @@ fun MyDomainsList(
     }
 }
 
-@Preview(device = Devices.PIXEL_3A)
-@Preview(device = Devices.PIXEL_3A, uiMode = UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_3A, group = "Initial")
+@Preview(device = Devices.PIXEL_3A, uiMode = UI_MODE_NIGHT_YES, group = "Initial")
 @Composable
 fun PreviewMyDomainsScreen() {
     M3Theme {
         MyDomainsScreen(PopulatedList.Initial)
     }
 }
-@Preview(device = Devices.PIXEL_3A)
-@Preview(device = Devices.PIXEL_3A, uiMode = UI_MODE_NIGHT_YES)
+@Preview(device = Devices.PIXEL_3A, group = "Error / Offline")
+@Preview(device = Devices.PIXEL_3A, uiMode = UI_MODE_NIGHT_YES, group = "Error / Offline")
 @Composable
 fun PreviewMyDomainsScreenError() {
     M3Theme {
         MyDomainsScreen(Error)
+    }
+}
+
+@Preview(device = Devices.PIXEL_3A, group = "Empty")
+@Preview(device = Devices.PIXEL_3A, uiMode = UI_MODE_NIGHT_YES, group = "Empty")
+@Composable
+fun PreviewMyDomainsScreenEmpty() {
+    M3Theme {
+        MyDomainsScreen(Empty)
     }
 }
