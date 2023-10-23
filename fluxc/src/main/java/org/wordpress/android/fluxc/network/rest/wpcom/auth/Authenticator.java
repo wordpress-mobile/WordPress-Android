@@ -241,7 +241,7 @@ public class Authenticator {
         }
 
         public static Token fromJSONObject(JSONObject tokenJSON) throws JSONException {
-            //TODO: check if this is really necessary or can be accessed easily
+            // TODO: check if this is really necessary or can be accessed easily
             JSONObject data = tokenJSON.getJSONObject(DATA);
             return new Token(tokenJSON.getString(ACCESS_TOKEN_FIELD_NAME), tokenJSON.getString(SITE_URL_FIELD_NAME),
                     tokenJSON.getString(SITE_ID_FIELD_NAME), tokenJSON.getString(SCOPE_FIELD_NAME),
