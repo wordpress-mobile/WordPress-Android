@@ -359,6 +359,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         return mFieldsToUpdate;
     }
 
+    @SuppressWarnings("unused")
     public void setFieldsToUpdate(MediaFields[] fieldsToUpdate) {
         this.mFieldsToUpdate = fieldsToUpdate;
     }
