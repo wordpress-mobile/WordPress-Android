@@ -34,11 +34,11 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version_name = current_version_name
-    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
+    build_bundle(app:, version_name:, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
-    upload_build_to_play_store(app: app, version_name: version_name, track: 'production')
+    upload_build_to_play_store(app:, version_name:, track: 'production')
 
-    create_gh_release(app: app, version_name: version_name) if options[:create_release]
+    create_gh_release(app:, version_name:) if options[:create_release]
   end
 
   #####################################################################################
@@ -102,11 +102,11 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version_name = current_version_name
-    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
+    build_bundle(app:, version_name:, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
-    upload_build_to_play_store(app: app, version_name: version_name, track: 'beta') if options[:upload_to_play_store]
+    upload_build_to_play_store(app:, version_name:, track: 'beta') if options[:upload_to_play_store]
 
-    create_gh_release(app: app, version_name: version_name, prerelease: true) if options[:create_release]
+    create_gh_release(app:, version_name:, prerelease: true) if options[:create_release]
   end
 
   #####################################################################################
@@ -188,10 +188,10 @@ platform :android do
       package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
 
       download_universal_apk_from_google_play(
-          package_name: package_name,
-          version_code: build_code,
-          destination: signed_apk_path(app, current_version_name),
-          json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
+        package_name:,
+        version_code: build_code,
+        destination: signed_apk_path(app, current_version_name),
+        json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
       )
     end
   end
