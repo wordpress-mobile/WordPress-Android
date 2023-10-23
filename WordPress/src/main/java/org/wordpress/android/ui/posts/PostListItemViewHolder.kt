@@ -4,10 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.text.Spannable
-import android.text.SpannableString
 import android.text.SpannableStringBuilder
-import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
 import android.view.LayoutInflater
 import android.view.Menu
