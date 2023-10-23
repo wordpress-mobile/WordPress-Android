@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:paddingEnd="@dimen/margin_none"
         android:paddingStart="@dimen/margin_none"
-        tools:text="@string/login_text_security_key" />
+        android:text="@string/login_text_security_key" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/login_otp_button"
