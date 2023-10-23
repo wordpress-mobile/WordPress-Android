@@ -353,7 +353,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             return;
         }
         // TODO: Check if security key is available, if not, trigger PushSecurityKeyPayload
-        PushSecurityKeyPayload payload = new PushSecurityKeyPayload(mEmailAddress, mPassword);
+        PushSecurityKeyPayload payload = new PushSecurityKeyPayload(mUserId, mWebauthnNonce);
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateSecurityKeyAction(payload));
     }
 
