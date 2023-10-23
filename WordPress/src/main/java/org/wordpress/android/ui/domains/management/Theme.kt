@@ -42,15 +42,27 @@ fun M3ThemeWithoutBackground(
                 darkColorScheme(
                     primary = AppColor.JetpackGreen30,
                     secondary = AppColor.JetpackGreen50,
+                    background = AppColor.DarkGray,
                     surface = AppColor.DarkGray,
                     error = AppColor.Red30,
+                    onPrimary = AppColor.Black,
+                    onSecondary = AppColor.White,
+                    onBackground = AppColor.White,
+                    onSurface = AppColor.White,
+                    onError = AppColor.Black
                 )
             } else {
                 lightColorScheme(
                     primary = AppColor.JetpackGreen50,
                     secondary = AppColor.JetpackGreen30,
+                    background = AppColor.White,
                     surface = AppColor.White,
                     error = AppColor.Red50,
+                    onPrimary = AppColor.White,
+                    onSecondary = AppColor.White,
+                    onBackground = AppColor.Black,
+                    onSurface = AppColor.Black,
+                    onError = AppColor.White
                 )
             },
             content = content
