@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.model;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.yarolegovich.wellsql.core.Identifiable;
@@ -21,7 +22,8 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     public enum MediaUploadState {
         QUEUED, UPLOADING, DELETING, DELETED, FAILED, UPLOADED;
 
-        public static MediaUploadState fromString(String stringState) {
+        @NonNull
+        public static MediaUploadState fromString(@Nullable String stringState) {
             if (stringState != null) {
                 for (MediaUploadState state : MediaUploadState.values()) {
                     if (stringState.equalsIgnoreCase(state.toString())) {
@@ -75,7 +77,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     @Column private boolean mVideoPressProcessingDone;
 
     // Local only
-    @Column private String mUploadState;
+    @Nullable @Column private String mUploadState;
     @Column private boolean mMarkedLocallyAsFeatured;
 
     // Other Sizes. Only available for images on self-hosted (xmlrpc layer) and Rest WPCOM sites
@@ -345,16 +347,17 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         return mVideoPressProcessingDone;
     }
 
-    public void setUploadState(String uploadState) {
+    public void setUploadState(@Nullable String uploadState) {
         mUploadState = uploadState;
     }
 
-    public String getUploadState() {
-        return mUploadState;
+    public void setUploadState(@NonNull MediaUploadState uploadState) {
+        mUploadState = uploadState.toString();
     }
 
-    public void setUploadState(MediaUploadState uploadState) {
-        mUploadState = uploadState.toString();
+    @Nullable
+    public String getUploadState() {
+        return mUploadState;
     }
 
     public MediaFields[] getFieldsToUpdate() {
