@@ -116,9 +116,9 @@ public class Authenticator {
         return new BearerRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), code, listener, errorListener);
     }
 
-    public SecurityKeyChallengeRequest makeRequest(String userId, String twoStepNonce) {
-        return new SecurityKeyChallengeRequest(userId, mAppSecrets.getAppId(),
-                mAppSecrets.getAppSecret(), twoStepNonce);
+    public WebauthnRequest makeRequest(String username, String password) {
+        return new WebauthnRequest(username, password, mAppSecrets.getAppId(),
+                mAppSecrets.getAppSecret());
     }
 
     private static class TokenRequest extends Request<Token> {
@@ -185,17 +185,17 @@ public class Authenticator {
         }
     }
 
-    public static class SecurityKeyChallengeRequest {
-        public String mUserId;
+    public static class WebauthnRequest {
+        public String mUsername;
+        public String mPassword;
         public String mClientId;
         public String mAppSecret;
-        public String mTwoStepNonce;
 
-        public SecurityKeyChallengeRequest(String userId, String appId, String appSecret, String twoStepNonce) {
-            this.mUserId = userId;
+        public WebauthnRequest(String username, String password, String appId, String appSecret) {
+            this.mUsername = username;
+            this.mPassword = password;
             this.mClientId = appId;
             this.mAppSecret = appSecret;
-            this.mTwoStepNonce = twoStepNonce;
         }
     }
 
@@ -207,7 +207,7 @@ public class Authenticator {
         private static final String SITE_ID_FIELD_NAME = "blog_id";
         private static final String DATA = "data";
         private static final String USER_ID = "user_id";
-        private static final String TWO_STEP_WEBAUTHN_NONCE = "two_step_webauthn_nonce";
+        private static final String TWO_STEP_WEBAUTHN_NONCE = "two_step_nonce_webauthn";
 
         private String mTokenType;
         private String mScope;
@@ -241,6 +241,7 @@ public class Authenticator {
         }
 
         public static Token fromJSONObject(JSONObject tokenJSON) throws JSONException {
+            //TODO: check if this is really necessary or can be accessed easily
             JSONObject data = tokenJSON.getJSONObject(DATA);
             return new Token(tokenJSON.getString(ACCESS_TOKEN_FIELD_NAME), tokenJSON.getString(SITE_URL_FIELD_NAME),
                     tokenJSON.getString(SITE_ID_FIELD_NAME), tokenJSON.getString(SCOPE_FIELD_NAME),
