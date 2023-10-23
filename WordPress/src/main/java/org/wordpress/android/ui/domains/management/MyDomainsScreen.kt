@@ -150,11 +150,15 @@ fun PrimaryButton(
     Button(
         onClick = onClick,
         modifier = modifier,
+        shape = RoundedCornerShape(4.dp),
         colors = ButtonDefaults.buttonColors(
             contentColor = AppColor.White,
         ),
     ) {
-        Text(text)
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelLarge,
+        )
     }
 }
 
