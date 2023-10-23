@@ -31,7 +31,9 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     @Retention(SOURCE)
     @IntDef({ORIGIN_UNKNOWN, ORIGIN_WPCOM_REST, ORIGIN_XMLRPC, ORIGIN_WPAPI})
-    public @interface SiteOrigin {}
+    public @interface SiteOrigin {
+    }
+
     public static final int ORIGIN_UNKNOWN = 0;
     public static final int ORIGIN_WPCOM_REST = 1;
     public static final int ORIGIN_XMLRPC = 2;
@@ -43,119 +45,221 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     public static final String ACTIVE_MODULES_KEY_SHARING_BUTTONS = "sharedaddy";
 
     @PrimaryKey
-    @Column private int mId;
+    @Column
+    private int mId;
     // Only given a value for wpcom and Jetpack sites - self-hosted sites use mSelfHostedSiteId
-    @Column private long mSiteId;
-    @Column private String mUrl;
-    @Column private String mAdminUrl;
-    @Column private String mLoginUrl;
-    @Column private String mName;
-    @Column private String mDescription;
-    @Column private boolean mIsWPCom;
-    @Column private boolean mIsWPComAtomic;
-    @Column private boolean mIsFeaturedImageSupported;
-    @Column private boolean mIsWpForTeamsSite;
-    @Column private String mDefaultCommentStatus = "open";
-    @Column private String mTimezone; // Expressed as an offset relative to GMT (e.g. '-8')
-    @Column private String mFrameNonce; // only wpcom and Jetpack sites
-    @Column private long mMaxUploadSize; // only set for Jetpack sites
-    @Column private long mMemoryLimit; // only set for Jetpack sites
-    @Column private int mOrigin = ORIGIN_UNKNOWN; // Does this site come from a WPCOM REST or XMLRPC fetch_sites call?
-    @Column private int mOrganizationId = -1;
+    @Column
+    private long mSiteId;
+    @Column
+    private String mUrl;
+    @Column
+    private String mAdminUrl;
+    @Column
+    private String mLoginUrl;
+    @Column
+    private String mName;
+    @Column
+    private String mDescription;
+    @Column
+    private boolean mIsWPCom;
+    @Column
+    private boolean mIsWPComAtomic;
+    @Column
+    private int mPublishedStatus = -1;
+    @Column
+    private boolean mIsFeaturedImageSupported;
+    @Column
+    private boolean mIsWpForTeamsSite;
+    @Column
+    private String mDefaultCommentStatus = "open";
+    @Column
+    private String mTimezone; // Expressed as an offset relative to GMT (e.g. '-8')
+    @Column
+    private String mFrameNonce; // only wpcom and Jetpack sites
+    @Column
+    private long mMaxUploadSize; // only set for Jetpack sites
+    @Column
+    private long mMemoryLimit; // only set for Jetpack sites
+    @Column
+    private int mOrigin = ORIGIN_UNKNOWN; // Does this site come from a WPCOM REST or XMLRPC fetch_sites call?
+    @Column
+    private int mOrganizationId = -1;
 
-    @Column private String mShowOnFront;
-    @Column private long mPageOnFront = -1;
-    @Column private long mPageForPosts = -1;
+    @Column
+    private String mShowOnFront;
+    @Column
+    private long mPageOnFront = -1;
+    @Column
+    private long mPageForPosts = -1;
 
     // Self hosted specifics
     // The siteId for self hosted sites. Jetpack sites will also have a mSiteId, which is their id on wpcom
-    @Column private long mSelfHostedSiteId;
-    @Column private String mUsername;
-    @Column private String mPassword;
-    @Column(name = "XMLRPC_URL") private String mXmlRpcUrl;
-    @Column private String mWpApiRestUrl;
-    @Column private String mSoftwareVersion;
-    @Column private boolean mIsSelfHostedAdmin;
+    @Column
+    private long mSelfHostedSiteId;
+    @Column
+    private String mUsername;
+    @Column
+    private String mPassword;
+    @Column(name = "XMLRPC_URL")
+    private String mXmlRpcUrl;
+    @Column
+    private String mWpApiRestUrl;
+    @Column
+    private String mSoftwareVersion;
+    @Column
+    private boolean mIsSelfHostedAdmin;
 
     // Self hosted user's profile data
-    @Column private String mEmail;
-    @Column private String mDisplayName;
+    @Column
+    private String mEmail;
+    @Column
+    private String mDisplayName;
 
     // mIsJetpackInstalled is true if Jetpack is installed and activated on the self hosted site, but Jetpack can
     // be disconnected.
-    @Column private boolean mIsJetpackInstalled;
+    @Column
+    private boolean mIsJetpackInstalled;
     // mIsJetpackConnected is true if Jetpack is installed, activated and connected to a WordPress.com account.
-    @Column private boolean mIsJetpackConnected;
+    @Column
+    private boolean mIsJetpackConnected;
     // mIsJetpackCPConnected is true for self hosted sites that use Jetpack Connection Package,
     // but don't have full jetpack plugin
-    @Column(name = "IS_JETPACK_CP_CONNECTED") private boolean mIsJetpackCPConnected;
-    @Column private String mJetpackVersion;
-    @Column private String mJetpackUserEmail;
-    @Column private boolean mIsAutomatedTransfer;
-    @Column private boolean mIsWpComStore;
-    @Column private boolean mHasWooCommerce;
+    @Column(name = "IS_JETPACK_CP_CONNECTED")
+    private boolean mIsJetpackCPConnected;
+    @Column
+    private String mJetpackVersion;
+    @Column
+    private String mJetpackUserEmail;
+    @Column
+    private boolean mIsAutomatedTransfer;
+    @Column
+    private boolean mIsWpComStore;
+    @Column
+    private boolean mHasWooCommerce;
 
     // WPCom specifics
-    @Column private boolean mIsVisible = true;
-    @Column private boolean mIsPrivate;
-    @Column private boolean mIsComingSoon;
-    @Column private boolean mIsVideoPressSupported;
-    @Column private long mPlanId;
-    @Column private String mPlanShortName;
-    @Column private String mIconUrl;
-    @Column private boolean mHasFreePlan;
-    @Column private String mUnmappedUrl;
-    @Column private String mWebEditor;
-    @Column private String mMobileEditor;
+    @Column
+    private boolean mIsVisible = true;
+    @Column
+    private boolean mIsPrivate;
+    @Column
+    private boolean mIsComingSoon;
+    @Column
+    private boolean mIsVideoPressSupported;
+    @Column
+    private long mPlanId;
+    @Column
+    private String mPlanShortName;
+    @Column
+    private String mPlanProductSlug;
+    @Column
+    private String mIconUrl;
+    @Column
+    private boolean mHasFreePlan;
+    @Column
+    private String mUnmappedUrl;
+    @Column
+    private String mWebEditor;
+    @Column
+    private String mMobileEditor;
 
     // WPCom capabilities
-    @Column private boolean mHasCapabilityEditPages;
-    @Column private boolean mHasCapabilityEditPosts;
-    @Column private boolean mHasCapabilityEditOthersPosts;
-    @Column private boolean mHasCapabilityEditOthersPages;
-    @Column private boolean mHasCapabilityDeletePosts;
-    @Column private boolean mHasCapabilityDeleteOthersPosts;
-    @Column private boolean mHasCapabilityEditThemeOptions;
-    @Column private boolean mHasCapabilityEditUsers;
-    @Column private boolean mHasCapabilityListUsers;
-    @Column private boolean mHasCapabilityManageCategories;
-    @Column private boolean mHasCapabilityManageOptions;
-    @Column private boolean mHasCapabilityActivateWordads;
-    @Column private boolean mHasCapabilityPromoteUsers;
-    @Column private boolean mHasCapabilityPublishPosts;
-    @Column private boolean mHasCapabilityUploadFiles;
-    @Column private boolean mHasCapabilityDeleteUser;
-    @Column private boolean mHasCapabilityRemoveUsers;
-    @Column private boolean mHasCapabilityViewStats;
+    @Column
+    private boolean mHasCapabilityEditPages;
+    @Column
+    private boolean mHasCapabilityEditPosts;
+    @Column
+    private boolean mHasCapabilityEditOthersPosts;
+    @Column
+    private boolean mHasCapabilityEditOthersPages;
+    @Column
+    private boolean mHasCapabilityDeletePosts;
+    @Column
+    private boolean mHasCapabilityDeleteOthersPosts;
+    @Column
+    private boolean mHasCapabilityEditThemeOptions;
+    @Column
+    private boolean mHasCapabilityEditUsers;
+    @Column
+    private boolean mHasCapabilityListUsers;
+    @Column
+    private boolean mHasCapabilityManageCategories;
+    @Column
+    private boolean mHasCapabilityManageOptions;
+    @Column
+    private boolean mHasCapabilityActivateWordads;
+    @Column
+    private boolean mHasCapabilityPromoteUsers;
+    @Column
+    private boolean mHasCapabilityPublishPosts;
+    @Column
+    private boolean mHasCapabilityUploadFiles;
+    @Column
+    private boolean mHasCapabilityDeleteUser;
+    @Column
+    private boolean mHasCapabilityRemoveUsers;
+    @Column
+    private boolean mHasCapabilityViewStats;
 
     // WPCOM and Jetpack Disk Quota information
-    @Column private long mSpaceAvailable;
-    @Column private long mSpaceAllowed;
-    @Column private long mSpaceUsed;
-    @Column private double mSpacePercentUsed;
+    @Column
+    private long mSpaceAvailable;
+    @Column
+    private long mSpaceAllowed;
+    @Column
+    private long mSpaceUsed;
+    @Column
+    private double mSpacePercentUsed;
 
-    @Column private String mActiveModules;
-    @Column private boolean mIsPublicizePermanentlyDisabled;
-    @Column private String mActiveJetpackConnectionPlugins;
+    @Column
+    private String mActiveModules;
+    @Column
+    private boolean mIsPublicizePermanentlyDisabled;
+    @Column
+    private String mActiveJetpackConnectionPlugins;
 
     // Zendesk meta
-    @Column private String mZendeskPlan;
-    @Column private String mZendeskAddOns;
+    @Column
+    private String mZendeskPlan;
+    @Column
+    private String mZendeskAddOns;
 
     // Blogging Reminder options
-    @Column private boolean mIsBloggingPromptsOptedIn;
-    @Column private boolean mIsBloggingPromptsCardOptedIn;
-    @Column private boolean mIsPotentialBloggingSite;
-    @Column private boolean mIsBloggingReminderOnMonday;
-    @Column private boolean mIsBloggingReminderOnTuesday;
-    @Column private boolean mIsBloggingReminderOnWednesday;
-    @Column private boolean mIsBloggingReminderOnThursday;
-    @Column private boolean mIsBloggingReminderOnFriday;
-    @Column private boolean mIsBloggingReminderOnSaturday;
-    @Column private boolean mIsBloggingReminderOnSunday;
-    @Column private int mBloggingReminderHour;
-    @Column private int mBloggingReminderMinute;
-    @Column private String mApplicationPasswordsAuthorizeUrl;
+    @Column
+    private boolean mIsBloggingPromptsOptedIn;
+    @Column
+    private boolean mIsBloggingPromptsCardOptedIn;
+    @Column
+    private boolean mIsPotentialBloggingSite;
+    @Column
+    private boolean mIsBloggingReminderOnMonday;
+    @Column
+    private boolean mIsBloggingReminderOnTuesday;
+    @Column
+    private boolean mIsBloggingReminderOnWednesday;
+    @Column
+    private boolean mIsBloggingReminderOnThursday;
+    @Column
+    private boolean mIsBloggingReminderOnFriday;
+    @Column
+    private boolean mIsBloggingReminderOnSaturday;
+    @Column
+    private boolean mIsBloggingReminderOnSunday;
+    @Column
+    private int mBloggingReminderHour;
+    @Column
+    private int mBloggingReminderMinute;
+    @Column
+    private String mApplicationPasswordsAuthorizeUrl;
+    @Column
+    private Boolean mCanBlaze;
+    // Comma-separated list of active features in the site's plan
+    @Column
+    private String mPlanActiveFeatures;
+    @Column
+    private Boolean mWasEcommerceTrial;
+    @Column
+    private Boolean mIsSingleUserSite;
 
     @Override
     public int getId() {
@@ -548,6 +652,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mPlanShortName = planShortName;
     }
 
+    public String getPlanProductSlug() {
+        return mPlanProductSlug;
+    }
+
+    public void setPlanProductSlug(String planProductSlug) {
+        mPlanProductSlug = planProductSlug;
+    }
+
     public long getPlanId() {
         return mPlanId;
     }
@@ -803,9 +915,13 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public boolean supportsPublicize() {
         // Publicize is only supported via REST
-        if (getOrigin() != ORIGIN_WPCOM_REST) return false;
+        if (getOrigin() != ORIGIN_WPCOM_REST) {
+            return false;
+        }
 
-        if (!getHasCapabilityPublishPosts()) return false;
+        if (!getHasCapabilityPublishPosts()) {
+            return false;
+        }
 
         if (isJetpackConnected()) {
             // For Jetpack, check if the module is enabled
@@ -960,5 +1076,49 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public boolean isApplicationPasswordsSupported() {
         return mApplicationPasswordsAuthorizeUrl != null && !mApplicationPasswordsAuthorizeUrl.isEmpty();
+    }
+
+    public int getPublishedStatus() {
+        return mPublishedStatus;
+    }
+
+    public void setPublishedStatus(int publishedStatus) {
+        this.mPublishedStatus = publishedStatus;
+    }
+
+    public Boolean getCanBlaze() {
+        return mCanBlaze;
+    }
+
+    public void setCanBlaze(Boolean mCanBlaze) {
+        this.mCanBlaze = mCanBlaze;
+    }
+
+    public Boolean getWasEcommerceTrial() {
+        return mWasEcommerceTrial;
+    }
+
+    public void setWasEcommerceTrial(Boolean wasEcommerceTrial) {
+        mWasEcommerceTrial = wasEcommerceTrial;
+    }
+
+    public boolean isHostedAtWPCom() {
+        return !isJetpackInstalled();
+    }
+
+    public String getPlanActiveFeatures() {
+        return mPlanActiveFeatures;
+    }
+
+    public void setPlanActiveFeatures(final String planActiveFeatures) {
+        this.mPlanActiveFeatures = planActiveFeatures;
+    }
+
+    public Boolean isSingleUserSite() {
+        return mIsSingleUserSite;
+    }
+
+    public void setIsSingleUserSite(Boolean isSingleUserSite) {
+        mIsSingleUserSite = isSingleUserSite;
     }
 }

@@ -56,22 +56,30 @@ class TransactionsRestClient @Inject constructor(
 
     suspend fun createShoppingCart(
         site: SiteModel,
-        productId: Int,
+        domainProductId: Int,
         domainName: String,
-        isPrivacyProtectionEnabled: Boolean,
-        isTemporary: Boolean
+        isDomainPrivacyProtectionEnabled: Boolean,
+        isTemporary: Boolean,
+        planProductId: Int? = null
     ): CreatedShoppingCartPayload {
         val url = WPCOMREST.me.shopping_cart.site(site.siteId).urlV1_1
 
         val domainProduct = mapOf(
-                "product_id" to productId,
+                "product_id" to domainProductId,
                 "meta" to domainName,
-                "extra" to PrivacyExtra(isPrivacyProtectionEnabled)
+                "extra" to PrivacyExtra(isDomainPrivacyProtectionEnabled)
         )
+
+        var products = arrayOf(domainProduct)
+
+        planProductId?.let {
+            val planProduct = mapOf("product_id" to it)
+            products += planProduct
+        }
 
         val body = mapOf(
                 "temporary" to isTemporary,
-                "products" to arrayOf(domainProduct)
+                "products" to products
         )
 
         return when (val response = wpComGsonRequestBuilder.syncPostRequest(

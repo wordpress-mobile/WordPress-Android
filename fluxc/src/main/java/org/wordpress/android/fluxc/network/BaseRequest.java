@@ -134,6 +134,19 @@ public abstract class BaseRequest<T> extends Request<T> {
         public boolean hasVolleyError() {
             return volleyError != null;
         }
+
+        public String getCombinedErrorMessage() {
+            String volleyErrorMessage = volleyError.getMessage();
+            if (volleyErrorMessage == null || volleyErrorMessage.isEmpty()) {
+                return message != null ? message : "";
+            } else {
+                if (message == null || message.isEmpty()) {
+                    return volleyErrorMessage;
+                } else {
+                    return message + " • " + volleyErrorMessage;
+                }
+            }
+        }
     }
 
     public enum GenericErrorType {

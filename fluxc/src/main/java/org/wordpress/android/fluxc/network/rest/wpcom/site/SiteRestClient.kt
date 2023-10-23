@@ -132,16 +132,43 @@ class SiteRestClient @Inject constructor(
         val site: SiteModel? = null
     ) : Payload<SiteError>()
 
+    /**
+     *  Fetches the user's sites from WPCom.
+     *  Since the V1.2 endpoint doesn't return the plan features, we will handle the fetch by following two
+     *  different approaches:
+     *  1. If we don't need any filtering, then we'll simply use the v1.1 endpoint which includes the features.
+     *  2. If we have some filters, then we'll send two requests: the first one to the v1.2 endpoint to fetch sites
+     *     And the second one to the /me/sites/features to fetch the features separately, the combine the results.
+     */
+    @Suppress("ComplexMethod")
     suspend fun fetchSites(filters: List<SiteFilter?>, filterJetpackConnectedPackageSite: Boolean): SitesModel {
+        val useV2Endpoint = filters.isNotEmpty()
         val params = getFetchSitesParams(filters)
-        val url = WPCOMREST.me.sites.urlV1_2
+        val url = WPCOMREST.me.sites.let { if (useV2Endpoint) it.urlV1_2 else it.urlV1_1 }
         val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, SitesResponse::class.java)
+
+        val siteFeatures = if (useV2Endpoint) {
+            fetchSitesFeatures().let {
+                if (it is Error) {
+                    val result = SitesModel()
+                    result.error = it.error
+                    return result
+                }
+                (it as Success).data
+            }
+        } else null
+
         return when (response) {
             is Success -> {
                 val siteArray = mutableListOf<SiteModel>()
                 val jetpackCPSiteArray = mutableListOf<SiteModel>()
                 for (siteResponse in response.data.sites) {
                     val siteModel = siteResponseToSiteModel(siteResponse)
+
+                    siteFeatures?.get(siteModel.siteId)?.let {
+                        siteModel.planActiveFeatures = it.joinToString(",")
+                    }
+
                     if (siteModel.isJetpackCPConnected) jetpackCPSiteArray.add(siteModel)
                     // see https://github.com/wordpress-mobile/WordPress-Android/issues/15540#issuecomment-993752880
                     if (filterJetpackConnectedPackageSite && siteModel.isJetpackCPConnected) continue
@@ -149,10 +176,26 @@ class SiteRestClient @Inject constructor(
                 }
                 SitesModel(siteArray, jetpackCPSiteArray)
             }
+
             is Error -> {
                 val payload = SitesModel(emptyList())
                 payload.error = response.error
                 payload
+            }
+        }
+    }
+
+    private suspend fun fetchSitesFeatures(): Response<Map<Long, List<String>>> {
+        val url = WPCOMREST.me.sites.features.urlV1_1
+        return wpComGsonRequestBuilder.syncGetRequest(
+            restClient = this,
+            url = url,
+            params = emptyMap(),
+            clazz = SitesFeaturesRestResponse::class.java
+        ).let {
+            when (it) {
+                is Success -> Success(it.data.features.mapValues { it.value.active })
+                is Error -> Error(it.error)
             }
         }
     }
@@ -794,6 +837,14 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
+    suspend fun fetchAllDomains(noWpCom: Boolean = true, resolveStatus: Boolean = true): Response<AllDomainsResponse> {
+        val url = WPCOMREST.all_domains.urlV1_1
+        val params = mapOf(
+            "no_wpcom" to noWpCom.toString(),
+            "resolve_status" to resolveStatus.toString()
+        )
+        return wpComGsonRequestBuilder.syncGetRequest(this, url, params, AllDomainsResponse::class.java)
+    }
     suspend fun fetchSiteDomains(site: SiteModel): Response<DomainsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).domains.urlV1_1
         return wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), DomainsResponse::class.java)
@@ -1001,6 +1052,16 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
+    suspend fun fetchJetpackSocial(remoteSiteId: Long): Response<JetpackSocialResponse> {
+        val url = WPCOMV2.sites.site(remoteSiteId).jetpack_social.url
+        return wpComGsonRequestBuilder.syncGetRequest(
+            restClient = this,
+            url = url,
+            params = mapOf(),
+            clazz = JetpackSocialResponse::class.java
+        )
+    }
+
     @Suppress("LongMethod", "ComplexMethod")
     private fun siteResponseToSiteModel(from: SiteWPComRestResponse): SiteModel {
         val site = SiteModel()
@@ -1021,6 +1082,7 @@ class SiteRestClient @Inject constructor(
             site.setIsVideoPressSupported(from.options.videopress_enabled)
             site.setIsAutomatedTransfer(from.options.is_automated_transfer)
             site.setIsWpComStore(from.options.is_wpcom_store)
+            site.publishedStatus = from.options.blog_public
             site.hasWooCommerce = from.options.woocommerce_is_active
             site.adminUrl = from.options.admin_url
             site.loginUrl = from.options.login_url
@@ -1034,6 +1096,7 @@ class SiteRestClient @Inject constructor(
             site.showOnFront = from.options.show_on_front
             site.pageOnFront = from.options.page_on_front
             site.pageForPosts = from.options.page_for_posts
+            site.canBlaze = from.options.can_blaze
             site.setIsPublicizePermanentlyDisabled(from.options.publicize_permanently_disabled)
             if (from.options.active_modules != null) {
                 site.activeModules = from.options.active_modules.joinToString(",")
@@ -1091,6 +1154,7 @@ class SiteRestClient @Inject constructor(
                 }
             }
             site.planShortName = from.plan.product_name_short
+            site.planProductSlug = from.plan.product_slug
             site.hasFreePlan = from.plan.is_free
         }
         if (from.capabilities != null) {
@@ -1137,6 +1201,9 @@ class SiteRestClient @Inject constructor(
             site.setIsWPCom(true)
         }
         site.origin = SiteModel.ORIGIN_WPCOM_REST
+        site.planActiveFeatures = (from.plan?.features?.active?.joinToString(",")).orEmpty()
+        site.wasEcommerceTrial = from.was_ecommerce_trial
+        site.setIsSingleUserSite(from.single_user_site)
         return site
     }
 
@@ -1198,7 +1265,8 @@ class SiteRestClient @Inject constructor(
     companion object {
         private const val NEW_SITE_TIMEOUT_MS = 90000
         private const val SITE_FIELDS = "ID,URL,name,description,jetpack,jetpack_connection,visible,is_private," +
-                "options,plan,capabilities,quota,icon,meta,zendesk_site_meta,organization_id"
+                "options,plan,capabilities,quota,icon,meta,zendesk_site_meta,organization_id," +
+                "was_ecommerce_trial,single_user_site"
         private const val FIELDS = "fields"
         private const val FILTERS = "filters"
     }

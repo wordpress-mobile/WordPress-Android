@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -320,7 +319,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    private @NotNull List<PostListItem> postListItemsFromPostsResponse(@Nullable Object[] response) {
+    private @NonNull List<PostListItem> postListItemsFromPostsResponse(@Nullable Object[] response) {
         if (response == null) {
             return Collections.emptyList();
         }

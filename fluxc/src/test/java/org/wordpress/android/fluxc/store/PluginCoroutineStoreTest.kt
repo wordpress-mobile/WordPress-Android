@@ -67,7 +67,7 @@ class PluginCoroutineStoreTest {
         val fetchedPlugins = listOf(
             SitePluginModel()
         )
-        whenever(pluginWPAPIRestClient.fetchPlugins(site, true)).thenReturn(
+        whenever(pluginWPAPIRestClient.fetchPlugins(site)).thenReturn(
             WPApiPluginsPayload(
                 site,
                 fetchedPlugins
@@ -76,14 +76,14 @@ class PluginCoroutineStoreTest {
 
         val result = store.syncFetchWPApiPlugins(site)
 
-        assertThat(result.isError).isFalse()
+        assertThat(result.isError).isFalse
         assertThat(result.type).isEqualTo(SITE)
         verify(pluginSqlUtils).insertOrReplaceSitePlugins(site, fetchedPlugins)
     }
 
     @Test
     fun `fetches WP Api plugins with error `() = test {
-        whenever(pluginWPAPIRestClient.fetchPlugins(site, true)).thenReturn(
+        whenever(pluginWPAPIRestClient.fetchPlugins(site)).thenReturn(
             WPApiPluginsPayload(
                 BaseNetworkError(
                     GenericErrorType.AUTHORIZATION_REQUIRED
@@ -93,7 +93,7 @@ class PluginCoroutineStoreTest {
 
         val result = store.syncFetchWPApiPlugins(site)
 
-        assertThat(result.isError).isTrue()
+        assertThat(result.isError).isTrue
         assertThat(result.error.type).isEqualTo(UNAUTHORIZED)
         verifyNoInteractions(pluginSqlUtils)
     }
@@ -103,7 +103,7 @@ class PluginCoroutineStoreTest {
         val fetchedPlugins = listOf(
             SitePluginModel()
         )
-        whenever(pluginWPAPIRestClient.fetchPlugins(site, true)).thenReturn(
+        whenever(pluginWPAPIRestClient.fetchPlugins(site)).thenReturn(
             WPApiPluginsPayload(
                 site,
                 fetchedPlugins
@@ -113,7 +113,7 @@ class PluginCoroutineStoreTest {
         store.fetchWPApiPlugins(site)
 
         verify(dispatcher).emitChange(onFetchedEventCaptor.capture())
-        assertThat(onFetchedEventCaptor.lastValue.isError).isFalse()
+        assertThat(onFetchedEventCaptor.lastValue.isError).isFalse
         assertThat(onFetchedEventCaptor.lastValue.type).isEqualTo(SITE)
         verify(pluginSqlUtils).insertOrReplaceSitePlugins(site, fetchedPlugins)
     }
@@ -133,7 +133,7 @@ class PluginCoroutineStoreTest {
 
         val result = store.syncDeleteSitePlugin(site, pluginName, slug)
 
-        assertThat(result.isError).isFalse()
+        assertThat(result.isError).isFalse
         assertThat(result.pluginName).isEqualTo(pluginName)
         assertThat(result.slug).isEqualTo(slug)
         verify(pluginSqlUtils).deleteSitePlugin(site, slug)
@@ -156,7 +156,7 @@ class PluginCoroutineStoreTest {
         store.deleteSitePlugin(site, pluginName, slug)
 
         verify(dispatcher).emitChange(onDeletedEventCaptor.capture())
-        assertThat(onDeletedEventCaptor.lastValue.isError).isFalse()
+        assertThat(onDeletedEventCaptor.lastValue.isError).isFalse
         assertThat(onDeletedEventCaptor.lastValue.pluginName).isEqualTo(pluginName)
         assertThat(onDeletedEventCaptor.lastValue.slug).isEqualTo(slug)
         verify(pluginSqlUtils).deleteSitePlugin(site, slug)
@@ -176,7 +176,7 @@ class PluginCoroutineStoreTest {
 
         val result = store.syncDeleteSitePlugin(site, pluginName, slug)
 
-        assertThat(result.isError).isTrue()
+        assertThat(result.isError).isTrue
         assertThat(result.error.type).isEqualTo(DeleteSitePluginErrorType.UNAUTHORIZED)
         verify(pluginSqlUtils, never()).deleteSitePlugin(eq(site), any())
     }
@@ -195,7 +195,7 @@ class PluginCoroutineStoreTest {
 
         val result = store.syncDeleteSitePlugin(site, pluginName, slug)
 
-        assertThat(result.isError).isFalse()
+        assertThat(result.isError).isFalse
         verify(pluginSqlUtils).deleteSitePlugin(site, slug)
     }
 
@@ -215,7 +215,7 @@ class PluginCoroutineStoreTest {
 
         val result = store.syncConfigureSitePlugin(site, pluginName, slug, active)
 
-        assertThat(result.isError).isFalse()
+        assertThat(result.isError).isFalse
         assertThat(result.pluginName).isEqualTo(pluginName)
         assertThat(result.slug).isEqualTo(slug)
         verify(pluginSqlUtils).insertOrUpdateSitePlugin(site, sitePluginModel)
@@ -239,7 +239,7 @@ class PluginCoroutineStoreTest {
         store.configureSitePlugin(site, pluginName, slug, active)
 
         verify(dispatcher).emitChange(onConfiguredEventCaptor.capture())
-        assertThat(onConfiguredEventCaptor.lastValue.isError).isFalse()
+        assertThat(onConfiguredEventCaptor.lastValue.isError).isFalse
         assertThat(onConfiguredEventCaptor.lastValue.pluginName).isEqualTo(pluginName)
         assertThat(onConfiguredEventCaptor.lastValue.slug).isEqualTo(slug)
         verify(pluginSqlUtils).insertOrUpdateSitePlugin(site, sitePluginModel)
@@ -260,7 +260,7 @@ class PluginCoroutineStoreTest {
 
         val result = store.syncConfigureSitePlugin(site, pluginName, slug, active)
 
-        assertThat(result.isError).isTrue()
+        assertThat(result.isError).isTrue
         assertThat(result.error.type).isEqualTo(ConfigureSitePluginErrorType.UNAUTHORIZED)
         verify(pluginSqlUtils, never()).insertOrUpdateSitePlugin(eq(site), any())
     }
@@ -287,7 +287,7 @@ class PluginCoroutineStoreTest {
 
         val result = store.syncInstallSitePlugin(site, slug)
 
-        assertThat(result.isError).isFalse()
+        assertThat(result.isError).isFalse
         assertThat(result.slug).isEqualTo(slug)
         verify(pluginSqlUtils, times(2)).insertOrUpdateSitePlugin(site, sitePluginModel)
         verify(pluginWPAPIRestClient).updatePlugin(site, name, true)
@@ -311,7 +311,7 @@ class PluginCoroutineStoreTest {
 
         val result = store.syncInstallSitePlugin(site, slug)
 
-        assertThat(result.isError).isTrue()
+        assertThat(result.isError).isTrue
         assertThat(result.slug).isEqualTo(slug)
         assertThat(result.error.type).isEqualTo(InstallSitePluginErrorType.UNAUTHORIZED)
         verifyNoInteractions(pluginSqlUtils)

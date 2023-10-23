@@ -28,7 +28,7 @@ class NonceRestClient @Inject constructor(
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
     private val nonceMap: MutableMap<String, Nonce> = mutableMapOf()
-    fun getNonce(siteUrl: String, username: String): Nonce? = nonceMap[siteUrl]?.takeIf { it.username == username }
+    fun getNonce(siteUrl: String, username: String?): Nonce? = nonceMap[siteUrl]?.takeIf { it.username == username }
     fun getNonce(site: SiteModel): Nonce? = getNonce(site.url, site.username)
 
     /**

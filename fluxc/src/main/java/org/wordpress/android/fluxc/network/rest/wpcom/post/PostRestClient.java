@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -20,6 +21,7 @@ import org.wordpress.android.fluxc.model.LikeModel;
 import org.wordpress.android.fluxc.model.LikeModel.LikeType;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
+import org.wordpress.android.fluxc.model.PublicizeSkipConnection;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.list.AuthorFilter;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite;
@@ -346,6 +348,7 @@ public class PostRestClient extends BaseWPComRestClient {
         );
 
         request.addQueryParameter("context", "edit");
+        if (post.isLocalDraft()) request.addQueryParameter("for", "mobile");
 
         request.disableRetries();
         add(request);
@@ -514,6 +517,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
         List<PostMetaData> metaDataList = from.getMetadata();
         if (metaDataList != null) {
+            final ArrayList<PostMetaData> publicizeSkipConnections = new ArrayList<>();
             for (PostMetaData metaData : metaDataList) {
                 String key = metaData.getKey();
                 if (key != null && metaData.getValue() != null) {
@@ -542,8 +546,25 @@ public class PostRestClient extends BaseWPComRestClient {
                             post.setAnsweredPromptId(Integer.parseInt(metaDataValue.toString()));
                         }
                     }
+
+                    if (key.equals("_wpas_mess")) {
+                        final Object metaDataValue = metaData.getValue();
+                        if (metaDataValue instanceof String) {
+                            post.setAutoShareMessage(metaDataValue.toString());
+                        }
+                        final long metaDataId = metaData.getId();
+                        if (metaDataId > 0) {
+                            post.setAutoShareId(metaDataId);
+                        }
+                    }
+
+                    // e.g. "_wpas_skip_publicize_12345"
+                    if (key.startsWith(PublicizeSkipConnection.METADATA_SKIP_PUBLICIZE_PREFIX)) {
+                        publicizeSkipConnections.add(metaData);
+                    }
                 }
             }
+            post.setPublicizeSkipConnectionsJson(new Gson().toJson(publicizeSkipConnections));
         }
 
         if (from.getCategories() != null) {
@@ -684,6 +705,36 @@ public class PostRestClient extends BaseWPComRestClient {
                 longitudeParams.put("key", "geo_longitude");
                 longitudeParams.put("operation", "delete");
                 metadata.add(longitudeParams);
+            }
+        }
+
+        if (post.getAutoShareMessage().length() > 0) {
+            Map<String, Object> autoShareMessageParams = new HashMap<>();
+            autoShareMessageParams.put("key", "_wpas_mess");
+            autoShareMessageParams.put("value", post.getAutoShareMessage());
+            if (post.getAutoShareId() > 0) {
+                autoShareMessageParams.put("id", post.getAutoShareId());
+            }
+            metadata.add(autoShareMessageParams);
+        }
+
+        if (post.getPublicizeSkipConnectionsJson().length() > 0) {
+            final List<PublicizeSkipConnection> publicizeSkipConnections = post.getPublicizeSkipConnectionsList();
+            if (publicizeSkipConnections.size() > 0) {
+                for (final PublicizeSkipConnection connection : publicizeSkipConnections) {
+                    if (connection.getKey() != null && !connection.getKey().isEmpty()
+                        && !connection.getId().isEmpty()
+                        && connection.getValue() != null && !connection.getValue().isEmpty()) {
+                        final Map<String, Object> publicizeSkipConnectionsMetadata = new HashMap<>();
+                        publicizeSkipConnectionsMetadata.put("key", connection.getKey());
+                        if (!connection.getId().equals("0")) {
+                            publicizeSkipConnectionsMetadata.put("id", connection.getId());
+                        }
+                        publicizeSkipConnectionsMetadata.put("value", connection.getValue());
+                        publicizeSkipConnectionsMetadata.put("operation", "update");
+                        metadata.add(publicizeSkipConnectionsMetadata);
+                    }
+                }
             }
         }
 

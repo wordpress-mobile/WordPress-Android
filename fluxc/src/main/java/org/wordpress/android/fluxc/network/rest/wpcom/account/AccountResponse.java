@@ -21,4 +21,5 @@ public class AccountResponse implements Response {
     public int site_count;
     public int visible_site_count;
     public boolean has_unseen_notes;
+    public String user_ip_country_code;
 }

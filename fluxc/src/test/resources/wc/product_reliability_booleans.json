@@ -1,0 +1,321 @@
+{
+  "id": 19,
+  "name": "Beanie",
+  "slug": "beanie",
+  "permalink": "https://superlativecentaur.wpcomstaging.com/product/beanie/",
+  "date_created": "2023-01-13T10:31:14",
+  "date_created_gmt": "2023-01-13T10:31:14",
+  "date_modified": "2023-07-06T15:20:40",
+  "date_modified_gmt": "2023-07-06T14:20:40",
+  "type": "simple",
+  "status": "publish",
+  "featured": false,
+  "catalog_visibility": "visible",
+  "description": "<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>\n",
+  "short_description": "<p>This is a simple product. Great!</p>\n",
+  "sku": "woo-beanie",
+  "price": "20",
+  "regular_price": "20",
+  "sale_price": "",
+  "date_on_sale_from": null,
+  "date_on_sale_from_gmt": null,
+  "date_on_sale_to": null,
+  "date_on_sale_to_gmt": null,
+  "on_sale": false,
+  "purchasable": "true",
+  "total_sales": 24,
+  "virtual": false,
+  "downloadable": false,
+  "downloads": [],
+  "download_limit": 0,
+  "download_expiry": 0,
+  "external_url": "",
+  "button_text": "",
+  "tax_status": "taxable",
+  "tax_class": "clothing-20010",
+  "manage_stock": true,
+  "stock_quantity": 497,
+  "backorders": "no",
+  "backorders_allowed": false,
+  "backordered": false,
+  "low_stock_amount": null,
+  "sold_individually": 1,
+  "weight": "1",
+  "dimensions": {
+    "length": "20",
+    "width": "20",
+    "height": "40"
+  },
+  "shipping_required": true,
+  "shipping_taxable": true,
+  "shipping_class": "",
+  "shipping_class_id": 0,
+  "reviews_allowed": true,
+  "average_rating": "0.00",
+  "rating_count": 0,
+  "upsell_ids": [],
+  "cross_sell_ids": [],
+  "parent_id": 0,
+  "purchase_note": "",
+  "categories": [
+    {
+      "id": 1363,
+      "name": "Accessories",
+      "slug": "accessories"
+    }
+  ],
+  "tags": [],
+  "images": [
+    {
+      "id": 48,
+      "date_created": "2023-01-13T10:31:17",
+      "date_created_gmt": "2023-01-13T10:31:17",
+      "date_modified": "2023-06-16T17:17:46",
+      "date_modified_gmt": "2023-06-16T15:17:46",
+      "src": "https://superlativecentaur.wpcomstaging.com/wp-content/uploads/2023/01/beanie-2.jpg",
+      "name": "beanie-2.jpg",
+      "alt": ""
+    }
+  ],
+  "attributes": [
+    {
+      "id": 1,
+      "name": "Color",
+      "position": 0,
+      "visible": true,
+      "variation": false,
+      "options": [
+        "Red"
+      ]
+    }
+  ],
+  "default_attributes": [],
+  "variations": [],
+  "grouped_products": [],
+  "menu_order": 0,
+  "price_html": "<span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>20.00</bdi></span><small class=\"wcsatt-sub-options\"> <span class=\"wcsatt-dash\">&mdash;</span> or subscribe and save up to</small> <span class=\"wcsatt-sub-discount\">30&#37;</span><small></small>",
+  "related_ids": [
+    36,
+    20,
+    22,
+    21
+  ],
+  "meta_data": [
+    {
+      "id": 526,
+      "key": "_wpcom_is_markdown",
+      "value": "1"
+    },
+    {
+      "id": 529,
+      "key": "_wpas_done_all",
+      "value": "1"
+    },
+    {
+      "id": 2623,
+      "key": "_wc_gla_synced_at",
+      "value": "1688653284"
+    },
+    {
+      "id": 2624,
+      "key": "_wc_gla_sync_status",
+      "value": "synced"
+    },
+    {
+      "id": 2625,
+      "key": "_wc_gla_visibility",
+      "value": "sync-and-show"
+    },
+    {
+      "id": 2626,
+      "key": "_wc_gla_google_ids",
+      "value": {
+        "US": "online:en:US:gla_19"
+      }
+    },
+    {
+      "id": 2716,
+      "key": "_wc_gla_mc_status",
+      "value": "not_synced"
+    },
+    {
+      "id": 2745,
+      "key": "_last_editor_used_jetpack",
+      "value": "classic-editor"
+    },
+    {
+      "id": 2746,
+      "key": "_product_addons",
+      "value": []
+    },
+    {
+      "id": 2747,
+      "key": "_product_addons_exclude_global",
+      "value": "0"
+    },
+    {
+      "id": 2748,
+      "key": "_wc_pinterest_condition",
+      "value": "new"
+    },
+    {
+      "id": 2749,
+      "key": "_wc_pinterest_google_product_category",
+      "value": "Apparel & Accessories > Clothing Accessories > Hats"
+    },
+    {
+      "id": 2750,
+      "key": "group_of_quantity",
+      "value": ""
+    },
+    {
+      "id": 2751,
+      "key": "minimum_allowed_quantity",
+      "value": ""
+    },
+    {
+      "id": 2752,
+      "key": "maximum_allowed_quantity",
+      "value": ""
+    },
+    {
+      "id": 2753,
+      "key": "minmax_do_not_count",
+      "value": "no"
+    },
+    {
+      "id": 2754,
+      "key": "minmax_cart_exclude",
+      "value": "yes"
+    },
+    {
+      "id": 2755,
+      "key": "minmax_category_group_of_exclude",
+      "value": "yes"
+    },
+    {
+      "id": 2756,
+      "key": "_wc_gla_brand",
+      "value": "woocommerce_brands"
+    },
+    {
+      "id": 2757,
+      "key": "_wc_gla_condition",
+      "value": "new"
+    },
+    {
+      "id": 2758,
+      "key": "_wc_gla_gender",
+      "value": "unisex"
+    },
+    {
+      "id": 2759,
+      "key": "_wc_gla_ageGroup",
+      "value": "adult"
+    },
+    {
+      "id": 2760,
+      "key": "_wc_gla_isBundle",
+      "value": "no"
+    },
+    {
+      "id": 2761,
+      "key": "_wc_gla_adult",
+      "value": "no"
+    },
+    {
+      "id": 11400,
+      "key": "_subscription_one_time_shipping",
+      "value": "no"
+    },
+    {
+      "id": 11401,
+      "key": "_wcsatt_force_subscription",
+      "value": "no"
+    },
+    {
+      "id": 11402,
+      "key": "_subscription_downloads_ids",
+      "value": ""
+    },
+    {
+      "id": 11403,
+      "key": "_wc_pre_orders_enabled",
+      "value": "yes"
+    },
+    {
+      "id": 11404,
+      "key": "_wc_pre_orders_fee",
+      "value": ""
+    },
+    {
+      "id": 12077,
+      "key": "_wc_pre_orders_when_to_charge",
+      "value": "upon_release"
+    },
+    {
+      "id": 17898,
+      "key": "wc_bis_previous_stock",
+      "value": "497"
+    },
+    {
+      "key": "_satt_data",
+      "value": {
+        "subscription_schemes": {
+          "1_month_6": {},
+          "1_year": {},
+          "1_month": {}
+        },
+        "has_forced_subscription": "",
+        "active_subscription_scheme_key": null
+      }
+    },
+    {
+      "key": "_subscription_payment_sync_date",
+      "value": 0
+    }
+  ],
+  "stock_status": "instock",
+  "has_options": true,
+  "composite_virtual": false,
+  "composite_layout": "",
+  "composite_add_to_cart_form_location": "",
+  "composite_editable_in_cart": false,
+  "composite_sold_individually_context": "",
+  "composite_shop_price_calc": "",
+  "composite_components": [],
+  "composite_scenarios": [],
+  "bundled_by": [
+    "133",
+    "423"
+  ],
+  "bundle_stock_status": "instock",
+  "bundle_stock_quantity": 497,
+  "bundle_virtual": false,
+  "bundle_layout": "",
+  "bundle_add_to_cart_form_location": "",
+  "bundle_editable_in_cart": false,
+  "bundle_sold_individually_context": "",
+  "bundle_item_grouping": "",
+  "bundle_min_size": "",
+  "bundle_max_size": "",
+  "bundle_price": [],
+  "bundled_items": [],
+  "bundle_sell_ids": [],
+  "jetpack_publicize_connections": [],
+  "jetpack_sharing_enabled": true,
+  "jetpack_likes_enabled": true,
+  "brands": [],
+  "_links": {
+    "self": [
+      {
+        "href": "https://superlativecentaur.wpcomstaging.com/wp-json/wc/v3/products/19"
+      }
+    ],
+    "collection": [
+      {
+        "href": "https://superlativecentaur.wpcomstaging.com/wp-json/wc/v3/products"
+      }
+    ]
+  }
+}

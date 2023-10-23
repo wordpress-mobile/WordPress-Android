@@ -60,10 +60,9 @@ class CardsStore @Inject constructor(
 
     fun getCards(
         site: SiteModel,
-        cardTypes: List<CardModel.Type>
-    ) = cardsDao.get(site.id, cardTypes).map { cards ->
-        CardsResult(cards.map { it.toCard() })
-    }
+    ) = cardsDao.get(site.id).map { cards ->
+            cards.map { it.toCard() }}
+        .map { CardsResult(it) }
 
     /* PAYLOADS */
 

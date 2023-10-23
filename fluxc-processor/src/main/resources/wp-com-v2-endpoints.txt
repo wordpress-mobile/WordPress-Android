@@ -34,9 +34,16 @@
 
 /sites/$site/blogging-prompts
 
-/sites/$site/blaze/status
+/sites/$site/wordads/dsp/api/v1/search/campaigns/site
 
 /sites/$site/launch
+
+/sites/$site/jetpack-ai/completions
+
+/sites/$site/jetpack-openai-query/jwt
+/text-completion
+
+/sites/$site/jetpack-social
 
 /users/username/suggestions/
 

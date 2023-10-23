@@ -1,5 +1,8 @@
 package org.wordpress.android.fluxc.persistence;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.wellsql.generated.TermModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
@@ -10,11 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class TaxonomySqlUtils {
-    public static int insertOrUpdateTerm(TermModel term) {
-        if (term == null) {
-            return 0;
-        }
-
+    public static int insertOrUpdateTerm(@NonNull TermModel term) {
         List<TermModel> termResult = WellSql.select(TermModel.class)
                 .where().beginGroup()
                 .equals(TermModelTable.ID, term.getId())
@@ -36,17 +35,10 @@ public class TaxonomySqlUtils {
         }
     }
 
-    public static TermModel insertTermForResult(TermModel term) {
-        WellSql.insert(term).asSingleTransaction(true).execute();
-
-        return term;
-    }
-
-    public static List<TermModel> getTermsForSite(SiteModel site, String taxonomyName) {
-        if (site == null || taxonomyName == null) {
-            return Collections.emptyList();
-        }
-
+    @NonNull
+    public static List<TermModel> getTermsForSite(
+            @NonNull SiteModel site,
+            @NonNull String taxonomyName) {
         return WellSql.select(TermModel.class)
                 .where().beginGroup()
                 .equals(TermModelTable.LOCAL_SITE_ID, site.getId())
@@ -55,11 +47,11 @@ public class TaxonomySqlUtils {
                 .getAsModel();
     }
 
-    public static TermModel getTermByRemoteId(SiteModel site, long remoteTermId, String taxonomyName) {
-        if (site == null || taxonomyName == null) {
-            return null;
-        }
-
+    @Nullable
+    public static TermModel getTermByRemoteId(
+            @NonNull SiteModel site,
+            long remoteTermId,
+            @NonNull String taxonomyName) {
         List<TermModel> termResult = WellSql.select(TermModel.class)
                 .where().beginGroup()
                 .equals(TermModelTable.LOCAL_SITE_ID, site.getId())
@@ -74,11 +66,11 @@ public class TaxonomySqlUtils {
         return null;
     }
 
-    public static TermModel getTermByName(SiteModel site, String termName, String taxonomyName) {
-        if (site == null || taxonomyName == null) {
-            return null;
-        }
-
+    @Nullable
+    public static TermModel getTermByName(
+            @NonNull SiteModel site,
+            @NonNull String termName,
+            @NonNull String taxonomyName) {
         List<TermModel> termResult = WellSql.select(TermModel.class)
                 .where().beginGroup()
                 .equals(TermModelTable.LOCAL_SITE_ID, site.getId())
@@ -93,9 +85,12 @@ public class TaxonomySqlUtils {
         return null;
     }
 
-    public static List<TermModel> getTermsFromRemoteIdList(List<Long> remoteTermIds, SiteModel site,
-                                                           String taxonomyName) {
-        if (taxonomyName == null || remoteTermIds == null || remoteTermIds.isEmpty()) {
+    @NonNull
+    public static List<TermModel> getTermsFromRemoteIdList(
+            @NonNull List<Long> remoteTermIds,
+            @NonNull SiteModel site,
+            @NonNull String taxonomyName) {
+        if (remoteTermIds.isEmpty()) {
             return Collections.emptyList();
         }
 
@@ -108,9 +103,12 @@ public class TaxonomySqlUtils {
                 .getAsModel();
     }
 
-    public static List<TermModel> getTermsFromRemoteNameList(List<String> remoteTermNames, SiteModel site,
-                                                             String taxonomyName) {
-        if (taxonomyName == null || remoteTermNames == null || remoteTermNames.isEmpty()) {
+    @NonNull
+    public static List<TermModel> getTermsFromRemoteNameList(
+            @NonNull List<String> remoteTermNames,
+            @NonNull SiteModel site,
+            @NonNull String taxonomyName) {
+        if (remoteTermNames.isEmpty()) {
             return Collections.emptyList();
         }
 
@@ -123,11 +121,9 @@ public class TaxonomySqlUtils {
                 .getAsModel();
     }
 
-    public static int clearTaxonomyForSite(SiteModel site, String taxonomyName) {
-        if (site == null || taxonomyName == null) {
-            return 0;
-        }
-
+    public static int clearTaxonomyForSite(
+            @NonNull SiteModel site,
+            @NonNull String taxonomyName) {
         return WellSql.delete(TermModel.class)
                 .where().beginGroup()
                 .equals(TermModelTable.LOCAL_SITE_ID, site.getId())
@@ -136,11 +132,7 @@ public class TaxonomySqlUtils {
                 .execute();
     }
 
-    public static int removeTerm(TermModel term) {
-        if (term == null) {
-            return 0;
-        }
-
+    public static int removeTerm(@NonNull TermModel term) {
         return WellSql.delete(TermModel.class)
                 .where().beginGroup()
                 .equals(TermModelTable.TAXONOMY, term.getTaxonomy())

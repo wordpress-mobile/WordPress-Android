@@ -3,6 +3,9 @@ package org.wordpress.android.fluxc.network.discovery;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.util.AppLog;
 
 import java.util.regex.Matcher;
@@ -12,7 +15,8 @@ public class DiscoveryUtils {
     /**
      * Strip known unnecessary paths from XML-RPC URL and remove trailing slashes
      */
-    public static String stripKnownPaths(String url) {
+    @NonNull
+    public static String stripKnownPaths(@NonNull String url) {
         // Remove 'wp-login.php' if available in the URL
         String sanitizedURL = truncateUrl(url, "wp-login.php");
 
@@ -36,9 +40,10 @@ public class DiscoveryUtils {
      * Truncate a string beginning at the marker
      * @param url input string
      * @param marker the marker to begin the truncation from
-     * @return new string truncated to the begining of the marker or the input string if marker is not found
+     * @return new string truncated to the beginning of the marker or the input string if marker is not found
      */
-    public static String truncateUrl(String url, String marker) {
+    @NonNull
+    public static String truncateUrl(@NonNull String url, @NonNull String marker) {
         if (TextUtils.isEmpty(marker) || !url.contains(marker)) {
             return url;
         }
@@ -51,7 +56,8 @@ public class DiscoveryUtils {
     /**
      * Append 'xmlrpc.php' if missing in the URL
      */
-    public static String appendXMLRPCPath(String url) {
+    @NonNull
+    public static String appendXMLRPCPath(@NonNull String url) {
         // Don't use 'ends' here! Some hosting wants parameters passed to baseURL/xmlrpc-php?my-authcode=XXX
         if (url.contains("xmlrpc.php")) {
             return url;
@@ -63,7 +69,7 @@ public class DiscoveryUtils {
     /**
      * Verify that the response of system.listMethods matches the expected list of available XML-RPC methods
      */
-    public static boolean validateListMethodsResponse(Object[] availableMethods) {
+    public static boolean validateListMethodsResponse(@Nullable Object[] availableMethods) {
         if (availableMethods == null) {
             AppLog.e(AppLog.T.NUX, "The response of system.listMethods was empty!");
             return false;
@@ -96,7 +102,7 @@ public class DiscoveryUtils {
     /**
      * Check whether given network error is a 401 Unauthorized HTTP error
      */
-    public static boolean isHTTPAuthErrorMessage(Exception e) {
+    public static boolean isHTTPAuthErrorMessage(@Nullable Exception e) {
         return e != null && e.getMessage() != null && e.getMessage().contains("401");
     }
 
@@ -105,7 +111,8 @@ public class DiscoveryUtils {
      *
      * @return XML-RPC endpoint for the specified site, or null if unable to discover endpoint.
      */
-    public static String getXMLRPCApiLink(String html) {
+    @Nullable
+    public static String getXMLRPCApiLink(@Nullable String html) {
         Pattern xmlrpcLink = Pattern.compile("<api\\s*?name=\"WordPress\".*?apiLink=\"(.*?)\"",
                 Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         if (html != null) {
@@ -122,7 +129,8 @@ public class DiscoveryUtils {
      *
      * @return String XML-RPC url
      */
-    public static String getXMLRPCPingback(String html) {
+    @Nullable
+    public static String getXMLRPCPingback(@Nullable String html) {
         Pattern pingbackLink = Pattern.compile(
                 "<link\\s*?rel=\"pingback\"\\s*?href=\"(.*?)\"",
                 Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
