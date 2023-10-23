@@ -108,20 +108,21 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         CAPTION("caption"),
         ALT("alt");
 
-        private final String mFieldName;
+        @NonNull private final String mFieldName;
 
         // Constructor
-        MediaFields(String fieldName) {
+        MediaFields(@NonNull String fieldName) {
             this.mFieldName = fieldName;
         }
 
         // Getter
+        @NonNull
         public String getFieldName() {
             return this.mFieldName;
         }
     }
 
-    private MediaFields[] mFieldsToUpdate = MediaFields.values();
+    @NonNull private MediaFields[] mFieldsToUpdate = MediaFields.values();
 
     @Override
     @SuppressWarnings("ConditionCoveredByFurtherCondition")
@@ -360,12 +361,13 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         return mUploadState;
     }
 
+    @NonNull
     public MediaFields[] getFieldsToUpdate() {
         return mFieldsToUpdate;
     }
 
     @SuppressWarnings("unused")
-    public void setFieldsToUpdate(MediaFields[] fieldsToUpdate) {
+    public void setFieldsToUpdate(@NonNull MediaFields[] fieldsToUpdate) {
         this.mFieldsToUpdate = fieldsToUpdate;
     }
 
