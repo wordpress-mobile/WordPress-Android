@@ -226,11 +226,11 @@ class PostListItemUiStateHelper @Inject constructor(
             labels.add(PostInfo(UiStringRes(R.string.local_changes), true))
         }
 
-        if (postStatus == PRIVATE) {
-            labels.add(PostInfo(UiStringRes(R.string.post_status_post_private), !isSearch))
+        if (postStatus == PRIVATE && !isSearch) {
+            labels.add(PostInfo(UiStringRes(R.string.post_status_post_private), true))
         }
-        if (postStatus == PENDING) {
-            labels.add(PostInfo(UiStringRes(R.string.post_status_pending_review), !isSearch))
+        if (postStatus == PENDING && !isSearch) {
+            labels.add(PostInfo(UiStringRes(R.string.post_status_pending_review), true))
         }
         if (post.sticky) {
             labels.add(PostInfo(UiStringRes(R.string.post_status_sticky), true))
@@ -240,9 +240,10 @@ class PostListItemUiStateHelper @Inject constructor(
             UNKNOWN -> if (isSearch) labels.add(PostInfo(UiStringRes(R.string.unknown)))
             PUBLISHED -> labels.add(PostInfo(UiStringRes(R.string.post_status_post_published)))
             DRAFT -> if (isSearch) labels.add(PostInfo(UiStringRes(R.string.post_status_draft)))
-            else labels.add(PostInfo(UiStringRes(R.string.post_status_post_edited)))
+            PENDING -> if (isSearch) labels.add(PostInfo(UiStringRes(R.string.post_status_post_edited)))
             TRASHED -> labels.add(PostInfo(UiStringRes(R.string.post_status_post_trashed)))
             SCHEDULED -> labels.add(PostInfo(UiStringRes(R.string.post_status_post_scheduled)))
+            PRIVATE -> if (isSearch) labels.add(PostInfo(UiStringRes(R.string.post_status_post_private)))
             else -> {}
         }
 
