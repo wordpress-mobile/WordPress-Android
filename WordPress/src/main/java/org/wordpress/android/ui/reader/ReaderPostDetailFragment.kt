@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
@@ -19,6 +20,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewStub
 import android.webkit.CookieManager
 import android.webkit.WebView
 import android.widget.ImageView.ScaleType.CENTER_CROP
@@ -28,15 +30,19 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.appcompat.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -45,6 +51,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
@@ -56,6 +63,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
+import org.wordpress.android.databinding.ReaderIncludePostDetailFooterBinding
+import org.wordpress.android.databinding.ReaderIncludePostDetailFooterNewBinding
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -64,6 +73,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
@@ -120,7 +130,6 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.RtlUtils
@@ -131,6 +140,7 @@ import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISS
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
+import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
@@ -149,6 +159,7 @@ import org.wordpress.android.widgets.WPTextView
 import java.net.HttpURLConnection
 import java.util.EnumSet
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 @AndroidEntryPoint
 @Suppress("LargeClass")
@@ -175,8 +186,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private var moreMenuPopup: ListPopupWindow? = null
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var scrollView: WPScrollView
-    private lateinit var layoutFooter: ViewGroup
     private lateinit var readerWebView: ReaderWebView
+    private lateinit var readerProgressBar: ProgressBar
 
     private lateinit var likeFacesTrain: View
     private lateinit var likeProgressBar: ProgressBar
@@ -199,6 +210,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var globalRelatedPostsView: ReaderSimplePostContainerView
     private lateinit var localRelatedPostsView: ReaderSimplePostContainerView
 
+    private lateinit var layoutFooterBinding: PostDetailFooterBarBinding
+
     private var postSlugsResolutionUnderway: Boolean = false
     private var hasAlreadyUpdatedPost: Boolean = false
     private var isWebViewPaused: Boolean = false
@@ -214,6 +227,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private val viewModel: ReaderPostDetailViewModel by viewModels()
     private lateinit var conversationViewModel: ConversationNotificationsViewModel
+
+    private var binding: ReaderFragmentPostDetailBinding? = null
 
     @Inject
     internal lateinit var accountStore: AccountStore
@@ -263,6 +278,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
+    @Inject
+    lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
+
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
             .post(ReaderEvents.DoSignIn())
@@ -289,9 +307,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 val isDarkTheme = context.resources.configuration.isDarkTheme()
 
                 val colorAttr = if (isCollapsed || isDarkTheme) {
-                    R.attr.colorOnSurface
+                    MaterialR.attr.colorOnSurface
                 } else {
-                    R.attr.colorSurface
+                    MaterialR.attr.colorSurface
                 }
                 val color = context.getColorFromAttribute(colorAttr)
                 val colorFilter = BlendModeColorFilterCompat
@@ -342,7 +360,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false)
+        val viewBinding = ReaderFragmentPostDetailBinding.inflate(inflater, container, false).also { binding = it }
+        val view = viewBinding.root
 
         initSwipeRefreshLayout(view)
         initAppBar(view)
@@ -403,7 +422,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             toolBar.setNavigationOnClickListener { requireActivity().finish() }
             toolBar.setTitle(R.string.reader_title_related_post_detail)
         } else {
-            toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            toolBar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp)
             toolBar.setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         }
     }
@@ -420,6 +439,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         readerWebView.setCustomViewListener(this)
         readerWebView.setUrlClickListener(this)
         readerWebView.setPageFinishedListener(this)
+
+        readerProgressBar = view.findViewById(R.id.reader_progress_bar)
     }
 
     private fun initLikeFacesTrain(view: View) {
@@ -448,14 +469,36 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun initLayoutFooter(view: View) {
-        layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
-        val elevationOverlayProvider = ElevationOverlayProvider(layoutFooter.context)
-        val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
-        val elevatedSurfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
-            appbarElevation
-        )
-        layoutFooter.setBackgroundColor(elevatedSurfaceColor)
-        layoutFooter.visibility = View.INVISIBLE
+        val isReaderImprovementsEnabled = readerImprovementsFeatureConfig.isEnabled()
+        view.findViewById<ViewStub>(R.id.layout_post_detail_footer).apply {
+            layoutResource = if (isReaderImprovementsEnabled) {
+                R.layout.reader_include_post_detail_footer_new
+            } else {
+                R.layout.reader_include_post_detail_footer
+            }
+
+            setOnInflateListener { _, inflated ->
+                layoutFooterBinding = if (isReaderImprovementsEnabled) {
+                    ReaderIncludePostDetailFooterNewBinding.bind(inflated).mapBinding().apply {
+                        // the new bar should hide on scroll
+                        val params = root.layoutParams as CoordinatorLayout.LayoutParams
+                        params.behavior = HideBottomViewOnScrollBehavior<View>()
+                    }
+                } else {
+                    ReaderIncludePostDetailFooterBinding.bind(inflated).mapBinding().apply {
+                        // the old bar should have the elevated surface color background
+                        val elevationOverlayProvider = ElevationOverlayProvider(root.context)
+                        val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
+                        val elevatedSurfaceColor = elevationOverlayProvider
+                            .compositeOverlayWithThemeSurfaceColorIfNeeded(appbarElevation)
+                        root.setBackgroundColor(elevatedSurfaceColor)
+                    }
+                }
+                layoutFooterBinding.root.isInvisible = true
+            }
+        }.also { stub ->
+            stub.inflate()
+        }
     }
 
     private fun initSignInButton(view: View) {
@@ -472,9 +515,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onResume() {
         super.onResume()
-        if (isVisible) {
-            replaceActivityToolbarWithCollapsingToolbar()
-        }
+        replaceActivityToolbarWithCollapsingToolbar()
     }
 
     private fun replaceActivityToolbarWithCollapsingToolbar() {
@@ -489,12 +530,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().addMenuProvider(this, viewLifecycleOwner)
-        val binding = ReaderFragmentPostDetailBinding.bind(view)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         initLikeFacesRecycler(savedInstanceState)
         initCommentSnippetRecycler(savedInstanceState)
-        initViewModel(binding, savedInstanceState)
+        binding?.let { initViewModel(it, savedInstanceState) }
         restoreState(savedInstanceState)
 
         showPost()
@@ -776,10 +816,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         updateFeaturedImage(state.featuredImageUiState, binding)
         updateExcerptFooter(state.excerptFooterUiState)
 
-        with(binding.layoutPostDetailFooter) {
-            updateActionButton(state.postId, state.blogId, state.actions.likeAction, countLikes)
+        with(layoutFooterBinding) {
+            updateActionButton(state.postId, state.blogId, state.actions.likeAction, like)
             updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
-            updateActionButton(state.postId, state.blogId, state.actions.commentsAction, countComments)
+            updateActionButton(state.postId, state.blogId, state.actions.commentsAction, comment)
             updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
         }
 
@@ -797,7 +837,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             if (handleDirectOperation()) return
 
             scrollView.visibility = View.VISIBLE
-            layoutFooter.visibility = View.VISIBLE
+            layoutFooterBinding.root.visibility = View.VISIBLE
         }
     }
 
@@ -864,7 +904,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory ->
                 replaceRelatedPostDetailWithHistory(postId = this.postId, blogId = this.blogId)
 
-            is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post)
+            is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post, this@ReaderPostDetailFragment)
             is ReaderNavigationEvents.ShowEngagedPeopleList -> {
                 ActivityLauncher.viewPostLikesListActivity(
                     activity,
@@ -978,13 +1018,18 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             binding.layoutPostDetailContainer,
             uiHelpers.getTextOfUiString(requireContext(), this.message),
             Snackbar.LENGTH_LONG
-        )
+        ).setAnchorView(layoutFooterBinding.root)
         if (this.buttonTitle != null) {
             snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), this.buttonTitle)) {
                 this.buttonAction.invoke()
             }
         }
         snackbar.show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
     override fun onDestroy() {
@@ -1002,33 +1047,34 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onPrepareMenu(menu: Menu) {
-        // browse & share require the post to have a URL (some feed-based posts don't have one)
+        val isReaderImprovementsEnabled = readerImprovementsFeatureConfig.isEnabled()
+
         val postHasUrl = viewModel.post?.hasUrl() == true
-        val mnuBrowse = menu.findItem(R.id.menu_browse)
-        if (mnuBrowse != null) {
-            mnuBrowse.isVisible = postHasUrl || viewModel.interceptedUri != null
+        val menuBrowse = menu.findItem(R.id.menu_browse)
+        menuBrowse?.isVisible = if (!isReaderImprovementsEnabled) {
+            // browse require the post to have a URL (some feed-based posts don't have one) or an intercepted URI
+            postHasUrl || viewModel.interceptedUri != null
+        } else {
+            // in the Reader improvements we are only showing this as a fallback for posts with intercepted URI only
+            !postHasUrl && viewModel.interceptedUri != null
         }
-        val mnuShare = menu.findItem(R.id.menu_share)
-        if (mnuShare != null) {
-            mnuShare.isVisible = postHasUrl
-        }
+
+        val menuShare = menu.findItem(R.id.menu_share)
+        // share should not be shown as a TopBar item after Reader improvements (only in the "more" menu)
+        menuShare?.isVisible = postHasUrl && !isReaderImprovementsEnabled
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
         R.id.menu_browse -> {
+            val interceptedUri = viewModel.interceptedUri
             if (viewModel.hasPost) {
                 readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
                 ReaderActivityLauncher.openPost(context, viewModel.post)
-            } else if (viewModel.interceptedUri != null) {
-                readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, viewModel.interceptedUri!!)
-                ReaderActivityLauncher.openUrl(activity, viewModel.interceptedUri, OpenUrlType.EXTERNAL)
+            } else if (interceptedUri != null) {
+                readerTracker.trackUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, interceptedUri)
+                ReaderActivityLauncher.openUrl(activity, interceptedUri, OpenUrlType.EXTERNAL)
                 requireActivity().finish()
             }
-            true
-        }
-        R.id.menu_share -> {
-            readerTracker.track(AnalyticsTracker.Stat.SHARED_ITEM)
-            ReaderActivityLauncher.sharePost(context, viewModel.post)
             true
         }
         R.id.menu_more -> {
@@ -1103,6 +1149,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onStart() {
         super.onStart()
         dispatcher.register(this)
@@ -1485,6 +1532,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         renderer?.beginRender()
     }
 
+    // overridePendingTransition is deprecated in SDK 34 in favor of overrideActivityTransition, but the latter requires
+    // SDK 34. overridePendingTransition still works on Android 14 so using it should be safe for now.
+    @Suppress("DEPRECATION")
     private fun handleDirectOperation() = when (directOperation) {
         DirectOperation.COMMENT_JUMP, DirectOperation.COMMENT_REPLY, DirectOperation.COMMENT_LIKE -> {
             viewModel.post?.let {
@@ -1505,14 +1555,20 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     @Suppress("DEPRECATION")
-    private fun ReaderPostDetailFragment.showPostInWebView(post: ReaderPost) {
+    private fun showPostInWebView(post: ReaderPost, fragment: Fragment) {
         readerWebView.setIsPrivatePost(post.isPrivate)
         readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))
-        renderer = ReaderPostRenderer(readerWebView, viewModel.post, readerCssProvider)
+        readerProgressBar.visibility = View.VISIBLE
+        renderer = ReaderPostRenderer(
+            readerWebView,
+            viewModel.post,
+            readerCssProvider,
+            readerImprovementsFeatureConfig.isEnabled()
+        )
 
         // if the post is from private atomic site postpone render until we have a special access cookie
         if (post.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
-            PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager, this@ReaderPostDetailFragment)
+            PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager, fragment)
             requestPrivateAtomicCookie()
         } else if (post.isPrivateAtomic && privateAtomicCookie.exists()) {
             // make sure we add cookie to the cookie manager if it exists before starting render
@@ -1541,6 +1597,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (!isAdded) {
             return
         }
+
+        readerProgressBar.visibility = View.GONE
 
         if (url != null && url == "about:blank") {
             // brief delay before showing related posts to give page time to render
@@ -1696,7 +1754,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_FILE_DOWNLOAD_TAPPED)
         return if (activity != null &&
             fileUrl != null &&
-            PermissionUtils.checkAndRequestStoragePermission(
+            PermissionUtils.checkAndRequestFileDownloadPermission(
                 this,
                 READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
             )
@@ -1759,6 +1817,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         trackRelatedPostsIfShowing()
     }
 
+    @Suppress("SameParameterValue")
     private fun setRefreshing(refreshing: Boolean) {
         swipeToRefreshHelper.isRefreshing = refreshing
     }
@@ -1768,6 +1827,32 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             AniUtils.animateTopBar(appBar, show)
         }
     }
+
+    private data class PostDetailFooterBarBinding(
+        val root: ViewGroup,
+        val bookmark: View,
+        val reblog: View,
+        val comment: View,
+        val like: View,
+    )
+
+    private fun ReaderIncludePostDetailFooterBinding.mapBinding(): PostDetailFooterBarBinding =
+        PostDetailFooterBarBinding(
+            root,
+            bookmark,
+            reblog,
+            countComments,
+            countLikes,
+        )
+
+    private fun ReaderIncludePostDetailFooterNewBinding.mapBinding(): PostDetailFooterBarBinding =
+        PostDetailFooterBarBinding(
+            root,
+            bookmark,
+            reblog,
+            comment,
+            like,
+        )
 
     companion object {
         private const val ON_PAGE_FINISHED_DELAY_MILLIS = 300L

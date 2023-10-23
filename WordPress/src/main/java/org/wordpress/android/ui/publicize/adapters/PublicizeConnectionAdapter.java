@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
@@ -25,6 +25,11 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.models.PublicizeConnection.ConnectStatus.MUST_DISCONNECT;
+import static org.wordpress.android.models.PublicizeConnection.ConnectStatus.OK;
+import static org.wordpress.android.models.PublicizeService.Status.UNSUPPORTED;
+import static org.wordpress.android.ui.publicize.PublicizeConstants.TWITTER_ID;
 
 public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeConnectionAdapter.ConnectionViewHolder> {
     public interface OnAdapterLoadedListener {
@@ -89,7 +94,7 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
         return mConnections.get(position).connectionId;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public ConnectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view =
@@ -112,24 +117,23 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
 
     private void bindButton(ConnectButton btnConnect, final PublicizeConnection connection) {
         ConnectStatus status = connection.getStatusEnum();
-        switch (status) {
-            case OK:
-            case MUST_DISCONNECT:
-                btnConnect.setAction(PublicizeConstants.ConnectAction.DISCONNECT);
-                btnConnect.setOnClickListener(v -> {
-                    if (mActionListener != null) {
-                        mActionListener.onRequestDisconnect(connection);
-                    }
-                });
-                break;
-            case BROKEN:
-            default:
-                btnConnect.setAction(ConnectAction.RECONNECT);
-                btnConnect.setOnClickListener(view -> {
-                    if (mActionListener != null) {
-                        mActionListener.onRequestReconnect(mService, connection);
-                    }
-                });
+        final boolean isTwitterConnection = TWITTER_ID.equals(connection.getService());
+        final boolean isServiceUnsupported = mService != null && UNSUPPORTED.equals(mService.getStatus());
+        if (OK.equals(status) || MUST_DISCONNECT.equals(status)
+            || (isTwitterConnection && isServiceUnsupported)) {
+            btnConnect.setAction(PublicizeConstants.ConnectAction.DISCONNECT);
+            btnConnect.setOnClickListener(v -> {
+                if (mActionListener != null) {
+                    mActionListener.onRequestDisconnect(connection);
+                }
+            });
+        } else {
+            btnConnect.setAction(ConnectAction.RECONNECT);
+            btnConnect.setOnClickListener(view -> {
+                if (mActionListener != null) {
+                    mActionListener.onRequestReconnect(mService, connection);
+                }
+            });
         }
     }
 

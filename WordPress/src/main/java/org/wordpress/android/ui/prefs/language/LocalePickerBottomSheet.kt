@@ -19,6 +19,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.LocalePickerBottomSheetBinding
 import org.wordpress.android.util.ActivityUtils
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 class LocalePickerBottomSheet : BottomSheetDialogFragment() {
     @Inject
@@ -61,7 +62,7 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
             val orientation = resources.configuration.orientation
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 val sheet = dialog?.findViewById<View>(
-                    com.google.android.material.R.id.design_bottom_sheet
+                    MaterialR.id.design_bottom_sheet
                 ) as? FrameLayout
                 sheet?.let {
                     val behavior = BottomSheetBehavior.from(it)
@@ -123,7 +124,7 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
         dialog?.setOnShowListener { dialogInterface ->
             val sheetDialog = dialogInterface as? BottomSheetDialog
             bottomSheet = sheetDialog?.findViewById<View>(
-                com.google.android.material.R.id.design_bottom_sheet
+                MaterialR.id.design_bottom_sheet
             ) as? FrameLayout
         }
     }

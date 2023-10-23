@@ -123,7 +123,7 @@ class PostListViewModel @Inject constructor(
 
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
-        override fun getLifecycle(): Lifecycle = lifecycleRegistry
+        override val lifecycle: Lifecycle = lifecycleRegistry
     }
 
     fun start(
@@ -381,8 +381,7 @@ class PostListViewModel @Inject constructor(
                 connector.postActionHandler.handlePostButton(buttonType, postModel, hasAutoSave)
             },
             uploadStatusTracker = connector.uploadStatusTracker,
-            isSearch = connector.postListType == SEARCH,
-            isSiteBlazeEligible = connector.isSiteBlazeEligible
+            isSearch = connector.postListType == SEARCH
         )
     }
 

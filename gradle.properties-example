@@ -7,10 +7,14 @@ org.gradle.parallel=true
 org.gradle.configureondemand=true
 org.gradle.caching=true
 
-
 # WordPress-Android properties.
 
 android.useAndroidX=true
+android.enableJetifier=false
+
+android.nonTransitiveRClass=true
+android.nonFinalResIds=false
+android.enableR8.fullMode=false
 
 # For more details on what these properties do visit
 # https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/README.md
@@ -23,6 +27,7 @@ wp.app_license_key = wordpress
 wp.zendesk.app_id=wordpress
 wp.zendesk.domain=https://www.google.com/
 wp.zendesk.oauth_client_id=wordpress
+wp.docsbotai.id=wordpress
 wp.reset_db_on_downgrade = false
 wp.sentry.dsn=https://00000000000000000000000000000000@sentry.io/00000000
 jp.sentry.dsn=https://00000000000000000000000000000000@sentry.io/00000000

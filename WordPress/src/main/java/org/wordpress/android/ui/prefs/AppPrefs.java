@@ -29,6 +29,7 @@ import org.wordpress.android.ui.quickstart.QuickStartType;
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.usecase.social.JetpackSocialFlow;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMediaUtils;
 
@@ -165,8 +166,6 @@ public class AppPrefs {
         // Used to delete recommended tags saved as followed tags in tbl_tags
         // Need to be done just once for a logged out user
         READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER,
-
-        READER_DISCOVER_WELCOME_BANNER_SHOWN,
         MANUAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
@@ -184,13 +183,28 @@ public class AppPrefs {
         SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD,
         SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD,
         SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING,
+        SHOULD_HIDE_DASHBOARD_DOMAIN_TRANSFER_CARD,
         SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD,
-        SHOULD_HIDE_DASHBOARD_DOMAIN_CARD,
+        SHOULD_HIDE_DASHBOARD_PLANS_CARD,
 
         // Jetpack Individual Plugin overlay for WordPress app
         WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_SHOWN_COUNT,
         WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_LAST_SHOWN_TIMESTAMP,
         NOTIFICATIONS_PERMISSION_WARNING_DISMISSED,
+        HAS_SAVED_PRIVACY_SETTINGS,
+        SHOULD_HIDE_BLAZE_OVERLAY,
+
+        // Should show Jetpack Social no connections UI
+        SHOULD_SHOW_JETPACK_SOCIAL_NO_CONNECTIONS,
+        SHOULD_HIDE_ACTIVITY_DASHBOARD_CARD,
+        SHOULD_HIDE_PAGES_DASHBOARD_CARD,
+        SHOULD_HIDE_TODAY_STATS_DASHBOARD_CARD,
+        SHOULD_HIDE_POST_DASHBOARD_CARD,
+        SHOULD_HIDE_NEXT_STEPS_DASHBOARD_CARD,
+        SHOULD_HIDE_GET_TO_KNOW_THE_APP_DASHBOARD_CARD,
+
+        SHOULD_SHOW_SITE_ITEM_AS_QUICK_LINK_IN_DASHBOARD,
+        SHOULD_SHOW_DEFAULT_QUICK_LINK_IN_DASHBOARD,
     }
 
     /**
@@ -363,7 +377,7 @@ public class AppPrefs {
     }
 
     public static void putLong(final PrefKey key, final long value) {
-        prefs().edit().putLong(key.name(), value) .apply();
+        prefs().edit().putLong(key.name(), value).apply();
     }
 
     private static int getInt(PrefKey key, int def) {
@@ -1268,14 +1282,6 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER, deleted);
     }
 
-    public static boolean getReaderDiscoverWelcomeBannerShown() {
-        return getBoolean(DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN, false);
-    }
-
-    public static void setReaderDiscoverWelcomeBannerShown(boolean shown) {
-        setBoolean(DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN, shown);
-    }
-
     public static void setShouldShowStoriesIntro(boolean shouldShow) {
         setBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, shouldShow);
     }
@@ -1612,6 +1618,18 @@ public class AppPrefs {
         return DeletablePrefKey.SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING.name() + siteId;
     }
 
+    public static Boolean getShouldHideDashboardDomainTransferCard(long siteId) {
+        return prefs().getBoolean(getSiteIdHideDashboardDomainTransferCardKey(siteId), false);
+    }
+
+    public static void setShouldHideDashboardDomainTransferCard(long siteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHideDashboardDomainTransferCardKey(siteId), isHidden).apply();
+    }
+
+    @NonNull private static String getSiteIdHideDashboardDomainTransferCardKey(long siteId) {
+        return DeletablePrefKey.SHOULD_HIDE_DASHBOARD_DOMAIN_TRANSFER_CARD.name() + siteId;
+    }
+
     public static Boolean getShouldHidePromoteWithBlazeCard(long siteId) {
         return prefs().getBoolean(getSiteIdHideBlazeKey(siteId), false);
     }
@@ -1624,16 +1642,16 @@ public class AppPrefs {
         return DeletablePrefKey.SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD.name() + siteId;
     }
 
-    public static Boolean getShouldHideDashboardDomainCard(long siteId) {
-        return prefs().getBoolean(getSiteIdHideDashboardDomainCardKey(siteId), false);
+    public static Boolean getShouldHideDashboardPlansCard(long siteId) {
+        return prefs().getBoolean(getSiteIdHideDashboardPlansCardKey(siteId), false);
     }
 
-    public static void setShouldHideDashboardDomainCard(long siteId, final boolean isHidden) {
-        prefs().edit().putBoolean(getSiteIdHideDashboardDomainCardKey(siteId), isHidden).apply();
+    public static void setShouldHideDashboardPlansCard(long siteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHideDashboardPlansCardKey(siteId), isHidden).apply();
     }
 
-    @NonNull private static String getSiteIdHideDashboardDomainCardKey(long siteId) {
-        return DeletablePrefKey.SHOULD_HIDE_DASHBOARD_DOMAIN_CARD.name() + siteId;
+    @NonNull private static String getSiteIdHideDashboardPlansCardKey(long siteId) {
+        return DeletablePrefKey.SHOULD_HIDE_DASHBOARD_PLANS_CARD.name() + siteId;
     }
 
     public static int getWPJetpackIndividualPluginOverlayShownCount() {
@@ -1659,5 +1677,129 @@ public class AppPrefs {
 
     public static void setNotificationsPermissionWarningDismissed(boolean dismissed) {
         setBoolean(DeletablePrefKey.NOTIFICATIONS_PERMISSION_WARNING_DISMISSED, dismissed);
+    }
+
+    public static Boolean getShouldHideBlazeOverlay() {
+        return getBoolean(DeletablePrefKey.SHOULD_HIDE_BLAZE_OVERLAY, false);
+    }
+
+    public static void setShouldHideBlazeOverlay(final boolean isHidden) {
+        setBoolean(DeletablePrefKey.SHOULD_HIDE_BLAZE_OVERLAY, isHidden);
+    }
+
+    public static Boolean getShouldShowJetpackSocialNoConnections(final long remoteSiteId,
+                                                                  final JetpackSocialFlow flow) {
+        return prefs().getBoolean(mapShouldShowJetpackSocialNoConnectionsKey(remoteSiteId, flow), true);
+    }
+
+    public static void setShouldShowJetpackSocialNoConnections(final boolean show, final long remoteSiteId,
+                                                               final JetpackSocialFlow flow) {
+        prefs().edit().putBoolean(mapShouldShowJetpackSocialNoConnectionsKey(remoteSiteId, flow), show)
+               .apply();
+    }
+
+    private static String mapShouldShowJetpackSocialNoConnectionsKey(final long remoteSiteId,
+                                                                     final JetpackSocialFlow flow) {
+        return DeletablePrefKey.SHOULD_SHOW_JETPACK_SOCIAL_NO_CONNECTIONS.name() + "_" + remoteSiteId + "_"
+               + flow.getValue();
+    }
+
+    public static void setShouldHideActivityDashboardCard(final long siteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHideActivityDashboardCardKey(siteId), isHidden).apply();
+    }
+
+    @NonNull private static String getSiteIdHideActivityDashboardCardKey(long siteId) {
+        return DeletablePrefKey.SHOULD_HIDE_ACTIVITY_DASHBOARD_CARD.name() + siteId;
+    }
+
+    public static Boolean getShouldHideActivityDashboardCard(final long siteId) {
+        return prefs().getBoolean(getSiteIdHideActivityDashboardCardKey(siteId), false);
+    }
+
+    public static void setShouldHidePagesDashboardCard(final long siteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHidePagesDashboardCardKey(siteId), isHidden).apply();
+    }
+
+    @NonNull private static String getSiteIdHidePagesDashboardCardKey(long siteId) {
+        return DeletablePrefKey.SHOULD_HIDE_PAGES_DASHBOARD_CARD.name() + siteId;
+    }
+
+    public static Boolean getShouldHidePagesDashboardCard(final long siteId) {
+        return prefs().getBoolean(getSiteIdHidePagesDashboardCardKey(siteId), false);
+    }
+
+    public static void setShouldHideTodaysStatsDashboardCard(final long siteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHideTodaysStatsDashboardCardKey(siteId), isHidden).apply();
+    }
+
+    @NonNull private static String getSiteIdHideTodaysStatsDashboardCardKey(long siteId) {
+        return DeletablePrefKey.SHOULD_HIDE_TODAY_STATS_DASHBOARD_CARD.name() + siteId;
+    }
+
+    public static Boolean getShouldHideTodaysStatsDashboardCard(final long siteId) {
+        return prefs().getBoolean(getSiteIdHideTodaysStatsDashboardCardKey(siteId), false);
+    }
+
+    public static void setShouldHidePostDashboardCard(final long siteId, final String postType,
+                                                      final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHidePostDashboardCardKey(siteId, postType), isHidden).apply();
+    }
+
+    @NonNull private static String getSiteIdHidePostDashboardCardKey(long siteId, final String postType) {
+        return DeletablePrefKey.SHOULD_HIDE_POST_DASHBOARD_CARD.name() + postType + siteId;
+    }
+
+    public static Boolean getShouldHidePostDashboardCard(final long siteId, final String postType) {
+        return prefs().getBoolean(getSiteIdHidePostDashboardCardKey(siteId, postType), false);
+    }
+
+    public static void setShouldHideNextStepsDashboardCard(final long siteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHideNextStepsDashboardCardKey(siteId), isHidden).apply();
+    }
+
+    @NonNull private static String getSiteIdHideNextStepsDashboardCardKey(long siteId) {
+        return DeletablePrefKey.SHOULD_HIDE_NEXT_STEPS_DASHBOARD_CARD.name() + siteId;
+    }
+
+    public static Boolean getShouldHideNextStepsDashboardCard(final long siteId) {
+        return prefs().getBoolean(getSiteIdHideNextStepsDashboardCardKey(siteId), false);
+    }
+
+    public static void setShouldHideGetToKnowTheAppDashboardCard(final long siteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHideGetToKnowTheAppDashboardCardKey(siteId), isHidden).apply();
+    }
+
+    @NonNull private static String getSiteIdHideGetToKnowTheAppDashboardCardKey(long siteId) {
+        return DeletablePrefKey.SHOULD_HIDE_GET_TO_KNOW_THE_APP_DASHBOARD_CARD.name() + siteId;
+    }
+
+    public static Boolean getShouldHideGetToKnowTheAppDashboardCard(final long siteId) {
+        return prefs().getBoolean(getSiteIdHideGetToKnowTheAppDashboardCardKey(siteId), false);
+    }
+
+    public static void setShouldShowSiteItemAsQuickLink(final String siteItem, final long siteId,
+                                                        final boolean isHidden) {
+        prefs().edit().putBoolean(getShouldShowSiteItemAsQuickLinkKey(siteItem, siteId), isHidden).apply();
+    }
+
+    @NonNull private static String getShouldShowSiteItemAsQuickLinkKey(String siteItem, long siteId) {
+        return DeletablePrefKey.SHOULD_SHOW_SITE_ITEM_AS_QUICK_LINK_IN_DASHBOARD.name() + siteItem + siteId;
+    }
+
+    public static Boolean getShouldShowSiteItemAsQuickLink(String siteItem, final long siteId) {
+        return prefs().getBoolean(getShouldShowSiteItemAsQuickLinkKey(siteItem, siteId), false);
+    }
+
+    public static void setShouldShowDefaultQuickLink(final String siteItem, final long siteId,
+                                                        final boolean shouldShow) {
+        prefs().edit().putBoolean(getShouldShowDefaultQuickLinkKey(siteItem, siteId), shouldShow).apply();
+    }
+
+    @NonNull private static String getShouldShowDefaultQuickLinkKey(String siteItem, long siteId) {
+        return DeletablePrefKey.SHOULD_SHOW_DEFAULT_QUICK_LINK_IN_DASHBOARD.name() + siteItem + siteId;
+    }
+
+    public static Boolean getShouldShowDefaultQuickLink(String siteItem, final long siteId) {
+        return prefs().getBoolean(getShouldShowDefaultQuickLinkKey(siteItem, siteId), true);
     }
 }

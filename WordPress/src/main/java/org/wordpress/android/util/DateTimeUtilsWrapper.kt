@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
+import android.text.format.DateUtils
 
 class DateTimeUtilsWrapper @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
@@ -40,5 +41,16 @@ class DateTimeUtilsWrapper @Inject constructor(
         return runCatching { LocalDate.parse(date, originalFormat).format(targetFormat) }
             .onFailure { AppLog.e(T.UTILS, "Couldn't parse date: $date", it) }
             .getOrNull()
+    }
+
+    /*
+    * Returns a string describing 'time' as a time relative to the current time.
+    * Use javaDateToTimeSpan function if the date is in the past.
+    * Use getRelativeTimeSpanString function if the date is in the future.
+    * Time spans in future are formatted like "In 42 minutes | In 2 days".
+    * */
+    fun getRelativeTimeSpanString(date: Date): String {
+        return DateUtils.getRelativeTimeSpanString(date.time, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
+            .toString()
     }
 }

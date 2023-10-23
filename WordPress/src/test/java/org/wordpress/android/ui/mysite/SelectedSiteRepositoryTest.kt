@@ -15,11 +15,13 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.EditorThemeAction
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
+import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig
 
 @ExperimentalCoroutinesApi
 class SelectedSiteRepositoryTest : BaseUnitTest() {
@@ -34,6 +36,10 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    lateinit var globalStyleSupportFeatureConfig: GlobalStyleSupportFeatureConfig
+
     private lateinit var siteModel: SiteModel
     private var siteIconProgressBarVisible: Boolean = false
     private var selectedSite: SiteModel? = null
@@ -46,7 +52,12 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        selectedSiteRepository = SelectedSiteRepository(dispatcher, siteSettingsInterfaceFactory, appPrefsWrapper)
+        selectedSiteRepository = SelectedSiteRepository(
+            dispatcher,
+            siteSettingsInterfaceFactory,
+            appPrefsWrapper,
+            globalStyleSupportFeatureConfig
+        )
         selectedSiteRepository.showSiteIconProgressBar.observeForever { siteIconProgressBarVisible = it == true }
         selectedSiteRepository.selectedSiteChange.observeForever { selectedSite = it }
         siteModel = SiteModel()
@@ -117,7 +128,6 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
         selectedSiteRepository.updateTitle(updatedTitle)
 
         assertThat(siteModel.name).isEqualTo(updatedTitle)
-        verify(dispatcher).dispatch(any())
         assertThat(actions.last().payload).isEqualTo(siteModel)
         assertThat(actions.last().type).isEqualTo(SiteAction.UPDATE_SITE)
 
@@ -216,6 +226,15 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
         selectedSiteRepository.siteSelected.observeForever { emptySiteIdEmitted = true }
 
         assertThat(emptySiteIdEmitted).isTrue
+    }
+
+    @Test
+    fun `Should fetch EditorTheme when updateSiteSettingsIfNecessary is called`() {
+        initializeSiteAndSiteSettings()
+
+        selectedSiteRepository.updateSiteSettingsIfNecessary()
+
+        assertThat(actions.last().type).isEqualTo(EditorThemeAction.FETCH_EDITOR_THEME)
     }
 
     private fun initializeSiteAndSiteSettings() {

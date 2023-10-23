@@ -21,7 +21,6 @@ import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.posts.BloggingPromptsEditorBlockMapper
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel.EditorLoadedPrompt
-import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -51,7 +50,6 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     private val bloggingPromptsEditorBlockMapper: BloggingPromptsEditorBlockMapper = mock {
         on { it.map(any()) } doReturn bloggingPromptsBlock
     }
-    private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig = mock()
     private val bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider = mock()
 
     @Before
@@ -59,7 +57,6 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
         viewModel = EditorBloggingPromptsViewModel(
             bloggingPromptsStore,
             bloggingPromptsEditorBlockMapper,
-            bloggingPromptsEnhancementsFeatureConfig,
             bloggingPromptsPostTagProvider,
             testDispatcher(),
         )
@@ -87,22 +84,13 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `should load blogging prompt mapped block if enhancements feature flag is ENABLED`() {
-        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
+    fun `should load blogging prompt mapped block`() {
         viewModel.start(siteModel, 123)
         assertThat(loadedPrompt?.content).isEqualTo(bloggingPromptsBlock)
     }
 
     @Test
-    fun `should not add prompt id tag if enhancements feature flag is DISABLED`() {
-        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(false)
-        viewModel.start(siteModel, 123)
-        assertThat(loadedPrompt?.tags).containsOnly(BloggingPromptsPostTagProvider.BLOGGING_PROMPT_TAG)
-    }
-
-    @Test
-    fun `should add prompt id tag if enhancements feature flag is ENABLED`() {
-        whenever(bloggingPromptsEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
+    fun `should add prompt id tag`() {
         whenever(bloggingPromptsPostTagProvider.promptIdTag(any())).thenReturn("promptIdTag")
         viewModel.start(siteModel, 123)
         assertThat(loadedPrompt?.tags).containsOnly(

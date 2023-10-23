@@ -16,10 +16,12 @@ class ChipsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     fun bind(
         item: Chips
     ) {
-        chipGroup.setOnCheckedChangeListener { group, checkedId ->
-            val checkedChip = group.findViewById<Chip>(checkedId)
-            checkedChip?.announceForAccessibility(group.resources.getString(R.string.stats_graph_updated))
-            item.onColumnSelected?.invoke(group.indexOfChild(checkedChip))
+        chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+            checkedIds.forEach { checkedId ->
+                val checkedChip = group.findViewById<Chip>(checkedId)
+                checkedChip?.announceForAccessibility(group.resources.getString(R.string.stats_graph_updated))
+                item.onColumnSelected?.invoke(group.indexOfChild(checkedChip))
+            }
         }
 
         chipGroup.children.forEachIndexed { index, view ->

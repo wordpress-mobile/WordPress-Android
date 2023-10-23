@@ -2,23 +2,68 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pages_content_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:foreground="?attr/selectableItemBackground"
-    android:paddingBottom="@dimen/my_site_card_row_padding"
-    android:paddingEnd="@dimen/my_site_card_row_padding"
-    android:paddingStart="@dimen/my_site_card_row_padding"
-    android:paddingTop="@dimen/my_site_card_row_padding">
+    android:paddingTop="@dimen/my_site_dashboard_card_page_create_page_top_padding">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"
-        style="@style/MySitePostItemTitle"
+        style="@style/DashboardCardSubtitle"
+        android:textAlignment="viewStart"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/my_site_card_row_padding"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/title" />
+        tools:text="This is a long title to check how the text behaves when its too long" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/status"
+        style="@style/DashboardCardDetail"
+        android:textAlignment="viewStart"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/my_site_dashboard_card_page_create_page_status_margin_top"
+        android:background="@drawable/bg_rectangle_dashboard_card_page_status"
+        android:drawablePadding="@dimen/margin_medium"
+        android:paddingVertical="@dimen/my_site_dashboard_card_page_create_page_status_padding_vertical"
+        android:paddingHorizontal="@dimen/my_site_dashboard_card_page_create_page_status_padding_horizontal"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        tools:drawableStart="@drawable/ic_dashboard_card_pages_published_page_status"
+        tools:text="@string/dashboard_card_page_item_status_published" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/lastEditedOrScheduledTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="in 2 hours"
+        style="@style/DashboardCardDetail"
+        android:layout_marginTop="@dimen/margin_small"
+        android:paddingHorizontal="@dimen/my_site_dashboard_card_page_page_modified_time_padding_horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/status"
+        app:layout_constraintStart_toEndOf="@+id/status"
+        app:layout_constraintTop_toTopOf="@+id/status" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="@dimen/list_divider_height"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/my_site_dashboard_card_page_create_page_divider_top_padding"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/status"
+        app:layout_constraintTop_toBottomOf="@+id/status"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

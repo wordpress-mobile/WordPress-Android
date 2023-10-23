@@ -99,7 +99,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final float mDisabledSiteOpacity;
 
     private final LayoutInflater mInflater;
-    private final HashSet<Integer> mSelectedPositions = new HashSet<>();
+    @NonNull private final HashSet<Integer> mSelectedPositions = new HashSet<>();
     @Nullable private final ViewHolderHandler mHeaderHandler;
     @Nullable private final ViewHolderHandler mFooterHandler;
 
@@ -229,11 +229,20 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
 
         TypedValue disabledAlpha = new TypedValue();
-        context.getResources().getValue(R.dimen.material_emphasis_disabled, disabledAlpha, true);
+        context.getResources().getValue(
+                com.google.android.material.R.dimen.material_emphasis_disabled,
+                disabledAlpha,
+                true
+        );
         mDisabledSiteOpacity = disabledAlpha.getFloat();
         mSelectedItemBackground = ColorUtils
-                .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface),
-                        context.getResources().getInteger(R.integer.selected_list_item_opacity));
+                .setAlphaComponent(
+                        ContextExtensionsKt.getColorFromAttribute(
+                                context,
+                                com.google.android.material.R.attr.colorOnSurface
+                        ),
+                        context.getResources().getInteger(R.integer.selected_list_item_opacity)
+                );
 
         mHeaderHandler = headerHandler;
         mFooterHandler = footerHandler;
@@ -484,7 +493,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * called when the user chooses to edit the visibility of wp.com blogs
      */
-    void setEnableEditMode(boolean enable, HashSet<Integer> selectedPositions) {
+    void setEnableEditMode(boolean enable, @NonNull HashSet<Integer> selectedPositions) {
         if (mIsMultiSelectEnabled == enable) {
             return;
         }

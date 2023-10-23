@@ -336,8 +336,12 @@ public class AnalyticsUtils {
      * @param comment      The comment object
      * @param source       The source of the comment action
      */
-    public static void trackCommentReplyWithDetails(boolean isQuickReply, SiteModel site,
-                                                    CommentModel comment, AnalyticsCommentActionSource source) {
+    public static void trackCommentReplyWithDetails(
+            boolean isQuickReply,
+            @NonNull SiteModel site,
+            @NonNull CommentModel comment,
+            AnalyticsCommentActionSource source
+    ) {
         AnalyticsTracker.Stat legacyTracker = null;
         if (source == AnalyticsCommentActionSource.NOTIFICATIONS) {
             legacyTracker = isQuickReply ? AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_REPLIED_TO
@@ -347,7 +351,7 @@ public class AnalyticsUtils {
         AnalyticsTracker.Stat stat = isQuickReply
                 ? AnalyticsTracker.Stat.COMMENT_QUICK_ACTION_REPLIED_TO
                 : AnalyticsTracker.Stat.COMMENT_REPLIED_TO;
-        if (site == null || !SiteUtils.isAccessedViaWPComRest(site)) {
+        if (!SiteUtils.isAccessedViaWPComRest(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack."
                                      + " Tracking analytics without blog info");
             AnalyticsTracker.track(stat);
@@ -713,8 +717,11 @@ public class AnalyticsUtils {
         }
     }
 
-    public static void trackCommentActionWithSiteDetails(AnalyticsTracker.Stat stat,
-                                                         AnalyticsCommentActionSource actionSource, SiteModel site) {
+    public static void trackCommentActionWithSiteDetails(
+            AnalyticsTracker.Stat stat,
+            AnalyticsCommentActionSource actionSource,
+            @Nullable SiteModel site
+    ) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(COMMENT_ACTION_SOURCE, actionSource.toString());
 

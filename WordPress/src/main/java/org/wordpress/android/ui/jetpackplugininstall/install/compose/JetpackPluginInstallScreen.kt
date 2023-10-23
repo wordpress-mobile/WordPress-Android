@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpackplugininstall.install.compose
 
+import android.annotation.SuppressLint
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -11,6 +12,7 @@ import org.wordpress.android.ui.jetpackplugininstall.install.compose.state.Error
 import org.wordpress.android.ui.jetpackplugininstall.install.compose.state.InitialState
 import org.wordpress.android.ui.jetpackplugininstall.install.compose.state.InstallingState
 @Composable
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 fun JetpackPluginInstallScreen(
     uiState: UiState,
     onDismissScreenClick: () -> Unit,

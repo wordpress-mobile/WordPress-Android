@@ -6,12 +6,9 @@ import android.content.Intent
 import android.net.Uri
 import android.widget.EditText
 import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matchers
@@ -20,7 +17,9 @@ import org.wordpress.android.R
 import org.wordpress.android.e2e.pages.HelpScreen
 import org.wordpress.android.e2e.pages.LandingPage.tapContinueWithWpCom
 import org.wordpress.android.e2e.pages.LandingPage.tapEnterYourSiteAddress
+import org.wordpress.android.support.ComposeEspressoLink
 import org.wordpress.android.support.WPSupportUtils
+import org.wordpress.android.login.R as LoginR
 
 class LoginFlow {
     fun chooseContinueWithWpCom(composeTestRule: ComposeTestRule?): LoginFlow {
@@ -33,7 +32,7 @@ class LoginFlow {
         // Email Address Screen – Fill it in and click "Continue"
         // See LoginEmailFragment
         WPSupportUtils.populateTextField(R.id.input, emailAddress)
-        WPSupportUtils.clickOn(R.id.login_continue_button)
+        WPSupportUtils.clickOn(LoginR.id.login_continue_button)
         return this
     }
 
@@ -45,9 +44,9 @@ class LoginFlow {
         return this
     }
 
-    fun confirmLogin(isSelfHosted: Boolean) {
+    fun confirmLogin() {
         // If we get bumped to the "enter your username and password" screen, fill it in
-        if (WPSupportUtils.atLeastOneElementWithIdIsDisplayed(R.id.login_password_row)) {
+        if (WPSupportUtils.atLeastOneElementWithIdIsDisplayed(LoginR.id.login_password_row)) {
             enterUsernameAndPassword(
                 BuildConfig.E2E_WP_COM_USER_USERNAME,
                 BuildConfig.E2E_WP_COM_USER_PASSWORD
@@ -58,37 +57,28 @@ class LoginFlow {
         // See LoginEpilogueFragment
         val sitesList = Espresso.onView(ViewMatchers.withId(R.id.recycler_view))
         WPSupportUtils.waitForElementToBeDisplayed(sitesList)
-        sitesList.perform(
-            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                1,
-                ViewActions.click()
-            )
-        )
-        if (!isSelfHosted) {
-            // Quick Start Prompt Dialog - Click the "No thanks" negative button to continue.
-            // See QuickStartPromptDialogFragment
-            val negativeButton =
-                Espresso.onView(ViewMatchers.withId(R.id.quick_start_prompt_dialog_button_negative))
-            WPSupportUtils.waitForElementToBeDisplayed(negativeButton)
-            WPSupportUtils.clickOn(negativeButton)
-        }
+        ComposeEspressoLink().unregister()
+        Espresso.pressBack()
+
         if (BuildConfig.IS_JETPACK_APP) {
             dismissNewFeaturesDialogIfDisplayed()
         }
+
         WPSupportUtils.waitForElementToBeDisplayed(R.id.nav_sites)
+        ComposeEspressoLink().unregister()
     }
 
     fun chooseMagicLink(): LoginFlow {
         // Password Screen – Choose "Get a login link by email"
         // See LoginEmailPasswordFragment
-        WPSupportUtils.clickOn(R.id.login_get_email_link)
+        WPSupportUtils.clickOn(LoginR.id.login_get_email_link)
         return this
     }
 
     fun openMagicLink(): LoginFlow {
         // Magic Link Sent Screen – Should see "Check email" button
         // See LoginMagicLinkSentFragment
-        WPSupportUtils.waitForElementToBeDisplayed(R.id.login_open_email_client)
+        WPSupportUtils.waitForElementToBeDisplayed(LoginR.id.login_open_email_client)
 
         // Follow the magic link to continue login
         // Intent is invoked directly rather than through a browser as WireMock is unavailable once in the background
@@ -103,13 +93,13 @@ class LoginFlow {
     fun enterUsernameAndPassword(username: String, password: String): LoginFlow {
         val usernameElement = Espresso.onView(
             CoreMatchers.allOf(
-                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.login_username_row)),
+                ViewMatchers.isDescendantOfA(ViewMatchers.withId(LoginR.id.login_username_row)),
                 Matchers.instanceOf(EditText::class.java)
             )
         )
         val passwordElement = Espresso.onView(
             CoreMatchers.allOf(
-                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.login_password_row)),
+                ViewMatchers.isDescendantOfA(ViewMatchers.withId(LoginR.id.login_password_row)),
                 Matchers.instanceOf(EditText::class.java)
             )
         )

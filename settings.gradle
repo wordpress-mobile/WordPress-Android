@@ -1,9 +1,12 @@
 pluginManagement {
-    gradle.ext.kotlinVersion = '1.6.10'
-    gradle.ext.agpVersion = '7.2.1'
-    gradle.ext.daggerVersion = "2.42"
-    gradle.ext.detektVersion = '1.21.0'
-    gradle.ext.navComponentVersion = '2.4.2'
+    gradle.ext.kotlinVersion = '1.8.21'
+    gradle.ext.agpVersion = '8.1.0'
+    gradle.ext.googleServicesVersion = '4.3.15'
+    gradle.ext.navigationVersion = '2.5.3'
+    gradle.ext.sentryVersion = '3.5.0'
+    gradle.ext.daggerVersion = "2.46.1"
+    gradle.ext.detektVersion = '1.23.0'
+    gradle.ext.violationCommentsVersion = '1.67'
 
     plugins {
         id "org.jetbrains.kotlin.android" version gradle.ext.kotlinVersion
@@ -14,11 +17,11 @@ pluginManagement {
         id "org.jetbrains.kotlin.plugin.allopen" version gradle.ext.kotlinVersion
         id "com.android.application" version gradle.ext.agpVersion
         id "com.android.library" version gradle.ext.agpVersion
-        id 'com.google.gms.google-services' version '4.3.8'
-        id "io.sentry.android.gradle" version "2.0.0"
+        id 'com.google.gms.google-services' version gradle.ext.googleServicesVersion
+        id "androidx.navigation.safeargs.kotlin" version gradle.ext.navigationVersion
+        id "io.sentry.android.gradle" version gradle.ext.sentryVersion
         id "io.gitlab.arturbosch.detekt" version gradle.ext.detektVersion
-        id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" version "1.67"
-        id "androidx.navigation.safeargs.kotlin" version gradle.ext.navComponentVersion
+        id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" version gradle.ext.violationCommentsVersion
     }
     repositories {
         maven {
@@ -41,7 +44,7 @@ pluginManagement {
 }
 
 plugins {
-    id "com.gradle.enterprise" version "3.9"
+    id "com.gradle.enterprise" version "3.15"
 }
 
 rootProject.name = 'WPAndroid'

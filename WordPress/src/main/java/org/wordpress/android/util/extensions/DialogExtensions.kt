@@ -8,10 +8,11 @@ import android.widget.FrameLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
+import android.R as AndroidR
+import com.google.android.material.R as MaterialR
 
 fun Dialog.getPreferenceDialogContainerView(): View? {
-    var view: View? = findViewById(android.R.id.list_container)
+    var view: View? = findViewById(AndroidR.id.list_container)
 
     // just in case, try to find a container of our own custom dialog
     if (view == null) {
@@ -24,7 +25,7 @@ fun Dialog.getPreferenceDialogContainerView(): View? {
 @Suppress("DEPRECATION")
 fun Dialog.setStatusBarAsSurfaceColor() {
     window?.apply {
-        statusBarColor = context.getColorFromAttribute(attr.colorSurface)
+        statusBarColor = context.getColorFromAttribute(MaterialR.attr.colorSurface)
         if (!context.resources.configuration.isDarkTheme()) {
             decorView.systemUiVisibility = decorView
                 .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -35,7 +36,7 @@ fun Dialog.setStatusBarAsSurfaceColor() {
 fun BottomSheetDialog.fillScreen(isDraggable: Boolean = false) {
     setOnShowListener {
         val bottomSheet: FrameLayout = findViewById(
-            com.google.android.material.R.id.design_bottom_sheet
+            MaterialR.id.design_bottom_sheet
         ) ?: return@setOnShowListener
 
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)

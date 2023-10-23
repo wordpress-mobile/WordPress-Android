@@ -118,7 +118,7 @@
         android:background="@drawable/ripple_oval"
         android:contentDescription="@string/my_site_btn_switch_site"
         android:padding="@dimen/margin_large"
-        android:src="@drawable/ic_chevron_down_white_24dp"
+        android:src="@drawable/ic_chevron_down_white_16dp"
         app:layout_constraintBottom_toBottomOf="@+id/site_info_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/site_info_container"

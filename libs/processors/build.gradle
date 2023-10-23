@@ -3,6 +3,9 @@ plugins {
     id "org.jetbrains.kotlin.kapt"
 }
 
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
 dependencies {
     implementation project(":libs:annotations")
 

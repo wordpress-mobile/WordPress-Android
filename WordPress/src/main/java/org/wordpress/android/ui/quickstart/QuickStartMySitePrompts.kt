@@ -62,14 +62,14 @@ enum class QuickStartMySitePrompts constructor(
     CHECK_STATS(
         QuickStartStore.QUICK_START_CHECK_STATS_LABEL,
         -1,
-        R.id.quick_action_stats_button,
+        R.id.quick_links_item_list,
         R.string.quick_start_dialog_check_stats_message_short,
         R.drawable.ic_stats_alt_white_24dp
     ),
     REVIEW_PAGES(
         QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL,
         -1,
-        R.id.quick_action_pages_button,
+        R.id.quick_links_item_list,
         R.string.quick_start_dialog_review_pages_message_short,
         R.drawable.ic_pages_white_24dp
     ),
@@ -83,7 +83,7 @@ enum class QuickStartMySitePrompts constructor(
     UPLOAD_MEDIA(
         QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL,
         -1,
-        R.id.quick_action_media_button,
+        R.id.quick_links_item_list,
         R.string.quick_start_dialog_upload_media_message,
         R.drawable.ic_media_white_24dp
     );

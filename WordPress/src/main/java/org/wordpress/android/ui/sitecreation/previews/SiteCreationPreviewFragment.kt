@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitecreation.previews
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.os.Bundle
@@ -164,6 +165,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private fun SiteCreationPreviewScreenDefaultBinding.animateContentTransition() {
         contentLayout.addOnLayoutChangeListener(
             object : OnLayoutChangeListener {
+                @SuppressLint("Recycle")
                 override fun onLayoutChange(
                     v: View?,
                     left: Int,

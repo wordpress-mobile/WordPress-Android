@@ -1,2 +1,2 @@
-- We added a yellow warning box telling you when notifications and blogging reminders are no longer being sent to your device as push notifications.
-- We updated media access permissions for photos, videos, and audio to align with the Android 13 update.
+In the block editor, you can now split or exit a formatted block by pressing the “enter” key three times.
+The left-hand border is always visible for quote blocks, too, even in block-based themes on dark mode. And you can quote us on that.

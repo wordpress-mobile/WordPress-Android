@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.ListPopupWindow;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
@@ -109,7 +110,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public interface CommentMenuActionListener {
-        void onCommentMenuItemTapped(ReaderComment comment, ReaderCommentMenuActionType actionType);
+        void onCommentMenuItemTapped(@NonNull ReaderComment comment, @NonNull ReaderCommentMenuActionType actionType);
     }
 
     private ReaderCommentList mComments = new ReaderCommentList();
@@ -179,7 +180,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public ReaderCommentAdapter(Context context, ReaderPost post) {
+    public ReaderCommentAdapter(
+            Context context,
+            @NonNull ReaderPost post
+    ) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
         mPost = post;
         mIsPrivatePost = mThreadedCommentsUtils.isPrivatePost(post);
@@ -197,10 +201,18 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mContentWidth = displayWidth - (cardMargin * 2) - (contentPadding * 2) - (mediumMargin * 2);
 
         mColorHighlight = ColorUtils
-                .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorPrimary),
-                        context.getResources().getInteger(R.integer.selected_list_item_opacity));
+                .setAlphaComponent(
+                        ContextExtensionsKt.getColorFromAttribute(
+                                context,
+                                com.google.android.material.R.attr.colorPrimary
+                        ),
+                        context.getResources().getInteger(R.integer.selected_list_item_opacity)
+                );
 
-        mReplyButtonHighlightedColor = ContextExtensionsKt.getColorStateListFromAttribute(context, R.attr.colorPrimary);
+        mReplyButtonHighlightedColor = ContextExtensionsKt.getColorStateListFromAttribute(
+                context,
+                com.google.android.material.R.attr.colorPrimary
+        );
         mReplyButtonNormalColorColor =
                 ContextExtensionsKt.getColorStateListFromAttribute(context, R.attr.wpColorOnSurfaceMedium);
 

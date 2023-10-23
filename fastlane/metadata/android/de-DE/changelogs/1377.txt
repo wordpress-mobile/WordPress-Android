@@ -1,0 +1,5 @@
+23.4:
+Wir haben Bugs zerquetscht!
+- Du kannst jetzt URLs von X einbetten, ohne dass ein Link kaputt geht.
+- Wenn du eine ungültige Medien-URL verwendest, zeigt die App jetzt eine Fehlermeldung an, anstatt abzustürzen.
+- Im Block-Editor stürzt die App nicht mehr ab, wenn du zu viele Blöcke innerhalb von Blöcken verschachtelst.

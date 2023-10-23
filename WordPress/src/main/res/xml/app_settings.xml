@@ -67,15 +67,6 @@
         android:key="@string/pref_key_device_settings"
         android:title="@string/preference_open_device_settings" />
 
-    <ListPreference
-        android:defaultValue="@string/initial_screen_entry_value_default_key"
-        android:dialogTitle="@string/initial_screen"
-        android:entries="@array/initial_screen_entries"
-        android:entryValues="@array/initial_screen_entry_values"
-        android:key="@string/pref_key_initial_screen"
-        android:summary="%s"
-        android:title="@string/initial_screen" />
-
     <org.wordpress.android.ui.prefs.WPSwitchPreference
         android:id="@+id/pref_open_web_links_with_jetpack"
         android:defaultValue="false"
@@ -85,11 +76,6 @@
     <Preference
         android:key="@string/pref_key_whats_new"
         android:title="@string/whats_new_in_version_title" />
-
-    <Preference
-        android:key="@string/pref_key_debug_settings"
-        app:isPreferenceVisible="false"
-        android:title="@string/preference_open_debug_settings" />
 
     <PreferenceCategory
         android:key="@string/pref_key_optimize_media"

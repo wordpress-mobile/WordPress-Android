@@ -12,6 +12,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAc
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SpacerNoAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_USER
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_USER
@@ -24,6 +25,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
+import com.google.android.material.R as MaterialR
 
 @Reusable
 class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
@@ -35,23 +37,27 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
 ) {
     suspend fun buildMoreMenuItems(
         post: ReaderPost,
+        includeBookmark: Boolean,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): List<ReaderPostCardAction> {
         return withContext(bgDispatcher) {
-            buildMoreMenuItemsBlocking(post, onButtonClicked)
+            buildMoreMenuItemsBlocking(post, includeBookmark, onButtonClicked)
         }
     }
 
     fun buildMoreMenuItemsBlocking(
         post: ReaderPost,
+        includeBookmark: Boolean,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): MutableList<ReaderPostCardAction> {
         val menuItems = mutableListOf<ReaderPostCardAction>()
         val isPostFollowed = readerPostTableWrapper.isPostFollowed(post)
+        val isPostBookmarked = post.isBookmarked
 
         menuItems.add(buildVisitSite(onButtonClicked))
         checkAndAddMenuItemForSiteNotifications(menuItems, isPostFollowed, post, onButtonClicked)
         checkAndAddMenuItemForPostSeenUnseen(menuItems, post, onButtonClicked)
+        if (includeBookmark) menuItems.add(buildBookmark(isPostBookmarked, onButtonClicked))
         menuItems.add(buildShare(onButtonClicked))
         menuItems.add(buildFollow(isPostFollowed, onButtonClicked))
         menuItems.add(SpacerNoAction())
@@ -66,7 +72,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         SecondaryAction(
             type = VISIT_SITE,
             label = UiStringRes(R.string.reader_label_visit),
-            labelColor = R.attr.colorOnSurface,
+            labelColor = MaterialR.attr.colorOnSurface,
             iconRes = R.drawable.ic_globe_white_24dp,
             iconColor = R.attr.wpColorOnSurfaceMedium,
             onClicked = onButtonClicked
@@ -99,7 +105,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                 type = SITE_NOTIFICATIONS,
                 label = UiStringRes(R.string.reader_btn_notifications_off),
                 labelColor = R.attr.wpColorOnSurfaceMedium,
-                iconRes = R.drawable.ic_bell_white_24dp,
+                iconRes = R.drawable.ic_reader_bell_24dp,
                 isSelected = true,
                 onClicked = onButtonClicked
             )
@@ -107,8 +113,8 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
             SecondaryAction(
                 type = SITE_NOTIFICATIONS,
                 label = UiStringRes(R.string.reader_btn_notifications_on),
-                labelColor = R.attr.colorOnSurface,
-                iconRes = R.drawable.ic_bell_white_24dp,
+                labelColor = MaterialR.attr.colorOnSurface,
+                iconRes = R.drawable.ic_reader_bell_24dp,
                 iconColor = R.attr.wpColorOnSurfaceMedium,
                 isSelected = false,
                 onClicked = onButtonClicked
@@ -135,7 +141,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
             SecondaryAction(
                 type = TOGGLE_SEEN_STATUS,
                 label = UiStringRes(R.string.reader_menu_mark_as_unseen),
-                labelColor = R.attr.colorOnSurface,
+                labelColor = MaterialR.attr.colorOnSurface,
                 iconRes = R.drawable.ic_not_visible_white_24dp,
                 iconColor = R.attr.wpColorOnSurfaceMedium,
                 isSelected = false,
@@ -145,7 +151,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
             SecondaryAction(
                 type = TOGGLE_SEEN_STATUS,
                 label = UiStringRes(R.string.reader_menu_mark_as_seen),
-                labelColor = R.attr.colorOnSurface,
+                labelColor = MaterialR.attr.colorOnSurface,
                 iconRes = R.drawable.ic_visible_white_24dp,
                 iconColor = R.attr.wpColorOnSurfaceMedium,
                 isSelected = false,
@@ -153,11 +159,34 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
             )
         }
 
+    private fun buildBookmark(
+        isPostBookmarked: Boolean,
+        onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
+    ): SecondaryAction = if (isPostBookmarked) {
+        SecondaryAction(
+            type = BOOKMARK,
+            label = UiStringRes(R.string.reader_secondary_bookmarked),
+            labelColor =  R.attr.wpColorOnSurfaceMedium,
+            iconRes = R.drawable.ic_bookmark_fill_new_24dp,
+            isSelected = true,
+            onClicked = onClicked,
+        )
+    } else {
+        SecondaryAction(
+            type = BOOKMARK,
+            label = UiStringRes(R.string.reader_secondary_bookmark),
+            labelColor = MaterialR.attr.colorSecondary,
+            iconRes = R.drawable.ic_bookmark_outline_new_24dp,
+            isSelected = false,
+            onClicked = onClicked,
+        )
+    }
+
     private fun buildShare(onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit) =
         SecondaryAction(
             type = SHARE,
             label = UiStringRes(R.string.reader_btn_share),
-            labelColor = R.attr.colorOnSurface,
+            labelColor = MaterialR.attr.colorOnSurface,
             iconRes = R.drawable.ic_share_white_24dp,
             iconColor = R.attr.wpColorOnSurfaceMedium,
             onClicked = onButtonClicked
@@ -177,7 +206,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
             SecondaryAction(
                 type = FOLLOW,
                 label = UiStringRes(R.string.reader_btn_follow),
-                labelColor = R.attr.colorSecondary,
+                labelColor = MaterialR.attr.colorSecondary,
                 iconRes = R.drawable.ic_reader_follow_white_24dp,
                 isSelected = false,
                 onClicked = onButtonClicked

@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_FOLLOWERS
@@ -38,7 +38,7 @@ class TotalFollowersUseCase @Inject constructor(
     private val actionCardHandler: ActionCardHandler,
     private val useCaseMode: UseCaseMode
 ) : StatelessUseCase<Int>(TOTAL_FOLLOWERS, mainDispatcher, bgDispatcher) {
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(TitleWithMore(string.stats_view_total_followers))
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(TitleWithMore(R.string.stats_view_total_followers))
 
     override fun buildEmptyItem() = buildUiModel(0)
 
@@ -62,7 +62,7 @@ class TotalFollowersUseCase @Inject constructor(
         items.add(buildTitle())
         items.add(ValueWithChartItem(value = domainModel.toString(), extraBottomMargin = true))
         if (totalStatsMapper.shouldShowFollowersGuideCard(domainModel)) {
-            items.add(ListItemGuideCard(resourceProvider.getString(string.stats_insights_followers_guide_card)))
+            items.add(ListItemGuideCard(resourceProvider.getString(R.string.stats_insights_followers_guide_card)))
         }
         return items
     }
@@ -72,7 +72,7 @@ class TotalFollowersUseCase @Inject constructor(
     }
 
     private fun buildTitle() = TitleWithMore(
-        string.stats_view_total_followers,
+        R.string.stats_view_total_followers,
         navigationAction = if (useCaseMode == VIEW_ALL) null else ListItemInteraction.create(this::onViewMoreClick)
     )
 

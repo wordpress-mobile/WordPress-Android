@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
@@ -45,7 +46,7 @@ import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_MOBIL
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
+import org.wordpress.android.util.config.PlansInSiteCreationFeatureConfig
 import kotlin.test.assertIs
 
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
@@ -66,22 +67,22 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     private lateinit var productsStore: ProductsStore
 
     @Mock
-    lateinit var purchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig
+    lateinit var plansInSiteCreationFeatureConfig: PlansInSiteCreationFeatureConfig
 
     @Mock
     private lateinit var tracker: SiteCreationTracker
 
     @Mock
-    private lateinit var uiStateObserver: Observer<DomainsUiState>
+    private lateinit var uiStateObserver: Observer<DomainsUiState?>
 
     @Mock
     private lateinit var createSiteBtnObserver: Observer<DomainModel>
 
     @Mock
-    private lateinit var clearBtnObserver: Observer<Unit>
+    private lateinit var clearBtnObserver: Observer<Unit?>
 
     @Mock
-    private lateinit var onHelpClickedObserver: Observer<Unit>
+    private lateinit var onHelpClickedObserver: Observer<Unit?>
 
     @Mock
     private lateinit var networkUtils: NetworkUtilsWrapper
@@ -99,7 +100,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             dispatcher = dispatcher,
             fetchDomainsUseCase = fetchDomainsUseCase,
             productsStore = productsStore,
-            purchasingFeatureConfig = purchasingFeatureConfig,
+            plansInSiteCreationFeatureConfig = plansInSiteCreationFeatureConfig,
             tracker = tracker,
             bgDispatcher = testDispatcher(),
             mainDispatcher = testDispatcher()
@@ -303,6 +304,30 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `click on the create site button tracks the selected free domain`() = testWithSuccessResponse {
+        val selectedDomain = mockDomain("test.domain")
+        val expectedCost = "Free"
+        whenever(selectedDomain.cost).thenReturn(expectedCost)
+        viewModel.onDomainSelected(selectedDomain)
+
+        viewModel.onCreateSiteBtnClicked()
+
+        verify(tracker).trackDomainSelected(selectedDomain.domainName, "", expectedCost)
+    }
+
+    @Test
+    fun `click on the create site button tracks the selected paid domain`() = testWithSuccessResponse {
+        val selectedDomain = mockDomain("test.domain", free = false)
+        val expectedCost = "1.23 USD"
+        whenever(selectedDomain.cost).thenReturn(expectedCost)
+        viewModel.onDomainSelected(selectedDomain)
+
+        viewModel.onCreateSiteBtnClicked()
+
+        verify(tracker).trackDomainSelected(selectedDomain.domainName, "", expectedCost)
+    }
+
+    @Test
     fun verifyFetchFreeDomainsWhenPurchasingFeatureConfigIsDisabled() = testWithSuccessResponse {
         viewModel.start()
 
@@ -329,7 +354,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     // region New UI
 
     private fun testNewUi(block: suspend CoroutineScope.() -> Unit) = test {
-        whenever(purchasingFeatureConfig.isEnabledOrManuallyOverridden()).thenReturn(true)
+        whenever(plansInSiteCreationFeatureConfig.isEnabled()).thenReturn(true)
         whenever(productsStore.fetchProducts(any())).thenReturn(mock())
         block()
     }
@@ -358,7 +383,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     private val uiDomains get() = assertIs<List<New.DomainUiState>>(viewModel.uiState.value?.contentState?.items)
 
     @Test
-    fun verifyFetchFreeAndPaidDomainsWhenPurchasingFeatureConfigIsEnabled() = testNewUi {
+    fun verifyFetchFreeAndPaidDomainsWhenPurchasingFeatureConfigIsEnabled() = testWithSuccessResultNewUi {
         val (query, size) = MULTI_RESULT_DOMAIN_FETCH_QUERY
         viewModel.start()
 
@@ -432,7 +457,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         assertThat(uiDomains).filteredOn { it.cost is Cost.Paid }.hasSameSizeAs(apiPaidDomains)
     }
 
-    @Test
+    @Test @Ignore("It is removed from UI for now, for being Free with annual plan")
     fun `verify cost of sale domain results from api is 'OnSale'`() = testWithSuccessResultNewUi { (query) ->
         whenever(productsStore.fetchProducts(any())).thenReturn(OnProductsFetched(SALE_PRODUCTS))
 
@@ -444,7 +469,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         assertThat(uiDomains).filteredOn { it.cost is Cost.OnSale }.hasSameSizeAs(SALE_PRODUCTS)
     }
 
-    @Test
+    @Test @Ignore("It is removed from UI for now, for being Free with annual plan")
     fun `verify sale domain results from api have tag 'Sale'`() = testWithSuccessResultNewUi { (query) ->
         whenever(productsStore.fetchProducts(any())).thenReturn(OnProductsFetched(SALE_PRODUCTS))
 

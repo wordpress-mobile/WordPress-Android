@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main.jetpack.migration.compose.state
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
@@ -44,7 +45,8 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.components.UserAv
 import org.wordpress.android.ui.main.jetpack.migration.compose.dimmed
 
 @Composable
-fun WelcomeStep(uiState: UiState.Content.Welcome) = with(uiState) {
+@SuppressLint("FrequentlyChangedStateReadInComposition")
+fun WelcomeStep(uiState: UiState.Content.Welcome): Unit = with(uiState) {
     Box {
         val listState = rememberLazyListState()
         val blurredListState = rememberLazyListState()

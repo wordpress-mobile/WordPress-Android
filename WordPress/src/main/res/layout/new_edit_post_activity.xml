@@ -17,7 +17,14 @@
             android:duplicateParentState="true"
             android:background="@drawable/tab_layout_background"
             android:layout_height="wrap_content"
-            app:theme="@style/WordPress.ActionBar" />
+            app:contentInsetStart="@dimen/margin_medium"
+            app:theme="@style/WordPress.ActionBar">
+
+            <include
+                layout="@layout/edit_post_header"
+                android:id="@+id/edit_post_header" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 

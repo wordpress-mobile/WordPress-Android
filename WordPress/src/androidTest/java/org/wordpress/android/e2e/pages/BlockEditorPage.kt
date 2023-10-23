@@ -8,14 +8,16 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import junit.framework.TestCase
 import org.junit.Assert
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.support.WPSupportUtils
+import org.wordpress.android.editor.R as EditorR
 
 class BlockEditorPage {
     private val mEditor: ViewInteraction
 
     init {
-        mEditor = Espresso.onView(ViewMatchers.withId(R.id.gutenberg_container))
+        mEditor = Espresso.onView(ViewMatchers.withId(EditorR.id.gutenberg_container))
         mEditor.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
@@ -108,7 +110,9 @@ class BlockEditorPage {
 
     fun confirmPublish(): BlockEditorPage {
         WPSupportUtils.clickOn(Espresso.onView(ViewMatchers.withText(R.string.publish_now)))
-        dismissBloggingRemindersAlertIfNeeded()
+        if (BuildConfig.IS_JETPACK_APP) {
+            dismissBloggingRemindersAlertIfNeeded()
+        }
         return this
     }
 
@@ -192,6 +196,60 @@ class BlockEditorPage {
     fun previewPost() {
         Espresso.openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext())
         WPSupportUtils.clickOn(Espresso.onView(ViewMatchers.withText(R.string.menu_preview)))
+    }
+
+    fun verifyContentStructure(blocks: Int, words: Int, characters: Int): BlockEditorPage {
+        val mContentStructure = "Blocks: %1\$d\nWords: %2\$d\nCharacters: %3\$d"
+
+        Espresso.openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext())
+        WPSupportUtils.clickOn(Espresso.onView(ViewMatchers.withText("Content structure")))
+
+        TestCase.assertTrue(
+            "Expected content structure is not valid",
+            WPSupportUtils.waitForElementToBeDisplayedWithoutFailure(
+                Espresso.onView(
+                    ViewMatchers.withText(
+                        String.format(mContentStructure, blocks, words, characters)
+                    )
+                )
+            )
+        )
+        Espresso.pressBack()
+        return this
+    }
+
+    fun undo(): BlockEditorPage {
+        WPSupportUtils.clickOn((R.id.menu_undo_action))
+        return this
+    }
+
+    fun redo(): BlockEditorPage {
+        WPSupportUtils.clickOn((R.id.menu_redo_action))
+        return this
+    }
+
+    fun verifyUndoIsVisible(): BlockEditorPage {
+        Espresso.onView(ViewMatchers.withId(R.id.menu_undo_action))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        return this
+    }
+
+    fun verifyRedoIsVisible(): BlockEditorPage {
+        Espresso.onView(ViewMatchers.withId(R.id.menu_redo_action))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        return this
+    }
+
+    fun verifyUndoIsHidden(): BlockEditorPage {
+        Espresso.onView(ViewMatchers.withId(R.id.menu_undo_action))
+            .check(ViewAssertions.doesNotExist())
+        return this
+    }
+
+    fun verifyRedoIsHidden(): BlockEditorPage {
+        Espresso.onView(ViewMatchers.withId(R.id.menu_redo_action))
+            .check(ViewAssertions.doesNotExist())
+        return this
     }
 
     companion object {

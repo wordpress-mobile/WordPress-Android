@@ -11,11 +11,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 
 @ExperimentalCoroutinesApi
 class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
@@ -33,12 +29,12 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
     fun `given onResume was called in dashboard, when dashboard cards are received with prompts card, then track once`() =
         test {
             launch {
-                helper.onResume(MySiteTabType.DASHBOARD)
+                helper.onResume()
 
                 // with prompt card (transient state)
                 helper.onDashboardCardsUpdated(
                     this,
-                    DashboardCards(listOf<DashboardCard>(mock<BloggingPromptCardWithData>()))
+                    mock()
                 )
 
                 delay(10)
@@ -46,7 +42,7 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
                 // again with prompt card (final state) to test debounce
                 helper.onDashboardCardsUpdated(
                     this,
-                    DashboardCards(listOf<DashboardCard>(mock<BloggingPromptCardWithData>()))
+                    mock()
                 )
 
                 advanceUntilIdle()
@@ -63,12 +59,13 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
     fun `given onResume was called in dashboard, when dashboard cards are received without prompts card, then don't track`() =
         test {
             launch {
-                helper.onResume(MySiteTabType.DASHBOARD)
+                helper.onResume()
 
+                val bloggingPromptCards = mock<List<MySiteCardAndItem.Card.BloggingPromptCard>>()
                 // with prompt card (transient state)
                 helper.onDashboardCardsUpdated(
                     this,
-                    DashboardCards(listOf<DashboardCard>(mock<BloggingPromptCardWithData>()))
+                    bloggingPromptCards
                 )
 
                 delay(10)
@@ -76,7 +73,7 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
                 // again without prompt card (final state) to test debounce
                 helper.onDashboardCardsUpdated(
                     this,
-                    DashboardCards(listOf())
+                    listOf()
                 )
 
                 advanceUntilIdle()
@@ -94,10 +91,11 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
     fun `given dashboard cards were received with prompts card, when onResume is called in dashboard, then track once`() =
         test {
             launch {
+                val bloggingPromptCards = mock<List<MySiteCardAndItem.Card.BloggingPromptCard>>()
                 // with prompt card (transient state)
                 helper.onDashboardCardsUpdated(
                     this,
-                    DashboardCards(listOf<DashboardCard>(mock<BloggingPromptCardWithData>()))
+                    bloggingPromptCards
                 )
 
                 delay(10)
@@ -105,12 +103,12 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
                 // again with prompt card (final state) to test debounce
                 helper.onDashboardCardsUpdated(
                     this,
-                    DashboardCards(listOf<DashboardCard>(mock<BloggingPromptCardWithData>()))
+                    bloggingPromptCards
                 )
 
                 advanceUntilIdle()
 
-                helper.onResume(MySiteTabType.DASHBOARD)
+                helper.onResume()
 
                 verify(bloggingPromptsCardAnalyticsTracker).trackMySiteCardViewed()
 
@@ -124,10 +122,11 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
     fun `given dashboard cards were received without prompts card, when onResume is called in dashboard, then don't track`() =
         test {
             launch {
+                val bloggingPromptCards = mock<List<MySiteCardAndItem.Card.BloggingPromptCard>>()
                 // with prompt card (transient state)
                 helper.onDashboardCardsUpdated(
                     this,
-                    DashboardCards(listOf<DashboardCard>(mock<BloggingPromptCardWithData>()))
+                    bloggingPromptCards
                 )
 
                 delay(10)
@@ -135,54 +134,12 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
                 // again without prompt card (final state) to test debounce
                 helper.onDashboardCardsUpdated(
                     this,
-                    DashboardCards(listOf())
+                    listOf()
                 )
 
                 advanceUntilIdle()
 
-                helper.onResume(MySiteTabType.DASHBOARD)
-
-                verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed()
-
-                // need to cancel this internal job to finish the test
-                cancel()
-            }
-        }
-
-    @Test
-    fun `given onResume was called in menu, when dashboard cards are received with prompts card, then don't track`() =
-        test {
-            launch {
-                helper.onResume(MySiteTabType.SITE_MENU)
-
-                // with prompt card (final state)
-                helper.onDashboardCardsUpdated(
-                    this,
-                    DashboardCards(listOf<DashboardCard>(mock<BloggingPromptCardWithData>()))
-                )
-
-                advanceUntilIdle()
-
-                verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed()
-
-                // need to cancel this internal job to finish the test
-                cancel()
-            }
-        }
-
-    @Test
-    fun `given dashboard cards were received with prompts card, when onResume is called in menu, then don't track`() =
-        test {
-            launch {
-                // with prompt card (final state)
-                helper.onDashboardCardsUpdated(
-                    this,
-                    DashboardCards(listOf<DashboardCard>(mock<BloggingPromptCardWithData>()))
-                )
-
-                advanceUntilIdle()
-
-                helper.onResume(MySiteTabType.SITE_MENU)
+                helper.onResume()
 
                 verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed()
 
@@ -197,7 +154,7 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
             // old site did not have prompt card
             helper.onDashboardCardsUpdated(
                 this,
-                DashboardCards(listOf())
+                mock()
             )
 
             // simulate the user was here for a while
@@ -207,12 +164,12 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
             helper.onSiteChanged(1)
 
             // screen resumed
-            helper.onResume(MySiteTabType.DASHBOARD)
+            helper.onResume()
 
             // dashboard cards updated with prompt card
             helper.onDashboardCardsUpdated(
                 this,
-                DashboardCards(listOf<DashboardCard>(mock<BloggingPromptCardWithData>()))
+                mock()
             )
 
             advanceUntilIdle()
@@ -228,9 +185,11 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
     fun `given new site selected, when dashboard cards are updated without prompt card, then don't track`() = test {
         launch {
             // old site had prompt card
+            val bloggingPromptCards = mock<List<MySiteCardAndItem.Card.BloggingPromptCard>>()
+
             helper.onDashboardCardsUpdated(
                 this,
-                DashboardCards(listOf<DashboardCard>(mock<BloggingPromptCardWithData>()))
+                bloggingPromptCards
             )
 
             // simulate the user was here for a while
@@ -240,12 +199,12 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
             helper.onSiteChanged(1)
 
             // screen resumed
-            helper.onResume(MySiteTabType.DASHBOARD)
+            helper.onResume()
 
             // dashboard cards updated without prompt card
             helper.onDashboardCardsUpdated(
                 this,
-                DashboardCards(listOf())
+                listOf()
             )
 
             advanceUntilIdle()

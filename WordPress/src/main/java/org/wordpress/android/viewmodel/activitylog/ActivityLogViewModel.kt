@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -103,8 +104,8 @@ class ActivityLogViewModel @Inject constructor(
     val showDateRangePicker: LiveData<ShowDateRangePicker>
         get() = _showDateRangePicker
 
-    private val _moveToTop = SingleLiveEvent<Unit>()
-    val moveToTop: SingleLiveEvent<Unit>
+    private val _moveToTop = SingleLiveEvent<Unit?>()
+    val moveToTop: SingleLiveEvent<Unit?>
         get() = _moveToTop
 
     private val _showItemDetail = SingleLiveEvent<ActivityLogListItem>()
@@ -578,8 +579,8 @@ class ActivityLogViewModel @Inject constructor(
     private fun queryRestoreStatus(restoreId: Long? = null) {
         restoreStatusJob?.cancel()
         restoreStatusJob = viewModelScope.launch {
-            getRestoreStatusUseCase.getRestoreStatus(site, restoreId)
-                .collect { handleRestoreStatus(it) }
+            val flow = getRestoreStatusUseCase.getRestoreStatus(site, restoreId) as? Flow<RestoreRequestState?>
+            flow?.collect { it?.run { handleRestoreStatus(it) } }
         }
     }
 
@@ -651,8 +652,9 @@ class ActivityLogViewModel @Inject constructor(
     private fun queryBackupDownloadStatus(downloadId: Long? = null) {
         backupDownloadStatusJob?.cancel()
         backupDownloadStatusJob = viewModelScope.launch {
-            getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, downloadId)
-                .collect { state -> handleBackupDownloadStatus(state) }
+            val flow = getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, downloadId)
+                    as? Flow<BackupDownloadRequestState?>
+            flow?.collect { it?.run { handleBackupDownloadStatus(it) } }
         }
     }
 

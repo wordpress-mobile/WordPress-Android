@@ -91,7 +91,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
     @Inject ReaderTracker mReaderTracker;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 

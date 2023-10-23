@@ -8,7 +8,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
-import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -18,7 +17,6 @@ class EditorBloggingPromptsViewModel
 @Inject constructor(
     private val bloggingPromptsStore: BloggingPromptsStore,
     private val bloggingPromptsEditorBlockMapper: BloggingPromptsEditorBlockMapper,
-    private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig,
     private val bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
@@ -56,9 +54,7 @@ class EditorBloggingPromptsViewModel
 
     private fun createPromptTags(tagUrl: String): List<String> = mutableListOf<String>().apply {
         add(BloggingPromptsPostTagProvider.BLOGGING_PROMPT_TAG)
-        if (bloggingPromptsEnhancementsFeatureConfig.isEnabled()) {
-            add(bloggingPromptsPostTagProvider.promptIdTag(tagUrl))
-        }
+        add(bloggingPromptsPostTagProvider.promptIdTag(tagUrl))
     }
 
     data class EditorLoadedPrompt(val promptId: Int, val content: String, val tags: List<String>)

@@ -28,6 +28,7 @@ import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject
@@ -82,7 +83,7 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
             val sheetDialog = dialogInterface as? BottomSheetDialog
 
             val bottomSheet = sheetDialog?.findViewById<View>(
-                com.google.android.material.R.id.design_bottom_sheet
+                MaterialR.id.design_bottom_sheet
             ) as? FrameLayout
 
             bottomSheet?.let {

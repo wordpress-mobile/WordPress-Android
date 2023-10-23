@@ -32,6 +32,7 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvider, ScrollableViewInitializedListener {
@@ -143,7 +144,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvid
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
-        android.R.id.home -> {
+        AndroidR.id.home -> {
             requireActivity().onBackPressedDispatcher.onBackPressed()
             true
         }

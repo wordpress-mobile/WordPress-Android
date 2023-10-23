@@ -125,7 +125,7 @@ object AppRatingDialog {
             internal const val TAG_APP_RATING_PROMPT_DIALOG = "TAG_APP_RATING_PROMPT_DIALOG"
         }
 
-        @Suppress("SwallowedException")
+        @Suppress("SwallowedException", "OVERRIDE_DEPRECATION")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = MaterialAlertDialogBuilder(activity)
             val appName = getString(R.string.app_name)
@@ -166,6 +166,7 @@ object AppRatingDialog {
             return builder.create()
         }
 
+        @Suppress("OVERRIDE_DEPRECATION")
         override fun onCancel(dialog: DialogInterface?) {
             super.onCancel(dialog)
             clearSharedPreferences()

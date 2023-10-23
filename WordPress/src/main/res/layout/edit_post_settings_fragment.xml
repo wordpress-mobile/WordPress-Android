@@ -255,10 +255,36 @@
 
             <LinearLayout style="@style/PostSettingsContainer">
 
-                <androidx.appcompat.widget.SwitchCompat
+                <org.wordpress.android.widgets.WPSwitchCompat
                     android:id="@+id/post_settings_sticky_switch"
                     style="@style/PostSettingsSwitch"
                     android:text="@string/post_settings_post_sticky" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--Jetpack Social-->
+        <LinearLayout
+            android:id="@+id/post_settings_jetpack_social_container"
+            style="@style/PostSettingsCardViewInnerLayout"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/PostSettingsSectionHeader"
+                android:text="@string/post_settings_jetpack_social_header" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="vertical">
+
+                <org.wordpress.android.ui.posts.EditPostSettingsJetpackSocialContainerView
+                    android:id="@+id/edit_post_settings_jetpack_social_container_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 

@@ -13,6 +13,15 @@
         android:orientation="vertical"
         android:paddingBottom="@dimen/content_margin">
 
+        <org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeWarningView
+            android:id="@+id/publicize_twitter_deprecation_notice_detail_warning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
         <LinearLayout
             android:id="@+id/connections_container"
             android:layout_width="match_parent"
@@ -22,6 +31,7 @@
             tools:visibility="visible">
 
             <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/connected_accounts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_extra_large"
@@ -44,7 +54,8 @@
             android:id="@+id/service_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_service"

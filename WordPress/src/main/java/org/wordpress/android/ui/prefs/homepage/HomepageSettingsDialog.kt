@@ -23,6 +23,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 class HomepageSettingsDialog : DialogFragment() {
     @Inject
@@ -116,9 +117,9 @@ class HomepageSettingsDialog : DialogFragment() {
         val button = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
         button.isEnabled = enabled
         val textColor = if (enabled) {
-            requireContext().getColorResIdFromAttribute(R.attr.colorPrimary)
+            requireContext().getColorResIdFromAttribute(MaterialR.attr.colorPrimary)
         } else {
-            R.color.material_on_surface_disabled
+            MaterialR.color.material_on_surface_disabled
         }
         button.setTextColor(ContextCompat.getColor(requireContext(), textColor))
     }

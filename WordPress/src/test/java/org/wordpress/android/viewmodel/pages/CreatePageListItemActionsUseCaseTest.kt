@@ -4,14 +4,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SiteModel.ORIGIN_WPCOM_REST
-import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
 import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
@@ -33,16 +30,13 @@ import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostU
 
 @RunWith(MockitoJUnitRunner::class)
 class CreatePageListItemActionsUseCaseTest {
-    @Mock
-    private lateinit var blazeFeatureUtils: BlazeFeatureUtils
-
     private lateinit var site: SiteModel
     private lateinit var useCase: CreatePageListItemActionsUseCase
     private val defaultRemoteId: Long = 1
 
     @Before
     fun setUp() {
-        useCase = CreatePageListItemActionsUseCase(blazeFeatureUtils)
+        useCase = CreatePageListItemActionsUseCase()
         site = SiteModel()
     }
 
@@ -280,7 +274,6 @@ class CreatePageListItemActionsUseCaseTest {
         site.showOnFront = ShowOnFront.PAGE.value
         site.setIsWPCom(true)
         site.setIsJetpackConnected(true)
-        whenever(blazeFeatureUtils.isBlazeEnabled()).thenReturn(true)
 
         // Act
         val publishedActions = useCase.setupPageActions(PUBLISHED, mock(), site, defaultRemoteId, true)

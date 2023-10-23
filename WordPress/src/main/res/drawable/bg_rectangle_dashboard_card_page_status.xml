@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="@dimen/my_site_dashboard_card_page_page_status_background_radius" />
+    <solid android:color="@color/bg_dashboard_card_pages_page_item_status_background"/>
+</shape>

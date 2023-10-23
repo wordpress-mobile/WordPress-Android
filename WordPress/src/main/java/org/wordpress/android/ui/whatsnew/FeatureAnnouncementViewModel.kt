@@ -32,8 +32,8 @@ class FeatureAnnouncementViewModel @Inject constructor(
     private val _uiModel = MediatorLiveData<FeatureAnnouncementUiModel>()
     val uiModel: LiveData<FeatureAnnouncementUiModel> = _uiModel
 
-    private val _onDialogClosed = SingleLiveEvent<Unit>()
-    val onDialogClosed: LiveData<Unit> = _onDialogClosed
+    private val _onDialogClosed = SingleLiveEvent<Unit?>()
+    val onDialogClosed: LiveData<Unit?> = _onDialogClosed
 
     private val _onAnnouncementDetailsRequested = SingleLiveEvent<String>()
     val onAnnouncementDetailsRequested: LiveData<String> = _onAnnouncementDetailsRequested

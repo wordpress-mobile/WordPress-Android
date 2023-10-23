@@ -147,7 +147,7 @@ class StatsViewAllFragment : Fragment(R.layout.stats_view_all_fragment) {
         binding = null
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

@@ -11,7 +11,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -32,10 +33,9 @@ class QuickStartTracker @Inject constructor(
         analyticsTrackerWrapper.track(stat, props)
     }
 
-    fun trackShown(itemType: MySiteCardAndItem.Type, tabType: MySiteTabType) {
+    fun trackShown(itemType: MySiteCardAndItem.Type) {
         if (itemType == QUICK_START_CARD) {
             val props = mapOf(
-                TAB to tabType.trackingLabel,
                 SITE_TYPE to getLastSelectedQuickStartType().trackingLabel
             )
             val cardsShownTrackedPair = Pair(itemType, props)
@@ -64,6 +64,22 @@ class QuickStartTracker @Inject constructor(
         }
     }
 
+    fun trackMoreMenuClicked(card: QuickStartCardType) {
+        analyticsTrackerWrapper.track(
+            Stat.MY_SITE_DASHBOARD_CONTEXTUAL_MENU_ACCESSED,
+            mapOf(CardsTracker.CARD to card.toQuickStartMenuCard().label)
+        )
+    }
+
+    fun trackMoreMenuItemClicked(card: QuickStartCardType) {
+        analyticsTrackerWrapper.track(
+            Stat.MY_SITE_DASHBOARD_CARD_MENU_ITEM_TAPPED,
+            mapOf(
+                CARD to card.toQuickStartMenuCard().label,
+                ITEM to QuickStartMenuItemType.HIDE_THIS.label
+            )
+        )
+    }
     fun resetShown() {
         cardsShownTracked.clear()
     }
@@ -75,8 +91,24 @@ class QuickStartTracker @Inject constructor(
         } ?: NewSiteQuickStartType
     }
 
+    enum class QuickStartMenuItemType(val label: String) {
+        HIDE_THIS("hide_this")
+    }
+
+    enum class QuickStartMenuCard(val label: String) {
+        GET_TO_KNOW_THE_APP("get_to_know_the_app"),
+        NEXT_STEPS("next_steps")
+    }
+
+    private fun QuickStartCardType.toQuickStartMenuCard(): QuickStartMenuCard {
+        return when (this) {
+            QuickStartCardType.GET_TO_KNOW_THE_APP -> QuickStartMenuCard.GET_TO_KNOW_THE_APP
+            QuickStartCardType.NEXT_STEPS -> QuickStartMenuCard.NEXT_STEPS
+        }
+    }
     companion object {
         private const val SITE_TYPE = "site_type"
-        private const val TAB = "tab"
+        private const val CARD = "card"
+        private const val ITEM = "item"
     }
 }

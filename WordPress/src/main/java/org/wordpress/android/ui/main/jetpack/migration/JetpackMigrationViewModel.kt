@@ -1,14 +1,18 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.text.TextUtils
 import androidx.annotation.DrawableRes
 import androidx.annotation.VisibleForTesting
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,13 +20,12 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -35,6 +38,7 @@ import org.wordpress.android.localcontentmigration.LocalMigrationState.Initial
 import org.wordpress.android.localcontentmigration.LocalMigrationState.Migrating
 import org.wordpress.android.localcontentmigration.MigrationEmailHelper
 import org.wordpress.android.localcontentmigration.WelcomeScreenData
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeleteSecondaryButton
@@ -44,9 +48,9 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.NotificationsPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.WelcomeSecondaryButton
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FinishActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FinishActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.Logout
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content.Delete
@@ -67,11 +71,15 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.PreventDuplicateNotifsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
+import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Locale
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class JetpackMigrationViewModel @Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    private val dispatcher: Dispatcher,
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val gravatarUtilsWrapper: GravatarUtilsWrapper,
     private val contextProvider: ContextProvider,
@@ -84,8 +92,7 @@ class JetpackMigrationViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val jetpackMigrationLanguageUtil: JetpackMigrationLanguageUtil,
-    private val dispatcher: Dispatcher,
-) : ViewModel() {
+) : ScopedViewModel(mainDispatcher) {
     private val _actionEvents = Channel<JetpackMigrationActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
 
@@ -114,15 +121,18 @@ class JetpackMigrationViewModel @Inject constructor(
                 emit(Loading)
                 logoutAndFallbackToLogin()
             }
+
             migrationState is Initial -> emit(Loading)
             migrationState is Migrating
                     || migrationState is Successful && !continueClicked -> emit(
                 initWelcomeScreenUi(migrationState.data, continueClicked)
             )
-            migrationState is Successful && continueClicked -> when {
+
+            migrationState is Successful -> when {
                 !notificationContinueClicked -> emit(initNotificationsScreenUi())
                 else -> emit(initSuccessScreenUi())
             }
+
             migrationState is Failure -> emit(initErrorScreenUi())
             else -> Unit
         }
@@ -243,7 +253,7 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     fun signOutWordPress(application: WordPress) {
-        viewModelScope.launch(Dispatchers.IO) {
+        launch(Dispatchers.IO) {
             application.wordPressComSignOut()
             postActionEvent(FallbackToLogin(deepLinkData))
         }
@@ -286,16 +296,31 @@ class JetpackMigrationViewModel @Inject constructor(
     }
 
     private fun tryMigration(application: WordPress) {
-        viewModelScope.launch(Dispatchers.IO) {
+        launch(Dispatchers.IO) {
             resetIfNeeded(application)
             appPrefsWrapper.setJetpackMigrationInProgress(true)
             localMigrationOrchestrator.tryLocalMigration(migrationStateFlow)
         }
     }
 
+    private fun hasNotificationPermission(): Boolean {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || ContextCompat.checkSelfPermission(
+            contextProvider.getContext(),
+            Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
     private fun onContinueFromNotificationsClicked() {
         if (preventDuplicateNotifsFeatureConfig.isEnabled()) disableNotificationsOnWP()
         migrationAnalyticsTracker.trackNotificationsScreenContinueButtonTapped()
+        if (hasNotificationPermission()) {
+            notificationContinueClickedFlow.value = true
+        } else {
+            postActionEvent(JetpackMigrationActionEvent.RequestNotificationPermission)
+        }
+    }
+
+    fun onPermissionChange() {
         notificationContinueClickedFlow.value = true
     }
 
@@ -348,11 +373,7 @@ class JetpackMigrationViewModel @Inject constructor(
         R.dimen.jp_migration_user_avatar_size
     )
 
-    private fun postActionEvent(actionEvent: JetpackMigrationActionEvent) {
-        viewModelScope.launch {
-            _actionEvents.send(actionEvent)
-        }
-    }
+    private fun postActionEvent(actionEvent: JetpackMigrationActionEvent) = launch { _actionEvents.send(actionEvent) }
 
     sealed class UiState {
         object Loading : UiState()
@@ -392,7 +413,7 @@ class JetpackMigrationViewModel @Inject constructor(
             ) : Content(
                 primaryActionButton = primaryActionButton,
                 screenIconRes = R.drawable.ic_jetpack_migration_notifications,
-                title = UiStringRes(R.string.jp_migration_notifications_title),
+                title = UiStringRes(R.string.jp_migration_notifications_allow_title),
                 subtitle = UiStringRes(R.string.jp_migration_notifications_subtitle),
                 message = UiStringRes(R.string.jp_migration_notifications_disabled_in_wp_message),
             )
@@ -529,6 +550,8 @@ class JetpackMigrationViewModel @Inject constructor(
 
     sealed class JetpackMigrationActionEvent {
         object ShowHelp : JetpackMigrationActionEvent()
+
+        object RequestNotificationPermission : JetpackMigrationActionEvent()
 
         data class CompleteFlow(
             val deepLinkData: PreMigrationDeepLinkData? = null,

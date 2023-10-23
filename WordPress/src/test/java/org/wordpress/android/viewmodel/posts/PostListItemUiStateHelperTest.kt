@@ -1148,8 +1148,7 @@ class PostListItemUiStateHelperTest {
         onAction = onAction,
         performingCriticalAction = performingCriticalAction,
         uploadStatusTracker = uploadStatusTracker,
-        isSearch = isSearch,
-        isSiteBlazeEligible = false
+        isSearch = isSearch
     )
 
     private fun createFailedUploadUiState(

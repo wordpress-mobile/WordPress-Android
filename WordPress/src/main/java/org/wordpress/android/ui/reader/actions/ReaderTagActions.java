@@ -1,9 +1,10 @@
 package org.wordpress.android.ui.reader.actions;
 
+import androidx.annotation.NonNull;
+
 import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.EventBus;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
@@ -87,7 +88,7 @@ public class ReaderTagActions {
         return true;
     }
 
-    public static boolean addTag(@NotNull final ReaderTag tag,
+    public static boolean addTag(@NonNull final ReaderTag tag,
                                  final ReaderActions.ActionListener actionListener,
                                  final boolean isLoggedIn) {
         ReaderTagList tags = new ReaderTagList();
@@ -95,12 +96,12 @@ public class ReaderTagActions {
         return addTags(tags, actionListener, isLoggedIn);
     }
 
-    public static boolean addTags(@NotNull final List<ReaderTag> tags,
+    public static boolean addTags(@NonNull final List<ReaderTag> tags,
                                   final boolean isLoggedIn) {
         return addTags(tags, null, isLoggedIn);
     }
 
-    public static boolean addTags(@NotNull final List<ReaderTag> tags,
+    public static boolean addTags(@NonNull final List<ReaderTag> tags,
                                   final ReaderActions.ActionListener actionListener,
                                   final boolean isLoggedIn) {
         ReaderTagList newTags = new ReaderTagList();

@@ -11,10 +11,10 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.items.ACTIVITY_ITEM
 import org.wordpress.android.ui.mysite.items.ADMIN_ITEM
 import org.wordpress.android.ui.mysite.items.BACKUP_ITEM
-import org.wordpress.android.ui.mysite.items.JETPACK_ITEM
 import org.wordpress.android.ui.mysite.items.PAGES_ITEM
 import org.wordpress.android.ui.mysite.items.PEOPLE_ITEM
 import org.wordpress.android.ui.mysite.items.PLAN_ITEM
@@ -28,7 +28,6 @@ import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
-import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteListItemBuilderTest {
@@ -51,7 +50,8 @@ class SiteListItemBuilderTest {
     lateinit var siteModel: SiteModel
 
     @Mock
-    lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
     private lateinit var siteListItemBuilder: SiteListItemBuilder
 
     @Before
@@ -62,7 +62,7 @@ class SiteListItemBuilderTest {
             siteUtilsWrapper,
             buildConfigWrapper,
             themeBrowserUtils,
-            siteDomainsFeatureConfig
+            jetpackFeatureRemovalPhaseHelper
         )
     }
 
@@ -254,63 +254,6 @@ class SiteListItemBuilderTest {
         whenever(siteModel.isWpForTeamsSite).thenReturn(isWpForTeams)
         whenever(siteModel.isWPCom).thenReturn(isWPCom)
         whenever(siteModel.isAutomatedTransfer).thenReturn(isAutomatedTransfer)
-    }
-
-    @Test
-    fun `returns jetpack item when site is jetpack, WPCom, can manage options and is not atomic`() {
-        setupJetpackItem(isJetpackConnected = true, isWpCom = true, canManageOptions = true, isAtomic = false)
-
-        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(lookAndFeelHeader).isEqualTo(JETPACK_ITEM)
-    }
-
-    @Test
-    fun `does not return jetpack item when site is not jetpack`() {
-        setupJetpackItem(isJetpackConnected = false)
-
-        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(lookAndFeelHeader).isNull()
-    }
-
-    @Test
-    fun `does not return jetpack item when site is not WPCom`() {
-        setupJetpackItem(isWpCom = false)
-
-        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(lookAndFeelHeader).isNull()
-    }
-
-    @Test
-    fun `does not return jetpack item when site can manage options`() {
-        setupJetpackItem(canManageOptions = false)
-
-        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(lookAndFeelHeader).isNull()
-    }
-
-    @Test
-    fun `does not return jetpack item when site is atomic`() {
-        setupJetpackItem(isAtomic = true)
-
-        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(lookAndFeelHeader).isNull()
-    }
-
-    private fun setupJetpackItem(
-        isJetpackConnected: Boolean = true,
-        isAtomic: Boolean = false,
-        isWpCom: Boolean = true,
-        canManageOptions: Boolean = true
-    ) {
-        whenever(siteModel.isJetpackConnected).thenReturn(isJetpackConnected)
-        whenever(siteModel.isWPComAtomic).thenReturn(isAtomic)
-        whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(isWpCom)
-        whenever(siteModel.hasCapabilityManageOptions).thenReturn(canManageOptions)
     }
 
     @Test

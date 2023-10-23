@@ -4,6 +4,7 @@ import android.text.TextUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteViewModel
@@ -12,7 +13,6 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.BACKUP
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.BLAZE
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.DOMAINS
-import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.JETPACK_SETTINGS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PAGES
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PEOPLE
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PLAN
@@ -29,7 +29,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.SiteUtilsWrapper
-import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
@@ -40,7 +39,7 @@ class SiteListItemBuilder @Inject constructor(
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val themeBrowserUtils: ThemeBrowserUtils,
-    private val siteDomainsFeatureConfig: SiteDomainsFeatureConfig
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
@@ -50,7 +49,8 @@ class SiteListItemBuilder @Inject constructor(
             ListItem(
                 R.drawable.ic_history_white_24dp,
                 UiStringRes(R.string.activity_log),
-                onClick = ListItemInteraction.create(ACTIVITY_LOG, onClick)
+                onClick = ListItemInteraction.create(ACTIVITY_LOG, onClick),
+                listItemAction = ACTIVITY_LOG
             )
         } else null
     }
@@ -60,7 +60,8 @@ class SiteListItemBuilder @Inject constructor(
             ListItem(
                 R.drawable.ic_gridicons_cloud_upload_white_24dp,
                 UiStringRes(R.string.backup),
-                onClick = ListItemInteraction.create(BACKUP, onClick)
+                onClick = ListItemInteraction.create(BACKUP, onClick),
+                listItemAction = BACKUP
             )
         } else null
     }
@@ -70,21 +71,8 @@ class SiteListItemBuilder @Inject constructor(
             ListItem(
                 R.drawable.ic_baseline_security_white_24dp,
                 UiStringRes(R.string.scan),
-                onClick = ListItemInteraction.create(SCAN, onClick)
-            )
-        } else null
-    }
-
-    fun buildJetpackItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        val jetpackSettingsVisible = site.isJetpackConnected && // jetpack is installed and connected
-                !site.isWPComAtomic &&
-                siteUtilsWrapper.isAccessedViaWPComRest(site) && // is using .com login
-                site.hasCapabilityManageOptions // has permissions to manage the site
-        return if (jetpackSettingsVisible) {
-            ListItem(
-                R.drawable.ic_cog_white_24dp,
-                UiStringRes(R.string.my_site_btn_jetpack_settings),
-                onClick = ListItemInteraction.create(JETPACK_SETTINGS, onClick)
+                onClick = ListItemInteraction.create(SCAN, onClick),
+                listItemAction = SCAN
             )
         } else null
     }
@@ -106,7 +94,8 @@ class SiteListItemBuilder @Inject constructor(
                 UiStringRes(R.string.plan),
                 secondaryText = UiStringText(planShortName),
                 onClick = ListItemInteraction.create(PLAN, onClick),
-                showFocusPoint = showFocusPoint
+                showFocusPoint = showFocusPoint,
+                listItemAction = PLAN
             )
         } else null
     }
@@ -121,7 +110,8 @@ class SiteListItemBuilder @Inject constructor(
                 R.drawable.ic_pages_white_24dp,
                 UiStringRes(R.string.my_site_btn_site_pages),
                 onClick = ListItemInteraction.create(PAGES, onClick),
-                showFocusPoint = showFocusPoint
+                showFocusPoint = showFocusPoint,
+                listItemAction = PAGES
             )
         } else null
     }
@@ -132,7 +122,8 @@ class SiteListItemBuilder @Inject constructor(
                 R.drawable.ic_wordpress_white_24dp,
                 UiStringRes(R.string.my_site_btn_wp_admin),
                 secondaryIcon = R.drawable.ic_external_white_24dp,
-                onClick = ListItemInteraction.create(ADMIN, onClick)
+                onClick = ListItemInteraction.create(ADMIN, onClick),
+                listItemAction = ADMIN
             )
         } else null
     }
@@ -142,7 +133,8 @@ class SiteListItemBuilder @Inject constructor(
             ListItem(
                 R.drawable.ic_user_white_24dp,
                 UiStringRes(R.string.people),
-                onClick = ListItemInteraction.create(PEOPLE, onClick)
+                onClick = ListItemInteraction.create(PEOPLE, onClick),
+                listItemAction = PEOPLE
             )
         } else null
     }
@@ -152,7 +144,8 @@ class SiteListItemBuilder @Inject constructor(
             ListItem(
                 R.drawable.ic_plugins_white_24dp,
                 UiStringRes(R.string.my_site_btn_plugins),
-                onClick = ListItemInteraction.create(PLUGINS, onClick)
+                onClick = ListItemInteraction.create(PLUGINS, onClick),
+                listItemAction = PLUGINS
             )
         } else null
     }
@@ -167,7 +160,8 @@ class SiteListItemBuilder @Inject constructor(
                 R.drawable.ic_share_white_24dp,
                 UiStringRes(R.string.my_site_btn_sharing),
                 showFocusPoint = showFocusPoint,
-                onClick = ListItemInteraction.create(SHARING, onClick)
+                onClick = ListItemInteraction.create(SHARING, onClick),
+                listItemAction = SHARING
             )
         } else null
     }
@@ -175,13 +169,13 @@ class SiteListItemBuilder @Inject constructor(
     fun buildDomainsItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (
             buildConfigWrapper.isJetpackApp &&
-            siteDomainsFeatureConfig.isEnabled() &&
             site.hasCapabilityManageOptions
         ) {
             ListItem(
                 R.drawable.ic_domains_white_24dp,
                 UiStringRes(R.string.my_site_btn_domains),
-                onClick = ListItemInteraction.create(DOMAINS, onClick)
+                onClick = ListItemInteraction.create(DOMAINS, onClick),
+                listItemAction = DOMAINS
             )
         } else null
     }
@@ -191,7 +185,26 @@ class SiteListItemBuilder @Inject constructor(
             ListItem(
                 R.drawable.ic_cog_white_24dp,
                 UiStringRes(R.string.my_site_btn_site_settings),
-                onClick = ListItemInteraction.create(SITE_SETTINGS, onClick)
+                onClick = ListItemInteraction.create(SITE_SETTINGS, onClick),
+                listItemAction = SITE_SETTINGS
+            )
+        } else null
+    }
+
+    @Suppress("ComplexCondition")
+    fun buildMeItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+        return if ((!buildConfigWrapper.isJetpackApp &&
+                    jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() &&
+                    site.hasCapabilityManageOptions) ||
+            (!buildConfigWrapper.isJetpackApp &&
+                    site.isSelfHostedAdmin)
+        ) {
+            ListItem(
+                R.drawable.ic_user_primary_white_24,
+                UiStringRes(R.string.me),
+                onClick = ListItemInteraction.create(ListItemAction.ME, onClick),
+                disablePrimaryIconTint = true,
+                listItemAction = ListItemAction.ME
             )
         } else null
     }
@@ -202,7 +215,8 @@ class SiteListItemBuilder @Inject constructor(
                 R.drawable.ic_promote_with_blaze,
                 UiStringRes(R.string.blaze_menu_item_label),
                 onClick = ListItemInteraction.create(BLAZE, onClick),
-                disablePrimaryIconTint = true
+                disablePrimaryIconTint = true,
+                listItemAction = BLAZE
             )
         } else null
     }
@@ -226,7 +240,8 @@ class SiteListItemBuilder @Inject constructor(
             ListItem(
                 R.drawable.ic_themes_white_24dp,
                 UiStringRes(R.string.themes),
-                onClick = ListItemInteraction.create(THEMES, onClick)
+                onClick = ListItemInteraction.create(THEMES, onClick),
+                listItemAction = THEMES
             )
         } else null
     }

@@ -17,8 +17,8 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.action.AccountAction
+import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
@@ -73,6 +73,8 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(any(), any())).thenReturn("")
         whenever(localeManagerWrapper.getLanguage()).thenReturn("")
         classToTest = JetpackMigrationViewModel(
+            mainDispatcher = testDispatcher(),
+            dispatcher = dispatcher,
             siteUtilsWrapper = siteUtilsWrapper,
             gravatarUtilsWrapper = gravatarUtilsWrapper,
             contextProvider = contextProvider,
@@ -85,7 +87,6 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
             siteStore = siteStore,
             localeManagerWrapper = localeManagerWrapper,
             jetpackMigrationLanguageUtil = jetpackMigrationLanguageUtil,
-            dispatcher = dispatcher,
         )
         classToTest.refreshAppTheme.observeForever(refreshAppThemeObserver)
         classToTest.refreshAppLanguage.observeForever(refreshAppLanguageObserver)
@@ -176,6 +177,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         verifyNoInteractions(dispatcher)
     }
 
+    @Test
     fun `Should dispatch fetch account action when finish button is tapped on success screen if needed`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.account).thenReturn(mock())
@@ -422,7 +424,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     fun `Should have correct title for Notifications Content`() {
         val notificationsContent = Content.Notifications(NotificationsPrimaryButton {})
         val actual = notificationsContent.title
-        val expected = UiStringRes(R.string.jp_migration_notifications_title)
+        val expected = UiStringRes(R.string.jp_migration_notifications_allow_title)
         assertThat(actual).isEqualTo(expected)
     }
 

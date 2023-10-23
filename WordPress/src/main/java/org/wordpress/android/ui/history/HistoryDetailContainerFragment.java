@@ -13,9 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +28,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.databinding.HistoryDetailContainerFragmentBinding;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.fluxc.model.revisions.RevisionModel;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -42,10 +40,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.image.ImageManager;
-import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
-import org.wordpress.aztec.AztecText;
 import org.wordpress.aztec.plugins.IAztecPlugin;
 import org.wordpress.aztec.plugins.shortcodes.AudioShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.CaptionShortcodePlugin;
@@ -59,18 +55,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class HistoryDetailContainerFragment extends Fragment {
-    private ArrayList<Revision> mRevisions;
-    private HistoryDetailFragmentAdapter mAdapter;
-    private ImageView mNextButton;
-    private ImageView mPreviousButton;
-    private OnPageChangeListener mOnPageChangeListener;
-    private Revision mRevision;
-    private TextView mTotalAdditions;
-    private TextView mTotalDeletions;
-    private WPViewPager mViewPager;
-    private AztecText mVisualContent;
-    private TextView mVisualTitle;
-    private ScrollView mVisualPreviewContainer;
+    @Nullable private OnPageChangeListener mOnPageChangeListener;
+    @Nullable private Revision mRevision;
     private int mPosition;
     private boolean mIsChevronClicked = false;
     private boolean mIsFragmentRecreated = false;
@@ -86,6 +72,8 @@ public class HistoryDetailContainerFragment extends Fragment {
 
     @Inject PostStore mPostStore;
 
+    @Nullable private HistoryDetailContainerFragmentBinding mBinding = null;
+
     public static HistoryDetailContainerFragment newInstance(final Revision revision,
                                                              final long[] previousRevisionsIds,
                                                              final long postId,
@@ -100,85 +88,85 @@ public class HistoryDetailContainerFragment extends Fragment {
         return fragment;
     }
 
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.history_detail_container_fragment, container, false);
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
+        mBinding = HistoryDetailContainerFragmentBinding.inflate(inflater, container, false);
 
         mIsFragmentRecreated = savedInstanceState != null;
 
-        mapRevisions();
-
-        if (mRevisions != null) {
-            for (final Revision revision : mRevisions) {
+        ArrayList<Revision> revisions = mapRevisions();
+        if (revisions != null && mRevision != null) {
+            for (final Revision revision : revisions) {
                 if (revision.getRevisionId() == mRevision.getRevisionId()) {
-                    mPosition = mRevisions.indexOf(revision);
+                    mPosition = revisions.indexOf(revision);
                 }
             }
         } else {
             throw new IllegalArgumentException("Revisions list extra is null in HistoryDetailContainerFragment");
         }
 
-        mViewPager = rootView.findViewById(R.id.diff_pager);
-        mViewPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.SLIDE_OVER));
+        HistoryDetailFragmentAdapter adapter = new HistoryDetailFragmentAdapter(getChildFragmentManager(), revisions);
 
-        mAdapter = new HistoryDetailFragmentAdapter(getChildFragmentManager(), mRevisions);
+        if (mBinding != null && mRevision != null) {
+            mBinding.diffPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.SLIDE_OVER));
+            mBinding.diffPager.setAdapter(adapter);
+            mBinding.diffPager.setCurrentItem(mPosition);
 
-        mViewPager.setAdapter(mAdapter);
-        mViewPager.setCurrentItem(mPosition);
+            mBinding.next.setOnClickListener(view -> {
+                mIsChevronClicked = true;
+                mBinding.diffPager.setCurrentItem(mPosition + 1, true);
+            });
+            mBinding.previous.setOnClickListener(view -> {
+                mIsChevronClicked = true;
+                mBinding.diffPager.setCurrentItem(mPosition - 1, true);
+            });
 
-        mTotalAdditions = rootView.findViewById(R.id.diff_additions);
-        mTotalDeletions = rootView.findViewById(R.id.diff_deletions);
+            Drawable loadingImagePlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
+                    requireContext(),
+                    org.wordpress.android.editor.R.drawable.ic_gridicons_image,
+                    EditorMediaUtils.getMaximumThumbnailSizeForEditor(requireContext()));
 
-        mNextButton = rootView.findViewById(R.id.next);
-        mNextButton.setOnClickListener(view -> {
-            mIsChevronClicked = true;
-            mViewPager.setCurrentItem(mPosition + 1, true);
-        });
+            mBinding.visualContent.setImageGetter(
+                    new AztecImageLoader(requireContext(),
+                            mImageManager,
+                            loadingImagePlaceholder)
+            );
+            mBinding.visualContent.setKeyListener(null);
+            mBinding.visualContent.setTextIsSelectable(true);
+            mBinding.visualContent.setCursorVisible(false);
+            mBinding.visualContent.setMovementMethod(LinkMovementMethod.getInstance());
 
-        mPreviousButton = rootView.findViewById(R.id.previous);
-        mPreviousButton.setOnClickListener(view -> {
-            mIsChevronClicked = true;
-            mViewPager.setCurrentItem(mPosition - 1, true);
-        });
+            ArrayList<IAztecPlugin> plugins = new ArrayList<>();
+            plugins.add(new WordPressCommentsPlugin(mBinding.visualContent));
+            plugins.add(new CaptionShortcodePlugin(mBinding.visualContent));
+            plugins.add(new VideoShortcodePlugin());
+            plugins.add(new AudioShortcodePlugin());
+            plugins.add(new HiddenGutenbergPlugin(mBinding.visualContent));
+            mBinding.visualContent.setPlugins(plugins);
 
-        mVisualTitle = rootView.findViewById(R.id.visual_title);
-        mVisualContent = rootView.findViewById(R.id.visual_content);
+            boolean isInVisualPreview = savedInstanceState != null
+                                        && savedInstanceState.getBoolean(KEY_IS_IN_VISUAL_PREVIEW);
+            mBinding.visualPreviewContainer.setVisibility(isInVisualPreview ? View.VISIBLE : View.GONE);
+            mBinding.diffPager.setVisibility(isInVisualPreview ? View.GONE : View.VISIBLE);
+            mBinding.previous.setVisibility(isInVisualPreview ? View.INVISIBLE : View.VISIBLE);
+            mBinding.next.setVisibility(isInVisualPreview ? View.INVISIBLE : View.VISIBLE);
 
-        Drawable loadingImagePlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
-                requireContext(),
-                org.wordpress.android.editor.R.drawable.ic_gridicons_image,
-                EditorMediaUtils.getMaximumThumbnailSizeForEditor(requireContext()));
+            refreshHistoryDetail(mBinding, adapter, mRevision);
+            resetOnPageChangeListener(mBinding, adapter);
 
-        mVisualContent.setImageGetter(new AztecImageLoader(requireContext(), mImageManager, loadingImagePlaceholder));
-        mVisualContent.setKeyListener(null);
-        mVisualContent.setTextIsSelectable(true);
-        mVisualContent.setCursorVisible(false);
-        mVisualContent.setMovementMethod(LinkMovementMethod.getInstance());
-
-        ArrayList<IAztecPlugin> plugins = new ArrayList<>();
-        plugins.add(new WordPressCommentsPlugin(mVisualContent));
-        plugins.add(new CaptionShortcodePlugin(mVisualContent));
-        plugins.add(new VideoShortcodePlugin());
-        plugins.add(new AudioShortcodePlugin());
-        plugins.add(new HiddenGutenbergPlugin(mVisualContent));
-        mVisualContent.setPlugins(plugins);
-
-        mVisualPreviewContainer = rootView.findViewById(R.id.visual_preview_container);
-
-        boolean isInVisualPreview = savedInstanceState != null
-                                    && savedInstanceState.getBoolean(KEY_IS_IN_VISUAL_PREVIEW);
-        mVisualPreviewContainer.setVisibility(isInVisualPreview ? View.VISIBLE : View.GONE);
-        mViewPager.setVisibility(isInVisualPreview ? View.GONE : View.VISIBLE);
-        mPreviousButton.setVisibility(isInVisualPreview ? View.INVISIBLE : View.VISIBLE);
-        mNextButton.setVisibility(isInVisualPreview ? View.INVISIBLE : View.VISIBLE);
-
-        refreshHistoryDetail();
-        resetOnPageChangeListener();
-
-        return rootView;
+            return mBinding.getRoot();
+        } else {
+            throw new IllegalStateException("mBinding or mRevision is null");
+        }
     }
 
-    private void mapRevisions() {
+    @Nullable
+    private ArrayList<Revision> mapRevisions() {
         if (getArguments() != null) {
             mRevision = getArguments().getParcelable(EXTRA_CURRENT_REVISION);
 
@@ -189,7 +177,9 @@ public class HistoryDetailContainerFragment extends Fragment {
             for (final long revisionId : previousRevisionsIds) {
                 revisionModels.add(mPostStore.getRevisionById(revisionId, postId, siteId));
             }
-            mRevisions = mapRevisionModelsToRevisions(revisionModels);
+            return mapRevisionModelsToRevisions(revisionModels);
+        } else {
+            return null;
         }
     }
 
@@ -210,10 +200,13 @@ public class HistoryDetailContainerFragment extends Fragment {
     @SuppressWarnings("deprecation")
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        showHistoryTimeStampInToolbar();
+        if (mRevision != null) {
+            showHistoryTimeStampInToolbar(mRevision);
+        }
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) requireActivity().getApplication()).component().inject(this);
@@ -223,24 +216,33 @@ public class HistoryDetailContainerFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_IS_IN_VISUAL_PREVIEW, isInVisualPreview());
+        if (mBinding != null) {
+            outState.putBoolean(KEY_IS_IN_VISUAL_PREVIEW, isInVisualPreview(mBinding));
+        }
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    @SuppressWarnings("deprecation")
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.history_detail, menu);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    @SuppressWarnings("deprecation")
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        MenuItem viewMode = menu.findItem(R.id.history_toggle_view);
-        viewMode.setTitle(isInVisualPreview() ? R.string.history_preview_html : R.string.history_preview_visual);
+        if (mBinding != null) {
+            MenuItem viewMode = menu.findItem(R.id.history_toggle_view);
+            viewMode.setTitle(
+                    isInVisualPreview(mBinding) ? R.string.history_preview_html : R.string.history_preview_visual
+            );
+        }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @SuppressWarnings("deprecation")
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.history_load) {
             Intent intent = new Intent();
             intent.putExtra(KEY_REVISION, mRevision);
@@ -248,64 +250,70 @@ public class HistoryDetailContainerFragment extends Fragment {
             requireActivity().setResult(Activity.RESULT_OK, intent);
             requireActivity().finish();
         } else if (item.getItemId() == R.id.history_toggle_view) {
-            if (isInVisualPreview()) {
-                AniUtils.fadeIn(mNextButton, Duration.SHORT);
-                AniUtils.fadeIn(mPreviousButton, Duration.SHORT);
-            } else {
-                String title = TextUtils.isEmpty(mRevision.getPostTitle())
-                        ? getString(R.string.history_no_title) : mRevision.getPostTitle();
-                mVisualTitle.setText(title);
-                mVisualContent.fromHtml(StringUtils.notNullStr(mRevision.getPostContent()), false);
-                AniUtils.fadeOut(mNextButton, Duration.SHORT, View.INVISIBLE);
-                AniUtils.fadeOut(mPreviousButton, Duration.SHORT, View.INVISIBLE);
+            if (mBinding != null && mRevision != null) {
+                if (isInVisualPreview(mBinding)) {
+                    AniUtils.fadeIn(mBinding.next, Duration.SHORT);
+                    AniUtils.fadeIn(mBinding.previous, Duration.SHORT);
+                } else {
+                    String title = TextUtils.isEmpty(mRevision.getPostTitle())
+                            ? getString(R.string.history_no_title) : mRevision.getPostTitle();
+                    mBinding.visualTitle.setText(title);
+                    mBinding.visualContent.fromHtml(StringUtils.notNullStr(mRevision.getPostContent()), false);
+                    AniUtils.fadeOut(mBinding.next, Duration.SHORT, View.INVISIBLE);
+                    AniUtils.fadeOut(mBinding.previous, Duration.SHORT, View.INVISIBLE);
+                }
+                crossfadePreviewViews(mBinding);
             }
-            crossfadePreviewViews();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void crossfadePreviewViews() {
-        final View fadeInView = isInVisualPreview() ? mViewPager : mVisualPreviewContainer;
-        final View fadeOutView = isInVisualPreview() ? mVisualPreviewContainer : mViewPager;
-        mVisualPreviewContainer.smoothScrollTo(0, 0);
-        mVisualPreviewContainer.post(new Runnable() {
-            @Override
-            public void run() {
-                AniUtils.fadeIn(fadeInView, Duration.SHORT);
-                AniUtils.fadeOut(fadeOutView, Duration.SHORT);
-            }
+    private void crossfadePreviewViews(@NonNull HistoryDetailContainerFragmentBinding binding) {
+        final View fadeInView = isInVisualPreview(binding) ? binding.diffPager : binding.visualPreviewContainer;
+        final View fadeOutView = isInVisualPreview(binding) ? binding.visualPreviewContainer : binding.diffPager;
+        binding.visualPreviewContainer.smoothScrollTo(0, 0);
+        binding.visualPreviewContainer.post(() -> {
+            AniUtils.fadeIn(fadeInView, Duration.SHORT);
+            AniUtils.fadeOut(fadeOutView, Duration.SHORT);
         });
     }
 
-    private void showHistoryTimeStampInToolbar() {
+    private void showHistoryTimeStampInToolbar(@NonNull Revision revision) {
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setSubtitle(mRevision.getTimeSpan());
+            actionBar.setSubtitle(revision.getTimeSpan());
         }
     }
 
-    private void refreshHistoryDetail() {
-        if (mRevision.getTotalAdditions() > 0) {
-            mTotalAdditions.setText(String.valueOf(mRevision.getTotalAdditions()));
-            mTotalAdditions.setVisibility(View.VISIBLE);
+    private void refreshHistoryDetail(
+            @NonNull HistoryDetailContainerFragmentBinding binding,
+            @NonNull HistoryDetailFragmentAdapter adapter,
+            @NonNull Revision revision
+    ) {
+        if (revision.getTotalAdditions() > 0) {
+            binding.diffAdditions.setText(String.valueOf(revision.getTotalAdditions()));
+            binding.diffAdditions.setVisibility(View.VISIBLE);
         } else {
-            mTotalAdditions.setVisibility(View.GONE);
+            binding.diffAdditions.setVisibility(View.GONE);
         }
 
-        if (mRevision.getTotalDeletions() > 0) {
-            mTotalDeletions.setText(String.valueOf(mRevision.getTotalDeletions()));
-            mTotalDeletions.setVisibility(View.VISIBLE);
+        if (revision.getTotalDeletions() > 0) {
+            binding.diffDeletions.setText(String.valueOf(revision.getTotalDeletions()));
+            binding.diffDeletions.setVisibility(View.VISIBLE);
         } else {
-            mTotalDeletions.setVisibility(View.GONE);
+            binding.diffDeletions.setVisibility(View.GONE);
         }
 
-        mPreviousButton.setEnabled(mPosition != 0);
-        mNextButton.setEnabled(mPosition != mAdapter.getCount() - 1);
+        binding.previous.setEnabled(mPosition != 0);
+        binding.next.setEnabled(mPosition != adapter.getCount() - 1);
     }
 
-    private void resetOnPageChangeListener() {
+    private void resetOnPageChangeListener(
+            @NonNull HistoryDetailContainerFragmentBinding binding,
+            @NonNull HistoryDetailFragmentAdapter adapter
+    ) {
         if (mOnPageChangeListener != null) {
-            mViewPager.removeOnPageChangeListener(mOnPageChangeListener);
+            binding.diffPager.removeOnPageChangeListener(mOnPageChangeListener);
         } else {
             mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
                 @Override
@@ -330,29 +338,39 @@ public class HistoryDetailContainerFragment extends Fragment {
                     }
 
                     mPosition = position;
-                    mRevision = mAdapter.getRevisionAtPosition(mPosition);
-                    refreshHistoryDetail();
-                    showHistoryTimeStampInToolbar();
+                    mRevision = adapter.getRevisionAtPosition(mPosition);
+                    if (mRevision != null) {
+                        refreshHistoryDetail(binding, adapter, mRevision);
+                        showHistoryTimeStampInToolbar(mRevision);
+                    }
                 }
             };
         }
 
-        mViewPager.addOnPageChangeListener(mOnPageChangeListener);
+        binding.diffPager.addOnPageChangeListener(mOnPageChangeListener);
     }
 
-    private boolean isInVisualPreview() {
-        return mVisualPreviewContainer.getVisibility() == View.VISIBLE;
+    private boolean isInVisualPreview(@NonNull HistoryDetailContainerFragmentBinding binding) {
+        return binding.visualPreviewContainer.getVisibility() == View.VISIBLE;
     }
 
-    private class HistoryDetailFragmentAdapter extends FragmentStatePagerAdapter {
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mBinding = null;
+    }
+
+    @SuppressWarnings("deprecation")
+    private static class HistoryDetailFragmentAdapter extends FragmentStatePagerAdapter {
         private final ArrayList<Revision> mRevisions;
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({"unchecked", "deprecation"})
         HistoryDetailFragmentAdapter(FragmentManager fragmentManager, ArrayList<Revision> revisions) {
             super(fragmentManager);
             mRevisions = (ArrayList<Revision>) revisions.clone();
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             return HistoryDetailFragment.Companion.newInstance(mRevisions.get(position));
@@ -364,7 +382,7 @@ public class HistoryDetailContainerFragment extends Fragment {
         }
 
         @Override
-        public void restoreState(Parcelable state, ClassLoader loader) {
+        public void restoreState(@Nullable Parcelable state, @Nullable ClassLoader loader) {
             try {
                 super.restoreState(state, loader);
             } catch (IllegalStateException exception) {
@@ -372,6 +390,7 @@ public class HistoryDetailContainerFragment extends Fragment {
             }
         }
 
+        @Nullable
         @Override
         public Parcelable saveState() {
             Bundle bundle = (Bundle) super.saveState();

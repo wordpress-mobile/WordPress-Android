@@ -8,23 +8,23 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import org.wordpress.android.R
-import org.wordpress.android.R.id
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
+import com.google.android.material.R as MaterialR
 
 class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
     parent,
     R.layout.stats_block_list_item
 ) {
-    private val iconContainer = itemView.findViewById<LinearLayout>(id.icon_container)
-    private val text = itemView.findViewById<TextView>(id.text)
-    private val value = itemView.findViewById<TextView>(id.value)
-    private val divider = itemView.findViewById<View>(id.divider)
-    private val expandButton = itemView.findViewById<ImageView>(id.expand_button)
+    private val iconContainer = itemView.findViewById<LinearLayout>(R.id.icon_container)
+    private val text = itemView.findViewById<TextView>(R.id.text)
+    private val value = itemView.findViewById<TextView>(R.id.value)
+    private val divider = itemView.findViewById<View>(R.id.divider)
+    private val expandButton = itemView.findViewById<ImageView>(R.id.expand_button)
     private var bar = itemView.findViewById<ProgressBar>(R.id.bar)
 
     fun bind(
@@ -35,7 +35,7 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
         iconContainer.setIconOrAvatar(header, imageManager)
         text.setTextOrHide(header.textResource, header.text)
         val textColor = when (expandableItem.header.textStyle) {
-            TextStyle.NORMAL -> text.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
+            TextStyle.NORMAL -> text.context.getColorResIdFromAttribute(MaterialR.attr.colorOnSurface)
             LIGHT -> text.context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
         }
         text.contentDescription = header.contentDescription

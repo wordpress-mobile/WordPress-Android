@@ -1,48 +1,70 @@
 package org.wordpress.android.ui.blaze
 
+import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.blaze.BlazeStatusModel
+import org.wordpress.android.fluxc.model.page.PageModel
+import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
+import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BlazeFeatureConfig
+import org.wordpress.android.util.config.BlazeManageCampaignFeatureConfig
 import javax.inject.Inject
 
 class BlazeFeatureUtils @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val blazeFeatureConfig: BlazeFeatureConfig,
+    private val blazeManageCampaignFeatureConfig: BlazeManageCampaignFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
 ) {
-    fun isBlazeEnabled(): Boolean {
+    private fun isBlazeEnabled(): Boolean {
         return buildConfigWrapper.isJetpackApp &&
                 blazeFeatureConfig.isEnabled()
     }
 
-    fun isBlazeEligibleForUser(siteModel: SiteModel): Boolean {
-        return siteModel.isAdmin &&
-                isBlazeEnabled()
-    }
-
     fun isPostBlazeEligible(
+        siteModel: SiteModel,
         postStatus: PostStatus,
         postModel: PostModel
     ): Boolean {
-        return isBlazeEnabled() &&
+        return isSiteBlazeEligible(siteModel) &&
                 postStatus == PostStatus.PUBLISHED &&
                 postModel.password.isEmpty()
     }
 
-    fun shouldShowBlazeCardEntryPoint(blazeStatusModel: BlazeStatusModel?, siteId: Long) =
-        isBlazeEnabled() &&
-                blazeStatusModel?.isEligible == true &&
-                    !isPromoteWithBlazeCardHiddenByUser(siteId)
+    fun isPageBlazeEligible(
+        siteModel: SiteModel,
+        pageStatus: PageStatus,
+        pageModel: PageModel
+    ): Boolean {
+        return isSiteBlazeEligible(siteModel) &&
+                pageStatus == PageStatus.PUBLISHED &&
+                pageModel.post.password.isEmpty()
+    }
 
-    fun shouldShowBlazeMenuEntryPoint(blazeStatusModel: BlazeStatusModel?) =
-        isBlazeEnabled() &&  blazeStatusModel?.isEligible == true
+    fun isSiteBlazeEligible(siteModel: SiteModel): Boolean {
+        return siteModel.canBlaze != null &&
+                siteModel.canBlaze &&
+                siteModel.isAdmin &&
+                isBlazeEnabled()
+    }
+
+    fun shouldShowBlazeCardEntryPoint(siteModel: SiteModel): Boolean =
+        isSiteBlazeEligible(siteModel) &&
+                !isBlazeCardHiddenByUser(siteModel.siteId)
+
+    fun shouldShowBlazeCampaigns() = blazeManageCampaignFeatureConfig.isEnabled()
+
+    fun shouldHideBlazeOverlay() = appPrefsWrapper.getShouldHideBlazeOverlay()
+
+    fun setShouldHideBlazeOverlay() = appPrefsWrapper.setShouldHideBlazeOverlay(true)
 
     fun track(stat: AnalyticsTracker.Stat, source: BlazeFlowSource) {
         analyticsTrackerWrapper.track(
@@ -51,8 +73,8 @@ class BlazeFeatureUtils @Inject constructor(
         )
     }
 
-    fun hidePromoteWithBlazeCard(siteId: Long) {
-        appPrefsWrapper.setShouldHidePromoteWithBlazeCard(siteId,true)
+    fun hideBlazeCard(siteId: Long) {
+        appPrefsWrapper.setShouldHideBlazeCard(siteId, true)
     }
 
     fun trackEntryPointTapped(blazeFlowSource: BlazeFlowSource) {
@@ -62,8 +84,8 @@ class BlazeFeatureUtils @Inject constructor(
         )
     }
 
-    private fun isPromoteWithBlazeCardHiddenByUser(siteId: Long): Boolean {
-        return appPrefsWrapper.getShouldHidePromoteWithBlazeCard(siteId)
+    private fun isBlazeCardHiddenByUser(siteId: Long): Boolean {
+        return appPrefsWrapper.hideBlazeCard(siteId)
     }
 
     fun trackOverlayDisplayed(blazeFlowSource: BlazeFlowSource) {
@@ -116,6 +138,29 @@ class BlazeFeatureUtils @Inject constructor(
             AnalyticsTracker.Stat.BLAZE_FLOW_COMPLETED, mapOf(SOURCE to blazeFlowSource.trackingName)
         )
     }
+
+    fun trackCampaignListingPageShown(campaignListingPageSource: CampaignListingPageSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_CAMPAIGN_LISTING_PAGE_SHOWN,
+            mapOf(SOURCE to campaignListingPageSource.trackingName)
+        )
+    }
+
+    fun trackCampaignDetailsOpened(campaignDetailPageSource: CampaignDetailPageSource) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.BLAZE_CAMPAIGN_DETAIL_PAGE_OPENED,
+            mapOf(SOURCE to campaignDetailPageSource.trackingName)
+        )
+    }
+
+    fun getUserAgent() = WordPress.getUserAgent()
+
+    fun getAuthenticationPostData(authenticationUrl: String,
+                                  urlToLoad: String,
+                                  username: String,
+                                  password: String,
+                                  token: String): String =
+        WPWebViewActivity.getAuthenticationPostData(authenticationUrl, urlToLoad, username, password, token)
 
     companion object {
         const val SOURCE = "source"

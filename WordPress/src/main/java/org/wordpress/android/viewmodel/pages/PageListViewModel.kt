@@ -5,22 +5,28 @@ import androidx.annotation.ColorRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.EditorThemeStore
+import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload
+import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -30,12 +36,15 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
+import org.wordpress.android.ui.pages.PageItem.VirtualHomepage
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig
+import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
 import org.wordpress.android.util.extensions.toFormattedDateString
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -60,10 +69,14 @@ class PageListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val accountStore: AccountStore,
+    private val globalStyleSupportFeatureConfig: GlobalStyleSupportFeatureConfig,
+    private val editorThemeStore: EditorThemeStore,
+    private val siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig,
+    private val blazeFeatureUtils: BlazeFeatureUtils,
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = Transformations.map(_pages) {
+    val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = _pages.map {
         Triple(it, isSitePhotonCapable, isSitePrivateAt)
     }
     private val _scrollToPosition = SingleLiveEvent<Int>()
@@ -71,6 +84,7 @@ class PageListViewModel @Inject constructor(
     private var retryScrollToPage: LocalId? = null
     private var isStarted: Boolean = false
     private lateinit var listType: PageListType
+    private val isBlockBasedTheme = MutableStateFlow(false)
 
     private lateinit var pagesViewModel: PagesViewModel
 
@@ -133,9 +147,29 @@ class PageListViewModel @Inject constructor(
             pagesViewModel.pages.observeForever(pagesObserver)
             pagesViewModel.invalidateUploadStatus.observeForever(uploadStatusObserver)
             pagesViewModel.authorSelectionUpdated.observeForever(authorSelectionChangedObserver)
-            pagesViewModel.blazeSiteEligibility.observeForever(blazeSiteEligibilityObserver)
 
             dispatcher.register(this)
+
+            refreshEditorTheme()
+        }
+    }
+
+    private fun refreshEditorTheme() {
+        // Get isBlockBasedTheme (cached) value from local db
+        isBlockBasedTheme.value = editorThemeStore.getIsBlockBasedTheme(pagesViewModel.site)
+
+        // Dispatch action to refresh the values from the remote
+        FetchEditorThemePayload(pagesViewModel.site, globalStyleSupportFeatureConfig.isEnabled()).let {
+            dispatcher.dispatch(EditorThemeActionBuilder.newFetchEditorThemeAction(it))
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    fun onEditorThemeChanged(event: OnEditorThemeChanged) {
+        if (pagesViewModel.site.id == event.siteId) {
+            event.editorTheme?.themeSupport?.let { themeSupport ->
+                isBlockBasedTheme.value = themeSupport.isEditorThemeBlockBased()
+            }
         }
     }
 
@@ -143,7 +177,6 @@ class PageListViewModel @Inject constructor(
         pagesViewModel.pages.removeObserver(pagesObserver)
         pagesViewModel.invalidateUploadStatus.removeObserver(uploadStatusObserver)
         pagesViewModel.authorSelectionUpdated.removeObserver(authorSelectionChangedObserver)
-        pagesViewModel.blazeSiteEligibility.removeObserver(blazeSiteEligibilityObserver)
 
         dispatcher.unregister(this)
     }
@@ -156,6 +189,10 @@ class PageListViewModel @Inject constructor(
         if (pageItem.tapActionEnabled) {
             pagesViewModel.onItemTapped(pageItem)
         }
+    }
+
+    fun onVirtualHomepageAction(action: VirtualHomepage.Action) {
+        pagesViewModel.onVirtualHomepageAction(action)
     }
 
     fun onEmptyListNewPageButtonTapped() {
@@ -174,24 +211,16 @@ class PageListViewModel @Inject constructor(
     }
 
     private val pagesObserver = Observer<List<PageModel>> { pages ->
-        pages?.let {
-            loadPagesAsync(pages)
-            pagesViewModel.checkIfNewPageButtonShouldBeVisible()
-        }
+        loadPagesAsync(pages)
+        pagesViewModel.checkIfNewPageButtonShouldBeVisible()
     }
 
     private val uploadStatusObserver = Observer<List<LocalId>> { ids ->
         pagesViewModel.uploadStatusTracker.invalidateUploadStatus(ids.map { localId -> localId.value })
     }
 
-    private val authorSelectionChangedObserver = Observer<AuthorFilterSelection> { authorSelection ->
-        authorSelection?.let {
-            pagesViewModel.pages.value?.let { loadPagesAsync(it) }
-        }
-    }
-
-    private val blazeSiteEligibilityObserver = Observer<Boolean> { _ ->
-            pagesViewModel.pages.value?.let { loadPagesAsync(it) }
+    private val authorSelectionChangedObserver = Observer<AuthorFilterSelection> {
+        pagesViewModel.pages.value?.let { loadPagesAsync(it) }
     }
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
@@ -227,7 +256,7 @@ class PageListViewModel @Inject constructor(
                     PUBLISHED -> _pages.postValue(listOf(Empty(R.string.pages_empty_published)))
                     SCHEDULED -> _pages.postValue(listOf(Empty(R.string.pages_empty_scheduled)))
                     DRAFTS -> _pages.postValue(listOf(Empty(R.string.pages_empty_drafts)))
-                    TRASHED -> _pages.postValue(listOf(Empty(R.string.pages_empty_trashed, isButtonVisible = false)))
+                    TRASHED -> _pages.postValue(listOf(Empty(R.string.pages_empty_trashed)))
                 }
             }
         } else {
@@ -281,7 +310,10 @@ class PageListViewModel @Inject constructor(
             filteredPages.sortedByDescending { it.date }.sortedBy { !it.isHomepage }
         })
 
+        val showVirtualHomepage = siteEditorMVPFeatureConfig.isEnabled() && isBlockBasedTheme.value
+
         return sortedPages
+            .let { if (showVirtualHomepage) it.filterNot { page -> page.isHomepage } else it }
             .map {
                 val pageItemIndent = if (shouldSortTopologically) {
                     getPageItemIndent(it)
@@ -312,6 +344,13 @@ class PageListViewModel @Inject constructor(
                     author = author,
                     showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                 )
+            }
+            .let {
+                if (showVirtualHomepage) {
+                    listOf(VirtualHomepage) + it
+                } else {
+                    it
+                }
             }
     }
 
@@ -504,8 +543,9 @@ class PageListViewModel @Inject constructor(
     private fun isPageBlazeEligible(pageModel: PageModel): Boolean {
         val pageStatus = PageStatus.fromPost(pageModel.post)
 
-       return listType == PUBLISHED && pageStatus != PageStatus.PRIVATE
-                && pagesViewModel.blazeSiteEligibility.value ?: false && pageModel.post.password.isEmpty()
+        if (listType != PUBLISHED) return false
+
+        return blazeFeatureUtils.isPageBlazeEligible(pagesViewModel.site, pageStatus, pageModel)
     }
 
     private data class ItemUiStateData(

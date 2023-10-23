@@ -13,7 +13,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -98,7 +98,7 @@ class SearchListViewModelTest : BaseUnitTest() {
     fun `show empty item on start`() {
         searchPages.value = null
 
-        assertThat(viewModel.searchResult.value).containsOnly(Empty(string.pages_search_suggestion, true))
+        assertThat(viewModel.searchResult.value).containsOnly(Empty(R.string.pages_search_suggestion, true))
     }
 
     @Test

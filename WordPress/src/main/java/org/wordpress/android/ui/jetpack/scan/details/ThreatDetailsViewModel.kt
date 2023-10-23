@@ -30,6 +30,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.ScanTracker
+import org.wordpress.android.util.config.RemoteConfigWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -43,7 +44,8 @@ class ThreatDetailsViewModel @Inject constructor(
     private val builder: ThreatDetailsListItemsBuilder,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val resourceProvider: ResourceProvider,
-    private val scanTracker: ScanTracker
+    private val scanTracker: ScanTracker,
+    private val remoteConfigWrapper: RemoteConfigWrapper
 ) : ViewModel() {
     private lateinit var site: SiteModel
     private lateinit var threatModel: ThreatModel
@@ -153,7 +155,9 @@ class ThreatDetailsViewModel @Inject constructor(
 
     private fun onGetFreeEstimateButtonClicked() {
         scanTracker.trackOnGetFreeEstimateButtonClicked()
-        updateNavigationEvent(ThreatDetailsNavigationEvents.ShowGetFreeEstimate)
+        updateNavigationEvent(ThreatDetailsNavigationEvents.ShowGetFreeEstimate(
+            remoteConfigWrapper.getCodeableGetFreeEstimateUrl())
+        )
     }
 
     private fun onEnterServerCredsIconClicked() {

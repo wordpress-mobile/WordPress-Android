@@ -26,6 +26,8 @@
   "response": {
     "status": 200,
     "jsonBody": {
+      "dashboard_card_activity_log": true,
+      "dashboard_card_pages": true
     }
   }
 }

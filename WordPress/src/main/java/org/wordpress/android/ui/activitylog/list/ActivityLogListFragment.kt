@@ -41,6 +41,7 @@ import org.wordpress.android.viewmodel.activitylog.DateRange
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
+import android.R as AndroidR
 
 private const val ACTIVITY_TYPE_FILTER_TAG = "activity_log_type_filter_tag"
 private const val DATE_PICKER_TAG = "activity_log_date_picker_tag"
@@ -114,7 +115,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         }
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         with(requireActivity()) {
@@ -204,7 +205,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         })
 
         viewModel.showSnackbarMessage.observe(viewLifecycleOwner, { message ->
-            val parent: View? = activity?.findViewById(android.R.id.content)
+            val parent: View? = activity?.findViewById(AndroidR.id.content)
             if (message != null && parent != null) {
                 WPSnackbar.make(parent, message, Snackbar.LENGTH_LONG).show()
             }

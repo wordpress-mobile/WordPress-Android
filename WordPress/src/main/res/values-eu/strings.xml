@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-07-23 20:48:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.11
 Language: eu_ES
 -->
 <resources>
@@ -32,7 +32,6 @@ Language: eu_ES
     <string name="me_btn_about">WordPressi buruz</string>
     <string name="gutenberg_native_featured_image">Nabarmendutako irudia</string>
     <string name="gutenberg_native_from_clipboard">Arbeletik</string>
-    <string name="my_site_post_card_link_go_to_drafts">Zirriborroetara joan</string>
     <string name="my_site_post_card_link_create_post">Bidalketa sortu</string>
     <string name="my_site_create_first_post_title">Sortu ezazu zure lehen bidalketa</string>
     <string name="my_site_untitled_post">Izenbururik gabe</string>
@@ -113,9 +112,6 @@ Language: eu_ES
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Editatu bidalketa eta orrialde berriak bloke editorearekin</string>
     <string name="quick_start_sites_type_customize">Pertsonalizatu zure gunea</string>
     <string name="quick_start_sites">Hurrengo urratsak</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Kendu hurrengo urratsak</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Hurrengo urratsak kenduz gero gunearen laguntza-tour guztiak kenduko dira. Ekintza hau ezin da desegin.</string>
-    <string name="quick_start_remove_next_steps_menu_title">Kendu hau</string>
     <string name="stats_posts_and_pages">Bidalketak eta orrialdeak</string>
     <string name="stats_videos_views_label">Ikustaldiak</string>
     <string name="stats_videos_title_label">Izenburua</string>
@@ -167,7 +163,6 @@ Language: eu_ES
     <string name="media_images">Irudiak</string>
     <string name="media_videos">Bideoak</string>
     <string name="media_documents">Dokumentuak</string>
-    <string name="sharing">Partekatzea</string>
     <string name="tabbar_accessibility_label_notifications">Jakinarazpenak. Kudeatu zure jakinarazpenak.</string>
     <string name="sure_to_remove_account">Kendu gunea aplikaziotik?</string>
     <string name="reader_label_visit">Gunea bisitatu</string>
@@ -533,17 +528,13 @@ Language: eu_ES
     <string name="view_in_browser">Nabigatzailean ikusi</string>
     <string name="horizontal_alignment">Lerrokatze horizontala</string>
     <string name="file_not_found">Ezin izan da igotzeko fitxategia aurkitu. Mugitua edo ezabatua izan da?</string>
-    <string name="content_required">Iruzkina beharrezkoa da</string>
-    <string name="toast_comment_unedited">Iruzkina ez da aldatu</string>
     <string name="learn_more">Gehiago jakin</string>
     <string name="media_gallery_type_thumbnail_grid">Miniaturen sareta</string>
     <string name="http_authorization_required">Baimena beharrezkoa</string>
     <string name="connection_error">Errorea konektatzean</string>
-    <string name="cancel_edit">Ezeztatu editatutakoa</string>
     <string name="media_error_no_permission">Ez duzu media bilduma ikusteko baimenik</string>
     <string name="remove_account">Ezabatu gunea</string>
     <string name="saving_changes">Aldaketak gordetzen</string>
-    <string name="sure_to_cancel_edit_comment">Iruzkin honen edizioa ezeztatu?</string>
     <string name="file_error_create">Ezin izan da media fitxategia igotzeko behin-behineko fitxategia sortu. Ziurtatu zaitez gailuak behar haina toki duela.</string>
     <string name="new_post">Bidalketa berria</string>
     <string name="new_media">Media berria</string>

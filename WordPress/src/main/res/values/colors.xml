@@ -62,6 +62,7 @@
 
     <!--Reader Post Card -->
     <color name="reader_post_list_background">@color/neutral_0</color>
+    <color name="reader_post_list_background_new">@color/white</color>
 
     <!-- Modal Layout Picker -->
     <color name="mlp_categories_button_background">#ffededed</color>
@@ -84,26 +85,6 @@
     <color name="quick_start_task_card_background">@color/gray_0</color>
     <color name="quick_start_task_card_completed_checkmark">@color/gray_5</color>
 
-    <!-- Quick Start Task Dynamic Cards -->
-    <color name="quick_start_task_card_illustration_background">@color/gray_0</color>
-    <color name="quick_start_task_card_illustration_surface">@color/white</color>
-    <color name="quick_start_task_card_illustration_details">@color/gray_30</color>
-    <color name="quick_start_task_card_illustration_line">@color/blue_5</color>
-    <color name="quick_start_task_card_illustration_area">@color/blue_0</color>
-    <color name="quick_start_task_card_illustration_mountain">@color/gray_5</color>
-    <color name="quick_start_task_card_illustration_sun_fill">#F5E6B3</color>
-    <color name="quick_start_task_card_illustration_sun_stroke">#F0C930</color>
-
-    <color name="quick_start_task_card_illustration_check_site_stats_stroke">@color/pink_5</color>
-    <color name="quick_start_task_card_illustration_edit_site_icon_area">@color/blue_0</color>
-    <color name="quick_start_task_card_illustration_edit_site_icon_mountain_fill">@color/gray_5</color>
-    <color name="quick_start_task_card_illustration_edit_site_icon_mountain_stroke">@color/gray_40</color>
-    <color name="quick_start_task_card_illustration_follow_other_sites_fill">@color/blue_0</color>
-    <color name="quick_start_task_card_illustration_set_site_title_header">@color/blue_0</color>
-    <color name="quick_start_task_card_illustration_set_site_title_body">@color/white</color>
-    <color name="quick_start_task_card_illustration_set_site_title_box_stroke">@color/blue_5</color>
-    <color name="quick_start_task_card_illustration_visit_your_site_star">#FFD60A</color>
-
     <!-- Reader Topics You Might Like Chips -->
     <color name="reader_topics_you_might_like_chip_green_stroke">@color/green_5</color>
     <color name="reader_topics_you_might_like_chip_green_font">@color/green_50</color>
@@ -117,6 +98,17 @@
     <color name="reader_topics_you_might_like_chip_orange_stroke">@color/orange_5</color>
     <color name="reader_topics_you_might_like_chip_orange_font">@color/orange_50</color>
     <color name="reader_topics_you_might_like_chip_orange_fill">@color/orange_0</color>
+
+    <!-- Reader Improvements -->
+    <color name="reader_improvements_follow_button_following_state">#F4F4F4</color>
+    <color name="reader_improvements_recommended_section_text">#99000000</color>
+    <color name="reader_you_might_like_background">@color/neutral_0</color>
+    <color name="reader_following_button_stroke">#1F000000</color>
+    <color name="reader_follow_button">@color/black</color>
+    <color name="reader_follow_button_text_color">@color/white</color>
+    <color name="reader_following_button_text_color">#99000000</color>
+    <color name="reader_follow_button_ripple">@color/reader_follow_button_ripple_selector_light</color>
+    <color name="reader_blog_section_avatar_internal_border">@color/black_translucent_20</color>
 
     <!-- These colors were removed from the login library and moved here as they are still being
     used by some old layouts. They should be replaced here as well, whenever possible. -->
@@ -137,5 +129,15 @@
 
     <!-- Jetpack feture removal overlay secondary button color -->
     <color name="jp_feature_removal_overlay_secondary_button_color">@color/jetpack_green_50</color>
+
+    <!-- Dashboard Card Plans -->
+    <color name="dashboard_card_plans_info_background">@color/gray_0</color>
+    <color name="dashboard_card_plans_info_text_color">@color/gray_20</color>
+
+    <!-- Support Chat Bot -->
+    <color name="docsbot_chat_container">#F9FAF9</color>
+
+    <!-- Partial Media Access -->
+    <color name="partial_media_access_prompt_background">#DEDEDE</color>
 
 </resources>

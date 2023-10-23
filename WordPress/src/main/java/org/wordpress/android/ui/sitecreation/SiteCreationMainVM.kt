@@ -6,8 +6,8 @@ import android.os.Parcelable
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -32,13 +32,12 @@ import org.wordpress.android.ui.sitecreation.SiteCreationResult.NotCreated
 import org.wordpress.android.ui.sitecreation.domains.DomainModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.plans.PlanModel
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
-import org.wordpress.android.util.experiments.SiteCreationDomainPurchasingExperiment
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
@@ -61,6 +60,7 @@ data class SiteCreationState(
     val segmentId: Long? = null,
     val siteDesign: String? = null,
     val domain: DomainModel? = null,
+    val plan: PlanModel? = null,
     val result: SiteCreationResult = NotCreated,
 ) : WizardState, Parcelable
 
@@ -110,8 +110,6 @@ class SiteCreationMainVM @Inject constructor(
     private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase,
     private val imageManager: ImageManager,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
-    private val domainPurchasingExperiment: SiteCreationDomainPurchasingExperiment,
-    private val domainPurchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig,
     private val domainsRegistrationTracker: DomainsRegistrationTracker,
 ) : ViewModel() {
     init {
@@ -132,7 +130,7 @@ class SiteCreationMainVM @Inject constructor(
 
     val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
         SingleEventObservable(
-            Transformations.map(wizardManager.navigatorLiveData) {
+            wizardManager.navigatorLiveData.map {
                 clearOldSiteCreationState(it)
                 WizardNavigationTarget(it, siteCreationState)
             }
@@ -145,11 +143,11 @@ class SiteCreationMainVM @Inject constructor(
     private val _onCompleted = SingleLiveEvent<SiteCreationCompletionEvent>()
     val onCompleted: LiveData<SiteCreationCompletionEvent> = _onCompleted
 
-    private val _exitFlowObservable = SingleLiveEvent<Unit>()
-    val exitFlowObservable: LiveData<Unit> = _exitFlowObservable
+    private val _exitFlowObservable = SingleLiveEvent<Unit?>()
+    val exitFlowObservable: LiveData<Unit?> = _exitFlowObservable
 
-    private val _onBackPressedObservable = SingleLiveEvent<Unit>()
-    val onBackPressedObservable: LiveData<Unit> = _onBackPressedObservable
+    private val _onBackPressedObservable = SingleLiveEvent<Unit?>()
+    val onBackPressedObservable: LiveData<Unit?> = _onBackPressedObservable
 
     private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
     val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
@@ -161,9 +159,6 @@ class SiteCreationMainVM @Inject constructor(
         if (isStarted) return
         if (savedInstanceState == null) {
             tracker.trackSiteCreationAccessed(siteCreationSource)
-            if (domainPurchasingFeatureConfig.isEnabledState()) {
-                tracker.trackSiteCreationDomainPurchasingExperimentVariation(domainPurchasingExperiment.getVariation())
-            }
             siteCreationState = SiteCreationState()
             if (jetpackFeatureRemovalOverlayUtil.shouldShowSiteCreationOverlay())
                 showJetpackOverlay()
@@ -237,7 +232,7 @@ class SiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
-    fun onSiteDesignSelected(siteDesign: String) {
+    fun onDesignSelected(siteDesign: String) {
         siteCreationState = siteCreationState.copy(siteDesign = siteDesign)
         wizardManager.showNextStep()
     }
@@ -267,10 +262,23 @@ class SiteCreationMainVM @Inject constructor(
                 siteCreationState = siteCreationState.copy(domain = null)
             }
         }
+        if (wizardStep == SiteCreationStep.PLANS) {
+            siteCreationState.plan?.let {
+                siteCreationState = siteCreationState.copy(plan = null)
+            }
+        }
     }
 
     fun onDomainsScreenFinished(domain: DomainModel) {
         siteCreationState = siteCreationState.copy(domain = domain)
+        wizardManager.showNextStep()
+    }
+
+    fun onPlanSelection(plan: PlanModel, domainName: String?) {
+        siteCreationState = siteCreationState.copy(plan = plan)
+        domainName?.let {
+            siteCreationState = siteCreationState.copy(domain = siteCreationState.domain?.copy(domainName = it))
+        }
         wizardManager.showNextStep()
     }
 
@@ -300,7 +308,13 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun onCheckoutResult(event: DomainRegistrationCompletedEvent?) {
-        if (event == null) return onBackPressed()
+        if (event == null) return
+        if (event.canceled) {
+            // Checkout canceled. A site with free domain will be created. Update the isFree parameter of the domain.
+            siteCreationState = siteCreationState.copy(domain = siteCreationState.domain?.copy(isFree = true))
+        } else {
+            domainsRegistrationTracker.trackDomainsPurchaseDomainSuccess(isSiteCreation = true)
+        }
         siteCreationState = siteCreationState.run {
             check(result is CreatedButNotFetched.InCart)
             copy(
@@ -316,7 +330,7 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onFreeSiteCreated(site: SiteModel) {
         siteCreationState = siteCreationState.copy(result = CreatedButNotFetched.NotInLocalDb(site))
-        if (checkNotNull(siteCreationState.domain).isFree) {
+        if (siteCreationState.plan?.productSlug == "free_plan") {
             wizardManager.showNextStep()
         }
     }

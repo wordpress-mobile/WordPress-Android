@@ -13,7 +13,6 @@ import org.mockito.kotlin.isNull
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.SiteStore
@@ -79,10 +78,10 @@ class TodayWidgetBlockListViewModelTest {
         val visitors = 100
         val likes = 50
         val comments = 300
-        whenever(resourceProvider.getString(string.stats_views)).thenReturn(viewsKey)
-        whenever(resourceProvider.getString(string.stats_visitors)).thenReturn(visitorsKey)
-        whenever(resourceProvider.getString(string.likes)).thenReturn(likesKey)
-        whenever(resourceProvider.getString(string.stats_comments)).thenReturn(commentsKey)
+        whenever(resourceProvider.getString(R.string.stats_views)).thenReturn(viewsKey)
+        whenever(resourceProvider.getString(R.string.stats_visitors)).thenReturn(visitorsKey)
+        whenever(resourceProvider.getString(R.string.likes)).thenReturn(likesKey)
+        whenever(resourceProvider.getString(R.string.stats_comments)).thenReturn(commentsKey)
         whenever(store.getTodayInsights(site)).thenReturn(
             VisitsModel("2019-10-10", views, visitors, likes, 0, comments, 0)
         )

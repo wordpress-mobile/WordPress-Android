@@ -13,6 +13,8 @@ complexity:
     ignoreAnnotated: ['Composable']
   TooManyFunctions:
     active: false
+  CyclomaticComplexMethod:
+    ignoreSimpleWhenEntries: true
 
 coroutines:
   GlobalCoroutineUsage:
@@ -21,10 +23,6 @@ coroutines:
 naming:
   FunctionNaming:
     ignoreAnnotated: ['Composable']
-
-potential-bugs:
-  MissingWhenCase:
-    allowElseExpression: false
 
 style:
   DataClassShouldBeImmutable:
@@ -38,7 +36,7 @@ style:
   UnusedImports:
     active: true
   UnusedPrivateMember:
-    ignoreAnnotated: ['Composable']
+    ignoreAnnotated: ['Preview']
   WildcardImport:
     active: true
     excludeImports: []

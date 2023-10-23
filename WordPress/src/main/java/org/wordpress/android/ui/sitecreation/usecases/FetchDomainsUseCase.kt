@@ -44,7 +44,7 @@ class FetchDomainsUseCase @Inject constructor(
             vendor,
             onlyWordpressCom,
             includeWordpressCom = true,
-            includeDotBlogSubdomain = true
+            includeDotBlogSubdomain = false
         )
 
         return suspendCancellableCoroutine { cont ->

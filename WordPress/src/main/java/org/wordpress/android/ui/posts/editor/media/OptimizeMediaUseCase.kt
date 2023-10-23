@@ -44,7 +44,7 @@ class OptimizeMediaUseCase @Inject constructor(
 
     private fun optimizeMedia(mediaUri: Uri, freshlyTaken: Boolean, site: SiteModel, trackEvent: Boolean): Uri? {
         val path = mediaUtilsWrapper.getRealPathFromURI(mediaUri) ?: return null
-        val isVideo = mediaUtilsWrapper.isVideo(mediaUri.toString())
+        val isVideo = mediaUtilsWrapper.isVideo(path)
 
         /**
          * If the user enabled the optimize images feature, the image gets rotated in mediaUtils.getOptimizedMedia.

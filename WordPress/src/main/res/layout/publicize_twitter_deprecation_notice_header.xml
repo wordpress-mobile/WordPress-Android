@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/twitter_deprecation_notice_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/margin_large"
+    android:paddingEnd="@dimen/content_margin"
+    android:paddingStart="@dimen/content_margin"
+    android:paddingTop="@dimen/margin_large"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/publicize_twitter_deprecation_notice_item_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/margin_extra_small_large"
+        android:paddingTop="@dimen/margin_extra_small_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_warning">
+
+        <ImageView
+            android:id="@+id/publicize_twitter_deprecation_notice_header_icon"
+            android:layout_width="@dimen/avatar_sz_small"
+            android:layout_height="@dimen/avatar_sz_small"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:contentDescription="@null"
+            app:layout_constraintEnd_toStartOf="@+id/publicize_twitter_deprecation_notice_header_service"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
+
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/publicize_twitter_deprecation_notice_header_user"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAppearance="?attr/textAppearanceCaption"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/publicize_twitter_deprecation_notice_header_service"
+            app:layout_constraintTop_toBottomOf="@+id/publicize_twitter_deprecation_notice_header_service"
+            tools:text="text_user" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/publicize_twitter_deprecation_notice_header_service"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            app:layout_constraintBottom_toTopOf="@+id/publicize_twitter_deprecation_notice_header_user"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/publicize_twitter_deprecation_notice_header_icon"
+            app:layout_constraintTop_toTopOf="@+id/publicize_twitter_deprecation_notice_header_icon"
+            tools:text="@string/twitter" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeWarningView
+        android:id="@+id/publicize_twitter_deprecation_notice_header_warning"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

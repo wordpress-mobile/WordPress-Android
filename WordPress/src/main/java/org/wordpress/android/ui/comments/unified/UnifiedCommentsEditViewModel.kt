@@ -103,30 +103,30 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     }
 
     enum class FieldType(@StringRes val errorStringRes: Int, val isValid: (String) -> Boolean) {
-        USER_NAME(R.string.comment_edit_user_name_error, { isValidUserName(it) }),
-        USER_EMAIL(R.string.comment_edit_user_email_error, { isValidUserEmail(it) }),
-        WEB_ADDRESS(R.string.comment_edit_web_address_error, { isValidWebAddress(it) }),
-        COMMENT(R.string.comment_edit_comment_error, { isValidComment(it) });
+        USER_NAME(R.string.comment_edit_user_name_error, { Utilities.isValidUserName(it) }),
+        USER_EMAIL(R.string.comment_edit_user_email_error, { Utilities.isValidUserEmail(it) }),
+        WEB_ADDRESS(R.string.comment_edit_web_address_error, { Utilities.isValidWebAddress(it) }),
+        COMMENT(R.string.comment_edit_comment_error, { Utilities.isValidComment(it) });
 
         // This is here for testing purposes
         fun matches(expectedField: FieldType): Boolean {
             return this == expectedField
         }
 
-        companion object {
-            private fun isValidUserName(userName: String): Boolean {
+        private object Utilities {
+            fun isValidUserName(userName: String): Boolean {
                 return userName.isNotBlank()
             }
 
-            private fun isValidUserEmail(email: String): Boolean {
+            fun isValidUserEmail(email: String): Boolean {
                 return email.isBlank() || validateEmail(email)
             }
 
-            private fun isValidWebAddress(url: String): Boolean {
+            fun isValidWebAddress(url: String): Boolean {
                 return url.isBlank() || validateUrl(url)
             }
 
-            private fun isValidComment(comment: String): Boolean {
+            fun isValidComment(comment: String): Boolean {
                 return comment.isNotBlank()
             }
         }

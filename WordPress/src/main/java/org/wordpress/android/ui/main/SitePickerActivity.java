@@ -11,10 +11,10 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,6 +30,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.databinding.SitePickerActivityBinding;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -38,7 +39,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.fluxc.store.StatsStore;
-import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -49,7 +49,6 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
@@ -59,7 +58,6 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.config.WPIndividualPluginOverlayFeatureConfig;
 import org.wordpress.android.util.helpers.Debouncer;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.viewmodel.main.SitePickerViewModel;
@@ -111,21 +109,20 @@ public class SitePickerActivity extends LocaleAwareActivity
     private static final String TRACK_PROPERTY_BLOG_ID = "blog_id";
     private static final String TRACK_PROPERTY_VISIBLE = "visible";
 
-    private SitePickerAdapter mAdapter;
-    private EmptyViewRecyclerView mRecycleView;
-    private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private ActionMode mActionMode;
-    private ActionMode mReblogActionMode;
-    private MenuItem mMenuEdit;
-    private MenuItem mMenuAdd;
-    private MenuItem mMenuSearch;
-    private SearchView mSearchView;
+    @Nullable private SitePickerAdapter mAdapter;
+    @Nullable private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    @Nullable private ActionMode mActionMode;
+    @Nullable private ActionMode mReblogActionMode;
+    @Nullable private MenuItem mMenuEdit;
+    @Nullable private MenuItem mMenuAdd;
+    @Nullable private MenuItem mMenuSearch;
+    @Nullable private SearchView mSearchView;
     private int mCurrentLocalId;
-    private SitePickerMode mSitePickerMode;
-    private final Debouncer mDebouncer = new Debouncer();
-    private SitePickerViewModel mViewModel;
+    @Nullable private SitePickerMode mSitePickerMode;
+    @NonNull private final Debouncer mDebouncer = new Debouncer();
+    @Nullable private SitePickerViewModel mViewModel;
 
-    private HashSet<Integer> mSelectedPositions = new HashSet<>();
+    @NonNull private HashSet<Integer> mSelectedPositions = new HashSet<>();
     private boolean mIsInEditMode;
 
     private boolean mShowMenuEnabled = false;
@@ -138,20 +135,22 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Inject StatsStore mStatsStore;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
-    @Inject WPIndividualPluginOverlayFeatureConfig mWPIndividualPluginOverlayFeatureConfig;
+
+    @Nullable private SitePickerActivityBinding mBinding = null;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(SitePickerViewModel.class);
 
-        setContentView(R.layout.site_picker_activity);
+        mBinding = SitePickerActivityBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
         restoreSavedInstanceState(savedInstanceState);
-        setupActionBar();
-        setupRecycleView();
+        setupActionBar(mBinding);
+        setupRecycleView(mBinding);
 
-        initSwipeToRefreshHelper(findViewById(android.R.id.content));
+        mSwipeToRefreshHelper = initSwipeToRefreshHelper(mBinding);
         if (savedInstanceState != null) {
             mSwipeToRefreshHelper.setRefreshing(savedInstanceState.getBoolean(KEY_REFRESHING, false));
         } else {
@@ -163,12 +162,12 @@ public class SitePickerActivity extends LocaleAwareActivity
                 unitEvent -> unitEvent.applyIfNotHandled(action -> {
                     switch (action.getActionType()) {
                         case NAVIGATE_TO_STATE:
-                            if (!mSitePickerMode.isReblogMode()) break;
+                            if (!(mSitePickerMode != null && mSitePickerMode.isReblogMode())) break;
                             switch (((NavigateToState) action).getNavigateState()) {
                                 case TO_SITE_SELECTED:
                                     mSitePickerMode = SitePickerMode.REBLOG_CONTINUE_MODE;
                                     if (getAdapter().getIsInSearchMode()) {
-                                        disableSearchMode();
+                                        disableSearchMode(mBinding);
                                     }
 
                                     if (mReblogActionMode == null) {
@@ -176,7 +175,7 @@ public class SitePickerActivity extends LocaleAwareActivity
                                     }
 
                                     SiteRecord site = ((NavigateToState) action).getSiteForReblog();
-                                    if (site != null) {
+                                    if (site != null && mReblogActionMode != null) {
                                         mReblogActionMode.setTitle(site.getBlogNameOrHomeURL());
                                     }
                                     break;
@@ -187,12 +186,12 @@ public class SitePickerActivity extends LocaleAwareActivity
                             }
                             break;
                         case CONTINUE_REBLOG_TO:
-                            if (!mSitePickerMode.isReblogMode()) break;
+                            if (!(mSitePickerMode != null && mSitePickerMode.isReblogMode())) break;
                             SiteRecord siteToReblog = ((ContinueReblogTo) action).getSiteForReblog();
-                            selectSiteAndFinish(siteToReblog);
+                            if (siteToReblog != null) selectSiteAndFinish(siteToReblog);
                             break;
                         case ASK_FOR_SITE_SELECTION:
-                            if (!mSitePickerMode.isReblogMode()) break;
+                            if (!(mSitePickerMode != null && mSitePickerMode.isReblogMode())) break;
                             if (BuildConfig.DEBUG) {
                                 throw new IllegalStateException(
                                         "SitePickerActivity > Selected site was null while attempting to reblog"
@@ -213,7 +212,7 @@ public class SitePickerActivity extends LocaleAwareActivity
                 }));
         // If the picker is already in editing mode from previous configuration, re-enable the editing mode.
         if (mIsInEditMode) {
-            startEditingVisibility();
+            startEditingVisibility(mBinding);
         }
     }
 
@@ -224,11 +223,15 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(KEY_SITE_LOCAL_ID, mCurrentLocalId);
         outState.putBoolean(KEY_IS_IN_SEARCH_MODE, getAdapter().getIsInSearchMode());
         outState.putString(KEY_LAST_SEARCH, getAdapter().getLastSearch());
-        outState.putBoolean(KEY_REFRESHING, mSwipeToRefreshHelper.isRefreshing());
+        if (mSwipeToRefreshHelper != null) {
+            outState.putBoolean(KEY_REFRESHING, mSwipeToRefreshHelper.isRefreshing());
+        } else {
+            outState.putBoolean(KEY_REFRESHING, false);
+        }
         outState.putSerializable(KEY_SITE_PICKER_MODE, mSitePickerMode);
 
         outState.putSerializable(KEY_SELECTED_POSITIONS, getAdapter().getSelectedPositions());
@@ -240,7 +243,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.site_picker, menu);
         mMenuSearch = menu.findItem(R.id.menu_search);
@@ -250,11 +253,16 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        updateMenuItemVisibility();
-        setupSearchView();
-        return true;
+        if (mBinding != null && mMenuSearch != null) {
+            updateMenuItemVisibility();
+            mSearchView = getSearchView(mMenuSearch);
+            setupSearchView(mBinding, mMenuSearch, mSearchView);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void updateMenuItemVisibility() {
@@ -263,6 +271,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         if (getAdapter().getIsInSearchMode()
+            || mSitePickerMode == null
             || mSitePickerMode.isReblogMode()
             || mSitePickerMode.isBloggingPromptsMode()) {
             mMenuEdit.setVisible(false);
@@ -278,29 +287,31 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_DISMISSED);
             getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else if (itemId == R.id.menu_edit) {
-            AnalyticsTracker.track(Stat.SITE_SWITCHER_TOGGLED_EDIT_TAPPED,
-                    Collections.singletonMap(TRACK_PROPERTY_STATE, TRACK_PROPERTY_STATE_EDIT));
-            startEditingVisibility();
-            return true;
+            if (mBinding != null) {
+                AnalyticsTracker.track(Stat.SITE_SWITCHER_TOGGLED_EDIT_TAPPED,
+                        Collections.singletonMap(TRACK_PROPERTY_STATE, TRACK_PROPERTY_STATE_EDIT));
+                startEditingVisibility(mBinding);
+                return true;
+            }
         } else if (itemId == R.id.menu_add) {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_ADD_SITE_TAPPED);
             addSite(this, mAccountStore.hasAccessToken(), SiteCreationSource.MY_SITE);
             return true;
         } else if (itemId == R.id.continue_flow) {
-            mViewModel.onContinueFlowSelected();
+            if (mViewModel != null) mViewModel.onContinueFlowSelected();
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
@@ -312,7 +323,9 @@ public class SitePickerActivity extends LocaleAwareActivity
                         data = new Intent();
                     }
                     if (data.getBooleanExtra(KEY_SITE_CREATED_BUT_NOT_FETCHED, false)) {
-                        showSiteCreatedButNotFetchedSnackbar();
+                        if (mBinding != null) {
+                            showSiteCreatedButNotFetchedSnackbar(mBinding);
+                        }
                     } else {
                         data.putExtra(WPMainActivity.ARG_CREATE_SITE, RequestCodes.CREATE_SITE);
                         setResult(resultCode, data);
@@ -323,16 +336,14 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         // Enable the block editor on sites created on mobile
-        switch (requestCode) {
-            case RequestCodes.CREATE_SITE:
-                if (data != null) {
-                    int newSiteLocalID = data.getIntExtra(
-                            SitePickerActivity.KEY_SITE_LOCAL_ID,
-                            SelectedSiteRepository.UNAVAILABLE
-                    );
-                    SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
-                }
-                break;
+        if (requestCode == RequestCodes.CREATE_SITE) {
+            if (data != null) {
+                int newSiteLocalID = data.getIntExtra(
+                        SitePickerActivity.KEY_SITE_LOCAL_ID,
+                        SelectedSiteRepository.UNAVAILABLE
+                );
+                SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
+            }
         }
     }
 
@@ -364,7 +375,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        if (mSwipeToRefreshHelper.isRefreshing()) {
+        if (mSwipeToRefreshHelper != null && mSwipeToRefreshHelper.isRefreshing()) {
             mSwipeToRefreshHelper.setRefreshing(false);
         }
         debounceLoadSites();
@@ -378,18 +389,16 @@ public class SitePickerActivity extends LocaleAwareActivity
         }, 200, TimeUnit.MILLISECONDS);
     }
 
-    private void initSwipeToRefreshHelper(View view) {
-        if (view == null) {
-            return;
-        }
-        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-                view.findViewById(R.id.ptr_layout),
+    @NonNull
+    private SwipeToRefreshHelper initSwipeToRefreshHelper(@NonNull SitePickerActivityBinding binding) {
+        return buildSwipeToRefreshHelper(
+                binding.ptrLayout,
                 () -> {
                     if (isFinishing()) {
                         return;
                     }
-                    if (!NetworkUtils.checkConnection(SitePickerActivity.this) || !mAccountStore.hasAccessToken()) {
-                        mSwipeToRefreshHelper.setRefreshing(false);
+                    if (!NetworkUtils.checkConnection(this) || !mAccountStore.hasAccessToken()) {
+                        if (mSwipeToRefreshHelper != null) mSwipeToRefreshHelper.setRefreshing(false);
                         return;
                     }
                     mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
@@ -397,21 +406,22 @@ public class SitePickerActivity extends LocaleAwareActivity
         );
     }
 
-    private void setupRecycleView() {
-        mRecycleView = findViewById(R.id.recycler_view);
-        mRecycleView.setLayoutManager(new LinearLayoutManager(this));
-        mRecycleView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
+    private void setupRecycleView(@NonNull SitePickerActivityBinding binding) {
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
 
-        mRecycleView.setItemAnimator(mSitePickerMode.isReblogMode() ? new DefaultItemAnimator() : null);
+        binding.recyclerView.setItemAnimator(
+                (mSitePickerMode != null && mSitePickerMode.isReblogMode()) ? new DefaultItemAnimator() : null
+        );
 
-        mRecycleView.setAdapter(getAdapter());
+        binding.recyclerView.setAdapter(getAdapter());
 
-        ActionableEmptyView actionableEmptyView = findViewById(R.id.actionable_empty_view);
-        actionableEmptyView.updateLayoutForSearch(true, 0);
-        mRecycleView.setEmptyView(actionableEmptyView);
+        binding.actionableEmptyView.updateLayoutForSearch(true, 0);
+        binding.recyclerView.setEmptyView(binding.actionableEmptyView);
     }
 
-    private void restoreSavedInstanceState(Bundle savedInstanceState) {
+    @SuppressWarnings("unchecked")
+    private void restoreSavedInstanceState(@Nullable Bundle savedInstanceState) {
         boolean isInSearchMode = false;
         String lastSearch = "";
 
@@ -430,12 +440,11 @@ public class SitePickerActivity extends LocaleAwareActivity
             mSitePickerMode = (SitePickerMode) getIntent().getSerializableExtra(KEY_SITE_PICKER_MODE);
         }
 
-        setNewAdapter(lastSearch, isInSearchMode);
+        mAdapter = createNewAdapter(lastSearch, isInSearchMode);
     }
 
-    private void setupActionBar() {
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
+    private void setupActionBar(@NonNull SitePickerActivityBinding binding) {
+        setSupportActionBar(binding.toolbarMain);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
@@ -443,25 +452,27 @@ public class SitePickerActivity extends LocaleAwareActivity
             actionBar.setTitle(R.string.site_picker_title);
 
             if (mSitePickerMode == SitePickerMode.REBLOG_CONTINUE_MODE && mReblogActionMode == null) {
-                mViewModel.onRefreshReblogActionMode();
+                if (mViewModel != null) mViewModel.onRefreshReblogActionMode();
             }
         }
     }
 
     private void setIsInSearchModeAndSetNewAdapter(boolean isInSearchMode) {
         String lastSearch = getAdapter().getLastSearch();
-        setNewAdapter(lastSearch, isInSearchMode);
+        mAdapter = createNewAdapter(lastSearch, isInSearchMode);
     }
 
+    @NonNull
     private SitePickerAdapter getAdapter() {
         if (mAdapter == null) {
-            setNewAdapter("", false);
+            mAdapter = createNewAdapter("", false);
         }
         return mAdapter;
     }
 
-    private void setNewAdapter(String lastSearch, boolean isInSearchMode) {
-        mAdapter = new SitePickerAdapter(
+    @NonNull
+    private SitePickerAdapter createNewAdapter(String lastSearch, boolean isInSearchMode) {
+        SitePickerAdapter adapter = new SitePickerAdapter(
                 this,
                 R.layout.site_picker_listitem,
                 mCurrentLocalId,
@@ -470,28 +481,31 @@ public class SitePickerActivity extends LocaleAwareActivity
                 new SitePickerAdapter.OnDataLoadedListener() {
                     @Override
                     public void onBeforeLoad(boolean isEmpty) {
-                        if (isEmpty) {
-                            showProgress(true);
+                        if (mBinding != null && isEmpty) {
+                            showProgress(mBinding, true);
                         }
                     }
 
                     @Override
                     public void onAfterLoad() {
-                        showProgress(false);
-                        if (mSitePickerMode == SitePickerMode.REBLOG_CONTINUE_MODE && !isInSearchMode) {
-                            mAdapter.findAndSelect(mCurrentLocalId);
-                            int scrollPos = mAdapter.getItemPosByLocalId(mCurrentLocalId);
-                            if (scrollPos > -1 && mRecycleView != null) {
-                                mRecycleView.scrollToPosition(scrollPos);
+                        if (mBinding != null && mViewModel != null) {
+                            showProgress(mBinding, false);
+                            if (mSitePickerMode == SitePickerMode.REBLOG_CONTINUE_MODE && !isInSearchMode) {
+                                getAdapter().findAndSelect(mCurrentLocalId);
+                                int scrollPos = getAdapter().getItemPosByLocalId(mCurrentLocalId);
+                                if (scrollPos > -1) {
+                                    mBinding.recyclerView.scrollToPosition(scrollPos);
+                                }
                             }
+                            mViewModel.onSiteListLoaded();
                         }
-                        mViewModel.onSiteListLoaded();
                     }
                 },
                 mSitePickerMode,
                 mIsInEditMode);
-        mAdapter.setOnSiteClickListener(this);
-        mAdapter.setOnSelectedCountChangedListener(this);
+        adapter.setOnSiteClickListener(this);
+        adapter.setOnSelectedCountChangedListener(this);
+        return adapter;
     }
 
     private void saveSiteVisibility(SiteRecord siteRecord) {
@@ -507,22 +521,24 @@ public class SitePickerActivity extends LocaleAwareActivity
         List<SiteModel> siteList = new ArrayList<>();
         for (SiteRecord siteRecord : changeSet) {
             SiteModel siteModel = mSiteStore.getSiteByLocalId(siteRecord.getLocalId());
-            if (hiddenSites.contains(siteRecord)) {
-                if (siteRecord.getLocalId() == mCurrentLocalId) {
-                    skippedCurrentSite = true;
-                    currentSiteName = siteRecord.getBlogNameOrHomeURL();
-                    continue;
+            if (siteModel != null) {
+                if (hiddenSites.contains(siteRecord)) {
+                    if (siteRecord.getLocalId() == mCurrentLocalId) {
+                        skippedCurrentSite = true;
+                        currentSiteName = siteRecord.getBlogNameOrHomeURL();
+                        continue;
+                    }
+                    siteModel.setIsVisible(false);
+                    // Remove stats data for hidden sites
+                    mStatsStore.deleteSiteData(siteModel);
+                } else {
+                    siteModel.setIsVisible(true);
                 }
-                siteModel.setIsVisible(false);
-                // Remove stats data for hidden sites
-                mStatsStore.deleteSiteData(siteModel);
-            } else {
-                siteModel.setIsVisible(true);
+                // Save the site
+                mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
+                siteList.add(siteModel);
+                trackVisibility(Long.toString(siteModel.getSiteId()), siteModel.isVisible());
             }
-            // Save the site
-            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
-            siteList.add(siteModel);
-            trackVisibility(Long.toString(siteModel.getSiteId()), siteModel.isVisible());
         }
 
         updateVisibilityOfSitesOnRemote(siteList);
@@ -569,52 +585,63 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
     }
 
-    private void setupSearchView() {
-        mSearchView = (SearchView) mMenuSearch.getActionView();
-        mSearchView.setMaxWidth(Integer.MAX_VALUE);
+    @NonNull
+    private SearchView getSearchView(@NonNull MenuItem menuSearch) {
+        SearchView searchView = (SearchView) menuSearch.getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        return searchView;
+    }
 
-        mMenuSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+    private void setupSearchView(
+            @NonNull SitePickerActivityBinding binding,
+            @NonNull MenuItem menuSearch,
+            @NonNull SearchView searchView
+    ) {
+        menuSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                if (!getAdapter().getIsInSearchMode()) {
-                    enableSearchMode();
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
+                if (!getAdapter().getIsInSearchMode() && mMenuEdit != null && mMenuAdd != null) {
+                    enableSearchMode(binding);
                     mMenuEdit.setVisible(false);
                     mMenuAdd.setVisible(false);
 
-                    mSearchView.setOnQueryTextListener(SitePickerActivity.this);
+                    searchView.setOnQueryTextListener(SitePickerActivity.this);
                 }
 
                 return true;
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                disableSearchMode();
-                mSearchView.setOnQueryTextListener(null);
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
+                disableSearchMode(binding);
+                searchView.setOnQueryTextListener(null);
                 return true;
             }
         });
 
-        setQueryIfInSearch();
+        setQueryIfInSearch(menuSearch, searchView);
     }
 
-    private void setQueryIfInSearch() {
+    private void setQueryIfInSearch(
+            @NonNull MenuItem menuSearch,
+            @NonNull SearchView searchView
+    ) {
         if (getAdapter().getIsInSearchMode()) {
-            mMenuSearch.expandActionView();
-            mSearchView.setOnQueryTextListener(SitePickerActivity.this);
-            mSearchView.setQuery(getAdapter().getLastSearch(), true);
+            menuSearch.expandActionView();
+            searchView.setOnQueryTextListener(SitePickerActivity.this);
+            searchView.setQuery(getAdapter().getLastSearch(), true);
         }
     }
 
-    private void enableSearchMode() {
+    private void enableSearchMode(@NonNull SitePickerActivityBinding binding) {
         setIsInSearchModeAndSetNewAdapter(true);
-        mRecycleView.swapAdapter(getAdapter(), true);
+        binding.recyclerView.swapAdapter(getAdapter(), true);
     }
 
-    private void disableSearchMode() {
+    private void disableSearchMode(@NonNull SitePickerActivityBinding binding) {
         hideSoftKeyboard();
         setIsInSearchModeAndSetNewAdapter(false);
-        mRecycleView.swapAdapter(getAdapter(), true);
+        binding.recyclerView.swapAdapter(getAdapter(), true);
         invalidateOptionsMenu();
     }
 
@@ -641,10 +668,10 @@ public class SitePickerActivity extends LocaleAwareActivity
             return false;
         }
         if (site.isUsingWpComRestApi()) {
-            if (mActionMode != null) {
+            if (mBinding == null || mActionMode != null) {
                 return false;
             }
-            startEditingVisibility();
+            startEditingVisibility(mBinding);
         } else {
             showRemoveSelfHostedSiteDialog(site);
         }
@@ -654,7 +681,7 @@ public class SitePickerActivity extends LocaleAwareActivity
 
     @Override
     public void onSiteClick(SiteRecord siteRecord) {
-        if (mSitePickerMode.isReblogMode()) {
+        if (mSitePickerMode != null && mSitePickerMode.isReblogMode() && mViewModel != null) {
             mCurrentLocalId = siteRecord.getLocalId();
             mViewModel.onSiteForReblogSelected(siteRecord);
         } else if (mActionMode == null) {
@@ -663,13 +690,13 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onQueryTextSubmit(String s) {
+    public boolean onQueryTextSubmit(@NonNull String s) {
         hideSoftKeyboard();
         return true;
     }
 
     @Override
-    public boolean onQueryTextChange(String s) {
+    public boolean onQueryTextChange(@NonNull String s) {
         if (getAdapter().getIsInSearchMode()) {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_SEARCH_PERFORMED);
             getAdapter().setLastSearch(s);
@@ -678,11 +705,11 @@ public class SitePickerActivity extends LocaleAwareActivity
         return true;
     }
 
-    public void showProgress(boolean show) {
-        findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
+    public void showProgress(@NonNull SitePickerActivityBinding binding, boolean show) {
+        binding.progress.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
-    private void selectSiteAndFinish(SiteRecord siteRecord) {
+    private void selectSiteAndFinish(@NonNull SiteRecord siteRecord) {
         hideSoftKeyboard();
         AppPrefs.addRecentlyPickedSiteId(siteRecord.getLocalId());
         setResult(RESULT_OK, new Intent().putExtra(KEY_SITE_LOCAL_ID, siteRecord.getLocalId()));
@@ -696,22 +723,22 @@ public class SitePickerActivity extends LocaleAwareActivity
 
     private final class ReblogActionModeCallback implements ActionMode.Callback {
         @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        public boolean onCreateActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
             mReblogActionMode = mode;
             mode.getMenuInflater().inflate(R.menu.site_picker_reblog_action_mode, menu);
             return true;
         }
 
         @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        public boolean onPrepareActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
             return true;
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
             int itemId = item.getItemId();
 
-            if (itemId == R.id.continue_flow) {
+            if (itemId == R.id.continue_flow && mViewModel != null) {
                 mViewModel.onContinueFlowSelected();
             }
 
@@ -719,8 +746,8 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            mViewModel.onReblogActionBackSelected();
+        public void onDestroyActionMode(@NonNull ActionMode mode) {
+            if (mViewModel != null) mViewModel.onReblogActionBackSelected();
             mReblogActionMode = null;
         }
     }
@@ -730,17 +757,17 @@ public class SitePickerActivity extends LocaleAwareActivity
         private Set<SiteRecord> mChangeSet;
 
         @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            mActionMode = actionMode;
+        public boolean onCreateActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
+            mActionMode = mode;
             mHasChanges = false;
             mChangeSet = new HashSet<>();
             updateActionModeTitle();
-            actionMode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
+            mode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
             return true;
         }
 
         @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+        public boolean onPrepareActionMode(@NonNull ActionMode mode, @NonNull Menu menu) {
             MenuItem mnuShow = menu.findItem(R.id.menu_show);
             mnuShow.setEnabled(mShowMenuEnabled);
 
@@ -757,18 +784,18 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            int itemId = menuItem.getItemId();
+        public boolean onActionItemClicked(@NonNull ActionMode mode, @NonNull MenuItem item) {
+            int itemId = item.getItemId();
             if (itemId == R.id.menu_show) {
                 Set<SiteRecord> changeSet = getAdapter().setVisibilityForSelectedSites(true);
                 mChangeSet.addAll(changeSet);
                 mHasChanges = true;
-                mActionMode.finish();
+                if (mActionMode != null) mActionMode.finish();
             } else if (itemId == R.id.menu_hide) {
                 Set<SiteRecord> changeSet = getAdapter().setVisibilityForSelectedSites(false);
                 mChangeSet.addAll(changeSet);
                 mHasChanges = true;
-                mActionMode.finish();
+                if (mActionMode != null) mActionMode.finish();
             } else if (itemId == R.id.menu_select_all) {
                 getAdapter().selectAll();
             } else if (itemId == R.id.menu_deselect_all) {
@@ -778,7 +805,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
+        public void onDestroyActionMode(@NonNull ActionMode actionMode) {
             if (mHasChanges) {
                 saveSitesVisibility(mChangeSet);
             }
@@ -806,6 +833,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
     }
 
+    @SuppressWarnings("deprecation")
     private static void showAddSiteDialog(Activity activity, SiteCreationSource source) {
         DialogFragment dialog = new AddSiteDialog();
         Bundle args = new Bundle();
@@ -818,12 +846,14 @@ public class SitePickerActivity extends LocaleAwareActivity
      * dialog which appears after user taps "Add site" - enables choosing whether to create
      * a new wp.com blog or add an existing self-hosted one
      */
+    @SuppressWarnings("deprecation")
     public static class AddSiteDialog extends DialogFragment {
         static final String ADD_SITE_DIALOG_TAG = "add_site_dialog";
 
         @NonNull
         @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
+        @SuppressWarnings("deprecation")
+        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
             SiteCreationSource source =
                     SiteCreationSource.fromString(getArguments().getString(ARG_SITE_CREATION_SOURCE));
             CharSequence[] items =
@@ -846,8 +876,8 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
     }
 
-    private void startEditingVisibility() {
-        mRecycleView.setItemAnimator(new DefaultItemAnimator());
+    private void startEditingVisibility(@NonNull SitePickerActivityBinding binding) {
+        binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
         getAdapter().setEnableEditMode(true, mSelectedPositions);
         startSupportActionMode(new ActionModeCallback());
         mIsInEditMode = true;
@@ -864,11 +894,11 @@ public class SitePickerActivity extends LocaleAwareActivity
         dialogBuilder.create().show();
     }
 
-    private void showSiteCreatedButNotFetchedSnackbar() {
+    private void showSiteCreatedButNotFetchedSnackbar(@NonNull SitePickerActivityBinding binding) {
         int duration = AccessibilityUtils
                 .getSnackbarDuration(this, getResources().getInteger(R.integer.site_creation_snackbar_duration));
         String message = getString(R.string.site_created_but_not_fetched_snackbar_message);
-        WPDialogSnackbar.make(findViewById(R.id.coordinatorLayout), message, duration).show();
+        WPDialogSnackbar.make(binding.coordinatorLayout, message, duration).show();
     }
 
     private void trackVisibility(String blogId, boolean isVisible) {

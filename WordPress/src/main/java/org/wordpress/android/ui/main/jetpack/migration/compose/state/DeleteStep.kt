@@ -37,7 +37,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.ScreenIcon
 
 @Composable
-fun DeleteStep(uiState: UiState.Content.Delete) = with(uiState) {
+fun DeleteStep(uiState: UiState.Content.Delete): Unit = with(uiState) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {

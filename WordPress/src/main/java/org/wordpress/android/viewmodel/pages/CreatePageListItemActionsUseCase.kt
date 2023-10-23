@@ -2,7 +2,6 @@ package org.wordpress.android.viewmodel.pages
 
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
@@ -26,7 +25,7 @@ import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostU
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadWaitingForConnection
 import javax.inject.Inject
 
-class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeatureUtils: BlazeFeatureUtils) {
+class CreatePageListItemActionsUseCase @Inject constructor() {
     @SuppressWarnings("ReturnCount")
     fun setupPageActions(
         listType: PageListType,
@@ -101,7 +100,7 @@ class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeat
                 add(CANCEL_AUTO_UPLOAD)
             }
 
-            if (isPageEligibleForBlaze && blazeFeatureUtils.isBlazeEnabled()) {
+            if (isPageEligibleForBlaze) {
                 add(PROMOTE_WITH_BLAZE)
             }
         }

@@ -108,7 +108,8 @@
                 android:contentDescription="@string/fab_create_desc"
                 android:src="@drawable/ic_create_white_24dp"
                 android:visibility="gone"
-                app:borderWidth="0dp" />
+                app:borderWidth="0dp"
+                tools:visibility="visible"/>
         </FrameLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

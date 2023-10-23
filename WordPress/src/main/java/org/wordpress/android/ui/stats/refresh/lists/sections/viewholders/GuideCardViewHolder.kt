@@ -10,11 +10,11 @@ import android.text.style.ClickableSpan
 import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
-import org.wordpress.android.R
 import org.wordpress.android.databinding.StatsBlockListGuideCardBinding
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemGuideCard
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.viewBinding
+import com.google.android.material.R as MaterialR
 
 class GuideCardViewHolder(
     val parent: ViewGroup,
@@ -50,7 +50,7 @@ private fun SpannableString.withClickableSpan(
         }
 
         override fun updateDrawState(ds: TextPaint) {
-            ds.color = context.getColorFromAttribute(R.attr.colorPrimary)
+            ds.color = context.getColorFromAttribute(MaterialR.attr.colorPrimary)
             ds.typeface = Typeface.create(
                 Typeface.DEFAULT_BOLD,
                 Typeface.NORMAL

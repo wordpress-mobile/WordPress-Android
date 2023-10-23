@@ -5,6 +5,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -12,9 +13,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
+import com.google.android.material.R as MaterialR
 
 @Composable
 fun PluginDescription(
@@ -26,10 +27,14 @@ fun PluginDescription(
     Text(
         modifier = modifier,
         text = buildPluginDescriptionText(pluginNames, siteString, useConciseText),
-        fontSize = 17.sp,
-        style = TextStyle(letterSpacing = (-0.01).sp),
+        style = dashboardCardDetail,
+        color = colorResource(MaterialR.color.material_on_surface_emphasis_medium)
     )
 }
+
+val dashboardCardDetail = TextStyle(
+        fontWeight = FontWeight.Normal,
+)
 
 @ReadOnlyComposable
 @Composable

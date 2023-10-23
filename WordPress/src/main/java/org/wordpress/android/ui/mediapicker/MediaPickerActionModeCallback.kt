@@ -19,12 +19,11 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 
 class MediaPickerActionModeCallback(private val viewModel: MediaPickerViewModel) : Callback,
     LifecycleOwner {
-    private lateinit var lifecycleRegistry: LifecycleRegistry
+    private val lifecycleRegistry = LifecycleRegistry(this)
     override fun onCreateActionMode(
         actionMode: ActionMode,
         menu: Menu
     ): Boolean {
-        lifecycleRegistry = LifecycleRegistry(this)
         lifecycleRegistry.handleLifecycleEvent(ON_START)
         val inflater = actionMode.menuInflater
         inflater.inflate(R.menu.photo_picker_action_mode, menu)
@@ -71,7 +70,7 @@ class MediaPickerActionModeCallback(private val viewModel: MediaPickerViewModel)
         return true
     }
 
-    override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         return false
     }
 
@@ -98,5 +97,5 @@ class MediaPickerActionModeCallback(private val viewModel: MediaPickerViewModel)
         lifecycleRegistry.handleLifecycleEvent(ON_STOP)
     }
 
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+    override val lifecycle: Lifecycle = lifecycleRegistry
 }

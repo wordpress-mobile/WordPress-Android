@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_extra_medium_large"
                     android:text="@string/wp_jetpack_powered_better_with_jetpack"
-                    android:textSize="@dimen/m3_sys_typescale_headline_large_text_size"
+                    android:textSize="@dimen/text_sz_extra_extra_large"
                     android:textAlignment="viewStart"
                     android:textFontWeight="700"
                     app:layout_constraintTop_toBottomOf="@id/illustration_view"

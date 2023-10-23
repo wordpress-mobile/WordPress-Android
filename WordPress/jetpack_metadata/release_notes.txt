@@ -1,4 +1,2 @@
-- Added warning message for when push notifications are turned off
-- Updated media access permissions to align with Android 13 update
-- Added card to dashboard for purchasing custom domains
-- Added other users’ responses to blogging prompts
+We’ve made some visual changes to the reader, including feed cards, headers, buttons, recommendations, and more.
+In the block editor, you can now split or exit a formatted block by pressing the “enter” key three times. The left-hand border is always visible for quote blocks, too.

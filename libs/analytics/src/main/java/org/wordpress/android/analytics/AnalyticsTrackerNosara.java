@@ -419,18 +419,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST:
                 predefinedEventProperties.put("source", "opening_reader_post");
                 break;
-            case QUICK_ACTION_STATS_TAPPED:
-                predefinedEventProperties.put("button", "stats");
-                break;
-            case QUICK_ACTION_PAGES_TAPPED:
-                predefinedEventProperties.put("button", "pages");
-                break;
-            case QUICK_ACTION_POSTS_TAPPED:
-                predefinedEventProperties.put("button", "posts");
-                break;
-            case QUICK_ACTION_MEDIA_TAPPED:
-                predefinedEventProperties.put("button", "media");
-                break;
             case QUICK_LINK_RIBBON_PAGES_TAPPED:
                 predefinedEventProperties.put("button", "pages");
                 break;
@@ -995,6 +983,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_menu_opened";
             case OPENED_MEDIA_LIBRARY:
                 return "site_menu_opened";
+            case OPENED_QUICK_LINK_RIBBON_MORE:
+                return "site_menu_opened";
             case OPENED_BLOG_SETTINGS:
                 return "site_menu_opened";
             case OPENED_ACCOUNT_SETTINGS:
@@ -1037,6 +1027,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 // This stat is part of a funnel that provides critical information.  Before
                 // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 return "account_created";
+            case CLOSE_ACCOUNT_FAILED:
+                return "close_account_failed";
+            case CLOSED_ACCOUNT:
+                return "closed_account";
             case SHARED_ITEM:
                 return "item_shared";
             case SHARED_ITEM_READER:
@@ -1315,6 +1309,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_pages_options_pressed";
             case PAGES_SEARCH_ACCESSED:
                 return "site_pages_search_accessed";
+            case PAGES_EDIT_HOMEPAGE_INFO_PRESSED:
+                return "site_pages_edit_homepage_info_pressed";
+            case PAGES_EDIT_HOMEPAGE_ITEM_PRESSED:
+                return "site_pages_edit_homepage_item_pressed";
             case SIGNUP_BUTTON_TAPPED:
                 // This stat is part of a funnel that provides critical information.  Before
                 // making ANY modification to this stat please refer to: p4qSXL-35X-p2
@@ -1389,8 +1387,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_accessed";
             case ENHANCED_SITE_CREATION_DOMAINS_ACCESSED:
                 return "enhanced_site_creation_domains_accessed";
-            case ENHANCED_SITE_CREATION_DOMAIN_PURCHASING_EXPERIMENT:
-                return "enhanced_site_creation_domain_purchasing_experiment";
             case ENHANCED_SITE_CREATION_DOMAINS_SELECTED:
                 return "enhanced_site_creation_domains_selected";
             case ENHANCED_SITE_CREATION_SUCCESS_LOADING:
@@ -1799,6 +1795,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "support_identity_set";
             case SUPPORT_OPEN_MOBILE_FORUM_TAPPED:
                 return "support_open_mobile_forum_tapped";
+            case SUPPORT_CHATBOT_STARTED:
+                return "support_chatbot_started";
+            case SUPPORT_CHATBOT_USER_SUBMITS_MESSAGE:
+                return "support_chatbot_user_submits_message";
+            case SUPPORT_CHATBOT_TOPIC:
+                return "support_chatbot_topic";
+            case SUPPORT_CHATBOT_WEBVIEW_ERROR:
+                return "support_chatbot_webview_error";
+            case SUPPORT_CHATBOT_TICKET_SUCCESS:
+                return "support_chatbot_ticket_success";
+            case SUPPORT_CHATBOT_TICKET_FAILURE:
+                return "support_chatbot_ticket_failure";
+            case SUPPORT_CHATBOT_ENDED:
+                return "support_chatbot_ended";
             case QUICK_START_TASK_DIALOG_VIEWED:
                 return "quick_start_task_dialog_viewed";
             case QUICK_START_STARTED:
@@ -1917,6 +1927,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domain_credit_suggestion_queried";
             case DOMAIN_CREDIT_NAME_SELECTED:
                 return "domain_credit_name_selected";
+            case DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN:
+                return "domain_management_my_domains_screen_shown";
             case DOMAINS_DASHBOARD_VIEWED:
                 return "domains_dashboard_viewed";
             case DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED:
@@ -1933,14 +1945,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domains_purchase_webview_viewed";
             case DOMAINS_PURCHASE_DOMAIN_SUCCESS:
                 return "domains_purchase_domain_success";
-            case QUICK_ACTION_STATS_TAPPED:
-            case QUICK_ACTION_PAGES_TAPPED:
-            case QUICK_ACTION_POSTS_TAPPED:
-            case QUICK_ACTION_MEDIA_TAPPED:
-                return "quick_action_tapped";
             case QUICK_LINK_RIBBON_PAGES_TAPPED:
             case QUICK_LINK_RIBBON_POSTS_TAPPED:
             case QUICK_LINK_RIBBON_MEDIA_TAPPED:
+            case QUICK_LINK_RIBBON_MORE_TAPPED:
             case QUICK_LINK_RIBBON_STATS_TAPPED:
                 return "quick_action_ribbon_tapped";
             case AUTO_UPLOAD_POST_INVOKED:
@@ -2547,6 +2555,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blaze_entry_point_tapped";
             case BLAZE_ENTRY_POINT_MENU_ACCESSED:
                 return "blaze_entry_point_menu_accessed";
+            case BLAZE_ENTRY_POINT_LEARN_MORE_TAPPED:
+                return "blaze_entry_point_learn_more_tapped";
             case BLAZE_ENTRY_POINT_HIDE_TAPPED:
                 return "blaze_entry_point_hide_tapped";
             case BLAZE_FEATURE_OVERLAY_DISPLAYED:
@@ -2563,20 +2573,68 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blaze_flow_canceled";
             case BLAZE_FLOW_ERROR:
                 return "blaze_flow_error";
+            case BLAZE_CAMPAIGN_LISTING_PAGE_SHOWN:
+                return "blaze_campaign_list_opened";
+            case BLAZE_CAMPAIGN_DETAIL_PAGE_OPENED:
+                return "blaze_campaign_details_opened";
             case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_SHOWN:
                 return "wp_individual_site_overlay_viewed";
             case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_DISMISSED:
                 return "wp_individual_site_overlay_dismissed";
             case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_PRIMARY_TAPPED:
                 return "wp_individual_site_overlay_primary_tapped";
-            case DASHBOARD_CARD_DOMAIN_SHOWN:
-                return "direct_domains_purchase_dashboard_card_shown";
-            case DASHBOARD_CARD_DOMAIN_TAPPED:
-                return "direct_domains_purchase_dashboard_card_tapped";
-            case DASHBOARD_CARD_DOMAIN_MORE_MENU_TAPPED:
-                return "direct_domains_purchase_dashboard_card_menu_tapped";
-            case DASHBOARD_CARD_DOMAIN_HIDDEN:
-                return "direct_domains_purchase_dashboard_card_hidden";
+            case DASHBOARD_CARD_PLANS_SHOWN:
+                return "free_to_paid_plan_dashboard_card_shown";
+            case DASHBOARD_CARD_PLANS_TAPPED:
+                return "free_to_paid_plan_dashboard_card_tapped";
+            case DASHBOARD_CARD_PLANS_MORE_MENU_TAPPED:
+                return "free_to_paid_plan_dashboard_card_menu_tapped";
+            case DASHBOARD_CARD_PLANS_HIDDEN:
+                return "free_to_paid_plan_dashboard_card_hidden";
+            case TWITTER_NOTICE_LINK_TAPPED:
+                return "twitter_notice_link_tapped";
+            case DASHBOARD_CARD_DOMAIN_TRANSFER_SHOWN:
+                return "dashboard_card_domain_transfer_shown";
+            case DASHBOARD_CARD_DOMAIN_TRANSFER_TAPPED:
+                return "dashboard_card_domain_transfer_tapped";
+            case DASHBOARD_CARD_DOMAIN_TRANSFER_MORE_MENU_TAPPED:
+                return "dashboard_card_domain_transfer_more_menu_tapped";
+            case DASHBOARD_CARD_DOMAIN_TRANSFER_HIDDEN:
+                return "dashboard_card_domain_transfer_hidden";
+            case JETPACK_SOCIAL_AUTO_SHARING_CONNECTION_TOGGLED:
+                return "jetpack_social_auto_sharing_connection_toggled";
+            case JETPACK_SOCIAL_SHARE_LIMIT_DISPLAYED:
+                return "jetpack_social_share_limit_displayed";
+            case JETPACK_SOCIAL_UPGRADE_LINK_TAPPED:
+                return "jetpack_social_upgrade_link_tapped";
+            case JETPACK_SOCIAL_ADD_CONNECTION_CTA_DISPLAYED:
+                return "jetpack_social_add_connection_cta_displayed";
+            case JETPACK_SOCIAL_ADD_CONNECTION_TAPPED:
+                return "jetpack_social_add_connection_tapped";
+            case JETPACK_SOCIAL_ADD_CONNECTION_DISMISSED:
+                return "jetpack_social_add_connection_dismissed";
+            case MY_SITE_DASHBOARD_CARD_MENU_ITEM_TAPPED:
+                return "my_site_dashboard_card_menu_item_tapped";
+            case MY_SITE_DASHBOARD_CONTEXTUAL_MENU_ACCESSED:
+                return "my_site_dashboard_contextual_menu_accessed";
+            case PERSONALIZATION_SCREEN_CARD_HIDE_TAPPED:
+                return "personalization_screen_card_hide_tapped";
+            case PERSONALIZATION_SCREEN_CARD_SHOW_TAPPED:
+                return "personalization_screen_card_show_tapped";
+            case PERSONALIZATION_SCREEN_SHORTCUT_HIDE_QUICK_LINK_TAPPED:
+                return "personalization_screen_shortcut_hide_quick_link_tapped";
+            case PERSONALIZATION_SCREEN_SHORTCUT_SHOW_QUICK_LINK_TAPPED:
+                return "personalization_screen_shortcut_show_quick_link_tapped";
+            case MORE_MENU_ITEM_TAPPED:
+                return "more_menu_item_tapped";
+            case QUICK_LINK_ITEM_TAPPED:
+                return "quick_link_item_tapped";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_SHOWN:
+                return "domain_management_purchase_domain_screen_shown";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED:
+                return "domain_management_purchase_domain_screen_new_domain_tapped";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED:
+                return "domain_management_purchase_domain_screen_existing_domain_tapped";
         }
         return null;
     }

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-08-22 17:29:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.11
 Language: es_VE
 -->
 <resources>
@@ -246,7 +246,6 @@ Language: es_VE
     <string name="my_site_menu_tab_title">Menú</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Tu búsqueda incluye caracteres no compatibles en los dominios de WordPress.com. Se permiten los siguientes caracteres: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Comprueba tu conexión a Internet y actualiza la página.</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Ir a las estadísticas</string>
     <string name="my_site_todays_stat_card_title">Estadísticas de hoy</string>
     <string name="error_edit_notification">Ha ocurrido un error al actualizar el contenido del aviso</string>
     <string name="reader_comment_menu_edit">Editar</string>
@@ -257,8 +256,6 @@ Language: es_VE
     <string name="gutenberg_native_tiled_gallery_settings">Ajustes de la galería de mosaico</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navega a la pantalla de selección del diseño</string>
     <string name="gutenberg_native_gallery_style">Estilo de la galería</string>
-    <string name="sharing_facebook_warning_positive_button">Ir a la web</string>
-    <string name="sharing_facebook_warning_message">Puedes conectar tu cuenta de Facebook en la web de WordPress.com. Cuando lo hayas hecho, vuelve a la aplicación de WordPress para cambiar tus ajustes para compartir.</string>
     <string name="about_automattic_app_icon_description">Icono de la aplicación</string>
     <string name="about_automattic_back_icon_description">Icono de volver</string>
     <string name="about_automattic_logo_description">Logotipo de Automattic</string>
@@ -317,8 +314,6 @@ Language: es_VE
     <string name="gutenberg_native_featured_image">Imagen destacada</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Copiar la URL desde el portapapeles, %s</string>
     <string name="me_btn_about">Acerca de WordPress</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Ir a las entradas programadas</string>
-    <string name="my_site_post_card_link_go_to_drafts">Ir a los borradores</string>
     <string name="my_site_post_card_link_create_post">Crear una entrada</string>
     <string name="my_site_create_next_post_excerpt">¡Publicar regularmente ayuda a crear tu audiencia!</string>
     <string name="my_site_create_next_post_title">Crear tu próxima entrada</string>
@@ -337,8 +332,6 @@ Language: es_VE
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis el primer año &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /año&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Tus dominios redirigirán tu sitio a %s</string>
     <string name="gutenberg_native_create_link">Crear un enlace</string>
-    <string name="domain_registration_result_description">Tu nuevo dominio &lt;b&gt;%s&lt;/b&gt; está siendo configurando. Tu dominio puede tardar hasta 30 minutos en empezar a funcionar.</string>
-    <string name="domain_registration_result_title">¡Felicidades por tu compra!</string>
     <string name="domains_suggestions_select_domain">Seleccionar el dominio</string>
     <string name="domains_title">Dominios</string>
     <string name="post_status_sticky">Fija</string>
@@ -551,6 +544,7 @@ Language: es_VE
     <string name="gutenberg_native_one">Uno</string>
     <string name="gutenberg_native_no_preview_available">Vista previa no disponible</string>
     <string name="gutenberg_native_text_color">Color del texto</string>
+    <string name="gutenberg_native_s_link">Enlace %s</string>
     <string name="gutenberg_native_padding">Relleno</string>
     <string name="gutenberg_native_four">Cuatro</string>
     <string name="gutenberg_native_featured">Destacado</string>
@@ -614,7 +608,6 @@ Language: es_VE
     <string name="new_site_creation_search_domain_input_hint">Teclea un nombre para tu sitio</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Se han completado todas las tareas&lt;/b&gt;&lt;br/&gt;Has llegado a más gente. ¡Buen trabajo!</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Se han completado todas las tareas&lt;/b&gt;&lt;br/&gt;Has personalizado tu sitio. ¡Bien hecho!</string>
-    <string name="quick_start_card_menu_hide">Ocultar por ahora</string>
     <string name="magic_link_not_meaning_to_create_account">¿No querías crear una nueva cuenta? Vuelve atrás y vuelve a introducir tu dirección de correo electrónico.</string>
     <string name="invite_links_disable_dialog_message">Una vez desactivado el enlace de invitación, nadie podrá usarlo para unirse a tu equipo. ¿Seguro que deseas continuar?</string>
     <string name="invite_links_disable_dialog_title">Desactivar enlace de invitación</string>
@@ -637,7 +630,6 @@ Language: es_VE
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Exploración finalizada&lt;/b&gt;&lt;br&gt;No se han encontrado amenazas potenciales</string>
     <string name="scan_fixing_threats_title_singular">Corrigiendo la amenaza</string>
     <string name="disable">Desactivar</string>
-    <string name="quick_start_card_menu_unpin">Desanclar</string>
     <string name="quick_start_list_review_pages_subtitle">Revisa tus páginas y haz cambios, o añade o elimina páginas.</string>
     <string name="quick_start_list_view_site_title">Ve tu sitio</string>
     <string name="quick_start_list_follow_site_subtitle">Descubre y sigue sitios que te inspiren.</string>
@@ -678,7 +670,6 @@ Language: es_VE
     <string name="gutenberg_native_audio_file">archivo de audio</string>
     <string name="gutenberg_native_audio_caption_s">Leyenda del audio. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Leyenda del audio. Vacía</string>
-    <string name="gutenberg_native_add_audio">AÑADIR AUDIO</string>
     <string name="continue_with_wpcom">Accede o regístrate con WordPress.com</string>
     <string name="photo_picker_use_audio">Usasr este audio</string>
     <string name="photo_picker_choose_audio">Elige un audio del dispositivo</string>
@@ -733,8 +724,6 @@ Language: es_VE
     <string name="backup_download_complete_failed_title">La descarga ha fallado</string>
     <string name="web_preview_tablet">Tableta</string>
     <string name="web_preview_mobile">Dispositivos móviles</string>
-    <string name="quick_start_card_menu_remove">No mostrar de nuevo</string>
-    <string name="quick_start_card_menu_pin">Anclar</string>
     <string name="quick_start_dialog_review_pages_message_short">Selecciona %1$s Páginas %2$s para ver tu lista de páginas.</string>
     <string name="quick_start_dialog_review_pages_message">Cambia, añade o elimina páginas en tu sitio.</string>
     <string name="quick_start_dialog_review_pages_title">Revisar las páginas del sitio</string>
@@ -881,9 +870,7 @@ Language: es_VE
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Fallo al guardar los medios.\nPor favor, toca para ver las opciones.</string>
     <string name="gutenberg_native_edit_file">Editar el archivo</string>
     <string name="gutenberg_native_copy_file_url">Copiar la URL del archivo </string>
-    <string name="gutenberg_native_choose_a_file">ELEGIR UN ARCHIVO</string>
     <string name="new_site_creation_domain_header_title">Elige un dominio</string>
-    <string name="my_site_btn_jetpack_settings">Ajustes de Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Siguiendo la conversación por correo electrónico</string>
     <string name="reader_btn_follow_comments">Seguir la conversación por correo electrónico</string>
@@ -1444,11 +1431,8 @@ Language: es_VE
     <string name="gutenberg_native_choose_from_device">Elegir desde el dispositivo</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ha ocurrido un error desconocido. Por favor, inténtalo de nuevo.</string>
     <string name="gutenberg_native_alt_text">Texto alternativo</string>
-    <string name="gutenberg_native_add_video">AÑADIR UN VÍDEO</string>
     <string name="gutenberg_native_add_url">Añadir la URL</string>
     <string name="gutenberg_native_add_alt_text">Añadir el texto alternativo</string>
-    <string name="gutenberg_native_add_image_or_video">AÑADIR UNA IMAGEN O UN VÍDEO</string>
-    <string name="gutenberg_native_add_image">AÑADIR UNA IMAGEN</string>
     <string name="gutenberg_native_add_block_here">AÑADIR EL BLOQUE AQUÍ</string>
     <string name="reader_empty_saved_posts_content_description">Toca el botón «Añadir a las entradas guardadas» para guardar una entrada en tu lista.</string>
     <string name="reader_acessibility_list_loaded">La lista se ha cargado con %1$d elementos.</string>
@@ -1737,9 +1721,6 @@ Language: es_VE
     <string name="quick_start_dialog_enable_sharing_message">Comparte automáticamente las nuevas entradas en tus cuentas de medios sociales.</string>
     <string name="quick_start_dialog_check_stats_title">Revisa las estadísticas de tu sitio</string>
     <string name="quick_start_dialog_check_stats_message">Mantente al día sobre el rendimiento de tu sitio.</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Eliminar los siguientes pasos ocultará todas las visitas guiadas de este sitio. Esta acción es irreversible.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Quitar los siguientes pasos</string>
-    <string name="quick_start_remove_next_steps_menu_title">Quitar esto</string>
     <string name="quick_start_task_skip_menu_title">Saltar tarea</string>
     <string name="notification_channel_reminder_title">Recordatorio</string>
     <string name="stats_select_next_period_description">Elige el siguiente periodo</string>
@@ -1901,7 +1882,6 @@ Language: es_VE
     <string name="quick_start_dialog_view_site_title">Ver tu sitio</string>
     <string name="quick_start_dialog_view_site_message">Previsualiza tu sitio para ver lo que verán tus visitantes.</string>
     <string name="quick_start_dialog_share_site_title">Comparte tu sitio</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Toca en %1$s Compartir %2$s para continuar</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Toca en %1$s Conexiones %2$s para añadir tus cuentas de medios sociales</string>
     <string name="quick_start_dialog_share_site_message">Conecta a tus cuentas de medios sociales - tu sitio compartirá automáticamente las nuevas entradas.</string>
     <string name="quick_start_dialog_publish_post_title">Publica una entrada</string>
@@ -2125,8 +2105,6 @@ Language: es_VE
     <string name="permissions_denied_message">Parece que has desactivado los permisos necesarios para esta característica.&lt;br/&gt;&lt;br/&gt;Para cambiarlo, edita tus permisos y asegúrate de que &lt;strong&gt;%s&lt;/strong&gt; está activado.</string>
     <string name="permissions_denied_title">Permisos</string>
     <string name="plugin_caption_featured">Destacados</string>
-    <string name="sharing_disabled_description">No puedes acceder a tus ajustes para compartir porque tu módulo de compartir de Jetpack está desactivado.</string>
-    <string name="sharing_disabled">Módulo para compartir desactivado.</string>
     <string name="version_with_name_param">Versión %s</string>
     <string name="notification_sound_has_invalid_path">El sonido escogido tiene una ruta incorrecta. Por favor, elige uno distinto.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
@@ -2335,7 +2313,6 @@ Language: es_VE
     <string name="share_intent_pick_site">Elige el sitio</string>
     <string name="share_action_media">Añadir a la biblioteca de medios</string>
     <string name="share_action_post">Añadir a una nueva entrada</string>
-    <string name="share_media_permission_required">Se requieren permisos para compartir imágenes o videos</string>
     <string name="invalid_ip_or_range">IP o rango de IP no válido</string>
     <string name="deleting_media_dlg">Eliminando</string>
     <string name="confirm_delete_media_video">¿Borrar este video?</string>
@@ -2515,11 +2492,9 @@ Language: es_VE
     <string name="connection_service_description">Conéctate para compartir automáticamente las entradas de tu blog en %s</string>
     <string name="connected_accounts_label">Cuentas conectadas</string>
     <string name="connections_description">Conecta con tus servicios de medios sociales favoritos para compartir automáticamente las nuevas entradas con tus amigos.</string>
-    <string name="sharing">Compartir</string>
     <string name="tabbar_accessibility_label_notifications">Avisos. Gestiona tus avisos.</string>
     <string name="tabbar_accessibility_label_reader">Lector. Sigue contenido de otros sitios.</string>
     <string name="tabbar_accessibility_label_my_site">Mi sitio. Ve tu sitio y gestiónalo, estadísticas incluidas.</string>
-    <string name="my_site_btn_sharing">Compartir</string>
     <string name="button_not_now">Ahora no</string>
     <string name="media_error_internal_server_error">Error en la subida. Trata de cambiar la optimización de imágenes en los ajustes de tu aplicación</string>
     <string name="media_downloading">Guardando medios en este dispositivo</string>
@@ -3125,9 +3100,6 @@ Language: es_VE
     <string name="add_new_category">Añadir nueva categoría</string>
     <string name="view_in_browser">Ver en el navegador</string>
     <string name="remove_account">Eliminar sitio</string>
-    <string name="toast_comment_unedited">El comentario no ha cambiado</string>
-    <string name="content_required">Comentario obligatorio</string>
-    <string name="sure_to_cancel_edit_comment">¿Cancelar la edición de este comentario?</string>
     <string name="saving_changes">Guardando cambios</string>
     <string name="trash">Papelera</string>
     <string name="dlg_confirm_trash_comments">¿Enviar a la papelera?</string>
@@ -3155,7 +3127,6 @@ Language: es_VE
     <string name="learn_more">Aprender más</string>
     <string name="post_not_found">Ocurrió un error al cargar la entrada. Actualiza tus entradas e intenta nuevamente.</string>
     <string name="plugin_not_found">Ocurrió un error al acceder a este plugin</string>
-    <string name="cancel_edit">Cancelar edición</string>
     <string name="connection_error">Error de conexión</string>
     <string name="select_categories">Seleccionar categorías</string>
     <string name="share_link">Compartir enlace</string>

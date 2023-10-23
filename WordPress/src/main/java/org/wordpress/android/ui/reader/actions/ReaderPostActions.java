@@ -141,7 +141,7 @@ public class ReaderPostActions {
      * get the latest version of this post - note that the post is only considered changed if the
      * like/comment count has changed, or if the current user's like/follow status has changed
      */
-    public static void updatePost(final ReaderPost localPost,
+    public static void updatePost(@NonNull final ReaderPost localPost,
                                   final UpdateResultListener resultListener) {
         String path = "read/sites/" + localPost.blogId + "/posts/" + localPost.postId + "/?meta=site,likes";
 
@@ -164,7 +164,7 @@ public class ReaderPostActions {
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
-    private static void handleUpdatePostResponse(final ReaderPost localPost,
+    private static void handleUpdatePostResponse(@NonNull final ReaderPost localPost,
                                                  final JSONObject jsonObject,
                                                  final UpdateResultListener resultListener) {
         if (jsonObject == null) {

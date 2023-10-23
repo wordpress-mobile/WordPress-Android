@@ -82,7 +82,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPermissionUtils;
-import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 
 import java.util.ArrayList;
@@ -139,7 +138,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject FollowedBlogsProvider mFollowedBlogsProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject UiHelpers mUiHelpers;
 
@@ -149,7 +147,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     private static final String BLOGGING_REMINDERS_BOTTOM_SHEET_TAG = "blogging-reminders-dialog-tag";
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -227,6 +225,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         initBloggingReminders();
     }
 
+    @Override public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        PreferenceScreen otherBlogsScreen = (PreferenceScreen) findPreference(
+                getString(R.string.pref_notification_other_blogs));
+        addToolbarToDialog(otherBlogsScreen);
+    }
+
     private void addJetpackBadgeAsFooterIfEnabled(ListView listView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             final JetpackPoweredScreen screen = JetpackPoweredScreen.WithDynamicText.NOTIFICATIONS_SETTINGS;
@@ -274,7 +279,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.notifications_settings, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_notifications_settings_search);
@@ -306,7 +311,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
         mSearchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
                 mSearchMenuItemCollapsed = false;
                 configureBlogsSettings(mBlogsCategory, true);
                 configureFollowedBlogsSettings(mFollowedBlogsCategory, true);
@@ -314,7 +319,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 mSearchMenuItemCollapsed = true;
                 configureBlogsSettings(mBlogsCategory, false);
                 configureFollowedBlogsSettings(mFollowedBlogsCategory, false);
@@ -942,17 +947,21 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         super.onPreferenceTreeClick(preferenceScreen, preference);
 
         if (preference instanceof PreferenceScreen) {
-            Dialog prefDialog = ((PreferenceScreen) preference).getDialog();
-            if (prefDialog != null) {
-                String title = String.valueOf(preference.getTitle());
-                WPActivityUtils.addToolbarToDialog(this, prefDialog, title);
-            }
+            addToolbarToDialog(preference);
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_STREAMS_OPENED);
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_DETAILS_OPENED);
         }
 
         return false;
+    }
+
+    private void addToolbarToDialog(Preference preference) {
+        Dialog prefDialog = ((PreferenceScreen) preference).getDialog();
+        if (prefDialog != null) {
+            String title = String.valueOf(preference.getTitle());
+            WPActivityUtils.addToolbarToDialog(this, prefDialog, title);
+        }
     }
 
     @Override
@@ -996,10 +1005,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     }
 
     private final BloggingRemindersProvider mBloggingRemindersProvider = new BloggingRemindersProvider() {
-        @Override public boolean isEnabled() {
-            return mBloggingRemindersFeatureConfig.isEnabled();
-        }
-
         @Override public String getSummary(long blogId) {
             UiString uiString = mBloggingRemindersSummariesBySiteId.get(blogId);
             return uiString != null ? mUiHelpers.getTextOfUiString(getContext(), uiString).toString() : null;

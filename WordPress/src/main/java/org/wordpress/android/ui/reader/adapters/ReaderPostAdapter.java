@@ -17,7 +17,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -39,10 +38,12 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState;
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder;
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
+import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostNewViewHolder;
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
@@ -57,12 +58,13 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -126,6 +128,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Inject ReaderPostUiStateBuilder mReaderPostUiStateBuilder;
     @Inject ReaderPostMoreButtonUiStateBuilder mReaderPostMoreButtonUiStateBuilder;
     @Inject ReaderTracker mReaderTracker;
+    @Inject ReaderImprovementsFeatureConfig mReaderImprovementsFeatureConfig;
 
     public String getSource() {
         return mSource;
@@ -244,13 +247,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return new GapMarkerViewHolder(new ReaderGapMarkerView(context));
 
             case VIEW_TYPE_XPOST:
-                postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_xpost, parent, false);
+                final int layoutRestId = mReaderImprovementsFeatureConfig.isEnabled()
+                        ? R.layout.reader_cardview_xpost_new : R.layout.reader_cardview_xpost;
+                postView = LayoutInflater.from(context).inflate(layoutRestId, parent, false);
                 return new ReaderXPostViewHolder(postView);
             case VIEW_TYPE_REMOVED_POST:
-                postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_removed_post, parent, false);
+                final int layoutResId = mReaderImprovementsFeatureConfig.isEnabled()
+                        ? R.layout.reader_cardview_removed_post_new : R.layout.reader_cardview_removed_post;
+                postView = LayoutInflater.from(context).inflate(layoutResId, parent, false);
                 return new ReaderRemovedPostViewHolder(postView);
             default:
-                return new ReaderPostViewHolder(mUiHelpers, mImageManager, mReaderTracker, parent);
+                return mReaderImprovementsFeatureConfig.isEnabled()
+                        ? new ReaderPostNewViewHolder(mUiHelpers, mImageManager, mReaderTracker, parent)
+                        : new ReaderPostViewHolder(mUiHelpers, mImageManager, mReaderTracker, parent);
         }
     }
 
@@ -258,6 +267,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ReaderPostViewHolder) {
             renderPost(position, (ReaderPostViewHolder) holder, false);
+        } else if (holder instanceof ReaderPostNewViewHolder) {
+            renderPostNew(position, (ReaderPostNewViewHolder) holder, false);
         } else if (holder instanceof ReaderXPostViewHolder) {
             renderXPost(position, (ReaderXPostViewHolder) holder);
         } else if (holder instanceof ReaderRemovedPostViewHolder) {
@@ -314,7 +325,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void toggleFollowButton(
             Context context,
-            @NotNull ReaderTag currentTag,
+            @NonNull ReaderTag currentTag,
             TagHeaderViewHolder tagHolder
     ) {
         if (!NetworkUtils.checkConnection(context)) {
@@ -385,9 +396,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ReaderPost post = getItem(position);
         final Context context = holder.mRemovedPostContainer.getContext();
         holder.mTxtRemovedPostTitle.setText(createTextForRemovedPostContainer(post, context));
-        Drawable drawable =
-                ColorUtils.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp,
-                        ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorPrimary));
+        Drawable drawable = ColorUtils.applyTintToDrawable(
+                context,
+                R.drawable.ic_undo_white_24dp,
+                ContextExtensionsKt.getColorResIdFromAttribute(
+                        context,
+                        com.google.android.material.R.attr.colorPrimary
+                )
+        );
         holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         holder.mPostContainer.setOnClickListener(v -> undoPostUnbookmarked(post));
     }
@@ -503,7 +519,109 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onPostHeaderClicked,
                         onTagItemClicked,
                         showMoreMenu ? mReaderPostMoreButtonUiStateBuilder
-                                .buildMoreMenuItemsBlocking(post, onButtonClicked) : null
+                                .buildMoreMenuItemsBlocking(post, false, onButtonClicked) : null
+                );
+        holder.onBind(uiState);
+    }
+
+    // TODO update the viewholder to the new one
+    private void renderPostNew(final int position, final ReaderPostNewViewHolder holder, boolean showMoreMenu) {
+        final ReaderPost post = getItem(position);
+        if (post == null) {
+            return;
+        }
+        Context ctx = holder.getViewContext();
+        Function3<Long, Long, ReaderPostCardActionType, Unit> onButtonClicked =
+                (postId, blogId, type) -> {
+                    mOnPostListItemButtonListener.onButtonClicked(post, type);
+                    renderPostNew(position, holder, false);
+                    return Unit.INSTANCE;
+                };
+        Function2<Long, Long, Unit> onItemClicked = (postId, blogId) -> {
+            if (mPostSelectedListener != null) {
+                mPostSelectedListener.onPostSelected(post);
+            }
+            return Unit.INSTANCE;
+        };
+        Function1<ReaderCardUiState, Unit> onItemRendered = (item) -> {
+            checkLoadMore(position);
+
+            // if we haven't already rendered this post and it has a "railcar" attached to it, add it
+            // to the rendered list and record the TrainTracks render event
+            if (post.hasRailcar() && !mRenderedIds.contains(post.getPseudoId())) {
+                mRenderedIds.add(post.getPseudoId());
+                mReaderTracker.trackRailcar(post.getRailcarJson());
+            }
+            return Unit.INSTANCE;
+        };
+        Function2<Long, Long, Unit> onDiscoverSectionClicked = (postId, blogId) -> {
+            ReaderPostDiscoverData discoverData = post.getDiscoverData();
+            switch (discoverData.getDiscoverType()) {
+                case EDITOR_PICK:
+                    if (mPostSelectedListener != null) {
+                        mPostSelectedListener.onPostSelected(post);
+                    }
+                    break;
+                case SITE_PICK:
+                    if (discoverData.getBlogId() != 0) {
+                        ReaderActivityLauncher.showReaderBlogPreview(
+                                ctx,
+                                discoverData.getBlogId(),
+                                post.isFollowedByCurrentUser,
+                                mSource,
+                                mReaderTracker
+                        );
+                    } else if (discoverData.hasBlogUrl()) {
+                        ReaderActivityLauncher.openUrl(ctx, discoverData.getBlogUrl());
+                    }
+                    break;
+                case OTHER:
+                    // noop
+                    break;
+            }
+            return Unit.INSTANCE;
+        };
+        Function1<ReaderPostNewUiState, Unit> onMoreButtonClicked = (uiState) -> {
+            renderPostNew(position, holder, true);
+            return Unit.INSTANCE;
+        };
+
+        Function1<ReaderPostNewUiState, Unit> onMoreDismissed = (uiState) -> {
+            renderPostNew(position, holder, false);
+            return Unit.INSTANCE;
+        };
+
+        Function2<Long, Long, Unit> onVideoOverlayClicked = (postId, blogId) -> {
+            ReaderActivityLauncher.showReaderVideoViewer(ctx, post.getFeaturedVideo());
+            return Unit.INSTANCE;
+        };
+
+        Function2<Long, Long, Unit> onPostHeaderClicked = (postId, blogId) -> {
+            ReaderActivityLauncher.showReaderBlogPreview(
+                    ctx,
+                    post,
+                    mSource,
+                    mReaderTracker
+            );
+            return Unit.INSTANCE;
+        };
+
+        ReaderPostNewUiState uiState = mReaderPostUiStateBuilder
+                .mapPostToNewUiStateBlocking(
+                        mSource,
+                        post,
+                        mPhotonWidth,
+                        mPhotonHeight,
+                        getPostListType(),
+                        onButtonClicked,
+                        onItemClicked,
+                        onItemRendered,
+                        onMoreButtonClicked,
+                        onMoreDismissed,
+                        onVideoOverlayClicked,
+                        onPostHeaderClicked,
+                        showMoreMenu ? mReaderPostMoreButtonUiStateBuilder
+                                .buildMoreMenuItemsBlocking(post, true, onButtonClicked) : null
                 );
         holder.onBind(uiState);
     }

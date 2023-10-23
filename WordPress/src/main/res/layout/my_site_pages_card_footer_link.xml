@@ -10,7 +10,8 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/link_label"
-        style="@style/MySiteCardPagesCardFooter"
+        style="@style/DashboardCardFooter"
+        android:paddingBottom="@dimen/my_site_dashboard_card_page_create_page_title_description_padding_bottom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/my_site_card_footer_link_padding"
@@ -24,7 +25,10 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/link_description"
-        style="@style/MySiteCardPagesCardFooterDescription"
+        style="@style/DashboardCardDetail"
+        android:paddingBottom="@dimen/my_site_dashboard_card_page_create_page_title_description_padding_bottom"
+        android:maxLines="2"
+        android:ellipsize="end"
         android:layout_width="0dp"
         android:visibility="visible"
         android:layout_height="wrap_content"

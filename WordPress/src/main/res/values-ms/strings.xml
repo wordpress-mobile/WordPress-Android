@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-12-20 12:00:16+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.11
 Language: ms
 -->
 <resources>
@@ -58,7 +58,6 @@ Language: ms
     <string name="jetpack_site_settings_category_title">Tetapan Jetpack</string>
     <string name="share_intent_pick_site">Petik laman</string>
     <string name="share_action_post">Tambah ke kiriman baharu</string>
-    <string name="share_media_permission_required">Kebenaran diperlukan untuk berkongsi imej atau video</string>
     <string name="invalid_ip_or_range">IP atau julat IP tidak sah</string>
     <string name="confirm_delete_media_video">Hapuskan video ini?</string>
     <string name="deleting_media_dlg">Menghapuskan</string>
@@ -228,11 +227,9 @@ Language: ms
     <string name="connections_description">Sambung perkhidmatan media sosial kegemaran anda untuk berkongsi kiriman dengan rakan-rakan secara automatik.</string>
     <string name="connected_accounts_label">Akaun yang telah disambung</string>
     <string name="tabbar_accessibility_label_notifications">Pemberitahuan. Urus pemberitahuan anda.</string>
-    <string name="sharing">Berkongsi</string>
     <string name="tabbar_accessibility_label_reader">Pembaca. Ikut kandungan dari laman lain.</string>
     <string name="tabbar_accessibility_label_my_site">Laman Saya. Lihat laman anda dan uruskannya, termasuk statistik.</string>
     <string name="button_not_now">Bikan sekarang</string>
-    <string name="my_site_btn_sharing">Berkongsi</string>
     <string name="media_error_internal_server_error">Ralat muat naik. Cuba ubah Optimumkan Imej dalam tetapan aplikasi anda</string>
     <string name="media_downloading">Menyimpan media ke peranti ini</string>
     <string name="error_media_save">Tidak dapat menyimpan media</string>
@@ -773,7 +770,6 @@ Language: ms
     <string name="create_a_link">Cipta pautan</string>
     <string name="local_draft">Draf setempat</string>
     <string name="select_categories">Pilih kategori</string>
-    <string name="cancel_edit">Batal edit</string>
     <string name="post_not_found">Ralat berlaku apabila kiriman dimuatkan. Segar semula kiriman anda dan cuba lagi.</string>
     <string name="mnu_comment_trash">Sampah</string>
     <string name="dlg_confirm_trash_comments">Hantar ke sampah?</string>
@@ -803,9 +799,6 @@ Language: ms
     <string name="page_settings">Tetapan laman</string>
     <string name="post_settings">Tetapan kiriman</string>
     <string name="remove_account">Buang laman</string>
-    <string name="sure_to_cancel_edit_comment">Batal menyunting komen ini?</string>
-    <string name="toast_comment_unedited">Ulasan tidak berubah</string>
-    <string name="content_required">Ulasan diwajibkan</string>
     <string name="edit_comment">Sunting ulasan</string>
     <string name="learn_more">Pelajari selanjutnya</string>
     <string name="invalid_site_url_message">Periksa bahawa URL laman yang dimasukkan adalah sah</string>

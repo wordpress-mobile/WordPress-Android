@@ -40,7 +40,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -55,6 +54,7 @@ import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectoryFetched;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
@@ -189,7 +189,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     @Inject ImageManager mImageManager;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
@@ -345,7 +345,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     }
 
     @Override
-    public void onPositiveClicked(@NotNull String instanceTag) {
+    public void onPositiveClicked(@NonNull String instanceTag) {
         // do nothing
     }
 
@@ -393,20 +393,20 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.plugin_detail, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         boolean showTrash = canPluginBeDisabledOrRemoved();
         menu.findItem(R.id.menu_trash).setVisible(showTrash);
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             if (isPluginStateChangedSinceLastConfigurationDispatch()) {
                 // It looks like we have some unsaved changes, we need to force a configuration dispatch since the
@@ -425,7 +425,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     }
 
     @Override
-    public void onSaveInstanceState(@NotNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putString(KEY_PLUGIN_SLUG, mSlug);
@@ -602,7 +602,10 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
 
     private void setCollapsibleHtmlText(@NonNull TextView textView, @Nullable String htmlText) {
         if (!TextUtils.isEmpty(htmlText)) {
-            textView.setTextColor(ContextExtensionsKt.getColorFromAttribute(this, R.attr.colorOnSurface));
+            textView.setTextColor(ContextExtensionsKt.getColorFromAttribute(
+                    this,
+                    com.google.android.material.R.attr.colorOnSurface
+            ));
             textView.setMovementMethod(WPLinkMovementMethod.getInstance());
             //noinspection ConstantConditions
             textView.setText(HtmlCompat.fromHtml(htmlText, HtmlCompat.FROM_HTML_MODE_LEGACY));
@@ -1090,7 +1093,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
             return;
         }
 
-        if (mSite.getId() != event.site.getId() || !mSlug.equals(event.slug)) {
+        if ((event.site != null && mSite.getId() != event.site.getId()) || !mSlug.equals(event.slug)) {
             // Not the event we are interested in
             return;
         }
@@ -1099,12 +1102,15 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
         if (event.isError()) {
             AppLog.e(T.PLUGINS, "An error occurred while installing the plugin with type: "
                                 + event.error.type + " and message: " + event.error.message);
-            refreshPluginVersionViews();
-            showInstallFailedSnackbar();
+            if (event.error.type == InstallSitePluginErrorType.PLUGIN_ALREADY_INSTALLED) {
+                // The plugin is already installed. Fetch the plugin to update the screen.
+                fetchPluginDirectory(0);
+            } else {
+                refreshPluginVersionViews();
+                showInstallFailedSnackbar();
+            }
             return;
         }
-
-        mIsInstallingPlugin = false;
 
         refreshPluginFromStore();
 

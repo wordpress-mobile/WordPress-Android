@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -34,7 +33,7 @@ class HistoryListFragment : Fragment(R.layout.history_list_fragment) {
         private const val KEY_POST_LOCAL_ID = "key_post_local_id"
         private const val KEY_SITE = "key_site"
 
-        fun newInstance(postId: Int, @NonNull site: SiteModel): HistoryListFragment {
+        fun newInstance(postId: Int, site: SiteModel): HistoryListFragment {
             val fragment = HistoryListFragment()
             val bundle = Bundle()
             bundle.putInt(KEY_POST_LOCAL_ID, postId)

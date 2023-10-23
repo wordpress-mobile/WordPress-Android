@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -105,7 +105,7 @@ fun <T, U, V> merge(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T?, U?)
     mediator.addSource(sourceB) {
         mediator.value = Pair(mediator.value?.first, it)
     }
-    return mediator.map { (dataA, dataB) -> merger(dataA, dataB) }
+    return mediator.mapSafe { (dataA, dataB) -> merger(dataA, dataB) }
 }
 
 /**
@@ -161,7 +161,7 @@ fun <S, T, U, V> merge(
             mediator.value = container?.copy(third = it)
         }
     }
-    return mediator.map { (first, second, third) -> merger(first, second, third) }
+    return mediator.mapSafe { (first, second, third) -> merger(first, second, third) }
 }
 
 /**
@@ -214,7 +214,7 @@ fun <S, T, U, V, W> merge(
             mediator.value = container?.copy(fourth = it)
         }
     }
-    return mediator.map { (first, second, third, fourth) -> merger(first, second, third, fourth) }
+    return mediator.mapSafe { (first, second, third, fourth) -> merger(first, second, third, fourth) }
 }
 
 /**
@@ -276,7 +276,79 @@ fun <S, T, U, V, W, X> merge(
             mediator.value = container?.copy(fifth = it)
         }
     }
-    return mediator.map { (first, second, third, fourth, fifth) -> merger(first, second, third, fourth, fifth) }
+    return mediator.mapSafe { (first, second, third, fourth, fifth) -> merger(first, second, third, fourth, fifth) }
+}
+
+/**
+ * Merges five LiveData sources using a given function. The function returns an object of a new type.
+ * @param sourceA first source
+ * @param sourceB second source
+ * @param sourceC third source
+ * @param sourceD fourth source
+ * @param sourceE fifth source
+ * @return new data source
+ */
+@Suppress("DestructuringDeclarationWithTooManyEntries", "LongParameterList")
+fun <S, T, U, V, W, X, Y> merge(
+    sourceA: LiveData<S>,
+    sourceB: LiveData<T>,
+    sourceC: LiveData<U>,
+    sourceD: LiveData<V>,
+    sourceE: LiveData<W>,
+    sourceF: LiveData<X>,
+    distinct: Boolean = false,
+    merger: (S?, T?, U?, V?, W?, X?) -> Y?
+): LiveData<Y> {
+    data class SixItemContainer(
+        val first: S? = null,
+        val second: T? = null,
+        val third: U? = null,
+        val fourth: V? = null,
+        val fifth: W? = null,
+        val sixth: X? = null,
+    )
+
+    val mediator = MediatorLiveData<SixItemContainer>()
+    mediator.value = SixItemContainer()
+    mediator.addSource(sourceA) {
+        val container = mediator.value
+        if (container?.first != it || !distinct) {
+            mediator.value = container?.copy(first = it)
+        }
+    }
+    mediator.addSource(sourceB) {
+        val container = mediator.value
+        if (container?.second != it || !distinct) {
+            mediator.value = container?.copy(second = it)
+        }
+    }
+    mediator.addSource(sourceC) {
+        val container = mediator.value
+        if (container?.third != it || !distinct) {
+            mediator.value = container?.copy(third = it)
+        }
+    }
+    mediator.addSource(sourceD) {
+        val container = mediator.value
+        if (container?.fourth != it || !distinct) {
+            mediator.value = container?.copy(fourth = it)
+        }
+    }
+    mediator.addSource(sourceE) {
+        val container = mediator.value
+        if (container?.fifth != it || !distinct) {
+            mediator.value = container?.copy(fifth = it)
+        }
+    }
+    mediator.addSource(sourceF) {
+        val container = mediator.value
+        if (container?.sixth != it || !distinct) {
+            mediator.value = container?.copy(sixth = it)
+        }
+    }
+    return mediator.mapSafe { (first, second, third, fourth, fifth, sixth) ->
+        merger(first, second, third, fourth, fifth, sixth)
+    }
 }
 
 /**
@@ -300,13 +372,13 @@ fun <Key, Value> combineMap(sources: Map<Key, LiveData<Value>>): MediatorLiveDat
             }
         }
     }
-    return mediator.map { it.toMap() }
+    return mediator.mapSafe { it.toMap() }
 }
 
 /**
  * Simple wrapper of the map utility method that is null safe
  */
-fun <T, U> LiveData<T>.map(mapper: (T) -> U?): MediatorLiveData<U> {
+fun <T, U> LiveData<T>.mapSafe(mapper: (T) -> U?): MediatorLiveData<U> {
     val result = MediatorLiveData<U>()
     result.addSource(this) { x -> result.value = x?.let { mapper(x) } }
     return result
@@ -332,7 +404,7 @@ fun <T, U> LiveData<T>.mapAsync(scope: CoroutineScope, mapper: suspend (T) -> U?
  * Calls the specified function [block] with `this` value as its receiver and returns new instance of LiveData.
  */
 fun <T> LiveData<T>.perform(block: LiveData<T>.(T) -> Unit): LiveData<T> {
-    return Transformations.map(this) {
+    return this.map {
         block(it)
         return@map it
     }
@@ -341,8 +413,8 @@ fun <T> LiveData<T>.perform(block: LiveData<T>.(T) -> Unit): LiveData<T> {
 /**
  * Simple wrapper of the map utility method that is null safe
  */
-fun <T, U> LiveData<T>.mapNullable(mapper: (T?) -> U?): LiveData<U> {
-    return Transformations.map(this) { mapper(it) }
+fun <T, U> LiveData<T>.mapNullable(mapper: (T?) -> U): LiveData<U> {
+    return this.map { mapper(it) }
 }
 
 /**

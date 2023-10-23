@@ -30,7 +30,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.wordpress.android.R.string
 import org.wordpress.android.ui.compose.components.SolidCircle
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.compose.unit.Margin
@@ -41,6 +40,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.Recommended
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.Sale
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag.Unavailable
+import androidx.compose.ui.R as ComposeR
 
 private val HighlightBgColor @Composable get() = colors.primary.copy(0.1f)
 private val SecondaryTextColor @Composable get() = colors.onSurface.copy(0.46f)
@@ -48,8 +48,10 @@ private val SecondaryFontSize = 13.sp
 private val PrimaryFontSize = 17.sp
 private val StartPadding = 40.dp
 
+
+@Suppress("CyclomaticComplexMethod")
 @Composable
-fun DomainItem(uiState: DomainUiState) = with(uiState) {
+fun DomainItem(uiState: DomainUiState): Unit = with(uiState) {
     Column(Modifier.background(if (isSelected) HighlightBgColor else Unspecified)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -59,7 +61,11 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
                     indication = rememberRipple(color = HighlightBgColor),
                     onClick = onClick::invoke,
                 )
-                .padding(vertical = Margin.ExtraLarge.value)
+                .then(if (cost is Cost.Paid) {
+                    Modifier.padding(top = Margin.ExtraLarge.value)
+                } else {
+                    Modifier.padding(vertical = Margin.ExtraLarge.value)
+                })
                 .padding(end = Margin.ExtraLarge.value)
         ) {
             Box(
@@ -69,7 +75,7 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
                 if (isSelected) {
                     Icon(
                         imageVector = Icons.Default.Check,
-                        contentDescription = stringResource(string.selected),
+                        contentDescription = stringResource(ComposeR.string.selected),
                         tint = colors.primary,
                         modifier = Modifier.size(16.dp),
                     )
@@ -100,17 +106,33 @@ fun DomainItem(uiState: DomainUiState) = with(uiState) {
             }
             if (tags.none { it is Unavailable }) {
                 if (cost is Cost.OnSale) {
-                    SalePrince(
+                    SalePrice(
                         cost.strikeoutTitle.asString() to cost.title.asString(),
                         cost.subtitle.asString(),
                         modifier = Modifier.padding(start = Margin.ExtraLarge.value)
                     )
-                } else {
+                }
+                else if (cost is Cost.Paid) {
+                    Plan(
+                        cost.strikeoutTitle.asString() to cost.title.asString(),
+                        modifier = Modifier.padding(start = Margin.ExtraLarge.value)
+                    )
+                }
+                else {
                     Price(
                         cost.title.asString(),
                         modifier = Modifier.padding(start = Margin.ExtraLarge.value)
                     )
                 }
+            }
+        }
+        if (cost is Cost.Paid) {
+            Row(modifier = Modifier.padding(bottom = Margin.ExtraLarge.value, start = StartPadding)) {
+                Text(
+                    text = cost.subtitle.asString(),
+                    color = colors.primary,
+                    fontSize = SecondaryFontSize,
+                )
             }
         }
         Divider(thickness = 0.5.dp)
@@ -128,7 +150,7 @@ private fun Price(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun SalePrince(title: Pair<String, String>, subtitle: String, modifier: Modifier = Modifier) {
+private fun SalePrice(title: Pair<String, String>, subtitle: String, modifier: Modifier = Modifier) {
     Column(
         modifier,
         horizontalAlignment = Alignment.End,
@@ -153,8 +175,27 @@ private fun SalePrince(title: Pair<String, String>, subtitle: String, modifier: 
             subtitle,
             color = colors.primary,
             fontSize = SecondaryFontSize,
-            modifier = Modifier.padding(top = 4.dp)
         )
+    }
+}
+
+@Composable
+private fun Plan(title: Pair<String, String>, modifier: Modifier = Modifier) {
+    Column(
+        modifier,
+        horizontalAlignment = Alignment.End,
+    ) {
+        title.let { (strikethroughText) ->
+            Row(verticalAlignment = Alignment.Bottom) {
+                Text(
+                    strikethroughText,
+                    color = SecondaryTextColor,
+                    fontSize = SecondaryFontSize,
+                    textDecoration = TextDecoration.LineThrough,
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+            }
+        }
     }
 }
 

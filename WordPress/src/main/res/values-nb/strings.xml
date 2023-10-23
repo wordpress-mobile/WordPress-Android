@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-06-10 14:21:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.11
 Language: nb_NO
 -->
 <resources>
@@ -125,7 +125,6 @@ Language: nb_NO
     <string name="adding_cat">Legger til kategori</string>
     <string name="login_select_email_client">Hvilken e-postapp bruker du?</string>
     <string name="my_site_menu_tab_title">Meny</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Gå til statistikk</string>
     <string name="my_site_todays_stat_card_title">Dagens statistikk</string>
     <string name="reader_comment_menu_edit">Redigér</string>
     <string name="reader_comment_menu_trash">Flytt til papirkurven</string>
@@ -229,7 +228,6 @@ Language: nb_NO
     <string name="reader_title_interests">Følg emner</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Avvis</string>
     <string name="activity_log_backup_download_notice_download_action">Last ned</string>
-    <string name="quick_start_card_menu_hide">Skjul for nå</string>
     <string name="invite_links_expire_date">Utløper %1$s</string>
     <string name="invite_links_disable_invite_link">Slå av invitasjonslenke</string>
     <string name="invite_links_share_invite_link">Del invitasjonslenke</string>
@@ -254,7 +252,6 @@ Language: nb_NO
     <string name="gutenberg_native_choose_audio">Velg lyd</string>
     <string name="gutenberg_native_audio_player">Lydavspiller</string>
     <string name="gutenberg_native_audio_file">lydfil</string>
-    <string name="gutenberg_native_add_audio">LEGG TIL LYD</string>
     <string name="continue_with_wpcom">Logg inn eller registrer deg på WordPress.com</string>
     <string name="photo_picker_use_audio">Bruk denne lyden</string>
     <string name="photo_picker_choose_audio">Velg lyd fra enheten</string>
@@ -271,8 +268,6 @@ Language: nb_NO
     <string name="backup_download_complete_failed_action_button">Utført</string>
     <string name="web_preview_tablet">Nettbrett</string>
     <string name="web_preview_mobile">Mobil</string>
-    <string name="quick_start_card_menu_remove">Ikke vis igjen</string>
-    <string name="quick_start_card_menu_pin">Fest dette</string>
     <string name="reader_menu_mark_as_unseen">Merk som usett</string>
     <string name="reader_menu_mark_as_seen">Merk som sett</string>
     <string name="threat_fix_all_warning_title">Fjern alle trusler</string>
@@ -329,9 +324,7 @@ Language: nb_NO
     <string name="gutenberg_native_file_name">Filnavn</string>
     <string name="gutenberg_native_file_block_settings">Innstillinger for fil-blokk</string>
     <string name="gutenberg_native_edit_file">Rediger fil</string>
-    <string name="gutenberg_native_choose_a_file">VELG EN FIL</string>
     <string name="new_site_creation_domain_header_title">Velg et domene</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack-innstillinger</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Følger samtalen på e-post</string>
     <string name="reader_btn_follow_comments">Følg samtalen på e-post</string>
@@ -767,11 +760,8 @@ Language: nb_NO
     <string name="gutenberg_native_choose_from_device">Velg fra enhet</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">En ukjent feil oppstod. Vennligst prøv igjen.</string>
     <string name="gutenberg_native_alt_text">Alt-tekst</string>
-    <string name="gutenberg_native_add_video">LEGG TIL VIDEO</string>
     <string name="gutenberg_native_add_url">Legg til URL</string>
     <string name="gutenberg_native_add_alt_text">Legg til alt-tekst</string>
-    <string name="gutenberg_native_add_image_or_video">LEGG TIL BILDE ELLER VIDEO</string>
-    <string name="gutenberg_native_add_image">LEGG TIL BILDE</string>
     <string name="gutenberg_native_add_block_here">LEGG TIL BLOKK HER</string>
     <string name="reader_empty_saved_posts_content_description">Trykk Legg til for å lagre-knappen for å lagre et innlegg til listen din.</string>
     <string name="reader_acessibility_list_loaded">\"Listen er lastet inn med %1$d elementer.\"</string>
@@ -1058,8 +1048,6 @@ Language: nb_NO
     <string name="quick_start_dialog_enable_sharing_message">Del dine innlegg automatisk på sosiale media.</string>
     <string name="quick_start_dialog_check_stats_title">Sjekk din besøksstatistikk</string>
     <string name="quick_start_dialog_check_stats_message">Hold deg oppdatert om ytelsen til ditt nettsted.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Fjern de neste trinn</string>
-    <string name="quick_start_remove_next_steps_menu_title">Fjern dette</string>
     <string name="quick_start_task_skip_menu_title">Hopp over oppgave</string>
     <string name="notification_channel_reminder_title">Påminnelse</string>
     <string name="stats_select_next_period_description">Velg neste periode</string>
@@ -1221,7 +1209,6 @@ Language: nb_NO
     <string name="quick_start_dialog_view_site_title">Vis ditt nettsted</string>
     <string name="quick_start_dialog_view_site_message">Forhåndsvis ditt nettsted for å se hva dine besøkende vi se.</string>
     <string name="quick_start_dialog_share_site_title">Del ditt netsted</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Trykk %1$s Deling %2$s for å fortsette</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Trykk %1$stilkoblinger%2$s for å legge til konti i sosiale medier</string>
     <string name="quick_start_dialog_share_site_message">Koble til dine konti i sosiale medier - ditt nettsted vil automatisk dele nye innlegg.</string>
     <string name="quick_start_dialog_publish_post_title">Publiser et innlegg</string>
@@ -1433,7 +1420,6 @@ Language: nb_NO
     <string name="signup_epilogue_error_avatar_view">Ditt profilbilde er lastet opp og vil bli synlig om kort tid.</string>
     <string name="permissions_denied_title">Tillatelser</string>
     <string name="plugin_caption_featured">Fremhevet</string>
-    <string name="sharing_disabled">Delingsmodulen er deaktivert</string>
     <string name="version_with_name_param">Versjn %s</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d sider / innlegg gjenstår</string>
@@ -1632,7 +1618,6 @@ Language: nb_NO
     <string name="share_intent_pick_site">Velg nettsted</string>
     <string name="share_action_media">Legg til i mediebiblioteket</string>
     <string name="share_action_post">Legg til i et nytt innlegg</string>
-    <string name="share_media_permission_required">Tillatelser er påkrevd for å kunne dele bilder eller videoer</string>
     <string name="invalid_ip_or_range">Ugyldig IP-adresse eller IP-område</string>
     <string name="deleting_media_dlg">Sletter</string>
     <string name="confirm_delete_media_video">Vil du slette denne videoen?</string>
@@ -1811,11 +1796,9 @@ Language: nb_NO
     <string name="connection_service_description">Koble til for å automatisk dele dine blogginnlegg til %s.</string>
     <string name="connected_accounts_label">Tilkoblede kontoer</string>
     <string name="connections_description">Koble til dine sosiale favorittmedietjenester for å automatisk dele nye innlegg med vennene dine.</string>
-    <string name="sharing">Deling</string>
     <string name="tabbar_accessibility_label_notifications">Notifikasjoner. Håndter dine notifikasjoner.</string>
     <string name="tabbar_accessibility_label_reader">Leseren. Følg innhold fra andre nettsteder.</string>
     <string name="tabbar_accessibility_label_my_site">Min side. Vis siden din og behandle den, inkludert statistikker.</string>
-    <string name="my_site_btn_sharing">Deling</string>
     <string name="button_not_now">Ikke nå</string>
     <string name="media_error_internal_server_error">Opplastningsfeil. Prøv å endre på «Optimaliser bilder» i appinnstillingene dine.</string>
     <string name="media_downloading">Lagrer medie på denne enheten</string>
@@ -2421,9 +2404,6 @@ Language: nb_NO
     <string name="add_new_category">Legg til ny kategori</string>
     <string name="view_in_browser">Åpne i nettleseren</string>
     <string name="remove_account">Fjern nettsted</string>
-    <string name="toast_comment_unedited">Kommentaren har ikke endret seg</string>
-    <string name="content_required">Kommentering er påkrevd</string>
-    <string name="sure_to_cancel_edit_comment">Vil du avbryte redigeringen av denne kommentaren?</string>
     <string name="saving_changes">Lagrer endringer</string>
     <string name="trash">Papirkurv</string>
     <string name="dlg_confirm_trash_comments">Send til papirkurv?</string>
@@ -2450,7 +2430,6 @@ Language: nb_NO
     <string name="media_gallery_type_thumbnail_grid">Forhåndsvisningsnetting</string>
     <string name="learn_more">Lær mer</string>
     <string name="post_not_found">En feil oppstod under innlastning av innlegget. Oppfrisk innleggene dine, og prøv igjen.</string>
-    <string name="cancel_edit">Avbryt redigeringen</string>
     <string name="connection_error">Tilkoblingsfeil</string>
     <string name="select_categories">Velg kategorier</string>
     <string name="share_link">Del lenke</string>

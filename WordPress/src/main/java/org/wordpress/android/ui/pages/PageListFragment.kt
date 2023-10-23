@@ -141,6 +141,7 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
             adapter = PageListAdapter(
                 { action, page -> viewModel.onMenuAction(action, page, requireContext()) },
                 { page -> viewModel.onItemTapped(page) },
+                { action -> viewModel.onVirtualHomepageAction(action) },
                 { viewModel.onEmptyListNewPageButtonTapped() },
                 isSitePhotonCapable,
                 isSitePrivateAt,

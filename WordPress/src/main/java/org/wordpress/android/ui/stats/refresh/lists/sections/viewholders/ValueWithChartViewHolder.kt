@@ -12,15 +12,14 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.data.LineDataSet.Mode.CUBIC_BEZIER
 import org.wordpress.android.R
-import org.wordpress.android.R.id
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 
 class ValueWithChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     parent,
     R.layout.stats_block_value_with_chart_item
 ) {
-    private val value = itemView.findViewById<TextView>(id.value)
-    private val chart = itemView.findViewById<LineChart>(id.line_chart)
+    private val value = itemView.findViewById<TextView>(R.id.value)
+    private val chart = itemView.findViewById<LineChart>(R.id.line_chart)
 
     fun bind(item: ValueWithChartItem) {
         value.text = item.value

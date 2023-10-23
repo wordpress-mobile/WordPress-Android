@@ -115,7 +115,7 @@ class QRCodeAuthFragment : Fragment() {
     }
 
     private fun initBackPressHandler() {
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             qrCodeAuthViewModel.onBackPressed()
         }
     }

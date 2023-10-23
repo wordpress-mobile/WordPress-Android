@@ -24,9 +24,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/feature_announcement_top_margin"
-                android:fontFamily="serif"
                 android:textAppearance="?attr/textAppearanceHeadline4"
                 android:textColor="?attr/colorOnSurface"
+                android:textStyle="bold"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout

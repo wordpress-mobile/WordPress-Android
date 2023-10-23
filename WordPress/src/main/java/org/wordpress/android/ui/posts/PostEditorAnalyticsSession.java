@@ -32,7 +32,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private static final String KEY_SESSION_ID = "session_id";
     private static final String KEY_STARTUP_TIME = "startup_time_ms";
     private static final String KEY_TEMPLATE = "template";
-    private static final String KEY_FULL_SITE_EDITING = "full_site_editing";
+    private static final String KEY_IS_BLOCK_BASED_THEME = "is_block_based_theme";
     private static final String KEY_ENDPOINT = "endpoint";
     private static final String KEY_ENTRY_POINT = "entry_point";
 
@@ -177,9 +177,9 @@ public class PostEditorAnalyticsSession implements Serializable {
                 properties);
     }
 
-    public void editorSettingsFetched(Boolean fullSiteEditing, String endpoint) {
+    public void editorSettingsFetched(Boolean isBlockBasedTheme, String endpoint) {
         final Map<String, Object> properties = getCommonProperties();
-        properties.put(KEY_FULL_SITE_EDITING, fullSiteEditing);
+        properties.put(KEY_IS_BLOCK_BASED_THEME, isBlockBasedTheme);
         properties.put(KEY_ENDPOINT, endpoint);
         AnalyticsUtils
                 .trackWithSiteDetails(mAnalyticsTrackerWrapper, Stat.EDITOR_SETTINGS_FETCHED, mSiteModel, properties);

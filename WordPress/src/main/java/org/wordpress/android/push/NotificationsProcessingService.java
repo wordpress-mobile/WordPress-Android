@@ -634,8 +634,12 @@ public class NotificationsProcessingService extends Service {
             mCommentsStoreAdapter.dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
 
             // Bump analytics
-            AnalyticsUtils.trackCommentReplyWithDetails(true,
-                    site, comment, AnalyticsCommentActionSource.NOTIFICATIONS);
+            AnalyticsUtils.trackCommentReplyWithDetails(
+                    true,
+                    site,
+                    comment,
+                    AnalyticsCommentActionSource.NOTIFICATIONS
+            );
             AnalyticsUtils.trackQuickActionTouched(QuickActionTrackPropertyValue.REPLY_TO, site, comment);
         }
 

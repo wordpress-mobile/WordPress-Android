@@ -1,17 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<style name="dashboard_card_title">
-    <item name="android:textSize">@dimen/text_sz_medium</item>
-    <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-    <item name="android:textColor">?attr/wpColorOnSurfaceHigh</item>
-    <item name="android:textStyle">bold</item>
-    <item name="android:textAlignment">viewStart</item>
-</style>
+    <style name="DashboardCardLargeTitle" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textColor">?attr/wpColorOnSurfaceHigh</item>
+    </style>
 
-<style name="dashboard_card_sub_title">
-    <item name="android:textSize">@dimen/text_sz_medium_large</item>
-    <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-    <item name="android:textAlignment">viewStart</item>
-</style>
+    <style name="DashboardCardSmallTitle" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">?attr/wpColorOnSurfaceHigh</item>
+        <item name="fontWeight">400</item>
+    </style>
+
+    <style name="DashboardCardSubtitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceHigh</item>
+        <item name="fontWeight">500</item>
+    </style>
+
+    <style name="DashboardCardDetail" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="fontWeight">400</item>
+    </style>
+
+    <style name="DashboardCardFooter" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/primary_emphasis_medium_selector</item>
+        <item name="fontWeight">500</item>
+    </style>
+
+    <style name="ShapeAppearance.PagesCardIllustration" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">
+            @dimen/my_site_dashboard_card_page_create_page_illustration_image_view_corner_radius
+        </item>
+    </style>
+
+    <!--My Site Card - Post Item-->
+    <style name="MySitePostItemTitle" parent="DashboardCardSubtitle">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MySiteCardWithoutPostTitle" parent="DashboardCardSubtitle">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MySitePostItemExcerpt" parent="DashboardCardDetail">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+
+    <style name="MySiteCardFooterLinkItem" parent="DashboardCardFooter">
+        <item name="android:paddingBottom">@dimen/my_site_card_footer_link_padding</item>
+        <item name="android:paddingEnd">@dimen/my_site_card_footer_link_padding</item>
+        <item name="android:paddingStart">@dimen/my_site_card_footer_link_padding</item>
+        <item name="android:paddingTop">@dimen/my_site_card_footer_link_padding_top</item>
+    </style>
+
+    <style name="MySitePostItemTimeIcon">
+        <item name="android:layout_width">@dimen/my_site_post_item_time_icon_size</item>
+        <item name="android:layout_height">@dimen/my_site_post_item_time_icon_size</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
+        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
+    </style>
+
+    <!--My Site Card - Today's Stats Item-->
+    <style name="MySiteTodaysStatsCardStatTitle" parent="DashboardCardDetail" >
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:lineSpacingExtra">@dimen/my_site_todays_stats_card_stat_title_line_spacing_extra</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MySiteTodaysStatsCardStatCountText" parent="DashboardCardLargeTitle">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_small</item>
+        <item name="android:layout_marginBottom">@dimen/margin_large</item>
+        <item name="android:minWidth">@dimen/my_site_today_stats_card_stat_title_min_width</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MySiteTodaysStatsCardMessage" parent="DashboardCardDetail">
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:paddingBottom">@dimen/margin_medium</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingTop">@dimen/margin_extra_large</item>
+    </style>
+
+    <!--My Site Card - Blogging Prompt-->
+
+    <style name="MySiteCardAnswerButton" parent="@style/MySiteCardFooterLinkItem">
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+    </style>
+
+    <style name="MySiteCardAnsweredButton" parent="@style/MySiteCardAnswerButton">
+        <item name="android:paddingStart">@dimen/margin_medium</item>
+        <item name="android:paddingEnd">@dimen/margin_medium</item>
+    </style>
+
+    <style name="MySiteCardBloggingPromptTitle" parent="DashboardCardSubtitle">
+        <item name="android:maxLines">3</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!--My Site Card - Quick start card -->
+    <style name="MySiteCardQuickStartItemTitle" parent="DashboardCardSubtitle">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingEnd">@dimen/content_margin</item>
+    </style>
+
+    <style name="MySiteCardItemSubtitle" parent="DashboardCardDetail">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+    </style>
+
+    <style name="NewQuickStartTypeTitle" parent="MySiteCardQuickStartItemTitle">
+        <item name="android:singleLine">false</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
+    <style name="QuickStartTypeSubtitle" parent="MySiteCardItemSubtitle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingEnd">@dimen/content_margin</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_small</item>
+    </style>
+
+    <!--My Site Card - Domain Registration-->
+
+    <style name="DomainRegistrationCardTitle" parent="DashboardCardSubtitle">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingEnd">@dimen/content_margin</item>
+    </style>
+
+    <style name="DomainRegistrationCardSubTitle" parent="DashboardCardDetail">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+    </style>
+
+    <!--My Site Error Card-->
+    <style name="MySiteErrorCardTitle" parent="MySiteCardQuickStartItemTitle">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/text_sz_larger</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+    </style>
+
+    <style name="MySiteErrorCardSubtitle" parent="MySiteCardItemSubtitle">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:maxLines">3</item>
+    </style>
+
+    <style name="MySiteErrorCardRetry" parent="WordPress.Button.Primary">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
 </resources>

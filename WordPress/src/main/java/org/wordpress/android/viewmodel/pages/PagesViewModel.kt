@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -33,7 +32,6 @@ import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteOptionsStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -53,6 +51,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
+import org.wordpress.android.ui.pages.PageItem.VirtualHomepage
 import org.wordpress.android.ui.pages.PagesAuthorFilterUIState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AuthorFilterListItemUIState
@@ -74,6 +73,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.extensions.clipboardManager
+import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -124,7 +124,6 @@ class PagesViewModel
     private val accountStore: AccountStore,
     private val prefs: AppPrefsWrapper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val blazeStore: BlazeStore,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -143,8 +142,8 @@ class PagesViewModel
     private val _searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>?> = MutableLiveData()
     val searchPages: LiveData<SortedMap<PageListType, List<PageModel>>?> = _searchPages
 
-    private val _createNewPage = SingleLiveEvent<Unit>()
-    val createNewPage: LiveData<Unit> = _createNewPage
+    private val _createNewPage = SingleLiveEvent<Unit?>()
+    val createNewPage: LiveData<Unit?> = _createNewPage
 
     private val _editPage = SingleLiveEvent<Triple<SiteModel, PostModel?, LoadAutoSaveRevision>>()
     val editPage: LiveData<Triple<SiteModel, PostModel?, LoadAutoSaveRevision>> = _editPage
@@ -176,8 +175,17 @@ class PagesViewModel
     private val _publishAction = SingleLiveEvent<PageModel>()
     val publishAction = _publishAction
 
+    private val _launchPageListType = SingleLiveEvent<PageListType>()
+    val launchPageListType = _launchPageListType
+
     private val _navigateToBlazeOverlay = SingleLiveEvent<PageModel>()
     val navigateToBlazeOverlay = _navigateToBlazeOverlay
+
+    private val _openExternalLink = SingleLiveEvent<String>()
+    val openExternalLink: LiveData<String> = _openExternalLink
+
+    private val _openSiteEditorWebView = SingleLiveEvent<SiteEditorData>()
+    val openSiteEditorWebView: LiveData<SiteEditorData> = _openSiteEditorWebView
 
     private var isInitialized = false
     private var scrollToPageId: Long? = null
@@ -228,12 +236,14 @@ class PagesViewModel
     private val _authorUIState = MutableLiveData<PagesAuthorFilterUIState>()
     val authorUIState: LiveData<PagesAuthorFilterUIState> = _authorUIState
 
-    private val _blazeSiteEligibility = MutableLiveData(false)
-    val blazeSiteEligibility: LiveData<Boolean> = _blazeSiteEligibility
-
     data class BrowsePreview(
         val post: PostModel,
         val previewType: RemotePreviewType
+    )
+
+    data class SiteEditorData(
+        val url: String,
+        val useWpComCredentials: Boolean,
     )
 
     fun start(site: SiteModel) {
@@ -241,7 +251,6 @@ class PagesViewModel
         if (_site == null) {
             _site = site
 
-            checkBlazeEligibility()
             loadPagesAsync()
             uploadStarter.queueUploadFromSite(site)
         }
@@ -275,20 +284,8 @@ class PagesViewModel
 
     override fun onCleared() {
         actionPerformer.onCleanup()
-        pageListEventListener.onDestroy()
-    }
-
-    private fun checkBlazeEligibility() {
-        // If the user is not an admin, we don't need to check for Blaze eligibility
-        if (!blazeFeatureUtils.isBlazeEligibleForUser(site)) return
-        launch {
-            blazeStore.getBlazeStatus(site.siteId)
-                .map { status -> status.model?.firstOrNull() }
-                .collect {
-                    it?.let {
-                        _blazeSiteEligibility.postValue(it.isEligible)
-                    }
-                }
+        if (::pageListEventListener.isInitialized) {
+            pageListEventListener.onDestroy()
         }
     }
 
@@ -347,6 +344,10 @@ class PagesViewModel
         }
     }
 
+    fun onSpecificPageListTypeRequested(pageListType: PageListType) {
+        _launchPageListType.postValue(pageListType)
+    }
+
     fun onPageTypeChanged(type: PageListType) {
         trackTabChangeEvent(type)
 
@@ -366,10 +367,7 @@ class PagesViewModel
     }
 
     fun checkIfNewPageButtonShouldBeVisible() {
-        val isNotEmpty = pageMap.values.any { currentPageType.pageStatuses.contains(it.status) }
-        val hasNoExceptions = !currentPageType.pageStatuses.contains(PageStatus.TRASHED) &&
-                _isSearchExpanded.value != true
-        _isNewPageButtonVisible.postOnUi(isNotEmpty && hasNoExceptions)
+        _isNewPageButtonVisible.postOnUi(_isSearchExpanded.value != true)
     }
 
     fun onSearch(searchQuery: String, delay: Long = SEARCH_DELAY) {
@@ -524,6 +522,7 @@ class PagesViewModel
                             appLogWrapper.d(PAGES, "${result.error.type}: ${result.error.message}")
                             R.string.page_homepage_update_failed
                         }
+
                         false -> {
                             R.string.page_homepage_successfully_updated
                         }
@@ -555,6 +554,7 @@ class PagesViewModel
                             appLogWrapper.d(PAGES, "${result.error.type}: ${result.error.message}")
                             R.string.page_posts_page_update_failed
                         }
+
                         false -> {
                             R.string.page_posts_page_successfully_updated
                         }
@@ -713,6 +713,34 @@ class PagesViewModel
         }
 
         editPage(RemoteId(page.remoteId))
+    }
+
+    fun onVirtualHomepageAction(action: VirtualHomepage.Action) {
+        trackVirtualHomepageAction(action)
+        when (action) {
+            is VirtualHomepage.Action.OpenExternalLink -> {
+                _openExternalLink.postValue(action.url)
+            }
+
+            VirtualHomepage.Action.OpenSiteEditor -> {
+                _openSiteEditorWebView.postValue(
+                    SiteEditorData(
+                        VirtualHomepage.Action.OpenSiteEditor.getUrl(site),
+                        useWpComCredentials = site.isWPCom || site.isWPComAtomic || site.isPrivateWPComAtomic
+                    )
+                )
+            }
+        }.exhaustive
+    }
+
+    private fun trackVirtualHomepageAction(action: VirtualHomepage.Action) {
+        val stat = when (action) {
+            VirtualHomepage.Action.OpenExternalLink.TemplateSupport ->
+                AnalyticsTracker.Stat.PAGES_EDIT_HOMEPAGE_INFO_PRESSED
+
+            VirtualHomepage.Action.OpenSiteEditor -> AnalyticsTracker.Stat.PAGES_EDIT_HOMEPAGE_ITEM_PRESSED
+        }
+        analyticsTracker.track(stat, site)
     }
 
     fun onNewPageButtonTapped() {

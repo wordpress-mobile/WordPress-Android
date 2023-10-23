@@ -30,7 +30,7 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: FeatureAnnouncementViewModel
 
     @Mock
-    lateinit var onDialogClosedObserver: Observer<Unit>
+    lateinit var onDialogClosedObserver: Observer<Unit?>
 
     @Mock
     lateinit var onAnnouncementDetailsRequestedObserver: Observer<String>

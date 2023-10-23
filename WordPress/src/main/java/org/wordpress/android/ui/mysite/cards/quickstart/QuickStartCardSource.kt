@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
@@ -30,13 +31,7 @@ class QuickStartCardSource @Inject constructor(
             refresh()
         }
         val quickStartTaskTypes = refresh.filter { it == true }.mapAsync(coroutineScope) {
-            quickStartRepository.getQuickStartTaskTypes(siteLocalId).onEach { taskType ->
-                if (!isEmptyCategory(siteLocalId, taskType) &&
-                    quickStartUtilsWrapper.isEveryQuickStartTaskDoneForType(siteLocalId, taskType)
-                ) {
-                    quickStartRepository.onCategoryCompleted(siteLocalId, taskType)
-                }
-            }
+            quickStartRepository.getQuickStartTaskTypes()
         }
         return merge(quickStartTaskTypes, quickStartRepository.activeTask) { types, activeTask ->
             val categories =
@@ -50,8 +45,27 @@ class QuickStartCardSource @Inject constructor(
                 } else {
                     listOf()
                 }
-            getState(QuickStartUpdate(activeTask, categories))
+
+            if (shouldShowQuickStartCard(categories, selectedSite)) {
+                getState(QuickStartUpdate(activeTask, categories))
+            } else {
+                getState(QuickStartUpdate(null, listOf()))
+            }
         }
+    }
+
+    private fun shouldShowQuickStartCard(
+        categories: List<QuickStartRepository.QuickStartCategory>,
+        selectedSite: SiteModel?
+    ) : Boolean {
+        selectedSite?.let { site ->
+            return if (categories.any { it.taskType == QuickStartTaskType.GET_TO_KNOW_APP }) {
+                quickStartRepository.shouldShowGetToKnowTheAppCard(site.siteId)
+            } else {
+                quickStartRepository.shouldShowNextStepsCard(site.siteId)
+            }
+        }
+        return false
     }
 
     private fun isEmptyCategory(

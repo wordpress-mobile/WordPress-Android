@@ -3,11 +3,17 @@ plugins {
 }
 
 android {
+    namespace "org.wordpress.android.networking"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
+    }
+
+    lint {
+        enable += 'UnknownNullness'
     }
 }
 
@@ -27,6 +33,7 @@ dependencies {
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
 
     implementation "com.android.volley:volley:$androidVolleyVersion"
+    implementation "androidx.annotation:annotation:$androidxAnnotationVersion"
 
     lintChecks "org.wordpress:lint:$wordPressLintVersion"
 }

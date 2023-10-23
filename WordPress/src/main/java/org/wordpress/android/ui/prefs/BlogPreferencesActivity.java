@@ -4,6 +4,8 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
@@ -42,7 +44,7 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
     @Inject Dispatcher mDispatcher;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.site_settings_activity);
@@ -105,7 +107,7 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemID = item.getItemId();
         if (itemID == android.R.id.home) {
             finish();
@@ -159,8 +161,12 @@ public class BlogPreferencesActivity extends LocaleAwareActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        if (!event.isError()) {
+        if (!event.isError() && mSite != null) {
             mSite = mSiteStore.getSiteByLocalId(mSite.getId());
+            if (mSite == null) {
+                // The site could be deleted. No need for any further action.
+                return;
+            }
             mActionBar.setTitle(StringEscapeUtils.unescapeHtml4(SiteUtils.getSiteNameOrHomeURL(mSite)));
         }
     }

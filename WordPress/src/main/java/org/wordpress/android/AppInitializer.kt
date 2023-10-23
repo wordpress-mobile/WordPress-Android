@@ -3,9 +3,12 @@
 package org.wordpress.android
 
 import android.annotation.SuppressLint
+import android.app.AppOpsManager
 import android.app.Application
+import android.app.AsyncNotedAppOp
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.SyncNotedAppOp
 import android.content.ComponentCallbacks2
 import android.content.Context
 import android.content.Intent
@@ -24,6 +27,7 @@ import android.util.AndroidRuntimeException
 import android.util.Log
 import android.webkit.WebSettings
 import android.webkit.WebView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -370,7 +374,40 @@ class AppInitializer @Inject constructor(
 
         debugCookieManager.sync()
 
+        if (!initialized && BuildConfig.DEBUG && Build.VERSION.SDK_INT >= VERSION_CODES.R) {
+            initAppOpsManager()
+        }
+
         initialized = true
+    }
+
+    /**
+     * Data access auditing
+     * @link https://developer.android.com/guide/topics/data/audit-access
+     */
+    @RequiresApi(VERSION_CODES.R)
+    private fun initAppOpsManager() {
+        val appOpsManager = context?.getSystemService(AppOpsManager::class.java) as AppOpsManager
+
+        val appOpsCallback = object : AppOpsManager.OnOpNotedCallback() {
+            private fun logPrivateDataAccess(opCode: String, trace: String) {
+                AppLog.i(T.MAIN, "Private data accessed. Operation: $opCode\nStack Trace:\n$trace")
+            }
+
+            override fun onNoted(syncNotedAppOp: SyncNotedAppOp) {
+                logPrivateDataAccess(syncNotedAppOp.op, Throwable("Stack Trace: ").stackTrace.toString())
+            }
+
+            override fun onSelfNoted(syncNotedAppOp: SyncNotedAppOp) {
+                logPrivateDataAccess(syncNotedAppOp.op, Throwable("Stack Trace: ").stackTrace.toString())
+            }
+
+            override fun onAsyncNoted(asyncNotedAppOp: AsyncNotedAppOp) {
+                logPrivateDataAccess(asyncNotedAppOp.op, asyncNotedAppOp.message)
+            }
+        }
+
+        appOpsManager.setOnOpNotedCallback(context?.mainExecutor, appOpsCallback)
     }
 
     private fun initWorkManager() {
@@ -378,6 +415,7 @@ class AppInitializer @Inject constructor(
         if (BuildConfig.DEBUG) {
             configBuilder.setMinimumLoggingLevel(Log.DEBUG)
         }
+        configBuilder.setJobSchedulerJobIdRange(WORK_MANAGER_ID_RANGE_MIN, WORK_MANAGER_ID_RANGE_MAX)
         WorkManager.initialize(application, configBuilder.build())
     }
 
@@ -960,6 +998,11 @@ class AppInitializer @Inject constructor(
         private const val KILOBYTES_IN_BYTES = 1024
         private const val MEMORY_CACHE_RATIO = 0.25 // Use 1/4th of the available memory for memory cache.
         private const val DEFAULT_TIMEOUT = 2 * 60 // 2 minutes
+
+        // Use service ids near the int max to avoid collisions with existing JobService ids
+        // The minimum range size is 1000, but we can easily give 10000.
+        private const val WORK_MANAGER_ID_RANGE_MAX = Int.MAX_VALUE
+        private const val WORK_MANAGER_ID_RANGE_MIN = WORK_MANAGER_ID_RANGE_MAX - 10000
 
         @SuppressLint("StaticFieldLeak")
         var context: Context? = null

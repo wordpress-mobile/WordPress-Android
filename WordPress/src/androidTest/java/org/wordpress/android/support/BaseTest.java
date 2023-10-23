@@ -109,7 +109,6 @@ public class BaseTest {
         MePage mePage = new MePage();
         boolean isSelfHosted = mePage.go().isSelfHosted();
         if (isSelfHosted) { // Logged in from self hosted connected
-            mePage.goBack();
             new MySitesPage().go().removeSite(E2E_SELF_HOSTED_USER_SITE_ADDRESS);
         } else {
             wpLogout();
@@ -117,10 +116,6 @@ public class BaseTest {
     }
 
     protected void logoutIfNecessary() {
-        if (isElementDisplayed(R.id.continue_with_wpcom_button) || isElementDisplayed(R.id.login_open_email_client)) {
-            return;
-        }
-
         if (isElementDisplayed(R.id.nav_sites)) {
             logout();
         }
@@ -131,7 +126,7 @@ public class BaseTest {
         new LoginFlow().chooseContinueWithWpCom(mComposeTestRule)
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .enterPassword(E2E_WP_COM_USER_PASSWORD)
-                       .confirmLogin(false);
+                       .confirmLogin();
     }
 
     private void wpLogout() {
