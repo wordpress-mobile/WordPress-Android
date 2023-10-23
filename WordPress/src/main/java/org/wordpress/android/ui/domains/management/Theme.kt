@@ -40,13 +40,17 @@ fun M3ThemeWithoutBackground(
         MaterialTheme(
             colorScheme = if (isDarkTheme) {
                 darkColorScheme(
+                    primary = AppColor.JetpackGreen30,
+                    secondary = AppColor.JetpackGreen50,
+                    surface = AppColor.DarkGray,
                     error = AppColor.Red30,
-                    surface = AppColor.DarkGray
                 )
             } else {
                 lightColorScheme(
+                    primary = AppColor.JetpackGreen50,
+                    secondary = AppColor.JetpackGreen30,
+                    surface = AppColor.White,
                     error = AppColor.Red50,
-                    surface = AppColor.White
                 )
             },
             content = content
