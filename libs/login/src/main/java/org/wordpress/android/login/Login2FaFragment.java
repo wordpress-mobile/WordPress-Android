@@ -337,7 +337,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
-        //TODO: Check if security key is available, if not, trigger PushSecurityKeyPayload
+        // TODO: Check if security key is available, if not, trigger PushSecurityKeyPayload
         PushSecurityKeyPayload payload = new PushSecurityKeyPayload(mEmailAddress, mPassword);
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateSecurityKeyAction(payload));
     }
@@ -560,7 +560,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWebauthnChallengeReceived(OnWebauthnChallengeReceived event) {
         if (event.isError()) {
-            //TODO: Handle error
+            // TODO: Handle error
             return;
         }
         mLoginListener.signSecurityKey(event.challengeInfo);
