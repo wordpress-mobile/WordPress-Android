@@ -103,7 +103,7 @@ ext {
 
     // other
     androidDesugarVersion = '1.1.8'
-    wordPressLintVersion = '1.1.0'
+    wordPressLintVersion = '2.0.0'
 }
 
 allprojects {
