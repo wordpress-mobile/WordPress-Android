@@ -33,10 +33,10 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnWebauthnChallengeReceived;
-import org.wordpress.android.fluxc.store.AccountStore.PushSecurityKeyPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialAuthPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialSmsPayload;
+import org.wordpress.android.fluxc.store.AccountStore.StartSecurityKeyChallengePayload;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -353,8 +353,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             return;
         }
         // TODO: Check if security key is available, if not, trigger PushSecurityKeyPayload
-        PushSecurityKeyPayload payload = new PushSecurityKeyPayload(mUserId, mWebauthnNonce);
-        mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateSecurityKeyAction(payload));
+        StartSecurityKeyChallengePayload payload = new StartSecurityKeyChallengePayload(
+                mUserId, mWebauthnNonce);
+        mDispatcher.dispatch(AuthenticationActionBuilder.newSecurityKeyChallengeAction(payload));
     }
 
     private String getAuthCodeFromClipboard() {
