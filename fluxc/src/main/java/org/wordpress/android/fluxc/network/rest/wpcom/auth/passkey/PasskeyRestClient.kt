@@ -41,8 +41,8 @@ class PasskeyRestClient @Inject constructor(
         onFailure: (error: WPComGsonNetworkError) -> Unit
     ) {
         val parameters = mapOf(
-            "user_id" to userId.toLong(),
-            "client_id" to clientId.toLong(),
+            "user_id" to userId,
+            "client_id" to clientId,
             "client_secret" to secret,
             "auth_type" to "webauthn",
             "two_step_nonce" to twoStepNonce
@@ -50,7 +50,7 @@ class PasskeyRestClient @Inject constructor(
 
         triggerAccountRequest(
             url = webauthnChallengeEndpointUrl,
-            body = parameters,
+            parameters = parameters,
             onSuccess = { onSuccess(it.asChallengeInfo) },
             onFailure = onFailure
         )
@@ -83,19 +83,19 @@ class PasskeyRestClient @Inject constructor(
 
         val parameters = mapOf(
             "user_id" to userId.toString(),
-            "client_id" to clientId,
+            "client_id" to clientId.toString(),
             "client_secret" to secret,
             "auth_type" to "webauthn",
             "two_step_nonce" to twoStepNonce,
             "client_data" to clientData,
-            "get_bearer_token" to true,
-            "create_2fa_cookies_only" to true
+            "get_bearer_token" to true.toString(),
+            "create_2fa_cookies_only" to true.toString()
         )
 
         return suspendCoroutine { cont ->
             triggerAccountRequest(
                 url = webauthnAuthEndpointUrl,
-                body = parameters,
+                parameters = parameters,
                 onSuccess = {
                     cont.resumeWith(Result.success(it.asBearerToken))
                 },
@@ -109,16 +109,17 @@ class PasskeyRestClient @Inject constructor(
 
     private fun triggerAccountRequest(
         url: String,
-        body: Map<String, Any>,
-        onSuccess: (response: Map<String, Any>) -> Unit,
+        parameters: Map<String, String>,
+        onSuccess: (response: Map<*, *>) -> Unit,
         onFailure: (error: WPComGsonNetworkError) -> Unit
     ) {
-        val successListener = Response.Listener<Map<String, Any>> { onSuccess(it) }
+        val successListener = Response.Listener<Map<*, *>> { onSuccess(it) }
         val failureListener = WPComErrorListener { onFailure(it) }
 
         val request = WPComGsonRequest.buildPostRequest(
             url,
-            body,
+            parameters,
+            emptyMap(),
             Map::class.java,
             successListener,
             failureListener
@@ -127,7 +128,7 @@ class PasskeyRestClient @Inject constructor(
         add(request)
     }
 
-    private val Map<String, Any>.asChallengeInfo: WebauthnChallengeInfo
+    private val Map<*, *>.asChallengeInfo: WebauthnChallengeInfo
         get() = WebauthnChallengeInfo(
             challenge = this["challenge"] as String,
             rpId = this["rpId"] as String,
@@ -137,7 +138,7 @@ class PasskeyRestClient @Inject constructor(
                 ?.map { it as String }
         )
 
-    private val Map<String, Any>.asBearerToken: String
+    private val Map<*, *>.asBearerToken: String
         get() = this["data"]
             ?.run { this as? Map<*, *> }
             ?.let { this["bearer_token"] as? String }
