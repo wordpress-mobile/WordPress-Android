@@ -70,10 +70,9 @@ fun MyDomainsScreen(uiState: UiState) {
                 contentColor = MaterialTheme.colorScheme.onSurface,
             )
         },
-    ) {
-        Column (
-            modifier = Modifier.padding(it),
-        ){
+    ) { paddingValues ->
+        Column (Modifier.padding(paddingValues)) {
+            var queryString by rememberSaveable { mutableStateOf("") }
             val listState = rememberLazyListState()
 
             val elevation = animateDpAsState(
@@ -82,6 +81,8 @@ fun MyDomainsScreen(uiState: UiState) {
             )
             MyDomainsSearchInput(
                 elevation.value,
+                queryString = queryString,
+                onQueryStringChanged = { queryString = it },
                 enabled = uiState is PopulatedList.Loaded,
             )
             when (uiState) {
@@ -167,14 +168,14 @@ fun PrimaryButton(
 @Composable
 fun MyDomainsSearchInput(
     elevation: Dp,
+    queryString: String,
+    onQueryStringChanged: (String) -> Unit,
     enabled: Boolean = false,
 ) {
-    var queryString by rememberSaveable { mutableStateOf("") }
-
     Surface (shadowElevation = elevation, modifier = Modifier.zIndex(1f)) {
         OutlinedTextField(
             value = queryString,
-            onValueChange = { queryString = it },
+            onValueChange = onQueryStringChanged,
             enabled = enabled,
             placeholder = { Text(stringResource(R.string.domain_management_search_your_domains)) },
             shape = RoundedCornerShape(50),
