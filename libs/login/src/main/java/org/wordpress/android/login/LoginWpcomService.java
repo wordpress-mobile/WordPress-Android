@@ -56,7 +56,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         FETCHING_ACCOUNT(50),
         FETCHING_SETTINGS(75),
         FETCHING_SITES(100),
-        FETCHING_SECURITY_KEY(100),
+        SECURITY_KEY_NEEDED,
         SUCCESS,
         FAILURE_EMAIL_WRONG_PASSWORD,
         FAILURE_2FA,
@@ -156,6 +156,16 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         OnCredentialsOK() {}
     }
 
+    static class SecurityKeyRequested{
+        public String userId;
+        public String webauthnNonce;
+
+        SecurityKeyRequested(String userId, String webauthnNonce) {
+            this.userId = userId;
+            this.webauthnNonce = webauthnNonce;
+        }
+    }
+
     @Inject Dispatcher mDispatcher;
 
     @Inject LoginAnalyticsListener mAnalyticsListener;
@@ -211,7 +221,6 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
             case FETCHING_ACCOUNT:
             case FETCHING_SETTINGS:
             case FETCHING_SITES:
-            case FETCHING_SECURITY_KEY:
                 return LoginNotification.progress(this, state.getStep().progressPercent);
             case SUCCESS:
                 return LoginNotification.success(this);
@@ -223,6 +232,8 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
                 return LoginNotification.failure(this, R.string.notification_2fa_needed);
             case FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL:
                 return LoginNotification.failure(this, R.string.notification_wpcom_username_needed);
+            case SECURITY_KEY_NEEDED:
+                return LoginNotification.failure(this, R.string.notification_security_key_needed);
             case FAILURE_FETCHING_ACCOUNT:
             case FAILURE_CANNOT_ADD_DUPLICATE_SITE:
             case FAILURE:
@@ -435,7 +446,8 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSecurityKeyAuthStarted(OnSecurityKeyAuthStarted event) {
-        // LoginWpcomService.clearLoginServiceState();
-        setState(LoginStep.SUCCESS);
+        signalCredentialsOK();
+        setState(LoginStep.SECURITY_KEY_NEEDED);
+        EventBus.getDefault().post(new SecurityKeyRequested(event.userId, event.webauthnNonce));
     }
 }

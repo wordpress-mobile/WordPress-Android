@@ -22,9 +22,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.fluxc.store.AccountStore.OnSecurityKeyAuthStarted;
 import org.wordpress.android.login.LoginWpcomService.LoginState;
 import org.wordpress.android.login.LoginWpcomService.OnCredentialsOK;
+import org.wordpress.android.login.LoginWpcomService.SecurityKeyRequested;
 import org.wordpress.android.login.util.AvatarHelper;
 import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener;
 import org.wordpress.android.login.util.SiteUtils;
@@ -345,7 +345,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSecurityKeyAuthStarted(OnSecurityKeyAuthStarted event) {
+    public void onSecurityKeyAuthStarted(SecurityKeyRequested event) {
         mLoginListener.needsSecurityKey(event.userId, event.webauthnNonce);
     }
 

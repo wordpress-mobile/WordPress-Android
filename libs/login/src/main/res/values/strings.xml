@@ -122,6 +122,7 @@
     <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
     <string name="notification_login_failed">An error has occurred.</string>
     <string name="notification_wpcom_username_needed">Please log in with your username and password.</string>
+    <string name="notification_security_key_needed">Please provide your security key to continue.</string>
 
     <!-- Screen titles -->
     <string name="email_address_login_title">Email address login</string>
