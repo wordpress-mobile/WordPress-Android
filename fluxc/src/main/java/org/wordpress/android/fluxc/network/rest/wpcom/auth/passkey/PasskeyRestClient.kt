@@ -32,33 +32,6 @@ class PasskeyRestClient @Inject constructor(
     userAgent
 ) {
     @Suppress("LongParameterList")
-    fun requestWebauthnInitialData(
-        clientId: String,
-        secret: String,
-        username: String,
-        password: String,
-        onSuccess: (response: WebauthnUserData) -> Unit,
-        onFailure: (error: WPComGsonNetworkError) -> Unit
-    ) {
-        val parameters = mapOf(
-            "client_id" to clientId,
-            "client_secret" to secret,
-            "grant_type" to "password",
-            "username" to username,
-            "password" to password,
-            "wpcom_supports_2fa" to true,
-            "with_auth_types" to true
-        )
-
-        triggerAccountRequest(
-            url = wpcomTokenEndpoint,
-            body = parameters,
-            onSuccess = { onSuccess(it.asWebauthnUserData) },
-            onFailure = onFailure
-        )
-    }
-
-    @Suppress("LongParameterList")
     fun requestWebauthnChallenge(
         userId: String,
         clientId: String,
