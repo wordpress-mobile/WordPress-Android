@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.fluxc.store.AccountStore.OnSecurityKeyAuthStarted;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
@@ -55,6 +56,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         FETCHING_ACCOUNT(50),
         FETCHING_SETTINGS(75),
         FETCHING_SITES(100),
+        FETCHING_SECURITY_KEY(100),
         SUCCESS,
         FAILURE_EMAIL_WRONG_PASSWORD,
         FAILURE_2FA,
@@ -426,6 +428,13 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
             }
         }
 
+        setState(LoginStep.SUCCESS);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSecurityKeyAuthStarted(OnSecurityKeyAuthStarted event) {
+        LoginWpcomService.clearLoginServiceState();
         setState(LoginStep.SUCCESS);
     }
 }
