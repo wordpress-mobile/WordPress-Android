@@ -232,7 +232,7 @@ public class Authenticator {
         }
 
         @Nullable @Override protected Map<String, String> getParams() throws AuthFailureError {
-            return super.getParams();
+            return mParams;
         }
     }
 
