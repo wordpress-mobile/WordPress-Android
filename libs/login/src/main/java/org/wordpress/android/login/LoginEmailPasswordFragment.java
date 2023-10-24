@@ -386,8 +386,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 // consume the state so we don't relauch the 2FA dialog if user backs up
                 LoginWpcomService.clearLoginServiceState();
                 break;
-            case FAILURE_SECURITY_KEY:
-                // TODO: remove this, not necessary
+            case SECURITY_KEY_NEEDED:
                 onLoginFinished(false);
                 // consume the state so we don't relauch the 2FA dialog if user backs up
                 LoginWpcomService.clearLoginServiceState();
