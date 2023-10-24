@@ -143,18 +143,7 @@ class PasskeyRestClient @Inject constructor(
             ?.let { this["bearer_token"] as? String }
             .orEmpty()
 
-    private val Map<String, Any>.asWebauthnUserData: WebauthnUserData
-        get() {
-            val data = this["data"] as Map<*, *>
-            return WebauthnUserData(
-                userId = data["user_id"] as Long,
-                webauthnNonce = data["two_step_nonce_webauthn"] as String
-            )
-        }
-
     companion object {
-        private const val wpcomOauthPrefix = "https://public-api.wordpress.com/oauth2"
-        private const val wpcomTokenEndpoint = "$wpcomOauthPrefix/token"
         private const val baseURLWithAction = "wp-login.php?action"
         private const val challengeEndpoint = "webauthn-challenge-endpoint"
         private const val authEndpoint = "webauthn-authentication-endpoint"
