@@ -1039,7 +1039,7 @@ public class AccountStore extends Store {
                 handleSentAuthEmail((AuthEmailResponsePayload) payload);
                 break;
             case SECURITY_KEY_CHALLENGE:
-                handleSecurityKeyCredentials((StartSecurityKeyChallengePayload) payload);
+                requestWebauthnChallenge((StartSecurityKeyChallengePayload) payload);
                 break;
         }
     }
@@ -1366,31 +1366,11 @@ public class AccountStore extends Store {
         }
     }
 
-    private void handleSecurityKeyCredentials(final StartSecurityKeyChallengePayload payload) {
+    private void requestWebauthnChallenge(final StartSecurityKeyChallengePayload payload) {
         WebauthnChallengeRequest request = mAuthenticator.makeRequest(payload.mUserId, payload.mWebauthnNonce);
-        mPasskeyRestClient.requestWebauthnInitialData(
-                request.mClientId,
-                request.mAppSecret,
-                request.mUserId,
-                request.mWebauthnNonce,
-                userData -> {
-                    requestWebauthnChallenge(String.valueOf(userData.getUserId()), userData.getWebauthnNonce(),
-                            request.mClientId, request.mAppSecret);
-                    return null;
-                },
-                error -> {
-                    OnWebauthnChallengeReceived event = new OnWebauthnChallengeReceived();
-                    event.error = new WebauthnChallengeError(error);
-                    emitChange(event);
-                    return null;
-                });
-    }
-
-    private void requestWebauthnChallenge(String userId, String webauthnNonce,
-                                          String clientId, String secret) {
         mPasskeyRestClient.requestWebauthnChallenge(
-                userId, clientId,
-                secret, webauthnNonce,
+                request.mUserId, request.mClientId,
+                request.mAppSecret, request.mWebauthnNonce,
                 info -> {
                     OnWebauthnChallengeReceived event = new OnWebauthnChallengeReceived();
                     event.challengeInfo = info;
