@@ -116,8 +116,8 @@ public class Authenticator {
         return new BearerRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), code, listener, errorListener);
     }
 
-    public WebauthnRequest makeRequest(String username, String password) {
-        return new WebauthnRequest(username, password, mAppSecrets.getAppId(),
+    public WebauthnChallengeRequest makeRequest(String userId, String webauthnNonce) {
+        return new WebauthnChallengeRequest(userId, webauthnNonce, mAppSecrets.getAppId(),
                 mAppSecrets.getAppSecret());
     }
 
@@ -185,15 +185,15 @@ public class Authenticator {
         }
     }
 
-    public static class WebauthnRequest {
-        public String mUsername;
-        public String mPassword;
+    public static class WebauthnChallengeRequest {
+        public String mUserId;
+        public String mWebauthnNonce;
         public String mClientId;
         public String mAppSecret;
 
-        public WebauthnRequest(String username, String password, String appId, String appSecret) {
-            this.mUsername = username;
-            this.mPassword = password;
+        public WebauthnChallengeRequest(String userId, String mWebauthnNonce, String appId, String appSecret) {
+            this.mUserId = userId;
+            this.mWebauthnNonce = mWebauthnNonce;
             this.mClientId = appId;
             this.mAppSecret = appSecret;
         }
