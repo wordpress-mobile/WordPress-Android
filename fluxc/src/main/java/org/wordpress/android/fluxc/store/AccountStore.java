@@ -40,7 +40,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.WebauthnRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.WebauthnChallengeRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.PasskeyRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.WebauthnChallengeInfo;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
@@ -330,13 +330,13 @@ public class AccountStore extends Store {
         NOTIFICATION_POST
     }
 
-    public static class PushSecurityKeyPayload extends Payload<BaseNetworkError> {
-        public String username;
-        public String password;
+    public static class StartSecurityKeyChallengePayload extends Payload<BaseNetworkError> {
+        public String mUserId;
+        public String mWebauthnNonce;
 
-        public PushSecurityKeyPayload(String username, String password) {
-            this.username = username;
-            this.password = password;
+        public StartSecurityKeyChallengePayload(String mUserId, String mWebauthnNonce) {
+            this.mUserId = mUserId;
+            this.mWebauthnNonce = mWebauthnNonce;
         }
     }
 
@@ -1038,8 +1038,8 @@ public class AccountStore extends Store {
             case SENT_AUTH_EMAIL:
                 handleSentAuthEmail((AuthEmailResponsePayload) payload);
                 break;
-            case AUTHENTICATE_SECURITY_KEY:
-                handleSecurityKeyCredentials((PushSecurityKeyPayload) payload);
+            case SECURITY_KEY_CHALLENGE:
+                handleSecurityKeyCredentials((StartSecurityKeyChallengePayload) payload);
                 break;
         }
     }
@@ -1344,7 +1344,7 @@ public class AccountStore extends Store {
                 mDispatcher.dispatch(payload.nextAction);
             }
             emitChange(new OnAuthenticationChanged());
-        } else if (token.getUserId() != null) {
+        } else if (token.getUserId() != null && token.getWebauthnNonce() != null) {
             OnSecurityKeyAuthStarted event = new OnSecurityKeyAuthStarted(token.getUserId(),
                     token.getWebauthnNonce());
             emitChange(event);
@@ -1366,13 +1366,13 @@ public class AccountStore extends Store {
         }
     }
 
-    private void handleSecurityKeyCredentials(final PushSecurityKeyPayload payload) {
-        WebauthnRequest request = mAuthenticator.makeRequest(payload.username, payload.password);
+    private void handleSecurityKeyCredentials(final StartSecurityKeyChallengePayload payload) {
+        WebauthnChallengeRequest request = mAuthenticator.makeRequest(payload.mUserId, payload.mWebauthnNonce);
         mPasskeyRestClient.requestWebauthnInitialData(
                 request.mClientId,
                 request.mAppSecret,
-                request.mUsername,
-                request.mPassword,
+                request.mUserId,
+                request.mWebauthnNonce,
                 userData -> {
                     requestWebauthnChallenge(String.valueOf(userData.getUserId()), userData.getWebauthnNonce(),
                             request.mClientId, request.mAppSecret);
