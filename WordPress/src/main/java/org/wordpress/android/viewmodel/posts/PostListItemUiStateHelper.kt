@@ -233,7 +233,11 @@ class PostListItemUiStateHelper @Inject constructor(
             .takeIf { !it.isNullOrBlank() }
             ?.let { StringEscapeUtils.unescapeHtml4(it) }
             ?.let { PostUtils.collapseShortcodes(it) }
-            ?.let { UiStringText(it) }
+            ?.let { UiStringText(getTextBeforeLargeSpaceGap(it)) }
+    private fun getTextBeforeLargeSpaceGap(input: String): String {
+        val parts = input.split(Regex("\\s+\\n+"))
+        return parts.first()
+    }
 
     private fun getProgressBarState(
         uploadUiState: PostUploadUiState,
