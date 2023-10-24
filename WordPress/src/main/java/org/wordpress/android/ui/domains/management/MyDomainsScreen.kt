@@ -86,8 +86,10 @@ fun MyDomainsScreen(uiState: UiState) {
                 enabled = uiState is PopulatedList.Loaded,
             )
             when (uiState) {
-                is PopulatedList ->
-                    MyDomainsList(listUiState = uiState, listState = listState)
+                is PopulatedList -> MyDomainsList(
+                    listUiState = uiState.filter(queryString),
+                    listState = listState,
+                )
                 Error -> ErrorScreen()
                 Empty -> EmptyScreen {}
             }
