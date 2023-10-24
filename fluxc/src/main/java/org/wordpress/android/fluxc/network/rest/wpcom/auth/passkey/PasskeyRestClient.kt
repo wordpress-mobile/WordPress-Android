@@ -144,10 +144,10 @@ class PasskeyRestClient @Inject constructor(
             .orEmpty()
 
     companion object {
-        private const val baseURLWithAction = "https://wordpress.com/wp-login.php?action"
+        private const val baseWPLoginUrl = "https://wordpress.com/wp-login.php?action"
         private const val challengeEndpoint = "webauthn-challenge-endpoint"
         private const val authEndpoint = "webauthn-authentication-endpoint"
-        const val webauthnChallengeEndpointUrl = "$baseURLWithAction=$challengeEndpoint"
-        const val webauthnAuthEndpointUrl = "$baseURLWithAction=$authEndpoint"
+        const val webauthnChallengeEndpointUrl = "$baseWPLoginUrl=$challengeEndpoint"
+        const val webauthnAuthEndpointUrl = "$baseWPLoginUrl=$authEndpoint"
     }
 }
