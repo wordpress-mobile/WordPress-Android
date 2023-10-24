@@ -12,7 +12,6 @@ import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiS
 import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
-
 @ExperimentalCoroutinesApi
 class DomainManagementViewModelTest : BaseUnitTest() {
     @Mock
