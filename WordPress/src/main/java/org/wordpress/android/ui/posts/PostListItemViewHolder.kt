@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import android.R as AndroidR
 
 const val POST_LIST_ICON_PADDING = 8
-const val MAX_TITLE_LINES = 3
+const val MAX_TITLE_EXCERPT_LINES = 3
 
 sealed class PostListItemViewHolder(
     @LayoutRes layout: Int,
@@ -119,8 +119,8 @@ sealed class PostListItemViewHolder(
         }
 
         if ((data.title != null && data.title != noTitle) && data.excerpt != null) {
-            titleTextView.maxLines = 3
-            excerptTextView.maxLines = 3
+            titleTextView.maxLines = MAX_TITLE_EXCERPT_LINES
+            excerptTextView.maxLines = MAX_TITLE_EXCERPT_LINES
             titleTextView.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
                 override fun onPreDraw(): Boolean {
                     // Remove the listener to avoid multiple callbacks
@@ -142,7 +142,7 @@ sealed class PostListItemViewHolder(
                             excerptTextView.maxLines = 0
                         }
                     }
-                    if (titleLines >= MAX_TITLE_LINES) {
+                    if (titleLines >= MAX_TITLE_EXCERPT_LINES) {
                         // If the title occupies more than 3 lines, hide the excerpt
                         excerptTextView.visibility = View.GONE
                     } else {
