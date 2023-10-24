@@ -886,7 +886,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         private const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
-        private const val ONE_ITEM = 1
         private const val FIRST_ITEM = 0
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
