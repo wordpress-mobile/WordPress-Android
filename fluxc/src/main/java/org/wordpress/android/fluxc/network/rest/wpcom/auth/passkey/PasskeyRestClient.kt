@@ -41,8 +41,8 @@ class PasskeyRestClient @Inject constructor(
         onFailure: (error: WPComGsonNetworkError) -> Unit
     ) {
         val parameters = mapOf(
-            "user_id" to userId,
-            "client_id" to clientId,
+            "user_id" to userId.toLong(),
+            "client_id" to clientId.toLong(),
             "client_secret" to secret,
             "auth_type" to "webauthn",
             "two_step_nonce" to twoStepNonce
