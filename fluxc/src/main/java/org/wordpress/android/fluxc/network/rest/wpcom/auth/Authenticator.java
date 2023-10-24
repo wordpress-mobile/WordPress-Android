@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.auth;
 
-import static org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.PasskeyRestClient.webauthnChallengeEndpointUrl;
-
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -26,6 +24,7 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.PasskeyRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.WebauthnChallengeInfo;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailErrorType;
@@ -113,8 +112,9 @@ public class Authenticator {
         return String.format(AUTHORIZE_ENDPOINT_FORMAT, AUTHORIZE_ENDPOINT, mAppSecrets.getAppId());
     }
 
-    public TokenRequest requestChallenge(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS,
-                                         Listener listener, ErrorListener errorListener) {
+    public TokenRequest requestChallenge(String username, String password, String twoStepCode,
+                                         boolean shouldSendTwoStepSMS, Listener listener,
+                                         ErrorListener errorListener) {
         return new PasswordRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), username, password, twoStepCode,
                 shouldSendTwoStepSMS, listener, errorListener);
     }
@@ -202,7 +202,7 @@ public class Authenticator {
         public WebauthnChallengeRequest(String userId, String mWebauthnNonce, String appId,
                                         String appSecret, Response.Listener<WebauthnChallengeInfo> listener,
                                         ErrorListener errorListener) {
-            super(Method.POST, webauthnChallengeEndpointUrl, errorListener);
+            super(Method.POST, PasskeyRestClient.webauthnChallengeEndpointUrl, errorListener);
             mListener = listener;
             mParams.put(CLIENT_ID_PARAM_NAME, appId);
             mParams.put(CLIENT_SECRET_PARAM_NAME, appSecret);
