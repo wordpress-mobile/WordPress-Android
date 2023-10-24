@@ -24,7 +24,6 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryResultPayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountFetchUsernameSuggestionsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
@@ -40,7 +39,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.WebauthnChallengeRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.PasskeyRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.WebauthnChallengeInfo;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
@@ -345,9 +343,9 @@ public class AccountStore extends Store {
     }
 
     public static class WebauthnChallengeError implements OnChangedError {
-        public WPComGsonNetworkError error;
+        public VolleyError error;
 
-        public WebauthnChallengeError(WPComGsonNetworkError error) {
+        public WebauthnChallengeError(VolleyError error) {
             this.error = error;
         }
     }
@@ -1367,21 +1365,16 @@ public class AccountStore extends Store {
     }
 
     private void requestWebauthnChallenge(final StartSecurityKeyChallengePayload payload) {
-        WebauthnChallengeRequest request = mAuthenticator.makeRequest(payload.mUserId, payload.mWebauthnNonce);
-        mPasskeyRestClient.requestWebauthnChallenge(
-                request.mUserId, request.mClientId,
-                request.mAppSecret, request.mWebauthnNonce,
+        mAuthenticator.requestChallenge(payload.mUserId, payload.mWebauthnNonce,
                 info -> {
                     OnWebauthnChallengeReceived event = new OnWebauthnChallengeReceived();
                     event.challengeInfo = info;
                     emitChange(event);
-                    return null;
                 },
                 error -> {
                     OnWebauthnChallengeReceived event = new OnWebauthnChallengeReceived();
                     event.error = new WebauthnChallengeError(error);
                     emitChange(event);
-                    return null;
                 });
     }
 
