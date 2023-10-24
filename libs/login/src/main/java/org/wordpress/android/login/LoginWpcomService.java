@@ -156,7 +156,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         OnCredentialsOK() {}
     }
 
-    static class SecurityKeyRequested{
+    static class SecurityKeyRequested {
         public String userId;
         public String webauthnNonce;
 
