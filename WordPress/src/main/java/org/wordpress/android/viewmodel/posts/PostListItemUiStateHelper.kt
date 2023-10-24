@@ -200,13 +200,6 @@ class PostListItemUiStateHelper @Inject constructor(
     ): List<UiString> {
         val uiStrings: MutableList<UiString> = mutableListOf()
 
-        if (formattedDate.isNotBlank()) {
-            uiStrings.add(UiStringText(formattedDate))
-        }
-        if (isAuthorFilterVisible && authorFilterSelection == EVERYONE && !displayName.isNullOrBlank()) {
-            uiStrings.add(UiStringText(displayName))
-        }
-
         if (isSearch) {
             val postStatusText = when (postStatus) {
                 UNKNOWN -> R.string.unknown
@@ -218,6 +211,13 @@ class PostListItemUiStateHelper @Inject constructor(
                 SCHEDULED -> R.string.post_status_post_scheduled
             }
             uiStrings.add(UiStringRes(postStatusText))
+        }
+
+        if (formattedDate.isNotBlank()) {
+            uiStrings.add(UiStringText(formattedDate))
+        }
+        if (isAuthorFilterVisible && authorFilterSelection == EVERYONE && !displayName.isNullOrBlank()) {
+            uiStrings.add(UiStringText(displayName))
         }
         return uiStrings
     }
