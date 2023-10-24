@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import com.wordpress.stories.compose.frame.FrameSaveNotifier;
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -1926,10 +1925,5 @@ public class ActivityLauncher {
     public static void openDomainManagement(@NonNull Context context) {
         Intent intent = new Intent(context, DomainManagementActivity.class);
         context.startActivity(intent);
-    }
-
-    public static void openDomainManagementDetails(@NonNull Context context, @NotNull String domainName) {
-        String url = "https://wordpress.com/domains/manage/all/" + domainName + "/edit/" + domainName;
-        WPWebViewActivity.openURL(context, url);
     }
 }
