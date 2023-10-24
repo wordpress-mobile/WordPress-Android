@@ -111,7 +111,7 @@
 
         <Space
             android:id="@+id/space_between"
-            android:layout_width="4dp"
+            android:layout_width="8dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/image_featured"
