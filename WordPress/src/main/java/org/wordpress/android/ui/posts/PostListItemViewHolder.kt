@@ -57,12 +57,12 @@ sealed class PostListItemViewHolder(
     private val container: ConstraintLayout = itemView.findViewById(R.id.container)
     private val excerptTextView: TextView = itemView.findViewById(R.id.excerpt)
     private val moreButton: ImageView = itemView.findViewById(R.id.more)
+
     private val selectableBackground: Drawable? = parent.context.getDrawableFromAttribute(
         AndroidR.attr.selectableItemBackground
     )
 
     private val noTitle = UiString.UiStringRes(R.string.untitled_in_parentheses)
-    private val delimiter = " · "
     /**
      * Url of an image loaded in the `featuredImageView`.
      */
@@ -119,6 +119,8 @@ sealed class PostListItemViewHolder(
         }
 
         if ((data.title != null && data.title != noTitle) && data.excerpt != null) {
+            titleTextView.maxLines = 3
+            excerptTextView.maxLines = 3
             titleTextView.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
                 override fun onPreDraw(): Boolean {
                     // Remove the listener to avoid multiple callbacks
@@ -129,6 +131,17 @@ sealed class PostListItemViewHolder(
 
                     // Check if the title occupies more than 3 lines
                     val titleLines = titleLayout.lineCount
+                    when (titleLines) {
+                        1 -> {
+                            excerptTextView.maxLines = 2
+                        }
+                        2 -> {
+                            excerptTextView.maxLines = 1
+                        }
+                         else -> {
+                            excerptTextView.maxLines = 0
+                        }
+                    }
                     if (titleLines >= MAX_TITLE_LINES) {
                         // If the title occupies more than 3 lines, hide the excerpt
                         excerptTextView.visibility = View.GONE
@@ -241,7 +254,7 @@ sealed class PostListItemViewHolder(
         )
         // If there's no icon, we insert a transparent one to keep the title aligned with the items which have icons.
         if (icon == null) icon = ColorDrawable(Color.TRANSPARENT)
-        val iconSize: Int = context.getResources().getDimensionPixelSize(R.dimen.menu_item_icon_size)
+        val iconSize: Int = context.resources.getDimensionPixelSize(R.dimen.menu_item_icon_size)
         icon.setBounds(0, 0, iconSize, iconSize)
         val imageSpan = ImageSpan(icon)
 
