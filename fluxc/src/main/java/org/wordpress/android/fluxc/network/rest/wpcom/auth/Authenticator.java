@@ -1,10 +1,14 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.auth;
 
+import static org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.PasskeyRestClient.webauthnChallengeEndpointUrl;
+
 import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -22,6 +26,7 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.WebauthnChallengeInfo;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
@@ -32,7 +37,9 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LanguageUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -185,17 +192,44 @@ public class Authenticator {
         }
     }
 
-    public static class WebauthnChallengeRequest {
-        public String mUserId;
-        public String mWebauthnNonce;
-        public String mClientId;
-        public String mAppSecret;
+    public static class WebauthnChallengeRequest extends Request<WebauthnChallengeInfo> {
+        private final Response.Listener<WebauthnChallengeInfo> mListener;
+        private Map<String, String> mParams = new HashMap<>();
 
-        public WebauthnChallengeRequest(String userId, String mWebauthnNonce, String appId, String appSecret) {
-            this.mUserId = userId;
-            this.mWebauthnNonce = mWebauthnNonce;
-            this.mClientId = appId;
-            this.mAppSecret = appSecret;
+        public WebauthnChallengeRequest(String userId, String mWebauthnNonce, String appId,
+                                        String appSecret, Response.Listener<WebauthnChallengeInfo> listener,
+                                        ErrorListener errorListener) {
+            super(Method.POST, webauthnChallengeEndpointUrl, errorListener);
+            mListener = listener;
+            mParams.put(CLIENT_ID_PARAM_NAME, appId);
+            mParams.put(CLIENT_SECRET_PARAM_NAME, appSecret);
+            mParams.put("user_id", userId);
+            mParams.put("auth_type", "webauthn");
+            mParams.put("two_step_nonce", mWebauthnNonce);
+        }
+
+
+        @Override protected Response<WebauthnChallengeInfo> parseNetworkResponse(NetworkResponse response) {
+            try {
+                String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                JSONObject challengeData = new JSONObject(jsonString).getJSONObject("data");
+                String challenge = challengeData.getString("challenge");
+                String rpId = challengeData.getString("rpId");
+                String nonce = challengeData.getString("two_step_nonce");
+                List<String> allowCredentials = new ArrayList<>();
+                WebauthnChallengeInfo info = new WebauthnChallengeInfo(challenge, rpId, nonce, allowCredentials);
+                return Response.success(info, HttpHeaderParser.parseCacheHeaders(response));
+            } catch (UnsupportedEncodingException | JSONException e) {
+                return Response.error(new ParseError(e));
+            }
+        }
+
+        @Override protected void deliverResponse(WebauthnChallengeInfo response) {
+            mListener.onResponse(response);
+        }
+
+        @Nullable @Override protected Map<String, String> getParams() throws AuthFailureError {
+            return super.getParams();
         }
     }
 
