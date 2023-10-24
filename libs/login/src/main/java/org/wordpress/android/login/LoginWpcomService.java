@@ -211,6 +211,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
             case FETCHING_ACCOUNT:
             case FETCHING_SETTINGS:
             case FETCHING_SITES:
+            case FETCHING_SECURITY_KEY:
                 return LoginNotification.progress(this, state.getStep().progressPercent);
             case SUCCESS:
                 return LoginNotification.success(this);
