@@ -104,7 +104,7 @@ public class Authenticator {
                              boolean shouldSendTwoStepSMS,
                              Listener listener,
                              ErrorListener errorListener) {
-        TokenRequest tokenRequest = makeRequest(username, password, twoStepCode, shouldSendTwoStepSMS, listener,
+        TokenRequest tokenRequest = requestChallenge(username, password, twoStepCode, shouldSendTwoStepSMS, listener,
                 errorListener);
         mRequestQueue.add(tokenRequest);
     }
@@ -113,19 +113,22 @@ public class Authenticator {
         return String.format(AUTHORIZE_ENDPOINT_FORMAT, AUTHORIZE_ENDPOINT, mAppSecrets.getAppId());
     }
 
-    public TokenRequest makeRequest(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS,
-                                    Listener listener, ErrorListener errorListener) {
+    public TokenRequest requestChallenge(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS,
+                                         Listener listener, ErrorListener errorListener) {
         return new PasswordRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), username, password, twoStepCode,
                 shouldSendTwoStepSMS, listener, errorListener);
     }
 
-    public TokenRequest makeRequest(String code, Listener listener, ErrorListener errorListener) {
+    public TokenRequest requestChallenge(String code, Listener listener, ErrorListener errorListener) {
         return new BearerRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), code, listener, errorListener);
     }
 
-    public WebauthnChallengeRequest makeRequest(String userId, String webauthnNonce) {
-        return new WebauthnChallengeRequest(userId, webauthnNonce, mAppSecrets.getAppId(),
-                mAppSecrets.getAppSecret());
+    public void requestChallenge(String userId, String webauthnNonce,
+                                 Response.Listener<WebauthnChallengeInfo> listener,
+                                 ErrorListener errorListener) {
+        WebauthnChallengeRequest request = new WebauthnChallengeRequest(userId, webauthnNonce, mAppSecrets.getAppId(),
+                mAppSecrets.getAppSecret(), listener, errorListener);
+        mRequestQueue.add(request);
     }
 
     private static class TokenRequest extends Request<Token> {
