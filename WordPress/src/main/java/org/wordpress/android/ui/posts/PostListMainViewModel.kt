@@ -38,10 +38,6 @@ import org.wordpress.android.ui.posts.PostListType.DRAFTS
 import org.wordpress.android.ui.posts.PostListType.PUBLISHED
 import org.wordpress.android.ui.posts.PostListType.SCHEDULED
 import org.wordpress.android.ui.posts.PostListType.TRASHED
-import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
-import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
-import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.CompactViewLayoutTypeMenuUiState
-import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.StandardViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadStarter
@@ -133,12 +129,6 @@ class PostListMainViewModel @Inject constructor(
 
     private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
     val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
-
-    private val _viewLayoutType = MutableLiveData<PostListViewLayoutType>()
-    val viewLayoutType: LiveData<PostListViewLayoutType> = _viewLayoutType
-
-    private val _viewLayoutTypeMenuUiState = MutableLiveData<PostListViewLayoutTypeMenuUiState>()
-    val viewLayoutTypeMenuUiState: LiveData<PostListViewLayoutTypeMenuUiState> = _viewLayoutTypeMenuUiState
 
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
@@ -243,12 +233,6 @@ class PostListMainViewModel @Inject constructor(
         this.site = site
         this.editPostRepository = editPostRepository
 
-        if (isSearchExpanded.value == true) {
-            setViewLayoutAndIcon(COMPACT, false)
-        } else {
-            setUserPreferredViewLayoutType()
-        }
-
         val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
             prefs.postListAuthorSelection
         } else {
@@ -334,7 +318,6 @@ class PostListMainViewModel @Inject constructor(
 
     fun onSearchExpanded(restorePreviousSearch: Boolean) {
         if (isSearchExpanded.value != true) {
-            setViewLayoutAndIcon(COMPACT, false)
             AnalyticsUtils.trackWithSiteDetails(POST_LIST_SEARCH_ACCESSED, site)
 
             if (!restorePreviousSearch) {
@@ -347,7 +330,6 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun onSearchCollapsed(delay: Long = SEARCH_COLLAPSE_DELAY) {
-        setUserPreferredViewLayoutType()
         _isSearchExpanded.value = false
         clearSearch()
 
@@ -567,32 +549,6 @@ class PostListMainViewModel @Inject constructor(
             postInfo,
             postActionHandler::handleRemotePreview
         )
-    }
-
-    fun toggleViewLayout() {
-        val currentLayoutType = viewLayoutType.value ?: PostListViewLayoutType.defaultValue
-        val toggledValue = when (currentLayoutType) {
-            STANDARD -> COMPACT
-            COMPACT -> STANDARD
-        }
-        AnalyticsUtils.trackAnalyticsPostListToggleLayout(toggledValue)
-        setViewLayoutAndIcon(toggledValue, true)
-    }
-
-    private fun setViewLayoutAndIcon(layout: PostListViewLayoutType, storeIntoPreferences: Boolean = true) {
-        _viewLayoutType.value = layout
-        _viewLayoutTypeMenuUiState.value = when (layout) {
-            STANDARD -> StandardViewLayoutTypeMenuUiState
-            COMPACT -> CompactViewLayoutTypeMenuUiState
-        }
-        if (storeIntoPreferences) {
-            prefs.postListViewLayoutType = layout
-        }
-    }
-
-    private fun setUserPreferredViewLayoutType() {
-        val savedLayoutType = prefs.postListViewLayoutType
-        setViewLayoutAndIcon(savedLayoutType, false)
     }
 
     fun onBottomSheetPublishButtonClicked() {

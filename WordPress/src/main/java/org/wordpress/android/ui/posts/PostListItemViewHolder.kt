@@ -11,7 +11,6 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.PopupMenu
@@ -26,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.extensions.expandTouchTargetArea
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
@@ -135,23 +133,6 @@ sealed class PostListItemViewHolder(
         }
     }
 
-    class Compact(
-        parent: ViewGroup,
-        imageManager: ImageManager,
-        private val uiHelpers: UiHelpers
-    ) : PostListItemViewHolder(R.layout.post_list_item_compact, parent, imageManager, uiHelpers) {
-        private val moreButton: ImageButton = itemView.findViewById(R.id.more_button)
-
-        override fun onBind(item: PostListItemUiState) {
-            setBasicValues(item.data)
-
-            itemView.setOnClickListener { item.onSelected.invoke() }
-            uiHelpers.updateVisibility(moreButton, item.compactActions.actions.isNotEmpty())
-            moreButton.expandTouchTargetArea(R.dimen.post_list_more_button_extra_padding)
-            moreButton.setOnClickListener { onMoreClicked(item.compactActions.actions, moreButton) }
-        }
-    }
-
     protected fun setBasicValues(data: PostListItemUiStateData) {
         uiHelpers.setTextOrHide(titleTextView, data.title)
         updatePostInfoLabel(postInfoTextView, data.postInfo)
@@ -249,7 +230,7 @@ sealed class PostListItemViewHolder(
     private fun getMenuItemTitleWithIcon(context: Context, item: PostListItemAction): SpannableStringBuilder {
         var icon: Drawable? = setTint(
             context,
-            context.getDrawable(item.buttonType.iconResId)!!, item.buttonType.colorAttrId
+            ContextCompat.getDrawable(context, item.buttonType.iconResId)!!, item.buttonType.colorAttrId
         )
         // If there's no icon, we insert a transparent one to keep the title aligned with the items which have icons.
         if (icon == null) icon = ColorDrawable(Color.TRANSPARENT)

@@ -7,7 +7,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
@@ -19,8 +18,6 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
-import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
-import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.viewmodel.Event
@@ -48,12 +45,10 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     private lateinit var viewModel: PostListMainViewModel
 
+    @Mock
+    lateinit var prefs: AppPrefsWrapper
     @Before
     fun setUp() {
-        val prefs = mock<AppPrefsWrapper> {
-            on { postListViewLayoutType } doReturn STANDARD
-        }
-
         whenever(editPostRepository.postChanged).thenReturn(MutableLiveData(Event(PostModel())))
 
         viewModel = PostListMainViewModel(
@@ -136,25 +131,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
         viewModel.onSearchExpanded(false)
         assertThat(searchQuery).isNull()
-    }
-
-    @Test
-    fun `search is using compact view mode independently from normal post list`() {
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
-        assertThat(viewModel.viewLayoutType.value).isEqualTo(STANDARD) // default value
-
-        var viewLayoutType: PostListViewLayoutType? = null
-        viewModel.viewLayoutType.observeForever {
-            viewLayoutType = it
-        }
-
-        viewModel.onSearchExpanded(false)
-
-        assertThat(viewLayoutType).isEqualTo(COMPACT)
-
-        viewModel.onSearchCollapsed()
-
-        assertThat(viewLayoutType).isEqualTo(STANDARD)
     }
 
     @Test
