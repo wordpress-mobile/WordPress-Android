@@ -60,7 +60,7 @@ class DomainManagementViewModel @Inject constructor(
     }
 
     sealed class ActionEvent {
-        class DomainTapped(val domain: String): ActionEvent()
+        data class DomainTapped(val domain: String): ActionEvent()
     }
 
     sealed class UiState {
