@@ -435,7 +435,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSecurityKeyAuthStarted(OnSecurityKeyAuthStarted event) {
-        LoginWpcomService.clearLoginServiceState();
+        //LoginWpcomService.clearLoginServiceState();
         setState(LoginStep.SUCCESS);
     }
 }
