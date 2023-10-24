@@ -355,7 +355,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
-                if (itemCount == ONE_ITEM && positionStart == FIRST_ITEM) {
+                if (itemCount <= 2 && positionStart == FIRST_ITEM) {
                     recyclerView.smoothScrollToPosition(0)
                 }
             }
