@@ -60,6 +60,8 @@ class DomainManagementViewModel @Inject constructor(
         sealed class PopulatedList: UiState() {
             object Initial: PopulatedList()
             data class Loaded(val domains: List<AllDomainsDomain>): PopulatedList()
+
+            fun filter(query: String) = this
         }
         object Empty: UiState()
         object Error: UiState()
