@@ -221,6 +221,7 @@ public class Authenticator {
                 String challenge = challengeData.getString("challenge");
                 String rpId = challengeData.getString("rpId");
                 String nonce = challengeData.getString("two_step_nonce");
+                int timeout = challengeData.getInt("timeout");
                 List<WebauthnCredential> credentials = new ArrayList<>();
                 JSONArray allowCredentials = challengeData.getJSONArray("allowCredentials");
                 for (int i = 0; i < allowCredentials.length(); i++) {
@@ -234,7 +235,7 @@ public class Authenticator {
                             credentialJson.getString("id"), transports);
                     credentials.add(credential);
                 }
-                WebauthnChallengeInfo info = new WebauthnChallengeInfo(challenge, rpId, nonce, credentials);
+                WebauthnChallengeInfo info = new WebauthnChallengeInfo(challenge, rpId, nonce, credentials, timeout);
                 return Response.success(info, HttpHeaderParser.parseCacheHeaders(response));
             } catch (UnsupportedEncodingException | JSONException e) {
                 return Response.error(new ParseError(e));
