@@ -225,7 +225,7 @@ sealed class PageItem(open val type: Type) {
         SET_AS_POSTS_PAGE(R.string.pages_set_as_posts_page, R.drawable.ic_posts_16dp),
         COPY(R.string.button_copy, R.drawable.ic_copy_white_24dp),
         COPY_LINK(R.string.pages_copy_link, R.drawable.ic_gridicons_link_white_24dp),
-        PUBLISH_NOW(R.string.pages_publish_now, R.drawable.ic_reader_white_24dp),
+        PUBLISH_NOW(R.string.pages_publish_now, R.drawable.ic_dashboard_card_pages_published_page_status),
         PROMOTE_WITH_BLAZE(R.string.pages_promote_with_blaze, R.drawable.ic_promote_with_blaze, 0),
         MOVE_TO_DRAFT(R.string.pages_move_to_draft, R.drawable.ic_refresh_white_24dp),
         DELETE_PERMANENTLY(R.string.pages_delete_permanently, R.drawable.ic_trash_white_24dp),
