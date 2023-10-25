@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -41,11 +42,20 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DomainListCard(uiState: DomainCardUiState) {
+fun DomainListCard(
+    uiState: DomainCardUiState,
+    onDomainTapped: (domain: String) -> Unit = {},
+    ) {
     OutlinedCard(
         modifier = Modifier.fillMaxWidth(),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        onClick = {
+            if (uiState is DomainCardUiState.Loaded && uiState.domain != null) {
+                onDomainTapped(uiState.domain)
+            }
+        },
     ) {
         Row(
             verticalAlignment = CenterVertically,
