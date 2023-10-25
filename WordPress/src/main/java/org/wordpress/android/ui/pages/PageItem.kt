@@ -220,9 +220,9 @@ sealed class PageItem(open val type: Type) {
     ) {
         VIEW_PAGE(R.string.pages_view, R.drawable.ic_external_white_24dp),
         CANCEL_AUTO_UPLOAD(R.string.pages_and_posts_cancel_auto_upload, R.drawable.ic_undo_white_24dp),
-        SET_PARENT(R.string.pages_set_parent, R.string.set_parent, R.drawable.ic_pages_set_as_parent),
-        SET_AS_HOMEPAGE(R.string.pages_set_as_homepage),
-        SET_AS_POSTS_PAGE(R.string.pages_set_as_posts_page),
+        SET_PARENT(R.string.set_parent, R.drawable.ic_pages_set_as_parent),
+        SET_AS_HOMEPAGE(R.string.pages_set_as_homepage, R.drawable.ic_homepage_16dp),
+        SET_AS_POSTS_PAGE(R.string.pages_set_as_posts_page, R.drawable.ic_posts_16dp),
         COPY(R.string.button_copy, R.drawable.ic_copy_white_24dp),
         COPY_LINK(R.string.pages_copy_link, R.drawable.ic_gridicons_link_white_24dp),
         PUBLISH_NOW(R.string.pages_publish_now, R.drawable.ic_reader_white_24dp),
