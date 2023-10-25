@@ -10,11 +10,13 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.ActionEvent
+import org.wordpress.android.ui.domains.usecases.AllDomains
 import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -29,8 +31,9 @@ class DomainManagementViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: DomainManagementViewModel
 
     @Before
-    fun setUp() {
+    fun setUp() = test {
         MockitoAnnotations.openMocks(this)
+        whenever(useCase.execute()).thenReturn(AllDomains.Empty)
         viewModel = DomainManagementViewModel(testDispatcher(), analyticsTracker, useCase)
     }
 
