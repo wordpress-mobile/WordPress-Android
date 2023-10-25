@@ -1,14 +1,21 @@
 package org.wordpress.android.ui.domains.management
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.TestScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
-import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.PopulatedList
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN
+import org.wordpress.android.ui.domains.management.DomainManagementViewModel.ActionEvent
+import org.wordpress.android.ui.domains.usecases.AllDomains
 import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -16,64 +23,48 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 class DomainManagementViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var analyticsTracker: AnalyticsTrackerWrapper
+
     @Mock
-    private lateinit var fetchAllDomainsUseCase: FetchAllDomainsUseCase
+    lateinit var useCase: FetchAllDomainsUseCase
 
     private lateinit var viewModel: DomainManagementViewModel
 
-    private val fakeDomainFoo = AllDomainsDomain(domain = "foo.com", siteSlug = "Foo Warehouse")
-    private val fakeDomainBar = AllDomainsDomain(domain = "bar.com", siteSlug = "Chocolate Bar")
-    private val fakeDomainBah = AllDomainsDomain(domain = "bah.com", siteSlug = "Black sheep")
-    private val allDomains = listOf(fakeDomainFoo, fakeDomainBar, fakeDomainBah)
-
     @Before
-    fun setUp() {
+    fun setUp() = test {
         MockitoAnnotations.openMocks(this)
-        viewModel = DomainManagementViewModel(
-            mainDispatcher = testDispatcher(),
-            analyticsTracker = analyticsTracker,
-            fetchAllDomainsUseCase = fetchAllDomainsUseCase,
-        )
-    }
-
-    // PopulatedList
-
-    @Test
-    fun `PopulatedList filter matches correctly by domain`() {
-        // Given
-        val uiState = PopulatedList.Loaded(domains = allDomains)
-        val query = "foo"
-
-        // When
-        val result = uiState.filter(query)
-
-        // Then
-        assertThat(result).isEqualTo(PopulatedList.Loaded(listOf(fakeDomainFoo)))
+        whenever(useCase.execute()).thenReturn(AllDomains.Empty)
+        viewModel = DomainManagementViewModel(testDispatcher(), analyticsTracker, useCase)
     }
 
     @Test
-    fun `PopulatedList filter matches correctly by site slug`() {
-        // Given
-        val uiState = PopulatedList.Loaded(domains = allDomains)
-        val query = "chocolate"
-
-        // When
-        val result = uiState.filter(query)
-
-        // Then
-        assertThat(result).isEqualTo(PopulatedList.Loaded(listOf(fakeDomainBar)))
+    fun `WHEN ViewModel initialized THEN track DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN event`() {
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN)
     }
 
     @Test
-    fun `PopulatedList filter matches all for the empty string`() {
-        // Given
-        val uiState = PopulatedList.Loaded(domains = allDomains)
-        val query = ""
+    fun `WHEN a domain is tapped THEN track DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED event`() {
+        viewModel.onDomainTapped(testDomain)
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED)
+    }
 
-        // When
-        val result = uiState.filter(query)
+    @Test
+    fun `WHEN a domain is tapped THEN send DomainTapped action event`() = testWithActionEvents { events ->
+        viewModel.onDomainTapped(testDomain)
+        advanceUntilIdle()
+        assertThat(events.last()).isEqualTo(ActionEvent.DomainTapped(testDomain))
+    }
 
-        // Then
-        assertThat(result).isEqualTo(PopulatedList.Loaded(domains = allDomains))
+    private fun testWithActionEvents(block: suspend TestScope.(events: List<ActionEvent>) -> Unit) =
+        test {
+            val actionEvents = mutableListOf<ActionEvent>()
+            val job = launch { viewModel.actionEvents.toList(actionEvents) }
+
+            block(actionEvents)
+
+            job.cancel()
+        }
+
+    companion object {
+        private const val testDomain = "domain"
     }
 }
