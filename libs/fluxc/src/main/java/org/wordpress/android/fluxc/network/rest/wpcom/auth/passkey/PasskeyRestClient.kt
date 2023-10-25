@@ -133,9 +133,9 @@ class PasskeyRestClient @Inject constructor(
             challenge = this["challenge"] as String,
             rpId = this["rpId"] as String,
             twoStepNonce = this["twoStepNonce"] as String,
-            allowedCredentials = this["allowedCredentials"]
-                .run { this as? List<*> }
-                ?.map { it as String }
+            allowCredentials = emptyList(),
+            timeout = 0,
+            rawJson = ""
         )
 
     private val Map<*, *>.asBearerToken: String
