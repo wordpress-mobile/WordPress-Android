@@ -15,6 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -26,6 +27,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErro
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.PasskeyRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.WebauthnChallengeInfo;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.WebauthnCredential;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
@@ -219,8 +221,20 @@ public class Authenticator {
                 String challenge = challengeData.getString("challenge");
                 String rpId = challengeData.getString("rpId");
                 String nonce = challengeData.getString("two_step_nonce");
-                List<String> allowCredentials = new ArrayList<>();
-                WebauthnChallengeInfo info = new WebauthnChallengeInfo(challenge, rpId, nonce, allowCredentials);
+                List<WebauthnCredential> credentials = new ArrayList<>();
+                JSONArray allowCredentials = challengeData.getJSONArray("allowCredentials");
+                for (int i = 0; i < allowCredentials.length(); i++) {
+                    JSONObject credentialJson = allowCredentials.getJSONObject(i);
+                    JSONArray transportsJson = credentialJson.getJSONArray("transports");
+                    List<String> transports = new ArrayList<>();
+                    for (int j = 0; j < transportsJson.length(); j++) {
+                        transports.add(transportsJson.getString(j));
+                    }
+                    WebauthnCredential credential = new WebauthnCredential(credentialJson.getString("type"),
+                            credentialJson.getString("id"), transports);
+                    credentials.add(credential);
+                }
+                WebauthnChallengeInfo info = new WebauthnChallengeInfo(challenge, rpId, nonce, credentials);
                 return Response.success(info, HttpHeaderParser.parseCacheHeaders(response));
             } catch (UnsupportedEncodingException | JSONException e) {
                 return Response.error(new ParseError(e));
