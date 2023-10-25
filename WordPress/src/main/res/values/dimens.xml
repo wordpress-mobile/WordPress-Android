@@ -72,7 +72,7 @@
     <dimen name="bottom_nav_bar_badge_size">12dp</dimen>
 
     <!-- featured image in post list -->
-    <dimen name="postlist_featured_image_height">98dp</dimen>
+    <dimen name="postlist_featured_image_height">64dp</dimen>
 
     <!-- left/right margin for content such as Me fragment, My Site fragment -->
     <dimen name="content_margin_normal">@dimen/margin_extra_large</dimen>
@@ -514,7 +514,7 @@
     <!--post skeleton-->
     <dimen name="post_list_row_skeleton_view_title_height">20dp</dimen>
     <dimen name="post_list_row_skeleton_view_excerpt_height">16dp</dimen>
-    <dimen name="post_list_row_skeleton_view_date_height">16dp</dimen>
+    <dimen name="post_list_row_skeleton_view_post_info_height">14dp</dimen>
 
     <!-- author spinner for pages and posts lists -->
     <dimen name="author_spinner_avatar_size">24dp</dimen>
@@ -769,4 +769,5 @@
     <dimen name="switch_thumb_size">20dp</dimen>
     <dimen name="switch_horizontal_padding">7dp</dimen>
     <dimen name="switch_vertical_padding">4dp</dimen>
+    <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 </resources>

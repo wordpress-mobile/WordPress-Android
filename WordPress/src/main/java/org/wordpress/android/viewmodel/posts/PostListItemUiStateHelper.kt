@@ -80,6 +80,7 @@ class PostListItemUiStateHelper @Inject constructor(
     @Suppress("LongParameterList", "LongMethod")
     fun createPostListItemUiState(
         authorFilterSelection: AuthorFilterSelection,
+        isFilteringByAuthorSupported: Boolean,
         post: PostModel,
         site: SiteModel,
         unhandledConflicts: Boolean,
@@ -115,17 +116,23 @@ class PostListItemUiStateHelper @Inject constructor(
             ),
         )
         val defaultActions = createDefaultViewActions(buttonTypes, onButtonClicked)
-        val compactActions = createCompactViewActions(buttonTypes, onButtonClicked)
+        val moreActions = createMoreActions(buttonTypes, onButtonClicked)
 
         val remotePostId = RemotePostId(RemoteId(post.remotePostId))
         val localPostId = LocalPostId(LocalId(post.id))
-        val title = getTitle(post = post)
+        val baseTitle = getTitle(post = post)
+        val excerpt = getExcerpt(post = post)
+
+        val title =
+            if (baseTitle == UiStringRes(R.string.untitled_in_parentheses) && excerpt != null) null else baseTitle
+
         val postInfo = getPostInfoLabels(
             postStatus,
             formattedDate,
             post.authorDisplayName,
             authorFilterSelection,
-            isSearch
+            isSearch,
+            isFilteringByAuthorSupported
         )
         val statuses = getStatuses(
             postStatus = postStatus,
@@ -157,7 +164,7 @@ class PostListItemUiStateHelper @Inject constructor(
             remotePostId = remotePostId,
             localPostId = localPostId,
             title = title,
-            excerpt = getExcerpt(post = post),
+            excerpt = excerpt,
             imageUrl = featuredImageUrl,
             postInfo = postInfo,
             statuses = statuses,
@@ -177,26 +184,21 @@ class PostListItemUiStateHelper @Inject constructor(
         return PostListItemUiState(
             data = itemUiData,
             actions = defaultActions,
-            compactActions = compactActions,
+            moreActions = moreActions,
             onSelected = onSelected
         )
     }
 
+    @Suppress("LongParameterList")
     private fun getPostInfoLabels(
         postStatus: PostStatus,
         formattedDate: String,
         displayName: String?,
         authorFilterSelection: AuthorFilterSelection,
-        isSearch: Boolean
+        isSearch: Boolean,
+        isAuthorFilterVisible: Boolean
     ): List<UiString> {
         val uiStrings: MutableList<UiString> = mutableListOf()
-
-        if (!formattedDate.isBlank()) {
-            uiStrings.add(UiStringText(formattedDate))
-        }
-        if (authorFilterSelection == EVERYONE && !displayName.isNullOrBlank()) {
-            uiStrings.add(UiStringText(displayName))
-        }
 
         if (isSearch) {
             val postStatusText = when (postStatus) {
@@ -209,6 +211,13 @@ class PostListItemUiStateHelper @Inject constructor(
                 SCHEDULED -> R.string.post_status_post_scheduled
             }
             uiStrings.add(UiStringRes(postStatusText))
+        }
+
+        if (formattedDate.isNotBlank()) {
+            uiStrings.add(UiStringText(formattedDate))
+        }
+        if (isAuthorFilterVisible && authorFilterSelection == EVERYONE && !displayName.isNullOrBlank()) {
+            uiStrings.add(UiStringText(displayName))
         }
         return uiStrings
     }
@@ -224,7 +233,11 @@ class PostListItemUiStateHelper @Inject constructor(
             .takeIf { !it.isNullOrBlank() }
             ?.let { StringEscapeUtils.unescapeHtml4(it) }
             ?.let { PostUtils.collapseShortcodes(it) }
-            ?.let { UiStringText(it) }
+            ?.let { UiStringText(getTextBeforeLargeSpaceGap(it)) }
+    private fun getTextBeforeLargeSpaceGap(input: String): String {
+        val parts = input.split(Regex("\\s+\\n+"))
+        return parts.first()
+    }
 
     private fun getProgressBarState(
         uploadUiState: PostUploadUiState,
@@ -501,7 +514,7 @@ class PostListItemUiStateHelper @Inject constructor(
         }
     }
 
-    private fun createCompactViewActions(
+    private fun createMoreActions(
         buttonTypes: List<PostListButtonType>,
         onButtonClicked: (PostListButtonType) -> Unit
     ): PostListItemAction.MoreItem {

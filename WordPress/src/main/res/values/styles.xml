@@ -998,15 +998,6 @@
         <item name="colorAccent">@color/primary_50</item>
     </style>
 
-    <!--Post List Skeleton-->
-    <style name="PostListRowSkeletonButton">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:gravity">center</item>
-        <item name="android:enabled">false</item>
-    </style>
-
     <!-- Site Creation: Domain Search Example-->
     <style name="SiteCreationDomainExample">
         <item name="android:layout_width">wrap_content</item>
@@ -1707,5 +1698,14 @@
     <!-- Media Picker -->
     <style name="MediaPickerPartialAccessTextButton" parent="TextAppearance.Material3.LabelLarge">
         <item name="android:textColor">@color/primary_emphasis_medium_selector</item>
+    </style>
+
+    <!-- Post List Item -->
+    <style name="PostList.Item.Title" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+    </style>
+
+    <style name="PostList.Item.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
     </style>
 </resources>

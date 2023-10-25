@@ -12,37 +12,13 @@ sealed class PostListItemType {
     class PostListItemUiState(
         val data: PostListItemUiStateData,
         val actions: List<PostListItemAction>,
-        val compactActions: PostListItemAction.MoreItem,
+        val moreActions: PostListItemAction.MoreItem,
         val onSelected: () -> Unit
     ) : PostListItemType()
 
-    class LoadingItem(val localOrRemoteId: LocalOrRemoteId, val options: LoadingItemOptions) : PostListItemType()
+    class LoadingItem(val localOrRemoteId: LocalOrRemoteId) : PostListItemType()
     object EndListIndicatorItem : PostListItemType()
 }
-
-sealed class LoadingItemOptions(
-    val showEditButton: Boolean,
-    val showViewButton: Boolean,
-    val showMoreButton: Boolean,
-    val showMoveToDraftButton: Boolean,
-    val showDeletePermanentlyButton: Boolean
-)
-
-object LoadingItemDefaultPost : LoadingItemOptions(
-    showEditButton = true,
-    showViewButton = true,
-    showMoreButton = true,
-    showMoveToDraftButton = false,
-    showDeletePermanentlyButton = false
-)
-
-object LoadingItemTrashedPost : LoadingItemOptions(
-    showEditButton = false,
-    showViewButton = false,
-    showMoreButton = false,
-    showMoveToDraftButton = true,
-    showDeletePermanentlyButton = true
-)
 
 data class PostListItemUiStateData(
     val remotePostId: RemotePostId,

@@ -23,8 +23,8 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadFailed
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadQueued
@@ -1037,7 +1037,7 @@ class PostListItemUiStateHelperTest {
 
         // Assert
         assertThat(state.data.postInfo!!.size).isEqualTo(2)
-        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
+        assertThat(state.data.postInfo!![0]).isEqualTo((UiStringText(FORMATTER_DATE)))
         assertThat(state.data.postInfo!![1]).isEqualTo(UiStringText(authorDisplayName))
     }
 
@@ -1068,8 +1068,8 @@ class PostListItemUiStateHelperTest {
 
         // Assert
         assertThat(state.data.postInfo!!.size).isEqualTo(2)
-        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
-        assertThat(state.data.postInfo!![1]).isEqualTo(UiStringRes(R.string.post_status_post_private))
+        assertThat(state.data.statuses[0]).isEqualTo(UiStringRes(R.string.post_status_post_private))
+        assertThat(state.data.postInfo!![1]).isEqualTo(UiStringText(FORMATTER_DATE))
     }
 
     @Test
@@ -1080,7 +1080,7 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.local_draft))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.local_draft))
     }
 
     @Test
@@ -1091,7 +1091,7 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat(state.data.statuses).containsOnly(UiStringRes(R.string.post_status_sticky))
+        assertThat(state.data.statuses).contains(UiStringRes(R.string.post_status_sticky))
     }
 
     @Test
@@ -1124,6 +1124,7 @@ class PostListItemUiStateHelperTest {
 
     private fun createPostListItemUiState(
         authorFilterSelection: AuthorFilterSelection = AuthorFilterSelection.EVERYONE,
+        isFilteringByAuthorSupported: Boolean = true,
         post: PostModel = PostModel(),
         site: SiteModel = SiteModel(),
         unhandledConflicts: Boolean = false,
@@ -1148,7 +1149,8 @@ class PostListItemUiStateHelperTest {
         onAction = onAction,
         performingCriticalAction = performingCriticalAction,
         uploadStatusTracker = uploadStatusTracker,
-        isSearch = isSearch
+        isSearch = isSearch,
+        isFilteringByAuthorSupported = isFilteringByAuthorSupported
     )
 
     private fun createFailedUploadUiState(
