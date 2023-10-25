@@ -235,7 +235,8 @@ public class Authenticator {
                             credentialJson.getString("id"), transports);
                     credentials.add(credential);
                 }
-                WebauthnChallengeInfo info = new WebauthnChallengeInfo(challenge, rpId, nonce, credentials, timeout);
+                WebauthnChallengeInfo info = new WebauthnChallengeInfo(challenge, rpId, nonce,
+                        credentials, timeout, challengeData.toString());
                 return Response.success(info, HttpHeaderParser.parseCacheHeaders(response));
             } catch (UnsupportedEncodingException | JSONException e) {
                 return Response.error(new ParseError(e));
