@@ -4,7 +4,8 @@ data class WebauthnChallengeInfo(
     val challenge: String,
     val rpId: String,
     val twoStepNonce: String,
-    val allowCredentials: List<WebauthnCredential>
+    val allowCredentials: List<WebauthnCredential>,
+    val timeout: Int
 )
 
 data class WebauthnCredential(
