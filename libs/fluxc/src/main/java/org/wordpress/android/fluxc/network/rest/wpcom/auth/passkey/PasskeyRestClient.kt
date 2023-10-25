@@ -32,31 +32,6 @@ class PasskeyRestClient @Inject constructor(
     userAgent
 ) {
     @Suppress("LongParameterList")
-    fun requestWebauthnChallenge(
-        userId: String,
-        clientId: String,
-        secret: String,
-        twoStepNonce: String,
-        onSuccess: (response: WebauthnChallengeInfo) -> Unit,
-        onFailure: (error: WPComGsonNetworkError) -> Unit
-    ) {
-        val parameters = mapOf(
-            "user_id" to userId,
-            "client_id" to clientId,
-            "client_secret" to secret,
-            "auth_type" to "webauthn",
-            "two_step_nonce" to twoStepNonce
-        )
-
-        triggerAccountRequest(
-            url = webauthnChallengeEndpointUrl,
-            parameters = parameters,
-            onSuccess = { onSuccess(it.asChallengeInfo) },
-            onFailure = onFailure
-        )
-    }
-
-    @Suppress("LongParameterList")
     suspend fun authenticateWebauthnSignature(
         userId: Long,
         clientId: Long,
@@ -127,16 +102,6 @@ class PasskeyRestClient @Inject constructor(
 
         add(request)
     }
-
-    private val Map<*, *>.asChallengeInfo: WebauthnChallengeInfo
-        get() = WebauthnChallengeInfo(
-            challenge = this["challenge"] as String,
-            rpId = this["rpId"] as String,
-            twoStepNonce = this["twoStepNonce"] as String,
-            allowCredentials = emptyList(),
-            timeout = 0,
-            rawJson = ""
-        )
 
     private val Map<*, *>.asBearerToken: String
         get() = this["data"]
