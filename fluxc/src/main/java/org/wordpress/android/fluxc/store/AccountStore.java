@@ -339,7 +339,7 @@ public class AccountStore extends Store {
     }
 
     public static class OnWebauthnChallengeReceived extends OnChanged<WebauthnChallengeError> {
-        public WebauthnChallengeInfo challengeInfo;
+        public String challengeInfo;
         public String mUserId;
     }
 
