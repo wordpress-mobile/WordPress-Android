@@ -101,12 +101,6 @@ sealed class DomainCardUiState {
         }
     }
 }
-private fun AllDomainsDomain.getDomainDetailsUrl(): String? =
-    if (domain.isNullOrEmpty() || siteSlug.isNullOrEmpty()) null else when (type) {
-        "transfer" -> "https://wordpress.com/domains/manage/all/$domain/transfer/in/$siteSlug"
-        "redirect" -> "https://wordpress.com/domains/manage/all/$domain/redirect/$siteSlug"
-        else -> "https://wordpress.com/domains/manage/all/$domain/edit/$siteSlug"
-    }
 
 sealed class StatusRowUiState {
     object Initial: StatusRowUiState()
