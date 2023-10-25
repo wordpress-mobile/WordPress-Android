@@ -52,15 +52,15 @@ class DomainManagementViewModel @Inject constructor(
         }
     }
 
-    fun onDomainTapped(domain: String) {
+    fun onDomainTapped(detailUrl: String) {
         analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED)
         launch {
-            _actionEvents.emit(ActionEvent.DomainTapped(domain))
+            _actionEvents.emit(ActionEvent.DomainTapped(detailUrl))
         }
     }
 
     sealed class ActionEvent {
-        data class DomainTapped(val domain: String): ActionEvent()
+        data class DomainTapped(val detailUrl: String): ActionEvent()
     }
 
     sealed class UiState {
@@ -78,6 +78,7 @@ sealed class DomainCardUiState {
     data class Loaded(
         val domain: String?,
         val title: String?,
+        val detailUrl: String?,
         val statusUiState: StatusRowUiState,
     ): DomainCardUiState()
 
@@ -88,6 +89,7 @@ sealed class DomainCardUiState {
             Loaded(
                 domain = it.domain,
                 title = it.blogName,
+                detailUrl = it.getDomainDetailsUrl(),
                 statusUiState = StatusRowUiState.Loaded(
                     indicatorColor = domainStatus.indicatorColor,
                     statusText = domainStatus.statusText,
@@ -99,6 +101,12 @@ sealed class DomainCardUiState {
         }
     }
 }
+private fun AllDomainsDomain.getDomainDetailsUrl(): String? =
+    if (domain.isNullOrEmpty() || siteSlug.isNullOrEmpty()) null else when (type) {
+        "transfer" -> "https://wordpress.com/domains/manage/all/$domain/transfer/in/$siteSlug"
+        "redirect" -> "https://wordpress.com/domains/manage/all/$domain/redirect/$siteSlug"
+        else -> "https://wordpress.com/domains/manage/all/$domain/edit/$siteSlug"
+    }
 
 sealed class StatusRowUiState {
     object Initial: StatusRowUiState()
