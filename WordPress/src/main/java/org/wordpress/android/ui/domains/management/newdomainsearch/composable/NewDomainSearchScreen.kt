@@ -3,9 +3,11 @@ package org.wordpress.android.ui.domains.management.newdomainsearch.composable
 import android.content.res.Configuration
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.ButtonDefaults
@@ -22,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -31,11 +34,14 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.domains.management.composable.DomainsSearchTextField
+import org.wordpress.android.ui.domains.management.newdomainsearch.domainsfetcher.NewDomain
 import org.wordpress.android.ui.domains.management.success
 
 @Composable
 fun NewDomainSearchScreen(
     onBackPressed: () -> Unit,
+    onSearchQueryChanged: (String) -> Unit,
+    domains: () -> List<NewDomain>,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -50,19 +56,24 @@ fun NewDomainSearchScreen(
             )
         },
         content = {
-            Column {
-                Column(
-                    modifier = Modifier.padding(it),
-                ) {
-                    val listState = rememberLazyListState()
+            Column(
+                modifier = Modifier.padding(it),
+            ) {
+                val listState = rememberLazyListState()
 
-                    val elevation = animateDpAsState(
-                        targetValue = if (listState.canScrollBackward) 4.dp else 0.dp,
-                        label = "Search Input Elevation",
-                    )
-                    NewDomainSearchInput(elevation = elevation.value)
+                val elevation = animateDpAsState(
+                    targetValue = if (listState.canScrollBackward) 4.dp else 0.dp,
+                    label = "Search Input Elevation",
+                )
+                NewDomainSearchInput(elevation = elevation.value, onValueChanged = onSearchQueryChanged)
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier.fillMaxWidth().weight(1f)
+                ) {
+                    items(items = domains()) { domain ->
+                        Domain(domain = domain)
+                    }
                 }
-                Spacer(modifier = Modifier.weight(1f))
                 TransferDomainFooter()
             }
         }
@@ -72,17 +83,21 @@ fun NewDomainSearchScreen(
 @Composable
 fun NewDomainSearchInput(
     elevation: Dp,
+    onValueChanged: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var queryString by rememberSaveable { mutableStateOf("") }
 
-    Surface (shadowElevation = elevation, modifier = Modifier.zIndex(1f)) {
+    Surface(shadowElevation = elevation, modifier = Modifier.zIndex(1f)) {
         DomainsSearchTextField(
             value = queryString,
             enabled = true,
             placeholder = R.string.new_domain_search_screen_input_placeholder,
             modifier = modifier,
-            onValueChange = { queryString = it }
+            onValueChange = {
+                queryString = it
+                onValueChanged(it)
+            }
         )
     }
 }
@@ -91,7 +106,7 @@ fun NewDomainSearchInput(
 fun TransferDomainFooter(
     modifier: Modifier = Modifier
 ) {
-    Surface (shadowElevation = 4.dp, modifier = Modifier.zIndex(1f)) {
+    Surface(shadowElevation = 8.dp, modifier = Modifier.zIndex(1f)) {
         Column(
             modifier = modifier
                 .padding(16.dp)
@@ -120,7 +135,47 @@ fun TransferDomainFooter(
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = MaterialTheme.colorScheme.success,
                     ),
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun Domain(
+    domain: NewDomain,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.padding(16.dp)) {
+        Row {
+            Text(
+                text = domain.domainPrefix,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = domain.domainSuffix,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        if (domain.salePrice.isNullOrEmpty()) {
+            Text(text = stringResource(id = R.string.new_domain_search_screen_list_item_regular_price, domain.price))
+        } else {
+            Row {
+                Text(
+                    text = stringResource(
+                        id = R.string.new_domain_search_screen_list_item_sale_price, domain.salePrice
+                    ),
+                    modifier = Modifier.padding(end = 4.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.success
+                )
+                Text(
+                    text = stringResource(id = R.string.new_domain_search_screen_list_item_regular_price, domain.price),
+                    textDecoration = TextDecoration.LineThrough,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
             }
         }
@@ -133,5 +188,26 @@ fun TransferDomainFooter(
 @Preview(name = "Landscape orientation", device = Devices.AUTOMOTIVE_1024p)
 @Composable
 fun NewDomainSearchScreenPreview() {
-    NewDomainSearchScreen({})
+    NewDomainSearchScreen(
+        domains = {
+            listOf(
+                NewDomain(
+                    productId = 0,
+                    domainPrefix = "example",
+                    domainSuffix = ".com",
+                    price = "USD 100",
+                    salePrice = "USD 30",
+                ),
+                NewDomain(
+                    productId = 0,
+                    domainPrefix = "example",
+                    domainSuffix = ".blog",
+                    price = "USD 100",
+                    salePrice = null,
+                ),
+            )
+        },
+        onSearchQueryChanged = {},
+        onBackPressed = {}
+    )
 }

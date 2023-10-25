@@ -2734,6 +2734,8 @@
     <string name="new_domain_search_screen_input_placeholder">Type to get more suggestions</string>
     <string name="new_domain_search_screen_transfer_domain_description">Looking to transfer a domain you already own?</string>
     <string name="new_domain_search_screen_transfer_domain_button">Transfer domain</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s / year</string>
+    <string name="new_domain_search_screen_list_item_sale_price">%s for the first year</string>
 
     <!-- Automated Transfer Eligibility Errors -->
     <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
