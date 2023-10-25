@@ -49,12 +49,12 @@ class DomainManagementViewModelTest : BaseUnitTest() {
     fun `WHEN a domain is tapped THEN send DomainTapped action event`() = testWithActionEvents { events ->
         viewModel.onDomainTapped(testDomain)
         advanceUntilIdle()
-        assertThat(events.last()).isEqualTo(DomainManagementViewModel.ActionEvent.DomainTapped(testDomain))
+        assertThat(events.last()).isEqualTo(ActionEvent.DomainTapped(testDomain))
     }
 
     private fun testWithActionEvents(block: suspend TestScope.(events: List<ActionEvent>) -> Unit) =
         test {
-            val actionEvents = mutableListOf<DomainManagementViewModel.ActionEvent>()
+            val actionEvents = mutableListOf<ActionEvent>()
             val job = launch { viewModel.actionEvents.toList(actionEvents) }
 
             block(actionEvents)
