@@ -579,6 +579,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             // TODO: Handle error
             return;
         }
-        mLoginListener.signSecurityKey(event.challengeInfo);
+        mLoginListener.signSecurityKey(event.challengeInfo, event.mUserId, mEmailAddress);
     }
 }
