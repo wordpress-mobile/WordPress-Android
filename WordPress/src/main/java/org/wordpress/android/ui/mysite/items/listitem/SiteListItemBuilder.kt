@@ -168,8 +168,7 @@ class SiteListItemBuilder @Inject constructor(
 
     fun buildDomainsItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (
-            buildConfigWrapper.isJetpackApp &&
-            site.hasCapabilityManageOptions
+            buildConfigWrapper.isJetpackApp && (site.isUsingWpComRestApi && site.hasCapabilityManageOptions)
         ) {
             ListItem(
                 R.drawable.ic_domains_white_24dp,
