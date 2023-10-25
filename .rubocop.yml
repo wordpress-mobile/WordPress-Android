@@ -1,12 +1,6 @@
-inherit_mode:
-  merge:
-    - Include
-
 AllCops:
   Exclude:
     - vendor/**/*
-  Include:
-    - .buildkite/danger/**/*
   NewCops: enable
 
 Metrics/MethodLength:
@@ -14,7 +8,3 @@ Metrics/MethodLength:
 
 Layout/LineLength:
   Max: 180
-
-Naming/FileName:
-  Exclude:
-    - .buildkite/danger/Dangerfile
