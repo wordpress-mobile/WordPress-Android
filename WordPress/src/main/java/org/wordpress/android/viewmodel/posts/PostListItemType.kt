@@ -11,7 +11,6 @@ import org.wordpress.android.widgets.PostListButtonType
 sealed class PostListItemType {
     class PostListItemUiState(
         val data: PostListItemUiStateData,
-        val actions: List<PostListItemAction>,
         val moreActions: PostListItemAction.MoreItem,
         val onSelected: () -> Unit
     ) : PostListItemType()
