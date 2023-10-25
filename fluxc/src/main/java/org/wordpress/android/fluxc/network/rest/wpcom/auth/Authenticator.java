@@ -126,7 +126,7 @@ public class Authenticator {
     }
 
     public void requestChallenge(String userId, String webauthnNonce,
-                                 Response.Listener<WebauthnChallengeInfo> listener,
+                                 Response.Listener<String> listener,
                                  ErrorListener errorListener) {
         WebauthnChallengeRequest request = new WebauthnChallengeRequest(userId, webauthnNonce, mAppSecrets.getAppId(),
                 mAppSecrets.getAppSecret(), listener, errorListener);
@@ -197,12 +197,11 @@ public class Authenticator {
         }
     }
 
-    public static class WebauthnChallengeRequest extends Request<WebauthnChallengeInfo> {
-        private final Response.Listener<WebauthnChallengeInfo> mListener;
+    public static class WebauthnChallengeRequest extends Request<String> {
+        private final Response.Listener<String> mListener;
         private Map<String, String> mParams = new HashMap<>();
-
         public WebauthnChallengeRequest(String userId, String mWebauthnNonce, String appId,
-                                        String appSecret, Response.Listener<WebauthnChallengeInfo> listener,
+                                        String appSecret, Response.Listener<String> listener,
                                         ErrorListener errorListener) {
             super(Method.POST, PasskeyRestClient.webauthnChallengeEndpointUrl, errorListener);
             mListener = listener;
@@ -214,36 +213,17 @@ public class Authenticator {
         }
 
 
-        @Override protected Response<WebauthnChallengeInfo> parseNetworkResponse(NetworkResponse response) {
+        @Override protected Response<String> parseNetworkResponse(NetworkResponse response) {
             try {
                 String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
                 JSONObject challengeData = new JSONObject(jsonString).getJSONObject("data");
-                String challenge = challengeData.getString("challenge");
-                String rpId = challengeData.getString("rpId");
-                String nonce = challengeData.getString("two_step_nonce");
-                int timeout = challengeData.getInt("timeout");
-                List<WebauthnCredential> credentials = new ArrayList<>();
-                JSONArray allowCredentials = challengeData.getJSONArray("allowCredentials");
-                for (int i = 0; i < allowCredentials.length(); i++) {
-                    JSONObject credentialJson = allowCredentials.getJSONObject(i);
-                    JSONArray transportsJson = credentialJson.getJSONArray("transports");
-                    List<String> transports = new ArrayList<>();
-                    for (int j = 0; j < transportsJson.length(); j++) {
-                        transports.add(transportsJson.getString(j));
-                    }
-                    WebauthnCredential credential = new WebauthnCredential(credentialJson.getString("type"),
-                            credentialJson.getString("id"), transports);
-                    credentials.add(credential);
-                }
-                WebauthnChallengeInfo info = new WebauthnChallengeInfo(challenge, rpId, nonce,
-                        credentials, timeout, challengeData.toString());
-                return Response.success(info, HttpHeaderParser.parseCacheHeaders(response));
+                return Response.success(challengeData.toString(), HttpHeaderParser.parseCacheHeaders(response));
             } catch (UnsupportedEncodingException | JSONException e) {
                 return Response.error(new ParseError(e));
             }
         }
 
-        @Override protected void deliverResponse(WebauthnChallengeInfo response) {
+        @Override protected void deliverResponse(String response) {
             mListener.onResponse(response);
         }
 
