@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import android.R as AndroidR
 
 const val POST_LIST_ICON_PADDING = 8
-const val MAX_TITLE_EXCERPT_LINES = 3
+const val MAX_TITLE_EXCERPT_LINES = 2
 
 sealed class PostListItemViewHolder(
     @LayoutRes layout: Int,
@@ -129,25 +129,15 @@ sealed class PostListItemViewHolder(
                     // Get the layout of the title text
                     val titleLayout = titleTextView.layout
 
-                    // Check if the title occupies more than 3 lines
-                    val titleLines = titleLayout.lineCount
-                    when (titleLines) {
+                    // Check if the title occupies more than 2 lines
+                    when (titleLayout.lineCount) {
                         1 -> {
                             excerptTextView.maxLines = 2
                         }
-                        2 -> {
+                        else -> {
                             excerptTextView.maxLines = 1
+                            titleTextView.maxLines = 2
                         }
-                         else -> {
-                            excerptTextView.maxLines = 0
-                        }
-                    }
-                    if (titleLines >= MAX_TITLE_EXCERPT_LINES) {
-                        // If the title occupies more than 3 lines, hide the excerpt
-                        excerptTextView.visibility = View.GONE
-                    } else {
-                        // If the title occupies 3 lines or less, show the excerpt
-                        excerptTextView.visibility = View.VISIBLE
                     }
                     return true
                 }
