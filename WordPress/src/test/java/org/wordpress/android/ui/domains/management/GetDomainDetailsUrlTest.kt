@@ -12,10 +12,10 @@ class GetDomainDetailsUrlTest : BaseUnitTest() {
     fun `WHEN a transfer domain is passed THEN a transfer detail url is generated`() {
         val domain = AllDomainsDomain(
             domain = "transfer.domain",
-            siteSlug = "transfer.domain.slug",
+            siteSlug = "transfer.slug",
             type = "transfer"
         )
-        val expectedDetailUrl = "https://wordpress.com/domains/manage/all/transfer.domain/transfer/in/transfer.domain.slug"
+        val expectedDetailUrl = "https://wordpress.com/domains/manage/all/transfer.domain/transfer/in/transfer.slug"
         val actualDetailUrl = domain.getDomainDetailsUrl()
         assertThat(actualDetailUrl).isEqualTo(expectedDetailUrl)
     }
