@@ -2,7 +2,6 @@ package org.wordpress.android.ui.domains.management
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
@@ -10,18 +9,13 @@ import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiS
 
 @ExperimentalCoroutinesApi
 class PopulatedListTest : BaseUnitTest() {
-    private lateinit var uiState: PopulatedList
-
     private val fakeDomainFoo = AllDomainsDomain(domain = "foo.com", siteSlug = "Foo Warehouse")
     private val fakeDomainBar = AllDomainsDomain(domain = "bar.com", siteSlug = "Chocolate Bar")
     private val fakeDomainBah = AllDomainsDomain(domain = "bah.com", siteSlug = "Black sheep")
-    private val allDomains = listOf(fakeDomainFoo, fakeDomainBar, fakeDomainBah)
 
-
-    @Before
-    fun setUp() {
-        uiState = PopulatedList.Loaded(domains = allDomains)
-    }
+    private val uiState = PopulatedList.Loaded(
+        domains = listOf(fakeDomainFoo, fakeDomainBar, fakeDomainBah)
+    )
 
     // PopulatedList
 
@@ -58,6 +52,6 @@ class PopulatedListTest : BaseUnitTest() {
         val result = uiState.filter(query)
 
         // Then
-        assertThat(result).isEqualTo(PopulatedList.Loaded(domains = allDomains))
+        assertThat(result).isEqualTo(uiState)
     }
 }
