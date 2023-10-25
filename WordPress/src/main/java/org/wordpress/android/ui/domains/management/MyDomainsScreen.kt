@@ -48,7 +48,10 @@ import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiS
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.Empty
 
 @Composable
-fun MyDomainsScreen(uiState: UiState) {
+fun MyDomainsScreen(
+    uiState: UiState,
+    onDomainTapped: (domain: String) -> Unit,
+) {
     Scaffold(
         topBar = {
             MainTopAppBar(
@@ -86,7 +89,7 @@ fun MyDomainsScreen(uiState: UiState) {
             )
             when (uiState) {
                 is PopulatedList ->
-                    MyDomainsList(listUiState = uiState, listState = listState)
+                    MyDomainsList(listUiState = uiState, listState = listState, onDomainTapped)
                 Error -> ErrorScreen()
                 Empty -> EmptyScreen {}
             }
@@ -197,6 +200,7 @@ fun MyDomainsSearchInput(
 fun MyDomainsList(
     listUiState: PopulatedList,
     listState: LazyListState,
+    onDomainTapped: (domain: String) -> Unit,
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -213,7 +217,7 @@ fun MyDomainsList(
                 }
             is PopulatedList.Loaded -> {
                 items(items = listUiState.domains) {
-                    DomainListCard(uiState = DomainCardUiState.fromDomain(domain = it))
+                    DomainListCard(uiState = DomainCardUiState.fromDomain(domain = it), onDomainTapped)
                 }
             }
         }
@@ -225,7 +229,7 @@ fun MyDomainsList(
 @Composable
 fun PreviewMyDomainsScreen() {
     M3Theme {
-        MyDomainsScreen(PopulatedList.Initial)
+        MyDomainsScreen(PopulatedList.Initial) {}
     }
 }
 @Preview(device = Devices.PIXEL_3A, group = "Error / Offline")
@@ -233,7 +237,7 @@ fun PreviewMyDomainsScreen() {
 @Composable
 fun PreviewMyDomainsScreenError() {
     M3Theme {
-        MyDomainsScreen(Error)
+        MyDomainsScreen(Error) {}
     }
 }
 
@@ -242,6 +246,6 @@ fun PreviewMyDomainsScreenError() {
 @Composable
 fun PreviewMyDomainsScreenEmpty() {
     M3Theme {
-        MyDomainsScreen(Empty)
+        MyDomainsScreen(Empty) {}
     }
 }
