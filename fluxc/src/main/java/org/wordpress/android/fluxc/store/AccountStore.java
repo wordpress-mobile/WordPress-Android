@@ -340,6 +340,7 @@ public class AccountStore extends Store {
 
     public static class OnWebauthnChallengeReceived extends OnChanged<WebauthnChallengeError> {
         public WebauthnChallengeInfo challengeInfo;
+        public String mUserId;
     }
 
     public static class WebauthnChallengeError implements OnChangedError {
@@ -1369,6 +1370,7 @@ public class AccountStore extends Store {
                 info -> {
                     OnWebauthnChallengeReceived event = new OnWebauthnChallengeReceived();
                     event.challengeInfo = info;
+                    event.mUserId = payload.mUserId;
                     emitChange(event);
                 },
                 error -> {
