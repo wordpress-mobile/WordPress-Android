@@ -453,8 +453,7 @@ class MySiteViewModel @Inject constructor(
         )
         val jetpackInstallFullPluginCard = jetpackInstallFullPluginCardBuilder.build(jetpackInstallFullPluginCardParams)
 
-        val cardsResult = if (!shouldShowDashboard(site)) emptyList()
-        else cardsBuilder.build(
+        val cardsResult = cardsBuilder.build(
             DomainRegistrationCardBuilderParams(
                 isDomainCreditAvailable = isDomainCreditAvailable,
                 domainRegistrationClick = this::domainRegistrationClick
