@@ -1470,7 +1470,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteSelected.value = siteLocalId
         onSiteChange.value = site
         selectedSite.value = SelectedSite(site)
-
     }
 
 
