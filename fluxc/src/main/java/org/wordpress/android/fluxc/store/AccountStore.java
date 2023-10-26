@@ -343,25 +343,11 @@ public class AccountStore extends Store {
     }
 
     public static class FinishSecurityKeyChallengePayload {
-        public String mId;
-        public String mRawId;
-        public String mType;
-        public WebauthnChallengeResponse mChallengeResponse;
-    }
-
-    public static class WebauthnChallengeResponse {
-        public String mUserHandle;
-        public String mClientDataJSON;
-        public String mSignature;
-        public String mAuthenticatorData;
-
-        public WebauthnChallengeResponse(String mUserHandle, String mClientDataJSON,
-                                         String mSignature, String mAuthenticatorData) {
-            this.mUserHandle = mUserHandle;
-            this.mClientDataJSON = mClientDataJSON;
-            this.mSignature = mSignature;
-            this.mAuthenticatorData = mAuthenticatorData;
-        }
+        public String mUserId;
+        public String mTwoStepNonce;
+        public String mClientId;
+        public String mClientSecret;
+        public String mClientData;
     }
 
     public static class WebauthnChallengeError implements OnChangedError {
@@ -1405,8 +1391,8 @@ public class AccountStore extends Store {
     }
 
     private void submitWebauthnChallengeResult(final FinishSecurityKeyChallengePayload payload) {
-        mAuthenticator.makeRequest(payload.mId, payload.mRawId, payload.mType,
-                payload.mChallengeResponse,
+        mAuthenticator.makeRequest(payload.mUserId, payload.mTwoStepNonce, payload.mClientId,
+                payload.mClientSecret, payload.mClientData,
                 token -> {
                     OnAuthenticationChanged event = new OnAuthenticationChanged();
                     emitChange(event);
