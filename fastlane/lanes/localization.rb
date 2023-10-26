@@ -302,7 +302,8 @@ platform :android do
         library_name: lib[:name],
         import_key: lib[:import_key],
         repository: lib[:repository],
-        file_path: lib[:strings_file_path]
+        file_path: lib[:strings_file_path],
+        build_gradle_path: File.join(PROJECT_ROOT_FOLDER, 'build.gradle')
       )
 
       if download_path.nil?

@@ -285,7 +285,9 @@ platform :android do
   #####################################################################################
   desc 'Updates store metadata and runs the release checks'
   lane :finalize_release do |options|
-    UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix
+    if android_current_branch_is_hotfix(version_properties_path: VERSION_PROPERTIES_PATH)
+      UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes')
+    end
 
     ensure_git_status_clean
     ensure_git_branch(branch: '^release/')
