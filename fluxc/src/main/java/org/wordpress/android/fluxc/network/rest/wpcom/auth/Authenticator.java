@@ -130,12 +130,12 @@ public class Authenticator {
         mRequestQueue.add(request);
     }
 
-    public void makeRequest(String id, String rawId, String type,
-                            WebauthnChallengeResponse challengeResponse,
-                            Response.Listener<String> listener,
+    public void makeRequest(String userId, String twoStepNonce,
+                            String clientId, String clientSecret,
+                            String clientData, Response.Listener<String> listener,
                             ErrorListener errorListener) {
-        WebauthnTokenRequest request = new WebauthnTokenRequest(id, rawId, type,
-                challengeResponse, listener, errorListener);
+        WebauthnTokenRequest request = new WebauthnTokenRequest(userId, twoStepNonce, clientId, clientSecret,
+                clientData, listener, errorListener);
         mRequestQueue.add(request);
     }
 
@@ -246,17 +246,20 @@ public class Authenticator {
         private final Response.Listener<String> mListener;
         private Map<String, String> mParams = new HashMap<>();
 
-        public WebauthnTokenRequest(String id, String rawId,
-                                    String type, WebauthnChallengeResponse challengeResponse,
-                                    Response.Listener<String> listener, ErrorListener errorListener) {
+        public WebauthnTokenRequest(String userId, String twoStepNonce,
+                                    String clientId, String clientSecret,
+                                    String clientData, Response.Listener<String> listener,
+                                    ErrorListener errorListener) {
             super(Method.POST, PasskeyRestClient.webauthnAuthEndpointUrl, errorListener);
             mListener = listener;
-            String jsonResponse = new Gson().toJson(challengeResponse);
-            mParams.put("id", id);
-            mParams.put("rawId", rawId);
-            mParams.put("type", type);
-            mParams.put("clientExtensionResults", "{}");
-            mParams.put("response", jsonResponse);
+            mParams.put("user_id", userId);
+            mParams.put("two_step_nonce", twoStepNonce);
+            mParams.put("auth_type", "webauthn");
+            mParams.put("client_data", clientData);
+            mParams.put("client_id", clientId);
+            mParams.put("client_secret", clientSecret);
+            mParams.put("get_bearer_token", "true");
+            mParams.put("create_2fa_cookies_only", "true");
         }
 
         @Override
