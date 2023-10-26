@@ -346,10 +346,22 @@ public class AccountStore extends Store {
         public String mId;
         public String mRawId;
         public String mType;
+        public WebauthnChallengeResponse mChallengeResponse;
+    }
+
+    public static class WebauthnChallengeResponse {
         public String mUserHandle;
         public String mClientDataJSON;
         public String mSignature;
         public String mAuthenticatorData;
+
+        public WebauthnChallengeResponse(String mUserHandle, String mClientDataJSON,
+                                         String mSignature, String mAuthenticatorData) {
+            this.mUserHandle = mUserHandle;
+            this.mClientDataJSON = mClientDataJSON;
+            this.mSignature = mSignature;
+            this.mAuthenticatorData = mAuthenticatorData;
+        }
     }
 
     public static class WebauthnChallengeError implements OnChangedError {
