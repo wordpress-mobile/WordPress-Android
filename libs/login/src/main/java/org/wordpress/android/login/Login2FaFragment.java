@@ -355,7 +355,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         // TODO: Check if security key is available, if not, trigger PushSecurityKeyPayload
         StartSecurityKeyChallengePayload payload = new StartSecurityKeyChallengePayload(
                 mUserId, mWebauthnNonce);
-        mDispatcher.dispatch(AuthenticationActionBuilder.newSecurityKeyChallengeAction(payload));
+        mDispatcher.dispatch(AuthenticationActionBuilder
+                .newStartSecurityKeyChallengeAction(payload));
     }
 
     private String getAuthCodeFromClipboard() {
