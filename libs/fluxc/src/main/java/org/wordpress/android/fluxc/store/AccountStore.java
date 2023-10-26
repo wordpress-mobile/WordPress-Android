@@ -345,8 +345,6 @@ public class AccountStore extends Store {
     public static class FinishSecurityKeyChallengePayload {
         public String mUserId;
         public String mTwoStepNonce;
-        public String mClientId;
-        public String mClientSecret;
         public String mClientData;
     }
 
@@ -1391,8 +1389,7 @@ public class AccountStore extends Store {
     }
 
     private void submitWebauthnChallengeResult(final FinishSecurityKeyChallengePayload payload) {
-        mAuthenticator.makeRequest(payload.mUserId, payload.mTwoStepNonce, payload.mClientId,
-                payload.mClientSecret, payload.mClientData,
+        mAuthenticator.makeRequest(payload.mUserId, payload.mTwoStepNonce, payload.mClientData,
                 token -> {
                     OnAuthenticationChanged event = new OnAuthenticationChanged();
                     emitChange(event);
