@@ -525,12 +525,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         siteInfo.loadMySiteDetails(state.siteInfoHeader)
 
         recyclerView.setVisible(true)
-        val cardAndItems = if (state.shouldShowDashboard) {
-            state.dashboardCardsAndItems
-        } else {
-            state.siteMenuCardsAndItems
-        }
-        (recyclerView.adapter as? MySiteAdapter)?.submitList(cardAndItems)
+        (recyclerView.adapter as? MySiteAdapter)?.submitList(state.dashboardData)
 
         if (noSitesView.actionableEmptyView.isVisible) {
             noSitesView.actionableEmptyView.setVisible(false)
