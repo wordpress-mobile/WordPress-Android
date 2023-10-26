@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/Automattic/dangermattic
-  revision: 0635de8b07954c70a4ed908fc1619774cb8fd10d
+  revision: 451932e8870ef3c52de0d8bea80edcfa3d879e53
   specs:
     danger-dangermattic (0.0.1)
       danger (~> 9.3)
@@ -286,7 +286,7 @@ GEM
     rake-compiler (1.2.5)
       rake
     rchardet (1.8.0)
-    regexp_parser (2.8.1)
+    regexp_parser (2.8.2)
     representable (3.2.0)
       declarative (< 0.1.0)
       trailblazer-option (>= 0.1.1, < 0.2.0)
@@ -295,19 +295,18 @@ GEM
     rexml (3.2.6)
     rmagick (4.3.0)
     rouge (2.0.7)
-    rubocop (1.56.4)
-      base64 (~> 0.1.1)
+    rubocop (1.57.2)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
-      parser (>= 3.2.2.3)
+      parser (>= 3.2.2.4)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
       rubocop-ast (>= 1.28.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.29.0)
+    rubocop-ast (1.30.0)
       parser (>= 3.2.1.0)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
