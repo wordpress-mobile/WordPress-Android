@@ -804,6 +804,9 @@
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
+            android:name=".ui.domains.management.DomainManagementDetailsActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity
             android:name=".ui.domains.management.purchasedomain.PurchaseDomainActivity"
             android:theme="@style/WordPress.NoActionBar" />
 

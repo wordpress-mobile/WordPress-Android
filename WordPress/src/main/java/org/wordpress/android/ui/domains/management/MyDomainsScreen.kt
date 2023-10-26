@@ -49,7 +49,8 @@ import org.wordpress.android.ui.domains.management.composable.DomainsSearchTextF
 @Composable
 fun MyDomainsScreen(
     uiState: UiState,
-    onAddDomainClicked: () -> Unit
+    onDomainTapped: (domain: String) -> Unit,
+    onAddDomainClicked: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -88,7 +89,7 @@ fun MyDomainsScreen(
             )
             when (uiState) {
                 is PopulatedList ->
-                    MyDomainsList(listUiState = uiState, listState = listState)
+                    MyDomainsList(listUiState = uiState, listState = listState, onDomainTapped)
                 Error -> ErrorScreen()
                 Empty -> EmptyScreen {}
             }
@@ -188,6 +189,7 @@ fun MyDomainsSearchInput(
 fun MyDomainsList(
     listUiState: PopulatedList,
     listState: LazyListState,
+    onDomainTapped: (domain: String) -> Unit,
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -204,7 +206,7 @@ fun MyDomainsList(
                 }
             is PopulatedList.Loaded -> {
                 items(items = listUiState.domains) {
-                    DomainListCard(uiState = DomainCardUiState.fromDomain(domain = it))
+                    DomainListCard(uiState = DomainCardUiState.fromDomain(domain = it), onDomainTapped)
                 }
             }
         }
@@ -216,7 +218,7 @@ fun MyDomainsList(
 @Composable
 fun PreviewMyDomainsScreen() {
     M3Theme {
-        MyDomainsScreen(PopulatedList.Initial, onAddDomainClicked = {})
+        MyDomainsScreen(PopulatedList.Initial, onAddDomainClicked = {}) {}
     }
 }
 @Preview(device = Devices.PIXEL_3A, group = "Error / Offline")
@@ -224,7 +226,7 @@ fun PreviewMyDomainsScreen() {
 @Composable
 fun PreviewMyDomainsScreenError() {
     M3Theme {
-        MyDomainsScreen(Error, onAddDomainClicked = {})
+        MyDomainsScreen(Error, onAddDomainClicked = {}) {}
     }
 }
 
@@ -233,6 +235,6 @@ fun PreviewMyDomainsScreenError() {
 @Composable
 fun PreviewMyDomainsScreenEmpty() {
     M3Theme {
-        MyDomainsScreen(Empty, onAddDomainClicked = {})
+        MyDomainsScreen(Empty, onAddDomainClicked = {}) {}
     }
 }

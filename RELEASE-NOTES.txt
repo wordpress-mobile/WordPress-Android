@@ -1,7 +1,13 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+23.7
+-----
+
 23.6
 -----
+* [*] Block Editor Social Icons: Fix visibility of inactive icons when used with block based themes in dark mode [https://github.com/WordPress/gutenberg/pull/55398]
+* [*] Block Editor Classic block: Add option to convert to blocks [https://github.com/WordPress/gutenberg/pull/55461]
+* [*] Block Editor Synced Patterns: Fix visibility of heading section when used with block based themes in dark mode [https://github.com/WordPress/gutenberg/pull/55399]
 
 
 23.5

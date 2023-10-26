@@ -1,6 +1,5 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:clipChildren="false"
@@ -26,8 +25,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    app:layout_collapseMode="parallax"
-                    app:layout_collapseParallaxMultiplier="1.0" />
+                    app:layout_collapseMode="none" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

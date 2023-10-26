@@ -65,7 +65,6 @@ import org.wordpress.android.ui.utils.TitleSubtitleSnackbarSpannable
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
@@ -133,9 +132,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     @Inject
     lateinit var activityNavigator: ActivityNavigator
-
-    @Inject
-    lateinit var buildConfigWrapper: BuildConfigWrapper
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
@@ -355,7 +351,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
-                if (itemCount == ONE_ITEM && positionStart == FIRST_ITEM) {
+                if (positionStart == FIRST_ITEM) {
                     recyclerView.smoothScrollToPosition(0)
                 }
             }
@@ -529,12 +525,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         siteInfo.loadMySiteDetails(state.siteInfoHeader)
 
         recyclerView.setVisible(true)
-        val cardAndItems = if (buildConfigWrapper.isJetpackApp) {
-            state.dashboardCardsAndItems
-        } else {
-            state.siteMenuCardsAndItems
-        }
-        (recyclerView.adapter as? MySiteAdapter)?.submitList(cardAndItems)
+        (recyclerView.adapter as? MySiteAdapter)?.submitList(state.dashboardData)
 
         if (noSitesView.actionableEmptyView.isVisible) {
             noSitesView.actionableEmptyView.setVisible(false)
@@ -886,7 +877,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         private const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
-        private const val ONE_ITEM = 1
         private const val FIRST_ITEM = 0
         fun newInstance(): MySiteFragment {
             return MySiteFragment()

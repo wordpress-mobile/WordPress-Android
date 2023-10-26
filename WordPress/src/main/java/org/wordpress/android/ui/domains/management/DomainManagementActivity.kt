@@ -13,7 +13,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
-class DomainManagementActivity: AppCompatActivity() {
+class DomainManagementActivity : AppCompatActivity() {
     private val viewModel: DomainManagementViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +22,7 @@ class DomainManagementActivity: AppCompatActivity() {
                 val uiState by viewModel.uiStateFlow.collectAsState()
                 MyDomainsScreen(
                     uiState = uiState,
+                    onDomainTapped = viewModel::onDomainTapped,
                     onAddDomainClicked = viewModel::onAddDomainClicked
                 )
             }
@@ -31,8 +32,10 @@ class DomainManagementActivity: AppCompatActivity() {
     }
 
     private fun handleActionEvents(actionEvent: DomainManagementViewModel.ActionEvent) {
-        when (actionEvent)  {
-            DomainManagementViewModel.ActionEvent.DomainTapped -> {}
+        when (actionEvent) {
+            is DomainManagementViewModel.ActionEvent.DomainTapped -> {
+                startActivity(DomainManagementDetailsActivity.createIntent(this, actionEvent.domain))
+            }
             DomainManagementViewModel.ActionEvent.AddDomainTapped -> ActivityLauncher.openNewDomainSearch(this)
         }
     }
