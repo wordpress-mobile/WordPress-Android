@@ -54,7 +54,7 @@ platform :android do
 
     extract_release_notes_for_version(
       version: new_version,
-      release_notes_file_path: "#{ENV['PROJECT_ROOT_FOLDER']}RELEASE-NOTES.txt",
+      release_notes_file_path: RELEASE_NOTES_SOURCE_PATH,
       extracted_notes_file_path: release_notes_path('wordpress')
     )
     # Jetpack Release notes are based on WP Release notes
@@ -65,7 +65,11 @@ platform :android do
       sh('git', 'commit', '-m', "Update draft release notes for Jetpack #{new_version}.")
     end
     cleanup_release_files(files: release_notes_short_paths)
-    android_update_release_notes(new_version: new_version) # Adds empty section for next version
+    # Adds empty section for next version
+    android_update_release_notes(
+      new_version: new_version,
+      release_notes_file_path: RELEASE_NOTES_SOURCE_PATH
+    )
 
     UI.message("Jetpack release notes were based on the same ones as WordPress. Don't forget to check #{release_notes_path('jetpack')} and amend them as necessary if any item does not apply for Jetpack before sending them to Editorial.")
 
@@ -488,22 +492,22 @@ platform :android do
 
   def release_notes_path(app)
     paths = {
-      wordpress: File.join(ENV['PROJECT_ROOT_FOLDER'], 'WordPress', 'metadata', 'release_notes.txt'),
-      jetpack: File.join(ENV['PROJECT_ROOT_FOLDER'], 'WordPress', 'jetpack_metadata', 'release_notes.txt')
+      wordpress: File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'metadata', 'release_notes.txt'),
+      jetpack: File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'jetpack_metadata', 'release_notes.txt')
     }
     paths[app.to_sym] || paths[:wordpress]
   end
 
   def release_notes_short_paths
     [
-      File.join(ENV['PROJECT_ROOT_FOLDER'], 'WordPress', 'metadata', 'release_notes_short.txt'),
-      File.join(ENV['PROJECT_ROOT_FOLDER'], 'WordPress', 'jetpack_metadata', 'release_notes_short.txt')
+      File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'metadata', 'release_notes_short.txt'),
+      File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'jetpack_metadata', 'release_notes_short.txt')
     ]
   end
 
   def bundle_file_path(app, version_name)
     prefix = APP_SPECIFIC_VALUES[app.to_sym][:bundle_name_prefix]
-    File.join(ENV['PROJECT_ROOT_FOLDER'], 'build', "#{prefix}-#{version_name}.aab")
+    File.join(PROJECT_ROOT_FOLDER, 'build', "#{prefix}-#{version_name}.aab")
   end
 
   def signed_apk_path(app, version_name)

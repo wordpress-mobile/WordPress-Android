@@ -31,6 +31,7 @@ PROTOTYPE_BUILD_DOMAIN = 'https://d2twmm2nzpx3bg.cloudfront.net'
 
 PROJECT_ROOT_FOLDER = File.dirname(File.expand_path(__dir__))
 FASTLANE_FOLDER = File.join(PROJECT_ROOT_FOLDER, 'fastlane')
+RELEASE_NOTES_SOURCE_PATH = File.join(PROJECT_ROOT_FOLDER, 'RELEASE-NOTES.txt')
 
 VERSION_PROPERTIES_PATH = File.join(PROJECT_ROOT_FOLDER, 'version.properties')
 
@@ -48,9 +49,7 @@ fastlane_require 'dotenv'
 USER_ENV_FILE_PATH = File.join(Dir.home, '.wpandroid-env.default')
 Dotenv.load(USER_ENV_FILE_PATH)
 
-ENV[GHHELPER_REPO = 'wordpress-mobile/WordPress-Android']
-ENV['PROJECT_ROOT_FOLDER'] = File.dirname(File.expand_path(__dir__)) + '/'
-ENV['FL_RELEASE_TOOLKIT_DEFAULT_BRANCH'] = 'trunk'
+GHHELPER_REPO = 'wordpress-mobile/WordPress-Android'
 DEFAULT_BRANCH = 'trunk'
 REPOSITORY_NAME = 'WordPress-Android'
 
