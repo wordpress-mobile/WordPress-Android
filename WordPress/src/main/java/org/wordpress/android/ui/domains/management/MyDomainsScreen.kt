@@ -218,7 +218,7 @@ fun MyDomainsList(
 @Composable
 fun PreviewMyDomainsScreen() {
     M3Theme {
-        MyDomainsScreen(PopulatedList.Initial, onAddDomainClicked = {}) {}
+        MyDomainsScreen(PopulatedList.Initial, onAddDomainClicked = {}, onDomainTapped = {})
     }
 }
 @Preview(device = Devices.PIXEL_3A, group = "Error / Offline")
@@ -226,7 +226,7 @@ fun PreviewMyDomainsScreen() {
 @Composable
 fun PreviewMyDomainsScreenError() {
     M3Theme {
-        MyDomainsScreen(Error, onAddDomainClicked = {}) {}
+        MyDomainsScreen(Error, onAddDomainClicked = {}, onDomainTapped = {})
     }
 }
 
@@ -235,6 +235,6 @@ fun PreviewMyDomainsScreenError() {
 @Composable
 fun PreviewMyDomainsScreenEmpty() {
     M3Theme {
-        MyDomainsScreen(Empty, onAddDomainClicked = {}) {}
+        MyDomainsScreen(Empty, onAddDomainClicked = {}, onDomainTapped = {})
     }
 }
