@@ -342,6 +342,10 @@ public class AccountStore extends Store {
         public String mUserId;
     }
 
+    public static class FinishSecurityKeyChallengePayload {
+
+    }
+
     public static class WebauthnChallengeError implements OnChangedError {
         public VolleyError error;
 
@@ -1036,8 +1040,11 @@ public class AccountStore extends Store {
             case SENT_AUTH_EMAIL:
                 handleSentAuthEmail((AuthEmailResponsePayload) payload);
                 break;
-            case SECURITY_KEY_CHALLENGE:
+            case START_SECURITY_KEY_CHALLENGE:
                 requestWebauthnChallenge((StartSecurityKeyChallengePayload) payload);
+                break;
+            case FINISH_SECURITY_KEY_CHALLENGE:
+                submitWebauthnChallengeResult((FinishSecurityKeyChallengePayload) payload);
                 break;
         }
     }
@@ -1377,6 +1384,10 @@ public class AccountStore extends Store {
                     event.error = new WebauthnChallengeError(error);
                     emitChange(event);
                 });
+    }
+
+    private void submitWebauthnChallengeResult(final FinishSecurityKeyChallengePayload payload) {
+        // TODO: Implement payload submission
     }
 
     private boolean checkError(AccountRestPayload payload, String log) {
