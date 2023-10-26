@@ -65,7 +65,6 @@ import org.wordpress.android.ui.utils.TitleSubtitleSnackbarSpannable
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
@@ -133,9 +132,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     @Inject
     lateinit var activityNavigator: ActivityNavigator
-
-    @Inject
-    lateinit var buildConfigWrapper: BuildConfigWrapper
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
@@ -529,7 +525,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         siteInfo.loadMySiteDetails(state.siteInfoHeader)
 
         recyclerView.setVisible(true)
-        val cardAndItems = if (buildConfigWrapper.isJetpackApp) {
+        val cardAndItems = if (state.shouldShowDashboard) {
             state.dashboardCardsAndItems
         } else {
             state.siteMenuCardsAndItems
