@@ -266,7 +266,7 @@ public class Authenticator {
                 JSONObject responseData = new JSONObject(jsonString).getJSONObject("data");
                 String token = responseData.getString("bearer_token");
                 return Response.success(token, HttpHeaderParser.parseCacheHeaders(response));
-            } catch(UnsupportedEncodingException | JSONException e) {
+            } catch (UnsupportedEncodingException | JSONException e) {
                 return Response.error(new ParseError(e));
             }
         }
