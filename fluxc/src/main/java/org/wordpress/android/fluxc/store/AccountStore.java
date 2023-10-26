@@ -343,7 +343,13 @@ public class AccountStore extends Store {
     }
 
     public static class FinishSecurityKeyChallengePayload {
-
+        public String mId;
+        public String mRawId;
+        public String mType;
+        public String mUserHandle;
+        public String mClientDataJSON;
+        public String mSignature;
+        public String mAuthenticatorData;
     }
 
     public static class WebauthnChallengeError implements OnChangedError {
