@@ -130,6 +130,15 @@ public class Authenticator {
         mRequestQueue.add(request);
     }
 
+    public void makeRequest(String id, String rawId, String type,
+                            WebauthnChallengeResponse challengeResponse,
+                            Response.Listener<String> listener,
+                            ErrorListener errorListener) {
+        WebauthnTokenRequest request = new WebauthnTokenRequest(id, rawId, type,
+                challengeResponse, listener, errorListener);
+        mRequestQueue.add(request);
+    }
+
     private static class TokenRequest extends Request<Token> {
         private final Listener mListener;
         protected Map<String, String> mParams = new HashMap<>();
