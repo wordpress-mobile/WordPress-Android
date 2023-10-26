@@ -129,10 +129,10 @@ public class Authenticator {
     }
 
     public void makeRequest(String userId, String twoStepNonce,
-                            String clientId, String clientSecret,
                             String clientData, Response.Listener<String> listener,
                             ErrorListener errorListener) {
-        WebauthnTokenRequest request = new WebauthnTokenRequest(userId, twoStepNonce, clientId, clientSecret,
+        WebauthnTokenRequest request = new WebauthnTokenRequest(userId, twoStepNonce,
+                mAppSecrets.getAppId(), mAppSecrets.getAppSecret(),
                 clientData, listener, errorListener);
         mRequestQueue.add(request);
     }
