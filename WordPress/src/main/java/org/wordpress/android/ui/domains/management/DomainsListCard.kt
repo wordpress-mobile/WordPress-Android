@@ -37,6 +37,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainStatus
 import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
+import org.wordpress.android.ui.domains.management.composable.PendingGhostStrip
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
@@ -102,32 +103,6 @@ fun DomainListCard(uiState: DomainCardUiState) {
         }
     }
 }
-
-@Composable
-fun PendingGhostStrip(width: Dp) {
-    val infiniteTransition = rememberInfiniteTransition(label = "Pending ghost strip transition")
-    val color by infiniteTransition.animateColor(
-        initialValue = MaterialTheme.colorScheme.ghost.copy(alpha = 0.06f),
-        targetValue = MaterialTheme.colorScheme.ghost.copy(alpha = 0.1f),
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = EaseInOut),
-            repeatMode = RepeatMode.Reverse,
-        ),
-        label = "Pending ghost strip color"
-    )
-    Box(
-        modifier = Modifier
-            .width(width)
-            .height(lineHeightDp)
-            .background(color)
-    )
-}
-
-private val lineHeightDp
-    @Composable
-    get() = with(LocalDensity.current) {
-        LocalTextStyle.current.lineHeight.toDp()
-    }
 
 @Preview(showBackground = true, widthDp = 360)
 @Preview(showBackground = true, widthDp = 360, uiMode = Configuration.UI_MODE_NIGHT_YES)
