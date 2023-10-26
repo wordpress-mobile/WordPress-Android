@@ -5,7 +5,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -29,7 +28,7 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
     private lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     @Mock
-    private lateinit var newDomainsSearchRepository: NewDomainsSearchRepository
+    private lateinit var repository: NewDomainsSearchRepository
 
     private lateinit var viewModel: NewDomainSearchViewModel
 
@@ -39,7 +38,7 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
         viewModel = NewDomainSearchViewModel(
             mainDispatcher = testDispatcher(),
             analyticsTracker = analyticsTracker,
-            newDomainsSearchRepository = newDomainsSearchRepository
+            newDomainsSearchRepository = repository
         )
     }
 
@@ -56,10 +55,11 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
         assertThat(events.last()).isEqualTo(ActionEvent.GoBack)
     }
 
+    @Suppress("MaxLineLength")
     @Test
     fun `GIVEN few queries requested within 250 ms query delay WHEN onSearchQueryChanged THEN search for domains with the last query only`() =
         test {
-            whenever(newDomainsSearchRepository.searchForDomains("third")).thenReturn(DomainsResult.Success(emptyList()))
+            whenever(repository.searchForDomains("third")).thenReturn(DomainsResult.Success(emptyList()))
 
             viewModel.onSearchQueryChanged("first")
             delay(200)
@@ -68,17 +68,18 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
             viewModel.onSearchQueryChanged("third")
             advanceUntilIdle()
 
-            verify(newDomainsSearchRepository, never()).searchForDomains("first")
-            verify(newDomainsSearchRepository, never()).searchForDomains("second")
-            verify(newDomainsSearchRepository).searchForDomains("third")
+            verify(repository, never()).searchForDomains("first")
+            verify(repository, never()).searchForDomains("second")
+            verify(repository).searchForDomains("third")
         }
 
+    @Suppress("MaxLineLength")
     @Test
     fun `GIVEN few queries requested outside 250 ms delay WHEN onSearchQueryChanged THEN search for domains with all the queries`() =
         test {
-            whenever(newDomainsSearchRepository.searchForDomains("first")).thenReturn(DomainsResult.Success(emptyList()))
-            whenever(newDomainsSearchRepository.searchForDomains("second")).thenReturn(DomainsResult.Success(emptyList()))
-            whenever(newDomainsSearchRepository.searchForDomains("third")).thenReturn(DomainsResult.Success(emptyList()))
+            whenever(repository.searchForDomains("first")).thenReturn(DomainsResult.Success(emptyList()))
+            whenever(repository.searchForDomains("second")).thenReturn(DomainsResult.Success(emptyList()))
+            whenever(repository.searchForDomains("third")).thenReturn(DomainsResult.Success(emptyList()))
 
             viewModel.onSearchQueryChanged("first")
             delay(250)
@@ -87,9 +88,9 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
             viewModel.onSearchQueryChanged("third")
             advanceUntilIdle()
 
-            verify(newDomainsSearchRepository).searchForDomains("first")
-            verify(newDomainsSearchRepository).searchForDomains("second")
-            verify(newDomainsSearchRepository).searchForDomains("third")
+            verify(repository).searchForDomains("first")
+            verify(repository).searchForDomains("second")
+            verify(repository).searchForDomains("third")
         }
 
     @Test
@@ -105,7 +106,7 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
                 )
             )
             val result = DomainsResult.Success(domains)
-            whenever(newDomainsSearchRepository.searchForDomains("query")).thenReturn(result)
+            whenever(repository.searchForDomains("query")).thenReturn(result)
 
             viewModel.onSearchQueryChanged("query")
             advanceUntilIdle()
@@ -116,7 +117,7 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
     @Test
     fun `GIVEN error search for domain result WHEN onSearchQueryChanged THEN emit error UI state`() =
         testWithUiStates { states ->
-            whenever(newDomainsSearchRepository.searchForDomains("query")).thenReturn(DomainsResult.Error)
+            whenever(repository.searchForDomains("query")).thenReturn(DomainsResult.Error)
 
             viewModel.onSearchQueryChanged("query")
             advanceUntilIdle()
