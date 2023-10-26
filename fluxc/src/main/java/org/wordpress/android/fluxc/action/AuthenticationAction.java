@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
 import org.wordpress.android.fluxc.store.AccountStore.StartSecurityKeyChallengePayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
+import org.wordpress.android.fluxc.store.AccountStore.FinishSecurityKeyChallengePayload;
 
 @ActionEnum
 public enum AuthenticationAction implements IAction {
@@ -28,5 +29,8 @@ public enum AuthenticationAction implements IAction {
     @Action(payloadType = AuthEmailResponsePayload.class)
     SENT_AUTH_EMAIL,
     @Action(payloadType = StartSecurityKeyChallengePayload.class)
-    SECURITY_KEY_CHALLENGE
+    START_SECURITY_KEY_CHALLENGE,
+
+    @Action(payloadType = FinishSecurityKeyChallengePayload.class)
+    FINISH_SECURITY_KEY_CHALLENGE
 }
