@@ -20,7 +20,7 @@
     <string name="next">Next</string>
     <string name="check_email">Check email</string>
     <string name="open_mail">Open Mail</string>
-    <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
+    <string name="enter_verification_code">Almost there! Please enter the verification code for WordPress.com from your authenticator app.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
     <string name="login_text_otp">Text me a code instead</string>
     <string name="login_text_otp_another">Text me another code instead</string>
