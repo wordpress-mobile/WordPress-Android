@@ -1,6 +1,11 @@
 package org.wordpress.android.ui.pages
 
+import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.text.SpannableStringBuilder
+import android.text.style.ImageSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +19,7 @@ import android.widget.RadioButton
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActionableEmptyView
@@ -30,6 +36,7 @@ import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.extensions.capitalizeWithLocaleWithoutLint
 import org.wordpress.android.util.extensions.currentLocale
+import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getDrawableFromAttribute
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
@@ -38,6 +45,8 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.Locale
 import android.R as AndroidR
+
+const val PAGES_LIST_ICON_PADDING = 8
 
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
     RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
@@ -154,15 +163,52 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
         private fun moreClick(pageItem: Page, v: View) {
             val popup = PopupMenu(v.context, v)
-            popup.setOnMenuItemClickListener { item ->
-                val action = PageItem.Action.fromItemId(item.itemId)
-                onMenuAction(action, pageItem)
-            }
-            popup.menuInflater.inflate(R.menu.page_more, popup.menu)
-            PageItem.Action.values().forEach {
-                popup.menu.findItem(it.itemId).isVisible = pageItem.actions.contains(it)
+            pageItem.actions.forEach { singleItemAction ->
+                val menuItem = popup.menu.add(
+                    getMenuItemTitleWithIcon(v.context, singleItemAction)
+                )
+                menuItem.setOnMenuItemClickListener {
+                    onMenuAction(singleItemAction, pageItem)
+                    true
+                }
             }
             popup.show()
+        }
+
+        @Suppress("ComplexMethod")
+        private fun getMenuItemTitleWithIcon(context: Context, item: PageItem.Action): SpannableStringBuilder {
+            var icon: Drawable? = item.icon?.let {
+                setTint(
+                    context,
+                    ContextCompat.getDrawable(context, item.icon)!!, item.colorTint
+                )
+            }
+
+            // If there's no icon, we insert a transparent one
+            // to keep the title aligned with the items which have icons.
+            if (icon == null) icon = ColorDrawable(Color.TRANSPARENT)
+            val iconSize: Int = context.getResources().getDimensionPixelSize(R.dimen.menu_item_icon_size)
+            icon.setBounds(0, 0, iconSize, iconSize)
+            val imageSpan = ImageSpan(icon)
+
+            // Add a space placeholder for the icon, before the title.
+            val menuTitle = context.getText(item.title)
+            val ssb = SpannableStringBuilder(
+                menuTitle.padStart(menuTitle.length + PAGES_LIST_ICON_PADDING)
+            )
+
+            // Replace the space placeholder with the icon.
+            ssb.setSpan(imageSpan, 1, 2, 0)
+            return ssb
+        }
+
+        private fun setTint(context: Context, drawable: Drawable, color: Int): Drawable {
+            val wrappedDrawable: Drawable = DrawableCompat.wrap(drawable)
+            if (color != 0) {
+                val iconColor = context.getColorFromAttribute(color)
+                DrawableCompat.setTint(wrappedDrawable, iconColor)
+            }
+            return wrappedDrawable
         }
 
         private fun showFeaturedImage(imageUrl: String?) {
