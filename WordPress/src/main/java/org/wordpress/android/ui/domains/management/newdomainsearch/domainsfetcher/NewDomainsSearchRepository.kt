@@ -21,7 +21,6 @@ class NewDomainsSearchRepository @Inject constructor(
     private val dispatcher: Dispatcher
 ) {
     var products: List<Product>? = null
-    var suggestions: DomainsResult = DomainsResult.Empty
 
     suspend fun searchForDomains(query: String): DomainsResult {
         if (products == null) fetchProducts()
@@ -81,8 +80,7 @@ class NewDomainsSearchRepository @Inject constructor(
     }
 
     sealed interface DomainsResult {
-        data class Success(val suggestions: List<ProposedDomain>) : DomainsResult
-        object Empty : DomainsResult
+        data class Success(val proposedDomains: List<ProposedDomain>) : DomainsResult
         object Error : DomainsResult
     }
 }

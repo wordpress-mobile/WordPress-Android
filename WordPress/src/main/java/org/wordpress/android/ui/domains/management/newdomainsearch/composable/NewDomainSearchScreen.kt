@@ -75,9 +75,8 @@ fun NewDomainSearchScreen(
                         listState = listState,
                         modifier = Modifier.weight(1f)
                     )
-
                     is UiState.Loading -> LoadingPlaceholder(modifier = Modifier.weight(1f))
-                    else -> Spacer(modifier = Modifier.weight(1f))
+                    is UiState.Error -> Spacer(modifier = Modifier.weight(1f))
                 }
                 TransferDomainFooter()
             }

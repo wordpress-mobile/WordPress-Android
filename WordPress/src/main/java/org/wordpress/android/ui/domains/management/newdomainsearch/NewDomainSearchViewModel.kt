@@ -34,7 +34,7 @@ class NewDomainSearchViewModel @Inject constructor(
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: Flow<ActionEvent> = _actionEvents
 
-    private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Empty)
+    private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.PopulatedDomains(emptyList()))
     val uiStateFlow = _uiStateFlow.asStateFlow()
 
     private val debouncedQuery = Channel<String>()
@@ -56,9 +56,8 @@ class NewDomainSearchViewModel @Inject constructor(
         val result = newDomainsSearchRepository.searchForDomains(query)
         _uiStateFlow.emit(
             when (result) {
-                is NewDomainsSearchRepository.DomainsResult.Success -> UiState.PopulatedDomains(result.suggestions)
+                is NewDomainsSearchRepository.DomainsResult.Success -> UiState.PopulatedDomains(result.proposedDomains)
                 is NewDomainsSearchRepository.DomainsResult.Error -> UiState.Error
-                is NewDomainsSearchRepository.DomainsResult.Empty -> UiState.Empty
             }
         )
     }
@@ -74,7 +73,6 @@ class NewDomainSearchViewModel @Inject constructor(
     }
 
     sealed class UiState {
-        object Empty : UiState()
         object Error : UiState()
         object Loading : UiState()
         data class PopulatedDomains(val domains: List<ProposedDomain>) : UiState()
