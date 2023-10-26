@@ -454,15 +454,7 @@ class MySiteViewModel @Inject constructor(
             jetpackInstallFullPluginCardParams
         )
 
-        val siteItems = siteItemsBuilder.build(
-            siteItemsViewModelSlice.buildItems(
-                shouldEnableFocusPoints = false,
-                site = site,
-                activeTask = activeTask,
-                backupAvailable = backupAvailable,
-                scanAvailable = scanAvailable
-            )
-        )
+        val siteItems = getSiteItems(site, activeTask, backupAvailable, scanAvailable)
 
         val jetpackBadge = buildJetpackBadgeIfEnabled()
 
@@ -489,6 +481,25 @@ class MySiteViewModel @Inject constructor(
                 noCardsMessage?.let { add(noCardsMessage) }
                 personalizeCard?.let { add(personalizeCard) }
             }.toList()
+        )
+    }
+
+    private fun getSiteItems(
+        site: SiteModel,
+        activeTask: QuickStartTask?,
+        backupAvailable: Boolean,
+        scanAvailable: Boolean
+    ): List<MySiteCardAndItem> {
+        val isJetpackApp = buildConfigWrapper.isJetpackApp
+        if (isJetpackApp) return emptyList()
+        return siteItemsBuilder.build(
+            siteItemsViewModelSlice.buildItems(
+                shouldEnableFocusPoints = false,
+                site = site,
+                activeTask = activeTask,
+                backupAvailable = backupAvailable,
+                scanAvailable = scanAvailable
+            )
         )
     }
 
