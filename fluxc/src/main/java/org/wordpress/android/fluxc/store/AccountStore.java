@@ -1405,7 +1405,17 @@ public class AccountStore extends Store {
     }
 
     private void submitWebauthnChallengeResult(final FinishSecurityKeyChallengePayload payload) {
-        // TODO: Implement payload submission
+        mAuthenticator.makeRequest(payload.mId, payload.mRawId, payload.mType,
+                payload.mChallengeResponse,
+                token -> {
+                    OnAuthenticationChanged event = new OnAuthenticationChanged();
+                    emitChange(event);
+                },
+                error -> {
+                    OnAuthenticationChanged event = new OnAuthenticationChanged();
+                    event.error = new AuthenticationError(AuthenticationErrorType.GENERIC_ERROR, "");
+                    emitChange(event);
+                });
     }
 
     private boolean checkError(AccountRestPayload payload, String log) {
