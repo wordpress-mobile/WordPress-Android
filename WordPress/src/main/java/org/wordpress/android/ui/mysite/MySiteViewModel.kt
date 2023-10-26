@@ -365,7 +365,8 @@ class MySiteViewModel @Inject constructor(
         return SiteSelected(
             siteInfoHeader = siteInfo,
             siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
-            dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
+            dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!,
+            shouldShowDashboard = shouldShowDashboard(site)
         )
     }
 
@@ -407,7 +408,7 @@ class MySiteViewModel @Inject constructor(
         )
         val jetpackInstallFullPluginCard = jetpackInstallFullPluginCardBuilder.build(jetpackInstallFullPluginCardParams)
 
-        val cardsResult = if (!jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()) emptyList()
+        val cardsResult = if (!shouldShowDashboard(site)) emptyList()
         else cardsBuilder.build(
             DomainRegistrationCardBuilderParams(
                 isDomainCreditAvailable = isDomainCreditAvailable,
@@ -484,14 +485,17 @@ class MySiteViewModel @Inject constructor(
         )
     }
 
+    private fun shouldShowDashboard(site: SiteModel): Boolean {
+       return buildConfigWrapper.isJetpackApp && site.isUsingWpComRestApi
+    }
+
     private fun getSiteItems(
         site: SiteModel,
         activeTask: QuickStartTask?,
         backupAvailable: Boolean,
         scanAvailable: Boolean
     ): List<MySiteCardAndItem> {
-        val isJetpackApp = buildConfigWrapper.isJetpackApp
-        if (isJetpackApp) return emptyList()
+        if(shouldShowDashboard(site)) return emptyList()
         return siteItemsBuilder.build(
             siteItemsViewModelSlice.buildItems(
                 shouldEnableFocusPoints = false,
@@ -976,7 +980,8 @@ class MySiteViewModel @Inject constructor(
         data class SiteSelected(
             val siteInfoHeader: SiteInfoHeaderCard,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
-            val dashboardCardsAndItems: List<MySiteCardAndItem>
+            val dashboardCardsAndItems: List<MySiteCardAndItem>,
+            val shouldShowDashboard: Boolean = false
         ) : State()
 
         data class NoSites(
