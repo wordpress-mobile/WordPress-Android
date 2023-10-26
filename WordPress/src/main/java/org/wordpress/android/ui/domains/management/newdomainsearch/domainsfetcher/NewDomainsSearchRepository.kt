@@ -74,7 +74,7 @@ class NewDomainsSearchRepository @Inject constructor(
             query,
             onlyWordpressCom = false,
             includeWordpressCom = false,
-            includeDotBlogSubdomain = true,
+            includeDotBlogSubdomain = false,
             quantity = SUGGESTIONS_REQUEST_COUNT
         )
         dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(suggestDomainsPayload))
