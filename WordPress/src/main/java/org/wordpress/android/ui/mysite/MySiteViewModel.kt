@@ -86,7 +86,6 @@ import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewMode
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.posts.BasicDialogViewModel
@@ -289,7 +288,7 @@ class MySiteViewModel @Inject constructor(
 
                 bloggingPromptCardViewModelSlice.onDashboardCardsUpdated(
                     viewModelScope,
-                    state.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card.BloggingPromptCard>()
+                    state.dashboardData.filterIsInstance<MySiteCardAndItem.Card.BloggingPromptCard>()
                 )
                 state
             } else {
@@ -364,17 +363,14 @@ class MySiteViewModel @Inject constructor(
         // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
             siteInfoHeader = siteInfo,
-            siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
-            dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!,
-            shouldShowDashboard = shouldShowDashboard(site)
+            dashboardData = siteItems
         )
     }
 
     private fun getPositionOfQuickStartItem(
-        siteItems: Map<MySiteTabType, List<MySiteCardAndItem>>,
+        siteItems: List<MySiteCardAndItem>,
     ): Int {
-        return (siteItems[MySiteTabType.DASHBOARD] as List<MySiteCardAndItem>)
-            .indexOfFirst { it.activeQuickStartItem }
+        return siteItems.indexOfFirst { it.activeQuickStartItem }
     }
 
     @Suppress("LongParameterList", "CyclomaticComplexMethod")
@@ -389,7 +385,26 @@ class MySiteViewModel @Inject constructor(
         bloggingPromptUpdate: BloggingPromptUpdate?,
         blazeCardUpdate: BlazeCardUpdate?,
         quickLinks: MySiteCardAndItem.Card.QuickLinksItem?
-    ): Map<MySiteTabType, List<MySiteCardAndItem>> {
+    ): List<MySiteCardAndItem> {
+        return if (shouldShowDashboard(site)) buildDashboardCards(
+            site,
+            isDomainCreditAvailable,
+            quickStartCategories,
+            cardsUpdate,
+            bloggingPromptUpdate,
+            blazeCardUpdate,
+            quickLinks
+        )
+        else buildSiteItemsMenu(site, activeTask, backupAvailable, scanAvailable, cardsUpdate)
+    }
+
+    private fun buildSiteItemsMenu(
+        site: SiteModel,
+        activeTask: QuickStartTask?,
+        backupAvailable: Boolean,
+        scanAvailable: Boolean,
+        cardsUpdate: CardsUpdate?
+    ): List<MySiteCardAndItem> {
         val infoItem = mySiteInfoItemBuilder.build(
             InfoItemBuilderParams(
                 isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
@@ -398,6 +413,36 @@ class MySiteViewModel @Inject constructor(
         val jetpackFeatureCard = getJetpackFeatureCard()
 
         val jetpackSwitchMenu = getJetpackSwitchMenu()
+
+        val jetpackBadge = buildJetpackBadgeIfEnabled()
+
+        val siteItems = getSiteItems(site, activeTask, backupAvailable, scanAvailable)
+
+        return mutableListOf<MySiteCardAndItem>().apply {
+            infoItem?.let { add(infoItem) }
+            addAll(siteItems)
+            jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
+            if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
+                jetpackFeatureCard?.let { add(0, jetpackFeatureCard) }
+            else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
+            jetpackBadge?.let { add(jetpackBadge) }
+        }.toList()
+    }
+
+    private fun buildDashboardCards(
+        site: SiteModel,
+        isDomainCreditAvailable: Boolean,
+        quickStartCategories: List<QuickStartCategory>,
+        cardsUpdate: CardsUpdate?,
+        bloggingPromptUpdate: BloggingPromptUpdate?,
+        blazeCardUpdate: BlazeCardUpdate?,
+        quickLinks: MySiteCardAndItem.Card.QuickLinksItem?
+    ): List<MySiteCardAndItem> {
+        val infoItem = mySiteInfoItemBuilder.build(
+            InfoItemBuilderParams(
+                isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
+            )
+        )
 
         val migrationSuccessCard = getJetpackMigrationSuccessCard()
 
@@ -455,38 +500,23 @@ class MySiteViewModel @Inject constructor(
             jetpackInstallFullPluginCardParams
         )
 
-        val siteItems = getSiteItems(site, activeTask, backupAvailable, scanAvailable)
-
-        val jetpackBadge = buildJetpackBadgeIfEnabled()
-
         val personalizeCard = personalizeCardBuilder.build(personalizeCardViewModelSlice.getBuilderParams())
 
         val noCardsMessage = noCardsMessageViewModelSlice.buildNoCardsMessage(cardsResult)
 
-        return mapOf(
-            MySiteTabType.SITE_MENU to mutableListOf<MySiteCardAndItem>().apply {
-                infoItem?.let { add(infoItem) }
-                addAll(siteItems)
-                jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
-                if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
-                    jetpackFeatureCard?.let { add(0, jetpackFeatureCard) }
-                else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
-                jetpackBadge?.let { add(jetpackBadge) }
-            },
-            MySiteTabType.DASHBOARD to mutableListOf<MySiteCardAndItem>().apply {
-                infoItem?.let { add(infoItem) }
-                migrationSuccessCard?.let { add(migrationSuccessCard) }
-                jetpackInstallFullPluginCard?.let { add(jetpackInstallFullPluginCard) }
-                quickLinks?.let { add(quickLinks) }
-                addAll(cardsResult)
-                noCardsMessage?.let { add(noCardsMessage) }
-                personalizeCard?.let { add(personalizeCard) }
-            }.toList()
-        )
+        return mutableListOf<MySiteCardAndItem>().apply {
+            infoItem?.let { add(infoItem) }
+            migrationSuccessCard?.let { add(migrationSuccessCard) }
+            jetpackInstallFullPluginCard?.let { add(jetpackInstallFullPluginCard) }
+            quickLinks?.let { add(quickLinks) }
+            addAll(cardsResult)
+            noCardsMessage?.let { add(noCardsMessage) }
+            personalizeCard?.let { add(personalizeCard) }
+        }.toList()
     }
 
     private fun shouldShowDashboard(site: SiteModel): Boolean {
-       return buildConfigWrapper.isJetpackApp && site.isUsingWpComRestApi
+        return buildConfigWrapper.isJetpackApp && site.isUsingWpComRestApi
     }
 
     private fun getSiteItems(
@@ -495,7 +525,7 @@ class MySiteViewModel @Inject constructor(
         backupAvailable: Boolean,
         scanAvailable: Boolean
     ): List<MySiteCardAndItem> {
-        if(shouldShowDashboard(site)) return emptyList()
+        if (shouldShowDashboard(site)) return emptyList()
         return siteItemsBuilder.build(
             siteItemsViewModelSlice.buildItems(
                 shouldEnableFocusPoints = false,
@@ -936,22 +966,22 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun trackCardsAndItemsShownIfNeeded(siteSelected: SiteSelected) {
-        siteSelected.dashboardCardsAndItems.filterIsInstance<DomainRegistrationCard>()
+        siteSelected.dashboardData.filterIsInstance<DomainRegistrationCard>()
             .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
-        siteSelected.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card>()
+        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card>()
             .let { cardsTracker.trackShown(it) }
-        siteSelected.dashboardCardsAndItems.filterIsInstance<QuickStartCard>()
+        siteSelected.dashboardData.filterIsInstance<QuickStartCard>()
             .firstOrNull()?.let { quickStartTracker.trackShown(it.type) }
-        siteSelected.dashboardCardsAndItems.filterIsInstance<QuickStartCard>()
+        siteSelected.dashboardData.filterIsInstance<QuickStartCard>()
             .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
-        siteSelected.siteMenuCardsAndItems.filterIsInstance<JetpackFeatureCard>()
+        siteSelected.dashboardData.filterIsInstance<JetpackFeatureCard>()
             .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
-        siteSelected.dashboardCardsAndItems.filterIsInstance<JetpackInstallFullPluginCard>()
+        siteSelected.dashboardData.filterIsInstance<JetpackInstallFullPluginCard>()
             .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type) }
         dashboardCardPlansUtils.trackCardShown(viewModelScope, siteSelected)
-        siteSelected.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>()
+        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>()
             .forEach { personalizeCardViewModelSlice.trackShown(it.type) }
-        siteSelected.dashboardCardsAndItems.filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>()
+        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>()
             .forEach { noCardsMessageViewModelSlice.trackShown(it.type) }
     }
 
@@ -979,9 +1009,7 @@ class MySiteViewModel @Inject constructor(
     sealed class State {
         data class SiteSelected(
             val siteInfoHeader: SiteInfoHeaderCard,
-            val siteMenuCardsAndItems: List<MySiteCardAndItem>,
-            val dashboardCardsAndItems: List<MySiteCardAndItem>,
-            val shouldShowDashboard: Boolean = false
+            val dashboardData: List<MySiteCardAndItem>,
         ) : State()
 
         data class NoSites(
