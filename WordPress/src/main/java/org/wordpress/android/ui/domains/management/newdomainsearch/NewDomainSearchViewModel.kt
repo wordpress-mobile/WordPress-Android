@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.domains.management.newdomainsearch
 
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
@@ -10,14 +11,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.domains.management.newdomainsearch.domainsfetcher.NewDomain
+import org.wordpress.android.ui.domains.management.newdomainsearch.domainsfetcher.ProposedDomain
 import org.wordpress.android.ui.domains.management.newdomainsearch.domainsfetcher.NewDomainsSearchRepository
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
+
+private const val SEARCH_QUERY_DELAY_MS = 250L
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
@@ -36,13 +41,10 @@ class NewDomainSearchViewModel @Inject constructor(
 
     init {
         analyticsTracker.track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_SEARCH_FOR_A_DOMAIN_SCREEN_SHOWN)
-        launch {
-            debouncedQuery.consumeAsFlow()
-                .debounce(300)
-                .collect {
-                    fetchDomains(it)
-                }
-        }
+        debouncedQuery.consumeAsFlow()
+            .debounce(SEARCH_QUERY_DELAY_MS)
+            .onEach(::fetchDomains)
+            .launchIn(viewModelScope)
     }
 
     fun onSearchQueryChanged(query: String) {
@@ -50,6 +52,7 @@ class NewDomainSearchViewModel @Inject constructor(
     }
 
     private suspend fun fetchDomains(query: String) {
+        _uiStateFlow.emit(UiState.Loading)
         val result = newDomainsSearchRepository.searchForDomains(query)
         _uiStateFlow.emit(
             when (result) {
@@ -73,6 +76,7 @@ class NewDomainSearchViewModel @Inject constructor(
     sealed class UiState {
         object Empty : UiState()
         object Error : UiState()
-        data class PopulatedDomains(val domains: List<NewDomain>) : UiState()
+        object Loading : UiState()
+        data class PopulatedDomains(val domains: List<ProposedDomain>) : UiState()
     }
 }

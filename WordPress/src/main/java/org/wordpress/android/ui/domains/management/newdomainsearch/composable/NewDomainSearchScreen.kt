@@ -4,15 +4,16 @@ import android.content.res.Configuration
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -34,14 +35,16 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.domains.management.composable.DomainsSearchTextField
-import org.wordpress.android.ui.domains.management.newdomainsearch.domainsfetcher.NewDomain
+import org.wordpress.android.ui.domains.management.composable.PendingGhostStrip
+import org.wordpress.android.ui.domains.management.newdomainsearch.NewDomainSearchViewModel.UiState
+import org.wordpress.android.ui.domains.management.newdomainsearch.domainsfetcher.ProposedDomain
 import org.wordpress.android.ui.domains.management.success
 
 @Composable
 fun NewDomainSearchScreen(
-    onBackPressed: () -> Unit,
+    uiState: UiState,
     onSearchQueryChanged: (String) -> Unit,
-    domains: () -> List<NewDomain>,
+    onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -66,13 +69,15 @@ fun NewDomainSearchScreen(
                     label = "Search Input Elevation",
                 )
                 NewDomainSearchInput(elevation = elevation.value, onValueChanged = onSearchQueryChanged)
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier.fillMaxWidth().weight(1f)
-                ) {
-                    items(items = domains()) { domain ->
-                        Domain(domain = domain)
-                    }
+                when (uiState) {
+                    is UiState.PopulatedDomains -> ProposedDomainList(
+                        domains = uiState.domains,
+                        listState = listState,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    is UiState.Loading -> LoadingPlaceholder(modifier = Modifier.weight(1f))
+                    else -> Spacer(modifier = Modifier.weight(1f))
                 }
                 TransferDomainFooter()
             }
@@ -103,6 +108,37 @@ fun NewDomainSearchInput(
 }
 
 @Composable
+fun ProposedDomainList(
+    domains: List<ProposedDomain>,
+    listState: LazyListState,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        state = listState,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        items(items = domains) { domain -> Domain(domain = domain) }
+    }
+}
+
+@Composable
+fun LoadingPlaceholder(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        repeat(times = 2) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                PendingGhostStrip(width = 100.dp)
+                Spacer(modifier = Modifier.height(4.dp))
+                Row {
+                    PendingGhostStrip(width = 150.dp)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    PendingGhostStrip(width = 80.dp)
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun TransferDomainFooter(
     modifier: Modifier = Modifier
 ) {
@@ -115,36 +151,17 @@ fun TransferDomainFooter(
                 text = stringResource(id = R.string.new_domain_search_screen_transfer_domain_description),
                 style = MaterialTheme.typography.bodyMedium,
             )
-            OutlinedButton(
-                onClick = {},
-                shape = MaterialTheme.shapes.small.copy(CornerSize(36.dp)),
-                elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 0.dp,
-                    pressedElevation = 0.dp,
-                    disabledElevation = 0.dp,
-                    hoveredElevation = 0.dp,
-                    focusedElevation = 0.dp
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.new_domain_search_screen_transfer_domain_button),
-                    modifier = Modifier.padding(vertical = 4.dp),
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.success,
-                    ),
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
+            JetpackOutlinedButton(
+                text = stringResource(R.string.new_domain_search_screen_transfer_domain_button),
+                onClick = {}
+            )
         }
     }
 }
 
 @Composable
 fun Domain(
-    domain: NewDomain,
+    domain: ProposedDomain,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.padding(16.dp)) {
@@ -189,16 +206,16 @@ fun Domain(
 @Composable
 fun NewDomainSearchScreenPreview() {
     NewDomainSearchScreen(
-        domains = {
-            listOf(
-                NewDomain(
+        uiState = UiState.PopulatedDomains(
+            domains = listOf(
+                ProposedDomain(
                     productId = 0,
                     domainPrefix = "example",
                     domainSuffix = ".com",
                     price = "USD 100",
                     salePrice = "USD 30",
                 ),
-                NewDomain(
+                ProposedDomain(
                     productId = 0,
                     domainPrefix = "example",
                     domainSuffix = ".blog",
@@ -206,7 +223,7 @@ fun NewDomainSearchScreenPreview() {
                     salePrice = null,
                 ),
             )
-        },
+        ),
         onSearchQueryChanged = {},
         onBackPressed = {}
     )

@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.domains.management.newdomainsearch.domainsfetcher
 
-data class NewDomain(
+data class ProposedDomain(
     val productId: Int,
     val domainPrefix: String,
     val domainSuffix: String,

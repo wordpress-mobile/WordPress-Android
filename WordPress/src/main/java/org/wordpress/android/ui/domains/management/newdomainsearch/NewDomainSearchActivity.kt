@@ -23,11 +23,9 @@ class NewDomainSearchActivity : AppCompatActivity() {
             M3Theme {
                 val uiState by viewModel.uiStateFlow.collectAsState()
                 NewDomainSearchScreen(
-                    domains = {
-                        (uiState as? NewDomainSearchViewModel.UiState.PopulatedDomains)?.domains.orEmpty()
-                    },
-                    onBackPressed = viewModel::onBackPressed,
-                    onSearchQueryChanged = viewModel::onSearchQueryChanged
+                    uiState = uiState,
+                    onSearchQueryChanged = viewModel::onSearchQueryChanged,
+                    onBackPressed = viewModel::onBackPressed
                 )
             }
         }

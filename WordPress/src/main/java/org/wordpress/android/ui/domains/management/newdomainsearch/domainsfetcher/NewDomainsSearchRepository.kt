@@ -54,7 +54,7 @@ class NewDomainsSearchRepository @Inject constructor(
                         val splitDomainName = domain.domain_name.split('.')
                         val suffix = splitDomainName.last()
                         val prefix = domain.domain_name.removeSuffix(suffix)
-                        NewDomain(
+                        ProposedDomain(
                             productId = domain.product_id,
                             domainPrefix = prefix,
                             domainSuffix = suffix,
@@ -81,7 +81,7 @@ class NewDomainsSearchRepository @Inject constructor(
     }
 
     sealed interface DomainsResult {
-        data class Success(val suggestions: List<NewDomain>) : DomainsResult
+        data class Success(val suggestions: List<ProposedDomain>) : DomainsResult
         object Empty : DomainsResult
         object Error : DomainsResult
     }
