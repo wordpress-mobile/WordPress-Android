@@ -16,85 +16,85 @@ enum class PostListButtonType constructor(
     BUTTON_EDIT(
         1,
         R.string.button_edit,
-        R.drawable.ic_pencil_white_24dp,
+        R.drawable.gb_ic_pencil,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_VIEW(
         2,
         R.string.button_view,
-        R.drawable.ic_external_white_24dp,
+        R.drawable.gb_ic_external,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_PREVIEW(
         3,
         R.string.button_preview,
-        R.drawable.ic_external_white_24dp,
+        R.drawable.gb_ic_globe,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_STATS(
         4,
         R.string.button_stats,
-        R.drawable.ic_stats_alt_white_24dp,
+        R.drawable.gb_ic_chart_bar,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_TRASH(
         5,
         R.string.button_trash,
-        R.drawable.ic_trash_white_24dp,
+        R.drawable.gb_ic_trash,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_DELETE(
         6,
         R.string.button_delete,
-        R.drawable.ic_trash_white_24dp,
+        R.drawable.gb_ic_trash,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_PUBLISH(
         7,
         R.string.button_publish,
-        R.drawable.ic_reader_white_24dp,
+        R.drawable.gb_ic_globe,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_SYNC(
         8,
         R.string.button_sync,
-        R.drawable.ic_reader_white_24dp,
+        R.drawable.gb_ic_update,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_MORE(
         9,
         R.string.button_more,
-        R.drawable.ic_ellipsis_white_24dp,
+        R.drawable.gb_ic_more_horizontal,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_SUBMIT(
         10,
         R.string.submit_for_review,
-        R.drawable.ic_reader_white_24dp,
+        R.drawable.gb_ic_post_author,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_RETRY(
         11,
         R.string.button_retry,
-        R.drawable.ic_refresh_white_24dp,
+        R.drawable.gb_ic_redo,
         MaterialR.attr.colorError
     ),
     BUTTON_MOVE_TO_DRAFT(
         12,
         R.string.button_move_to_draft,
-        R.drawable.ic_refresh_white_24dp,
+        R.drawable.gb_ic_move_to,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_DELETE_PERMANENTLY(
         13,
         R.string.button_delete_permanently,
-        R.drawable.ic_trash_white_24dp,
+        R.drawable.gb_ic_trash,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_CANCEL_PENDING_AUTO_UPLOAD(
         14,
         R.string.pages_and_posts_cancel_auto_upload,
-        R.drawable.ic_undo_white_24dp,
+        R.drawable.gb_ic_undo,
         R.attr.wpColorWarningDark
     ),
     BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG(
@@ -106,13 +106,13 @@ enum class PostListButtonType constructor(
     BUTTON_COPY(
         16,
         R.string.button_copy,
-        R.drawable.ic_copy_white_24dp,
+        R.drawable.gb_ic_copy,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_COPY_URL(
         17,
         R.string.button_copy_link,
-        R.drawable.ic_gridicons_link_white_24dp,
+        R.drawable.gb_ic_link,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_PROMOTE_WITH_BLAZE(
