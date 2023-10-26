@@ -1390,7 +1390,7 @@ public class AccountStore extends Store {
     }
 
     private void requestWebauthnChallenge(final StartSecurityKeyChallengePayload payload) {
-        mAuthenticator.requestChallenge(payload.mUserId, payload.mWebauthnNonce,
+        mAuthenticator.makeRequest(payload.mUserId, payload.mWebauthnNonce,
                 info -> {
                     OnWebauthnChallengeReceived event = new OnWebauthnChallengeReceived();
                     event.challengeInfo = info;
