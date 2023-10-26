@@ -22,7 +22,7 @@ enum class PostListButtonType constructor(
     BUTTON_VIEW(
         2,
         R.string.button_view,
-        R.drawable.gb_ic_seen,
+        R.drawable.gb_ic_external,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_PREVIEW(
@@ -70,7 +70,7 @@ enum class PostListButtonType constructor(
     BUTTON_SUBMIT(
         10,
         R.string.submit_for_review,
-        R.drawable.ic_reader_white_24dp,
+        R.drawable.gb_ic_post_author,
         MaterialR.attr.colorOnSurface
     ),
     BUTTON_RETRY(
