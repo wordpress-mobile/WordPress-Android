@@ -14,6 +14,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +31,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthEmailErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
+import org.wordpress.android.fluxc.store.AccountStore.WebauthnChallengeResponse;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LanguageUtils;
@@ -208,7 +210,8 @@ public class Authenticator {
         }
 
 
-        @Override protected Response<String> parseNetworkResponse(NetworkResponse response) {
+        @Override
+        protected Response<String> parseNetworkResponse(NetworkResponse response) {
             try {
                 String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
                 JSONObject challengeData = new JSONObject(jsonString).getJSONObject("data");
@@ -218,11 +221,55 @@ public class Authenticator {
             }
         }
 
-        @Override protected void deliverResponse(String response) {
+        @Override
+        protected void deliverResponse(String response) {
             mListener.onResponse(response);
         }
 
-        @Nullable @Override protected Map<String, String> getParams() throws AuthFailureError {
+        @Nullable
+        @Override
+        protected Map<String, String> getParams() throws AuthFailureError {
+            return mParams;
+        }
+    }
+
+    public static class WebauthnTokenRequest extends Request<String> {
+        private final Response.Listener<String> mListener;
+        private Map<String, String> mParams = new HashMap<>();
+
+        public WebauthnTokenRequest(String id, String rawId,
+                                    String type, WebauthnChallengeResponse challengeResponse,
+                                    Response.Listener<String> listener, ErrorListener errorListener) {
+            super(Method.POST, PasskeyRestClient.webauthnAuthEndpointUrl, errorListener);
+            mListener = listener;
+            String jsonResponse = new Gson().toJson(challengeResponse);
+            mParams.put("id", id);
+            mParams.put("rawId", rawId);
+            mParams.put("type", type);
+            mParams.put("clientExtensionResults", "{}");
+            mParams.put("response", jsonResponse);
+        }
+
+        @Override
+        protected Response<String> parseNetworkResponse(NetworkResponse response) {
+            try {
+                String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                JSONObject responseData = new JSONObject(jsonString).getJSONObject("data");
+                String token = responseData.getString("bearer_token");
+                return Response.success(token, HttpHeaderParser.parseCacheHeaders(response));
+            } catch(UnsupportedEncodingException | JSONException e) {
+                return Response.error(new ParseError(e));
+            }
+        }
+
+        @Override
+        protected void deliverResponse(String response) {
+            mListener.onResponse(response);
+        }
+
+        @Nullable
+        @Override
+        protected Map<String, String> getParams() throws AuthFailureError {
             return mParams;
         }
     }
