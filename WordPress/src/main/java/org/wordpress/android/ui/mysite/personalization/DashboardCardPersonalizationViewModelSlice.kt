@@ -117,15 +117,15 @@ class DashboardCardPersonalizationViewModelSlice @Inject constructor(
     )
 
     private fun getPagesCardState(siteId: Long, selectedSite: SiteModel): DashboardCardState? {
-        if (selectedSite.hasCapabilityEditPages || selectedSite.isSelfHostedAdmin) {
-            return DashboardCardState(
+        return if (selectedSite.hasCapabilityEditPages || selectedSite.isSelfHostedAdmin) {
+            DashboardCardState(
                 title = R.string.personalization_screen_pages_card_title,
                 description = R.string.personalization_screen_pages_card_description,
                 enabled = isPagesCardShown(siteId),
                 cardType = CardType.PAGES
             )
         } else {
-            return null
+            null
         }
     }
 
