@@ -49,8 +49,8 @@ class LocalMigrationContentResolver @Inject constructor(
         with(contextProvider.getContext().contentResolver) {
             val cursor = try {
                 query(uriBuilder, entityType, entityId)
-            } catch (e: Throwable) {
-                null
+            } catch (e: SecurityException) {
+                return Failure(NullCursor(entityType, e))
             }
             if (cursor == null) Failure(NullCursor(entityType))
             else runCatching {
