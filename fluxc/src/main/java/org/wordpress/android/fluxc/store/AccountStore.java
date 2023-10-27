@@ -39,6 +39,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.WebauthnTokenRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey.PasskeyRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
 import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
@@ -1389,15 +1390,28 @@ public class AccountStore extends Store {
     }
 
     private void submitWebauthnChallengeResult(final FinishSecurityKeyChallengePayload payload) {
-        mAuthenticator.makeRequest(payload.mUserId, payload.mTwoStepNonce, payload.mClientData,
-                token -> {
+//        mAuthenticator.makeRequest(payload.mUserId, payload.mTwoStepNonce, payload.mClientData,
+//                token -> {
+//                    OnAuthenticationChanged event = new OnAuthenticationChanged();
+//                    emitChange(event);
+//                },
+//                error -> {
+//                    OnAuthenticationChanged event = new OnAuthenticationChanged();
+//                    event.error = new AuthenticationError(AuthenticationErrorType.GENERIC_ERROR, "");
+//                    emitChange(event);
+//                });
+        mPasskeyRestClient.authenticateWebauthnSignature(payload.mUserId, payload.mTwoStepNonce, payload.mClientData,
+                mAuthenticator.mAppSecrets.getAppId(), mAuthenticator.mAppSecrets.getAppSecret(),
+                response -> {
                     OnAuthenticationChanged event = new OnAuthenticationChanged();
                     emitChange(event);
+                    return null;
                 },
                 error -> {
                     OnAuthenticationChanged event = new OnAuthenticationChanged();
                     event.error = new AuthenticationError(AuthenticationErrorType.GENERIC_ERROR, "");
                     emitChange(event);
+                    return null;
                 });
     }
 
