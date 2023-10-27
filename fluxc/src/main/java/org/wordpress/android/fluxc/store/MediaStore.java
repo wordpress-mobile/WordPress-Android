@@ -58,12 +58,14 @@ public class MediaStore extends Store {
      * Actions: FETCH(ED)_MEDIA, PUSH(ED)_MEDIA, UPLOADED_MEDIA, DELETE(D)_MEDIA, UPDATE_MEDIA, and REMOVE_MEDIA
      */
     public static class MediaPayload extends Payload<MediaError> {
-        public SiteModel site;
-        public MediaModel media;
-        public MediaPayload(SiteModel site, MediaModel media) {
+        @NonNull public SiteModel site;
+        @Nullable public MediaModel media;
+
+        public MediaPayload(@NonNull SiteModel site, @NonNull MediaModel media) {
             this(site, media, null);
         }
-        public MediaPayload(SiteModel site, MediaModel media, MediaError error) {
+
+        public MediaPayload(@NonNull SiteModel site, @Nullable MediaModel media, @Nullable MediaError error) {
             this.site = site;
             this.media = media;
             this.error = error;
@@ -76,12 +78,19 @@ public class MediaStore extends Store {
     public static class UploadMediaPayload extends MediaPayload {
         public final boolean stripLocation;
 
-        public UploadMediaPayload(SiteModel site, MediaModel media, boolean stripLocation) {
+        public UploadMediaPayload(
+                @NonNull SiteModel site,
+                @Nullable MediaModel media,
+                boolean stripLocation) {
             super(site, media, null);
             this.stripLocation = stripLocation;
         }
 
-        public UploadMediaPayload(SiteModel site, MediaModel media, MediaError error, boolean stripLocation) {
+        public UploadMediaPayload(
+                @NonNull SiteModel site,
+                @Nullable MediaModel media,
+                @Nullable MediaError error,
+                boolean stripLocation) {
             super(site, media, error);
             this.stripLocation = stripLocation;
         }
@@ -91,22 +100,30 @@ public class MediaStore extends Store {
      * Actions: FETCH_MEDIA_LIST
      */
     public static class FetchMediaListPayload extends Payload<BaseNetworkError> {
-        public SiteModel site;
+        @NonNull public SiteModel site;
         public boolean loadMore;
-        public MimeType.Type mimeType;
+        @Nullable public MimeType.Type mimeType;
         public int number = DEFAULT_NUM_MEDIA_PER_FETCH;
 
-        public FetchMediaListPayload(SiteModel site) {
+        @SuppressWarnings("unused")
+        public FetchMediaListPayload(@NonNull SiteModel site) {
             this.site = site;
         }
 
-        public FetchMediaListPayload(SiteModel site, int number, boolean loadMore) {
+        public FetchMediaListPayload(
+                @NonNull SiteModel site,
+                int number,
+                boolean loadMore) {
             this.site = site;
             this.loadMore = loadMore;
             this.number = number;
         }
 
-        public FetchMediaListPayload(SiteModel site, int number, boolean loadMore, MimeType.Type mimeType) {
+        public FetchMediaListPayload(
+                @NonNull SiteModel site,
+                int number,
+                boolean loadMore,
+                @NonNull MimeType.Type mimeType) {
             this.site = site;
             this.loadMore = loadMore;
             this.mimeType = mimeType;
@@ -118,16 +135,18 @@ public class MediaStore extends Store {
      * Actions: FETCHED_MEDIA_LIST
      */
     public static class FetchMediaListResponsePayload extends Payload<MediaError> {
-        public SiteModel site;
-        public List<MediaModel> mediaList;
+        @NonNull public SiteModel site;
+        @NonNull public List<MediaModel> mediaList;
         public boolean loadedMore;
         public boolean canLoadMore;
-        public MimeType.Type mimeType;
-        public FetchMediaListResponsePayload(SiteModel site,
-                                             @NonNull List<MediaModel> mediaList,
-                                             boolean loadedMore,
-                                             boolean canLoadMore,
-                                             MimeType.Type mimeType) {
+        @Nullable public MimeType.Type mimeType;
+
+        public FetchMediaListResponsePayload(
+                @NonNull SiteModel site,
+                @NonNull List<MediaModel> mediaList,
+                boolean loadedMore,
+                boolean canLoadMore,
+                @Nullable MimeType.Type mimeType) {
             this.site = site;
             this.mediaList = mediaList;
             this.loadedMore = loadedMore;
@@ -135,7 +154,10 @@ public class MediaStore extends Store {
             this.mimeType = mimeType;
         }
 
-        public FetchMediaListResponsePayload(SiteModel site, MediaError error, MimeType.Type mimeType) {
+        public FetchMediaListResponsePayload(
+                @NonNull SiteModel site,
+                @NonNull MediaError error,
+                @Nullable MimeType.Type mimeType) {
             this.mediaList = new ArrayList<>();
             this.site = site;
             this.error = error;
@@ -147,15 +169,25 @@ public class MediaStore extends Store {
      * Actions: UPLOADED_MEDIA, CANCELED_MEDIA_UPLOAD
      */
     public static class ProgressPayload extends Payload<MediaError> {
-        public MediaModel media;
+        @Nullable public MediaModel media;
         public float progress;
         public boolean completed;
         public boolean canceled;
-        public ProgressPayload(MediaModel media, float progress, boolean completed, boolean canceled) {
+
+        public ProgressPayload(
+                @NonNull MediaModel media,
+                float progress,
+                boolean completed,
+                boolean canceled) {
             this(media, progress, completed, null);
             this.canceled = canceled;
         }
-        public ProgressPayload(MediaModel media, float progress, boolean completed, MediaError error) {
+
+        public ProgressPayload(
+                @Nullable MediaModel media,
+                float progress,
+                boolean completed,
+                @Nullable MediaError error) {
             this.media = media;
             this.progress = progress;
             this.completed = completed;
@@ -167,15 +199,15 @@ public class MediaStore extends Store {
      * Actions: CANCEL_MEDIA_UPLOAD
      */
     public static class CancelMediaPayload extends Payload<BaseNetworkError> {
-        public SiteModel site;
-        public MediaModel media;
+        @NonNull public SiteModel site;
+        @NonNull public MediaModel media;
         public boolean delete;
 
-        public CancelMediaPayload(SiteModel site, MediaModel media) {
+        public CancelMediaPayload(@NonNull SiteModel site, @NonNull MediaModel media) {
             this(site, media, true);
         }
 
-        public CancelMediaPayload(SiteModel site, MediaModel media, boolean delete) {
+        public CancelMediaPayload(@NonNull SiteModel site, @NonNull MediaModel media, boolean delete) {
             this.site = site;
             this.media = media;
             this.delete = delete;
@@ -225,9 +257,11 @@ public class MediaStore extends Store {
         public String message;
         public int statusCode;
         public String logMessage;
+
         public MediaError(MediaErrorType type) {
             this.type = type;
         }
+
         public MediaError(MediaErrorType type, String message) {
             this.type = type;
             this.message = message;
@@ -274,7 +308,7 @@ public class MediaStore extends Store {
             if (type == MediaErrorType.BAD_REQUEST) {
                 String[] splitMsg = message.split("\\|", 2);
 
-                if (null != splitMsg && splitMsg.length > 1) {
+                if (splitMsg.length > 1) {
                     String userMessage = splitMsg[1];
 
                     if (TextUtils.isEmpty(userMessage)) {
@@ -299,6 +333,7 @@ public class MediaStore extends Store {
     public static class UploadStockMediaError implements OnChangedError {
         public UploadStockMediaErrorType type;
         public String message;
+
         public UploadStockMediaError(UploadStockMediaErrorType type, String message) {
             this.type = type;
             this.message = message;
@@ -308,15 +343,19 @@ public class MediaStore extends Store {
     public static class OnMediaChanged extends OnChanged<MediaError> {
         public MediaAction cause;
         public List<MediaModel> mediaList;
+
         public OnMediaChanged(MediaAction cause) {
-            this(cause, new ArrayList<MediaModel>(), null);
+            this(cause, new ArrayList<>(), null);
         }
+
         public OnMediaChanged(MediaAction cause, @NonNull List<MediaModel> mediaList) {
             this(cause, mediaList, null);
         }
+
         public OnMediaChanged(MediaAction cause, MediaError error) {
-            this(cause, new ArrayList<MediaModel>(), error);
+            this(cause, new ArrayList<>(), error);
         }
+
         public OnMediaChanged(MediaAction cause, @NonNull List<MediaModel> mediaList, MediaError error) {
             this.cause = cause;
             this.mediaList = mediaList;
@@ -328,11 +367,13 @@ public class MediaStore extends Store {
         public SiteModel site;
         public boolean canLoadMore;
         public MimeType.Type mimeType;
+
         public OnMediaListFetched(SiteModel site, boolean canLoadMore, MimeType.Type mimeType) {
             this.site = site;
             this.canLoadMore = canLoadMore;
             this.mimeType = mimeType;
         }
+
         public OnMediaListFetched(SiteModel site, MediaError error, MimeType.Type mimeType) {
             this.site = site;
             this.error = error;
@@ -345,6 +386,7 @@ public class MediaStore extends Store {
         public float progress;
         public boolean completed;
         public boolean canceled;
+
         public OnMediaUploaded(MediaModel media, float progress, boolean completed, boolean canceled) {
             this.media = media;
             this.progress = progress;
@@ -362,6 +404,7 @@ public class MediaStore extends Store {
             this.site = site;
             this.mediaList = mediaList;
         }
+
         public OnStockMediaUploaded(@NonNull SiteModel site, @NonNull UploadStockMediaError error) {
             this.site = site;
             this.error = error;
@@ -416,6 +459,13 @@ public class MediaStore extends Store {
                     return MediaErrorType.SERVER_ERROR;
                 case TIMEOUT:
                     return MediaErrorType.TIMEOUT;
+                case NO_CONNECTION:
+                case NETWORK_ERROR:
+                case CENSORED:
+                case INVALID_SSL_CERTIFICATE:
+                case HTTP_AUTH_ERROR:
+                case INVALID_RESPONSE:
+                case UNKNOWN:
                 default:
                     return MediaErrorType.GENERIC_ERROR;
             }
@@ -497,6 +547,7 @@ public class MediaStore extends Store {
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
+    @SuppressWarnings("rawtypes")
     public void onAction(Action action) {
         IAction actionType = action.getType();
         if (!(actionType instanceof MediaAction)) {
@@ -570,13 +621,13 @@ public class MediaStore extends Store {
     public MediaModel instantiateMediaModel() {
         MediaModel media = new MediaModel();
 
-        media = MediaSqlUtils.insertMediaForResult(media);
+        MediaModel insertedMedia = MediaSqlUtils.insertMediaForResult(media);
 
-        if (media.getId() == -1) {
-            media = null;
+        if (insertedMedia.getId() == -1) {
+            return null;
         }
 
-        return media;
+        return insertedMedia;
     }
 
     public List<MediaModel> getAllSiteMedia(SiteModel siteModel) {
@@ -584,6 +635,7 @@ public class MediaStore extends Store {
     }
 
     public static final List<String> NOT_DELETED_STATES = new ArrayList<>();
+
     static {
         NOT_DELETED_STATES.add(MediaUploadState.DELETING.toString());
         NOT_DELETED_STATES.add(MediaUploadState.FAILED.toString());
@@ -617,14 +669,17 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getSiteImages(siteModel);
     }
 
+    @SuppressWarnings("unused")
     public List<MediaModel> getSiteVideos(SiteModel siteModel) {
         return MediaSqlUtils.getSiteVideos(siteModel);
     }
 
+    @SuppressWarnings("unused")
     public List<MediaModel> getSiteAudio(SiteModel siteModel) {
         return MediaSqlUtils.getSiteAudio(siteModel);
     }
 
+    @SuppressWarnings("unused")
     public List<MediaModel> getSiteDocuments(SiteModel siteModel) {
         return MediaSqlUtils.getSiteDocuments(siteModel);
     }
@@ -694,6 +749,7 @@ public class MediaStore extends Store {
         return MediaSqlUtils.matchPostMedia(postModel.getId());
     }
 
+    @SuppressWarnings("unused")
     public List<MediaModel> getMediaForPostWithState(PostImmutableModel postModel, MediaUploadState expectedState) {
         return MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.UPLOAD_STATE,
                 expectedState);
@@ -719,7 +775,7 @@ public class MediaStore extends Store {
     // Action implementations
     //
 
-    void updateMedia(MediaModel media, boolean emit) {
+    void updateMedia(@Nullable MediaModel media, boolean emit) {
         OnMediaChanged event = new OnMediaChanged(MediaAction.UPDATE_MEDIA);
 
         if (media == null) {
@@ -752,7 +808,7 @@ public class MediaStore extends Store {
     // Helper methods that choose the appropriate network client to perform an action
     //
 
-    private void performPushMedia(MediaPayload payload) {
+    private void performPushMedia(@NonNull MediaPayload payload) {
         if (payload.media == null) {
             // null or empty media list -or- list contains a null value
             notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.PUSH_MEDIA, null);
@@ -770,6 +826,7 @@ public class MediaStore extends Store {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void notifyMediaUploadError(MediaErrorType errorType, String errorMessage, MediaModel media,
                                         String logMessage, MalformedMediaArgSubType argErrorType) {
         OnMediaUploaded onMediaUploaded = new OnMediaUploaded(media, 1, false, false);
@@ -779,7 +836,13 @@ public class MediaStore extends Store {
         emitChange(onMediaUploaded);
     }
 
-    private void performUploadMedia(UploadMediaPayload payload) {
+    private void performUploadMedia(@NonNull UploadMediaPayload payload) {
+        if (payload.media == null) {
+            // null or empty media list -or- list contains a null value
+            notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.UPLOAD_MEDIA, null);
+            return;
+        }
+
         MalformedMediaArgSubType argError = MediaUtils.getMediaValidationErrorType(payload.media);
 
         if (argError.getType() != Type.NO_ERROR) {
@@ -792,8 +855,7 @@ public class MediaStore extends Store {
                     argError.getType().getErrorLogDescription(),
                     payload.media,
                     message,
-                    argError
-            );
+                    argError);
             return;
         }
 
@@ -816,7 +878,7 @@ public class MediaStore extends Store {
         }
     }
 
-    private void performFetchMediaList(FetchMediaListPayload payload) {
+    private void performFetchMediaList(@NonNull FetchMediaListPayload payload) {
         int offset = 0;
         if (payload.loadMore) {
             List<String> list = new ArrayList<>();
@@ -840,10 +902,10 @@ public class MediaStore extends Store {
         }
     }
 
-    private void performFetchMedia(MediaPayload payload) {
-        if (payload.site == null || payload.media == null) {
+    private void performFetchMedia(@NonNull MediaPayload payload) {
+        if (payload.media == null) {
             // null or empty media list -or- list contains a null value
-            notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.FETCH_MEDIA, payload.media);
+            notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.FETCH_MEDIA, null);
             return;
         }
 
@@ -868,10 +930,6 @@ public class MediaStore extends Store {
     }
 
     private void performCancelUpload(@NonNull CancelMediaPayload payload) {
-        if (payload.media == null) {
-            return;
-        }
-
         MediaModel media = payload.media;
         if (payload.delete) {
             MediaSqlUtils.deleteMedia(media);
@@ -991,21 +1049,15 @@ public class MediaStore extends Store {
         emitChange(onMediaChanged);
     }
 
-    private void notifyMediaError(MediaErrorType errorType, String errorMessage, MediaAction cause,
-                                  List<MediaModel> media) {
-        OnMediaChanged mediaChange = new OnMediaChanged(cause, media);
-        mediaChange.error = new MediaError(errorType, errorMessage);
-        emitChange(mediaChange);
-    }
-
-    private void notifyMediaError(MediaErrorType errorType, MediaAction cause, MediaModel media) {
-        notifyMediaError(errorType, null, cause, media);
-    }
-
-    private void notifyMediaError(MediaErrorType errorType, String errorMessage, MediaAction cause, MediaModel media) {
+    private void notifyMediaError(
+            @NonNull MediaErrorType errorType,
+            @NonNull MediaAction cause,
+            @Nullable MediaModel media) {
         List<MediaModel> mediaList = new ArrayList<>();
         mediaList.add(media);
-        notifyMediaError(errorType, errorMessage, cause, mediaList);
+        OnMediaChanged mediaChange = new OnMediaChanged(cause, mediaList);
+        mediaChange.error = new MediaError(errorType, null);
+        emitChange(mediaChange);
     }
 
     private void performUploadStockMedia(UploadStockMediaPayload payload) {
