@@ -1,0 +1,3 @@
+23.5 :
+Dans l’éditeur de blocs, vous pouvez maintenant scinder ou quitter un bloc mis en forme en appuyant sur la touche Entrée trois fois.
+La bordure gauche est toujours visible pour les blocs de citation également, même avec les thèmes basés sur des blocs du mode sombre. Et vous pouvez nous prendre au mot à ce sujet.
