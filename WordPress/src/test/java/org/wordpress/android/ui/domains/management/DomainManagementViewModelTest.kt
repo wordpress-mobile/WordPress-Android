@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.domains
+package org.wordpress.android.ui.domains.management
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -14,7 +14,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN
-import org.wordpress.android.ui.domains.management.DomainManagementViewModel
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.ActionEvent
 import org.wordpress.android.ui.domains.usecases.AllDomains
 import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase

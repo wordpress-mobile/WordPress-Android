@@ -67,6 +67,12 @@ class DomainManagementViewModel @Inject constructor(
         sealed class PopulatedList: UiState() {
             object Initial: PopulatedList()
             data class Loaded(val domains: List<AllDomainsDomain>): PopulatedList()
+
+            fun filter(query: String): PopulatedList = if (this is Loaded) {
+                copy(domains = domains.filter { domain -> domain.matches(query) })
+            } else {
+                this
+            }
         }
         object Empty: UiState()
         object Error: UiState()
@@ -146,3 +152,7 @@ val DomainStatus.isBold
         null -> true
         else -> false
     }
+
+private fun AllDomainsDomain.matches(query: String) =
+    domain?.contains(query, true) ?: false
+            || siteSlug?.contains(query, true) ?: false
