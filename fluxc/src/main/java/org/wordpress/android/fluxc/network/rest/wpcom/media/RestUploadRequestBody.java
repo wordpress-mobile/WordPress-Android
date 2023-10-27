@@ -20,19 +20,22 @@ import okio.Okio;
 
 /**
  * Wrapper for {@link MultipartBody} that reports upload progress as body data is written.
- *
+ * <p>
  * A {@link ProgressListener} is required, use {@link MultipartBody} if progress is not needed.
- *
- * ref http://stackoverflow.com/questions/35528751/okhttp-3-tracking-multipart-upload-progress
+ * <p>
+ * @see <a href="http://stackoverflow.com/questions/35528751/okhttp-3-tracking-multipart-upload-progress">doc</a>
  */
 public class RestUploadRequestBody extends BaseUploadRequestBody {
     private static final String MEDIA_DATA_KEY = "media[0]";
     private static final String MEDIA_ATTRIBUTES_KEY = "attrs[0]";
     private static final String MEDIA_PARAM_FORMAT = MEDIA_ATTRIBUTES_KEY + "[%s]";
 
-    private final MultipartBody mMultipartBody;
+    @NonNull private final MultipartBody mMultipartBody;
 
-    public RestUploadRequestBody(MediaModel media, Map<String, Object> params, ProgressListener listener) {
+    public RestUploadRequestBody(
+            @NonNull MediaModel media,
+            @NonNull Map<String, Object> params,
+            @NonNull ProgressListener listener) {
         super(media, listener);
         mMultipartBody = buildMultipartBody(params);
     }
@@ -52,6 +55,7 @@ public class RestUploadRequestBody extends BaseUploadRequestBody {
         return -1L;
     }
 
+    @NonNull
     @Override
     public MediaType contentType() {
         return mMultipartBody.contentType();
@@ -65,13 +69,18 @@ public class RestUploadRequestBody extends BaseUploadRequestBody {
         bufferedSink.flush();
     }
 
-    private MultipartBody buildMultipartBody(Map<String, Object> params) {
+    @NonNull
+    @SuppressWarnings("deprecation")
+    private MultipartBody buildMultipartBody(@NonNull Map<String, Object> params) {
         MediaModel media = getMedia();
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         // add media attributes
         for (String key : params.keySet()) {
-            builder.addFormDataPart(String.format(MEDIA_PARAM_FORMAT, key), params.get(key).toString());
+            Object value = params.get(key);
+            if (value != null) {
+                builder.addFormDataPart(String.format(MEDIA_PARAM_FORMAT, key), value.toString());
+            }
         }
 
         // add media file data
