@@ -1567,7 +1567,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         // if the post is from private atomic site postpone render until we have a special access cookie
         if (post.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
-            PrivateAtCookieRefreshProgressDialog.showIfNecessary(parentFragmentManager, fragment)
+            PrivateAtCookieRefreshProgressDialog.showIfNecessary(childFragmentManager, fragment)
             requestPrivateAtomicCookie()
         } else if (post.isPrivateAtomic && privateAtomicCookie.exists()) {
             // make sure we add cookie to the cookie manager if it exists before starting render

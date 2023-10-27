@@ -95,21 +95,21 @@ class StatsMinifiedWidgetConfigureFragment : Fragment(R.layout.stats_widget_conf
 
             siteSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner) {
                 StatsWidgetSiteSelectionDialogFragment().show(
-                    parentFragmentManager,
+                    childFragmentManager,
                     "stats_site_selection_fragment"
                 )
             }
 
             colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner) {
                 StatsWidgetColorSelectionDialogFragment().show(
-                    parentFragmentManager,
+                    childFragmentManager,
                     "stats_view_mode_selection_fragment"
                 )
             }
 
             dataTypeSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner) {
                 StatsWidgetDataTypeSelectionDialogFragment().show(
-                    parentFragmentManager,
+                    childFragmentManager,
                     "stats_data_type_selection_fragment"
                 )
             }
