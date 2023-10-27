@@ -68,7 +68,7 @@ public class Authenticator {
     private final Context mAppContext;
     private final Dispatcher mDispatcher;
     private final RequestQueue mRequestQueue;
-    public AppSecrets mAppSecrets;
+    private AppSecrets mAppSecrets;
 
     public interface Listener extends Response.Listener<Token> {
     }
