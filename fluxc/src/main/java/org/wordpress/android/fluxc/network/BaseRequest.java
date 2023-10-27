@@ -1,5 +1,8 @@
 package org.wordpress.android.fluxc.network;
 
+import static org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType.METHOD_NOT_ALLOWED;
+import static org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType.NOT_SET;
+
 import android.net.Uri;
 import android.net.Uri.Builder;
 import android.util.Base64;
@@ -29,9 +32,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.net.ssl.SSLHandshakeException;
-
-import static org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType.METHOD_NOT_ALLOWED;
-import static org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType.NOT_SET;
 
 public abstract class BaseRequest<T> extends Request<T> {
     public static final int DEFAULT_REQUEST_TIMEOUT = 30000;
@@ -361,17 +361,21 @@ public abstract class BaseRequest<T> extends Request<T> {
         }
 
         // Get Error by HTTP response code
+        String errorMessage = "";
+        if (volleyError.getMessage() != null) {
+            errorMessage = volleyError.getMessage();
+        }
         switch (volleyError.networkResponse.statusCode) {
             case 404:
-                return new BaseNetworkError(GenericErrorType.NOT_FOUND, volleyError.getMessage(), volleyError);
+                return new BaseNetworkError(GenericErrorType.NOT_FOUND, errorMessage, volleyError);
             case 405:
                 return this instanceof XMLRPCRequest
                         ? new BaseNetworkError(volleyError, METHOD_NOT_ALLOWED)
                         : new BaseNetworkError(volleyError);
             case 451:
-                return new BaseNetworkError(GenericErrorType.CENSORED, volleyError.getMessage(), volleyError);
+                return new BaseNetworkError(GenericErrorType.CENSORED, errorMessage, volleyError);
             case 500:
-                return new BaseNetworkError(GenericErrorType.SERVER_ERROR, volleyError.getMessage(), volleyError);
+                return new BaseNetworkError(GenericErrorType.SERVER_ERROR, errorMessage, volleyError);
             default:
                 break;
         }
