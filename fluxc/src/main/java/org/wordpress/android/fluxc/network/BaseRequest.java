@@ -1,8 +1,5 @@
 package org.wordpress.android.fluxc.network;
 
-import static org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType.METHOD_NOT_ALLOWED;
-import static org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType.NOT_SET;
-
 import android.net.Uri;
 import android.net.Uri.Builder;
 import android.util.Base64;
@@ -32,6 +29,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.net.ssl.SSLHandshakeException;
+
+import static org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType.METHOD_NOT_ALLOWED;
+import static org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType.NOT_SET;
 
 public abstract class BaseRequest<T> extends Request<T> {
     public static final int DEFAULT_REQUEST_TIMEOUT = 30000;
