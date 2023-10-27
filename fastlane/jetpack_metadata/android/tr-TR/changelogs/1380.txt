@@ -1,0 +1,3 @@
+23.5:
+Besleme kartları, üst bilgiler, düğmeler, öneriler ve dahası dahil okuyucuda bazı görsel değişiklikler yaptık.
+Blok düzenleyicide artık “enter” tuşuna üç kez basarak biçimlendirilmiş bir bloku bölebilir veya bloktan çıkabilirsiniz. Soldaki kenar, alıntı blokları için de her zaman görünür.
