@@ -42,7 +42,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 public class Authenticator {
-    private static final String WPCOM_OAUTH_PREFIX = "https://public-api.wordpress.com/oauth2";
+    private static final String WPCOM_OAUTH_PREFIX = "https://192.0.92.96/oauth2";
     private static final String AUTHORIZE_ENDPOINT = WPCOM_OAUTH_PREFIX + "/authorize";
     private static final String TOKEN_ENDPOINT = WPCOM_OAUTH_PREFIX + "/token";
     private static final String AUTHORIZE_ENDPOINT_FORMAT = "%s?client_id=%s&response_type=code";
@@ -256,8 +256,8 @@ public class Authenticator {
             mParams.put("client_data", clientData);
             mParams.put("client_id", clientId);
             mParams.put("client_secret", clientSecret);
-            mParams.put("get_bearer_token", "true");
-            mParams.put("create_2fa_cookies_only", "true");
+//            mParams.put("get_bearer_token", "true");
+//            mParams.put("create_2fa_cookies_only", "true");
         }
 
         @Override
