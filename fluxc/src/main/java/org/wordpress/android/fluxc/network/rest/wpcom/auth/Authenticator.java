@@ -68,7 +68,7 @@ public class Authenticator {
     private final Context mAppContext;
     private final Dispatcher mDispatcher;
     private final RequestQueue mRequestQueue;
-    private AppSecrets mAppSecrets;
+    public AppSecrets mAppSecrets;
 
     public interface Listener extends Response.Listener<Token> {
     }
@@ -256,8 +256,8 @@ public class Authenticator {
             mParams.put("client_data", clientData);
             mParams.put("client_id", clientId);
             mParams.put("client_secret", clientSecret);
-//            mParams.put("get_bearer_token", "true");
-//            mParams.put("create_2fa_cookies_only", "true");
+            mParams.put("get_bearer_token", "true");
+            mParams.put("create_2fa_cookies_only", "true");
         }
 
         @Override
