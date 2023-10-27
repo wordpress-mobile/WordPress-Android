@@ -90,7 +90,7 @@ class StatsWidgetConfigureFragment : Fragment() {
         return inflater.inflate(R.layout.stats_widget_configure_fragment, container, false)
     }
 
-    @Suppress("DEPRECATION", "LongMethod")
+    @Suppress("LongMethod")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val nonNullActivity = requireActivity()
@@ -126,12 +126,12 @@ class StatsWidgetConfigureFragment : Fragment() {
             }
 
             siteSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
-                StatsWidgetSiteSelectionDialogFragment().show(requireFragmentManager(), "stats_site_selection_fragment")
+                StatsWidgetSiteSelectionDialogFragment().show(parentFragmentManager, "stats_site_selection_fragment")
             })
 
             colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
                 StatsWidgetColorSelectionDialogFragment().show(
-                    requireFragmentManager(),
+                    parentFragmentManager,
                     "stats_view_mode_selection_fragment"
                 )
             })
