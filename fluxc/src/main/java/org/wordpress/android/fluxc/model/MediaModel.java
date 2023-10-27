@@ -16,6 +16,7 @@ import org.wordpress.android.util.StringUtils;
 import java.io.Serializable;
 
 @Table
+@SuppressWarnings("NotNullFieldNotInitialized")
 public class MediaModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
     private static final long serialVersionUID = -1396457338496002846L;
 
@@ -44,26 +45,26 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     @Column private long mMediaId; // The remote ID of the media
     @Column private long mPostId; // The remote post ID ('parent') of the media
     @Column private long mAuthorId;
-    @Column private String mGuid;
+    @NonNull @Column private String mGuid;
 
     // Upload date, ISO 8601-formatted date in UTC
-    @Column private String mUploadDate;
+    @Nullable @Column private String mUploadDate;
 
     // Remote Url's
-    @Column private String mUrl;
-    @Column private String mThumbnailUrl;
+    @NonNull @Column private String mUrl;
+    @Nullable @Column private String mThumbnailUrl;
 
     // File descriptors
-    @Column private String mFileName;
-    @Column private String mFilePath;
-    @Column private String mFileExtension;
-    @Column private String mMimeType;
+    @Nullable @Column private String mFileName;
+    @Nullable @Column private String mFilePath;
+    @Nullable @Column private String mFileExtension;
+    @Nullable @Column private String mMimeType;
 
     // Descriptive strings
-    @Column private String mTitle;
-    @Column private String mCaption;
-    @Column private String mDescription;
-    @Column private String mAlt;
+    @Nullable @Column private String mTitle;
+    @NonNull @Column private String mCaption;
+    @NonNull @Column private String mDescription;
+    @NonNull @Column private String mAlt;
 
     // Image and Video files only
     @Column private int mWidth;
@@ -73,7 +74,7 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     @Column private int mLength;
 
     // Video only
-    @Column private String mVideoPressGuid;
+    @Nullable @Column private String mVideoPressGuid;
     @Column private boolean mVideoPressProcessingDone;
 
     // Local only
@@ -81,9 +82,9 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     @Column private boolean mMarkedLocallyAsFeatured;
 
     // Other Sizes. Only available for images on self-hosted (xmlrpc layer) and Rest WPCOM sites
-    @Column private String mFileUrlMediumSize; // Self-hosted and wpcom
-    @Column private String mFileUrlMediumLargeSize; // Self-hosted only
-    @Column private String mFileUrlLargeSize; // Self-hosted and wpcom
+    @Nullable @Column private String mFileUrlMediumSize; // Self-hosted and wpcom
+    @Nullable @Column private String mFileUrlMediumLargeSize; // Self-hosted only
+    @Nullable @Column private String mFileUrlLargeSize; // Self-hosted and wpcom
 
     //
     // Legacy
@@ -212,98 +213,110 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         return mAuthorId;
     }
 
-    public void setGuid(String guid) {
+    public void setGuid(@NonNull String guid) {
         mGuid = guid;
     }
 
+    @NonNull
     public String getGuid() {
         return mGuid;
     }
 
-    public void setUploadDate(String uploadDate) {
+    public void setUploadDate(@Nullable String uploadDate) {
         mUploadDate = uploadDate;
     }
 
+    @Nullable
     public String getUploadDate() {
         return mUploadDate;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(@NonNull String url) {
         mUrl = url;
     }
 
+    @NonNull
     public String getUrl() {
         return mUrl;
     }
 
-    public void setThumbnailUrl(String thumbnailUrl) {
+    public void setThumbnailUrl(@Nullable String thumbnailUrl) {
         mThumbnailUrl = thumbnailUrl;
     }
 
+    @Nullable
     public String getThumbnailUrl() {
         return mThumbnailUrl;
     }
 
-    public void setFileName(String fileName) {
+    public void setFileName(@Nullable String fileName) {
         mFileName = fileName;
     }
 
+    @Nullable
     public String getFileName() {
         return mFileName;
     }
 
-    public void setFilePath(String filePath) {
+    public void setFilePath(@Nullable String filePath) {
         mFilePath = filePath;
     }
 
+    @Nullable
     public String getFilePath() {
         return mFilePath;
     }
 
-    public void setFileExtension(String fileExtension) {
+    public void setFileExtension(@Nullable String fileExtension) {
         mFileExtension = fileExtension;
     }
 
+    @Nullable
     public String getFileExtension() {
         return mFileExtension;
     }
 
-    public void setMimeType(String mimeType) {
+    public void setMimeType(@Nullable String mimeType) {
         mMimeType = mimeType;
     }
 
+    @Nullable
     public String getMimeType() {
         return mMimeType;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(@Nullable String title) {
         mTitle = title;
     }
 
+    @Nullable
     public String getTitle() {
         return mTitle;
     }
 
-    public void setCaption(String caption) {
+    public void setCaption(@NonNull String caption) {
         mCaption = caption;
     }
 
+    @NonNull
     public String getCaption() {
         return mCaption;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(@NonNull String description) {
         mDescription = description;
     }
 
+    @NonNull
     public String getDescription() {
         return mDescription;
     }
 
-    public void setAlt(String alt) {
+    public void setAlt(@NonNull String alt) {
         mAlt = alt;
     }
 
+    @NonNull
     public String getAlt() {
         return mAlt;
     }
@@ -332,10 +345,11 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         return mLength;
     }
 
-    public void setVideoPressGuid(String videoPressGuid) {
+    public void setVideoPressGuid(@Nullable String videoPressGuid) {
         mVideoPressGuid = videoPressGuid;
     }
 
+    @Nullable
     public String getVideoPressGuid() {
         return mVideoPressGuid;
     }
@@ -427,26 +441,29 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         return mDeleted;
     }
 
-    public void setFileUrlMediumSize(String file) {
+    public void setFileUrlMediumSize(@Nullable String file) {
         mFileUrlMediumSize = file;
     }
 
+    @Nullable
     public String getFileUrlMediumSize() {
         return mFileUrlMediumSize;
     }
 
-    public void setFileUrlMediumLargeSize(String file) {
+    public void setFileUrlMediumLargeSize(@Nullable String file) {
         mFileUrlMediumLargeSize = file;
     }
 
+    @Nullable
     public String getFileUrlMediumLargeSize() {
         return mFileUrlMediumLargeSize;
     }
 
-    public void setFileUrlLargeSize(String file) {
+    public void setFileUrlLargeSize(@Nullable String file) {
         mFileUrlLargeSize = file;
     }
 
+    @Nullable
     public String getFileUrlLargeSize() {
         return mFileUrlLargeSize;
     }
