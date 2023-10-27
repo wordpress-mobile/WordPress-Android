@@ -32,54 +32,32 @@ class PasskeyRestClient @Inject constructor(
     userAgent
 ) {
     @Suppress("LongParameterList")
-    suspend fun authenticateWebauthnSignature(
-        userId: Long,
-        clientId: Long,
-        secret: String,
+    fun authenticateWebauthnSignature(
+        userId: String,
         twoStepNonce: String,
-        credentialId: ByteArray,
-        clientDataJson: ByteArray,
-        authenticatorData: ByteArray,
-        signature: ByteArray,
-        userHandle: ByteArray
-    ): String {
-        val clientData = mapOf(
-            "id" to Base64.encode(credentialId, Base64.DEFAULT),
-            "rawId" to Base64.encode(credentialId, Base64.DEFAULT),
-            "type" to "public-key",
-            "clientExtensionResults" to mapOf<String, Any>(),
-            "response" to mapOf(
-                "clientDataJSON" to Base64.encode(clientDataJson, Base64.DEFAULT),
-                "authenticatorData" to Base64.encode(authenticatorData, Base64.DEFAULT),
-                "signature" to Base64.encode(signature, Base64.DEFAULT),
-                "userHandle" to Base64.encode(userHandle, Base64.DEFAULT)
-            )
-        ).let { Gson().toJson(it) }
-
+        clientData: String,
+        clientId: String,
+        secret: String,
+        onSuccess: (response: String) -> Unit,
+        onFailure: (error: WPComGsonNetworkError) -> Unit
+    ) {
         val parameters = mapOf(
-            "user_id" to userId.toString(),
-            "client_id" to clientId.toString(),
-            "client_secret" to secret,
-            "auth_type" to "webauthn",
+            "user_id" to userId,
             "two_step_nonce" to twoStepNonce,
+            "auth_type" to "webauthn",
             "client_data" to clientData,
-            "get_bearer_token" to true.toString(),
-            "create_2fa_cookies_only" to true.toString()
+            "client_id" to clientId,
+            "client_secret" to secret,
+            "get_bearer_token" to "true",
+            "create_2fa_cookies_only" to "true"
         )
 
-        return suspendCoroutine { cont ->
-            triggerAccountRequest(
-                url = webauthnAuthEndpointUrl,
-                parameters = parameters,
-                onSuccess = {
-                    cont.resumeWith(Result.success(it.asBearerToken))
-                },
-                onFailure = {
-                    val exception = Exception(it.message)
-                    cont.resumeWith(Result.failure(exception))
-                }
-            )
-        }
+        triggerAccountRequest(
+            url = webauthnAuthEndpointUrl,
+            parameters = parameters,
+            onSuccess = { onSuccess(it.asBearerToken) },
+            onFailure = onFailure
+        )
     }
 
     private fun triggerAccountRequest(
@@ -94,7 +72,6 @@ class PasskeyRestClient @Inject constructor(
         val request = WPComGsonRequest.buildPostRequest(
             url,
             parameters,
-            emptyMap(),
             Map::class.java,
             successListener,
             failureListener
