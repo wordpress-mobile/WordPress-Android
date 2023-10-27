@@ -20,7 +20,7 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '2.4.0'
     automatticTracksVersion = '3.3.0'
-    gutenbergMobileVersion = 'v1.106.0'
+    gutenbergMobileVersion = 'v1.107.0'
     wordPressAztecVersion = 'v1.8.0'
     wordPressFluxCVersion = '2878-3334cf0e27dfb7c2eb9021a7e09700dbc49645bf'
     wordPressLoginVersion = '1.6.0'
@@ -103,7 +103,7 @@ ext {
 
     // other
     androidDesugarVersion = '1.1.8'
-    wordPressLintVersion = '1.1.0'
+    wordPressLintVersion = '2.0.0'
 }
 
 allprojects {

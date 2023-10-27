@@ -40,13 +40,29 @@ fun M3ThemeWithoutBackground(
         MaterialTheme(
             colorScheme = if (isDarkTheme) {
                 darkColorScheme(
+                    primary = AppColor.JetpackGreen30,
+                    secondary = AppColor.JetpackGreen50,
+                    background = AppColor.DarkGray,
+                    surface = AppColor.DarkGray,
                     error = AppColor.Red30,
-                    surface = AppColor.DarkGray
+                    onPrimary = AppColor.Black,
+                    onSecondary = AppColor.White,
+                    onBackground = AppColor.White,
+                    onSurface = AppColor.White,
+                    onError = AppColor.Black
                 )
             } else {
                 lightColorScheme(
+                    primary = AppColor.JetpackGreen50,
+                    secondary = AppColor.JetpackGreen30,
+                    background = AppColor.White,
+                    surface = AppColor.White,
                     error = AppColor.Red50,
-                    surface = AppColor.White
+                    onPrimary = AppColor.White,
+                    onSecondary = AppColor.White,
+                    onBackground = AppColor.Black,
+                    onSurface = AppColor.Black,
+                    onError = AppColor.White
                 )
             },
             content = content
