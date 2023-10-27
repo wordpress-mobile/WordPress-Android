@@ -11,7 +11,9 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -124,6 +126,34 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
 
             assertThat(states.last()).isEqualTo(UiState.Error)
         }
+
+    @Suppress("MaxLineLength")
+    @Test
+    fun `GIVEN blank and empty queries WHEN onSearchQueryChanged THEN do not fetch domains`() = test {
+        viewModel.onSearchQueryChanged("")
+        delay(250)
+        viewModel.onSearchQueryChanged(" ")
+        advanceUntilIdle()
+
+        verifyNoInteractions(repository)
+    }
+
+    @Suppress("MaxLineLength")
+    @Test
+    fun `GIVEN repeated queries with redundant blank symbols WHEN onSearchQueryChanged THEN fetch domains only once`() = test {
+        whenever(repository.searchForDomains("query")).thenReturn(DomainsResult.Success(emptyList()))
+
+        viewModel.onSearchQueryChanged("query")
+        delay(250)
+        viewModel.onSearchQueryChanged(" query")
+        delay(250)
+        viewModel.onSearchQueryChanged("query ")
+        advanceUntilIdle()
+
+        verify(repository, times(1)).searchForDomains("query")
+        verify(repository, never()).searchForDomains(" query")
+        verify(repository, never()).searchForDomains("query ")
+    }
 
     private fun testWithActionEvents(block: suspend TestScope.(events: List<ActionEvent>) -> Unit) = test {
         val actionEvents = mutableListOf<ActionEvent>()
