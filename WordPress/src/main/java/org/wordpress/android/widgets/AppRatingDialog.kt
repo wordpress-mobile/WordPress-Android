@@ -121,7 +121,7 @@ object AppRatingDialog {
             internal const val TAG_APP_RATING_PROMPT_DIALOG = "TAG_APP_RATING_PROMPT_DIALOG"
         }
 
-        @Suppress("SwallowedException", )
+        @Suppress("SwallowedException")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = MaterialAlertDialogBuilder(requireActivity())
             val appName = getString(R.string.app_name)
