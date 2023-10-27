@@ -1495,7 +1495,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel.onShowPost(blogId = blogId, postId = postId)
     }
 
-    @Suppress("unused", "DEPRECATION")
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPrivateAtomicCookieFetched(event: OnPrivateAtomicCookieFetched) {
         if (!isAdded) {
@@ -1515,7 +1515,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             )
         }
 
-        PrivateAtCookieRefreshProgressDialog.dismissIfNecessary(fragmentManager)
+        PrivateAtCookieRefreshProgressDialog.dismissIfNecessary(parentFragmentManager)
         renderer?.beginRender()
     }
 
@@ -1554,7 +1554,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         null -> false
     }
 
-    @Suppress("DEPRECATION")
     private fun showPostInWebView(post: ReaderPost, fragment: Fragment) {
         readerWebView.setIsPrivatePost(post.isPrivate)
         readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))
@@ -1568,7 +1567,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         // if the post is from private atomic site postpone render until we have a special access cookie
         if (post.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
-            PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager, fragment)
+            PrivateAtCookieRefreshProgressDialog.showIfNecessary(parentFragmentManager, fragment)
             requestPrivateAtomicCookie()
         } else if (post.isPrivateAtomic && privateAtomicCookie.exists()) {
             // make sure we add cookie to the cookie manager if it exists before starting render
