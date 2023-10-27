@@ -1,10 +1,8 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey
 
 import android.content.Context
-import android.util.Base64
 import com.android.volley.RequestQueue
 import com.android.volley.Response
-import com.google.gson.Gson
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
@@ -15,7 +13,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
-import kotlin.coroutines.suspendCoroutine
 
 @Singleton
 class PasskeyRestClient @Inject constructor(
