@@ -1515,7 +1515,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             )
         }
 
-        PrivateAtCookieRefreshProgressDialog.dismissIfNecessary(parentFragmentManager)
+        PrivateAtCookieRefreshProgressDialog.dismissIfNecessary(childFragmentManager)
         renderer?.beginRender()
     }
 
