@@ -32,7 +32,6 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.plans.PlansConstants
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.util.QuickStartUtils.addQuickStartFocusPointAboveTheView
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
@@ -102,12 +101,15 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
+
         site = savedInstanceState?.getSerializableCompat(WordPress.SITE)
         if (site == null) {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             requireActivity().finish()
         }
+
         setHasOptionsMenu(true)
+
         if (savedInstanceState != null) {
             lastSearch = savedInstanceState.getString(KEY_LAST_SEARCH)
             quickStartEvent = savedInstanceState.getParcelableCompat(QuickStartEvent.KEY)
@@ -135,11 +137,14 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.theme_browser_fragment, container, false)
+
         actionableEmptyView = view.findViewById(R.id.actionable_empty_view)
         emptyTextView = view.findViewById(R.id.text_empty)
         emptyView = view.findViewById(R.id.empty_view)
+
         configureGridView(inflater, view)
         configureSwipeToRefresh(view)
+
         return view
     }
 
@@ -151,6 +156,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     @Suppress("deprecation")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         adapter.setThemeList(fetchThemes())
         gridView?.adapter = adapter
     }
@@ -170,6 +176,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         searchView = searchMenuItem?.actionView as SearchView
         searchView?.setOnQueryTextListener(this)
         searchView?.maxWidth = Int.MAX_VALUE
+
         if (!TextUtils.isEmpty(lastSearch)) {
             searchMenuItem?.expandActionView()
             onQueryTextSubmit(lastSearch)
@@ -236,8 +243,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     private fun addMainHeader(inflater: LayoutInflater) {
-        @SuppressLint("InflateParams") val header =
-            inflater.inflate(R.layout.theme_grid_cardview_header, null)
+        @SuppressLint("InflateParams")
+        val header = inflater.inflate(R.layout.theme_grid_cardview_header, null)
 
         // inflater doesn't work with automatic elevation in night mode so we set card background color manually
         val headerCardView = header.findViewById<View>(R.id.header_card)
@@ -245,20 +252,22 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         val elevatedSurfaceColor =
             elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(headerCardView.elevation)
         headerCardView.setBackgroundColor(elevatedSurfaceColor)
+
         currentThemeTextView = header.findViewById(R.id.header_theme_text)
+
         setThemeNameIfAlreadyAvailable()
         headerCustomizeButton = header.findViewById(R.id.customize)
-        headerCustomizeButton?.setOnClickListener(View.OnClickListener { v: View? ->
-            AnalyticsUtils.trackWithSiteDetails(
-                AnalyticsTracker.Stat.THEMES_CUSTOMIZE_ACCESSED,
-                site
-            )
+        headerCustomizeButton?.setOnClickListener {
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_CUSTOMIZE_ACCESSED, site)
             callback?.onTryAndCustomizeSelected(currentThemeId)
-        })
+        }
+
         val details = header.findViewById<LinearLayout>(R.id.details)
-        details.setOnClickListener { v: View? -> callback?.onDetailsSelected(currentThemeId) }
+        details.setOnClickListener { callback?.onDetailsSelected(currentThemeId) }
+
         val support = header.findViewById<LinearLayout>(R.id.support)
-        support.setOnClickListener { v: View? -> callback?.onSupportSelected(currentThemeId) }
+        support.setOnClickListener { callback?.onSupportSelected(currentThemeId) }
+
         gridView?.addHeaderView(header)
     }
 
@@ -283,9 +292,11 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         if (!isAdded || view == null) {
             return
         }
+
         val hasThemes = adapter.unfilteredCount > 0
         val hasVisibleThemes = adapter.count > 0
         val hasNoMatchingThemes = hasThemes && !hasVisibleThemes
+
         emptyView?.visibility = if (!hasThemes) View.VISIBLE else View.GONE
         if (!hasThemes && !NetworkUtils.isNetworkAvailable(activity)) {
             emptyTextView?.setText(R.string.no_network_title)
@@ -302,6 +313,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
                 sortedJetpackThemes
             }
         }
+
         return ArrayList()
     }
 
@@ -366,6 +378,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         if (themes.isEmpty()) {
             return
         }
+
         val iterator = themes.iterator()
         while (iterator.hasNext()) {
             val theme = iterator.next()
@@ -379,15 +392,12 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         if (wpComThemes.isEmpty() || uploadedThemes.isEmpty()) {
             return
         }
+        
         for (uploadedTheme in uploadedThemes) {
             val wpComIterator = wpComThemes.iterator()
             while (wpComIterator.hasNext()) {
                 val wpComTheme = wpComIterator.next()
-                if (StringUtils.equals(
-                        wpComTheme.themeId,
-                        uploadedTheme.themeId.replace("-wpcom", "")
-                    )
-                ) {
+                if (StringUtils.equals(wpComTheme.themeId, uploadedTheme.themeId.replace("-wpcom", ""))) {
                     wpComIterator.remove()
                     break
                 }
@@ -420,6 +430,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         @JvmField
         val TAG: String = ThemeBrowserFragment::class.java.name
         private const val KEY_LAST_SEARCH = "last_search"
+
         @JvmStatic
         fun newInstance(site: SiteModel?): ThemeBrowserFragment {
             val fragment = ThemeBrowserFragment()
