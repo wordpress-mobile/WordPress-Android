@@ -149,23 +149,6 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         }
     }
 
-    private fun showQuickStartFocusPoint() {
-        if (view == null) {
-            return
-        }
-        mHeaderCustomizeButton!!.post {
-            val focusPointSize =
-                resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
-            val horizontalOffset = mHeaderCustomizeButton!!.width / 2 - focusPointSize + resources
-                .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset)
-            addQuickStartFocusPointAboveTheView(
-                (view as ViewGroup?)!!, mHeaderCustomizeButton!!,
-                horizontalOffset, 0
-            )
-            mHeaderCustomizeButton!!.isPressed = true
-        }
-    }
-
     @Suppress("deprecation")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
