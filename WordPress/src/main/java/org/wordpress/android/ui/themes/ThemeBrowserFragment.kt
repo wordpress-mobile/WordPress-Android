@@ -81,23 +81,20 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     @JvmField
     @Inject
-    var mThemeStore: ThemeStore? = null
+    lateinit var themeStore: ThemeStore
 
-    @JvmField
     @Inject
-    var mQuickStartStore: QuickStartStore? = null
+    lateinit var quickStartStore: QuickStartStore
 
-    @JvmField
     @Inject
-    var mDispatcher: Dispatcher? = null
+    lateinit var dispatcher: Dispatcher
 
-    @JvmField
     @Inject
-    var mImageManager: ImageManager? = null
+    lateinit var imageManager: ImageManager
 
-    @JvmField
     @Inject
-    var mQuickStartUtilsWrapper: QuickStartUtilsWrapper? = null
+    lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity!!.application as WordPress).component().inject(this)
