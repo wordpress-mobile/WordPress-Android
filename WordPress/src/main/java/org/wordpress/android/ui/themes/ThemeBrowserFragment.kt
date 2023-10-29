@@ -48,7 +48,7 @@ import javax.inject.Inject
  */
 class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     SearchView.OnQueryTextListener {
-    internal interface ThemeBrowserFragmentCallback {
+    interface ThemeBrowserFragmentCallback {
         fun onActivateSelected(themeId: String?)
         fun onTryAndCustomizeSelected(themeId: String?)
         fun onViewSelected(themeId: String?)
