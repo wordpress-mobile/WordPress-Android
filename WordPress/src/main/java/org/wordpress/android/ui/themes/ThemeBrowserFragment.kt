@@ -38,6 +38,7 @@ import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
@@ -108,8 +109,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         }
         setHasOptionsMenu(true)
         if (savedInstanceState != null) {
-            mQuickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY)
             lastSearch = savedInstanceState.getString(KEY_LAST_SEARCH)
+            quickStartEvent = savedInstanceState.getParcelableCompat(QuickStartEvent.KEY)
         }
     }
 
