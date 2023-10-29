@@ -38,6 +38,7 @@ import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.HeaderGridView
@@ -99,8 +100,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mSite = arguments!!.getSerializable(WordPress.SITE) as SiteModel?
         (requireActivity().application as WordPress).component().inject(this)
+        site = savedInstanceState?.getSerializableCompat(WordPress.SITE)
         if (site == null) {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             requireActivity().finish()
