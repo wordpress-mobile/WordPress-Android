@@ -99,11 +99,11 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.application as WordPress).component().inject(this)
         mSite = arguments!!.getSerializable(WordPress.SITE) as SiteModel?
+        (requireActivity().application as WordPress).component().inject(this)
         if (site == null) {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT)
-            activity!!.finish()
+            requireActivity().finish()
         }
         setHasOptionsMenu(true)
         if (savedInstanceState != null) {
