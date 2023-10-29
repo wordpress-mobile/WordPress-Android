@@ -65,7 +65,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     private var gridView: HeaderGridView? = null
     private var emptyView: RelativeLayout? = null
     private var actionableEmptyView: ActionableEmptyView? = null
-    private var currentThemeTextView: TextView? = null
+    var currentThemeTextView: TextView? = null
     private var headerCustomizeButton: View? = null
 
     private val adapter: ThemeBrowserAdapter by lazy {
