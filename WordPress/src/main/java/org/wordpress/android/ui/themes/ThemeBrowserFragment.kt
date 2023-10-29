@@ -426,7 +426,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     companion object {
         @JvmField
-        val TAG = ThemeBrowserFragment::class.java.name
+        val TAG: String = ThemeBrowserFragment::class.java.name
         private const val KEY_LAST_SEARCH = "last_search"
         @JvmStatic
         fun newInstance(site: SiteModel?): ThemeBrowserFragment {
