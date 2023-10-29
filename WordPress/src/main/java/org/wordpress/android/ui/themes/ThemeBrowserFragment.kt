@@ -57,29 +57,31 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         fun onSwipeToRefresh()
     }
 
-    private var mSwipeToRefreshHelper: SwipeToRefreshHelper? = null
-    private var mCurrentThemeId: String? = null
-    private var mLastSearch: String? = null
-    private var mGridView: HeaderGridView? = null
-    private var mEmptyView: RelativeLayout? = null
-    private var mActionableEmptyView: ActionableEmptyView? = null
-    var currentThemeTextView: TextView? = null
-        private set
-    private var mHeaderCustomizeButton: View? = null
+    private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
+    private var currentThemeId: String? = null
+    private var lastSearch: String? = null
+
+    private var gridView: HeaderGridView? = null
+    private var emptyView: RelativeLayout? = null
+    private var actionableEmptyView: ActionableEmptyView? = null
+    private var currentThemeTextView: TextView? = null
+    private var headerCustomizeButton: View? = null
+
     private val adapter: ThemeBrowserAdapter by lazy {
         ThemeBrowserAdapter(activity, mSite!!.planId, mCallback, mImageManager).apply {
             registerDataSetObserver(ThemeDataSetObserver())
         }
     }
-    private var mShouldRefreshOnStart = false
-    private var mEmptyTextView: TextView? = null
-    private var mSite: SiteModel? = null
-    private var mSearchMenuItem: MenuItem? = null
-    private var mSearchView: SearchView? = null
-    private var mCallback: ThemeBrowserFragmentCallback? = null
-    private var mQuickStartEvent: QuickStartEvent? = null
+    private var shouldRefreshOnStart = false
+    private var emptyTextView: TextView? = null
+    private var site: SiteModel? = null
 
-    @JvmField
+    private var searchMenuItem: MenuItem? = null
+    private var searchView: SearchView? = null
+
+    private var callback: ThemeBrowserFragmentCallback? = null
+    private var quickStartEvent: QuickStartEvent? = null
+
     @Inject
     lateinit var themeStore: ThemeStore
 
@@ -99,20 +101,20 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         super.onCreate(savedInstanceState)
         (activity!!.application as WordPress).component().inject(this)
         mSite = arguments!!.getSerializable(WordPress.SITE) as SiteModel?
-        if (mSite == null) {
+        if (site == null) {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             activity!!.finish()
         }
         setHasOptionsMenu(true)
         if (savedInstanceState != null) {
-            mLastSearch = savedInstanceState.getString(KEY_LAST_SEARCH)
             mQuickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY)
+            lastSearch = savedInstanceState.getString(KEY_LAST_SEARCH)
         }
     }
 
     override fun onAttach(activity: Activity) {
         super.onAttach(activity)
-        mCallback = try {
+        callback = try {
             activity as ThemeBrowserFragmentCallback
         } catch (e: ClassCastException) {
             throw ClassCastException("$activity must implement ThemeBrowserFragmentCallback")
@@ -124,7 +126,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         if (mSearchView != null) {
             mSearchView!!.setOnQueryTextListener(null)
         }
-        mCallback = null
+        callback = null
     }
 
     override fun onCreateView(
@@ -133,9 +135,9 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.theme_browser_fragment, container, false)
-        mActionableEmptyView = view.findViewById(R.id.actionable_empty_view)
-        mEmptyTextView = view.findViewById(R.id.text_empty)
-        mEmptyView = view.findViewById(R.id.empty_view)
+        actionableEmptyView = view.findViewById(R.id.actionable_empty_view)
+        emptyTextView = view.findViewById(R.id.text_empty)
+        emptyView = view.findViewById(R.id.empty_view)
         configureGridView(inflater, view)
         configureSwipeToRefresh(view)
         return view
@@ -162,7 +164,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         if (mSearchMenuItem != null && mSearchMenuItem!!.isActionViewExpanded) {
             outState.putString(KEY_LAST_SEARCH, mSearchView!!.query.toString())
         }
-        outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent)
+        outState.putParcelable(QuickStartEvent.KEY, quickStartEvent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -180,7 +182,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_search) {
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, mSite)
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, site)
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -207,8 +209,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         }
     }
 
-    fun setCurrentThemeId(currentThemeId: String?) {
-        mCurrentThemeId = currentThemeId
+    fun setCurrentThemeId(themeId: String?) {
+        currentThemeId = themeId
         refreshView()
     }
 
@@ -217,9 +219,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     private fun configureSwipeToRefresh(view: View) {
-        mSwipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(
-            view.findViewById(R.id.ptr_layout)
-        ) {
+        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(view.findViewById(R.id.ptr_layout)) {
             if (!isAdded) {
                 return@buildSwipeToRefreshHelper
             }
@@ -235,7 +235,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     private fun configureGridView(inflater: LayoutInflater, view: View) {
-        mGridView = view.findViewById(R.id.theme_listview)
+        gridView = view.findViewById(R.id.theme_listview)
         addHeaderViews(inflater)
         mGridView.setRecyclerListener(this)
     }
@@ -252,11 +252,11 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         headerCardView.setBackgroundColor(elevatedSurfaceColor)
         currentThemeTextView = header.findViewById(R.id.header_theme_text)
         setThemeNameIfAlreadyAvailable()
-        mHeaderCustomizeButton = header.findViewById(R.id.customize)
         mHeaderCustomizeButton.setOnClickListener(View.OnClickListener { v: View? ->
+        headerCustomizeButton = header.findViewById(R.id.customize)
             AnalyticsUtils.trackWithSiteDetails(
                 AnalyticsTracker.Stat.THEMES_CUSTOMIZE_ACCESSED,
-                mSite
+                site
             )
             mCallback!!.onTryAndCustomizeSelected(mCurrentThemeId)
         })
@@ -275,9 +275,9 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     fun setRefreshing(refreshing: Boolean) {
-        mShouldRefreshOnStart = refreshing
         if (mSwipeToRefreshHelper != null) {
             mSwipeToRefreshHelper!!.isRefreshing = refreshing
+        shouldRefreshOnStart = refreshing
             if (!refreshing) {
                 refreshView()
             }
@@ -354,7 +354,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         // find the index of the active theme
         var activeThemeIndex = 0
         for (theme in themes) {
-            if (mCurrentThemeId == theme.themeId) {
+            if (currentThemeId == theme.themeId) {
                 theme.active = true
                 activeThemeIndex = themes.indexOf(theme)
                 break
