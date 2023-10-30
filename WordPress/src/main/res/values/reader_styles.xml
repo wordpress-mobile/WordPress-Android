@@ -359,6 +359,16 @@
     <!-- progress bars -->
     <style name="ReaderProgressBar" parent="Widget.AppCompat.ProgressBar" />
 
+    <style name="ReaderFooterProgressBar" parent="Widget.AppCompat.ProgressBar" >
+        <item name="android:layout_width">@dimen/reader_footer_progress_bar_size</item>
+        <item name="android:layout_height">@dimen/reader_footer_progress_bar_size</item>
+        <item name="android:background">@drawable/bg_oval_surface</item>
+        <item name="android:backgroundTint">@color/reader_footer_progress_background</item>
+        <item name="android:elevation">@dimen/card_elevation</item>
+        <item name="android:padding">@dimen/margin_medium</item>
+        <item name="android:layout_margin">@dimen/margin_large</item>
+    </style>
+
     <!-- chips -->
     <style name="ReaderChip" parent="@style/Widget.MaterialComponents.Chip.Filter">
         <item name="android:textSize">@dimen/text_sz_large</item>
