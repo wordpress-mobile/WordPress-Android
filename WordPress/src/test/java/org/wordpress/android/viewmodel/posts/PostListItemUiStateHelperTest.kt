@@ -94,7 +94,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_DRAFT)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_PUBLISH)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -112,7 +111,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_DRAFT, isLocalDraft = true)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_PUBLISH)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -130,7 +128,6 @@ class PostListItemUiStateHelperTest {
             capabilitiesToPublish = false
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_SUBMIT)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -149,7 +146,6 @@ class PostListItemUiStateHelperTest {
             capabilitiesToPublish = false
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_SUBMIT)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -169,7 +165,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_DRAFT)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -189,7 +184,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_DRAFT, isLocalDraft = true)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -209,7 +203,6 @@ class PostListItemUiStateHelperTest {
             capabilitiesToPublish = false
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -231,7 +224,6 @@ class PostListItemUiStateHelperTest {
             capabilitiesToPublish = false
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -248,7 +240,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_PUBLISH)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -269,7 +260,6 @@ class PostListItemUiStateHelperTest {
             statsSupported = false
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -289,7 +279,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_PUBLISH)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -310,7 +299,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_PUBLISH)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -329,7 +317,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_PUBLISH, isLocallyChanged = true)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_PUBLISH)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -352,7 +339,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_PUBLISH, isLocallyChanged = true)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -382,7 +368,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_SCHEDULED)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
 
@@ -398,7 +383,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_SCHEDULED, isLocallyChanged = true)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_SYNC)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -418,7 +402,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_SCHEDULED, isLocallyChanged = true)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -435,7 +418,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_PENDING)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_PUBLISH)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -452,7 +434,6 @@ class PostListItemUiStateHelperTest {
             capabilitiesToPublish = false
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -472,7 +453,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_PUBLISH, isLocallyChanged = true)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -494,7 +474,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_SCHEDULED, isLocallyChanged = true)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -513,7 +492,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_PRIVATE, isLocallyChanged = true)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -532,7 +510,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_DRAFT, isLocallyChanged = true)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -562,7 +539,6 @@ class PostListItemUiStateHelperTest {
             post = createPostModel(status = POST_STATE_PUBLISH, isLocallyChanged = true)
         )
 
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
@@ -904,7 +880,6 @@ class PostListItemUiStateHelperTest {
         val state = createPostListItemUiState(
             post = createPostModel(isLocalDraft = true, isLocallyChanged = true)
         )
-        assertThat(state.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_EDIT)
         assertThat(state.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
         assertThat(state.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MORE)
         assertThat(state.actions).hasSize(3)
