@@ -29,7 +29,7 @@ class DomainManagementActivity : AppCompatActivity() {
     private fun handleActionEvents(actionEvent: DomainManagementViewModel.ActionEvent) {
         when (actionEvent) {
             is DomainManagementViewModel.ActionEvent.DomainTapped -> {
-                startActivity(DomainManagementDetailsActivity.createIntent(this, actionEvent.domain))
+                startActivity(DomainManagementDetailsActivity.createIntent(this, actionEvent.detailUrl))
             }
         }
     }
