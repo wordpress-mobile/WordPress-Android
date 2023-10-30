@@ -49,7 +49,7 @@ import org.wordpress.android.ui.domains.management.composable.DomainsSearchTextF
 @Composable
 fun MyDomainsScreen(
     uiState: UiState,
-    onDomainTapped: (domain: String) -> Unit,
+    onDomainTapped: (detailUrl: String) -> Unit,
     onAddDomainClicked: () -> Unit,
 ) {
     Scaffold(
@@ -193,7 +193,7 @@ fun MyDomainsSearchInput(
 fun MyDomainsList(
     listUiState: PopulatedList,
     listState: LazyListState,
-    onDomainTapped: (domain: String) -> Unit,
+    onDomainTapped: (detailUrl: String) -> Unit,
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
