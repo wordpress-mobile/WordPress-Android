@@ -692,7 +692,10 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getMediaWithLocalId(localMediaId);
     }
 
-    public List<MediaModel> getSiteMediaWithIds(SiteModel siteModel, List<Long> mediaIds) {
+    @NonNull
+    public List<MediaModel> getSiteMediaWithIds(
+            @NonNull SiteModel siteModel,
+            @NonNull List<Long> mediaIds) {
         return MediaSqlUtils.getSiteMediaWithIds(siteModel, mediaIds);
     }
 
