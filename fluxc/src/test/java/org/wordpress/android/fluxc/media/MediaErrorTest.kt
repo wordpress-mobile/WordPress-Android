@@ -6,8 +6,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
-import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.BAD_REQUEST
-import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
 
 @RunWith(MockitoJUnitRunner::class)
 class MediaErrorTest {
@@ -15,7 +14,7 @@ class MediaErrorTest {
 
     @Before
     fun setUp() {
-        mediaError = MediaError(GENERIC_ERROR)
+        mediaError = MediaError(MediaErrorType.GENERIC_ERROR)
     }
 
     @Test
@@ -27,7 +26,7 @@ class MediaErrorTest {
 
     @Test
     fun `user message extracted on BAD_REQUEST and API user message available`() {
-        mediaError.type = BAD_REQUEST
+        mediaError.type = MediaErrorType.BAD_REQUEST
         mediaError.message = "rest_upload_user_quota_exceeded|You have used your space quota. " +
                 "Please delete files before uploading. Back"
 
@@ -40,7 +39,7 @@ class MediaErrorTest {
 
     @Test
     fun `user message not extracted on BAD_REQUEST and API user message not available`() {
-        mediaError.type = BAD_REQUEST
+        mediaError.type = MediaErrorType.BAD_REQUEST
         mediaError.message = "You have used your space quota. " +
                 "Please delete files before uploading. Back"
 
