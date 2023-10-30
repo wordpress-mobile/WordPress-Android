@@ -34,14 +34,6 @@ import org.wordpress.android.fluxc.test
 import kotlin.test.assertEquals
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetchedPayload as BlazeCampaignsFetchedPayload
 
-private val AUDIENCE_LIST_RESPONSE = AudienceList(
-    devices = "",
-    countries = "",
-    languages = "",
-    topics = "",
-    oSS = ""
-)
-
 private val CONTENT_CONFIG_RESPONSE = ContentConfig(
     title = "Brand new post - do not approve",
     snippet = "This is a test blaze, please do not approve.",
@@ -56,51 +48,11 @@ private val CONTENT_CAMPAIGN_STATS = CampaignStats(
 
 private val CAMPAIGN_RESPONSE = Campaign(
     campaignId = 1,
-    name = "Brand new post - do not approve",
-    description = null,
-    ownerId = 1,
-    startDate = "2023-06-02T00:00:00.000Z",
     createdAt = "2023-06-02T00:00:00.000Z",
     endDate = "2023-06-02T00:00:00.000Z",
-    statusSmart = 0,
-    status = "rejected",
-    subscriptionId = 1,
-    revenue = null,
-    displayName = "displayname",
-    avatarUrl = "https://avatar.url",
     budgetCents = 1000,
-    targetUrn = "urn:wpcom:post:199247490:9",
-    targetUrl = "https://targeturl",
-    userTargetLanguage = null,
-    userTargetGeo = "0",
-    userTargetGeo2 = null,
-    deviceTargetType = "all",
-    osTargetType = null,
-    contentTargetLanguage = "0",
-    contentTargetIabCategory = "0",
-    keywordTargetIds = null,
-    keywordTargetKvs = null,
-    type = "post",
-    placement = null,
-    siteNames = null,
-    pageNames = null,
-    displayDeliveryEstimate = "71400:96600",
-    smartDeliveryEstimate = "140000",
-    deliveryPercent = 0,
-    moderationStatus = "rejected",
-    moderationReason = "other",
-    mimeType = "application/json",
-    width = 300,
-    height = 250,
-    altText = null,
-    fileName = null,
-    creativeAssetId = 65831,
-    smartId = null,
-    imageMimeType = "image/jpeg",
     contentImage = "undefined",
-    creativeHtml = "",
     uiStatus = "rejected",
-    audienceList = AUDIENCE_LIST_RESPONSE,
     contentConfig = CONTENT_CONFIG_RESPONSE,
     campaignStats = CONTENT_CAMPAIGN_STATS
 )

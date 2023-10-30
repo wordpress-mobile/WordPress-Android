@@ -46,18 +46,9 @@ const val PAGE = 1
 const val TOTAL_ITEMS = 1
 const val TOTAL_PAGES = 1
 
-private val AUDIENCE_LIST_RESPONSE = AudienceList(
-    devices = "",
-    countries = "",
-    languages = "",
-    topics = "",
-    oSS = ""
-)
 
 private val CONTENT_CONFIG_RESPONSE = ContentConfig(
     title = TITLE,
-    snippet = "",
-    clickUrl = "",
     imageUrl = IMAGE_URL
 )
 
@@ -72,7 +63,6 @@ private val CAMPAIGN_RESPONSE = Campaign(
     endDate = END_DATE,
     budgetCents = BUDGET_CENTS,
     uiStatus = UI_STATUS,
-    audienceList = AUDIENCE_LIST_RESPONSE,
     contentConfig = CONTENT_CONFIG_RESPONSE,
     campaignStats = CONTENT_CAMPAIGN_STATS
 )
