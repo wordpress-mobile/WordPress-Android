@@ -1,0 +1,3 @@
+23.5:
+Im Block-Editor kannst du einen formatierten Block jetzt aufteilen oder beenden, indem du dreimal die Eingabetaste drückst.
+Der linke Rahmen wird immer auch für Zitatblöcke angezeigt, sogar in blockbasierten Themes im dunklen Modus. Wir geben dir unser Wort.

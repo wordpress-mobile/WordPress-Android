@@ -109,6 +109,7 @@
     <color name="reader_following_button_text_color">#99000000</color>
     <color name="reader_follow_button_ripple">@color/reader_follow_button_ripple_selector_light</color>
     <color name="reader_blog_section_avatar_internal_border">@color/black_translucent_20</color>
+    <color name="reader_post_body_link">@color/blue_50</color>
 
     <!-- These colors were removed from the login library and moved here as they are still being
     used by some old layouts. They should be replaced here as well, whenever possible. -->
