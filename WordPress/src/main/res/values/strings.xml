@@ -2651,6 +2651,7 @@
 
     <!-- Domain Registration -->
     <string name="domains_title">Domains</string>
+    <string name="site_domain_title">Site Domain</string>
     <string name="register_domain">Register Domain</string>
     <string name="domains_suggestions_select_domain">Select domain</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
