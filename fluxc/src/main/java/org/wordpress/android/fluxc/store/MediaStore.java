@@ -349,22 +349,29 @@ public class MediaStore extends Store {
     }
 
     public static class OnMediaChanged extends OnChanged<MediaError> {
-        public MediaAction cause;
-        public List<MediaModel> mediaList;
+        @NonNull public MediaAction cause;
+        @NonNull public List<MediaModel> mediaList;
 
-        public OnMediaChanged(MediaAction cause) {
+        public OnMediaChanged(@NonNull MediaAction cause) {
             this(cause, new ArrayList<>(), null);
         }
 
-        public OnMediaChanged(MediaAction cause, @NonNull List<MediaModel> mediaList) {
+        public OnMediaChanged(
+                @NonNull MediaAction cause,
+                @NonNull List<MediaModel> mediaList) {
             this(cause, mediaList, null);
         }
 
-        public OnMediaChanged(MediaAction cause, MediaError error) {
+        public OnMediaChanged(
+                @NonNull MediaAction cause,
+                @Nullable MediaError error) {
             this(cause, new ArrayList<>(), error);
         }
 
-        public OnMediaChanged(MediaAction cause, @NonNull List<MediaModel> mediaList, MediaError error) {
+        public OnMediaChanged(
+                @NonNull MediaAction cause,
+                @NonNull List<MediaModel> mediaList,
+                @Nullable MediaError error) {
             this.cause = cause;
             this.mediaList = mediaList;
             this.error = error;
