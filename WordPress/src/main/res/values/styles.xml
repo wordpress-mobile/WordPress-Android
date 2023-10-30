@@ -1708,4 +1708,13 @@
     <style name="PostList.Item.Body" parent="TextAppearance.Material3.BodyMedium">
         <item name="android:alpha">@dimen/material_emphasis_medium</item>
     </style>
+
+    <!-- Pages List Item -->
+    <style name="Pages.Item.Title" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+    </style>
+
+    <style name="PagesList.Item.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+    </style>
 </resources>
