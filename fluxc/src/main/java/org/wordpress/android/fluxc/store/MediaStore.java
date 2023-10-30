@@ -687,6 +687,7 @@ public class MediaStore extends Store {
         return media.size() > 0 ? media.get(0) : null;
     }
 
+    @Nullable
     public MediaModel getMediaWithLocalId(int localMediaId) {
         return MediaSqlUtils.getMediaWithLocalId(localMediaId);
     }
