@@ -1,2 +1,6 @@
-In the block editor, you can now split or exit a formatted block by pressing the “enter” key three times.
-The left-hand border is always visible for quote blocks, too, even in block-based themes on dark mode. And you can quote us on that.
+* [*] Block Editor Social Icons: Fix visibility of inactive icons when used with block based themes in dark mode [https://github.com/WordPress/gutenberg/pull/55398]
+* [*] Block Editor Classic block: Add option to convert to blocks [https://github.com/WordPress/gutenberg/pull/55461]
+* [*] Block Editor Synced Patterns: Fix visibility of heading section when used with block based themes in dark mode [https://github.com/WordPress/gutenberg/pull/55399]
+* [***] [Jetpack-only] [***] Added domain selection, plan selection, and checkout screens in site creation flow [https://github.com/wordpress-mobile/WordPress-Android/pull/19304]
+
+
