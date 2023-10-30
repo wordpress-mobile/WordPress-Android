@@ -15,7 +15,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.AudienceList
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsError
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetchedPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsResponse
