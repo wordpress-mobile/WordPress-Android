@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class MediaTestUtils {
     public static int insertMediaIntoDatabase(MediaModel media) {
@@ -18,7 +18,7 @@ public class MediaTestUtils {
     public static List<MediaModel> insertRandomMediaIntoDatabase(int localSiteId, int count) {
         List<MediaModel> insertedMedia = generateRandomizedMediaList(count, localSiteId);
         for (MediaModel media : insertedMedia) {
-            assertTrue(MediaSqlUtils.insertOrUpdateMedia(media) == 1);
+            assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(media));
         }
         return insertedMedia;
     }
