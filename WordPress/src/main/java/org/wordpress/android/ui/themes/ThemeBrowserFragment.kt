@@ -134,7 +134,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
 
-        site = savedInstanceState?.getSerializableCompat(WordPress.SITE)
+        site = arguments?.getSerializableCompat(WordPress.SITE)
         if (site == null) {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             requireActivity().finish()
