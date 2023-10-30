@@ -6,7 +6,10 @@ import org.wordpress.android.localcontentmigration.LocalContentEntityData.Compan
 sealed class LocalMigrationError {
     sealed class ProviderError : LocalMigrationError() {
         data class NullValueFromQuery(val forEntity: LocalContentEntity) : ProviderError()
-        data class NullCursor(val forEntity: LocalContentEntity, val throwable: Throwable? = null) : ProviderError()
+        sealed class FailureToProvideCursor(val forEntity: LocalContentEntity) : ProviderError()
+        class NullCursor(forEntity: LocalContentEntity) : FailureToProvideCursor(forEntity)
+        class CursorException(forEntity: LocalContentEntity, val throwable: Throwable)
+            : FailureToProvideCursor(forEntity)
         data class ParsingException(
             val forEntity: LocalContentEntity,
             val throwable: Throwable,
