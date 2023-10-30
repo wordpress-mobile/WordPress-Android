@@ -677,11 +677,12 @@ public class MediaStore extends Store {
         return getAllSiteMedia(siteModel).size();
     }
 
-    public boolean hasSiteMediaWithId(SiteModel siteModel, long mediaId) {
+    public boolean hasSiteMediaWithId(@NonNull SiteModel siteModel, long mediaId) {
         return getSiteMediaWithId(siteModel, mediaId) != null;
     }
 
-    public MediaModel getSiteMediaWithId(SiteModel siteModel, long mediaId) {
+    @Nullable
+    public MediaModel getSiteMediaWithId(@NonNull SiteModel siteModel, long mediaId) {
         List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(siteModel, mediaId);
         return media.size() > 0 ? media.get(0) : null;
     }
