@@ -24,7 +24,10 @@ public class MediaTestUtils {
     }
 
     public static MediaModel generateMedia(String title, String desc, String caption, String alt) {
-        MediaModel media = new MediaModel();
+        MediaModel media = new MediaModel(
+                0,
+                0
+        );
         media.setTitle(title);
         media.setDescription(desc);
         media.setCaption(caption);
@@ -33,9 +36,10 @@ public class MediaTestUtils {
     }
 
     public static MediaModel generateMediaFromPath(int localSiteId, long mediaId, String filePath) {
-        MediaModel media = new MediaModel();
-        media.setLocalSiteId(localSiteId);
-        media.setMediaId(mediaId);
+        MediaModel media = new MediaModel(
+                localSiteId,
+                mediaId
+        );
         media.setFilePath(filePath);
         media.setFileName(MediaUtils.getFileName(filePath));
         media.setFileExtension(MediaUtils.getExtension(filePath));

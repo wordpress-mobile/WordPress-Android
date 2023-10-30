@@ -11,16 +11,17 @@ class UploadTestUtils {
     private static final int TEST_LOCAL_SITE_ID = 42;
 
     static MediaModel getTestMedia(long mediaId) {
-        MediaModel media = new MediaModel();
-        media.setLocalSiteId(TEST_LOCAL_SITE_ID);
-        media.setMediaId(mediaId);
-        return media;
+        return new MediaModel(
+                TEST_LOCAL_SITE_ID,
+                mediaId
+        );
     }
 
     static MediaModel getLocalTestMedia() {
-        MediaModel media = new MediaModel();
-        media.setLocalSiteId(TEST_LOCAL_SITE_ID);
-        return media;
+        return new MediaModel(
+                TEST_LOCAL_SITE_ID,
+                0
+        );
     }
 
     static PostModel getTestPost() {
