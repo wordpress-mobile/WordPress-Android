@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-06-10 14:21:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.9
+Generator: GlotPress/4.0.0-alpha.11
 Language: nb_NO
 -->
 <resources>
@@ -1209,7 +1209,6 @@ Language: nb_NO
     <string name="quick_start_dialog_view_site_title">Vis ditt nettsted</string>
     <string name="quick_start_dialog_view_site_message">Forhåndsvis ditt nettsted for å se hva dine besøkende vi se.</string>
     <string name="quick_start_dialog_share_site_title">Del ditt netsted</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Trykk %1$s Deling %2$s for å fortsette</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Trykk %1$stilkoblinger%2$s for å legge til konti i sosiale medier</string>
     <string name="quick_start_dialog_share_site_message">Koble til dine konti i sosiale medier - ditt nettsted vil automatisk dele nye innlegg.</string>
     <string name="quick_start_dialog_publish_post_title">Publiser et innlegg</string>
@@ -1421,7 +1420,6 @@ Language: nb_NO
     <string name="signup_epilogue_error_avatar_view">Ditt profilbilde er lastet opp og vil bli synlig om kort tid.</string>
     <string name="permissions_denied_title">Tillatelser</string>
     <string name="plugin_caption_featured">Fremhevet</string>
-    <string name="sharing_disabled">Delingsmodulen er deaktivert</string>
     <string name="version_with_name_param">Versjn %s</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d sider / innlegg gjenstår</string>

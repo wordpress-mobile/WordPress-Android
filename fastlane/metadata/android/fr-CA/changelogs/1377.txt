@@ -1,5 +1,0 @@
-23.4 :
-Nous avons corrigé des bugs !
-- Vous pouvez désormais intégrer des URL depuis X sans obtenir un lien mort.
-- Lorsque vous utilisez une URL non valide pour un média, l’application affiche un message d’erreur au lieu de planter.
-- Dans l’éditeur de blocs, l’application ne plante plus lorsque vous imbriquez trop de blocs les uns dans les autres.

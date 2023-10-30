@@ -1,5 +1,0 @@
-23.4:
-Hataları ezip geçiyoruz!
-- Artık X'ten URL'leri gömerken bozuk bağlantı almayacaksınız.
-- Geçersiz bir ortam URL'si kullandığınızda, uygulama artık çökmeyecek ve bunun yerine bir hata mesajı görüntüleyecek.
-- Blok düzenleyicide, blokların içine çok fazla blok yerleştirdiğinizde uygulama artık çökmeyecek.

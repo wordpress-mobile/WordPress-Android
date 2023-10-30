@@ -34,8 +34,5 @@ class QuickLinkRibbonViewHolder(
 
     fun bind(quickLinksItem: QuickLinksItem) = with(binding) {
         (quickLinksItemList.adapter as QuickLinksItemAdapter).update(quickLinksItem.quickLinkItems)
-        if (quickLinksItem.showMoreFocusPoint) {
-            quickLinksItemList.smoothScrollToPosition(quickLinksItemList.adapter!!.itemCount - 1)
-        }
     }
 }

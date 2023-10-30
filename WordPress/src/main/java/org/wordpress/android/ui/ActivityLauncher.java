@@ -57,6 +57,7 @@ import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.domains.DomainsDashboardActivity;
+import org.wordpress.android.ui.domains.management.DomainManagementActivity;
 import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
 import org.wordpress.android.ui.engagement.EngagementNavigationSource;
 import org.wordpress.android.ui.engagement.HeaderData;
@@ -1918,6 +1919,11 @@ public class ActivityLauncher {
 
     public static void showJetpackStaticPoster(@NonNull Context context) {
         Intent intent = new Intent(context, JetpackStaticPosterActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void openDomainManagement(@NonNull Context context) {
+        Intent intent = new Intent(context, DomainManagementActivity.class);
         context.startActivity(intent);
     }
 }

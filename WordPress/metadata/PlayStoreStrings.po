@@ -10,6 +10,13 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
+msgctxt "release_note_235"
+msgid ""
+"23.5:\n"
+"In the block editor, you can now split or exit a formatted block by pressing the “enter” key three times.\n"
+"The left-hand border is always visible for quote blocks, too, even in block-based themes on dark mode. And you can quote us on that.\n"
+msgstr ""
+
 msgctxt "release_note_234"
 msgid ""
 "23.4:\n"
@@ -17,14 +24,6 @@ msgid ""
 "- You can now embed URLs from X without getting a broken link.\n"
 "- When you use an invalid media URL, the app displays an error message instead of crashing.\n"
 "- In the block editor, the app will no longer crash when you nest too many blocks within blocks.\n"
-msgstr ""
-
-msgctxt "release_note_233"
-msgid ""
-"23.3:\n"
-"We changed the way alerts appear when you’re inserting media into blocks from a URL. So we’ve got that going for us, which is nice.\n"
-"\n"
-"It’s also easier to tell the difference between placeholder text and actual content in block-based themes.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

@@ -65,8 +65,6 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 import javax.inject.Inject
 
-private const val MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD = 3
-
 /**
  * Helper class which encapsulates logic for creating UiStates for items in the PostsList.
  */
@@ -115,7 +113,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 post
             ),
         )
-        val defaultActions = createDefaultViewActions(buttonTypes, onButtonClicked)
+        // val defaultActions = createDefaultViewActions(buttonTypes, onButtonClicked)
         val moreActions = createMoreActions(buttonTypes, onButtonClicked)
 
         val remotePostId = RemotePostId(RemoteId(post.remotePostId))
@@ -183,7 +181,6 @@ class PostListItemUiStateHelper @Inject constructor(
 
         return PostListItemUiState(
             data = itemUiData,
-            actions = defaultActions,
             moreActions = moreActions,
             onSelected = onSelected
         )
@@ -268,7 +265,7 @@ class PostListItemUiStateHelper @Inject constructor(
         val labels: MutableList<UiString> = ArrayList()
         when {
             uploadUiState is UploadFailed -> {
-                getErrorLabel(uploadUiState, postStatus)?.let { labels.add(it) }
+                getErrorLabel(uploadUiState, postStatus).let { labels.add(it) }
             }
 
             uploadUiState is UploadingPost -> if (uploadUiState.isDraft) {
@@ -343,7 +340,7 @@ class PostListItemUiStateHelper @Inject constructor(
         return labels
     }
 
-    private fun getErrorLabel(uploadUiState: UploadFailed, postStatus: PostStatus): UiString? {
+    private fun getErrorLabel(uploadUiState: UploadFailed, postStatus: PostStatus): UiString {
         return when {
             uploadUiState.error.mediaError != null -> getMediaUploadErrorMessage(uploadUiState, postStatus)
             uploadUiState.error.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
@@ -492,28 +489,6 @@ class PostListItemUiStateHelper @Inject constructor(
 
         if (canMovePostToDraft) {
             add(BUTTON_MOVE_TO_DRAFT)
-        }
-    }
-
-    private fun createDefaultViewActions(
-        buttonTypes: List<PostListButtonType>,
-        onButtonClicked: (PostListButtonType) -> Unit
-    ): List<PostListItemAction> {
-        val createSinglePostListItem = { buttonType: PostListButtonType ->
-            PostListItemAction.SingleItem(buttonType, onButtonClicked)
-        }
-        return if (buttonTypes.size > MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD) {
-            val visibleItems = buttonTypes.take(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1)
-                .map(createSinglePostListItem)
-            val itemsUnderMore = buttonTypes.subList(
-                kotlin.math.max(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1, 0),
-                buttonTypes.size
-            )
-                .map(createSinglePostListItem)
-
-            visibleItems.plus(PostListItemAction.MoreItem(itemsUnderMore, onButtonClicked))
-        } else {
-            buttonTypes.map(createSinglePostListItem)
         }
     }
 

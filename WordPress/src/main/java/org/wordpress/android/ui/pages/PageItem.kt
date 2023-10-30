@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.pages
 
 import androidx.annotation.ColorRes
-import androidx.annotation.IdRes
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -213,25 +213,22 @@ sealed class PageItem(open val type: Type) {
         VIRTUAL_HOMEPAGE(6),
     }
 
-    enum class Action(@IdRes val itemId: Int) {
-        VIEW_PAGE(R.id.view_page),
-        CANCEL_AUTO_UPLOAD(R.id.cancel_auto_upload),
-        SET_PARENT(R.id.set_parent),
-        SET_AS_HOMEPAGE(R.id.set_as_homepage),
-        SET_AS_POSTS_PAGE(R.id.set_as_posts_page),
-        COPY(R.id.copy),
-        COPY_LINK(R.id.copy_page_link),
-        PUBLISH_NOW(R.id.publish_now),
-        PROMOTE_WITH_BLAZE(R.id.promote_with_blaze),
-        MOVE_TO_DRAFT(R.id.move_to_draft),
-        DELETE_PERMANENTLY(R.id.delete_permanently),
-        MOVE_TO_TRASH(R.id.move_to_trash);
-
-        companion object {
-            fun fromItemId(itemId: Int): Action {
-                return values().firstOrNull { it.itemId == itemId }
-                    ?: throw IllegalArgumentException("Unexpected item ID in context menu")
-            }
-        }
+    enum class Action(
+        @StringRes val title: Int,
+        @DrawableRes val icon: Int? = R.drawable.ic_gridicons_link_white_24dp,
+        val colorTint: Int = com.google.android.material.R.attr.colorOnSurface
+    ) {
+        VIEW_PAGE(R.string.pages_view, R.drawable.ic_external_white_24dp),
+        CANCEL_AUTO_UPLOAD(R.string.pages_and_posts_cancel_auto_upload, R.drawable.ic_undo_white_24dp),
+        SET_PARENT(R.string.set_parent, R.drawable.ic_pages_set_as_parent),
+        SET_AS_HOMEPAGE(R.string.pages_set_as_homepage, R.drawable.ic_homepage_16dp),
+        SET_AS_POSTS_PAGE(R.string.pages_set_as_posts_page, R.drawable.ic_posts_16dp),
+        COPY(R.string.button_copy, R.drawable.ic_copy_white_24dp),
+        COPY_LINK(R.string.pages_copy_link, R.drawable.ic_gridicons_link_white_24dp),
+        PUBLISH_NOW(R.string.pages_publish_now, R.drawable.ic_dashboard_card_pages_published_page_status),
+        PROMOTE_WITH_BLAZE(R.string.pages_promote_with_blaze, R.drawable.ic_promote_with_blaze, 0),
+        MOVE_TO_DRAFT(R.string.pages_move_to_draft, R.drawable.ic_refresh_white_24dp),
+        DELETE_PERMANENTLY(R.string.pages_delete_permanently, R.drawable.ic_trash_white_24dp),
+        MOVE_TO_TRASH(R.string.pages_move_to_trash, R.drawable.ic_trash_white_24dp);
     }
 }
