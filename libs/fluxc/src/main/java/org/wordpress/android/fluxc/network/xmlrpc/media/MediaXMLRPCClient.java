@@ -414,8 +414,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 error -> {
                     String message = "Error response from XMLRPC.DELETE_MEDIA:" + error;
                     AppLog.e(T.MEDIA, message);
-                    MediaErrorType mediaErrorType = MediaErrorType.fromBaseNetworkError(error);
-                    MediaError mediaError = new MediaError(mediaErrorType);
+                    MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                     mediaError.logMessage = "XMLRPC: " + message;
                     notifyMediaDeleted(site, media, mediaError);
                 }));
