@@ -247,33 +247,38 @@ public class MediaStore extends Store {
             this.mediaList = new ArrayList<>();
         }
     }
+
     //
     // OnChanged events
     //
 
     public static class MediaError implements OnChangedError {
-        public MediaErrorType type;
-        public MediaErrorSubType mErrorSubType;
-        public String message;
+        @NonNull public MediaErrorType type;
+        @Nullable public MediaErrorSubType mErrorSubType;
+        @Nullable public String message;
         public int statusCode;
-        public String logMessage;
+        @Nullable public String logMessage;
 
-        public MediaError(MediaErrorType type) {
+        public MediaError(@NonNull MediaErrorType type) {
             this.type = type;
         }
 
-        public MediaError(MediaErrorType type, String message) {
+        public MediaError(@NonNull MediaErrorType type, @Nullable String message) {
             this.type = type;
             this.message = message;
         }
 
-        public MediaError(MediaErrorType type, String message, MediaErrorSubType errorSubType) {
+        public MediaError(
+                @NonNull MediaErrorType type,
+                @Nullable String message,
+                @NonNull MediaErrorSubType errorSubType) {
             this.type = type;
             this.message = message;
             this.mErrorSubType = errorSubType;
         }
 
-        public static MediaError fromIOException(IOException e) {
+        @NonNull
+        public static MediaError fromIOException(@NonNull IOException e) {
             MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
             mediaError.message = e.getLocalizedMessage();
             mediaError.logMessage = e.getMessage();
@@ -300,6 +305,7 @@ public class MediaStore extends Store {
             return mediaError;
         }
 
+        @NonNull
         public String getApiUserMessageIfAvailable() {
             if (TextUtils.isEmpty(message)) {
                 return "";
@@ -829,8 +835,12 @@ public class MediaStore extends Store {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private void notifyMediaUploadError(MediaErrorType errorType, String errorMessage, MediaModel media,
-                                        String logMessage, MalformedMediaArgSubType argErrorType) {
+    private void notifyMediaUploadError(
+            @NonNull MediaErrorType errorType,
+            @Nullable String errorMessage,
+            @Nullable MediaModel media,
+            @NonNull String logMessage,
+            @NonNull MalformedMediaArgSubType argErrorType) {
         OnMediaUploaded onMediaUploaded = new OnMediaUploaded(media, 1, false, false);
         MediaError mediaError = new MediaError(errorType, errorMessage, argErrorType);
         mediaError.logMessage = logMessage;
