@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-13 11:48:16+0000
+Translation-Revision-Date: 2023-10-20 22:19:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.9
+Generator: GlotPress/4.0.0-alpha.11
 Language: sq_AL
 -->
 <resources>
+    <string name="account_and_settings">Rregullime dhe Llogari</string>
+    <string name="site_creation_plans_selection_title">Përzgjidhni një plan</string>
+    <string name="site_creation_domain_free_with_annual_plan">Falas për vitin e parë, me plane vjetore të paguar</string>
+    <string name="reader_label_followers_count_single">1 ndjekës</string>
+    <string name="reader_secondary_bookmarked">U ruajt</string>
+    <string name="reader_secondary_bookmark">Ruaje</string>
+    <string name="reader_discover_recommended_header_new">Mund t’ju pëlqente edhe</string>
     <string name="gutenberg_native_ungroup_block">Hiqe bllokun nga grupi</string>
     <string name="gutenberg_native_tap_here_to_show_more_details">Prekeni këtu, që të shihni më tepër hollësi.</string>
     <string name="gutenberg_native_synced_patterns">Modele të njëkohësuar</string>
@@ -653,7 +660,7 @@ Language: sq_AL
     <string name="gutenberg_native_tiled_gallery_settings">Rregullime galerie mozaik</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Kalohet te skena e përzgjedhjes së skemës</string>
     <string name="gutenberg_native_gallery_style">Stil galerie</string>
-    <string name="sharing_connect_via_web_warning_message">Mund ta lidhni llogarinë tuaj %s në sajtin WordPress.com. Kur të keni mbaruar, kthehuni te aplikacioni, që të ndryshoni rregullimet tuaja për Ndarje Me të Tjerë.</string>
+    <string name="sharing_connect_via_web_warning_message">Mund ta lidhni llogarinë tuaj %s në sajtin WordPress.com. Kur të keni mbaruar, kthehuni te aplikacioni, që të ndryshoni rregullimet tuaja për Shoqërorë.</string>
     <string name="about_automattic_app_icon_description">Ikonë aplikacioni</string>
     <string name="about_automattic_back_icon_description">Ikonë për mbrapsht</string>
     <string name="about_automattic_logo_description">Stemë e Automattic-ut</string>
@@ -2297,7 +2304,7 @@ Language: sq_AL
     <string name="quick_start_dialog_view_site_title">Shihni sajtin tuaj</string>
     <string name="quick_start_dialog_view_site_message">Bëni një paraparje të sajtit tuaj që të shihni ç’do të shohin vizitorët tuaj.</string>
     <string name="quick_start_dialog_share_site_title">Ndajeni sajtin tuaj me të tjerë</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Prekni %1$s Ndarje Me të Tjerë %2$s që të vazhdohet</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Prekni %1$s Shoqërorë %2$s që të vazhdohet</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Prekni %1$s Lidhje %2$s që të shtoni llogari tuajat nga media shoqërore</string>
     <string name="quick_start_dialog_share_site_message">Lidhni llogaritë tuaja nga media shoqërore — sajti juaj do të ndajë vetvetiu me të tjerët postimet e reja.</string>
     <string name="quick_start_dialog_publish_post_title">Botoni një postim</string>
@@ -2521,8 +2528,8 @@ Language: sq_AL
     <string name="permissions_denied_message">Duket se i keni çaktivizuar lejet e domosdoshme për funksionimin e kësaj veçorie.&lt;br/&gt;&lt;br/&gt;Për ta ndryshuar këtë, përpunoni lejet tuaja dhe sigurohuni që &lt;strong&gt;%s&lt;/strong&gt; është e aktivizuar.</string>
     <string name="permissions_denied_title">Leje</string>
     <string name="plugin_caption_featured">Të zgjedhura</string>
-    <string name="sharing_disabled_description">S’mund të hyni te rregullimet tuaja mbi ndarjen me të tjerë, ngaqë moduli juaj Sharing Jetpack është i çaktivizuar.</string>
-    <string name="sharing_disabled">Moduli i ndarjeve është i çaktivizuar</string>
+    <string name="sharing_disabled_description">S’mund të hyni te rregullimet tuaja mbi ndarjen me të tjerë, ngaqë moduli juaj Jetpack Social është i çaktivizuar.</string>
+    <string name="sharing_disabled">Moduli Shoqërore është i çaktivizuar</string>
     <string name="version_with_name_param">Version %s</string>
     <string name="notification_sound_has_invalid_path">Tingulli i zgjedhur ka një shteg të pavlefshëm. Ju lutemi, zgjidhni një tjetër.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>

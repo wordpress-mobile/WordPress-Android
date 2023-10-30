@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-05 08:54:07+0000
+Translation-Revision-Date: 2023-10-19 13:54:29+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.9
+Generator: GlotPress/4.0.0-alpha.11
 Language: zh_TW
 -->
 <resources>
+    <string name="account_and_settings">帳號與設定</string>
+    <string name="site_creation_plans_selection_title">選取方案</string>
+    <string name="site_creation_domain_free_with_annual_plan">選購任何年繳方案，第一年完全免費</string>
+    <string name="reader_label_followers_count_single">1 位關注者</string>
+    <string name="reader_secondary_bookmarked">已儲存</string>
+    <string name="reader_secondary_bookmark">儲存</string>
+    <string name="reader_discover_recommended_header_new">你可能會喜歡</string>
     <string name="gutenberg_native_ungroup_block">取消區塊群組</string>
     <string name="gutenberg_native_tap_here_to_show_more_details">點選此處以顯示更多詳細資訊。</string>
     <string name="gutenberg_native_synced_patterns">同步的版面配置</string>
@@ -663,7 +670,7 @@ Language: zh_TW
     <string name="gutenberg_native_tiled_gallery_settings">並排圖庫設定</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">導覽至版面配置選取畫面</string>
     <string name="gutenberg_native_gallery_style">圖庫樣式</string>
-    <string name="sharing_connect_via_web_warning_message">你可以在 WordPress.com 網站連結 %s 帳號。 完成設定後，請返回此應用程式變更你的「分享」設定。</string>
+    <string name="sharing_connect_via_web_warning_message">你可以在 WordPress.com 網站連結 %s 帳號。 完成設定後，請返回此應用程式變更你的「社群」設定。</string>
     <string name="about_automattic_app_icon_description">應用程式圖示</string>
     <string name="about_automattic_back_icon_description">返回圖示</string>
     <string name="about_automattic_logo_description">Automattic 標誌</string>
@@ -2307,7 +2314,7 @@ Language: zh_TW
     <string name="quick_start_dialog_view_site_title">檢視你的網站</string>
     <string name="quick_start_dialog_view_site_message">預覽你的網站即可查看訪客將會看到的內容。</string>
     <string name="quick_start_dialog_share_site_title">分享你的網站</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">點選%1$s「分享」%2$s以繼續</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">點選「%1$s社群%2$s」以繼續</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">點選%1$s「連結」%2$s以新增你的社交媒體帳號</string>
     <string name="quick_start_dialog_share_site_message">連結到你的社交媒體帳號 - 你的網站會自動分享新文章。</string>
     <string name="quick_start_dialog_publish_post_title">發表文章</string>
@@ -2531,8 +2538,8 @@ Language: zh_TW
     <string name="permissions_denied_message">你似乎已關閉此功能所需的權限。&lt;br/&gt;&lt;br/&gt;若要變更此設定，請編輯權限並確認已啟用 &lt;strong&gt;%s&lt;/strong&gt;。</string>
     <string name="permissions_denied_title">權限</string>
     <string name="plugin_caption_featured">精選</string>
-    <string name="sharing_disabled_description">由於你的「分享 Jetpack」模組已停用，因此無法存取分享設定。</string>
-    <string name="sharing_disabled">「分享」模組已停用</string>
+    <string name="sharing_disabled_description">由於你的「Jetpack 社群」模組已停用，因此無法存取社群分享設定。</string>
+    <string name="sharing_disabled">社群模組已停用</string>
     <string name="version_with_name_param">版本 %s</string>
     <string name="notification_sound_has_invalid_path">所選音效的路徑無效。請選擇另一個。</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
@@ -3482,6 +3489,7 @@ Language: zh_TW
     <string name="reader_toast_err_already_follow_blog">你已經關注此網站</string>
     <string name="reader_toast_err_get_blog_info">無法顯示此網站</string>
     <string name="reader_label_followed_blog">已關注的網站</string>
+    <string name="reader_label_followers_count">%s 位關注者</string>
     <string name="reader_hint_add_tag_or_url">輸入要關注的 URL 或主題</string>
     <string name="reader_page_followed_blogs">關注的網站</string>
     <string name="reader_page_followed_tags">已關注的主題</string>

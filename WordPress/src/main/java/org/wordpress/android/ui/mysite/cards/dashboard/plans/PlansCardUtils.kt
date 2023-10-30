@@ -35,6 +35,7 @@ class PlansCardUtils @Inject constructor(
     ): Boolean {
         return buildConfigWrapper.isJetpackApp &&
                 !isCardHiddenByUser(siteModel.siteId) &&
+                (siteModel.isWPCom || siteModel.isWPComAtomic) &&
                 siteModel.hasFreePlan &&
                 siteModel.isAdmin &&
                 !siteModel.isWpForTeamsSite
@@ -50,7 +51,7 @@ class PlansCardUtils @Inject constructor(
 
         dashboardUpdateDebounceJob = scope.launch(bgDispatcher) {
             val isVisible = siteSelected
-                ?.dashboardCardsAndItems
+                ?.dashboardData
                 ?.any { card ->
                     card is DashboardPlansCard
                 } ?: false
@@ -115,7 +116,7 @@ class PlansCardUtils @Inject constructor(
 
     private fun positionIndex(siteSelected: SiteSelected?): Int {
         return siteSelected
-            ?.dashboardCardsAndItems
+            ?.dashboardData
             ?.indexOfFirst {
                 it is DashboardPlansCard
             } ?: -1

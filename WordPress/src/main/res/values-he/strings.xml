@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-04 13:54:07+0000
+Translation-Revision-Date: 2023-10-19 16:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.9
+Generator: GlotPress/4.0.0-alpha.11
 Language: he_IL
 -->
 <resources>
+    <string name="account_and_settings">חשבון והגדרות</string>
+    <string name="site_creation_plans_selection_title">לבחור תוכנית</string>
+    <string name="site_creation_domain_free_with_annual_plan">בחינם לשנה הראשונה ברכישת תוכנית שנתית בתשלום</string>
+    <string name="reader_label_followers_count_single">עוקב אחד</string>
+    <string name="reader_secondary_bookmarked">נשמר</string>
+    <string name="reader_secondary_bookmark">לשמור</string>
+    <string name="reader_discover_recommended_header_new">אולי יעניין אותך</string>
     <string name="gutenberg_native_ungroup_block">לבטל הקבצה של בלוק</string>
     <string name="gutenberg_native_tap_here_to_show_more_details">להצגת פרטים נוספים יש להקיש כאן.</string>
     <string name="gutenberg_native_synced_patterns">מקבצים מסונכרנים</string>
@@ -663,7 +670,7 @@ Language: he_IL
     <string name="gutenberg_native_tiled_gallery_settings">הגדרות גלריה פרושה</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">מנתב למסך של בחירת הפריסה</string>
     <string name="gutenberg_native_gallery_style">סגנון גלריה</string>
-    <string name="sharing_connect_via_web_warning_message">אפשר לחבר את חשבון שלך ב-%s לאתר שלך ב-WordPress.com. בסיום, אפשר לחזור לאפליקציה כדי לשנות את הגדרות ה\'שיתוף\'.</string>
+    <string name="sharing_connect_via_web_warning_message">אפשר לחבר את חשבון שלך ב-%s לאתר שלך ב-WordPress.com. בסיום, אפשר לחזור לאפליקציה כדי לשנות את ההגדרות של \'רשתות חברתיות\'.</string>
     <string name="about_automattic_app_icon_description">סמל האפליקציה</string>
     <string name="about_automattic_back_icon_description">סמל \'חזרה\'</string>
     <string name="about_automattic_logo_description">הסמל של Automattic</string>
@@ -2306,7 +2313,7 @@ Language: he_IL
     <string name="quick_start_dialog_view_site_title">הצגת האתר שלך</string>
     <string name="quick_start_dialog_view_site_message">באפשרותך להציג תצוגה מקדימה של האתר כדי לבחון מה יראו המבקרים.</string>
     <string name="quick_start_dialog_share_site_title">שיתוף האתר שלך</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">יש להקיש על %1$s שיתוף %2$s כדי להמשיך</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">יש להקיש על ⁦%1$s⁩ רשתות חברתיות ⁦%2$s⁩ כדי להמשיך</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">יש להקיש על %1$s חשבונות מקושרים %2$s כדי להוסיף חשבונות של רשתות חברתיות</string>
     <string name="quick_start_dialog_share_site_message">התחברות לחשבונות שלך ברשתות החברתיות – האתר שלך ישתף באופן אוטומטי פוסטים חדשים.</string>
     <string name="quick_start_dialog_publish_post_title">פרסום פוסט</string>
@@ -2530,8 +2537,8 @@ Language: he_IL
     <string name="permissions_denied_message">נראה שהשבתת את פעילות ההרשאות שנדרשות לתכונה זו.&lt;br/&gt;&lt;br/&gt;כדי לשנות זאת, יש לערוך את ההרשאות שלך ולוודא שהפעלת את &lt;strong&gt;%s&lt;/strong&gt;.</string>
     <string name="permissions_denied_title">הרשאות</string>
     <string name="plugin_caption_featured">תוספים מרכזיים</string>
-    <string name="sharing_disabled_description">אין לך גישה להגדרות השיתוף מכיוון שמודול השיתוף של Jetpack מושבת.</string>
-    <string name="sharing_disabled">מודול השיתוף מושבת</string>
+    <string name="sharing_disabled_description">אין לך גישה להגדרות השיתוף ברשתות החברתיות כי המודול Jetpack Social מושבת.</string>
+    <string name="sharing_disabled">מודול הרשתות החברתיות מושבת</string>
     <string name="version_with_name_param">גרסה %s</string>
     <string name="notification_sound_has_invalid_path">הנתיב של הצליל שנבחר לא חוקי. יש לבחור נתיב אחר.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>

@@ -219,7 +219,7 @@ class SiteCreationProgressViewModel @Inject constructor(
             updateUiStateAsync(CartError)
         } else {
             AppLog.d(T.SITE_CREATION, "Successful cart creation: ${event.cartDetails}")
-            _onCartCreated.postValue(CheckoutDetails(site, domain.domainName))
+            _onCartCreated.postValue(CheckoutDetails(site, domain.domainName, showCloseButton = true))
         }
     }
 

@@ -20,9 +20,9 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '2.4.0'
     automatticTracksVersion = '3.3.0'
-    gutenbergMobileVersion = 'v1.106.0'
+    gutenbergMobileVersion = 'v1.107.0'
     wordPressAztecVersion = 'v1.8.0'
-    wordPressFluxCVersion = 'trunk-6eee26f191edc73d3934ad5876d4a9b7b1456a9f'
+    wordPressFluxCVersion = 'trunk-b85a542abce556295bb4afc44e553bc2a395c3b4'
     wordPressLoginVersion = '1.6.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.10.0'
@@ -72,7 +72,7 @@ ext {
     googleMLKitBarcodeScanningVersion = '17.0.0'
     googlePlayServicesAuthVersion = '20.4.1'
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
-    jsoupVersion = '1.15.4'
+    jsoupVersion = '1.16.2'
     kotlinxCoroutinesVersion = '1.7.3'
     lottieVersion = '6.0.0'
     philjayMpAndroidChartVersion = 'v3.1.0'
@@ -103,7 +103,7 @@ ext {
 
     // other
     androidDesugarVersion = '1.1.8'
-    wordPressLintVersion = '1.1.0'
+    wordPressLintVersion = '2.0.0'
 }
 
 allprojects {

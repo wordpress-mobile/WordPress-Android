@@ -37,7 +37,9 @@ ALL_LOCALES = [
   { glotpress: 'cy', android: 'cy', promo_config: false },
   { glotpress: 'da', android: 'da', promo_config: false },
   { glotpress: 'el', android: 'el', promo_config: false },
-  { glotpress: 'en-au', android: 'en-rAU', promo_config: false },
+  # Temporarily disable 'en-au' translations to address some issues:
+  # https://wordpress.slack.com/archives/C02RP50LK/p1693431282243939
+  # { glotpress: 'en-au', android: 'en-rAU', promo_config: false },
   { glotpress: 'en-ca', android: 'en-rCA', promo_config: false },
   { glotpress: 'en-gb', android: 'en-rGB', promo_config: false },
   { glotpress: 'es-cl', android: 'es-rCL', promo_config: false },
