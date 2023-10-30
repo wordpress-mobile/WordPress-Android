@@ -445,7 +445,8 @@ public class MediaStore extends Store {
         // unknown/unspecified
         GENERIC_ERROR;
 
-        public static MediaErrorType fromBaseNetworkError(BaseNetworkError baseError) {
+        @NonNull
+        public static MediaErrorType fromBaseNetworkError(@NonNull BaseNetworkError baseError) {
             switch (baseError.type) {
                 case NOT_FOUND:
                     return MediaErrorType.NOT_FOUND;
@@ -471,6 +472,7 @@ public class MediaStore extends Store {
             }
         }
 
+        @NonNull
         public static MediaErrorType fromHttpStatusCode(int code) {
             switch (code) {
                 case 400:
@@ -488,7 +490,8 @@ public class MediaStore extends Store {
             }
         }
 
-        public static MediaErrorType fromString(String string) {
+        @NonNull
+        public static MediaErrorType fromString(@Nullable String string) {
             if (string != null) {
                 for (MediaErrorType v : MediaErrorType.values()) {
                     if (string.equalsIgnoreCase(v.name())) {
