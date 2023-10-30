@@ -95,11 +95,17 @@ public class MediaSqlUtils {
                 .getAsModel();
     }
 
-    public static List<MediaModel> getSiteMediaWithIds(SiteModel siteModel, List<Long> mediaIds) {
+    @NonNull
+    public static List<MediaModel> getSiteMediaWithIds(
+            @NonNull SiteModel siteModel,
+            @NonNull List<Long> mediaIds) {
         return getSiteMediaWithIdsQuery(siteModel, mediaIds).getAsModel();
     }
 
-    private static SelectQuery<MediaModel> getSiteMediaWithIdsQuery(SiteModel siteModel, List<Long> mediaIds) {
+    @NonNull
+    private static SelectQuery<MediaModel> getSiteMediaWithIdsQuery(
+            @NonNull SiteModel siteModel,
+            @NonNull List<Long> mediaIds) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
