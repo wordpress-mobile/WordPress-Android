@@ -50,6 +50,16 @@ import javax.inject.Singleton;
 public class MediaStore extends Store {
     public static final int DEFAULT_NUM_MEDIA_PER_FETCH = 50;
 
+    public static final List<String> NOT_DELETED_STATES = new ArrayList<>();
+
+    static {
+        NOT_DELETED_STATES.add(MediaUploadState.DELETING.toString());
+        NOT_DELETED_STATES.add(MediaUploadState.FAILED.toString());
+        NOT_DELETED_STATES.add(MediaUploadState.QUEUED.toString());
+        NOT_DELETED_STATES.add(MediaUploadState.UPLOADED.toString());
+        NOT_DELETED_STATES.add(MediaUploadState.UPLOADING.toString());
+    }
+
     //
     // Payloads
     //
@@ -661,16 +671,6 @@ public class MediaStore extends Store {
     @NonNull
     public List<MediaModel> getAllSiteMedia(@NonNull SiteModel siteModel) {
         return MediaSqlUtils.getAllSiteMedia(siteModel);
-    }
-
-    public static final List<String> NOT_DELETED_STATES = new ArrayList<>();
-
-    static {
-        NOT_DELETED_STATES.add(MediaUploadState.DELETING.toString());
-        NOT_DELETED_STATES.add(MediaUploadState.FAILED.toString());
-        NOT_DELETED_STATES.add(MediaUploadState.QUEUED.toString());
-        NOT_DELETED_STATES.add(MediaUploadState.UPLOADED.toString());
-        NOT_DELETED_STATES.add(MediaUploadState.UPLOADING.toString());
     }
 
     public int getSiteMediaCount(@NonNull SiteModel siteModel) {
