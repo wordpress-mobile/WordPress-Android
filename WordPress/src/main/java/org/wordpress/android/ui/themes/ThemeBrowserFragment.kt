@@ -140,6 +140,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
             requireActivity().finish()
         }
 
+        @Suppress("DEPRECATION")
         setHasOptionsMenu(true)
 
         savedInstanceState?.let {
@@ -221,6 +222,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, site)
             return true
         }
+        @Suppress("DEPRECATION")
         return super.onOptionsItemSelected(item)
     }
 
