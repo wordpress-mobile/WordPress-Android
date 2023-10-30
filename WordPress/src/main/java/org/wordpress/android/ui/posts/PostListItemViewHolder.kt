@@ -21,6 +21,7 @@ import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.MenuCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -161,7 +162,7 @@ sealed class PostListItemViewHolder(
         val menu = PopupMenu(v.context, v)
         actions.forEach { singleItemAction ->
             val menuItem = menu.menu.add(
-                Menu.NONE,
+                singleItemAction.buttonType.groupId,
                 singleItemAction.buttonType.value,
                 Menu.NONE,
                 getMenuItemTitleWithIcon(v.context, singleItemAction)
@@ -170,6 +171,7 @@ sealed class PostListItemViewHolder(
                 singleItemAction.onButtonClicked.invoke(singleItemAction.buttonType)
                 true
             }
+            MenuCompat.setGroupDividerEnabled(menu.menu, true)
         }
         menu.show()
     }
