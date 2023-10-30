@@ -9,7 +9,7 @@ import com.google.android.material.R as MaterialR
 private const val VIEW_GROUP_ID = 1
 private const val PUBLISH_GROUP_ID = 2
 private const val TAKE_AN_ACTION_GROUP_ID = 3
-private const val PROMOTE_GROUP_ID = 4
+private const val SHARE_AND_PROMOTE_GROUP_ID = 4
 private const val NAVIGATE_GROUP_ID = 5
 private const val TRASH_GROUP_ID = 6
 private const val OTHER_GROUP_ID = 7
@@ -156,16 +156,16 @@ enum class PostListButtonType constructor(
         R.string.button_share,
         R.drawable.gb_ic_share,
         MaterialR.attr.colorOnSurface,
-        TAKE_AN_ACTION_GROUP_ID,
-        3
+        SHARE_AND_PROMOTE_GROUP_ID,
+        1
     ),
     BUTTON_PROMOTE_WITH_BLAZE(
         18,
         R.string.button_promote_with_blaze,
         R.drawable.ic_promote_with_blaze,
         0,
-        PROMOTE_GROUP_ID,
-        1
+        SHARE_AND_PROMOTE_GROUP_ID,
+        2
     ),
     BUTTON_COMMENTS(
         19,
