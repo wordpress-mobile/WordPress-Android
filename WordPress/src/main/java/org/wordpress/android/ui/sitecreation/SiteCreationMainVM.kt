@@ -183,6 +183,9 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun preloadThumbnails(context: Context) {
+        if (jetpackFeatureRemovalOverlayUtil.shouldDisableSiteCreation()) {
+            return // no need to preload thumbnails if site creation is disabled
+        }
         if (preloadingJob == null) {
             preloadingJob = viewModelScope.launch(Dispatchers.IO) {
                 if (networkUtils.isNetworkAvailable()) {
