@@ -19,3 +19,6 @@ Layout/LineLength:
 Lint/ConstantDefinitionInBlock:
   Exclude:
     - fastlane/lanes/localization.rb
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never

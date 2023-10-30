@@ -149,7 +149,7 @@ platform :android do
     metadata_dir = File.join(FASTLANE_FOLDER, APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
 
     upload_to_play_store(
-      package_name:,
+      package_name: package_name,
       track: 'production',
       version_code: current_build_code, # Apparently required by fastlane… even if the "Main Store Listing" isn't be attached to a specific build ¯\_(ツ)_/¯
       metadata_path: metadata_dir,
@@ -196,7 +196,7 @@ platform :android do
         play_store_desc: { desc: 'full_description.txt', max_size: 4000 }
       }
       unless skip_release_notes
-        delete_old_changelogs(app:, build: build_number)
+        delete_old_changelogs(app: app, build: build_number)
         version_suffix = version.split('.').join
         files["release_note_#{version_suffix}"] = { desc: "changelogs/#{build_number}.txt", max_size: 500, alternate_key: "release_note_short_#{version_suffix}" }
       end
@@ -212,8 +212,8 @@ platform :android do
       gp_downloadmetadata(
         project_url: app_values[:glotpress_metadata_project],
         target_files: files,
-        locales:,
-        download_path:
+        locales: locales,
+        download_path: download_path
       )
 
       # Copy the source `.txt` files (used as source of truth when we generated the `.po`) to the `fastlane/*metadata/android/en-US` dir,
@@ -228,7 +228,7 @@ platform :android do
       git_add(path: download_path)
       message = "Update #{app_values[:display_name]} metadata translations"
       message += " for #{version}" unless version.nil?
-      git_commit(path: download_path, message:, allow_nothing_to_commit: true)
+      git_commit(path: download_path, message: message, allow_nothing_to_commit: true)
     end
     push_to_git_remote unless skip_commit || skip_git_push
   end
@@ -369,7 +369,7 @@ platform :android do
     an_update_metadata_source(
       po_file_path: po_path,
       source_files: sources,
-      release_version:
+      release_version: release_version
     )
 
     git_add(path: po_path)

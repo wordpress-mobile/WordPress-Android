@@ -50,7 +50,7 @@ platform :android do
     apk_dir = File.join('WordPress', 'build', 'outputs', 'apk')
     package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
     test_class = APP_SPECIFIC_VALUES[app.to_sym][:screenshots_test_class]
-    output_dir = screenshots_dir(app:, subfolder: 'raw')
+    output_dir = screenshots_dir(app: app, subfolder: 'raw')
 
     screenshot_devices.each do |device|
       name = android_create_avd(device_model: device[:device], api_level: device[:api]) # Create the AVD for device, API and system image we need
@@ -63,7 +63,7 @@ platform :android do
         clear_previous_screenshots: should_clear_previous_screenshots,
         app_package_name: package_name,
         tests_package_name: "#{package_name}.test",
-        locales:,
+        locales: locales,
         output_directory: output_dir,
         skip_open_summary: is_ci,
         use_tests_in_classes: test_class,
@@ -97,7 +97,7 @@ platform :android do
     app = get_app_name_option!(options)
     folder_mapping = { options[:phone] => 'phoneScreenshots', options[:tenInch] => 'tenInchScreenshots' }
 
-    raw_screenshots_dir = screenshots_dir(app:, subfolder: 'raw')
+    raw_screenshots_dir = screenshots_dir(app: app, subfolder: 'raw')
     FileUtils.rm_rf(raw_screenshots_dir)
     FileUtils.mkdir_p(raw_screenshots_dir)
 
@@ -141,12 +141,12 @@ platform :android do
     end
     app = get_app_name_option!(options)
 
-    download_metadata_strings(app:, skip_release_notes: true, skip_git_push: true) unless options.fetch(:skip_download_strings, false)
+    download_metadata_strings(app: app, skip_release_notes: true, skip_git_push: true) unless options.fetch(:skip_download_strings, false)
 
     # Define intermediate folders
-    raw_screenshots_dir = screenshots_dir(app:, subfolder: 'raw')
-    raw_screenshots_processing_dir = screenshots_dir(app:, subfolder: 'raw_tmp')
-    promo_screenshots_processing_dir = screenshots_dir(app:, subfolder: 'promo_tmp')
+    raw_screenshots_dir = screenshots_dir(app: app, subfolder: 'raw')
+    raw_screenshots_processing_dir = screenshots_dir(app: app, subfolder: 'raw_tmp')
+    promo_screenshots_processing_dir = screenshots_dir(app: app, subfolder: 'promo_tmp')
     final_metadata_dir = File.join(FASTLANE_FOLDER, APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
 
     # Clean temporary folder from previous runs
@@ -157,7 +157,7 @@ platform :android do
     FileUtils.rm_rf(raw_screenshots_processing_dir)
     FileUtils.copy_entry(raw_screenshots_dir, raw_screenshots_processing_dir)
 
-    clean_raw_screenshot_filenames(app:, dir: raw_screenshots_processing_dir)
+    clean_raw_screenshot_filenames(app: app, dir: raw_screenshots_processing_dir)
 
     locales = ALL_LOCALES
               .reject { |h| h[:google_play].nil? }
@@ -230,7 +230,7 @@ platform :android do
     metadata_dir = File.join(FASTLANE_FOLDER, APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
 
     upload_to_play_store(
-      package_name:,
+      package_name: package_name,
       metadata_path: metadata_dir,
       skip_upload_apk: true,
       skip_upload_aab: true,

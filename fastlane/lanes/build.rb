@@ -34,11 +34,11 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version_name = current_version_name
-    build_bundle(app:, version_name:, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
+    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
-    upload_build_to_play_store(app:, version_name:, track: 'production')
+    upload_build_to_play_store(app: app, version_name: version_name, track: 'production')
 
-    create_gh_release(app:, version_name:) if options[:create_release]
+    create_gh_release(app: app, version_name: version_name) if options[:create_release]
   end
 
   #####################################################################################
@@ -69,7 +69,7 @@ platform :android do
     end
 
     app = get_app_name_option!(options)
-    build_beta(app:, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
+    build_beta(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
   end
 
   #####################################################################################
@@ -102,11 +102,11 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version_name = current_version_name
-    build_bundle(app:, version_name:, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
+    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
-    upload_build_to_play_store(app:, version_name:, track: 'beta') if options[:upload_to_play_store]
+    upload_build_to_play_store(app: app, version_name: version_name, track: 'beta') if options[:upload_to_play_store]
 
-    create_gh_release(app:, version_name:, prerelease: true) if options[:create_release]
+    create_gh_release(app: app, version_name: version_name, prerelease: true) if options[:create_release]
   end
 
   #####################################################################################
@@ -140,7 +140,7 @@ platform :android do
       retry_count = 2
       begin
         upload_to_play_store(
-          package_name:,
+          package_name: package_name,
           aab: aab_file_path,
           track: options[:track],
           release_status: 'draft',
@@ -188,7 +188,7 @@ platform :android do
       package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
 
       download_universal_apk_from_google_play(
-        package_name:,
+        package_name: package_name,
         version_code: build_code,
         destination: signed_apk_path(app, current_version_name),
         json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
@@ -216,7 +216,7 @@ platform :android do
       properties: { prototypeBuildVersionName: version_name }
     )
 
-    upload_prototype_build(product: 'WordPress', version_name:)
+    upload_prototype_build(product: 'WordPress', version_name: version_name)
   end
 
   #####################################################################################
@@ -239,7 +239,7 @@ platform :android do
       properties: { prototypeBuildVersionName: version_name }
     )
 
-    upload_prototype_build(product: 'Jetpack', version_name:)
+    upload_prototype_build(product: 'Jetpack', version_name: version_name)
   end
 
   #####################################################################################
@@ -339,7 +339,7 @@ platform :android do
     return unless ENV['BUILDKITE']
 
     message = "#{product} Prototype Build: [#{filename}](#{install_url})"
-    buildkite_annotate(style: 'info', context: "prototype-build-#{product}", message:)
+    buildkite_annotate(style: 'info', context: "prototype-build-#{product}", message: message)
     buildkite_metadata(set: { versionName: version_name, 'build:flavor': PROTOTYPE_BUILD_FLAVOR, 'build:type': PROTOTYPE_BUILD_TYPE })
   end
 
