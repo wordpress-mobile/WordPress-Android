@@ -59,7 +59,7 @@ enum class PostListButtonType constructor(
         5,
         R.string.button_trash,
         R.drawable.gb_ic_trash,
-        MaterialR.attr.colorError,
+        R.attr.wpColorError,
         TRASH_GROUP_ID,
         3
     ),
@@ -67,7 +67,7 @@ enum class PostListButtonType constructor(
         6,
         R.string.button_delete,
         R.drawable.gb_ic_trash,
-        MaterialR.attr.colorError,
+        R.attr.wpColorError,
         TRASH_GROUP_ID,
         1
     ),
@@ -107,7 +107,7 @@ enum class PostListButtonType constructor(
         11,
         R.string.button_retry,
         R.drawable.gb_ic_redo,
-        MaterialR.attr.colorError,
+        R.attr.wpColorError,
         PUBLISH_GROUP_ID,
         3
     ),
@@ -123,7 +123,7 @@ enum class PostListButtonType constructor(
         13,
         R.string.button_delete_permanently,
         R.drawable.gb_ic_trash,
-        MaterialR.attr.colorError,
+        R.attr.wpColorError,
         TRASH_GROUP_ID,
         3
     ),
