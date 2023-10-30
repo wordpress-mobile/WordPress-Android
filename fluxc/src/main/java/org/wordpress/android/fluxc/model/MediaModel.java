@@ -16,7 +16,6 @@ import org.wordpress.android.util.StringUtils;
 import java.io.Serializable;
 
 @Table
-@SuppressWarnings("NotNullFieldNotInitialized")
 public class MediaModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
     private static final long serialVersionUID = -1396457338496002846L;
 
@@ -124,6 +123,200 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     }
 
     @NonNull private MediaFields[] mFieldsToUpdate = MediaFields.values();
+
+    @Deprecated
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    public MediaModel() {
+        this.mId = 0;
+        this.mLocalSiteId = 0;
+        this.mLocalPostId = 0;
+        this.mMediaId = 0;
+        this.mPostId = 0;
+        this.mAuthorId = 0;
+        this.mGuid = "";
+        this.mUploadDate = null;
+        this.mUrl = "";
+        this.mThumbnailUrl = null;
+        this.mFileName = null;
+        this.mFilePath = null;
+        this.mFileExtension = null;
+        this.mMimeType = null;
+        this.mTitle = null;
+        this.mCaption = "";
+        this.mDescription = "";
+        this.mAlt = "";
+        this.mWidth = 0;
+        this.mHeight = 0;
+        this.mLength = 0;
+        this.mVideoPressGuid = null;
+        this.mVideoPressProcessingDone = false;
+        this.mUploadState = null;
+        this.mMarkedLocallyAsFeatured = false;
+        this.mFileUrlMediumSize = null;
+        this.mFileUrlMediumLargeSize = null;
+        this.mFileUrlLargeSize = null;
+        this.mHorizontalAlignment = 0;
+        this.mVerticalAlignment = false;
+        this.mFeatured = false;
+        this.mFeaturedInPost = false;
+        this.mDeleted = false;
+    }
+
+    /**
+     * Use when getting an existing media.
+     */
+    public MediaModel(
+            int localSiteId,
+            long mediaId) {
+        this.mLocalSiteId = localSiteId;
+        this.mMediaId = mediaId;
+        this.mGuid = "";
+        this.mUrl = "";
+        this.mCaption = "";
+        this.mDescription = "";
+        this.mAlt = "";
+    }
+
+    /**
+     * Use when converting local uri into a media, and then, to upload a new or update an existing media.
+     */
+    public MediaModel(
+            int localSiteId,
+            @Nullable String uploadDate,
+            @Nullable String fileName,
+            @Nullable String filePath,
+            @Nullable String fileExtension,
+            @Nullable String mimeType,
+            @Nullable String title,
+            @Nullable MediaUploadState uploadState) {
+        this.mLocalSiteId = localSiteId;
+        this.mGuid = "";
+        this.mUploadDate = uploadDate;
+        this.mUrl = "";
+        this.mFileName = fileName;
+        this.mFilePath = filePath;
+        this.mFileExtension = fileExtension;
+        this.mMimeType = mimeType;
+        this.mTitle = title;
+        this.mCaption = "";
+        this.mDescription = "";
+        this.mAlt = "";
+        this.mUploadState = uploadState != null ? uploadState.toString() : null;
+    }
+
+    /**
+     * Use when converting editor image metadata into a media.
+     */
+    public MediaModel(
+            @NonNull String url,
+            @Nullable String fileName,
+            @Nullable String fileExtension,
+            @Nullable String title,
+            @NonNull String caption,
+            @NonNull String alt,
+            int width,
+            int height) {
+        this.mGuid = "";
+        this.mUrl = url;
+        this.mFileName = fileName;
+        this.mFileExtension = fileExtension;
+        this.mTitle = title;
+        this.mCaption = caption;
+        this.mDescription = "";
+        this.mAlt = alt;
+        this.mWidth = width;
+        this.mHeight = height;
+    }
+
+    /**
+     * Use when converting a media file into a media.
+     */
+    public MediaModel(
+            int id,
+            int localSiteId,
+            long mediaId,
+            @NonNull String url,
+            @Nullable String thumbnailUrl,
+            @Nullable String fileName,
+            @Nullable String filePath,
+            @Nullable String fileExtension,
+            @Nullable String mimeType,
+            @Nullable String title,
+            @NonNull String caption,
+            @NonNull String description,
+            @NonNull String alt,
+            @Nullable String videoPressGuid,
+            @NonNull MediaUploadState uploadState) {
+        this.mId = id;
+        this.mLocalSiteId = localSiteId;
+        this.mMediaId = mediaId;
+        this.mGuid = "";
+        this.mUrl = url;
+        this.mThumbnailUrl = thumbnailUrl;
+        this.mFileName = fileName;
+        this.mFilePath = filePath;
+        this.mFileExtension = fileExtension;
+        this.mMimeType = mimeType;
+        this.mTitle = title;
+        this.mCaption = caption;
+        this.mDescription = description;
+        this.mAlt = alt;
+        this.mVideoPressGuid = videoPressGuid;
+        this.mUploadState = uploadState.toString();
+    }
+
+    public MediaModel(
+            int localSiteId,
+            long mediaId,
+            long postId,
+            long authorId,
+            @NonNull String guid,
+            @Nullable String uploadDate,
+            @NonNull String url,
+            @Nullable String thumbnailUrl,
+            @Nullable String fileName,
+            @Nullable String fileExtension,
+            @Nullable String mimeType,
+            @Nullable String title,
+            @NonNull String caption,
+            @NonNull String description,
+            @NonNull String alt,
+            int width,
+            int height,
+            int length,
+            @Nullable String videoPressGuid,
+            boolean videoPressProcessingDone,
+            @NonNull MediaUploadState uploadState,
+            @Nullable String fileUrlMediumSize,
+            @Nullable String fileUrlMediumLargeSize,
+            @Nullable String fileUrlLargeSize,
+            boolean deleted) {
+        this.mLocalSiteId = localSiteId;
+        this.mMediaId = mediaId;
+        this.mPostId = postId;
+        this.mAuthorId = authorId;
+        this.mGuid = guid;
+        this.mUploadDate = uploadDate;
+        this.mUrl = url;
+        this.mThumbnailUrl = thumbnailUrl;
+        this.mFileName = fileName;
+        this.mFileExtension = fileExtension;
+        this.mMimeType = mimeType;
+        this.mTitle = title;
+        this.mCaption = caption;
+        this.mDescription = description;
+        this.mAlt = alt;
+        this.mWidth = width;
+        this.mHeight = height;
+        this.mLength = length;
+        this.mVideoPressGuid = videoPressGuid;
+        this.mVideoPressProcessingDone = videoPressProcessingDone;
+        this.mUploadState = uploadState.toString();
+        this.mFileUrlMediumSize = fileUrlMediumSize;
+        this.mFileUrlMediumLargeSize = fileUrlMediumLargeSize;
+        this.mFileUrlLargeSize = fileUrlLargeSize;
+        this.mDeleted = deleted;
+    }
 
     @Override
     @SuppressWarnings("ConditionCoveredByFurtherCondition")
