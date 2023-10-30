@@ -41,8 +41,11 @@ class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
     companion object {
         const val TAG = "private_at_cookie_progress_dialog"
 
-        @Suppress("DEPRECATION")
-        fun showIfNecessary(fragmentManager: FragmentManager?, targetFragment: Fragment? = null) {
+        fun showIfNecessary(fragmentManager: FragmentManager?) {
+            showIfNecessary(fragmentManager, null)
+        }
+
+        fun showIfNecessary(fragmentManager: FragmentManager?, targetFragment: Fragment?) {
             fragmentManager?.let {
                 val thisFragment = fragmentManager.findFragmentByTag(TAG)
                 if (thisFragment == null ||
