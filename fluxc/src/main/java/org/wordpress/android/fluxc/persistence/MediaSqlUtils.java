@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.persistence;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.wellsql.generated.MediaModelTable;
 import com.yarolegovich.wellsql.ConditionClauseBuilder;
@@ -107,6 +108,7 @@ public class MediaSqlUtils {
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
+    @Nullable
     public static MediaModel getMediaWithLocalId(int localMediaId) {
         List<MediaModel> result = WellSql.select(MediaModel.class).where()
                 .equals(MediaModelTable.ID, localMediaId)
