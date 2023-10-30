@@ -98,6 +98,38 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     @Inject
     lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
 
+    private val sortedWpComThemes: List<ThemeModel>
+        get() {
+            val wpComThemes = themeStore.wpComThemes
+
+            // first thing to do is attempt to find the active theme and move it to the front of the list
+            moveActiveThemeToFront(wpComThemes)
+
+            // then remove all premium themes from the list with an exception for the active theme
+            if (!shouldShowPremiumThemes()) {
+                removeNonActivePremiumThemes(wpComThemes)
+            }
+            return wpComThemes
+        }
+    private val sortedJetpackThemes: List<ThemeModel>
+        get() {
+            val wpComThemes = themeStore.wpComThemes
+            val uploadedThemes = themeStore.getThemesForSite(requireNotNull(site))
+
+            // put the active theme at the top of the uploaded themes list
+            moveActiveThemeToFront(uploadedThemes)
+
+            // remove all premium themes from the WP.com themes list
+            removeNonActivePremiumThemes(wpComThemes)
+
+            // remove uploaded themes from WP.com themes list (including active theme)
+            removeDuplicateThemes(wpComThemes, uploadedThemes)
+            val allThemes: MutableList<ThemeModel> = ArrayList()
+            allThemes.addAll(uploadedThemes)
+            allThemes.addAll(wpComThemes)
+            return allThemes
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
@@ -317,38 +349,6 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     fun refreshView() {
         adapter.setThemeList(fetchThemes())
     }
-
-    private val sortedWpComThemes: List<ThemeModel>
-        private get() {
-            val wpComThemes = themeStore.wpComThemes
-
-            // first thing to do is attempt to find the active theme and move it to the front of the list
-            moveActiveThemeToFront(wpComThemes)
-
-            // then remove all premium themes from the list with an exception for the active theme
-            if (!shouldShowPremiumThemes()) {
-                removeNonActivePremiumThemes(wpComThemes)
-            }
-            return wpComThemes
-        }
-    private val sortedJetpackThemes: List<ThemeModel>
-        private get() {
-            val wpComThemes = themeStore.wpComThemes
-            val uploadedThemes = themeStore.getThemesForSite(requireNotNull(site))
-
-            // put the active theme at the top of the uploaded themes list
-            moveActiveThemeToFront(uploadedThemes)
-
-            // remove all premium themes from the WP.com themes list
-            removeNonActivePremiumThemes(wpComThemes)
-
-            // remove uploaded themes from WP.com themes list (including active theme)
-            removeDuplicateThemes(wpComThemes, uploadedThemes)
-            val allThemes: MutableList<ThemeModel> = ArrayList()
-            allThemes.addAll(uploadedThemes)
-            allThemes.addAll(wpComThemes)
-            return allThemes
-        }
 
     private fun moveActiveThemeToFront(themes: MutableList<ThemeModel>) {
         if (themes.isEmpty() || TextUtils.isEmpty(currentThemeId)) {
