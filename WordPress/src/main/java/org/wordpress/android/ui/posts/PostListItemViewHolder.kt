@@ -4,7 +4,9 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
 import android.view.LayoutInflater
 import android.view.Menu
@@ -39,6 +41,7 @@ import org.wordpress.android.viewmodel.posts.PostListItemUiStateData
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.concurrent.atomic.AtomicBoolean
 import android.R as AndroidR
+import com.google.android.material.R as MaterialR
 
 const val POST_LIST_ICON_PADDING = 8
 const val MAX_TITLE_EXCERPT_LINES = 2
@@ -240,20 +243,33 @@ sealed class PostListItemViewHolder(
 
     @Suppress("ComplexMethod")
     private fun getMenuItemTitleWithIcon(context: Context, item: PostListItemAction): SpannableStringBuilder {
-        var icon: Drawable? = setTint(
+        var icon: Drawable = setTint(
             context,
             ContextCompat.getDrawable(context, item.buttonType.iconResId)!!, item.buttonType.colorAttrId
         )
+
         // If there's no icon, we insert a transparent one to keep the title aligned with the items which have icons.
-        if (icon == null) icon = ColorDrawable(Color.TRANSPARENT)
+        if (item.buttonType.iconResId == 0) icon = ColorDrawable(Color.TRANSPARENT)
+
         val iconSize: Int = context.resources.getDimensionPixelSize(R.dimen.menu_item_icon_size)
         icon.setBounds(0, 0, iconSize, iconSize)
         val imageSpan = ImageSpan(icon)
 
         // Add a space placeholder for the icon, before the title.
         val menuTitle = context.getText(item.buttonType.textResId)
-        val ssb = SpannableStringBuilder(
-            menuTitle.padStart(menuTitle.length + POST_LIST_ICON_PADDING)
+
+        // Use the same text color as the icon
+        val textColor =
+            if (item.buttonType.colorAttrId == 0) context.getColorFromAttribute(MaterialR.attr.colorOnSurface)
+            else context.getColorFromAttribute(item.buttonType.colorAttrId)
+        val ssb = SpannableStringBuilder(menuTitle.padStart(menuTitle.length + POST_LIST_ICON_PADDING))
+
+        // Apply text color to the title.
+        ssb.setSpan(
+            ForegroundColorSpan(textColor),
+            POST_LIST_ICON_PADDING,
+            ssb.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
         // Replace the space placeholder with the icon.
