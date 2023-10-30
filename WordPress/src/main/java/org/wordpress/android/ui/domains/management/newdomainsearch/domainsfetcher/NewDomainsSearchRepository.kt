@@ -43,6 +43,7 @@ class NewDomainsSearchRepository @Inject constructor(
     private fun onDomainSuggestionsFetched(query: String, event: OnSuggestedDomains): DomainsResult {
         return if (query == event.query && !event.isError) {
             val suggestions = event.suggestions
+                .filter { !it.is_free }
                 .sortedBy { it.relevance }
                 .map { domain ->
                     val product = products?.firstOrNull { product -> product.productId == domain.product_id }
