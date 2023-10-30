@@ -403,12 +403,16 @@ public class MediaStore extends Store {
     }
 
     public static class OnMediaUploaded extends OnChanged<MediaError> {
-        public MediaModel media;
+        @Nullable public MediaModel media;
         public float progress;
         public boolean completed;
         public boolean canceled;
 
-        public OnMediaUploaded(MediaModel media, float progress, boolean completed, boolean canceled) {
+        public OnMediaUploaded(
+                @Nullable MediaModel media,
+                float progress,
+                boolean completed,
+                boolean canceled) {
             this.media = media;
             this.progress = progress;
             this.completed = completed;
@@ -992,15 +996,23 @@ public class MediaStore extends Store {
         if (payload.isError() || payload.canceled || payload.completed) {
             updateMedia(payload.media, false);
         }
-        OnMediaUploaded onMediaUploaded =
-                new OnMediaUploaded(payload.media, payload.progress, payload.completed, payload.canceled);
+        OnMediaUploaded onMediaUploaded = new OnMediaUploaded(
+                payload.media,
+                payload.progress,
+                payload.completed,
+                payload.canceled
+        );
         onMediaUploaded.error = payload.error;
         emitChange(onMediaUploaded);
     }
 
     private void handleMediaCanceled(@NonNull ProgressPayload payload) {
-        OnMediaUploaded onMediaUploaded =
-                new OnMediaUploaded(payload.media, payload.progress, payload.completed, payload.canceled);
+        OnMediaUploaded onMediaUploaded = new OnMediaUploaded(
+                payload.media,
+                payload.progress,
+                payload.completed,
+                payload.canceled
+        );
         onMediaUploaded.error = payload.error;
 
         emitChange(onMediaUploaded);
