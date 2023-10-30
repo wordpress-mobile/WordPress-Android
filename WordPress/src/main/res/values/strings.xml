@@ -2707,7 +2707,7 @@
 
     <!-- Domain Management -->
     <string name="domain_management_expires">Expires %1$s</string>
-    <string name="domain_management_my_domains_title">My Domains</string>
+    <string name="domain_management_my_domains_title">All Domains</string>
     <string name="domain_management_purchase_a_domain">Purchase a domain</string>
     <string name="domain_management_search_your_domains">Search your domains</string>
     <string name="domain_management_open_domain_details">Open domain details</string>
