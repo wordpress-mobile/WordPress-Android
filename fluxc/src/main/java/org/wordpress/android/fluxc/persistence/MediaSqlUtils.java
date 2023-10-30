@@ -84,7 +84,8 @@ public class MediaSqlUtils {
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
-    public static List<MediaModel> getSiteMediaWithId(SiteModel siteModel, long mediaId) {
+    @NonNull
+    public static List<MediaModel> getSiteMediaWithId(@NonNull SiteModel siteModel, long mediaId) {
         return WellSql.select(MediaModel.class).where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
                 .equals(MediaModelTable.MEDIA_ID, mediaId)
