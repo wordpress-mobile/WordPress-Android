@@ -125,16 +125,19 @@ class StatsWidgetConfigureFragment : Fragment() {
                 viewModel.addWidget()
             }
 
-            siteSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
-                StatsWidgetSiteSelectionDialogFragment().show(parentFragmentManager, "stats_site_selection_fragment")
-            })
+            siteSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner) {
+                StatsWidgetSiteSelectionDialogFragment().show(
+                    childFragmentManager,
+                    "stats_site_selection_fragment"
+                )
+            }
 
-            colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
+            colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner) {
                 StatsWidgetColorSelectionDialogFragment().show(
-                    parentFragmentManager,
+                    childFragmentManager,
                     "stats_view_mode_selection_fragment"
                 )
-            })
+            }
 
             merge(siteSelectionViewModel.notification, colorSelectionViewModel.notification).observeEvent(
                 viewLifecycleOwner,
