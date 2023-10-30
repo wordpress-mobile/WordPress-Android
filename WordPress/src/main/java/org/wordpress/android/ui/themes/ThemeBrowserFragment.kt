@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.themes
 
 import android.annotation.SuppressLint
-import android.app.Activity
+import android.content.Context
 import android.database.DataSetObserver
 import android.os.Bundle
 import android.text.TextUtils
@@ -116,8 +116,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         }
     }
 
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
         callback = try {
             activity as ThemeBrowserFragmentCallback
         } catch (e: ClassCastException) {
