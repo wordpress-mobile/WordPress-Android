@@ -514,7 +514,8 @@ public class MediaStore extends Store {
         UNKNOWN,
         GENERIC_ERROR;
 
-        public static UploadStockMediaErrorType fromNetworkError(WPComGsonNetworkError wpError) {
+        @NonNull
+        public static UploadStockMediaErrorType fromNetworkError(@NonNull WPComGsonNetworkError wpError) {
             // invalid upload request
             if (wpError.apiError.equalsIgnoreCase("invalid_input")) {
                 return INVALID_INPUT;
