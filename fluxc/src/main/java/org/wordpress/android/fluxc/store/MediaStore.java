@@ -618,9 +618,8 @@ public class MediaStore extends Store {
     // Getters
     //
 
-    public MediaModel instantiateMediaModel() {
-        MediaModel media = new MediaModel();
-
+    @Nullable
+    public MediaModel instantiateMediaModel(@NonNull MediaModel media) {
         MediaModel insertedMedia = MediaSqlUtils.insertMediaForResult(media);
 
         if (insertedMedia.getId() == -1) {
