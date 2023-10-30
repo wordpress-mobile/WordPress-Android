@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.persistence;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.wellsql.generated.MediaModelTable;
 import com.yarolegovich.wellsql.ConditionClauseBuilder;
 import com.yarolegovich.wellsql.DeleteQuery;
@@ -18,7 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MediaSqlUtils {
-    public static List<MediaModel> getAllSiteMedia(SiteModel siteModel) {
+    @NonNull
+    public static List<MediaModel> getAllSiteMedia(@NonNull SiteModel siteModel) {
         return getAllSiteMediaQuery(siteModel).getAsModel();
     }
 
@@ -65,7 +68,8 @@ public class MediaSqlUtils {
                 .getAsCursor();
     }
 
-    private static SelectQuery<MediaModel> getAllSiteMediaQuery(SiteModel siteModel) {
+    @NonNull
+    private static SelectQuery<MediaModel> getAllSiteMediaQuery(@NonNull SiteModel siteModel) {
         return WellSql.select(MediaModel.class)
                 .where().equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId()).endWhere()
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);

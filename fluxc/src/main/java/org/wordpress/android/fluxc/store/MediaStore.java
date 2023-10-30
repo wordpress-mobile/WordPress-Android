@@ -658,7 +658,8 @@ public class MediaStore extends Store {
         return insertedMedia;
     }
 
-    public List<MediaModel> getAllSiteMedia(SiteModel siteModel) {
+    @NonNull
+    public List<MediaModel> getAllSiteMedia(@NonNull SiteModel siteModel) {
         return MediaSqlUtils.getAllSiteMedia(siteModel);
     }
 
@@ -672,7 +673,7 @@ public class MediaStore extends Store {
         NOT_DELETED_STATES.add(MediaUploadState.UPLOADING.toString());
     }
 
-    public int getSiteMediaCount(SiteModel siteModel) {
+    public int getSiteMediaCount(@NonNull SiteModel siteModel) {
         return getAllSiteMedia(siteModel).size();
     }
 
