@@ -36,8 +36,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetche
 
 private val CONTENT_CONFIG_RESPONSE = ContentConfig(
     title = "Brand new post - do not approve",
-    snippet = "This is a test blaze, please do not approve.",
-    clickUrl = "https://clickurl",
     imageUrl = "https://imageurl"
 )
 
