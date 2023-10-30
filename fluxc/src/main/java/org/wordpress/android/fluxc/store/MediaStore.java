@@ -337,10 +337,12 @@ public class MediaStore extends Store {
     }
 
     public static class UploadStockMediaError implements OnChangedError {
-        public UploadStockMediaErrorType type;
-        public String message;
+        @NonNull public UploadStockMediaErrorType type;
+        @Nullable public String message;
 
-        public UploadStockMediaError(UploadStockMediaErrorType type, String message) {
+        public UploadStockMediaError(
+                @NonNull UploadStockMediaErrorType type,
+                @Nullable String message) {
             this.type = type;
             this.message = message;
         }
