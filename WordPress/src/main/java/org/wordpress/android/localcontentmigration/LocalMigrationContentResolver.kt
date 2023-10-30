@@ -51,7 +51,7 @@ class LocalMigrationContentResolver @Inject constructor(
             val cursor = runCatching {
                 query(uriBuilder, entityType, entityId)
             }.getOrElse { failure ->
-                return@with CursorException(entityType, failure)
+                return@with Failure(CursorException(entityType, failure))
             } ?: return@with Failure(NullCursor(entityType))
 
             runCatching {
