@@ -127,6 +127,7 @@ public class MediaSqlUtilsTest {
 
     // Inserts media of multiple MIME types then retrieves only images and verifies
     @Test
+    @SuppressWarnings("ConstantValue")
     public void testGetSiteImages() {
         List<Long> imageIds = new ArrayList<>(SMALL_TEST_POOL);
         List<Long> videoIds = new ArrayList<>(SMALL_TEST_POOL);
