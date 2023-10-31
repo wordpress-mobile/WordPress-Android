@@ -51,7 +51,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static android.app.ProgressDialog.show;
 import static android.content.Context.CLIPBOARD_SERVICE;
 
 import dagger.android.support.AndroidSupportInjection;
