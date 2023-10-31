@@ -26,11 +26,17 @@ android {
         }
         consumerProguardFiles 'proguard-rules.pro'
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    lint {
+        lintConfig file("${project.rootDir}/config/lint/lint.xml")
+        enable += 'UnknownNullness'
     }
 
     testOptions {
@@ -124,6 +130,8 @@ dependencies {
     testImplementation sharedLibs.mockito.kotlin
     testImplementation sharedLibs.mockito.inline
     testImplementation sharedLibs.assertj.core
+
+    lintChecks sharedLibs.wordpress.lint
 }
 
 project.afterEvaluate {

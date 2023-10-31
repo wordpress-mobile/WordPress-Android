@@ -1,29 +1,21 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.taxonomy;
 
+import androidx.annotation.NonNull;
+
 import org.wordpress.android.fluxc.network.Response;
 
 import java.util.List;
 
+@SuppressWarnings("NotNullFieldNotInitialized")
 public class TermWPComRestResponse implements Response {
-    public class TermsResponse {
-        public List<TermWPComRestResponse> terms;
+    public static class TermsResponse {
+        @NonNull public List<TermWPComRestResponse> terms;
     }
 
     public long ID;
-    public String name;
-    public String slug;
-    public String description;
+    @NonNull public String name;
+    @NonNull public String slug;
+    @NonNull public String description;
     public int post_count;
     public long parent;
-    public Meta meta;
-
-    public class Meta {
-        public Links links;
-
-        public class Links {
-            public String self;
-            public String help;
-            public String site;
-        }
-    }
 }

@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.TypeConverters
+import kotlinx.coroutines.flow.Flow
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.persistence.coverters.BlazeCampaignsDateConverter
@@ -20,7 +21,7 @@ abstract class BlazeCampaignsDao {
         val campaigns = getCampaigns(siteId)
         val pagination = getCampaignsPagination(siteId)
         return BlazeCampaignsModel(
-            campaigns = campaigns?.map { it.toDomainModel() } ?: emptyList(),
+            campaigns = campaigns.map { it.toDomainModel() },
             page = pagination?.page ?: 1,
             totalItems = pagination?.totalItems ?: 0,
             totalPages = pagination?.totalPages ?: 0
@@ -28,16 +29,19 @@ abstract class BlazeCampaignsDao {
     }
 
     @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY createdAt DESC")
-    abstract fun getCampaigns(siteId: Long): List<BlazeCampaignEntity>?
+    abstract fun getCampaigns(siteId: Long): List<BlazeCampaignEntity>
+
+    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY createdAt DESC")
+    abstract fun observeCampaigns(siteId: Long): Flow<List<BlazeCampaignEntity>>
 
     @Query("SELECT * from BlazeCampaignsPagination WHERE `siteId` = :siteId")
     abstract fun getCampaignsPagination(siteId: Long): BlazeCampaignsPaginationEntity?
 
-    @Transaction
-    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY createdAt DESC")
-    fun getMostRecentCampaignForSite(siteId: Long): BlazeCampaignModel? {
-        return getCampaigns(siteId)?.firstOrNull()?.toDomainModel()
-    }
+    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY createdAt DESC LIMIT 1")
+    abstract fun getMostRecentCampaignForSite(siteId: Long): BlazeCampaignEntity?
+
+    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY createdAt DESC LIMIT 1")
+    abstract fun observeMostRecentCampaignForSite(siteId: Long): Flow<BlazeCampaignEntity?>
 
     @Transaction
     open suspend fun insertCampaignsAndPageInfoForSite(

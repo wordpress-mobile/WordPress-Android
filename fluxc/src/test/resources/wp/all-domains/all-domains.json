@@ -1,0 +1,75 @@
+{
+  "domains": [
+    {
+      "domain": "some.test.domain",
+      "blog_id": 11111,
+      "blog_name": "some test blog",
+      "type": "mapping",
+      "is_domain_only_site": false,
+      "is_wpcom_staging_domain": false,
+      "has_registration": false,
+      "registration_date": "2009-03-26T21:20:53+00:00",
+      "expiry": "2024-03-24T00:00:00+00:00",
+      "wpcom_domain": false,
+      "current_user_is_owner": true,
+      "site_slug": "test slug",
+      "domain_status": {
+        "status": "Active",
+        "status_type": "success"
+      }
+    },
+    {
+      "domain": "some.test.domain.with.status.weight",
+      "blog_id": 22222,
+      "blog_name": "some test blog with status_weight",
+      "type": "mapping",
+      "is_domain_only_site": false,
+      "is_wpcom_staging_domain": false,
+      "has_registration": false,
+      "registration_date": "2009-03-26T21:20:53+00:00",
+      "expiry": "2024-03-24T00:00:00+00:00",
+      "wpcom_domain": true,
+      "current_user_is_owner": false,
+      "site_slug": "test slug 2",
+      "domain_status": {
+        "status": "Expiring soon",
+        "status_type": "error",
+        "status_weight": 1000
+      }
+    },
+    {
+      "domain": "some.test.domain.with.action.required",
+      "blog_id": 22222,
+      "blog_name": "some test blog with action_required",
+      "type": "mapping",
+      "is_domain_only_site": false,
+      "is_wpcom_staging_domain": false,
+      "has_registration": false,
+      "registration_date": "2009-03-26T21:20:53+00:00",
+      "expiry": "2024-03-24T00:00:00+00:00",
+      "wpcom_domain": true,
+      "current_user_is_owner": false,
+      "site_slug": "test slug 2",
+      "domain_status": {
+        "status": "Expiring soon",
+        "status_type": "error",
+        "status_weight": 1000,
+        "action_required": true
+      }
+    },
+    {
+      "domain": "some.test.domain.no.domain.status",
+      "blog_id": 22222,
+      "blog_name": "some test blog no domain status",
+      "type": "mapping",
+      "is_domain_only_site": false,
+      "is_wpcom_staging_domain": false,
+      "has_registration": false,
+      "registration_date": "2009-03-26T21:20:53+00:00",
+      "expiry": "2024-03-24T00:00:00+00:00",
+      "wpcom_domain": true,
+      "current_user_is_owner": false,
+      "site_slug": "test slug 2"
+    }
+  ]
+}

@@ -1,49 +1,50 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.media;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.fluxc.network.Response;
 
 import java.util.List;
 
 /**
  * Response to GET request for media items
- *
- * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/media/%24media_ID/
+ * <p>
+ * @see <a href="https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/media/%24media_ID/">doc</a>
  */
+@SuppressWarnings("NotNullFieldNotInitialized")
 public class MediaWPComRestResponse implements Response {
     public static final String DELETED_STATUS = "deleted";
 
-    public class MultipleMediaResponse {
-        public List<MediaWPComRestResponse> media;
-        public List<String> errors;
-        public int found;
+    public static class MultipleMediaResponse {
+        @NonNull public List<MediaWPComRestResponse> media;
     }
 
-    public class Thumbnails {
-        public String thumbnail;
-        public String medium;
-        public String large;
-        public String post_thumbnail;
-        public String fmt_std;
+    public static class Thumbnails {
+        @Nullable public String thumbnail;
+        @Nullable public String medium;
+        @Nullable public String large;
+        @Nullable public String fmt_std;
     }
 
     public long ID;
-    public String date;
+    @NonNull public String date;
     public long post_ID;
     public long author_ID;
-    public String URL;
-    public String guid;
-    public String file;
-    public String extension;
-    public String mime_type;
-    public String title;
-    public String caption;
-    public String description;
-    public String alt;
-    public Thumbnails thumbnails;
+    @NonNull public String URL;
+    @NonNull public String guid;
+    @NonNull public String file;
+    @NonNull public String extension;
+    @NonNull public String mime_type;
+    @NonNull public String title;
+    @NonNull public String caption;
+    @NonNull public String description;
+    @NonNull public String alt;
+    @Nullable public Thumbnails thumbnails;
     public int height;
     public int width;
     public int length;
-    public String videopress_guid;
+    @Nullable public String videopress_guid;
     public boolean videopress_processing_done;
-    public String status;
+    @Nullable public String status;
 }

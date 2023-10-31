@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -31,46 +32,48 @@ public class TaxonomyStore extends Store {
     public static final String DEFAULT_TAXONOMY_TAG = "post_tag";
 
     public static class FetchTermsPayload extends Payload<BaseNetworkError> {
-        public SiteModel site;
-        public TaxonomyModel taxonomy;
+        @NonNull public SiteModel site;
+        @NonNull public TaxonomyModel taxonomy;
 
-        public FetchTermsPayload(SiteModel site, TaxonomyModel taxonomy) {
+        public FetchTermsPayload(@NonNull SiteModel site, @NonNull TaxonomyModel taxonomy) {
             this.site = site;
             this.taxonomy = taxonomy;
         }
     }
 
+    @SuppressWarnings("NotNullFieldNotInitialized")
     public static class FetchTermsResponsePayload extends Payload<TaxonomyError> {
-        public TermsModel terms;
-        public SiteModel site;
-        public String taxonomy;
+        @NonNull public TermsModel terms;
+        @NonNull public SiteModel site;
+        @NonNull public String taxonomy; // This field is also included in error payload.
 
-        public FetchTermsResponsePayload(TermsModel terms, SiteModel site, String taxonomy) {
+        public FetchTermsResponsePayload(@NonNull TermsModel terms, @NonNull SiteModel site, @NonNull String taxonomy) {
             this.terms = terms;
             this.site = site;
             this.taxonomy = taxonomy;
         }
 
-        public FetchTermsResponsePayload(TaxonomyError error, String taxonomy) {
+        public FetchTermsResponsePayload(@NonNull TaxonomyError error, @NonNull String taxonomy) {
             this.error = error;
             this.taxonomy = taxonomy;
         }
     }
 
     public static class RemoteTermPayload extends Payload<TaxonomyError> {
-        public TermModel term;
-        public SiteModel site;
+        @NonNull public TermModel term;
+        @NonNull public SiteModel site;
 
-        public RemoteTermPayload(TermModel term, SiteModel site) {
+        public RemoteTermPayload(@NonNull TermModel term, @NonNull SiteModel site) {
             this.term = term;
             this.site = site;
         }
     }
 
     public static class FetchTermResponsePayload extends RemoteTermPayload {
-        public TaxonomyAction origin = TaxonomyAction.FETCH_TERM; // Used to track fetching newly uploaded XML-RPC terms
+        // Used to track fetching newly uploaded XML-RPC terms
+        @NonNull public TaxonomyAction origin = TaxonomyAction.FETCH_TERM;
 
-        public FetchTermResponsePayload(TermModel term, SiteModel site) {
+        public FetchTermResponsePayload(@NonNull TermModel term, @NonNull SiteModel site) {
             super(term, site);
         }
     }
@@ -78,32 +81,44 @@ public class TaxonomyStore extends Store {
     // OnChanged events
     public static class OnTaxonomyChanged extends OnChanged<TaxonomyError> {
         public int rowsAffected;
-        public String taxonomyName;
-        public TaxonomyAction causeOfChange;
+        @NonNull public TaxonomyAction causeOfChange;
 
-        public OnTaxonomyChanged(int rowsAffected, String taxonomyName) {
+        public OnTaxonomyChanged(int rowsAffected, @NonNull String taxonomyName) {
             this.rowsAffected = rowsAffected;
-            this.taxonomyName = taxonomyName;
+            this.causeOfChange = taxonomyActionFromName(taxonomyName);
         }
 
-        public OnTaxonomyChanged(int rowsAffected) {
+        public OnTaxonomyChanged(int rowsAffected, @NonNull TaxonomyAction causeOfChange) {
             this.rowsAffected = rowsAffected;
+            this.causeOfChange = causeOfChange;
+        }
+
+        @NonNull
+        private TaxonomyAction taxonomyActionFromName(@NonNull String taxonomy) {
+            switch (taxonomy) {
+                case DEFAULT_TAXONOMY_CATEGORY:
+                    return TaxonomyAction.FETCH_CATEGORIES;
+                case DEFAULT_TAXONOMY_TAG:
+                    return TaxonomyAction.FETCH_TAGS;
+                default:
+                    return TaxonomyAction.FETCH_TERMS;
+            }
         }
     }
 
     public static class OnTermUploaded extends OnChanged<TaxonomyError> {
-        public TermModel term;
+        @NonNull public TermModel term;
 
-        public OnTermUploaded(TermModel term) {
+        public OnTermUploaded(@NonNull TermModel term) {
             this.term = term;
         }
     }
 
     public static class TaxonomyError implements OnChangedError {
-        public TaxonomyErrorType type;
-        public String message;
+        @NonNull public TaxonomyErrorType type;
+        @NonNull public String message;
 
-        public TaxonomyError(TaxonomyErrorType type, @NonNull String message) {
+        public TaxonomyError(@NonNull TaxonomyErrorType type, @NonNull String message) {
             this.type = type;
             this.message = message;
         }
@@ -113,7 +128,7 @@ public class TaxonomyStore extends Store {
             this.message = message;
         }
 
-        public TaxonomyError(TaxonomyErrorType type) {
+        public TaxonomyError(@NonNull TaxonomyErrorType type) {
             this(type, "");
         }
     }
@@ -125,12 +140,11 @@ public class TaxonomyStore extends Store {
         INVALID_RESPONSE,
         GENERIC_ERROR;
 
-        public static TaxonomyErrorType fromString(String string) {
-            if (string != null) {
-                for (TaxonomyErrorType v : TaxonomyErrorType.values()) {
-                    if (string.equalsIgnoreCase(v.name())) {
-                        return v;
-                    }
+        @NonNull
+        public static TaxonomyErrorType fromString(@NonNull String string) {
+            for (TaxonomyErrorType v : TaxonomyErrorType.values()) {
+                if (string.equalsIgnoreCase(v.name())) {
+                    return v;
                 }
             }
             return GENERIC_ERROR;
@@ -152,112 +166,108 @@ public class TaxonomyStore extends Store {
         AppLog.d(AppLog.T.API, "TaxonomyStore onRegister");
     }
 
-    public TermModel instantiateCategory(SiteModel site) {
-        return instantiateTermModel(site, DEFAULT_TAXONOMY_CATEGORY);
-    }
-
-    public TermModel instantiateTag(SiteModel site) {
-        return instantiateTermModel(site, DEFAULT_TAXONOMY_TAG);
-    }
-
-    public TermModel instantiateTerm(SiteModel site, TaxonomyModel taxonomy) {
-        return instantiateTermModel(site, taxonomy.getName());
-    }
-
-    private TermModel instantiateTermModel(SiteModel site, String taxonomyName) {
-        TermModel newTerm = new TermModel();
-        newTerm.setLocalSiteId(site.getId());
-        newTerm.setTaxonomy(taxonomyName);
-
-        // Insert the term into the db, updating the object to include the local ID
-        newTerm = TaxonomySqlUtils.insertTermForResult(newTerm);
-
-        // id is set to -1 if insertion fails
-        if (newTerm.getId() == -1) {
-            return null;
-        }
-        return newTerm;
-    }
-
     /**
      * Returns all categories for the given site as a {@link TermModel} list.
      */
-    public List<TermModel> getCategoriesForSite(SiteModel site) {
+    @NonNull
+    @SuppressWarnings("unused")
+    public List<TermModel> getCategoriesForSite(@NonNull SiteModel site) {
         return TaxonomySqlUtils.getTermsForSite(site, DEFAULT_TAXONOMY_CATEGORY);
     }
 
     /**
      * Returns all tags for the given site as a {@link TermModel} list.
      */
-    public List<TermModel> getTagsForSite(SiteModel site) {
+    @NonNull
+    @SuppressWarnings("unused")
+    public List<TermModel> getTagsForSite(@NonNull SiteModel site) {
         return TaxonomySqlUtils.getTermsForSite(site, DEFAULT_TAXONOMY_TAG);
     }
 
     /**
      * Returns all the terms of a taxonomy for the given site as a {@link TermModel} list.
      */
-    public List<TermModel> getTermsForSite(SiteModel site, String taxonomyName) {
+    @NonNull
+    @SuppressWarnings("unused")
+    public List<TermModel> getTermsForSite(@NonNull SiteModel site, @NonNull String taxonomyName) {
         return TaxonomySqlUtils.getTermsForSite(site, taxonomyName);
     }
 
     /**
      * Returns a category as a {@link TermModel} given its remote id.
      */
-    public TermModel getCategoryByRemoteId(SiteModel site, long remoteId) {
+    @Nullable
+    @SuppressWarnings("unused")
+    public TermModel getCategoryByRemoteId(@NonNull SiteModel site, long remoteId) {
         return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, DEFAULT_TAXONOMY_CATEGORY);
     }
 
     /**
      * Returns a tag as a {@link TermModel} given its remote id.
      */
-    public TermModel getTagByRemoteId(SiteModel site, long remoteId) {
+    @Nullable
+    @SuppressWarnings("unused")
+    public TermModel getTagByRemoteId(@NonNull SiteModel site, long remoteId) {
         return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, DEFAULT_TAXONOMY_TAG);
     }
 
     /**
      * Returns a term as a {@link TermModel} given its remote id.
      */
-    public TermModel getTermByRemoteId(SiteModel site, long remoteId, String taxonomyName) {
+    @Nullable
+    @SuppressWarnings("unused")
+    public TermModel getTermByRemoteId(@NonNull SiteModel site, long remoteId, @NonNull String taxonomyName) {
         return TaxonomySqlUtils.getTermByRemoteId(site, remoteId, taxonomyName);
     }
 
     /**
      * Returns a category as a {@link TermModel} given its name.
      */
-    public TermModel getCategoryByName(SiteModel site, String categoryName) {
+    @Nullable
+    @SuppressWarnings("unused")
+    public TermModel getCategoryByName(@NonNull SiteModel site, @NonNull String categoryName) {
         return TaxonomySqlUtils.getTermByName(site, categoryName, DEFAULT_TAXONOMY_CATEGORY);
     }
 
     /**
      * Returns a tag as a {@link TermModel} given its name.
      */
-    public TermModel getTagByName(SiteModel site, String tagName) {
+    @Nullable
+    @SuppressWarnings("unused")
+    public TermModel getTagByName(@NonNull SiteModel site, @NonNull String tagName) {
         return TaxonomySqlUtils.getTermByName(site, tagName, DEFAULT_TAXONOMY_TAG);
     }
 
     /**
      * Returns a term as a {@link TermModel} given its name.
      */
-    public TermModel getTermByName(SiteModel site, String termName, String taxonomyName) {
+    @Nullable
+    @SuppressWarnings("unused")
+    public TermModel getTermByName(@NonNull SiteModel site, @NonNull String termName, @NonNull String taxonomyName) {
         return TaxonomySqlUtils.getTermByName(site, termName, taxonomyName);
     }
 
     /**
      * Returns all the categories for the given post as a {@link TermModel} list.
      */
-    public List<TermModel> getCategoriesForPost(PostImmutableModel post, SiteModel site) {
+    @NonNull
+    @SuppressWarnings("unused")
+    public List<TermModel> getCategoriesForPost(@NonNull PostImmutableModel post, @NonNull SiteModel site) {
         return TaxonomySqlUtils.getTermsFromRemoteIdList(post.getCategoryIdList(), site, DEFAULT_TAXONOMY_CATEGORY);
     }
 
     /**
      * Returns all the tags for the given post as a {@link TermModel} list.
      */
-    public List<TermModel> getTagsForPost(PostImmutableModel post, SiteModel site) {
+    @NonNull
+    @SuppressWarnings("unused")
+    public List<TermModel> getTagsForPost(@NonNull PostImmutableModel post, @NonNull SiteModel site) {
         return TaxonomySqlUtils.getTermsFromRemoteNameList(post.getTagNameList(), site, DEFAULT_TAXONOMY_TAG);
     }
 
-    @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
+    @Subscribe(threadMode = ThreadMode.ASYNC)
+    @SuppressWarnings("rawtypes")
     public void onAction(Action action) {
         IAction actionType = action.getType();
         if (!(actionType instanceof TaxonomyAction)) {
@@ -298,10 +308,13 @@ public class TaxonomyStore extends Store {
             case REMOVE_ALL_TERMS:
                 removeAllTerms();
                 break;
+            case UPDATE_TERM:
+            case REMOVE_TERM:
+                break;
         }
     }
 
-    private void fetchTerm(RemoteTermPayload payload) {
+    private void fetchTerm(@NonNull RemoteTermPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerm(payload.term, payload.site);
         } else {
@@ -310,7 +323,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void fetchTerms(SiteModel site, String taxonomyName) {
+    private void fetchTerms(@NonNull SiteModel site, @NonNull String taxonomyName) {
         // TODO: Support large number of terms (currently pulling 100 from REST, and ? from XML-RPC) - pagination?
         if (site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerms(site, taxonomyName);
@@ -320,11 +333,11 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void fetchTerms(FetchTermsPayload payload) {
+    private void fetchTerms(@NonNull FetchTermsPayload payload) {
         fetchTerms(payload.site, payload.taxonomy.getName());
     }
 
-    private void handleFetchTermsCompleted(FetchTermsResponsePayload payload) {
+    private void handleFetchTermsCompleted(@NonNull FetchTermsResponsePayload payload) {
         OnTaxonomyChanged onTaxonomyChanged;
 
         if (payload.isError()) {
@@ -345,21 +358,10 @@ public class TaxonomyStore extends Store {
             onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, payload.taxonomy);
         }
 
-        switch (payload.taxonomy) {
-            case DEFAULT_TAXONOMY_CATEGORY:
-                onTaxonomyChanged.causeOfChange = TaxonomyAction.FETCH_CATEGORIES;
-                break;
-            case DEFAULT_TAXONOMY_TAG:
-                onTaxonomyChanged.causeOfChange = TaxonomyAction.FETCH_TAGS;
-                break;
-            default:
-                onTaxonomyChanged.causeOfChange = TaxonomyAction.FETCH_TERMS;
-        }
-
         emitChange(onTaxonomyChanged);
     }
 
-    private void handleFetchSingleTermCompleted(FetchTermResponsePayload payload) {
+    private void handleFetchSingleTermCompleted(@NonNull FetchTermResponsePayload payload) {
         if (payload.origin == TaxonomyAction.PUSH_TERM) {
             OnTermUploaded onTermUploaded = new OnTermUploaded(payload.term);
             if (payload.isError()) {
@@ -372,27 +374,31 @@ public class TaxonomyStore extends Store {
         }
 
         if (payload.isError()) {
-            OnTaxonomyChanged event = new OnTaxonomyChanged(0, payload.term.getTaxonomy());
+            OnTaxonomyChanged event = new OnTaxonomyChanged(
+                    0,
+                    TaxonomyAction.UPDATE_TERM
+            );
             event.error = payload.error;
-            event.causeOfChange = TaxonomyAction.UPDATE_TERM;
             emitChange(event);
         } else {
             updateTerm(payload.term);
         }
     }
 
-    private void handleDeleteTermCompleted(RemoteTermPayload payload) {
+    private void handleDeleteTermCompleted(@NonNull RemoteTermPayload payload) {
         if (payload.isError()) {
-            OnTaxonomyChanged event = new OnTaxonomyChanged(0, payload.term.getTaxonomy());
+            OnTaxonomyChanged event = new OnTaxonomyChanged(
+                    0,
+                    TaxonomyAction.DELETE_TERM
+            );
             event.error = payload.error;
-            event.causeOfChange = TaxonomyAction.DELETE_TERM;
             emitChange(event);
         } else {
             removeTerm(payload.term);
         }
     }
 
-    private void handlePushTermCompleted(RemoteTermPayload payload) {
+    private void handlePushTermCompleted(@NonNull RemoteTermPayload payload) {
         if (payload.isError()) {
             OnTermUploaded onTermUploaded = new OnTermUploaded(payload.term);
             onTermUploaded.error = payload.error;
@@ -412,7 +418,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void pushTerm(RemoteTermPayload payload) {
+    private void pushTerm(@NonNull RemoteTermPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.pushTerm(payload.term, payload.site);
         } else {
@@ -421,7 +427,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void deleteTerm(RemoteTermPayload payload) {
+    private void deleteTerm(@NonNull RemoteTermPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.deleteTerm(payload.term, payload.site);
         } else {
@@ -429,27 +435,33 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void updateTerm(TermModel term) {
+    private void updateTerm(@NonNull TermModel term) {
         int rowsAffected = TaxonomySqlUtils.insertOrUpdateTerm(term);
 
-        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
-        onTaxonomyChanged.causeOfChange = TaxonomyAction.UPDATE_TERM;
+        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(
+                rowsAffected,
+                TaxonomyAction.UPDATE_TERM
+        );
         emitChange(onTaxonomyChanged);
     }
 
-    private void removeTerm(TermModel term) {
+    private void removeTerm(@NonNull TermModel term) {
         int rowsAffected = TaxonomySqlUtils.removeTerm(term);
 
-        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
-        onTaxonomyChanged.causeOfChange = TaxonomyAction.REMOVE_TERM;
+        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(
+                rowsAffected,
+                TaxonomyAction.REMOVE_TERM
+        );
         emitChange(onTaxonomyChanged);
     }
 
     private void removeAllTerms() {
         int rowsAffected = TaxonomySqlUtils.deleteAllTerms();
 
-        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected);
-        onTaxonomyChanged.causeOfChange = TaxonomyAction.REMOVE_ALL_TERMS;
+        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(
+                rowsAffected,
+                TaxonomyAction.REMOVE_ALL_TERMS
+        );
         emitChange(onTaxonomyChanged);
     }
 }

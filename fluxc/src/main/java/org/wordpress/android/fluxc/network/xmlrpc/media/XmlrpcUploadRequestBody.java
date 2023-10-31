@@ -39,12 +39,16 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
     private static final String APPEND_XML =
             "</base64></value></member></struct></value></param></params></methodCall>";
 
-    private final String mPrependString;
+    @NonNull private final String mPrependString;
     private long mMediaSize;
     private long mContentSize = -1;
     private long mMediaBytesWritten = 0;
 
-    public XmlrpcUploadRequestBody(MediaModel media, ProgressListener listener, SiteModel site) {
+    @SuppressWarnings("deprecation")
+    public XmlrpcUploadRequestBody(
+            @NonNull MediaModel media,
+            @NonNull ProgressListener listener,
+            @NonNull SiteModel site) {
         super(media, listener);
 
         // TODO: we should use the XMLRPCSerializer instead of doing this
@@ -69,6 +73,7 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
         return (float) mMediaBytesWritten / mMediaSize;
     }
 
+    @NonNull
     @Override
     public MediaType contentType() {
         return MEDIA_TYPE;
@@ -109,8 +114,7 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
 
         // write file to xml
 
-        FileInputStream fis = new FileInputStream(getMedia().getFilePath());
-        try {
+        try (FileInputStream fis = new FileInputStream(getMedia().getFilePath())) {
             byte[] buffer = new byte[3600]; // you must use a 24bit multiple
             int length;
             String chunk;
@@ -119,8 +123,6 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
                 mMediaBytesWritten += length;
                 bufferedSink.writeUtf8(chunk);
             }
-        } finally {
-            fis.close();
         }
 
         // write remainder or XML

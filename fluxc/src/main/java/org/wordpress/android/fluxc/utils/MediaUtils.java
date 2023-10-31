@@ -65,10 +65,12 @@ public class MediaUtils {
     // File operations
     //
 
+    @NonNull
     public static String getMediaValidationError(@NonNull MediaModel media) {
         return BaseUploadRequestBody.hasRequiredData(media);
     }
 
+    @NonNull
     public static MalformedMediaArgSubType getMediaValidationErrorType(@NonNull MediaModel media) {
         return BaseUploadRequestBody.checkMediaArg(media);
     }
