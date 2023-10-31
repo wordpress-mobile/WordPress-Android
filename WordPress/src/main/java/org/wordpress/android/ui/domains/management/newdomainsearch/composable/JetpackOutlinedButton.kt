@@ -2,7 +2,7 @@ package org.wordpress.android.ui.domains.management.newdomainsearch.composable
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -20,7 +20,7 @@ fun JetpackOutlinedButton(
 ) {
     OutlinedButton(
         onClick = onClick,
-        shape = MaterialTheme.shapes.small.copy(CornerSize(36.dp)),
+        shape = RoundedCornerShape(4.dp),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
