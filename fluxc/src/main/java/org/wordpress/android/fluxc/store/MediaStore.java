@@ -1136,7 +1136,7 @@ public class MediaStore extends Store {
         emitChange(mediaChange);
     }
 
-    private void performUploadStockMedia(UploadStockMediaPayload payload) {
+    private void performUploadStockMedia(@NonNull UploadStockMediaPayload payload) {
         mMediaRestClient.uploadStockMedia(payload.site, payload.stockMediaList);
     }
 
