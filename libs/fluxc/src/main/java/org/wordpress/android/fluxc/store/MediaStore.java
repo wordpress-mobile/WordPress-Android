@@ -734,7 +734,8 @@ public class MediaStore extends Store {
         return MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.POST_ID, 0);
     }
 
-    public List<MediaModel> getLocalSiteMedia(SiteModel siteModel) {
+    @NonNull
+    public List<MediaModel> getLocalSiteMedia(@NonNull SiteModel siteModel) {
         MediaUploadState expectedState = MediaUploadState.UPLOADED;
         return MediaSqlUtils.getSiteMediaExcluding(siteModel, MediaModelTable.UPLOAD_STATE, expectedState);
     }

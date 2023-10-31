@@ -250,7 +250,11 @@ public class MediaSqlUtils {
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
-    public static List<MediaModel> getSiteMediaExcluding(SiteModel site, String column, Object value) {
+    @NonNull
+    public static List<MediaModel> getSiteMediaExcluding(
+            @NonNull SiteModel site,
+            @NonNull String column,
+            @NonNull Object value) {
         return getSiteMediaExcludingQuery(site, column, value).getAsModel();
     }
 
@@ -436,7 +440,11 @@ public class MediaSqlUtils {
         return builder.endGroup().endWhere().execute();
     }
 
-    private static SelectQuery<MediaModel> getSiteMediaExcludingQuery(SiteModel site, String column, Object value) {
+    @NonNull
+    private static SelectQuery<MediaModel> getSiteMediaExcludingQuery(
+            @NonNull SiteModel site,
+            @NonNull String column,
+            @NonNull Object value) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .not().equals(column, value)
