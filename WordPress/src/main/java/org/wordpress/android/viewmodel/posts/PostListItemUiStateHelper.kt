@@ -420,10 +420,6 @@ class PostListItemUiStateHelper @Inject constructor(
         val canShowPublishButton = canRetryUpload || canPublishPost
         val buttonTypes = ArrayList<PostListButtonType>()
 
-        if (postStatus != TRASHED) {
-            buttonTypes.add(BUTTON_EDIT)
-        }
-
         if (canCancelPendingAutoUpload) {
             buttonTypes.add(BUTTON_CANCEL_PENDING_AUTO_UPLOAD)
         }
@@ -463,7 +459,14 @@ class PostListItemUiStateHelper @Inject constructor(
 
         buttonTypes.addDeletingOrTrashAction(isLocalDraft, postStatus)
 
-        return buttonTypes
+        return sortPostListButtons(buttonTypes)
+    }
+
+    private fun sortPostListButtons(list: List<PostListButtonType>): List<PostListButtonType> {
+        return list.sortedWith(compareBy(
+            { it.groupId },
+            { it.positionInGroup }
+        ))
     }
 
     private fun MutableList<PostListButtonType>.addViewOrPreviewAction(shouldShowPreview: Boolean) {

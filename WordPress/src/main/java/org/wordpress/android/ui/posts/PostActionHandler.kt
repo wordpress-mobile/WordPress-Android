@@ -34,6 +34,7 @@ import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_COMMENTS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY_URL
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
@@ -133,6 +134,7 @@ class PostActionHandler(
             BUTTON_PROMOTE_WITH_BLAZE -> {
                 triggerPostListAction.invoke(PostListAction.ShowPromoteWithBlaze(post))
             }
+            BUTTON_COMMENTS -> {} // todo: implement
         }
     }
 

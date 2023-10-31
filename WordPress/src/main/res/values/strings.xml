@@ -309,6 +309,8 @@
     <string name="button_copy">Duplicate</string>
     <string name="button_copy_link">Copy link</string>
     <string name="button_promote_with_blaze">Promote with Blaze</string>
+    <string name="button_comments" translatable="false">@string/comments</string>
+    <string name="button_share" translatable="false">@string/share_desc</string>
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
