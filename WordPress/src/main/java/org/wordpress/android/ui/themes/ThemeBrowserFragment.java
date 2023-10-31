@@ -71,15 +71,15 @@ public class ThemeBrowserFragment extends Fragment
     }
 
     interface ThemeBrowserFragmentCallback {
-        void onActivateSelected(String themeId);
+        void onActivateSelected(@NonNull String themeId);
 
-        void onTryAndCustomizeSelected(String themeId);
+        void onTryAndCustomizeSelected(@NonNull String themeId);
 
-        void onViewSelected(String themeId);
+        void onViewSelected(@NonNull String themeId);
 
-        void onDetailsSelected(String themeId);
+        void onDetailsSelected(@NonNull String themeId);
 
-        void onSupportSelected(String themeId);
+        void onSupportSelected(@NonNull String themeId);
 
         void onSwipeToRefresh();
     }
