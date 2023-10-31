@@ -376,16 +376,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     private fun removeNonActivePremiumThemes(themes: MutableList<ThemeModel>) {
-        if (themes.isEmpty()) {
-            return
-        }
-        val iterator = themes.iterator()
-        while (iterator.hasNext()) {
-            val theme = iterator.next()
-            if (!theme.isFree && !theme.active) {
-                iterator.remove()
-            }
-        }
+        themes.removeAll { !it.isFree && !it.active }
     }
 
     private fun removeDuplicateThemes(wpComThemes: MutableList<ThemeModel>, uploadedThemes: List<ThemeModel>?) {
