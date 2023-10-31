@@ -50,6 +50,16 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `WHEN a domain is tapped THEN send PurchaseDomain action event`() = testWithActionEvents { events ->
+        val domain = ProposedDomain(1, "test.", "com", "1", null)
+        viewModel.onDomainTapped(domain)
+        advanceUntilIdle()
+
+        val expectedEvent = ActionEvent.PurchaseDomain(domain)
+        assertThat(events.last()).isEqualTo(expectedEvent)
+    }
+
+    @Test
     fun `WHEN transfer domain button pressed THEN send TransferDomain action event`() = testWithActionEvents { events ->
         viewModel.onTransferDomainClicked()
         advanceUntilIdle()

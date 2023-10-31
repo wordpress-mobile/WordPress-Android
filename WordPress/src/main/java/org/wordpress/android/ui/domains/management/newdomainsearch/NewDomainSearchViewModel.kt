@@ -71,6 +71,12 @@ class NewDomainSearchViewModel @Inject constructor(
         }
     }
 
+    fun onDomainTapped(domain: ProposedDomain) {
+        launch {
+            _actionEvents.emit(ActionEvent.PurchaseDomain(domain))
+        }
+    }
+
     fun onBackPressed() {
         launch {
             _actionEvents.emit(ActionEvent.GoBack)
@@ -78,6 +84,7 @@ class NewDomainSearchViewModel @Inject constructor(
     }
 
     sealed class ActionEvent {
+        data class PurchaseDomain(val domain: ProposedDomain) : ActionEvent()
         data class TransferDomain(val url: String) : ActionEvent()
         object GoBack : ActionEvent()
     }
