@@ -31,6 +31,7 @@ public class WPComThemeResponse {
     public String demo_uri;
     public String version;
     public String screenshot;
+    public String theme_type;
     public String description;
     public String download_uri;
     public String price;
