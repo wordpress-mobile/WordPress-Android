@@ -1358,6 +1358,9 @@ public class AccountStore extends Store {
         } else if (token.getUserId() != null && token.getWebauthnNonce() != null) {
             OnSecurityKeyAuthStarted event = new OnSecurityKeyAuthStarted(token.getUserId(),
                     token.getWebauthnNonce());
+            if (payload.nextAction != null) {
+                mDispatcher.dispatch(payload.nextAction);
+            }
             emitChange(event);
         } else {
             OnAuthenticationChanged event = new OnAuthenticationChanged();
