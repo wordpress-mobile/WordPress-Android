@@ -90,11 +90,11 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.application as WordPress).component().inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
         site = arguments?.getSerializable(WordPress.SITE) as SiteModel?
         if (site == null) {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT)
-            activity!!.finish()
+            requireActivity().finish()
         }
         setHasOptionsMenu(true)
         if (savedInstanceState != null) {
