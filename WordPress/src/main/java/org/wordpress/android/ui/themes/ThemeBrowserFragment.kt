@@ -56,23 +56,23 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     private var _binding: ThemeBrowserFragmentBinding? = null
     private val binding get() = _binding!!
-    private var mSwipeToRefreshHelper: SwipeToRefreshHelper? = null
-    private var mCurrentThemeId: String? = null
-    private var mLastSearch: String? = null
+    private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
+    private var currentThemeId: String? = null
+    private var lastSearch: String? = null
     var currentThemeTextView: TextView? = null
         private set
-    private var mHeaderCustomizeButton: View? = null
+    private var headerCustomizeButton: View? = null
     private val adapter: ThemeBrowserAdapter by lazy {
-        ThemeBrowserAdapter(activity, mSite!!.planId, mCallback, imageManager).apply {
+        ThemeBrowserAdapter(activity, site!!.planId, callback, imageManager).apply {
             registerDataSetObserver(ThemeDataSetObserver())
         }
     }
-    private var mShouldRefreshOnStart = false
-    private var mSite: SiteModel? = null
-    private var mSearchMenuItem: MenuItem? = null
-    private var mSearchView: SearchView? = null
-    private var mCallback: ThemeBrowserFragmentCallback? = null
-    private var mQuickStartEvent: QuickStartEvent? = null
+    private var shouldRefreshOnStart = false
+    private var site: SiteModel? = null
+    private var searchMenuItem: MenuItem? = null
+    private var searchView: SearchView? = null
+    private var callback: ThemeBrowserFragmentCallback? = null
+    private var quickStartEvent: QuickStartEvent? = null
 
     @Inject
     lateinit var themeStore: ThemeStore
@@ -91,21 +91,21 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity!!.application as WordPress).component().inject(this)
-        mSite = arguments!!.getSerializable(WordPress.SITE) as SiteModel?
-        if (mSite == null) {
+        site = arguments!!.getSerializable(WordPress.SITE) as SiteModel?
+        if (site == null) {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             activity!!.finish()
         }
         setHasOptionsMenu(true)
         if (savedInstanceState != null) {
-            mLastSearch = savedInstanceState.getString(KEY_LAST_SEARCH)
-            mQuickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY)
+            lastSearch = savedInstanceState.getString(KEY_LAST_SEARCH)
+            quickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY)
         }
     }
 
     override fun onAttach(activity: Activity) {
         super.onAttach(activity)
-        mCallback = try {
+        callback = try {
             activity as ThemeBrowserFragmentCallback
         } catch (e: ClassCastException) {
             throw ClassCastException("$activity must implement ThemeBrowserFragmentCallback")
@@ -114,10 +114,10 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     override fun onDetach() {
         super.onDetach()
-        if (mSearchView != null) {
-            mSearchView!!.setOnQueryTextListener(null)
+        if (searchView != null) {
+            searchView!!.setOnQueryTextListener(null)
         }
-        mCallback = null
+        callback = null
     }
 
     override fun onCreateView(
@@ -153,28 +153,28 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if (mSearchMenuItem != null && mSearchMenuItem!!.isActionViewExpanded) {
-            outState.putString(KEY_LAST_SEARCH, mSearchView!!.query.toString())
+        if (searchMenuItem != null && searchMenuItem!!.isActionViewExpanded) {
+            outState.putString(KEY_LAST_SEARCH, searchView!!.query.toString())
         }
-        outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent)
+        outState.putParcelable(QuickStartEvent.KEY, quickStartEvent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search, menu)
-        mSearchMenuItem = menu.findItem(R.id.menu_search)
-        mSearchView = mSearchMenuItem.getActionView() as SearchView?
-        mSearchView!!.setOnQueryTextListener(this)
-        mSearchView!!.maxWidth = Int.MAX_VALUE
-        if (!TextUtils.isEmpty(mLastSearch)) {
-            mSearchMenuItem.expandActionView()
-            onQueryTextSubmit(mLastSearch)
-            mSearchView!!.setQuery(mLastSearch, true)
+        searchMenuItem = menu.findItem(R.id.menu_search)
+        searchView = searchMenuItem.getActionView() as SearchView?
+        searchView!!.setOnQueryTextListener(this)
+        searchView!!.maxWidth = Int.MAX_VALUE
+        if (!TextUtils.isEmpty(lastSearch)) {
+            searchMenuItem.expandActionView()
+            onQueryTextSubmit(lastSearch)
+            searchView!!.setQuery(lastSearch, true)
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_search) {
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, mSite)
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, site)
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -182,8 +182,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         adapter.filter.filter(query)
-        if (mSearchView != null) {
-            mSearchView!!.clearFocus()
+        if (searchView != null) {
+            searchView!!.clearFocus()
         }
         return true
     }
@@ -202,7 +202,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     fun setCurrentThemeId(currentThemeId: String?) {
-        mCurrentThemeId = currentThemeId
+        this.currentThemeId = currentThemeId
         refreshView()
     }
 
@@ -211,19 +211,19 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     private fun configureSwipeToRefresh() {
-        mSwipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(binding.ptrLayout) {
+        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(binding.ptrLayout) {
             if (!isAdded) {
                 return@buildSwipeToRefreshHelper
             }
             if (!NetworkUtils.checkConnection(activity)) {
-                mSwipeToRefreshHelper!!.isRefreshing = false
+                swipeToRefreshHelper!!.isRefreshing = false
                 binding.textEmpty.setText(R.string.no_network_title)
                 return@buildSwipeToRefreshHelper
             }
             setRefreshing(true)
-            mCallback!!.onSwipeToRefresh()
+            callback!!.onSwipeToRefresh()
         }
-        mSwipeToRefreshHelper.setRefreshing(mShouldRefreshOnStart)
+        swipeToRefreshHelper.setRefreshing(shouldRefreshOnStart)
     }
 
     private fun configureGridView(inflater: LayoutInflater) {
@@ -243,40 +243,40 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         headerCardView.setBackgroundColor(elevatedSurfaceColor)
         currentThemeTextView = header.findViewById(R.id.header_theme_text)
         setThemeNameIfAlreadyAvailable()
-        mHeaderCustomizeButton = header.findViewById(R.id.customize)
-        mHeaderCustomizeButton.setOnClickListener(View.OnClickListener { v: View? ->
+        headerCustomizeButton = header.findViewById(R.id.customize)
+        headerCustomizeButton.setOnClickListener(View.OnClickListener { v: View? ->
             AnalyticsUtils.trackWithSiteDetails(
                 AnalyticsTracker.Stat.THEMES_CUSTOMIZE_ACCESSED,
-                mSite
+                site
             )
-            mCallback!!.onTryAndCustomizeSelected(mCurrentThemeId!!)
+            callback!!.onTryAndCustomizeSelected(currentThemeId!!)
         })
         val details = header.findViewById<LinearLayout>(R.id.details)
         details.setOnClickListener { v: View? ->
-            mCallback!!.onDetailsSelected(
-                mCurrentThemeId!!
+            callback!!.onDetailsSelected(
+                currentThemeId!!
             )
         }
         val support = header.findViewById<LinearLayout>(R.id.support)
         support.setOnClickListener { v: View? ->
-            mCallback!!.onSupportSelected(
-                mCurrentThemeId!!
+            callback!!.onSupportSelected(
+                currentThemeId!!
             )
         }
         binding.themeListview.addHeaderView(header)
     }
 
     private fun setThemeNameIfAlreadyAvailable() {
-        val currentTheme = themeStore!!.getActiveThemeForSite(mSite!!)
+        val currentTheme = themeStore!!.getActiveThemeForSite(site!!)
         if (currentTheme != null) {
             currentThemeTextView!!.text = currentTheme.name
         }
     }
 
     fun setRefreshing(refreshing: Boolean) {
-        mShouldRefreshOnStart = refreshing
-        if (mSwipeToRefreshHelper != null) {
-            mSwipeToRefreshHelper!!.isRefreshing = refreshing
+        shouldRefreshOnStart = refreshing
+        if (swipeToRefreshHelper != null) {
+            swipeToRefreshHelper!!.isRefreshing = refreshing
             if (!refreshing) {
                 refreshView()
             }
@@ -299,10 +299,10 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     private fun fetchThemes(): List<ThemeModel>? {
-        if (mSite == null) {
+        if (site == null) {
             return ArrayList()
         }
-        return if (mSite!!.isWPCom) {
+        return if (site!!.isWPCom) {
             sortedWpComThemes
         } else sortedJetpackThemes
     }
@@ -327,7 +327,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     private val sortedJetpackThemes: List<ThemeModel>?
         private get() {
             val wpComThemes = themeStore!!.wpComThemes
-            val uploadedThemes = themeStore!!.getThemesForSite(mSite!!)
+            val uploadedThemes = themeStore!!.getThemesForSite(site!!)
 
             // put the active theme at the top of the uploaded themes list
             moveActiveThemeToFront(uploadedThemes)
@@ -344,14 +344,14 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         }
 
     private fun moveActiveThemeToFront(themes: List<ThemeModel>?) {
-        if (themes == null || themes.isEmpty() || TextUtils.isEmpty(mCurrentThemeId)) {
+        if (themes == null || themes.isEmpty() || TextUtils.isEmpty(currentThemeId)) {
             return
         }
 
         // find the index of the active theme
         var activeThemeIndex = 0
         for (theme in themes) {
-            if (mCurrentThemeId == theme.themeId) {
+            if (currentThemeId == theme.themeId) {
                 theme.active = true
                 activeThemeIndex = themes.indexOf(theme)
                 break
@@ -401,10 +401,10 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     private fun shouldShowPremiumThemes(): Boolean {
-        if (mSite == null) {
+        if (site == null) {
             return false
         }
-        val planId = mSite!!.planId
+        val planId = site!!.planId
         return planId == PlansConstants.PREMIUM_PLAN_ID || planId == PlansConstants.BUSINESS_PLAN_ID || planId == PlansConstants.JETPACK_PREMIUM_PLAN_ID || planId == PlansConstants.JETPACK_BUSINESS_PLAN_ID
     }
 
