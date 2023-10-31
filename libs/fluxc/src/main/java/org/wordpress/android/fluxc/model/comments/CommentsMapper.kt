@@ -37,7 +37,7 @@ class CommentsMapper @Inject constructor(
                 }
             },
             authorProfileImageUrl = commentDto.author?.avatar_URL,
-            remotePostId = commentDto.post?.ID ?: 0,
+            remotePostId = commentDto.post?.ID ?: 0L,
             postTitle = StringEscapeUtils.unescapeHtml4(commentDto.post?.title),
             status = commentDto.status,
             datePublished = commentDto.date,
@@ -46,7 +46,7 @@ class CommentsMapper @Inject constructor(
             url = commentDto.URL,
             authorId = commentDto.author?.ID ?: 0L,
             hasParent = commentDto.parent != null,
-            parentId = commentDto.parent?.ID ?: 0,
+            parentId = commentDto.parent?.ID ?: 0L,
             iLike = commentDto.i_like
         )
     }
@@ -64,11 +64,11 @@ class CommentsMapper @Inject constructor(
             this.authorEmail = entity.authorEmail
             this.authorProfileImageUrl = entity.authorProfileImageUrl
             this.postTitle = entity.postTitle
-            this.status = entity.status
-            this.datePublished = entity.datePublished
+            this.status = entity.status ?: ""
+            this.datePublished = entity.datePublished ?: ""
             this.publishedTimestamp = entity.publishedTimestamp
-            this.content = entity.content
-            this.url = entity.url
+            this.content = entity.content ?: ""
+            this.url = entity.url ?: ""
             this.hasParent = entity.hasParent
             this.parentId = entity.parentId
             this.iLike = entity.iLike
@@ -139,7 +139,7 @@ class CommentsMapper @Inject constructor(
                 content = XMLRPCUtils.safeGetMapValue(commentMap, "content", ""),
                 url = XMLRPCUtils.safeGetMapValue(commentMap, "link", ""),
                 hasParent = remoteParentCommentId > 0,
-                parentId = if (remoteParentCommentId > 0) remoteParentCommentId else 0,
+                parentId = if (remoteParentCommentId > 0) remoteParentCommentId else 0L,
                 iLike = false
         )
     }

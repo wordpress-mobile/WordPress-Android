@@ -23,6 +23,7 @@
 
 /products/categories/
 /products/categories/<id>/
+/products/categories/batch/
 
 /products/tags/
 /products/tags/<id>/
@@ -106,3 +107,5 @@
 /subscriptions/<id>/
 
 /reports/products
+
+/options

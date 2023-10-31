@@ -1,5 +1,8 @@
 package org.wordpress.android.fluxc.network.discovery;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
@@ -31,17 +34,19 @@ import static org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFi
 
 @Singleton
 public class DiscoveryXMLRPCClient extends BaseXMLRPCClient {
-    @Inject public DiscoveryXMLRPCClient(Dispatcher dispatcher,
-                                 @Named("custom-ssl") RequestQueue requestQueue,
-                                 UserAgent userAgent,
-                                 HTTPAuthManager httpAuthManager) {
+    @Inject public DiscoveryXMLRPCClient(
+            Dispatcher dispatcher,
+            @Named("custom-ssl") RequestQueue requestQueue,
+            UserAgent userAgent,
+            HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
     /**
      * Obtain the HTML response from a GET request for the given URL.
      */
-    public String getResponse(String url) throws DiscoveryException {
+    @Nullable
+    public String getResponse(@NonNull String url) throws DiscoveryException {
         BaseRequestFuture<String> future = BaseRequestFuture.newFuture();
         DiscoveryRequest request = new DiscoveryRequest(url, future, future);
         add(request);
@@ -63,8 +68,8 @@ public class DiscoveryXMLRPCClient extends BaseXMLRPCClient {
                     throw new DiscoveryException(DiscoveryError.XMLRPC_FORBIDDEN, url);
                 }
             } else if (e.getCause() instanceof NoConnectionError
-                    && e.getCause().getCause() instanceof SSLHandshakeException
-                    && e.getCause().getCause().getCause() instanceof CertificateException) {
+                       && e.getCause().getCause() instanceof SSLHandshakeException
+                       && e.getCause().getCause().getCause() instanceof CertificateException) {
                 // In the event of an SSL handshake error we should stop attempting discovery
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
             }
@@ -73,9 +78,10 @@ public class DiscoveryXMLRPCClient extends BaseXMLRPCClient {
     }
 
     /**
-     * Peform a system.listMethods call on the given URL.
+     * Perform a system.listMethods call on the given URL.
      */
-    public Object[] listMethods(String url) throws DiscoveryException {
+    @Nullable
+    public Object[] listMethods(@NonNull String url) throws DiscoveryException {
         if (!UrlUtils.isValidUrlAndHostNotNull(url)) {
             AppLog.e(AppLog.T.NUX, "Invalid URL: " + url);
             throw new DiscoveryException(DiscoveryError.INVALID_URL, url);
@@ -104,8 +110,8 @@ public class DiscoveryXMLRPCClient extends BaseXMLRPCClient {
                     throw new DiscoveryException(DiscoveryError.XMLRPC_FORBIDDEN, url);
                 }
             } else if (e.getCause() instanceof NoConnectionError
-                    && e.getCause().getCause() instanceof SSLHandshakeException
-                    && e.getCause().getCause().getCause() instanceof CertificateException) {
+                       && e.getCause().getCause() instanceof SSLHandshakeException
+                       && e.getCause().getCause().getCause() instanceof CertificateException) {
                 // In the event of an SSL handshake error we should stop attempting discovery
                 throw new DiscoveryException(DiscoveryError.ERRONEOUS_SSL_CERTIFICATE, url);
             } else if (e.getCause() instanceof ServerError) {

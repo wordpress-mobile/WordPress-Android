@@ -5,6 +5,7 @@ import com.android.volley.RequestQueue
 import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
+import org.wordpress.android.fluxc.model.JWTToken
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
@@ -43,7 +44,7 @@ class JetpackAIRestClient @Inject constructor(
         )
 
         return when (response) {
-            is Response.Success -> JetpackAIJWTTokenResponse.Success(response.data.token)
+            is Response.Success -> JetpackAIJWTTokenResponse.Success(JWTToken(response.data.token))
             is Response.Error -> JetpackAIJWTTokenResponse.Error(
                 response.error.toJetpackAICompletionsError(),
                 response.error.message
@@ -52,14 +53,14 @@ class JetpackAIRestClient @Inject constructor(
     }
 
     suspend fun fetchJetpackAITextCompletion(
-        token: String,
+        token: JWTToken,
         prompt: String,
         feature: String
     ): JetpackAICompletionsResponse {
         val url = WPCOMV2.text_completion.url
         val body = mutableMapOf<String, String>()
         body.apply {
-            put("token", token)
+            put("token", token.value)
             put("prompt", prompt)
             put("feature", feature)
             put("_fields", FIELDS_TO_REQUEST)
@@ -136,7 +137,7 @@ class JetpackAIRestClient @Inject constructor(
     )
 
     sealed class JetpackAIJWTTokenResponse {
-        data class Success(val token: String) : JetpackAIJWTTokenResponse()
+        data class Success(val token: JWTToken) : JetpackAIJWTTokenResponse()
         data class Error(
             val type: JetpackAICompletionsErrorType,
             val message: String? = null
