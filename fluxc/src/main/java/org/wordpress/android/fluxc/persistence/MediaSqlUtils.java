@@ -178,11 +178,13 @@ public class MediaSqlUtils {
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
-    public static List<MediaModel> getSiteImages(SiteModel siteModel) {
+    @NonNull
+    public static List<MediaModel> getSiteImages(@NonNull SiteModel siteModel) {
         return getSiteImagesQuery(siteModel).getAsModel();
     }
 
-    private static SelectQuery<MediaModel> getSiteImagesQuery(SiteModel siteModel) {
+    @NonNull
+    private static SelectQuery<MediaModel> getSiteImagesQuery(@NonNull SiteModel siteModel) {
         return getSiteMediaByMimeTypeQuery(siteModel, Type.IMAGE.getValue());
     }
 
@@ -190,15 +192,18 @@ public class MediaSqlUtils {
         return getSiteImagesExcludingQuery(siteModel, filter).getAsModel();
     }
 
-    public static List<MediaModel> getSiteVideos(SiteModel siteModel) {
+    @NonNull
+    public static List<MediaModel> getSiteVideos(@NonNull SiteModel siteModel) {
         return getSiteVideosQuery(siteModel).getAsModel();
     }
 
-    public static List<MediaModel> getSiteDocuments(SiteModel siteModel) {
+    @NonNull
+    public static List<MediaModel> getSiteDocuments(@NonNull SiteModel siteModel) {
         return getSiteDocumentsQuery(siteModel).getAsModel();
     }
 
-    public static List<MediaModel> getSiteAudio(SiteModel siteModel) {
+    @NonNull
+    public static List<MediaModel> getSiteAudio(@NonNull SiteModel siteModel) {
         return getSiteAudioQuery(siteModel).getAsModel();
     }
 
@@ -212,19 +217,25 @@ public class MediaSqlUtils {
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
-    private static SelectQuery<MediaModel> getSiteVideosQuery(SiteModel siteModel) {
+    @NonNull
+    private static SelectQuery<MediaModel> getSiteVideosQuery(@NonNull SiteModel siteModel) {
         return getSiteMediaByMimeTypeQuery(siteModel, Type.VIDEO.getValue());
     }
 
-    private static SelectQuery<MediaModel> getSiteAudioQuery(SiteModel siteModel) {
+    @NonNull
+    private static SelectQuery<MediaModel> getSiteAudioQuery(@NonNull SiteModel siteModel) {
         return getSiteMediaByMimeTypeQuery(siteModel, Type.AUDIO.getValue());
     }
 
-    private static SelectQuery<MediaModel> getSiteDocumentsQuery(SiteModel siteModel) {
+    @NonNull
+    private static SelectQuery<MediaModel> getSiteDocumentsQuery(@NonNull SiteModel siteModel) {
         return getSiteMediaByMimeTypeQuery(siteModel, Type.APPLICATION.getValue());
     }
 
-    private static SelectQuery<MediaModel> getSiteMediaByMimeTypeQuery(SiteModel siteModel, String mimeTypePrefix) {
+    @NonNull
+    private static SelectQuery<MediaModel> getSiteMediaByMimeTypeQuery(
+            @NonNull SiteModel siteModel,
+            @NonNull String mimeTypePrefix) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
