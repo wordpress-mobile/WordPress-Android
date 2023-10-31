@@ -63,7 +63,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         private set
     private var headerCustomizeButton: View? = null
     private val adapter: ThemeBrowserAdapter by lazy {
-        ThemeBrowserAdapter(activity, site!!.planId, callback, imageManager).apply {
+        ThemeBrowserAdapter(activity, requireNotNull(site).planId, callback, imageManager).apply {
             registerDataSetObserver(ThemeDataSetObserver())
         }
     }
@@ -91,7 +91,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity!!.application as WordPress).component().inject(this)
-        site = arguments!!.getSerializable(WordPress.SITE) as SiteModel?
+        site = arguments?.getSerializable(WordPress.SITE) as SiteModel?
         if (site == null) {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             activity!!.finish()
@@ -114,9 +114,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     override fun onDetach() {
         super.onDetach()
-        if (searchView != null) {
-            searchView!!.setOnQueryTextListener(null)
-        }
+        searchView?.setOnQueryTextListener(null)
         callback = null
     }
 
@@ -132,11 +130,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     override fun onResume() {
         super.onResume()
-        if (activity is ScrollableViewInitializedListener) {
-            (activity as ScrollableViewInitializedListener?)!!.onScrollableViewInitialized(
-                binding.themeListview.id
-            )
-        }
+        (activity as? ScrollableViewInitializedListener)?.onScrollableViewInitialized(binding.themeListview.id)
     }
 
     override fun onDestroyView() {
@@ -153,8 +147,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if (searchMenuItem != null && searchMenuItem!!.isActionViewExpanded) {
-            outState.putString(KEY_LAST_SEARCH, searchView!!.query.toString())
+        if (searchMenuItem != null && requireNotNull(searchMenuItem).isActionViewExpanded) {
+            outState.putString(KEY_LAST_SEARCH, searchView?.query.toString())
         }
         outState.putParcelable(QuickStartEvent.KEY, quickStartEvent)
     }
@@ -163,12 +157,12 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         inflater.inflate(R.menu.search, menu)
         searchMenuItem = menu.findItem(R.id.menu_search)
         searchView = searchMenuItem.getActionView() as SearchView?
-        searchView!!.setOnQueryTextListener(this)
-        searchView!!.maxWidth = Int.MAX_VALUE
+        searchView?.setOnQueryTextListener(this)
+        searchView?.maxWidth = Int.MAX_VALUE
         if (!TextUtils.isEmpty(lastSearch)) {
             searchMenuItem.expandActionView()
             onQueryTextSubmit(lastSearch)
-            searchView!!.setQuery(lastSearch, true)
+            searchView?.setQuery(lastSearch, true)
         }
     }
 
@@ -182,9 +176,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         adapter.filter.filter(query)
-        if (searchView != null) {
-            searchView!!.clearFocus()
-        }
+        searchView?.clearFocus()
         return true
     }
 
@@ -195,9 +187,9 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     override fun onMovedToScrapHeap(view: View?) {
         // cancel image fetch requests if the view has been moved to recycler.
-        val niv = view!!.findViewById<ImageView>(R.id.theme_grid_item_image)
+        val niv = view?.findViewById<ImageView>(R.id.theme_grid_item_image)
         if (niv != null) {
-            imageManager!!.cancelRequestAndClearImageView(niv)
+            imageManager.cancelRequestAndClearImageView(niv)
         }
     }
 
@@ -216,12 +208,12 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
                 return@buildSwipeToRefreshHelper
             }
             if (!NetworkUtils.checkConnection(activity)) {
-                swipeToRefreshHelper!!.isRefreshing = false
+                swipeToRefreshHelper?.isRefreshing = false
                 binding.textEmpty.setText(R.string.no_network_title)
                 return@buildSwipeToRefreshHelper
             }
             setRefreshing(true)
-            callback!!.onSwipeToRefresh()
+            callback?.onSwipeToRefresh()
         }
         swipeToRefreshHelper.setRefreshing(shouldRefreshOnStart)
     }
@@ -249,34 +241,30 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
                 AnalyticsTracker.Stat.THEMES_CUSTOMIZE_ACCESSED,
                 site
             )
-            callback!!.onTryAndCustomizeSelected(currentThemeId!!)
+            callback?.onTryAndCustomizeSelected(currentThemeId)
         })
         val details = header.findViewById<LinearLayout>(R.id.details)
         details.setOnClickListener { v: View? ->
-            callback!!.onDetailsSelected(
-                currentThemeId!!
-            )
+            callback?.onDetailsSelected(currentThemeId)
         }
         val support = header.findViewById<LinearLayout>(R.id.support)
         support.setOnClickListener { v: View? ->
-            callback!!.onSupportSelected(
-                currentThemeId!!
-            )
+            callback?.onSupportSelected(currentThemeId)
         }
         binding.themeListview.addHeaderView(header)
     }
 
     private fun setThemeNameIfAlreadyAvailable() {
-        val currentTheme = themeStore!!.getActiveThemeForSite(site!!)
+        val currentTheme = themeStore.getActiveThemeForSite(requireNotNull(site))
         if (currentTheme != null) {
-            currentThemeTextView!!.text = currentTheme.name
+            currentThemeTextView?.text = currentTheme.name
         }
     }
 
     fun setRefreshing(refreshing: Boolean) {
         shouldRefreshOnStart = refreshing
-        if (swipeToRefreshHelper != null) {
-            swipeToRefreshHelper!!.isRefreshing = refreshing
+        swipeToRefreshHelper?.let {
+            it.isRefreshing = refreshing
             if (!refreshing) {
                 refreshView()
             }
@@ -299,12 +287,14 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     private fun fetchThemes(): List<ThemeModel>? {
-        if (site == null) {
-            return ArrayList()
+        site?.let {
+            return if (it.isWPCom) {
+                sortedWpComThemes
+            } else {
+                sortedJetpackThemes
+            }
         }
-        return if (site!!.isWPCom) {
-            sortedWpComThemes
-        } else sortedJetpackThemes
+        return ArrayList()
     }
 
     fun refreshView() {
@@ -313,7 +303,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     private val sortedWpComThemes: List<ThemeModel>?
         private get() {
-            val wpComThemes = themeStore!!.wpComThemes
+            val wpComThemes = themeStore.wpComThemes
 
             // first thing to do is attempt to find the active theme and move it to the front of the list
             moveActiveThemeToFront(wpComThemes)
@@ -326,8 +316,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         }
     private val sortedJetpackThemes: List<ThemeModel>?
         private get() {
-            val wpComThemes = themeStore!!.wpComThemes
-            val uploadedThemes = themeStore!!.getThemesForSite(site!!)
+            val wpComThemes = themeStore.wpComThemes
+            val uploadedThemes = themeStore.getThemesForSite(requireNotNull(site))
 
             // put the active theme at the top of the uploaded themes list
             moveActiveThemeToFront(uploadedThemes)
@@ -401,11 +391,14 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     private fun shouldShowPremiumThemes(): Boolean {
-        if (site == null) {
-            return false
+        site?.let {
+            val planId = it.planId
+            return planId == PlansConstants.PREMIUM_PLAN_ID ||
+                    planId == PlansConstants.BUSINESS_PLAN_ID ||
+                    planId == PlansConstants.JETPACK_PREMIUM_PLAN_ID ||
+                    planId == PlansConstants.JETPACK_BUSINESS_PLAN_ID
         }
-        val planId = site!!.planId
-        return planId == PlansConstants.PREMIUM_PLAN_ID || planId == PlansConstants.BUSINESS_PLAN_ID || planId == PlansConstants.JETPACK_PREMIUM_PLAN_ID || planId == PlansConstants.JETPACK_BUSINESS_PLAN_ID
+        return false
     }
 
     private inner class ThemeDataSetObserver : DataSetObserver() {
