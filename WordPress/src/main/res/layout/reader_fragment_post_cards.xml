@@ -69,9 +69,7 @@
 
     <ProgressBar
         android:id="@+id/progress_footer"
-        style="@style/ReaderProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/ReaderFooterProgressBar"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:visibility="gone"
