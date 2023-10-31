@@ -66,6 +66,7 @@ public class MediaUtils {
     //
 
     @NonNull
+    @SuppressWarnings("unused")
     public static String getMediaValidationError(@NonNull MediaModel media) {
         return BaseUploadRequestBody.hasRequiredData(media);
     }
