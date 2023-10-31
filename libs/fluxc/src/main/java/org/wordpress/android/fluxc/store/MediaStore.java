@@ -1083,8 +1083,7 @@ public class MediaStore extends Store {
         if (payload.mimeType != null) {
             mimeTypeValue = payload.mimeType.getValue();
         }
-        MediaSqlUtils.deleteUploadedSiteMediaNotInList(
-                payload.site, existingMediaList, mimeTypeValue);
+        MediaSqlUtils.deleteUploadedSiteMediaNotInList(payload.site, existingMediaList, mimeTypeValue);
 
         // add new media
         for (MediaModel media : newMediaList) {
