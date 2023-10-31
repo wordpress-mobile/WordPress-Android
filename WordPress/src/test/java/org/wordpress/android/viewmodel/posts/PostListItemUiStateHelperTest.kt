@@ -224,8 +224,9 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
         assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
         assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_STATS)
-        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
-        assertThat(moreActions).hasSize(6)
+        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_COMMENTS)
+        assertThat(moreActions[6].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(7)
     }
 
     @Test
@@ -240,8 +241,9 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
         assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
         assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
-        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
-        assertThat(moreActions).hasSize(5)
+        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_COMMENTS)
+        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(6)
     }
 
     @Test
@@ -257,8 +259,9 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
         assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
         assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_STATS)
-        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
-        assertThat(moreActions).hasSize(6)
+        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_COMMENTS)
+        assertThat(moreActions[6].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(7)
     }
 
     @Test
@@ -273,8 +276,9 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
         assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
         assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
-        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
-        assertThat(moreActions).hasSize(5)
+        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_COMMENTS)
+        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(6)
     }
 
     @Test
@@ -289,8 +293,9 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
         assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
         assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
-        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
-        assertThat(moreActions).hasSize(6)
+        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_COMMENTS)
+        assertThat(moreActions[6].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(7)
     }
 
     @Test
@@ -307,8 +312,9 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
         assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
         assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
-        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
-        assertThat(moreActions).hasSize(5)
+        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_COMMENTS)
+        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(6)
     }
 
     @Test
@@ -407,8 +413,9 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
         assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
         assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
-        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
-        assertThat(moreActions).hasSize(6)
+        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_COMMENTS)
+        assertThat(moreActions[6].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(7)
    }
 
     @Test
@@ -487,8 +494,9 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
         assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
         assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY_URL)
-        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
-        assertThat(moreActions).hasSize(6)
+        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_COMMENTS)
+        assertThat(moreActions[6].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(7)
     }
 
     @Test
@@ -824,8 +832,9 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_RETRY)
         assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
         assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
-        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE)
-        assertThat(moreActions).hasSize(4)
+        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COMMENTS)
+        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_DELETE)
+        assertThat(moreActions).hasSize(5)
     }
 
     @Test
