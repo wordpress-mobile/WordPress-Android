@@ -50,8 +50,8 @@ public interface LoginListener {
     void needs2fa(String email, String password);
     void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup, String nonceSms);
     void needs2faSocialConnect(String email, String password, String idToken, String service);
-    void needsSecurityKey(String userId, String webauthnNonce);
-    void signSecurityKey(String challengeRequestJson, String userId, String username);
+    void needsSecurityKey(String email, String password, String userId, String webauthnNonce);
+    void signSecurityKey(String challengeRequestJson, String userId);
     void loggedInViaPassword(ArrayList<Integer> oldSitesIds);
     void helpEmailPasswordScreen(String email);
 
