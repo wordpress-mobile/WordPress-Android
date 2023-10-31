@@ -333,8 +333,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
             return allThemes
         }
 
-    private fun moveActiveThemeToFront(themes: List<ThemeModel>?) {
         if (themes == null || themes.isEmpty() || TextUtils.isEmpty(currentThemeId)) {
+    private fun moveActiveThemeToFront(themes: MutableList<ThemeModel>?) {
             return
         }
 
