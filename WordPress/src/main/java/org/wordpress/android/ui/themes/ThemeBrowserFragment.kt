@@ -62,7 +62,11 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     var currentThemeTextView: TextView? = null
         private set
     private var mHeaderCustomizeButton: View? = null
-    private var mAdapter: ThemeBrowserAdapter? = null
+    private val adapter: ThemeBrowserAdapter by lazy {
+        ThemeBrowserAdapter(activity, mSite!!.planId, mCallback, mImageManager).apply {
+            registerDataSetObserver(ThemeDataSetObserver())
+        }
+    }
     private var mShouldRefreshOnStart = false
     private var mSite: SiteModel? = null
     private var mSearchMenuItem: MenuItem? = null
@@ -307,15 +311,6 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
             sortedWpComThemes
         } else sortedJetpackThemes
     }
-
-    private val adapter: ThemeBrowserAdapter
-        private get() {
-            if (mAdapter == null) {
-                mAdapter = ThemeBrowserAdapter(activity, mSite!!.planId, mCallback, mImageManager)
-                mAdapter!!.registerDataSetObserver(ThemeDataSetObserver())
-            }
-            return mAdapter!!
-        }
 
     fun refreshView() {
         adapter.setThemeList(fetchThemes()!!)
