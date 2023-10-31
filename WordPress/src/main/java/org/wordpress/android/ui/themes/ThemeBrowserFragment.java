@@ -88,19 +88,21 @@ public class ThemeBrowserFragment extends Fragment
     private String mCurrentThemeId;
     private String mLastSearch;
 
-    private HeaderGridView mGridView;
-    private RelativeLayout mEmptyView;
-    private ActionableEmptyView mActionableEmptyView;
-    private TextView mCurrentThemeTextView;
-    private View mHeaderCustomizeButton;
+    @Nullable private HeaderGridView mGridView;
+    @Nullable private RelativeLayout mEmptyView;
+    @Nullable private ActionableEmptyView mActionableEmptyView;
+    @Nullable private TextView mCurrentThemeTextView;
+    @Nullable private View mHeaderCustomizeButton;
 
     private ThemeBrowserAdapter mAdapter;
     private boolean mShouldRefreshOnStart;
-    private TextView mEmptyTextView;
     private SiteModel mSite;
+    @Nullable private TextView mEmptyTextView;
 
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
+    @Nullable private MenuItem mSearchMenuItem;
+    @Nullable private SearchView mSearchView;
 
     private ThemeBrowserFragmentCallback mCallback;
     private QuickStartEvent mQuickStartEvent;
@@ -255,6 +257,7 @@ public class ThemeBrowserFragment extends Fragment
         }
     }
 
+    @Nullable
     TextView getCurrentThemeTextView() {
         return mCurrentThemeTextView;
     }
