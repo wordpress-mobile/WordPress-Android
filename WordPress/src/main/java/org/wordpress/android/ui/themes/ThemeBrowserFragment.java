@@ -133,7 +133,7 @@ public class ThemeBrowserFragment extends Fragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(@NonNull Activity activity) {
         super.onAttach(activity);
         try {
             mCallback = (ThemeBrowserFragmentCallback) activity;
@@ -151,8 +151,9 @@ public class ThemeBrowserFragment extends Fragment
         mCallback = null;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Nullable @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.theme_browser_fragment, container, false);
 
         mActionableEmptyView = view.findViewById(R.id.actionable_empty_view);
@@ -192,7 +193,7 @@ public class ThemeBrowserFragment extends Fragment
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         getAdapter().setThemeList(fetchThemes());
@@ -234,7 +235,7 @@ public class ThemeBrowserFragment extends Fragment
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {
+    public boolean onQueryTextSubmit(@Nullable String query) {
         getAdapter().getFilter().filter(query);
         if (mSearchView != null) {
             mSearchView.clearFocus();
@@ -243,13 +244,13 @@ public class ThemeBrowserFragment extends Fragment
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
+    public boolean onQueryTextChange(@Nullable String newText) {
         getAdapter().getFilter().filter(newText);
         return true;
     }
 
     @Override
-    public void onMovedToScrapHeap(View view) {
+    public void onMovedToScrapHeap(@Nullable View view) {
         // cancel image fetch requests if the view has been moved to recycler.
         ImageView niv = view.findViewById(R.id.theme_grid_item_image);
         if (niv != null) {
@@ -267,11 +268,11 @@ public class ThemeBrowserFragment extends Fragment
         refreshView();
     }
 
-    private void addHeaderViews(LayoutInflater inflater) {
+    private void addHeaderViews(@NonNull LayoutInflater inflater) {
         addMainHeader(inflater);
     }
 
-    private void configureSwipeToRefresh(View view) {
+    private void configureSwipeToRefresh(@Nullable View view) {
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 view.findViewById(R.id.ptr_layout),
                 () -> {
@@ -289,13 +290,13 @@ public class ThemeBrowserFragment extends Fragment
         mSwipeToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
     }
 
-    private void configureGridView(LayoutInflater inflater, View view) {
+    private void configureGridView(@NonNull LayoutInflater inflater, @Nullable View view) {
         mGridView = view.findViewById(R.id.theme_listview);
         addHeaderViews(inflater);
         mGridView.setRecyclerListener(this);
     }
 
-    private void addMainHeader(LayoutInflater inflater) {
+    private void addMainHeader(@NonNull LayoutInflater inflater) {
         @SuppressLint("InflateParams")
         View header = inflater.inflate(R.layout.theme_grid_cardview_header, null);
 
