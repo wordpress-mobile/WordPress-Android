@@ -26,17 +26,25 @@ public class MediaSqlUtils {
         return getAllSiteMediaQuery(siteModel).getAsModel();
     }
 
-    public static List<MediaModel> getMediaWithStates(SiteModel site, List<String> uploadStates) {
+    @NonNull
+    public static List<MediaModel> getMediaWithStates(
+            @NonNull SiteModel site,
+            @NonNull List<String> uploadStates) {
         return getMediaWithStatesQuery(site, uploadStates).getAsModel();
     }
 
-    public static WellCursor<MediaModel> getMediaWithStatesAsCursor(SiteModel site, List<String> uploadStates) {
+    @NonNull
+    public static WellCursor<MediaModel> getMediaWithStatesAsCursor(
+            @NonNull SiteModel site,
+            @NonNull List<String> uploadStates) {
         return getMediaWithStatesQuery(site, uploadStates).getAsCursor();
     }
 
-    public static List<MediaModel> getMediaWithStatesAndMimeType(SiteModel site,
-                                                                 List<String> uploadStates,
-                                                                 String mimeType) {
+    @NonNull
+    public static List<MediaModel> getMediaWithStatesAndMimeType(
+            @NonNull SiteModel site,
+            @NonNull List<String> uploadStates,
+            @NonNull String mimeType) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
@@ -76,7 +84,10 @@ public class MediaSqlUtils {
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
-    private static SelectQuery<MediaModel> getMediaWithStatesQuery(SiteModel site, List<String> uploadStates) {
+    @NonNull
+    private static SelectQuery<MediaModel> getMediaWithStatesQuery(
+            @NonNull SiteModel site,
+            @NonNull List<String> uploadStates) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
