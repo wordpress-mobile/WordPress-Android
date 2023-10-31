@@ -406,7 +406,7 @@ public class MediaSqlUtilsTest {
     }
 
     @Test
-    public void testPushAndFetchCollision() throws InterruptedException {
+        public void testPushAndFetchCollision() {
         // Test uploading media, fetching remote media and updating the db from the fetch first
 
         MediaModel mediaModel = getTestMedia(0);
