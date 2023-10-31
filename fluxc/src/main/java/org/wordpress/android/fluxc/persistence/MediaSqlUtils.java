@@ -188,7 +188,10 @@ public class MediaSqlUtils {
         return getSiteMediaByMimeTypeQuery(siteModel, Type.IMAGE.getValue());
     }
 
-    public static List<MediaModel> getSiteImagesExcluding(SiteModel siteModel, List<Long> filter) {
+    @NonNull
+    public static List<MediaModel> getSiteImagesExcluding(
+            @NonNull SiteModel siteModel,
+            @NonNull List<Long> filter) {
         return getSiteImagesExcludingQuery(siteModel, filter).getAsModel();
     }
 
@@ -207,7 +210,10 @@ public class MediaSqlUtils {
         return getSiteAudioQuery(siteModel).getAsModel();
     }
 
-    public static SelectQuery<MediaModel> getSiteImagesExcludingQuery(SiteModel siteModel, List<Long> filter) {
+    @NonNull
+    public static SelectQuery<MediaModel> getSiteImagesExcludingQuery(
+            @NonNull SiteModel siteModel,
+            @NonNull List<Long> filter) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
