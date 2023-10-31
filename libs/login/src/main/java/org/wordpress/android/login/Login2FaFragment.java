@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -50,6 +51,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static android.app.ProgressDialog.show;
 import static android.content.Context.CLIPBOARD_SERVICE;
 
 import dagger.android.support.AndroidSupportInjection;
@@ -579,6 +581,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     public void onWebauthnChallengeReceived(OnWebauthnChallengeReceived event) {
         if (event.isError()) {
             // TODO: Handle error
+            Toast.makeText(requireContext(), "Login failed", Toast.LENGTH_SHORT).show();
             endProgress();
             return;
         }
@@ -589,10 +592,12 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSecurityKeyCheckFinished(SecurityKeyCheckFinished event) {
         if (event.isError()) {
-            handleAuthError(event.error.type, event.error.message);
-            endProgress();
+            Toast.makeText(requireContext(), "Login failed", Toast.LENGTH_SHORT).show();
+            // handleAuthError(event.error.type, event.error.message);
+            // endProgress();
             return;
         }
-        doFinishLogin();
+        Toast.makeText(requireContext(), "Login succeeded", Toast.LENGTH_SHORT).show();
+        // doFinishLogin();
     }
 }
