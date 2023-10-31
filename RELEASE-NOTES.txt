@@ -9,7 +9,7 @@
 * [*] Block Editor Classic block: Add option to convert to blocks [https://github.com/WordPress/gutenberg/pull/55461]
 * [*] Block Editor Synced Patterns: Fix visibility of heading section when used with block based themes in dark mode [https://github.com/WordPress/gutenberg/pull/55399]
 * [***] [Jetpack-only] [***] Added domain selection, plan selection, and checkout screens in site creation flow [https://github.com/wordpress-mobile/WordPress-Android/pull/19304]
-
+* [**] [Jetpack-only] Update the main site navigation on the My Site screen, making it easier to access the common site sections. The new shortcuts can be modified using the Personalize Home Tab screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/19151]
 
 23.5
 -----
