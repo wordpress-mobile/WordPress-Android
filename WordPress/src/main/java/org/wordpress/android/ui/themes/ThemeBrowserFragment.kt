@@ -63,7 +63,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         private set
     private var mHeaderCustomizeButton: View? = null
     private val adapter: ThemeBrowserAdapter by lazy {
-        ThemeBrowserAdapter(activity, mSite!!.planId, mCallback, mImageManager).apply {
+        ThemeBrowserAdapter(activity, mSite!!.planId, mCallback, imageManager).apply {
             registerDataSetObserver(ThemeDataSetObserver())
         }
     }
@@ -74,25 +74,20 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     private var mCallback: ThemeBrowserFragmentCallback? = null
     private var mQuickStartEvent: QuickStartEvent? = null
 
-    @JvmField
     @Inject
-    var mThemeStore: ThemeStore? = null
+    lateinit var themeStore: ThemeStore
 
-    @JvmField
     @Inject
-    var mQuickStartStore: QuickStartStore? = null
+    lateinit var quickStartStore: QuickStartStore
 
-    @JvmField
     @Inject
-    var mDispatcher: Dispatcher? = null
+    lateinit var dispatcher: Dispatcher
 
-    @JvmField
     @Inject
-    var mImageManager: ImageManager? = null
+    lateinit var imageManager: ImageManager
 
-    @JvmField
     @Inject
-    var mQuickStartUtilsWrapper: QuickStartUtilsWrapper? = null
+    lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity!!.application as WordPress).component().inject(this)
@@ -202,7 +197,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         // cancel image fetch requests if the view has been moved to recycler.
         val niv = view!!.findViewById<ImageView>(R.id.theme_grid_item_image)
         if (niv != null) {
-            mImageManager!!.cancelRequestAndClearImageView(niv)
+            imageManager!!.cancelRequestAndClearImageView(niv)
         }
     }
 
@@ -272,7 +267,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     private fun setThemeNameIfAlreadyAvailable() {
-        val currentTheme = mThemeStore!!.getActiveThemeForSite(mSite!!)
+        val currentTheme = themeStore!!.getActiveThemeForSite(mSite!!)
         if (currentTheme != null) {
             currentThemeTextView!!.text = currentTheme.name
         }
@@ -318,7 +313,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     private val sortedWpComThemes: List<ThemeModel>?
         private get() {
-            val wpComThemes = mThemeStore!!.wpComThemes
+            val wpComThemes = themeStore!!.wpComThemes
 
             // first thing to do is attempt to find the active theme and move it to the front of the list
             moveActiveThemeToFront(wpComThemes)
@@ -331,8 +326,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         }
     private val sortedJetpackThemes: List<ThemeModel>?
         private get() {
-            val wpComThemes = mThemeStore!!.wpComThemes
-            val uploadedThemes = mThemeStore!!.getThemesForSite(mSite!!)
+            val wpComThemes = themeStore!!.wpComThemes
+            val uploadedThemes = themeStore!!.getThemesForSite(mSite!!)
 
             // put the active theme at the top of the uploaded themes list
             moveActiveThemeToFront(uploadedThemes)
