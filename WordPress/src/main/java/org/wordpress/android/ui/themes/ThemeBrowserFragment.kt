@@ -95,7 +95,10 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         get() {
             val wpComThemes = themeStore.wpComThemes
 
-            // first thing to do is attempt to find the active theme and move it to the front of the list
+            // first thing is to remove all external (partner) themes from the themes list since we do not support them
+            removeNonActiveExternalThemes(wpComThemes)
+
+            // then attempt to find the active theme and move it to the front of the list
             moveActiveThemeToFront(wpComThemes)
 
             // then remove all premium themes from the list with an exception for the active theme
@@ -108,6 +111,9 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         get() {
             val wpComThemes = themeStore.wpComThemes
             val uploadedThemes = themeStore.getThemesForSite(requireNotNull(site))
+
+            // remove all external (partner) themes from themes list since we do not support them
+            removeNonActiveExternalThemes(wpComThemes)
 
             // put the active theme at the top of the uploaded themes list
             moveActiveThemeToFront(uploadedThemes)
@@ -363,6 +369,10 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         if (activeThemeIndex > 0) {
             themes.add(0, themes.removeAt(activeThemeIndex))
         }
+    }
+
+    private fun removeNonActiveExternalThemes(themes: MutableList<ThemeModel>) {
+        themes.removeAll { it.isExternalTheme && !it.active }
     }
 
     private fun removeNonActivePremiumThemes(themes: MutableList<ThemeModel>) {
