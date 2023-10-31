@@ -405,6 +405,7 @@ public class MediaSqlUtils {
                 .endGroup().endWhere().execute();
     }
 
+    @SuppressWarnings("unused")
     public static int deleteAllSiteMedia(SiteModel site) {
         if (site == null) {
             return 0;
