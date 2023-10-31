@@ -699,27 +699,27 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getSiteMediaWithIds(siteModel, mediaIds);
     }
 
-    public List<MediaModel> getSiteImages(SiteModel siteModel) {
+    @NonNull
+    public List<MediaModel> getSiteImages(@NonNull SiteModel siteModel) {
         return MediaSqlUtils.getSiteImages(siteModel);
     }
 
+    @NonNull
     @SuppressWarnings("unused")
-    public List<MediaModel> getSiteVideos(SiteModel siteModel) {
+    public List<MediaModel> getSiteVideos(@NonNull SiteModel siteModel) {
         return MediaSqlUtils.getSiteVideos(siteModel);
     }
 
+    @NonNull
     @SuppressWarnings("unused")
-    public List<MediaModel> getSiteAudio(SiteModel siteModel) {
+    public List<MediaModel> getSiteAudio(@NonNull SiteModel siteModel) {
         return MediaSqlUtils.getSiteAudio(siteModel);
     }
 
+    @NonNull
     @SuppressWarnings("unused")
-    public List<MediaModel> getSiteDocuments(SiteModel siteModel) {
+    public List<MediaModel> getSiteDocuments(@NonNull SiteModel siteModel) {
         return MediaSqlUtils.getSiteDocuments(siteModel);
-    }
-
-    public int getSiteImageCount(SiteModel siteModel) {
-        return getSiteImages(siteModel).size();
     }
 
     public List<MediaModel> getSiteImagesExcludingIds(SiteModel siteModel, List<Long> filter) {
