@@ -348,6 +348,10 @@ public class AccountStore extends Store {
         public String mClientData;
     }
 
+    public static class SecurityKeyCheckFinished extends OnChanged<AuthenticationError> {
+        public String mBearerToken;
+    }
+
     public static class WebauthnChallengeError implements OnChangedError {
         public VolleyError error;
 
@@ -1391,11 +1395,13 @@ public class AccountStore extends Store {
     private void submitWebauthnChallengeResult(final FinishSecurityKeyChallengePayload payload) {
         mAuthenticator.makeRequest(payload.mUserId, payload.mTwoStepNonce, payload.mClientData,
                 token -> {
+                    SecurityKeyCheckFinished event = new SecurityKeyCheckFinished();
+                    event.mBearerToken = token;
                     mAccessToken.set(token);
-                    emitChange(new OnAuthenticationChanged());
+                    emitChange(event);
                 },
                 error -> {
-                    OnAuthenticationChanged event = new OnAuthenticationChanged();
+                    SecurityKeyCheckFinished event = new SecurityKeyCheckFinished();
                     event.error = new AuthenticationError(AuthenticationErrorType.GENERIC_ERROR,
                             "Passkey login failed");
                     emitChange(event);
