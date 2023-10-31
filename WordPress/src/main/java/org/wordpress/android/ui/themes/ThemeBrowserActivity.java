@@ -174,7 +174,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     }
 
     @Override
-    public void onTryAndCustomizeSelected(@NonNull String themeId) {
+    public void onTryAndCustomizeSelected(@Nullable String themeId) {
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.PREVIEW);
     }
 
@@ -184,12 +184,12 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     }
 
     @Override
-    public void onDetailsSelected(@NonNull String themeId) {
+    public void onDetailsSelected(@Nullable String themeId) {
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.DETAILS);
     }
 
     @Override
-    public void onSupportSelected(@NonNull String themeId) {
+    public void onSupportSelected(@Nullable String themeId) {
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.SUPPORT);
     }
 

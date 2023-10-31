@@ -49,10 +49,10 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     SearchView.OnQueryTextListener {
     interface ThemeBrowserFragmentCallback {
         fun onActivateSelected(themeId: String)
-        fun onTryAndCustomizeSelected(themeId: String)
+        fun onTryAndCustomizeSelected(themeId: String?)
         fun onViewSelected(themeId: String)
-        fun onDetailsSelected(themeId: String)
-        fun onSupportSelected(themeId: String)
+        fun onDetailsSelected(themeId: String?)
+        fun onSupportSelected(themeId: String?)
         fun onSwipeToRefresh()
     }
 
