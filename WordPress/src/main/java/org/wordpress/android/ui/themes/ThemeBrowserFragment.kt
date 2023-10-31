@@ -141,7 +141,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     @Suppress("deprecation")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        adapter.setThemeList(fetchThemes()!!)
+        adapter.setThemeList(fetchThemes())
         binding.themeListview.adapter = adapter
     }
 
@@ -286,7 +286,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         binding.actionableEmptyView.visibility = if (hasNoMatchingThemes) View.VISIBLE else View.GONE
     }
 
-    private fun fetchThemes(): List<ThemeModel>? {
+    private fun fetchThemes(): List<ThemeModel> {
         site?.let {
             return if (it.isWPCom) {
                 sortedWpComThemes
@@ -298,10 +298,10 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     fun refreshView() {
-        adapter.setThemeList(fetchThemes()!!)
+        adapter.setThemeList(fetchThemes())
     }
 
-    private val sortedWpComThemes: List<ThemeModel>?
+    private val sortedWpComThemes: List<ThemeModel>
         private get() {
             val wpComThemes = themeStore.wpComThemes
 
@@ -314,7 +314,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
             }
             return wpComThemes
         }
-    private val sortedJetpackThemes: List<ThemeModel>?
+    private val sortedJetpackThemes: List<ThemeModel>
         private get() {
             val wpComThemes = themeStore.wpComThemes
             val uploadedThemes = themeStore.getThemesForSite(requireNotNull(site))
@@ -333,8 +333,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
             return allThemes
         }
 
-        if (themes == null || themes.isEmpty() || TextUtils.isEmpty(currentThemeId)) {
     private fun moveActiveThemeToFront(themes: MutableList<ThemeModel>?) {
+        if (themes.isNullOrEmpty() || TextUtils.isEmpty(currentThemeId)) {
             return
         }
 
@@ -354,8 +354,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         }
     }
 
-    private fun removeNonActivePremiumThemes(themes: MutableList<ThemeModel>?) {
-        if (themes == null || themes.isEmpty()) {
+    private fun removeNonActivePremiumThemes(themes: MutableList<ThemeModel>) {
+        if (themes.isEmpty()) {
             return
         }
         val iterator = themes.iterator()
@@ -367,11 +367,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         }
     }
 
-    private fun removeDuplicateThemes(
-        wpComThemes: MutableList<ThemeModel>?,
-        uploadedThemes: List<ThemeModel>?
-    ) {
-        if (wpComThemes == null || wpComThemes.isEmpty() || uploadedThemes == null || uploadedThemes.isEmpty()) {
+    private fun removeDuplicateThemes(wpComThemes: MutableList<ThemeModel>, uploadedThemes: List<ThemeModel>?) {
+        if (wpComThemes.isEmpty() || uploadedThemes.isNullOrEmpty()) {
             return
         }
         for (uploadedTheme in uploadedThemes) {
