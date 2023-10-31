@@ -298,7 +298,11 @@ public class MediaSqlUtils {
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
-    public static List<MediaModel> matchPostMedia(int localPostId, String column, Object value) {
+    @NonNull
+    public static List<MediaModel> matchPostMedia(
+            int localPostId,
+            @NonNull String column,
+            @NonNull Object value) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_POST_ID, localPostId)
@@ -308,6 +312,7 @@ public class MediaSqlUtils {
                 .getAsModel();
     }
 
+    @NonNull
     public static List<MediaModel> matchPostMedia(int localPostId) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
