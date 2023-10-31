@@ -55,7 +55,10 @@ public class MediaSqlUtils {
                 .getAsModel();
     }
 
-    public static WellCursor<MediaModel> getImagesWithStatesAsCursor(SiteModel site, List<String> uploadStates) {
+    @NonNull
+    public static WellCursor<MediaModel> getImagesWithStatesAsCursor(
+            @NonNull SiteModel site,
+            @NonNull List<String> uploadStates) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
@@ -66,7 +69,10 @@ public class MediaSqlUtils {
                 .getAsCursor();
     }
 
-    public static WellCursor<MediaModel> getUnattachedMediaWithStates(SiteModel site, List<String> uploadStates) {
+    @NonNull
+    public static WellCursor<MediaModel> getUnattachedMediaWithStates(
+            @NonNull SiteModel site,
+            @NonNull List<String> uploadStates) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
