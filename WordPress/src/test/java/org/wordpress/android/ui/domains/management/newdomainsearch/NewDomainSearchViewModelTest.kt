@@ -60,7 +60,7 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
 
     @Test
     fun `WHEN transfer domain button pressed THEN track DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED event`() =
-        testWithActionEvents { events ->
+        testWithActionEvents {
             viewModel.onTransferDomainClicked()
             advanceUntilIdle()
 
