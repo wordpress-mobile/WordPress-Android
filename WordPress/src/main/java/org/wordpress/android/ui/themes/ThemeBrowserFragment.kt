@@ -108,6 +108,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        @Suppress("SwallowedException")
         callback = try {
             activity as ThemeBrowserFragmentCallback
         } catch (e: ClassCastException) {
