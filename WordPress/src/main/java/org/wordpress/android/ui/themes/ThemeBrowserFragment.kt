@@ -99,9 +99,9 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
             requireActivity().finish()
         }
         setHasOptionsMenu(true)
-        if (savedInstanceState != null) {
-            lastSearch = savedInstanceState.getString(KEY_LAST_SEARCH)
-            quickStartEvent = savedInstanceState.getParcelableCompat(QuickStartEvent.KEY)
+        savedInstanceState?.let {
+            lastSearch = it.getString(KEY_LAST_SEARCH)
+            quickStartEvent = it.getParcelableCompat(QuickStartEvent.KEY)
         }
     }
 
@@ -189,9 +189,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     override fun onMovedToScrapHeap(view: View?) {
         // cancel image fetch requests if the view has been moved to recycler.
-        val niv = view?.findViewById<ImageView>(R.id.theme_grid_item_image)
-        if (niv != null) {
-            imageManager.cancelRequestAndClearImageView(niv)
+        view?.findViewById<ImageView>(R.id.theme_grid_item_image)?.let {
+            imageManager.cancelRequestAndClearImageView(it)
         }
     }
 
@@ -258,9 +257,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
 
     private fun setThemeNameIfAlreadyAvailable() {
         val currentTheme = themeStore.getActiveThemeForSite(requireNotNull(site))
-        if (currentTheme != null) {
-            currentThemeTextView?.text = currentTheme.name
-        }
+        currentTheme?.let { currentThemeTextView?.text = it.name }
     }
 
     fun setRefreshing(refreshing: Boolean) {
