@@ -722,7 +722,7 @@
         <!-- Domains -->
         <activity
             android:name=".ui.domains.DomainsDashboardActivity"
-            android:label="@string/domains_title"
+            android:label="@string/site_domain_title"
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
