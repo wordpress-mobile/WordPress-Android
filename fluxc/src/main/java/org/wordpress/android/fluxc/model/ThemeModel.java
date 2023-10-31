@@ -25,6 +25,7 @@ public class ThemeModel implements Identifiable, Serializable {
     @Column private String mAuthorUrl;
     @Column private String mThemeUrl;
     @Column private String mScreenshotUrl;
+    @Column private String mThemeType;
     @Column private String mDemoUrl;
     @Column private String mDownloadUrl;
     @Column private String mStylesheet;
@@ -155,6 +156,14 @@ public class ThemeModel implements Identifiable, Serializable {
 
     public void setScreenshotUrl(String screenshotUrl) {
         mScreenshotUrl = screenshotUrl;
+    }
+
+    public String getThemeType() {
+        return mThemeType;
+    }
+
+    public void setThemeType(String themeType) {
+        mThemeType = themeType;
     }
 
     public String getDemoUrl() {
