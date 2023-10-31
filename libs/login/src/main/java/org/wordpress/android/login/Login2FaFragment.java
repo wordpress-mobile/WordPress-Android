@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnWebauthnChallengeReceive
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialAuthPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialSmsPayload;
+import org.wordpress.android.fluxc.store.AccountStore.SecurityKeyCheckFinished;
 import org.wordpress.android.fluxc.store.AccountStore.StartSecurityKeyChallengePayload;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
@@ -578,8 +579,20 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     public void onWebauthnChallengeReceived(OnWebauthnChallengeReceived event) {
         if (event.isError()) {
             // TODO: Handle error
+            endProgress();
             return;
         }
         mLoginListener.signSecurityKey(event.challengeInfo, event.mUserId);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSecurityKeyCheckFinished(SecurityKeyCheckFinished event) {
+        if (event.isError()) {
+            handleAuthError(event.error.type, event.error.message);
+            endProgress();
+            return;
+        }
+        doFinishLogin();
     }
 }
