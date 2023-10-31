@@ -254,11 +254,19 @@ public class MediaSqlUtils {
         return getSiteMediaExcludingQuery(site, column, value).getAsModel();
     }
 
-    public static List<MediaModel> matchSiteMedia(SiteModel siteModel, String column, Object value) {
+    @NonNull
+    public static List<MediaModel> matchSiteMedia(
+            @NonNull SiteModel siteModel,
+            @NonNull String column,
+            @NonNull Object value) {
         return matchSiteMediaQuery(siteModel, column, value).getAsModel();
     }
 
-    private static SelectQuery<MediaModel> matchSiteMediaQuery(SiteModel siteModel, String column, Object value) {
+    @NonNull
+    private static SelectQuery<MediaModel> matchSiteMediaQuery(
+            @NonNull SiteModel siteModel,
+            @NonNull String column,
+            @NonNull Object value) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
