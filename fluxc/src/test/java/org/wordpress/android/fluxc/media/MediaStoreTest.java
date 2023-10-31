@@ -279,7 +279,7 @@ public class MediaStoreTest {
             insertMediaIntoDatabase(attached);
             insertMediaIntoDatabase(unattached);
         }
-        assertEquals(testPoolSize, mMediaStore.getUnattachedSiteMediaCount(getTestSiteWithLocalId(testSiteId)));
+        assertEquals(testPoolSize, mMediaStore.getUnattachedSiteMedia(getTestSiteWithLocalId(testSiteId)).size());
     }
 
     @Test
