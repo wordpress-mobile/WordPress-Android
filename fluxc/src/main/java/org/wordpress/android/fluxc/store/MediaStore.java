@@ -762,23 +762,38 @@ public class MediaStore extends Store {
         return media.size() > 0 ? media.get(0).getThumbnailUrl() : null;
     }
 
-    public List<MediaModel> searchSiteMedia(SiteModel siteModel, String searchTerm) {
+    @NonNull
+    public List<MediaModel> searchSiteMedia(
+            @NonNull SiteModel siteModel,
+            @NonNull String searchTerm) {
         return MediaSqlUtils.searchSiteMedia(siteModel, searchTerm);
     }
 
-    public List<MediaModel> searchSiteImages(SiteModel siteModel, String searchTerm) {
+    @NonNull
+    public List<MediaModel> searchSiteImages(
+            @NonNull SiteModel siteModel,
+            @NonNull String searchTerm) {
         return MediaSqlUtils.searchSiteImages(siteModel, searchTerm);
     }
 
-    public List<MediaModel> searchSiteVideos(SiteModel siteModel, String searchTerm) {
+    @NonNull
+    public List<MediaModel> searchSiteVideos(
+            @NonNull SiteModel siteModel,
+            @NonNull String searchTerm) {
         return MediaSqlUtils.searchSiteVideos(siteModel, searchTerm);
     }
 
-    public List<MediaModel> searchSiteAudio(SiteModel siteModel, String searchTerm) {
+    @NonNull
+    public List<MediaModel> searchSiteAudio(
+            @NonNull SiteModel siteModel,
+            @NonNull String searchTerm) {
         return MediaSqlUtils.searchSiteAudio(siteModel, searchTerm);
     }
 
-    public List<MediaModel> searchSiteDocuments(SiteModel siteModel, String searchTerm) {
+    @NonNull
+    public List<MediaModel> searchSiteDocuments(
+            @NonNull SiteModel siteModel,
+            @NonNull String searchTerm) {
         return MediaSqlUtils.searchSiteDocuments(siteModel, searchTerm);
     }
 
