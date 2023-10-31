@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/Automattic/dangermattic
-  revision: 451932e8870ef3c52de0d8bea80edcfa3d879e53
+  revision: 8406e79e3b20e71421462a525c50a0525da697aa
   specs:
     danger-dangermattic (0.0.1)
       danger (~> 9.3)
@@ -16,7 +16,7 @@ GEM
   specs:
     CFPropertyList (3.0.6)
       rexml
-    activesupport (7.1.0)
+    activesupport (7.1.1)
       base64
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
@@ -32,8 +32,8 @@ GEM
     ast (2.4.2)
     atomos (0.1.3)
     aws-eventstream (1.2.0)
-    aws-partitions (1.833.0)
-    aws-sdk-core (3.185.0)
+    aws-partitions (1.843.0)
+    aws-sdk-core (3.185.1)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
@@ -282,7 +282,7 @@ GEM
     public_suffix (5.0.3)
     racc (1.7.1)
     rainbow (3.1.1)
-    rake (13.0.6)
+    rake (13.1.0)
     rake-compiler (1.2.5)
       rake
     rchardet (1.8.0)
