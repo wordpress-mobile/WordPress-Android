@@ -20,6 +20,7 @@ import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.GravityCompat
 import androidx.core.view.MenuCompat
 import androidx.appcompat.widget.PopupMenu as AppCompatPopupMenu
 import androidx.recyclerview.widget.RecyclerView
@@ -160,7 +161,7 @@ sealed class PostListItemViewHolder(
 
     private fun onMoreClicked(actions: List<PostListItemAction>, v: View) {
         val emptyDrawable = ContextCompat.getDrawable(v.context, R.drawable.ic_placeholder_24dp)
-        val menu = AppCompatPopupMenu(v.context, v)
+        val menu = AppCompatPopupMenu(v.context, v, GravityCompat.END)
         MenuCompat.setGroupDividerEnabled(menu.menu, true)
         menu.setForceShowIcon(true)
         actions.forEach { singleItemAction ->
