@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionRespo
 import org.wordpress.android.fluxc.store.ProductsStore
 import org.wordpress.android.fluxc.store.SiteStore
 
+@Suppress("MaxLineLength")
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class NewDomainsSearchRepositoryTest : BaseUnitTest() {
