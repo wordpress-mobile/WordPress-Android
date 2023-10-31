@@ -91,7 +91,8 @@ public class MediaUtils {
     /**
      * Returns the substring of characters that follow the final '.' in the given string.
      */
-    public static String getExtension(String filePath) {
+    @Nullable
+    public static String getExtension(@Nullable String filePath) {
         if (TextUtils.isEmpty(filePath) || !filePath.contains(".")) return null;
         if (filePath.lastIndexOf(".") + 1 >= filePath.length()) return null;
         return filePath.substring(filePath.lastIndexOf(".") + 1);
