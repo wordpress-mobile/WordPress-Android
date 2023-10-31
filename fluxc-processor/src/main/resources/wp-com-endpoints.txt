@@ -19,6 +19,7 @@
 /me/domain-contact-information/
 /me/settings/
 /me/sites/
+/me/sites/features
 /me/send-verification-email/
 /me/social-login/connect/
 /me/username/
@@ -41,6 +42,8 @@
 /read/site/$site#String/comment_email_subscriptions/$action#String
 /read/site/$site#String/post_email_subscriptions/$action#String
 /read/site/$site#String/post_email_subscriptions/update
+
+/all-domains
 
 /domains/suggestions
 /domains/supported-countries/

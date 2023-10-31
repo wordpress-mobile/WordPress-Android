@@ -19,17 +19,17 @@ import okio.Sink;
 
 /**
  * Wrapper for {@link okhttp3.MultipartBody} that reports upload progress as body data is written.
- *
+ * <p>
  * A {@link ProgressListener} is required, use {@link okhttp3.MultipartBody} if progress is not needed.
- *
- * ref http://stackoverflow.com/questions/35528751/okhttp-3-tracking-multipart-upload-progress
+ * <p>
+ * @see <a href="http://stackoverflow.com/questions/35528751/okhttp-3-tracking-multipart-upload-progress">doc</a>
  */
 public abstract class BaseUploadRequestBody extends RequestBody {
     /**
      * Callback to report upload progress as body data is written to the sink for network delivery.
      */
     public interface ProgressListener {
-        void onProgress(MediaModel media, float progress);
+        void onProgress(@NonNull MediaModel media, float progress);
     }
 
     /**
@@ -40,15 +40,15 @@ public abstract class BaseUploadRequestBody extends RequestBody {
      *     <li>define a file path to a valid local file</li>
      * </ul>
      *
-     * @return null if {@code media} is valid, otherwise a string describing why it's invalid
+     * @return a string describing why {@code media} is invalid
      */
-    public static String hasRequiredData(MediaModel media) {
+    @NonNull
+    public static String hasRequiredData(@NonNull MediaModel media) {
         return checkMediaArg(media).getType().getErrorLogDescription();
     }
 
-    public static MalformedMediaArgSubType checkMediaArg(MediaModel media) {
-        if (media == null) return new MalformedMediaArgSubType(Type.MEDIA_WAS_NULL);
-
+    @NonNull
+    public static MalformedMediaArgSubType checkMediaArg(@NonNull MediaModel media) {
         // validate MIME type is recognized
         String mimeType = media.getMimeType();
         if (!MediaUtils.isSupportedMimeType(mimeType)) {
@@ -72,25 +72,19 @@ public abstract class BaseUploadRequestBody extends RequestBody {
         return new MalformedMediaArgSubType(Type.NO_ERROR);
     }
 
-    private final MediaModel mMedia;
-    private final ProgressListener mListener;
+    @NonNull private final MediaModel mMedia;
+    @NonNull private final ProgressListener mListener;
 
-    public BaseUploadRequestBody(MediaModel media, ProgressListener listener) {
-        // validate arguments
-        if (listener == null) {
-            throw new IllegalArgumentException("progress listener cannot be null");
-        }
-        String mediaError = hasRequiredData(media);
-        if (mediaError != null) {
-            throw new IllegalArgumentException(mediaError);
-        }
-
+    public BaseUploadRequestBody(
+            @NonNull MediaModel media,
+            @NonNull ProgressListener listener) {
         mMedia = media;
         mListener = listener;
     }
 
     protected abstract float getProgress(long bytesWritten);
 
+    @NonNull
     public MediaModel getMedia() {
         return mMedia;
     }
@@ -103,7 +97,7 @@ public abstract class BaseUploadRequestBody extends RequestBody {
         private long mBytesWritten = 0;
         private long mLastTimeOnProgressCalled = 0;
 
-        public CountingSink(Sink delegate) {
+        public CountingSink(@NonNull Sink delegate) {
             super(delegate);
         }
 

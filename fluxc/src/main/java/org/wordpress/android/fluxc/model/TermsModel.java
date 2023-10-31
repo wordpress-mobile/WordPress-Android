@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TermsModel extends Payload<BaseNetworkError> {
-    private List<TermModel> mTerms;
+    @NonNull private List<TermModel> mTerms;
 
     public TermsModel() {
         mTerms = new ArrayList<>();
@@ -19,11 +19,12 @@ public class TermsModel extends Payload<BaseNetworkError> {
         mTerms = terms;
     }
 
+    @NonNull
     public List<TermModel> getTerms() {
         return mTerms;
     }
 
-    public void setTerms(List<TermModel> terms) {
+    public void setTerms(@NonNull List<TermModel> terms) {
         this.mTerms = terms;
     }
 }
