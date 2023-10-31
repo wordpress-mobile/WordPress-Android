@@ -260,6 +260,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
         theme.setDemoUrl(response.demo_uri);
         theme.setVersion(response.version);
         theme.setScreenshotUrl(response.screenshot);
+        theme.setThemeType(response.theme_type);
         theme.setDescription(response.description);
         theme.setDownloadUrl(response.download_uri);
         if (TextUtils.isEmpty(response.price)) {
