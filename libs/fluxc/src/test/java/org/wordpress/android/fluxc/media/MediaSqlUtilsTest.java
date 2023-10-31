@@ -31,7 +31,7 @@ public class MediaSqlUtilsTest {
     private static final int TEST_LOCAL_SITE_ID = 42;
     private static final int SMALL_TEST_POOL = 10;
 
-    private Random mRandom = new Random(System.currentTimeMillis());
+    private final Random mRandom = new Random(System.currentTimeMillis());
 
     @Before
     public void setUp() {
