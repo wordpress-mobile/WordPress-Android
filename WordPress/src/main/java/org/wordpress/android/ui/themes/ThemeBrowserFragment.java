@@ -358,6 +358,7 @@ public class ThemeBrowserFragment extends Fragment
         mActionableEmptyView.setVisibility(hasNoMatchingThemes ? View.VISIBLE : View.GONE);
     }
 
+    @Nullable
     private List<ThemeModel> fetchThemes() {
         if (mSite == null) {
             return new ArrayList<>();
@@ -382,6 +383,7 @@ public class ThemeBrowserFragment extends Fragment
         getAdapter().setThemeList(fetchThemes());
     }
 
+    @Nullable
     private List<ThemeModel> getSortedWpComThemes() {
         List<ThemeModel> wpComThemes = mThemeStore.getWpComThemes();
 
@@ -396,6 +398,7 @@ public class ThemeBrowserFragment extends Fragment
         return wpComThemes;
     }
 
+    @Nullable
     private List<ThemeModel> getSortedJetpackThemes() {
         List<ThemeModel> wpComThemes = mThemeStore.getWpComThemes();
         List<ThemeModel> uploadedThemes = mThemeStore.getThemesForSite(mSite);
@@ -415,7 +418,7 @@ public class ThemeBrowserFragment extends Fragment
         return allThemes;
     }
 
-    private void moveActiveThemeToFront(final List<ThemeModel> themes) {
+    private void moveActiveThemeToFront(@Nullable final List<ThemeModel> themes) {
         if (themes == null || themes.isEmpty() || TextUtils.isEmpty(mCurrentThemeId)) {
             return;
         }
@@ -436,7 +439,7 @@ public class ThemeBrowserFragment extends Fragment
         }
     }
 
-    private void removeNonActivePremiumThemes(final List<ThemeModel> themes) {
+    private void removeNonActivePremiumThemes(@Nullable final List<ThemeModel> themes) {
         if (themes == null || themes.isEmpty()) {
             return;
         }
@@ -450,7 +453,8 @@ public class ThemeBrowserFragment extends Fragment
         }
     }
 
-    private void removeDuplicateThemes(final List<ThemeModel> wpComThemes, final List<ThemeModel> uploadedThemes) {
+    private void removeDuplicateThemes(@Nullable final List<ThemeModel> wpComThemes,
+                                       @Nullable final List<ThemeModel> uploadedThemes) {
         if (wpComThemes == null || wpComThemes.isEmpty() || uploadedThemes == null || uploadedThemes.isEmpty()) {
             return;
         }
