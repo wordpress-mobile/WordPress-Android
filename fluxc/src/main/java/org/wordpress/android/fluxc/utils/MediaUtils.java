@@ -58,7 +58,8 @@ public class MediaUtils {
                 || isSupportedApplicationMimeType(type);
     }
 
-    public static String getMimeTypeForExtension(String extension) {
+    @Nullable
+    public static String getMimeTypeForExtension(@Nullable String extension) {
         return MIME_TYPES.getMimeTypeForExtension(extension);
     }
 
