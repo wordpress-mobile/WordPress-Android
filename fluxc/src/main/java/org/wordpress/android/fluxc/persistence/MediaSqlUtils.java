@@ -389,7 +389,7 @@ public class MediaSqlUtils {
         return media;
     }
 
-    public static int deleteMedia(MediaModel media) {
+    public static int deleteMedia(@Nullable MediaModel media) {
         if (media == null) return 0;
         if (media.getMediaId() == 0) {
             // If the remote media ID is 0, this is a local media file and we should only match by local ID
@@ -415,7 +415,10 @@ public class MediaSqlUtils {
         }
     }
 
-    public static int deleteMatchingSiteMedia(SiteModel siteModel, String column, Object value) {
+    public static int deleteMatchingSiteMedia(
+            @NonNull SiteModel siteModel,
+            @NonNull String column,
+            @NonNull Object value) {
         return WellSql.delete(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
@@ -424,18 +427,14 @@ public class MediaSqlUtils {
     }
 
     @SuppressWarnings("unused")
-    public static int deleteAllSiteMedia(SiteModel site) {
-        if (site == null) {
-            return 0;
-        }
-
+    public static int deleteAllSiteMedia(@NonNull SiteModel site) {
         return WellSql.delete(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
                 .endGroup().endWhere().execute();
     }
 
-    public static void deleteAllUploadedSiteMedia(SiteModel siteModel) {
+    public static void deleteAllUploadedSiteMedia(@NonNull SiteModel siteModel) {
         WellSql.delete(MediaModel.class)
                .where().beginGroup()
                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
@@ -443,7 +442,9 @@ public class MediaSqlUtils {
                .endGroup().endWhere().execute();
     }
 
-    public static void deleteAllUploadedSiteMediaWithMimeType(SiteModel siteModel, String mimeType) {
+    public static void deleteAllUploadedSiteMediaWithMimeType(
+            @NonNull SiteModel siteModel,
+            @NonNull String mimeType) {
         WellSql.delete(MediaModel.class)
                .where().beginGroup()
                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
@@ -456,7 +457,10 @@ public class MediaSqlUtils {
         WellSql.delete(MediaModel.class).execute();
     }
 
-    public static void deleteUploadedSiteMediaNotInList(SiteModel site, List<MediaModel> mediaList, String mimeType) {
+    public static void deleteUploadedSiteMediaNotInList(
+            @NonNull SiteModel site,
+            @NonNull List<MediaModel> mediaList,
+            @NonNull String mimeType) {
         if (mediaList.isEmpty()) {
             if (!TextUtils.isEmpty(mimeType)) {
                 MediaSqlUtils.deleteAllUploadedSiteMediaWithMimeType(site, mimeType);
