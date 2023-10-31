@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -22,12 +21,12 @@ import com.google.android.material.elevation.ElevationOverlayProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.databinding.ThemeBrowserFragmentBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.ThemeModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.ThemeStore
-import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.plans.PlansConstants
 import org.wordpress.android.ui.quickstart.QuickStartEvent
@@ -40,7 +39,6 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.widgets.HeaderGridView
 import javax.inject.Inject
 
 /**
@@ -57,18 +55,16 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         fun onSwipeToRefresh()
     }
 
+    private var _binding: ThemeBrowserFragmentBinding? = null
+    private val binding get() = _binding!!
     private var mSwipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var mCurrentThemeId: String? = null
     private var mLastSearch: String? = null
-    private var mGridView: HeaderGridView? = null
-    private var mEmptyView: RelativeLayout? = null
-    private var mActionableEmptyView: ActionableEmptyView? = null
     var currentThemeTextView: TextView? = null
         private set
     private var mHeaderCustomizeButton: View? = null
     private var mAdapter: ThemeBrowserAdapter? = null
     private var mShouldRefreshOnStart = false
-    private var mEmptyTextView: TextView? = null
     private var mSite: SiteModel? = null
     private var mSearchMenuItem: MenuItem? = null
     private var mSearchView: SearchView? = null
@@ -129,23 +125,25 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.theme_browser_fragment, container, false)
-        mActionableEmptyView = view.findViewById(R.id.actionable_empty_view)
-        mEmptyTextView = view.findViewById(R.id.text_empty)
-        mEmptyView = view.findViewById(R.id.empty_view)
-        configureGridView(inflater, view)
-        configureSwipeToRefresh(view)
-        return view
+    ): View {
+        _binding = ThemeBrowserFragmentBinding.inflate(inflater, container, false)
+        configureGridView(inflater)
+        configureSwipeToRefresh()
+        return binding.root
     }
 
     override fun onResume() {
         super.onResume()
         if (activity is ScrollableViewInitializedListener) {
             (activity as ScrollableViewInitializedListener?)!!.onScrollableViewInitialized(
-                mGridView!!.id
+                binding.themeListview.id
             )
         }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
     private fun showQuickStartFocusPoint() {
@@ -169,7 +167,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         adapter.setThemeList(fetchThemes()!!)
-        mGridView!!.adapter = adapter
+        binding.themeListview.adapter = adapter
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -231,16 +229,14 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         addMainHeader(inflater)
     }
 
-    private fun configureSwipeToRefresh(view: View?) {
-        mSwipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(
-            view!!.findViewById(R.id.ptr_layout)
-        ) {
+    private fun configureSwipeToRefresh() {
+        mSwipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(binding.ptrLayout) {
             if (!isAdded) {
                 return@buildSwipeToRefreshHelper
             }
             if (!NetworkUtils.checkConnection(activity)) {
                 mSwipeToRefreshHelper!!.isRefreshing = false
-                mEmptyTextView!!.setText(R.string.no_network_title)
+                binding.textEmpty.setText(R.string.no_network_title)
                 return@buildSwipeToRefreshHelper
             }
             setRefreshing(true)
@@ -249,10 +245,9 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         mSwipeToRefreshHelper.setRefreshing(mShouldRefreshOnStart)
     }
 
-    private fun configureGridView(inflater: LayoutInflater, view: View?) {
-        mGridView = view!!.findViewById(R.id.theme_listview)
+    private fun configureGridView(inflater: LayoutInflater) {
         addHeaderViews(inflater)
-        mGridView.setRecyclerListener(this)
+        binding.themeListview.setRecyclerListener(this)
     }
 
     private fun addMainHeader(inflater: LayoutInflater) {
@@ -287,7 +282,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
                 mCurrentThemeId!!
             )
         }
-        mGridView!!.addHeaderView(header)
+        binding.themeListview.addHeaderView(header)
     }
 
     private fun setThemeNameIfAlreadyAvailable() {
@@ -314,13 +309,12 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         val hasThemes = adapter.unfilteredCount > 0
         val hasVisibleThemes = adapter.count > 0
         val hasNoMatchingThemes = hasThemes && !hasVisibleThemes
-        mEmptyView!!.visibility = if (!hasThemes) View.VISIBLE else View.GONE
+        binding.emptyView.visibility = if (!hasThemes) View.VISIBLE else View.GONE
         if (!hasThemes && !NetworkUtils.isNetworkAvailable(activity)) {
-            mEmptyTextView!!.setText(R.string.no_network_title)
+            binding.textEmpty.setText(R.string.no_network_title)
         }
-        mGridView!!.visibility = if (hasVisibleThemes) View.VISIBLE else View.GONE
-        mActionableEmptyView!!.visibility =
-            if (hasNoMatchingThemes) View.VISIBLE else View.GONE
+        binding.themeListview.visibility = if (hasVisibleThemes) View.VISIBLE else View.GONE
+        binding.actionableEmptyView.visibility = if (hasNoMatchingThemes) View.VISIBLE else View.GONE
     }
 
     private fun fetchThemes(): List<ThemeModel>? {
