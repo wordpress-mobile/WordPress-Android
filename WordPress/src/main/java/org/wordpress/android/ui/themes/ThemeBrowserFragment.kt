@@ -156,11 +156,11 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search, menu)
         searchMenuItem = menu.findItem(R.id.menu_search)
-        searchView = searchMenuItem.getActionView() as SearchView?
+        searchView = searchMenuItem?.actionView as SearchView
         searchView?.setOnQueryTextListener(this)
         searchView?.maxWidth = Int.MAX_VALUE
         if (!TextUtils.isEmpty(lastSearch)) {
-            searchMenuItem.expandActionView()
+            searchMenuItem?.expandActionView()
             onQueryTextSubmit(lastSearch)
             searchView?.setQuery(lastSearch, true)
         }
@@ -215,7 +215,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
             setRefreshing(true)
             callback?.onSwipeToRefresh()
         }
-        swipeToRefreshHelper.setRefreshing(shouldRefreshOnStart)
+        swipeToRefreshHelper?.isRefreshing = shouldRefreshOnStart
     }
 
     private fun configureGridView(inflater: LayoutInflater) {
@@ -236,7 +236,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         currentThemeTextView = header.findViewById(R.id.header_theme_text)
         setThemeNameIfAlreadyAvailable()
         headerCustomizeButton = header.findViewById(R.id.customize)
-        headerCustomizeButton.setOnClickListener(View.OnClickListener { v: View? ->
+        headerCustomizeButton?.setOnClickListener(View.OnClickListener { v: View? ->
             AnalyticsUtils.trackWithSiteDetails(
                 AnalyticsTracker.Stat.THEMES_CUSTOMIZE_ACCESSED,
                 site
