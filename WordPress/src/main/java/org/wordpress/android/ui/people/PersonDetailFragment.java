@@ -257,7 +257,7 @@ public class PersonDetailFragment extends Fragment {
                 mSiteStore.getSiteByLocalId(
                         mLocalTableBlogId),
                 person.getRole());
-        dialog.show(getFragmentManager(), null);
+        dialog.show(getChildFragmentManager(), null);
     }
 
     // used to optimistically update the role
