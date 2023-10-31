@@ -855,7 +855,7 @@ public class MediaStore extends Store {
         }
     }
 
-    private void removeMedia(MediaModel media) {
+    private void removeMedia(@Nullable MediaModel media) {
         OnMediaChanged event = new OnMediaChanged(MediaAction.REMOVE_MEDIA);
 
         if (media == null) {
