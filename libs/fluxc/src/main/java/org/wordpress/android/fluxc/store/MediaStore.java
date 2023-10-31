@@ -756,7 +756,8 @@ public class MediaStore extends Store {
         return media.size() > 0 ? media.get(0).getUrl() : null;
     }
 
-    public String getThumbnailUrlForSiteMediaWithId(SiteModel siteModel, long mediaId) {
+    @Nullable
+    public String getThumbnailUrlForSiteMediaWithId(@NonNull SiteModel siteModel, long mediaId) {
         List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(siteModel, mediaId);
         return media.size() > 0 ? media.get(0).getThumbnailUrl() : null;
     }
