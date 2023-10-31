@@ -189,7 +189,7 @@ public class MediaStoreTest {
     public void testGetSiteImageCount() {
         final int testSiteId = 9001;
         SiteModel testSite = getTestSiteWithLocalId(testSiteId);
-        assertEquals(0, mMediaStore.getSiteImageCount(testSite));
+        assertEquals(0, mMediaStore.getSiteImages(testSite).size());
 
         // insert both images and videos
         final int testListSize = 10;
@@ -207,14 +207,14 @@ public class MediaStoreTest {
         }
 
         assertEquals(mMediaStore.getSiteMediaCount(testSite), testImages.size() + testVideos.size());
-        assertEquals(mMediaStore.getSiteImageCount(testSite), testImages.size());
+        assertEquals(mMediaStore.getSiteImages(testSite).size(), testImages.size());
     }
 
     @Test
     public void testGetSiteImagesBlacklist() {
         final int testSiteId = 3;
         SiteModel testSite = getTestSiteWithLocalId(testSiteId);
-        assertEquals(0, mMediaStore.getSiteImageCount(testSite));
+        assertEquals(0, mMediaStore.getSiteImages(testSite).size());
 
         final int testListSize = 10;
         final List<MediaModel> testImages = new ArrayList<>(testListSize);
@@ -224,7 +224,7 @@ public class MediaStoreTest {
             assertEquals(1, insertMediaIntoDatabase(image));
             testImages.add(image);
         }
-        assertEquals(testListSize, mMediaStore.getSiteImageCount(testSite));
+        assertEquals(testListSize, mMediaStore.getSiteImages(testSite).size());
 
         // create blacklist
         List<Long> blacklist = new ArrayList<>(testListSize / 2);
