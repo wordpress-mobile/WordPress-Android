@@ -729,12 +729,9 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getSiteImagesExcluding(siteModel, filter);
     }
 
-    public List<MediaModel> getUnattachedSiteMedia(SiteModel siteModel) {
+    @NonNull
+    public List<MediaModel> getUnattachedSiteMedia(@NonNull SiteModel siteModel) {
         return MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.POST_ID, 0);
-    }
-
-    public int getUnattachedSiteMediaCount(SiteModel siteModel) {
-        return getUnattachedSiteMedia(siteModel).size();
     }
 
     public List<MediaModel> getLocalSiteMedia(SiteModel siteModel) {
@@ -742,11 +739,17 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getSiteMediaExcluding(siteModel, MediaModelTable.UPLOAD_STATE, expectedState);
     }
 
-    public List<MediaModel> getSiteMediaWithState(SiteModel siteModel, MediaUploadState expectedState) {
+    @NonNull
+    public List<MediaModel> getSiteMediaWithState(
+            @NonNull SiteModel siteModel,
+            @NonNull MediaUploadState expectedState) {
         return MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.UPLOAD_STATE, expectedState);
     }
 
-    public String getUrlForSiteVideoWithVideoPressGuid(SiteModel siteModel, String videoPressGuid) {
+    @Nullable
+    public String getUrlForSiteVideoWithVideoPressGuid(
+            @NonNull SiteModel siteModel,
+            @NonNull String videoPressGuid) {
         List<MediaModel> media =
                 MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.VIDEO_PRESS_GUID, videoPressGuid);
         return media.size() > 0 ? media.get(0).getUrl() : null;
@@ -792,13 +795,14 @@ public class MediaStore extends Store {
                 expectedState);
     }
 
-    public MediaModel getNextSiteMediaToDelete(SiteModel siteModel) {
+    @Nullable
+    public MediaModel getNextSiteMediaToDelete(@NonNull SiteModel siteModel) {
         List<MediaModel> media = MediaSqlUtils.matchSiteMedia(siteModel,
                 MediaModelTable.UPLOAD_STATE, MediaUploadState.DELETING.toString());
         return media.size() > 0 ? media.get(0) : null;
     }
 
-    public boolean hasSiteMediaToDelete(SiteModel siteModel) {
+    public boolean hasSiteMediaToDelete(@NonNull SiteModel siteModel) {
         return getNextSiteMediaToDelete(siteModel) != null;
     }
 
