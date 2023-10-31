@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.main;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,6 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -818,7 +818,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
     }
 
-    public static void addSite(Activity activity, boolean hasAccessToken, SiteCreationSource source) {
+    public static void addSite(FragmentActivity activity, boolean hasAccessToken, SiteCreationSource source) {
         if (hasAccessToken) {
             if (!BuildConfig.ENABLE_ADD_SELF_HOSTED_SITE) {
                 ActivityLauncher.newBlogForResult(activity, source);
@@ -833,36 +833,36 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
     }
 
-    @SuppressWarnings("deprecation")
-    private static void showAddSiteDialog(Activity activity, SiteCreationSource source) {
+    private static void showAddSiteDialog(FragmentActivity activity, SiteCreationSource source) {
         DialogFragment dialog = new AddSiteDialog();
         Bundle args = new Bundle();
         args.putString(ARG_SITE_CREATION_SOURCE, source.getLabel());
         dialog.setArguments(args);
-        dialog.show(activity.getFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
+        dialog.show(activity.getSupportFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
     }
 
-    /*
-     * dialog which appears after user taps "Add site" - enables choosing whether to create
-     * a new wp.com blog or add an existing self-hosted one
+    /**
+     * Dialog which appears after user taps "Add site" - enables choosing whether to create
+     * a new wp.com blog or add an existing self-hosted one.
+     *
+     * @apiNote Must pass ARG_SITE_CREATION_SOURCE in arguments when creating this dialog.
      */
-    @SuppressWarnings("deprecation")
     public static class AddSiteDialog extends DialogFragment {
         static final String ADD_SITE_DIALOG_TAG = "add_site_dialog";
 
         @NonNull
         @Override
-        @SuppressWarnings("deprecation")
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+            assert getArguments() != null;
             SiteCreationSource source =
                     SiteCreationSource.fromString(getArguments().getString(ARG_SITE_CREATION_SOURCE));
             CharSequence[] items =
                     {getString(R.string.site_picker_create_wpcom),
                             getString(R.string.site_picker_add_self_hosted)};
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireActivity());
             builder.setTitle(R.string.site_picker_add_site);
             builder.setAdapter(
-                    new ArrayAdapter<>(getActivity(), R.layout.add_new_site_dialog_item, R.id.text, items),
+                    new ArrayAdapter<>(requireActivity(), R.layout.add_new_site_dialog_item, R.id.text, items),
                     (dialog, which) -> {
                         if (which == 0) {
                             ActivityLauncher.newBlogForResult(getActivity(), source);
