@@ -417,34 +417,35 @@ public class MediaSqlUtils {
                 .endGroup().endWhere().execute();
     }
 
-    public static int deleteAllUploadedSiteMedia(SiteModel siteModel) {
-        return WellSql.delete(MediaModel.class)
-                .where().beginGroup()
-                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
-                .equals(MediaModelTable.UPLOAD_STATE, MediaUploadState.UPLOADED.toString())
-                .endGroup().endWhere().execute();
+    public static void deleteAllUploadedSiteMedia(SiteModel siteModel) {
+        WellSql.delete(MediaModel.class)
+               .where().beginGroup()
+               .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
+               .equals(MediaModelTable.UPLOAD_STATE, MediaUploadState.UPLOADED.toString())
+               .endGroup().endWhere().execute();
     }
 
-    public static int deleteAllUploadedSiteMediaWithMimeType(SiteModel siteModel, String mimeType) {
-        return WellSql.delete(MediaModel.class)
-                .where().beginGroup()
-                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
-                .equals(MediaModelTable.UPLOAD_STATE, MediaUploadState.UPLOADED.toString())
-                .contains(MediaModelTable.MIME_TYPE, mimeType)
-                .endGroup().endWhere().execute();
+    public static void deleteAllUploadedSiteMediaWithMimeType(SiteModel siteModel, String mimeType) {
+        WellSql.delete(MediaModel.class)
+               .where().beginGroup()
+               .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
+               .equals(MediaModelTable.UPLOAD_STATE, MediaUploadState.UPLOADED.toString())
+               .contains(MediaModelTable.MIME_TYPE, mimeType)
+               .endGroup().endWhere().execute();
     }
 
-    public static int deleteAllMedia() {
-        return WellSql.delete(MediaModel.class).execute();
+    public static void deleteAllMedia() {
+        WellSql.delete(MediaModel.class).execute();
     }
 
-    public static int deleteUploadedSiteMediaNotInList(SiteModel site, List<MediaModel> mediaList, String mimeType) {
+    public static void deleteUploadedSiteMediaNotInList(SiteModel site, List<MediaModel> mediaList, String mimeType) {
         if (mediaList.isEmpty()) {
             if (!TextUtils.isEmpty(mimeType)) {
-                return MediaSqlUtils.deleteAllUploadedSiteMediaWithMimeType(site, mimeType);
+                MediaSqlUtils.deleteAllUploadedSiteMediaWithMimeType(site, mimeType);
             } else {
-                return MediaSqlUtils.deleteAllUploadedSiteMedia(site);
+                MediaSqlUtils.deleteAllUploadedSiteMedia(site);
             }
+            return;
         }
 
         List<Integer> idList = new ArrayList<>();
@@ -462,7 +463,7 @@ public class MediaSqlUtils {
             builder.contains(MediaModelTable.MIME_TYPE, mimeType);
         }
 
-        return builder.endGroup().endWhere().execute();
+        builder.endGroup().endWhere().execute();
     }
 
     @NonNull
