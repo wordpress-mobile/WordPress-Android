@@ -200,12 +200,6 @@ public class MediaSqlUtilsTest {
         }
     }
 
-    // Adds media with known post ID and title, deletes via postId and title, verifies
-    @Test
-    public void testMatchPostMedia() {
-        MediaModel testMedia = getTestMedia(1);
-    }
-
     // Adds a media item with known fields, updates all fields, retrieves and verifies
     @Test
     public void testUpdateExistingMedia() {
