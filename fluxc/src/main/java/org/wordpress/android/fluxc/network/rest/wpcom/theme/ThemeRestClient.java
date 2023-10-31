@@ -47,6 +47,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
     /** Used by {@link #fetchWpComThemes()} request all themes in a single fetch. */
     private static final String WP_THEME_FETCH_NUMBER_PARAM = "number=500";
     private static final String WPCOM_MOBILE_FRIENDLY_TAXONOMY_SLUG = "mobile-friendly";
+    private static final String THEME_TYPE_EXTERNAL = "managed-external";
 
     @Inject public ThemeRestClient(Context appContext, Dispatcher dispatcher,
                            @Named("regular") RequestQueue requestQueue,
@@ -261,6 +262,9 @@ public class ThemeRestClient extends BaseWPComRestClient {
         theme.setVersion(response.version);
         theme.setScreenshotUrl(response.screenshot);
         theme.setThemeType(response.theme_type);
+        if (response.theme_type != null) {
+            theme.setIsExternalTheme(response.theme_type.equals(THEME_TYPE_EXTERNAL));
+        }
         theme.setDescription(response.description);
         theme.setDownloadUrl(response.download_uri);
         if (TextUtils.isEmpty(response.price)) {

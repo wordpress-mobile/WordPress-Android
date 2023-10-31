@@ -37,6 +37,7 @@ public class ThemeModel implements Identifiable, Serializable {
     @Column private boolean mAutoUpdateTranslation;
 
     // local use only
+    @Column private boolean mIsExternalTheme;
     @Column private boolean mIsWpComTheme;
 
     @Override
@@ -240,6 +241,14 @@ public class ThemeModel implements Identifiable, Serializable {
 
     public void setAutoUpdateTranslation(boolean autoUpdateTranslation) {
         mAutoUpdateTranslation = autoUpdateTranslation;
+    }
+
+    public boolean isExternalTheme() {
+        return mIsExternalTheme;
+    }
+
+    public void setIsExternalTheme(boolean isExternalTheme) {
+        mIsExternalTheme = isExternalTheme;
     }
 
     public boolean isWpComTheme() {

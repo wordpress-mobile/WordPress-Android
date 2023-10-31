@@ -1995,6 +1995,7 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 197 -> migrate(version) {
                     db.execSQL("ALTER TABLE ThemeModel ADD THEME_TYPE TEXT")
+                    db.execSQL("ALTER TABLE ThemeModel ADD IS_EXTERNAL_THEME BOOLEAN")
                 }
             }
         }
