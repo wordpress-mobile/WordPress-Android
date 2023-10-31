@@ -23,7 +23,7 @@ class DomainManagementActivity : AppCompatActivity() {
                 MyDomainsScreen(
                     uiState = uiState,
                     onDomainTapped = viewModel::onDomainTapped,
-                    onAddDomainClicked = viewModel::onAddDomainClicked
+                    onAddDomainClicked = viewModel::onAddDomainClicked,
                 )
             }
         }
@@ -36,7 +36,7 @@ class DomainManagementActivity : AppCompatActivity() {
             is DomainManagementViewModel.ActionEvent.DomainTapped -> {
                 startActivity(DomainManagementDetailsActivity.createIntent(this, actionEvent.detailUrl))
             }
-            DomainManagementViewModel.ActionEvent.AddDomainTapped -> ActivityLauncher.openNewDomainSearch(this)
+            is DomainManagementViewModel.ActionEvent.AddDomainTapped -> ActivityLauncher.openNewDomainSearch(this)
         }
     }
 }

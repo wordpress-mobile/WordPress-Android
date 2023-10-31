@@ -42,7 +42,7 @@ class NewDomainsSearchRepository @Inject constructor(
         return if (query == event.query && !event.isError) {
             val suggestions = event.suggestions
                 .filter { !it.is_free }
-                .sortedBy { it.relevance }
+                .sortedByDescending { it.relevance }
                 .map { domain ->
                     val product = products?.firstOrNull { product -> product.productId == domain.product_id }
                     val splitDomainName = domain.domain_name.split('.')
@@ -56,7 +56,6 @@ class NewDomainsSearchRepository @Inject constructor(
                         salePrice = product?.combinedSaleCostDisplay,
                     )
                 }
-                .asReversed()
             DomainsResult.Success(suggestions)
         } else {
             DomainsResult.Error
