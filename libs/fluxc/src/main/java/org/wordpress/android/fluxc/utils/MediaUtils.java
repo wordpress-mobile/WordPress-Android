@@ -79,6 +79,7 @@ public class MediaUtils {
     /**
      * Queries filesystem to determine if a given file can be read.
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean canReadFile(String filePath) {
         if (filePath == null || TextUtils.isEmpty(filePath)) return false;
         File file = new File(filePath);
