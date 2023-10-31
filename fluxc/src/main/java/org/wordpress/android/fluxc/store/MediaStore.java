@@ -722,7 +722,10 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getSiteDocuments(siteModel);
     }
 
-    public List<MediaModel> getSiteImagesExcludingIds(SiteModel siteModel, List<Long> filter) {
+    @NonNull
+    public List<MediaModel> getSiteImagesExcludingIds(
+            @NonNull SiteModel siteModel,
+            @NonNull List<Long> filter) {
         return MediaSqlUtils.getSiteImagesExcluding(siteModel, filter);
     }
 
