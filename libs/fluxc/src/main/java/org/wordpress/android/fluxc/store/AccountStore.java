@@ -1391,8 +1391,8 @@ public class AccountStore extends Store {
     private void submitWebauthnChallengeResult(final FinishSecurityKeyChallengePayload payload) {
         mAuthenticator.makeRequest(payload.mUserId, payload.mTwoStepNonce, payload.mClientData,
                 token -> {
-                    OnAuthenticationChanged event = new OnAuthenticationChanged();
-                    emitChange(event);
+                    mAccessToken.set(token);
+                    emitChange(new OnAuthenticationChanged());
                 },
                 error -> {
                     OnAuthenticationChanged event = new OnAuthenticationChanged();
