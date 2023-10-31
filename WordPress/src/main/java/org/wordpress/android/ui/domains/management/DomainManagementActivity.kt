@@ -23,7 +23,8 @@ class DomainManagementActivity : AppCompatActivity() {
                 MyDomainsScreen(
                     uiState = uiState,
                     onDomainTapped = viewModel::onDomainTapped,
-                    onAddDomainClicked = viewModel::onAddDomainClicked,
+                    onAddDomainTapped = viewModel::onAddDomainClicked,
+                    onFindDomainTapped = viewModel::onAddDomainClicked
                 )
             }
         }
