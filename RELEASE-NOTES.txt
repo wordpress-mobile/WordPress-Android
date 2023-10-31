@@ -3,10 +3,6 @@
 23.7
 -----
 
-
-23.7
------
-
 23.6
 -----
 * [*] Block Editor Social Icons: Fix visibility of inactive icons when used with block based themes in dark mode [https://github.com/WordPress/gutenberg/pull/55398]
