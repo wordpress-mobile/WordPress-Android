@@ -84,9 +84,9 @@ public class ThemeBrowserFragment extends Fragment
         void onSwipeToRefresh();
     }
 
-    private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private String mCurrentThemeId;
-    private String mLastSearch;
+    @Nullable private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    @Nullable private String mCurrentThemeId;
+    @Nullable private String mLastSearch;
 
     @Nullable private HeaderGridView mGridView;
     @Nullable private RelativeLayout mEmptyView;
@@ -94,18 +94,16 @@ public class ThemeBrowserFragment extends Fragment
     @Nullable private TextView mCurrentThemeTextView;
     @Nullable private View mHeaderCustomizeButton;
 
-    private ThemeBrowserAdapter mAdapter;
+    @Nullable private ThemeBrowserAdapter mAdapter;
     private boolean mShouldRefreshOnStart;
-    private SiteModel mSite;
     @Nullable private TextView mEmptyTextView;
+    @Nullable private SiteModel mSite;
 
-    private MenuItem mSearchMenuItem;
-    private SearchView mSearchView;
     @Nullable private MenuItem mSearchMenuItem;
     @Nullable private SearchView mSearchView;
 
-    private ThemeBrowserFragmentCallback mCallback;
-    private QuickStartEvent mQuickStartEvent;
+    @Nullable private ThemeBrowserFragmentCallback mCallback;
+    @Nullable private QuickStartEvent mQuickStartEvent;
 
     @Inject ThemeStore mThemeStore;
     @Inject QuickStartStore mQuickStartStore;
@@ -263,7 +261,7 @@ public class ThemeBrowserFragment extends Fragment
         return mCurrentThemeTextView;
     }
 
-    void setCurrentThemeId(String currentThemeId) {
+    void setCurrentThemeId(@Nullable String currentThemeId) {
         mCurrentThemeId = currentThemeId;
         refreshView();
     }
