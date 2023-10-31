@@ -62,7 +62,8 @@ public class ThemeBrowserFragment extends Fragment
     public static final String TAG = ThemeBrowserFragment.class.getName();
     private static final String KEY_LAST_SEARCH = "last_search";
 
-    public static ThemeBrowserFragment newInstance(SiteModel site) {
+    @NonNull
+    public static ThemeBrowserFragment newInstance(@NonNull SiteModel site) {
         ThemeBrowserFragment fragment = new ThemeBrowserFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
@@ -371,6 +372,7 @@ public class ThemeBrowserFragment extends Fragment
         return getSortedJetpackThemes();
     }
 
+    @NonNull
     private ThemeBrowserAdapter getAdapter() {
         if (mAdapter == null) {
             mAdapter = new ThemeBrowserAdapter(getActivity(), mSite.getPlanId(), mCallback, mImageManager);
