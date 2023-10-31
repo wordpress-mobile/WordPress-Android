@@ -115,9 +115,8 @@ public class MediaUtils {
      * Removes location from the Exif information from an image
      *
      * @param imagePath image file path
-     * @return success
      */
-    public static boolean stripLocation(String imagePath) {
+    public static void stripLocation(String imagePath) {
         try {
             ExifInterface exifInterface = new ExifInterface(imagePath);
             exifInterface.setAttribute(ExifInterface.TAG_GPS_ALTITUDE, "0/0");
@@ -130,10 +129,8 @@ public class MediaUtils {
             exifInterface.setAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD, "0");
             exifInterface.setAttribute(ExifInterface.TAG_GPS_DATESTAMP, " ");
             exifInterface.saveAttributes();
-            return true;
         } catch (IOException e) {
             AppLog.e(T.MEDIA, "Removing of GPS info from image failed");
-            return false;
         }
     }
 }
