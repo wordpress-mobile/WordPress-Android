@@ -592,11 +592,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     public void onSecurityKeyCheckFinished(SecurityKeyCheckFinished event) {
         if (event.isError()) {
             Toast.makeText(requireContext(), "Login failed", Toast.LENGTH_SHORT).show();
-            // handleAuthError(event.error.type, event.error.message);
-            // endProgress();
+            handleAuthError(event.error.type, event.error.message);
+            endProgress();
             return;
         }
         Toast.makeText(requireContext(), "Login succeeded", Toast.LENGTH_SHORT).show();
-        // doFinishLogin();
+        doFinishLogin();
     }
 }
