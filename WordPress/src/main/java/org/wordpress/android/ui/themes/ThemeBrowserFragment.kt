@@ -31,7 +31,6 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.plans.PlansConstants
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.util.QuickStartUtils.addQuickStartFocusPointAboveTheView
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
@@ -144,23 +143,6 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
-    }
-
-    private fun showQuickStartFocusPoint() {
-        if (view == null) {
-            return
-        }
-        mHeaderCustomizeButton!!.post {
-            val focusPointSize =
-                resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
-            val horizontalOffset = mHeaderCustomizeButton!!.width / 2 - focusPointSize + resources
-                .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset)
-            addQuickStartFocusPointAboveTheView(
-                (view as ViewGroup?)!!, mHeaderCustomizeButton!!,
-                horizontalOffset, 0
-            )
-            mHeaderCustomizeButton!!.isPressed = true
-        }
     }
 
     @Suppress("deprecation")
