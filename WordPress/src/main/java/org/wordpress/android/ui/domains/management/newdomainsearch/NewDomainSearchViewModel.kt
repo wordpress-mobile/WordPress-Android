@@ -64,6 +64,12 @@ class NewDomainSearchViewModel @Inject constructor(
         }
     }
 
+    fun onTransferDomainClicked() {
+        launch {
+            _actionEvents.emit(ActionEvent.TransferDomain(DOMAIN_TRANSFER_PAGE_URL))
+        }
+    }
+
     fun onBackPressed() {
         launch {
             _actionEvents.emit(ActionEvent.GoBack)
@@ -71,6 +77,7 @@ class NewDomainSearchViewModel @Inject constructor(
     }
 
     sealed class ActionEvent {
+        class TransferDomain(val url: String) : ActionEvent()
         object GoBack : ActionEvent()
     }
 
@@ -78,5 +85,9 @@ class NewDomainSearchViewModel @Inject constructor(
         object Error : UiState()
         object Loading : UiState()
         data class PopulatedDomains(val domains: List<ProposedDomain>) : UiState()
+    }
+
+    companion object {
+        const val DOMAIN_TRANSFER_PAGE_URL = "https://wordpress.com/setup/domain-transfer/intro"
     }
 }
