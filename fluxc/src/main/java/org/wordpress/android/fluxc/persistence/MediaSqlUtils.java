@@ -339,7 +339,7 @@ public class MediaSqlUtils {
                 .getAsModel();
     }
 
-    public static int insertOrUpdateMedia(MediaModel media) {
+    public static int insertOrUpdateMedia(@Nullable MediaModel media) {
         if (media == null) return 0;
 
         List<MediaModel> existingMedia;
@@ -383,7 +383,8 @@ public class MediaSqlUtils {
         }
     }
 
-    public static MediaModel insertMediaForResult(MediaModel media) {
+    @NonNull
+    public static MediaModel insertMediaForResult(@NonNull MediaModel media) {
         WellSql.insert(media).asSingleTransaction(true).execute();
         return media;
     }
