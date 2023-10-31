@@ -1140,7 +1140,7 @@ public class MediaStore extends Store {
         mMediaRestClient.uploadStockMedia(payload.site, payload.stockMediaList);
     }
 
-    private void handleStockMediaUploaded(UploadedStockMediaPayload payload) {
+    private void handleStockMediaUploaded(@NonNull UploadedStockMediaPayload payload) {
         OnStockMediaUploaded onStockMediaUploaded;
 
         if (payload.isError()) {
