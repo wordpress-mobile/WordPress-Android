@@ -7,12 +7,11 @@ import org.wordpress.android.R
 import com.google.android.material.R as MaterialR
 
 private const val VIEW_GROUP_ID = 1
-private const val PUBLISH_GROUP_ID = 2
-private const val TAKE_AN_ACTION_GROUP_ID = 3
-private const val SHARE_AND_PROMOTE_GROUP_ID = 4
-private const val NAVIGATE_GROUP_ID = 5
-private const val TRASH_GROUP_ID = 6
-private const val OTHER_GROUP_ID = 7
+private const val TAKE_AN_ACTION_GROUP_ID = 2
+private const val SHARE_AND_PROMOTE_GROUP_ID = 3
+private const val NAVIGATE_GROUP_ID = 4
+private const val TRASH_GROUP_ID = 5
+private const val OTHER_GROUP_ID = 6
 
 // PostListButton.java types - from attrs.xml
 enum class PostListButtonType constructor(
@@ -76,7 +75,7 @@ enum class PostListButtonType constructor(
         R.string.button_publish,
         R.drawable.gb_ic_globe,
         MaterialR.attr.colorOnSurface,
-        PUBLISH_GROUP_ID,
+        TAKE_AN_ACTION_GROUP_ID,
         2
     ),
     BUTTON_SYNC(
@@ -84,7 +83,7 @@ enum class PostListButtonType constructor(
         R.string.button_sync,
         R.drawable.gb_ic_update,
         MaterialR.attr.colorOnSurface,
-        PUBLISH_GROUP_ID,
+        TAKE_AN_ACTION_GROUP_ID,
         4
     ),
     BUTTON_MORE(
@@ -100,7 +99,7 @@ enum class PostListButtonType constructor(
         R.string.submit_for_review,
         R.drawable.gb_ic_post_author,
         MaterialR.attr.colorOnSurface,
-        PUBLISH_GROUP_ID,
+        TAKE_AN_ACTION_GROUP_ID,
         5
     ),
     BUTTON_RETRY(
@@ -108,7 +107,7 @@ enum class PostListButtonType constructor(
         R.string.button_retry,
         R.drawable.gb_ic_redo,
         R.attr.wpColorError,
-        PUBLISH_GROUP_ID,
+        TAKE_AN_ACTION_GROUP_ID,
         3
     ),
     BUTTON_MOVE_TO_DRAFT(
@@ -117,7 +116,7 @@ enum class PostListButtonType constructor(
         R.drawable.gb_ic_move_to,
         MaterialR.attr.colorOnSurface,
         TAKE_AN_ACTION_GROUP_ID,
-        1
+        6
     ),
     BUTTON_DELETE_PERMANENTLY(
         13,
@@ -132,7 +131,7 @@ enum class PostListButtonType constructor(
         R.string.pages_and_posts_cancel_auto_upload,
         R.drawable.gb_ic_undo,
         R.attr.wpColorWarningDark,
-        PUBLISH_GROUP_ID,
+        TAKE_AN_ACTION_GROUP_ID,
         1
     ),
     BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG(
@@ -149,7 +148,7 @@ enum class PostListButtonType constructor(
         R.drawable.gb_ic_copy,
         MaterialR.attr.colorOnSurface,
         TAKE_AN_ACTION_GROUP_ID,
-        2
+        7
     ),
     BUTTON_COPY_URL(
         17,
