@@ -584,6 +584,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             endProgress();
             return;
         }
+        startProgress();
         mLoginListener.signSecurityKey(event.challengeInfo, event.mUserId);
     }
 
