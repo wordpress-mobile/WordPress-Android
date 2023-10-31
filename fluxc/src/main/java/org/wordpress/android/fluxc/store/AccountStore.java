@@ -1396,7 +1396,8 @@ public class AccountStore extends Store {
                 },
                 error -> {
                     OnAuthenticationChanged event = new OnAuthenticationChanged();
-                    event.error = new AuthenticationError(AuthenticationErrorType.GENERIC_ERROR, "");
+                    event.error = new AuthenticationError(AuthenticationErrorType.GENERIC_ERROR,
+                            "Passkey login failed");
                     emitChange(event);
                 });
     }
