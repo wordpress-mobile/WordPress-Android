@@ -70,7 +70,7 @@ public class MediaSqlUtilsTest {
     // Inserts 10 items with known IDs then retrieves all media and validates IDs
     @Test
     public void testGetAllSiteMedia() {
-        long[] testIds = insertBasicTestItems(SMALL_TEST_POOL);
+        long[] testIds = insertBasicTestItems();
         List<MediaModel> storedMedia = MediaSqlUtils.getAllSiteMedia(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID));
         assertThat(storedMedia).hasSize(testIds.length);
         for (int i = 0; i < testIds.length; ++i) {
@@ -112,7 +112,7 @@ public class MediaSqlUtilsTest {
     // Inserts many media items then retrieves only some items and validates based on ID
     @Test
     public void testGetSpecifiedMedia() {
-        long[] testIds = insertBasicTestItems(SMALL_TEST_POOL);
+        long[] testIds = insertBasicTestItems();
         List<Long> mediaIds = new ArrayList<>();
         for (int i = 0; i < SMALL_TEST_POOL; i += 2) {
             mediaIds.add(testIds[i]);
@@ -152,7 +152,7 @@ public class MediaSqlUtilsTest {
     // Inserts many images then retrieves all images with a supplied exclusion filter
     @Test
     public void testGetSiteImagesExclusionFilter() {
-        long[] imageIds = insertImageTestItems(SMALL_TEST_POOL);
+        long[] imageIds = insertImageTestItems();
         List<Long> exclusion = new ArrayList<>();
         for (int i = 0; i < SMALL_TEST_POOL; i += 2) {
             exclusion.add(imageIds[i]);
@@ -353,7 +353,7 @@ public class MediaSqlUtilsTest {
         SiteModel site = getTestSiteWithLocalId(TEST_LOCAL_SITE_ID);
 
         // Insert media
-        insertBasicTestItems(SMALL_TEST_POOL);
+        insertBasicTestItems();
 
         // Insert one deleted media
         MediaModel image = getTestMedia(42);
@@ -369,7 +369,7 @@ public class MediaSqlUtilsTest {
         SiteModel site = getTestSiteWithLocalId(TEST_LOCAL_SITE_ID);
 
         // Insert media
-        insertBasicTestItems(SMALL_TEST_POOL);
+        insertBasicTestItems();
 
         // Insert one detached but deleted media
         MediaModel media = getTestMedia(42);
@@ -391,7 +391,7 @@ public class MediaSqlUtilsTest {
         SiteModel site = getTestSiteWithLocalId(TEST_LOCAL_SITE_ID);
 
         // Insert images
-        insertImageTestItems(SMALL_TEST_POOL);
+        insertImageTestItems();
 
         // Insert one deleted image
         MediaModel image = getTestMedia(42);
@@ -437,9 +437,9 @@ public class MediaSqlUtilsTest {
 
     // Utilities
 
-    private long[] insertBasicTestItems(int num) {
-        long[] testItemIds = new long[num];
-        for (int i = 0; i < num; ++i) {
+    private long[] insertBasicTestItems() {
+        long[] testItemIds = new long[MediaSqlUtilsTest.SMALL_TEST_POOL];
+        for (int i = 0; i < MediaSqlUtilsTest.SMALL_TEST_POOL; ++i) {
             testItemIds[i] = mRandom.nextLong();
             MediaModel media = getTestMedia(testItemIds[i]);
             media.setUploadState(MediaUploadState.UPLOADED);
@@ -448,9 +448,9 @@ public class MediaSqlUtilsTest {
         return testItemIds;
     }
 
-    private long[] insertImageTestItems(int num) {
-        long[] testItemIds = new long[num];
-        for (int i = 0; i < num; ++i) {
+    private long[] insertImageTestItems() {
+        long[] testItemIds = new long[MediaSqlUtilsTest.SMALL_TEST_POOL];
+        for (int i = 0; i < MediaSqlUtilsTest.SMALL_TEST_POOL; ++i) {
             testItemIds[i] = Math.abs(mRandom.nextInt());
             MediaModel image = getTestMedia(testItemIds[i]);
             image.setMimeType("image/jpg");
