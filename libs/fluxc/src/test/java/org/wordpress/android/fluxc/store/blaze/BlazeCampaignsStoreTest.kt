@@ -14,7 +14,6 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.AudienceList
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsError
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetchedPayload
@@ -46,18 +45,9 @@ const val PAGE = 1
 const val TOTAL_ITEMS = 1
 const val TOTAL_PAGES = 1
 
-private val AUDIENCE_LIST_RESPONSE = AudienceList(
-    devices = "",
-    countries = "",
-    languages = "",
-    topics = "",
-    oSS = ""
-)
 
 private val CONTENT_CONFIG_RESPONSE = ContentConfig(
     title = TITLE,
-    snippet = "",
-    clickUrl = "",
     imageUrl = IMAGE_URL
 )
 
@@ -72,7 +62,6 @@ private val CAMPAIGN_RESPONSE = Campaign(
     endDate = END_DATE,
     budgetCents = BUDGET_CENTS,
     uiStatus = UI_STATUS,
-    audienceList = AUDIENCE_LIST_RESPONSE,
     contentConfig = CONTENT_CONFIG_RESPONSE,
     campaignStats = CONTENT_CAMPAIGN_STATS
 )
