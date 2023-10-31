@@ -33,7 +33,7 @@ platform :android do
 
     UI.important(message)
 
-    UI.user_error!('Aborted by user request') if !options[:skip_confirm] && !UI.confirm('Do you want to continue?')
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     # Create the release branch
     UI.message 'Creating release branch...'
@@ -101,7 +101,7 @@ platform :android do
 
     UI.important("Completing code freeze for: #{new_version}")
 
-    UI.user_error!('Aborted by user request') if !options[:skip_confirm] && !UI.confirm('Do you want to continue?')
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     localize_libraries
     update_frozen_strings_for_translation
@@ -151,7 +151,7 @@ platform :android do
 
     UI.important(message)
 
-    UI.user_error!('Aborted by user request') if !options[:skip_confirm] && !UI.confirm('Do you want to continue?')
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     update_frozen_strings_for_translation
     download_translations
@@ -216,7 +216,7 @@ platform :android do
 
     UI.important(message)
 
-    UI.user_error!('Aborted by user request') if !options[:skip_confirm] && !UI.confirm('Do you want to continue?')
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     # Check tags
     UI.user_error!("The version `#{new_version}` tag already exists!") if git_tag_exists(tag: new_version)
@@ -257,7 +257,7 @@ platform :android do
 
     UI.important("Triggering hotfix build for version: #{current_release_version}")
 
-    UI.user_error!('Aborted by user request') if !options[:skip_confirm] && !UI.confirm('Do you want to continue?')
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     trigger_release_build(branch_to_build: "release/#{current_release_version}")
   end
@@ -283,7 +283,7 @@ platform :android do
 
     UI.important("Finalizing release: #{current_release_version}")
 
-    UI.user_error!('Aborted by user request') if !options[:skip_confirm] && !UI.confirm('Do you want to continue?')
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     configure_apply(force: is_ci)
 

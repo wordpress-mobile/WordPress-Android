@@ -26,7 +26,7 @@ platform :android do
 
       UI.important("Building version #{current_release_version} (#{current_build_code}) for upload to Release Channel")
 
-      UI.user_error!('Aborted by user request') if !options[:skip_confirm] && !UI.confirm('Do you want to continue?')
+      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
       android_build_preflight
     end
@@ -63,7 +63,7 @@ platform :android do
 
       UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
 
-      UI.user_error!('Aborted by user request') if !options[:skip_confirm] && !UI.confirm('Do you want to continue?')
+      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
       android_build_preflight
     end
@@ -94,7 +94,7 @@ platform :android do
 
       UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
 
-      UI.user_error!('Aborted by user request') if !options[:skip_confirm] && !UI.confirm('Do you want to continue?')
+      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
       android_build_preflight
     end
