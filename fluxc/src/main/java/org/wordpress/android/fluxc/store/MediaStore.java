@@ -797,19 +797,25 @@ public class MediaStore extends Store {
         return MediaSqlUtils.searchSiteDocuments(siteModel, searchTerm);
     }
 
-    public MediaModel getMediaForPostWithPath(PostImmutableModel postModel, String filePath) {
+    @Nullable
+    public MediaModel getMediaForPostWithPath(
+            @NonNull PostImmutableModel postModel,
+            @NonNull String filePath) {
         List<MediaModel> media = MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.FILE_PATH, filePath);
         return media.size() > 0 ? media.get(0) : null;
     }
 
-    public List<MediaModel> getMediaForPost(PostImmutableModel postModel) {
+    @NonNull
+    public List<MediaModel> getMediaForPost(@NonNull PostImmutableModel postModel) {
         return MediaSqlUtils.matchPostMedia(postModel.getId());
     }
 
+    @NonNull
     @SuppressWarnings("unused")
-    public List<MediaModel> getMediaForPostWithState(PostImmutableModel postModel, MediaUploadState expectedState) {
-        return MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.UPLOAD_STATE,
-                expectedState);
+    public List<MediaModel> getMediaForPostWithState(
+            @NonNull PostImmutableModel postModel,
+            @NonNull MediaUploadState expectedState) {
+        return MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.UPLOAD_STATE, expectedState);
     }
 
     @Nullable
