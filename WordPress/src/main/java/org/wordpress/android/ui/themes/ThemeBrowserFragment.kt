@@ -98,6 +98,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             requireActivity().finish()
         }
+        @Suppress("DEPRECATION")
         setHasOptionsMenu(true)
         savedInstanceState?.let {
             lastSearch = it.getString(KEY_LAST_SEARCH)
@@ -173,6 +174,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, site)
             return true
         }
+        @Suppress("DEPRECATION")
         return super.onOptionsItemSelected(item)
     }
 
