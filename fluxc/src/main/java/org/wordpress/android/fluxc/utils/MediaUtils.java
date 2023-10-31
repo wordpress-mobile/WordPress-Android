@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.utils;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.exifinterface.media.ExifInterface;
 
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -18,39 +19,39 @@ public class MediaUtils {
     private static final MimeTypes MIME_TYPES = new MimeTypes();
     public static final double MEMORY_LIMIT_FILESIZE_MULTIPLIER = 0.75D;
 
-    public static boolean isImageMimeType(String type) {
+    public static boolean isImageMimeType(@Nullable String type) {
         return MIME_TYPES.isImageType(type);
     }
 
-    public static boolean isVideoMimeType(String type) {
+    public static boolean isVideoMimeType(@Nullable String type) {
         return MIME_TYPES.isVideoType(type);
     }
 
-    public static boolean isAudioMimeType(String type) {
+    public static boolean isAudioMimeType(@Nullable String type) {
         return MIME_TYPES.isAudioType(type);
     }
 
-    public static boolean isApplicationMimeType(String type) {
+    public static boolean isApplicationMimeType(@Nullable String type) {
         return MIME_TYPES.isApplicationType(type);
     }
 
-    public static boolean isSupportedImageMimeType(String type) {
+    public static boolean isSupportedImageMimeType(@Nullable String type) {
         return MIME_TYPES.isSupportedImageType(type);
     }
 
-    public static boolean isSupportedVideoMimeType(String type) {
+    public static boolean isSupportedVideoMimeType(@Nullable String type) {
         return MIME_TYPES.isSupportedVideoType(type);
     }
 
-    public static boolean isSupportedAudioMimeType(String type) {
+    public static boolean isSupportedAudioMimeType(@Nullable String type) {
         return MIME_TYPES.isSupportedAudioType(type);
     }
 
-    public static boolean isSupportedApplicationMimeType(String type) {
+    public static boolean isSupportedApplicationMimeType(@Nullable String type) {
         return MIME_TYPES.isSupportedApplicationType(type);
     }
 
-    public static boolean isSupportedMimeType(String type) {
+    public static boolean isSupportedMimeType(@Nullable String type) {
         return isSupportedImageMimeType(type)
                 || isSupportedVideoMimeType(type)
                 || isSupportedAudioMimeType(type)
