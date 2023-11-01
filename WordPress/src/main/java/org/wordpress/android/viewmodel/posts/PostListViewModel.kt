@@ -77,7 +77,7 @@ class PostListViewModel @Inject constructor(
         SiteUtils.isAccessedViaWPComRest(connector.site) && connector.site.hasCapabilityViewStats
     }
     private val isFilteringByAuthorSupported: Boolean by lazy {
-        connector.site.isWPCom &&
+        connector.site.isUsingWpComRestApi &&
                 connector.site.hasCapabilityEditOthersPosts &&
                 !connector.site.isSingleUserSite
     }

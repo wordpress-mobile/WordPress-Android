@@ -216,7 +216,7 @@ class PostListMainViewModel @Inject constructor(
      * This behavior is consistent with Calypso as of 11/4/2019.
      */
     private val isFilteringByAuthorSupported: Boolean by lazy {
-        site.isWPCom && site.hasCapabilityEditOthersPosts && !site.isSingleUserSite
+        site.isUsingWpComRestApi && site.hasCapabilityEditOthersPosts && !site.isSingleUserSite
     }
 
     init {
