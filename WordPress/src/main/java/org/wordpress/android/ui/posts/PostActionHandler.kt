@@ -79,6 +79,7 @@ class PostActionHandler(
         invalidateList.invoke()
     })
 
+    @Suppress("LongMethod")
     fun handlePostButton(buttonType: PostListButtonType, post: PostModel, hasAutoSave: Boolean) {
         when (buttonType) {
             BUTTON_EDIT -> editPostButtonAction(site, post)
@@ -134,7 +135,9 @@ class PostActionHandler(
             BUTTON_PROMOTE_WITH_BLAZE -> {
                 triggerPostListAction.invoke(PostListAction.ShowPromoteWithBlaze(post))
             }
-            BUTTON_COMMENTS -> {} // todo: implement
+            BUTTON_COMMENTS -> {
+                triggerPostListAction.invoke(PostListAction.ShowComments(site, post))
+            }
         }
     }
 

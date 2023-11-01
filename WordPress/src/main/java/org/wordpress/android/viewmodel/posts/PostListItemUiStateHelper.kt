@@ -47,6 +47,7 @@ import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiStat
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_COMMENTS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY_URL
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
@@ -113,7 +114,6 @@ class PostListItemUiStateHelper @Inject constructor(
                 post
             ),
         )
-        // val defaultActions = createDefaultViewActions(buttonTypes, onButtonClicked)
         val moreActions = createMoreActions(buttonTypes, onButtonClicked)
 
         val remotePostId = RemotePostId(RemoteId(post.remotePostId))
@@ -459,6 +459,8 @@ class PostListItemUiStateHelper @Inject constructor(
 
         buttonTypes.addDeletingOrTrashAction(isLocalDraft, postStatus)
 
+        buttonTypes.addCommentActionIfNeeded(postStatus)
+
         return sortPostListButtons(buttonTypes)
     }
 
@@ -489,6 +491,12 @@ class PostListItemUiStateHelper @Inject constructor(
 
         if (canMovePostToDraft) {
             add(BUTTON_MOVE_TO_DRAFT)
+        }
+    }
+
+    private fun MutableList<PostListButtonType>.addCommentActionIfNeeded(postStatus: PostStatus) {
+        if (postStatus == PUBLISHED) {
+            add(BUTTON_COMMENTS)
         }
     }
 

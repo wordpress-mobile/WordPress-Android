@@ -13,6 +13,8 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
@@ -53,8 +55,8 @@ sealed class PostListAction {
     class ViewStats(val site: SiteModel, val post: PostModel) : PostListAction()
     class ViewPost(val site: SiteModel, val post: PostModel) : PostListAction()
     class DismissPendingNotification(val pushId: Int) : PostListAction()
-
     class ShowPromoteWithBlaze(val post: PostModel) : PostListAction()
+    class ShowComments(val site: SiteModel, val post: PostModel) : PostListAction()
 }
 
 @Suppress("TooGenericExceptionCaught", "LongMethod", "ComplexMethod", "LongParameterList")
@@ -130,6 +132,17 @@ fun handlePostListAction(
                 AppLog.e(AppLog.T.POSTS, e)
                 action.showSnackbar.invoke(action.messageError)
             }
+        }
+        is PostListAction.ShowComments -> {
+            ReaderActivityLauncher.showReaderPostDetail(
+                activity,
+                false,
+                action.site.siteId,
+                action.post.remotePostId,
+                ReaderPostPagerActivity.DirectOperation.COMMENT_JUMP,
+                0,
+                false,
+                null)
         }
     }
 }
