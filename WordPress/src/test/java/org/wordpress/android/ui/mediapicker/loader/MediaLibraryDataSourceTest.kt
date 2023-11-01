@@ -300,7 +300,7 @@ class MediaLibraryDataSourceTest : BaseUnitTest() {
             assertThat(mediaItem.url).isEqualTo(mediaModel.url)
             assertThat(mediaItem.name).isEqualTo(mediaModel.title)
             assertThat(mediaItem.mimeType).isEqualTo(mediaModel.mimeType)
-            assertThat(mediaItem.dataModified).isEqualTo(mediaModel.uploadDate.toLong())
+            assertThat(mediaItem.dataModified).isEqualTo(mediaModel.uploadDate?.toLong())
         }
     }
 

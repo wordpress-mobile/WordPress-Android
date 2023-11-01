@@ -132,7 +132,7 @@ class MediaLibraryDataSource(
                 mediaModel.title,
                 mediaType,
                 mediaModel.mimeType,
-                dateTimeUtilsWrapper.dateFromIso8601(mediaModel.uploadDate).time
+                mediaModel.uploadDate?.let { dateTimeUtilsWrapper.dateFromIso8601(it).time } ?: 0L
             )
         }
     }
