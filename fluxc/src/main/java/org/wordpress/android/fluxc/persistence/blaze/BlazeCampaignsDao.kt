@@ -102,6 +102,7 @@ abstract class BlazeCampaignsDao {
         val budgetCents: Long,
         val impressions: Long,
         val clicks: Long,
+        val targetUrn: String
     ) {
         fun toDomainModel() = BlazeCampaignModel(
             campaignId = campaignId,
@@ -112,7 +113,8 @@ abstract class BlazeCampaignsDao {
             uiStatus = uiStatus,
             budgetCents = budgetCents,
             impressions = impressions,
-            clicks = clicks
+            clicks = clicks,
+            targetUrn = targetUrn
         )
 
         companion object {
@@ -129,7 +131,8 @@ abstract class BlazeCampaignsDao {
                 uiStatus = campaign.uiStatus,
                 budgetCents = campaign.budgetCents,
                 impressions = campaign.impressions,
-                clicks = campaign.clicks
+                clicks = campaign.clicks,
+                targetUrn = campaign.targetUrn
             )
         }
     }
