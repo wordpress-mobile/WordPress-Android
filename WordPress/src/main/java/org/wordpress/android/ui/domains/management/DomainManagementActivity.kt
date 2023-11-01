@@ -24,7 +24,8 @@ class DomainManagementActivity : AppCompatActivity() {
                     uiState = uiState,
                     onDomainTapped = viewModel::onDomainTapped,
                     onAddDomainTapped = viewModel::onAddDomainClicked,
-                    onFindDomainTapped = viewModel::onAddDomainClicked
+                    onFindDomainTapped = viewModel::onAddDomainClicked,
+                    onBackTapped = viewModel::onBackTapped
                 )
             }
         }
@@ -38,6 +39,7 @@ class DomainManagementActivity : AppCompatActivity() {
                 startActivity(DomainManagementDetailsActivity.createIntent(this, actionEvent.detailUrl))
             }
             is DomainManagementViewModel.ActionEvent.AddDomainTapped -> ActivityLauncher.openNewDomainSearch(this)
+            is DomainManagementViewModel.ActionEvent.NavigateBackTapped -> onBackPressedDispatcher.onBackPressed()
         }
     }
 }
