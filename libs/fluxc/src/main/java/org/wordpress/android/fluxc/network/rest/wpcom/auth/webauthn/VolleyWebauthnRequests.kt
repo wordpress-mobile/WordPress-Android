@@ -34,6 +34,26 @@ private enum class WebauthnRequestParameters(val value: String) {
     CREATE_2FA_COOKIES_ONLY("create_2fa_cookies_only")
 }
 
+class WebauthnChallengeRequestException(message: String): Exception(message)
+
+private fun NetworkResponse?.extractResult(parameterName: String): Response<String> {
+    if (this == null) {
+        val error = WebauthnChallengeRequestException("Webauthn challenge response is null")
+        return Response.error(ParseError(error))
+    }
+
+    return try {
+        val headers = HttpHeaderParser.parseCacheHeaders(this)
+        val charsetName = HttpHeaderParser.parseCharset(this.headers)
+        return String(this.data, charset(charsetName))
+            .let { JSONObject(it).getJSONObject(parameterName) }
+            .let { Response.success(it.toString(), headers) }
+    } catch (exception: Exception) {
+        val error = WebauthnChallengeRequestException("Webauthn challenge response is invalid")
+        Response.error(ParseError(error))
+    }
+}
+
 class WebauthnChallengeRequest(
     userId: String,
     twoStepNonce: String,
@@ -50,25 +70,43 @@ class WebauthnChallengeRequest(
         TWO_STEP_NONCE.value to twoStepNonce
     )
 
-    override fun parseNetworkResponse(response: NetworkResponse?): Response<String> {
-        if (response == null) {
-            val error = WebauthnChallengeRequestException("Webauthn challenge response is null")
-            return Response.error(ParseError(error))
-        }
+    override fun getParams() = parameters
+    override fun deliverResponse(response: String) = listener.onResponse(response)
+    override fun parseNetworkResponse(response: NetworkResponse?) =
+        response.extractResult(responseParameterName)
 
-        return try {
-            val headers = HttpHeaderParser.parseCacheHeaders(response)
-            val charsetName = HttpHeaderParser.parseCharset(response.headers)
-            String(response.data, charset(charsetName))
-                .let { JSONObject(it).getJSONObject("data") }
-                .let { Response.success(it.toString(), headers) }
-        } catch (exception: Exception) {
-            val error = WebauthnChallengeRequestException("Webauthn challenge response is invalid")
-            Response.error(ParseError(error))
-        }
+    companion object {
+        private const val responseParameterName = "data"
     }
+}
+
+class WebauthnTokenRequest(
+    userId: String,
+    twoStepNonce: String,
+    clientId: String,
+    clientSecret: String,
+    clientData: String,
+    errorListener: ErrorListener,
+    private val listener: Response.Listener<String>
+) : Request<String>(Method.POST, webauthnAuthEndpointUrl, errorListener) {
+    private val parameters = mapOf(
+        CLIENT_ID.value to clientId,
+        CLIENT_SECRET.value to clientSecret,
+        USER_ID.value to userId,
+        AUTH_TYPE.value to WEBAUTHN_AUTH_TYPE,
+        TWO_STEP_NONCE.value to twoStepNonce,
+        CLIENT_DATA.value to clientData,
+        GET_BEARER_TOKEN.value to "true",
+        CREATE_2FA_COOKIES_ONLY.value to "true"
+    )
+
+    override fun parseNetworkResponse(response: NetworkResponse?) =
+        response.extractResult(responseParameterName)
 
     override fun getParams() = parameters
     override fun deliverResponse(response: String) = listener.onResponse(response)
-    class WebauthnChallengeRequestException(message: String): Exception(message)
+
+    companion object {
+        private const val responseParameterName = "bearer_token"
+    }
 }
