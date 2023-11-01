@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import android.content.Intent
-import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
@@ -36,7 +35,7 @@ import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COMMENTS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY
-import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY_URL
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SHARE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -120,7 +119,7 @@ class PostActionHandler(
                 }
             }
             BUTTON_COPY -> copyPost(site, post, true)
-            BUTTON_COPY_URL -> triggerPostListAction.invoke(copyUrlAction(post))
+            BUTTON_SHARE -> triggerPostListAction.invoke(share(post))
             BUTTON_DELETE, BUTTON_DELETE_PERMANENTLY -> {
                 postListDialogHelper.showDeletePostConfirmationDialog(post)
             }
@@ -141,20 +140,8 @@ class PostActionHandler(
         }
     }
 
-    private fun copyUrlAction(post: PostModel) = PostListAction.CopyUrl(
-        site = site,
-        post = post,
-        showSnackbar = showSnackbar,
-        messageSuccess = SnackbarMessageHolder(
-            UiStringRes(R.string.post_link_copied_to_clipboard),
-            duration = Snackbar.LENGTH_SHORT,
-            isImportant = false
-        ),
-        messageError = SnackbarMessageHolder(
-            UiStringRes(R.string.error_copy_to_clipboard),
-            duration = Snackbar.LENGTH_SHORT,
-            isImportant = false
-        )
+    private fun share(post: PostModel) = PostListAction.SharePost(
+        post = post
     )
 
     private fun cancelPendingAutoUpload(post: PostModel) {
