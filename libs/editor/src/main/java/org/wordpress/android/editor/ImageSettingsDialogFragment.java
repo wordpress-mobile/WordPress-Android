@@ -64,13 +64,16 @@ import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_MAX_WIDT
 
 /**
  * A full-screen DialogFragment with image settings.
- *
+ * <p>
  * Modifies the action bar - host activity must call {@link ImageSettingsDialogFragment#dismissFragment()}
  * when the fragment is dismissed to restore it.
+ * <p>
+ * Use {@link ImageSettingsDialogFragment#ARG_REQUEST_CODE_KEY} to pass request code in arguments with inorder
+ * to receive activity results from this fragment.
  */
 public class ImageSettingsDialogFragment extends DialogFragment {
-    public static final int IMAGE_SETTINGS_DIALOG_REQUEST_CODE = 5;
     public static final String IMAGE_SETTINGS_DIALOG_TAG = "image-settings";
+    public static final String ARG_REQUEST_CODE_KEY = "image-settings-request-code-key";
 
     private JSONObject mImageMeta;
     private int mMaxImageWidth;
@@ -145,11 +148,17 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                     intent.putExtra(ATTR_ID_IMAGE_REMOTE, Integer.parseInt(imageRemoteId));
                 }
 
-                getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), intent);
+                if (getArguments() != null) {
+                    requireParentFragment().onActivityResult(
+                        getArguments().getInt(ARG_REQUEST_CODE_KEY),
+                        getArguments().getInt(ARG_REQUEST_CODE_KEY),
+                        intent
+                    );
+                }
 
                 restorePreviousActionBar();
-                getFragmentManager().popBackStack();
-                ToastUtils.showToast(getActivity(), R.string.image_settings_save_toast);
+                getParentFragmentManager().popBackStack();
+                ToastUtils.showToast(requireActivity(), R.string.image_settings_save_toast);
             }
         });
     }
@@ -295,9 +304,16 @@ public class ImageSettingsDialogFragment extends DialogFragment {
             AppLog.d(AppLog.T.EDITOR, "Unable to update JSON array");
         }
 
-        getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), null);
+        if (getArguments() != null) {
+            requireParentFragment().onActivityResult(
+                getArguments().getInt(ARG_REQUEST_CODE_KEY),
+                getArguments().getInt(ARG_REQUEST_CODE_KEY),
+                null
+            );
+        }
+
         restorePreviousActionBar();
-        getFragmentManager().popBackStack();
+        getParentFragmentManager().popBackStack();
     }
 
     public void setImageLoader(ImageLoader imageLoader) {
@@ -322,13 +338,19 @@ public class ImageSettingsDialogFragment extends DialogFragment {
      * Displays a dialog asking the user to confirm that they want to exit, discarding unsaved changes.
      */
     private void showDiscardChangesDialog() {
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(requireActivity());
         builder.setTitle(getString(R.string.image_settings_dismiss_dialog_title));
         builder.setPositiveButton(getString(R.string.discard), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), null);
+                if (getArguments() != null) {
+                    requireParentFragment().onActivityResult(
+                        getArguments().getInt(ARG_REQUEST_CODE_KEY),
+                        getArguments().getInt(ARG_REQUEST_CODE_KEY),
+                        null
+                    );
+                }
                 restorePreviousActionBar();
-                getFragmentManager().popBackStack();
+                getParentFragmentManager().popBackStack();
             }
         });
 
