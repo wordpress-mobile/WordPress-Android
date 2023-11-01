@@ -50,16 +50,14 @@ public class AccountStoreTest {
         testAccount.setAboutMe("testAboutMe");
         AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount);
         AccountStore testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
-                getMockSelfHostedEndpointFinder(), getMockAuthenticator(),
-                getMockAccessToken(true));
+                getMockSelfHostedEndpointFinder(), getMockAuthenticator(), getMockAccessToken(true));
         Assert.assertEquals(testAccount, testStore.getAccount());
     }
 
     @Test
     public void testHasAccessToken() {
         AccountStore testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
-                getMockSelfHostedEndpointFinder(), getMockAuthenticator(),
-                getMockAccessToken(true));
+                getMockSelfHostedEndpointFinder(), getMockAuthenticator(), getMockAccessToken(true));
         Assert.assertTrue(testStore.hasAccessToken());
         testStore = new AccountStore(new Dispatcher(), getMockRestClient(), getMockSelfHostedEndpointFinder(),
                 getMockAuthenticator(), getMockAccessToken(false));
@@ -72,8 +70,7 @@ public class AccountStoreTest {
         testAccount.setVisibleSiteCount(0);
         AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount);
         AccountStore testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
-                getMockSelfHostedEndpointFinder(), getMockAuthenticator(),
-                getMockAccessToken(false));
+                getMockSelfHostedEndpointFinder(), getMockAuthenticator(), getMockAccessToken(false));
         Assert.assertFalse(testStore.hasAccessToken());
         testAccount.setVisibleSiteCount(1);
         AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount);
@@ -90,8 +87,7 @@ public class AccountStoreTest {
         testAccount.setUserId(24);
         AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount);
         AccountStore testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
-                getMockSelfHostedEndpointFinder(), getMockAuthenticator(),
-                testToken);
+                getMockSelfHostedEndpointFinder(), getMockAuthenticator(), testToken);
         Assert.assertTrue(testStore.hasAccessToken());
         // Signout is private (and it should remain private)
         Method privateMethod = AccountStore.class.getDeclaredMethod("signOut");
