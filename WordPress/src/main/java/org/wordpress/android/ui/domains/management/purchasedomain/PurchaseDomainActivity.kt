@@ -23,10 +23,10 @@ class PurchaseDomainActivity : AppCompatActivity() {
     lateinit var viewModelFactory: PurchaseDomainViewModel.Factory
 
     private val viewModel: PurchaseDomainViewModel by viewModels {
-        PurchaseDomainViewModel.provideFactory(viewModelFactory, domainIdArg)
+        PurchaseDomainViewModel.provideFactory(viewModelFactory, domainArg)
     }
 
-    private val domainIdArg: Int get() = intent.getIntExtra(DOMAIN_CANDIDATE_ID_KEY, -1)
+    private val domainArg: String get() = intent.getStringExtra(PICKED_DOMAIN_KEY) ?: error("Domain cannot be null.")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +55,6 @@ class PurchaseDomainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val DOMAIN_CANDIDATE_ID_KEY: String = "domain_candidate_id_key"
+        const val PICKED_DOMAIN_KEY: String = "picked_domain_key"
     }
 }

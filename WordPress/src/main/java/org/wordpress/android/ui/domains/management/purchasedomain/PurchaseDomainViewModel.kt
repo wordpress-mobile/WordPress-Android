@@ -17,7 +17,7 @@ import javax.inject.Named
 class PurchaseDomainViewModel @AssistedInject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    @Assisted private val domainId: Int
+    @Assisted private val domain: String
 ) : ScopedViewModel(mainDispatcher) {
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: Flow<ActionEvent> = _actionEvents
@@ -29,14 +29,14 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     fun onNewDomainSelected() {
         analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED)
         launch {
-            _actionEvents.emit(ActionEvent.GoToDomainPurchasing(domainId = domainId))
+            _actionEvents.emit(ActionEvent.GoToDomainPurchasing(domain = domain))
         }
     }
 
     fun onExistingDomainSelected() {
         analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED)
         launch {
-            _actionEvents.emit(ActionEvent.GoToExistingDomain(domainId = domainId))
+            _actionEvents.emit(ActionEvent.GoToExistingDomain(domain = domain))
         }
     }
 
@@ -48,19 +48,19 @@ class PurchaseDomainViewModel @AssistedInject constructor(
 
     sealed class ActionEvent {
         object GoBack : ActionEvent()
-        data class GoToDomainPurchasing(val domainId: Int) : ActionEvent()
-        data class GoToExistingDomain(val domainId: Int) : ActionEvent()
+        data class GoToDomainPurchasing(val domain: String) : ActionEvent()
+        data class GoToExistingDomain(val domain: String) : ActionEvent()
     }
 
     @AssistedFactory
     interface Factory {
-        fun create(domainId: Int): PurchaseDomainViewModel
+        fun create(domain: String): PurchaseDomainViewModel
     }
 
     companion object {
-        fun provideFactory(assistedFactory: Factory, domainId: Int) = object : ViewModelProvider.Factory {
+        fun provideFactory(assistedFactory: Factory, domain: String) = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T = assistedFactory.create(domainId) as T
+            override fun <T : ViewModel> create(modelClass: Class<T>): T = assistedFactory.create(domain) as T
         }
     }
 }

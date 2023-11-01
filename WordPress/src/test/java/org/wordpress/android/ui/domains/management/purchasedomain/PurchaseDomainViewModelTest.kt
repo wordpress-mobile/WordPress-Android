@@ -24,7 +24,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 class PurchaseDomainViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var analyticsTracker: AnalyticsTrackerWrapper
-    private val pickedDomainId = 8
+    private val domain = "domain.com"
 
     private lateinit var viewModel: PurchaseDomainViewModel
 
@@ -34,7 +34,7 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
         viewModel = PurchaseDomainViewModel(
             mainDispatcher = testDispatcher(),
             analyticsTracker = analyticsTracker,
-            domainId = pickedDomainId
+            domain = domain
         )
     }
 
@@ -61,7 +61,7 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
         viewModel.onNewDomainSelected()
         advanceUntilIdle()
 
-        assertThat(events.last()).isEqualTo(GoToDomainPurchasing(pickedDomainId))
+        assertThat(events.last()).isEqualTo(GoToDomainPurchasing(domain))
     }
 
     @Test
@@ -69,7 +69,7 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
         viewModel.onExistingDomainSelected()
         advanceUntilIdle()
 
-        assertThat(events.last()).isEqualTo(GoToExistingDomain(pickedDomainId))
+        assertThat(events.last()).isEqualTo(GoToExistingDomain(domain))
     }
 
     @Test
