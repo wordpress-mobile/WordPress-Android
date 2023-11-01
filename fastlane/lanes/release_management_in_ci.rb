@@ -58,7 +58,7 @@ platform :android do
     buildkite_trigger_build(
       buildkite_organization: BUILDKITE_ORGANIZATION,
       buildkite_pipeline: BUILDKITE_PIPELINE,
-      branch: editorial_branch.to_s,
+      branch: editorial_branch,
       pipeline_file: 'update-release-notes.yml',
       message: 'Update Release Notes',
       environment: { RELEASE_VERSION: release_version, EDITORIAL_BRANCH: editorial_branch }
