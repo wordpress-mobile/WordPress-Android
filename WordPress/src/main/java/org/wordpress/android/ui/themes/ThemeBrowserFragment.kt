@@ -328,15 +328,13 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     private fun fetchThemes(): List<ThemeModel> {
-        site?.let {
-            return if (it.isWPCom) {
+        return site?.let {
+            if (it.isWPCom) {
                 sortedWpComThemes
             } else {
                 sortedJetpackThemes
             }
-        }
-
-        return ArrayList()
+        } ?: ArrayList()
     }
 
     fun refreshView() {
