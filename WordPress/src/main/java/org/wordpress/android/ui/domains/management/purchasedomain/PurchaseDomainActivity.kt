@@ -13,12 +13,20 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToDomainPurchasing
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingDomain
 import org.wordpress.android.ui.domains.management.purchasedomain.composable.PurchaseDomainScreen
+import javax.inject.Inject
 
 private typealias NotImplemented = Unit
 
 @AndroidEntryPoint
 class PurchaseDomainActivity : AppCompatActivity() {
-    private val viewModel: PurchaseDomainViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: PurchaseDomainViewModel.Factory
+
+    private val viewModel: PurchaseDomainViewModel by viewModels {
+        PurchaseDomainViewModel.provideFactory(viewModelFactory, domainIdArg)
+    }
+
+    private val domainIdArg: Int get() = intent.getIntExtra(DOMAIN_CANDIDATE_ID_KEY, -1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +48,13 @@ class PurchaseDomainActivity : AppCompatActivity() {
 
     private fun handleActionEvents(actionEvent: PurchaseDomainViewModel.ActionEvent) {
         when (actionEvent) {
+            is GoToDomainPurchasing -> NotImplemented
+            is GoToExistingDomain -> NotImplemented
             GoBack -> onBackPressedDispatcher.onBackPressed()
-            GoToDomainPurchasing -> NotImplemented
-            GoToExistingDomain -> NotImplemented
         }
+    }
+
+    companion object {
+        const val DOMAIN_CANDIDATE_ID_KEY: String = "domain_candidate_id_key"
     }
 }

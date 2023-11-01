@@ -11,6 +11,8 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 import org.wordpress.android.ui.blaze.blazepromote.ARG_BLAZE_FLOW_SOURCE
 import org.wordpress.android.ui.blaze.blazepromote.ARG_BLAZE_SHOULD_SHOW_OVERLAY
 import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainActivity
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainActivity.Companion.DOMAIN_CANDIDATE_ID_KEY
 import org.wordpress.android.ui.mysite.menu.KEY_QUICK_START_EVENT
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
@@ -78,5 +80,13 @@ class ActivityNavigator @Inject constructor() {
             return
         }
         context.startActivity(Intent(context, MenuActivity::class.java))
+    }
+
+    fun openPurchaseDomain(context: Context, domainId: Int) {
+        context.startActivity(
+            Intent(context, PurchaseDomainActivity::class.java).apply {
+                putExtra(DOMAIN_CANDIDATE_ID_KEY, domainId)
+            }
+        )
     }
 }
