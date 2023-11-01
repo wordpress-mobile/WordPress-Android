@@ -33,12 +33,12 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
-import org.wordpress.android.fluxc.store.AccountStore.OnWebauthnChallengeReceived;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialAuthPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialSmsPayload;
-import org.wordpress.android.fluxc.store.AccountStore.SecurityKeyCheckFinished;
-import org.wordpress.android.fluxc.store.AccountStore.StartSecurityKeyChallengePayload;
+import org.wordpress.android.fluxc.store.AccountStore.StartWebauthnChallengePayload;
+import org.wordpress.android.fluxc.store.AccountStore.WebauthnChallengeReceived;
+import org.wordpress.android.fluxc.store.AccountStore.WebauthnPasskeyAuthenticated;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -350,19 +350,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         }
     }
 
-    private void doAuthWithSecurityKeyAction() {
-        if (!NetworkUtils.checkConnection(getActivity())) {
-            return;
-        }
-
-        mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
-
-        StartSecurityKeyChallengePayload payload = new StartSecurityKeyChallengePayload(
-                mUserId, mWebauthnNonce);
-        mDispatcher.dispatch(AuthenticationActionBuilder
-                .newStartSecurityKeyChallengeAction(payload));
-    }
-
     private String getAuthCodeFromClipboard() {
         ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
 
@@ -577,25 +564,36 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mSentSmsCode = true;
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onWebauthnChallengeReceived(OnWebauthnChallengeReceived event) {
-        if (event.isError()) {
-            // TODO: Handle error
-            Toast.makeText(requireContext(), "Login failed", Toast.LENGTH_SHORT).show();
-            endProgress();
+    private void doAuthWithSecurityKeyAction() {
+        if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
+
         startProgress(false);
+        mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
+
+        StartWebauthnChallengePayload payload = new StartWebauthnChallengePayload(
+                mUserId, mWebauthnNonce);
+        mDispatcher.dispatch(AuthenticationActionBuilder
+                .newStartSecurityKeyChallengeAction(payload));
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWebauthnChallengeReceived(WebauthnChallengeReceived event) {
+        if (event.isError()) {
+            endProgress();
+            handleAuthError(event.error.type, event.error.message);
+            return;
+        }
         mLoginListener.signSecurityKey(event.challengeInfo, event.mUserId);
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSecurityKeyCheckFinished(SecurityKeyCheckFinished event) {
+    public void onSecurityKeyCheckFinished(WebauthnPasskeyAuthenticated event) {
         endProgress();
         if (event.isError()) {
-            Toast.makeText(requireContext(), "Login failed", Toast.LENGTH_SHORT).show();
             handleAuthError(event.error.type, event.error.message);
             return;
         }
