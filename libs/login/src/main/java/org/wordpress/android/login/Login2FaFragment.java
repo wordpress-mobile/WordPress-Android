@@ -77,6 +77,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
     private static final String ARG_WEBAUTHN_NONCE = "WEBAUTHN_NONCE";
+    private static final String ARG_DISPLAY_SECURITY_KEY_BUTTON = "ARG_DISPLAY_SECURITY_KEY_BUTTON";
     private static final int LENGTH_NONCE_AUTHENTICATOR = 6;
     private static final int LENGTH_NONCE_BACKUP = 8;
     private static final int LENGTH_NONCE_SMS = 7;
@@ -114,6 +115,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private boolean mIsSocialLogin;
     private boolean mIsSocialLoginConnect;
     private boolean mSentSmsCode;
+    private boolean mIsSecurityKeyEnabled;
 
     public static Login2FaFragment newInstance(String emailAddress, String password) {
         Login2FaFragment fragment = new Login2FaFragment();
@@ -132,6 +134,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         args.putString(ARG_PASSWORD, password);
         args.putString(ARG_2FA_USER_ID, userId);
         args.putString(ARG_WEBAUTHN_NONCE, webauthnNonce);
+        args.putBoolean(ARG_DISPLAY_SECURITY_KEY_BUTTON, true);
         fragment.setArguments(args);
         return fragment;
     }
@@ -207,10 +210,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         });
 
         mSecurityKeyButton = rootView.findViewById(R.id.login_security_key_button);
-        mSecurityKeyButton.setOnClickListener(view -> {
-            mAnalyticsListener.trackContinueWithSecurityKeyClicked();
-            doAuthWithSecurityKeyAction();
-        });
+        mSecurityKeyButton.setVisibility(mIsSecurityKeyEnabled ? View.VISIBLE : View.GONE);
+        mSecurityKeyButton.setOnClickListener(view -> doAuthWithSecurityKeyAction());
     }
 
     @Override
@@ -260,6 +261,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mIsSocialLoginConnect = getArguments().getBoolean(ARG_2FA_IS_SOCIAL_CONNECT);
         mService = getArguments().getString(ARG_2FA_SOCIAL_SERVICE);
         mWebauthnNonce = getArguments().getString(ARG_WEBAUTHN_NONCE);
+        mIsSecurityKeyEnabled = getArguments().getBoolean(ARG_DISPLAY_SECURITY_KEY_BUTTON, false);
 
         if (savedInstanceState != null) {
             // Overwrite argument nonce values with saved state values on device rotation.
@@ -593,11 +595,10 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSecurityKeyCheckFinished(WebauthnPasskeyAuthenticated event) {
         if (event.isError()) {
-            handleAuthError(event.error.type, event.error.message);
             endProgress();
+            handleAuthError(event.error.type, event.error.message);
             return;
         }
-        Toast.makeText(requireContext(), "Login succeeded", Toast.LENGTH_SHORT).show();
         doFinishLogin();
     }
 }
