@@ -177,7 +177,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         super.onDestroyView()
     }
 
-    @Suppress("deprecation")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -193,6 +193,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         outState.putParcelable(QuickStartEvent.KEY, quickStartEvent)
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search, menu)
         searchMenuItem = menu.findItem(R.id.menu_search)
@@ -207,6 +208,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         }
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu_search) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, site)
