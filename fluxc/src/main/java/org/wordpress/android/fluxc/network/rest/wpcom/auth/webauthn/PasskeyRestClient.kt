@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey
+package org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn
 
 import android.content.Context
 import com.android.volley.RequestQueue

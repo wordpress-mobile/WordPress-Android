@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey
+package org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn
 
 data class WebauthnUserData(
     val userId: Long,

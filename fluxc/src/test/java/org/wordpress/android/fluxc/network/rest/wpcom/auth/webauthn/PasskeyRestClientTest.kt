@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.auth.passkey
+package org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn
 
 import org.junit.Before
 import org.mockito.kotlin.mock
