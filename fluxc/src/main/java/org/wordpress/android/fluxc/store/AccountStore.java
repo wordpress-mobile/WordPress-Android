@@ -327,37 +327,29 @@ public class AccountStore extends Store {
         NOTIFICATION_POST
     }
 
-    public static class StartSecurityKeyChallengePayload extends Payload<BaseNetworkError> {
+    public static class StartWebauthnChallengePayload extends Payload<BaseNetworkError> {
         public String mUserId;
         public String mWebauthnNonce;
 
-        public StartSecurityKeyChallengePayload(String mUserId, String mWebauthnNonce) {
+        public StartWebauthnChallengePayload(String mUserId, String mWebauthnNonce) {
             this.mUserId = mUserId;
             this.mWebauthnNonce = mWebauthnNonce;
         }
     }
 
-    public static class OnWebauthnChallengeReceived extends OnChanged<WebauthnChallengeError> {
+    public static class WebauthnChallengeReceived extends OnChanged<AuthenticationError> {
         public String challengeInfo;
         public String mUserId;
     }
 
-    public static class FinishSecurityKeyChallengePayload {
+    public static class FinishWebauthnChallengePayload {
         public String mUserId;
         public String mTwoStepNonce;
         public String mClientData;
     }
 
-    public static class SecurityKeyCheckFinished extends OnChanged<AuthenticationError> {
+    public static class WebauthnPasskeyAuthenticated extends OnChanged<AuthenticationError> {
         public String mBearerToken;
-    }
-
-    public static class WebauthnChallengeError implements OnChangedError {
-        public VolleyError error;
-
-        public WebauthnChallengeError(VolleyError error) {
-            this.error = error;
-        }
     }
 
     /**
@@ -560,6 +552,7 @@ public class AccountStore extends Store {
         UNSUPPORTED_RESPONSE_TYPE,
         UNKNOWN_TOKEN,
         EMAIL_LOGIN_NOT_ALLOWED,
+        WEBAUTHN_FAILED,
 
         // From response's "message" field - sadly... (be careful with i18n)
         INCORRECT_USERNAME_OR_PASSWORD,
@@ -1047,10 +1040,10 @@ public class AccountStore extends Store {
                 handleSentAuthEmail((AuthEmailResponsePayload) payload);
                 break;
             case START_SECURITY_KEY_CHALLENGE:
-                requestWebauthnChallenge((StartSecurityKeyChallengePayload) payload);
+                requestWebauthnChallenge((StartWebauthnChallengePayload) payload);
                 break;
             case FINISH_SECURITY_KEY_CHALLENGE:
-                submitWebauthnChallengeResult((FinishSecurityKeyChallengePayload) payload);
+                submitWebauthnChallengeResult((FinishWebauthnChallengePayload) payload);
                 break;
         }
     }
@@ -1380,33 +1373,34 @@ public class AccountStore extends Store {
         }
     }
 
-    private void requestWebauthnChallenge(final StartSecurityKeyChallengePayload payload) {
+    private void requestWebauthnChallenge(final StartWebauthnChallengePayload payload) {
         mAuthenticator.makeRequest(payload.mUserId, payload.mWebauthnNonce,
                 info -> {
-                    OnWebauthnChallengeReceived event = new OnWebauthnChallengeReceived();
+                    WebauthnChallengeReceived event = new WebauthnChallengeReceived();
                     event.challengeInfo = info;
                     event.mUserId = payload.mUserId;
                     emitChange(event);
                 },
                 error -> {
-                    OnWebauthnChallengeReceived event = new OnWebauthnChallengeReceived();
-                    event.error = new WebauthnChallengeError(error);
+                    WebauthnChallengeReceived event = new WebauthnChallengeReceived();
+                    event.error = new AuthenticationError(AuthenticationErrorType.WEBAUTHN_FAILED,
+                            "Webauthn failed");
                     emitChange(event);
                 });
     }
 
-    private void submitWebauthnChallengeResult(final FinishSecurityKeyChallengePayload payload) {
+    private void submitWebauthnChallengeResult(final FinishWebauthnChallengePayload payload) {
         mAuthenticator.makeRequest(payload.mUserId, payload.mTwoStepNonce, payload.mClientData,
                 token -> {
-                    SecurityKeyCheckFinished event = new SecurityKeyCheckFinished();
+                    WebauthnPasskeyAuthenticated event = new WebauthnPasskeyAuthenticated();
                     event.mBearerToken = token;
                     mAccessToken.set(token);
                     emitChange(event);
                 },
                 error -> {
-                    SecurityKeyCheckFinished event = new SecurityKeyCheckFinished();
-                    event.error = new AuthenticationError(AuthenticationErrorType.GENERIC_ERROR,
-                            "Passkey login failed");
+                    WebauthnPasskeyAuthenticated event = new WebauthnPasskeyAuthenticated();
+                    event.error = new AuthenticationError(AuthenticationErrorType.WEBAUTHN_FAILED,
+                            "Webauthn failed");
                     emitChange(event);
                 });
     }
