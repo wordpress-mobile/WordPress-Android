@@ -39,7 +39,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.PasskeyRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
 import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
 import org.wordpress.android.util.AppLog;
@@ -869,18 +868,16 @@ public class AccountStore extends Store {
     private AccountModel mAccount;
     private AccessToken mAccessToken;
     private SelfHostedEndpointFinder mSelfHostedEndpointFinder;
-    private PasskeyRestClient mPasskeyRestClient;
 
     @Inject public AccountStore(Dispatcher dispatcher, AccountRestClient accountRestClient,
                         SelfHostedEndpointFinder selfHostedEndpointFinder, Authenticator authenticator,
-                        AccessToken accessToken, PasskeyRestClient passkeyRestClient) {
+                        AccessToken accessToken) {
         super(dispatcher);
         mAuthenticator = authenticator;
         mAccountRestClient = accountRestClient;
         mSelfHostedEndpointFinder = selfHostedEndpointFinder;
         mAccount = loadAccount();
         mAccessToken = accessToken;
-        mPasskeyRestClient = passkeyRestClient;
     }
 
     @Override
