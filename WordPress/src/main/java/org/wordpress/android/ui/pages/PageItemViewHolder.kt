@@ -87,10 +87,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 marginLayoutParams.leftMargin = indentWidth
                 pageItemContainer.layoutParams = marginLayoutParams
 
-                pageTitle.text = if (page.title.isEmpty()) {
+                pageTitle.text = page.title.ifEmpty {
                     parent.context.getString(R.string.untitled_in_parentheses)
-                } else {
-                    page.title
                 }
 
                 showSubtitle(page.date, page.author, page.subtitle, page.icon)
