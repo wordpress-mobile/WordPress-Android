@@ -56,12 +56,11 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         FETCHING_ACCOUNT(50),
         FETCHING_SETTINGS(75),
         FETCHING_SITES(100),
-        SECURITY_KEY_NEEDED,
         SUCCESS,
         FAILURE_EMAIL_WRONG_PASSWORD,
         FAILURE_2FA,
         FAILURE_SOCIAL_2FA,
-        FAILURE_SECURITY_KEY,
+        SECURITY_KEY_NEEDED,
         FAILURE_FETCHING_ACCOUNT,
         FAILURE_CANNOT_ADD_DUPLICATE_SITE,
         FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL,
@@ -317,11 +316,6 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
                 } else {
                     setState(LoginStep.FAILURE_2FA);
                 }
-                break;
-            case NEEDS_SECURITY_KEY:
-                // login credentials were correct anyway so, offer to save to SmartLock
-                signalCredentialsOK();
-                setState(LoginStep.FAILURE_SECURITY_KEY);
                 break;
             case EMAIL_LOGIN_NOT_ALLOWED:
                 setState(LoginStep.FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL);
