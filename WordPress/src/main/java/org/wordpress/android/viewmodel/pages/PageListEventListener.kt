@@ -117,9 +117,7 @@ class PageListEventListener(
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
-        if (event.mediaList != null) {
-            uploadStatusChanged(*event.mediaList.map { LocalId(it.localPostId) }.toTypedArray())
-        }
+        uploadStatusChanged(*event.mediaList.map { LocalId(it.localPostId) }.toTypedArray())
     }
 
     @Suppress("unused")
