@@ -393,14 +393,12 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     private fun shouldShowPremiumThemes(): Boolean {
-        site?.let {
-            val planId = it.planId
-            return planId == PlansConstants.PREMIUM_PLAN_ID ||
-                    planId == PlansConstants.BUSINESS_PLAN_ID ||
-                    planId == PlansConstants.JETPACK_PREMIUM_PLAN_ID ||
-                    planId == PlansConstants.JETPACK_BUSINESS_PLAN_ID
-        }
-        return false
+        return site?.let {
+            it.planId == PlansConstants.PREMIUM_PLAN_ID ||
+                    it.planId == PlansConstants.BUSINESS_PLAN_ID ||
+                    it.planId == PlansConstants.JETPACK_PREMIUM_PLAN_ID ||
+                    it.planId == PlansConstants.JETPACK_BUSINESS_PLAN_ID
+        } ?: false
     }
 
     private inner class ThemeDataSetObserver : DataSetObserver() {
