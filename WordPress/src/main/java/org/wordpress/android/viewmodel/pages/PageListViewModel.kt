@@ -96,8 +96,8 @@ class PageListViewModel @Inject constructor(
         get() = remoteId == pagesViewModel.site.pageForPosts
 
     private val showAuthorName: Boolean by lazy {
-         // show if the site is a single user site and the users in the site has the capability to edit/add pages
-         !pagesViewModel.site.isSingleUserSite && pagesViewModel.site.hasCapabilityEditOthersPages
+        // show if the site is a single user site and the users in the site has the capability to edit/add pages
+        !pagesViewModel.site.isSingleUserSite && pagesViewModel.site.hasCapabilityEditOthersPages
     }
 
     private val featuredImageMap = mutableMapOf<Long, String>()
@@ -233,13 +233,7 @@ class PageListViewModel @Inject constructor(
         val pageItems = pages
             .sortedBy { it.title.lowercase(localeManagerWrapper.getLocale()) }
             .filter { listType.pageStatuses.contains(it.status) }
-            .filter {
-                if (pagesViewModel.shouldFilterByAuthor()) {
-                    it.post.authorId == accountStore.account.userId
-                } else {
-                    true
-                }
-            }
+            .filter { filterByAuthor(it) }
             .let {
                 when (listType) {
                     PUBLISHED -> preparePublishedPages(it, pagesViewModel.arePageActionsEnabled)
@@ -250,6 +244,15 @@ class PageListViewModel @Inject constructor(
             }
 
         displayListItems(pageItems)
+    }
+
+    private fun filterByAuthor(page: PageModel): Boolean {
+        return if (pagesViewModel.shouldFilterByAuthor()) {
+            page.post.authorId == accountStore.account.userId
+        } else {
+            // there is no filter logic needed if we want to show all authors
+            true
+        }
     }
 
     private fun displayListItems(newPages: List<PageItem>) {
