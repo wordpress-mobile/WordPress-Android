@@ -1926,4 +1926,11 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, DomainManagementActivity.class);
         context.startActivity(intent);
     }
+
+    public static void openShareIntent(@NonNull Context context, @NonNull String link) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, link);
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_link)));
+    }
 }
