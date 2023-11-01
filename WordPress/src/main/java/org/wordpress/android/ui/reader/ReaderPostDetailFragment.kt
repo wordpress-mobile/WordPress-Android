@@ -26,6 +26,7 @@ import android.webkit.WebView
 import android.widget.ImageView.ScaleType.CENTER_CROP
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ListPopupWindow
@@ -39,7 +40,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -904,7 +904,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory ->
                 replaceRelatedPostDetailWithHistory(postId = this.postId, blogId = this.blogId)
 
-            is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post, this@ReaderPostDetailFragment)
+            is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post)
             is ReaderNavigationEvents.ShowEngagedPeopleList -> {
                 ActivityLauncher.viewPostLikesListActivity(
                     activity,
@@ -1554,7 +1554,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         null -> false
     }
 
-    private fun showPostInWebView(post: ReaderPost, fragment: Fragment) {
+    private fun showPostInWebView(post: ReaderPost) {
         readerWebView.setIsPrivatePost(post.isPrivate)
         readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))
         readerProgressBar.visibility = View.VISIBLE
@@ -1567,7 +1567,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         // if the post is from private atomic site postpone render until we have a special access cookie
         if (post.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
-            PrivateAtCookieRefreshProgressDialog.showIfNecessary(childFragmentManager, fragment)
+            PrivateAtCookieRefreshProgressDialog.showIfNecessary(childFragmentManager)
             requestPrivateAtomicCookie()
         } else if (post.isPrivateAtomic && privateAtomicCookie.exists()) {
             // make sure we add cookie to the cookie manager if it exists before starting render
