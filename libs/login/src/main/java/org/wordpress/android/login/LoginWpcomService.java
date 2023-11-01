@@ -105,7 +105,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
                     || mStep == LoginStep.FAILURE_EMAIL_WRONG_PASSWORD
                     || mStep == LoginStep.FAILURE_2FA
                     || mStep == LoginStep.FAILURE_SOCIAL_2FA
-                    || mStep == LoginStep.FAILURE_SECURITY_KEY
+                    || mStep == LoginStep.SECURITY_KEY_NEEDED
                     || mStep == LoginStep.FAILURE_FETCHING_ACCOUNT
                     || mStep == LoginStep.FAILURE_CANNOT_ADD_DUPLICATE_SITE
                     || mStep == LoginStep.FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL;
