@@ -16,12 +16,89 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnRequ
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnRequestParameters.TWO_STEP_NONCE
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnRequestParameters.USER_ID
 
-private const val WEBAUTHN_AUTH_TYPE = "webauthn"
-private const val baseWPLoginUrl = "https://wordpress.com/wp-login.php?action"
-private const val challengeEndpoint = "webauthn-challenge-endpoint"
-private const val authEndpoint = "webauthn-authentication-endpoint"
-private const val webauthnChallengeEndpointUrl = "$baseWPLoginUrl=$challengeEndpoint"
-private const val webauthnAuthEndpointUrl = "$baseWPLoginUrl=$authEndpoint"
+class WebauthnChallengeRequest(
+    userId: String,
+    twoStepNonce: String,
+    clientId: String,
+    clientSecret: String,
+    listener: Response.Listener<String>,
+    errorListener: ErrorListener
+): BaseWebauthnRequest(webauthnChallengeEndpointUrl, errorListener, listener) {
+    override val parameters: Map<String, String> = mapOf(
+        CLIENT_ID.value to clientId,
+        CLIENT_SECRET.value to clientSecret,
+        USER_ID.value to userId,
+        AUTH_TYPE.value to WEBAUTHN_AUTH_TYPE,
+        TWO_STEP_NONCE.value to twoStepNonce
+    )
+
+    override val responseParameterName = "data"
+}
+
+class WebauthnTokenRequest(
+    userId: String,
+    twoStepNonce: String,
+    clientId: String,
+    clientSecret: String,
+    clientData: String,
+    listener: Response.Listener<String>,
+    errorListener: ErrorListener
+) : BaseWebauthnRequest(webauthnAuthEndpointUrl, errorListener, listener) {
+    override val parameters = mapOf(
+        CLIENT_ID.value to clientId,
+        CLIENT_SECRET.value to clientSecret,
+        USER_ID.value to userId,
+        AUTH_TYPE.value to WEBAUTHN_AUTH_TYPE,
+        TWO_STEP_NONCE.value to twoStepNonce,
+        CLIENT_DATA.value to clientData,
+        GET_BEARER_TOKEN.value to "true",
+        CREATE_2FA_COOKIES_ONLY.value to "true"
+    )
+
+    override val responseParameterName = "bearer_token"
+}
+
+abstract class BaseWebauthnRequest(
+    url: String,
+    errorListener: ErrorListener,
+    private val listener: Response.Listener<String>
+) : Request<String>(Method.POST, url, errorListener) {
+    abstract val parameters: Map<String, String>
+    abstract val responseParameterName: String
+
+    private fun NetworkResponse?.extractResult(parameterName: String): Response<String> {
+        if (this == null) {
+            val error = WebauthnChallengeRequestException("Webauthn challenge response is null")
+            return Response.error(ParseError(error))
+        }
+
+        return try {
+            val headers = HttpHeaderParser.parseCacheHeaders(this)
+            val charsetName = HttpHeaderParser.parseCharset(this.headers)
+            return String(this.data, charset(charsetName))
+                .let { JSONObject(it).getJSONObject(parameterName) }
+                .let { Response.success(it.toString(), headers) }
+        } catch (exception: Exception) {
+            val error = WebauthnChallengeRequestException("Webauthn challenge response is invalid")
+            Response.error(ParseError(error))
+        }
+    }
+
+    override fun getParams() = parameters
+    override fun deliverResponse(response: String) = listener.onResponse(response)
+    override fun parseNetworkResponse(response: NetworkResponse?) =
+        response.extractResult(responseParameterName)
+
+    companion object {
+        private const val baseWPLoginUrl = "https://wordpress.com/wp-login.php?action"
+        private const val challengeEndpoint = "webauthn-challenge-endpoint"
+        private const val authEndpoint = "webauthn-authentication-endpoint"
+
+        internal const val webauthnChallengeEndpointUrl = "$baseWPLoginUrl=$challengeEndpoint"
+        internal const val webauthnAuthEndpointUrl = "$baseWPLoginUrl=$authEndpoint"
+        internal const val WEBAUTHN_AUTH_TYPE = "webauthn"
+    }
+}
 
 private enum class WebauthnRequestParameters(val value: String) {
     USER_ID("user_id"),
@@ -35,78 +112,3 @@ private enum class WebauthnRequestParameters(val value: String) {
 }
 
 class WebauthnChallengeRequestException(message: String): Exception(message)
-
-private fun NetworkResponse?.extractResult(parameterName: String): Response<String> {
-    if (this == null) {
-        val error = WebauthnChallengeRequestException("Webauthn challenge response is null")
-        return Response.error(ParseError(error))
-    }
-
-    return try {
-        val headers = HttpHeaderParser.parseCacheHeaders(this)
-        val charsetName = HttpHeaderParser.parseCharset(this.headers)
-        return String(this.data, charset(charsetName))
-            .let { JSONObject(it).getJSONObject(parameterName) }
-            .let { Response.success(it.toString(), headers) }
-    } catch (exception: Exception) {
-        val error = WebauthnChallengeRequestException("Webauthn challenge response is invalid")
-        Response.error(ParseError(error))
-    }
-}
-
-class WebauthnChallengeRequest(
-    userId: String,
-    twoStepNonce: String,
-    clientId: String,
-    clientSecret: String,
-    errorListener: ErrorListener,
-    private val listener: Response.Listener<String>
-): Request<String>(Method.POST, webauthnChallengeEndpointUrl, errorListener) {
-    private val parameters: Map<String, String> = mapOf(
-        CLIENT_ID.value to clientId,
-        CLIENT_SECRET.value to clientSecret,
-        USER_ID.value to userId,
-        AUTH_TYPE.value to WEBAUTHN_AUTH_TYPE,
-        TWO_STEP_NONCE.value to twoStepNonce
-    )
-
-    override fun getParams() = parameters
-    override fun deliverResponse(response: String) = listener.onResponse(response)
-    override fun parseNetworkResponse(response: NetworkResponse?) =
-        response.extractResult(responseParameterName)
-
-    companion object {
-        private const val responseParameterName = "data"
-    }
-}
-
-class WebauthnTokenRequest(
-    userId: String,
-    twoStepNonce: String,
-    clientId: String,
-    clientSecret: String,
-    clientData: String,
-    errorListener: ErrorListener,
-    private val listener: Response.Listener<String>
-) : Request<String>(Method.POST, webauthnAuthEndpointUrl, errorListener) {
-    private val parameters = mapOf(
-        CLIENT_ID.value to clientId,
-        CLIENT_SECRET.value to clientSecret,
-        USER_ID.value to userId,
-        AUTH_TYPE.value to WEBAUTHN_AUTH_TYPE,
-        TWO_STEP_NONCE.value to twoStepNonce,
-        CLIENT_DATA.value to clientData,
-        GET_BEARER_TOKEN.value to "true",
-        CREATE_2FA_COOKIES_ONLY.value to "true"
-    )
-
-    override fun parseNetworkResponse(response: NetworkResponse?) =
-        response.extractResult(responseParameterName)
-
-    override fun getParams() = parameters
-    override fun deliverResponse(response: String) = listener.onResponse(response)
-
-    companion object {
-        private const val responseParameterName = "bearer_token"
-    }
-}
