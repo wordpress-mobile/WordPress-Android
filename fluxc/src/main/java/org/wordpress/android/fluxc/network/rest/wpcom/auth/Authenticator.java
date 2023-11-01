@@ -22,7 +22,9 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnChallengeInfo;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnChallengeRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnTokenRequest;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailErrorType;
@@ -116,7 +118,7 @@ public class Authenticator {
     }
 
     public void makeRequest(String userId, String webauthnNonce,
-                            Response.Listener<String> listener,
+                            Response.Listener<WebauthnChallengeInfo> listener,
                             ErrorListener errorListener) {
         WebauthnChallengeRequest request = new WebauthnChallengeRequest(
                 userId,
@@ -130,7 +132,7 @@ public class Authenticator {
     }
 
     public void makeRequest(String userId, String twoStepNonce,
-                            String clientData, Response.Listener<String> listener,
+                            String clientData, Response.Listener<WebauthnToken> listener,
                             ErrorListener errorListener) {
         WebauthnTokenRequest request = new WebauthnTokenRequest(
                 userId,
