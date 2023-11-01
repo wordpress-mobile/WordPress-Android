@@ -33,10 +33,10 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         }
     }
 
-    fun onExistingDomainSelected() {
-        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED)
+    fun onExistingSiteSelected() {
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED)
         launch {
-            _actionEvents.emit(ActionEvent.GoToExistingDomain(domain = domain))
+            _actionEvents.emit(ActionEvent.GoToExistingSite(domain = domain))
         }
     }
 
@@ -49,7 +49,7 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     sealed class ActionEvent {
         object GoBack : ActionEvent()
         data class GoToDomainPurchasing(val domain: String) : ActionEvent()
-        data class GoToExistingDomain(val domain: String) : ActionEvent()
+        data class GoToExistingSite(val domain: String) : ActionEvent()
     }
 
     @AssistedFactory

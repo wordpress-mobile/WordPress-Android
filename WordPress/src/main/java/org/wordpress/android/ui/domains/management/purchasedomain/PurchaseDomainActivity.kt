@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.ui.domains.management.M3Theme
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoBack
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToDomainPurchasing
-import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingDomain
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingSite
 import org.wordpress.android.ui.domains.management.purchasedomain.composable.PurchaseDomainScreen
 import javax.inject.Inject
 
@@ -34,7 +34,7 @@ class PurchaseDomainActivity : AppCompatActivity() {
             M3Theme {
                 PurchaseDomainScreen(
                     onNewDomainCardSelected = viewModel::onNewDomainSelected,
-                    onExistingDomainCardSelected = viewModel::onExistingDomainSelected,
+                    onExistingSiteCardSelected = viewModel::onExistingSiteSelected,
                     onBackPressed = viewModel::onBackPressed,
                 )
             }
@@ -49,7 +49,7 @@ class PurchaseDomainActivity : AppCompatActivity() {
     private fun handleActionEvents(actionEvent: PurchaseDomainViewModel.ActionEvent) {
         when (actionEvent) {
             is GoToDomainPurchasing -> NotImplemented
-            is GoToExistingDomain -> NotImplemented
+            is GoToExistingSite -> NotImplemented
             GoBack -> onBackPressedDispatcher.onBackPressed()
         }
     }
