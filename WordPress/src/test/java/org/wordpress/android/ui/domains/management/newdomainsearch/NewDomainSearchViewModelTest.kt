@@ -50,6 +50,24 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `WHEN transfer domain button pressed THEN send TransferDomain action event`() = testWithActionEvents { events ->
+        viewModel.onTransferDomainClicked()
+        advanceUntilIdle()
+
+        val expectedTransferUrl = "https://wordpress.com/setup/domain-transfer/intro"
+        assertThat(events.last()).isEqualTo(ActionEvent.TransferDomain(expectedTransferUrl))
+    }
+
+    @Test
+    fun `WHEN transfer domain button pressed THEN track DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED event`() =
+        testWithActionEvents {
+            viewModel.onTransferDomainClicked()
+            advanceUntilIdle()
+
+            verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED)
+        }
+
+    @Test
     fun `WHEN back button pressed THEN send GoBack action event`() = testWithActionEvents { events ->
         viewModel.onBackPressed()
         advanceUntilIdle()

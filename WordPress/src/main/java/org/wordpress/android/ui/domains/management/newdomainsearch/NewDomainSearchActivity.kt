@@ -10,12 +10,17 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.domains.management.M3Theme
 import org.wordpress.android.ui.domains.management.newdomainsearch.composable.NewDomainSearchScreen
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NewDomainSearchActivity : AppCompatActivity() {
     private val viewModel: NewDomainSearchViewModel by viewModels()
+
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +30,7 @@ class NewDomainSearchActivity : AppCompatActivity() {
                 NewDomainSearchScreen(
                     uiState = uiState,
                     onSearchQueryChanged = viewModel::onSearchQueryChanged,
+                    onTransferDomainClicked = viewModel::onTransferDomainClicked,
                     onBackPressed = viewModel::onBackPressed
                 )
             }
@@ -38,6 +44,10 @@ class NewDomainSearchActivity : AppCompatActivity() {
 
     private fun handleActionEvents(actionEvent: NewDomainSearchViewModel.ActionEvent) {
         when (actionEvent) {
+            is NewDomainSearchViewModel.ActionEvent.TransferDomain -> activityNavigator.openDomainTransfer(
+                this, actionEvent.url
+            )
+
             NewDomainSearchViewModel.ActionEvent.GoBack -> onBackPressedDispatcher.onBackPressed()
         }
     }

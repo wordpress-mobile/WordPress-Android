@@ -28,7 +28,7 @@ private const val SEARCH_QUERY_DELAY_MS = 250L
 class NewDomainSearchViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val newDomainsSearchRepository: NewDomainsSearchRepository,
-    analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: Flow<ActionEvent> = _actionEvents
@@ -64,6 +64,13 @@ class NewDomainSearchViewModel @Inject constructor(
         }
     }
 
+    fun onTransferDomainClicked() {
+        analyticsTracker.track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED)
+        launch {
+            _actionEvents.emit(ActionEvent.TransferDomain(DOMAIN_TRANSFER_PAGE_URL))
+        }
+    }
+
     fun onBackPressed() {
         launch {
             _actionEvents.emit(ActionEvent.GoBack)
@@ -71,6 +78,7 @@ class NewDomainSearchViewModel @Inject constructor(
     }
 
     sealed class ActionEvent {
+        data class TransferDomain(val url: String) : ActionEvent()
         object GoBack : ActionEvent()
     }
 
@@ -78,5 +86,9 @@ class NewDomainSearchViewModel @Inject constructor(
         object Error : UiState()
         object Loading : UiState()
         data class PopulatedDomains(val domains: List<ProposedDomain>) : UiState()
+    }
+
+    companion object {
+        const val DOMAIN_TRANSFER_PAGE_URL = "https://wordpress.com/setup/domain-transfer/intro"
     }
 }

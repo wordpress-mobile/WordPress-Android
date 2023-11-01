@@ -44,6 +44,7 @@ import org.wordpress.android.ui.domains.management.success
 fun NewDomainSearchScreen(
     uiState: UiState,
     onSearchQueryChanged: (String) -> Unit,
+    onTransferDomainClicked: () -> Unit,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -78,7 +79,7 @@ fun NewDomainSearchScreen(
                     is UiState.Loading -> LoadingPlaceholder(modifier = Modifier.weight(1f))
                     is UiState.Error -> Spacer(modifier = Modifier.weight(1f))
                 }
-                TransferDomainFooter()
+                TransferDomainFooter(onTransferDomainClicked = onTransferDomainClicked)
             }
         }
     )
@@ -139,6 +140,7 @@ fun LoadingPlaceholder(modifier: Modifier = Modifier) {
 
 @Composable
 fun TransferDomainFooter(
+    onTransferDomainClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(shadowElevation = 8.dp, modifier = Modifier.zIndex(1f)) {
@@ -152,7 +154,7 @@ fun TransferDomainFooter(
             )
             JetpackOutlinedButton(
                 text = stringResource(R.string.new_domain_search_screen_transfer_domain_button),
-                onClick = {}
+                onClick = onTransferDomainClicked
             )
         }
     }
@@ -224,6 +226,7 @@ fun NewDomainSearchScreenPreview() {
             )
         ),
         onSearchQueryChanged = {},
+        onTransferDomainClicked = {},
         onBackPressed = {}
     )
 }
