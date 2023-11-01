@@ -56,8 +56,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         fun onSwipeToRefresh()
     }
 
-    private var _binding: ThemeBrowserFragmentBinding? = null
-    private val binding get() = _binding!!
+    private var binding: ThemeBrowserFragmentBinding? = null
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var currentThemeId: String? = null
     private var lastSearch: String? = null
@@ -158,21 +157,23 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = ThemeBrowserFragmentBinding.inflate(inflater, container, false)
+        binding = ThemeBrowserFragmentBinding.inflate(inflater, container, false).apply {
+            configureGridView(inflater)
+            configureSwipeToRefresh()
+        }
 
-        configureGridView(inflater)
-        configureSwipeToRefresh()
-
-        return binding.root
+        return requireNotNull(binding).root
     }
 
     override fun onResume() {
         super.onResume()
-        (activity as? ScrollableViewInitializedListener)?.onScrollableViewInitialized(binding.themeListview.id)
+        (activity as? ScrollableViewInitializedListener)?.onScrollableViewInitialized(
+            requireNotNull(binding).themeListview.id
+        )
     }
 
     override fun onDestroyView() {
-        _binding = null
+        binding = null
         super.onDestroyView()
     }
 
@@ -181,7 +182,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         super.onActivityCreated(savedInstanceState)
 
         adapter.setThemeList(fetchThemes())
-        binding.themeListview.adapter = adapter
+        requireNotNull(binding).themeListview.adapter = adapter
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -240,18 +241,18 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         refreshView()
     }
 
-    private fun addHeaderViews(inflater: LayoutInflater) {
+    private fun ThemeBrowserFragmentBinding.addHeaderViews(inflater: LayoutInflater) {
         addMainHeader(inflater)
     }
 
-    private fun configureSwipeToRefresh() {
-        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(binding.ptrLayout) {
+    private fun ThemeBrowserFragmentBinding.configureSwipeToRefresh() {
+        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptrLayout) {
             if (!isAdded) {
                 return@buildSwipeToRefreshHelper
             }
             if (!NetworkUtils.checkConnection(activity)) {
                 swipeToRefreshHelper?.isRefreshing = false
-                binding.textEmpty.setText(R.string.no_network_title)
+                textEmpty.setText(R.string.no_network_title)
                 return@buildSwipeToRefreshHelper
             }
             setRefreshing(true)
@@ -260,12 +261,12 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         swipeToRefreshHelper?.isRefreshing = shouldRefreshOnStart
     }
 
-    private fun configureGridView(inflater: LayoutInflater) {
+    private fun ThemeBrowserFragmentBinding.configureGridView(inflater: LayoutInflater) {
         addHeaderViews(inflater)
-        binding.themeListview.setRecyclerListener(this)
+        themeListview.setRecyclerListener(this@ThemeBrowserFragment)
     }
 
-    private fun addMainHeader(inflater: LayoutInflater) {
+    private fun ThemeBrowserFragmentBinding.addMainHeader(inflater: LayoutInflater) {
         @SuppressLint("InflateParams")
         val header = inflater.inflate(R.layout.theme_grid_cardview_header, null)
 
@@ -291,7 +292,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         val support = header.findViewById<LinearLayout>(R.id.support)
         support.setOnClickListener { callback?.onSupportSelected(currentThemeId) }
 
-        binding.themeListview.addHeaderView(header)
+        themeListview.addHeaderView(header)
     }
 
     private fun setThemeNameIfAlreadyAvailable() {
@@ -318,12 +319,12 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         val hasVisibleThemes = adapter.count > 0
         val hasNoMatchingThemes = hasThemes && !hasVisibleThemes
 
-        binding.emptyView.visibility = if (!hasThemes) View.VISIBLE else View.GONE
+        binding?.emptyView?.visibility = if (!hasThemes) View.VISIBLE else View.GONE
         if (!hasThemes && !NetworkUtils.isNetworkAvailable(activity)) {
-            binding.textEmpty.setText(R.string.no_network_title)
+            binding?.textEmpty?.setText(R.string.no_network_title)
         }
-        binding.themeListview.visibility = if (hasVisibleThemes) View.VISIBLE else View.GONE
-        binding.actionableEmptyView.visibility = if (hasNoMatchingThemes) View.VISIBLE else View.GONE
+        binding?.themeListview?.visibility = if (hasVisibleThemes) View.VISIBLE else View.GONE
+        binding?.actionableEmptyView?.visibility = if (hasNoMatchingThemes) View.VISIBLE else View.GONE
     }
 
     private fun fetchThemes(): List<ThemeModel> {
