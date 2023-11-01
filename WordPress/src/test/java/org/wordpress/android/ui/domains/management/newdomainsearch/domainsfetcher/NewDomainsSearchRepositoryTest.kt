@@ -45,8 +45,7 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                     proposedDomains = listOf(
                         ProposedDomain(
                             productId = 0,
-                            domainPrefix = "example.",
-                            domainSuffix = "com",
+                            domain = "example.com",
                             price = "USD 50",
                             salePrice = "USD 10"
                         )
@@ -68,8 +67,7 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                     proposedDomains = listOf(
                         ProposedDomain(
                             productId = 0,
-                            domainPrefix = "example.",
-                            domainSuffix = "com",
+                            domain = "example.com",
                             price = "USD 50",
                             salePrice = null
                         )
@@ -118,22 +116,19 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                     proposedDomains = listOf(
                         ProposedDomain(
                             productId = 1,
-                            domainPrefix = "second.",
-                            domainSuffix = "com",
+                            domain = "second.com",
                             price = "USD 40",
                             salePrice = null
                         ),
                         ProposedDomain(
                             productId = 0,
-                            domainPrefix = "first.",
-                            domainSuffix = "com",
+                            domain = "first.com",
                             price = "USD 30",
                             salePrice = null
                         ),
                         ProposedDomain(
                             productId = 2,
-                            domainPrefix = "third.",
-                            domainSuffix = "com",
+                            domain = "third.com",
                             price = "USD 50",
                             salePrice = null
                         ),
@@ -182,15 +177,13 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                     proposedDomains = listOf(
                         ProposedDomain(
                             productId = 1,
-                            domainPrefix = "second.",
-                            domainSuffix = "com",
+                            domain = "second.com",
                             price = "USD 40",
                             salePrice = null
                         ),
                         ProposedDomain(
                             productId = 0,
-                            domainPrefix = "first.",
-                            domainSuffix = "com",
+                            domain = "first.com",
                             price = "USD 30",
                             salePrice = null
                         ),
@@ -212,8 +205,7 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                     proposedDomains = listOf(
                         ProposedDomain(
                             productId = 0,
-                            domainPrefix = "example.",
-                            domainSuffix = "com",
+                            domain = "example.com",
                             price = "USD 50",
                             salePrice = null
                         )

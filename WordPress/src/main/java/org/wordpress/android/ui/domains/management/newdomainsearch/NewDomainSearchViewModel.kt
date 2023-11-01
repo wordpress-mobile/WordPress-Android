@@ -74,7 +74,7 @@ class NewDomainSearchViewModel @Inject constructor(
     fun onDomainTapped(domain: ProposedDomain) {
         analyticsTracker.track(
             AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_SEARCH_DOMAIN_TAPPED,
-            mapOf("domain_name" to domain.domainPrefix + domain.domainSuffix)
+            mapOf("domain_name" to domain.domain)
         )
         launch {
             _actionEvents.emit(ActionEvent.PurchaseDomain(domain))

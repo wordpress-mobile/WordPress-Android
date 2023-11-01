@@ -228,15 +228,13 @@ fun NewDomainSearchScreenPreview() {
             domains = listOf(
                 ProposedDomain(
                     productId = 0,
-                    domainPrefix = "example",
-                    domainSuffix = ".com",
+                    domain = "example.com",
                     price = "USD 100",
                     salePrice = "USD 30",
                 ),
                 ProposedDomain(
                     productId = 0,
-                    domainPrefix = "example",
-                    domainSuffix = ".blog",
+                    domain = "example.blog",
                     price = "USD 100",
                     salePrice = null,
                 ),
