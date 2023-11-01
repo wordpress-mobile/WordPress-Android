@@ -39,6 +39,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnChallengeInfo;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnToken;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
 import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
 import org.wordpress.android.util.AppLog;
@@ -337,7 +339,7 @@ public class AccountStore extends Store {
     }
 
     public static class WebauthnChallengeReceived extends OnChanged<AuthenticationError> {
-        public String challengeInfo;
+        public WebauthnChallengeInfo mChallengeInfo;
         public String mUserId;
     }
 
@@ -348,7 +350,7 @@ public class AccountStore extends Store {
     }
 
     public static class WebauthnPasskeyAuthenticated extends OnChanged<AuthenticationError> {
-        public String mBearerToken;
+        public WebauthnToken mWebauthnToken;
     }
 
     /**
@@ -1374,7 +1376,7 @@ public class AccountStore extends Store {
         mAuthenticator.makeRequest(payload.mUserId, payload.mWebauthnNonce,
                 info -> {
                     WebauthnChallengeReceived event = new WebauthnChallengeReceived();
-                    event.challengeInfo = info;
+                    event.mChallengeInfo = info;
                     event.mUserId = payload.mUserId;
                     emitChange(event);
                 },
@@ -1390,8 +1392,8 @@ public class AccountStore extends Store {
         mAuthenticator.makeRequest(payload.mUserId, payload.mTwoStepNonce, payload.mClientData,
                 token -> {
                     WebauthnPasskeyAuthenticated event = new WebauthnPasskeyAuthenticated();
-                    event.mBearerToken = token;
-                    mAccessToken.set(token);
+                    event.mWebauthnToken = token;
+                    mAccessToken.set(token.getBearerToken());
                     emitChange(event);
                 },
                 error -> {
