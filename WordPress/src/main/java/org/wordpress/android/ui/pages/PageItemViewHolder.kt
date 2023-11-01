@@ -254,7 +254,11 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     parent.context.getString(R.string.pages_item_date_subtitle),
                     stringDate
                 )
-                pageSubtitleSuffix.text = parent.context.getString(subtitle)
+                pageSubtitleSuffix.text = String.format(
+                    Locale.getDefault(),
+                    parent.context.getString(R.string.pages_item_subtitle),
+                    parent.context.getString(subtitle)
+                )
             } else {
                 pageSubtitle.text = author?.let {
                     String.format(
