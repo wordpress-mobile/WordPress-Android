@@ -24,7 +24,8 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.PasskeyRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnChallengeRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnTokenRequest;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
@@ -116,24 +117,32 @@ public class Authenticator {
                 shouldSendTwoStepSMS, listener, errorListener);
     }
 
-    public TokenRequest makeRequest(String code, Listener listener, ErrorListener errorListener) {
-        return new BearerRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), code, listener, errorListener);
-    }
-
     public void makeRequest(String userId, String webauthnNonce,
                             Response.Listener<String> listener,
                             ErrorListener errorListener) {
-        WebauthnChallengeRequest request = new WebauthnChallengeRequest(userId, webauthnNonce, mAppSecrets.getAppId(),
-                mAppSecrets.getAppSecret(), listener, errorListener);
+        WebauthnChallengeRequest request = new WebauthnChallengeRequest(
+                userId,
+                webauthnNonce,
+                mAppSecrets.getAppId(),
+                mAppSecrets.getAppSecret(),
+                listener,
+                errorListener
+        );
         mRequestQueue.add(request);
     }
 
     public void makeRequest(String userId, String twoStepNonce,
                             String clientData, Response.Listener<String> listener,
                             ErrorListener errorListener) {
-        WebauthnTokenRequest request = new WebauthnTokenRequest(userId, twoStepNonce,
-                mAppSecrets.getAppId(), mAppSecrets.getAppSecret(),
-                clientData, listener, errorListener);
+        WebauthnTokenRequest request = new WebauthnTokenRequest(
+                userId,
+                twoStepNonce,
+                mAppSecrets.getAppId(),
+                mAppSecrets.getAppSecret(),
+                clientData,
+                listener,
+                errorListener
+        );
         mRequestQueue.add(request);
     }
 
@@ -198,89 +207,6 @@ public class Authenticator {
             super(appId, appSecret, listener, errorListener);
             mParams.put(CODE_PARAM_NAME, code);
             mParams.put(GRANT_TYPE_PARAM_NAME, BEARER_GRANT_TYPE);
-        }
-    }
-
-    public static class WebauthnChallengeRequest extends Request<String> {
-        private final Response.Listener<String> mListener;
-        private Map<String, String> mParams = new HashMap<>();
-        public WebauthnChallengeRequest(String userId, String mWebauthnNonce, String appId,
-                                        String appSecret, Response.Listener<String> listener,
-                                        ErrorListener errorListener) {
-            super(Method.POST, PasskeyRestClient.webauthnChallengeEndpointUrl, errorListener);
-            mListener = listener;
-            mParams.put(CLIENT_ID_PARAM_NAME, appId);
-            mParams.put(CLIENT_SECRET_PARAM_NAME, appSecret);
-            mParams.put("user_id", userId);
-            mParams.put("auth_type", "webauthn");
-            mParams.put("two_step_nonce", mWebauthnNonce);
-        }
-
-
-        @Override
-        protected Response<String> parseNetworkResponse(NetworkResponse response) {
-            try {
-                String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                JSONObject challengeData = new JSONObject(jsonString).getJSONObject("data");
-                return Response.success(challengeData.toString(), HttpHeaderParser.parseCacheHeaders(response));
-            } catch (UnsupportedEncodingException | JSONException e) {
-                return Response.error(new ParseError(e));
-            }
-        }
-
-        @Override
-        protected void deliverResponse(String response) {
-            mListener.onResponse(response);
-        }
-
-        @Nullable
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-            return mParams;
-        }
-    }
-
-    public static class WebauthnTokenRequest extends Request<String> {
-        private final Response.Listener<String> mListener;
-        private Map<String, String> mParams = new HashMap<>();
-
-        public WebauthnTokenRequest(String userId, String twoStepNonce,
-                                    String clientId, String clientSecret,
-                                    String clientData, Response.Listener<String> listener,
-                                    ErrorListener errorListener) {
-            super(Method.POST, PasskeyRestClient.webauthnAuthEndpointUrl, errorListener);
-            mListener = listener;
-            mParams.put("user_id", userId);
-            mParams.put("two_step_nonce", twoStepNonce);
-            mParams.put("auth_type", "webauthn");
-            mParams.put("client_data", clientData);
-            mParams.put("client_id", clientId);
-            mParams.put("client_secret", clientSecret);
-            mParams.put("get_bearer_token", "true");
-            mParams.put("create_2fa_cookies_only", "true");
-        }
-
-        @Override
-        protected Response<String> parseNetworkResponse(NetworkResponse response) {
-            try {
-                String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                JSONObject responseData = new JSONObject(jsonString).getJSONObject("data");
-                String token = responseData.getString("bearer_token");
-                return Response.success(token, HttpHeaderParser.parseCacheHeaders(response));
-            } catch (UnsupportedEncodingException | JSONException e) {
-                return Response.error(new ParseError(e));
-            }
-        }
-
-        @Override
-        protected void deliverResponse(String response) {
-            mListener.onResponse(response);
-        }
-
-        @Nullable
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-            return mParams;
         }
     }
 
