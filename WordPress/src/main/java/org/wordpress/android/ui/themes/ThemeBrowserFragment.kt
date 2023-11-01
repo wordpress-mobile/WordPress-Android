@@ -158,10 +158,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         callback = null
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = ThemeBrowserFragmentBinding.inflate(inflater, container, false)
 
         configureGridView(inflater)
