@@ -452,7 +452,7 @@ platform :android do
     Dir.glob(File.join(app_values[:metadata_dir], 'android', '*', 'changelogs', '*')).each do |file|
       File.delete(file) if Integer(File.basename(file, '.*')) < Integer(options[:build])
     rescue StandardError
-      puts "Cannot delete file #{file}"
+      UI.error("Could not delete file #{file}.")
     end
   end
 

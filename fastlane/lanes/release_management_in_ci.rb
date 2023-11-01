@@ -6,7 +6,7 @@ platform :android do
   #####################################################################################
   # Triggers for Buildkite
   #####################################################################################
-  lane :trigger_code_freeze_in_ci do |_options|
+  lane :trigger_code_freeze_in_ci do
     buildkite_trigger_build(
       buildkite_organization: BUILDKITE_ORGANIZATION,
       buildkite_pipeline: BUILDKITE_PIPELINE,
