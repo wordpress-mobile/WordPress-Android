@@ -354,6 +354,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
+
+        mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
+
         StartSecurityKeyChallengePayload payload = new StartSecurityKeyChallengePayload(
                 mUserId, mWebauthnNonce);
         mDispatcher.dispatch(AuthenticationActionBuilder
