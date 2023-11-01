@@ -1913,7 +1913,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
-            if (!isAdded() && !mHasUpdatedPosts) {
+            if (!isAdded() || !mHasUpdatedPosts) {
                 return;
             }
             if (isEmpty) {
