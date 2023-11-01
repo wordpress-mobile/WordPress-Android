@@ -22,6 +22,18 @@
         <ignore path="**/generated/source/kapt/**/org/wordpress/android/push/Hilt_GCMMessageService.java" />
     </issue>
     <issue id="GradleDependency" severity="ignore" /> <!-- Dependabot will take care of this -->
+    <issue id="MissingNullAnnotationOnField">
+        <ignore path="**/generated/**" />
+    </issue>
+    <issue id="MissingNullAnnotationOnConstructorParameter">
+        <ignore path="**/generated/**" />
+    </issue>
+    <issue id="MissingNullAnnotationOnMethodParameter">
+        <ignore path="**/generated/**" />
+    </issue>
+    <issue id="MissingNullAnnotationOnMethodReturnType">
+        <ignore path="**/generated/**" />
+    </issue>
     <!-- SECURITY -->
     <issue id="TrustAllX509TrustManager">
         <!-- EDITOR -->

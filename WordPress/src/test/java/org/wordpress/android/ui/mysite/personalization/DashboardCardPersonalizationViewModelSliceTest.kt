@@ -16,6 +16,8 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -36,6 +38,12 @@ class DashboardCardPersonalizationViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
+    @Mock
+    lateinit var blazeFeatureUtils: BlazeFeatureUtils
+
+    @Mock
+    lateinit var bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper
+
     private lateinit var viewModelSlice: DashboardCardPersonalizationViewModelSlice
 
     private val site = SiteModel().apply { siteId = 123L }
@@ -54,12 +62,19 @@ class DashboardCardPersonalizationViewModelSliceTest : BaseUnitTest() {
         whenever(bloggingRemindersStore.bloggingRemindersModel(localSiteId))
             .thenReturn(flowOf(userSetBloggingRemindersModel))
 
+        whenever(blazeFeatureUtils.isSiteBlazeEligible(site)).thenReturn(true)
+        test {
+            whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(true)
+        }
+
         viewModelSlice = DashboardCardPersonalizationViewModelSlice(
             bgDispatcher = testDispatcher(),
             appPrefsWrapper = appPrefsWrapper,
             selectedSiteRepository = selectedSiteRepository,
             bloggingRemindersStore = bloggingRemindersStore,
-            analyticsTrackerWrapper = analyticsTrackerWrapper
+            analyticsTrackerWrapper = analyticsTrackerWrapper,
+            blazeFeatureUtils = blazeFeatureUtils,
+            bloggingPromptsSettingsHelper = bloggingPromptsSettingsHelper
         )
 
         viewModelSlice.uiState.observeForever {
@@ -103,6 +118,8 @@ class DashboardCardPersonalizationViewModelSliceTest : BaseUnitTest() {
     @Test
     fun `given pages card is not hidden, when cards are fetched, then state is checked`() {
         whenever(appPrefsWrapper.getShouldHidePagesDashboardCard(123L)).thenReturn(false)
+        site.hasCapabilityEditPages = true
+        site.setIsSelfHostedAdmin(true)
 
         viewModelSlice.start(123L)
         val statsCardState = uiStateList.last().find { it.cardType == CardType.PAGES }
@@ -113,6 +130,8 @@ class DashboardCardPersonalizationViewModelSliceTest : BaseUnitTest() {
     @Test
     fun `given activity log card is not hidden, when cards are fetched, then state is checked`() {
         whenever(appPrefsWrapper.getShouldHideActivityDashboardCard(123L)).thenReturn(false)
+        site.hasCapabilityManageOptions = true
+        site.setIsWpForTeamsSite(false)
 
         viewModelSlice.start(123L)
         val statsCardState = uiStateList.last().find { it.cardType == CardType.ACTIVITY_LOG }
@@ -123,6 +142,7 @@ class DashboardCardPersonalizationViewModelSliceTest : BaseUnitTest() {
     @Test
     fun `given blaze card is not hidden, when cards are fetched, then state is checked`() {
         whenever(appPrefsWrapper.hideBlazeCard(123L)).thenReturn(false)
+
 
         viewModelSlice.start(123L)
         val statsCardState = uiStateList.last().find { it.cardType == CardType.BLAZE }

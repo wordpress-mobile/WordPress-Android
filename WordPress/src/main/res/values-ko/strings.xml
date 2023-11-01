@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-05 09:54:07+0000
+Translation-Revision-Date: 2023-10-19 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.9
+Generator: GlotPress/4.0.0-alpha.11
 Language: ko_KR
 -->
 <resources>
+    <string name="account_and_settings">계정 및 설정</string>
+    <string name="site_creation_plans_selection_title">요금제 선택</string>
+    <string name="site_creation_domain_free_with_annual_plan">연간 유료 요금제에서는 첫해 무료</string>
+    <string name="reader_label_followers_count_single">팔로워 1명</string>
+    <string name="reader_secondary_bookmarked">저장됨</string>
+    <string name="reader_secondary_bookmark">저장</string>
+    <string name="reader_discover_recommended_header_new">좋아할 수도 있습니다</string>
     <string name="gutenberg_native_ungroup_block">블록 그룹 해제</string>
     <string name="gutenberg_native_tap_here_to_show_more_details">자세히 알아보려면 여기를 누르세요.</string>
     <string name="gutenberg_native_synced_patterns">동기화된 패턴</string>
@@ -665,7 +672,7 @@ Language: ko_KR
     <string name="gutenberg_native_tiled_gallery_settings">바둑판식 갤러리 설정</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">레이아웃 선택 화면으로 이동</string>
     <string name="gutenberg_native_gallery_style">갤러리 스타일</string>
-    <string name="sharing_connect_via_web_warning_message">워드프레스닷컴 웹사이트에서 %s 계정을 연결할 수 있습니다. 완료하면 앱으로 돌아가서 공유 설정을 변경하세요.</string>
+    <string name="sharing_connect_via_web_warning_message">워드프레스닷컴 웹사이트에서 %s 계정을 연결할 수 있습니다. 완료하면 앱으로 돌아가서 소셜 설정을 변경하세요.</string>
     <string name="about_automattic_app_icon_description">앱 아이콘</string>
     <string name="about_automattic_back_icon_description">뒤로 아이콘</string>
     <string name="about_automattic_logo_description">Automattic 로고</string>
@@ -2310,7 +2317,7 @@ Language: ko_KR
     <string name="quick_start_dialog_view_site_title">사이트 보기</string>
     <string name="quick_start_dialog_view_site_message">새 사이트를 미리 보며 방문자에게 표시되는 내용을 참조하세요.</string>
     <string name="quick_start_dialog_share_site_title">사이트 공유</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">%1$s 공유 %2$s를 탭하여 계속하기</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">계속하려면 %1$s소셜%2$s 탭하기</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">%1$s 연결 %2$s을 탭하여 소셜 미디어 계정 추가</string>
     <string name="quick_start_dialog_share_site_message">소셜 미디어 계정을 연결하세요. 그러면 사이트에서 새 글을 자동으로 공유합니다.</string>
     <string name="quick_start_dialog_publish_post_title">글 게시</string>
@@ -2534,8 +2541,8 @@ Language: ko_KR
     <string name="permissions_denied_message">이 기능에 대한 필수 권한이 해제되어 있는 것 같습니다.&lt;br/&gt;&lt;br/&gt;변경하려면 권한을 편집하고 &lt;strong&gt;%s&lt;/strong&gt;이(가) 활성화되어 있는지 확인하세요.</string>
     <string name="permissions_denied_title">권한</string>
     <string name="plugin_caption_featured">특성</string>
-    <string name="sharing_disabled_description">공유 젯팩 모듈이 비활성화되었기 때문에 공유 설정에 액세스할 수 없습니다.</string>
-    <string name="sharing_disabled">공유 모듈이 비활성화됨</string>
+    <string name="sharing_disabled_description">Jetpack Social 모듈이 비활성화되었기 때문에 소셜 공유 설정에 액세스할 수 없습니다.</string>
+    <string name="sharing_disabled">소셜 모듈 비활성화됨</string>
     <string name="version_with_name_param">%s 버전</string>
     <string name="notification_sound_has_invalid_path">선택한 사운드의 경로가 잘못되었습니다. 다른 항목을 선택하세요.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>

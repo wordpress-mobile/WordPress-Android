@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +30,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -40,11 +42,20 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DomainListCard(uiState: DomainCardUiState) {
+fun DomainListCard(
+    uiState: DomainCardUiState,
+    onDomainTapped: (detailUrl: String) -> Unit = {},
+    ) {
     OutlinedCard(
         modifier = Modifier.fillMaxWidth(),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        onClick = {
+            if (uiState is DomainCardUiState.Loaded && uiState.detailUrl != null) {
+                onDomainTapped(uiState.detailUrl)
+            }
+        },
     ) {
         Row(
             verticalAlignment = CenterVertically,
@@ -89,11 +100,15 @@ fun DomainListCard(uiState: DomainCardUiState) {
                 }
             }
             Spacer(modifier = Modifier.width(16.dp))
-            Icon(
-                painter = painterResource(id = R.drawable.ic_chevron_right_white_24dp),
-                contentDescription = "",
-                tint = MaterialTheme.colorScheme.outline,
-            )
+            if (uiState == DomainCardUiState.Initial) {
+                Spacer(modifier = Modifier.width(24.dp))
+            } else {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_chevron_right_white_24dp),
+                    contentDescription = stringResource(R.string.domain_management_open_domain_details),
+                    tint = MaterialTheme.colorScheme.outline,
+                )
+            }
         }
     }
 }

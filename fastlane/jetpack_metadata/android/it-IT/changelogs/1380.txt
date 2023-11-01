@@ -1,0 +1,3 @@
+23.5:
+Abbiamo apportato alcune modifiche visive al Reader, tra cui schede feed, intestazioni, pulsanti, consigli e altro ancora.
+Nell'editor a blocchi puoi ora dividere un blocco formattato o uscirne premendo il tasto "Invio" per tre volte. Il bordo sinistro è inoltre sempre visibile per i blocchi Citazione.
