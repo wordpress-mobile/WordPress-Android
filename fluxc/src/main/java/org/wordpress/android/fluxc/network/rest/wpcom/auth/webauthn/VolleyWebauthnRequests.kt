@@ -6,6 +6,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.Response.ErrorListener
 import com.android.volley.toolbox.HttpHeaderParser
+import com.google.gson.Gson
 import org.json.JSONException
 import org.json.JSONObject
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnRequestParameters.AUTH_TYPE
@@ -23,9 +24,9 @@ class WebauthnChallengeRequest(
     twoStepNonce: String,
     clientId: String,
     clientSecret: String,
-    listener: Response.Listener<String>,
+    listener: Response.Listener<WebauthnChallengeInfo>,
     errorListener: ErrorListener
-): BaseWebauthnRequest(webauthnChallengeEndpointUrl, errorListener, listener) {
+): BaseWebauthnRequest<WebauthnChallengeInfo>(webauthnChallengeEndpointUrl, errorListener, listener) {
     override val parameters: Map<String, String> = mapOf(
         CLIENT_ID.value to clientId,
         CLIENT_SECRET.value to clientSecret,
@@ -34,7 +35,8 @@ class WebauthnChallengeRequest(
         TWO_STEP_NONCE.value to twoStepNonce
     )
 
-    override val responseParameterName = "data"
+    override fun serializeResponse(response: String): WebauthnChallengeInfo =
+        gson.fromJson(response, WebauthnChallengeInfo::class.java)
 }
 
 @SuppressWarnings("LongParameterList")
@@ -44,9 +46,9 @@ class WebauthnTokenRequest(
     clientId: String,
     clientSecret: String,
     clientData: String,
-    listener: Response.Listener<String>,
+    listener: Response.Listener<WebauthnToken>,
     errorListener: ErrorListener
-) : BaseWebauthnRequest(webauthnAuthEndpointUrl, errorListener, listener) {
+) : BaseWebauthnRequest<WebauthnToken>(webauthnAuthEndpointUrl, errorListener, listener) {
     override val parameters = mapOf(
         CLIENT_ID.value to clientId,
         CLIENT_SECRET.value to clientSecret,
@@ -58,18 +60,21 @@ class WebauthnTokenRequest(
         CREATE_2FA_COOKIES_ONLY.value to "true"
     )
 
-    override val responseParameterName = "bearer_token"
+    override fun serializeResponse(response: String): WebauthnToken =
+        gson.fromJson(response, WebauthnToken::class.java)
 }
 
-abstract class BaseWebauthnRequest(
+abstract class BaseWebauthnRequest<T>(
     url: String,
     errorListener: ErrorListener,
-    private val listener: Response.Listener<String>
-) : Request<String>(Method.POST, url, errorListener) {
+    private val listener: Response.Listener<T>
+) : Request<T>(Method.POST, url, errorListener) {
     abstract val parameters: Map<String, String>
-    abstract val responseParameterName: String
+    abstract fun serializeResponse(response: String): T
 
-    private fun NetworkResponse?.extractResult(parameterName: String): Response<String> {
+    internal val gson by lazy { Gson() }
+
+    private fun NetworkResponse?.extractResult(parameterName: String): Response<T> {
         if (this == null) {
             val error = WebauthnChallengeRequestException("Webauthn challenge response is null")
             return Response.error(ParseError(error))
@@ -80,27 +85,29 @@ abstract class BaseWebauthnRequest(
             val charsetName = HttpHeaderParser.parseCharset(this.headers)
             String(this.data, charset(charsetName))
                 .let { JSONObject(it).getJSONObject(parameterName) }
-                .let { Response.success(it.toString(), headers) }
+                .let { serializeResponse(it.toString()) }
+                .let { Response.success(it, headers) }
         }
         catch (exception: UnsupportedEncodingException) { handleError(exception) }
         catch (exception: JSONException) { handleError(exception) }
     }
 
-    private fun handleError(exception: Exception): Response<String> {
+    private fun handleError(exception: Exception): Response<T> {
         val message = exception.message ?: "Webauthn challenge response is null"
         val error = WebauthnChallengeRequestException(message)
         return Response.error(ParseError(error))
     }
 
     override fun getParams() = parameters
-    override fun deliverResponse(response: String) = listener.onResponse(response)
+    override fun deliverResponse(response: T) = listener.onResponse(response)
     override fun parseNetworkResponse(response: NetworkResponse?) =
-        response.extractResult(responseParameterName)
+        response.extractResult(WEBAUTHN_DATA)
 
     companion object {
         private const val baseWPLoginUrl = "https://wordpress.com/wp-login.php?action"
         private const val challengeEndpoint = "webauthn-challenge-endpoint"
         private const val authEndpoint = "webauthn-authentication-endpoint"
+        private const val WEBAUTHN_DATA = "data"
 
         internal const val webauthnChallengeEndpointUrl = "$baseWPLoginUrl=$challengeEndpoint"
         internal const val webauthnAuthEndpointUrl = "$baseWPLoginUrl=$authEndpoint"
