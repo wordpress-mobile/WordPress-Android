@@ -340,8 +340,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         adapter.setThemeList(fetchThemes())
     }
 
-    private fun moveActiveThemeToFront(themes: MutableList<ThemeModel>?) {
-        if (themes.isNullOrEmpty() || TextUtils.isEmpty(currentThemeId)) {
+    private fun moveActiveThemeToFront(themes: MutableList<ThemeModel>) {
+        if (themes.isEmpty() || TextUtils.isEmpty(currentThemeId)) {
             return
         }
 
@@ -374,8 +374,8 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         }
     }
 
-    private fun removeDuplicateThemes(wpComThemes: MutableList<ThemeModel>, uploadedThemes: List<ThemeModel>?) {
-        if (wpComThemes.isEmpty() || uploadedThemes.isNullOrEmpty()) {
+    private fun removeDuplicateThemes(wpComThemes: MutableList<ThemeModel>, uploadedThemes: List<ThemeModel>) {
+        if (wpComThemes.isEmpty() || uploadedThemes.isEmpty()) {
             return
         }
 
