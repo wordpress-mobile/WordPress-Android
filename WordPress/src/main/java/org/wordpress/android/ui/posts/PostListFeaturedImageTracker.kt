@@ -31,7 +31,7 @@ class PostListFeaturedImageTracker(private val dispatcher: Dispatcher, private v
         featuredImageMap[featuredImageId]?.let { return it }
         mediaStore.getSiteMediaWithId(site, featuredImageId)?.let { media ->
             // This should be a pretty rare case, but some media seems to be missing url
-            return if (media.url != null) {
+            return if (media.url.isNotBlank()) {
                 featuredImageMap[featuredImageId] = media.url
                 media.url
             } else null

@@ -3312,7 +3312,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return false;
         }
 
-        if (media.getUrl() != null && media.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
+        if (!TextUtils.isEmpty(media.getUrl()) && media.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
             // Note: we should actually do this when the editor fragment starts instead of waiting for user input.
             // Notify the editor fragment upload was successful and it should replace the local url by the remote url.
             if (mEditorMediaUploadListener != null) {
@@ -3672,7 +3672,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, event.error);
         } else if (event.completed) {
             // if the remote url on completed is null, we consider this upload wasn't successful
-            if (event.media.getUrl() == null) {
+            if (TextUtils.isEmpty(event.media.getUrl())) {
                 MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
                 mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, error);
             } else {
