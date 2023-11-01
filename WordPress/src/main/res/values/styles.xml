@@ -982,18 +982,6 @@
         <item name="android:paddingStart">@dimen/margin_extra_medium_large</item>
     </style>
 
-    <!-- Pages styles -->
-    <style name="PageListItemTextStyle" parent="PageListTopLevelItemTextStyle">
-        <item name="android:fontFamily">serif</item>
-    </style>
-
-    <style name="PageListTopLevelItemTextStyle">
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
     <style name="LinearProgress" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/primary_50</item>
     </style>
