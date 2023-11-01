@@ -286,10 +286,10 @@ class PageListViewModel @Inject constructor(
         }
 
         // Media is not in the Store, we need to download it
-        val mediaToDownload = MediaModel()
-        mediaToDownload.mediaId = featuredImageId
-        mediaToDownload.localSiteId = pagesViewModel.site.id
-
+        val mediaToDownload = MediaModel(
+            pagesViewModel.site.id,
+            featuredImageId
+        )
         val payload = MediaPayload(pagesViewModel.site, mediaToDownload)
         dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
 

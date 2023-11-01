@@ -105,8 +105,8 @@ class AppendMediaToEditorUseCaseTest {
         }
 
         fun createMediaModel(url: String? = "", filePath: String? = ""): MediaModel {
-            return MediaModel().apply {
-                this.url = url
+            return MediaModel(0, 0).apply {
+                this.url = url ?: ""
                 this.filePath = filePath
             }
         }

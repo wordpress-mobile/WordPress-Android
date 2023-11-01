@@ -37,9 +37,10 @@ class PostListFeaturedImageTracker(private val dispatcher: Dispatcher, private v
             } else null
         }
         // Media is not in the Store, we need to download it
-        val mediaToDownload = MediaModel()
-        mediaToDownload.mediaId = featuredImageId
-        mediaToDownload.localSiteId = site.id
+        val mediaToDownload = MediaModel(
+            site.id,
+            featuredImageId
+        )
         val payload = MediaPayload(site, mediaToDownload)
         dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
         return null

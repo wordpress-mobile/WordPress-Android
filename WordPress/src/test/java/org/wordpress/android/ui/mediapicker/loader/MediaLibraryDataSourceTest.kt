@@ -305,8 +305,7 @@ class MediaLibraryDataSourceTest : BaseUnitTest() {
     }
 
     private fun buildMediaModel(date: Long): MediaModel {
-        val mediaModel = MediaModel()
-        mediaModel.mediaId = mediaIdCounter
+        val mediaModel = MediaModel(siteModel.id, mediaIdCounter)
         mediaIdCounter += 1
         mediaModel.url = "http://media.jpg"
         mediaModel.title = "media"
