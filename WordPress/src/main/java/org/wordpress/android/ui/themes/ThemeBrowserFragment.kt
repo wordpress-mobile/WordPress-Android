@@ -63,7 +63,6 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
     private var lastSearch: String? = null
     var currentThemeTextView: TextView? = null
         private set
-    private var headerCustomizeButton: View? = null
     private val adapter: ThemeBrowserAdapter by lazy {
         ThemeBrowserAdapter(activity, requireNotNull(site).planId, callback, imageManager).apply {
             registerDataSetObserver(ThemeDataSetObserver())
@@ -280,7 +279,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         currentThemeTextView = header.findViewById(R.id.header_theme_text)
 
         setThemeNameIfAlreadyAvailable()
-        headerCustomizeButton = header.findViewById(R.id.customize)
+        val headerCustomizeButton = header.findViewById<View>(R.id.customize)
         headerCustomizeButton?.setOnClickListener {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_CUSTOMIZE_ACCESSED, site)
             callback?.onTryAndCustomizeSelected(currentThemeId)
