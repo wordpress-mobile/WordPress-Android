@@ -132,8 +132,9 @@ class PageListEventListener(
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onMediaUploaded(event: OnMediaUploaded) {
-        if (event.media != null && event.media.localPostId != 0 && site.id == event.media.localSiteId) {
-            uploadStatusChanged(LocalId(event.media.localPostId))
+        val media = event.media
+        if (media != null && media.localPostId != 0 && site.id == media.localSiteId) {
+            uploadStatusChanged(LocalId(media.localPostId))
         }
     }
 

@@ -214,12 +214,12 @@ class PostListEventListener(
         if (event.isError || event.canceled) {
             return
         }
-        if (event.media == null || event.media.localPostId == 0 || site.id != event.media.localSiteId) {
-            // Not interested in media not attached to posts or not belonging to the current site
-            return
+        val media = event.media
+        if (media != null && media.localPostId != 0 && site.id == media.localSiteId) {
+            featuredMediaChanged(media.mediaId)
+            uploadStatusChanged(media.localPostId)
         }
-        featuredMediaChanged(event.media.mediaId)
-        uploadStatusChanged(event.media.localPostId)
+        // Not interested in media not attached to posts or not belonging to the current site
     }
 
     // EventBus Events
