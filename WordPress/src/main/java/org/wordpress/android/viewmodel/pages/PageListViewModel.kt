@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.AccountStore
@@ -93,6 +94,11 @@ class PageListViewModel @Inject constructor(
 
     private val PageModel.isPostsPage: Boolean
         get() = remoteId == pagesViewModel.site.pageForPosts
+
+    private val showAuthorName: Boolean by lazy {
+         // show if the site is a single user site and the users in the site has the capability to edit/add pages
+         !pagesViewModel.site.isSingleUserSite && pagesViewModel.site.hasCapabilityEditOthersPages
+    }
 
     private val featuredImageMap = mutableMapOf<Long, String>()
 
@@ -321,11 +327,7 @@ class PageListViewModel @Inject constructor(
                     DEFAULT_INDENT
                 }
                 val itemUiStateData = createItemUiStateData(it)
-                val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                    null
-                } else {
-                    it.post.authorDisplayName
-                }
+                val author = getAuthorName(it.post)
                 PublishedPage(
                     remoteId = it.remoteId,
                     localId = it.pageId,
@@ -369,12 +371,7 @@ class PageListViewModel @Inject constructor(
                 listOf(Divider(date)) +
                         results.map {
                             val itemUiStateData = createItemUiStateData(it)
-
-                            val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                                null
-                            } else {
-                                it.post.authorDisplayName
-                            }
+                            val author = getAuthorName(it.post)
                             ScheduledPage(
                                 remoteId = it.remoteId,
                                 localId = it.pageId,
@@ -420,11 +417,7 @@ class PageListViewModel @Inject constructor(
                     actionsEnabled = actionsEnabled,
                     progressBarUiState = itemUiStateData.progressBarUiState,
                     showOverlay = itemUiStateData.showOverlay,
-                    author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                        null
-                    } else {
-                        it.post.authorDisplayName
-                    },
+                    author = getAuthorName(it.post),
                     showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                 )
             }
@@ -443,11 +436,7 @@ class PageListViewModel @Inject constructor(
         return filteredPages
             .map {
                 val itemUiStateData = createItemUiStateData(it)
-                val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                    null
-                } else {
-                    it.post.authorDisplayName
-                }
+                val author = getAuthorName(it.post)
                 TrashedPage(
                     remoteId = it.remoteId,
                     localId = it.pageId,
@@ -464,6 +453,17 @@ class PageListViewModel @Inject constructor(
                     showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                 )
             }
+    }
+
+    private fun getAuthorName(postModel: PostModel): String? {
+        if (!showAuthorName) return null
+        return pagesViewModel.authorUIState.value?.authorFilterSelection?.let {
+            if (it == ME) {
+                null
+            } else {
+                postModel.authorDisplayName
+            }
+        }
     }
 
     private fun topologicalSort(
