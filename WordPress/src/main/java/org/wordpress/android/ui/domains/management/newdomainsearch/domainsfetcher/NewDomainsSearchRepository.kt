@@ -1,20 +1,18 @@
 package org.wordpress.android.ui.domains.management.newdomainsearch.domainsfetcher
 
 import org.wordpress.android.Constants
-import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.products.Product
 import org.wordpress.android.fluxc.store.ProductsStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
-import org.wordpress.android.util.dispatchAndAwait
 import javax.inject.Inject
 
 private const val SUGGESTIONS_REQUEST_COUNT = 20
 
 class NewDomainsSearchRepository @Inject constructor(
     private val productsStore: ProductsStore,
-    private val dispatcher: Dispatcher
+    private val suggestedDomainsFetcher: SuggestedDomainsFetcher
 ) {
     var products: List<Product>? = null
 
@@ -29,7 +27,7 @@ class NewDomainsSearchRepository @Inject constructor(
                 quantity = SUGGESTIONS_REQUEST_COUNT
             )
         ).let { action ->
-            dispatcher.dispatchAndAwait<SiteStore.SuggestDomainsPayload, OnSuggestedDomains>(action)
+            suggestedDomainsFetcher.fetch(action)
         }.let { event ->
             onDomainSuggestionsFetched(query, event)
         }
@@ -44,7 +42,7 @@ class NewDomainsSearchRepository @Inject constructor(
         return if (query == event.query && !event.isError) {
             val suggestions = event.suggestions
                 .filter { !it.is_free }
-                .sortedBy { it.relevance }
+                .sortedByDescending { it.relevance }
                 .map { domain ->
                     val product = products?.firstOrNull { product -> product.productId == domain.product_id }
                     val splitDomainName = domain.domain_name.split('.')
@@ -58,7 +56,6 @@ class NewDomainsSearchRepository @Inject constructor(
                         salePrice = product?.combinedSaleCostDisplay,
                     )
                 }
-                .asReversed()
             DomainsResult.Success(suggestions)
         } else {
             DomainsResult.Error

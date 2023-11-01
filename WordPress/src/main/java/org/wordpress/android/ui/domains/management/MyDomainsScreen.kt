@@ -50,7 +50,8 @@ import org.wordpress.android.ui.domains.management.composable.DomainsSearchTextF
 fun MyDomainsScreen(
     uiState: UiState,
     onDomainTapped: (detailUrl: String) -> Unit,
-    onAddDomainClicked: () -> Unit,
+    onAddDomainTapped: () -> Unit,
+    onFindDomainTapped: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -60,7 +61,7 @@ fun MyDomainsScreen(
                 onNavigationIconClick = {},
                 actions = {
                     IconButton(
-                        onClick = onAddDomainClicked,
+                        onClick = onAddDomainTapped,
                         enabled = uiState is PopulatedList.Loaded || uiState is Empty,
                     ) {
                         Icon(
@@ -95,7 +96,7 @@ fun MyDomainsScreen(
                     onDomainTapped,
                 )
                 Error -> ErrorScreen()
-                Empty -> EmptyScreen {}
+                Empty -> EmptyScreen(onFindDomainTapped)
             }
         }
     }
@@ -222,7 +223,7 @@ fun MyDomainsList(
 @Composable
 fun PreviewMyDomainsScreen() {
     M3Theme {
-        MyDomainsScreen(PopulatedList.Initial, onAddDomainClicked = {}, onDomainTapped = {})
+        MyDomainsScreen(PopulatedList.Initial, onAddDomainTapped = {}, onDomainTapped = {}, onFindDomainTapped = {})
     }
 }
 @Preview(device = Devices.PIXEL_3A, group = "Error / Offline")
@@ -230,7 +231,7 @@ fun PreviewMyDomainsScreen() {
 @Composable
 fun PreviewMyDomainsScreenError() {
     M3Theme {
-        MyDomainsScreen(Error, onAddDomainClicked = {}, onDomainTapped = {})
+        MyDomainsScreen(Error, onAddDomainTapped = {}, onDomainTapped = {}, onFindDomainTapped = {})
     }
 }
 
@@ -239,6 +240,6 @@ fun PreviewMyDomainsScreenError() {
 @Composable
 fun PreviewMyDomainsScreenEmpty() {
     M3Theme {
-        MyDomainsScreen(Empty, onAddDomainClicked = {}, onDomainTapped = {})
+        MyDomainsScreen(Empty, onAddDomainTapped = {}, onDomainTapped = {}, onFindDomainTapped = {})
     }
 }

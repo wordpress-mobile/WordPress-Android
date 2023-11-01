@@ -2651,6 +2651,7 @@
 
     <!-- Domain Registration -->
     <string name="domains_title">Domains</string>
+    <string name="site_domain_title">Site Domain</string>
     <string name="register_domain">Register Domain</string>
     <string name="domains_suggestions_select_domain">Select domain</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
@@ -2706,7 +2707,7 @@
 
     <!-- Domain Management -->
     <string name="domain_management_expires">Expires %1$s</string>
-    <string name="domain_management_my_domains_title">My Domains</string>
+    <string name="domain_management_my_domains_title">All Domains</string>
     <string name="domain_management_purchase_a_domain">Purchase a domain</string>
     <string name="domain_management_search_your_domains">Search your domains</string>
     <string name="domain_management_open_domain_details">Open domain details</string>
@@ -2715,6 +2716,7 @@
     <string name="domain_management_empty_title">You don\'t have any domains</string>
     <string name="domain_management_empty_subtitle">Tap below to find your perfect domain.</string>
     <string name="domain_management_empty_find_domain">Find a domain</string>
+    <string name="domain_management_site_domains_button">All</string>
 
     <!-- Domain Management - Purchase Domain Screen -->
     <string name="purchase_domain_screen_title">Purchase Domain</string>
@@ -4783,4 +4785,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ungroup block</string>
     <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Warning message</string>
     <string name="account_and_settings">Account and Settings</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can convert the content to blocks.</string>
+    <string name="gutenberg_native_s_block_converted_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">\'%s\' block converted to blocks</string>
 </resources>

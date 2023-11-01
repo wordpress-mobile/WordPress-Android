@@ -1,0 +1,10 @@
+AllCops:
+  Exclude:
+    - vendor/**/*
+  NewCops: enable
+
+Metrics/MethodLength:
+  Max: 30
+
+Layout/LineLength:
+  Max: 180
