@@ -62,7 +62,6 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         FAILURE_2FA,
         FAILURE_SOCIAL_2FA,
         FAILURE_SECURITY_KEY,
-        FAILURE_SOCIAL_SECURITY_KEY,
         FAILURE_FETCHING_ACCOUNT,
         FAILURE_CANNOT_ADD_DUPLICATE_SITE,
         FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL,
@@ -106,6 +105,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
                     || mStep == LoginStep.FAILURE_EMAIL_WRONG_PASSWORD
                     || mStep == LoginStep.FAILURE_2FA
                     || mStep == LoginStep.FAILURE_SOCIAL_2FA
+                    || mStep == LoginStep.FAILURE_SECURITY_KEY
                     || mStep == LoginStep.FAILURE_FETCHING_ACCOUNT
                     || mStep == LoginStep.FAILURE_CANNOT_ADD_DUPLICATE_SITE
                     || mStep == LoginStep.FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL;
@@ -321,12 +321,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
             case NEEDS_SECURITY_KEY:
                 // login credentials were correct anyway so, offer to save to SmartLock
                 signalCredentialsOK();
-
-                if (mIsSocialLogin) {
-                    setState(LoginStep.FAILURE_SOCIAL_SECURITY_KEY);
-                } else {
-                    setState(LoginStep.FAILURE_SECURITY_KEY);
-                }
+                setState(LoginStep.FAILURE_SECURITY_KEY);
                 break;
             case EMAIL_LOGIN_NOT_ALLOWED:
                 setState(LoginStep.FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL);

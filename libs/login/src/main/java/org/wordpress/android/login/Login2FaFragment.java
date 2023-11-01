@@ -354,7 +354,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
-        // TODO: Check if security key is available, if not, trigger PushSecurityKeyPayload
         StartSecurityKeyChallengePayload payload = new StartSecurityKeyChallengePayload(
                 mUserId, mWebauthnNonce);
         mDispatcher.dispatch(AuthenticationActionBuilder
@@ -584,17 +583,17 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             endProgress();
             return;
         }
-        startProgress();
+        startProgress(false);
         mLoginListener.signSecurityKey(event.challengeInfo, event.mUserId);
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSecurityKeyCheckFinished(SecurityKeyCheckFinished event) {
+        endProgress();
         if (event.isError()) {
             Toast.makeText(requireContext(), "Login failed", Toast.LENGTH_SHORT).show();
             handleAuthError(event.error.type, event.error.message);
-            endProgress();
             return;
         }
         Toast.makeText(requireContext(), "Login succeeded", Toast.LENGTH_SHORT).show();
