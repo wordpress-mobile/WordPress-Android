@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-18 14:54:08+0000
+Translation-Revision-Date: 2023-10-26 19:16:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: it
@@ -104,6 +104,7 @@ Language: it
     <string name="campaign_listing_page_no_campaigns_message_title">Non hai campagne</string>
     <string name="blaze_campaign_details_page_title">Dettagli della campagna</string>
     <string name="blaze_campaigns_page_title">Campagne Blaze</string>
+    <string name="budget_campaign_stats">Budget</string>
     <string name="clicks_campaign_stats">Clic</string>
     <string name="impressions_campaign_stats">Impressioni</string>
     <string name="campaign_status_scheduled">PIANIFICATA</string>
@@ -445,7 +446,7 @@ Language: it
     <string name="wp_jetpack_powered">Con tecnologia Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Immagine indicante la scansione del codice di accesso in elaborazione</string>
     <string name="qrcode_auth_flow_error_content_description">Immagine indiante un errore</string>
-    <string name="qrcode_auth_flow_dismiss_dialog_message">Desideri continuare?</string>
+    <string name="qrcode_auth_flow_dismiss_dialog_message">Vuoi davvero continuare?</string>
     <string name="qrcode_auth_flow_dismiss_dialog_title">Esci dalla scansione del flusso di codici di accesso</string>
     <string name="qrcode_auth_flow_error_auth_failed_subtitle">Impossibile accedere usando questo codice di accesso. Tocca il pulsante Scansiona di nuovo per scansionare nuovamente il codice.</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Autenticazione non riuscita</string>
@@ -1074,7 +1075,7 @@ Language: it
     <string name="restore_status_failure_heading">Siamo spiacenti, non è stato possibile trovare lo stato del ripristino</string>
     <string name="restore_complete_failed_description">Impossibile ripristinare il sito</string>
     <string name="restore_warning_action_button">Conferma</string>
-    <string name="restore_warning_description_with_two_parameters">Desideri ripristinare il sito al giorno %1$s alle ore %2$s?\n        Qualsiasi modifica apportata da quel momento andrà persa.</string>
+    <string name="restore_warning_description_with_two_parameters">Vuoi davvero ripristinare il sito al giorno %1$s alle ore %2$s?\n        Qualsiasi modifica apportata da quel momento andrà persa.</string>
     <string name="backup_download_complete_failed_description">Impossibile creare il backup</string>
     <string name="backup_item_sqls_hint">(SQL)</string>
     <string name="backup_item_content_hint">(esclude temi, plugin e caricamenti)</string>
@@ -2128,7 +2129,7 @@ Language: it
     <string name="stats_site_not_loaded_yet">Sito non ancora caricato</string>
     <string name="stats_more_posts">Più articoli</string>
     <string name="stats_fewer_posts">Meno articoli</string>
-    <string name="new_site_creation_preview_back_pressed_warning">Potresti perdere i tuoi progressi. Desideri uscire?</string>
+    <string name="new_site_creation_preview_back_pressed_warning">Potresti perdere i tuoi progressi. Vuoi davvero uscire?</string>
     <string name="plans_loading_error_with_cache_button">Visualizza piani in ogni caso</string>
     <string name="plans_loading_error_with_cache_subtitle">Per visualizzare i Piani è richiesta una connessione Internet, pertanto i dettagli potrebbero non essere aggiornati.</string>
     <string name="plans_loading_error_no_cache_subtitle">È necessaria una connessione Internet per visualizzare i Piani</string>
@@ -2305,7 +2306,7 @@ Language: it
     <string name="page_moved_to_trash">La pagina è stata spostata nel cestino</string>
     <string name="page_moved_to_draft">La pagina è stata spostata in bozze</string>
     <string name="top_level">Primo livello</string>
-    <string name="page_delete_dialog_message">Desideri eliminare la pagina %s?</string>
+    <string name="page_delete_dialog_message">Vuoi davvero eliminare la pagina %s?</string>
     <string name="page_parent_change_error">Si è verificato un errore durante la modifica del genitore della pagina</string>
     <string name="page_status_change_error">Si è verificato un errore durante la modifica dello stato della pagina</string>
     <string name="page_delete_error">Si è verificato un errore durante l\'eliminazione della pagina</string>
@@ -2675,7 +2676,7 @@ Language: it
     <string name="plugin_icon_content_description">Icona del plugin</string>
     <string name="plugin_home_page">Homepage del plugin</string>
     <string name="wordpress_dot_org_plugin_page">Pagina del plugin di WordPress.org</string>
-    <string name="plugin_remove_dialog_message">Desideri rimuovere %1$s da %2$s?\n\nIn questo modo il plugin verrà disattivato e tutti i file e i dati associati verranno eliminati.</string>
+    <string name="plugin_remove_dialog_message">Vuoi davvero rimuovere %1$s da %2$s?\n\nIn questo modo il plugin verrà disattivato e tutti i file e i dati associati verranno eliminati.</string>
     <string name="plugin_remove_dialog_title">Rimuovi plugin</string>
     <string name="plugin_remove_progress_dialog_message">Rimozione di %s in corso…</string>
     <string name="plugin_disable_progress_dialog_message">Disabilitazione di %s in corso…</string>
@@ -2734,7 +2735,7 @@ Language: it
     <string name="jetpack_disconnect_error_toast">Errore durante la disconnessione del sito</string>
     <string name="jetpack_disconnect_success_toast">Sito disconnesso</string>
     <string name="jetpack_disconnect_confirm">Disconnetti</string>
-    <string name="jetpack_disconnect_confirmation_message">Desideri disconnettere Jetpack dal sito?</string>
+    <string name="jetpack_disconnect_confirmation_message">Vuoi davvero disconnettere Jetpack dal sito?</string>
     <string name="jetpack_disconnect_pref_title">\"Esegui la disconnessione da WordPress.com\"</string>
     <string name="site_settings_jetpack_allowlist_description">Puoi contrassegnare un indirizzo IP (o una serie di indirizzi) come \"Sempre consentito\" per evitare che venga bloccato da Jetpack. Sono accettati indirizzi IPv4 e IPv6. Per specificare un intervallo, inserisci il valore minimo e il valore massimo separati da un trattino. Esempio: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Richiede l\'Autenticazione a due passaggi</string>

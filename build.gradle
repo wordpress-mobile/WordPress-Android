@@ -20,10 +20,10 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '2.4.0'
     automatticTracksVersion = '3.3.0'
-    gutenbergMobileVersion = 'v1.106.0'
+    gutenbergMobileVersion = 'v1.107.0'
     wordPressAztecVersion = 'v1.8.0'
-    wordPressFluxCVersion = '2721-904caa4a166f2badde7fc31253bc01359e8d24f1'
-    wordPressLoginVersion = '1.6.0'
+    wordPressFluxCVersion = '2721-ab994d4bff10f35996349ae8a5ce54785270729f'
+    wordPressLoginVersion = 'trunk-9963d78096edf65f8704b803e5b93c08fc9174cd'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.10.0'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
@@ -103,7 +103,7 @@ ext {
 
     // other
     androidDesugarVersion = '1.1.8'
-    wordPressLintVersion = '1.1.0'
+    wordPressLintVersion = '2.0.0'
 }
 
 allprojects {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-17 05:51:29+0000
+Translation-Revision-Date: 2023-10-20 09:24:49+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: ro
@@ -1222,7 +1222,7 @@ Language: ro
     <string name="threat_get_free_estimate">Ai o estimare gratuită</string>
     <string name="threat_ignore">Ignoră amenințarea</string>
     <string name="threat_fix">Înlătură amenințarea</string>
-    <string name="threat_fix_fixable_default">Scanarea Jetpack va soluționa amenințarea.</string>
+    <string name="threat_fix_fixable_default">Scanare Jetpack va înlătura amenințarea.</string>
     <string name="threat_fix_fixable_edit">Scanarea Jetpack va edita fișierul sau directorul afectat.</string>
     <string name="threat_fix_fixable_update">Scanarea Jetpack va fi actualizată la o versiune mai nouă (%s).</string>
     <string name="threat_fix_fixable_delete">Scanarea Jetpack va șterge fișierul sau directorul afectat.</string>

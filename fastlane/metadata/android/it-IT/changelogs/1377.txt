@@ -1,5 +1,0 @@
-23.4:
-Abbiamo rimosso i bug.
-- Ora puoi incorporare URL da X senza che il link risulti interrotto.
-- Quando utilizzi un URL a contenuto multimediale non valido, l'app mostra un messaggio di errore invece di arrestarsi.
-- Nell'editor a blocchi, l'app non si arresterà più quando effettui la nidificazione di troppi blocchi all'interno dei blocchi.

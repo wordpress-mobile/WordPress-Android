@@ -82,10 +82,7 @@ class ReaderResourceVars {
                            + ")";
 
         mTextColor = onSurfaceHighType;
-        mLinkColorStr = HtmlUtils.colorResToHtmlColor(context, ContextExtensionsKt.getColorResIdFromAttribute(
-                context,
-                com.google.android.material.R.attr.colorPrimary
-        ));
+        mLinkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.reader_post_body_link);
 
         // full-size image width must take margin into account
         mFullSizeImageWidthPx = displayWidthPx - (detailMarginWidthPx * 2);

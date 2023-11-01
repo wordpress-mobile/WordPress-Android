@@ -404,7 +404,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
         whenever(jetpackBrandingUtils.getBrandingTextForScreen(any())).thenReturn(mock())
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()).thenReturn(true)
         whenever(blazeCardViewModelSlice.refresh).thenReturn(refresh)
         whenever(domainTransferCardViewModel.refresh).thenReturn(refresh)
         whenever(pagesCardViewModelSlice.getPagesCardBuilderParams(anyOrNull())).thenReturn(mock())
@@ -677,7 +676,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* DOMAIN REGISTRATION CARD */
     @Test
     fun `domain registration item click opens domain registration`() {
-        initSelectedSite()
+        initSelectedSite(isJetpackApp = true)
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
         findDomainRegistrationCard()?.onClick?.click()
@@ -711,7 +710,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when domain registration card is shown, then card shown event is tracked`() = test {
-        initSelectedSite()
+        initSelectedSite(isJetpackApp = true)
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
         verify(
@@ -724,7 +723,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when quick start task type item is clicked, then quick start full screen dialog is opened`() {
-        initSelectedSite(isQuickStartInProgress = true)
+        initSelectedSite(isQuickStartInProgress = true, isJetpackApp = true)
 
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
@@ -734,7 +733,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when quick start task type item is clicked, then quick start active task is cleared`() {
-        initSelectedSite(isQuickStartInProgress = true)
+        initSelectedSite(isQuickStartInProgress = true, isJetpackApp = true)
 
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
@@ -744,7 +743,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when quick start card item clicked, then quick start card item tapped is tracked`() {
-        initSelectedSite()
+        initSelectedSite(isJetpackApp = true)
 
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
@@ -981,7 +980,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given error dashboard card, when retry is clicked, then refresh is triggered`() =
         test {
-            initSelectedSite()
+            initSelectedSite(isJetpackApp = true)
             cardsUpdate.value = cardsUpdate.value?.copy(showErrorCard = true)
 
             requireNotNull(onDashboardErrorRetryClick).invoke()
@@ -993,23 +992,23 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given show stale msg not in cards update, when dashboard cards updated, then info item not shown`() {
-        initSelectedSite(showStaleMessage = false)
+        initSelectedSite(showStaleMessage = false, isJetpackApp = true)
 
         cardsUpdate.value = cardsUpdate.value?.copy(showStaleMessage = false)
 
         assertThat((uiModels.last() as SiteSelected)
-            .dashboardCardsAndItems.filterIsInstance(InfoItem::class.java))
+            .dashboardData.filterIsInstance(InfoItem::class.java))
             .isEmpty()
     }
 
     @Test
     fun `given show stale msg in cards update, when dashboard cards updated, then info item shown`() {
-        initSelectedSite(showStaleMessage = true)
+        initSelectedSite(showStaleMessage = true, isJetpackApp = true)
 
         cardsUpdate.value = cardsUpdate.value?.copy(showStaleMessage = true)
 
         assertThat((uiModels.last() as SiteSelected)
-            .dashboardCardsAndItems.filterIsInstance(InfoItem::class.java))
+            .dashboardData.filterIsInstance(InfoItem::class.java))
             .isNotEmpty
     }
 
@@ -1127,11 +1126,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given IS NOT Jetpack app, migration success card SHOULD NOT be shown`() {
-        val packageName = "packageName"
-        whenever(wordPressPublicData.currentPackageId()).thenReturn(packageName)
-        whenever(appPrefsWrapper.isJetpackMigrationCompleted()).thenReturn(true)
-        whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
-
         initSelectedSite()
 
         assertThat(getSiteMenuTabLastItems()[0]).isNotInstanceOf(SingleActionCard::class.java)
@@ -1143,10 +1137,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given migration IS NOT completed, migration success card SHOULD NOT be shown`() {
         val packageName = "packageName"
         whenever(wordPressPublicData.currentPackageId()).thenReturn(packageName)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
 
-        initSelectedSite()
+        initSelectedSite(isJetpackApp = true)
 
         assertThat(getSiteMenuTabLastItems()[0]).isNotInstanceOf(SingleActionCard::class.java)
         assertThat(getLastItems()[0]).isNotInstanceOf(SingleActionCard::class.java)
@@ -1155,10 +1148,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given WordPress app IS NOT installed, migration success card SHOULD NOT be shown`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(appPrefsWrapper.isJetpackMigrationCompleted()).thenReturn(true)
 
-        initSelectedSite()
+        initSelectedSite(isJetpackApp = true)
 
         assertThat(getSiteMenuTabLastItems()[0]).isNotInstanceOf(SingleActionCard::class.java)
         assertThat(getLastItems()[0]).isNotInstanceOf(SingleActionCard::class.java)
@@ -1169,11 +1161,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given IS JP app, migration IS complete and WP app IS installed, migration success card SHOULD be shown`() {
         val packageName = "packageName"
         whenever(wordPressPublicData.currentPackageId()).thenReturn(packageName)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(appPrefsWrapper.isJetpackMigrationCompleted()).thenReturn(true)
         whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
 
-        initSelectedSite()
+        initSelectedSite(isJetpackApp = true)
 
         assertThat(getDashboardTabLastItems()[0]).isInstanceOf(SingleActionCard::class.java)
     }
@@ -1182,10 +1173,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `JP migration success card should have the correct text`() {
         val packageName = "packageName"
         whenever(wordPressPublicData.currentPackageId()).thenReturn(packageName)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(appPrefsWrapper.isJetpackMigrationCompleted()).thenReturn(true)
         whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
-        initSelectedSite()
+        initSelectedSite(isJetpackApp = true)
 
         val expected = R.string.jp_migration_success_card_message
         assertThat((getDashboardTabLastItems()[0] as SingleActionCard).textResource).isEqualTo(expected)
@@ -1195,10 +1185,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `JP migration success card should have the correct image`() {
         val packageName = "packageName"
         whenever(wordPressPublicData.currentPackageId()).thenReturn(packageName)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(appPrefsWrapper.isJetpackMigrationCompleted()).thenReturn(true)
         whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
-        initSelectedSite()
+        initSelectedSite(isJetpackApp = true)
 
         val expected = R.drawable.ic_wordpress_jetpack_appicon
         assertThat((getDashboardTabLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
@@ -1208,10 +1197,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `JP migration success card click should be tracked`() {
         val packageName = "packageName"
         whenever(wordPressPublicData.currentPackageId()).thenReturn(packageName)
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(appPrefsWrapper.isJetpackMigrationCompleted()).thenReturn(true)
         whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
-        initSelectedSite()
+        initSelectedSite(isJetpackApp = true)
 
         (getDashboardTabLastItems()[0] as SingleActionCard).onActionClick.invoke()
 
@@ -1230,16 +1218,16 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given selected site with tabs disabled, when all cards and items, then qs card exists`() {
-        initSelectedSite()
+        initSelectedSite(isJetpackApp = true)
 
         assertThat(getLastItems().filterIsInstance(QuickStartCard::class.java)).isNotEmpty
     }
 
     @Test
     fun `given selected site, when dashboard cards and items, then dashboard cards exists`() {
-        initSelectedSite()
+        initSelectedSite(isJetpackApp = true)
 
-        val items = (uiModels.last() as SiteSelected).dashboardCardsAndItems
+        val items = (uiModels.last() as SiteSelected).dashboardData
 
         assertThat(items.filterIsInstance(MySiteCardAndItem.Card::class.java)).isNotEmpty
     }
@@ -1249,7 +1237,7 @@ class MySiteViewModelTest : BaseUnitTest() {
        // setUpSiteItemBuilder()
         initSelectedSite()
 
-        val items = (uiModels.last() as SiteSelected).dashboardCardsAndItems
+        val items = (uiModels.last() as SiteSelected).dashboardData
 
         assertThat(items.filterIsInstance(ListItem::class.java)).isEmpty()
     }
@@ -1257,9 +1245,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `when dashboard cards items built, then qs card exists`() {
       //  setUpSiteItemBuilder()
-        initSelectedSite()
+        initSelectedSite(isJetpackApp = true)
 
-        val items = (uiModels.last() as SiteSelected).dashboardCardsAndItems
+        val items = (uiModels.last() as SiteSelected).dashboardData
 
         assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty
     }
@@ -1270,7 +1258,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        val items = (uiModels.last() as SiteSelected).siteMenuCardsAndItems
+        val items = (uiModels.last() as SiteSelected).dashboardData
 
         assertThat(items.filterIsInstance(QuickStartCard::class.java)).isEmpty()
     }
@@ -1279,7 +1267,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         setUpSiteItemBuilder()
         initSelectedSite()
 
-        val items = (uiModels.last() as SiteSelected).siteMenuCardsAndItems
+        val items = (uiModels.last() as SiteSelected).dashboardData
 
         assertThat(items.filterIsInstance(ListItem::class.java)).isNotEmpty
     }
@@ -1290,17 +1278,17 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        val items = (uiModels.last() as SiteSelected).siteMenuCardsAndItems
+        val items = (uiModels.last() as SiteSelected).dashboardData
 
         assertThat(items.filterIsInstance(QuickStartCard::class.java)).isEmpty()
     }
 
     @Test
     fun `given selected site with domain credit, when dashboard cards + items, then domain reg card exists`() {
-        initSelectedSite()
+        initSelectedSite(isJetpackApp = true)
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
-        val items = (uiModels.last() as SiteSelected).dashboardCardsAndItems
+        val items = (uiModels.last() as SiteSelected).dashboardData
 
         assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isNotEmpty
     }
@@ -1310,7 +1298,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite()
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
-        val items = (uiModels.last() as SiteSelected).siteMenuCardsAndItems
+        val items = (uiModels.last() as SiteSelected).dashboardData
 
         assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isEmpty()
     }
@@ -1445,13 +1433,13 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun findJetpackBadgeListItem() = getSiteMenuTabLastItems().filterIsInstance(JetpackBadge::class.java)
 
-    private fun getLastItems() = (uiModels.last() as SiteSelected).dashboardCardsAndItems
+    private fun getLastItems() = (uiModels.last() as SiteSelected).dashboardData
 
-    private fun getMenuItems() = (uiModels.last() as SiteSelected).siteMenuCardsAndItems
+    private fun getMenuItems() = (uiModels.last() as SiteSelected).dashboardData
 
-    private fun getDashboardTabLastItems() = (uiModels.last() as SiteSelected).dashboardCardsAndItems
+    private fun getDashboardTabLastItems() = (uiModels.last() as SiteSelected).dashboardData
 
-    private fun getSiteMenuTabLastItems() = (uiModels.last() as SiteSelected).siteMenuCardsAndItems
+    private fun getSiteMenuTabLastItems() = (uiModels.last() as SiteSelected).dashboardData
 
     private fun getSiteInfoHeaderCard() = (uiModels.last() as SiteSelected).siteInfoHeader
 
@@ -1460,7 +1448,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         isQuickStartInProgress: Boolean = false,
         showStaleMessage: Boolean = false,
         isSiteUsingWpComRestApi: Boolean = true,
-        shouldShowJetpackBranding: Boolean = true
+        shouldShowJetpackBranding: Boolean = true,
+        isJetpackApp: Boolean = false
     ) {
         whenever(
             mySiteInfoItemBuilder.build(InfoItemBuilderParams(isStaleMessagePresent = showStaleMessage))
@@ -1468,6 +1457,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickStartUpdate.value = QuickStartUpdate(
             categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
+        // in order to build the dashboard cards, this value should be true along with isSiteUsingWpComRestApi
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(isJetpackApp)
+
         whenever(jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard()).thenReturn(shouldShowJetpackBranding)
         if (isSiteUsingWpComRestApi) {
             site.setIsWPCom(true)

@@ -2382,10 +2382,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (updateAction == UpdateAction.REQUEST_OLDER) {
             // show/hide progress bar at bottom if these are older posts
             showLoadingProgress(isUpdating);
-        } else if (isUpdating && isPostAdapterEmpty()) {
-            // show swipe-to-refresh if update started and no posts are showing
+        } else if (isUpdating) {
+            // show swipe-to-refresh if update started
             mRecyclerView.setRefreshing(true);
-        } else if (!isUpdating) {
+        } else {
             // hide swipe-to-refresh progress if update is complete
             mRecyclerView.setRefreshing(false);
         }

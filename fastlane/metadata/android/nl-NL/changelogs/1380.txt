@@ -1,0 +1,3 @@
+23.5:
+In de blokeditor kan je nu een geformatteerd blok splitten of verlaten door drie keer op enter te drukken.
+De linkergrens is altijd zichtbaar voor blokquotes, zelfs in blokgebaseerde thema's in donkere modus. We houden ons aan ons woord.

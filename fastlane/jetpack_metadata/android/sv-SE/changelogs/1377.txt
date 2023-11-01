@@ -1,5 +1,0 @@
-23.4:
-Vi har bekämpat buggar!
-- Nu kan du bädda in URL:er från X utan att länken bryts.
-- När du använder en ogiltig media-URL visar appen ett felmeddelande istället för att krascha.
-- Appen kraschar inte längre i blockredigeraren när du nestar för många block inuti block.

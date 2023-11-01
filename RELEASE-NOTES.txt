@@ -1,14 +1,20 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-23.6
+23.7
 -----
 
+23.6
+-----
+* [*] Block Editor Social Icons: Fix visibility of inactive icons when used with block based themes in dark mode [https://github.com/WordPress/gutenberg/pull/55398]
+* [*] Block Editor Classic block: Add option to convert to blocks [https://github.com/WordPress/gutenberg/pull/55461]
+* [*] Block Editor Synced Patterns: Fix visibility of heading section when used with block based themes in dark mode [https://github.com/WordPress/gutenberg/pull/55399]
+* [***] [Jetpack-only] [***] Added domain selection, plan selection, and checkout screens in site creation flow [https://github.com/wordpress-mobile/WordPress-Android/pull/19304]
+* [**] [Jetpack-only] Update the main site navigation on the My Site screen, making it easier to access the common site sections. The new shortcuts can be modified using the Personalize Home Tab screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/19151]
 
 23.5
 -----
 * [*] Block Editor: Split formatted text on triple Enter [https://github.com/WordPress/gutenberg/pull/53354]
 * [*] Block Editor: Quote block: Ensure border is visible with block-based themes in dark [https://github.com/WordPress/gutenberg/pull/54964]
-* [***] [internal][Jetpack-only] [***] Added domain selection, plan selection, and checkout screens in site creation flow [https://github.com/wordpress-mobile/WordPress-Android/pull/19304]
 * [**] [Jetpack-only] Reader: Improvement of core UI elements, including feed cards, tag and site headers, buttons and recommendation sections [https://github.com/wordpress-mobile/WordPress-Android/pull/19267]
 
 23.4

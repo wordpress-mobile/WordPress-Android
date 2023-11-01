@@ -169,27 +169,27 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     }
 
     @Override
-    public void onActivateSelected(String themeId) {
+    public void onActivateSelected(@NonNull String themeId) {
         activateTheme(themeId);
     }
 
     @Override
-    public void onTryAndCustomizeSelected(String themeId) {
+    public void onTryAndCustomizeSelected(@Nullable String themeId) {
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.PREVIEW);
     }
 
     @Override
-    public void onViewSelected(String themeId) {
+    public void onViewSelected(@NonNull String themeId) {
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.DEMO);
     }
 
     @Override
-    public void onDetailsSelected(String themeId) {
+    public void onDetailsSelected(@Nullable String themeId) {
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.DETAILS);
     }
 
     @Override
-    public void onSupportSelected(String themeId) {
+    public void onSupportSelected(@Nullable String themeId) {
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.SUPPORT);
     }
 
