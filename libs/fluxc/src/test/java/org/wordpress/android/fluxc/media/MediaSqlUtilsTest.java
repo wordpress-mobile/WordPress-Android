@@ -35,7 +35,7 @@ public class MediaSqlUtilsTest {
 
     @Before
     public void setUp() {
-        Context appContext = RuntimeEnvironment.application.getApplicationContext();
+        Context appContext = RuntimeEnvironment.getApplication().getApplicationContext();
 
         WellSqlConfig config = new SingleStoreWellSqlConfigForTests(appContext, MediaModel.class);
         WellSql.init(config);
