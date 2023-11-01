@@ -173,7 +173,7 @@ fun Domain(
         onClick = { onDomainTapped(domain) },
         modifier = modifier.fillMaxWidth()
     ) {
-        Column(modifier = modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Row {
                 Text(
                     text = domain.domainPrefix,
