@@ -592,9 +592,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSecurityKeyCheckFinished(WebauthnPasskeyAuthenticated event) {
-        endProgress();
         if (event.isError()) {
             handleAuthError(event.error.type, event.error.message);
+            endProgress();
             return;
         }
         Toast.makeText(requireContext(), "Login succeeded", Toast.LENGTH_SHORT).show();
