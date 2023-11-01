@@ -1659,7 +1659,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         UpdateAction updateAction = event.getOffset() == 0 ? UpdateAction.REQUEST_NEWER : UpdateAction.REQUEST_OLDER;
         setIsUpdating(true, updateAction);
         setEmptyTitleDescriptionAndButton(false);
-        showEmptyView();
+        if (isPostAdapterEmpty()) showEmptyView();
     }
 
     @SuppressWarnings("unused")
@@ -2266,7 +2266,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
         setIsUpdating(true, event.getAction());
         setEmptyTitleDescriptionAndButton(false);
-        showEmptyView();
+        if (isPostAdapterEmpty()) showEmptyView();
     }
 
     @SuppressWarnings("unused")
