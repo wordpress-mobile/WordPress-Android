@@ -22,7 +22,8 @@ data class Campaign(
     @SerializedName("created_at") val createdAt: String,
     @SerializedName("end_date") val endDate: String? = null,
     @SerializedName("ui_status") val uiStatus: String,
-    @SerializedName("campaign_stats") val campaignStats: CampaignStats
+    @SerializedName("campaign_stats") val campaignStats: CampaignStats,
+    @SerializedName("target_urn") val targetUrn: String,
 ) {
     fun toCampaignsModel(): BlazeCampaignModel {
         return BlazeCampaignModel(
@@ -34,7 +35,8 @@ data class Campaign(
             uiStatus = uiStatus,
             budgetCents = budgetCents ?: 0,
             impressions = campaignStats.impressionsTotal ?: 0L,
-            clicks = campaignStats.clicksTotal ?: 0L
+            clicks = campaignStats.clicksTotal ?: 0L,
+            targetUrn = targetUrn,
         )
     }
 }
