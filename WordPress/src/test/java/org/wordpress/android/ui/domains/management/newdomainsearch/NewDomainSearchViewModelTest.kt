@@ -10,6 +10,8 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.argWhere
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -50,6 +52,33 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `WHEN a domain is tapped THEN send PurchaseDomain action event`() = testWithActionEvents { events ->
+        val domain = ProposedDomain(1, "test.", "com", "1", null)
+        viewModel.onDomainTapped(domain)
+        advanceUntilIdle()
+
+        val expectedEvent = ActionEvent.PurchaseDomain(domain)
+        assertThat(events.last()).isEqualTo(expectedEvent)
+    }
+
+    @Test
+    fun `WHEN a domain is tapped THEN track DOMAIN_MANAGEMENT_SEARCH_DOMAIN_TAPPED event`() = test {
+        val domain = ProposedDomain(1, "test.", "com", "1", null)
+        viewModel.onDomainTapped(domain)
+        advanceUntilIdle()
+
+        verify(analyticsTracker)
+            .track(
+                eq(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_SEARCH_DOMAIN_TAPPED),
+                argWhere<Map<String, Any?>> {
+                    assertThat(it).hasSize(1)
+                    assertThat(it).containsEntry("domain_name", "test.com")
+                    true
+                }
+            )
+    }
+
+    @Test
     fun `WHEN transfer domain button pressed THEN send TransferDomain action event`() = testWithActionEvents { events ->
         viewModel.onTransferDomainClicked()
         advanceUntilIdle()
@@ -59,8 +88,7 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN transfer domain button pressed THEN track DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED event`() =
-        testWithActionEvents {
+    fun `WHEN transfer domain button pressed THEN track DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED event`() = test {
             viewModel.onTransferDomainClicked()
             advanceUntilIdle()
 

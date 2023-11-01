@@ -31,6 +31,7 @@ class NewDomainSearchActivity : AppCompatActivity() {
                     uiState = uiState,
                     onSearchQueryChanged = viewModel::onSearchQueryChanged,
                     onTransferDomainClicked = viewModel::onTransferDomainClicked,
+                    onDomainTapped = viewModel::onDomainTapped,
                     onBackPressed = viewModel::onBackPressed
                 )
             }
@@ -44,6 +45,9 @@ class NewDomainSearchActivity : AppCompatActivity() {
 
     private fun handleActionEvents(actionEvent: NewDomainSearchViewModel.ActionEvent) {
         when (actionEvent) {
+            is NewDomainSearchViewModel.ActionEvent.PurchaseDomain -> { /* TODO */
+            }
+
             is NewDomainSearchViewModel.ActionEvent.TransferDomain -> activityNavigator.openDomainTransfer(
                 this, actionEvent.url
             )

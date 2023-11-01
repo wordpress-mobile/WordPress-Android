@@ -45,6 +45,7 @@ fun NewDomainSearchScreen(
     uiState: UiState,
     onSearchQueryChanged: (String) -> Unit,
     onTransferDomainClicked: () -> Unit,
+    onDomainTapped: (domain: ProposedDomain) -> Unit,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -74,6 +75,7 @@ fun NewDomainSearchScreen(
                     is UiState.PopulatedDomains -> ProposedDomainList(
                         domains = uiState.domains,
                         listState = listState,
+                        onDomainTapped = onDomainTapped,
                         modifier = Modifier.weight(1f)
                     )
                     is UiState.Loading -> LoadingPlaceholder(modifier = Modifier.weight(1f))
@@ -111,13 +113,14 @@ fun NewDomainSearchInput(
 fun ProposedDomainList(
     domains: List<ProposedDomain>,
     listState: LazyListState,
+    onDomainTapped: (domain: ProposedDomain) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         state = listState,
         modifier = modifier.fillMaxWidth()
     ) {
-        items(items = domains) { domain -> Domain(domain = domain) }
+        items(items = domains) { domain -> Domain(domain = domain, onDomainTapped = onDomainTapped) }
     }
 }
 
@@ -163,38 +166,52 @@ fun TransferDomainFooter(
 @Composable
 fun Domain(
     domain: ProposedDomain,
+    onDomainTapped: (domain: ProposedDomain) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.padding(16.dp)) {
-        Row {
-            Text(
-                text = domain.domainPrefix,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = domain.domainSuffix,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        if (domain.salePrice.isNullOrEmpty()) {
-            Text(text = stringResource(id = R.string.new_domain_search_screen_list_item_regular_price, domain.price))
-        } else {
+    Surface(
+        onClick = { onDomainTapped(domain) },
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Row {
                 Text(
-                    text = stringResource(
-                        id = R.string.new_domain_search_screen_list_item_sale_price, domain.salePrice
-                    ),
-                    modifier = Modifier.padding(end = 4.dp),
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.success
+                    text = domain.domainPrefix,
+                    style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = stringResource(id = R.string.new_domain_search_screen_list_item_regular_price, domain.price),
-                    textDecoration = TextDecoration.LineThrough,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    text = domain.domainSuffix,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
                 )
+            }
+            if (domain.salePrice.isNullOrEmpty()) {
+                Text(
+                    text = stringResource(
+                        id = R.string.new_domain_search_screen_list_item_regular_price,
+                        domain.price
+                    )
+                )
+            } else {
+                Row {
+                    Text(
+                        text = stringResource(
+                            id = R.string.new_domain_search_screen_list_item_sale_price, domain.salePrice
+                        ),
+                        modifier = Modifier.padding(end = 4.dp),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.success
+                    )
+                    Text(
+                        text = stringResource(
+                            id = R.string.new_domain_search_screen_list_item_regular_price,
+                            domain.price
+                        ),
+                        textDecoration = TextDecoration.LineThrough,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
+                }
             }
         }
     }
@@ -227,6 +244,7 @@ fun NewDomainSearchScreenPreview() {
         ),
         onSearchQueryChanged = {},
         onTransferDomainClicked = {},
+        onDomainTapped = {},
         onBackPressed = {}
     )
 }
