@@ -84,7 +84,6 @@ abstract class BaseWebauthnRequest(
         }
         catch (exception: UnsupportedEncodingException) { handleError(exception) }
         catch (exception: JSONException) { handleError(exception) }
-
     }
 
     private fun handleError(exception: Exception): Response<String> {
