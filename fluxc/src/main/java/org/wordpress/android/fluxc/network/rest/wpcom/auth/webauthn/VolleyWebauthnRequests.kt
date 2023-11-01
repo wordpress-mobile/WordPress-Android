@@ -6,6 +6,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.Response.ErrorListener
 import com.android.volley.toolbox.HttpHeaderParser
+import org.json.JSONException
 import org.json.JSONObject
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnRequestParameters.AUTH_TYPE
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnRequestParameters.CLIENT_DATA
@@ -15,6 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnRequ
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnRequestParameters.GET_BEARER_TOKEN
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnRequestParameters.TWO_STEP_NONCE
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnRequestParameters.USER_ID
+import java.io.UnsupportedEncodingException
 
 class WebauthnChallengeRequest(
     userId: String,
@@ -35,6 +37,7 @@ class WebauthnChallengeRequest(
     override val responseParameterName = "data"
 }
 
+@SuppressWarnings("LongParameterList")
 class WebauthnTokenRequest(
     userId: String,
     twoStepNonce: String,
@@ -75,13 +78,19 @@ abstract class BaseWebauthnRequest(
         return try {
             val headers = HttpHeaderParser.parseCacheHeaders(this)
             val charsetName = HttpHeaderParser.parseCharset(this.headers)
-            return String(this.data, charset(charsetName))
+            String(this.data, charset(charsetName))
                 .let { JSONObject(it).getJSONObject(parameterName) }
                 .let { Response.success(it.toString(), headers) }
-        } catch (exception: Exception) {
-            val error = WebauthnChallengeRequestException("Webauthn challenge response is invalid")
-            Response.error(ParseError(error))
         }
+        catch (exception: UnsupportedEncodingException) { handleError(exception) }
+        catch (exception: JSONException) { handleError(exception) }
+
+    }
+
+    private fun handleError(exception: Exception): Response<String> {
+        val message = exception.message ?: "Webauthn challenge response is null"
+        val error = WebauthnChallengeRequestException(message)
+        return Response.error(ParseError(error))
     }
 
     override fun getParams() = parameters
