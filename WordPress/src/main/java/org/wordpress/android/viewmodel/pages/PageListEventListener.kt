@@ -114,7 +114,7 @@ class PageListEventListener(
         }
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "SpreadOperator")
     @Subscribe(threadMode = BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
         uploadStatusChanged(*event.mediaList.map { LocalId(it.localPostId) }.toTypedArray())
@@ -167,7 +167,7 @@ class PageListEventListener(
         }
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "SpreadOperator")
     @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: UploadService.UploadMediaRetryEvent) {
         if (event.mediaModelList != null && event.mediaModelList.isNotEmpty()) {

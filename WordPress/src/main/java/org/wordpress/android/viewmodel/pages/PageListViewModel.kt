@@ -495,7 +495,7 @@ class PageListViewModel @Inject constructor(
         pagesViewModel.onImagesChanged()
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "SpreadOperator")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError) {

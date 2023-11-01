@@ -187,12 +187,6 @@
     <ID>ReturnCount:UploadActionUseCase.kt$UploadActionUseCase$fun getAutoUploadAction(post: PostImmutableModel, site: SiteModel): UploadAction</ID>
     <ID>ReturnCount:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined$private fun endsWithDelimiter(string: String): Boolean</ID>
     <ID>ReturnCount:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined$private fun removeDelimiterFromItemIfPresent(item: String?): String?</ID>
-    <ID>SpreadOperator:PageListEventListener.kt$PageListEventListener$(*event.mediaList.map { LocalId(it.localPostId) }.toTypedArray())</ID>
-    <ID>SpreadOperator:PageListEventListener.kt$PageListEventListener$(*postsToRefresh.map { LocalId(it.id) }.toTypedArray())</ID>
-    <ID>SpreadOperator:PageListViewModel.kt$PageListViewModel$(*event.mediaList.map { it.mediaId }.toLongArray())</ID>
-    <ID>SpreadOperator:PostListEventListener.kt$PostListEventListener$(*event.mediaList.map { it.localPostId }.toIntArray())</ID>
-    <ID>SpreadOperator:PostListEventListener.kt$PostListEventListener$(*event.mediaList.map { it.mediaId }.toLongArray())</ID>
-    <ID>SpreadOperator:PostListEventListener.kt$PostListEventListener$(*postsToRefresh.map { it.id }.toIntArray())</ID>
     <ID>SpreadOperator:UiHelpers.kt$UiHelpers$( uiString.stringRes, *uiString.params.map { value -> getTextOfUiString( context, value ) }.toTypedArray() )</ID>
     <ID>ThrowsCount:PageListDialogHelper.kt$PageListDialogHelper$fun onNegativeClickedForBasicDialog( instanceTag: String, editPage: (RemoteId, LoadAutoSaveRevision) -> Unit, copyPage: (RemoteId) -> Unit )</ID>
     <ID>ThrowsCount:PageListDialogHelper.kt$PageListDialogHelper$fun onPositiveClickedForBasicDialog( instanceTag: String, deletePage: (RemoteId) -> Unit, editPage: (RemoteId, LoadAutoSaveRevision) -> Unit, editPageFirst: (RemoteId) -> Unit )</ID>
