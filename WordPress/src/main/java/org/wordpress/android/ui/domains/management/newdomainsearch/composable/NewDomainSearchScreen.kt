@@ -169,7 +169,10 @@ fun Domain(
     onDomainTapped: (domain: ProposedDomain) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(onClick = { onDomainTapped(domain) }) {
+    Surface(
+        onClick = { onDomainTapped(domain) },
+        modifier = modifier.fillMaxWidth()
+    ) {
         Column(modifier = modifier.padding(16.dp)) {
             Row {
                 Text(
