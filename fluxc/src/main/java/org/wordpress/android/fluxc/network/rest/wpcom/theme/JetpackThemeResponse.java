@@ -4,7 +4,7 @@ import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
 public class JetpackThemeResponse {
-    public class JetpackThemeListResponse {
+    public static class JetpackThemeListResponse {
         public List<JetpackThemeResponse> themes;
         public int count;
     }
