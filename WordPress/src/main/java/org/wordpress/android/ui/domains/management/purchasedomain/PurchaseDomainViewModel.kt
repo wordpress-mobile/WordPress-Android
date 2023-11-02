@@ -37,11 +37,16 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     fun onExistingSiteSelected() {
         analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED)
         launch {
-            _actionEvents.emit(ActionEvent.GoToExistingSite(domain = domain))
+            _actionEvents.emit(ActionEvent.GoToSitePicker(domain = domain))
         }
     }
 
     fun onSiteChosen(site: SiteModel?) {
+        launch {
+            site?.let {
+                _actionEvents.emit(ActionEvent.GoToExistingSite(domain = domain, siteModel = it))
+            }
+        }
     }
 
     fun onBackPressed() {
@@ -53,7 +58,8 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     sealed class ActionEvent {
         object GoBack : ActionEvent()
         data class GoToDomainPurchasing(val domain: String) : ActionEvent()
-        data class GoToExistingSite(val domain: String) : ActionEvent()
+        data class GoToSitePicker(val domain: String) : ActionEvent()
+        data class GoToExistingSite(val domain: String, val siteModel: SiteModel) : ActionEvent()
     }
 
     @AssistedFactory

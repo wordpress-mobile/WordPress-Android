@@ -3,9 +3,11 @@ package org.wordpress.android.ui.domains.management.purchasedomain
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.launch
+import androidx.activity.result.registerForActivityResult
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -14,9 +16,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity
 import org.wordpress.android.ui.domains.management.M3Theme
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoBack
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToDomainPurchasing
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToSitePicker
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingSite
 import org.wordpress.android.ui.domains.management.purchasedomain.composable.PurchaseDomainScreen
 import org.wordpress.android.ui.main.SitePickerActivity
@@ -59,8 +63,20 @@ class PurchaseDomainActivity : AppCompatActivity() {
                     null
                 }
         },
-        viewModel::onSiteChosen,
+        ::onSiteChosen,
     )
+
+    private fun onSiteChosen(siteModel: SiteModel?) {
+        siteModel?.let {
+            viewModel.onSiteChosen(it)
+        }
+    }
+
+    private val openCheckout = registerForActivityResult(
+        DomainRegistrationCheckoutWebViewActivity.OpenCheckout(),
+    ) {
+        Log.d("snaplog", "$it")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +99,15 @@ class PurchaseDomainActivity : AppCompatActivity() {
     private fun handleActionEvents(actionEvent: PurchaseDomainViewModel.ActionEvent) {
         when (actionEvent) {
             is GoToDomainPurchasing -> NotImplemented
-            is GoToExistingSite -> { chooseSite.launch() }
+            is GoToSitePicker -> { chooseSite.launch() }
+            is GoToExistingSite -> {
+                openCheckout.launch(
+                    DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails(
+                        actionEvent.siteModel,
+                        actionEvent.domain,
+                    )
+                )
+            }
             GoBack -> onBackPressedDispatcher.onBackPressed()
         }
     }
