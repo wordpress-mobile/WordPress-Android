@@ -83,5 +83,10 @@ class ActivityLauncherWrapper @Inject constructor() {
         const val GOOGLE_STORE_REFERRER = "referrer"
         const val GOOGLE_STORE_UTM_SOURCE = "utm_source"
         const val GOOGLE_STORE_UTM_CAMPAIGN = "utm_campaign"
+        const val CAMPAIGN_SITE_CREATION = "site_creation"
+        const val CAMPAIGN_BOTTOM_SHEET = "bottom_sheet"
+        const val CAMPAIGN_STATIC_POSTER = "static_poster"
+        const val CAMPAIGN_INDIVIDUAL_PLUGIN = "individual_plugin"
+        const val CAMPAIGN_JETPACK_OVERLAY = "jetpack_overlay"
     }
 }

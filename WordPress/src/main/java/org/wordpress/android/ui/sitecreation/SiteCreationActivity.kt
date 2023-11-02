@@ -14,6 +14,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityLauncherWrapper
+import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.CAMPAIGN_SITE_CREATION
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
@@ -188,7 +189,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
             when (action) {
                 is OpenPlayStore -> {
                     fragment.dismiss()
-                    activityLauncherWrapper.openPlayStoreLink(this, JETPACK_PACKAGE_NAME)
+                    activityLauncherWrapper.openPlayStoreLink(this, JETPACK_PACKAGE_NAME, CAMPAIGN_SITE_CREATION)
                 }
                 is DismissDialog -> {
                     fragment.dismiss()
