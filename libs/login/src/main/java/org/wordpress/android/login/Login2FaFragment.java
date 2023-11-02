@@ -144,6 +144,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         args.putString(ARG_PASSWORD, password);
         args.putString(ARG_2FA_USER_ID, userId);
         args.putString(ARG_WEBAUTHN_NONCE, webauthnNonce);
+        args.putString(ARG_2FA_NONCE_AUTHENTICATOR, webauthnNonce);
         args.putBoolean(ARG_DISPLAY_SECURITY_KEY_BUTTON, true);
         fragment.setArguments(args);
         return fragment;
