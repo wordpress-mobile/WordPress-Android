@@ -213,7 +213,7 @@ sealed class PageItem(open val type: Type) {
         VIRTUAL_HOMEPAGE(6),
     }
 
-    enum class PositionGroup(val position:Int){
+    enum class ActionPositionGroup(val position:Int){
         VIEW(1),
         TAKE_AN_ACTION(2),
         SHARE_AND_PROMOTE(3),
