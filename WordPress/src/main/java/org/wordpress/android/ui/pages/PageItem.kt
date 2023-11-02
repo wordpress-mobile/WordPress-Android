@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.pages
 
 import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -26,7 +25,7 @@ sealed class PageItem(open val type: Type) {
         @ColorRes open val labelsColor: Int?,
         open var indent: Int,
         open var imageUrl: String?,
-        open val actions: List<Action>,
+        open val actions: List<PagesListAction>,
         open var actionsEnabled: Boolean,
         open val tapActionEnabled: Boolean,
         open val progressBarUiState: ProgressBarUiState,
@@ -47,7 +46,7 @@ sealed class PageItem(open val type: Type) {
         override val labelsColor: Int? = null,
         override var indent: Int = 0,
         override var imageUrl: String? = null,
-        override val actions: List<Action>,
+        override val actions: List<PagesListAction>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
@@ -81,7 +80,7 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<UiString> = emptyList(),
         override val labelsColor: Int? = null,
         override var imageUrl: String? = null,
-        override val actions: List<Action>,
+        override val actions: List<PagesListAction>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
@@ -115,7 +114,7 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<UiString> = emptyList(),
         override val labelsColor: Int? = null,
         override var imageUrl: String? = null,
-        override val actions: List<Action>,
+        override val actions: List<PagesListAction>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
@@ -149,7 +148,7 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<UiString> = emptyList(),
         override val labelsColor: Int? = null,
         override var imageUrl: String? = null,
-        override val actions: List<Action>,
+        override val actions: List<PagesListAction>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
@@ -211,97 +210,5 @@ sealed class PageItem(open val type: Type) {
         PARENT(4),
         TOP_LEVEL_PARENT(5),
         VIRTUAL_HOMEPAGE(6),
-    }
-
-    enum class ActionGroup(val position: Int) {
-        VIEW(1),
-        TAKE_AN_ACTION(2),
-        SHARE_AND_PROMOTE(3),
-        TRASH(4),
-        OTHER(5)
-    }
-
-    enum class Action(
-        @StringRes val title: Int,
-        @DrawableRes val icon: Int? = R.drawable.ic_gridicons_link_white_24dp,
-        val colorTint: Int = com.google.android.material.R.attr.colorOnSurface,
-        val actionGroup: ActionGroup = ActionGroup.OTHER,
-        val positionInGroup: Int
-    ) {
-        VIEW_PAGE(
-            R.string.pages_view,
-            R.drawable.ic_external_white_24dp,
-            actionGroup = ActionGroup.VIEW,
-            positionInGroup = 1,
-        ),
-        CANCEL_AUTO_UPLOAD(
-            R.string.pages_and_posts_cancel_auto_upload,
-            R.drawable.gb_ic_undo,
-            actionGroup = ActionGroup.TAKE_AN_ACTION,
-            colorTint = R.attr.wpColorWarningDark,
-            positionInGroup = 1,
-        ),
-        SET_PARENT(
-            R.string.set_parent,
-            R.drawable.ic_pages_set_as_parent,
-            actionGroup = ActionGroup.TAKE_AN_ACTION,
-            positionInGroup = 2,
-        ),
-        SET_AS_HOMEPAGE(
-            R.string.pages_set_as_homepage,
-            R.drawable.ic_homepage_16dp,
-            actionGroup = ActionGroup.TAKE_AN_ACTION,
-            positionInGroup = 3,
-        ),
-        SET_AS_POSTS_PAGE(
-            R.string.pages_set_as_posts_page,
-            R.drawable.ic_posts_16dp,
-            actionGroup = ActionGroup.TAKE_AN_ACTION,
-            positionInGroup = 4,
-        ),
-        COPY(
-            R.string.button_copy,
-            R.drawable.gb_ic_copy,
-            actionGroup = ActionGroup.TAKE_AN_ACTION,
-            positionInGroup = 1,
-        ),
-        COPY_LINK(
-            R.string.pages_copy_link,
-            R.drawable.gb_ic_share,
-            actionGroup = ActionGroup.SHARE_AND_PROMOTE,
-            positionInGroup = 2,
-        ),
-        PUBLISH_NOW(
-            R.string.pages_publish_now,
-            R.drawable.gb_ic_globe,
-            actionGroup = ActionGroup.TAKE_AN_ACTION,
-            positionInGroup = 3,
-        ),
-        PROMOTE_WITH_BLAZE(
-            R.string.pages_promote_with_blaze,
-            R.drawable.ic_blaze_flame_24dp,
-            0,
-            actionGroup = ActionGroup.SHARE_AND_PROMOTE,
-            positionInGroup = 2,
-        ),
-        MOVE_TO_DRAFT(
-            R.string.pages_move_to_draft,
-            R.drawable.gb_ic_move_to,
-            actionGroup = ActionGroup.TAKE_AN_ACTION,
-            positionInGroup = 6,
-        ),
-        DELETE_PERMANENTLY(
-            R.string.pages_delete_permanently,
-            R.drawable.gb_ic_trash,
-            actionGroup = ActionGroup.TRASH,
-            colorTint = R.attr.wpColorError,
-            positionInGroup = 1,
-        ),
-        MOVE_TO_TRASH(
-            R.string.pages_move_to_trash,
-            R.drawable.gb_ic_trash,
-            actionGroup = ActionGroup.TRASH,
-            positionInGroup = 3,
-        );
     }
 }

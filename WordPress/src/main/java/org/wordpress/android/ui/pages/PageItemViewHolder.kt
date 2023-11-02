@@ -57,7 +57,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
     class PageViewHolder(
         parentView: ViewGroup,
-        private val onMenuAction: (PageItem.Action, Page) -> Boolean,
+        private val onMenuAction: (PagesListAction, Page) -> Boolean,
         private val onItemTapped: (Page) -> Unit,
         private val imageManager: ImageManager? = null,
         private val isSitePhotonCapable: Boolean = false,
@@ -188,7 +188,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private fun setIconAndIconColorIfNeeded(
             context: Context,
             menuItem: MenuItem,
-            singleItemAction: PageItem.Action,
+            singleItemAction: PagesListAction,
             emptyDrawable: Drawable?
         ) {
             if (singleItemAction.icon != null) {
@@ -207,7 +207,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private fun setTextColorIfNeeded(
             context: Context,
             menuItem: MenuItem,
-            singleItemAction: PageItem.Action
+            singleItemAction: PagesListAction
         ) {
             if (singleItemAction.colorTint > 0 &&
                 singleItemAction.colorTint != com.google.android.material.R.attr.colorOnSurface) {
