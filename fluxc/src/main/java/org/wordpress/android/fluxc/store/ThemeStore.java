@@ -76,8 +76,8 @@ public class ThemeStore extends Store {
     }
 
     public static class SiteThemePayload extends Payload<ThemesError> {
-        public SiteModel site;
-        public ThemeModel theme;
+        @NonNull public SiteModel site;
+        @NonNull public ThemeModel theme;
 
         public SiteThemePayload(@NonNull SiteModel site, @NonNull ThemeModel theme) {
             this.site = site;
