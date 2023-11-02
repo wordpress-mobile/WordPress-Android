@@ -511,7 +511,7 @@ class PageListViewModel @Inject constructor(
             else -> null
         }
         val icon = when {
-            pageModel.isHomepage -> R.drawable.ic_homepage_16dp
+            pageModel.isHomepage -> R.drawable.ic_home_page_24dp
             pageModel.isPostsPage -> R.drawable.ic_posts_white_24dp
             else -> null
         }

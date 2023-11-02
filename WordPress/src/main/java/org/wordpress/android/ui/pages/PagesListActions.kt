@@ -40,7 +40,7 @@ enum class PagesListAction(
     ),
     SET_AS_HOMEPAGE(
         R.string.pages_set_as_homepage,
-        R.drawable.ic_homepage_16dp,
+        R.drawable.ic_home_page_24dp,
         actionGroup = ActionGroup.TAKE_AN_ACTION,
         positionInGroup = 3,
     ),
