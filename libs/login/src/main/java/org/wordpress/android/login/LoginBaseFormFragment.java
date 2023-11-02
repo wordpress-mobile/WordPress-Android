@@ -339,7 +339,6 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
             FetchSitesPayload payload =
                     SiteUtils.getFetchSitesPayload(isJetpackAppLogin(), isWooAppLogin());
             mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(payload));
-            mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction());
         }
     }
 
