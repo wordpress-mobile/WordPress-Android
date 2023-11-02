@@ -82,10 +82,10 @@ class ActivityNavigator @Inject constructor() {
         context.startActivity(Intent(context, MenuActivity::class.java))
     }
 
-    fun openPurchaseDomain(context: Context, domainId: Int) {
+    fun openPurchaseDomain(context: Context, domain: String) {
         context.startActivity(
             Intent(context, PurchaseDomainActivity::class.java)
-                .putExtra(PICKED_DOMAIN_KEY, domainId)
+                .putExtra(PICKED_DOMAIN_KEY, domain)
         )
     }
 }

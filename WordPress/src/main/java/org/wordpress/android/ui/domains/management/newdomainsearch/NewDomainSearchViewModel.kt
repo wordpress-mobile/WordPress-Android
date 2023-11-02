@@ -77,7 +77,7 @@ class NewDomainSearchViewModel @Inject constructor(
             mapOf("domain_name" to domain.domain)
         )
         launch {
-            _actionEvents.emit(ActionEvent.PurchaseDomain(domain))
+            _actionEvents.emit(ActionEvent.PurchaseDomain(domain.domain))
         }
     }
 
@@ -88,7 +88,7 @@ class NewDomainSearchViewModel @Inject constructor(
     }
 
     sealed class ActionEvent {
-        data class PurchaseDomain(val domain: ProposedDomain) : ActionEvent()
+        data class PurchaseDomain(val domain: String) : ActionEvent()
         data class TransferDomain(val url: String) : ActionEvent()
         object GoBack : ActionEvent()
     }

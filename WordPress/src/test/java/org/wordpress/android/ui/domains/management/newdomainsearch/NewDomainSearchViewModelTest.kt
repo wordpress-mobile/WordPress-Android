@@ -57,7 +57,7 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
         viewModel.onDomainTapped(domain)
         advanceUntilIdle()
 
-        val expectedEvent = ActionEvent.PurchaseDomain(domain)
+        val expectedEvent = ActionEvent.PurchaseDomain(domain.domain)
         assertThat(events.last()).isEqualTo(expectedEvent)
     }
 
