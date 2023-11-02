@@ -41,8 +41,8 @@
 
         <ImageView
             android:id="@+id/page_subtitle_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/page_list_prefix_icon_size"
+            android:layout_height="@dimen/page_list_prefix_icon_size"
             android:layout_marginStart="@dimen/page_item_horizontal_padding"
             app:layout_constraintBottom_toBottomOf="@+id/page_subtitle_suffix"
             app:layout_constraintStart_toEndOf="@+id/page_subtitle"
@@ -50,7 +50,8 @@
             app:layout_constraintTop_toTopOf="@+id/page_subtitle_suffix"
             app:layout_goneMarginBottom="@dimen/margin_large"
             tools:ignore="ContentDescription"
-            tools:src="@drawable/ic_posts_16dp" />
+            app:tint="#787C82"
+            tools:src="@drawable/ic_posts_white_24dp" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/page_subtitle_suffix"

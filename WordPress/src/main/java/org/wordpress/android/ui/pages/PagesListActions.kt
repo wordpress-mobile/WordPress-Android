@@ -46,7 +46,7 @@ enum class PagesListAction(
     ),
     SET_AS_POSTS_PAGE(
         R.string.pages_set_as_posts_page,
-        R.drawable.ic_posts_16dp,
+        R.drawable.ic_posts_white_24dp,
         actionGroup = ActionGroup.TAKE_AN_ACTION,
         positionInGroup = 4,
     ),

@@ -512,7 +512,7 @@ class PageListViewModel @Inject constructor(
         }
         val icon = when {
             pageModel.isHomepage -> R.drawable.ic_homepage_16dp
-            pageModel.isPostsPage -> R.drawable.ic_posts_16dp
+            pageModel.isPostsPage -> R.drawable.ic_posts_white_24dp
             else -> null
         }
         return ItemUiStateData(
