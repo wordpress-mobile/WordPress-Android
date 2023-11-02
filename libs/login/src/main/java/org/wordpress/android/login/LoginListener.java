@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnChallengeInfo;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 
@@ -51,8 +50,7 @@ public interface LoginListener {
     void needs2fa(String email, String password);
     void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup, String nonceSms);
     void needs2faSocialConnect(String email, String password, String idToken, String service);
-    void needsSecurityKey(String email, String password, String userId, String webauthnNonce);
-    void signSecurityKey(WebauthnChallengeInfo challengeInfo, String userId);
+    void needs2faSecurityKey(String email, String password, String userId, String webauthnNonce);
     void loggedInViaPassword(ArrayList<Integer> oldSitesIds);
     void helpEmailPasswordScreen(String email);
 

@@ -347,7 +347,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSecurityKeyAuthStarted(SecurityKeyRequested event) {
         onLoginFinished(false);
-        mLoginListener.needsSecurityKey(mEmailAddress, mPassword, event.userId, event.webauthnNonce);
+        mLoginListener.needs2faSecurityKey(mEmailAddress, mPassword, event.userId, event.webauthnNonce);
         LoginWpcomService.clearLoginServiceState();
     }
 
