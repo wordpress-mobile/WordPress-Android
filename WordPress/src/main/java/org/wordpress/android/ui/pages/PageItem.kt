@@ -213,6 +213,15 @@ sealed class PageItem(open val type: Type) {
         VIRTUAL_HOMEPAGE(6),
     }
 
+    enum class PositionGroup(val position:Int){
+        VIEW(1),
+        TAKE_AN_ACTION(2),
+        SHARE_AND_PROMOTE(3),
+        NAVIGATE(4),
+        TRASH(5),
+        OTHER(6)
+    }
+
     enum class Action(
         @StringRes val title: Int,
         @DrawableRes val icon: Int? = R.drawable.ic_gridicons_link_white_24dp,
