@@ -52,7 +52,7 @@ private val CAMPAIGN_RESPONSE = Campaign(
     uiStatus = "rejected",
     contentConfig = CONTENT_CONFIG_RESPONSE,
     campaignStats = CONTENT_CAMPAIGN_STATS,
-    targetUrn = "urn:blaze:product:1"
+    targetUrn = "urn:wpcom:post:199247490:9"
 )
 
 private val BLAZE_CAMPAIGNS_RESPONSE = BlazeCampaignsResponse(
