@@ -112,7 +112,7 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
     }
 
     private fun getDraftsPageActions(uploadUiState: PostUploadUiState): List<Action> {
-        return mutableListOf<>(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, COPY_LINK).apply {
+        return mutableListOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, COPY_LINK).apply {
             if (canCancelPendingAutoUpload(uploadUiState)) {
                 add(CANCEL_AUTO_UPLOAD)
             }
