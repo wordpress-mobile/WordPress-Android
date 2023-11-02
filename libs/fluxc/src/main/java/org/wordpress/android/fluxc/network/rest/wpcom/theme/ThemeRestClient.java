@@ -222,7 +222,8 @@ public class ThemeRestClient extends BaseWPComRestClient {
                 }));
     }
 
-    private static ThemeModel createThemeFromWPComResponse(WPComThemeResponse response) {
+    @NonNull
+    private static ThemeModel createThemeFromWPComResponse(@NonNull WPComThemeResponse response) {
         ThemeModel theme = new ThemeModel();
         theme.setThemeId(response.id);
         theme.setSlug(response.slug);
@@ -288,7 +289,8 @@ public class ThemeRestClient extends BaseWPComRestClient {
         return theme;
     }
 
-    private static List<ThemeModel> createThemeListFromArrayResponse(WPComThemeListResponse response) {
+    @NonNull
+    private static List<ThemeModel> createThemeListFromArrayResponse(@NonNull WPComThemeListResponse response) {
         final List<ThemeModel> themeList = new ArrayList<>();
         for (WPComThemeResponse item : response.themes) {
             themeList.add(createThemeFromWPComResponse(item));
