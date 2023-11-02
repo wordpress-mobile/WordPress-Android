@@ -316,8 +316,9 @@ public class ThemeRestClient extends BaseWPComRestClient {
      *
      * @see <a href="https://developer.wordpress.com/docs/api/console/">Documentation</a>
      */
-    private @NonNull String getThemeIdWithWpComSuffix(ThemeModel theme) {
-        if (theme == null || theme.getThemeId() == null) {
+    @NonNull
+    private String getThemeIdWithWpComSuffix(@NonNull ThemeModel theme) {
+        if (theme.getThemeId() == null) {
             return "";
         } else if (theme.getThemeId().endsWith("-wpcom")) {
             return theme.getThemeId();
