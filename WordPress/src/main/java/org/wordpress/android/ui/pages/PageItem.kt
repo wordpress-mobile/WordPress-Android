@@ -225,68 +225,81 @@ sealed class PageItem(open val type: Type) {
         @StringRes val title: Int,
         @DrawableRes val icon: Int? = R.drawable.ic_gridicons_link_white_24dp,
         val colorTint: Int = com.google.android.material.R.attr.colorOnSurface,
-        val actionPositionGroup: ActionGroup = ActionGroup.OTHER
+        val actionGroup: ActionGroup = ActionGroup.OTHER,
+        val positionInGroup: Int
     ) {
         VIEW_PAGE(
             R.string.pages_view,
             R.drawable.ic_external_white_24dp,
-            actionPositionGroup = ActionGroup.VIEW
+            actionGroup = ActionGroup.VIEW,
+            positionInGroup = 1,
         ),
         CANCEL_AUTO_UPLOAD(
             R.string.pages_and_posts_cancel_auto_upload,
             R.drawable.ic_undo_white_24dp,
-            actionPositionGroup = ActionGroup.TAKE_AN_ACTION
+            actionGroup = ActionGroup.TAKE_AN_ACTION,
+            positionInGroup = 1,
         ),
         SET_PARENT(
             R.string.set_parent,
             R.drawable.ic_pages_set_as_parent,
-            actionPositionGroup = ActionGroup.TAKE_AN_ACTION
+            actionGroup = ActionGroup.TAKE_AN_ACTION,
+            positionInGroup = 2,
         ),
         SET_AS_HOMEPAGE(
             R.string.pages_set_as_homepage,
             R.drawable.ic_homepage_16dp,
-            actionPositionGroup = ActionGroup.TAKE_AN_ACTION
+            actionGroup = ActionGroup.TAKE_AN_ACTION,
+            positionInGroup = 3,
         ),
         SET_AS_POSTS_PAGE(
             R.string.pages_set_as_posts_page,
             R.drawable.ic_posts_16dp,
-            actionPositionGroup = ActionGroup.TAKE_AN_ACTION
+            actionGroup = ActionGroup.TAKE_AN_ACTION,
+            positionInGroup = 4,
         ),
         COPY(
             R.string.button_copy,
             R.drawable.ic_copy_white_24dp,
-            actionPositionGroup = ActionGroup.SHARE_AND_PROMOTE
+            actionGroup = ActionGroup.TAKE_AN_ACTION,
+            positionInGroup = 1,
         ),
         COPY_LINK(
             R.string.pages_copy_link,
             R.drawable.ic_gridicons_link_white_24dp,
-            actionPositionGroup = ActionGroup.SHARE_AND_PROMOTE
+            actionGroup = ActionGroup.SHARE_AND_PROMOTE,
+            positionInGroup = 2,
         ),
         PUBLISH_NOW(
             R.string.pages_publish_now,
             R.drawable.ic_dashboard_card_pages_published_page_status,
-            actionPositionGroup = ActionGroup.TAKE_AN_ACTION
+            actionGroup = ActionGroup.TAKE_AN_ACTION,
+            positionInGroup = 3,
         ),
         PROMOTE_WITH_BLAZE(
             R.string.pages_promote_with_blaze,
             R.drawable.ic_promote_with_blaze,
             0,
-            actionPositionGroup = ActionGroup.SHARE_AND_PROMOTE
+            actionGroup = ActionGroup.SHARE_AND_PROMOTE,
+            positionInGroup = 2,
         ),
         MOVE_TO_DRAFT(
             R.string.pages_move_to_draft,
             R.drawable.ic_refresh_white_24dp,
-            actionPositionGroup = ActionGroup.TAKE_AN_ACTION
+            actionGroup = ActionGroup.TAKE_AN_ACTION,
+            positionInGroup = 6,
         ),
         DELETE_PERMANENTLY(
             R.string.pages_delete_permanently,
             R.drawable.ic_trash_white_24dp,
-            actionPositionGroup = ActionGroup.TRASH
+            actionGroup = ActionGroup.TRASH,
+            positionInGroup = 1,
         ),
         MOVE_TO_TRASH(
             R.string.pages_move_to_trash,
             R.drawable.ic_trash_white_24dp,
-            actionPositionGroup = ActionGroup.TRASH
+            actionGroup = ActionGroup.TRASH,
+            positionInGroup = 3,
         );
     }
 }
