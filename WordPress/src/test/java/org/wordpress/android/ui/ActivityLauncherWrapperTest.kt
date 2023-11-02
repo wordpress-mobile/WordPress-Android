@@ -68,7 +68,7 @@ class ActivityLauncherWrapperTest {
         val packageManager = mock<PackageManager>()
         whenever(activity.packageManager).thenReturn(packageManager)
         whenever(activity.application).thenReturn(application)
-        whenever(application.packageName).thenReturn("org.wordpress.android")
+        whenever(application.packageName).thenReturn(SOURCE_PACKAGE)
 
         if (isInstalled) {
             whenever(packageManager.getLaunchIntentForPackage(any())).thenReturn(mock())
