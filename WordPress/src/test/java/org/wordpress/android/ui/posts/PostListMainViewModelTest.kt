@@ -228,4 +228,13 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.onFabLongPressedForCreateMenu.value?.peekContent()).isNotNull
     }
+
+    @Test
+    fun `given start, when isSingleUserSite is null, then an exception is not thrown`() {
+        whenever(site.isSingleUserSite).thenReturn(null)
+
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
+
+        // no exception thrown
+    }
 }
