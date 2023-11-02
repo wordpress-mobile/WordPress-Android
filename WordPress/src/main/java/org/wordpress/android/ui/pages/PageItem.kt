@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.pages
 
 import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -26,7 +25,7 @@ sealed class PageItem(open val type: Type) {
         @ColorRes open val labelsColor: Int?,
         open var indent: Int,
         open var imageUrl: String?,
-        open val actions: Set<Action>,
+        open val actions: List<PagesListAction>,
         open var actionsEnabled: Boolean,
         open val tapActionEnabled: Boolean,
         open val progressBarUiState: ProgressBarUiState,
@@ -47,7 +46,7 @@ sealed class PageItem(open val type: Type) {
         override val labelsColor: Int? = null,
         override var indent: Int = 0,
         override var imageUrl: String? = null,
-        override val actions: Set<Action>,
+        override val actions: List<PagesListAction>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
@@ -81,7 +80,7 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<UiString> = emptyList(),
         override val labelsColor: Int? = null,
         override var imageUrl: String? = null,
-        override val actions: Set<Action>,
+        override val actions: List<PagesListAction>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
@@ -115,7 +114,7 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<UiString> = emptyList(),
         override val labelsColor: Int? = null,
         override var imageUrl: String? = null,
-        override val actions: Set<Action>,
+        override val actions: List<PagesListAction>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
@@ -149,7 +148,7 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<UiString> = emptyList(),
         override val labelsColor: Int? = null,
         override var imageUrl: String? = null,
-        override val actions: Set<Action>,
+        override val actions: List<PagesListAction>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
@@ -211,24 +210,5 @@ sealed class PageItem(open val type: Type) {
         PARENT(4),
         TOP_LEVEL_PARENT(5),
         VIRTUAL_HOMEPAGE(6),
-    }
-
-    enum class Action(
-        @StringRes val title: Int,
-        @DrawableRes val icon: Int? = R.drawable.ic_gridicons_link_white_24dp,
-        val colorTint: Int = com.google.android.material.R.attr.colorOnSurface
-    ) {
-        VIEW_PAGE(R.string.pages_view, R.drawable.ic_external_white_24dp),
-        CANCEL_AUTO_UPLOAD(R.string.pages_and_posts_cancel_auto_upload, R.drawable.ic_undo_white_24dp),
-        SET_PARENT(R.string.set_parent, R.drawable.ic_pages_set_as_parent),
-        SET_AS_HOMEPAGE(R.string.pages_set_as_homepage, R.drawable.ic_homepage_16dp),
-        SET_AS_POSTS_PAGE(R.string.pages_set_as_posts_page, R.drawable.ic_posts_16dp),
-        COPY(R.string.button_copy, R.drawable.ic_copy_white_24dp),
-        COPY_LINK(R.string.pages_copy_link, R.drawable.ic_gridicons_link_white_24dp),
-        PUBLISH_NOW(R.string.pages_publish_now, R.drawable.ic_dashboard_card_pages_published_page_status),
-        PROMOTE_WITH_BLAZE(R.string.pages_promote_with_blaze, R.drawable.ic_promote_with_blaze, 0),
-        MOVE_TO_DRAFT(R.string.pages_move_to_draft, R.drawable.ic_refresh_white_24dp),
-        DELETE_PERMANENTLY(R.string.pages_delete_permanently, R.drawable.ic_trash_white_24dp),
-        MOVE_TO_TRASH(R.string.pages_move_to_trash, R.drawable.ic_trash_white_24dp);
     }
 }

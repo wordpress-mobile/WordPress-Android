@@ -1,25 +1,27 @@
 package org.wordpress.android.ui.pages
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.text.SpannableStringBuilder
-import android.text.style.ImageSpan
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
-import android.widget.PopupMenu
 import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.GravityCompat
+import androidx.core.view.MenuCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActionableEmptyView
@@ -45,8 +47,8 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.Locale
 import android.R as AndroidR
-
-const val PAGES_LIST_ICON_PADDING = 8
+import androidx.appcompat.widget.PopupMenu as AppCompatPopupMenu
+import com.google.android.material.R as MaterialR
 
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
     RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
@@ -54,7 +56,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
     class PageViewHolder(
         parentView: ViewGroup,
-        private val onMenuAction: (PageItem.Action, Page) -> Boolean,
+        private val onMenuAction: (PagesListAction, Page) -> Boolean,
         private val onItemTapped: (Page) -> Unit,
         private val imageManager: ImageManager? = null,
         private val isSitePhotonCapable: Boolean = false,
@@ -160,45 +162,62 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         }
 
         private fun moreClick(pageItem: Page, v: View) {
-            val popup = PopupMenu(v.context, v)
+            val menu = AppCompatPopupMenu(v.context, v, GravityCompat.END)
+            MenuCompat.setGroupDividerEnabled(menu.menu, true)
+            menu.setForceShowIcon(true)
+
             pageItem.actions.forEach { singleItemAction ->
-                val menuItem = popup.menu.add(
-                    getMenuItemTitleWithIcon(v.context, singleItemAction)
+                val menuItem = menu.menu.add(
+                    singleItemAction.actionGroup.id,
+                    0,
+                    Menu.NONE,
+                    singleItemAction.title
                 )
                 menuItem.setOnMenuItemClickListener {
                     onMenuAction(singleItemAction, pageItem)
                     true
                 }
+                setIconAndIconColorIfNeeded(v.context, menuItem, singleItemAction)
+                setTextColorIfNeeded(v.context, menuItem, singleItemAction)
             }
-            popup.show()
+            menu.show()
         }
 
-        @Suppress("ComplexMethod")
-        private fun getMenuItemTitleWithIcon(context: Context, item: PageItem.Action): SpannableStringBuilder {
-            var icon: Drawable? = item.icon?.let {
-                setTint(
-                    context,
-                    ContextCompat.getDrawable(context, item.icon)!!, item.colorTint
-                )
-            }
-
-            // If there's no icon, we insert a transparent one
-            // to keep the title aligned with the items which have icons.
-            if (icon == null) icon = ColorDrawable(Color.TRANSPARENT)
-            val iconSize: Int = context.getResources().getDimensionPixelSize(R.dimen.menu_item_icon_size)
-            icon.setBounds(0, 0, iconSize, iconSize)
-            val imageSpan = ImageSpan(icon)
-
-            // Add a space placeholder for the icon, before the title.
-            val menuTitle = context.getText(item.title)
-            val ssb = SpannableStringBuilder(
-                menuTitle.padStart(menuTitle.length + PAGES_LIST_ICON_PADDING)
+        private fun setIconAndIconColorIfNeeded(
+            context: Context,
+            menuItem: MenuItem,
+            singleItemAction: PagesListAction,
+        ) {
+            val icon: Drawable = setTint(
+                context,
+                ContextCompat.getDrawable(context, singleItemAction.icon)!!,
+                singleItemAction.colorTint
             )
-
-            // Replace the space placeholder with the icon.
-            ssb.setSpan(imageSpan, 1, 2, 0)
-            return ssb
+            menuItem.icon = icon
         }
+
+        private fun setTextColorIfNeeded(
+            context: Context,
+            menuItem: MenuItem,
+            singleItemAction: PagesListAction
+        ) {
+            if (singleItemAction.colorTint > 0 &&
+                singleItemAction.colorTint != MaterialR.attr.colorOnSurface) {
+                val menuTitle = context.getText(singleItemAction.title)
+                val spannableString = SpannableString(menuTitle)
+                val textColor = context.getColorFromAttribute(singleItemAction.colorTint)
+
+                spannableString.setSpan(
+                    ForegroundColorSpan(textColor),
+                    0,
+                    spannableString.length,
+                    Spannable.SPAN_INCLUSIVE_INCLUSIVE
+                )
+
+                menuItem.title = spannableString
+            }
+        }
+
 
         private fun setTint(context: Context, drawable: Drawable, color: Int): Drawable {
             val wrappedDrawable: Drawable = DrawableCompat.wrap(drawable)

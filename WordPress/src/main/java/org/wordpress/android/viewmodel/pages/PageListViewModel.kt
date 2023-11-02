@@ -29,7 +29,6 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.pages.PageItem
-import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
@@ -38,6 +37,7 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.ui.pages.PageItem.VirtualHomepage
+import org.wordpress.android.ui.pages.PagesListAction
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.utils.UiString
@@ -187,7 +187,7 @@ class PageListViewModel @Inject constructor(
         dispatcher.unregister(this)
     }
 
-    fun onMenuAction(action: Action, pageItem: Page, context: Context): Boolean {
+    fun onMenuAction(action: PagesListAction, pageItem: Page, context: Context): Boolean {
         return pagesViewModel.onMenuAction(action, pageItem, context)
     }
 
@@ -511,8 +511,8 @@ class PageListViewModel @Inject constructor(
             else -> null
         }
         val icon = when {
-            pageModel.isHomepage -> R.drawable.ic_homepage_16dp
-            pageModel.isPostsPage -> R.drawable.ic_posts_16dp
+            pageModel.isHomepage -> R.drawable.gb_ic_home_page_24dp
+            pageModel.isPostsPage -> R.drawable.ic_posts_white_24dp
             else -> null
         }
         return ItemUiStateData(
@@ -539,7 +539,7 @@ class PageListViewModel @Inject constructor(
         @ColorRes val labelsColor: Int?,
         val progressBarUiState: ProgressBarUiState,
         val showOverlay: Boolean,
-        val actions: Set<Action>,
+        val actions: List<PagesListAction>,
         val subtitle: Int? = null,
         val icon: Int? = null,
         val showQuickStartFocusPoint: Boolean = false
