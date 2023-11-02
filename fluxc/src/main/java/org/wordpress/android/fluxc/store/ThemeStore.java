@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeRestClient;
 import org.wordpress.android.fluxc.persistence.ThemeSqlUtils;
 import org.wordpress.android.util.AppLog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -64,10 +65,11 @@ public class ThemeStore extends Store {
     }
 
     public static class FetchedWpComThemesPayload extends Payload<ThemesError> {
-        public List<ThemeModel> themes;
+        @NonNull public List<ThemeModel> themes;
 
         public FetchedWpComThemesPayload(@NonNull ThemesError error) {
             this.error = error;
+            this.themes = new ArrayList<>();
         }
 
         public FetchedWpComThemesPayload(@NonNull List<ThemeModel> themes) {
