@@ -106,15 +106,18 @@ public class ThemeStore extends Store {
     }
 
     public static class FetchedStarterDesignsPayload extends Payload<ThemesError> {
-        public List<StarterDesign> designs;
-        public List<StarterDesignCategory> categories;
+        @NonNull public List<StarterDesign> designs;
+        @NonNull public List<StarterDesignCategory> categories;
 
         public FetchedStarterDesignsPayload(@NonNull ThemesError error) {
             this.error = error;
+            this.designs = new ArrayList<>();
+            this.categories = new ArrayList<>();
         }
 
-        public FetchedStarterDesignsPayload(@NonNull List<StarterDesign> designs,
-                                            @NonNull List<StarterDesignCategory> categories) {
+        public FetchedStarterDesignsPayload(
+                @NonNull List<StarterDesign> designs,
+                @NonNull List<StarterDesignCategory> categories) {
             this.designs = designs;
             this.categories = categories;
         }
@@ -227,11 +230,13 @@ public class ThemeStore extends Store {
     }
 
     public static class OnStarterDesignsFetched extends OnChanged<ThemesError> {
-        public List<StarterDesign> designs;
-        public List<StarterDesignCategory> categories;
+        @NonNull public List<StarterDesign> designs;
+        @NonNull public List<StarterDesignCategory> categories;
 
-        public OnStarterDesignsFetched(List<StarterDesign> designs, List<StarterDesignCategory> categories,
-                                       ThemesError error) {
+        public OnStarterDesignsFetched(
+                @NonNull List<StarterDesign> designs,
+                @NonNull List<StarterDesignCategory> categories,
+                @Nullable ThemesError error) {
             this.designs = designs;
             this.categories = categories;
             this.error = error;
