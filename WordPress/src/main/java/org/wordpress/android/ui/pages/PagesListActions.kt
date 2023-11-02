@@ -59,8 +59,8 @@ enum class PagesListAction(
     COPY_LINK(
         R.string.button_share,
         R.drawable.gb_ic_share,
-        actionGroup = ActionGroup.TAKE_AN_ACTION,
-        positionInGroup = 8,
+        actionGroup = ActionGroup.SHARE_AND_PROMOTE,
+        positionInGroup = 1,
     ),
     PUBLISH_NOW(
         R.string.pages_publish_now,
@@ -73,7 +73,7 @@ enum class PagesListAction(
         R.drawable.ic_blaze_flame_24dp,
         0,
         actionGroup = ActionGroup.SHARE_AND_PROMOTE,
-        positionInGroup = 1,
+        positionInGroup = 2,
     ),
     MOVE_TO_DRAFT(
         R.string.pages_move_to_draft,
