@@ -35,7 +35,7 @@ public class ThemeStoreUnitTest {
 
     @Before
     public void setUp() {
-        Context appContext = RuntimeEnvironment.application.getApplicationContext();
+        Context appContext = RuntimeEnvironment.getApplication().getApplicationContext();
         WellSqlConfig config = new WellSqlConfig(appContext);
         WellSql.init(config);
         config.reset();
