@@ -73,7 +73,7 @@ enum class PagesListAction(
         R.drawable.ic_blaze_flame_24dp,
         0,
         actionGroup = ActionGroup.SHARE_AND_PROMOTE,
-        positionInGroup = 2,
+        positionInGroup = 1,
     ),
     MOVE_TO_DRAFT(
         R.string.pages_move_to_draft,
