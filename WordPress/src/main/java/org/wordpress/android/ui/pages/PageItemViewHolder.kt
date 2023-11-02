@@ -48,6 +48,7 @@ import java.util.Date
 import java.util.Locale
 import android.R as AndroidR
 import androidx.appcompat.widget.PopupMenu as AppCompatPopupMenu
+import com.google.android.material.R as MaterialR
 
 const val PAGES_LIST_ICON_PADDING = 8
 
@@ -163,7 +164,6 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         }
 
         private fun moreClick(pageItem: Page, v: View) {
-            val emptyDrawable = ContextCompat.getDrawable(v.context, R.drawable.ic_placeholder_24dp)
             val menu = AppCompatPopupMenu(v.context, v, GravityCompat.END)
             MenuCompat.setGroupDividerEnabled(menu.menu, true)
             menu.setForceShowIcon(true)
@@ -179,7 +179,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     onMenuAction(singleItemAction, pageItem)
                     true
                 }
-                setIconAndIconColorIfNeeded(v.context, menuItem, singleItemAction, emptyDrawable)
+                setIconAndIconColorIfNeeded(v.context, menuItem, singleItemAction)
                 setTextColorIfNeeded(v.context, menuItem, singleItemAction)
             }
             menu.show()
@@ -189,19 +189,13 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             context: Context,
             menuItem: MenuItem,
             singleItemAction: PagesListAction,
-            emptyDrawable: Drawable?
         ) {
-            if (singleItemAction.icon != null) {
-                val icon: Drawable = setTint(
-                    context,
-                    ContextCompat.getDrawable(context, singleItemAction.icon)!!,
-                    singleItemAction.colorTint
-                )
-                menuItem.icon = icon
-            } else {
-                // Leave space for the icon so the text lines up
-                menuItem.icon = emptyDrawable
-            }
+            val icon: Drawable = setTint(
+                context,
+                ContextCompat.getDrawable(context, singleItemAction.icon)!!,
+                singleItemAction.colorTint
+            )
+            menuItem.icon = icon
         }
 
         private fun setTextColorIfNeeded(
@@ -210,7 +204,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             singleItemAction: PagesListAction
         ) {
             if (singleItemAction.colorTint > 0 &&
-                singleItemAction.colorTint != com.google.android.material.R.attr.colorOnSurface) {
+                singleItemAction.colorTint != MaterialR.attr.colorOnSurface) {
                 val menuTitle = context.getText(singleItemAction.title)
                 val spannableString = SpannableString(menuTitle)
                 val textColor = context.getColorFromAttribute(singleItemAction.colorTint)
