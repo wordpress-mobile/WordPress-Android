@@ -34,8 +34,8 @@ public class ThemeStore extends Store {
 
     // Payloads
     public static class FetchedCurrentThemePayload extends Payload<ThemesError> {
-        public SiteModel site;
-        public ThemeModel theme;
+        @NonNull public SiteModel site;
+        @Nullable public ThemeModel theme;
 
         public FetchedCurrentThemePayload(@NonNull SiteModel site, @NonNull ThemesError error) {
             this.site = site;
@@ -171,10 +171,10 @@ public class ThemeStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class OnCurrentThemeFetched extends OnChanged<ThemesError> {
-        public SiteModel site;
-        public ThemeModel theme;
+        @NonNull public SiteModel site;
+        @Nullable public ThemeModel theme;
 
-        public OnCurrentThemeFetched(SiteModel site, ThemeModel theme) {
+        public OnCurrentThemeFetched(@NonNull SiteModel site, @Nullable ThemeModel theme) {
             this.site = site;
             this.theme = theme;
         }
@@ -398,7 +398,11 @@ public class ThemeStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ThemeSqlUtils.insertOrReplaceActiveThemeForSite(payload.site, payload.theme);
+            if (payload.theme != null) {
+                ThemeSqlUtils.insertOrReplaceActiveThemeForSite(payload.site, payload.theme);
+            } else {
+                AppLog.w(AppLog.T.THEMES, "Fetched current theme payload theme is null.");
+            }
         }
         emitChange(event);
     }
