@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 
-enum class ActionGroup(val position: Int) {
+enum class ActionGroup(val id: Int) {
     VIEW(1),
     TAKE_AN_ACTION(2),
     SHARE_AND_PROMOTE(3),

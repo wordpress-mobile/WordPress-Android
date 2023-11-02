@@ -170,7 +170,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
             pageItem.actions.forEach { singleItemAction ->
                 val menuItem = menu.menu.add(
-                    singleItemAction.actionGroup.position,
+                    singleItemAction.actionGroup.id,
                     0,
                     Menu.NONE,
                     singleItemAction.title
