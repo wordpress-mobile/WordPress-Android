@@ -33,7 +33,7 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
         siteModel: SiteModel,
         remoteId: Long,
         isPageEligibleForBlaze: Boolean = false
-    ): Set<Action> {
+    ): List<Action> {
         return when (listType) {
             SCHEDULED -> return getScheduledPageActions(uploadUiState)
             PUBLISHED -> return getPublishedPageActions(
@@ -43,13 +43,18 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
                 uploadUiState,
                 isPageEligibleForBlaze
             )
+
             DRAFTS -> getDraftsPageActions(uploadUiState)
-            TRASHED -> setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY)
+            TRASHED -> mutableListOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY).sortedWith(
+                compareBy(
+                    { it.actionGroup },
+                    { it.positionInGroup })
+            ).toList()
         }
     }
 
-    private fun getScheduledPageActions(uploadUiState: PostUploadUiState): MutableSet<Action> {
-        return mutableSetOf(
+    private fun getScheduledPageActions(uploadUiState: PostUploadUiState): List<Action> {
+        return mutableListOf(
             VIEW_PAGE,
             SET_PARENT,
             COPY_LINK,
@@ -59,7 +64,7 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
             if (canCancelPendingAutoUpload(uploadUiState)) {
                 add(CANCEL_AUTO_UPLOAD)
             }
-        }
+        }.sortedWith(compareBy({ it.actionGroup }, { it.positionInGroup })).toList()
     }
 
     private fun canCancelPendingAutoUpload(uploadUiState: PostUploadUiState) =
@@ -72,8 +77,8 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
         listType: PageListType,
         uploadUiState: PostUploadUiState,
         isPageEligibleForBlaze: Boolean
-    ): MutableSet<Action> {
-        return mutableSetOf(
+    ): List<Action> {
+        return mutableListOf(
             VIEW_PAGE,
             COPY,
             COPY_LINK,
@@ -103,14 +108,14 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
             if (isPageEligibleForBlaze) {
                 add(PROMOTE_WITH_BLAZE)
             }
-        }
+        }.sortedWith(compareBy({ it.actionGroup }, { it.positionInGroup })).toList()
     }
 
-    private fun getDraftsPageActions(uploadUiState: PostUploadUiState): MutableSet<Action> {
-        return mutableSetOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, COPY_LINK).apply {
+    private fun getDraftsPageActions(uploadUiState: PostUploadUiState): List<Action> {
+        return mutableListOf<>(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, COPY_LINK).apply {
             if (canCancelPendingAutoUpload(uploadUiState)) {
                 add(CANCEL_AUTO_UPLOAD)
             }
-        }
+        }.sortedWith(compareBy({ it.actionGroup }, { it.positionInGroup })).toList()
     }
 }
