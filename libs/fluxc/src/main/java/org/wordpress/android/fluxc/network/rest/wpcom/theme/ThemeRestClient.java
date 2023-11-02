@@ -304,7 +304,8 @@ public class ThemeRestClient extends BaseWPComRestClient {
 
     /**
      * Must provide theme slug with -wpcom suffix to install a WP.com theme on a Jetpack site.
-     * Per documentation in the developer console: https://developer.wordpress.com/docs/api/console/
+     *
+     * @see <a href="https://developer.wordpress.com/docs/api/console/">Documentation</a>
      */
     private @NonNull String getThemeIdWithWpComSuffix(ThemeModel theme) {
         if (theme == null || theme.getThemeId() == null) {
