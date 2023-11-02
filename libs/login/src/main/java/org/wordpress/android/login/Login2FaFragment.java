@@ -111,7 +111,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private String mIdToken;
     private String mNonce;
     private String mNonceAuthenticator;
-    private String mWebauthnNonce;
     private String mNonceBackup;
     private String mNonceSms;
     private String mPassword;
@@ -270,7 +269,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mIsSocialLogin = getArguments().getBoolean(ARG_2FA_IS_SOCIAL);
         mIsSocialLoginConnect = getArguments().getBoolean(ARG_2FA_IS_SOCIAL_CONNECT);
         mService = getArguments().getString(ARG_2FA_SOCIAL_SERVICE);
-        mWebauthnNonce = getArguments().getString(ARG_WEBAUTHN_NONCE);
         mIsSecurityKeyEnabled = getArguments().getBoolean(ARG_DISPLAY_SECURITY_KEY_BUTTON, false);
 
         if (savedInstanceState != null) {
@@ -593,7 +591,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
 
         StartWebauthnChallengePayload payload = new StartWebauthnChallengePayload(
-                mUserId, mWebauthnNonce);
+                mUserId, mNonce);
         mDispatcher.dispatch(AuthenticationActionBuilder
                 .newStartSecurityKeyChallengeAction(payload));
     }
