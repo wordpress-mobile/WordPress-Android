@@ -179,36 +179,53 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     onMenuAction(singleItemAction, pageItem)
                     true
                 }
+                setIconAndIconColorIfNeeded(v.context, menuItem, singleItemAction, emptyDrawable)
+                setTextColorIfNeeded(v.context, menuItem, singleItemAction)
             }
             menu.show()
         }
 
-        @Suppress("ComplexMethod")
-        private fun getMenuItemTitleWithIcon(context: Context, item: PageItem.Action): SpannableStringBuilder {
-            var icon: Drawable? = item.icon?.let {
-                setTint(
+        private fun setIconAndIconColorIfNeeded(
+            context: Context,
+            menuItem: MenuItem,
+            singleItemAction: PageItem.Action,
+            emptyDrawable: Drawable?
+        ) {
+            if (singleItemAction.icon != null) {
+                val icon: Drawable = setTint(
                     context,
-                    ContextCompat.getDrawable(context, item.icon)!!, item.colorTint
+                    ContextCompat.getDrawable(context, singleItemAction.icon)!!,
+                    singleItemAction.colorTint
                 )
+                menuItem.icon = icon
+            } else {
+                // Leave space for the icon so the text lines up
+                menuItem.icon = emptyDrawable
             }
-
-            // If there's no icon, we insert a transparent one
-            // to keep the title aligned with the items which have icons.
-            if (icon == null) icon = ColorDrawable(Color.TRANSPARENT)
-            val iconSize: Int = context.getResources().getDimensionPixelSize(R.dimen.menu_item_icon_size)
-            icon.setBounds(0, 0, iconSize, iconSize)
-            val imageSpan = ImageSpan(icon)
-
-            // Add a space placeholder for the icon, before the title.
-            val menuTitle = context.getText(item.title)
-            val ssb = SpannableStringBuilder(
-                menuTitle.padStart(menuTitle.length + PAGES_LIST_ICON_PADDING)
-            )
-
-            // Replace the space placeholder with the icon.
-            ssb.setSpan(imageSpan, 1, 2, 0)
-            return ssb
         }
+
+        private fun setTextColorIfNeeded(
+            context: Context,
+            menuItem: MenuItem,
+            singleItemAction: PageItem.Action
+        ) {
+            if (singleItemAction.colorTint > 0 &&
+                singleItemAction.colorTint != com.google.android.material.R.attr.colorOnSurface) {
+                val menuTitle = context.getText(singleItemAction.title)
+                val spannableString = SpannableString(menuTitle)
+                val textColor = context.getColorFromAttribute(singleItemAction.colorTint)
+
+                spannableString.setSpan(
+                    ForegroundColorSpan(textColor),
+                    0,
+                    spannableString.length,
+                    Spannable.SPAN_INCLUSIVE_INCLUSIVE
+                )
+
+                menuItem.title = spannableString
+            }
+        }
+
 
         private fun setTint(context: Context, drawable: Drawable, color: Int): Drawable {
             val wrappedDrawable: Drawable = DrawableCompat.wrap(drawable)
