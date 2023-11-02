@@ -3,20 +3,20 @@ package org.wordpress.android.ui.pages
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import com.google.android.material.R as MaterialR
 
 enum class ActionGroup(val id: Int) {
     VIEW(1),
     TAKE_AN_ACTION(2),
     SHARE_AND_PROMOTE(3),
-    TRASH(4),
-    OTHER(5)
+    TRASH(4)
 }
 
 enum class PagesListAction(
     @StringRes val title: Int,
-    @DrawableRes val icon: Int? = R.drawable.ic_gridicons_link_white_24dp,
-    val colorTint: Int = com.google.android.material.R.attr.colorOnSurface,
-    val actionGroup: ActionGroup = ActionGroup.OTHER,
+    @DrawableRes val icon: Int,
+    val colorTint: Int = MaterialR.attr.colorOnSurface,
+    val actionGroup: ActionGroup,
     val positionInGroup: Int
 ) {
     VIEW_PAGE(
