@@ -110,7 +110,7 @@ class StockMediaRestClient @Inject constructor(
                 val mediaList: List<MediaModel> = mediaResponseUtils.getMediaListFromRestResponse(
                         response.data,
                         site.id
-                ) ?: listOf()
+                )
                 UploadedStockMediaPayload(site, mediaList)
             }
             is Error -> {
