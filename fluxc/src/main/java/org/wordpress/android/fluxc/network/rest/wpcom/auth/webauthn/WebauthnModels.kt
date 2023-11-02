@@ -19,7 +19,5 @@ class WebauthnCredentialResponse(
 
 class WebauthnToken(
     @SerializedName("bearer_token")
-    val bearerToken: String,
-    @SerializedName("token_links")
-    val tokenLinks: String
+    val bearerToken: String
 )
