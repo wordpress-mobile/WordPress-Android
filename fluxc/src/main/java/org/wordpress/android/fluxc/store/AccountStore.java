@@ -38,7 +38,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.OauthResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.WebauthnResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnChallengeInfo;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnToken;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
@@ -1326,7 +1328,7 @@ public class AccountStore extends Store {
     private void authenticate(final AuthenticatePayload payload) {
         mAuthenticator.authenticate(payload.username, payload.password, payload.twoStepCode,
                 payload.shouldSendTwoStepSms,
-                token -> handleAuthResponse(token, payload),
+                response -> handleAuthResponse(response, payload),
                 this::handleAuthError);
     }
 
@@ -1339,17 +1341,19 @@ public class AccountStore extends Store {
         emitChange(event);
     }
 
-    private void handleAuthResponse(Token token, AuthenticatePayload payload) {
-        // Check if token exists, if not, check for security key
-        if (token.getAccessToken() != null) {
+    private void handleAuthResponse(OauthResponse response, AuthenticatePayload payload) {
+        // Oauth endpoint can return a Token or a WebauthnResponse
+        if (response instanceof Token) {
+            Token token = (Token) response;
             mAccessToken.set(token.getAccessToken());
             if (payload.nextAction != null) {
                 mDispatcher.dispatch(payload.nextAction);
             }
             emitChange(new OnAuthenticationChanged());
-        } else if (token.getUserId() != null && token.getWebauthnNonce() != null) {
-            OnSecurityKeyAuthStarted event = new OnSecurityKeyAuthStarted(token.getUserId(),
-                    token.getWebauthnNonce());
+        } else if (response instanceof WebauthnResponse) {
+            WebauthnResponse webauthnResponse = (WebauthnResponse) response;
+            OnSecurityKeyAuthStarted event = new OnSecurityKeyAuthStarted(webauthnResponse.getUserId(),
+                    webauthnResponse.getWebauthnNonce());
             if (payload.nextAction != null) {
                 mDispatcher.dispatch(payload.nextAction);
             }

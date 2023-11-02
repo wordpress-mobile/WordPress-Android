@@ -71,7 +71,7 @@ public class Authenticator {
     private final RequestQueue mRequestQueue;
     private AppSecrets mAppSecrets;
 
-    public interface Listener extends Response.Listener<Token> {
+    public interface Listener extends Response.Listener<OauthResponse> {
     }
 
     public interface ErrorListener extends Response.ErrorListener {
@@ -146,7 +146,8 @@ public class Authenticator {
         mRequestQueue.add(request);
     }
 
-    private static class TokenRequest extends Request<Token> {
+    private static class TokenRequest extends Request<OauthResponse> {
+        private static final String DATA = "data";
         private final Listener mListener;
         protected Map<String, String> mParams = new HashMap<>();
 
@@ -163,20 +164,25 @@ public class Authenticator {
         }
 
         @Override
-        public void deliverResponse(Token token) {
-            mListener.onResponse(token);
+        public void deliverResponse(OauthResponse response) {
+            mListener.onResponse(response);
         }
 
         @Override
-        protected Response<Token> parseNetworkResponse(NetworkResponse response) {
+        protected Response<OauthResponse> parseNetworkResponse(NetworkResponse response) {
             try {
                 String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                JSONObject tokenData = new JSONObject(jsonString);
-                return Response.success(Token.fromJSONObject(tokenData), HttpHeaderParser.parseCacheHeaders(response));
-            } catch (UnsupportedEncodingException e) {
+                JSONObject responseData = new JSONObject(jsonString);
+                JSONObject successData = responseData.optJSONObject(DATA);
+                if (successData != null) {
+                    return Response.success(new WebauthnResponse(successData),
+                            HttpHeaderParser.parseCacheHeaders(response));
+                }
+
+                return Response.success(Token.fromJSONObject(responseData),
+                        HttpHeaderParser.parseCacheHeaders(response));
+            } catch (UnsupportedEncodingException | JSONException e) {
                 return Response.error(new ParseError(e));
-            } catch (JSONException je) {
-                return Response.error(new ParseError(je));
             }
         }
     }
@@ -210,23 +216,20 @@ public class Authenticator {
         }
     }
 
-    public static class Token {
+    public interface OauthResponse {}
+
+    public static class Token implements OauthResponse {
         private static final String TOKEN_TYPE_FIELD_NAME = "token_type";
         private static final String ACCESS_TOKEN_FIELD_NAME = "access_token";
         private static final String SITE_URL_FIELD_NAME = "blog_url";
         private static final String SCOPE_FIELD_NAME = "scope";
         private static final String SITE_ID_FIELD_NAME = "blog_id";
-        private static final String DATA = "data";
-        private static final String USER_ID = "user_id";
-        private static final String TWO_STEP_WEBAUTHN_NONCE = "two_step_nonce_webauthn";
 
         private String mTokenType;
         private String mScope;
         private String mAccessToken;
         private String mSiteUrl;
         private String mSiteId;
-        private String mUserId;
-        private String mTwoStepWebauthnNonce;
 
         public Token(String accessToken, String siteUrl, String siteId, String scope, String tokenType) {
             mAccessToken = accessToken;
@@ -234,11 +237,6 @@ public class Authenticator {
             mSiteId = siteId;
             mScope = scope;
             mTokenType = tokenType;
-        }
-
-        public Token(String userId, String webAuthTwoStepNonce) {
-            mUserId = userId;
-            mTwoStepWebauthnNonce = webAuthTwoStepNonce;
         }
 
         public String getAccessToken() {
@@ -249,23 +247,30 @@ public class Authenticator {
             return getAccessToken();
         }
 
+        public static Token fromJSONObject(JSONObject tokenJSON) throws JSONException {
+            return new Token(tokenJSON.getString(ACCESS_TOKEN_FIELD_NAME), tokenJSON.getString(SITE_URL_FIELD_NAME),
+                    tokenJSON.getString(SITE_ID_FIELD_NAME), tokenJSON.getString(SCOPE_FIELD_NAME),
+                    tokenJSON.getString(TOKEN_TYPE_FIELD_NAME));
+        }
+    }
+
+    public static class WebauthnResponse implements OauthResponse {
+        private static final String USER_ID = "user_id";
+        private static final String TWO_STEP_WEBAUTHN_NONCE = "two_step_nonce_webauthn";
+        private String mUserId;
+        private String mTwoStepWebauthnNonce;
+
+        public WebauthnResponse(JSONObject data) throws JSONException {
+            mUserId = data.getString(USER_ID);
+            mTwoStepWebauthnNonce = data.getString(TWO_STEP_WEBAUTHN_NONCE);
+        }
+
         public String getUserId() {
             return mUserId;
         }
 
         public String getWebauthnNonce() {
             return mTwoStepWebauthnNonce;
-        }
-
-        public static Token fromJSONObject(JSONObject tokenJSON) throws JSONException {
-            JSONObject data = tokenJSON.optJSONObject(DATA);
-            if (data != null) {
-                return new Token(data.getString(USER_ID), data.getString(TWO_STEP_WEBAUTHN_NONCE));
-            }
-
-            return new Token(tokenJSON.getString(ACCESS_TOKEN_FIELD_NAME), tokenJSON.getString(SITE_URL_FIELD_NAME),
-                    tokenJSON.getString(SITE_ID_FIELD_NAME), tokenJSON.getString(SCOPE_FIELD_NAME),
-                    tokenJSON.getString(TOKEN_TYPE_FIELD_NAME));
         }
     }
 
