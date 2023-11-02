@@ -50,8 +50,6 @@ import android.R as AndroidR
 import androidx.appcompat.widget.PopupMenu as AppCompatPopupMenu
 import com.google.android.material.R as MaterialR
 
-const val PAGES_LIST_ICON_PADDING = 8
-
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
     RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(pageItem: PageItem)
