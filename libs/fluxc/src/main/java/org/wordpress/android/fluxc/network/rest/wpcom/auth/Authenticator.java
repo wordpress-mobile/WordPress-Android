@@ -95,24 +95,19 @@ public class Authenticator {
         mAppSecrets = secrets;
     }
 
-    public void authenticate(String username,
-                             String password,
-                             String twoStepCode,
-                             boolean shouldSendTwoStepSMS,
-                             Listener listener,
-                             ErrorListener errorListener) {
-        TokenRequest tokenRequest = makeRequest(username, password, twoStepCode, shouldSendTwoStepSMS, listener,
+    public void authenticate(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS,
+                             Listener listener, ErrorListener errorListener) {
+        OauthRequest request = makeRequest(username, password, twoStepCode, shouldSendTwoStepSMS, listener,
                 errorListener);
-        mRequestQueue.add(tokenRequest);
+        mRequestQueue.add(request);
     }
 
     public String getAuthorizationURL() {
         return String.format(AUTHORIZE_ENDPOINT_FORMAT, AUTHORIZE_ENDPOINT, mAppSecrets.getAppId());
     }
 
-    public TokenRequest makeRequest(String username, String password, String twoStepCode,
-                                    boolean shouldSendTwoStepSMS, Listener listener,
-                                    ErrorListener errorListener) {
+    public OauthRequest makeRequest(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS,
+                                    Listener listener, ErrorListener errorListener) {
         return new PasswordRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), username, password, twoStepCode,
                 shouldSendTwoStepSMS, listener, errorListener);
     }
@@ -146,12 +141,12 @@ public class Authenticator {
         mRequestQueue.add(request);
     }
 
-    private static class TokenRequest extends Request<OauthResponse> {
+    private static class OauthRequest extends Request<OauthResponse> {
         private static final String DATA = "data";
         private final Listener mListener;
         protected Map<String, String> mParams = new HashMap<>();
 
-        TokenRequest(String appId, String appSecret, Listener listener, ErrorListener errorListener) {
+        OauthRequest(String appId, String appSecret, Listener listener, ErrorListener errorListener) {
             super(Method.POST, TOKEN_ENDPOINT, errorListener);
             mListener = listener;
             mParams.put(CLIENT_ID_PARAM_NAME, appId);
@@ -187,7 +182,7 @@ public class Authenticator {
         }
     }
 
-    public static class PasswordRequest extends TokenRequest {
+    public static class PasswordRequest extends OauthRequest {
         public PasswordRequest(String appId, String appSecret, String username, String password, String twoStepCode,
                                boolean shouldSendTwoStepSMS, Listener listener, ErrorListener errorListener) {
             super(appId, appSecret, listener, errorListener);
@@ -207,7 +202,7 @@ public class Authenticator {
         }
     }
 
-    public static class BearerRequest extends TokenRequest {
+    public static class BearerRequest extends OauthRequest {
         public BearerRequest(String appId, String appSecret, String code, Listener listener,
                              ErrorListener errorListener) {
             super(appId, appSecret, listener, errorListener);
