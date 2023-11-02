@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.volley.RequestQueue;
 
@@ -145,7 +146,11 @@ public class ThemeRestClient extends BaseWPComRestClient {
     /**
      * Endpoint:  v2/common-starter-site-designs
      */
-    public void fetchStarterDesigns(Float previewWidth, Float previewHeight, Float scale, String[] groups) {
+    public void fetchStarterDesigns(
+            @Nullable Float previewWidth,
+            @Nullable Float previewHeight,
+            @Nullable Float scale,
+            @Nullable String[] groups) {
         Map<String, String> params = new HashMap<>();
         params.put("type", "mobile");
         if (previewWidth != null) {

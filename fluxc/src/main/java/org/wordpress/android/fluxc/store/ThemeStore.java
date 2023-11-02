@@ -91,8 +91,11 @@ public class ThemeStore extends Store {
         @Nullable public Float scale;
         @Nullable public String[] groups;
 
-        public FetchStarterDesignsPayload(@Nullable Float previewWidth, @Nullable Float previewHeight,
-                                          @Nullable Float scale, @Nullable String... groups) {
+        public FetchStarterDesignsPayload(
+                @Nullable Float previewWidth,
+                @Nullable Float previewHeight,
+                @Nullable Float scale,
+                @Nullable String... groups) {
             this.previewWidth = previewWidth;
             this.previewHeight = previewHeight;
             this.scale = scale;
@@ -341,9 +344,12 @@ public class ThemeStore extends Store {
         mThemeRestClient.fetchWpComThemes();
     }
 
-    private void fetchStarterDesigns(FetchStarterDesignsPayload payload) {
-        mThemeRestClient.fetchStarterDesigns(payload.previewWidth, payload.previewHeight,
-                payload.scale, payload.groups);
+    private void fetchStarterDesigns(@NonNull FetchStarterDesignsPayload payload) {
+        mThemeRestClient.fetchStarterDesigns(
+                payload.previewWidth,
+                payload.previewHeight,
+                payload.scale,
+                payload.groups);
     }
 
     private void handleWpComThemesFetched(@NonNull FetchedWpComThemesPayload payload) {
