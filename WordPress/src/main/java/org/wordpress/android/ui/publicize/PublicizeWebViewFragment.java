@@ -28,6 +28,8 @@ import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.util.WebViewUtils;
 import org.wordpress.android.util.helpers.WebChromeClientWithVideoPoster;
 
+import java.util.Objects;
+
 import javax.inject.Inject;
 
 public class PublicizeWebViewFragment extends PublicizeBaseFragment {
@@ -173,9 +175,9 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
             // does this url denotes that we made it past the auth stage?
             if (isAdded() && url != null) {
                 Uri uri = Uri.parse(url);
-                if (uri.getHost().equals("public-api.wordpress.com")
-                    && uri.getPath().equals("/connect/")
-                    && uri.getQueryParameter("action").equals("verify")) {
+                if (Objects.equals(uri.getHost(), "public-api.wordpress.com")
+                    && Objects.equals(uri.getPath(), "/connect/")
+                    && Objects.equals(uri.getQueryParameter("action"), "verify")) {
                     // "denied" param will appear on failure or cancellation
                     String denied = uri.getQueryParameter("denied");
                     if (!TextUtils.isEmpty(denied)) {
