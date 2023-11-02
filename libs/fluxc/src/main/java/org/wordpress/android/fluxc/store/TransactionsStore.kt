@@ -169,7 +169,7 @@ class TransactionsStore @Inject constructor(
     }
 
     class CreateShoppingCartWithDomainAndPlanPayload(
-        val site: SiteModel,
+        val site: SiteModel?,
         val domainProductId: Int,
         val domainName: String,
         val isDomainPrivacyEnabled: Boolean,
