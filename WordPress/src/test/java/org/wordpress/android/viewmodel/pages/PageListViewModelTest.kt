@@ -91,7 +91,11 @@ class PageListViewModelTest : BaseUnitTest() {
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
     private lateinit var viewModel: PageListViewModel
-    private val site = SiteModel()
+
+    private val site = SiteModel().apply {
+        hasCapabilityEditOthersPages = true
+    }
+
     private val pageListState = MutableLiveData<PageListState>()
     private lateinit var actions: MutableList<Action<*>>
 
@@ -122,6 +126,7 @@ class PageListViewModelTest : BaseUnitTest() {
         val invalidateUploadStatus = MutableLiveData<List<LocalId>>()
 
         whenever(pagesViewModel.arePageActionsEnabled).thenReturn(false)
+        site.setIsSingleUserSite(false)
         whenever(pagesViewModel.site).thenReturn(site)
         whenever(pagesViewModel.invalidateUploadStatus).thenReturn(invalidateUploadStatus)
         whenever(pagesViewModel.uploadStatusTracker).thenReturn(mock())

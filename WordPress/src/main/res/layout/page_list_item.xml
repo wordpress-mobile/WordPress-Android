@@ -17,20 +17,19 @@
         android:minHeight="@dimen/page_list_row_min_height"
         android:background="?selectableItemBackground">
 
-        <org.wordpress.android.widgets.WPTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/page_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
+            style="@style/Pages.Item.Title"
             android:layout_marginEnd="@dimen/margin_medium"
             android:layout_marginStart="@dimen/page_item_horizontal_padding"
             android:layout_marginTop="@dimen/margin_large"
             android:ellipsize="end"
             android:fontFamily="serif"
-            android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:maxLines="3"
             android:textAlignment="textStart"
-            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/page_subtitle"
             app:layout_constraintEnd_toStartOf="@+id/featured_image"
             app:layout_constraintHorizontal_bias="0"
@@ -40,37 +39,20 @@
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Porro totam quia architecto ducimus laudantium minus autem"/>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/page_subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/page_item_horizontal_padding"
-            android:layout_marginTop="@dimen/margin_extra_small"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/wpColorOnSurfaceMedium"
-            app:layout_goneMarginBottom="@dimen/margin_large"
-            app:layout_constraintBottom_toTopOf="@+id/labels"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/page_title"
-            tools:text="99 days ago • Eulah Kuvalis •" />
-
         <ImageView
             android:id="@+id/page_subtitle_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_small"
-            app:layout_constraintBottom_toTopOf="@+id/labels"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginStart="@dimen/page_item_horizontal_padding"
+            app:layout_constraintBottom_toBottomOf="@+id/page_subtitle_suffix"
             app:layout_constraintStart_toEndOf="@+id/page_subtitle"
-            app:layout_constraintTop_toBottomOf="@+id/page_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/page_subtitle_suffix"
             app:layout_goneMarginBottom="@dimen/margin_large"
             tools:ignore="ContentDescription"
             tools:src="@drawable/ic_posts_16dp" />
 
-        <org.wordpress.android.widgets.WPTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/page_subtitle_suffix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,15 +60,32 @@
             android:layout_marginTop="@dimen/margin_extra_small"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/wpColorOnSurfaceMedium"
+            style="@style/PagesList.Item.Body"
             app:layout_constraintBottom_toTopOf="@+id/labels"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/page_subtitle_icon"
             app:layout_constraintEnd_toStartOf="@+id/featured_image"
             app:layout_constraintTop_toBottomOf="@+id/page_title"
             app:layout_goneMarginBottom="@dimen/margin_large"
+            app:layout_goneMarginStart="@dimen/page_item_horizontal_padding"
             tools:text="@string/site_settings_posts_page" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/page_subtitle"
+            style="@style/PagesList.Item.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintBottom_toTopOf="@+id/labels"
+            app:layout_constraintEnd_toStartOf="@+id/featured_image"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/page_subtitle_suffix"
+            app:layout_constraintTop_toBottomOf="@+id/page_title"
+            app:layout_goneMarginBottom="@dimen/margin_large"
+            app:layout_goneMarginStart="@dimen/page_item_horizontal_padding"
+            tools:text="99 days ago • Eulah Kuvalis •" />
 
         <ImageView
             android:id="@+id/featured_image"
@@ -109,8 +108,8 @@
             android:layout_marginEnd="@dimen/page_item_horizontal_padding"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/more"
-            android:src="@drawable/ic_ellipsis_vertical_white_24dp"
-            app:tint="?attr/wpColorOnSurfaceMedium"
+            android:src="@drawable/gb_ic_more_vertical"
+            app:tint="?attr/colorOnSurface"
             app:layout_constraintBottom_toBottomOf="@+id/featured_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -130,13 +129,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <org.wordpress.android.widgets.WPTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/labels"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAlignment="textStart"
             android:maxLines="3"
             android:ellipsize="end"
+            style="@style/PagesList.Item.Body"
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_marginBottom="@dimen/margin_large"
             app:layout_constraintStart_toStartOf="@+id/page_title"

@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.AccountStore
@@ -93,6 +94,11 @@ class PageListViewModel @Inject constructor(
 
     private val PageModel.isPostsPage: Boolean
         get() = remoteId == pagesViewModel.site.pageForPosts
+
+    private val showAuthorName: Boolean by lazy {
+        // show if the site is a single user site and the users in the site has the capability to edit/add pages
+        !pagesViewModel.site.isSingleUserSite && pagesViewModel.site.hasCapabilityEditOthersPages
+    }
 
     private val featuredImageMap = mutableMapOf<Long, String>()
 
@@ -227,6 +233,7 @@ class PageListViewModel @Inject constructor(
         val pageItems = pages
             .sortedBy { it.title.lowercase(localeManagerWrapper.getLocale()) }
             .filter { listType.pageStatuses.contains(it.status) }
+            .filter { filterByAuthor(it) }
             .let {
                 when (listType) {
                     PUBLISHED -> preparePublishedPages(it, pagesViewModel.arePageActionsEnabled)
@@ -237,6 +244,15 @@ class PageListViewModel @Inject constructor(
             }
 
         displayListItems(pageItems)
+    }
+
+    private fun filterByAuthor(page: PageModel): Boolean {
+        return if (pagesViewModel.shouldFilterByAuthor()) {
+            page.post.authorId == accountStore.account.userId
+        } else {
+            // there is no filter logic needed if we want to show all authors
+            true
+        }
     }
 
     private fun displayListItems(newPages: List<PageItem>) {
@@ -297,17 +313,11 @@ class PageListViewModel @Inject constructor(
     }
 
     private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        val filteredPages = if (pagesViewModel.shouldFilterByAuthor()) {
-            pages.filter { it.post.authorId == accountStore.account.userId }
-        } else {
-            pages
-        }
-
-        val shouldSortTopologically = filteredPages.size < MAX_TOPOLOGICAL_PAGE_COUNT
+        val shouldSortTopologically = pages.size < MAX_TOPOLOGICAL_PAGE_COUNT
         val sortedPages = (if (shouldSortTopologically) {
-            topologicalSort(filteredPages.sortedBy { !(it.isHomepage && it.parent == null) }, listType = PUBLISHED)
+            topologicalSort(pages.sortedBy { !(it.isHomepage && it.parent == null) }, listType = PUBLISHED)
         } else {
-            filteredPages.sortedByDescending { it.date }.sortedBy { !it.isHomepage }
+            pages.sortedByDescending { it.date }.sortedBy { !it.isHomepage }
         })
 
         val showVirtualHomepage = siteEditorMVPFeatureConfig.isEnabled() && isBlockBasedTheme.value
@@ -321,11 +331,7 @@ class PageListViewModel @Inject constructor(
                     DEFAULT_INDENT
                 }
                 val itemUiStateData = createItemUiStateData(it)
-                val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                    null
-                } else {
-                    it.post.authorDisplayName
-                }
+                val author = getAuthorName(it.post)
                 PublishedPage(
                     remoteId = it.remoteId,
                     localId = it.pageId,
@@ -358,23 +364,12 @@ class PageListViewModel @Inject constructor(
         pages: List<PageModel>,
         actionsEnabled: Boolean
     ): List<PageItem> {
-        val filteredPages = if (pagesViewModel.shouldFilterByAuthor()) {
-            pages.filter { it.post.authorId == accountStore.account.userId }
-        } else {
-            pages
-        }
-
-        return filteredPages.groupBy { it.date.toFormattedDateString() }
+        return pages.groupBy { it.date.toFormattedDateString() }
             .map { (date, results) ->
                 listOf(Divider(date)) +
                         results.map {
                             val itemUiStateData = createItemUiStateData(it)
-
-                            val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                                null
-                            } else {
-                                it.post.authorDisplayName
-                            }
+                            val author = getAuthorName(it.post)
                             ScheduledPage(
                                 remoteId = it.remoteId,
                                 localId = it.pageId,
@@ -399,13 +394,7 @@ class PageListViewModel @Inject constructor(
     }
 
     private fun prepareDraftPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        val filteredPages = if (pagesViewModel.shouldFilterByAuthor()) {
-            pages.filter { it.post.authorId == accountStore.account.userId }
-        } else {
-            pages
-        }
-
-        return filteredPages
+        return pages
             .map {
                 val itemUiStateData = createItemUiStateData(it)
                 DraftPage(
@@ -420,11 +409,7 @@ class PageListViewModel @Inject constructor(
                     actionsEnabled = actionsEnabled,
                     progressBarUiState = itemUiStateData.progressBarUiState,
                     showOverlay = itemUiStateData.showOverlay,
-                    author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                        null
-                    } else {
-                        it.post.authorDisplayName
-                    },
+                    author = getAuthorName(it.post),
                     showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                 )
             }
@@ -434,20 +419,10 @@ class PageListViewModel @Inject constructor(
         pages: List<PageModel>,
         actionsEnabled: Boolean
     ): List<PageItem> {
-        val filteredPages = if (pagesViewModel.shouldFilterByAuthor()) {
-            pages.filter { it.post.authorId == accountStore.account.userId }
-        } else {
-            pages
-        }
-
-        return filteredPages
+        return pages
             .map {
                 val itemUiStateData = createItemUiStateData(it)
-                val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                    null
-                } else {
-                    it.post.authorDisplayName
-                }
+                val author = getAuthorName(it.post)
                 TrashedPage(
                     remoteId = it.remoteId,
                     localId = it.pageId,
@@ -464,6 +439,17 @@ class PageListViewModel @Inject constructor(
                     showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                 )
             }
+    }
+
+    private fun getAuthorName(postModel: PostModel): String? {
+        if (!showAuthorName) return null
+        return pagesViewModel.authorUIState.value?.authorFilterSelection?.let {
+            if (it == ME) {
+                null
+            } else {
+                postModel.authorDisplayName
+            }
+        }
     }
 
     private fun topologicalSort(

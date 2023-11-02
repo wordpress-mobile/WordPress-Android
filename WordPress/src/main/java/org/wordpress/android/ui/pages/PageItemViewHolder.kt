@@ -87,10 +87,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 marginLayoutParams.leftMargin = indentWidth
                 pageItemContainer.layoutParams = marginLayoutParams
 
-                pageTitle.text = if (page.title.isEmpty()) {
+                pageTitle.text = page.title.ifEmpty {
                     parent.context.getString(R.string.untitled_in_parentheses)
-                } else {
-                    page.title
                 }
 
                 showSubtitle(page.date, page.author, page.subtitle, page.icon)
@@ -256,7 +254,11 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     parent.context.getString(R.string.pages_item_date_subtitle),
                     stringDate
                 )
-                pageSubtitleSuffix.text = parent.context.getString(subtitle)
+                pageSubtitleSuffix.text = String.format(
+                    Locale.getDefault(),
+                    parent.context.getString(R.string.pages_item_subtitle),
+                    parent.context.getString(subtitle)
+                )
             } else {
                 pageSubtitle.text = author?.let {
                     String.format(

@@ -989,11 +989,12 @@ class PagesViewModel
      * 2) Jetpack sites - we need to pass in the self-hosted user id to be able to filter for authors
      * which we currently can't
      * 3) Sites on which the user doesn't have permissions to edit posts of other users.
+     * 4) Single user sites - there is no point in filtering by author on single user sites.
      *
      * This behavior is consistent with Calypso and Posts as of 11/4/2019.
      */
     private val isFilteringByAuthorSupported: Boolean by lazy {
-        site.isWPCom && site.hasCapabilityEditOthersPages && !site.isSingleUserSite
+        site.isUsingWpComRestApi && site.hasCapabilityEditOthersPages && !site.isSingleUserSite
     }
 
     @SuppressLint("NullSafeMutableLiveData")
