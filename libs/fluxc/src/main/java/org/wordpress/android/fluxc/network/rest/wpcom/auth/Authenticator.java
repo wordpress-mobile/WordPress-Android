@@ -253,11 +253,14 @@ public class Authenticator {
         private static final String USER_ID = "user_id";
         private static final String TWO_STEP_WEBAUTHN_NONCE = "two_step_nonce_webauthn";
         private String mUserId;
-        private String mTwoStepWebauthnNonce;
+        private String mWebauthnNonce;
+        private String mBackupNonce;
+        private String authenticatorNonce;
+        private String pushNonce;
 
         public WebauthnResponse(JSONObject data) throws JSONException {
             mUserId = data.getString(USER_ID);
-            mTwoStepWebauthnNonce = data.getString(TWO_STEP_WEBAUTHN_NONCE);
+            mWebauthnNonce = data.getString(TWO_STEP_WEBAUTHN_NONCE);
         }
 
         public String getUserId() {
@@ -265,7 +268,7 @@ public class Authenticator {
         }
 
         public String getWebauthnNonce() {
-            return mTwoStepWebauthnNonce;
+            return mWebauthnNonce;
         }
     }
 
