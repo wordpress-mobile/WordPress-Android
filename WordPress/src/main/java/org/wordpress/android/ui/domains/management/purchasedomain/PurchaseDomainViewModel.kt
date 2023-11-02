@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -38,6 +39,9 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         launch {
             _actionEvents.emit(ActionEvent.GoToExistingSite(domain = domain))
         }
+    }
+
+    fun onSiteChosen(site: SiteModel?) {
     }
 
     fun onBackPressed() {
