@@ -1,5 +1,0 @@
-23.4:
-Estamos eliminando os bugs!
-- Agora você pode incorporar URLs do X sem um link quebrado.
-Quando você usa uma URL de mídia inválida, agora o aplicativo exibe uma mensagem de erro em vez de travar.
-- No editor de blocos, o aplicativo não vai mais travar quando você aninhar muitos blocos dentro de blocos.

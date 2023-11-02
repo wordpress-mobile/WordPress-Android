@@ -1,0 +1,3 @@
+23.5:
+Kami hadirkan perubahan desain di pembaca, termasuk di kartu feed, header, tombol-tombol, rekomendasi, dan masih banyak lagi.
+Di editor blok, Anda sekarang bisa memecah atau keluar dari blok yang telah diformat dengan menekan Enter tiga kali. Tepi sebelah kiri blok kutipan sekarang juga selalu ditampilkan.

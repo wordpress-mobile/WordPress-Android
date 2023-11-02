@@ -14,7 +14,7 @@
         android:background="@drawable/bg_oval_placeholder"
         android:contentDescription="@null"
         android:importantForAccessibility="no"
-        android:src="@drawable/bg_oval_placeholder_globe_32dp"
+        android:src="@drawable/bg_oval_placeholder_image_32dp"
         app:layout_constraintBottom_toTopOf="@+id/site_description"
         app:layout_constraintStart_toStartOf="@id/guideline_start"
         app:layout_constraintTop_toTopOf="parent"

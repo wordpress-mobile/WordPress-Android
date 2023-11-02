@@ -52,15 +52,30 @@ class DomainManagementViewModel @Inject constructor(
         }
     }
 
-    fun onDomainTapped(domain: String) {
+    fun onDomainTapped(detailUrl: String) {
         analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED)
         launch {
-            _actionEvents.emit(ActionEvent.DomainTapped(domain))
+            _actionEvents.emit(ActionEvent.DomainTapped(detailUrl))
+        }
+    }
+
+    fun onAddDomainClicked() {
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_ADD_DOMAIN_TAPPED)
+        launch {
+            _actionEvents.emit(ActionEvent.AddDomainTapped)
+        }
+    }
+
+    fun onBackTapped() {
+        launch {
+            _actionEvents.emit(ActionEvent.NavigateBackTapped)
         }
     }
 
     sealed class ActionEvent {
-        data class DomainTapped(val domain: String): ActionEvent()
+        data class DomainTapped(val detailUrl: String): ActionEvent()
+        object AddDomainTapped: ActionEvent()
+        object NavigateBackTapped: ActionEvent()
     }
 
     sealed class UiState {
@@ -84,6 +99,7 @@ sealed class DomainCardUiState {
     data class Loaded(
         val domain: String?,
         val title: String?,
+        val detailUrl: String?,
         val statusUiState: StatusRowUiState,
     ): DomainCardUiState()
 
@@ -94,6 +110,7 @@ sealed class DomainCardUiState {
             Loaded(
                 domain = it.domain,
                 title = it.blogName,
+                detailUrl = it.getDomainDetailsUrl(),
                 statusUiState = StatusRowUiState.Loaded(
                     indicatorColor = domainStatus.indicatorColor,
                     statusText = domainStatus.statusText,

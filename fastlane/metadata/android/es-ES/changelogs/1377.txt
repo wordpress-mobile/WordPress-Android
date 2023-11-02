@@ -1,5 +1,0 @@
-23,4:
-Hemos estado eliminando errores.
-- Ahora puedes incrustar URL desde X sin obtener un enlace roto.
-- Cuando utilizas una URL de medios no válida, la aplicación muestra ahora un mensaje de error en lugar de bloquearse.
-- En el editor de bloques, la aplicación ya no se bloqueará cuando anides demasiados bloques dentro de bloques.

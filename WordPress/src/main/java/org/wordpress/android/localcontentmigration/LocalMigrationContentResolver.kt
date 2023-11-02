@@ -3,6 +3,7 @@ package org.wordpress.android.localcontentmigration
 import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
+import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderError.CursorException
 import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderError.NullCursor
 import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderError.NullValueFromQuery
 import org.wordpress.android.localcontentmigration.LocalMigrationError.ProviderError.ParsingException
@@ -47,13 +48,17 @@ class LocalMigrationContentResolver @Inject constructor(
         }
     }.let { uriBuilder ->
         with(contextProvider.getContext().contentResolver) {
-            val cursor = query(uriBuilder, entityType, entityId)
-            if (cursor == null) Failure(NullCursor(entityType))
-            else runCatching {
-                val value = cursor.getValue<T>()
-                if (value == null) Failure(NullValueFromQuery(entityType))
-                else Success(value)
-            }.getOrElse { Failure(ParsingException(entityType, it)) }
+            val cursor = runCatching {
+                query(uriBuilder, entityType, entityId)
+            }.getOrElse { failure ->
+                return@with Failure(CursorException(entityType, failure))
+            } ?: return@with Failure(NullCursor(entityType))
+
+            runCatching {
+                cursor.getValue<T>()?.let { Success(it) } ?: Failure(NullValueFromQuery(entityType))
+            }.getOrElse {  failure ->
+                Failure(ParsingException(entityType, failure))
+            }
         }
     }
 }

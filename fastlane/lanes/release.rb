@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 platform :android do
   #####################################################################################
   # code_freeze
@@ -31,9 +33,7 @@ platform :android do
 
     UI.important(message)
 
-    unless options[:skip_confirm]
-      UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
-    end
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     # Create the release branch
     UI.message 'Creating release branch...'
@@ -54,7 +54,7 @@ platform :android do
 
     extract_release_notes_for_version(
       version: new_version,
-      release_notes_file_path: "#{ENV['PROJECT_ROOT_FOLDER']}RELEASE-NOTES.txt",
+      release_notes_file_path: RELEASE_NOTES_SOURCE_PATH,
       extracted_notes_file_path: release_notes_path('wordpress')
     )
     # Jetpack Release notes are based on WP Release notes
@@ -65,9 +65,14 @@ platform :android do
       sh('git', 'commit', '-m', "Update draft release notes for Jetpack #{new_version}.")
     end
     cleanup_release_files(files: release_notes_short_paths)
-    android_update_release_notes(new_version: new_version) # Adds empty section for next version
+    # Adds empty section for next version
+    android_update_release_notes(
+      new_version: new_version,
+      release_notes_file_path: RELEASE_NOTES_SOURCE_PATH
+    )
 
-    UI.message("Jetpack release notes were based on the same ones as WordPress. Don't forget to check #{release_notes_path('jetpack')} and amend them as necessary if any item does not apply for Jetpack before sending them to Editorial.")
+    UI.message("Jetpack release notes were based on the same ones as WordPress. Don't forget to check #{release_notes_path('jetpack')} and amend them" \
+               'as necessary if any item does not apply for Jetpack before sending them to Editorial.')
 
     push_to_git_remote(tags: false)
 
@@ -96,9 +101,7 @@ platform :android do
 
     UI.important("Completing code freeze for: #{new_version}")
 
-    unless options[:skip_confirm]
-      UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
-    end
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     localize_libraries
     update_frozen_strings_for_translation
@@ -133,9 +136,7 @@ platform :android do
     ensure_git_status_clean
 
     # Check branch
-    unless Fastlane::Helper::GitHelper.checkout_and_pull(release: current_release_version)
-      UI.user_error!("Release branch for version #{current_release_version} doesn't exist.")
-    end
+    UI.user_error!("Release branch for version #{current_release_version} doesn't exist.") unless Fastlane::Helper::GitHelper.checkout_and_pull(release: current_release_version)
 
     # Check versions
     message = <<-MESSAGE
@@ -150,9 +151,7 @@ platform :android do
 
     UI.important(message)
 
-    unless options[:skip_confirm]
-      UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
-    end
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     update_frozen_strings_for_translation
     download_translations
@@ -217,9 +216,7 @@ platform :android do
 
     UI.important(message)
 
-    unless options[:skip_confirm]
-      UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
-    end
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     # Check tags
     UI.user_error!("The version `#{new_version}` tag already exists!") if git_tag_exists(tag: new_version)
@@ -260,9 +257,7 @@ platform :android do
 
     UI.important("Triggering hotfix build for version: #{current_release_version}")
 
-    unless options[:skip_confirm]
-      UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
-    end
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     trigger_release_build(branch_to_build: "release/#{current_release_version}")
   end
@@ -281,16 +276,14 @@ platform :android do
   #####################################################################################
   desc 'Updates store metadata and runs the release checks'
   lane :finalize_release do |options|
-    UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix
+    UI.user_error!('Please use `finalize_hotfix_release` lane for hotfixes') if android_current_branch_is_hotfix(version_properties_path: VERSION_PROPERTIES_PATH)
 
     ensure_git_status_clean
     ensure_git_branch(branch: '^release/')
 
     UI.important("Finalizing release: #{current_release_version}")
 
-    unless options[:skip_confirm]
-      UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
-    end
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     configure_apply(force: is_ci)
 
@@ -416,7 +409,7 @@ platform :android do
   # bundle exec fastlane create_gh_release app:jetpack version_name:12.3-rc-4 prerelease:true # Includes only existing asset for JPBeta 12.3-rc-4
   #####################################################################################
   lane :create_gh_release do |options|
-    apps = options[:app].nil? ? ['wordpress', 'jetpack'] : [get_app_name_option!(options)]
+    apps = options[:app].nil? ? %w[wordpress jetpack] : [get_app_name_option!(options)]
     versions = options[:version_name].nil? ? [current_version_name] : [options[:version_name]]
 
     download_signed_apks_from_google_play(app: options[:app])
@@ -434,7 +427,7 @@ platform :android do
     tmp_file = File.absolute_path('unified-release-notes.txt')
     unified_notes = apps.map do |app|
       notes = File.read(release_notes_path(app))
-      "\#\# #{app_titles[app]}\n\n#{notes}"
+      "## #{app_titles[app]}\n\n#{notes}"
     end.join("\n\n")
     File.write(tmp_file, unified_notes)
 
@@ -457,9 +450,9 @@ platform :android do
     app = get_app_name_option!(options)
     app_values = APP_SPECIFIC_VALUES[app.to_sym]
     Dir.glob(File.join(app_values[:metadata_dir], 'android', '*', 'changelogs', '*')).each do |file|
-      if Integer(File.basename(file, '.*')) < Integer(options[:build])
-        File.delete(file)
-      end rescue puts "Cannot delete file #{file}"
+      File.delete(file) if Integer(File.basename(file, '.*')) < Integer(options[:build])
+    rescue StandardError
+      UI.error("Could not delete file #{file}.")
     end
   end
 
@@ -480,30 +473,28 @@ platform :android do
   def get_app_name_option!(options)
     app = options[:app]&.downcase
     UI.user_error!("Missing 'app' parameter. Expected 'app:wordpress' or 'app:jetpack'") if app.nil?
-    unless %i[wordpress jetpack].include?(app.to_sym)
-      UI.user_error!("Invalid 'app' parameter #{app.inspect}. Expected 'wordpress' or 'jetpack'")
-    end
-    return app
+    UI.user_error!("Invalid 'app' parameter #{app.inspect}. Expected 'wordpress' or 'jetpack'") unless %i[wordpress jetpack].include?(app.to_sym)
+    app
   end
 
   def release_notes_path(app)
     paths = {
-      wordpress: File.join(ENV['PROJECT_ROOT_FOLDER'], 'WordPress', 'metadata', 'release_notes.txt'),
-      jetpack: File.join(ENV['PROJECT_ROOT_FOLDER'], 'WordPress', 'jetpack_metadata', 'release_notes.txt')
+      wordpress: File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'metadata', 'release_notes.txt'),
+      jetpack: File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'jetpack_metadata', 'release_notes.txt')
     }
     paths[app.to_sym] || paths[:wordpress]
   end
 
   def release_notes_short_paths
     [
-      File.join(ENV['PROJECT_ROOT_FOLDER'], 'WordPress', 'metadata', 'release_notes_short.txt'),
-      File.join(ENV['PROJECT_ROOT_FOLDER'], 'WordPress', 'jetpack_metadata', 'release_notes_short.txt')
+      File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'metadata', 'release_notes_short.txt'),
+      File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'jetpack_metadata', 'release_notes_short.txt')
     ]
   end
 
   def bundle_file_path(app, version_name)
     prefix = APP_SPECIFIC_VALUES[app.to_sym][:bundle_name_prefix]
-    File.join(ENV['PROJECT_ROOT_FOLDER'], 'build', "#{prefix}-#{version_name}.aab")
+    File.join(PROJECT_ROOT_FOLDER, 'build', "#{prefix}-#{version_name}.aab")
   end
 
   def signed_apk_path(app, version_name)
