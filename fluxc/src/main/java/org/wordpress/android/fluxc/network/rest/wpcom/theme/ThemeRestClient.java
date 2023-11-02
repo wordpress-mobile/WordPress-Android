@@ -266,7 +266,8 @@ public class ThemeRestClient extends BaseWPComRestClient {
         return theme;
     }
 
-    private static ThemeModel createThemeFromJetpackResponse(JetpackThemeResponse response) {
+    @NonNull
+    private static ThemeModel createThemeFromJetpackResponse(@NonNull JetpackThemeResponse response) {
         ThemeModel theme = new ThemeModel();
         theme.setThemeId(response.id);
         theme.setName(response.name);
@@ -301,7 +302,8 @@ public class ThemeRestClient extends BaseWPComRestClient {
     /**
      * Creates a list of ThemeModels from the Jetpack /v1/sites/$siteId/themes REST response.
      */
-    private static List<ThemeModel> createThemeListFromJetpackResponse(JetpackThemeListResponse response) {
+    @NonNull
+    private static List<ThemeModel> createThemeListFromJetpackResponse(@NonNull JetpackThemeListResponse response) {
         final List<ThemeModel> themeList = new ArrayList<>();
         for (JetpackThemeResponse item : response.themes) {
             themeList.add(createThemeFromJetpackResponse(item));
