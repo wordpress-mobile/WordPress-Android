@@ -11,12 +11,14 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Named
 
 class PurchaseDomainViewModel @AssistedInject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    private val createCartUseCase: CreateCartUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     @Assisted private val productId: Int,
     @Assisted private val domain: String,
@@ -31,9 +33,7 @@ class PurchaseDomainViewModel @AssistedInject constructor(
 
     fun onNewDomainSelected() {
         analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED)
-        launch {
-            _actionEvents.emit(ActionEvent.GoToDomainPurchasing(domain = domain))
-        }
+        createCart(null, productId, domain, privacy)
     }
 
     fun onExistingSiteSelected() {
@@ -44,16 +44,36 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     }
 
     fun onSiteChosen(site: SiteModel?) {
-        launch {
-            site?.let {
-                _actionEvents.emit(ActionEvent.GoToExistingSite(domain = domain, siteModel = it))
-            }
-        }
+        createCart(site, productId, domain, privacy)
     }
 
     fun onBackPressed() {
         launch {
             _actionEvents.emit(ActionEvent.GoBack)
+        }
+    }
+
+    private fun createCart(site: SiteModel?, productId: Int, domainName: String, supportsPrivacy: Boolean) = launch {
+        // TODO Show loading indicator
+
+        val event = createCartUseCase.execute(
+            site,
+            productId,
+            domainName,
+            supportsPrivacy,
+            false
+        )
+
+        // TODO Hide loading indicator
+
+        if (event.isError) {
+            // TODO Handle failed cart creation
+        } else {
+            if (site != null) {
+                _actionEvents.emit(ActionEvent.GoToExistingSite(domain = domain, siteModel = site))
+            } else {
+                _actionEvents.emit(ActionEvent.GoToDomainPurchasing(domain = domain))
+            }
         }
     }
 

@@ -102,7 +102,14 @@ class PurchaseDomainActivity : AppCompatActivity() {
 
     private fun handleActionEvents(actionEvent: PurchaseDomainViewModel.ActionEvent) {
         when (actionEvent) {
-            is GoToDomainPurchasing -> NotImplemented
+            is GoToDomainPurchasing -> {
+                openCheckout.launch(
+                    DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails(
+                        null,
+                        actionEvent.domain,
+                    )
+                )
+            }
             is GoToSitePicker -> { chooseSite.launch() }
             is GoToExistingSite -> {
                 openCheckout.launch(
