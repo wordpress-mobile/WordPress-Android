@@ -34,6 +34,7 @@ import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PagesAuthorFilterUIState
+import org.wordpress.android.ui.pages.PagesListAction
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
@@ -409,7 +410,7 @@ class PageListViewModelTest : BaseUnitTest() {
     @Test
     fun `verify PageListItemActionsUseCase passes the Menu Actions to PublishedPage`() {
         // Arrange
-        val actions = setOf(mock<PageItem.Action>())
+        val actions = mutableListOf(mock<PagesListAction>())
 
         whenever(
             pageListItemActionsUseCase.setupPageActions(
