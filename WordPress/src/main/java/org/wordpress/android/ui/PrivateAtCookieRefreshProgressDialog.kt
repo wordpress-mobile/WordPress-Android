@@ -7,7 +7,6 @@ import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import org.wordpress.android.R
 
@@ -28,11 +27,10 @@ class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
         return dialog != null && dialog!!.isShowing
     }
 
-    @Suppress("DEPRECATION")
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        if (targetFragment is PrivateAtCookieProgressDialogOnDismissListener) {
-            (targetFragment as PrivateAtCookieProgressDialogOnDismissListener).onCookieProgressDialogCancelled()
+        if (parentFragment is PrivateAtCookieProgressDialogOnDismissListener) {
+            (parentFragment as PrivateAtCookieProgressDialogOnDismissListener).onCookieProgressDialogCancelled()
         } else if (activity is PrivateAtCookieProgressDialogOnDismissListener) {
             (activity as PrivateAtCookieProgressDialogOnDismissListener).onCookieProgressDialogCancelled()
         }
@@ -42,19 +40,14 @@ class PrivateAtCookieRefreshProgressDialog : DialogFragment() {
         const val TAG = "private_at_cookie_progress_dialog"
 
         fun showIfNecessary(fragmentManager: FragmentManager?) {
-            showIfNecessary(fragmentManager, null)
-        }
-
-        @Suppress("DEPRECATION")
-        fun showIfNecessary(fragmentManager: FragmentManager?, targetFragment: Fragment?) {
             fragmentManager?.let {
                 val thisFragment = fragmentManager.findFragmentByTag(TAG)
-                if (thisFragment == null ||
-                    (thisFragment is PrivateAtCookieRefreshProgressDialog && !thisFragment.isDialogVisible())
-                ) {
+                if (thisFragment == null) {
                     val progressFragment = PrivateAtCookieRefreshProgressDialog()
-                    progressFragment.setTargetFragment(targetFragment, 0)
                     progressFragment.show(fragmentManager, TAG)
+                }
+                if (thisFragment is PrivateAtCookieRefreshProgressDialog && !thisFragment.isDialogVisible()) {
+                    thisFragment.show(fragmentManager, TAG)
                 }
             }
         }

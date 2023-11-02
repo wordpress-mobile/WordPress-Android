@@ -52,7 +52,7 @@ class StatsMinifiedWidgetConfigureFragment : Fragment(R.layout.stats_widget_conf
     private lateinit var colorSelectionViewModel: StatsColorSelectionViewModel
     private lateinit var dataTypeSelectionViewModel: StatsDataTypeSelectionViewModel
 
-    @Suppress("DEPRECATION", "LongMethod")
+    @Suppress("LongMethod")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val nonNullActivity = requireActivity()
@@ -93,23 +93,26 @@ class StatsMinifiedWidgetConfigureFragment : Fragment(R.layout.stats_widget_conf
                 viewModel.addWidget()
             }
 
-            siteSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
-                StatsWidgetSiteSelectionDialogFragment().show(requireFragmentManager(), "stats_site_selection_fragment")
-            })
+            siteSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner) {
+                StatsWidgetSiteSelectionDialogFragment().show(
+                    childFragmentManager,
+                    "stats_site_selection_fragment"
+                )
+            }
 
-            colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
+            colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner) {
                 StatsWidgetColorSelectionDialogFragment().show(
-                    requireFragmentManager(),
+                    childFragmentManager,
                     "stats_view_mode_selection_fragment"
                 )
-            })
+            }
 
-            dataTypeSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
+            dataTypeSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner) {
                 StatsWidgetDataTypeSelectionDialogFragment().show(
-                    requireFragmentManager(),
+                    childFragmentManager,
                     "stats_data_type_selection_fragment"
                 )
-            })
+            }
 
             mergeNotNull(
                 siteSelectionViewModel.notification,
