@@ -245,6 +245,7 @@ public class ThemeStore extends Store {
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
+    @SuppressWarnings("rawtypes")
     public void onAction(Action action) {
         IAction actionType = action.getType();
         if (!(actionType instanceof ThemeAction)) {
