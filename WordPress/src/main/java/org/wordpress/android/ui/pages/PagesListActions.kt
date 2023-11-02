@@ -21,7 +21,7 @@ enum class PagesListAction(
 ) {
     VIEW_PAGE(
         R.string.pages_view,
-        R.drawable.ic_external_white_24dp,
+        R.drawable.gb_ic_external,
         actionGroup = ActionGroup.VIEW,
         positionInGroup = 1,
     ),
