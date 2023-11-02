@@ -92,6 +92,7 @@ enum class PagesListAction(
         R.string.pages_move_to_trash,
         R.drawable.gb_ic_trash,
         actionGroup = ActionGroup.TRASH,
-        positionInGroup = 3,
+        colorTint = R.attr.wpColorError,
+        positionInGroup = 2,
     );
 }
