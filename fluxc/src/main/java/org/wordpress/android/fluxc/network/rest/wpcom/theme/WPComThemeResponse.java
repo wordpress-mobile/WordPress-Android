@@ -13,7 +13,6 @@ public class WPComThemeResponse {
     public static class WPComThemeMobileFriendlyTaxonomy {
         public String name;
         public String slug;
-        public int term_id;
     }
 
     public static class WPComThemeTaxonomies {
