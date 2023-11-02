@@ -44,17 +44,24 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ThemeRestClient extends BaseWPComRestClient {
-    /** Used by {@link #fetchWpComThemes()} request all themes in a single fetch. */
+    /**
+     * Used by {@link #fetchWpComThemes()} request all themes in a single fetch.
+     */
     private static final String WP_THEME_FETCH_NUMBER_PARAM = "number=500";
     private static final String WPCOM_MOBILE_FRIENDLY_TAXONOMY_SLUG = "mobile-friendly";
 
-    @Inject public ThemeRestClient(Context appContext, Dispatcher dispatcher,
-                           @Named("regular") RequestQueue requestQueue,
-                           AccessToken accessToken, UserAgent userAgent) {
+    @Inject public ThemeRestClient(
+            Context appContext,
+            Dispatcher dispatcher,
+            @Named("regular") RequestQueue requestQueue,
+            AccessToken accessToken,
+            UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
 
-    /** [Undocumented!] Endpoint: v1.1/sites/$siteId/themes/$themeId/delete */
+    /**
+     * [Undocumented!] Endpoint: v1.1/sites/$siteId/themes/$themeId/delete
+     */
     public void deleteTheme(@NonNull final SiteModel site, @NonNull final ThemeModel theme) {
         String url = WPCOMREST.sites.site(site.getSiteId()).themes.theme(theme.getThemeId()).delete.getUrlV1_1();
         add(WPComGsonRequest.buildPostRequest(url, null, JetpackThemeResponse.class,
@@ -78,7 +85,9 @@ public class ThemeRestClient extends BaseWPComRestClient {
                 }));
     }
 
-    /** [Undocumented!] Endpoint: v1.1/sites/$siteId/themes/$themeId/install */
+    /**
+     * [Undocumented!] Endpoint: v1.1/sites/$siteId/themes/$themeId/install
+     */
     public void installTheme(@NonNull final SiteModel site, @NonNull final ThemeModel theme) {
         String themeId = getThemeIdWithWpComSuffix(theme);
         String url = WPCOMREST.sites.site(site.getSiteId()).themes.theme(themeId).install.getUrlV1_1();
@@ -104,6 +113,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
 
     /**
      * Endpoint: v1.1/sites/$siteId/themes/mine
+     *
      * @see <a href="https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/themes/mine/">Documentation</a>
      */
     public void activateTheme(@NonNull final SiteModel site, @NonNull final ThemeModel theme) {
@@ -133,6 +143,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
 
     /**
      * [Undocumented!] Endpoint: v1.2/themes
+     *
      * @see <a href="https://developer.wordpress.com/docs/api/1.1/get/themes/">Previous version</a>
      */
     public void fetchWpComThemes() {
@@ -198,6 +209,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
 
     /**
      * [Undocumented!] Endpoint: v1/sites/$siteId/themes
+     *
      * @see <a href="https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/themes/">Similar endpoint</a>
      */
     public void fetchJetpackInstalledThemes(@NonNull final SiteModel site) {
@@ -224,6 +236,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
 
     /**
      * Endpoint: v1.1/sites/$siteId/themes/mine; same endpoint for both Jetpack and WP.com sites!
+     *
      * @see <a href="https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/themes/mine/">Documentation</a>
      */
     public void fetchCurrentTheme(@NonNull final SiteModel site) {
@@ -322,7 +335,9 @@ public class ThemeRestClient extends BaseWPComRestClient {
         return themeList;
     }
 
-    /** Creates a list of ThemeModels from the Jetpack /v1/sites/$siteId/themes REST response. */
+    /**
+     * Creates a list of ThemeModels from the Jetpack /v1/sites/$siteId/themes REST response.
+     */
     private static List<ThemeModel> createThemeListFromJetpackResponse(JetpackThemeListResponse response) {
         final List<ThemeModel> themeList = new ArrayList<>();
         for (JetpackThemeResponse item : response.themes) {
