@@ -1,25 +1,27 @@
 package org.wordpress.android.ui.pages
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.text.SpannableStringBuilder
-import android.text.style.ImageSpan
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
-import android.widget.PopupMenu
 import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.GravityCompat
+import androidx.core.view.MenuCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActionableEmptyView
@@ -45,6 +47,7 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.Locale
 import android.R as AndroidR
+import androidx.appcompat.widget.PopupMenu as AppCompatPopupMenu
 
 const val PAGES_LIST_ICON_PADDING = 8
 
@@ -160,17 +163,24 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         }
 
         private fun moreClick(pageItem: Page, v: View) {
-            val popup = PopupMenu(v.context, v)
+            val emptyDrawable = ContextCompat.getDrawable(v.context, R.drawable.ic_placeholder_24dp)
+            val menu = AppCompatPopupMenu(v.context, v, GravityCompat.END)
+            MenuCompat.setGroupDividerEnabled(menu.menu, true)
+            menu.setForceShowIcon(true)
+
             pageItem.actions.forEach { singleItemAction ->
-                val menuItem = popup.menu.add(
-                    getMenuItemTitleWithIcon(v.context, singleItemAction)
+                val menuItem = menu.menu.add(
+                    singleItemAction.actionGroup.position,
+                    0,
+                    Menu.NONE,
+                    singleItemAction.title
                 )
                 menuItem.setOnMenuItemClickListener {
                     onMenuAction(singleItemAction, pageItem)
                     true
                 }
             }
-            popup.show()
+            menu.show()
         }
 
         @Suppress("ComplexMethod")
