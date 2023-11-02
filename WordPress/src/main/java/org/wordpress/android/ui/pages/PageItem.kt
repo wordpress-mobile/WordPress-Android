@@ -236,8 +236,9 @@ sealed class PageItem(open val type: Type) {
         ),
         CANCEL_AUTO_UPLOAD(
             R.string.pages_and_posts_cancel_auto_upload,
-            R.drawable.ic_undo_white_24dp,
+            R.drawable.gb_ic_undo,
             actionGroup = ActionGroup.TAKE_AN_ACTION,
+            colorTint = R.attr.wpColorWarningDark,
             positionInGroup = 1,
         ),
         SET_PARENT(
@@ -260,44 +261,45 @@ sealed class PageItem(open val type: Type) {
         ),
         COPY(
             R.string.button_copy,
-            R.drawable.ic_copy_white_24dp,
+            R.drawable.gb_ic_copy,
             actionGroup = ActionGroup.TAKE_AN_ACTION,
             positionInGroup = 1,
         ),
         COPY_LINK(
             R.string.pages_copy_link,
-            R.drawable.ic_gridicons_link_white_24dp,
+            R.drawable.gb_ic_share,
             actionGroup = ActionGroup.SHARE_AND_PROMOTE,
             positionInGroup = 2,
         ),
         PUBLISH_NOW(
             R.string.pages_publish_now,
-            R.drawable.ic_dashboard_card_pages_published_page_status,
+            R.drawable.gb_ic_globe,
             actionGroup = ActionGroup.TAKE_AN_ACTION,
             positionInGroup = 3,
         ),
         PROMOTE_WITH_BLAZE(
             R.string.pages_promote_with_blaze,
-            R.drawable.ic_promote_with_blaze,
+            R.drawable.ic_blaze_flame_24dp,
             0,
             actionGroup = ActionGroup.SHARE_AND_PROMOTE,
             positionInGroup = 2,
         ),
         MOVE_TO_DRAFT(
             R.string.pages_move_to_draft,
-            R.drawable.ic_refresh_white_24dp,
+            R.drawable.gb_ic_move_to,
             actionGroup = ActionGroup.TAKE_AN_ACTION,
             positionInGroup = 6,
         ),
         DELETE_PERMANENTLY(
             R.string.pages_delete_permanently,
-            R.drawable.ic_trash_white_24dp,
+            R.drawable.gb_ic_trash,
             actionGroup = ActionGroup.TRASH,
+            colorTint = R.attr.wpColorError,
             positionInGroup = 1,
         ),
         MOVE_TO_TRASH(
             R.string.pages_move_to_trash,
-            R.drawable.ic_trash_white_24dp,
+            R.drawable.gb_ic_trash,
             actionGroup = ActionGroup.TRASH,
             positionInGroup = 3,
         );
