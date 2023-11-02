@@ -340,6 +340,14 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         EventBus.getDefault().post(new OnCredentialsOK());
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSecurityKeyAuthStarted(OnSecurityKeyAuthStarted event) {
+        signalCredentialsOK();
+        setState(LoginStep.SECURITY_KEY_NEEDED);
+        EventBus.getDefault().post(new SecurityKeyRequested(event.userId, event.webauthnNonce));
+    }
+
     // OnChanged events
 
     @SuppressWarnings("unused")
@@ -430,13 +438,5 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         }
 
         setState(LoginStep.SUCCESS);
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSecurityKeyAuthStarted(OnSecurityKeyAuthStarted event) {
-        signalCredentialsOK();
-        setState(LoginStep.SECURITY_KEY_NEEDED);
-        EventBus.getDefault().post(new SecurityKeyRequested(event.userId, event.webauthnNonce));
     }
 }
