@@ -24,7 +24,9 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 class PurchaseDomainViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    private val productId = 8
     private val domain = "domain.com"
+    private val supportsPrivacy = true
 
     private lateinit var viewModel: PurchaseDomainViewModel
 
@@ -34,7 +36,9 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
         viewModel = PurchaseDomainViewModel(
             mainDispatcher = testDispatcher(),
             analyticsTracker = analyticsTracker,
-            domain = domain
+            productId = productId,
+            domain = domain,
+            privacy = supportsPrivacy,
         )
     }
 

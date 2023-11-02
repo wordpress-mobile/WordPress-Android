@@ -231,12 +231,14 @@ fun NewDomainSearchScreenPreview() {
                     domain = "example.com",
                     price = "USD 100",
                     salePrice = "USD 30",
+                    supportsPrivacy = true,
                 ),
                 ProposedDomain(
                     productId = 0,
                     domain = "example.blog",
                     price = "USD 100",
                     salePrice = null,
+                    supportsPrivacy = true,
                 ),
             )
         ),

@@ -47,7 +47,8 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                             productId = 0,
                             domain = "example.com",
                             price = "USD 50",
-                            salePrice = "USD 10"
+                            salePrice = "USD 10",
+                            supportsPrivacy = true
                         )
                     )
                 )
@@ -69,13 +70,15 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                             productId = 0,
                             domain = "example.com",
                             price = "USD 50",
-                            salePrice = null
+                            salePrice = null,
+                            supportsPrivacy = true
                         )
                     )
                 )
             )
         }
 
+    @Suppress("LongMethod")
     @Test
     fun `GIVEN few domains with different relevance WHEN searchForDomains THEN sort domains by descending by relevance`() =
         test {
@@ -90,6 +93,7 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                             is_free = false
                             relevance = 1f
                             cost = "USD 30"
+                            supports_privacy = true
                         },
                         DomainSuggestionResponse().apply {
                             product_id = 1
@@ -97,6 +101,7 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                             is_free = false
                             relevance = 2f
                             cost = "USD 40"
+                            supports_privacy = true
                         },
                         DomainSuggestionResponse().apply {
                             product_id = 2
@@ -104,6 +109,7 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                             is_free = false
                             relevance = 0f
                             cost = "USD 50"
+                            supports_privacy = true
                         },
                     )
                 )
@@ -118,19 +124,21 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                             productId = 1,
                             domain = "second.com",
                             price = "USD 40",
-                            salePrice = null
+                            salePrice = null,
+                            supportsPrivacy = true
                         ),
                         ProposedDomain(
                             productId = 0,
                             domain = "first.com",
                             price = "USD 30",
-                            salePrice = null
+                            salePrice = null,
+                            supportsPrivacy = true
                         ),
-                        ProposedDomain(
-                            productId = 2,
+                        ProposedDomain(productId = 2,
                             domain = "third.com",
                             price = "USD 50",
-                            salePrice = null
+                            salePrice = null,
+                            supportsPrivacy = true
                         ),
                     )
                 )
@@ -151,6 +159,7 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                             is_free = false
                             relevance = 1f
                             cost = "USD 30"
+                            supports_privacy = true
                         },
                         DomainSuggestionResponse().apply {
                             product_id = 1
@@ -158,6 +167,7 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                             is_free = false
                             relevance = 2f
                             cost = "USD 40"
+                            supports_privacy = true
                         },
                         DomainSuggestionResponse().apply {
                             product_id = 2
@@ -165,6 +175,7 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                             is_free = true
                             relevance = 0f
                             cost = "USD 50"
+                            supports_privacy = true
                         },
                     )
                 )
@@ -179,13 +190,15 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                             productId = 1,
                             domain = "second.com",
                             price = "USD 40",
-                            salePrice = null
+                            salePrice = null,
+                            supportsPrivacy = true
                         ),
                         ProposedDomain(
                             productId = 0,
                             domain = "first.com",
                             price = "USD 30",
-                            salePrice = null
+                            salePrice = null,
+                            supportsPrivacy = true
                         ),
                     )
                 )
@@ -207,7 +220,8 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                             productId = 0,
                             domain = "example.com",
                             price = "USD 50",
-                            salePrice = null
+                            salePrice = null,
+                            supportsPrivacy = true
                         )
                     )
                 )
@@ -251,7 +265,7 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
     private suspend fun mockProductWithSaleResponse(productId: Int = 0) {
         whenever(productsStore.fetchProducts(Constants.TYPE_DOMAINS_PRODUCT)).thenReturn(
             ProductsStore.OnProductsFetched(
-                products = listOf(Product(productId = productId, combinedSaleCostDisplay = "USD 10"))
+                products = listOf(Product(productId = productId, combinedSaleCostDisplay = "USD 10",))
             )
         )
     }
@@ -278,6 +292,7 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
                         is_free = isFree
                         relevance = 0f
                         cost = "USD 50"
+                        supports_privacy = true
                     }
                 )
             )
