@@ -51,7 +51,7 @@
             app:layout_goneMarginBottom="@dimen/margin_large"
             tools:ignore="ContentDescription"
             app:tint="#787C82"
-            tools:src="@drawable/gb_ic_pages_set_as_parent" />
+            tools:src="@drawable/ic_posts_white_24dp" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/page_subtitle_suffix"
