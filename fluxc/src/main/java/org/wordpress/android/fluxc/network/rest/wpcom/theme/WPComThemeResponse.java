@@ -6,17 +6,17 @@ import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
 public class WPComThemeResponse {
-    public class WPComThemeListResponse {
+    public static class WPComThemeListResponse {
         public List<WPComThemeResponse> themes;
     }
 
-    public class WPComThemeMobileFriendlyTaxonomy {
+    public static class WPComThemeMobileFriendlyTaxonomy {
         public String name;
         public String slug;
         public int term_id;
     }
 
-    public class WPComThemeTaxonomies {
+    public static class WPComThemeTaxonomies {
         @SerializedName("theme_mobile-friendly")
         public WPComThemeMobileFriendlyTaxonomy[] theme_mobile_friendly;
     }
