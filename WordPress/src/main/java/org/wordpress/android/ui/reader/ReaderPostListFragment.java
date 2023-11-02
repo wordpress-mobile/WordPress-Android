@@ -209,6 +209,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     private boolean mIsUpdating;
     private boolean mWasPaused;
+    private boolean mHasRequestedPosts;
     private boolean mHasUpdatedPosts;
     private boolean mIsAnimatingOutNewPostsBar;
 
@@ -417,6 +418,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
             mSiteSearchRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION);
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
+            mHasRequestedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
             mHasUpdatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mFirstLoad = savedInstanceState.getBoolean(ReaderConstants.KEY_FIRST_LOAD);
             mSearchTabsPos = savedInstanceState.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION);
@@ -897,8 +899,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (isAdded() && mRecyclerView.getAdapter() == null) {
             mRecyclerView.setAdapter(getPostAdapter());
             refreshPosts();
-            if (!mHasUpdatedPosts && NetworkUtils.isNetworkAvailable(getActivity())) {
-                mHasUpdatedPosts = true;
+            if (!mHasRequestedPosts && NetworkUtils.isNetworkAvailable(getActivity())) {
+                mHasRequestedPosts = true;
                 if (getPostListType().isTagType()) {
                     updateCurrentTagIfTime();
                 } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
@@ -967,6 +969,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
         outState.putLong(ReaderConstants.ARG_FEED_ID, mCurrentFeedId);
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasRequestedPosts);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasUpdatedPosts);
         outState.putBoolean(ReaderConstants.KEY_FIRST_LOAD, mFirstLoad);
         if (mRecyclerView != null) {
@@ -1656,6 +1659,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         UpdateAction updateAction = event.getOffset() == 0 ? UpdateAction.REQUEST_NEWER : UpdateAction.REQUEST_OLDER;
         setIsUpdating(true, updateAction);
         setEmptyTitleDescriptionAndButton(false);
+        if (isPostAdapterEmpty()) showEmptyView();
     }
 
     @SuppressWarnings("unused")
@@ -1909,7 +1913,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
-            if (!isAdded()) {
+            if (!isAdded() || !mHasUpdatedPosts) {
                 return;
             }
             if (isEmpty) {
@@ -2262,6 +2266,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
         setIsUpdating(true, event.getAction());
         setEmptyTitleDescriptionAndButton(false);
+        if (isPostAdapterEmpty()) showEmptyView();
     }
 
     @SuppressWarnings("unused")
@@ -2275,6 +2280,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             return;
         }
         setIsUpdating(false, event.getAction());
+        mHasUpdatedPosts = true;
 
         // don't show new posts if user is searching - posts will automatically
         // appear when search is exited
