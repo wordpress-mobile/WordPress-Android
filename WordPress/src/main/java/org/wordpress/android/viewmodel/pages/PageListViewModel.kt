@@ -539,7 +539,7 @@ class PageListViewModel @Inject constructor(
         @ColorRes val labelsColor: Int?,
         val progressBarUiState: ProgressBarUiState,
         val showOverlay: Boolean,
-        val actions: Set<Action>,
+        val actions: List<Action>,
         val subtitle: Int? = null,
         val icon: Int? = null,
         val showQuickStartFocusPoint: Boolean = false
