@@ -54,13 +54,13 @@ enum class PagesListAction(
         R.string.button_copy,
         R.drawable.gb_ic_copy,
         actionGroup = ActionGroup.TAKE_AN_ACTION,
-        positionInGroup = 1,
+        positionInGroup = 7,
     ),
     COPY_LINK(
-        R.string.pages_copy_link,
+        R.string.button_share,
         R.drawable.gb_ic_share,
-        actionGroup = ActionGroup.SHARE_AND_PROMOTE,
-        positionInGroup = 2,
+        actionGroup = ActionGroup.TAKE_AN_ACTION,
+        positionInGroup = 8,
     ),
     PUBLISH_NOW(
         R.string.pages_publish_now,
