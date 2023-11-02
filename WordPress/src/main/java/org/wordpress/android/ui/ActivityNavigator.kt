@@ -12,7 +12,9 @@ import org.wordpress.android.ui.blaze.blazepromote.ARG_BLAZE_FLOW_SOURCE
 import org.wordpress.android.ui.blaze.blazepromote.ARG_BLAZE_SHOULD_SHOW_OVERLAY
 import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainActivity
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainActivity.Companion.PICKED_PRODUCT_ID
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainActivity.Companion.PICKED_DOMAIN_KEY
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainActivity.Companion.PICKED_DOMAIN_PRIVACY
 import org.wordpress.android.ui.mysite.menu.KEY_QUICK_START_EVENT
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
@@ -82,10 +84,12 @@ class ActivityNavigator @Inject constructor() {
         context.startActivity(Intent(context, MenuActivity::class.java))
     }
 
-    fun openPurchaseDomain(context: Context, domain: String) {
+    fun openPurchaseDomain(context: Context, productId: Int, domain: String, supportsPrivacy: Boolean) {
         context.startActivity(
             Intent(context, PurchaseDomainActivity::class.java)
+                .putExtra(PICKED_PRODUCT_ID, productId)
                 .putExtra(PICKED_DOMAIN_KEY, domain)
+                .putExtra(PICKED_DOMAIN_PRIVACY, supportsPrivacy)
         )
     }
 }

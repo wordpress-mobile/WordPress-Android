@@ -18,7 +18,9 @@ import javax.inject.Named
 class PurchaseDomainViewModel @AssistedInject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    @Assisted private val domain: String
+    @Assisted private val productId: Int,
+    @Assisted private val domain: String,
+    @Assisted private val privacy: Boolean,
 ) : ScopedViewModel(mainDispatcher) {
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: Flow<ActionEvent> = _actionEvents
@@ -64,13 +66,15 @@ class PurchaseDomainViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(domain: String): PurchaseDomainViewModel
+        fun create(productId: Int, domain: String, privacy: Boolean): PurchaseDomainViewModel
     }
 
     companion object {
-        fun provideFactory(assistedFactory: Factory, domain: String) = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T = assistedFactory.create(domain) as T
-        }
+        fun provideFactory(assistedFactory: Factory, productId: Int, domain: String, privacy: Boolean) =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                    assistedFactory.create(productId, domain, privacy) as T
+            }
     }
 }

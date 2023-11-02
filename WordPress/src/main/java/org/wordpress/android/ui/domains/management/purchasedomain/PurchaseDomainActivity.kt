@@ -39,10 +39,14 @@ class PurchaseDomainActivity : AppCompatActivity() {
     lateinit var siteStore: SiteStore
 
     private val viewModel: PurchaseDomainViewModel by viewModels {
-        PurchaseDomainViewModel.provideFactory(viewModelFactory, domainArg)
+        PurchaseDomainViewModel.provideFactory(viewModelFactory, productArg, domainArg, privacyArg)
     }
 
+    private val productArg: Int get() = intent.getIntExtra(PICKED_PRODUCT_ID, 0)
+
     private val domainArg: String get() = intent.getStringExtra(PICKED_DOMAIN_KEY) ?: error("Domain cannot be null.")
+
+    private val privacyArg: Boolean get() = intent.getBooleanExtra(PICKED_DOMAIN_PRIVACY, false)
 
     private val chooseSite = registerForActivityResult(
         object : ActivityResultContract<Unit, SiteModel?>() {
@@ -113,6 +117,8 @@ class PurchaseDomainActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val PICKED_PRODUCT_ID: String = "picked_product_id"
         const val PICKED_DOMAIN_KEY: String = "picked_domain_key"
+        const val PICKED_DOMAIN_PRIVACY: String = "picked_domain_privacy"
     }
 }

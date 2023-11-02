@@ -46,7 +46,7 @@ class NewDomainSearchActivity : AppCompatActivity() {
     private fun handleActionEvents(actionEvent: NewDomainSearchViewModel.ActionEvent) {
         when (actionEvent) {
             is NewDomainSearchViewModel.ActionEvent.PurchaseDomain -> activityNavigator.openPurchaseDomain(
-                this, actionEvent.domain.domain
+                this, actionEvent.domain.productId, actionEvent.domain.domain, actionEvent.domain.supportsPrivacy
             )
 
             is NewDomainSearchViewModel.ActionEvent.TransferDomain -> activityNavigator.openDomainTransfer(
