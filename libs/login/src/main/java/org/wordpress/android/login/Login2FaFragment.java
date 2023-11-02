@@ -587,7 +587,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             handleAuthError(event.error.type, event.error.message);
             return;
         }
-        mLoginListener.signSecurityKey(event.challengeInfo, event.mUserId);
+        mLoginListener.signSecurityKey(event.mChallengeInfo, event.mUserId);
     }
 
     @SuppressWarnings("unused")
