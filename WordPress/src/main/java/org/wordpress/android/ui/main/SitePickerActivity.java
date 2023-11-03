@@ -845,7 +845,7 @@ public class SitePickerActivity extends LocaleAwareActivity
      * Dialog which appears after user taps "Add site" - enables choosing whether to create
      * a new wp.com blog or add an existing self-hosted one.
      *
-     * @apiNote Must pass ARG_SITE_CREATION_SOURCE in arguments when creating this dialog.
+     * @apiNote Must pass {@link SitePickerActivity#ARG_SITE_CREATION_SOURCE} in arguments when creating this dialog.
      */
     public static class AddSiteDialog extends DialogFragment {
         static final String ADD_SITE_DIALOG_TAG = "add_site_dialog";
