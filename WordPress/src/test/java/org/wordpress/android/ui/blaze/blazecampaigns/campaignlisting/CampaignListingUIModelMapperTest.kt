@@ -39,6 +39,7 @@ class CampaignListingUIModelMapperTest : BaseUnitTest() {
         budgetCents = 100,
         createdAt = mock(),
         endDate = mock(),
+        targetUrn = null,
     )
 
     @Test
@@ -67,6 +68,7 @@ class CampaignListingUIModelMapperTest : BaseUnitTest() {
         budgetCents = 100,
         createdAt = mock(),
         endDate = mock(),
+        targetUrn = null,
     )
 
     @Test
