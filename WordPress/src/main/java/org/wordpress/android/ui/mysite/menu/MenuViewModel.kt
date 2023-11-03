@@ -75,6 +75,10 @@ class MenuViewModel @Inject constructor(
     private val _snackbar = MutableSharedFlow<SnackbarMessage>()
     val snackBar = _snackbar.asSharedFlow()
 
+
+    private val _onSelectedSiteMissing = MutableLiveData<Unit>()
+    val onSelectedSiteMissing = _onSelectedSiteMissing as LiveData<Unit>
+
     private var quickStartEvent: QuickStartEvent? = null
     private var isStarted = false
 
@@ -86,7 +90,13 @@ class MenuViewModel @Inject constructor(
         if (isStarted) {
             return
         }
-        val site = selectedSiteRepository.getSelectedSite()!!
+
+        val site = selectedSiteRepository.getSelectedSite()
+        if (site == null) {
+            _onSelectedSiteMissing.value = Unit
+            return
+        }
+
         this.quickStartEvent = quickStartEvent
         if (quickStartEvent != null) {
             quickStartRepository.setActiveTask(quickStartEvent.task, true)
