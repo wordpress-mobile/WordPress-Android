@@ -304,7 +304,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.apply {
                     execSQL(
-                        "ALTER TABLE `BlazeCampaigns` ADD COLUMN `targetUrn` TEXT NOT NULL"
+                        "ALTER TABLE `BlazeCampaigns` ADD COLUMN `targetUrn` TEXT"
                     )
                 }
             }
