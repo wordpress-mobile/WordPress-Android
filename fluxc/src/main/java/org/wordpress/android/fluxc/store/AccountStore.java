@@ -459,6 +459,7 @@ public class AccountStore extends Store {
         public final String mBackupNonce;
         public final String authenticatorNonce;
         public final String pushNonce;
+        public final boolean isSocialLogin;
 
         public OnSecurityKeyAuthStarted(WebauthnResponse response) {
             userId = response.mUserId;
@@ -466,6 +467,7 @@ public class AccountStore extends Store {
             mBackupNonce = response.mBackupNonce;
             authenticatorNonce = response.mAuthenticatorNonce;
             pushNonce = response.mPushNonce;
+            isSocialLogin = response.isSocialLogin();
         }
     }
 
