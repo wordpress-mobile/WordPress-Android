@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 21,
-    "identityHash": "bc545949d15449eecc47a217e9322220",
+    "identityHash": "cc9b6fb74d814058f43e676516961b97",
     "entities": [
       {
         "tableName": "BloggingReminders",
@@ -676,7 +676,7 @@
       },
       {
         "tableName": "BlazeCampaigns",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`siteId` INTEGER NOT NULL, `campaignId` INTEGER NOT NULL, `title` TEXT NOT NULL, `imageUrl` TEXT, `createdAt` TEXT NOT NULL, `endDate` TEXT, `uiStatus` TEXT NOT NULL, `budgetCents` INTEGER NOT NULL, `impressions` INTEGER NOT NULL, `clicks` INTEGER NOT NULL, `targetUrn` TEXT NOT NULL, PRIMARY KEY(`siteId`, `campaignId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`siteId` INTEGER NOT NULL, `campaignId` INTEGER NOT NULL, `title` TEXT NOT NULL, `imageUrl` TEXT, `createdAt` TEXT NOT NULL, `endDate` TEXT, `uiStatus` TEXT NOT NULL, `budgetCents` INTEGER NOT NULL, `impressions` INTEGER NOT NULL, `clicks` INTEGER NOT NULL, `targetUrn` TEXT, PRIMARY KEY(`siteId`, `campaignId`))",
         "fields": [
           {
             "fieldPath": "siteId",
@@ -742,7 +742,7 @@
             "fieldPath": "targetUrn",
             "columnName": "targetUrn",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -875,7 +875,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bc545949d15449eecc47a217e9322220')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cc9b6fb74d814058f43e676516961b97')"
     ]
   }
 }
