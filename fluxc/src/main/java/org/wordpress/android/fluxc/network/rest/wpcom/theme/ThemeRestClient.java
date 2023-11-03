@@ -282,7 +282,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
 
         // the screenshot field in Jetpack responses does not contain a protocol so we'll prepend 'https'
         String screenshotUrl = response.screenshot;
-        if (screenshotUrl != null && screenshotUrl.startsWith("//")) {
+        if (screenshotUrl.startsWith("//")) {
             screenshotUrl = "https:" + screenshotUrl;
         }
         theme.setScreenshotUrl(screenshotUrl);
