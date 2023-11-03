@@ -255,32 +255,24 @@ public class Authenticator {
         private static final String TWO_STEP_BACKUP_NONCE = "two_step_nonce_backup";
         private static final String TWO_STEP_AUTHENTICATOR_NONCE = "two_step_nonce_authenticator";
         private static final String TWO_STEP_PUSH_NONCE = "two_step_nonce_push";
-        private final String mUserId;
-        private final String mWebauthnNonce;
-        private final String mBackupNonce;
-        private final String authenticatorNonce;
-        private final String pushNonce;
+        public final String mUserId;
+        public final String mWebauthnNonce;
+        public final String mBackupNonce;
+        public final String mAuthenticatorNonce;
+        public final String mPushNonce;
 
         public WebauthnResponse(JSONObject data) throws JSONException {
             mUserId = data.getString(USER_ID);
             mWebauthnNonce = data.getString(TWO_STEP_WEBAUTHN_NONCE);
             mBackupNonce = data.getString(TWO_STEP_BACKUP_NONCE);
-            authenticatorNonce = data.getString(TWO_STEP_AUTHENTICATOR_NONCE);
-            pushNonce = data.getString(TWO_STEP_PUSH_NONCE);
-        }
-
-        public String getUserId() {
-            return mUserId;
-        }
-
-        public String getWebauthnNonce() {
-            return mWebauthnNonce;
+            mAuthenticatorNonce = data.getString(TWO_STEP_AUTHENTICATOR_NONCE);
+            mPushNonce = data.getString(TWO_STEP_PUSH_NONCE);
         }
 
         public boolean isSocialLogin() {
             return notNullOrEmpty(mBackupNonce)
-                   || notNullOrEmpty(authenticatorNonce)
-                   || notNullOrEmpty(pushNonce);
+                   || notNullOrEmpty(mAuthenticatorNonce)
+                   || notNullOrEmpty(mPushNonce);
         }
 
         private boolean notNullOrEmpty(String field) {
