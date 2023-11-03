@@ -59,8 +59,23 @@ class DomainManagementViewModel @Inject constructor(
         }
     }
 
+    fun onAddDomainClicked() {
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_ADD_DOMAIN_TAPPED)
+        launch {
+            _actionEvents.emit(ActionEvent.AddDomainTapped)
+        }
+    }
+
+    fun onBackTapped() {
+        launch {
+            _actionEvents.emit(ActionEvent.NavigateBackTapped)
+        }
+    }
+
     sealed class ActionEvent {
         data class DomainTapped(val detailUrl: String): ActionEvent()
+        object AddDomainTapped: ActionEvent()
+        object NavigateBackTapped: ActionEvent()
     }
 
     sealed class UiState {
