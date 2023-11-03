@@ -476,7 +476,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         if (canShowAppRatingPrompt) {
-            AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
+            AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getSupportFragmentManager());
         }
 
         scheduleLocalNotifications();

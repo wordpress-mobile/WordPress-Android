@@ -5,7 +5,7 @@ data class ProposedDomain(
     val domain: String,
     val price: String,
     val salePrice: String?,
-    val supportsPrivacy: Boolean = false,
+    val supportsPrivacy: Boolean,
 ) {
     val domainSuffix: String
         get() = domain.split('.').last()

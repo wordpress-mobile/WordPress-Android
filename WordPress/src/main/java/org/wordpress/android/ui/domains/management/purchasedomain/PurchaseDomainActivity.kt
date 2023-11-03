@@ -28,8 +28,6 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import javax.inject.Inject
 
-private typealias NotImplemented = Unit
-
 @AndroidEntryPoint
 class PurchaseDomainActivity : AppCompatActivity() {
     @Inject

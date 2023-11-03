@@ -84,12 +84,12 @@ class ActivityNavigator @Inject constructor() {
         context.startActivity(Intent(context, MenuActivity::class.java))
     }
 
-    fun openPurchaseDomain(context: Context, productId: Int, domain: String, supportsPrivacy: Boolean) {
+    fun openPurchaseDomain(context: Context, productId: Int, domainName: String, domainSupportsPrivacy: Boolean) {
         context.startActivity(
             Intent(context, PurchaseDomainActivity::class.java)
                 .putExtra(PICKED_PRODUCT_ID, productId)
-                .putExtra(PICKED_DOMAIN_KEY, domain)
-                .putExtra(PICKED_DOMAIN_PRIVACY, supportsPrivacy)
+                .putExtra(PICKED_DOMAIN_KEY, domainName)
+                .putExtra(PICKED_DOMAIN_PRIVACY, domainSupportsPrivacy)
         )
     }
 }
