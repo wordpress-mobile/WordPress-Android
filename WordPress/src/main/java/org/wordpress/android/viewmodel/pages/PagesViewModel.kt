@@ -994,7 +994,8 @@ class PagesViewModel
      * This behavior is consistent with Calypso and Posts as of 11/4/2019.
      */
     private val isFilteringByAuthorSupported: Boolean by lazy {
-        site.isUsingWpComRestApi && site.hasCapabilityEditOthersPages && !site.isSingleUserSite
+        site.isUsingWpComRestApi && site.hasCapabilityEditOthersPages
+                && (site.isSingleUserSite != null && !site.isSingleUserSite)
     }
 
     @SuppressLint("NullSafeMutableLiveData")
