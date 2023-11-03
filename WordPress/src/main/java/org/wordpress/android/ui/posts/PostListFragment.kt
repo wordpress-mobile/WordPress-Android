@@ -33,7 +33,6 @@ import org.wordpress.android.viewmodel.posts.PagedPostList
 import org.wordpress.android.viewmodel.posts.PostListEmptyUiState
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListViewModel
-import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 private const val EXTRA_POST_LIST_TYPE = "post_list_type"
@@ -57,8 +56,6 @@ class PostListFragment : ViewPagerFragment() {
     private var recyclerView: RecyclerView? = null
     private var actionableEmptyView: ActionableEmptyView? = null
     private var progressLoadMore: ProgressBar? = null
-
-    private lateinit var itemDecorationStandardLayout: RecyclerItemDecoration
 
     private lateinit var postListType: PostListType
 
@@ -172,13 +169,8 @@ class PostListFragment : ViewPagerFragment() {
         actionableEmptyView = view.findViewById(R.id.actionable_empty_view)
 
         val context = nonNullActivity
-        itemDecorationStandardLayout = RecyclerItemDecoration(
-            0,
-            context.resources.getDimensionPixelSize(R.dimen.margin_medium)
-        )
         recyclerView?.layoutManager = LinearLayoutManager(context)
         recyclerView?.adapter = postListAdapter
-        recyclerView?.addItemDecoration(itemDecorationStandardLayout)
 
         swipeRefreshLayout?.let {
             swipeToRefreshHelper = buildSwipeToRefreshHelper(it) {
