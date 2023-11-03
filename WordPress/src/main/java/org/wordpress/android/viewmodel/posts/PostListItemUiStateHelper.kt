@@ -49,7 +49,7 @@ import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COMMENTS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY
-import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY_URL
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SHARE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -415,7 +415,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 !isLocallyChanged &&
                 shouldShowStatsInJetpackRemovalPhase
         val canShowCopy = postStatus == PUBLISHED || postStatus == DRAFT
-        val canShowCopyUrlButton = !isLocalDraft && postStatus != TRASHED
+        val canShowShareButton = !isLocalDraft && postStatus != TRASHED
         val canShowViewButton = !canRetryUpload && postStatus != TRASHED
         val canShowPublishButton = canRetryUpload || canPublishPost
         val buttonTypes = ArrayList<PostListButtonType>()
@@ -449,8 +449,8 @@ class PostListItemUiStateHelper @Inject constructor(
 
         buttonTypes.addMoveToDraftActionIfAvailable(postStatus)
 
-        if (canShowCopyUrlButton) {
-            buttonTypes.add(BUTTON_COPY_URL)
+        if (canShowShareButton) {
+            buttonTypes.add(BUTTON_SHARE)
         }
 
         if (shouldShowPromoteWithBlaze) {

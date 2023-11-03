@@ -150,7 +150,7 @@ enum class PostListButtonType constructor(
         TAKE_AN_ACTION_GROUP_ID,
         7
     ),
-    BUTTON_COPY_URL(
+    BUTTON_SHARE(
         17,
         R.string.button_share,
         R.drawable.gb_ic_share,

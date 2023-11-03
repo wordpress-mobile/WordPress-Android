@@ -8,7 +8,7 @@ import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COMMENTS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY
-import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY_URL
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SHARE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -52,7 +52,7 @@ fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postDat
         BUTTON_MOVE_TO_DRAFT -> "move_to_draft"
         BUTTON_CANCEL_PENDING_AUTO_UPLOAD -> "cancel_pending_auto_upload"
         BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG -> "show_move_trashed_post_to_draft_post_dialog"
-        BUTTON_COPY_URL -> "copy_url"
+        BUTTON_SHARE -> "share"
         BUTTON_PROMOTE_WITH_BLAZE -> "promote_with_blaze"
         BUTTON_COMMENTS -> "comments"
     }
