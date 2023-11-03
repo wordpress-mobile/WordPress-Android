@@ -44,7 +44,7 @@ import org.wordpress.android.ui.domains.management.success
 @Composable
 fun PurchaseDomainScreen(
     onNewDomainCardSelected: () -> Unit,
-    onExistingDomainCardSelected: () -> Unit,
+    onExistingSiteCardSelected: () -> Unit,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -80,7 +80,7 @@ fun PurchaseDomainScreen(
                 ) {
                     ScreenHeader()
                     ScreenDescription()
-                    DomainCards(onNewDomainCardSelected, onExistingDomainCardSelected)
+                    DomainCards(onNewDomainCardSelected, onExistingSiteCardSelected)
                     DiscountNotice()
                 }
             }
@@ -91,7 +91,7 @@ fun PurchaseDomainScreen(
 @Composable
 private fun DomainCards(
     onNewDomainCardSelected: () -> Unit,
-    onExistingDomainCardSelected: () -> Unit,
+    onExistingSiteCardSelected: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.padding(top = 24.dp)) {
@@ -99,12 +99,12 @@ private fun DomainCards(
         if (isPortrait) {
             Column(verticalArrangement = arrangement) {
                 NewDomainCard(onNewDomainCardSelected)
-                ExistingDomainCard(onExistingDomainCardSelected)
+                ExistingSiteCard(onExistingSiteCardSelected)
             }
         } else {
             Row(horizontalArrangement = arrangement) {
                 NewDomainCard(onNewDomainCardSelected, modifier = Modifier.weight(1f))
-                ExistingDomainCard(onExistingDomainCardSelected, modifier = Modifier.weight(1f))
+                ExistingSiteCard(onExistingSiteCardSelected, modifier = Modifier.weight(1f))
             }
         }
     }
@@ -163,8 +163,8 @@ private fun NewDomainCard(
 }
 
 @Composable
-private fun ExistingDomainCard(
-    onExistingDomainCardSelected: () -> Unit,
+private fun ExistingSiteCard(
+    onExistingSiteCardSelected: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     DomainOptionCard(
@@ -172,7 +172,7 @@ private fun ExistingDomainCard(
         title = R.string.purchase_domain_screen_existing_domain_card_title,
         description = R.string.purchase_domain_screen_existing_domain_card_description,
         button = R.string.purchase_domain_screen_existing_domain_card_button,
-        onOptionSelected = onExistingDomainCardSelected,
+        onOptionSelected = onExistingSiteCardSelected,
         modifier = modifier,
     )
 }
