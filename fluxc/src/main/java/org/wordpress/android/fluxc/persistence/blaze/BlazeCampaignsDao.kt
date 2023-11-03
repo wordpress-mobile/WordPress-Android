@@ -102,7 +102,7 @@ abstract class BlazeCampaignsDao {
         val budgetCents: Long,
         val impressions: Long,
         val clicks: Long,
-        val targetUrn: String
+        val targetUrn: String?
     ) {
         fun toDomainModel() = BlazeCampaignModel(
             campaignId = campaignId,
