@@ -107,6 +107,7 @@ class MenuActivity : AppCompatActivity() {
         viewModel.navigation.observe(this) { handleNavigationAction(it.getContentIfNotHandled()) }
         viewModel.onSnackbarMessage.observe(this) { showSnackbar(it.getContentIfNotHandled()) }
         viewModel.onQuickStartMySitePrompts.observe(this) { handleActiveTutorialPrompt(it.getContentIfNotHandled()) }
+        viewModel.onSelectedSiteMissing.observe(this) { finish() }
 
         // Set the Compose callback for SnackbarSequencer
         snackbarSequencer.setComposeSnackbarCallback { item ->
