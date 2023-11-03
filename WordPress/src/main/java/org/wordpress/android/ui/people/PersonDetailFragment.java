@@ -83,9 +83,10 @@ public class PersonDetailFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+        ((WordPress) requireActivity().getApplicationContext()).component().inject(this);
 
         if (savedInstanceState == null) {
+            assert getArguments() != null;
             mCurrentUserId = getArguments().getLong(ARG_CURRENT_USER_ID);
             mPersonId = getArguments().getLong(ARG_PERSON_ID);
             mLocalTableBlogId = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
@@ -121,8 +122,8 @@ public class PersonDetailFragment extends Fragment {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.person_detail_fragment, container, false);
 
         Toolbar toolbar = rootView.findViewById(R.id.toolbar_main);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
