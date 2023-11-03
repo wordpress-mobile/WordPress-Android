@@ -454,12 +454,18 @@ public class AccountStore extends Store {
     }
 
     public static class OnSecurityKeyAuthStarted extends OnChanged<AuthenticationError> {
-        public String userId;
-        public String webauthnNonce;
+        public final String userId;
+        public final String webauthnNonce;
+        public final String mBackupNonce;
+        public final String authenticatorNonce;
+        public final String pushNonce;
 
-        public OnSecurityKeyAuthStarted(String userId, String webauthnNonce) {
-            this.userId = userId;
-            this.webauthnNonce = webauthnNonce;
+        public OnSecurityKeyAuthStarted(WebauthnResponse response) {
+            userId = response.mUserId;
+            webauthnNonce = response.mWebauthnNonce;
+            mBackupNonce = response.mBackupNonce;
+            authenticatorNonce = response.mAuthenticatorNonce;
+            pushNonce = response.mPushNonce;
         }
     }
 
@@ -1351,9 +1357,7 @@ public class AccountStore extends Store {
             }
             emitChange(new OnAuthenticationChanged());
         } else if (response instanceof WebauthnResponse) {
-            WebauthnResponse webauthnResponse = (WebauthnResponse) response;
-            OnSecurityKeyAuthStarted event = new OnSecurityKeyAuthStarted(webauthnResponse.getUserId(),
-                    webauthnResponse.getWebauthnNonce());
+            OnSecurityKeyAuthStarted event = new OnSecurityKeyAuthStarted((WebauthnResponse) response);
             if (payload.nextAction != null) {
                 mDispatcher.dispatch(payload.nextAction);
             }
