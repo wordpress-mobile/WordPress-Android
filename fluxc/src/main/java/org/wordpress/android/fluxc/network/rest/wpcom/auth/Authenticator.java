@@ -270,6 +270,16 @@ public class Authenticator {
         public String getWebauthnNonce() {
             return mWebauthnNonce;
         }
+
+        public boolean isSocialLogin() {
+            return notNullOrEmpty(mBackupNonce)
+                   || notNullOrEmpty(authenticatorNonce)
+                   || notNullOrEmpty(pushNonce);
+        }
+
+        private boolean notNullOrEmpty(String field) {
+            return field != null && !field.isEmpty();
+        }
     }
 
     public void sendAuthEmail(final AuthEmailPayload payload) {
