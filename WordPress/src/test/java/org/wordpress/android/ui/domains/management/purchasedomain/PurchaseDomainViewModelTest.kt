@@ -11,19 +11,23 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_SHOWN
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoBack
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToDomainPurchasing
-import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingDomain
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingSite
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
 class PurchaseDomainViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    private val productId = 8
+    private val domain = "domain.com"
+    private val supportsPrivacy = true
+
     private lateinit var viewModel: PurchaseDomainViewModel
 
     @Before
@@ -31,7 +35,10 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
         MockitoAnnotations.openMocks(this)
         viewModel = PurchaseDomainViewModel(
             mainDispatcher = testDispatcher(),
-            analyticsTracker = analyticsTracker
+            analyticsTracker = analyticsTracker,
+            productId = productId,
+            domain = domain,
+            privacy = supportsPrivacy,
         )
     }
 
@@ -49,8 +56,8 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     @Test
     @Suppress("MaxLineLength")
     fun `WHEN existing domain selected THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED event`() {
-        viewModel.onExistingDomainSelected()
-        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED)
+        viewModel.onExistingSiteSelected()
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED)
     }
 
     @Test
@@ -58,15 +65,15 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
         viewModel.onNewDomainSelected()
         advanceUntilIdle()
 
-        assertThat(events.last()).isEqualTo(GoToDomainPurchasing)
+        assertThat(events.last()).isEqualTo(GoToDomainPurchasing(domain))
     }
 
     @Test
-    fun `WHEN existing domain selected THEN send GoToExistingDomain action event`() = testWithActionEvents { events ->
-        viewModel.onExistingDomainSelected()
+    fun `WHEN existing site selected THEN send GoToExistingSite action event`() = testWithActionEvents { events ->
+        viewModel.onExistingSiteSelected()
         advanceUntilIdle()
 
-        assertThat(events.last()).isEqualTo(GoToExistingDomain)
+        assertThat(events.last()).isEqualTo(GoToExistingSite(domain))
     }
 
     @Test

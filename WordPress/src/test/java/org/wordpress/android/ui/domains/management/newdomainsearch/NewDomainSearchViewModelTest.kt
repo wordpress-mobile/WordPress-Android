@@ -53,17 +53,17 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
 
     @Test
     fun `WHEN a domain is tapped THEN send PurchaseDomain action event`() = testWithActionEvents { events ->
-        val domain = ProposedDomain(1, "test.com", "1", null)
+        val domain = ProposedDomain(1, "test.com", "1", null, true)
         viewModel.onDomainTapped(domain)
         advanceUntilIdle()
 
-        val expectedEvent = ActionEvent.PurchaseDomain(domain)
+        val expectedEvent = ActionEvent.PurchaseDomain(domain.productId, domain.domain, domain.supportsPrivacy)
         assertThat(events.last()).isEqualTo(expectedEvent)
     }
 
     @Test
     fun `WHEN a domain is tapped THEN track DOMAIN_MANAGEMENT_SEARCH_DOMAIN_TAPPED event`() = test {
-        val domain = ProposedDomain(1, "test.com", "1", null)
+        val domain = ProposedDomain(1, "test.com", "1", null, true)
         viewModel.onDomainTapped(domain)
         advanceUntilIdle()
 
@@ -149,7 +149,8 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
                     productId = 0,
                     domain = "domain.com",
                     price = "USD 100",
-                    salePrice = null
+                    salePrice = null,
+                    supportsPrivacy = true
                 )
             )
             val result = DomainsResult.Success(domains)
