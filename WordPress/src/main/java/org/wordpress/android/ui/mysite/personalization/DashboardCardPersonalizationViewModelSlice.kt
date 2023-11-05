@@ -179,9 +179,12 @@ class DashboardCardPersonalizationViewModelSlice @Inject constructor(
 
     private fun updateCardState(cardType: CardType, enabled: Boolean) {
         val currentCards: MutableList<DashboardCardState> = _uiState.value!!.toMutableList()
-        val updated = currentCards.find { it.cardType == cardType }!!.copy(enabled = enabled)
-        currentCards[cardType.order] = updated
-        _uiState.postValue(currentCards)
+        val cardIndex = currentCards.indexOfFirst { it.cardType == cardType }
+        if (cardIndex != -1) {
+            val updated = currentCards[cardIndex].copy(enabled = enabled)
+            currentCards[cardIndex] = updated
+            _uiState.postValue(currentCards)
+        }
     }
 
     private fun isStatsCardShown(siteId: Long) = !appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(siteId)
