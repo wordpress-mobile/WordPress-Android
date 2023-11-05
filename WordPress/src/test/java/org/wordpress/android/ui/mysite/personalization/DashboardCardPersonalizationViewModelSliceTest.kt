@@ -66,7 +66,7 @@ class DashboardCardPersonalizationViewModelSliceTest : BaseUnitTest() {
 
         whenever(blazeFeatureUtils.isSiteBlazeEligible(site)).thenReturn(true)
         test {
-            whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(true)
+            whenever(bloggingPromptsSettingsHelper.shouldShowPromptsSetting()).thenReturn(true)
         }
 
         viewModelSlice = DashboardCardPersonalizationViewModelSlice(

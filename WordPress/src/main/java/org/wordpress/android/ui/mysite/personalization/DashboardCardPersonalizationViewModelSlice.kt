@@ -61,7 +61,7 @@ class DashboardCardPersonalizationViewModelSlice @Inject constructor(
     }
 
     private suspend fun getBloggingPromptCardState(): DashboardCardState? {
-        return if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
+        return if (bloggingPromptsSettingsHelper.shouldShowPromptsSetting()) {
             DashboardCardState(
                 title = R.string.personalization_screen_blogging_prompts_card_title,
                 description = R.string.personalization_screen_blogging_prompts_card_description,
