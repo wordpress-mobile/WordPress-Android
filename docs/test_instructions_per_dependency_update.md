@@ -45,6 +45,7 @@ rather than strict requirements.
 3. [ExoPlayer](#exoplayer)
 4. [Firebase](#firebase)
 5. [PlayServicesAuth](#playservicesauth)
+6. [PlayServicesCoreScanner](#playservicescodescanner)
 
 ℹ️ Every test instruction should be prefixed with one of the following:
 - [JP/WP] This test applies to both, the `Jetpack` and `WordPress` apps.
@@ -272,5 +273,37 @@ rather than strict requirements.
   button (note that you need to use a non `A8C` account to be able to complete this flow).
 - Verify that the Google sign-in works, that you have successfully logged-in and are able to use the
   app as expected.
+
+</details>
+
+### PlayServicesCodeScanner [[googlePlayServicesCodeScannerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="playservicescodescanner"></a>
+
+<details>
+  <summary>1. [JP] Scan Login Code</summary>
+
+Step.1:
+- Build and install the `Jetpack` app (note that you don't need a release build, a debug build will
+  suffice).
+- Login to the `Jetpack` app with a `WP.com` account (note that you need to use a non `A8C` account
+  and a non `2FA` enabled account).
+- Navigate to the `Me` screen (click on avatar at top-right).
+- (STOP)
+
+Step.2:
+- Head over to your desktop and open a web browser (note that using an incognito tab works best).
+- Browse to `wordpress.com` (note that if you are logged-in, log-out first).
+- Tap the `Log In` link (top-right).
+- Tap the `Login via the mobile app` link in the list of options below the main `Continue` button
+  (bottom-middle).
+- Verify you are on the `Login via the mobile app` view and `Use QR Code to login` is shown, along
+  with a QR code for you to scan.
+- (STOP)
+
+Step.3:
+- Head back to your mobile.
+- Tap the `Scan Login Code` item on the `Me` screen you are currently at.
+- Scan the QR code on the web browser.
+- Follow the remaining prompts on your mobile to login to WordPress on your web browser (desktop),
+  verify that you have successfully logged-in and are able to use WordPress as expected.
 
 </details>
