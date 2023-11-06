@@ -12,11 +12,15 @@ Fixes #
 
 1. Potential unintended areas of impact
 
+    - TODO
 
 2. What I did to test those areas of impact (or what existing automated tests I relied on)
 
+    - TODO
 
 3. What automated tests I added (or what prevented me from doing so)
+
+    - TODO
 
 -----
 
