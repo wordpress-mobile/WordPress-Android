@@ -42,7 +42,7 @@ rather than strict requirements.
 
 1. [WorkManager](#workmanager)
 2. [Preference](#preference)
-3. [Next](#next)
+3. [ExoPlayer](#exoplayer)
 
 ℹ️ Every test instruction should be prefixed with one of the following:
 - [JP/WP] This test applies to both, the `Jetpack` and `WordPress` apps.
@@ -169,6 +169,31 @@ rather than strict requirements.
 
 </details>
 
-### Next [[next](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="next"></a>
+### ExoPlayer [[googleExoPlayerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="exoplayer"></a>
 
-TODO
+<details>
+  <summary>1. [JP/WP] Image Preview</summary>
+
+- Go to `Post` screen.
+- Edit a new post, add an `Image` block and then an image into it.
+- Having added an image to the image block, click on the image block and then again on the image within.
+- This will launch `Media Preview` screen and the image should be previewed.
+- Verify that the `Image Preview` is working as expected, that rotating the device works and finally
+  that clicking back navigates you back to the post edit screen.
+
+</details>
+
+<details>
+  <summary>2. [JP/WP] Video Preview</summary>
+
+- Go to `Post` screen.
+- Edit a new post, add an `Video` block but don't add a video into it just yet.
+- Find the `Video` block, click on `ADD VIDEO` and then `Choose from device` to choose a video.
+- From the list of available videos to choose from screen, click on the `Play` button on the center
+  on any video. FYI: If you don't click on the center, this video will get selected for use, but it
+  won't play.
+- This will launch `Media Preview` screen and the video should start playing.
+- Verify that the `Video Preview` is working as expected, that rotating the device works and finally
+  that clicking back navigates you back to the list of available videos to choose from screen.
+
+</details>
