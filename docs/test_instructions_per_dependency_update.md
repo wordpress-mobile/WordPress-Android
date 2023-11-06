@@ -49,6 +49,7 @@ rather than strict requirements.
 7. [Navigation](#navigation)
 8. [Okio](#okio)
 9. [Zendesk](#zendesk)
+10. [JSoup](#jsoup)
 
 ℹ️ Every test instruction should be prefixed with one of the following:
 - [JP/WP] This test applies to both, the `Jetpack` and `WordPress` apps.
@@ -358,5 +359,55 @@ Step.3:
   `Thank you for contacting the WordPress.com support team! (#1234567)` email.
 - Verify that clicking on it navigates you to the inner screen where your message is shown as
   `Delivered` along with a predefined automated `mobile support` response message.
+
+</details>
+
+### JSoup [[jsoupVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="jsoup"></a>
+
+<details>
+    <summary>1. [JP/WP] Classic Editor [Aztec]</summary>
+
+ℹ️ Disable the `Block Editor` before testing this.
+
+- Go to `Posts` screen and create a new post.
+- Add an `Image`, `Video` and any other entry (like `Paragraph`, `Ordered List`, `Quote`, etc).
+- Publish this newly created post.
+- Verify that this newly created `Classic Editor` related post of yours is being displayed as
+  expected, both when previewing it from within the `Posts` and `Reader` screens. FYI: On `Reader`,
+  you will find you post within the `FOLLOWING` tab.
+
+</details>
+
+<details>
+    <summary>2. [JP/WP] Block Editor [Gutenberg]</summary>
+
+ℹ️ Enable the `Block Editor` before testing this.
+
+- Go to `Posts` screen and create a new post.
+- Add an `Image`, `Gallery`, `Video`, `Audio`, `File`, `Media Text` and `Cover` blocks to the post.
+- Publish this newly created post.
+- Verify that this newly created `Block Editor` related post of yours is being displayed as expected,
+  both when previewing it from within the `Posts` and `Reader` screens. FYI: On `Reader`, you will
+  find you post within the `FOLLOWING` tab.
+
+</details>
+
+<details>
+    <summary>3. [JP] Reader Post Details [ReaderPostRenderer.java]</summary>
+
+- Go to `Reader` screen and click on various posts.
+- Verify that each and every post, along with all their details is being displayed as expected.
+
+</details>
+
+<details>
+    <summary>4. [JP] Stats Insights - Latest Post Summary [LatestPostSummaryMapper.kt]</summary>
+
+ℹ️ If the `Latest Post Summary` card is not being displayed, navigate to the bottom of the `Stats`
+   screen and click on the `Add new stats card`. Then, enabled the `Latest Post Summary` from within
+   the `Posts and Pages` group.
+
+- Go to `Stats` screen and its `INSIGHTS` tab.
+- Scroll to the `Latest Post Summary` card and verify that it is being displayed as expected.
 
 </details>
