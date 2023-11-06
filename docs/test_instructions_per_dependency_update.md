@@ -52,6 +52,7 @@ rather than strict requirements.
 10. [JSoup](#jsoup)
 11. [AutoService](#autoservice)
 12. [KotlinPoet](#kotlinpoet)
+13. [Lottie](#lottie)
 
 ℹ️ Every test instruction should be prefixed with one of the following:
 - [JP/WP] This test applies to both, the `Jetpack` and `WordPress` apps.
@@ -471,5 +472,34 @@ Step.3:
     <summary>4. [JP/WP] Experimental Features [@Experiment]</summary>
 
 ℹ️ Just test the most recent experimental feature.
+
+</details>
+
+### Lottie [[lottieVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="lottie"></a>
+
+<details>
+    <summary>1. [JP/WP] JP Install Full Plugin Animation [JPInstallFullPluginAnimation.kt]</summary>
+
+- TODO
+- TODO
+- TODO
+
+</details>
+
+<details>
+    <summary>1. [WP] Jetpack Static Poster [JetpackStaticPoster.kt]</summary>
+
+- TODO
+- TODO
+- TODO
+
+</details>
+
+<details>
+    <summary>1. [JP] Notifications Screen [NotificationsDetailListFragment.kt]</summary>
+
+- TODO
+- TODO
+- TODO
 
 </details>
