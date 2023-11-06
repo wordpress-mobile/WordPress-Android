@@ -237,11 +237,17 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
+        refreshDomainManagementVisibility()
+    }
+
+    private fun MeFragmentBinding.refreshDomainManagementVisibility() {
         if (shouldShowDomainButton) {
-            domainManagementContainer.visibility = VISIBLE
+            domainManagementContainer.visibility = View.VISIBLE
             domainManagementContainer.setOnClickListener {
                 context?.let { ActivityLauncher.openDomainManagement(it) }
             }
+        } else {
+            domainManagementContainer.visibility = View.GONE
         }
     }
 
