@@ -9,6 +9,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import kotlin.test.assertNull
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -64,7 +66,7 @@ class DashboardCardPersonalizationViewModelSliceTest : BaseUnitTest() {
 
         whenever(blazeFeatureUtils.isSiteBlazeEligible(site)).thenReturn(true)
         test {
-            whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(true)
+            whenever(bloggingPromptsSettingsHelper.shouldShowPromptsSetting()).thenReturn(true)
         }
 
         viewModelSlice = DashboardCardPersonalizationViewModelSlice(
@@ -273,5 +275,15 @@ class DashboardCardPersonalizationViewModelSliceTest : BaseUnitTest() {
             AnalyticsTracker.Stat.PERSONALIZATION_SCREEN_CARD_HIDE_TAPPED,
             mapOf(CARD_TYPE_TRACK_PARAM to cardType.trackingName)
         )
+    }
+
+    @Test
+    fun `given blaze state is not built, when cards are fetched, then blaze is not present and app does not crash`() {
+        whenever(blazeFeatureUtils.isSiteBlazeEligible(anyOrNull())).thenReturn(false)
+
+        viewModelSlice.start(123L)
+        val cardState = uiStateList.last().find { it.cardType == CardType.BLAZE }
+
+        assertNull(cardState)
     }
 }
