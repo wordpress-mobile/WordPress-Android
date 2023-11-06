@@ -281,9 +281,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
+        viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner) {
             startActivity(Intent(activity, UnifiedAboutActivity::class.java))
-        })
+        }
 
         viewModel.showDisconnectDialog.observeEvent(viewLifecycleOwner) {
             when (it) {
@@ -295,11 +295,11 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        viewModel.recommendUiState.observeEvent(viewLifecycleOwner, {
+        viewModel.recommendUiState.observeEvent(viewLifecycleOwner) {
             if (!isAdded) return@observeEvent
 
             manageRecommendUiState(it)
-        })
+        }
 
         viewModel.showScanLoginCode.observeEvent(viewLifecycleOwner) {
             ActivityLauncher.startQRCodeAuthFlow(requireContext())
@@ -449,7 +449,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     }
 
     private fun MeFragmentBinding.loadAvatar(injectFilePath: String?) {
-        val newAvatarUploaded = injectFilePath != null && injectFilePath.isNotEmpty()
+        val newAvatarUploaded = !injectFilePath.isNullOrEmpty()
         val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl)
         meGravatarLoader.load(
             newAvatarUploaded,
@@ -567,7 +567,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         when (requestCode) {
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
                 val mediaUriStringsArray = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
-                if (mediaUriStringsArray == null || mediaUriStringsArray.size == 0) {
+                if (mediaUriStringsArray.isNullOrEmpty()) {
                     AppLog.e(
                         UTILS,
                         "Can't resolve picked or captured image"
