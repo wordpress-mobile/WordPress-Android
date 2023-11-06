@@ -2,7 +2,7 @@ Fixes #
 
 -----
 
-## To test:
+## To Test:
 
 <!-- Test instructions per dependency update: https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/docs/test_instructions_per_dependency_update.md -->
 
@@ -20,7 +20,7 @@ Fixes #
 
 -----
 
-## PR submission checklist:
+## PR Submission Checklist:
 
 - [ ] I have completed the Regression Notes.
 - [ ] I have considered adding accessibility improvements for my changes.
@@ -28,7 +28,7 @@ Fixes #
 
 -----
 
-## UI Changes testing checklist:
+## UI Changes Testing Checklist:
 
 - [ ] Portrait and landscape orientations.
 - [ ] Light and dark modes.
