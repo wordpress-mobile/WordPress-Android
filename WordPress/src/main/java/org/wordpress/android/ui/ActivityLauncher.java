@@ -1933,11 +1933,11 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void openShareIntent(@NonNull Context context, @NonNull PostModel postModel) {
+    public static void openShareIntent(@NonNull Context context, @NonNull String link, @Nullable String title) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, postModel.getLink());
-        intent.putExtra(Intent.EXTRA_TITLE, postModel.getTitle());
+        intent.putExtra(Intent.EXTRA_TEXT, link);
+        intent.putExtra(Intent.EXTRA_TITLE, title);
         context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_link)));
     }
 }
