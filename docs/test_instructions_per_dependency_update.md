@@ -6,6 +6,38 @@ The purpose of this document is to establish a set of guidelines for testing the
 dependency updates. Specifically, it outlines a series of test instructions that should be adhered
 to when updating a dependency.
 
+## FAQ
+
+### Could someone overlook testing a dependency update on a new screen?
+
+This document focuses on a set of screens that are essential to the app's functionality. The concept
+is that, to ensure an update's safety, there's no need to test every screen using that dependency;
+testing the core ones should suffice.
+
+### How much effort will it take to maintain this document?
+
+Engineers should only update this document if new core screens are added, potentially introducing
+regressions if left untested, or if an existing core screen is removed, rendering the dependency
+update redundant. If an engineer observes that a core screen has been updated, they should revise
+the testing instructions as part of the dependency update pull request. This makes keeping this
+document up-to-date a low-effort and minimally maintenance-intensive task.
+
+### Should this document be blindly trusted?
+
+No engineer should blindly trust and strictly adhere to the testing instructions provided in this
+document. These instructions serve as a starting point and a reminder for engineers working on a
+dependency update to ensure they test the core screens. Engineers should exercise their best
+judgment and conduct additional testing if they deem it necessary.
+
+### Do we need testing instructions for every dependency update?
+
+Some dependency updates are quite broad and apply to the entire app, making it challenging to
+provide specific testing instructions (e.g., `fragment`, `appcompat`, `compose`, etc.). In such
+cases, engineers should use their best judgment to perform a smoke test on the entire app to ensure
+its correctness. Engineers should rely on their intuition to identify which dependencies warrant
+testing instructions. Therefore, this document should be regarded as a set of helpful guidelines
+rather than strict requirements.
+
 ## Content
 
 1. [WorkManager](#workmanager)
