@@ -9,16 +9,19 @@ class DomainLocalSearchEngineTest {
     private val fakeDomainFoo = AllDomainsDomain(
         domain = "foo.com",
         siteSlug = "Foo Warehouse",
+        blogName = "Awesome blog",
         domainStatus = DomainStatus(status = "Active")
     )
     private val fakeDomainBar = AllDomainsDomain(
         domain = "bar.com",
         siteSlug = "Chocolate Bar",
+        blogName = "Sweet blog",
         domainStatus = DomainStatus(status = "Activating")
     )
     private val fakeDomainBah = AllDomainsDomain(
         domain = "bah.com",
         siteSlug = "Black sheep",
+        blogName = "Unique blog",
         domainStatus = DomainStatus(status = "Expired")
     )
     private val allDomains = listOf(fakeDomainFoo, fakeDomainBar, fakeDomainBah)
@@ -59,6 +62,18 @@ class DomainLocalSearchEngineTest {
 
         // Then
         assertThat(result).isEqualTo(listOf(fakeDomainFoo))
+    }
+
+    @Test
+    fun `PopulatedList filter matches correctly by blog name`() {
+        // Given
+        val query = "unique"
+
+        // When
+        val result = engine.filter(allDomains, query)
+
+        // Then
+        assertThat(result).isEqualTo(listOf(fakeDomainBah))
     }
 
     @Test

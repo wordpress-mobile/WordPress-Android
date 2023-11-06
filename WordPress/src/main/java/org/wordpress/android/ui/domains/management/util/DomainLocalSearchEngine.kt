@@ -10,5 +10,6 @@ class DomainLocalSearchEngine @Inject constructor() {
     private fun AllDomainsDomain.matches(query: String) =
         domain?.contains(query, true) ?: false
                 || siteSlug?.contains(query, true) ?: false
+                || blogName?.contains(query, true) ?: false
                 || domainStatus?.status?.contains(query, true) ?: false
 }
