@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
@@ -76,14 +77,14 @@ class QuickLinksItemViewModelSlice @Inject constructor(
             site()?.let { site ->
                 jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
                     _uiState.postValue(
-                        convertToQuickLinkRibbonItem(
+                        convertToQuickLinkRibbonItem(site,
                             siteItemsBuilder.build(
                                 MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
                                     site = site,
                                     enableFocusPoints = true,
                                     activeTask = null,
                                     onClick = this@QuickLinksItemViewModelSlice::onClick,
-                                    isBlazeEligible = isSiteBlazeEligible(),
+                                    isBlazeEligible = isSiteBlazeEligible(site),
                                     backupAvailable = it.backup,
                                     scanAvailable = (it.scan && !site.isWPCom && !site.isWPComAtomic)
                                 )
@@ -96,9 +97,10 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     }
 
     private fun convertToQuickLinkRibbonItem(
+        site: SiteModel,
         listItems: List<MySiteCardAndItem>,
     ): MySiteCardAndItem.Card.QuickLinksItem {
-        val siteId = selectedSiteRepository.getSelectedSite()!!.siteId
+        val siteId = site.siteId
         val activeListItems = listItems.filterIsInstance(MySiteCardAndItem.Item.ListItem::class.java)
             .filter { isActiveQuickLink(it.listItemAction, siteId = siteId) }
         val activeQuickLinks = activeListItems.map { listItem ->
@@ -122,8 +124,8 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         )
     }
 
-    private fun isSiteBlazeEligible() =
-        blazeFeatureUtils.isSiteBlazeEligible(selectedSiteRepository.getSelectedSite()!!)
+    private fun isSiteBlazeEligible(site: SiteModel) =
+        blazeFeatureUtils.isSiteBlazeEligible(site)
 
 
     private fun onClick(action: ListItemAction) {
