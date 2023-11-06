@@ -82,6 +82,24 @@ rather than strict requirements.
 
 </details>
 
+<details>
+  <summary>3. [JP] LocalNotificationWorker.kt</summary>
+
+- TODO
+- TODO
+- TODO
+
+</details>
+
+<details>
+  <summary>4. [JP] WeeklyRoundupWorker.kt</summary>
+
+- TODO
+- TODO
+- TODO
+
+</details>
+
 ### Preference [[androidxPreferenceVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L50)] <a name="preference"></a>
 
 <details>
