@@ -147,6 +147,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     private val viewModel: MeViewModel by viewModels()
 
+    private val shouldShowDomainButton
+        get() = BuildConfig.IS_JETPACK_APP && domainManagementFeatureConfig.isEnabled() && accountStore.hasAccessToken()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
@@ -236,7 +238,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        if (BuildConfig.IS_JETPACK_APP && domainManagementFeatureConfig.isEnabled()) {
+        if (shouldShowDomainButton) {
             domainManagementContainer.visibility = VISIBLE
             domainManagementContainer.setOnClickListener {
                 context?.let { ActivityLauncher.openDomainManagement(it) }
