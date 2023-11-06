@@ -111,7 +111,7 @@ class DomainRegistrationCheckoutWebViewActivity : WPWebViewActivity(), DomainReg
         data class CheckoutDetails(val site: SiteModel?, val domainName: String, val showCloseButton: Boolean = false)
 
         private fun getCheckoutUrl(site: SiteModel?) = "https://wordpress.com/checkout/" +
-                (site?.let { SiteUtils.getHomeURLOrHostName(it) } ?: "no-sites?isDomainOnly=1")
+                (site?.let { SiteUtils.getHomeURLOrHostName(it) } ?: "no-site?isDomainOnly=1")
 
         companion object {
             const val REGISTRATION_DOMAIN_NAME = "REGISTRATION_DOMAIN_NAME"
