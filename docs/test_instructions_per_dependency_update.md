@@ -53,6 +53,7 @@ rather than strict requirements.
 11. [AutoService](#autoservice)
 12. [KotlinPoet](#kotlinpoet)
 13. [Lottie](#lottie)
+14. [UCrop](#ucrop)
 
 ℹ️ Every test instruction should be prefixed with one of the following:
 - [JP/WP] This test applies to both, the `Jetpack` and `WordPress` apps.
@@ -501,5 +502,19 @@ Step.3:
 - TODO
 - TODO
 - TODO
+
+</details>
+
+### UCrop [[uCropVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="ucrop"></a>
+
+<details>
+    <summary>1. [JP/WP] Image Edit Screen [PreviewImageFragment.kt + CropFragment.kt]</summary>
+
+- Add a new `blog` post.
+- Add a new `image` block.
+- Choose an image and wait for it to be uploaded within the `image` block.
+- Click on the `media options` of this image (top right) and then click `edit`.
+- Crop the image and click the `done` menu option (top right).
+- Verify the image is updated accordingly.
 
 </details>
