@@ -60,6 +60,8 @@ rather than strict requirements.
 - [JP] This test applies to the `Jetpack` app only.
 - [WP] This test applies to the `WordPress` app only.
 
+-----
+
 ### WorkManager [[androidxWorkManagerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L54)] <a name="workmanager"></a>
 
 <details>
@@ -110,6 +112,8 @@ rather than strict requirements.
 - TODO
 
 </details>
+
+-----
 
 ### Preference [[androidxPreferenceVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L50)] <a name="preference"></a>
 
@@ -180,6 +184,8 @@ rather than strict requirements.
 
 </details>
 
+-----
+
 ### ExoPlayer [[googleExoPlayerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="exoplayer"></a>
 
 <details>
@@ -209,6 +215,8 @@ rather than strict requirements.
 
 </details>
 
+-----
+
 ### Firebase [[firebaseBomVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="firebase"></a>
 
 <details>
@@ -221,6 +229,8 @@ rather than strict requirements.
   when you click on it, navigates you to the 'Notifications Detail' screen for this post.
 
 </details>
+
+-----
 
 ### PlayServicesAuth [[googlePlayServicesAuthVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="playservicesauth"></a>
 
@@ -284,6 +294,8 @@ rather than strict requirements.
 
 </details>
 
+-----
+
 ### PlayServicesCodeScanner [[googlePlayServicesCodeScannerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="playservicescodescanner"></a>
 
 <details>
@@ -316,6 +328,8 @@ Step.3:
 
 </details>
 
+-----
+
 ### Navigation [[navigationVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="navigation"></a>
 
 <details>
@@ -331,6 +345,8 @@ Step.3:
 
 </details>
 
+-----
+
 ### Okio [[squareupOkioVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="okio"></a>
 
 <details>
@@ -343,6 +359,8 @@ Step.3:
 - Verify the image is updated accordingly.
 
 </details>
+
+-----
 
 ### Zendesk [[zendeskVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="zendesk"></a>
 
@@ -365,6 +383,8 @@ Step.3:
   `Delivered` along with a predefined automated `mobile support` response message.
 
 </details>
+
+-----
 
 ### JSoup [[jsoupVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="jsoup"></a>
 
@@ -416,6 +436,8 @@ Step.3:
 
 </details>
 
+-----
+
 ### AutoService [[googleAutoServiceVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="autoservice"></a>
 
 <details>
@@ -445,6 +467,8 @@ Step.3:
 ℹ️ Just test the most recent experimental feature.
 
 </details>
+
+-----
 
 ### KotlinPoet [[squareupKotlinPoetVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="kotlinpoet"></a>
 
@@ -476,6 +500,8 @@ Step.3:
 
 </details>
 
+-----
+
 ### Lottie [[lottieVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="lottie"></a>
 
 <details>
@@ -504,6 +530,8 @@ Step.3:
 - TODO
 
 </details>
+
+-----
 
 ### UCrop [[uCropVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="ucrop"></a>
 
