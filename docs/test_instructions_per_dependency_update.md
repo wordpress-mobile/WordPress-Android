@@ -48,6 +48,7 @@ rather than strict requirements.
 6. [PlayServicesCoreScanner](#playservicescodescanner)
 7. [Navigation](#navigation)
 8. [Okio](#okio)
+9. [Zendesk](#zendesk)
 
 ℹ️ Every test instruction should be prefixed with one of the following:
 - [JP/WP] This test applies to both, the `Jetpack` and `WordPress` apps.
@@ -335,5 +336,27 @@ Step.3:
 - Choose an image and wait for the `Edit Photo` screen to appear.
 - Crop the image and click the `done` menu option (top right).
 - Verify the image is updated accordingly.
+
+</details>
+
+### Zendesk [[zendeskVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="zendesk"></a>
+
+<details>
+    <summary>1. [JP] Zendesk Update [Tickets & Contact Support]</summary>
+
+ℹ️ This test only works when testing with a normal, non-a8c user account.
+
+- Go to `Me` tab -> `Help` -> `Tickets`.
+- Verify that the `My tickets` Zendesk related screen opens and that it lists all of your tickets
+  (or non if you don't have any yet).
+- Go back to the `Help` settings screen and then click on `Contact Support`.
+- Verify that the `Help` Zendesk related screen opens and that you are prompt to `Send a message...`.
+- Type `Testing Zendesk X.Y.Z update, please ignore and thank you!` and then send your message.
+- Go back to the `Help` settings screen and then click on `Tickets` again.
+- Verify that your previously sent message is listed in there and that you can click on it.
+  PS: You could also check your emails and verify that you got a
+  `Thank you for contacting the WordPress.com support team! (#1234567)` email.
+- Verify that clicking on it navigates you to the inner screen where your message is shown as
+  `Delivered` along with a predefined automated `mobile support` response message.
 
 </details>
