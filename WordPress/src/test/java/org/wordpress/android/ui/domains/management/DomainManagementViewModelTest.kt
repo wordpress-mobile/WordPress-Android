@@ -15,6 +15,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.ActionEvent
+import org.wordpress.android.ui.domains.management.util.DomainLocalSearchEngine
 import org.wordpress.android.ui.domains.usecases.AllDomains
 import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -27,13 +28,16 @@ class DomainManagementViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var useCase: FetchAllDomainsUseCase
 
+    @Mock
+    lateinit var domainLocalSearchEngine: DomainLocalSearchEngine
+
     private lateinit var viewModel: DomainManagementViewModel
 
     @Before
     fun setUp() = test {
         MockitoAnnotations.openMocks(this)
         whenever(useCase.execute()).thenReturn(AllDomains.Empty)
-        viewModel = DomainManagementViewModel(testDispatcher(), analyticsTracker, useCase)
+        viewModel = DomainManagementViewModel(testDispatcher(), analyticsTracker, useCase, domainLocalSearchEngine)
     }
 
     @Test

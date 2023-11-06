@@ -8,12 +8,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
@@ -22,7 +20,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainStatus
 import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.domains.management.util.DomainSearchEngine
+import org.wordpress.android.ui.domains.management.util.DomainLocalSearchEngine
 import org.wordpress.android.ui.domains.usecases.AllDomains
 import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -33,15 +31,12 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val SEARCH_QUERY_DELAY_MS = 250L
-
-@OptIn(FlowPreview::class)
 @HiltViewModel
 class DomainManagementViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val fetchAllDomainsUseCase: FetchAllDomainsUseCase,
-    private val domainSearchEngine: DomainSearchEngine,
+    private val domainLocalSearchEngine: DomainLocalSearchEngine,
 ) : ScopedViewModel(mainDispatcher) {
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: Flow<ActionEvent> = _actionEvents
@@ -49,7 +44,7 @@ class DomainManagementViewModel @Inject constructor(
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.PopulatedList.Initial)
     val uiStateFlow = _uiStateFlow.asStateFlow()
 
-    private val debouncedQuery = MutableStateFlow("")
+    private val searchQuery = MutableStateFlow("")
 
     init {
         analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN)
@@ -57,8 +52,7 @@ class DomainManagementViewModel @Inject constructor(
             fetchAllDomains()
         }
         launch {
-            debouncedQuery
-                .debounce(SEARCH_QUERY_DELAY_MS)
+            searchQuery
                 .onEach(::filterDomains)
                 .launchIn(viewModelScope)
         }
@@ -70,12 +64,12 @@ class DomainManagementViewModel @Inject constructor(
                 AllDomains.Empty -> UiState.Empty
                 AllDomains.Error -> UiState.Error
                 is AllDomains.Success -> {
-                    val query = debouncedQuery.value
-                    if (debouncedQuery.value.isBlank()) {
+                    val query = searchQuery.value
+                    if (searchQuery.value.isBlank()) {
                         UiState.PopulatedList.Loaded(it.domains)
                     } else {
                         UiState.PopulatedList.Filtered(
-                            filtered = domainSearchEngine.filter(it.domains, query),
+                            filtered = domainLocalSearchEngine.filter(it.domains, query),
                             allDomains = it.domains
                         )
                     }
@@ -94,7 +88,7 @@ class DomainManagementViewModel @Inject constructor(
             UiState.PopulatedList.Loaded(domains)
         } else {
             UiState.PopulatedList.Filtered(
-                filtered = domainSearchEngine.filter(domains, query),
+                filtered = domainLocalSearchEngine.filter(domains, query),
                 allDomains = domains
             )
         }
@@ -122,7 +116,7 @@ class DomainManagementViewModel @Inject constructor(
 
     fun onSearchQueryChanged(query: String) {
         launch {
-            debouncedQuery.emit(query.trim())
+            searchQuery.emit(query.trim())
         }
     }
 
@@ -221,7 +215,3 @@ val DomainStatus.isBold
         null -> true
         else -> false
     }
-
-private fun AllDomainsDomain.matches(query: String) =
-    domain?.contains(query, true) ?: false
-            || siteSlug?.contains(query, true) ?: false
