@@ -22,10 +22,11 @@ class DomainManagementActivity : AppCompatActivity() {
                 val uiState by viewModel.uiStateFlow.collectAsState()
                 MyDomainsScreen(
                     uiState = uiState,
+                    onSearchQueryChanged = viewModel::onSearchQueryChanged,
                     onDomainTapped = viewModel::onDomainTapped,
                     onAddDomainTapped = viewModel::onAddDomainClicked,
                     onFindDomainTapped = viewModel::onAddDomainClicked,
-                    onBackTapped = viewModel::onBackTapped
+                    onBackTapped = viewModel::onBackTapped,
                 )
             }
         }

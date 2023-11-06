@@ -49,6 +49,7 @@ import org.wordpress.android.ui.domains.management.composable.DomainsSearchTextF
 @Composable
 fun MyDomainsScreen(
     uiState: UiState,
+    onSearchQueryChanged: (String) -> Unit,
     onDomainTapped: (detailUrl: String) -> Unit,
     onAddDomainTapped: () -> Unit,
     onFindDomainTapped: () -> Unit,
@@ -87,12 +88,15 @@ fun MyDomainsScreen(
             MyDomainsSearchInput(
                 elevation.value,
                 queryString = queryString,
-                onQueryStringChanged = { queryString = it },
-                enabled = uiState is PopulatedList.Loaded,
+                onQueryStringChanged = {
+                    queryString = it
+                    onSearchQueryChanged(it)
+                },
+                enabled = uiState is PopulatedList.Loaded || uiState is PopulatedList.Filtered,
             )
             when (uiState) {
                 is PopulatedList -> MyDomainsList(
-                    listUiState = uiState.filter(queryString),
+                    listUiState = uiState,
                     listState = listState,
                     onDomainTapped,
                 )
@@ -216,6 +220,12 @@ fun MyDomainsList(
                     DomainListCard(uiState = DomainCardUiState.fromDomain(domain = it), onDomainTapped)
                 }
             }
+
+            is PopulatedList.Filtered -> {
+                items(items = listUiState.filtered) {
+                    DomainListCard(uiState = DomainCardUiState.fromDomain(domain = it), onDomainTapped)
+                }
+            }
         }
     }
 }
@@ -227,6 +237,7 @@ fun PreviewMyDomainsScreen() {
     M3Theme {
         MyDomainsScreen(
             uiState = PopulatedList.Initial,
+            onSearchQueryChanged = {},
             onAddDomainTapped = {},
             onDomainTapped = {},
             onFindDomainTapped = {},
@@ -242,6 +253,7 @@ fun PreviewMyDomainsScreenError() {
     M3Theme {
         MyDomainsScreen(
             uiState = Error,
+            onSearchQueryChanged = {},
             onAddDomainTapped = {},
             onDomainTapped = {},
             onFindDomainTapped = {},
@@ -257,6 +269,7 @@ fun PreviewMyDomainsScreenEmpty() {
     M3Theme {
         MyDomainsScreen(
             uiState = Empty,
+            onSearchQueryChanged = {},
             onAddDomainTapped = {},
             onDomainTapped = {},
             onFindDomainTapped = {},

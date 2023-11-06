@@ -21,10 +21,18 @@ class LevenshteinDistanceAlgorithm @Inject constructor() {
      * @return A double value representing the similarity score.
      */
     fun levenshteinSimilarity(first: String, second: String): Double {
+        val firstLength = first.length
+        val secondLength = second.length
+        val threshold = if (firstLength > secondLength) {
+            (second.length.toDouble() / first.length.toDouble()).coerceAtMost(0.8)
+        } else {
+            (first.length.toDouble() / second.length.toDouble()).coerceAtMost(0.8)
+        }
         if (first.isBlank() && second.isBlank()) return 0.0
         val levenshteinDistance = levenshtein(first, second)
         val maxLength = maxOf(first.length, second.length)
-        return (maxLength - levenshteinDistance) / maxLength.toDouble()
+        val similarity = (maxLength - levenshteinDistance) / maxLength.toDouble()
+        return if (similarity >= threshold) similarity else 0.0
     }
 
     /**
