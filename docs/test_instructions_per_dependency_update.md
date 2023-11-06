@@ -43,6 +43,7 @@ rather than strict requirements.
 1. [WorkManager](#workmanager)
 2. [Preference](#preference)
 3. [ExoPlayer](#exoplayer)
+4. [Firebase](#firebase)
 
 ℹ️ Every test instruction should be prefixed with one of the following:
 - [JP/WP] This test applies to both, the `Jetpack` and `WordPress` apps.
@@ -195,5 +196,18 @@ rather than strict requirements.
 - This will launch `Media Preview` screen and the video should start playing.
 - Verify that the `Video Preview` is working as expected, that rotating the device works and finally
   that clicking back navigates you back to the list of available videos to choose from screen.
+
+</details>
+
+### Firebase [[firebaseBomVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="firebase"></a>
+
+<details>
+    <summary>1. [JP/WP] Push Notification on Post Being Published [GCMMessageService.java]</summary>
+
+- Add a new `blog` post.
+- Add any number of blocks.
+- Publish the post.
+- Verify that, on post being published, you get a push notification with the post's title, which,
+  when you click on it, navigates you to the 'Notifications Detail' screen for this post.
 
 </details>
