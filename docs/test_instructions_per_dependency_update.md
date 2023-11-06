@@ -46,6 +46,7 @@ rather than strict requirements.
 4. [Firebase](#firebase)
 5. [PlayServicesAuth](#playservicesauth)
 6. [PlayServicesCoreScanner](#playservicescodescanner)
+7. [Navigation](#navigation)
 
 ℹ️ Every test instruction should be prefixed with one of the following:
 - [JP/WP] This test applies to both, the `Jetpack` and `WordPress` apps.
@@ -305,5 +306,20 @@ Step.3:
 - Scan the QR code on the web browser.
 - Follow the remaining prompts on your mobile to login to WordPress on your web browser (desktop),
   verify that you have successfully logged-in and are able to use WordPress as expected.
+
+</details>
+
+### Navigation [[navigationVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="navigation"></a>
+
+<details>
+    <summary>1. [JP/WP] Image Editing Flow [libs:image-editor]</summary>
+
+- Add a new `blog` post.
+- Add a new `image` block.
+- Choose an image and wait for it to be uploaded within the `image` block.
+- Click on the `media options` of this image (top right) and then click `edit`.
+- Verify that the `Edit Image` screen is shown and functioning as expected.
+- Crop the image and click the `done` menu option (top right).
+- Make sure the image is updated accordingly.
 
 </details>
