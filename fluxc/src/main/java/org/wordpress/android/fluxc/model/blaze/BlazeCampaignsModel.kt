@@ -18,5 +18,6 @@ data class BlazeCampaignModel(
     val uiStatus: String,
     val budgetCents: Long,
     val impressions: Long,
-    val clicks: Long
+    val clicks: Long,
+    val targetUrn: String?,
 )
