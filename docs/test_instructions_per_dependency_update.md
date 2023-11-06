@@ -50,6 +50,8 @@ rather than strict requirements.
 8. [Okio](#okio)
 9. [Zendesk](#zendesk)
 10. [JSoup](#jsoup)
+11. [AutoService](#autoservice)
+12. [KotlinPoet](#kotlinpoet)
 
 ℹ️ Every test instruction should be prefixed with one of the following:
 - [JP/WP] This test applies to both, the `Jetpack` and `WordPress` apps.
@@ -409,5 +411,65 @@ Step.3:
 
 - Go to `Stats` screen and its `INSIGHTS` tab.
 - Scroll to the `Latest Post Summary` card and verify that it is being displayed as expected.
+
+</details>
+
+### AutoService [[googleAutoServiceVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="autoservice"></a>
+
+<details>
+    <summary>1. [JP/WP] Remote Features [@Feature]</summary>
+
+️️ℹ️ Just test the most recent remote feature flag.
+
+</details>
+
+<details>
+    <summary>2. [JP/WP] Features in Development [@FeatureInDevelopment]</summary>
+
+ℹ️ Just test the most recent feature flag in development.
+
+</details>
+
+<details>
+    <summary>3. [JP/WP] Remote Field Configs [@RemoteFieldDefaultGenerater]</summary>
+
+ℹ️ Just test the most recent remote remote field configs.
+
+</details>
+
+<details>
+    <summary>4. [JP/WP] Experimental Features [@Experiment]</summary>
+
+ℹ️ Just test the most recent experimental feature.
+
+</details>
+
+### KotlinPoet [[squareupKotlinPoetVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="kotlinpoet"></a>
+
+<details>
+    <summary>1. [JP/WP] Remote Features [@Feature]</summary>
+
+️️ℹ️ Just test the most recent remote feature flag.
+
+</details>
+
+<details>
+    <summary>2. [JP/WP] Features in Development [@FeatureInDevelopment]</summary>
+
+ℹ️ Just test the most recent feature flag in development.
+
+</details>
+
+<details>
+    <summary>3. [JP/WP] Remote Field Configs [@RemoteFieldDefaultGenerater]</summary>
+
+ℹ️ Just test the most recent remote remote field configs.
+
+</details>
+
+<details>
+    <summary>4. [JP/WP] Experimental Features [@Experiment]</summary>
+
+ℹ️ Just test the most recent experimental feature.
 
 </details>
