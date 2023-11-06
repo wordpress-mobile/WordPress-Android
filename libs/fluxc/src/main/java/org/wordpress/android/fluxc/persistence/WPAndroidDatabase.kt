@@ -31,7 +31,7 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.JetpackSocialEntity
 
 @Database(
-        version = 20,
+        version = 21,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -103,6 +103,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 .addMigrations(MIGRATION_15_16)
                 .addMigrations(MIGRATION_18_19)
                 .addMigrations(MIGRATION_19_20)
+                .addMigrations(MIGRATION_20_21)
                 .build()
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -295,6 +296,15 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                     execSQL(
                         "CREATE INDEX IF NOT EXISTS `index_BlazeCampaigns_siteId` " +
                                 "ON `BlazeCampaigns` (`siteId`)"
+                    )
+                }
+            }
+        }
+        val MIGRATION_20_21 = object : Migration(20, 21) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.apply {
+                    execSQL(
+                        "ALTER TABLE `BlazeCampaigns` ADD COLUMN `targetUrn` TEXT"
                     )
                 }
             }
