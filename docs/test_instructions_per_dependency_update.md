@@ -103,9 +103,9 @@ rather than strict requirements.
 ### Preference [[androidxPreferenceVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L50)] <a name="preference"></a>
 
 <details>
-  <summary>1. [JP/WP] AccountSettingsFragment.kt</summary>
+  <summary>1. [JP/WP] Account Settings [AccountSettingsFragment.kt]</summary>
 
-- Go to `Me` screen.
+- Go to `Me` tab.
 - Click on the `Account Settings` button.
 - Verify that the `Account Settings` screen is displayed.
 - Click on each of the settings within the `Account Settings` screen and verify that every setting
@@ -114,21 +114,21 @@ rather than strict requirements.
 </details>
 
 <details>
-  <summary>2. [JP/WP] AppSettingsFragment.java</summary>
+  <summary>2. [JP/WP] App Settings [AppSettingsFragment.java]</summary>
 
-- Go to `Me` screen.
+- Go to `Me` tab.
 - Click on the `App Settings` button.
 - Verify that the `App Settings` screen is displayed.
 - Click on each of the settings within the `App Settings` screen and verify that every setting works
-  as expected, including the inner settings like the `Privacy Settings` and `Debug Settings` screens.
+  as expected, including the inner settings like the `Privacy Settings`.
+- Do the same for the `Debug Settings` screens.
 
 </details>
 
 <details>
-  <summary>3. [JP/WP] SiteSettingsFragment.java</summary>
+  <summary>3. [JP/WP] Site Settings [SiteSettingsFragment.java]</summary>
 
-- While on the `My Site/MENU` tab.
-- Click on the `Site Settings` button.
+- Go to `Site Settings` screen.
 - Verify that the `Site Settings` screen is displayed.
 - Click on each of the settings within the `Site Settings` screen and verify that every setting
   works as expected.
@@ -136,11 +136,12 @@ rather than strict requirements.
 </details>
 
 <details>
-  <summary>4. [JP/WP] JetpackSecuritySettingsFragment.java</summary>
+  <summary>4. [JP/WP] Jetpack Settings - Security [JetpackSecuritySettingsFragment.java]</summary>
 
-- Prerequisite: You must have a Jetpack connected site, which displays this setting.
-- While on the `My Site/MENU` tab.
-- Click on the `Jetpack Settings` button.
+ℹ️ Prerequisite: To have this setting displayed you must have a Jetpack connected site.
+
+- Go to `Site Settings` screen.
+- Find the `Jetpack Settings` section and click on `Security`.
 - Verify that the `Security` setting screen is displayed.
 - Click on each of the settings within the `Security` settings screen and verify that every setting
   works as expected.
@@ -148,9 +149,9 @@ rather than strict requirements.
 </details>
 
 <details>
-  <summary>5. [JP] NotificationsSettingsFragment.java</summary>
+  <summary>5. [JP] Notifications Settings [NotificationsSettingsFragment.java]</summary>
 
-- While on the `Notifications` tab.
+- Go to `Notifications` tab.
 - Click on the `Gear` setting button (top-right).
 - Verify that the `Notification Settings` screen is displayed.
 - Click on each of the settings within the `Notification Settings` settings screen and verify that
@@ -159,11 +160,12 @@ rather than strict requirements.
 </details>
 
 <details>
-  <summary>6. [JP/WP] EditPostActivity.java</summary>
+  <summary>6. [JP/WP] Edit Post Screen [EditPostActivity.java]</summary>
+
+ℹ️ Editing a new post uses `PreferenceManager` to `setDefaultValues(...)` for `Account Settings`.
 
 - Go to `Post` screen.
-- Edit a new post, which uses `PreferenceManager` to `setDefaultValues(...)` for `Account Settings`,
-  add a few of the main blocks and verify that everything is workings as expected.
+- Edit a new post, add a few of the main blocks and verify that everything is workings as expected.
 
 </details>
 
