@@ -2,13 +2,14 @@ Fixes #
 
 -----
 
-To test:
+## To test:
 
 <!-- Test instructions per dependency update: https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/docs/test_instructions_per_dependency_update.md -->
 
 -----
 
 ## Regression Notes
+
 1. Potential unintended areas of impact
 
 
@@ -19,7 +20,7 @@ To test:
 
 -----
 
-PR submission checklist:
+## PR submission checklist:
 
 - [ ] I have completed the Regression Notes.
 - [ ] I have considered adding accessibility improvements for my changes.
@@ -27,7 +28,7 @@ PR submission checklist:
 
 -----
 
-UI Changes testing checklist:
+## UI Changes testing checklist:
 
 - [ ] Portrait and landscape orientations.
 - [ ] Light and dark modes.
