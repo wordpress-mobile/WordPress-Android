@@ -1,6 +1,10 @@
 package org.wordpress.android.ui.domains.management.purchasedomain
 
-import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -8,13 +12,14 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
-import javax.inject.Inject
 import javax.inject.Named
 
-@HiltViewModel
-class PurchaseDomainViewModel @Inject constructor(
+class PurchaseDomainViewModel @AssistedInject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    @Assisted private val productId: Int,
+    @Assisted private val domain: String,
+    @Assisted private val privacy: Boolean,
 ) : ScopedViewModel(mainDispatcher) {
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: Flow<ActionEvent> = _actionEvents
@@ -26,14 +31,14 @@ class PurchaseDomainViewModel @Inject constructor(
     fun onNewDomainSelected() {
         analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED)
         launch {
-            _actionEvents.emit(ActionEvent.GoToDomainPurchasing)
+            _actionEvents.emit(ActionEvent.GoToDomainPurchasing(domain = domain))
         }
     }
 
-    fun onExistingDomainSelected() {
-        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED)
+    fun onExistingSiteSelected() {
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED)
         launch {
-            _actionEvents.emit(ActionEvent.GoToExistingDomain)
+            _actionEvents.emit(ActionEvent.GoToExistingSite(domain = domain))
         }
     }
 
@@ -45,7 +50,21 @@ class PurchaseDomainViewModel @Inject constructor(
 
     sealed class ActionEvent {
         object GoBack : ActionEvent()
-        object GoToDomainPurchasing : ActionEvent()
-        object GoToExistingDomain : ActionEvent()
+        data class GoToDomainPurchasing(val domain: String) : ActionEvent()
+        data class GoToExistingSite(val domain: String) : ActionEvent()
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(productId: Int, domain: String, privacy: Boolean): PurchaseDomainViewModel
+    }
+
+    companion object {
+        fun provideFactory(assistedFactory: Factory, productId: Int, domain: String, privacy: Boolean) =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                    assistedFactory.create(productId, domain, privacy) as T
+            }
     }
 }
