@@ -214,15 +214,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             viewModel.showUnifiedAbout()
         }
 
-        if (shouldShowQrCodeLogin()) {
-            rowScanLoginCode.isVisible = true
-            scanLoginCodeDivider.isVisible = true
-
-            rowScanLoginCode.setOnClickListener {
-                viewModel.showScanLoginCode()
-            }
-        }
-
         initRecommendUiState()
 
         rowLogout.setOnClickListener {
@@ -237,10 +228,22 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        refreshDomainManagementVisibility()
+        refreshWPCOMLoggedInOnlyButtonsVisibility()
     }
 
-    private fun MeFragmentBinding.refreshDomainManagementVisibility() {
+    private fun MeFragmentBinding.refreshWPCOMLoggedInOnlyButtonsVisibility() {
+        if (shouldShowQrCodeLogin()) {
+            rowScanLoginCode.isVisible = true
+            scanLoginCodeDivider.isVisible = true
+
+            rowScanLoginCode.setOnClickListener {
+                viewModel.showScanLoginCode()
+            }
+        } else {
+            rowScanLoginCode.isVisible = false
+            scanLoginCodeDivider.isVisible = false
+        }
+
         if (shouldShowDomainButton) {
             domainManagementContainer.visibility = View.VISIBLE
             domainManagementContainer.setOnClickListener {
@@ -287,7 +290,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 true -> showDisconnectDialog()
                 false -> {
                     hideDisconnectDialog()
-                    refreshDomainManagementVisibility()
+                    refreshWPCOMLoggedInOnlyButtonsVisibility()
                 }
             }
         }
