@@ -13,7 +13,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.view.View.OnClickListener
-import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
