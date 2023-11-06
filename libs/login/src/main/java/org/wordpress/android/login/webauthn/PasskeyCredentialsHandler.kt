@@ -13,13 +13,17 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnChal
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnCredentialResponse
 import org.wordpress.android.fluxc.store.AccountStore.FinishWebauthnChallengePayload
 
+interface OnPasskeyRequestReadyListener {
+    fun onPasskeyRequestReady(intentSenderRequest: IntentSenderRequest)
+}
+
 class PasskeyCredentialsHandler(
     private val userId: String,
     private val challengeInfo: WebauthnChallengeInfo
 ) {
     fun createIntentSender(
         context: Context,
-        onPasskeyRequestReady: (IntentSenderRequest) -> Unit
+        listener: OnPasskeyRequestReadyListener
     ) {
         val options = PublicKeyCredentialRequestOptions.Builder()
                 .setRpId(challengeInfo.rpId)
@@ -35,7 +39,7 @@ class PasskeyCredentialsHandler(
                             .Builder(it.intentSender)
                             .build()
 
-                    onPasskeyRequestReady(intentSender)
+                    listener.onPasskeyRequestReady(intentSender)
                 }
     }
 

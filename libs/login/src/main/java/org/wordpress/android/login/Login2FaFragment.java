@@ -616,7 +616,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 intent -> {
                     assert mResultLauncher != null;
                     mResultLauncher.launch(intent);
-                    return null;
                 });
     }
 
