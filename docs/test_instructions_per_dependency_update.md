@@ -167,14 +167,6 @@ rather than strict requirements.
 
 </details>
 
-<details>
-  <summary>7. [JP/WP] MySitesPage.java</summary>
-
-- Run the `StatsTests` UI test suite, which uses the `MySitesPage.java` class, and verify that all
-  tests pass.
-
-</details>
-
 ### Next [[next](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="next"></a>
 
 TODO
