@@ -3,11 +3,9 @@ package org.wordpress.android.ui.domains.management.purchasedomain
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.launch
-import androidx.activity.result.registerForActivityResult
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -77,7 +75,7 @@ class PurchaseDomainActivity : AppCompatActivity() {
     private val openCheckout = registerForActivityResult(
         DomainRegistrationCheckoutWebViewActivity.OpenCheckout(),
     ) {
-        Log.d("snaplog", "$it")
+        viewModel.onDomainRegistrationComplete(it)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -52,6 +53,11 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         launch {
             _actionEvents.emit(ActionEvent.GoBack)
         }
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    fun onDomainRegistrationComplete(event: DomainRegistrationCompletedEvent?) {
+        // TODO Handle domain registration complete
     }
 
     private fun createCart(site: SiteModel?, productId: Int, domainName: String, supportsPrivacy: Boolean) = launch {
