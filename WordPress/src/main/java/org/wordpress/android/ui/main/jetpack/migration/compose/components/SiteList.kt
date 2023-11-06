@@ -54,7 +54,7 @@ fun SiteList(
     LazyColumn(
         state = listState,
         modifier = modifier
-            .conditionalThen(userScrollEnabled, Modifier.disableUserScroll())
+            .conditionalThen(!userScrollEnabled, Modifier.disableUserScroll())
             .background(MaterialTheme.colors.background)
             .fillMaxHeight()
             .then(blurModifier),
