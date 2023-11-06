@@ -58,14 +58,6 @@ class PasskeyCredentialsHandler(
                     credential.transports.asParsedTransports()
             )
 
-    private val allTransports = listOf(
-            Transport.USB,
-            Transport.NFC,
-            Transport.BLUETOOTH_LOW_ENERGY,
-            Transport.HYBRID,
-            Transport.INTERNAL
-    )
-
     private fun String.decodeBase64(): ByteArray {
         return Base64.decode(this, Base64.NO_PADDING or Base64.NO_WRAP or Base64.URL_SAFE)
     }
@@ -80,6 +72,12 @@ class PasskeyCredentialsHandler(
                 "hybrid" -> Transport.HYBRID
                 else -> null
             }
-        }.takeIf { it.isNotEmpty() } ?: allTransports
+        }.takeIf { it.isNotEmpty() } ?: listOf(
+                Transport.USB,
+                Transport.NFC,
+                Transport.BLUETOOTH_LOW_ENERGY,
+                Transport.HYBRID,
+                Transport.INTERNAL
+        )
     }
 }
