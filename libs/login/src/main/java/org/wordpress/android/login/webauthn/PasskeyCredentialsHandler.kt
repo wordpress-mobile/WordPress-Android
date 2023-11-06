@@ -69,4 +69,17 @@ class PasskeyCredentialsHandler(
     private fun String.decodeBase64(): ByteArray {
         return Base64.decode(this, Base64.NO_PADDING or Base64.NO_WRAP or Base64.URL_SAFE)
     }
+
+    private fun List<String>.asTransports(): List<Transport> {
+        return mapNotNull {
+            when (it) {
+                "usb" -> Transport.USB
+                "nfc" -> Transport.NFC
+                "ble" -> Transport.BLUETOOTH_LOW_ENERGY
+                "internal" -> Transport.INTERNAL
+                "hybrid" -> Transport.HYBRID
+                else -> null
+            }
+        }.takeIf { it.isNotEmpty() } ?: allTransports
+    }
 }
