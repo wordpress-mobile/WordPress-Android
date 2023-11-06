@@ -55,7 +55,7 @@ class PasskeyCredentialsHandler(
             PublicKeyCredentialDescriptor(
                     PUBLIC_KEY.toString(),
                     credential.id.decodeBase64(),
-                    allTransports
+                    credential.transports.asParsedTransports()
             )
 
     private val allTransports = listOf(
@@ -70,7 +70,7 @@ class PasskeyCredentialsHandler(
         return Base64.decode(this, Base64.NO_PADDING or Base64.NO_WRAP or Base64.URL_SAFE)
     }
 
-    private fun List<String>.asTransports(): List<Transport> {
+    private fun List<String>.asParsedTransports(): List<Transport> {
         return mapNotNull {
             when (it) {
                 "usb" -> Transport.USB
