@@ -47,6 +47,7 @@ rather than strict requirements.
 5. [PlayServicesAuth](#playservicesauth)
 6. [PlayServicesCoreScanner](#playservicescodescanner)
 7. [Navigation](#navigation)
+8. [Okio](#okio)
 
 ℹ️ Every test instruction should be prefixed with one of the following:
 - [JP/WP] This test applies to both, the `Jetpack` and `WordPress` apps.
@@ -321,5 +322,18 @@ Step.3:
 - Verify that the `Edit Image` screen is shown and functioning as expected.
 - Crop the image and click the `done` menu option (top right).
 - Make sure the image is updated accordingly.
+
+</details>
+
+### Okio [[squareupOkioVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="okio"></a>
+
+<details>
+    <summary>1. [JP/WP] Me Screen [GravatarApi.java + StreamingRequest.java]</summary>
+
+- Go to `Me` tab.
+- From the `Me` screen you are in, click on your profile's icon (`CHANGE PHOTO`).
+- Choose an image and wait for the `Edit Photo` screen to appear.
+- Crop the image and click the `done` menu option (top right).
+- Verify the image is updated accordingly.
 
 </details>
