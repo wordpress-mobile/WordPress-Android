@@ -34,6 +34,7 @@ import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PagesAuthorFilterUIState
+import org.wordpress.android.ui.pages.PagesListAction
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
@@ -91,7 +92,11 @@ class PageListViewModelTest : BaseUnitTest() {
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
     private lateinit var viewModel: PageListViewModel
-    private val site = SiteModel()
+
+    private val site = SiteModel().apply {
+        hasCapabilityEditOthersPages = true
+    }
+
     private val pageListState = MutableLiveData<PageListState>()
     private lateinit var actions: MutableList<Action<*>>
 
@@ -122,6 +127,7 @@ class PageListViewModelTest : BaseUnitTest() {
         val invalidateUploadStatus = MutableLiveData<List<LocalId>>()
 
         whenever(pagesViewModel.arePageActionsEnabled).thenReturn(false)
+        site.setIsSingleUserSite(false)
         whenever(pagesViewModel.site).thenReturn(site)
         whenever(pagesViewModel.invalidateUploadStatus).thenReturn(invalidateUploadStatus)
         whenever(pagesViewModel.uploadStatusTracker).thenReturn(mock())
@@ -404,7 +410,7 @@ class PageListViewModelTest : BaseUnitTest() {
     @Test
     fun `verify PageListItemActionsUseCase passes the Menu Actions to PublishedPage`() {
         // Arrange
-        val actions = setOf(mock<PageItem.Action>())
+        val actions = mutableListOf(mock<PagesListAction>())
 
         whenever(
             pageListItemActionsUseCase.setupPageActions(

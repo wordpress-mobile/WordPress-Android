@@ -89,7 +89,6 @@ import org.wordpress.android.ui.posts.EditPostPublishSettingsFragment;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
 import org.wordpress.android.ui.posts.HistoryListFragment;
 import org.wordpress.android.ui.posts.PostDatePickerDialogFragment;
-import org.wordpress.android.ui.posts.PostListCreateMenuFragment;
 import org.wordpress.android.ui.posts.PostListFragment;
 import org.wordpress.android.ui.posts.PostNotificationScheduleTimeDialogFragment;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment;
@@ -478,8 +477,6 @@ public interface AppComponent {
     void inject(PhotoPickerFragment object);
 
     void inject(ReaderDiscoverLogic object);
-
-    void inject(PostListCreateMenuFragment object);
 
     void inject(SuggestionActivity object);
 

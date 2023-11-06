@@ -24,7 +24,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
-import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.quickstart.QuickStartType;
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
@@ -1129,16 +1128,6 @@ public class AppPrefs {
 
     public static void setAuthorFilterSelection(@NonNull AuthorFilterSelection selection) {
         setLong(DeletablePrefKey.POST_LIST_AUTHOR_FILTER, selection.getId());
-    }
-
-    @NonNull public static PostListViewLayoutType getPostsListViewLayoutType() {
-        long id = getLong(DeletablePrefKey.POST_LIST_VIEW_LAYOUT_TYPE,
-                PostListViewLayoutType.getDefaultValue().getId());
-        return PostListViewLayoutType.fromId(id);
-    }
-
-    public static void setPostsListViewLayoutType(@NonNull PostListViewLayoutType type) {
-        setLong(DeletablePrefKey.POST_LIST_VIEW_LAYOUT_TYPE, type.getId());
     }
 
     public static void setStatsWidgetSelectedSiteId(long siteId, int appWidgetId) {

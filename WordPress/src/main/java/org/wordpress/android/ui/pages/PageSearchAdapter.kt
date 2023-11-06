@@ -10,7 +10,7 @@ import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 
 class PageSearchAdapter(
-    private val onMenuAction: (PageItem.Action, Page) -> Boolean,
+    private val onMenuAction: (PagesListAction, Page) -> Boolean,
     private val onItemTapped: (Page) -> Unit,
     private val uiHelper: UiHelpers
 ) : Adapter<PageItemViewHolder>() {

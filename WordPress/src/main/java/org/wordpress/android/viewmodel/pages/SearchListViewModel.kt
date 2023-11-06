@@ -10,7 +10,6 @@ import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem
-import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
@@ -18,6 +17,7 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
+import org.wordpress.android.ui.pages.PagesListAction
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
@@ -68,7 +68,7 @@ class SearchListViewModel
         }
     }
 
-    fun onMenuAction(action: Action, pageItem: Page, context: Context? = null): Boolean {
+    fun onMenuAction(action: PagesListAction, pageItem: Page, context: Context? = null): Boolean {
         return pagesViewModel.onMenuAction(action, pageItem, context)
     }
 

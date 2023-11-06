@@ -8,4 +8,5 @@
     <color name="colorPrimaryEditor">@color/primary_30</color>
 
     <color name="nav_bar">@color/colorPrimary</color>
+    <color name="tab_indicator">@color/colorPrimary</color>
 </resources>

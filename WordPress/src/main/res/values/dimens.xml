@@ -72,7 +72,7 @@
     <dimen name="bottom_nav_bar_badge_size">12dp</dimen>
 
     <!-- featured image in post list -->
-    <dimen name="postlist_featured_image_height">98dp</dimen>
+    <dimen name="postlist_featured_image_height">64dp</dimen>
 
     <!-- left/right margin for content such as Me fragment, My Site fragment -->
     <dimen name="content_margin_normal">@dimen/margin_extra_large</dimen>
@@ -93,7 +93,6 @@
     <dimen name="content_margin_none">0dp</dimen>
     <dimen name="site_creation_content_margin">@dimen/content_margin_none</dimen>
     <dimen name="post_list_content_margin_standard">@dimen/content_margin_none</dimen>
-    <dimen name="post_list_content_margin_compact">@dimen/content_margin_none</dimen>
     <dimen name="page_list_content_margin">@dimen/content_margin_none</dimen>
 
     <!--
@@ -255,8 +254,6 @@
     <dimen name="reader_expandable_tags_view_chip_new_radius">5dp</dimen>
     <dimen name="reader_expandable_tags_view_chip_new_border">1dp</dimen>
     <dimen name="reader_expandable_tags_view_chip_new_height">36dp</dimen>
-
-    <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 
     <dimen name="empty_list_title_side_margin">32dp</dimen>
     <dimen name="empty_list_title_bottom_margin">8dp</dimen>
@@ -510,29 +507,22 @@
     <dimen name="two_line_list_item_height">72dp</dimen>
     <dimen name="page_list_divider_height">40dp</dimen>
     <dimen name="page_list_row_min_height">80dp</dimen>
-    <dimen name="page_list_featured_image_size">40dp</dimen>
+    <dimen name="page_list_featured_image_size">48dp</dimen>
     <dimen name="page_list_menu_button_size">24dp</dimen>
     <dimen name="page_list_tab_layout_fading_edge_width">16dp</dimen>
+    <dimen name="page_list_prefix_icon_size">16dp</dimen>
 
     <dimen name="quota_bar_text_minimum_height">36dp</dimen>
 
     <!--post skeleton-->
     <dimen name="post_list_row_skeleton_view_title_height">20dp</dimen>
     <dimen name="post_list_row_skeleton_view_excerpt_height">16dp</dimen>
-    <dimen name="post_list_row_skeleton_view_date_height">16dp</dimen>
+    <dimen name="post_list_row_skeleton_view_post_info_height">14dp</dimen>
 
     <!-- author spinner for pages and posts lists -->
-    <dimen name="author_spinner_width">60dp</dimen>
-    <dimen name="author_spinner_avatar_size">32dp</dimen>
+    <dimen name="author_spinner_avatar_size">24dp</dimen>
     <dimen name="author_spinner_avatar_padding">1dp</dimen>
     <dimen name="author_spinner_dropdown_avatar_horizontal_margin">13dp</dimen>
-
-    <!--posts list-->
-    <dimen name="posts_list_tab_layout_fading_edge_width">16dp</dimen>
-    <dimen name="posts_list_compact_row_height">80dp</dimen>
-    <dimen name="posts_list_compact_image_size">40dp</dimen>
-    <dimen name="posts_list_compact_menu_button_size">24dp</dimen>
-
 
     <!--site creation-->
     <dimen name="site_creation_segments_content_padding_vertical">16dp</dimen>
@@ -749,7 +739,6 @@
     <dimen name="jetpack_full_screen_overlay_new_users_content_margin">32dp</dimen>
     <dimen name="jetpack_full_screen_overlay_new_users_content_margin_land">16dp</dimen>
     <dimen name="jetpack_full_screen_overlay_new_users_content_text_size">15sp</dimen>
-    <dimen name="menu_item_icon_size">24dp</dimen>
 
     <!-- Activity Log Card -->
     <dimen name="activity_card_icon_size">40dp</dimen>
@@ -782,4 +771,5 @@
     <dimen name="switch_thumb_size">20dp</dimen>
     <dimen name="switch_horizontal_padding">7dp</dimen>
     <dimen name="switch_vertical_padding">4dp</dimen>
+    <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 </resources>

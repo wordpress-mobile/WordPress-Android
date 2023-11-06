@@ -1,19 +1,27 @@
 package org.wordpress.android.ui.pages
 
+import android.content.Context
 import android.graphics.drawable.Drawable
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
-import android.widget.PopupMenu
 import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.GravityCompat
+import androidx.core.view.MenuCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActionableEmptyView
@@ -30,6 +38,7 @@ import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.extensions.capitalizeWithLocaleWithoutLint
 import org.wordpress.android.util.extensions.currentLocale
+import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getDrawableFromAttribute
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
@@ -38,6 +47,8 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.Locale
 import android.R as AndroidR
+import androidx.appcompat.widget.PopupMenu as AppCompatPopupMenu
+import com.google.android.material.R as MaterialR
 
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
     RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
@@ -45,7 +56,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
     class PageViewHolder(
         parentView: ViewGroup,
-        private val onMenuAction: (PageItem.Action, Page) -> Boolean,
+        private val onMenuAction: (PagesListAction, Page) -> Boolean,
         private val onItemTapped: (Page) -> Unit,
         private val imageManager: ImageManager? = null,
         private val isSitePhotonCapable: Boolean = false,
@@ -78,10 +89,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 marginLayoutParams.leftMargin = indentWidth
                 pageItemContainer.layoutParams = marginLayoutParams
 
-                pageTitle.text = if (page.title.isEmpty()) {
+                pageTitle.text = page.title.ifEmpty {
                     parent.context.getString(R.string.untitled_in_parentheses)
-                } else {
-                    page.title
                 }
 
                 showSubtitle(page.date, page.author, page.subtitle, page.icon)
@@ -153,16 +162,70 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         }
 
         private fun moreClick(pageItem: Page, v: View) {
-            val popup = PopupMenu(v.context, v)
-            popup.setOnMenuItemClickListener { item ->
-                val action = PageItem.Action.fromItemId(item.itemId)
-                onMenuAction(action, pageItem)
+            val menu = AppCompatPopupMenu(v.context, v, GravityCompat.END)
+            MenuCompat.setGroupDividerEnabled(menu.menu, true)
+            menu.setForceShowIcon(true)
+
+            pageItem.actions.forEach { singleItemAction ->
+                val menuItem = menu.menu.add(
+                    singleItemAction.actionGroup.id,
+                    0,
+                    Menu.NONE,
+                    singleItemAction.title
+                )
+                menuItem.setOnMenuItemClickListener {
+                    onMenuAction(singleItemAction, pageItem)
+                    true
+                }
+                setIconAndIconColorIfNeeded(v.context, menuItem, singleItemAction)
+                setTextColorIfNeeded(v.context, menuItem, singleItemAction)
             }
-            popup.menuInflater.inflate(R.menu.page_more, popup.menu)
-            PageItem.Action.values().forEach {
-                popup.menu.findItem(it.itemId).isVisible = pageItem.actions.contains(it)
+            menu.show()
+        }
+
+        private fun setIconAndIconColorIfNeeded(
+            context: Context,
+            menuItem: MenuItem,
+            singleItemAction: PagesListAction,
+        ) {
+            val icon: Drawable = setTint(
+                context,
+                ContextCompat.getDrawable(context, singleItemAction.icon)!!,
+                singleItemAction.colorTint
+            )
+            menuItem.icon = icon
+        }
+
+        private fun setTextColorIfNeeded(
+            context: Context,
+            menuItem: MenuItem,
+            singleItemAction: PagesListAction
+        ) {
+            if (singleItemAction.colorTint > 0 &&
+                singleItemAction.colorTint != MaterialR.attr.colorOnSurface) {
+                val menuTitle = context.getText(singleItemAction.title)
+                val spannableString = SpannableString(menuTitle)
+                val textColor = context.getColorFromAttribute(singleItemAction.colorTint)
+
+                spannableString.setSpan(
+                    ForegroundColorSpan(textColor),
+                    0,
+                    spannableString.length,
+                    Spannable.SPAN_INCLUSIVE_INCLUSIVE
+                )
+
+                menuItem.title = spannableString
             }
-            popup.show()
+        }
+
+
+        private fun setTint(context: Context, drawable: Drawable, color: Int): Drawable {
+            val wrappedDrawable: Drawable = DrawableCompat.wrap(drawable)
+            if (color != 0) {
+                val iconColor = context.getColorFromAttribute(color)
+                DrawableCompat.setTint(wrappedDrawable, iconColor)
+            }
+            return wrappedDrawable
         }
 
         private fun showFeaturedImage(imageUrl: String?) {
@@ -210,7 +273,11 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     parent.context.getString(R.string.pages_item_date_subtitle),
                     stringDate
                 )
-                pageSubtitleSuffix.text = parent.context.getString(subtitle)
+                pageSubtitleSuffix.text = String.format(
+                    Locale.getDefault(),
+                    parent.context.getString(R.string.pages_item_subtitle),
+                    parent.context.getString(subtitle)
+                )
             } else {
                 pageSubtitle.text = author?.let {
                     String.format(
