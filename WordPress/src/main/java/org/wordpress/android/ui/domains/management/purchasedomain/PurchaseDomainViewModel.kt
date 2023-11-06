@@ -44,6 +44,7 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     }
 
     fun onSiteChosen(site: SiteModel?) {
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN)
         createCart(site, productId, domain, privacy)
     }
 

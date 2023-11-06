@@ -13,6 +13,7 @@ import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_SHOWN
@@ -66,6 +67,12 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     fun `WHEN new domain selected THEN the cart is submitted with the selected domain`() = test {
         viewModel.onNewDomainSelected()
         verify(createCartUseCase, atLeastOnce()).execute(null, productId, domain, supportsPrivacy, false, null)
+    }
+
+    @Test
+    fun `WHEN a site is chosen THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN event`() {
+        viewModel.onSiteChosen(testSite)
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN)
     }
 
     @Test
