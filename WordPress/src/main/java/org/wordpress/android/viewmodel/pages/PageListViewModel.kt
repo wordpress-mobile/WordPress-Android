@@ -97,7 +97,8 @@ class PageListViewModel @Inject constructor(
 
     private val showAuthorName: Boolean by lazy {
         // show if the site is a single user site and the users in the site has the capability to edit/add pages
-        !pagesViewModel.site.isSingleUserSite && pagesViewModel.site.hasCapabilityEditOthersPages
+        (pagesViewModel.site.isSingleUserSite != null && !pagesViewModel.site.isSingleUserSite)
+        && pagesViewModel.site.hasCapabilityEditOthersPages
     }
 
     private val featuredImageMap = mutableMapOf<Long, String>()

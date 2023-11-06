@@ -79,7 +79,7 @@ class PostListViewModel @Inject constructor(
     private val isFilteringByAuthorSupported: Boolean by lazy {
         connector.site.isUsingWpComRestApi &&
                 connector.site.hasCapabilityEditOthersPosts &&
-                !connector.site.isSingleUserSite
+                (connector.site.isSingleUserSite != null && !connector.site.isSingleUserSite)
     }
     private var isStarted: Boolean = false
     private lateinit var connector: PostListViewModelConnector
