@@ -1,7 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
 import android.annotation.SuppressLint
-import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
@@ -35,6 +34,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -72,7 +72,6 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.extensions.clipboardManager
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -571,27 +570,14 @@ class PagesViewModel
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private fun copyPageLink(page: Page, context: Context) {
-        try {
-            // Get the link to the page
-            val pageLink = postStore.getPostByLocalPostId(page.localId).link
-            // Copy the link to the clipboard
-            context.clipboardManager?.setPrimaryClip(
-                ClipData.newPlainText("${page.localId}", pageLink)
-            ) ?: throw NullPointerException("ClipboardManager is not supported on this device")
-
-            _showSnackbarMessage.postValue(
-                SnackbarMessageHolder(UiStringRes(R.string.media_edit_copy_url_toast))
-            )
-        } catch (e: Throwable) {
-            /**
-             * Ignore any exceptions here as certain devices have bugs and will fail.
-             * See https://crrev.com/542cb9cfcc927295615809b0c99917b09a219d9f for more info.
-             */
-            AppLog.e(PAGES, e)
-            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
-        }
+        // Get the link to the page
+        val pageLink = postStore.getPostByLocalPostId(page.localId).link
+        ActivityLauncher.openShareIntent(
+            context,
+            pageLink,
+            page.title
+        )
     }
 
     private fun previewPage(page: Page) {

@@ -118,7 +118,7 @@ fun handlePostListAction(
                 null)
         }
         is PostListAction.SharePost -> {
-            ActivityLauncher.openShareIntent(activity, action.post)
+            ActivityLauncher.openShareIntent(activity, action.post.link, action.post.title)
         }
     }
 }
