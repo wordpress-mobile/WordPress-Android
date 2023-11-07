@@ -428,6 +428,7 @@ public class AccountStore extends Store {
         public String nonceAuthenticator;
         public String nonceBackup;
         public String nonceSms;
+        public String nonceWebauthn;
         public String notificationSent;
         public String phoneNumber;
         public String userId;
@@ -442,6 +443,7 @@ public class AccountStore extends Store {
             this.nonceAuthenticator = payload.twoStepNonceAuthenticator;
             this.nonceBackup = payload.twoStepNonceBackup;
             this.nonceSms = payload.twoStepNonceSms;
+            this.nonceWebauthn = payload.twoStepNonceWebauthn;
             this.notificationSent = payload.twoStepNotificationSent;
             this.phoneNumber = payload.phoneNumber;
             this.userId = payload.userId;
