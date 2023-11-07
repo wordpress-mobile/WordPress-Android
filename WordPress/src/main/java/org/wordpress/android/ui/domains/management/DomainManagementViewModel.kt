@@ -63,17 +63,7 @@ class DomainManagementViewModel @Inject constructor(
             _uiStateFlow.value = when (it) {
                 AllDomains.Empty -> UiState.Empty
                 AllDomains.Error -> UiState.Error
-                is AllDomains.Success -> {
-                    val query = searchQuery.value
-                    if (searchQuery.value.isBlank()) {
-                        UiState.PopulatedList.Loaded.Complete(it.domains)
-                    } else {
-                        UiState.PopulatedList.Loaded.Filtered(
-                            filtered = domainLocalSearchEngine.filter(it.domains, query),
-                            allDomains = it.domains
-                        )
-                    }
-                }
+                is AllDomains.Success -> UiState.PopulatedList.Loaded.Complete(it.domains)
             }
         }
     }
