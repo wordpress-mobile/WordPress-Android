@@ -46,6 +46,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class WPMediaUtils {
@@ -142,6 +143,10 @@ public class WPMediaUtils {
         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                String propertyValue = (which == DialogInterface.BUTTON_POSITIVE) ? "on" : "off";
+                AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_OPTIMIZE_IMAGES_POPUP_TAPPED,
+                        Collections.singletonMap("option", propertyValue));
+
                 if (which == DialogInterface.BUTTON_NEGATIVE) {
                     if (!AppPrefs.isImageOptimize()) {
                         // null or image optimization already OFF. We should not be here though.
