@@ -65,6 +65,7 @@ rather than strict requirements.
 8. Other UI
     1. [Lottie](#lottie)
     2. [UCrop](#ucrop)
+9. [Smoke Test](#smoke-test)
 
 ℹ️ Every test instruction should be prefixed with one of the following:
 - [JP/WP] This test applies to both, the `Jetpack` and `WordPress` apps.
@@ -596,5 +597,167 @@ Step.3:
 - Click on the `media options` of this image (top right) and then click `edit`.
 - Crop the image and click the `done` menu option (top right).
 - Verify the image is updated accordingly.
+
+</details>
+
+-----
+
+## Smoke Test <a name="smoke-test"></a>
+
+1. Plugin
+    1. [GoogleServices](#googleservices)
+    2. [Dagger](#dagger)
+2. Kotlin
+    1. [Kotlin](#kotlin)
+    2. [Coroutines](#coroutines)
+3. EventBus
+    1. [EventBus](#eventbus)
+4. AndroidX Core
+    1. [Annotation](#annotation)
+    2. [ArchCore](#archcore)
+    3. [Lifecycle](#lifecycle)
+    4. [Core](#core)
+    5. [Activity](#activity)
+    6. [Fragment](#fragment)
+    7. [AppCompat](#appcompat)
+5. AndroidX Compose
+    1. [Compose](#compose)
+    2. [ComposeMaterial3](#composematerial3)
+    3. [ComposeConstraintLayout](#composeconstraintlayout)
+    4. [Coil](#coil)
+6. AndroidX/Google
+    1. [RecyclerView](#recyclerview)
+    2. [ViewPager2](#viewpager2)
+7. Material/Google
+    1. [Material](#material)
+    2. [ConstraintLayout](#constraintlayout)
+8. Network
+    1. [Retrofit](#retrofit)
+    2. [Volley](#volley)
+    3. [Glide](#glide)
+    4. [Gson](#gson)
+9. Tool
+    1. [InstallReferrer](#installreferrer)
+10. Other Core
+    1. [ApacheCommons](#apachecommons)
+11. Other
+    1. [Desugar](#desugar)
+
+ℹ️ Some smoke test instructions might have an `Extra` section with addition instructions.
+
+-----
+
+### GoogleServices [[googleServicesVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#1)] <a name="googleservices"></a>
+
+-----
+
+### Dagger [[daggerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#1)] <a name="dagger"></a>
+
+-----
+
+### Kotlin [[kotlinVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#1)] + [[androidxComposeCompilerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="kotlin"></a>
+
+-----
+
+### Coroutines [[kotlinxCoroutinesVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="coroutines"></a>
+
+-----
+
+### EventBus [[eventBusVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="eventbus"></a>
+
+-----
+
+### Annotation [[androidxAnnotationVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="annotation"></a>
+
+-----
+
+### ArchCore [[androidxArchCoreVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="archcore"></a>
+
+-----
+
+### Lifecycle [[androidxLifecycleVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="lifecycle"></a>
+
+-----
+
+### Core [[androidxCoreVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="core"></a>
+
+-----
+
+### Activity [[androidxActivityVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="activity"></a>
+
+-----
+
+### Fragment [[androidxFragmentVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="fragment"></a>
+
+-----
+
+### AppCompat [[androidxAppcompatVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="appcompat"></a>
+
+-----
+
+### Compose [[androidxComposeBomVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="compose"></a>
+
+-----
+
+### ComposeMaterial3 [[androidxComposeMaterial3Version](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="composematerial3"></a>
+
+-----
+
+### ComposeConstraintLayout [[androidxConstraintlayoutComposeVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="composeconstraintlayout"></a>
+
+-----
+
+### Coil [[coilComposeVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="coil"></a>
+
+-----
+
+### RecyclerView [[androidxRecyclerviewVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="recyclerview"></a>
+
+-----
+
+### ViewPager2 [[androidxViewpager2Version](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="viewpager2"></a>
+
+-----
+
+### Material [[googleMaterialVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="material"></a>
+
+-----
+
+### ConstraintLayout [[androidxConstraintlayoutVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="constraintlayout"></a>
+
+-----
+
+### Retrofit [[squareupRetrofitVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="retrofit"></a>
+
+-----
+
+### Volley [[androidVolleyVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="volley"></a>
+
+-----
+
+### Glide [[glideVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] + [[glideVolleyVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="glide"></a>
+
+-----
+
+### Gson [[googleGsonVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="gson"></a>
+
+-----
+
+### InstallReferrer [[androidInstallReferrerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="installreferrer"></a>
+
+-----
+
+### ApacheCommons [[apacheCommonsTextVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="apachecommons"></a>
+
+-----
+
+### Desugar [[androidDesugarVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="desugar"></a>
+
+<details>
+    <summary>Extra</summary>
+
+Focus on testing push notifications and/or blogging reminders since this was why this library was
+introduced to this project in the first place (see [here](https://github.com/wordpress-mobile/WordPress-Android/pull/14698)
+and [here](https://github.com/orgs/wordpress-mobile/projects/95)).
 
 </details>
