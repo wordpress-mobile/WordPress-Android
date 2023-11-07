@@ -13,8 +13,18 @@ object BloggingPromptsUtils {
         }
     }
 
-    fun dateToString(date: Date): String {
-        val formatter = DATE_FORMAT.get() as DateFormat
+    private val DATE_FORMAT_IGNORES_YEAR: ThreadLocal<DateFormat> = object : ThreadLocal<DateFormat>() {
+        override fun initialValue(): DateFormat {
+            return SimpleDateFormat("--MM-dd", Locale.US)
+        }
+    }
+
+    fun dateToString(date: Date, ignoresYear: Boolean = false): String {
+        val formatter = if (ignoresYear) {
+            DATE_FORMAT_IGNORES_YEAR.get()
+        } else {
+            DATE_FORMAT.get()
+        } as DateFormat
         return formatter.format(date)
     }
 
@@ -26,4 +36,7 @@ object BloggingPromptsUtils {
             Date()
         }
     }
+
+    @Suppress("MagicNumber")
+    fun yearForDate(date: Date): String = dateToString(date).substring(0, 4)
 }

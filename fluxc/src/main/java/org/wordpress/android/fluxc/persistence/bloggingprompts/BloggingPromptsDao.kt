@@ -36,31 +36,29 @@ abstract class BloggingPromptsDao {
 
     @Entity(
         tableName = "BloggingPrompts",
-        primaryKeys = ["id"]
+        primaryKeys = ["date"]
     )
     @TypeConverters(BloggingPromptDateConverter::class)
     data class BloggingPromptEntity(
         val id: Int,
         val siteLocalId: Int,
         val text: String,
-        val title: String,
-        val content: String,
         val date: Date,
         val isAnswered: Boolean,
         val respondentsCount: Int,
         val attribution: String,
-        val respondentsAvatars: List<String>
+        val respondentsAvatars: List<String>,
+        val answeredLink: String
     ) {
         fun toBloggingPrompt() = BloggingPromptModel(
             id = id,
             text = text,
-            title = title,
-            content = content,
             date = date,
             isAnswered = isAnswered,
             attribution = attribution,
             respondentsCount = respondentsCount,
-            respondentsAvatarUrls = respondentsAvatars
+            respondentsAvatarUrls = respondentsAvatars,
+            answeredLink = answeredLink,
         )
 
         companion object {
@@ -71,13 +69,12 @@ abstract class BloggingPromptsDao {
                 id = prompt.id,
                 siteLocalId = siteLocalId,
                 text = prompt.text,
-                title = prompt.title,
-                content = prompt.content,
                 date = prompt.date,
                 isAnswered = prompt.isAnswered,
-                attribution = prompt.attribution,
                 respondentsCount = prompt.respondentsCount,
-                respondentsAvatars = prompt.respondentsAvatarUrls
+                attribution = prompt.attribution,
+                respondentsAvatars = prompt.respondentsAvatarUrls,
+                answeredLink = prompt.answeredLink,
             )
         }
     }
