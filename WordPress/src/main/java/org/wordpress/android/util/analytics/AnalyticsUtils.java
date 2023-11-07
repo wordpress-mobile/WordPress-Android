@@ -32,7 +32,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
@@ -640,12 +639,6 @@ public class AnalyticsUtils {
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT, properties);
-    }
-
-    public static void trackAnalyticsPostListToggleLayout(PostListViewLayoutType viewLayoutType) {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("post_list_view_layout_type", viewLayoutType.toString());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.POST_LIST_VIEW_LAYOUT_TOGGLED, properties);
     }
 
     private static Map<String, String> createNewsCardProperties(String origin, int version) {

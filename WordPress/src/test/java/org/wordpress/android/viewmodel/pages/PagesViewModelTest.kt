@@ -43,13 +43,13 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.pages.PageItem
-import org.wordpress.android.ui.pages.PageItem.Action.COPY
-import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
-import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
-import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
-import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PagesAuthorFilterUIState
+import org.wordpress.android.ui.pages.PagesListAction.COPY
+import org.wordpress.android.ui.pages.PagesListAction.COPY_LINK
+import org.wordpress.android.ui.pages.PagesListAction.PUBLISH_NOW
+import org.wordpress.android.ui.pages.PagesListAction.SET_AS_HOMEPAGE
+import org.wordpress.android.ui.pages.PagesListAction.SET_AS_POSTS_PAGE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
@@ -441,7 +441,7 @@ class PagesViewModelTest : BaseUnitTest() {
         localId = 2,
         title = "Published page",
         date = Date(),
-        actions = emptySet(),
+        actions = emptyList(),
         progressBarUiState = ProgressBarUiState.Hidden,
         showOverlay = false
     )
@@ -519,6 +519,7 @@ class PagesViewModelTest : BaseUnitTest() {
         val wpcomSite = SiteModel()
         wpcomSite.setIsWPCom(true)
         wpcomSite.hasCapabilityEditOthersPages = true
+        wpcomSite.setIsSingleUserSite(false)
         setUpPageStoreWithASinglePage(wpcomSite)
 
         whenever(appPrefsWrapper.postListAuthorSelection).thenReturn(EVERYONE)
@@ -565,6 +566,7 @@ class PagesViewModelTest : BaseUnitTest() {
         val wpcomSite = SiteModel()
         wpcomSite.setIsWPCom(true)
         wpcomSite.hasCapabilityEditOthersPages = true
+        wpcomSite.setIsSingleUserSite(false)
         setUpPageStoreWithASinglePage(wpcomSite)
 
         whenever(appPrefsWrapper.postListAuthorSelection).thenReturn(EVERYONE)

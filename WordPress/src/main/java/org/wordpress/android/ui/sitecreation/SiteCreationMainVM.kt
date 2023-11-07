@@ -183,6 +183,9 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun preloadThumbnails(context: Context) {
+        if (jetpackFeatureRemovalOverlayUtil.shouldDisableSiteCreation()) {
+            return // no need to preload thumbnails if site creation is disabled
+        }
         if (preloadingJob == null) {
             preloadingJob = viewModelScope.launch(Dispatchers.IO) {
                 if (networkUtils.isNetworkAvailable()) {
@@ -299,7 +302,9 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun onCartCreated(checkoutDetails: CheckoutDetails) {
-        siteCreationState = siteCreationState.copy(result = CreatedButNotFetched.InCart(checkoutDetails.site))
+        checkoutDetails.site?.let{
+            siteCreationState = siteCreationState.copy(result = CreatedButNotFetched.InCart(it))
+        }
         domainsRegistrationTracker.trackDomainsPurchaseWebviewViewed(checkoutDetails.site, isSiteCreation = true)
         _showDomainCheckout.value = checkoutDetails
     }
