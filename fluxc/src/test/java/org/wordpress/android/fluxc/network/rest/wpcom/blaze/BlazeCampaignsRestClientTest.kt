@@ -32,7 +32,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.test
 import kotlin.test.assertEquals
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetchedPayload as BlazeCampaignsFetchedPayload
 
 private val CONTENT_CONFIG_RESPONSE = ContentConfig(
     title = "Brand new post - do not approve",
@@ -52,7 +51,8 @@ private val CAMPAIGN_RESPONSE = Campaign(
     contentImage = "undefined",
     uiStatus = "rejected",
     contentConfig = CONTENT_CONFIG_RESPONSE,
-    campaignStats = CONTENT_CAMPAIGN_STATS
+    campaignStats = CONTENT_CAMPAIGN_STATS,
+    targetUrn = "urn:wpcom:post:199247490:9"
 )
 
 private val BLAZE_CAMPAIGNS_RESPONSE = BlazeCampaignsResponse(

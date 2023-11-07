@@ -38,7 +38,8 @@ private val BLAZE_CAMPAIGN_MODEL = BlazeCampaignModel(
     uiStatus = UI_STATUS,
     budgetCents = BUDGET_CENTS,
     impressions = IMPRESSIONS,
-    clicks = CLICKS
+    clicks = CLICKS,
+    targetUrn = "urn:wpcom:post:199247490:9"
 )
 private val BLAZE_CAMPAIGNS_MODEL = BlazeCampaignsModel(
     campaigns = listOf(BLAZE_CAMPAIGN_MODEL),
