@@ -66,9 +66,9 @@ class DomainManagementViewModel @Inject constructor(
                 is AllDomains.Success -> {
                     val query = searchQuery.value
                     if (searchQuery.value.isBlank()) {
-                        UiState.PopulatedList.Loaded(it.domains)
+                        UiState.PopulatedList.Loaded.Complete(it.domains)
                     } else {
-                        UiState.PopulatedList.Filtered(
+                        UiState.PopulatedList.Loaded.Filtered(
                             filtered = domainLocalSearchEngine.filter(it.domains, query),
                             allDomains = it.domains
                         )
@@ -80,14 +80,13 @@ class DomainManagementViewModel @Inject constructor(
 
     private fun filterDomains(query: String) {
         val domains = when (val state = _uiStateFlow.value) {
-            is UiState.PopulatedList.Loaded -> state.domains
-            is UiState.PopulatedList.Filtered -> state.allDomains
+            is UiState.PopulatedList.Loaded -> state.allDomains
             else -> return
         }
         _uiStateFlow.value = if (query.isBlank()) {
-            UiState.PopulatedList.Loaded(domains)
+            UiState.PopulatedList.Loaded.Complete(allDomains = domains)
         } else {
-            UiState.PopulatedList.Filtered(
+            UiState.PopulatedList.Loaded.Filtered(
                 filtered = domainLocalSearchEngine.filter(domains, query),
                 allDomains = domains
             )
@@ -129,11 +128,16 @@ class DomainManagementViewModel @Inject constructor(
     sealed class UiState {
         sealed class PopulatedList: UiState() {
             object Initial: PopulatedList()
-            data class Loaded(val domains: List<AllDomainsDomain>): PopulatedList()
-            data class Filtered(
-                val filtered: List<AllDomainsDomain>,
-                val allDomains: List<AllDomainsDomain>
-            ) : PopulatedList()
+            sealed class Loaded : PopulatedList() {
+                abstract val allDomains: List<AllDomainsDomain>
+                data class Complete(
+                    override val allDomains: List<AllDomainsDomain>
+                ): Loaded()
+                data class Filtered(
+                    override val allDomains: List<AllDomainsDomain>,
+                    val filtered: List<AllDomainsDomain>
+                ) : Loaded()
+            }
         }
         object Empty: UiState()
         object Error: UiState()

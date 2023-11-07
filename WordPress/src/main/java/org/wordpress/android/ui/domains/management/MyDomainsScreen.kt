@@ -92,7 +92,7 @@ fun MyDomainsScreen(
                     queryString = it
                     onSearchQueryChanged(it)
                 },
-                enabled = uiState is PopulatedList.Loaded || uiState is PopulatedList.Filtered,
+                enabled = uiState is PopulatedList.Loaded,
             )
             when (uiState) {
                 is PopulatedList -> MyDomainsList(
@@ -215,13 +215,13 @@ fun MyDomainsList(
                     }
                 }
 
-            is PopulatedList.Loaded -> {
-                items(items = listUiState.domains) {
+            is PopulatedList.Loaded.Complete -> {
+                items(items = listUiState.allDomains) {
                     DomainListCard(uiState = DomainCardUiState.fromDomain(domain = it), onDomainTapped)
                 }
             }
 
-            is PopulatedList.Filtered -> {
+            is PopulatedList.Loaded.Filtered -> {
                 items(items = listUiState.filtered) {
                     DomainListCard(uiState = DomainCardUiState.fromDomain(domain = it), onDomainTapped)
                 }
