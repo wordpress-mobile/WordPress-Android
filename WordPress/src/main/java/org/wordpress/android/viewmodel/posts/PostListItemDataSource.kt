@@ -11,8 +11,6 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.datasource.ListItemDataSourceInterface
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
-import org.wordpress.android.ui.posts.PostListType
-import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.EndListIndicatorIdentifier
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.RemotePostId
@@ -43,8 +41,7 @@ class PostListItemDataSource(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
     private val postFetcher: PostFetcher,
-    private val transform: (PostModel) -> PostListItemUiState,
-    private val postListType: PostListType
+    private val transform: (PostModel) -> PostListItemUiState
 ) : ListItemDataSourceInterface<PostListDescriptor, PostListItemIdentifier, PostListItemType> {
     override fun fetchList(listDescriptor: PostListDescriptor, offset: Long) {
         val fetchPostListPayload = FetchPostListPayload(listDescriptor, offset)
@@ -113,12 +110,7 @@ class PostListItemDataSource(
     private fun transformToPostListItemType(localOrRemoteId: LocalOrRemoteId, post: PostModel?): PostListItemType =
         if (post == null) {
             // If the post is not in cache, that means we'll be loading it
-            val options = if (postListType == TRASHED) {
-                LoadingItemTrashedPost
-            } else {
-                LoadingItemDefaultPost
-            }
-            LoadingItem(localOrRemoteId, options)
+            LoadingItem(localOrRemoteId)
         } else {
             transform(post)
         }

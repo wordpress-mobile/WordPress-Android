@@ -1,2 +1,2 @@
-In the block editor, you can now split or exit a formatted block by pressing the “enter” key three times.
-The left-hand border is always visible for quote blocks, too, even in block-based themes on dark mode. And you can quote us on that.
+- Inactive social icons and Synced Pattern titles are no longer invisible in block-based themes using dark mode. Good try, fellas, but you’re not as ninja as you think.
+- In the Classic editor, you can now convert your content into blocks with the click of a button.

@@ -18,14 +18,11 @@ class DomainManagementDetailsActivity : WPWebViewActivity() {
     }
 
     companion object {
-        private fun getDomainDetailsUrl(domainName: String) =
-            "https://wordpress.com/domains/manage/all/$domainName/edit/$domainName"
-
-        fun createIntent(context: Context, domainName: String): Intent =
+        fun createIntent(context: Context, domainDetailUrl: String): Intent =
             Intent(context, DomainManagementDetailsActivity::class.java).apply {
                 putExtra(USE_GLOBAL_WPCOM_USER, true)
                 putExtra(AUTHENTICATION_URL, WPCOM_LOGIN_URL)
-                putExtra(URL_TO_LOAD, getDomainDetailsUrl(domainName))
+                putExtra(URL_TO_LOAD, domainDetailUrl)
             }
     }
 }

@@ -47,9 +47,9 @@ import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.blaze.BlazeFlowSource;
-import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity;
 import org.wordpress.android.ui.blaze.PageUIModel;
 import org.wordpress.android.ui.blaze.PostUIModel;
+import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity;
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
@@ -58,6 +58,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.domains.DomainsDashboardActivity;
 import org.wordpress.android.ui.domains.management.DomainManagementActivity;
+import org.wordpress.android.ui.domains.management.newdomainsearch.NewDomainSearchActivity;
 import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
 import org.wordpress.android.ui.engagement.EngagementNavigationSource;
 import org.wordpress.android.ui.engagement.HeaderData;
@@ -1925,5 +1926,18 @@ public class ActivityLauncher {
     public static void openDomainManagement(@NonNull Context context) {
         Intent intent = new Intent(context, DomainManagementActivity.class);
         context.startActivity(intent);
+    }
+
+    public static void openNewDomainSearch(@NonNull Context context) {
+        Intent intent = new Intent(context, NewDomainSearchActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void openShareIntent(@NonNull Context context, @NonNull PostModel postModel) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, postModel.getLink());
+        intent.putExtra(Intent.EXTRA_TITLE, postModel.getTitle());
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_link)));
     }
 }

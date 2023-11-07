@@ -54,6 +54,14 @@ class DomainManagementViewModelTest : BaseUnitTest() {
         assertThat(events.last()).isEqualTo(ActionEvent.DomainTapped(testDomain))
     }
 
+    @Test
+    fun `WHEN a navigation back button is tapped THEN send NavigateBackTapped action event`() =
+        testWithActionEvents { events ->
+            viewModel.onBackTapped()
+            advanceUntilIdle()
+            assertThat(events.last()).isEqualTo(ActionEvent.NavigateBackTapped)
+        }
+
     private fun testWithActionEvents(block: suspend TestScope.(events: List<ActionEvent>) -> Unit) =
         test {
             val actionEvents = mutableListOf<ActionEvent>()

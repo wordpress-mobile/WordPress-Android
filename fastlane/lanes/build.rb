@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 platform :android do
   #####################################################################################
   # build_and_upload_release
@@ -24,9 +26,7 @@ platform :android do
 
       UI.important("Building version #{current_release_version} (#{current_build_code}) for upload to Release Channel")
 
-      unless options[:skip_confirm]
-        UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
-      end
+      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
       android_build_preflight
     end
@@ -63,9 +63,7 @@ platform :android do
 
       UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
 
-      unless options[:skip_confirm]
-        UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
-      end
+      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
       android_build_preflight
     end
@@ -96,9 +94,7 @@ platform :android do
 
       UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
 
-      unless options[:skip_confirm]
-        UI.user_error!('Aborted by user request') unless UI.confirm('Do you want to continue?')
-      end
+      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
       android_build_preflight
     end
@@ -158,7 +154,7 @@ platform :android do
       rescue FastlaneCore::Interface::FastlaneError => e
         # Sometimes the upload fails randomly with a "Google Api Error: Invalid request - This Edit has been deleted.".
         # It seems one reason might be a race condition when we do multiple edits at the exact same time (WP beta, JP beta). Retrying usually fixes it
-        if e.message.start_with?('Google Api Error') && (retry_count -= 1) > 0
+        if e.message.start_with?('Google Api Error') && (retry_count -= 1).positive?
           UI.error 'Upload failed with Google API error. Retrying in 2mn...'
           sleep(120)
           retry
@@ -192,10 +188,10 @@ platform :android do
       package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
 
       download_universal_apk_from_google_play(
-          package_name: package_name,
-          version_code: build_code,
-          destination: signed_apk_path(app, current_version_name),
-          json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
+        package_name: package_name,
+        version_code: build_code,
+        destination: signed_apk_path(app, current_version_name),
+        json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
       )
     end
   end
@@ -212,15 +208,15 @@ platform :android do
   lane :build_and_upload_wordpress_prototype_build do
     UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
 
-    versionName = generate_prototype_build_number
+    version_name = generate_prototype_build_number
     gradle(
       task: 'assemble',
       flavor: "WordPress#{PROTOTYPE_BUILD_FLAVOR}",
       build_type: PROTOTYPE_BUILD_TYPE,
-      properties: { prototypeBuildVersionName: versionName }
+      properties: { prototypeBuildVersionName: version_name }
     )
 
-    upload_prototype_build(product: 'WordPress', versionName: versionName)
+    upload_prototype_build(product: 'WordPress', version_name: version_name)
   end
 
   #####################################################################################
@@ -235,15 +231,15 @@ platform :android do
   lane :build_and_upload_jetpack_prototype_build do
     UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
 
-    versionName = generate_prototype_build_number
+    version_name = generate_prototype_build_number
     gradle(
       task: 'assemble',
       flavor: "Jetpack#{PROTOTYPE_BUILD_FLAVOR}",
       build_type: PROTOTYPE_BUILD_TYPE,
-      properties: { prototypeBuildVersionName: versionName }
+      properties: { prototypeBuildVersionName: version_name }
     )
 
-    upload_prototype_build(product: 'Jetpack', versionName: versionName)
+    upload_prototype_build(product: 'Jetpack', version_name: version_name)
   end
 
   #####################################################################################
@@ -311,8 +307,8 @@ platform :android do
   #
   # @param [String] product the display name of the app to upload to S3. 'WordPress' or 'Jetpack'
   #
-  def upload_prototype_build(product:, versionName:)
-    filename = "#{product.downcase}-prototype-build-#{versionName}.apk"
+  def upload_prototype_build(product:, version_name:)
+    filename = "#{product.downcase}-prototype-build-#{version_name}.apk"
 
     upload_path = upload_to_s3(
       bucket: 'a8c-apps-public-artifacts',
@@ -328,31 +324,31 @@ platform :android do
       app_display_name: product,
       app_icon: ":#{product.downcase}:", # Use Buildkite emoji based on product name
       download_url: install_url,
-      metadata: { Flavor: PROTOTYPE_BUILD_FLAVOR, 'Build Type': PROTOTYPE_BUILD_TYPE, 'Version': versionName },
+      metadata: { Flavor: PROTOTYPE_BUILD_FLAVOR, 'Build Type': PROTOTYPE_BUILD_TYPE, Version: version_name },
       footnote: '<em>Note: Google Login is not supported on these builds.</em>',
       fold: true
     )
 
     comment_on_pr(
       project: GHHELPER_REPO,
-      pr_number: Integer(ENV['BUILDKITE_PULL_REQUEST']),
+      pr_number: Integer(ENV.fetch('BUILDKITE_PULL_REQUEST', nil)),
       reuse_identifier: "#{product.downcase}-prototype-build-link",
       body: comment_body
     )
 
-    if ENV['BUILDKITE']
-      message = "#{product} Prototype Build: [#{filename}](#{install_url})"
-      buildkite_annotate(style: 'info', context: "prototype-build-#{product}", message: message)
-      buildkite_metadata(set: { versionName: versionName, 'build:flavor': PROTOTYPE_BUILD_FLAVOR, 'build:type': PROTOTYPE_BUILD_TYPE })
-    end
+    return unless ENV['BUILDKITE']
+
+    message = "#{product} Prototype Build: [#{filename}](#{install_url})"
+    buildkite_annotate(style: 'info', context: "prototype-build-#{product}", message: message)
+    buildkite_metadata(set: { versionName: version_name, 'build:flavor': PROTOTYPE_BUILD_FLAVOR, 'build:type': PROTOTYPE_BUILD_TYPE })
   end
 
   # This function is Buildkite-specific
   def generate_prototype_build_number
     if ENV['BUILDKITE']
-      commit = ENV['BUILDKITE_COMMIT'][0, 7]
+      commit = ENV.fetch('BUILDKITE_COMMIT', nil)[0, 7]
       branch = ENV['BUILDKITE_BRANCH'].parameterize
-      pr_num = ENV['BUILDKITE_PULL_REQUEST']
+      pr_num = ENV.fetch('BUILDKITE_PULL_REQUEST', nil)
 
       pr_num == 'false' ? "#{branch}-#{commit}" : "pr#{pr_num}-#{commit}"
     else

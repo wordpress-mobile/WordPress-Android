@@ -336,7 +336,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 mImageManager.loadIntoCircle(mHeaderAvatar, ImageType.AVATAR_WITHOUT_BACKGROUND, mPhotoUrl);
             }
         } else {
-            mDialog = (FullScreenDialogFragment) getParentFragmentManager().findFragmentByTag(FullScreenDialogFragment.TAG);
+            mDialog = (FullScreenDialogFragment) getParentFragmentManager()
+                    .findFragmentByTag(FullScreenDialogFragment.TAG);
 
             if (mDialog != null) {
                 mDialog.setOnConfirmListener(this);

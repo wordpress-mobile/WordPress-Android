@@ -1,2 +1,4 @@
-We’ve made some visual changes to the reader, including feed cards, headers, buttons, recommendations, and more.
-In the block editor, you can now split or exit a formatted block by pressing the “enter” key three times. The left-hand border is always visible for quote blocks, too.
+- New domain/plan options and checkout screens in site creation process
+- My Site navigation has links to common sections
+- Inactive social icons and Synced Pattern titles are visible in dark mode for block-based themes
+- Content can be converted into blocks in the Classic editor

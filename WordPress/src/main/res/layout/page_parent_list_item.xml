@@ -11,9 +11,9 @@
         android:layout_height="match_parent"
         android:background="?attr/selectableItemBackground">
 
-        <org.wordpress.android.widgets.WPTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/page_title"
-            style="@style/PageListItemTextStyle"
+            style="@style/Pages.Item.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/toolbar_content_offset"

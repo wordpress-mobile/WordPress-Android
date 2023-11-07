@@ -722,7 +722,7 @@
         <!-- Domains -->
         <activity
             android:name=".ui.domains.DomainsDashboardActivity"
-            android:label="@string/domains_title"
+            android:label="@string/site_domain_title"
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
@@ -802,11 +802,16 @@
         <activity
             android:name=".ui.domains.management.DomainManagementActivity"
             android:theme="@style/WordPress.NoActionBar" />
+
         <activity
             android:name=".ui.domains.management.DomainManagementDetailsActivity"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.domains.management.purchasedomain.PurchaseDomainActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+
+        <activity
+            android:name=".ui.domains.management.newdomainsearch.NewDomainSearchActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Services -->
