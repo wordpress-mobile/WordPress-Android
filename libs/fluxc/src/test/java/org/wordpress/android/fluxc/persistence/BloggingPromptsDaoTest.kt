@@ -57,7 +57,7 @@ class BloggingPromptsDaoTest {
     }
 
     @Test
-    fun `test prompt insert and update with site Id`(): Unit = runBlocking {
+    fun `test prompt insertForSite and update`(): Unit = runBlocking {
         // when
         var promptEntity = generateBloggingPrompt()
 
@@ -108,6 +108,36 @@ class BloggingPromptsDaoTest {
         val specificPrompt = prompts.first()
         assertThat(specificPrompt).isNotNull
         assertThat(specificPrompt.toBloggingPrompt()).isEqualTo(prompt2)
+    }
+
+    @Test
+    fun `getPromptForDate returns correct prompt after update`(): Unit = runBlocking {
+        // when
+        val prompt1 = generateBloggingPrompt().copy(
+            id = 1,
+            date = BloggingPromptsUtils.stringToDate("2015-04-20")
+        )
+            .toBloggingPrompt()
+        val prompt2 = generateBloggingPrompt().copy(
+            id = 2,
+            date = BloggingPromptsUtils.stringToDate("2015-04-21")
+        )
+            .toBloggingPrompt()
+
+        promptsDao.insertForSite(localSideId, listOf(prompt1, prompt2))
+
+        val updatedPrompt2 = prompt2.copy(id = 3, text = "updated text")
+        promptsDao.insertForSite(localSideId, listOf(updatedPrompt2))
+
+        // then
+        val prompts = promptsDao.getPromptForDate(
+            localSideId,
+            BloggingPromptsUtils.stringToDate("2015-04-21")
+        ).first()
+
+        val specificPrompt = prompts.first()
+        assertThat(specificPrompt).isNotNull
+        assertThat(specificPrompt.toBloggingPrompt()).isEqualTo(updatedPrompt2)
     }
 
     @Test
@@ -185,12 +215,11 @@ class BloggingPromptsDaoTest {
 
         assertThat(promptEntity.id).isEqualTo(prompt.id)
         assertThat(promptEntity.text).isEqualTo(prompt.text)
-        assertThat(promptEntity.title).isEqualTo(prompt.title)
-        assertThat(promptEntity.content).isEqualTo(prompt.content)
         assertThat(promptEntity.date).isEqualTo(prompt.date)
         assertThat(promptEntity.isAnswered).isEqualTo(prompt.isAnswered)
         assertThat(promptEntity.respondentsCount).isEqualTo(prompt.respondentsCount)
         assertThat(promptEntity.respondentsAvatars).isEqualTo(prompt.respondentsAvatarUrls)
+        assertThat(promptEntity.answeredLink).isEqualTo(prompt.answeredLink)
     }
 
     @Test
@@ -210,13 +239,12 @@ class BloggingPromptsDaoTest {
             id = 1,
             siteLocalId = localSideId,
             text = "Cast the movie of your life.",
-            title = "Prompt Title",
-            content = "content of the prompt",
             date = BloggingPromptsUtils.stringToDate("2015-01-12"),
-            attribution = "dayone",
             isAnswered = false,
             respondentsCount = 5,
-            respondentsAvatars = emptyList()
+            attribution = "dayone",
+            respondentsAvatars = emptyList(),
+            answeredLink = "https://wordpress.com/tag/dailyprompt-1"
         )
     }
 }
