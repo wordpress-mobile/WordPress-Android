@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.action.TransactionAction
 import org.wordpress.android.fluxc.generated.TransactionActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.CREATE_SHOPPING_CART_RESPONSE
+import org.wordpress.android.fluxc.network.rest.wpcom.transactions.CREATE_SHOPPING_CART_WITH_NO_SITE_RESPONSE
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.CREATE_SHOPPING_CART_WITH_PLAN_RESPONSE
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.DOMAIN_CONTACT_INFORMATION
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.SUPPORTED_COUNTRIES_MODEL
@@ -139,6 +140,48 @@ class TransactionsStoreTest {
 
         val expectedEvent = TransactionsStore.OnShoppingCartCreated(
             CREATE_SHOPPING_CART_WITH_PLAN_RESPONSE
+        )
+        verify(dispatcher).emitChange(eq(expectedEvent))
+    }
+
+    @Test
+    fun createShoppingCartWithDomainAndNoSite() = test {
+        whenever(
+            transactionsRestClient.createShoppingCart(
+                null,
+                TEST_DOMAIN_PRODUCT_ID,
+                TEST_DOMAIN_NAME,
+                isDomainPrivacyProtectionEnabled = true,
+                isTemporary = true
+            )
+        ).thenReturn(
+            CreatedShoppingCartPayload(
+                CREATE_SHOPPING_CART_WITH_NO_SITE_RESPONSE
+            )
+        )
+
+        val payload = CreateShoppingCartWithDomainAndPlanPayload(
+            site = null,
+            domainProductId = TEST_DOMAIN_PRODUCT_ID,
+            domainName = TEST_DOMAIN_NAME,
+            isDomainPrivacyEnabled = true,
+            isTemporary = true
+        )
+
+        val action = TransactionActionBuilder.newCreateShoppingCartWithDomainAndPlanAction(payload)
+        transactionsStore.onAction(action)
+
+        verify(transactionsRestClient).createShoppingCart(
+            site = payload.site,
+            domainProductId = payload.domainProductId,
+            domainName = payload.domainName,
+            isDomainPrivacyProtectionEnabled = payload.isDomainPrivacyEnabled,
+            isTemporary = payload.isTemporary,
+            planProductId = payload.planProductId
+        )
+
+        val expectedEvent = TransactionsStore.OnShoppingCartCreated(
+            CREATE_SHOPPING_CART_WITH_NO_SITE_RESPONSE
         )
         verify(dispatcher).emitChange(eq(expectedEvent))
     }
