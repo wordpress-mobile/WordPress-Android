@@ -51,6 +51,7 @@ public class ThemeModel implements Identifiable, Serializable {
     }
 
     @Override
+    @SuppressWarnings("ConditionCoveredByFurtherCondition")
     public boolean equals(@Nullable Object other) {
         if (other == null || !(other instanceof ThemeModel)) {
             return false;
