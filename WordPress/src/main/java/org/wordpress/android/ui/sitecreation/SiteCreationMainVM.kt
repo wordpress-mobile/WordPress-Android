@@ -196,9 +196,6 @@ class SiteCreationMainVM @Inject constructor(
                     if (response.isError) {
                         AppLog.e(T.THEMES, "Error preloading starter designs: ${response.error}")
                         return@launch
-                    } else if (response.designs == null) {
-                        AppLog.e(T.THEMES, "Null starter designs response: $response")
-                        return@launch
                     }
 
                     for (design in response.designs) {
