@@ -239,7 +239,7 @@ public class LoginGoogleFragment extends GoogleFragment {
         } else if (event.requiresTwoStepAuth || Login2FaFragment.TWO_FACTOR_TYPE_SMS.equals(event.notificationSent)) {
             AppLog.d(T.MAIN, "GOOGLE LOGIN: onSocialChanged - needs 2fa");
             mLoginListener.needs2faSocial(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup,
-                    event.nonceSms);
+                    event.nonceSms, event.nonceWebauthn);
         } else {
             AppLog.d(T.MAIN, "GOOGLE LOGIN: onSocialChanged - success");
             mGoogleListener.onGoogleLoginFinished();
