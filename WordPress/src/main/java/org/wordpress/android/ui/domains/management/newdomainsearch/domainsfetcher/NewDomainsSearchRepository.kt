@@ -45,15 +45,12 @@ class NewDomainsSearchRepository @Inject constructor(
                 .sortedByDescending { it.relevance }
                 .map { domain ->
                     val product = products?.firstOrNull { product -> product.productId == domain.product_id }
-                    val splitDomainName = domain.domain_name.split('.')
-                    val suffix = splitDomainName.last()
-                    val prefix = domain.domain_name.removeSuffix(suffix)
                     ProposedDomain(
                         productId = domain.product_id,
-                        domainPrefix = prefix,
-                        domainSuffix = suffix,
+                        domain = domain.domain_name,
                         price = domain.cost,
                         salePrice = product?.combinedSaleCostDisplay,
+                        supportsPrivacy = domain.supports_privacy
                     )
                 }
             DomainsResult.Success(suggestions)

@@ -5,7 +5,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.prefs.AppPrefs.PrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.getBoolean
 import org.wordpress.android.ui.quickstart.QuickStartType
@@ -51,10 +50,6 @@ class AppPrefsWrapper @Inject constructor() {
     var postListAuthorSelection: AuthorFilterSelection
         get() = AppPrefs.getAuthorFilterSelection()
         set(value) = AppPrefs.setAuthorFilterSelection(value)
-
-    var postListViewLayoutType: PostListViewLayoutType
-        get() = AppPrefs.getPostsListViewLayoutType()
-        set(value) = AppPrefs.setPostsListViewLayoutType(value)
 
     var systemNotificationsEnabled: Boolean
         get() = AppPrefs.getSystemNotificationsEnabled()

@@ -336,7 +336,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 mImageManager.loadIntoCircle(mHeaderAvatar, ImageType.AVATAR_WITHOUT_BACKGROUND, mPhotoUrl);
             }
         } else {
-            mDialog = (FullScreenDialogFragment) getFragmentManager().findFragmentByTag(FullScreenDialogFragment.TAG);
+            mDialog = (FullScreenDialogFragment) getParentFragmentManager()
+                    .findFragmentByTag(FullScreenDialogFragment.TAG);
 
             if (mDialog != null) {
                 mDialog.setOnConfirmListener(this);
@@ -603,7 +604,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 .setContent(UsernameChangerFullScreenDialogFragment.class, bundle)
                 .build();
 
-        mDialog.show(getActivity().getSupportFragmentManager(), FullScreenDialogFragment.TAG);
+        mDialog.show(requireActivity().getSupportFragmentManager(), FullScreenDialogFragment.TAG);
     }
 
     protected void loadAvatar(final String avatarUrl, String injectFilePath) {

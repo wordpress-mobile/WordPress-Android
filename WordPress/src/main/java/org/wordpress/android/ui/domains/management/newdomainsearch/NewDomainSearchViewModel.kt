@@ -71,6 +71,22 @@ class NewDomainSearchViewModel @Inject constructor(
         }
     }
 
+    fun onDomainTapped(domain: ProposedDomain) {
+        analyticsTracker.track(
+            AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_SEARCH_DOMAIN_TAPPED,
+            mapOf("domain_name" to domain.domain)
+        )
+        launch {
+            _actionEvents.emit(
+                ActionEvent.PurchaseDomain(
+                    productId = domain.productId,
+                    domain = domain.domain,
+                    supportsPrivacy = domain.supportsPrivacy
+                )
+            )
+        }
+    }
+
     fun onBackPressed() {
         launch {
             _actionEvents.emit(ActionEvent.GoBack)
@@ -78,6 +94,11 @@ class NewDomainSearchViewModel @Inject constructor(
     }
 
     sealed class ActionEvent {
+        data class PurchaseDomain(
+            val productId: Int,
+            val domain: String,
+            val supportsPrivacy: Boolean
+        ) : ActionEvent()
         data class TransferDomain(val url: String) : ActionEvent()
         object GoBack : ActionEvent()
     }
