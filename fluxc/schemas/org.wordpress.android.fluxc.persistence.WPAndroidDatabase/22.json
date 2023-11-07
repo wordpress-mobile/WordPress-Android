@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 21,
-    "identityHash": "cc9b6fb74d814058f43e676516961b97",
+    "version": 22,
+    "identityHash": "b3791e80e8277844d1b16b090631346f",
     "entities": [
       {
         "tableName": "BloggingReminders",
@@ -426,7 +426,7 @@
       },
       {
         "tableName": "BloggingPrompts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `siteLocalId` INTEGER NOT NULL, `text` TEXT NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, `date` TEXT NOT NULL, `isAnswered` INTEGER NOT NULL, `respondentsCount` INTEGER NOT NULL, `attribution` TEXT NOT NULL, `respondentsAvatars` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `siteLocalId` INTEGER NOT NULL, `text` TEXT NOT NULL, `date` TEXT NOT NULL, `isAnswered` INTEGER NOT NULL, `respondentsCount` INTEGER NOT NULL, `attribution` TEXT NOT NULL, `respondentsAvatars` TEXT NOT NULL, `answeredLink` TEXT NOT NULL, PRIMARY KEY(`date`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -443,18 +443,6 @@
           {
             "fieldPath": "text",
             "columnName": "text",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "title",
-            "columnName": "title",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "content",
-            "columnName": "content",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -487,11 +475,17 @@
             "columnName": "respondentsAvatars",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "answeredLink",
+            "columnName": "answeredLink",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "date"
           ],
           "autoGenerate": false
         },
@@ -875,7 +869,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cc9b6fb74d814058f43e676516961b97')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b3791e80e8277844d1b16b090631346f')"
     ]
   }
 }

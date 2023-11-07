@@ -55,14 +55,15 @@ class TransactionsRestClient @Inject constructor(
     }
 
     suspend fun createShoppingCart(
-        site: SiteModel,
+        site: SiteModel?,
         domainProductId: Int,
         domainName: String,
         isDomainPrivacyProtectionEnabled: Boolean,
         isTemporary: Boolean,
         planProductId: Int? = null
     ): CreatedShoppingCartPayload {
-        val url = WPCOMREST.me.shopping_cart.site(site.siteId).urlV1_1
+        val url = site?.let { WPCOMREST.me.shopping_cart.site(it.siteId).urlV1_1 }
+            ?: WPCOMREST.me.shopping_cart.no_site.urlV1_1
 
         val domainProduct = mapOf(
                 "product_id" to domainProductId,
