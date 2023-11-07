@@ -62,6 +62,8 @@
 
 /payments/transactions/summary
 
+/payments/deposits/overview-all
+
 /wc_stripe/account/summary
 /wc_stripe/terminal/locations/store
 /wc_stripe/orders/<order_id>/create_customer
