@@ -14,10 +14,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsError
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsErrorType
+import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsListResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsRestClient.BloggingPromptResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsRestClient.BloggingPromptsListResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsRestClient.BloggingPromptsRespondentAvatar
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsUtils
 import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
@@ -30,47 +30,46 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 const val SITE_LOCAL_ID = 1
+const val ANSWERED_LINK_PREFIX = "https://wordpress.com/tag/dailyprompt-"
 
-private val PROMPTS_RESPONSE = BloggingPromptsListResponse(
-    prompts = listOf(
-        BloggingPromptResponse(
-            id = 1,
-            text = "Cast the movie of your life.",
-            title = "Prompt Title",
-            content = "content of the prompt",
-            date = "2015-01-12",
-            attribution = "",
-            isAnswered = false,
-            respondentsCount = 0,
-            respondentsAvatars = emptyList()
-        ),
+private val PROMPTS_RESPONSE: BloggingPromptsListResponse = listOf(
+    BloggingPromptResponse(
+        id = 1,
+        text = "Cast the movie of your life.",
+        date = "2015-01-12",
+        attribution = "",
+        isAnswered = false,
+        respondentsCount = 0,
+        respondentsAvatars = emptyList(),
+        answeredLink = ANSWERED_LINK_PREFIX + 1,
+        answeredLinkText = "View all responses",
+    ),
 
-        BloggingPromptResponse(
-            id = 2,
-            text = "Cast the movie of your life 2.",
-            title = "Prompt Title 2",
-            content = "content of the prompt 2",
-            date = "2015-01-13",
-            attribution = "dayone",
-            isAnswered = true,
-            respondentsCount = 1,
-            respondentsAvatars = listOf(BloggingPromptsRespondentAvatar("http://site/avatar1.jpg"))
+    BloggingPromptResponse(
+        id = 2,
+        text = "Cast the movie of your life 2.",
+        date = "2015-01-13",
+        attribution = "dayone",
+        isAnswered = true,
+        respondentsCount = 1,
+        respondentsAvatars = listOf(BloggingPromptsRespondentAvatar("http://site/avatar1.jpg")),
+        answeredLink = ANSWERED_LINK_PREFIX + 2,
+        answeredLinkText = "View all responses",
+    ),
+    BloggingPromptResponse(
+        id = 3,
+        text = "Cast the movie of your life 3.",
+        date = "2015-01-14",
+        attribution = "",
+        isAnswered = false,
+        respondentsCount = 3,
+        respondentsAvatars = listOf(
+            BloggingPromptsRespondentAvatar("http://site/avatar1.jpg"),
+            BloggingPromptsRespondentAvatar("http://site/avatar2.jpg"),
+            BloggingPromptsRespondentAvatar("http://site/avatar3.jpg")
         ),
-        BloggingPromptResponse(
-            id = 3,
-            text = "Cast the movie of your life 3.",
-            title = "Prompt Title 3",
-            content = "content of the prompt 3",
-            date = "2015-01-14",
-            attribution = "",
-            isAnswered = false,
-            respondentsCount = 3,
-            respondentsAvatars = listOf(
-                BloggingPromptsRespondentAvatar("http://site/avatar1.jpg"),
-                BloggingPromptsRespondentAvatar("http://site/avatar2.jpg"),
-                BloggingPromptsRespondentAvatar("http://site/avatar3.jpg")
-            )
-        )
+        answeredLink = ANSWERED_LINK_PREFIX + 3,
+        answeredLinkText = "View all responses",
     )
 )
 
@@ -79,41 +78,38 @@ private val PROMPTS_RESPONSE = BloggingPromptsListResponse(
 private val FIRST_PROMPT_MODEL = BloggingPromptModel(
     id = 1,
     text = "Cast the movie of your life.",
-    title = "Prompt Title",
-    content = "content of the prompt",
     date = BloggingPromptsUtils.stringToDate("2015-01-12"),
-    attribution = "",
     isAnswered = false,
+    attribution = "",
     respondentsCount = 0,
-    respondentsAvatarUrls = emptyList()
+    respondentsAvatarUrls = emptyList(),
+    answeredLink = ANSWERED_LINK_PREFIX + 1,
 )
 
 private val SECOND_PROMPT_MODEL = BloggingPromptModel(
     id = 2,
     text = "Cast the movie of your life 2.",
-    title = "Prompt Title 2",
-    content = "content of the prompt 2",
     date = BloggingPromptsUtils.stringToDate("2015-01-13"),
-    attribution = "dayone",
     isAnswered = true,
+    attribution = "dayone",
     respondentsCount = 1,
-    respondentsAvatarUrls = listOf("http://site/avatar1.jpg")
+    respondentsAvatarUrls = listOf("http://site/avatar1.jpg"),
+    answeredLink = ANSWERED_LINK_PREFIX + 2,
 )
 
 private val THIRD_PROMPT_MODEL = BloggingPromptModel(
     id = 3,
     text = "Cast the movie of your life 3.",
-    title = "Prompt Title 3",
-    content = "content of the prompt 3",
     date = BloggingPromptsUtils.stringToDate("2015-01-14"),
-    attribution = "",
     isAnswered = false,
+    attribution = "",
     respondentsCount = 3,
     respondentsAvatarUrls = listOf(
         "http://site/avatar1.jpg",
         "http://site/avatar2.jpg",
         "http://site/avatar3.jpg"
-    )
+    ),
+    answeredLink = ANSWERED_LINK_PREFIX + 3,
 )
 
 private val PROMPT_MODELS = listOf(FIRST_PROMPT_MODEL, SECOND_PROMPT_MODEL, THIRD_PROMPT_MODEL)
@@ -124,43 +120,40 @@ private val FIRST_PROMPT_ENTITY = BloggingPromptEntity(
     id = 1,
     siteLocalId = SITE_LOCAL_ID,
     text = "Cast the movie of your life.",
-    title = "Prompt Title",
-    content = "content of the prompt",
     date = BloggingPromptsUtils.stringToDate("2015-01-12"),
-    attribution = "",
     isAnswered = false,
     respondentsCount = 0,
-    respondentsAvatars = emptyList()
+    attribution = "",
+    respondentsAvatars = emptyList(),
+    answeredLink = ANSWERED_LINK_PREFIX + 1,
 )
 
 private val SECOND_PROMPT_ENTITY = BloggingPromptEntity(
     id = 2,
     siteLocalId = SITE_LOCAL_ID,
     text = "Cast the movie of your life 2.",
-    title = "Prompt Title 2",
-    content = "content of the prompt 2",
     date = BloggingPromptsUtils.stringToDate("2015-01-13"),
-    attribution = "dayone",
     isAnswered = true,
     respondentsCount = 1,
-    respondentsAvatars = listOf("http://site/avatar1.jpg")
+    attribution = "dayone",
+    respondentsAvatars = listOf("http://site/avatar1.jpg"),
+    answeredLink = ANSWERED_LINK_PREFIX + 2,
 )
 
 private val THIRD_PROMPT_ENTITY = BloggingPromptEntity(
     id = 3,
     siteLocalId = SITE_LOCAL_ID,
     text = "Cast the movie of your life 3.",
-    title = "Prompt Title 3",
-    content = "content of the prompt 3",
     date = BloggingPromptsUtils.stringToDate("2015-01-14"),
-    attribution = "",
     isAnswered = false,
     respondentsCount = 3,
+    attribution = "",
     respondentsAvatars = listOf(
         "http://site/avatar1.jpg",
         "http://site/avatar2.jpg",
         "http://site/avatar3.jpg"
-    )
+    ),
+    answeredLink = ANSWERED_LINK_PREFIX + 3,
 )
 
 private val PROMPT_ENTITIES = listOf(FIRST_PROMPT_ENTITY, SECOND_PROMPT_ENTITY, THIRD_PROMPT_ENTITY)
