@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.model;
 
+import androidx.annotation.Nullable;
+
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
@@ -49,7 +51,7 @@ public class ThemeModel implements Identifiable, Serializable {
     }
 
     @Override
-    public boolean equals(Object other) {
+    public boolean equals(@Nullable Object other) {
         if (other == null || !(other instanceof ThemeModel)) {
             return false;
         }
