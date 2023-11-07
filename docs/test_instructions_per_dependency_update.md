@@ -40,20 +40,28 @@ rather than strict requirements.
 
 ## Content
 
-1. [WorkManager](#workmanager)
-2. [Preference](#preference)
-3. [ExoPlayer](#exoplayer)
-4. [Firebase](#firebase)
-5. [PlayServicesAuth](#playservicesauth)
-6. [PlayServicesCoreScanner](#playservicescodescanner)
-7. [Navigation](#navigation)
-8. [Okio](#okio)
-9. [Zendesk](#zendesk)
-10. [JSoup](#jsoup)
-11. [AutoService](#autoservice)
-12. [KotlinPoet](#kotlinpoet)
-13. [Lottie](#lottie)
-14. [UCrop](#ucrop)
+1. AndroidX Jetpack
+    1. [WorkManager](#workmanager)
+2. AndroidX/Google
+    1. [Preference](#preference)
+    2. [ExoPlayer](#exoplayer)
+3. Firebase/Google
+    1. [Firebase](#firebase)
+    2. [PlayServicesAuth](#playservicesauth)
+    3. [PlayServicesCoreScanner](#playservicescodescanner)
+4. Plugin
+    1. [Navigation](#navigation)
+5. Network
+    1. [Okio](#okio)
+6. Tool
+    1. [Zendesk](#zendesk)
+    2. [JSoup](#jsoup)
+7. Other Core
+    1. [AutoService](#autoservice)
+    2. [KotlinPoet](#kotlinpoet)
+8. Other UI
+    1. [Lottie](#lottie)
+    2. [UCrop](#ucrop)
 
 ℹ️ Every test instruction should be prefixed with one of the following:
 - [JP/WP] This test applies to both, the `Jetpack` and `WordPress` apps.
