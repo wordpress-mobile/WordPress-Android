@@ -47,10 +47,13 @@ rather than strict requirements.
 3. AndroidX/Google
     1. [Preference](#preference)
     2. [ExoPlayer](#exoplayer)
+    3. [Webkit](#webkit)
 4. Firebase/Google
     1. [Firebase](#firebase)
-    2. [PlayServicesAuth](#playservicesauth)
-    3. [PlayServicesCoreScanner](#playservicescodescanner)
+    2. [FirebaseIid](#firebaseiid)
+    3. [MLKitBarcodeScanning](#mlkitbarcodescanning)
+    4. [PlayServicesAuth](#playservicesauth)
+    5. [PlayServicesCoreScanner](#playservicescodescanner)
 5. Network
     1. [Okio](#okio)
 6. Tool
@@ -70,7 +73,7 @@ rather than strict requirements.
 
 -----
 
-### Navigation [[navigationVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="navigation"></a>
+### Navigation [[navigationVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#L1)] <a name="navigation"></a>
 
 <details>
     <summary>1. [JP/WP] Image Editing Flow [libs:image-editor]</summary>
@@ -242,6 +245,19 @@ rather than strict requirements.
 
 -----
 
+### Webkit [[androidxWebkitVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="webkit"></a>
+
+<details>
+    <summary>1. [TODO] TODO</summary>
+
+- TODO
+- TODO
+- TODO
+
+</details>
+
+-----
+
 ### Firebase [[firebaseBomVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="firebase"></a>
 
 <details>
@@ -252,6 +268,34 @@ rather than strict requirements.
 - Publish the post.
 - Verify that, on post being published, you get a push notification with the post's title, which,
   when you click on it, navigates you to the 'Notifications Detail' screen for this post.
+
+</details>
+
+
+-----
+
+### FirebaseIid [[firebaseIidVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="firebaseiid"></a>
+
+<details>
+    <summary>1. [TODO] TODO</summary>
+
+- TODO
+- TODO
+- TODO
+
+</details>
+
+-----
+
+### MLKitBarcodeScanning [[googleMLKitBarcodeScanningVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="mlkitbarcodescanning"></a>
+
+
+<details>
+    <summary>1. [TODO] TODO</summary>
+
+- TODO
+- TODO
+- TODO
 
 </details>
 
