@@ -150,26 +150,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         return fragment;
     }
 
-    public static Login2FaFragment newInstanceSocialSecurityKey(String emailAddress, String userId,
-                                                                String nonceAuthenticator,
-                                                                String nonceBackup, String nonceSms,
-                                                                String webauthnNonce) {
-        Login2FaFragment fragment = new Login2FaFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_EMAIL_ADDRESS, emailAddress);
-        args.putString(ARG_2FA_USER_ID, userId);
-        args.putString(ARG_2FA_NONCE_AUTHENTICATOR, nonceAuthenticator);
-        args.putString(ARG_2FA_NONCE_BACKUP, nonceBackup);
-        args.putString(ARG_2FA_NONCE_SMS, nonceSms);
-        args.putString(ARG_WEBAUTHN_NONCE, webauthnNonce);
-        args.putBoolean(ARG_DISPLAY_SECURITY_KEY_BUTTON, true);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public static Login2FaFragment newInstanceSocial(String emailAddress, String userId,
                                                      String nonceAuthenticator, String nonceBackup,
-                                                     String nonceSms) {
+                                                     String nonceSms, String nonceWebauthn) {
         Login2FaFragment fragment = new Login2FaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
@@ -177,9 +160,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         args.putString(ARG_2FA_NONCE_AUTHENTICATOR, nonceAuthenticator);
         args.putString(ARG_2FA_NONCE_BACKUP, nonceBackup);
         args.putString(ARG_2FA_NONCE_SMS, nonceSms);
+        args.putString(ARG_WEBAUTHN_NONCE, nonceWebauthn);
         args.putBoolean(ARG_2FA_IS_SOCIAL, true);
         // Social account connected, connect call not needed.
         args.putBoolean(ARG_2FA_IS_SOCIAL_CONNECT, false);
+        args.putBoolean(ARG_DISPLAY_SECURITY_KEY_BUTTON, nonceWebauthn != null && !nonceWebauthn.isEmpty());
         fragment.setArguments(args);
         return fragment;
     }
