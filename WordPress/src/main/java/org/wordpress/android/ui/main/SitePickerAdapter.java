@@ -75,7 +75,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         DEFAULT_MODE,
         REBLOG_SELECT_MODE,
         REBLOG_CONTINUE_MODE,
-        BLOGGING_PROMPTS_MODE;
+        BLOGGING_PROMPTS_MODE,
+        SIMPLE_MODE;
 
         public boolean isReblogMode() {
             return this == REBLOG_SELECT_MODE || this == REBLOG_CONTINUE_MODE;

@@ -305,7 +305,9 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun onCartCreated(checkoutDetails: CheckoutDetails) {
-        siteCreationState = siteCreationState.copy(result = CreatedButNotFetched.InCart(checkoutDetails.site))
+        checkoutDetails.site?.let{
+            siteCreationState = siteCreationState.copy(result = CreatedButNotFetched.InCart(it))
+        }
         domainsRegistrationTracker.trackDomainsPurchaseWebviewViewed(checkoutDetails.site, isSiteCreation = true)
         _showDomainCheckout.value = checkoutDetails
     }

@@ -216,8 +216,8 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
         startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
         verify(onCartCreatedObserver).onChanged(argThat {
-            assertEquals(SITE_REMOTE_ID, site.siteId)
-            assertEquals(SITE_SLUG, site.url)
+            assertEquals(SITE_REMOTE_ID, site?.siteId)
+            assertEquals(SITE_SLUG, site?.url)
             domainName == PAID_DOMAIN.domainName
         })
     }
