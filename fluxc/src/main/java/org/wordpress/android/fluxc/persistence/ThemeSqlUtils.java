@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.persistence;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.wellsql.generated.ThemeModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -78,6 +79,7 @@ public class ThemeSqlUtils {
         insertOrUpdateSiteTheme(site, theme);
     }
 
+    @NonNull
     public static List<ThemeModel> getActiveThemeForSite(@NonNull SiteModel site) {
         return WellSql.select(ThemeModel.class)
                 .where().beginGroup()
@@ -108,7 +110,8 @@ public class ThemeSqlUtils {
                 .endWhere().getAsModel();
     }
 
-    public static ThemeModel getWpComThemeByThemeId(String themeId) {
+    @Nullable
+    public static ThemeModel getWpComThemeByThemeId(@NonNull String themeId) {
         if (TextUtils.isEmpty(themeId)) {
             return null;
         }
@@ -126,8 +129,9 @@ public class ThemeSqlUtils {
         return matches.get(0);
     }
 
-    public static ThemeModel getSiteThemeByThemeId(SiteModel siteModel, String themeId) {
-        if (siteModel == null || TextUtils.isEmpty(themeId)) {
+    @Nullable
+    public static ThemeModel getSiteThemeByThemeId(@NonNull SiteModel siteModel, @NonNull String themeId) {
+        if (TextUtils.isEmpty(themeId)) {
             return null;
         }
         List<ThemeModel> matches = WellSql.select(ThemeModel.class)

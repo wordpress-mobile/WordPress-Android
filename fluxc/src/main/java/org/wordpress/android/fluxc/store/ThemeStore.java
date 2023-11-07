@@ -324,21 +324,24 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getThemesForSite(site);
     }
 
-    public ThemeModel getInstalledThemeByThemeId(SiteModel siteModel, String themeId) {
-        if (themeId == null || themeId.isEmpty()) {
+    @Nullable
+    public ThemeModel getInstalledThemeByThemeId(@NonNull SiteModel siteModel, @NonNull String themeId) {
+        if (TextUtils.isEmpty(themeId)) {
             return null;
         }
         return ThemeSqlUtils.getSiteThemeByThemeId(siteModel, themeId);
     }
 
+    @Nullable
     @SuppressWarnings("WeakerAccess")
-    public ThemeModel getWpComThemeByThemeId(String themeId) {
+    public ThemeModel getWpComThemeByThemeId(@NonNull String themeId) {
         if (TextUtils.isEmpty(themeId)) {
             return null;
         }
         return ThemeSqlUtils.getWpComThemeByThemeId(themeId);
     }
 
+    @Nullable
     public ThemeModel getActiveThemeForSite(@NonNull SiteModel site) {
         List<ThemeModel> activeTheme = ThemeSqlUtils.getActiveThemeForSite(site);
         return activeTheme.isEmpty() ? null : activeTheme.get(0);
