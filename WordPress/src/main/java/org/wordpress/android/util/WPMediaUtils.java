@@ -107,8 +107,8 @@ public class WPMediaUtils {
      * Check if we should advertise image optimization feature for the current site.
      * <p>
      * The following condition need to be all true:
-     * 1) Image optimization is OFF on the site.
-     * 2) Didn't already ask to enable the feature.
+     * 1) Image optimization is ON on the site.
+     * 2) Didn't already ask to keep or disable the feature.
      * 3) The user has granted storage access to the app.
      * This is because we don't want to ask so much things to users the first time they try to add a picture to the app.
      *
@@ -129,8 +129,8 @@ public class WPMediaUtils {
             return false;
         }
 
-        // Check whether image optimization is already available for the site
-        return !AppPrefs.isImageOptimize();
+        // Check whether image optimization is enabled for the site
+        return AppPrefs.isImageOptimize();
     }
 
     public interface OnAdvertiseImageOptimizationListener {
@@ -142,11 +142,11 @@ public class WPMediaUtils {
         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (which == DialogInterface.BUTTON_POSITIVE) {
-                    if (AppPrefs.isImageOptimize()) {
-                        // null or image optimization already ON. We should not be here though.
+                if (which == DialogInterface.BUTTON_NEGATIVE) {
+                    if (!AppPrefs.isImageOptimize()) {
+                        // null or image optimization already OFF. We should not be here though.
                     } else {
-                        AppPrefs.setImageOptimize(true);
+                        AppPrefs.setImageOptimize(false);
                     }
                 }
 
