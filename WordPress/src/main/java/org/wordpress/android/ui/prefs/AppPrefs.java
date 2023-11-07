@@ -747,7 +747,7 @@ public class AppPrefs {
     }
 
     public static boolean isImageOptimize() {
-        return getBoolean(DeletablePrefKey.IMAGE_OPTIMIZE_ENABLED, false);
+        return getBoolean(DeletablePrefKey.IMAGE_OPTIMIZE_ENABLED, true);
     }
 
     public static void setImageOptimize(boolean optimize) {
@@ -776,7 +776,7 @@ public class AppPrefs {
     }
 
     public static int getImageOptimizeQuality() {
-        int quality = getInt(DeletablePrefKey.IMAGE_OPTIMIZE_QUALITY, 0);
+        int quality = getInt(DeletablePrefKey.IMAGE_OPTIMIZE_QUALITY, 1);
         return quality > 1 ? quality : WPMediaUtils.OPTIMIZE_IMAGE_ENCODER_QUALITY;
     }
 
