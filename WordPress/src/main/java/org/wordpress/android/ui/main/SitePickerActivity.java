@@ -853,9 +853,8 @@ public class SitePickerActivity extends LocaleAwareActivity
         @NonNull
         @Override
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-            assert getArguments() != null;
             SiteCreationSource source =
-                    SiteCreationSource.fromString(getArguments().getString(ARG_SITE_CREATION_SOURCE));
+                    SiteCreationSource.fromString(requireArguments().getString(ARG_SITE_CREATION_SOURCE));
             CharSequence[] items =
                     {getString(R.string.site_picker_create_wpcom),
                             getString(R.string.site_picker_add_self_hosted)};

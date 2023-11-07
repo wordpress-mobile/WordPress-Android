@@ -86,11 +86,10 @@ public class PersonDetailFragment extends Fragment {
         ((WordPress) requireActivity().getApplicationContext()).component().inject(this);
 
         if (savedInstanceState == null) {
-            assert getArguments() != null;
-            mCurrentUserId = getArguments().getLong(ARG_CURRENT_USER_ID);
-            mPersonId = getArguments().getLong(ARG_PERSON_ID);
-            mLocalTableBlogId = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
-            mPersonType = (Person.PersonType) getArguments().getSerializable(ARG_PERSON_TYPE);
+            mCurrentUserId = requireArguments().getLong(ARG_CURRENT_USER_ID);
+            mPersonId = requireArguments().getLong(ARG_PERSON_ID);
+            mLocalTableBlogId = requireArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
+            mPersonType = (Person.PersonType) requireArguments().getSerializable(ARG_PERSON_TYPE);
         } else {
             mCurrentUserId = savedInstanceState.getLong(ARG_CURRENT_USER_ID);
             mPersonId = savedInstanceState.getLong(ARG_PERSON_ID);
