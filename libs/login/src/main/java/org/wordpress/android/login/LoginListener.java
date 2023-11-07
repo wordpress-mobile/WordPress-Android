@@ -48,10 +48,12 @@ public interface LoginListener {
     void forgotPassword(String url);
     void useMagicLinkInstead(String email, boolean verifyEmail);
     void needs2fa(String email, String password);
-    void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup, String nonceSms, String nonceWebauthn);
+    void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup,
+                        String nonceSms, String nonceWebauthn);
     void needs2faSocialConnect(String email, String password, String idToken, String service);
     void needs2faSecurityKey(String email, String password, String userId, String webauthnNonce);
-    void needs2faSocialSecurityKey(String email, String userId, String nonceAuthenticator, String nonceBackup, String nonceSms, String webauthnNonce);
+    void needs2faSocialSecurityKey(String email, String userId, String nonceAuthenticator,
+                                   String nonceBackup, String nonceSms, String webauthnNonce);
     void loggedInViaPassword(ArrayList<Integer> oldSitesIds);
     void helpEmailPasswordScreen(String email);
 
