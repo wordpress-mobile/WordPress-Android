@@ -50,6 +50,12 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         }
     }
 
+    fun onErrorButtonTapped() {
+        launch {
+            _uiStateFlow.update { UiState.Initial }
+        }
+    }
+
     fun onSiteChosen(site: SiteModel?) {
         analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN)
         createCart(site, productId, domain, privacy)
@@ -77,14 +83,13 @@ class PurchaseDomainViewModel @AssistedInject constructor(
             false
         )
 
-        launch {
-            delay(loadingStateAnimationResetDelay)
-            _uiStateFlow.update { UiState.Initial }
-        }
-
         if (event.isError) {
-            // TODO Handle failed cart creation
+            _uiStateFlow.update { UiState.ErrorSubmittingCart }
         } else {
+            launch {
+                delay(loadingStateAnimationResetDelay)
+                _uiStateFlow.update { UiState.Initial }
+            }
             if (site != null) {
                 _actionEvents.emit(ActionEvent.GoToExistingSite(domain = domain, siteModel = site))
             } else {
@@ -97,6 +102,8 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         object Initial : UiState
         object SubmittingJustDomainCart : UiState
         object SubmittingSiteDomainCart : UiState
+
+        object ErrorSubmittingCart : UiState
     }
 
     sealed class ActionEvent {
