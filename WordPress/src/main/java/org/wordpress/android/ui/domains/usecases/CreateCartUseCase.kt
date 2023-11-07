@@ -30,7 +30,7 @@ class CreateCartUseCase @Inject constructor(
 
     @Suppress("UseCheckOrError")
     suspend fun execute(
-        site: SiteModel,
+        site: SiteModel?,
         domainProductId: Int,
         domainName: String,
         isDomainPrivacyEnabled: Boolean,

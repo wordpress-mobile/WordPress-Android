@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.view.isVisible
 import org.wordpress.android.R
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.WPTextView
@@ -154,7 +155,11 @@ class ActionableEmptyView : LinearLayout {
             subtitle.contentDescription
         } else {
             subtitle.text
-        }
+        }.takeIf {
+            // only use the subtitle if it's visible as this view is used with only the title some times and the
+            // subtitle has a default value that is not relevant
+            subtitle.isVisible
+        } ?: ""
 
         announceForAccessibility("${title.text}.$subTitle")
     }

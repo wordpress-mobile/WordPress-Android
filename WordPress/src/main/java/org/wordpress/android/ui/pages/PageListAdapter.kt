@@ -14,7 +14,7 @@ import org.wordpress.android.util.image.ImageManager
 
 @Suppress("LongParameterList")
 class PageListAdapter(
-    private val onMenuAction: (PageItem.Action, Page) -> Boolean,
+    private val onMenuAction: (PagesListAction, Page) -> Boolean,
     private val onItemTapped: (Page) -> Unit,
     private val onVirtualHomepageAction: (VirtualHomepage.Action) -> Unit,
     private val onEmptyActionButtonTapped: () -> Unit,

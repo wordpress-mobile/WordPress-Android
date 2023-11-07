@@ -1,10 +1,6 @@
-@file:Suppress("DEPRECATION")
-
 package org.wordpress.android.widgets
 
 import android.app.Dialog
-import android.app.DialogFragment
-import android.app.FragmentManager
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
@@ -13,6 +9,8 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -74,7 +72,7 @@ object AppRatingDialog {
      * Show the rate dialog if the criteria is satisfied.
      * @return true if shown, false otherwise.
      */
-    @Suppress("DEPRECATION")
+
     fun showRateDialogIfNeeded(fragmentManger: FragmentManager): Boolean {
         return if (shouldShowRateDialog()) {
             showRateDialog(fragmentManger)
@@ -109,7 +107,6 @@ object AppRatingDialog {
         }
     }
 
-    @Suppress("DEPRECATION")
     private fun showRateDialog(fragmentManger: FragmentManager) {
         var dialog = fragmentManger.findFragmentByTag(AppRatingDialog.TAG_APP_RATING_PROMPT_DIALOG)
         if (dialog == null) {
@@ -119,33 +116,32 @@ object AppRatingDialog {
         }
     }
 
-    @Suppress("DEPRECATION")
     class AppRatingDialog : DialogFragment() {
         companion object {
             internal const val TAG_APP_RATING_PROMPT_DIALOG = "TAG_APP_RATING_PROMPT_DIALOG"
         }
 
-        @Suppress("SwallowedException", "OVERRIDE_DEPRECATION")
+        @Suppress("SwallowedException")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = MaterialAlertDialogBuilder(activity)
+            val builder = MaterialAlertDialogBuilder(requireActivity())
             val appName = getString(R.string.app_name)
             val title = getString(R.string.app_rating_title, appName)
             builder.setTitle(title)
                 .setMessage(R.string.app_rating_message)
                 .setCancelable(true)
                 .setPositiveButton(R.string.app_rating_rate_now) { _, _ ->
-                    val appPackage = activity.packageName
+                    val appPackage = requireActivity().packageName
                     val url = "market://details?id=$appPackage"
                     try {
-                        activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                        requireActivity().startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
                     } catch (e: ActivityNotFoundException) {
                         // play store app isn't on this device so open app's page in browser instead
-                        activity.startActivity(
+                        requireActivity().startActivity(
                             Intent(
                                 Intent.ACTION_VIEW,
                                 Uri.parse(
                                     "http://play.google.com/store/apps/details?id=" +
-                                            activity.packageName
+                                            requireActivity().packageName
                                 )
                             )
                         )
@@ -166,8 +162,7 @@ object AppRatingDialog {
             return builder.create()
         }
 
-        @Suppress("OVERRIDE_DEPRECATION")
-        override fun onCancel(dialog: DialogInterface?) {
+        override fun onCancel(dialog: DialogInterface) {
             super.onCancel(dialog)
             clearSharedPreferences()
             storeAskLaterDate()

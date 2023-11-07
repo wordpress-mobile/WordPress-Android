@@ -379,22 +379,18 @@ class DomainRegistrationDetailsFragment : Fragment() {
         )
     }
 
-    @Suppress("DEPRECATION")
     private fun showStatePicker(states: List<SupportedStateResponse>) {
         val dialogFragment = StatePickerDialogFragment.newInstance(states.toCollection(ArrayList()))
-        dialogFragment.setTargetFragment(this, 0)
-        dialogFragment.show(requireFragmentManager(), StatePickerDialogFragment.TAG)
+        dialogFragment.show(childFragmentManager, StatePickerDialogFragment.TAG)
     }
 
-    @Suppress("DEPRECATION")
     private fun showCountryPicker(countries: List<SupportedDomainCountry>) {
         val dialogFragment = CountryPickerDialogFragment.newInstance(
             countries.toCollection(
                 ArrayList()
             )
         )
-        dialogFragment.setTargetFragment(this, 0)
-        dialogFragment.show(requireFragmentManager(), CountryPickerDialogFragment.TAG)
+        dialogFragment.show(childFragmentManager, CountryPickerDialogFragment.TAG)
     }
 
     private fun DomainRegistrationDetailsFragmentBinding.toggleFormProgressIndictor(visible: Boolean) {
@@ -472,13 +468,9 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     as ArrayList<SupportedStateResponse>
         }
 
-        @Suppress("DEPRECATION", "UseCheckOrError")
+        @Suppress("UseCheckOrError")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            if (targetFragment == null) {
-                throw IllegalStateException("StatePickerDialogFragment is missing a targetFragment ")
-            }
-
-            viewModel = ViewModelProvider(targetFragment!!, viewModelFactory)
+            viewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
             val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(R.string.domain_registration_state_picker_dialog_title)
@@ -521,13 +513,9 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     as ArrayList<SupportedDomainCountry>
         }
 
-        @Suppress("DEPRECATION", "UseCheckOrError")
+        @Suppress("UseCheckOrError")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            if (targetFragment == null) {
-                throw IllegalStateException("CountryPickerDialogFragment is missing a targetFragment ")
-            }
-
-            viewModel = ViewModelProvider(targetFragment!!, viewModelFactory)
+            viewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
             val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(R.string.domain_registration_country_picker_dialog_title)

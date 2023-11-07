@@ -10,20 +10,18 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
+msgctxt "release_note_236"
+msgid ""
+"23.6:\n"
+"- Inactive social icons and Synced Pattern titles are no longer invisible in block-based themes using dark mode. Good try, fellas, but you’re not as ninja as you think.\n"
+"- In the Classic editor, you can now convert your content into blocks with the click of a button.\n"
+msgstr ""
+
 msgctxt "release_note_235"
 msgid ""
 "23.5:\n"
 "In the block editor, you can now split or exit a formatted block by pressing the “enter” key three times.\n"
 "The left-hand border is always visible for quote blocks, too, even in block-based themes on dark mode. And you can quote us on that.\n"
-msgstr ""
-
-msgctxt "release_note_234"
-msgid ""
-"23.4:\n"
-"We’ve been squashing bugs!\n"
-"- You can now embed URLs from X without getting a broken link.\n"
-"- When you use an invalid media URL, the app displays an error message instead of crashing.\n"
-"- In the block editor, the app will no longer crash when you nest too many blocks within blocks.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

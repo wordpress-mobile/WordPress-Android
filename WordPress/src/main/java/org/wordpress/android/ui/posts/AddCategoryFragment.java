@@ -45,14 +45,14 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
     @Override
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        ((WordPress) requireActivity().getApplication()).component().inject(this);
 
         initSite(savedInstanceState);
 
         AlertDialog.Builder builder =
                 new MaterialAlertDialogBuilder(new ContextThemeWrapper(getActivity(), R.style.PostSettingsTheme));
         // Get the layout inflater
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
 
         // Inflate view
         //noinspection InflateParams
@@ -72,7 +72,7 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        AlertDialog dialog = (AlertDialog) getDialog();
+        AlertDialog dialog = (AlertDialog) requireDialog();
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,15 +88,15 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
             } else {
-                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+                mSite = (SiteModel) requireActivity().getIntent().getSerializableExtra(WordPress.SITE);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
         if (mSite == null) {
-            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            getFragmentManager().popBackStack();
+            ToastUtils.showToast(requireActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getParentFragmentManager().popBackStack();
         }
     }
 
@@ -115,7 +115,7 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
                 categoryName,
                 parentId
         );
-        ((SelectCategoriesActivity) getActivity()).categoryAdded(newCategory);
+        ((SelectCategoriesActivity) requireActivity()).categoryAdded(newCategory);
 
         return true;
     }

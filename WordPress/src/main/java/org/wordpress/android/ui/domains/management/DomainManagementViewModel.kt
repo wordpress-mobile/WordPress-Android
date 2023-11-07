@@ -66,9 +66,16 @@ class DomainManagementViewModel @Inject constructor(
         }
     }
 
+    fun onBackTapped() {
+        launch {
+            _actionEvents.emit(ActionEvent.NavigateBackTapped)
+        }
+    }
+
     sealed class ActionEvent {
         data class DomainTapped(val detailUrl: String): ActionEvent()
         object AddDomainTapped: ActionEvent()
+        object NavigateBackTapped: ActionEvent()
     }
 
     sealed class UiState {

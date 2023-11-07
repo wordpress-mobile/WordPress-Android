@@ -134,6 +134,10 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private fun loadGravatar(imgIcon: ImageView, avatarUrl: String) {
+        if (avatarUrl.isEmpty()) {
+            AppLog.d(AppLog.T.MAIN, "Attempted to load an empty Gravatar URL!")
+            return
+        }
         AppLog.d(AppLog.T.MAIN, meGravatarLoader.constructGravatarUrl(avatarUrl))
         imgIcon.let {
             meGravatarLoader.load(

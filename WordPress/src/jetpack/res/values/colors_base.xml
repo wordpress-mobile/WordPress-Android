@@ -24,4 +24,5 @@
     <color name="primary_light">@color/jetpack_green_30</color>
 
     <color name="nav_bar">@color/black</color>
+    <color name="tab_indicator">@color/black</color>
 </resources>
