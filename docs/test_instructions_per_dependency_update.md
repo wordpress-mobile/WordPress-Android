@@ -66,6 +66,7 @@ rather than strict requirements.
     1. [Lottie](#lottie)
     2. [UCrop](#ucrop)
 9. [Smoke Test](#smoke-test)
+10. [Special](#special)
 
 ℹ️ Every test instruction should be prefixed with one of the following:
 - [JP/WP] This test applies to both, the `Jetpack` and `WordPress` apps.
@@ -759,5 +760,100 @@ Step.3:
 Focus on testing push notifications and/or blogging reminders since this was why this library was
 introduced to this project in the first place (see [here](https://github.com/wordpress-mobile/WordPress-Android/pull/14698)
 and [here](https://github.com/orgs/wordpress-mobile/projects/95)).
+
+</details>
+
+-----
+
+## Special <a name="special"></a>
+
+1. Gradle
+    1. [Gradle](#gradle)
+2. Plugin
+    1. [AGP](#agp)
+    2. [Sentry](#sentry)
+    3. [Detekt](#detekt)
+    4. [ViolationComments](#violationcomments)
+3. React Native
+    1. [ReactNative](#reactnative)
+
+ℹ️ Every special test instructions have a `Why & Extra` section to further explain why that
+   dependency update is so special and how to deal with it.
+
+-----
+
+### Gradle [[gradleWrapper](https://github.com/wordpress-mobile/WordPress-Android/tree/trunk/gradle/wrapper)] <a name="gradle"></a>
+
+<details>
+    <summary>Why & How</summary>
+
+- TODO
+- TODO
+- TODO
+
+</details>
+
+-----
+
+### AGP [[agpVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#L1)] <a name="agp"></a>
+
+<details>
+    <summary>Why & How</summary>
+
+- TODO
+- TODO
+- TODO
+
+</details>
+
+-----
+
+### Sentry [[sentryVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#L1)] <a name="sentry"></a>
+
+<details>
+    <summary>Why & How</summary>
+
+- TODO
+- TODO
+- TODO
+
+</details>
+
+-----
+
+### Detekt [[detektVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#L1)] <a name="detekt"></a>
+
+<details>
+    <summary>Why & How</summary>
+
+- TODO
+- TODO
+- TODO
+
+</details>
+
+-----
+
+### ViolationComments [[violationCommentsVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#L1)] <a name="violationcomments"></a>
+
+<details>
+    <summary>Why & How</summary>
+
+- TODO
+- TODO
+- TODO
+
+</details>
+
+-----
+
+### ReactNative [[facebookReactVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="reactnative"></a>
+
+<details>
+    <summary>Why & How</summary>
+
+- TODO
+- TODO
+- TODO
 
 </details>
