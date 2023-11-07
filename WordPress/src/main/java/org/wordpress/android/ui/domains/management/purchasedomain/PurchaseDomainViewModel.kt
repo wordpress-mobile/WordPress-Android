@@ -6,6 +6,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,7 +77,10 @@ class PurchaseDomainViewModel @AssistedInject constructor(
             false
         )
 
-        _uiStateFlow.update { UiState.Initial }
+        launch {
+            delay(loadingStateAnimationResetDelay)
+            _uiStateFlow.update { UiState.Initial }
+        }
 
         if (event.isError) {
             // TODO Handle failed cart creation
@@ -108,6 +112,8 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     }
 
     companion object {
+        const val loadingStateAnimationResetDelay = 1000L
+
         fun provideFactory(assistedFactory: Factory, productId: Int, domain: String, privacy: Boolean) =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
