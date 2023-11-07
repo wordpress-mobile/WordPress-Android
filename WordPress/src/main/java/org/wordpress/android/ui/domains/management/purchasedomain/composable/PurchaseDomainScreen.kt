@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -44,6 +45,7 @@ fun PurchaseDomainScreen(
     uiState: UiState,
     onNewDomainCardSelected: () -> Unit,
     onExistingSiteCardSelected: () -> Unit,
+    onErrorButtonTapped: () -> Unit,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -65,22 +67,26 @@ fun PurchaseDomainScreen(
             )
         },
         content = {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surface)
-                    .padding(it)
-            ) {
-                Column(
+            if (uiState == UiState.ErrorSubmittingCart) {
+                ErrorScreen(onButtonTapped = onErrorButtonTapped)
+            } else {
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .verticalScroll(contentScrollState)
-                        .padding(16.dp)
+                        .background(MaterialTheme.colorScheme.surface)
+                        .padding(it)
                 ) {
-                    ScreenHeader()
-                    ScreenDescription()
-                    DomainCards(uiState, onNewDomainCardSelected, onExistingSiteCardSelected)
-                    DiscountNotice()
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(contentScrollState)
+                            .padding(16.dp)
+                    ) {
+                        ScreenHeader()
+                        ScreenDescription()
+                        DomainCards(uiState, onNewDomainCardSelected, onExistingSiteCardSelected)
+                        DiscountNotice()
+                    }
                 }
             }
         }
@@ -236,6 +242,31 @@ private fun DomainOptionCard(
     }
 }
 
+@Composable
+fun ErrorScreen(onButtonTapped: () -> Unit) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize().padding(32.dp),
+    ) {
+        Text(
+            text = stringResource(R.string.purchase_domain_screen_error_title),
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.outline,
+        )
+        Text(
+            text = stringResource(R.string.purchase_domain_screen_error_subtitle),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.outline,
+        )
+        PrimaryButton(
+            text = stringResource(R.string.purchase_domain_screen_error_button_title),
+            onClick = onButtonTapped,
+            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+        )
+    }
+}
+
 private val isPortrait: Boolean @Composable get() = LocalConfiguration.current.orientation == ORIENTATION_PORTRAIT
 
 @Preview(name = "Light mode", locale = "en")
@@ -245,7 +276,16 @@ private val isPortrait: Boolean @Composable get() = LocalConfiguration.current.o
 @Composable
 fun PurchaseDomainScreenPreview() {
     M3Theme {
-        PurchaseDomainScreen(Initial, {}, {}, {})
+        PurchaseDomainScreen(Initial, {}, {}, {}, {})
+    }
+}
+
+@Preview(name = "Light mode", locale = "en")
+@Preview(name = "Dark mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun PurchaseDomainScreenErrorPreview() {
+    M3Theme {
+        PurchaseDomainScreen(UiState.ErrorSubmittingCart, {}, {}, {}, {})
     }
 }
 
