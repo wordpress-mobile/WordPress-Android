@@ -37,22 +37,22 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
-import org.wordpress.android.ui.pages.PageItem.Action
-import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
-import org.wordpress.android.ui.pages.PageItem.Action.COPY
-import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
-import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
-import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
-import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
-import org.wordpress.android.ui.pages.PageItem.Action.PROMOTE_WITH_BLAZE
-import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
-import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
-import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
-import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
-import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.VirtualHomepage
 import org.wordpress.android.ui.pages.PagesAuthorFilterUIState
+import org.wordpress.android.ui.pages.PagesListAction
+import org.wordpress.android.ui.pages.PagesListAction.CANCEL_AUTO_UPLOAD
+import org.wordpress.android.ui.pages.PagesListAction.COPY
+import org.wordpress.android.ui.pages.PagesListAction.COPY_LINK
+import org.wordpress.android.ui.pages.PagesListAction.DELETE_PERMANENTLY
+import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_DRAFT
+import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PagesListAction.PROMOTE_WITH_BLAZE
+import org.wordpress.android.ui.pages.PagesListAction.PUBLISH_NOW
+import org.wordpress.android.ui.pages.PagesListAction.SET_AS_HOMEPAGE
+import org.wordpress.android.ui.pages.PagesListAction.SET_AS_POSTS_PAGE
+import org.wordpress.android.ui.pages.PagesListAction.SET_PARENT
+import org.wordpress.android.ui.pages.PagesListAction.VIEW_PAGE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AuthorFilterListItemUIState
 import org.wordpress.android.ui.posts.AuthorFilterSelection
@@ -462,7 +462,7 @@ class PagesViewModel
         }
     }
 
-    fun onMenuAction(action: Action, page: Page, context: Context? = null): Boolean {
+    fun onMenuAction(action: PagesListAction, page: Page, context: Context? = null): Boolean {
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
@@ -660,7 +660,7 @@ class PagesViewModel
         }
     }
 
-    private fun trackMenuSelectionEvent(action: Action) {
+    private fun trackMenuSelectionEvent(action: PagesListAction) {
         val menu = when (action) {
             VIEW_PAGE -> "view"
             CANCEL_AUTO_UPLOAD -> "cancel_auto_upload"
@@ -989,11 +989,13 @@ class PagesViewModel
      * 2) Jetpack sites - we need to pass in the self-hosted user id to be able to filter for authors
      * which we currently can't
      * 3) Sites on which the user doesn't have permissions to edit posts of other users.
+     * 4) Single user sites - there is no point in filtering by author on single user sites.
      *
      * This behavior is consistent with Calypso and Posts as of 11/4/2019.
      */
     private val isFilteringByAuthorSupported: Boolean by lazy {
-        site.isWPCom && site.hasCapabilityEditOthersPages
+        site.isUsingWpComRestApi && site.hasCapabilityEditOthersPages
+                && (site.isSingleUserSite != null && !site.isSingleUserSite)
     }
 
     @SuppressLint("NullSafeMutableLiveData")

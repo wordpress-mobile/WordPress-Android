@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,8 +17,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.posts.PostListType.SEARCH
-import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
-import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
@@ -36,7 +33,6 @@ import org.wordpress.android.viewmodel.posts.PagedPostList
 import org.wordpress.android.viewmodel.posts.PostListEmptyUiState
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListViewModel
-import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 private const val EXTRA_POST_LIST_TYPE = "post_list_type"
@@ -60,9 +56,6 @@ class PostListFragment : ViewPagerFragment() {
     private var recyclerView: RecyclerView? = null
     private var actionableEmptyView: ActionableEmptyView? = null
     private var progressLoadMore: ProgressBar? = null
-
-    private lateinit var itemDecorationCompactLayout: RecyclerItemDecoration
-    private lateinit var itemDecorationStandardLayout: RecyclerItemDecoration
 
     private lateinit var postListType: PostListType
 
@@ -107,26 +100,6 @@ class PostListFragment : ViewPagerFragment() {
 
         mainViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)[PostListMainViewModel::class.java]
 
-        mainViewModel.viewLayoutType.observe(viewLifecycleOwner, Observer { optionaLayoutType ->
-            optionaLayoutType?.let { layoutType ->
-                recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
-                recyclerView?.removeItemDecoration(itemDecorationStandardLayout)
-
-                when (layoutType) {
-                    STANDARD -> {
-                        recyclerView?.addItemDecoration(itemDecorationStandardLayout)
-                    }
-                    COMPACT -> {
-                        recyclerView?.addItemDecoration(itemDecorationCompactLayout)
-                    }
-                }
-
-                if (postListAdapter.updateItemLayoutType(layoutType)) {
-                    recyclerView?.scrollToPosition(0)
-                }
-            }
-        })
-
         mainViewModel.authorSelectionUpdated.observe(viewLifecycleOwner) {
             if (it != null) {
                 if (viewModel.updateAuthorFilterIfNotSearch(it)) {
@@ -157,34 +130,34 @@ class PostListFragment : ViewPagerFragment() {
 
     private fun initObservers() {
         if (postListType == SEARCH) {
-            mainViewModel.searchQuery.observe(viewLifecycleOwner, Observer {
+            mainViewModel.searchQuery.observe(viewLifecycleOwner) {
                 if (TextUtils.isEmpty(it)) {
                     postListAdapter.submitList(null)
                 }
                 viewModel.search(it)
-            })
+            }
         }
 
-        viewModel.emptyViewState.observe(viewLifecycleOwner, Observer {
+        viewModel.emptyViewState.observe(viewLifecycleOwner) {
             it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
-        })
+        }
 
-        viewModel.isFetchingFirstPage.observe(viewLifecycleOwner, Observer {
+        viewModel.isFetchingFirstPage.observe(viewLifecycleOwner) {
             swipeRefreshLayout?.isRefreshing = it == true
-        })
+        }
 
-        viewModel.pagedListData.observe(viewLifecycleOwner, Observer {
+        viewModel.pagedListData.observe(viewLifecycleOwner) {
             it?.let { pagedListData -> updatePagedListData(pagedListData) }
-        })
+        }
 
-        viewModel.isLoadingMore.observe(viewLifecycleOwner, Observer {
+        viewModel.isLoadingMore.observe(viewLifecycleOwner) {
             progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
-        })
-        viewModel.scrollToPosition.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.scrollToPosition.observe(viewLifecycleOwner) {
             it?.let { index ->
                 recyclerView?.scrollToPosition(index)
             }
-        })
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -196,14 +169,6 @@ class PostListFragment : ViewPagerFragment() {
         actionableEmptyView = view.findViewById(R.id.actionable_empty_view)
 
         val context = nonNullActivity
-        itemDecorationStandardLayout = RecyclerItemDecoration(
-            0,
-            context.resources.getDimensionPixelSize(R.dimen.margin_medium)
-        )
-        itemDecorationCompactLayout = RecyclerItemDecoration(
-            0,
-            context.resources.getDimensionPixelSize(R.dimen.list_divider_height)
-        )
         recyclerView?.layoutManager = LinearLayoutManager(context)
         recyclerView?.adapter = postListAdapter
 

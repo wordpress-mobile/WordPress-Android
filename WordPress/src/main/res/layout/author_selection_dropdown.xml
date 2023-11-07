@@ -22,7 +22,7 @@
         android:layout_marginEnd="@dimen/author_spinner_dropdown_avatar_horizontal_margin"
         android:importantForAccessibility="no"
         android:padding="@dimen/author_spinner_avatar_padding"
-        tools:src="@drawable/bg_oval_neutral_30_multiple_users_white_40dp"
+        tools:src="@drawable/ic_people_white_24dp"
         tools:tint="@color/neutral_50" />
 
     <androidx.appcompat.widget.AppCompatTextView

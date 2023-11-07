@@ -280,6 +280,7 @@
     <string name="multiple_status_label_delimiter" translatable="false">\u0020·\u0020</string>
     <string name="post_list_toggle_item_layout_cards_view">Switch to cards view</string>
     <string name="post_list_toggle_item_layout_list_view">Switch to list view</string>
+    <string name="post_list_toggle_author_filter">Filter by author</string>
     <string name="post_waiting_for_connection_publish">We\'ll publish the post when your device is back online.</string>
     <string name="post_waiting_for_connection_pending">We\'ll submit your post for review when your device is back online.</string>
     <string name="post_waiting_for_connection_scheduled">We\'ll schedule your post when your device is back online.</string>
@@ -308,6 +309,8 @@
     <string name="button_copy">Duplicate</string>
     <string name="button_copy_link">Copy link</string>
     <string name="button_promote_with_blaze">Promote with Blaze</string>
+    <string name="button_comments" translatable="false">@string/comments</string>
+    <string name="button_share" translatable="false">@string/share_desc</string>
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
@@ -1759,6 +1762,7 @@
     <string name="post_status_post_scheduled">Scheduled</string>
     <string name="post_status_post_trashed">Trashed</string>
     <string name="post_status_post_published">Published</string>
+    <string name="post_status_post_edited">Edited</string>
 
     <string-array name="post_settings_statuses" translatable="false">
         <item>@string/post_status_publish_post</item>
@@ -3342,6 +3346,7 @@
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="pages_copy_link">Copy link</string>
 
     <string name="page_status_pending_review" translatable="false">@string/post_status_pending_review</string>

@@ -88,7 +88,6 @@ import org.wordpress.android.viewmodel.pages.PageParentViewModel;
 import org.wordpress.android.viewmodel.pages.PagesViewModel;
 import org.wordpress.android.viewmodel.pages.SearchListViewModel;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
-import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel;
 import org.wordpress.android.viewmodel.posts.PostListViewModel;
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
 import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel;
@@ -352,11 +351,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PrepublishingPublishSettingsViewModel.class)
     abstract ViewModel prepublishingPublishSettingsViewModel(PrepublishingPublishSettingsViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(PostListCreateMenuViewModel.class)
-    abstract ViewModel postListCreateMenuViewModel(PostListCreateMenuViewModel postListCreateMenuViewModel);
 
     @Binds
     @IntoMap
