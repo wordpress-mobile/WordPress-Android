@@ -54,17 +54,17 @@ public class TextInputDialogFragment extends DialogFragment {
     @Override
     @SuppressWarnings("deprecation")
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+        LayoutInflater layoutInflater = requireActivity().getLayoutInflater();
         //noinspection InflateParams
         View promptView = layoutInflater.inflate(R.layout.text_input_dialog, null);
-        AlertDialog.Builder alertDialogBuilder = new MaterialAlertDialogBuilder(getActivity());
+        AlertDialog.Builder alertDialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
         alertDialogBuilder.setView(promptView);
 
         final WPTextView textView = promptView.findViewById(R.id.text_input_dialog_label);
         final EditText editText = promptView.findViewById(R.id.text_input_dialog_input);
         final WPTextView hintView = promptView.findViewById(R.id.text_input_dialog_hint);
 
-        Bundle args = getArguments();
+        Bundle args = requireArguments();
         String title = args.getString(TITLE_TAG);
         String hint = args.getString(HINT_TAG);
         boolean isMultiline = args.getBoolean(IS_MULTILINE_TAG);
@@ -91,12 +91,12 @@ public class TextInputDialogFragment extends DialogFragment {
 
         alertDialogBuilder.setCancelable(true)
                           .setPositiveButton(android.R.string.ok, (dialog, id) -> {
-                              if (getTargetFragment() instanceof Callback) {
-                                  ((Callback) getTargetFragment())
+                              if (getParentFragment() instanceof Callback) {
+                                  ((Callback) getParentFragment())
                                           .onSuccessfulInput(editText.getText().toString(), callbackId);
                               } else {
                                   AppLog.e(AppLog.T.UTILS,
-                                           "Target fragment doesn't implement TextInputDialogFragment.Callback");
+                                           "Parent fragment doesn't implement TextInputDialogFragment.Callback");
                               }
                           })
                           .setNegativeButton(R.string.cancel,
@@ -117,11 +117,11 @@ public class TextInputDialogFragment extends DialogFragment {
     @SuppressWarnings("deprecation")
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
-        if (getTargetFragment() instanceof Callback) {
-            ((Callback) getTargetFragment()).onTextInputDialogDismissed(callbackId);
+        if (getParentFragment() instanceof Callback) {
+            ((Callback) getParentFragment()).onTextInputDialogDismissed(callbackId);
         } else {
             AppLog.e(AppLog.T.UTILS,
-                    "Target fragment doesn't implement TextInputDialogFragment.Callback");
+                    "Parent fragment doesn't implement TextInputDialogFragment.Callback");
         }
     }
 

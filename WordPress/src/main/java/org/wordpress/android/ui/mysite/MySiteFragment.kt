@@ -378,7 +378,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         noSitesView.actionableEmptyView.button.setOnClickListener { viewModel.onAddSitePressed() }
     }
 
-    @Suppress("DEPRECATION", "LongMethod")
+    @Suppress("LongMethod")
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner) { uiModel ->
             hideRefreshIndicatorIfNeeded()
@@ -407,8 +407,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 model.isInputEnabled,
                 model.callbackId
             )
-            inputDialog.setTargetFragment(this@MySiteFragment, 0)
-            inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
+            inputDialog.show(childFragmentManager, TextInputDialogFragment.TAG)
         }
         viewModel.onNavigation.observeEvent(viewLifecycleOwner) { handleNavigationAction(it) }
         viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner) { showSnackbar(it) }
