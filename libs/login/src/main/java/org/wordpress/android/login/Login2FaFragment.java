@@ -590,7 +590,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             return;
         }
 
-        startProgress(false);
+        startProgress();
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
 
         StartWebauthnChallengePayload payload = new StartWebauthnChallengePayload(
