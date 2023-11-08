@@ -291,7 +291,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         onCredentialsResultAvailable(result.getData());
                     } else {
-                        String errorMessage = getString(R.string.notification_security_key_needed);
+                        String errorMessage = getString(R.string.login_error_security_key);
                         endProgress();
                         handleAuthError(AuthenticationErrorType.WEBAUTHN_FAILED, errorMessage);
                     }
@@ -459,6 +459,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 // TODO: FluxC: could be specific?
             case WEBAUTHN_FAILED:
                 mAnalyticsListener.trackLoginSecurityKeyFailure();
+                ToastUtils.showToast(getActivity(),
+                        errorMessage == null ? getString(R.string.error_generic) : errorMessage);
             default:
                 AppLog.e(T.NUX, "Server response: " + errorMessage);
                 mAnalyticsListener.trackFailure(errorMessage);
@@ -611,7 +613,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     public void onWebauthnChallengeReceived(WebauthnChallengeReceived event) {
         if (event.isError()) {
             endProgress();
-            handleAuthError(event.error.type, event.error.message);
+            handleAuthError(event.error.type, getString(R.string.login_error_security_key));
             return;
         }
         mPasskeyCredentialsHandler = new PasskeyCredentialsHandler(
@@ -645,7 +647,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     public void onSecurityKeyCheckFinished(WebauthnPasskeyAuthenticated event) {
         if (event.isError()) {
             endProgress();
-            handleAuthError(event.error.type, event.error.message);
+            handleAuthError(event.error.type, getString(R.string.login_error_security_key));
             return;
         }
         mAnalyticsListener.trackLoginSecurityKeySuccess();
