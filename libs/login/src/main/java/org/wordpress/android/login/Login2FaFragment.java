@@ -624,18 +624,24 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mPasskeyCredentialsHandler.createIntentSender(
                 requireContext(),
                 intent -> {
-                    assert mResultLauncher != null;
-                    mResultLauncher.launch(intent);
+                    if (mResultLauncher != null) {
+                        mResultLauncher.launch(intent);
+                    }
                 });
     }
 
     private void onCredentialsResultAvailable(@NonNull Intent resultData) {
         if (resultData.hasExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA)) {
             byte[] credentialBytes = resultData.getByteArrayExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA);
-            assert credentialBytes != null;
+            if (credentialBytes == null || mPasskeyCredentialsHandler == null) {
+                endProgress();
+                handleAuthError(AuthenticationErrorType.WEBAUTHN_FAILED,
+                        getString(R.string.login_error_security_key));
+                return;
+            }
+
             PublicKeyCredential credentials =
                     PublicKeyCredential.deserializeFromBytes(credentialBytes);
-            assert mPasskeyCredentialsHandler != null;
             FinishWebauthnChallengePayload payload =
                     mPasskeyCredentialsHandler.onCredentialsAvailable(credentials);
             mDispatcher.dispatch(
