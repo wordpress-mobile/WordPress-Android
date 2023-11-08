@@ -820,17 +820,15 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
         switch (event.cause) {
             case DELETE_MEDIA:
-                if (event.mediaList != null) {
-                    // If the media was deleted, remove it from multi select if it was selected
-                    for (MediaModel mediaModel : event.mediaList) {
-                        int localMediaId = mediaModel.getId();
-                        mMediaGridFragment.removeFromMultiSelect(localMediaId);
-                    }
+                // If the media was deleted, remove it from multi select if it was selected
+                for (MediaModel mediaModel : event.mediaList) {
+                    int localMediaId = mediaModel.getId();
+                    mMediaGridFragment.removeFromMultiSelect(localMediaId);
                 }
                 break;
         }
 
-        if (event.mediaList != null && event.mediaList.size() == 1) {
+        if (event.mediaList.size() == 1) {
             updateMediaGridItem(event.mediaList.get(0), true);
         } else {
             reloadMediaGrid();

@@ -2734,6 +2734,9 @@
     <string name="purchase_domain_screen_existing_domain_card_description">Use with a site you already started.</string>
     <string name="purchase_domain_screen_existing_domain_card_button">Choose Site</string>
     <string name="purchase_domain_screen_discount_notice">*A free domain for one year is included with all paid annual plans.</string>
+    <string name="purchase_domain_screen_error_title">Error</string>
+    <string name="purchase_domain_screen_error_subtitle">Something went wrong while adding the domain to the cart. Make sure you are online and retry.</string>
+    <string name="purchase_domain_screen_error_button_title">OK</string>
 
     <!-- Domain Management - Search For A New Domain Screen -->
     <string name="new_domain_search_screen_title">Search for a domain</string>

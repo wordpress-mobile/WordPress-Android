@@ -161,7 +161,7 @@ class CleanUpMediaToPostAssociationUseCaseTest(private val containsGutenbergBloc
         fun createMediaList(): List<MediaModel> {
             val list = mutableListOf<MediaModel>()
             for (i in 1..10) {
-                list.add(MediaModel().apply { id = i })
+                list.add(MediaModel(0, 0).apply { id = i })
             }
             return list
         }

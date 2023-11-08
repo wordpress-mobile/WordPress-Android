@@ -2834,6 +2834,58 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.PHOTO_PICKER:
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
                         WPMediaUtils.advertiseImageOptimization(this, () -> handlePhotoPickerResult(data));
+                    break;
+                case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
+                    // user chose a featured image
+                    if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
+                        long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
+                        setFeaturedImageId(mediaId, true, false);
+                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS)) {
+                        List<Uri> uris = convertStringArrayIntoUrisList(
+                                data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS));
+                        int postId = getImmutablePost().getId();
+                        mFeaturedImageHelper.trackFeaturedImageEvent(
+                                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_POST_SETTINGS,
+                                postId
+                        );
+                        for (Uri mediaUri : uris) {
+                            String mimeType = getContentResolver().getType(mediaUri);
+                            EnqueueFeaturedImageResult queueImageResult = mFeaturedImageHelper
+                                    .queueFeaturedImageForUpload(
+                                            postId, getSite(), mediaUri,
+                                            mimeType
+                                    );
+                            if (queueImageResult == EnqueueFeaturedImageResult.FILE_NOT_FOUND) {
+                                Toast.makeText(
+                                        this,
+                                        R.string.file_not_found, Toast.LENGTH_SHORT
+                                ).show();
+                            } else if (queueImageResult == EnqueueFeaturedImageResult.INVALID_POST_ID) {
+                                Toast.makeText(
+                                        this,
+                                        R.string.error_generic, Toast.LENGTH_SHORT
+                                ).show();
+                            }
+                        }
+                        if (mEditPostSettingsFragment != null) {
+                            mEditPostSettingsFragment.refreshViews();
+                        }
+                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
+                        List<Uri> uris = convertStringArrayIntoUrisList(
+                                data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
+                        mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
+                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                        int[] localIds = data.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS);
+                        int postId = getImmutablePost().getId();
+                        for (int localId : localIds) {
+                            MediaModel media = mMediaStore.getMediaWithLocalId(localId);
+                            if (media != null) {
+                                mFeaturedImageHelper.queueFeaturedImageForUpload(postId, media);
+                            }
+                        }
+                        if (mEditPostSettingsFragment != null) {
+                            mEditPostSettingsFragment.refreshViews();
+                        }
                     }
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
@@ -3320,7 +3372,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return false;
         }
 
-        if (media.getUrl() != null && media.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
+        if (!TextUtils.isEmpty(media.getUrl()) && media.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
             // Note: we should actually do this when the editor fragment starts instead of waiting for user input.
             // Notify the editor fragment upload was successful and it should replace the local url by the remote url.
             if (mEditorMediaUploadListener != null) {
@@ -3455,17 +3507,19 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // probably here is best for Gutenberg to start interacting with
         if (mShowGutenbergEditor && mEditorFragment instanceof GutenbergEditorFragment) {
             refreshEditorTheme();
-            List<MediaModel> failedMedia =
-                    mMediaStore.getMediaForPostWithState(mEditPostRepository.getPost(), MediaUploadState.FAILED);
-            if (failedMedia != null && !failedMedia.isEmpty()) {
-                HashSet<Integer> mediaIds = new HashSet<>();
-                for (MediaModel media : failedMedia) {
-                    // featured image isn't in the editor but in the Post Settings fragment, so we want to skip it
-                    if (!media.getMarkedLocallyAsFeatured()) {
-                        mediaIds.add(media.getId());
+            PostImmutableModel post = mEditPostRepository.getPost();
+            if (post != null) {
+                List<MediaModel> failedMedia = mMediaStore.getMediaForPostWithState(post, MediaUploadState.FAILED);
+                if (!failedMedia.isEmpty()) {
+                    HashSet<Integer> mediaIds = new HashSet<>();
+                    for (MediaModel media : failedMedia) {
+                        // featured image isn't in the editor but in the Post Settings fragment, so we want to skip it
+                        if (!media.getMarkedLocallyAsFeatured()) {
+                            mediaIds.add(media.getId());
+                        }
                     }
+                    ((GutenbergEditorFragment) mEditorFragment).resetUploadingMediaToFailed(mediaIds);
                 }
-                ((GutenbergEditorFragment) mEditorFragment).resetUploadingMediaToFailed(mediaIds);
             }
         } else if (mShowAztecEditor && mEditorFragment instanceof AztecEditorFragment) {
             final EntryPoint entryPoint = (EntryPoint) getIntent().getSerializableExtra(EXTRA_ENTRY_POINT);
@@ -3680,7 +3734,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, event.error);
         } else if (event.completed) {
             // if the remote url on completed is null, we consider this upload wasn't successful
-            if (event.media.getUrl() == null) {
+            if (TextUtils.isEmpty(event.media.getUrl())) {
                 MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
                 mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, error);
             } else {

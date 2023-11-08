@@ -409,21 +409,23 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         return true;
     }
 
+    @NonNull
     private MediaModel getMediaModelFromEditorImageMetaData() {
-        MediaModel mediaModel = new MediaModel();
-        mediaModel.setUrl(mEditorImageMetaData.getSrc());
-        mediaModel.setTitle(mEditorImageMetaData.getTitle());
-        mediaModel.setCaption(mEditorImageMetaData.getCaption());
-        mediaModel.setAlt(mEditorImageMetaData.getAlt());
-        if (!TextUtils.isEmpty(mEditorImageMetaData.getSrc())) {
-            mediaModel.setFileName(
-                    mEditorImageMetaData.getSrc().substring(mEditorImageMetaData.getSrc().lastIndexOf("/") + 1));
+        String source = mEditorImageMetaData.getSrc();
+        String filename = null;
+        if (!TextUtils.isEmpty(source)) {
+            filename = source.substring(source.lastIndexOf("/") + 1);
         }
-        mediaModel.setFileExtension(
-                org.wordpress.android.fluxc.utils.MediaUtils.getExtension(mEditorImageMetaData.getSrc()));
-        mediaModel.setWidth(mEditorImageMetaData.getWidthInt());
-        mediaModel.setHeight(mEditorImageMetaData.getHeightInt());
-        return mediaModel;
+        return new MediaModel(
+                source,
+                filename,
+                org.wordpress.android.fluxc.utils.MediaUtils.getExtension(source),
+                mEditorImageMetaData.getTitle(),
+                mEditorImageMetaData.getCaption(),
+                mEditorImageMetaData.getAlt(),
+                mEditorImageMetaData.getWidthInt(),
+                mEditorImageMetaData.getHeightInt()
+        );
     }
 
     @Override

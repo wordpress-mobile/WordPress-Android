@@ -16,35 +16,36 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.domains.management.M3Theme
+import org.wordpress.android.ui.domains.management.composable.PrimaryButton
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.Initial
 import org.wordpress.android.ui.domains.management.success
 
 @Composable
 fun PurchaseDomainScreen(
+    uiState: UiState,
     onNewDomainCardSelected: () -> Unit,
     onExistingSiteCardSelected: () -> Unit,
+    onErrorButtonTapped: () -> Unit,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -66,22 +67,26 @@ fun PurchaseDomainScreen(
             )
         },
         content = {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surface)
-                    .padding(it)
-            ) {
-                Column(
+            if (uiState == UiState.ErrorSubmittingCart) {
+                ErrorScreen(onButtonTapped = onErrorButtonTapped)
+            } else {
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .verticalScroll(contentScrollState)
-                        .padding(16.dp)
+                        .background(MaterialTheme.colorScheme.surface)
+                        .padding(it)
                 ) {
-                    ScreenHeader()
-                    ScreenDescription()
-                    DomainCards(onNewDomainCardSelected, onExistingSiteCardSelected)
-                    DiscountNotice()
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(contentScrollState)
+                            .padding(16.dp)
+                    ) {
+                        ScreenHeader()
+                        ScreenDescription()
+                        DomainCards(uiState, onNewDomainCardSelected, onExistingSiteCardSelected)
+                        DiscountNotice()
+                    }
                 }
             }
         }
@@ -90,6 +95,7 @@ fun PurchaseDomainScreen(
 
 @Composable
 private fun DomainCards(
+    uiState: UiState,
     onNewDomainCardSelected: () -> Unit,
     onExistingSiteCardSelected: () -> Unit,
     modifier: Modifier = Modifier,
@@ -98,13 +104,13 @@ private fun DomainCards(
         val arrangement = Arrangement.spacedBy(16.dp)
         if (isPortrait) {
             Column(verticalArrangement = arrangement) {
-                NewDomainCard(onNewDomainCardSelected)
-                ExistingSiteCard(onExistingSiteCardSelected)
+                NewDomainCard(uiState, onNewDomainCardSelected)
+                ExistingSiteCard(uiState, onExistingSiteCardSelected)
             }
         } else {
             Row(horizontalArrangement = arrangement) {
-                NewDomainCard(onNewDomainCardSelected, modifier = Modifier.weight(1f))
-                ExistingSiteCard(onExistingSiteCardSelected, modifier = Modifier.weight(1f))
+                NewDomainCard(uiState, onNewDomainCardSelected, modifier = Modifier.weight(1f))
+                ExistingSiteCard(uiState, onExistingSiteCardSelected, modifier = Modifier.weight(1f))
             }
         }
     }
@@ -149,6 +155,7 @@ private fun DiscountNotice(modifier: Modifier = Modifier) {
 
 @Composable
 private fun NewDomainCard(
+    uiState: UiState,
     onNewDomainCardSelected: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -157,6 +164,8 @@ private fun NewDomainCard(
         title = R.string.purchase_domain_screen_new_domain_card_title,
         description = R.string.purchase_domain_screen_new_domain_card_description,
         button = R.string.purchase_domain_screen_new_domain_card_button,
+        isEnabled = uiState == Initial,
+        isInProgress = uiState == UiState.SubmittingJustDomainCart,
         onOptionSelected = onNewDomainCardSelected,
         modifier = modifier,
     )
@@ -164,6 +173,7 @@ private fun NewDomainCard(
 
 @Composable
 private fun ExistingSiteCard(
+    uiState: UiState,
     onExistingSiteCardSelected: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -172,6 +182,8 @@ private fun ExistingSiteCard(
         title = R.string.purchase_domain_screen_existing_domain_card_title,
         description = R.string.purchase_domain_screen_existing_domain_card_description,
         button = R.string.purchase_domain_screen_existing_domain_card_button,
+        isEnabled = uiState == Initial,
+        isInProgress = uiState == UiState.SubmittingSiteDomainCart,
         onOptionSelected = onExistingSiteCardSelected,
         modifier = modifier,
     )
@@ -183,6 +195,8 @@ private fun DomainOptionCard(
     @StringRes title: Int,
     @StringRes description: Int,
     @StringRes button: Int,
+    isEnabled: Boolean,
+    isInProgress: Boolean,
     onOptionSelected: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -216,32 +230,40 @@ private fun DomainOptionCard(
             ),
             modifier = Modifier.padding(top = 8.dp)
         )
-        Button(
+        PrimaryButton(
+            isEnabled = isEnabled,
+            isInProgress = isInProgress,
             onClick = onOptionSelected,
-            shape = MaterialTheme.shapes.small.copy(CornerSize(36.dp)),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 0.dp,
-                pressedElevation = 0.dp,
-                disabledElevation = 0.dp,
-                hoveredElevation = 0.dp,
-                focusedElevation = 0.dp
-            ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.success
-            ),
+            text = stringResource(button),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
-        ) {
-            Text(
-                text = stringResource(button),
-                modifier = Modifier.padding(vertical = 4.dp),
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    color = Color.White,
-                ),
-                fontWeight = FontWeight.Medium
-            )
-        }
+                .padding(16.dp)
+        )
+    }
+}
+
+@Composable
+fun ErrorScreen(onButtonTapped: () -> Unit) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize().padding(32.dp),
+    ) {
+        Text(
+            text = stringResource(R.string.purchase_domain_screen_error_title),
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.outline,
+        )
+        Text(
+            text = stringResource(R.string.purchase_domain_screen_error_subtitle),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.outline,
+        )
+        PrimaryButton(
+            text = stringResource(R.string.purchase_domain_screen_error_button_title),
+            onClick = onButtonTapped,
+            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+        )
     }
 }
 
@@ -253,8 +275,17 @@ private val isPortrait: Boolean @Composable get() = LocalConfiguration.current.o
 @Preview(name = "Landscape orientation", device = Devices.AUTOMOTIVE_1024p)
 @Composable
 fun PurchaseDomainScreenPreview() {
-    AppTheme {
-        PurchaseDomainScreen({}, {}, {})
+    M3Theme {
+        PurchaseDomainScreen(Initial, {}, {}, {}, {})
+    }
+}
+
+@Preview(name = "Light mode", locale = "en")
+@Preview(name = "Dark mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun PurchaseDomainScreenErrorPreview() {
+    M3Theme {
+        PurchaseDomainScreen(UiState.ErrorSubmittingCart, {}, {}, {}, {})
     }
 }
 

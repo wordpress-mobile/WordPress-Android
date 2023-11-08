@@ -664,18 +664,20 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                             )
                             storyMediaFileDataList.add(storyMediaFileData)
                         } else {
-                            val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
-                            val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(mediaModel)
-                            mediaFile?.let { mediafile ->
-                                mediaFile.alt = StoryFrameItem.getAltTextFromFrameAddedViews(frame)
-                                mediaModel.alt = mediaFile.alt
-                                val storyMediaFileData =
-                                    saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
-                                        mediaFile = mediafile,
-                                        temporaryId = assignedTempId
-                                    )
-                                frame.id = storyMediaFileData.id
-                                storyMediaFileDataList.add(storyMediaFileData)
+                            site?.let { site ->
+                                val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
+                                val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(mediaModel)
+                                mediaFile?.let { mediafile ->
+                                    mediaFile.alt = StoryFrameItem.getAltTextFromFrameAddedViews(frame)
+                                    mediaModel?.alt = mediaFile.alt
+                                    val storyMediaFileData =
+                                        saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
+                                            mediaFile = mediafile,
+                                            temporaryId = assignedTempId
+                                        )
+                                    frame.id = storyMediaFileData.id
+                                    storyMediaFileDataList.add(storyMediaFileData)
+                                }
                             }
                         }
                     }

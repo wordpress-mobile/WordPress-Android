@@ -125,14 +125,14 @@ class MediaLibraryDataSource(
     }
 
     private fun List<MediaModel>.toMediaItems(mediaType: MediaType): List<MediaItem> {
-        return this.filter { it.url != null }.map { mediaModel ->
+        return this.filter { it.url.isNotBlank() }.map { mediaModel ->
             MediaItem(
                 RemoteId(mediaModel.mediaId),
                 mediaModel.url,
                 mediaModel.title,
                 mediaType,
                 mediaModel.mimeType,
-                dateTimeUtilsWrapper.dateFromIso8601(mediaModel.uploadDate).time
+                mediaModel.uploadDate?.let { dateTimeUtilsWrapper.dateFromIso8601(it).time } ?: 0L
             )
         }
     }

@@ -32,7 +32,7 @@ class NewDomainSearchActivity : AppCompatActivity() {
                     onSearchQueryChanged = viewModel::onSearchQueryChanged,
                     onTransferDomainClicked = viewModel::onTransferDomainClicked,
                     onDomainTapped = viewModel::onDomainTapped,
-                    onBackPressed = viewModel::onBackPressed
+                    onBackPressed = viewModel::onBackPressed,
                 )
             }
         }
