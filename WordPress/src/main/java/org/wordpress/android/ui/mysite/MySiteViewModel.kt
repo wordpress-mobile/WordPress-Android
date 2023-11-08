@@ -166,7 +166,7 @@ class MySiteViewModel @Inject constructor(
     private val bloggingPromptCardViewModelSlice: BloggingPromptCardViewModelSlice,
     private val noCardsMessageViewModelSlice: NoCardsMessageViewModelSlice,
     private val siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice,
-    private val quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice
+    private val quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()

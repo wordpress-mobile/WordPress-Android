@@ -89,7 +89,7 @@ class BloggingPromptCardViewHolder(
                         context.getColorStateListFromAttributeOrRes(it.labelColor)
                     )
                     card.onViewAnswersClick?.let { onClick ->
-                        setOnClickListener { onClick(card.promptId) }
+                        setOnClickListener { onClick(card.tagUrl) }
                     }
                 }
                 ?: run {

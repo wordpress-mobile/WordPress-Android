@@ -12,11 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,16 +36,17 @@ import androidx.compose.ui.zIndex
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.Empty
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.Error
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.PopulatedList
 import org.wordpress.android.ui.domains.management.composable.DomainsSearchTextField
+import org.wordpress.android.ui.domains.management.composable.PrimaryButton
 
 @Composable
 fun MyDomainsScreen(
     uiState: UiState,
+    onSearchQueryChanged: (String) -> Unit,
     onDomainTapped: (detailUrl: String) -> Unit,
     onAddDomainTapped: () -> Unit,
     onFindDomainTapped: () -> Unit,
@@ -87,12 +85,15 @@ fun MyDomainsScreen(
             MyDomainsSearchInput(
                 elevation.value,
                 queryString = queryString,
-                onQueryStringChanged = { queryString = it },
+                onQueryStringChanged = {
+                    queryString = it
+                    onSearchQueryChanged(it)
+                },
                 enabled = uiState is PopulatedList.Loaded,
             )
             when (uiState) {
                 is PopulatedList -> MyDomainsList(
-                    listUiState = uiState.filter(queryString),
+                    listUiState = uiState,
                     listState = listState,
                     onDomainTapped,
                 )
@@ -151,27 +152,6 @@ fun EmptyScreen(onFindDomainTapped: () -> Unit) {
     }
 }
 
-@Composable
-fun PrimaryButton(
-    onClick: () -> Unit,
-    text: String,
-    modifier: Modifier = Modifier,
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier,
-        shape = RoundedCornerShape(4.dp),
-        colors = ButtonDefaults.buttonColors(
-            contentColor = AppColor.White,
-        ),
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelLarge,
-        )
-    }
-}
-
 
 @Composable
 fun MyDomainsSearchInput(
@@ -211,8 +191,14 @@ fun MyDomainsList(
                     }
                 }
 
-            is PopulatedList.Loaded -> {
-                items(items = listUiState.domains) {
+            is PopulatedList.Loaded.Complete -> {
+                items(items = listUiState.allDomains) {
+                    DomainListCard(uiState = DomainCardUiState.fromDomain(domain = it), onDomainTapped)
+                }
+            }
+
+            is PopulatedList.Loaded.Filtered -> {
+                items(items = listUiState.filtered) {
                     DomainListCard(uiState = DomainCardUiState.fromDomain(domain = it), onDomainTapped)
                 }
             }
@@ -227,6 +213,7 @@ fun PreviewMyDomainsScreen() {
     M3Theme {
         MyDomainsScreen(
             uiState = PopulatedList.Initial,
+            onSearchQueryChanged = {},
             onAddDomainTapped = {},
             onDomainTapped = {},
             onFindDomainTapped = {},
@@ -242,6 +229,7 @@ fun PreviewMyDomainsScreenError() {
     M3Theme {
         MyDomainsScreen(
             uiState = Error,
+            onSearchQueryChanged = {},
             onAddDomainTapped = {},
             onDomainTapped = {},
             onFindDomainTapped = {},
@@ -257,6 +245,7 @@ fun PreviewMyDomainsScreenEmpty() {
     M3Theme {
         MyDomainsScreen(
             uiState = Empty,
+            onSearchQueryChanged = {},
             onAddDomainTapped = {},
             onDomainTapped = {},
             onFindDomainTapped = {},

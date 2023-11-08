@@ -6,8 +6,12 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
@@ -25,6 +29,8 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     @Assisted private val domain: String,
     @Assisted private val privacy: Boolean,
 ) : ScopedViewModel(mainDispatcher) {
+    private val _uiStateFlow = MutableStateFlow<UiState>(UiState.Initial)
+    val uiStateFlow = _uiStateFlow.asStateFlow()
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: Flow<ActionEvent> = _actionEvents
 
@@ -41,6 +47,12 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED)
         launch {
             _actionEvents.emit(ActionEvent.GoToSitePicker(domain = domain))
+        }
+    }
+
+    fun onErrorButtonTapped() {
+        launch {
+            _uiStateFlow.update { UiState.Initial }
         }
     }
 
@@ -61,7 +73,7 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     }
 
     private fun createCart(site: SiteModel?, productId: Int, domainName: String, supportsPrivacy: Boolean) = launch {
-        // TODO Show loading indicator
+        _uiStateFlow.update { if (site == null) UiState.SubmittingJustDomainCart else UiState.SubmittingSiteDomainCart }
 
         val event = createCartUseCase.execute(
             site,
@@ -71,17 +83,27 @@ class PurchaseDomainViewModel @AssistedInject constructor(
             false
         )
 
-        // TODO Hide loading indicator
-
         if (event.isError) {
-            // TODO Handle failed cart creation
+            _uiStateFlow.update { UiState.ErrorSubmittingCart }
         } else {
+            launch {
+                delay(loadingStateAnimationResetDelay)
+                _uiStateFlow.update { UiState.Initial }
+            }
             if (site != null) {
                 _actionEvents.emit(ActionEvent.GoToExistingSite(domain = domain, siteModel = site))
             } else {
                 _actionEvents.emit(ActionEvent.GoToDomainPurchasing(domain = domain))
             }
         }
+    }
+
+    sealed interface UiState {
+        object Initial : UiState
+        object SubmittingJustDomainCart : UiState
+        object SubmittingSiteDomainCart : UiState
+
+        object ErrorSubmittingCart : UiState
     }
 
     sealed class ActionEvent {
@@ -97,6 +119,8 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     }
 
     companion object {
+        const val loadingStateAnimationResetDelay = 1000L
+
         fun provideFactory(assistedFactory: Factory, productId: Int, domain: String, privacy: Boolean) =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
