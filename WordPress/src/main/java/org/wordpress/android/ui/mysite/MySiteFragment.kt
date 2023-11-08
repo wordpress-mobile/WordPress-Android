@@ -715,7 +715,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             action.activityId,
             action.isRewindable
         )
-        is SiteNavigationAction.TriggerCreatePageFlow -> Unit // no-op
+        is SiteNavigationAction.TriggerCreatePageFlow -> wpMainActivityViewModel.triggerCreatePageFlow()
         is SiteNavigationAction.OpenPagesDraftsTab -> ActivityLauncher.viewCurrentBlogPagesOfType(
             requireActivity(),
             action.site,
