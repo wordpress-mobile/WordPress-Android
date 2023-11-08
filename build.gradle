@@ -23,7 +23,7 @@ ext {
     gutenbergMobileVersion = 'v1.107.0'
     wordPressAztecVersion = 'v1.8.0'
     wordPressFluxCVersion = '2874-07fd32cc7c4c70a4be9cb059b92d4a99843cd982'
-    wordPressLoginVersion = '123-74518b442d1ff5bda14d43a7cca0dde75ddf151c'
+    wordPressLoginVersion = '123-b90eb4e918cffcf27bd98557c7a3d6a5e3367c97'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.10.0'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
