@@ -132,12 +132,11 @@ public class ThemeStore extends Store {
         UNKNOWN_THEME,
         MISSING_THEME;
 
-        public static ThemeErrorType fromString(String type) {
-            if (type != null) {
-                for (ThemeErrorType v : ThemeErrorType.values()) {
-                    if (type.equalsIgnoreCase(v.name())) {
-                        return v;
-                    }
+        @NonNull
+        public static ThemeErrorType fromString(@NonNull String type) {
+            for (ThemeErrorType v : ThemeErrorType.values()) {
+                if (type.equalsIgnoreCase(v.name())) {
+                    return v;
                 }
             }
             return GENERIC_ERROR;
@@ -146,15 +145,15 @@ public class ThemeStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class ThemesError implements OnChangedError {
-        public ThemeErrorType type;
-        public String message;
+        @NonNull public ThemeErrorType type;
+        @Nullable public String message;
 
-        public ThemesError(String type, String message) {
+        public ThemesError(@NonNull String type, @Nullable String message) {
             this.type = ThemeErrorType.fromString(type);
             this.message = message;
         }
 
-        public ThemesError(ThemeErrorType type) {
+        public ThemesError(@NonNull ThemeErrorType type) {
             this.type = type;
         }
     }

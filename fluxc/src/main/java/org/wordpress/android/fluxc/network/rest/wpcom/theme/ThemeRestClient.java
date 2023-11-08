@@ -137,8 +137,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
                 }, error -> {
                     AppLog.e(AppLog.T.API, "Received error response to WP.com themes fetch request.");
-                    ThemesError themeError = new ThemesError(
-                            error.apiError, error.message);
+                    ThemesError themeError = new ThemesError(error.apiError, error.message);
                     FetchedWpComThemesPayload payload = new FetchedWpComThemesPayload(themeError);
                     mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
                 }));
