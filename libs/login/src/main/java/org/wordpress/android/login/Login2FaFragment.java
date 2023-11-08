@@ -461,6 +461,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 mAnalyticsListener.trackLoginSecurityKeyFailure();
                 ToastUtils.showToast(getActivity(),
                         errorMessage == null ? getString(R.string.error_generic) : errorMessage);
+                break;
             default:
                 AppLog.e(T.NUX, "Server response: " + errorMessage);
                 mAnalyticsListener.trackFailure(errorMessage);
