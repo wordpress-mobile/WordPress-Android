@@ -47,15 +47,12 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private val bloggingPrompt = BloggingPromptModel(
         id = 123,
         text = PROMPT_TITLE,
-        title = "",
-        content = "<!-- wp:pullquote -->\n" +
-                "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
-                "<!-- /wp:pullquote -->",
         date = Date(),
         isAnswered = false,
         attribution = "dayone",
         respondentsCount = 5,
-        respondentsAvatarUrls = RESPONDENTS
+        respondentsAvatarUrls = RESPONDENTS,
+        answeredLink = "https://wordpress.com/tag/dailyprompt-123"
     )
 
     @Before
@@ -102,7 +99,7 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private val onAnswerClick: (promptId: Int) -> Unit = { }
     private val onSkipClick: () -> Unit = { }
     private val onViewMoreClick: () -> Unit = { }
-    private val onViewAnswersClick: (promptId: Int) -> Unit = { }
+    private val onViewAnswersClick: (tagUrl: String) -> Unit = { }
     private val onRemoveClick: () -> Unit = { }
 
     private fun bloggingPromptCard(
@@ -112,6 +109,7 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
         numberOfAnswers = NUMBER_OF_RESPONDENTS,
         false,
         promptId = 123,
+        tagUrl = "https://wordpress.com/tag/dailyprompt-123",
         attribution = BloggingPromptAttribution.DAY_ONE,
         onShareClick = onShareClick,
         onAnswerClick = onAnswerClick,

@@ -5,6 +5,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.launch
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -61,9 +63,12 @@ class PurchaseDomainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             M3Theme {
+                val uiState by viewModel.uiStateFlow.collectAsState()
                 PurchaseDomainScreen(
+                    uiState = uiState,
                     onNewDomainCardSelected = viewModel::onNewDomainSelected,
                     onExistingSiteCardSelected = viewModel::onExistingSiteSelected,
+                    onErrorButtonTapped = viewModel::onErrorButtonTapped,
                     onBackPressed = viewModel::onBackPressed,
                 )
             }
