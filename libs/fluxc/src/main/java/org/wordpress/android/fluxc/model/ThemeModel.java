@@ -13,7 +13,6 @@ import org.wordpress.android.util.StringUtils;
 import java.io.Serializable;
 
 @Table
-@SuppressWarnings("NotNullFieldNotInitialized")
 public class ThemeModel implements Identifiable, Serializable {
     private static final long serialVersionUID = 5966516212440517166L;
 
@@ -33,7 +32,7 @@ public class ThemeModel implements Identifiable, Serializable {
     @Nullable @Column private String mDownloadUrl;
     @Nullable @Column private String mStylesheet;
     @Nullable @Column private String mPriceText;
-    @Column private boolean mFree = true;
+    @Column private boolean mFree;
     @Nullable @Column private String mMobileFriendlyCategorySlug;
     @Column private boolean mActive;
     @Column private boolean mAutoUpdate;
@@ -41,6 +40,96 @@ public class ThemeModel implements Identifiable, Serializable {
 
     // local use only
     @Column private boolean mIsWpComTheme;
+
+    @Deprecated
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    public ThemeModel() {
+        this.mId = 0;
+        this.mLocalSiteId = 0;
+        this.mThemeId = "";
+        this.mName = "";
+        this.mDescription = "";
+        this.mSlug = null;
+        this.mVersion = null;
+        this.mAuthorName = null;
+        this.mAuthorUrl = null;
+        this.mThemeUrl = null;
+        this.mScreenshotUrl = "";
+        this.mDemoUrl = null;
+        this.mDownloadUrl = null;
+        this.mStylesheet = null;
+        this.mPriceText = null;
+        this.mFree = true;
+        this.mMobileFriendlyCategorySlug = null;
+        this.mActive = false;
+        this.mAutoUpdate = false;
+        this.mAutoUpdateTranslation = false;
+        this.mIsWpComTheme = false;
+    }
+
+    /**
+     * Use when creating a WP.com theme.
+     */
+    public ThemeModel(
+            @NonNull String themeId,
+            @NonNull String name,
+            @NonNull String description,
+            @Nullable String slug,
+            @Nullable String version,
+            @Nullable String authorName,
+            @Nullable String authorUrl,
+            @Nullable String themeUrl,
+            @NonNull String screenshotUrl,
+            @Nullable String demoUrl,
+            @Nullable String downloadUrl,
+            @Nullable String stylesheet,
+            @Nullable String priceText,
+            boolean free,
+            @Nullable String mobileFriendlyCategorySlug) {
+        this.mThemeId = themeId;
+        this.mName = name;
+        this.mDescription = description;
+        this.mSlug = slug;
+        this.mVersion = version;
+        this.mAuthorName = authorName;
+        this.mAuthorUrl = authorUrl;
+        this.mThemeUrl = themeUrl;
+        this.mScreenshotUrl = screenshotUrl;
+        this.mDemoUrl = demoUrl;
+        this.mDownloadUrl = downloadUrl;
+        this.mStylesheet = stylesheet;
+        this.mPriceText = priceText;
+        this.mFree = free;
+        this.mMobileFriendlyCategorySlug = mobileFriendlyCategorySlug;
+    }
+
+    /**
+     * Use when creating a Jetpack theme.
+     */
+    public ThemeModel(
+            @NonNull String themeId,
+            @NonNull String name,
+            @NonNull String description,
+            @Nullable String version,
+            @Nullable String authorName,
+            @Nullable String authorUrl,
+            @Nullable String themeUrl,
+            @NonNull String screenshotUrl,
+            boolean active,
+            boolean autoUpdate,
+            boolean autoUpdateTranslation) {
+        this.mThemeId = themeId;
+        this.mName = name;
+        this.mDescription = description;
+        this.mVersion = version;
+        this.mAuthorName = authorName;
+        this.mAuthorUrl = authorUrl;
+        this.mThemeUrl = themeUrl;
+        this.mScreenshotUrl = screenshotUrl;
+        this.mActive = active;
+        this.mAutoUpdate = autoUpdate;
+        this.mAutoUpdateTranslation = autoUpdateTranslation;
+    }
 
     @Override
     public int getId() {

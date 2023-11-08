@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.JetpackThemeResponse.JetpackThemeListResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.WPComThemeListResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.WPComThemeMobileFriendlyTaxonomy;
+import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.WPComThemeTaxonomies;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedSiteThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedStarterDesignsPayload;
@@ -224,30 +225,36 @@ public class ThemeRestClient extends BaseWPComRestClient {
 
     @NonNull
     private static ThemeModel createThemeFromWPComResponse(@NonNull WPComThemeResponse response) {
-        ThemeModel theme = new ThemeModel();
-        theme.setThemeId(response.id);
-        theme.setSlug(response.slug);
-        theme.setStylesheet(response.stylesheet);
-        theme.setName(response.name);
-        theme.setAuthorName(response.author);
-        theme.setAuthorUrl(response.author_uri);
-        theme.setThemeUrl(response.theme_uri);
-        theme.setDemoUrl(response.demo_uri);
-        theme.setVersion(response.version);
-        theme.setScreenshotUrl(response.screenshot);
-        theme.setDescription(response.description);
-        theme.setDownloadUrl(response.download_uri);
-        if (TextUtils.isEmpty(response.price)) {
-            theme.setFree(true);
-        } else {
-            theme.setFree(false);
-            theme.setPriceText(response.price);
+        boolean free = TextUtils.isEmpty(response.price);
+        String priceText = null;
+        if (!free) {
+            priceText = response.price;
         }
+        return new ThemeModel(
+                response.id,
+                response.name,
+                response.description,
+                response.slug,
+                response.version,
+                response.author,
+                response.author_uri,
+                response.theme_uri,
+                response.screenshot,
+                response.demo_uri,
+                response.download_uri,
+                response.stylesheet,
+                priceText,
+                free,
+                getMobileFriendlyCategorySlug(response.taxonomies)
+        );
+    }
 
+    @Nullable
+    private static String getMobileFriendlyCategorySlug(@Nullable WPComThemeTaxonomies taxonomies) {
         // detect the mobile-friendly category slug if there
-        if (response.taxonomies != null && response.taxonomies.theme_mobile_friendly != null) {
+        if (taxonomies != null && taxonomies.theme_mobile_friendly != null) {
             String category = null;
-            for (WPComThemeMobileFriendlyTaxonomy taxonomy : response.taxonomies.theme_mobile_friendly) {
+            for (WPComThemeMobileFriendlyTaxonomy taxonomy : taxonomies.theme_mobile_friendly) {
                 // The server response has two taxonomies defined here. One is named "mobile-friendly" and the other is
                 //  a more specific category the theme belongs to. We're only interested in the specific one here so,
                 //  ignore the "mobile-friendly" one.
@@ -260,34 +267,31 @@ public class ThemeRestClient extends BaseWPComRestClient {
                 // we got the category slug so, no need to continue looping
                 break;
             }
-            theme.setMobileFriendlyCategorySlug(category);
+            return category;
         }
-
-        return theme;
+        return null;
     }
 
     @NonNull
     private static ThemeModel createThemeFromJetpackResponse(@NonNull JetpackThemeResponse response) {
-        ThemeModel theme = new ThemeModel();
-        theme.setThemeId(response.id);
-        theme.setName(response.name);
-        theme.setThemeUrl(response.theme_uri);
-        theme.setDescription(response.description);
-        theme.setAuthorName(response.author);
-        theme.setAuthorUrl(response.author_uri);
-        theme.setVersion(response.version);
-        theme.setActive(response.active);
-        theme.setAutoUpdate(response.autoupdate);
-        theme.setAutoUpdateTranslation(response.autoupdate_translation);
-
         // the screenshot field in Jetpack responses does not contain a protocol so we'll prepend 'https'
         String screenshotUrl = response.screenshot;
         if (screenshotUrl.startsWith("//")) {
             screenshotUrl = "https:" + screenshotUrl;
         }
-        theme.setScreenshotUrl(screenshotUrl);
-
-        return theme;
+        return new ThemeModel(
+                response.id,
+                response.name,
+                response.description,
+                response.version,
+                response.author,
+                response.author_uri,
+                response.theme_uri,
+                screenshotUrl,
+                response.active,
+                response.autoupdate,
+                response.autoupdate_translation
+        );
     }
 
     @NonNull
