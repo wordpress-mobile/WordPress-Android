@@ -1,10 +1,7 @@
 package org.wordpress.android.ui.domains.management.purchasedomain
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.launch
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -21,9 +18,7 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToSitePicker
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingSite
 import org.wordpress.android.ui.domains.management.purchasedomain.composable.PurchaseDomainScreen
-import org.wordpress.android.ui.main.SitePickerActivity
-import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.main.SitePickerContract
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -44,29 +39,7 @@ class PurchaseDomainActivity : AppCompatActivity() {
 
     private val privacyArg: Boolean get() = intent.getBooleanExtra(PICKED_DOMAIN_PRIVACY, false)
 
-    private val chooseSite = registerForActivityResult(
-        object : ActivityResultContract<Unit, SiteModel?>() {
-            override fun createIntent(context: Context, input: Unit) =
-                Intent(context, SitePickerActivity::class.java).apply {
-                    putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, SitePickerMode.SIMPLE_MODE)
-                }
-
-            override fun parseResult(resultCode: Int, intent: Intent?) =
-                if (resultCode == RESULT_OK) {
-                    intent?.getIntExtra(
-                        SitePickerActivity.KEY_SITE_LOCAL_ID,
-                        SelectedSiteRepository.UNAVAILABLE,
-                    )?.let { siteLocalId ->
-                        siteStore.getSiteByLocalId(siteLocalId)
-                    }
-                } else {
-                    null
-                }
-        },
-        ::onSiteChosen,
-    )
-
-    private fun onSiteChosen(siteModel: SiteModel?) {
+    private val chooseSite = registerForActivityResult(SitePickerContract { siteStore }) { siteModel ->
         siteModel?.let {
             viewModel.onSiteChosen(it)
         }
