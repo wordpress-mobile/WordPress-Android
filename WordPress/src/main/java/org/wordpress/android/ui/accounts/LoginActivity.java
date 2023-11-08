@@ -636,7 +636,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override public void needs2faSecurityKey(String email, String password, String userId, String webauthnNonce) {
-        // adds tracking details here
+        mLoginAnalyticsListener.trackLoginSecurityKeyNeeded();
         Login2FaFragment login2FaFragment =
                 Login2FaFragment.newInstanceSecurityKey(email, password, userId, webauthnNonce);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
