@@ -26,6 +26,9 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoBack
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToDomainPurchasing
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToSitePicker
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.Initial
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.SubmittingJustDomainCart
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.SubmittingSiteDomainCart
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -58,6 +61,11 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `WHEN ViewModel initialized THEN the ui is set to the Initial state`() {
+        assertThat(viewModel.uiStateFlow.value).isEqualTo(Initial)
+    }
+
+    @Test
     fun `WHEN new domain selected THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED event`() {
         viewModel.onNewDomainSelected()
         verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED)
@@ -70,6 +78,15 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `WHEN new domain selected THEN the ui is set to the SubmittingJustDomainCart state`() = test {
+        assertThat(viewModel.uiStateFlow.value).isEqualTo(Initial)
+        viewModel.onNewDomainSelected()
+        assertThat(viewModel.uiStateFlow.value).isEqualTo(SubmittingJustDomainCart)
+        advanceUntilIdle()
+        assertThat(viewModel.uiStateFlow.value).isEqualTo(Initial)
+    }
+
+    @Test
     fun `WHEN a site is chosen THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN event`() {
         viewModel.onSiteChosen(testSite)
         verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN)
@@ -79,6 +96,15 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     fun `WHEN a site is chosen THEN the cart is submitted with the selected domain`() = test {
         viewModel.onSiteChosen(testSite)
         verify(createCartUseCase, atLeastOnce()).execute(testSite, productId, domain, supportsPrivacy, false, null)
+    }
+
+    @Test
+    fun `WHEN a site is chosen THEN the ui is set to the SubmittingSiteDomainCart state`() = test {
+        assertThat(viewModel.uiStateFlow.value).isEqualTo(Initial)
+        viewModel.onSiteChosen(testSite)
+        assertThat(viewModel.uiStateFlow.value).isEqualTo(SubmittingSiteDomainCart)
+        advanceUntilIdle()
+        assertThat(viewModel.uiStateFlow.value).isEqualTo(Initial)
     }
 
     @Test

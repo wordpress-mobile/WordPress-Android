@@ -12,11 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,12 +36,12 @@ import androidx.compose.ui.zIndex
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.Empty
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.Error
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.PopulatedList
 import org.wordpress.android.ui.domains.management.composable.DomainsSearchTextField
+import org.wordpress.android.ui.domains.management.composable.PrimaryButton
 
 @Composable
 fun MyDomainsScreen(
@@ -147,27 +144,6 @@ fun EmptyScreen(onFindDomainTapped: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-        )
-    }
-}
-
-@Composable
-fun PrimaryButton(
-    onClick: () -> Unit,
-    text: String,
-    modifier: Modifier = Modifier,
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier,
-        shape = RoundedCornerShape(4.dp),
-        colors = ButtonDefaults.buttonColors(
-            contentColor = AppColor.White,
-        ),
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelLarge,
         )
     }
 }
