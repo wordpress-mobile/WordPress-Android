@@ -253,6 +253,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         mSitePickerMode = sitePickerMode;
 
+        if (sitePickerMode == SitePickerMode.SIMPLE_MODE) {
+            mShowSelfHostedSites = false;
+        }
+
         mShowHiddenSites = isInEditMode; // If site picker is in edit mode, show hidden sites.
 
         mShowAndReturn = showAndReturn;
