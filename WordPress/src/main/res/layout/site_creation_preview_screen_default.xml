@@ -16,24 +16,39 @@
         android:layout_marginHorizontal="@dimen/margin_extra_large"
         android:layout_marginVertical="@dimen/margin_large" />
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/sitePreviewCaption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/site_creation_preview_header_item"
+        android:layout_marginHorizontal="@dimen/margin_extra_large"
+        app:cardBackgroundColor="@color/dashboard_card_plans_info_background"
+        app:cardCornerRadius="8dp">
+
+        <TextView
+            android:id="@+id/sitePreviewCaptionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/margin_extra_large"
+            android:padding="@dimen/margin_extra_large"
+            android:text="@string/new_site_creation_preview_caption_paid"
+            android:textAlignment="viewStart"
+            android:textColor="@color/dashboard_card_plans_info_text_color"
+            android:textSize="@dimen/text_sz_small"
+            app:drawableStartCompat="@drawable/ic_info_outline_grey_dark_24dp"
+            app:drawableTint="@color/gray_20" />
+
+    </com.google.android.material.card.MaterialCardView>
+
     <include
         android:id="@+id/site_creation_preview_web_view_container"
         layout="@layout/site_creation_preview_web_view_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/sitePreviewCaption"
-        android:layout_below="@id/site_creation_preview_header_item"
-        android:layout_marginHorizontal="@dimen/margin_extra_large" />
-
-    <TextView
-        android:id="@+id/sitePreviewCaption"
-        style="@style/SiteCreationHeaderV2Subtitle"
-        android:layout_above="@+id/sitePreviewOkButtonContainer"
-        android:lineSpacingExtra="@null"
+        android:layout_above="@id/sitePreviewOkButtonContainer"
+        android:layout_below="@id/sitePreviewCaption"
         android:layout_marginHorizontal="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_large"
-        android:paddingBottom="@null"
-        android:text="@string/new_site_creation_preview_caption_paid" />
+        android:layout_marginTop="@dimen/margin_large" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/sitePreviewOkButtonContainer"
