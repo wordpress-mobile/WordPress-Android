@@ -2998,7 +2998,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
             int postId = getImmutablePost().getId();
             for (int localId : localIds) {
                 MediaModel media = mMediaStore.getMediaWithLocalId(localId);
-                mFeaturedImageHelper.queueFeaturedImageForUpload(postId, media);
+                if (media != null) {
+                    mFeaturedImageHelper.queueFeaturedImageForUpload(postId, media);
+                }
             }
             if (mEditPostSettingsFragment != null) {
                 mEditPostSettingsFragment.refreshViews();
