@@ -42,12 +42,16 @@ class DomainManagementViewModel @Inject constructor(
     init {
         analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN)
         launch {
-            fetchAllDomainsUseCase.execute().let {
-                _uiStateFlow.value = when (it) {
-                    AllDomains.Empty -> UiState.Empty
-                    AllDomains.Error -> UiState.Error
-                    is AllDomains.Success -> UiState.PopulatedList.Loaded(it.domains)
-                }
+            fetchAllDomains()
+        }
+    }
+
+    private suspend fun fetchAllDomains() {
+        fetchAllDomainsUseCase.execute().let {
+            _uiStateFlow.value = when (it) {
+                AllDomains.Empty -> UiState.Empty
+                AllDomains.Error -> UiState.Error
+                is AllDomains.Success -> UiState.PopulatedList.Loaded(it.domains)
             }
         }
     }
@@ -69,6 +73,13 @@ class DomainManagementViewModel @Inject constructor(
     fun onBackTapped() {
         launch {
             _actionEvents.emit(ActionEvent.NavigateBackTapped)
+        }
+    }
+
+    fun onRefresh() {
+        launch {
+            _uiStateFlow.value = UiState.PopulatedList.Initial
+            fetchAllDomains()
         }
     }
 

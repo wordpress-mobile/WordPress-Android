@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
@@ -17,26 +16,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ErrorScreen() {
+fun ErrorScreen(onRefresh: () -> Unit) {
     val refreshScope = rememberCoroutineScope()
-    var refreshing by remember { mutableStateOf(false) }
-    val refreshState = rememberPullRefreshState(refreshing, onRefresh = {
-        refreshScope.launch {
-            refreshing = true
-            delay(1000)
-            refreshing = false
-        }
-    })
+    val isRefreshing by remember { mutableStateOf(false) }
+    val refreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = { refreshScope.launch { onRefresh() } },
+    )
 
     Box(Modifier.pullRefresh(refreshState)) {
         Column(
@@ -57,6 +51,5 @@ fun ErrorScreen() {
                 color = MaterialTheme.colorScheme.outline,
             )
         }
-        PullRefreshIndicator(refreshing, refreshState, Modifier.align(Alignment.TopCenter))
     }
 }

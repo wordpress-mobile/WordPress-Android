@@ -53,6 +53,7 @@ fun MyDomainsScreen(
     onAddDomainTapped: () -> Unit,
     onFindDomainTapped: () -> Unit,
     onBackTapped: () -> Unit,
+    onRefresh: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -97,7 +98,7 @@ fun MyDomainsScreen(
                     onDomainTapped,
                 )
 
-                Error -> ErrorScreen()
+                Error -> ErrorScreen(onRefresh)
                 Empty -> EmptyScreen(onFindDomainTapped)
             }
         }
@@ -212,7 +213,8 @@ fun PreviewMyDomainsScreen() {
             onAddDomainTapped = {},
             onDomainTapped = {},
             onFindDomainTapped = {},
-            onBackTapped = {}
+            onBackTapped = {},
+            onRefresh = {},
         )
     }
 }
@@ -227,7 +229,8 @@ fun PreviewMyDomainsScreenError() {
             onAddDomainTapped = {},
             onDomainTapped = {},
             onFindDomainTapped = {},
-            onBackTapped = {}
+            onBackTapped = {},
+            onRefresh = {},
         )
     }
 }
@@ -242,7 +245,8 @@ fun PreviewMyDomainsScreenEmpty() {
             onAddDomainTapped = {},
             onDomainTapped = {},
             onFindDomainTapped = {},
-            onBackTapped = {}
+            onBackTapped = {},
+            onRefresh = {},
         )
     }
 }
