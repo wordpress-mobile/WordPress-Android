@@ -18,7 +18,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -35,6 +34,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.text.Message
 import org.wordpress.android.ui.compose.components.text.Subtitle
 import org.wordpress.android.ui.compose.components.text.Title
+import org.wordpress.android.ui.compose.modifiers.conditionalThen
 import org.wordpress.android.ui.compose.modifiers.disableUserScroll
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.utils.uiStringText
@@ -46,15 +46,15 @@ import org.wordpress.android.ui.main.jetpack.migration.compose.dimmed
 fun SiteList(
     uiState: UiState.Content.Welcome,
     listState: LazyListState,
-    userScrollEnabled: Boolean = true,
-    bottomPaddingPx: Int = 0,
     modifier: Modifier = Modifier,
     blurModifier: Modifier = Modifier,
+    userScrollEnabled: Boolean = true,
+    bottomPaddingPx: Int = 0,
 ) {
     LazyColumn(
         state = listState,
         modifier = modifier
-            .composed { if (userScrollEnabled) this else disableUserScroll() }
+            .conditionalThen(!userScrollEnabled, Modifier.disableUserScroll())
             .background(MaterialTheme.colors.background)
             .fillMaxHeight()
             .then(blurModifier),
