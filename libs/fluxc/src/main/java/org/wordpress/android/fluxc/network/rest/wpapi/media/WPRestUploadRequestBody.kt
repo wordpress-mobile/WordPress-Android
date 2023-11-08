@@ -39,18 +39,22 @@ class WPRestUploadRequestBody(
             }
         }
 
-        val mediaFile = File(media.filePath)
-        val body = mediaFile.asRequestBody(media.mimeType.toMediaType())
-        val fileName = URLEncoder.encode(media.fileName, "UTF-8")
-
         val builder: MultipartBody.Builder = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart(FILE_FORM_KEY, fileName, body)
                 .addParamIfNotEmpty(TITLE_FORM_KEY, media.title)
                 .addParamIfNotEmpty(DESCRIPTION_FORM_KEY, media.description)
                 .addParamIfNotEmpty(CAPTION_FORM_KEY, media.caption)
                 .addParamIfNotEmpty(ALT_FORM_KEY, media.alt)
                 .addParamIfNotEmpty(POST_ID_FORM_KEY, media.postId.takeIf { it > 0L }?.toString())
+
+        val filePath = media.filePath
+        val mimeType = media.mimeType
+        if (filePath != null && mimeType != null) {
+            val mediaFile = File(filePath)
+            val body = mediaFile.asRequestBody(mimeType.toMediaType())
+            val fileName = URLEncoder.encode(media.fileName, "UTF-8")
+            builder.addFormDataPart(FILE_FORM_KEY, fileName, body)
+        }
 
         return builder.build()
     }
