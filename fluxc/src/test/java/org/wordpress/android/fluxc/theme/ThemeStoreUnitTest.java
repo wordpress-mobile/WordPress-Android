@@ -169,7 +169,7 @@ public class ThemeStoreUnitTest {
     }
 
     private ThemeModel generateTestTheme(int siteId, String themeId, String themeName) {
-        ThemeModel theme = new ThemeModel();
+        @SuppressWarnings("deprecation") ThemeModel theme = new ThemeModel();
         theme.setLocalSiteId(siteId);
         theme.setThemeId(themeId);
         theme.setName(themeName);
