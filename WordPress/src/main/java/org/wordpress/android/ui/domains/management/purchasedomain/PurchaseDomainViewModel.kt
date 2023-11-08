@@ -60,6 +60,12 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         // TODO Handle domain registration complete
     }
 
+    private val SiteModel.shouldOfferPlans
+        get() = (isWPCom || isWPComAtomic) &&
+                hasFreePlan &&
+                isAdmin &&
+                !isWpForTeamsSite
+
     private fun createCart(site: SiteModel?, productId: Int, domainName: String, supportsPrivacy: Boolean) = launch {
         // TODO Show loading indicator
 
@@ -76,11 +82,14 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         if (event.isError) {
             // TODO Handle failed cart creation
         } else {
-            if (site != null) {
-                _actionEvents.emit(ActionEvent.GoToExistingSite(domain = domain, siteModel = site))
-            } else {
-                _actionEvents.emit(ActionEvent.GoToDomainPurchasing(domain = domain))
-            }
+            site?.also {
+                if (it.shouldOfferPlans) {
+                    _actionEvents.emit(ActionEvent.GoToExistingSitePlans(domain = domain, siteModel = site))
+                } else {
+                    _actionEvents.emit(ActionEvent.GoToExistingSiteCheckout(domain = domain, siteModel = site))
+                }
+            } ?:
+            _actionEvents.emit(ActionEvent.GoToDomainPurchasing(domain = domain))
         }
     }
 
@@ -88,7 +97,8 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         object GoBack : ActionEvent()
         data class GoToDomainPurchasing(val domain: String) : ActionEvent()
         data class GoToSitePicker(val domain: String) : ActionEvent()
-        data class GoToExistingSite(val domain: String, val siteModel: SiteModel) : ActionEvent()
+        data class GoToExistingSiteCheckout(val domain: String, val siteModel: SiteModel) : ActionEvent()
+        data class GoToExistingSitePlans(val domain: String, val siteModel: SiteModel) : ActionEvent()
     }
 
     @AssistedFactory

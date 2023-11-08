@@ -9,14 +9,14 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity
 import org.wordpress.android.ui.domains.management.M3Theme
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoBack
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToDomainPurchasing
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToSitePicker
-import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingSite
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingSiteCheckout
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingSitePlans
 import org.wordpress.android.ui.domains.management.purchasedomain.composable.PurchaseDomainScreen
 import org.wordpress.android.ui.main.SitePickerContract
 import javax.inject.Inject
@@ -51,6 +51,12 @@ class PurchaseDomainActivity : AppCompatActivity() {
         viewModel.onDomainRegistrationComplete(it)
     }
 
+    private val openPlans = registerForActivityResult(
+        DomainRegistrationCheckoutWebViewActivity.OpenPlans(),
+    ) {
+        viewModel.onDomainRegistrationComplete(it)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -80,9 +86,17 @@ class PurchaseDomainActivity : AppCompatActivity() {
                 )
             }
             is GoToSitePicker -> { chooseSite.launch() }
-            is GoToExistingSite -> {
+            is GoToExistingSiteCheckout -> {
                 openCheckout.launch(
                     DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails(
+                        actionEvent.siteModel,
+                        actionEvent.domain,
+                    )
+                )
+            }
+            is GoToExistingSitePlans -> {
+                openPlans.launch(
+                    DomainRegistrationCheckoutWebViewActivity.OpenPlans.PlanDetails(
                         actionEvent.siteModel,
                         actionEvent.domain,
                     )
