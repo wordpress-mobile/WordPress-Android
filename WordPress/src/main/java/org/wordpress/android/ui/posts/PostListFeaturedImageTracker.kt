@@ -31,15 +31,16 @@ class PostListFeaturedImageTracker(private val dispatcher: Dispatcher, private v
         featuredImageMap[featuredImageId]?.let { return it }
         mediaStore.getSiteMediaWithId(site, featuredImageId)?.let { media ->
             // This should be a pretty rare case, but some media seems to be missing url
-            return if (media.url != null) {
+            return if (media.url.isNotBlank()) {
                 featuredImageMap[featuredImageId] = media.url
                 media.url
             } else null
         }
         // Media is not in the Store, we need to download it
-        val mediaToDownload = MediaModel()
-        mediaToDownload.mediaId = featuredImageId
-        mediaToDownload.localSiteId = site.id
+        val mediaToDownload = MediaModel(
+            site.id,
+            featuredImageId
+        )
         val payload = MediaPayload(site, mediaToDownload)
         dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
         return null
