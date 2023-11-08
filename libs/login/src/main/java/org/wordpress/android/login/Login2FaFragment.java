@@ -290,6 +290,10 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         onCredentialsResultAvailable(result.getData());
+                    } else {
+                        String errorMessage = getString(R.string.notification_security_key_needed);
+                        endProgress();
+                        handleAuthError(AuthenticationErrorType.WEBAUTHN_FAILED, errorMessage);
                     }
                 });
     }
