@@ -506,6 +506,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
                         WPMediaUtils.advertiseImageOptimization(this, () -> handlePickerResult(data, resultCode));
+                    } else {
+                        handlePickerResult(data, resultCode);
                     }
                 }
                 break;

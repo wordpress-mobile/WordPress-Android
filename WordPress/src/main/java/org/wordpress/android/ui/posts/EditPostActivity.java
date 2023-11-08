@@ -2834,6 +2834,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.PHOTO_PICKER:
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
                         WPMediaUtils.advertiseImageOptimization(this, () -> handlePhotoPickerResult(data));
+                    } else {
+                        handlePhotoPickerResult(data);
                     }
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
