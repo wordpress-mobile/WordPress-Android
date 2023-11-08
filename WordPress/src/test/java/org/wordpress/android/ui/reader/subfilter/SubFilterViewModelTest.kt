@@ -237,10 +237,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
         verify(appPrefsWrapper, times(0)).setLastReaderKnownAccessTokenStatus(any())
 
         assertThat(viewModel.updateTagsAndSites.value!!.peekContent()).isEqualTo(
-            EnumSet.of(
-                UpdateTask.TAGS,
-                UpdateTask.FOLLOWED_BLOGS
-            )
+            EnumSet.of(UpdateTask.TAGS)
         )
 
         assertThat(viewModel.currentSubFilter.value).isInstanceOf(SiteAll::class.java)
@@ -258,10 +255,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
         verify(appPrefsWrapper, times(1)).setLastReaderKnownAccessTokenStatus(any())
 
         assertThat(viewModel.updateTagsAndSites.value!!.peekContent()).isEqualTo(
-            EnumSet.of(
-                UpdateTask.TAGS,
-                UpdateTask.FOLLOWED_BLOGS
-            )
+            EnumSet.of(UpdateTask.TAGS)
         )
 
         assertThat(viewModel.currentSubFilter.value).isInstanceOf(SiteAll::class.java)
