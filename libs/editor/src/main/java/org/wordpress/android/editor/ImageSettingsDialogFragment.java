@@ -96,6 +96,65 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     private boolean mPreviousHomeAsUpEnabled;
     private View mPreviousCustomView;
 
+    public static ImageSettingsDialogFragment newInstance(
+        int requestCode,
+        String src,
+        String title,
+        String caption,
+        String alt,
+        String align,
+        String urlLink,
+        int naturalWidth,
+        int dimenWidth,
+        @NonNull String maxWidth,
+        Boolean isImageFeatured,
+        Boolean isFeatured,
+        Boolean isAztecEnabled
+    ) throws JSONException {
+        JSONObject imageMeta = new JSONObject();
+        imageMeta.put(ATTR_SRC, src);
+        imageMeta.put(ATTR_TITLE, title);
+        imageMeta.put(ATTR_CAPTION, caption);
+        imageMeta.put(ATTR_ALT, alt);
+        imageMeta.put(ATTR_ALIGN, align);
+        imageMeta.put(ATTR_URL_LINK, urlLink);
+        imageMeta.put("naturalWidth", naturalWidth);
+        imageMeta.put(ATTR_DIMEN_WIDTH, dimenWidth);
+
+        return newInstance(requestCode, imageMeta, maxWidth, isImageFeatured, isFeatured, isAztecEnabled);
+    }
+
+    public static ImageSettingsDialogFragment newInstance(
+            int requestCode,
+            @NonNull JSONObject imageMeta,
+            @NonNull String maxWidth,
+            Boolean isImageFeatured,
+            Boolean isFeatured,
+            Boolean isAztecEnabled
+    ) {
+        return newInstance(requestCode, imageMeta.toString(), maxWidth, isImageFeatured, isFeatured, isAztecEnabled);
+    }
+
+    public static ImageSettingsDialogFragment newInstance(
+        int requestCode,
+        @NonNull String imageMeta,
+        @NonNull String maxWidth,
+        Boolean isImageFeatured,
+        Boolean isFeatured,
+        Boolean isAztecEnabled
+    ) {
+        ImageSettingsDialogFragment imageSettingsDialogFragment = new ImageSettingsDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(ARG_REQUEST_CODE_KEY, requestCode);
+        bundle.putString(EXTRA_IMAGE_META, imageMeta);
+        bundle.putString(EXTRA_MAX_WIDTH, maxWidth);
+        bundle.putBoolean(EXTRA_IMAGE_FEATURED, isImageFeatured);
+        bundle.putBoolean(EXTRA_FEATURED, isFeatured);
+        bundle.putBoolean(EXTRA_ENABLED_AZTEC, isAztecEnabled);
+        imageSettingsDialogFragment.setArguments(bundle);
+        return imageSettingsDialogFragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
