@@ -148,11 +148,7 @@ public class WPMediaUtils {
                         Collections.singletonMap("option", propertyValue));
 
                 if (which == DialogInterface.BUTTON_NEGATIVE) {
-                    if (!AppPrefs.isImageOptimize()) {
-                        // null or image optimization already OFF. We should not be here though.
-                    } else {
-                        AppPrefs.setImageOptimize(false);
-                    }
+                    if (AppPrefs.isImageOptimize()) AppPrefs.setImageOptimize(false);
                 }
 
                 listener.done();
