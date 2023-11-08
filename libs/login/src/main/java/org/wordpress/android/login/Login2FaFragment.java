@@ -291,9 +291,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         onCredentialsResultAvailable(result.getData());
                     } else {
-                        String errorMessage = getString(R.string.login_error_security_key);
-                        endProgress();
-                        handleAuthError(AuthenticationErrorType.WEBAUTHN_FAILED, errorMessage);
+                        handleWebauthnError();
                     }
                 });
     }
@@ -634,9 +632,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         if (resultData.hasExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA)) {
             byte[] credentialBytes = resultData.getByteArrayExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA);
             if (credentialBytes == null || mPasskeyCredentialsHandler == null) {
-                endProgress();
-                handleAuthError(AuthenticationErrorType.WEBAUTHN_FAILED,
-                        getString(R.string.login_error_security_key));
+                handleWebauthnError();
                 return;
             }
 
@@ -659,5 +655,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         }
         mAnalyticsListener.trackLoginSecurityKeySuccess();
         doFinishLogin();
+    }
+
+    private void handleWebauthnError() {
+        String errorMessage = getString(R.string.login_error_security_key);
+        endProgress();
+        handleAuthError(AuthenticationErrorType.WEBAUTHN_FAILED, errorMessage);
     }
 }
