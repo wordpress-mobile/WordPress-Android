@@ -48,7 +48,7 @@ class PurchaseDomainActivity : AppCompatActivity() {
         object : ActivityResultContract<Unit, SiteModel?>() {
             override fun createIntent(context: Context, input: Unit) =
                 Intent(context, SitePickerActivity::class.java).apply {
-                    putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, SitePickerMode.DEFAULT_MODE)
+                    putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, SitePickerMode.SIMPLE_MODE)
                 }
 
             override fun parseResult(resultCode: Int, intent: Intent?) =
