@@ -82,6 +82,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return this == REBLOG_SELECT_MODE || this == REBLOG_CONTINUE_MODE;
         }
 
+        public boolean isSimpleMode() {
+            return this == SIMPLE_MODE;
+        }
+
         public boolean isBloggingPromptsMode() {
             return this == BLOGGING_PROMPTS_MODE;
         }
@@ -345,7 +349,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 DisplayUtils.dpToPx(holder.itemView.getContext(), 4));
 
         if ((site.mLocalId == mCurrentLocalId && !mIsMultiSelectEnabled
-             && mSitePickerMode == SitePickerMode.DEFAULT_MODE)
+             && (mSitePickerMode == SitePickerMode.DEFAULT_MODE || mSitePickerMode.isSimpleMode()))
             || (mIsMultiSelectEnabled && isItemSelected(position))
             || (mSitePickerMode == SitePickerMode.REBLOG_CONTINUE_MODE && mSelectedLocalId == site.mLocalId)) {
             holder.mLayoutContainer.setBackgroundColor(mSelectedItemBackground);
@@ -695,7 +699,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public List<SiteModel> getBlogsForCurrentView() {
-        if (mSitePickerMode.isReblogMode() || mSitePickerMode.isBloggingPromptsMode()) {
+        if (mSitePickerMode.isReblogMode() || mSitePickerMode.isBloggingPromptsMode()
+            || mSitePickerMode.isSimpleMode()) {
             // If we are reblogging we only want to select or search into the WPCom visible sites.
             return mSiteStore.getVisibleSitesAccessedViaWPCom();
         } else if (mIsInSearchMode) {

@@ -162,7 +162,10 @@ public class SitePickerActivity extends LocaleAwareActivity
                 unitEvent -> unitEvent.applyIfNotHandled(action -> {
                     switch (action.getActionType()) {
                         case NAVIGATE_TO_STATE:
-                            if (!(mSitePickerMode != null && mSitePickerMode.isReblogMode())) break;
+                            if (!(mSitePickerMode != null
+                                  && (mSitePickerMode.isReblogMode() || mSitePickerMode.isSimpleMode()))) {
+                                break;
+                            }
                             switch (((NavigateToState) action).getNavigateState()) {
                                 case TO_SITE_SELECTED:
                                     mSitePickerMode = SitePickerMode.REBLOG_CONTINUE_MODE;
@@ -186,7 +189,10 @@ public class SitePickerActivity extends LocaleAwareActivity
                             }
                             break;
                         case CONTINUE_REBLOG_TO:
-                            if (!(mSitePickerMode != null && mSitePickerMode.isReblogMode())) break;
+                            if (!(mSitePickerMode != null && (mSitePickerMode.isReblogMode()
+                                                              || mSitePickerMode.isSimpleMode()))) {
+                                break;
+                            }
                             SiteRecord siteToReblog = ((ContinueReblogTo) action).getSiteForReblog();
                             if (siteToReblog != null) selectSiteAndFinish(siteToReblog);
                             break;
@@ -273,6 +279,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         if (getAdapter().getIsInSearchMode()
             || mSitePickerMode == null
             || mSitePickerMode.isReblogMode()
+            || mSitePickerMode.isSimpleMode()
             || mSitePickerMode.isBloggingPromptsMode()) {
             mMenuEdit.setVisible(false);
             mMenuAdd.setVisible(false);
