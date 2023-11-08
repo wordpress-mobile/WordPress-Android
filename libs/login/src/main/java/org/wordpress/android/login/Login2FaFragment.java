@@ -457,6 +457,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 break;
             case INVALID_REQUEST:
                 // TODO: FluxC: could be specific?
+            case WEBAUTHN_FAILED:
+                mAnalyticsListener.trackLoginSecurityKeyFailure();
             default:
                 AppLog.e(T.NUX, "Server response: " + errorMessage);
                 mAnalyticsListener.trackFailure(errorMessage);
@@ -590,6 +592,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     }
 
     private void doAuthWithSecurityKeyAction() {
+        mAnalyticsListener.trackUseSecurityKeyClicked();
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
@@ -645,6 +648,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             handleAuthError(event.error.type, event.error.message);
             return;
         }
+        mAnalyticsListener.trackLoginSecurityKeySuccess();
         doFinishLogin();
     }
 }
