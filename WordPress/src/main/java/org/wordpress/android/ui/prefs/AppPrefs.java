@@ -776,7 +776,7 @@ public class AppPrefs {
     }
 
     public static int getImageOptimizeQuality() {
-        int quality = getInt(DeletablePrefKey.IMAGE_OPTIMIZE_QUALITY, 1);
+        int quality = getInt(DeletablePrefKey.IMAGE_OPTIMIZE_QUALITY, 0);
         return quality > 1 ? quality : WPMediaUtils.OPTIMIZE_IMAGE_ENCODER_QUALITY;
     }
 
