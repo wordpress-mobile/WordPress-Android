@@ -89,6 +89,7 @@ class PurchaseDomainActivity : AppCompatActivity() {
                     uiState = uiState,
                     onNewDomainCardSelected = viewModel::onNewDomainSelected,
                     onExistingSiteCardSelected = viewModel::onExistingSiteSelected,
+                    onErrorButtonTapped = viewModel::onErrorButtonTapped,
                     onBackPressed = viewModel::onBackPressed,
                 )
             }

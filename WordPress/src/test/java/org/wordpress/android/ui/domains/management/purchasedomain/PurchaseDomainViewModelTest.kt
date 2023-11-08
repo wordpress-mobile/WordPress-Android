@@ -29,6 +29,7 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.Initial
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.SubmittingJustDomainCart
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.SubmittingSiteDomainCart
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.ErrorSubmittingCart
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -108,6 +109,23 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `WHEN an error occurs while submitting the cart THEN the ui is set to the ErrorSubmittingCart state`() = test {
+        mockCartError()
+        assertThat(viewModel.uiStateFlow.value).isEqualTo(Initial)
+        viewModel.onNewDomainSelected()
+        assertThat(viewModel.uiStateFlow.value).isEqualTo(ErrorSubmittingCart)
+    }
+
+
+    @Test
+    fun `WHEN the error button is tapped THEN the ui is set to the Initial state`() = test {
+        mockCartError()
+        viewModel.onNewDomainSelected()
+        viewModel.onErrorButtonTapped()
+        assertThat(viewModel.uiStateFlow.value).isEqualTo(Initial)
+    }
+
+    @Test
     fun `WHEN a site is chosen THEN send the GoToExistingSite action event`() = testWithActionEvents { events ->
         viewModel.onSiteChosen(testSite)
         advanceUntilIdle()
@@ -173,6 +191,19 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
         )
     }
 
+    private fun mockCartError() = test {
+        whenever(
+            createCartUseCase.execute(
+                null, productId, domain,
+                isDomainPrivacyEnabled = true,
+                isTemporary = false,
+                planProductId = null
+            )
+        ).thenReturn(
+            TransactionsStore.OnShoppingCartCreated(shoppingCartCreateError)
+        )
+    }
+
     private fun testWithActionEvents(block: suspend TestScope.(events: List<ActionEvent>) -> Unit) = test {
         val actionEvents = mutableListOf<ActionEvent>()
         val job = launch { viewModel.actionEvents.toList(actionEvents) }
@@ -190,5 +221,9 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
         private const val supportsPrivacy = true
         private val testSite = SiteModel().also { it.siteId = siteId }
         private val testProduct = Product(productId, domain, Extra(privacy = true))
+        private val shoppingCartCreateError = TransactionsStore.CreateShoppingCartError(
+            TransactionsStore.CreateCartErrorType.GENERIC_ERROR,
+            "Error Creating Cart"
+        )
     }
 }
