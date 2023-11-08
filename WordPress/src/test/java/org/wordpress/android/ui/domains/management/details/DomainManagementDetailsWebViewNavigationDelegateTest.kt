@@ -4,6 +4,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.ui.utils.AbstractAllowedUrlsWebViewNavigationDelegate.Url
 
 @ExperimentalCoroutinesApi
 class DomainManagementDetailsWebViewNavigationDelegateTest : BaseUnitTest() {
@@ -46,8 +47,7 @@ class DomainManagementDetailsWebViewNavigationDelegateTest : BaseUnitTest() {
     }
 
     companion object {
-        private fun buildUrls(vararg paths: String, host: String = "wordpress.com") = paths.toList().map {
-            DomainManagementDetailsWebViewNavigationDelegate.Url(host, it)
-        }
+        private fun buildUrls(vararg paths: String, host: String = "wordpress.com") =
+            paths.toList().map { Url(host, it) }
     }
 }
