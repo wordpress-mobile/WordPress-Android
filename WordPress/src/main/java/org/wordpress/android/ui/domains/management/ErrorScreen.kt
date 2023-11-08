@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
@@ -51,5 +52,6 @@ fun ErrorScreen(onRefresh: () -> Unit) {
                 color = MaterialTheme.colorScheme.outline,
             )
         }
+        PullRefreshIndicator(isRefreshing, refreshState, Modifier.align(Alignment.TopCenter))
     }
 }
