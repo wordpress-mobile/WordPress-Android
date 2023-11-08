@@ -46,8 +46,8 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
     public static final String REST_AUTHORIZATION_FORMAT = "Bearer %s";
 
     public static class WPComGsonNetworkError extends BaseNetworkError {
-        public String apiError;
-        public WPComGsonNetworkError(BaseNetworkError error) {
+        @NonNull public String apiError;
+        public WPComGsonNetworkError(@NonNull BaseNetworkError error) {
             super(error);
             this.apiError = "";
         }
