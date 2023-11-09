@@ -7,9 +7,9 @@ import javax.inject.Inject
 class BloggingPromptsCardAnalyticsTracker @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) {
-    fun trackMySiteCardAnswerPromptClicked() = analyticsTracker.track(
+    fun trackMySiteCardAnswerPromptClicked(attribution: String?) = analyticsTracker.track(
         Stat.BLOGGING_PROMPTS_MY_SITE_CARD_ANSWER_PROMPT_CLICKED,
-        emptyMap()
+        mapOf("attribution" to attribution).filterValues { !it.isNullOrBlank() }
     )
 
     fun trackMySiteCardShareClicked() = analyticsTracker.track(
@@ -57,8 +57,8 @@ class BloggingPromptsCardAnalyticsTracker @Inject constructor(
         emptyMap()
     )
 
-    fun trackMySiteCardViewed() = analyticsTracker.track(
+    fun trackMySiteCardViewed(attribution: String?) = analyticsTracker.track(
         Stat.BLOGGING_PROMPTS_MY_SITE_CARD_VIEWED,
-        emptyMap()
+        mapOf("attribution" to attribution).filterValues { !it.isNullOrBlank() }
     )
 }
