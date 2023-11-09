@@ -170,7 +170,10 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     }
 
     @SuppressWarnings("deprecation")
-    private void configureCardView(ThemeViewHolder themeViewHolder, boolean isCurrent) {
+    private void configureCardView(
+            @NonNull ThemeViewHolder themeViewHolder,
+            boolean isCurrent
+    ) {
         if (isCurrent) {
             ColorStateList color = ContextExtensionsKt.getColorStateListFromAttribute(
                     mContext,
@@ -201,7 +204,7 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     }
 
     private void configureImageView(
-            ThemeViewHolder themeViewHolder,
+            @NonNull ThemeViewHolder themeViewHolder,
             @NonNull String screenshotURL,
             @NonNull final String themeId,
             final boolean isCurrent
@@ -235,7 +238,7 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     }
 
     private void configureImageButton(
-            ThemeViewHolder themeViewHolder,
+            @NonNull ThemeViewHolder themeViewHolder,
             @NonNull final String themeId,
             final boolean isPremium,
             boolean isCurrent
