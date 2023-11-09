@@ -52,6 +52,7 @@ private val PROMPT_ONE = BloggingPromptResponse(
     respondentsAvatars = emptyList(),
     answeredLink = ANSWERED_LINK_PREFIX + "1010",
     answeredLinkText = "View all responses",
+    bloganuaryId = "bloganuary-2022-04",
 )
 
 private val PROMPT_TWO = BloggingPromptResponse(

@@ -31,7 +31,7 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.JetpackSocialEntity
 
 @Database(
-        version = 22,
+        version = 23,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -54,6 +54,7 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.Je
             AutoMigration(from = 13, to = 14),
             AutoMigration(from = 16, to = 17),
             AutoMigration(from = 17, to = 18),
+            AutoMigration(from = 22, to = 23),
         ]
 )
 @TypeConverters(
