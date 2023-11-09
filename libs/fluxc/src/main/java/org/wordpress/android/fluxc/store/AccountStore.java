@@ -453,14 +453,14 @@ public class AccountStore extends Store {
         public String username;
     }
 
-    public static class OnSecurityKeyAuthStarted extends OnChanged<AuthenticationError> {
+    public static class OnTwoFactorAuthStarted extends OnChanged<AuthenticationError> {
         public final String userId;
         public final String webauthnNonce;
         public final String mBackupNonce;
         public final String authenticatorNonce;
         public final String pushNonce;
 
-        public OnSecurityKeyAuthStarted(TwoFactorResponse response) {
+        public OnTwoFactorAuthStarted(TwoFactorResponse response) {
             userId = response.mUserId;
             webauthnNonce = response.mWebauthnNonce;
             mBackupNonce = response.mBackupNonce;
@@ -1358,7 +1358,7 @@ public class AccountStore extends Store {
             emitChange(new OnAuthenticationChanged());
         } else if (response instanceof TwoFactorResponse) {
             TwoFactorResponse twoFactorResponse = (TwoFactorResponse) response;
-            OnSecurityKeyAuthStarted event = new OnSecurityKeyAuthStarted(twoFactorResponse);
+            OnTwoFactorAuthStarted event = new OnTwoFactorAuthStarted(twoFactorResponse);
             if (payload.nextAction != null) {
                 mDispatcher.dispatch(payload.nextAction);
             }
