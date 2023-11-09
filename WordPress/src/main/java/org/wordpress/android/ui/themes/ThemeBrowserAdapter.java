@@ -202,12 +202,16 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
 
     private void configureImageView(
             ThemeViewHolder themeViewHolder,
-            String screenshotURL,
+            @NonNull String screenshotURL,
             @NonNull final String themeId,
             final boolean isCurrent
     ) {
-        mImageManager.load(themeViewHolder.mImageView, ImageType.THEME, getUrlWithWidth(screenshotURL),
-                ScaleType.FIT_CENTER);
+        mImageManager.load(
+                themeViewHolder.mImageView,
+                ImageType.THEME,
+                getUrlWithWidth(screenshotURL),
+                ScaleType.FIT_CENTER
+        );
 
         themeViewHolder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,7 +225,8 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         });
     }
 
-    private String getUrlWithWidth(String screenshotURL) {
+    @NonNull
+    private String getUrlWithWidth(@NonNull String screenshotURL) {
         if (screenshotURL.contains("?")) {
             return screenshotURL + "&" + THEME_IMAGE_PARAMETER + mViewWidth;
         } else {
