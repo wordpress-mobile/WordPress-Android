@@ -96,7 +96,8 @@ public class ThemeSqlUtils {
                 .endWhere().getAsModel();
     }
 
-    public static List<ThemeModel> getWpComMobileFriendlyThemes(String categorySlug) {
+    @NonNull
+    public static List<ThemeModel> getWpComMobileFriendlyThemes(@NonNull String categorySlug) {
         return WellSql.select(ThemeModel.class)
                 .where()
                 .equals(ThemeModelTable.MOBILE_FRIENDLY_CATEGORY_SLUG, categorySlug)
