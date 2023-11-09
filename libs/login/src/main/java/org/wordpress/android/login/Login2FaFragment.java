@@ -136,16 +136,21 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         return fragment;
     }
 
-    public static Login2FaFragment newInstanceSecurityKey(String emailAddress, String password,
-                                                          String userId, String webauthnNonce) {
+    public static Login2FaFragment newInstance(String emailAddress, String password,
+                                               String userId, String webauthnNonce,
+                                               String authenticatorNonce, String backupNonce,
+                                               String smsNonce) {
+        boolean supportsWebauthn = webauthnNonce != null && !webauthnNonce.isEmpty();
         Login2FaFragment fragment = new Login2FaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
         args.putString(ARG_PASSWORD, password);
         args.putString(ARG_2FA_USER_ID, userId);
         args.putString(ARG_WEBAUTHN_NONCE, webauthnNonce);
-        args.putString(ARG_2FA_NONCE_AUTHENTICATOR, webauthnNonce);
-        args.putBoolean(ARG_DISPLAY_SECURITY_KEY_BUTTON, true);
+        args.putString(ARG_2FA_NONCE_AUTHENTICATOR, authenticatorNonce);
+        args.putString(ARG_2FA_NONCE_BACKUP, backupNonce);
+        args.putString(ARG_2FA_NONCE_SMS, smsNonce);
+        args.putBoolean(ARG_DISPLAY_SECURITY_KEY_BUTTON, supportsWebauthn);
         fragment.setArguments(args);
         return fragment;
     }
