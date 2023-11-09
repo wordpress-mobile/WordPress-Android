@@ -2975,7 +2975,7 @@
     <string name="turn_on">Yes, leave on</string>
     <string name="leave_off">No, turn off</string>
     <string name="image_optimization_promo_title">Keep optimizing images?</string>
-    <string name="image_optimization_promo_desc">Image optimization shrinks images for quicker uploading.\n\nBy default it\'s enabled but you can change this any time in app settings.</string>
+    <string name="image_optimization_promo_desc">Image optimization shrinks images for faster uploading.\n\This option is enabled by default, but you can change it in the app settings at any time.</string>
 
     <!-- Login -->
     <!-- If any of these appear unused, be sure to check the same string in the login library -
