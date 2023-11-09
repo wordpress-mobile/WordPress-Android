@@ -101,7 +101,8 @@ public class Authenticator {
     }
 
     public void authenticate(String username, String password, Listener listener, ErrorListener errorListener) {
-
+        OauthRequest request = makeRequest(username, password, listener, errorListener);
+        mRequestQueue.add(request);
     }
 
     public void authenticate(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS,
