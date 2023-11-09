@@ -1,12 +1,14 @@
-package org.wordpress.android.ui.domains.management
+package org.wordpress.android.ui.domains.management.details
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 
-class DomainManagementDetailsActivity : WPWebViewActivity() {
+class DomainManagementDetailsActivity : WPWebViewActivity(),
+    DomainManagementDetailsWebViewClient.DomainManagementWebViewClientListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toggleNavbarVisibility(false)
@@ -15,6 +17,12 @@ class DomainManagementDetailsActivity : WPWebViewActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // We don't want any menu items
         return true
+    }
+
+    override fun createWebViewClient(allowedURL: List<String>?) = DomainManagementDetailsWebViewClient(this)
+
+    override fun onRedirectToExternalBrowser(url: String) {
+        ActivityLauncher.openUrlExternal(this, url)
     }
 
     companion object {
