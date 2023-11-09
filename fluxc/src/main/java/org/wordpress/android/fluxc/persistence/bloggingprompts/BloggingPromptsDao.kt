@@ -48,7 +48,8 @@ abstract class BloggingPromptsDao {
         val respondentsCount: Int,
         val attribution: String,
         val respondentsAvatars: List<String>,
-        val answeredLink: String
+        val answeredLink: String,
+        val bloganuaryId: String? = null,
     ) {
         fun toBloggingPrompt() = BloggingPromptModel(
             id = id,
@@ -59,6 +60,7 @@ abstract class BloggingPromptsDao {
             respondentsCount = respondentsCount,
             respondentsAvatarUrls = respondentsAvatars,
             answeredLink = answeredLink,
+            bloganuaryId = bloganuaryId,
         )
 
         companion object {
@@ -75,6 +77,7 @@ abstract class BloggingPromptsDao {
                 attribution = prompt.attribution,
                 respondentsAvatars = prompt.respondentsAvatarUrls,
                 answeredLink = prompt.answeredLink,
+                bloganuaryId = prompt.bloganuaryId,
             )
         }
     }
