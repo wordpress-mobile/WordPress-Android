@@ -33,8 +33,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
-import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.PARSE_ERROR
-import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.REQUEST_TOO_LARGE
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.MimeType
@@ -155,11 +153,11 @@ abstract class BaseWPV2MediaRestClient constructor(
                             }
                         } catch (e: JsonSyntaxException) {
                             AppLog.e(MEDIA, e)
-                            val error = MediaError(PARSE_ERROR)
+                            val error = MediaError(MediaErrorType.PARSE_ERROR)
                             handleFailure(media, error)
                         } catch (e: NullPointerException) {
                             AppLog.e(MEDIA, e)
-                            val error = MediaError(PARSE_ERROR)
+                            val error = MediaError(MediaErrorType.PARSE_ERROR)
                             handleFailure(media, error)
                         }
                     } else {
@@ -201,7 +199,7 @@ abstract class BaseWPV2MediaRestClient constructor(
             is WPAPIResponse.Error -> {
                 val errorMessage = "could not parse Fetch all media response: $response"
                 AppLog.w(MEDIA, errorMessage)
-                val error = MediaError(PARSE_ERROR)
+                val error = MediaError(MediaErrorType.PARSE_ERROR)
                 error.logMessage = errorMessage
                 FetchMediaListResponsePayload(site, error, mimeType)
             }
@@ -219,7 +217,7 @@ abstract class BaseWPV2MediaRestClient constructor(
         val mediaError = MediaError(MediaErrorType.fromHttpStatusCode(code))
         mediaError.statusCode = code
         mediaError.logMessage = message
-        if (mediaError.type == REQUEST_TOO_LARGE) {
+        if (mediaError.type == MediaErrorType.REQUEST_TOO_LARGE) {
             // 413 (Request too large) errors are coming from the web server and are not an API response like the rest
             mediaError.message = message
             return mediaError
@@ -228,7 +226,7 @@ abstract class BaseWPV2MediaRestClient constructor(
             val responseBody = body
             if (responseBody == null) {
                 AppLog.e(MEDIA, "error uploading media, response body was empty $this")
-                mediaError.type = PARSE_ERROR
+                mediaError.type = MediaErrorType.PARSE_ERROR
                 return mediaError
             }
             val jsonBody = JSONObject(responseBody.string())

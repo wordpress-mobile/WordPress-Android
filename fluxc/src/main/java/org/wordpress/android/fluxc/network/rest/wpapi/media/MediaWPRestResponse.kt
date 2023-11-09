@@ -1,15 +1,15 @@
+@file:Suppress("MatchingDeclarationName")
+
 package org.wordpress.android.fluxc.network.rest.wpapi.media
 
 import com.google.gson.annotations.SerializedName
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.model.MediaModel
-import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.DELETED
-import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.UPLOADED
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
+import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse
 import org.wordpress.android.util.DateTimeUtils
 import java.text.SimpleDateFormat
 import java.util.Locale
-
-private const val DELETED_STATUS = "deleted"
 
 data class MediaWPRESTResponse(
     val id: Long,
@@ -59,27 +59,36 @@ data class MediaWPRESTResponse(
     )
 }
 
-fun MediaWPRESTResponse.toMediaModel(localSiteId: Int): MediaModel {
-    val mediaModel = MediaModel()
-    mediaModel.localSiteId = localSiteId
-    mediaModel.mediaId = id
-    val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT).parse(dateGmt)
-    mediaModel.uploadDate = DateTimeUtils.iso8601FromDate(date)
-    mediaModel.postId = post ?: 0L
-    mediaModel.authorId = author
-    mediaModel.url = sourceURL
-    mediaModel.guid = guid.rendered
-    mediaModel.fileName = mediaDetails.file
-    mediaModel.fileExtension = mediaDetails.file?.substringAfterLast('.', "")
-    mediaModel.mimeType = mimeType
-    mediaModel.title = StringEscapeUtils.unescapeHtml4(title.rendered)
-    mediaModel.caption = StringEscapeUtils.unescapeHtml4(caption.rendered)
-    mediaModel.description = StringEscapeUtils.unescapeHtml4(description.rendered)
-    mediaModel.alt = StringEscapeUtils.unescapeHtml4(altText)
-    mediaModel.thumbnailUrl = mediaDetails.sizes?.thumbnail?.sourceURL
-    mediaModel.height = mediaDetails.height
-    mediaModel.width = mediaDetails.width
-    mediaModel.deleted = DELETED_STATUS == status
-    mediaModel.setUploadState(if (mediaModel.deleted) DELETED else UPLOADED)
-    return mediaModel
-}
+fun MediaWPRESTResponse.toMediaModel(localSiteId: Int) = MediaModel(
+    localSiteId,
+    id,
+    post ?: 0L,
+    author,
+    guid.rendered,
+    DateTimeUtils.iso8601FromDate(
+        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT).parse(dateGmt)
+    ),
+    sourceURL,
+    mediaDetails.sizes?.thumbnail?.sourceURL,
+    mediaDetails.file,
+    mediaDetails.file?.substringAfterLast('.', ""),
+    mimeType,
+    StringEscapeUtils.unescapeHtml4(title.rendered),
+    StringEscapeUtils.unescapeHtml4(caption.rendered),
+    StringEscapeUtils.unescapeHtml4(description.rendered),
+    StringEscapeUtils.unescapeHtml4(altText),
+    mediaDetails.width,
+    mediaDetails.height,
+        0,
+        null,
+        false,
+    if (MediaWPComRestResponse.DELETED_STATUS == status) {
+        MediaUploadState.DELETED
+    } else {
+        MediaUploadState.UPLOADED
+    },
+    null,
+    null,
+    null,
+    MediaWPComRestResponse.DELETED_STATUS == status
+)
