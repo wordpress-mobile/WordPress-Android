@@ -299,7 +299,12 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should emit OpenSocialConnectionList when onJetpackSocialConnectProfilesClick is called`() {
+    fun `Should emit OpenSocialConnectionList when onJetpackSocialConnectProfilesClick is called`() = test {
+        mockUserId()
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+            .thenReturn(emptyList())
+        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+            .thenReturn(ShareLimit.Disabled)
         classToTest.start(fakeSiteModel(), editPostRepository)
         classToTest.onJetpackSocialConnectProfilesClick(JetpackSocialFlow.POST_SETTINGS)
         verify(actionEventsObserver).onChanged(
