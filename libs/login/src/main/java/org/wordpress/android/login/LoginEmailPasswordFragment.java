@@ -24,7 +24,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.login.LoginWpcomService.LoginState;
 import org.wordpress.android.login.LoginWpcomService.OnCredentialsOK;
-import org.wordpress.android.login.LoginWpcomService.SecurityKeyRequested;
+import org.wordpress.android.login.LoginWpcomService.TwoFactorRequested;
 import org.wordpress.android.login.util.AvatarHelper;
 import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener;
 import org.wordpress.android.login.util.SiteUtils;
@@ -345,7 +345,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSecurityKeyAuthStarted(SecurityKeyRequested event) {
+    public void onSecurityKeyAuthStarted(TwoFactorRequested event) {
         onLoginFinished(false);
         mLoginListener.needs2faSecurityKey(mEmailAddress, mRequestedPassword, event.userId, event.webauthnNonce);
         LoginWpcomService.clearLoginServiceState();
