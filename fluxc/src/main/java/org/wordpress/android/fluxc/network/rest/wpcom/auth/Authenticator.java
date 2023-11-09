@@ -48,7 +48,7 @@ public class Authenticator {
     private static final String AUTHORIZE_ENDPOINT = WPCOM_OAUTH_PREFIX + "/authorize";
     private static final String TOKEN_ENDPOINT = WPCOM_OAUTH_PREFIX + "/token";
     private static final String AUTHORIZE_ENDPOINT_FORMAT = "%s?client_id=%s&response_type=code";
-    private static final String LOGIN_BASE_ENDPOINT = WPCOM_PREFIX + "wp-login.php?action=login-endpoint";
+    private static final String LOGIN_BASE_ENDPOINT = WPCOM_PREFIX + "/wp-login.php?action=login-endpoint";
     public static final String CLIENT_ID_PARAM_NAME = "client_id";
     public static final String CLIENT_SECRET_PARAM_NAME = "client_secret";
     public static final String CODE_PARAM_NAME = "code";
