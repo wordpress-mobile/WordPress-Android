@@ -21,7 +21,8 @@ class DomainManagementDetailsActivity : WPWebViewActivity(),
         return true
     }
 
-    override fun createWebViewClient(allowedURL: List<String>?) = DomainManagementDetailsWebViewClient(this)
+    override fun createWebViewClient(allowedURL: List<String>?) =
+        DomainManagementDetailsWebViewClient(DomainManagementDetailsWebViewNavigationDelegate(domainArg), this)
 
     override fun onRedirectToExternalBrowser(url: String) {
         ActivityLauncher.openUrlExternal(this, url)

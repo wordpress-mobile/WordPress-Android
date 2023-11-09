@@ -7,6 +7,10 @@ abstract class AbstractAllowedUrlsWebViewNavigationDelegate {
 
     fun canNavigateTo(url: Url) = allowedUrls.any { it.matches(url) }
 
+    fun canNavigateTo(uri: Uri) = canNavigateTo(uri.toUrl())
+
+    fun canNavigateTo(urlString: String) = canNavigateTo(Uri.parse(urlString))
+
     data class UrlMatcher(
         private val host: Regex,
         private val paths: List<Regex>

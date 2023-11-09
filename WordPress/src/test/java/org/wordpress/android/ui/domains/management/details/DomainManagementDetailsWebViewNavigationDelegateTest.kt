@@ -8,14 +8,13 @@ import org.wordpress.android.ui.utils.AbstractAllowedUrlsWebViewNavigationDelega
 
 @ExperimentalCoroutinesApi
 class DomainManagementDetailsWebViewNavigationDelegateTest : BaseUnitTest() {
-    private val navigationDelegate = DomainManagementDetailsWebViewNavigationDelegate
+    private val navigationDelegate = DomainManagementDetailsWebViewNavigationDelegate("some.domain")
 
     @Test
     fun `when browsing in the domains path, then the web view can navigate`() {
         Assertions.assertThat(
             buildUrls(
-                "/domains/manage/all/some.domain/edit/some.domain", // standard details page
-                "/domains/mapping/some.domain/setup/some.domain?step=&show-errors=false&firstVisit=false" // fix errors
+                "/domains/manage/all/some.domain/edit/some.slug", // standard details page
             )
         ).allMatch {
             navigationDelegate.canNavigateTo(it)
@@ -26,6 +25,8 @@ class DomainManagementDetailsWebViewNavigationDelegateTest : BaseUnitTest() {
     fun `when browsing outside the domains path, then the web view cannot navigate`() {
         Assertions.assertThat(
             buildUrls(
+                "/domains/manage/all/some.domain/dns/some.slug", // standard details page
+                "/domains/mapping/some.domain/setup/some.domain?step=&show-errors=false&firstVisit=false",// some errors
                 "/email/antonis.me/manage/some.domain", // setup email
                 "/support/domains/https-ssl/" // support
             )
