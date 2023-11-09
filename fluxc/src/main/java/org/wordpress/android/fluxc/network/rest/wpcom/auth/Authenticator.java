@@ -100,6 +100,10 @@ public class Authenticator {
         mAppSecrets = secrets;
     }
 
+    public void authenticate(String username, String password, Listener listener, ErrorListener errorListener) {
+
+    }
+
     public void authenticate(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS,
                              Listener listener, ErrorListener errorListener) {
         OauthRequest request = makeRequest(username, password, twoStepCode, shouldSendTwoStepSMS, listener,
@@ -111,10 +115,15 @@ public class Authenticator {
         return String.format(AUTHORIZE_ENDPOINT_FORMAT, AUTHORIZE_ENDPOINT, mAppSecrets.getAppId());
     }
 
+    public OauthRequest makeRequest(String username, String password, Listener listener, ErrorListener errorListener) {
+        return new PasswordRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(),
+                username, password, listener, errorListener);
+    }
+
     public OauthRequest makeRequest(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS,
                                     Listener listener, ErrorListener errorListener) {
-        return new PasswordRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), username, password, twoStepCode,
-                shouldSendTwoStepSMS, listener, errorListener);
+        return new TwoFactorRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(),
+                username, password, twoStepCode, shouldSendTwoStepSMS, listener, errorListener);
     }
 
     public void makeRequest(String userId, String webauthnNonce,
@@ -151,8 +160,8 @@ public class Authenticator {
         private final Listener mListener;
         protected Map<String, String> mParams = new HashMap<>();
 
-        OauthRequest(String appId, String appSecret, Listener listener, ErrorListener errorListener) {
-            super(Method.POST, LOGIN_BASE_ENDPOINT, errorListener);
+        OauthRequest(String url, String appId, String appSecret, Listener listener, ErrorListener errorListener) {
+            super(Method.POST, url, errorListener);
             mListener = listener;
             mParams.put(CLIENT_ID_PARAM_NAME, appId);
             mParams.put(CLIENT_SECRET_PARAM_NAME, appSecret);
@@ -188,21 +197,27 @@ public class Authenticator {
     }
 
     public static class PasswordRequest extends OauthRequest {
-        public PasswordRequest(String appId, String appSecret, String username, String password, String twoStepCode,
-                               boolean shouldSendTwoStepSMS, Listener listener, ErrorListener errorListener) {
-            super(appId, appSecret, listener, errorListener);
+        public PasswordRequest(String appId, String appSecret, String username, String password,
+                               Listener listener, ErrorListener errorListener) {
+            super(LOGIN_BASE_ENDPOINT, appId, appSecret, listener, errorListener);
+            mParams.put(USERNAME_PARAM_NAME, username);
+            mParams.put(PASSWORD_PARAM_NAME, password);
+            mParams.put(GRANT_TYPE_PARAM_NAME, PASSWORD_GRANT_TYPE);
+            mParams.put("wpcom_supports_2fa", "true");
+        }
+    }
+
+    public static class TwoFactorRequest extends OauthRequest {
+        public TwoFactorRequest(String appId, String appSecret, String username, String password, String twoStepCode,
+                                boolean shouldSendTwoStepSMS, Listener listener, ErrorListener errorListener) {
+            super(TOKEN_ENDPOINT, appId, appSecret, listener, errorListener);
             mParams.put(USERNAME_PARAM_NAME, username);
             mParams.put(PASSWORD_PARAM_NAME, password);
             mParams.put(GRANT_TYPE_PARAM_NAME, PASSWORD_GRANT_TYPE);
             mParams.put(GET_BEARER_TOKEN, "true");
-
-            if (!TextUtils.isEmpty(twoStepCode)) {
-                mParams.put("wpcom_otp", twoStepCode);
-            } else {
-                mParams.put("wpcom_supports_2fa", "true");
-                if (shouldSendTwoStepSMS) {
-                    mParams.put("wpcom_resend_otp", "true");
-                }
+            mParams.put("wpcom_otp", twoStepCode);
+            if (shouldSendTwoStepSMS && TextUtils.isEmpty(twoStepCode)) {
+                mParams.put("wpcom_resend_otp", "true");
             }
         }
     }
@@ -210,7 +225,7 @@ public class Authenticator {
     public static class BearerRequest extends OauthRequest {
         public BearerRequest(String appId, String appSecret, String code, Listener listener,
                              ErrorListener errorListener) {
-            super(appId, appSecret, listener, errorListener);
+            super(TOKEN_ENDPOINT, appId, appSecret, listener, errorListener);
             mParams.put(CODE_PARAM_NAME, code);
             mParams.put(GRANT_TYPE_PARAM_NAME, BEARER_GRANT_TYPE);
         }
