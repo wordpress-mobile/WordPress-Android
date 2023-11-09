@@ -73,6 +73,7 @@ class BloggingPromptsRestClient @Inject constructor(
         @SerializedName("answered_users_sample") val respondentsAvatars: List<BloggingPromptsRespondentAvatar>,
         @SerializedName("answered_link") val answeredLink: String,
         @SerializedName("answered_link_text") val answeredLinkText: String,
+        @SerializedName("bloganuary_id") val bloganuaryId: String? = null,
     ) {
         fun toBloggingPromptModel() = BloggingPromptModel(
             id = id,
