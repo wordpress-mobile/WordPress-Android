@@ -219,10 +219,10 @@ public class ThemeStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class OnThemeInstalled extends OnChanged<ThemesError> {
-        public SiteModel site;
-        public ThemeModel theme;
+        @NonNull public SiteModel site;
+        @NonNull public ThemeModel theme;
 
-        public OnThemeInstalled(SiteModel site, ThemeModel theme) {
+        public OnThemeInstalled(@NonNull SiteModel site, @NonNull ThemeModel theme) {
             this.site = site;
             this.theme = theme;
         }
