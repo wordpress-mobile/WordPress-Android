@@ -40,7 +40,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.OauthResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.WebauthnResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.TwoFactorResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnChallengeInfo;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnToken;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
@@ -460,7 +460,7 @@ public class AccountStore extends Store {
         public final String authenticatorNonce;
         public final String pushNonce;
 
-        public OnSecurityKeyAuthStarted(WebauthnResponse response) {
+        public OnSecurityKeyAuthStarted(TwoFactorResponse response) {
             userId = response.mUserId;
             webauthnNonce = response.mWebauthnNonce;
             mBackupNonce = response.mBackupNonce;
@@ -1356,9 +1356,9 @@ public class AccountStore extends Store {
                 mDispatcher.dispatch(payload.nextAction);
             }
             emitChange(new OnAuthenticationChanged());
-        } else if (response instanceof WebauthnResponse) {
-            WebauthnResponse webauthnResponse = (WebauthnResponse) response;
-            OnSecurityKeyAuthStarted event = new OnSecurityKeyAuthStarted(webauthnResponse);
+        } else if (response instanceof TwoFactorResponse) {
+            TwoFactorResponse twoFactorResponse = (TwoFactorResponse) response;
+            OnSecurityKeyAuthStarted event = new OnSecurityKeyAuthStarted(twoFactorResponse);
             if (payload.nextAction != null) {
                 mDispatcher.dispatch(payload.nextAction);
             }
