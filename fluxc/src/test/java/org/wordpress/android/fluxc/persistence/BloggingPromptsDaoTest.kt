@@ -245,7 +245,8 @@ class BloggingPromptsDaoTest {
             respondentsCount = 5,
             attribution = "dayone",
             respondentsAvatars = emptyList(),
-            answeredLink = "https://wordpress.com/tag/dailyprompt-1"
+            answeredLink = "https://wordpress.com/tag/dailyprompt-1",
+            bloganuaryId = "bloganuary-2015-12",
         )
     }
 }
