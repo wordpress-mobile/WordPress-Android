@@ -7,6 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
@@ -31,20 +32,37 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: EditorBloggingPromptsViewModel
     private var loadedPrompt: EditorLoadedPrompt? = null
 
-    private val bloggingPrompt = BloggingPromptsResult(
-        model = BloggingPromptModel(
-            id = 123,
-            text = "title",
-            date = Date(),
-            isAnswered = false,
-            attribution = "",
-            respondentsCount = 5,
-            respondentsAvatarUrls = listOf(),
-            answeredLink = "https://wordpress.com/tag/dailyprompt-123",
+    private val bloggingPrompt = listOf(
+        BloggingPromptsResult(
+            model = BloggingPromptModel(
+                id = 123,
+                text = "title",
+                date = Date(),
+                isAnswered = false,
+                attribution = "",
+                respondentsCount = 5,
+                respondentsAvatarUrls = listOf(),
+                answeredLink = "https://wordpress.com/tag/dailyprompt-123",
+            )
+        ),
+        BloggingPromptsResult(
+            model = BloggingPromptModel(
+                id = 321,
+                text = "title",
+                date = Date(),
+                isAnswered = false,
+                attribution = "",
+                respondentsCount = 10,
+                respondentsAvatarUrls = listOf(),
+                answeredLink = "https://wordpress.com/tag/dailyprompt-321",
+                bloganuaryId = "bloganuaryTag"
+            )
         )
     )
     private val bloggingPromptsStore: BloggingPromptsStore = mock {
-        onBlocking { getPromptById(any(), any()) } doReturn flowOf(bloggingPrompt)
+        onBlocking { getPromptById(any(), any()) } doAnswer { mock ->
+            flowOf(bloggingPrompt.first { it.model?.id == mock.arguments[1] })
+        }
     }
     private val bloggingPromptsBlock = "blogging_prompts_block"
     private val bloggingPromptsEditorBlockMapper: BloggingPromptsEditorBlockMapper = mock {
@@ -72,7 +90,7 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
     fun `starting VM fetches a prompt and posts it to onBloggingPromptLoaded`() = test {
         viewModel.start(siteModel, 123)
 
-        assertThat(loadedPrompt?.promptId).isEqualTo(bloggingPrompt.model?.id)
+        assertThat(loadedPrompt?.promptId).isEqualTo(123)
 
         verify(bloggingPromptsStore, times(1)).getPromptById(any(), any())
     }
@@ -96,6 +114,18 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
         assertThat(loadedPrompt?.tags).containsOnly(
             BloggingPromptsPostTagProvider.BLOGGING_PROMPT_TAG,
             "promptIdTag"
+        )
+    }
+
+    @Test
+    fun `should add bloganuary tags`() {
+        whenever(bloggingPromptsPostTagProvider.promptIdTag(any())).thenReturn("promptIdTag")
+        viewModel.start(siteModel, 321)
+        assertThat(loadedPrompt?.tags).containsOnly(
+            BloggingPromptsPostTagProvider.BLOGGING_PROMPT_TAG,
+            "promptIdTag",
+            BloggingPromptsPostTagProvider.BLOGANUARY_TAG,
+            "bloganuaryTag"
         )
     }
 }
