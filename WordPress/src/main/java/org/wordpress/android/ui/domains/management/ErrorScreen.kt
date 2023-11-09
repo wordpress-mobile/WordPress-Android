@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.domains.management
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,11 +22,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.launch
-import org.wordpress.android.R
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ErrorScreen(onRefresh: () -> Unit) {
+fun ErrorScreen(
+    @StringRes titleRes: Int,
+    @StringRes descriptionRes: Int,
+    onRefresh: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val refreshScope = rememberCoroutineScope()
     val isRefreshing by remember { mutableStateOf(false) }
     val refreshState = rememberPullRefreshState(
@@ -33,7 +38,7 @@ fun ErrorScreen(onRefresh: () -> Unit) {
         onRefresh = { refreshScope.launch { onRefresh() } },
     )
 
-    Box(Modifier.pullRefresh(refreshState)) {
+    Box(modifier.pullRefresh(refreshState)) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -42,12 +47,12 @@ fun ErrorScreen(onRefresh: () -> Unit) {
                 .verticalScroll(rememberScrollState()),
         ) {
             Text(
-                text = stringResource(R.string.domain_management_error_title),
+                text = stringResource(titleRes),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.outline,
             )
             Text(
-                text = stringResource(R.string.domain_management_error_subtitle),
+                text = stringResource(descriptionRes),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.outline,
             )
