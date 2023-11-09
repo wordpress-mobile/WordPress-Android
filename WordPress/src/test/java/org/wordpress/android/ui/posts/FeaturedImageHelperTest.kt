@@ -374,7 +374,7 @@ class FeaturedImageHelperTest {
 
     companion object Fixtures {
         fun createMediaModel(markedLocallyAsFeatured: Boolean): MediaModel {
-            return MediaModel().apply {
+            return MediaModel(0, 0).apply {
                 this.markedLocallyAsFeatured = markedLocallyAsFeatured
             }
         }

@@ -171,40 +171,44 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     }
 
     private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
-        if (event.canceled) {
-            AppLog.i(T.MEDIA, "MediaUploadHandler > Upload successfully canceled");
-            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_CANCELED,
-                                   getMediaFromInProgressQueueById(event.media.getId()), null);
-            completeUploadWithId(event.media.getId());
-            uploadNextInQueue();
-        } else if (event.completed) {
-            AppLog.i(T.MEDIA, "MediaUploadHandler > Upload completed - localId=" + event.media.getId() + " title="
-                              + event.media.getTitle());
-            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS,
-                                   getMediaFromInProgressQueueById(event.media.getId()), null);
-            completeUploadWithId(event.media.getId());
-            uploadNextInQueue();
-        } else {
-            AppLog.i(T.MEDIA, "MediaUploadHandler > " + event.media.getId() + " - progress: " + event.progress);
+        if (event.media != null) {
+            if (event.canceled) {
+                AppLog.i(T.MEDIA, "MediaUploadHandler > Upload successfully canceled");
+                trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_CANCELED,
+                        getMediaFromInProgressQueueById(event.media.getId()), null);
+                completeUploadWithId(event.media.getId());
+                uploadNextInQueue();
+            } else if (event.completed) {
+                AppLog.i(T.MEDIA, "MediaUploadHandler > Upload completed - localId=" + event.media.getId() + " title="
+                                  + event.media.getTitle());
+                trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS,
+                        getMediaFromInProgressQueueById(event.media.getId()), null);
+                completeUploadWithId(event.media.getId());
+                uploadNextInQueue();
+            } else {
+                AppLog.i(T.MEDIA, "MediaUploadHandler > " + event.media.getId() + " - progress: " + event.progress);
+            }
         }
     }
 
     private void handleOnMediaUploadedError(@NonNull OnMediaUploaded event) {
         AppLog.w(T.MEDIA, "MediaUploadHandler > Error uploading media: " + event.error.message);
-        MediaModel media = getMediaFromInProgressQueueById(event.media.getId());
-        if (media != null) {
-            mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+        if (event.media != null) {
+            MediaModel media = getMediaFromInProgressQueueById(event.media.getId());
+            if (media != null) {
+                mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+            }
+
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("error_type", event.error.type.name());
+            properties.put("error_message", event.error.message);
+            properties.put("error_log", event.error.logMessage);
+            properties.put("error_status_code", event.error.statusCode);
+            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_ERROR, media, properties);
+
+            completeUploadWithId(event.media.getId());
+            uploadNextInQueue();
         }
-
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("error_type", event.error.type.name());
-        properties.put("error_message", event.error.message);
-        properties.put("error_log", event.error.logMessage);
-        properties.put("error_status_code", event.error.statusCode);
-        trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_ERROR, media, properties);
-
-        completeUploadWithId(event.media.getId());
-        uploadNextInQueue();
     }
 
     private synchronized void uploadNextInQueue() {
