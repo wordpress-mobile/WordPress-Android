@@ -27,15 +27,14 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class ThemeStoreUnitTest {
-    private ThemeStore mThemeStore = new ThemeStore(new Dispatcher(), Mockito.mock(ThemeRestClient.class));
+    private final ThemeStore mThemeStore = new ThemeStore(new Dispatcher(), Mockito.mock(ThemeRestClient.class));
 
     @Before
     public void setUp() {
-        Context appContext = RuntimeEnvironment.application.getApplicationContext();
+        Context appContext = RuntimeEnvironment.getApplication().getApplicationContext();
         WellSqlConfig config = new WellSqlConfig(appContext);
         WellSql.init(config);
         config.reset();
@@ -56,7 +55,7 @@ public class ThemeStoreUnitTest {
         mThemeStore.setActiveThemeForSite(site, firstTheme);
         List<ThemeModel> activeThemes = ThemeSqlUtils.getActiveThemeForSite(site);
         assertNotNull(activeThemes);
-        assertTrue(activeThemes.size() == 1);
+        assertEquals(1, activeThemes.size());
         ThemeModel firstActiveTheme = activeThemes.get(0);
         assertEquals(firstTheme.getThemeId(), firstActiveTheme.getThemeId());
         assertEquals(firstTheme.getName(), firstActiveTheme.getName());
@@ -65,7 +64,7 @@ public class ThemeStoreUnitTest {
         mThemeStore.setActiveThemeForSite(site, secondTheme);
         activeThemes = ThemeSqlUtils.getActiveThemeForSite(site);
         assertNotNull(activeThemes);
-        assertTrue(activeThemes.size() == 1);
+        assertEquals(1, activeThemes.size());
         ThemeModel secondActiveTheme = activeThemes.get(0);
         assertEquals(secondTheme.getThemeId(), secondActiveTheme.getThemeId());
         assertEquals(secondTheme.getName(), secondActiveTheme.getName());
