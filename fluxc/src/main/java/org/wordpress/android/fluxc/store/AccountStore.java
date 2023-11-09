@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.yarolegovich.wellsql.WellSql;
 
@@ -62,15 +63,30 @@ import static org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErr
 @Singleton
 public class AccountStore extends Store {
     // Payloads
-    public static class AuthenticatePayload extends Payload<BaseNetworkError> {
+    public static class AuthenticationRequestPayload extends Payload<BaseNetworkError> {
+        public Action nextAction;
+    }
+
+    public static class AuthenticatePayload extends AuthenticationRequestPayload {
+        public String username;
+        public String password;
+        public AuthenticatePayload(@NonNull String username, @NonNull String password) {
+            this.username = username;
+            this.password = password;
+        }
+    }
+
+    public static class AuthenticateTwoFactorPayload extends AuthenticationRequestPayload {
         public String username;
         public String password;
         public String twoStepCode;
         public boolean shouldSendTwoStepSms;
-        public Action nextAction;
-        public AuthenticatePayload(@NonNull String username, @NonNull String password) {
+        public AuthenticateTwoFactorPayload(@NonNull String username, @NonNull String password,
+                                            @NonNull String twoStepCode, boolean shouldSendTwoStepSms) {
             this.username = username;
             this.password = password;
+            this.twoStepCode = twoStepCode;
+            this.shouldSendTwoStepSms = shouldSendTwoStepSms;
         }
     }
 
@@ -1031,6 +1047,9 @@ public class AccountStore extends Store {
             case AUTHENTICATE:
                 authenticate((AuthenticatePayload) payload);
                 break;
+            case AUTHENTICATE_TWO_FACTOR:
+                authenticateTwoFactor((AuthenticateTwoFactorPayload) payload);
+                break;
             case AUTHENTICATE_ERROR:
                 handleAuthenticateError((AuthenticateErrorPayload) payload);
                 break;
@@ -1332,6 +1351,12 @@ public class AccountStore extends Store {
     }
 
     private void authenticate(final AuthenticatePayload payload) {
+        mAuthenticator.authenticate(payload.username, payload.password,
+                response -> handleAuthResponse(response, payload),
+                this::handleAuthError);
+    }
+
+    private void authenticateTwoFactor(final AuthenticateTwoFactorPayload payload) {
         mAuthenticator.authenticate(payload.username, payload.password, payload.twoStepCode,
                 payload.shouldSendTwoStepSms,
                 response -> handleAuthResponse(response, payload),
@@ -1347,7 +1372,7 @@ public class AccountStore extends Store {
         emitChange(event);
     }
 
-    private void handleAuthResponse(OauthResponse response, AuthenticatePayload payload) {
+    private void handleAuthResponse(OauthResponse response, AuthenticationRequestPayload payload) {
         // Oauth endpoint can return a Token or a WebauthnResponse
         if (response instanceof Token) {
             Token token = (Token) response;
@@ -1383,7 +1408,7 @@ public class AccountStore extends Store {
 
     private void requestWebauthnChallenge(final StartWebauthnChallengePayload payload) {
         mAuthenticator.makeRequest(payload.mUserId, payload.mWebauthnNonce,
-                info -> {
+                (Response.Listener<WebauthnChallengeInfo>) info -> {
                     WebauthnChallengeReceived event = new WebauthnChallengeReceived();
                     event.mChallengeInfo = info;
                     event.mUserId = payload.mUserId;
