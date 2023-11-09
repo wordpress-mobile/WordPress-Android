@@ -105,6 +105,7 @@ public class ThemeSqlUtils {
                 .endWhere().getAsModel();
     }
 
+    @NonNull
     public static List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
         return WellSql.select(ThemeModel.class)
                 .where()
