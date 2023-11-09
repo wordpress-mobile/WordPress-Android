@@ -499,25 +499,25 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         switch (requestCode) {
             case RequestCodes.PICTURE_LIBRARY:
             case RequestCodes.VIDEO_LIBRARY:
-            case RequestCodes.FILE_LIBRARY:
             case RequestCodes.AUDIO_LIBRARY:
+                handlePickerResult(data, resultCode);
+                break;
+            case RequestCodes.FILE_LIBRARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
-                        List<Uri> uris = convertStringArrayIntoUrisList(
-                                data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
-                        for (Uri uri : uris) {
-                            getMediaFromDeviceAndTrack(uri, requestCode);
-                        }
+                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
+                        WPMediaUtils.advertiseImageOptimization(this, () -> handlePickerResult(data, resultCode));
+                    } else {
+                        handlePickerResult(data, resultCode);
                     }
                 }
                 break;
             case RequestCodes.TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
-                    WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
-                    Uri uri = getOptimizedPictureIfNecessary(Uri.parse(mMediaCapturePath));
-                    mMediaCapturePath = null;
-                    queueFileForUpload(uri, getContentResolver().getType(uri));
-                    trackAddMediaFromDeviceEvents(true, false, uri);
+                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
+                        WPMediaUtils.advertiseImageOptimization(this, this::addLastTakenPicture);
+                    } else {
+                        addLastTakenPicture();
+                    }
                 }
                 break;
             case RequestCodes.TAKE_VIDEO:
@@ -551,6 +551,24 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                     addMediaToUploadService(mediaModels);
                 }
                 break;
+        }
+    }
+
+    private void addLastTakenPicture() {
+        WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
+        Uri uri = getOptimizedPictureIfNecessary(Uri.parse(mMediaCapturePath));
+        mMediaCapturePath = null;
+        queueFileForUpload(uri, getContentResolver().getType(uri));
+        trackAddMediaFromDeviceEvents(true, false, uri);
+    }
+
+    private void handlePickerResult(Intent data, int requestCode) {
+        if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
+            List<Uri> uris = convertStringArrayIntoUrisList(
+                    data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
+            for (Uri uri : uris) {
+                getMediaFromDeviceAndTrack(uri, requestCode);
+            }
         }
     }
 

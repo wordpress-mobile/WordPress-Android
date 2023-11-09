@@ -747,7 +747,7 @@ public class AppPrefs {
     }
 
     public static boolean isImageOptimize() {
-        return getBoolean(DeletablePrefKey.IMAGE_OPTIMIZE_ENABLED, false);
+        return getBoolean(DeletablePrefKey.IMAGE_OPTIMIZE_ENABLED, true);
     }
 
     public static void setImageOptimize(boolean optimize) {
