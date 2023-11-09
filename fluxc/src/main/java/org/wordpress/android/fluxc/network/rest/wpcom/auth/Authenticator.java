@@ -56,6 +56,7 @@ public class Authenticator {
     public static final String USERNAME_PARAM_NAME = "username";
     public static final String PASSWORD_PARAM_NAME = "password";
     public static final String WITH_AUTH_TYPES = "with_auth_types";
+    public static final String GET_BEARER_TOKEN = "get_bearer_token";
 
     public static final String PASSWORD_GRANT_TYPE = "password";
     public static final String BEARER_GRANT_TYPE = "bearer";
@@ -148,7 +149,7 @@ public class Authenticator {
         protected Map<String, String> mParams = new HashMap<>();
 
         OauthRequest(String appId, String appSecret, Listener listener, ErrorListener errorListener) {
-            super(Method.POST, TOKEN_ENDPOINT, errorListener);
+            super(Method.POST, LOGIN_BASE_ENDPOINT, errorListener);
             mListener = listener;
             mParams.put(CLIENT_ID_PARAM_NAME, appId);
             mParams.put(CLIENT_SECRET_PARAM_NAME, appSecret);
@@ -190,7 +191,7 @@ public class Authenticator {
             mParams.put(USERNAME_PARAM_NAME, username);
             mParams.put(PASSWORD_PARAM_NAME, password);
             mParams.put(GRANT_TYPE_PARAM_NAME, PASSWORD_GRANT_TYPE);
-            mParams.put(WITH_AUTH_TYPES, "true");
+            mParams.put(GET_BEARER_TOKEN, "true");
 
             if (!TextUtils.isEmpty(twoStepCode)) {
                 mParams.put("wpcom_otp", twoStepCode);
