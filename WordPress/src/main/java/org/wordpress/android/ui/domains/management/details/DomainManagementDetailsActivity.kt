@@ -26,6 +26,7 @@ class DomainManagementDetailsActivity : WPWebViewActivity(),
 
     override fun onRedirectToExternalBrowser(url: String) {
         ActivityLauncher.openUrlExternal(this, url)
+        onBackPressedDispatcher.onBackPressed()
     }
 
     companion object {
