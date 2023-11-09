@@ -88,7 +88,8 @@ class BloggingPromptsDaoTest {
             .toBloggingPrompt()
         val prompt2 = generateBloggingPrompt().copy(
             id = 2,
-            date = BloggingPromptsUtils.stringToDate("2015-04-20")
+            date = BloggingPromptsUtils.stringToDate("2015-01-20"),
+            bloganuaryId = "bloganuary-2015-20"
         )
             .toBloggingPrompt()
         val prompt3 = generateBloggingPrompt().copy(
@@ -102,7 +103,7 @@ class BloggingPromptsDaoTest {
         // then
         val prompts = promptsDao.getPromptForDate(
             localSideId,
-            BloggingPromptsUtils.stringToDate("2015-04-20")
+            BloggingPromptsUtils.stringToDate("2015-01-20")
         ).first()
 
         val specificPrompt = prompts.first()
