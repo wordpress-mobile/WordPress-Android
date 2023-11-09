@@ -84,6 +84,7 @@ class BloggingPromptsRestClient @Inject constructor(
             respondentsCount = respondentsCount,
             respondentsAvatarUrls = respondentsAvatars.map { it.avatarUrl },
             answeredLink = answeredLink,
+            bloganuaryId = bloganuaryId,
         )
     }
 
