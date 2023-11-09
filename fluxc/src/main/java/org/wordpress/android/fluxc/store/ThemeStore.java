@@ -321,6 +321,7 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getWpComMobileFriendlyThemes(categorySlug);
     }
 
+    @NonNull
     public List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
         return ThemeSqlUtils.getThemesForSite(site);
     }
