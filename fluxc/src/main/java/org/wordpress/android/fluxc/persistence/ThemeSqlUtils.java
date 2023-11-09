@@ -88,6 +88,7 @@ public class ThemeSqlUtils {
                 .endGroup().endWhere().getAsModel();
     }
 
+    @NonNull
     public static List<ThemeModel> getWpComThemes() {
         return WellSql.select(ThemeModel.class)
                 .where()
