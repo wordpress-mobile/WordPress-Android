@@ -84,7 +84,6 @@ class DomainManagementDetailsWebViewClientTest : BaseUnitTest() {
     @Test
     fun `WHEN preparing to browse to an allowed domain THEN do not redirect to the external browser`() {
         val url = "https://some.domain"
-        whenever(uri.toString()).thenReturn(url)
         whenever(request.url).thenReturn(uri)
         whenever(navigationDelegate.canNavigateTo(uri)).thenReturn(true)
         val actual = client.shouldOverrideUrlLoading(webView, request)
