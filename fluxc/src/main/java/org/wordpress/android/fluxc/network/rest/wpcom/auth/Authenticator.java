@@ -296,7 +296,7 @@ public class Authenticator {
             }
 
             ArrayList<String> supportedAuthTypes = new ArrayList<>();
-            for(int i = 0; i < supportedTypes.length(); i++) {
+            for (int i = 0; i < supportedTypes.length(); i++) {
                 supportedAuthTypes.add(supportedTypes.getString(i));
             }
             mSupportedAuthTypes = supportedAuthTypes;
