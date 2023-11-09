@@ -254,20 +254,23 @@ public class Authenticator {
     public static class WebauthnResponse implements OauthResponse {
         private static final String USER_ID = "user_id";
         private static final String TWO_STEP_WEBAUTHN_NONCE = "two_step_nonce_webauthn";
-        private String mUserId;
-        private String mTwoStepWebauthnNonce;
+        private static final String TWO_STEP_BACKUP_NONCE = "two_step_nonce_backup";
+        private static final String TWO_STEP_AUTHENTICATOR_NONCE = "two_step_nonce_authenticator";
+        private static final String TWO_STEP_PUSH_NONCE = "two_step_nonce_push";
+        public final String mUserId;
+        public final String mWebauthnNonce;
+        public final String mBackupNonce;
+        public final String mAuthenticatorNonce;
+        public final String mPushNonce;
+        public final String mTwoStepWebauthnNonce;
 
         public WebauthnResponse(JSONObject data) throws JSONException {
             mUserId = data.getString(USER_ID);
             mTwoStepWebauthnNonce = data.getString(TWO_STEP_WEBAUTHN_NONCE);
-        }
-
-        public String getUserId() {
-            return mUserId;
-        }
-
-        public String getWebauthnNonce() {
-            return mTwoStepWebauthnNonce;
+            mWebauthnNonce = data.getString(TWO_STEP_WEBAUTHN_NONCE);
+            mBackupNonce = data.getString(TWO_STEP_BACKUP_NONCE);
+            mAuthenticatorNonce = data.getString(TWO_STEP_AUTHENTICATOR_NONCE);
+            mPushNonce = data.getString(TWO_STEP_PUSH_NONCE);
         }
     }
 
