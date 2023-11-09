@@ -35,6 +35,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticateTwoFactorPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.FinishWebauthnChallengePayload;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
@@ -371,10 +372,10 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 mDispatcher.dispatch(AccountActionBuilder.newPushSocialAuthAction(payload));
             }
         } else {
-            AuthenticatePayload payload = new AuthenticatePayload(mEmailAddress, mPassword);
-            payload.twoStepCode = twoStepCode;
-            payload.shouldSendTwoStepSms = shouldSendTwoStepSMS;
-            mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
+            AuthenticateTwoFactorPayload payload = new AuthenticateTwoFactorPayload(mEmailAddress,
+                    mPassword, twoStepCode, shouldSendTwoStepSMS);
+            mDispatcher.dispatch(AuthenticationActionBuilder
+                    .newAuthenticateTwoFactorAction(payload));
         }
     }
 
