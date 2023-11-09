@@ -2655,6 +2655,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domain_management_search_domain_tapped";
             case DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED:
                 return "domain_management_transfer_domain_tapped";
+            case LOGIN_SECURITY_KEY_FAILURE:
+                return "login_security_key_failure";
+            case LOGIN_SECURITY_KEY_NEEDED:
+                return "login_security_key_needed";
+            case LOGIN_SECURITY_KEY_SUCCESS:
+                return "login_security_key_success";
+            case LOGIN_SECURITY_KEY_CLICKED:
+                return "login_security_key_clicked";
         }
         return null;
     }
