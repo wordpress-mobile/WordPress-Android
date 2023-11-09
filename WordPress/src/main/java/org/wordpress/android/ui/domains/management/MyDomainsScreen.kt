@@ -51,6 +51,7 @@ fun MyDomainsScreen(
     onAddDomainTapped: () -> Unit,
     onFindDomainTapped: () -> Unit,
     onBackTapped: () -> Unit,
+    onRefresh: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -98,32 +99,14 @@ fun MyDomainsScreen(
                     onDomainTapped,
                 )
 
-                Error -> ErrorScreen()
+                Error -> ErrorScreen(onRefresh)
                 Empty -> EmptyScreen(onFindDomainTapped)
             }
         }
     }
 }
 
-@Composable
-fun ErrorScreen() {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        Text(
-            text = stringResource(R.string.domain_management_error_title),
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.outline,
-        )
-        Text(
-            text = stringResource(R.string.domain_management_error_subtitle),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.outline,
-        )
-    }
-}
+
 
 @Composable
 fun EmptyScreen(onFindDomainTapped: () -> Unit) {
@@ -217,7 +200,8 @@ fun PreviewMyDomainsScreen() {
             onAddDomainTapped = {},
             onDomainTapped = {},
             onFindDomainTapped = {},
-            onBackTapped = {}
+            onBackTapped = {},
+            onRefresh = {},
         )
     }
 }
@@ -233,7 +217,8 @@ fun PreviewMyDomainsScreenError() {
             onAddDomainTapped = {},
             onDomainTapped = {},
             onFindDomainTapped = {},
-            onBackTapped = {}
+            onBackTapped = {},
+            onRefresh = {},
         )
     }
 }
@@ -249,7 +234,8 @@ fun PreviewMyDomainsScreenEmpty() {
             onAddDomainTapped = {},
             onDomainTapped = {},
             onFindDomainTapped = {},
-            onBackTapped = {}
+            onBackTapped = {},
+            onRefresh = {},
         )
     }
 }

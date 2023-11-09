@@ -9,6 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
@@ -16,6 +17,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.AllDomainsError
+import org.wordpress.android.fluxc.store.SiteStore.AllDomainsErrorType
+import org.wordpress.android.fluxc.store.SiteStore.FetchedAllDomainsPayload
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.ActionEvent
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState
 import org.wordpress.android.ui.domains.management.util.DomainLocalSearchEngine
@@ -30,6 +35,9 @@ class DomainManagementViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var useCase: FetchAllDomainsUseCase
+
+    @Mock
+    lateinit var siteStore: SiteStore
 
     @Mock
     lateinit var domainLocalSearchEngine: DomainLocalSearchEngine
@@ -115,6 +123,23 @@ class DomainManagementViewModelTest : BaseUnitTest() {
             assertThat(state.last()).isEqualTo(UiState.PopulatedList.Loaded.Complete(allDomains = domains))
             verifyNoInteractions(domainLocalSearchEngine)
         }
+    }
+
+    @Test
+    fun `onRefresh fetches all the domains again`() = test {
+        // Given
+        val useCase = FetchAllDomainsUseCase(siteStore)
+        whenever(siteStore.fetchAllDomains()).thenReturn(
+            FetchedAllDomainsPayload(AllDomainsError(AllDomainsErrorType.GENERIC_ERROR)),
+            FetchedAllDomainsPayload(emptyList()),
+        )
+        viewModel = DomainManagementViewModel(testDispatcher(), analyticsTracker, useCase, domainLocalSearchEngine)
+
+        // When
+        viewModel.onRefresh()
+
+        // Then
+        verify(siteStore, times(2)).fetchAllDomains()
     }
 
     private fun testWithActionEvents(

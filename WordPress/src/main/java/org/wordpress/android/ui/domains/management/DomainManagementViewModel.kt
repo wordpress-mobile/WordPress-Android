@@ -103,6 +103,13 @@ class DomainManagementViewModel @Inject constructor(
         }
     }
 
+    fun onRefresh() {
+        launch {
+            _uiStateFlow.value = UiState.PopulatedList.Initial
+            fetchAllDomains()
+        }
+    }
+
     fun onSearchQueryChanged(query: String) {
         launch {
             searchQuery.emit(query.trim())
