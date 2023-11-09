@@ -35,14 +35,14 @@ import java.util.Date
 @Composable
 fun DomainListCard(
     uiState: DomainCardUiState,
-    onDomainTapped: (detailUrl: String) -> Unit = {},
+    onDomainTapped: (domain: String, detailUrl: String) -> Unit = { _: String, _: String -> },
     ) {
     OutlinedCard(
         modifier = Modifier.fillMaxWidth(),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         onClick = {
             if (uiState is DomainCardUiState.Loaded && uiState.detailUrl != null) {
-                onDomainTapped(uiState.detailUrl)
+                onDomainTapped(uiState.domain ?: "", uiState.detailUrl)
             }
         },
     ) {

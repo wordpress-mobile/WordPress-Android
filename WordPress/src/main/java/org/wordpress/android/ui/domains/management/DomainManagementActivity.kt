@@ -41,7 +41,13 @@ class DomainManagementActivity : AppCompatActivity() {
     private fun handleActionEvents(actionEvent: ActionEvent) {
         when (actionEvent) {
             is ActionEvent.DomainTapped -> {
-                startActivity(DomainManagementDetailsActivity.createIntent(this, actionEvent.detailUrl))
+                startActivity(
+                    DomainManagementDetailsActivity.createIntent(
+                        this,
+                        actionEvent.domain,
+                        actionEvent.detailUrl
+                    )
+                )
             }
             is ActionEvent.AddDomainTapped -> ActivityLauncher.openNewDomainSearch(this)
             is ActionEvent.NavigateBackTapped -> onBackPressedDispatcher.onBackPressed()
