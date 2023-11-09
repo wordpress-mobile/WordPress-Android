@@ -10,6 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.domains.management.details.DomainManagementDetailsActivity
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
