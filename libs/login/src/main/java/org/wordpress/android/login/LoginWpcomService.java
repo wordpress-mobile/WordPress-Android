@@ -352,8 +352,8 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
     public void onTwoFactorAuthStarted(OnTwoFactorAuthStarted event) {
         signalCredentialsOK();
         setState(LoginStep.SECURITY_KEY_NEEDED);
-        TwoFactorRequested twoFactorRequest = new TwoFactorRequested(event.userId, event.webauthnNonce,
-                event.mBackupNonce, event.authenticatorNonce, event.pushNonce);
+        TwoFactorRequested twoFactorRequest = new TwoFactorRequested(event.userId,
+                event.webauthnNonce, event.mBackupNonce, event.authenticatorNonce, event.pushNonce);
         EventBus.getDefault().post(twoFactorRequest);
     }
 

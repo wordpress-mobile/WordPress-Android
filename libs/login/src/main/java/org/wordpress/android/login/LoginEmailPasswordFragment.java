@@ -345,9 +345,10 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSecurityKeyAuthStarted(TwoFactorRequested event) {
+    public void onTwoFactorAuthStarted(TwoFactorRequested event) {
         onLoginFinished(false);
-        mLoginListener.needs2faSecurityKey(mEmailAddress, mRequestedPassword, event.userId, event.webauthnNonce);
+        mLoginListener.needs2fa(mEmailAddress, mRequestedPassword, event.userId,
+                event.webauthnNonce, event.authenticatorNonce, event.backupNonce, event.pushNonce);
         LoginWpcomService.clearLoginServiceState();
     }
 
