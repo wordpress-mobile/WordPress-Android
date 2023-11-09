@@ -5,18 +5,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainStatus
 import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.domains.management.util.DomainLocalSearchEngine
 import org.wordpress.android.ui.domains.usecases.AllDomains
 import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -32,6 +36,7 @@ class DomainManagementViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val fetchAllDomainsUseCase: FetchAllDomainsUseCase,
+    private val domainLocalSearchEngine: DomainLocalSearchEngine,
 ) : ScopedViewModel(mainDispatcher) {
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: Flow<ActionEvent> = _actionEvents
@@ -39,10 +44,17 @@ class DomainManagementViewModel @Inject constructor(
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.PopulatedList.Initial)
     val uiStateFlow = _uiStateFlow.asStateFlow()
 
+    private val searchQuery = MutableStateFlow("")
+
     init {
         analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN)
         launch {
             fetchAllDomains()
+        }
+        launch {
+            searchQuery
+                .onEach(::filterDomains)
+                .launchIn(viewModelScope)
         }
     }
 
@@ -51,8 +63,23 @@ class DomainManagementViewModel @Inject constructor(
             _uiStateFlow.value = when (it) {
                 AllDomains.Empty -> UiState.Empty
                 AllDomains.Error -> UiState.Error
-                is AllDomains.Success -> UiState.PopulatedList.Loaded(it.domains)
+                is AllDomains.Success -> UiState.PopulatedList.Loaded.Complete(it.domains)
             }
+        }
+    }
+
+    private fun filterDomains(query: String) {
+        val domains = when (val state = _uiStateFlow.value) {
+            is UiState.PopulatedList.Loaded -> state.allDomains
+            else -> return
+        }
+        _uiStateFlow.value = if (query.isBlank()) {
+            UiState.PopulatedList.Loaded.Complete(allDomains = domains)
+        } else {
+            UiState.PopulatedList.Loaded.Filtered(
+                filtered = domainLocalSearchEngine.filter(domains, query),
+                allDomains = domains
+            )
         }
     }
 
@@ -83,6 +110,12 @@ class DomainManagementViewModel @Inject constructor(
         }
     }
 
+    fun onSearchQueryChanged(query: String) {
+        launch {
+            searchQuery.emit(query.trim())
+        }
+    }
+
     sealed class ActionEvent {
         data class DomainTapped(val detailUrl: String): ActionEvent()
         object AddDomainTapped: ActionEvent()
@@ -92,12 +125,15 @@ class DomainManagementViewModel @Inject constructor(
     sealed class UiState {
         sealed class PopulatedList: UiState() {
             object Initial: PopulatedList()
-            data class Loaded(val domains: List<AllDomainsDomain>): PopulatedList()
-
-            fun filter(query: String): PopulatedList = if (this is Loaded) {
-                copy(domains = domains.filter { domain -> domain.matches(query) })
-            } else {
-                this
+            sealed class Loaded : PopulatedList() {
+                abstract val allDomains: List<AllDomainsDomain>
+                data class Complete(
+                    override val allDomains: List<AllDomainsDomain>
+                ): Loaded()
+                data class Filtered(
+                    override val allDomains: List<AllDomainsDomain>,
+                    val filtered: List<AllDomainsDomain>
+                ) : Loaded()
             }
         }
         object Empty: UiState()
@@ -180,7 +216,3 @@ val DomainStatus.isBold
         null -> true
         else -> false
     }
-
-private fun AllDomainsDomain.matches(query: String) =
-    domain?.contains(query, true) ?: false
-            || siteSlug?.contains(query, true) ?: false

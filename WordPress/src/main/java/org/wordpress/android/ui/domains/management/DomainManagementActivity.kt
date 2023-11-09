@@ -24,6 +24,7 @@ class DomainManagementActivity : AppCompatActivity() {
 
                 MyDomainsScreen(
                     uiState = uiState,
+                    onSearchQueryChanged = viewModel::onSearchQueryChanged,
                     onDomainTapped = viewModel::onDomainTapped,
                     onAddDomainTapped = viewModel::onAddDomainClicked,
                     onFindDomainTapped = viewModel::onAddDomainClicked,

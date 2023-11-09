@@ -420,8 +420,8 @@ class MediaPickerViewModel @Inject constructor(
             is Identifier.RemoteId -> {
                 site?.let {
                     launch {
-                        val media: MediaModel = mediaStore.getSiteMediaWithId(it, identifier.value)
-                        _onNavigate.postValue(Event(PreviewMedia(media)))
+                        val media: MediaModel? = mediaStore.getSiteMediaWithId(it, identifier.value)
+                        media?.let { _onNavigate.postValue(Event(PreviewMedia(it))) }
                     }
                 }
             }

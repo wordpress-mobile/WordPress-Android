@@ -358,13 +358,12 @@ class MySiteViewModelTest : BaseUnitTest() {
             promptModel = BloggingPromptModel(
                 id = bloggingPromptId,
                 text = "text",
-                title = "",
-                content = "content",
                 date = Date(),
                 isAnswered = false,
                 attribution = "dayone",
                 respondentsCount = 5,
-                respondentsAvatarUrls = listOf()
+                respondentsAvatarUrls = listOf(),
+                answeredLink = "https://wordpress.com/tag/$bloggingPromptId"
             )
         )
     )

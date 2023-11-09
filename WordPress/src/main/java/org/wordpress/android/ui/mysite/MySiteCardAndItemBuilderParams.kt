@@ -147,7 +147,7 @@ sealed class MySiteCardAndItemBuilderParams {
         val onAnswerClick: (promptId: Int) -> Unit,
         val onSkipClick: () -> Unit,
         val onViewMoreClick: () -> Unit,
-        val onViewAnswersClick: (promptId: Int) -> Unit,
+        val onViewAnswersClick: (tagUrl: String) -> Unit,
         val onRemoveClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 

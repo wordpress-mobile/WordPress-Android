@@ -17,6 +17,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.BloggingPromptCardNavigationAction
@@ -50,6 +51,9 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper
 
+    @Mock
+    lateinit var bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider
+
     private lateinit var viewModelSlice: BloggingPromptCardViewModelSlice
 
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
@@ -72,7 +76,8 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
             appPrefsWrapper,
             bloggingPromptsCardAnalyticsTracker,
             bloggingPromptsSettingsHelper,
-            bloggingPromptsCardTrackHelper
+            bloggingPromptsCardTrackHelper,
+            bloggingPromptsPostTagProvider,
         )
 
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
@@ -125,11 +130,13 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `given blogging prompt card, when view answers is clicked, view more action is called`() = test {
-        val promptId = 123
-        val expectedTag = BloggingPromptsPostTagProvider.promptIdSearchReaderTag(promptId)
+        val tagUrl = "valid-url"
+
+        val expectedTag = mock<ReaderTag>()
+        whenever(bloggingPromptsPostTagProvider.promptIdSearchReaderTag(tagUrl)).thenReturn(expectedTag)
 
         val params = viewModelSlice.getBuilderParams(mock())
-        params.onViewAnswersClick(promptId)
+        params.onViewAnswersClick(tagUrl)
 
         assertThat(navigationActions).containsOnly(BloggingPromptCardNavigationAction.ViewAnswers(expectedTag))
         verify(bloggingPromptsCardAnalyticsTracker).trackMySiteCardViewAnswersClicked()

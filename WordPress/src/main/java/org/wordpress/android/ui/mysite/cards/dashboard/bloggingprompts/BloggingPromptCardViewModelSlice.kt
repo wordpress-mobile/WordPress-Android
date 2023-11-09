@@ -31,7 +31,8 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
-    private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper
+    private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
+    private val bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider,
 ) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage as LiveData<Event<SnackbarMessageHolder>>
@@ -92,9 +93,9 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         }
     }
 
-    private fun onBloggingPromptViewAnswersClick(promptId: Int) {
+    private fun onBloggingPromptViewAnswersClick(tagUrl: String) {
         bloggingPromptsCardAnalyticsTracker.trackMySiteCardViewAnswersClicked()
-        val tag = BloggingPromptsPostTagProvider.promptIdSearchReaderTag(promptId)
+        val tag = bloggingPromptsPostTagProvider.promptIdSearchReaderTag(tagUrl)
         _onNavigation.value = Event(BloggingPromptCardNavigationAction.ViewAnswers(tag))
     }
 

@@ -26,6 +26,7 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 
 typealias PromptID = Int
+typealias TagURL = String
 
 sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartItem: Boolean = false) {
     enum class Type {
@@ -290,12 +291,13 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 val numberOfAnswers: Int,
                 val isAnswered: Boolean,
                 val promptId: Int,
+                val tagUrl: String,
                 val attribution: BloggingPromptAttribution,
                 val onShareClick: (String) -> Unit,
                 val onAnswerClick: (PromptID) -> Unit,
                 val onSkipClick: () -> Unit,
                 val onViewMoreClick: () -> Unit,
-                val onViewAnswersClick: ((PromptID) -> Unit)?,
+                val onViewAnswersClick: ((TagURL) -> Unit)?,
                 val onRemoveClick: () -> Unit,
             ) : BloggingPromptCard(type = Type.BLOGGING_PROMPT_CARD)
         }

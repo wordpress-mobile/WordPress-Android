@@ -415,9 +415,6 @@ class EditorMediaTest : BaseUnitTest() {
             on { isNetworkAvailable() }.thenReturn(isOnline)
         }
 
-        fun createMediaModel(localId: Int = 1, mediaId: Long) = MediaModel().apply {
-            this.mediaId = mediaId
-            this.id = localId
-        }
+        fun createMediaModel(localId: Int = 1, mediaId: Long) = MediaModel(0, mediaId).apply { id = localId }
     }
 }

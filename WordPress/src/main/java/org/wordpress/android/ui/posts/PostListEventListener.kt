@@ -171,10 +171,10 @@ class PostListEventListener(
         }
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "SpreadOperator")
     @Subscribe(threadMode = BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
-        if (!event.isError && event.mediaList != null) {
+        if (!event.isError) {
             featuredMediaChanged(*event.mediaList.map { it.mediaId }.toLongArray())
             uploadStatusChanged(*event.mediaList.map { it.localPostId }.toIntArray())
         }
@@ -214,12 +214,12 @@ class PostListEventListener(
         if (event.isError || event.canceled) {
             return
         }
-        if (event.media == null || event.media.localPostId == 0 || site.id != event.media.localSiteId) {
-            // Not interested in media not attached to posts or not belonging to the current site
-            return
+        val media = event.media
+        if (media != null && media.localPostId != 0 && site.id == media.localSiteId) {
+            featuredMediaChanged(media.mediaId)
+            uploadStatusChanged(media.localPostId)
         }
-        featuredMediaChanged(event.media.mediaId)
-        uploadStatusChanged(event.media.localPostId)
+        // Not interested in media not attached to posts or not belonging to the current site
     }
 
     // EventBus Events
@@ -283,7 +283,7 @@ class PostListEventListener(
         uploadStatusChanged(event.media.localPostId)
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "SpreadOperator")
     @Subscribe(threadMode = BACKGROUND)
     fun onEventBackgroundThread(event: UploadService.UploadMediaRetryEvent) {
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {

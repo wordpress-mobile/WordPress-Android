@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog.T;
@@ -40,23 +41,24 @@ public class FluxCUtils {
             return null;
         }
 
-        MediaModel mediaModel = new MediaModel();
-        mediaModel.setFileName(file.getFileName());
-        mediaModel.setFilePath(file.getFilePath());
-        mediaModel.setFileExtension(org.wordpress.android.fluxc.utils.MediaUtils.getExtension(file.getFilePath()));
-        mediaModel.setMimeType(file.getMimeType());
-        mediaModel.setThumbnailUrl(file.getThumbnailURL());
-        mediaModel.setUrl(file.getFileURL());
-        mediaModel.setTitle(file.getTitle());
-        mediaModel.setDescription(file.getDescription());
-        mediaModel.setCaption(file.getCaption());
-        mediaModel.setAlt(file.getAlt());
-        mediaModel.setMediaId(file.getMediaId() != null ? Long.valueOf(file.getMediaId()) : 0);
-        mediaModel.setId(file.getId());
-        mediaModel.setUploadState(file.getUploadState());
-        mediaModel.setLocalSiteId(Integer.valueOf(file.getBlogId()));
-        mediaModel.setVideoPressGuid(file.getVideoPressGuid());
-        return mediaModel;
+        String filePath = file.getFilePath();
+        return new MediaModel(
+                file.getId(),
+                Integer.parseInt(file.getBlogId()),
+                file.getMediaId() != null ? Long.parseLong(file.getMediaId()) : 0,
+                file.getFileURL(),
+                file.getThumbnailURL(),
+                file.getFileName(),
+                filePath,
+                org.wordpress.android.fluxc.utils.MediaUtils.getExtension(filePath),
+                file.getMimeType(),
+                file.getTitle(),
+                file.getCaption(),
+                file.getDescription(),
+                file.getAlt(),
+                file.getVideoPressGuid(),
+                MediaUploadState.fromString(file.getUploadState())
+        );
     }
 
     public static MediaFile mediaFileFromMediaModel(MediaModel media) {
@@ -93,6 +95,7 @@ public class FluxCUtils {
      *
      * @return MediaModel or null in case of problems reading the URI
      */
+    @Nullable
     public static MediaModel mediaModelFromLocalUri(@NonNull Context context,
                                                     @NonNull Uri uri,
                                                     @Nullable String mimeType,
@@ -112,7 +115,6 @@ public class FluxCUtils {
             return null;
         }
 
-        MediaModel media = mediaStore.instantiateMediaModel();
         String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
         if (filename == null) filename = "";
         String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
@@ -140,15 +142,22 @@ public class FluxCUtils {
             filename += "." + fileExtension;
         }
 
-        media.setFileName(filename);
-        media.setTitle(title);
-        media.setFilePath(path);
-        media.setLocalSiteId(localSiteId);
-        media.setFileExtension(fileExtension);
-        media.setMimeType(mimeType);
-        media.setUploadState(MediaModel.MediaUploadState.QUEUED);
-        media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
-
-        return media;
+        MediaModel media = new MediaModel(
+                localSiteId,
+                DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000),
+                filename,
+                path,
+                fileExtension,
+                mimeType,
+                title,
+                MediaModel.MediaUploadState.QUEUED
+        );
+        MediaModel instantiatedMedia = mediaStore.instantiateMediaModel(media);
+        if (instantiatedMedia != null) {
+            return instantiatedMedia;
+        } else {
+            AppLog.w(T.MEDIA, "The media couldn't instantiate.");
+            return null;
+        }
     }
 }

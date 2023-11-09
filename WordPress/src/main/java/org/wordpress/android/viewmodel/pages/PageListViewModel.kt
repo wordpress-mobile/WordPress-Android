@@ -296,17 +296,17 @@ class PageListViewModel @Inject constructor(
 
         mediaStore.getSiteMediaWithId(pagesViewModel.site, featuredImageId)?.let { media ->
             // This should be a pretty rare case, but some media seems to be missing url
-            return if (media.url != null) {
+            return if (media.url.isNotBlank()) {
                 featuredImageMap[featuredImageId] = media.url
                 media.url
             } else null
         }
 
         // Media is not in the Store, we need to download it
-        val mediaToDownload = MediaModel()
-        mediaToDownload.mediaId = featuredImageId
-        mediaToDownload.localSiteId = pagesViewModel.site.id
-
+        val mediaToDownload = MediaModel(
+            pagesViewModel.site.id,
+            featuredImageId
+        )
         val payload = MediaPayload(pagesViewModel.site, mediaToDownload)
         dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
 
@@ -482,10 +482,10 @@ class PageListViewModel @Inject constructor(
         pagesViewModel.onImagesChanged()
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "SpreadOperator")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
-        if (!event.isError && event.mediaList != null) {
+        if (!event.isError) {
             invalidateFeaturedMedia(*event.mediaList.map { it.mediaId }.toLongArray())
         }
     }
