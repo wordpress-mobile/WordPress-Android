@@ -1,5 +1,8 @@
 package org.wordpress.android.fluxc.model;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
@@ -19,7 +22,8 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     public enum MediaUploadState {
         QUEUED, UPLOADING, DELETING, DELETED, FAILED, UPLOADED;
 
-        public static MediaUploadState fromString(String stringState) {
+        @NonNull
+        public static MediaUploadState fromString(@Nullable String stringState) {
             if (stringState != null) {
                 for (MediaUploadState state : MediaUploadState.values()) {
                     if (stringState.equalsIgnoreCase(state.toString())) {
@@ -40,26 +44,26 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     @Column private long mMediaId; // The remote ID of the media
     @Column private long mPostId; // The remote post ID ('parent') of the media
     @Column private long mAuthorId;
-    @Column private String mGuid;
+    @NonNull @Column private String mGuid;
 
     // Upload date, ISO 8601-formatted date in UTC
-    @Column private String mUploadDate;
+    @Nullable @Column private String mUploadDate;
 
     // Remote Url's
-    @Column private String mUrl;
-    @Column private String mThumbnailUrl;
+    @NonNull @Column private String mUrl;
+    @Nullable @Column private String mThumbnailUrl;
 
     // File descriptors
-    @Column private String mFileName;
-    @Column private String mFilePath;
-    @Column private String mFileExtension;
-    @Column private String mMimeType;
+    @Nullable @Column private String mFileName;
+    @Nullable @Column private String mFilePath;
+    @Nullable @Column private String mFileExtension;
+    @Nullable @Column private String mMimeType;
 
     // Descriptive strings
-    @Column private String mTitle;
-    @Column private String mCaption;
-    @Column private String mDescription;
-    @Column private String mAlt;
+    @Nullable @Column private String mTitle;
+    @NonNull @Column private String mCaption;
+    @NonNull @Column private String mDescription;
+    @NonNull @Column private String mAlt;
 
     // Image and Video files only
     @Column private int mWidth;
@@ -69,17 +73,17 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
     @Column private int mLength;
 
     // Video only
-    @Column private String mVideoPressGuid;
+    @Nullable @Column private String mVideoPressGuid;
     @Column private boolean mVideoPressProcessingDone;
 
     // Local only
-    @Column private String mUploadState;
+    @Nullable @Column private String mUploadState;
     @Column private boolean mMarkedLocallyAsFeatured;
 
     // Other Sizes. Only available for images on self-hosted (xmlrpc layer) and Rest WPCOM sites
-    @Column private String mFileUrlMediumSize; // Self-hosted and wpcom
-    @Column private String mFileUrlMediumLargeSize; // Self-hosted only
-    @Column private String mFileUrlLargeSize; // Self-hosted and wpcom
+    @Nullable @Column private String mFileUrlMediumSize; // Self-hosted and wpcom
+    @Nullable @Column private String mFileUrlMediumLargeSize; // Self-hosted only
+    @Nullable @Column private String mFileUrlLargeSize; // Self-hosted and wpcom
 
     //
     // Legacy
@@ -104,23 +108,219 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         CAPTION("caption"),
         ALT("alt");
 
-        private String mFieldName;
+        @NonNull private final String mFieldName;
 
         // Constructor
-        MediaFields(String fieldName) {
+        MediaFields(@NonNull String fieldName) {
             this.mFieldName = fieldName;
         }
 
         // Getter
+        @NonNull
         public String getFieldName() {
             return this.mFieldName;
         }
     }
 
-    private MediaFields[] mFieldsToUpdate = MediaFields.values();
+    @NonNull private MediaFields[] mFieldsToUpdate = MediaFields.values();
+
+    @Deprecated
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    public MediaModel() {
+        this.mId = 0;
+        this.mLocalSiteId = 0;
+        this.mLocalPostId = 0;
+        this.mMediaId = 0;
+        this.mPostId = 0;
+        this.mAuthorId = 0;
+        this.mGuid = "";
+        this.mUploadDate = null;
+        this.mUrl = "";
+        this.mThumbnailUrl = null;
+        this.mFileName = null;
+        this.mFilePath = null;
+        this.mFileExtension = null;
+        this.mMimeType = null;
+        this.mTitle = null;
+        this.mCaption = "";
+        this.mDescription = "";
+        this.mAlt = "";
+        this.mWidth = 0;
+        this.mHeight = 0;
+        this.mLength = 0;
+        this.mVideoPressGuid = null;
+        this.mVideoPressProcessingDone = false;
+        this.mUploadState = null;
+        this.mMarkedLocallyAsFeatured = false;
+        this.mFileUrlMediumSize = null;
+        this.mFileUrlMediumLargeSize = null;
+        this.mFileUrlLargeSize = null;
+        this.mHorizontalAlignment = 0;
+        this.mVerticalAlignment = false;
+        this.mFeatured = false;
+        this.mFeaturedInPost = false;
+        this.mDeleted = false;
+    }
+
+    /**
+     * Use when getting an existing media.
+     */
+    public MediaModel(
+            int localSiteId,
+            long mediaId) {
+        this.mLocalSiteId = localSiteId;
+        this.mMediaId = mediaId;
+        this.mGuid = "";
+        this.mUrl = "";
+        this.mCaption = "";
+        this.mDescription = "";
+        this.mAlt = "";
+    }
+
+    /**
+     * Use when converting local uri into a media, and then, to upload a new or update an existing media.
+     */
+    public MediaModel(
+            int localSiteId,
+            @Nullable String uploadDate,
+            @Nullable String fileName,
+            @Nullable String filePath,
+            @Nullable String fileExtension,
+            @Nullable String mimeType,
+            @Nullable String title,
+            @Nullable MediaUploadState uploadState) {
+        this.mLocalSiteId = localSiteId;
+        this.mGuid = "";
+        this.mUploadDate = uploadDate;
+        this.mUrl = "";
+        this.mFileName = fileName;
+        this.mFilePath = filePath;
+        this.mFileExtension = fileExtension;
+        this.mMimeType = mimeType;
+        this.mTitle = title;
+        this.mCaption = "";
+        this.mDescription = "";
+        this.mAlt = "";
+        this.mUploadState = uploadState != null ? uploadState.toString() : null;
+    }
+
+    /**
+     * Use when converting editor image metadata into a media.
+     */
+    public MediaModel(
+            @NonNull String url,
+            @Nullable String fileName,
+            @Nullable String fileExtension,
+            @Nullable String title,
+            @NonNull String caption,
+            @NonNull String alt,
+            int width,
+            int height) {
+        this.mGuid = "";
+        this.mUrl = url;
+        this.mFileName = fileName;
+        this.mFileExtension = fileExtension;
+        this.mTitle = title;
+        this.mCaption = caption;
+        this.mDescription = "";
+        this.mAlt = alt;
+        this.mWidth = width;
+        this.mHeight = height;
+    }
+
+    /**
+     * Use when converting a media file into a media.
+     */
+    public MediaModel(
+            int id,
+            int localSiteId,
+            long mediaId,
+            @NonNull String url,
+            @Nullable String thumbnailUrl,
+            @Nullable String fileName,
+            @Nullable String filePath,
+            @Nullable String fileExtension,
+            @Nullable String mimeType,
+            @Nullable String title,
+            @NonNull String caption,
+            @NonNull String description,
+            @NonNull String alt,
+            @Nullable String videoPressGuid,
+            @NonNull MediaUploadState uploadState) {
+        this.mId = id;
+        this.mLocalSiteId = localSiteId;
+        this.mMediaId = mediaId;
+        this.mGuid = "";
+        this.mUrl = url;
+        this.mThumbnailUrl = thumbnailUrl;
+        this.mFileName = fileName;
+        this.mFilePath = filePath;
+        this.mFileExtension = fileExtension;
+        this.mMimeType = mimeType;
+        this.mTitle = title;
+        this.mCaption = caption;
+        this.mDescription = description;
+        this.mAlt = alt;
+        this.mVideoPressGuid = videoPressGuid;
+        this.mUploadState = uploadState.toString();
+    }
+
+    public MediaModel(
+            int localSiteId,
+            long mediaId,
+            long postId,
+            long authorId,
+            @NonNull String guid,
+            @Nullable String uploadDate,
+            @NonNull String url,
+            @Nullable String thumbnailUrl,
+            @Nullable String fileName,
+            @Nullable String fileExtension,
+            @Nullable String mimeType,
+            @Nullable String title,
+            @NonNull String caption,
+            @NonNull String description,
+            @NonNull String alt,
+            int width,
+            int height,
+            int length,
+            @Nullable String videoPressGuid,
+            boolean videoPressProcessingDone,
+            @NonNull MediaUploadState uploadState,
+            @Nullable String fileUrlMediumSize,
+            @Nullable String fileUrlMediumLargeSize,
+            @Nullable String fileUrlLargeSize,
+            boolean deleted) {
+        this.mLocalSiteId = localSiteId;
+        this.mMediaId = mediaId;
+        this.mPostId = postId;
+        this.mAuthorId = authorId;
+        this.mGuid = guid;
+        this.mUploadDate = uploadDate;
+        this.mUrl = url;
+        this.mThumbnailUrl = thumbnailUrl;
+        this.mFileName = fileName;
+        this.mFileExtension = fileExtension;
+        this.mMimeType = mimeType;
+        this.mTitle = title;
+        this.mCaption = caption;
+        this.mDescription = description;
+        this.mAlt = alt;
+        this.mWidth = width;
+        this.mHeight = height;
+        this.mLength = length;
+        this.mVideoPressGuid = videoPressGuid;
+        this.mVideoPressProcessingDone = videoPressProcessingDone;
+        this.mUploadState = uploadState.toString();
+        this.mFileUrlMediumSize = fileUrlMediumSize;
+        this.mFileUrlMediumLargeSize = fileUrlMediumLargeSize;
+        this.mFileUrlLargeSize = fileUrlLargeSize;
+        this.mDeleted = deleted;
+    }
 
     @Override
-    public boolean equals(Object other) {
+    @SuppressWarnings("ConditionCoveredByFurtherCondition")
+    public boolean equals(@Nullable Object other) {
         if (this == other) return true;
         if (other == null || !(other instanceof MediaModel)) return false;
 
@@ -206,98 +406,110 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         return mAuthorId;
     }
 
-    public void setGuid(String guid) {
+    public void setGuid(@NonNull String guid) {
         mGuid = guid;
     }
 
+    @NonNull
     public String getGuid() {
         return mGuid;
     }
 
-    public void setUploadDate(String uploadDate) {
+    public void setUploadDate(@Nullable String uploadDate) {
         mUploadDate = uploadDate;
     }
 
+    @Nullable
     public String getUploadDate() {
         return mUploadDate;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(@NonNull String url) {
         mUrl = url;
     }
 
+    @NonNull
     public String getUrl() {
         return mUrl;
     }
 
-    public void setThumbnailUrl(String thumbnailUrl) {
+    public void setThumbnailUrl(@Nullable String thumbnailUrl) {
         mThumbnailUrl = thumbnailUrl;
     }
 
+    @Nullable
     public String getThumbnailUrl() {
         return mThumbnailUrl;
     }
 
-    public void setFileName(String fileName) {
+    public void setFileName(@Nullable String fileName) {
         mFileName = fileName;
     }
 
+    @Nullable
     public String getFileName() {
         return mFileName;
     }
 
-    public void setFilePath(String filePath) {
+    public void setFilePath(@Nullable String filePath) {
         mFilePath = filePath;
     }
 
+    @Nullable
     public String getFilePath() {
         return mFilePath;
     }
 
-    public void setFileExtension(String fileExtension) {
+    public void setFileExtension(@Nullable String fileExtension) {
         mFileExtension = fileExtension;
     }
 
+    @Nullable
     public String getFileExtension() {
         return mFileExtension;
     }
 
-    public void setMimeType(String mimeType) {
+    public void setMimeType(@Nullable String mimeType) {
         mMimeType = mimeType;
     }
 
+    @Nullable
     public String getMimeType() {
         return mMimeType;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(@Nullable String title) {
         mTitle = title;
     }
 
+    @Nullable
     public String getTitle() {
         return mTitle;
     }
 
-    public void setCaption(String caption) {
+    public void setCaption(@NonNull String caption) {
         mCaption = caption;
     }
 
+    @NonNull
     public String getCaption() {
         return mCaption;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(@NonNull String description) {
         mDescription = description;
     }
 
+    @NonNull
     public String getDescription() {
         return mDescription;
     }
 
-    public void setAlt(String alt) {
+    public void setAlt(@NonNull String alt) {
         mAlt = alt;
     }
 
+    @NonNull
     public String getAlt() {
         return mAlt;
     }
@@ -326,10 +538,11 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         return mLength;
     }
 
-    public void setVideoPressGuid(String videoPressGuid) {
+    public void setVideoPressGuid(@Nullable String videoPressGuid) {
         mVideoPressGuid = videoPressGuid;
     }
 
+    @Nullable
     public String getVideoPressGuid() {
         return mVideoPressGuid;
     }
@@ -342,23 +555,26 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         return mVideoPressProcessingDone;
     }
 
-    public void setUploadState(String uploadState) {
+    public void setUploadState(@Nullable String uploadState) {
         mUploadState = uploadState;
     }
 
+    public void setUploadState(@NonNull MediaUploadState uploadState) {
+        mUploadState = uploadState.toString();
+    }
+
+    @Nullable
     public String getUploadState() {
         return mUploadState;
     }
 
-    public void setUploadState(MediaUploadState uploadState) {
-        mUploadState = uploadState.toString();
-    }
-
+    @NonNull
     public MediaFields[] getFieldsToUpdate() {
         return mFieldsToUpdate;
     }
 
-    public void setFieldsToUpdate(MediaFields[] fieldsToUpdate) {
+    @SuppressWarnings("unused")
+    public void setFieldsToUpdate(@NonNull MediaFields[] fieldsToUpdate) {
         this.mFieldsToUpdate = fieldsToUpdate;
     }
 
@@ -418,26 +634,29 @@ public class MediaModel extends Payload<BaseNetworkError> implements Identifiabl
         return mDeleted;
     }
 
-    public void setFileUrlMediumSize(String file) {
+    public void setFileUrlMediumSize(@Nullable String file) {
         mFileUrlMediumSize = file;
     }
 
+    @Nullable
     public String getFileUrlMediumSize() {
         return mFileUrlMediumSize;
     }
 
-    public void setFileUrlMediumLargeSize(String file) {
+    public void setFileUrlMediumLargeSize(@Nullable String file) {
         mFileUrlMediumLargeSize = file;
     }
 
+    @Nullable
     public String getFileUrlMediumLargeSize() {
         return mFileUrlMediumLargeSize;
     }
 
-    public void setFileUrlLargeSize(String file) {
+    public void setFileUrlLargeSize(@Nullable String file) {
         mFileUrlLargeSize = file;
     }
 
+    @Nullable
     public String getFileUrlLargeSize() {
         return mFileUrlLargeSize;
     }

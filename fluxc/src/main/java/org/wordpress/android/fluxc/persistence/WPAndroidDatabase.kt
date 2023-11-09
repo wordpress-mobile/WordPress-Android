@@ -31,7 +31,7 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.JetpackSocialEntity
 
 @Database(
-        version = 20,
+        version = 23,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -54,6 +54,7 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.Je
             AutoMigration(from = 13, to = 14),
             AutoMigration(from = 16, to = 17),
             AutoMigration(from = 17, to = 18),
+            AutoMigration(from = 22, to = 23),
         ]
 )
 @TypeConverters(
@@ -103,6 +104,8 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 .addMigrations(MIGRATION_15_16)
                 .addMigrations(MIGRATION_18_19)
                 .addMigrations(MIGRATION_19_20)
+                .addMigrations(MIGRATION_20_21)
+                .addMigrations(MIGRATION_21_22)
                 .build()
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -296,6 +299,50 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                         "CREATE INDEX IF NOT EXISTS `index_BlazeCampaigns_siteId` " +
                                 "ON `BlazeCampaigns` (`siteId`)"
                     )
+                }
+            }
+        }
+        val MIGRATION_20_21 = object : Migration(20, 21) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.apply {
+                    execSQL(
+                        "ALTER TABLE `BlazeCampaigns` ADD COLUMN `targetUrn` TEXT"
+                    )
+                }
+            }
+        }
+
+        val MIGRATION_21_22 = object : Migration(21, 22) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // migrate old data to new table schema
+                database.apply {
+                    execSQL(
+                        "CREATE TABLE IF NOT EXISTS `BloggingPrompts_new` (" +
+                            "`id` INTEGER NOT NULL," +
+                            "`siteLocalId` INTEGER NOT NULL," +
+                            "`text` TEXT NOT NULL," +
+                            "`date` TEXT NOT NULL," +
+                            "`isAnswered` INTEGER NOT NULL," +
+                            "`respondentsCount` INTEGER NOT NULL," +
+                            "`attribution` TEXT NOT NULL," +
+                            "`respondentsAvatars` TEXT NOT NULL," +
+                            "`answeredLink` TEXT NOT NULL," +
+                            "PRIMARY KEY(`date`)" +
+                            ")"
+                    )
+
+                    val tagPrefix = "https://wordpress.com/tag/dailyprompt-"
+                    execSQL(
+                        "INSERT INTO BloggingPrompts_new (" +
+                            "id, siteLocalId, text, date, isAnswered, " +
+                            "respondentsCount, attribution, respondentsAvatars, answeredLink) " +
+                            "SELECT id, siteLocalId, text, date, isAnswered, " +
+                            "respondentsCount, attribution, respondentsAvatars, " +
+                            "'$tagPrefix' || id FROM BloggingPrompts"
+                    )
+
+                    execSQL("DROP TABLE `BloggingPrompts`")
+                    execSQL("ALTER TABLE `BloggingPrompts_new` RENAME TO `BloggingPrompts`")
                 }
             }
         }

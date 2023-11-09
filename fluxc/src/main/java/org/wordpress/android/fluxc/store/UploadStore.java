@@ -461,8 +461,10 @@ public class UploadStore extends Store {
         emitChange(new OnUploadChanged(UploadAction.CLEAR_MEDIA_FOR_POST));
     }
 
-    private @NonNull Set<MediaModel> getMediaForPostWithState(PostImmutableModel post,
-                                                              @MediaUploadModel.UploadState int state) {
+    @NonNull
+    private Set<MediaModel> getMediaForPostWithState(
+            PostImmutableModel post,
+            @MediaUploadModel.UploadState int state) {
         PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(post.getId());
         if (postUploadModel == null) {
             return Collections.emptySet();
