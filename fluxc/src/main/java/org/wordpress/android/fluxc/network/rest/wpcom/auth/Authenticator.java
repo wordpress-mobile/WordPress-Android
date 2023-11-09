@@ -172,7 +172,7 @@ public class Authenticator {
                 JSONObject responseData = new JSONObject(jsonString);
                 JSONObject successData = responseData.optJSONObject(DATA);
                 if (successData != null) {
-                    return Response.success(new WebauthnResponse(successData),
+                    return Response.success(new TwoFactorResponse(successData),
                             HttpHeaderParser.parseCacheHeaders(response));
                 }
 
@@ -251,7 +251,7 @@ public class Authenticator {
         }
     }
 
-    public static class WebauthnResponse implements OauthResponse {
+    public static class TwoFactorResponse implements OauthResponse {
         private static final String USER_ID = "user_id";
         private static final String TWO_STEP_WEBAUTHN_NONCE = "two_step_nonce_webauthn";
         private static final String TWO_STEP_BACKUP_NONCE = "two_step_nonce_backup";
@@ -263,7 +263,7 @@ public class Authenticator {
         public final String mAuthenticatorNonce;
         public final String mPushNonce;
 
-        public WebauthnResponse(JSONObject data) throws JSONException {
+        public TwoFactorResponse(JSONObject data) throws JSONException {
             mUserId = data.getString(USER_ID);
             mWebauthnNonce = data.getString(TWO_STEP_WEBAUTHN_NONCE);
             mBackupNonce = data.getString(TWO_STEP_BACKUP_NONCE);
