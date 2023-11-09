@@ -5,7 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailWebViewNavigationDelegate
-import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailWebViewNavigationDelegate.Url
+import org.wordpress.android.ui.utils.AbstractAllowedUrlsWebViewNavigationDelegate.Url
 
 @ExperimentalCoroutinesApi
 class CampaignDetailWebViewNavigationDelegateTest : BaseUnitTest() {
