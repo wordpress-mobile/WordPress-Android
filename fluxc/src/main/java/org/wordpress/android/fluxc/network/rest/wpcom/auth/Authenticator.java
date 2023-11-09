@@ -262,11 +262,9 @@ public class Authenticator {
         public final String mBackupNonce;
         public final String mAuthenticatorNonce;
         public final String mPushNonce;
-        public final String mTwoStepWebauthnNonce;
 
         public WebauthnResponse(JSONObject data) throws JSONException {
             mUserId = data.getString(USER_ID);
-            mTwoStepWebauthnNonce = data.getString(TWO_STEP_WEBAUTHN_NONCE);
             mWebauthnNonce = data.getString(TWO_STEP_WEBAUTHN_NONCE);
             mBackupNonce = data.getString(TWO_STEP_BACKUP_NONCE);
             mAuthenticatorNonce = data.getString(TWO_STEP_AUTHENTICATOR_NONCE);
