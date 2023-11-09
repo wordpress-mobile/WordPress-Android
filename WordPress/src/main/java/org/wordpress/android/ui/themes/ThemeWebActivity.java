@@ -54,8 +54,12 @@ public class ThemeWebActivity extends WPWebViewActivity {
         return WPWebViewActivity.getSiteLoginUrl(site);
     }
 
-    public static void openTheme(Activity activity, @NonNull SiteModel site, @NonNull ThemeModel theme,
-                                 @NonNull ThemeWebActivityType type) {
+    public static void openTheme(
+            Activity activity,
+            @NonNull SiteModel site,
+            @NonNull ThemeModel theme,
+            @NonNull ThemeWebActivityType type
+    ) {
         String url = getUrl(site, theme, type, !theme.isFree());
         if (TextUtils.isEmpty(url)) {
             ToastUtils.showToast(activity, R.string.could_not_load_theme);
@@ -72,7 +76,12 @@ public class ThemeWebActivity extends WPWebViewActivity {
         }
     }
 
-    private static void openWPCOMURL(Activity activity, String url, ThemeModel theme, SiteModel site) {
+    private static void openWPCOMURL(
+            Activity activity,
+            String url,
+            @NonNull ThemeModel theme,
+            SiteModel site
+    ) {
         if (activity == null) {
             AppLog.e(AppLog.T.UTILS, "ThemeWebActivity requires a non-null activity");
             return;
