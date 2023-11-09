@@ -200,8 +200,12 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         }
     }
 
-    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId,
-                                    final boolean isCurrent) {
+    private void configureImageView(
+            ThemeViewHolder themeViewHolder,
+            String screenshotURL,
+            @NonNull final String themeId,
+            final boolean isCurrent
+    ) {
         mImageManager.load(themeViewHolder.mImageView, ImageType.THEME, getUrlWithWidth(screenshotURL),
                 ScaleType.FIT_CENTER);
 
@@ -225,8 +229,12 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         }
     }
 
-    private void configureImageButton(ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium,
-                                      boolean isCurrent) {
+    private void configureImageButton(
+            ThemeViewHolder themeViewHolder,
+            @NonNull final String themeId,
+            final boolean isPremium,
+            boolean isCurrent
+    ) {
         final PopupMenu popupMenu = new PopupMenu(mContext, themeViewHolder.mImageButton);
         popupMenu.getMenuInflater().inflate(R.menu.theme_more, popupMenu.getMenu());
 
