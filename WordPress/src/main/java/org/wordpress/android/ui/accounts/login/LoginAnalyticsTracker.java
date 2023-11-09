@@ -391,4 +391,20 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override public void usernamePasswordScreenResumed() {
         mUnifiedLoginTracker.setStep(Step.USERNAME_PASSWORD);
     }
+
+    @Override public void trackLoginSecurityKeyFailure() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SECURITY_KEY_FAILURE);
+    }
+
+    @Override public void trackLoginSecurityKeyNeeded() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SECURITY_KEY_NEEDED);
+    }
+
+    @Override public void trackLoginSecurityKeySuccess() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SECURITY_KEY_SUCCESS);
+    }
+
+    @Override public void trackUseSecurityKeyClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SECURITY_KEY_CLICKED);
+    }
 }
