@@ -13,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -36,7 +37,9 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LanguageUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -257,11 +260,13 @@ public class Authenticator {
         private static final String TWO_STEP_BACKUP_NONCE = "two_step_nonce_backup";
         private static final String TWO_STEP_AUTHENTICATOR_NONCE = "two_step_nonce_authenticator";
         private static final String TWO_STEP_PUSH_NONCE = "two_step_nonce_push";
+        private static final String TWO_STEP_SUPPORTED_AUTH_TYPES = "two_step_supported_auth_types";
         public final String mUserId;
         public final String mWebauthnNonce;
         public final String mBackupNonce;
         public final String mAuthenticatorNonce;
         public final String mPushNonce;
+        public final List<String> mSupportedAuthTypes;
 
         public TwoFactorResponse(JSONObject data) throws JSONException {
             mUserId = data.getString(USER_ID);
@@ -269,6 +274,16 @@ public class Authenticator {
             mBackupNonce = data.optString(TWO_STEP_BACKUP_NONCE);
             mAuthenticatorNonce = data.optString(TWO_STEP_AUTHENTICATOR_NONCE);
             mPushNonce = data.optString(TWO_STEP_PUSH_NONCE);
+            JSONArray supportedTypes = data.getJSONArray(TWO_STEP_SUPPORTED_AUTH_TYPES);
+            if (supportedTypes.length() == 0) {
+                throw new JSONException("No supported auth types found");
+            }
+
+            ArrayList<String> supportedAuthTypes = new ArrayList<>();
+            for(int i = 0; i < supportedTypes.length(); i++) {
+                supportedAuthTypes.add(supportedTypes.getString(i));
+            }
+            mSupportedAuthTypes = supportedAuthTypes;
         }
     }
 
