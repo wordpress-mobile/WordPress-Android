@@ -2715,8 +2715,8 @@
     <string name="domain_management_purchase_a_domain">Purchase a domain</string>
     <string name="domain_management_search_your_domains">Search your domains</string>
     <string name="domain_management_open_domain_details">Open domain details</string>
-    <string name="domain_management_error_title">Couldn\'t Update</string>
-    <string name="domain_management_error_subtitle">Check that you\'re online and refresh.</string>
+    <string name="domain_management_error_title">Couldn\'t retrieve your domains</string>
+    <string name="domain_management_error_subtitle">Check that you\'re online and pull to refresh.</string>
     <string name="domain_management_empty_title">You don\'t have any domains</string>
     <string name="domain_management_empty_subtitle">Tap below to find your perfect domain.</string>
     <string name="domain_management_empty_find_domain">Find a domain</string>
