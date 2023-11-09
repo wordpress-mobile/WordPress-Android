@@ -104,6 +104,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
         activity.startActivityForResult(intent, ThemeBrowserActivity.ACTIVATE_THEME);
     }
 
+    @Nullable
     public static String getIdentifierForCustomizer(@NonNull SiteModel site, @NonNull ThemeModel theme) {
         if (site.isJetpackConnected()) {
             return theme.getThemeId();
@@ -112,8 +113,13 @@ public class ThemeWebActivity extends WPWebViewActivity {
         }
     }
 
-    public static String getUrl(@NonNull SiteModel site, @NonNull ThemeModel theme, @NonNull ThemeWebActivityType type,
-                                boolean isPremium) {
+    @Nullable
+    public static String getUrl(
+            @NonNull SiteModel site,
+            @NonNull ThemeModel theme,
+            @NonNull ThemeWebActivityType type,
+            boolean isPremium
+    ) {
         if (theme.isWpComTheme()) {
             switch (type) {
                 case PREVIEW:
@@ -135,7 +141,12 @@ public class ThemeWebActivity extends WPWebViewActivity {
         } else {
             switch (type) {
                 case PREVIEW:
-                    return site.getAdminUrl() + "customize.php?theme=" + getIdentifierForCustomizer(site, theme);
+                    String identifier = getIdentifierForCustomizer(site, theme);
+                    if (identifier != null) {
+                        return site.getAdminUrl() + "customize.php?theme=" + identifier;
+                    } else {
+                        return null;
+                    }
                 case DEMO:
                     return site.getAdminUrl() + "themes.php?theme=" + theme.getThemeId();
                 case DETAILS:
