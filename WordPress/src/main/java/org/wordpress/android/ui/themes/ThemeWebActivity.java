@@ -128,10 +128,14 @@ public class ThemeWebActivity extends WPWebViewActivity {
                             .format(THEME_URL_PREVIEW, UrlUtils.getHost(site.getUrl()), domain, theme.getThemeId());
                 case DEMO:
                     String url = theme.getDemoUrl();
-                    if (url.contains("?")) {
-                        return url + "&" + THEME_URL_DEMO_PARAMETER;
+                    if (url != null) {
+                        if (url.contains("?")) {
+                            return url + "&" + THEME_URL_DEMO_PARAMETER;
+                        } else {
+                            return url + "?" + THEME_URL_DEMO_PARAMETER;
+                        }
                     } else {
-                        return url + "?" + THEME_URL_DEMO_PARAMETER;
+                        return null;
                     }
                 case DETAILS:
                     return String.format(THEME_URL_DETAILS, theme.getThemeId());
