@@ -121,6 +121,7 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         data class GoToSitePicker(val domain: String) : ActionEvent()
         data class GoToExistingSiteCheckout(val domain: String, val siteModel: SiteModel) : ActionEvent()
         data class GoToExistingSitePlans(val domain: String, val siteModel: SiteModel) : ActionEvent()
+        object OpenDomainManagement : ActionEvent()
     }
 
     @AssistedFactory
