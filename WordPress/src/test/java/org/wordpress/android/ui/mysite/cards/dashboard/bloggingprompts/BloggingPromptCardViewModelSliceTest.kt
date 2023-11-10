@@ -17,12 +17,14 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.BloggingPromptCardNavigationAction
 import org.wordpress.android.ui.mysite.BloggingPromptsCardTrackHelper
 import org.wordpress.android.ui.mysite.MySiteSourceManager
+import org.wordpress.android.ui.mysite.MySiteUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -111,11 +113,17 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `given blogging prompt card, when answer button is clicked, answer action is called`() = test {
-        val params = viewModelSlice.getBuilderParams(mock())
+        val attribution = "attribution"
+        val bloggingPromptUpdate = mock<MySiteUiState.PartialState.BloggingPromptUpdate>().apply {
+            val mockPromptModel = mock<BloggingPromptModel>()
+            whenever(mockPromptModel.attribution).thenReturn(attribution)
+            whenever(promptModel).thenReturn(mockPromptModel)
+        }
+        val params = viewModelSlice.getBuilderParams(bloggingPromptUpdate)
 
         params.onAnswerClick(123)
 
-        verify(bloggingPromptsCardAnalyticsTracker).trackMySiteCardAnswerPromptClicked()
+        verify(bloggingPromptsCardAnalyticsTracker).trackMySiteCardAnswerPromptClicked(attribution)
         assertThat(navigationActions).containsOnly(BloggingPromptCardNavigationAction.AnswerPrompt(site, 123))
     }
 
