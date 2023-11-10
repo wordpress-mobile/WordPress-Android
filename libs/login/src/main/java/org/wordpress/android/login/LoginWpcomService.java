@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
+import org.wordpress.android.fluxc.store.AccountStore.OnTwoFactorAuthStarted;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
@@ -33,6 +34,7 @@ import org.wordpress.android.util.AutoForeground;
 import org.wordpress.android.util.AutoForegroundNotification;
 import org.wordpress.android.util.ToastUtils;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -59,6 +61,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         FAILURE_EMAIL_WRONG_PASSWORD,
         FAILURE_2FA,
         FAILURE_SOCIAL_2FA,
+        SECURITY_KEY_NEEDED,
         FAILURE_FETCHING_ACCOUNT,
         FAILURE_CANNOT_ADD_DUPLICATE_SITE,
         FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL,
@@ -102,6 +105,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
                     || mStep == LoginStep.FAILURE_EMAIL_WRONG_PASSWORD
                     || mStep == LoginStep.FAILURE_2FA
                     || mStep == LoginStep.FAILURE_SOCIAL_2FA
+                    || mStep == LoginStep.SECURITY_KEY_NEEDED
                     || mStep == LoginStep.FAILURE_FETCHING_ACCOUNT
                     || mStep == LoginStep.FAILURE_CANNOT_ADD_DUPLICATE_SITE
                     || mStep == LoginStep.FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL;
@@ -150,6 +154,26 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
 
     static class OnCredentialsOK {
         OnCredentialsOK() {}
+    }
+
+    static class TwoFactorRequested {
+        public final String userId;
+        public final String webauthnNonce;
+        public final String backupNonce;
+        public final String authenticatorNonce;
+        public final String pushNonce;
+        public final List<String> supportedAuthTypes;
+
+        TwoFactorRequested(String userId, String webauthnNonce, String backupNonce,
+                           String authenticatorNonce, String pushNonce,
+                           List<String> supportedAuthTypes) {
+            this.userId = userId;
+            this.webauthnNonce = webauthnNonce;
+            this.backupNonce = backupNonce;
+            this.authenticatorNonce = authenticatorNonce;
+            this.pushNonce = pushNonce;
+            this.supportedAuthTypes = supportedAuthTypes;
+        }
     }
 
     @Inject Dispatcher mDispatcher;
@@ -218,6 +242,8 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
                 return LoginNotification.failure(this, R.string.notification_2fa_needed);
             case FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL:
                 return LoginNotification.failure(this, R.string.notification_wpcom_username_needed);
+            case SECURITY_KEY_NEEDED:
+                return LoginNotification.failure(this, R.string.notification_security_key_needed);
             case FAILURE_FETCHING_ACCOUNT:
             case FAILURE_CANNOT_ADD_DUPLICATE_SITE:
             case FAILURE:
@@ -301,7 +327,6 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
                 } else {
                     setState(LoginStep.FAILURE_2FA);
                 }
-
                 break;
             case EMAIL_LOGIN_NOT_ALLOWED:
                 setState(LoginStep.FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL);
@@ -324,6 +349,17 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
 
     private void signalCredentialsOK() {
         EventBus.getDefault().post(new OnCredentialsOK());
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTwoFactorAuthStarted(OnTwoFactorAuthStarted event) {
+        signalCredentialsOK();
+        setState(LoginStep.SECURITY_KEY_NEEDED);
+        TwoFactorRequested twoFactorRequest = new TwoFactorRequested(event.userId,
+                event.webauthnNonce, event.mBackupNonce, event.authenticatorNonce,
+                event.pushNonce, event.mSupportedAuthTypes);
+        EventBus.getDefault().post(twoFactorRequest);
     }
 
     // OnChanged events

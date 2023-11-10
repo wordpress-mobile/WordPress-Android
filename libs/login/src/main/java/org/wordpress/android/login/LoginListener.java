@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface LoginListener {
     interface SelfSignedSSLCallback {
@@ -48,6 +49,9 @@ public interface LoginListener {
     void forgotPassword(String url);
     void useMagicLinkInstead(String email, boolean verifyEmail);
     void needs2fa(String email, String password);
+    void needs2fa(String email, String password, String userId, String webauthnNonce,
+                  String nonceAuthenticator, String nonceBackup, String noncePush,
+                  List<String> supportedAuthTypes);
     void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup, String nonceSms);
     void needs2faSocialConnect(String email, String password, String idToken, String service);
     void loggedInViaPassword(ArrayList<Integer> oldSitesIds);

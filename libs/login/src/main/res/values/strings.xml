@@ -23,6 +23,7 @@
     <string name="enter_verification_code">Almost there! Please enter the verification code for WordPress.com from your authenticator app.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
     <string name="login_text_otp">Text me a code instead</string>
+    <string name="login_text_security_key">Use a security key</string>
     <string name="login_text_otp_another">Text me another code instead</string>
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
     <string name="email_not_registered_wpcom">Hmm, we can\'t find a WordPress.com account connected to this email address.</string>
@@ -69,6 +70,7 @@
     <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
+    <string name="login_error_security_key">There was some trouble with the Security key login</string>
     <string name="sign_up_label">Sign Up</string>
     <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>
     <string name="signup_magic_link_error_button_negative">Close</string>
@@ -121,6 +123,7 @@
     <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
     <string name="notification_login_failed">An error has occurred.</string>
     <string name="notification_wpcom_username_needed">Please log in with your username and password.</string>
+    <string name="notification_security_key_needed">Please provide your security key to continue.</string>
 
     <!-- Screen titles -->
     <string name="email_address_login_title">Email address login</string>

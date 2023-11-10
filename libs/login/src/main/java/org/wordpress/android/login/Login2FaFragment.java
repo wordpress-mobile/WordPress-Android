@@ -2,6 +2,7 @@ package org.wordpress.android.login;
 
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -14,6 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,20 +26,27 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.fido.Fido;
+import com.google.android.gms.fido.fido2.api.common.PublicKeyCredential;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
-import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticateTwoFactorPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
+import org.wordpress.android.fluxc.store.AccountStore.FinishWebauthnChallengePayload;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialAuthPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialSmsPayload;
+import org.wordpress.android.fluxc.store.AccountStore.StartWebauthnChallengePayload;
+import org.wordpress.android.fluxc.store.AccountStore.WebauthnChallengeReceived;
+import org.wordpress.android.fluxc.store.AccountStore.WebauthnPasskeyAuthenticated;
 import org.wordpress.android.login.util.SiteUtils;
+import org.wordpress.android.login.webauthn.PasskeyCredentialsHandler;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
 import org.wordpress.android.util.AppLog;
@@ -44,9 +55,11 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.CLIPBOARD_SERVICE;
 
 import dagger.android.support.AndroidSupportInjection;
@@ -72,6 +85,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private static final String ARG_2FA_USER_ID = "ARG_2FA_USER_ID";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
+    private static final String ARG_WEBAUTHN_NONCE = "WEBAUTHN_NONCE";
+    private static final String ARG_2FA_SUPPORTED_AUTH_TYPES = "ARG_2FA_SUPPORTED_AUTH_TYPES";
     private static final int LENGTH_NONCE_AUTHENTICATOR = 6;
     private static final int LENGTH_NONCE_BACKUP = 8;
     private static final int LENGTH_NONCE_SMS = 7;
@@ -92,10 +107,12 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     ArrayList<Integer> mOldSitesIDs;
 
     private Button mOtpButton;
+    private Button mSecurityKeyButton;
     private String mEmailAddress;
     private String mIdToken;
     private String mNonce;
     private String mNonceAuthenticator;
+    private String mWebauthnNonce;
     private String mNonceBackup;
     private String mNonceSms;
     private String mPassword;
@@ -107,12 +124,34 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private boolean mIsSocialLogin;
     private boolean mIsSocialLoginConnect;
     private boolean mSentSmsCode;
+    private List<SupportedAuthTypes> mSupportedAuthTypes;
+    @Nullable private PasskeyCredentialsHandler mPasskeyCredentialsHandler = null;
+    @Nullable private ActivityResultLauncher<IntentSenderRequest> mResultLauncher = null;
 
     public static Login2FaFragment newInstance(String emailAddress, String password) {
         Login2FaFragment fragment = new Login2FaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
         args.putString(ARG_PASSWORD, password);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static Login2FaFragment newInstance(String emailAddress, String password,
+                                               String userId, String webauthnNonce,
+                                               String authenticatorNonce, String backupNonce,
+                                               String smsNonce, List<String> authTypes) {
+        boolean supportsWebauthn = webauthnNonce != null && !webauthnNonce.isEmpty();
+        Login2FaFragment fragment = new Login2FaFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_EMAIL_ADDRESS, emailAddress);
+        args.putString(ARG_PASSWORD, password);
+        args.putString(ARG_2FA_USER_ID, userId);
+        args.putString(ARG_WEBAUTHN_NONCE, webauthnNonce);
+        args.putString(ARG_2FA_NONCE_AUTHENTICATOR, authenticatorNonce);
+        args.putString(ARG_2FA_NONCE_BACKUP, backupNonce);
+        args.putString(ARG_2FA_NONCE_SMS, smsNonce);
+        args.putStringArrayList(ARG_2FA_SUPPORTED_AUTH_TYPES, new ArrayList<>(authTypes));
         fragment.setArguments(args);
         return fragment;
     }
@@ -175,7 +214,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         // restrict the allowed input chars to just numbers
         m2FaInput.getEditText().setKeyListener(DigitsKeyListener.getInstance("0123456789"));
 
+        boolean isSmsEnabled = mSupportedAuthTypes.contains(SupportedAuthTypes.PUSH);
         mOtpButton = rootView.findViewById(R.id.login_otp_button);
+        mOtpButton.setVisibility(isSmsEnabled ? View.VISIBLE : View.GONE);
         mOtpButton.setText(mSentSmsCode ? R.string.login_text_otp_another : R.string.login_text_otp);
         mOtpButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -186,6 +227,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 }
             }
         });
+
+        boolean isSecurityKeyEnabled = mSupportedAuthTypes.contains(SupportedAuthTypes.WEBAUTHN);
+        mSecurityKeyButton = rootView.findViewById(R.id.login_security_key_button);
+        mSecurityKeyButton.setVisibility(isSecurityKeyEnabled ? View.VISIBLE : View.GONE);
+        mSecurityKeyButton.setOnClickListener(view -> doAuthWithSecurityKeyAction());
     }
 
     @Override
@@ -234,6 +280,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mIsSocialLogin = getArguments().getBoolean(ARG_2FA_IS_SOCIAL);
         mIsSocialLoginConnect = getArguments().getBoolean(ARG_2FA_IS_SOCIAL_CONNECT);
         mService = getArguments().getString(ARG_2FA_SOCIAL_SERVICE);
+        mWebauthnNonce = getArguments().getString(ARG_WEBAUTHN_NONCE);
+        mSupportedAuthTypes = handleSupportedAuthTypesParameter(
+                getArguments().getStringArrayList(ARG_2FA_SUPPORTED_AUTH_TYPES));
 
         if (savedInstanceState != null) {
             // Overwrite argument nonce values with saved state values on device rotation.
@@ -245,6 +294,16 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             mPhoneNumber = savedInstanceState.getString(KEY_SMS_NUMBER);
             mSentSmsCode = savedInstanceState.getBoolean(KEY_SMS_SENT);
         }
+
+        mResultLauncher =
+                registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        onCredentialsResultAvailable(result.getData());
+                    } else {
+                        handleWebauthnError();
+                    }
+                });
     }
 
     @Override
@@ -317,10 +376,10 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 mDispatcher.dispatch(AccountActionBuilder.newPushSocialAuthAction(payload));
             }
         } else {
-            AuthenticatePayload payload = new AuthenticatePayload(mEmailAddress, mPassword);
-            payload.twoStepCode = twoStepCode;
-            payload.shouldSendTwoStepSms = shouldSendTwoStepSMS;
-            mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
+            AuthenticateTwoFactorPayload payload = new AuthenticateTwoFactorPayload(mEmailAddress,
+                    mPassword, twoStepCode, shouldSendTwoStepSMS);
+            mDispatcher.dispatch(AuthenticationActionBuilder
+                    .newAuthenticateTwoFactorAction(payload));
         }
     }
 
@@ -406,6 +465,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 break;
             case INVALID_REQUEST:
                 // TODO: FluxC: could be specific?
+            case WEBAUTHN_FAILED:
+                mAnalyticsListener.trackLoginSecurityKeyFailure();
+                ToastUtils.showToast(getActivity(),
+                        errorMessage == null ? getString(R.string.error_generic) : errorMessage);
+                break;
             default:
                 AppLog.e(T.NUX, "Server response: " + errorMessage);
                 mAnalyticsListener.trackFailure(errorMessage);
@@ -536,5 +600,113 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mLabel.setText(getString(R.string.enter_verification_code_sms, mPhoneNumber));
         mOtpButton.setText(getString(R.string.login_text_otp_another));
         mSentSmsCode = true;
+    }
+
+    private void doAuthWithSecurityKeyAction() {
+        mAnalyticsListener.trackUseSecurityKeyClicked();
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            return;
+        }
+
+        startProgress();
+        mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
+
+        StartWebauthnChallengePayload payload = new StartWebauthnChallengePayload(
+                mUserId, mWebauthnNonce);
+        mDispatcher.dispatch(AuthenticationActionBuilder
+                .newStartSecurityKeyChallengeAction(payload));
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWebauthnChallengeReceived(WebauthnChallengeReceived event) {
+        if (event.isError()) {
+            endProgress();
+            handleAuthError(event.error.type, getString(R.string.login_error_security_key));
+            return;
+        }
+        mPasskeyCredentialsHandler = new PasskeyCredentialsHandler(
+                event.mUserId,
+                event.mChallengeInfo
+        );
+        mPasskeyCredentialsHandler.createIntentSender(
+                requireContext(),
+                intent -> {
+                    if (mResultLauncher != null) {
+                        mResultLauncher.launch(intent);
+                    }
+                });
+    }
+
+    private void onCredentialsResultAvailable(@NonNull Intent resultData) {
+        if (resultData.hasExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA)) {
+            byte[] credentialBytes = resultData.getByteArrayExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA);
+            if (credentialBytes == null || mPasskeyCredentialsHandler == null) {
+                handleWebauthnError();
+                return;
+            }
+
+            PublicKeyCredential credentials =
+                    PublicKeyCredential.deserializeFromBytes(credentialBytes);
+            FinishWebauthnChallengePayload payload =
+                    mPasskeyCredentialsHandler.onCredentialsAvailable(credentials);
+            mDispatcher.dispatch(
+                    AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(payload));
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSecurityKeyCheckFinished(WebauthnPasskeyAuthenticated event) {
+        if (event.isError()) {
+            endProgress();
+            handleAuthError(event.error.type, getString(R.string.login_error_security_key));
+            return;
+        }
+        mAnalyticsListener.trackLoginSecurityKeySuccess();
+        doFinishLogin();
+    }
+
+    private void handleWebauthnError() {
+        String errorMessage = getString(R.string.login_error_security_key);
+        endProgress();
+        handleAuthError(AuthenticationErrorType.WEBAUTHN_FAILED, errorMessage);
+    }
+
+    @NonNull private ArrayList<SupportedAuthTypes> handleSupportedAuthTypesParameter(
+            ArrayList<String> supportedTypes) {
+        ArrayList<SupportedAuthTypes> supportedAuthTypes = new ArrayList<>();
+        if (supportedTypes != null) {
+            for (String type : supportedTypes) {
+                SupportedAuthTypes parsedType = SupportedAuthTypes.fromString(type);
+                if (parsedType != SupportedAuthTypes.UNKNOWN) {
+                    supportedAuthTypes.add(parsedType);
+                }
+            }
+        }
+        return supportedAuthTypes;
+    }
+
+    public enum SupportedAuthTypes {
+        WEBAUTHN,
+        BACKUP,
+        AUTHENTICATOR,
+        PUSH,
+        UNKNOWN;
+
+        static SupportedAuthTypes fromString(String value) {
+            switch (value) {
+                case "webauthn":
+                    return WEBAUTHN;
+                case "backup":
+                    return BACKUP;
+                case "authenticator":
+                    return AUTHENTICATOR;
+                case "push":
+                    return PUSH;
+                default:
+                    return UNKNOWN;
+            }
+        }
     }
 }
