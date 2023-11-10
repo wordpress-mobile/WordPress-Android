@@ -106,6 +106,7 @@
             android:id="@+id/page_more"
             android:layout_width="@dimen/page_list_menu_button_size"
             android:layout_height="@dimen/page_list_menu_button_size"
+            android:padding="8dp"
             android:layout_marginEnd="@dimen/page_item_horizontal_padding"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/more"
