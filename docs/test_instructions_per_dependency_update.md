@@ -379,7 +379,7 @@ rather than strict requirements.
 Step.1:
 - Build and install the `Jetpack` app (note that you don't need a release build, a debug build will
   suffice).
-- Login to the `Jetpack` app with a `WP.com` account (note that you need to use a non `A8C` account
+- Log in to the `Jetpack` app with a `WP.com` account (note that you need to use a non `A8C` account
   and a non `2FA` enabled account).
 - Navigate to the `Me` screen (click on avatar at top-right).
 - (STOP)
@@ -398,7 +398,7 @@ Step.3:
 - Head back to your mobile.
 - Tap the `Scan Login Code` item on the `Me` screen you are currently at.
 - Scan the QR code on the web browser.
-- Follow the remaining prompts on your mobile to login to WordPress on your web browser (desktop),
+- Follow the remaining prompts on your mobile to log in to WordPress on your web browser (desktop),
   verify that you have successfully logged-in and are able to use WordPress as expected.
 
 </details>
