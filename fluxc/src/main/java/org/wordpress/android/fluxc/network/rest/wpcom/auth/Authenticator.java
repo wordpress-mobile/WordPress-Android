@@ -204,6 +204,7 @@ public class Authenticator {
             mParams.put(USERNAME_PARAM_NAME, username);
             mParams.put(PASSWORD_PARAM_NAME, password);
             mParams.put(GRANT_TYPE_PARAM_NAME, PASSWORD_GRANT_TYPE);
+            mParams.put(GET_BEARER_TOKEN, "true");
             mParams.put("wpcom_supports_2fa", "true");
         }
     }
