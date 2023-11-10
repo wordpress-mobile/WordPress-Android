@@ -560,6 +560,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         siteInfoContainer.subtitle.text = siteInfoHeader.url
         siteInfoContainer.subtitle.setOnClickListener { siteInfoHeader.onUrlClick.click() }
         switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
+        siteInfoCard.visibility = View.VISIBLE
     }
 
 
