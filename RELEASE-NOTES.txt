@@ -2,6 +2,7 @@
 
 23.7
 -----
+* [***] [Jetpack-only] [***] Added the All Domains screen enabling the users to manage their domains from within the app [https://github.com/wordpress-mobile/WordPress-Android/pull/19366]
 
 23.6
 -----
