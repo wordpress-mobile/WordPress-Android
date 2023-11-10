@@ -308,7 +308,7 @@ rather than strict requirements.
 <details>
   <summary>1. [JP] Google Sign-in on Jetpack</summary>
 
-ℹ️ Prerequisite: If you don't have access to upload an`.aab` to Google Play Store for
+ℹ️ Prerequisite: If you don't have access to upload an `.aab` to Google Play Store for
    `Jetpack - Website Builder`, post a request to `+systemsrequests`.
 
 - Check-out this branch and edit the `version.properties` file to pick a dummy `versionName` and
@@ -338,7 +338,7 @@ rather than strict requirements.
 <details>
   <summary>2. [WP] Google Sign-in on WordPress</summary>
 
-ℹ️ Prerequisite: If you don't have access to upload an`.aab` to Google Play Store for
+ℹ️ Prerequisite: If you don't have access to upload an `.aab` to Google Play Store for
    `WordPress - Website Builder`, post a request to `+systemsrequests`.
 
 - Check-out this branch and edit the `version.properties` file to pick a dummy `versionName` and
