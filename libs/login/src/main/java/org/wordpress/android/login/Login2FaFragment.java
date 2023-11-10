@@ -55,6 +55,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,6 +87,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
     private static final String ARG_WEBAUTHN_NONCE = "WEBAUTHN_NONCE";
     private static final String ARG_DISPLAY_SECURITY_KEY_BUTTON = "ARG_DISPLAY_SECURITY_KEY_BUTTON";
+    private static final String ARG_2FA_SUPPORTED_AUTH_TYPES = "ARG_2FA_SUPPORTED_AUTH_TYPES";
     private static final int LENGTH_NONCE_AUTHENTICATOR = 6;
     private static final int LENGTH_NONCE_BACKUP = 8;
     private static final int LENGTH_NONCE_SMS = 7;
@@ -124,6 +126,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private boolean mIsSocialLoginConnect;
     private boolean mSentSmsCode;
     private boolean mIsSecurityKeyEnabled;
+    private List<SupportedAuthTypes> mSupportedAuthTypes;
     @Nullable private PasskeyCredentialsHandler mPasskeyCredentialsHandler = null;
     @Nullable private ActivityResultLauncher<IntentSenderRequest> mResultLauncher = null;
 
@@ -139,7 +142,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     public static Login2FaFragment newInstance(String emailAddress, String password,
                                                String userId, String webauthnNonce,
                                                String authenticatorNonce, String backupNonce,
-                                               String smsNonce) {
+                                               String smsNonce, List<String> authTypes) {
         boolean supportsWebauthn = webauthnNonce != null && !webauthnNonce.isEmpty();
         Login2FaFragment fragment = new Login2FaFragment();
         Bundle args = new Bundle();
@@ -151,6 +154,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         args.putString(ARG_2FA_NONCE_BACKUP, backupNonce);
         args.putString(ARG_2FA_NONCE_SMS, smsNonce);
         args.putBoolean(ARG_DISPLAY_SECURITY_KEY_BUTTON, supportsWebauthn);
+        args.putStringArrayList(ARG_2FA_SUPPORTED_AUTH_TYPES, new ArrayList<>(authTypes));
         fragment.setArguments(args);
         return fragment;
     }
@@ -278,6 +282,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mService = getArguments().getString(ARG_2FA_SOCIAL_SERVICE);
         mWebauthnNonce = getArguments().getString(ARG_WEBAUTHN_NONCE);
         mIsSecurityKeyEnabled = getArguments().getBoolean(ARG_DISPLAY_SECURITY_KEY_BUTTON, false);
+        mSupportedAuthTypes = handleSupportedAuthTypesParameter(
+                getArguments().getStringArrayList(ARG_2FA_SUPPORTED_AUTH_TYPES));
 
         if (savedInstanceState != null) {
             // Overwrite argument nonce values with saved state values on device rotation.
@@ -666,5 +672,42 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         String errorMessage = getString(R.string.login_error_security_key);
         endProgress();
         handleAuthError(AuthenticationErrorType.WEBAUTHN_FAILED, errorMessage);
+    }
+
+    @NonNull private static ArrayList<SupportedAuthTypes> handleSupportedAuthTypesParameter(
+            ArrayList<String> supportedTypes) {
+        ArrayList<SupportedAuthTypes> supportedAuthTypes = new ArrayList<>();
+        if (supportedTypes != null) {
+            for (String type : supportedTypes) {
+                SupportedAuthTypes parsedType = SupportedAuthTypes.fromString(type);
+                if (parsedType != SupportedAuthTypes.UNKNOWN) {
+                    supportedAuthTypes.add(parsedType);
+                }
+            }
+        }
+        return supportedAuthTypes;
+    }
+
+    public enum SupportedAuthTypes {
+        WEBAUTHN,
+        BACKUP,
+        AUTHENTICATOR,
+        PUSH,
+        UNKNOWN;
+
+        static SupportedAuthTypes fromString(String value) {
+            switch (value) {
+                case "webauthn":
+                    return WEBAUTHN;
+                case "backup":
+                    return BACKUP;
+                case "authenticator":
+                    return AUTHENTICATOR;
+                case "push":
+                    return PUSH;
+                default:
+                    return UNKNOWN;
+            }
+        }
     }
 }
