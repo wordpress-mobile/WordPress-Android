@@ -137,16 +137,16 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/statuses_label"
+        style="@style/PostList.Item.Body"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        style="@style/PostList.Item.Body"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_medium"
         android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
         app:layout_constraintBottom_toTopOf="@+id/upload_progress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/final_mid_section"
+        app:layout_constraintVertical_bias="0.0"
         tools:text="Private · Local Changes Private · Local Changes Private · Local Changes Private · Local Changes Private · Local Changes " />
 
     <ProgressBar
