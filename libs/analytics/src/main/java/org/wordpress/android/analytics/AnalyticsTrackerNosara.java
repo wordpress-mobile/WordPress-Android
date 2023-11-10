@@ -2659,6 +2659,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domain_management_search_domain_tapped";
             case DOMAIN_MANAGEMENT_DOMAINS_SEARCH_TRANSFER_DOMAIN_TAPPED:
                 return "domain_management_domains_search_transfer_domain_tapped";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_COMPLETED:
+                return "domain_management_purchase_domain_completed";
         }
         return null;
     }

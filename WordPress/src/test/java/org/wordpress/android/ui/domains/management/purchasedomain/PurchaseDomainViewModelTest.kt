@@ -17,6 +17,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_P
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_CHOOSE_SITE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_GET_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_SHOWN
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_COMPLETED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse.Extra
@@ -136,6 +137,17 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
 
         // Then
         assertThat(events.last()).isEqualTo(ActionEvent.OpenDomainManagement)
+    }
+
+    @Test
+    fun `WHEN check out is complete THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_COMPLETED event`() = test {
+        viewModel.onDomainRegistrationComplete(
+            DomainRegistrationCompletedEvent("example.com", "joe@schmo.co")
+        )
+        advanceUntilIdle()
+
+        // Then
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_COMPLETED)
     }
 
     @Test

@@ -69,6 +69,7 @@ class PurchaseDomainViewModel @AssistedInject constructor(
 
     fun onDomainRegistrationComplete(event: DomainRegistrationCompletedEvent?) = event?.also {
         launch {
+            analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_COMPLETED)
             _actionEvents.emit(ActionEvent.OpenDomainManagement)
         }
     } ?: run {
