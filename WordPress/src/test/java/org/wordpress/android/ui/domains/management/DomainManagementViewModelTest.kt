@@ -14,8 +14,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAIN_DETAILS_WEB_VIEW_SHOWN
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAINS_LIST_SHOWN
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.AllDomainsError
@@ -50,16 +50,16 @@ class DomainManagementViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN ViewModel initialized THEN track DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN event`() = test {
+    fun `WHEN ViewModel initialized THEN track DOMAIN_MANAGEMENT_DOMAINS_LIST_SHOWN event`() = test {
         initializeViewModel()
-        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN)
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_DOMAINS_LIST_SHOWN)
     }
 
     @Test
-    fun `WHEN a domain is tapped THEN track DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED event`() = test {
+    fun `WHEN a domain is tapped THEN track DOMAIN_MANAGEMENT_DOMAIN_DETAILS_WEB_VIEW_SHOWN event`() = test {
         initializeViewModel()
         viewModel.onDomainTapped(testDomain, testDomainDetailUrl)
-        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED)
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_DOMAIN_DETAILS_WEB_VIEW_SHOWN)
     }
 
     @Test

@@ -48,8 +48,8 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN ViewModel initialized THEN track DOMAIN_MANAGEMENT_SEARCH_FOR_A_DOMAIN_SCREEN_SHOWN event`() {
-        verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_SEARCH_FOR_A_DOMAIN_SCREEN_SHOWN)
+    fun `WHEN ViewModel initialized THEN track DOMAIN_MANAGEMENT_DOMAINS_SEARCH_SHOWN event`() {
+        verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAINS_SEARCH_SHOWN)
     }
 
     @Test
@@ -88,12 +88,13 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
         assertThat(events.last()).isEqualTo(ActionEvent.TransferDomain(expectedTransferUrl))
     }
 
+    @Suppress("MaxLineLength")
     @Test
-    fun `WHEN transfer domain button pressed THEN track DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED event`() = test {
+    fun `WHEN transfer domain button pressed THEN track DOMAIN_MANAGEMENT_DOMAINS_SEARCH_TRANSFER_DOMAIN_TAPPED event`() = test {
         viewModel.onTransferDomainClicked()
         advanceUntilIdle()
 
-        verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED)
+        verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAINS_SEARCH_TRANSFER_DOMAIN_TAPPED)
     }
 
     @Test

@@ -43,7 +43,7 @@ class NewDomainSearchViewModel @Inject constructor(
     private val debouncedQuery = MutableStateFlow("")
 
     init {
-        analyticsTracker.track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_SEARCH_FOR_A_DOMAIN_SCREEN_SHOWN)
+        analyticsTracker.track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAINS_SEARCH_SHOWN)
         debouncedQuery
             .filter { it.isNotBlank() }
             .debounce(SEARCH_QUERY_DELAY_MS)
@@ -82,7 +82,7 @@ class NewDomainSearchViewModel @Inject constructor(
     }
 
     fun onTransferDomainClicked() {
-        analyticsTracker.track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED)
+        analyticsTracker.track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAINS_SEARCH_TRANSFER_DOMAIN_TAPPED)
         launch {
             _actionEvents.emit(ActionEvent.TransferDomain(DOMAIN_TRANSFER_PAGE_URL))
         }

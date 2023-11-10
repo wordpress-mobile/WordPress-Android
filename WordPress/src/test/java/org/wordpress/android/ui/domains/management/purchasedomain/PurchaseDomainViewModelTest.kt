@@ -13,9 +13,9 @@ import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SITE_SELECTED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_CHOOSE_SITE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_GET_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_SHOWN
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient
@@ -72,9 +72,9 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN new domain selected THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED event`() {
+    fun `WHEN new domain selected THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_GET_DOMAIN_TAPPED event`() {
         viewModel.onNewDomainSelected()
-        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED)
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_GET_DOMAIN_TAPPED)
     }
 
     @Test
@@ -93,9 +93,9 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN a site is chosen THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN event`() {
+    fun `WHEN a site is chosen THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SITE_SELECTED event`() {
         viewModel.onSiteChosen(testSite)
-        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN)
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SITE_SELECTED)
     }
 
     @Test
@@ -183,10 +183,9 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("MaxLineLength")
-    fun `WHEN existing domain selected THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED event`() {
+    fun `WHEN existing domain selected THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_CHOOSE_SITE_TAPPED event`() {
         viewModel.onExistingSiteSelected()
-        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED)
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_CHOOSE_SITE_TAPPED)
     }
 
     @Test
