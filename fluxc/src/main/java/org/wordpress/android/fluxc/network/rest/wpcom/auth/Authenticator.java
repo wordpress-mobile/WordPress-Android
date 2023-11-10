@@ -213,7 +213,7 @@ public class Authenticator {
     public static class TwoFactorRequest extends OauthRequest {
         public TwoFactorRequest(String appId, String appSecret, String username, String password, String twoStepCode,
                                 boolean shouldSendTwoStepSMS, Listener listener, ErrorListener errorListener) {
-            super(TOKEN_ENDPOINT, appId, appSecret, listener, errorListener);
+            super(LOGIN_BASE_ENDPOINT, appId, appSecret, listener, errorListener);
             mParams.put(USERNAME_PARAM_NAME, username);
             mParams.put(PASSWORD_PARAM_NAME, password);
             mParams.put(GRANT_TYPE_PARAM_NAME, PASSWORD_GRANT_TYPE);
