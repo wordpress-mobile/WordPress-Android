@@ -194,7 +194,6 @@ public class Authenticator {
                     String accessToken = responseJson.getString(ACCESS_TOKEN);
                     return Response.success(new Token(accessToken), headers);
                 }
-
             } catch (UnsupportedEncodingException | JSONException e) {
                 return Response.error(new ParseError(e));
             }
