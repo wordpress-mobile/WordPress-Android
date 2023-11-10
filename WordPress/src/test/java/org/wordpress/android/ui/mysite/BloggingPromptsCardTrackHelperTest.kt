@@ -184,7 +184,9 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
         launch {
             helper.onDashboardCardsUpdated(
                 this,
-                siteSelected()
+                siteSelected().copy(
+                    dashboardData = emptyList()
+                )
             )
 
             // simulate the user was here for a while
