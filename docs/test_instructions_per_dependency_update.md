@@ -450,7 +450,10 @@ Step.3:
 <details>
     <summary>1. [JP/WP] Classic Editor [Aztec]</summary>
 
-ℹ️ Disable the `Block Editor` before testing this.
+ℹ️ Disable the `Block Editor` before testing this. You can do so by going to `Site Settings` ->
+   `Editor` section -> `Use Block Editor` option and switch that off.
+📝 Note that you might need to be on a business plan to have this `Editor` section available as not
+   all sites have this option.
 
 - Go to `Posts` screen and create a new post.
 - Add an `Image`, `Video` and any other entry (like `Paragraph`, `Ordered List`, `Quote`, etc).
@@ -464,7 +467,10 @@ Step.3:
 <details>
     <summary>2. [JP/WP] Block Editor [Gutenberg]</summary>
 
-ℹ️ Enable the `Block Editor` before testing this.
+ℹ️ Enable the `Block Editor` before testing this. You can do so by going to `Site Settings` ->
+`Editor` section -> `Use Block Editor` option and switch that on.
+📝 Note that you might need to be on a business plan to have this `Editor` section available as not
+all sites have this option.
 
 - Go to `Posts` screen and create a new post.
 - Add an `Image`, `Gallery`, `Video`, `Audio`, `File`, `Media Text` and `Cover` blocks to the post.
