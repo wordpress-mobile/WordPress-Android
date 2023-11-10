@@ -99,7 +99,11 @@ fun MyDomainsScreen(
                     onDomainTapped,
                 )
 
-                Error -> ErrorScreen(onRefresh)
+                Error -> ErrorScreen(
+                    titleRes = R.string.domain_management_error_title,
+                    descriptionRes = R.string.domain_management_error_subtitle,
+                    onRefresh = onRefresh
+                )
                 Empty -> EmptyScreen(onFindDomainTapped)
             }
         }

@@ -72,6 +72,15 @@ class NewDomainSearchViewModel @Inject constructor(
         }
     }
 
+    fun onRefresh() {
+        launch {
+            val query = debouncedQuery.value.trim()
+            if (query.isEmpty()) return@launch
+            val result = fetchDomains(query)
+            handleDomainsResult(result)
+        }
+    }
+
     fun onTransferDomainClicked() {
         analyticsTracker.track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED)
         launch {
