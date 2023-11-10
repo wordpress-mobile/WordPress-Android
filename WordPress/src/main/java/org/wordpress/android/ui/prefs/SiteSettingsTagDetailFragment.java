@@ -12,6 +12,8 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
+import androidx.fragment.app.Fragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -26,10 +28,7 @@ import static org.wordpress.android.ui.reader.utils.ReaderUtils.sanitizeWithDash
 /**
  * A fragment for editing a tag
  */
-// TODO: android.app.Fragment  is deprecated since Android P.
-// Needs to be replaced with android.support.v4.app.Fragment
-// See https://developer.android.com/reference/android/app/Fragment
-public class SiteSettingsTagDetailFragment extends android.app.Fragment {
+public class SiteSettingsTagDetailFragment extends Fragment {
     private static final String ARGS_TERM = "term";
     private static final String ARGS_IS_NEW_TERM = "is_new";
 
@@ -64,9 +63,7 @@ public class SiteSettingsTagDetailFragment extends android.app.Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
-
-        setHasOptionsMenu(true);
+        ((WordPress) requireActivity().getApplication()).component().inject(this);
     }
 
     @Override
@@ -80,39 +77,19 @@ public class SiteSettingsTagDetailFragment extends android.app.Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        mTerm = (TermModel) getArguments().getSerializable(ARGS_TERM);
-        mIsNewTerm = getArguments().getBoolean(ARGS_IS_NEW_TERM);
+        mTerm = (TermModel) requireArguments().getSerializable(ARGS_TERM);
+        mIsNewTerm = requireArguments().getBoolean(ARGS_IS_NEW_TERM);
+
+        setOptionsMenu();
 
         if (savedInstanceState == null && !DisplayUtils.isLandscape(getActivity())) {
             EditTextUtils.showSoftInput(mNameView);
         }
 
         loadTagDetail();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.tag_detail, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.menu_trash).setVisible(!mIsNewTerm);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.menu_trash && mListener != null) {
-            mListener.onRequestDeleteTag(mTerm);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     void setOnTagDetailListener(@NonNull OnTagDetailListener listener) {
@@ -125,9 +102,9 @@ public class SiteSettingsTagDetailFragment extends android.app.Fragment {
         }
 
         if (mIsNewTerm) {
-            getActivity().setTitle(R.string.add_new_tag);
+            requireActivity().setTitle(R.string.add_new_tag);
         } else {
-            getActivity().setTitle(mTerm.getName());
+            requireActivity().setTitle(mTerm.getName());
         }
 
         mNameView.setText(mTerm.getName());
@@ -162,5 +139,32 @@ public class SiteSettingsTagDetailFragment extends android.app.Fragment {
 
     boolean isNewTerm() {
         return mIsNewTerm;
+    }
+
+    private void setOptionsMenu() {
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu,
+                                     @NonNull MenuInflater menuInflater) {
+                menu.clear();
+                menuInflater.inflate(R.menu.tag_detail, menu);
+            }
+
+            @Override
+            public void onPrepareMenu(@NonNull Menu menu) {
+                MenuProvider.super.onPrepareMenu(menu);
+                menu.findItem(R.id.menu_trash).setVisible(!mIsNewTerm);
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.menu_trash && mListener != null) {
+                    mListener.onRequestDeleteTag(mTerm);
+                    item.setVisible(!mIsNewTerm);
+                    return true;
+                }
+                return false;
+            }
+        }, getViewLifecycleOwner());
     }
 }
