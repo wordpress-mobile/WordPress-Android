@@ -1,23 +1,38 @@
 Fixes #
 
-To test:
+-----
+
+## To Test:
+
+<!-- Test instructions per dependency update: https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/docs/test_instructions_per_dependency_update.md -->
+
+-----
 
 ## Regression Notes
+
 1. Potential unintended areas of impact
 
+    - TODO
 
 2. What I did to test those areas of impact (or what existing automated tests I relied on)
 
+    - TODO
 
 3. What automated tests I added (or what prevented me from doing so)
 
-PR submission checklist:
+    - TODO
+
+-----
+
+## PR Submission Checklist:
 
 - [ ] I have completed the Regression Notes.
 - [ ] I have considered adding accessibility improvements for my changes.
 - [ ] I have considered if this change warrants user-facing release notes and have added them to `RELEASE-NOTES.txt` if necessary.
 
-UI Changes testing checklist:
+-----
+
+## UI Changes Testing Checklist:
 
 - [ ] Portrait and landscape orientations.
 - [ ] Light and dark modes.
