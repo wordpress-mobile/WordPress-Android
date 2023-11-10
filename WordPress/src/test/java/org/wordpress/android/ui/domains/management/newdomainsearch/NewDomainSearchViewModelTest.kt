@@ -219,6 +219,29 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
         verifyNoInteractions(repository)
     }
 
+    @Test
+    fun `GIVEN empty saved query WHEN onRefresh THEN do not fetch domains`() =
+        test {
+            viewModel.onRefresh()
+            advanceUntilIdle()
+
+            verifyNoInteractions(repository)
+        }
+
+    @Test
+    fun `GIVEN recent search call returns error WHEN onRefresh THEN fetch domains with the saved query`() =
+        testWithUiStates { states ->
+            whenever(repository.searchForDomains("query")).thenReturn(DomainsResult.Error)
+            viewModel.onSearchQueryChanged("query")
+            val domains = listOf(ProposedDomain(0, "", "", "", true))
+            whenever(repository.searchForDomains("query")).thenReturn(DomainsResult.Success(domains))
+
+            viewModel.onRefresh()
+            advanceUntilIdle()
+
+            assertThat(states.last()).isEqualTo(UiState.PopulatedDomains(domains = domains))
+        }
+
     @Suppress("MaxLineLength")
     @Test
     fun `GIVEN repeated queries with redundant blank symbols WHEN onSearchQueryChanged THEN fetch domains only once`() =

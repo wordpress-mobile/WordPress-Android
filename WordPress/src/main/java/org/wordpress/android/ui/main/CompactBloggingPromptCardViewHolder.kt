@@ -1,10 +1,9 @@
 package org.wordpress.android.ui.main
 
 import android.view.ViewGroup
-import org.wordpress.android.R
 import org.wordpress.android.databinding.BloggingPromptCardCompactBinding
 import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
-import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution.DAY_ONE
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.extensions.viewBinding
@@ -21,11 +20,8 @@ class CompactBloggingPromptCardViewHolder(
             uiHelpers.getTextOfUiString(promptContent.context, action.promptTitle).toString()
         )
         uiHelpers.setTextOrHide(promptContent, cardPrompt)
-        uiHelpers.updateVisibility(attributionContainer, action.attribution == DAY_ONE)
 
-        attributionContent.text = htmlCompatWrapper.fromHtml(
-            attributionContent.context.getString(R.string.my_site_blogging_prompt_card_attribution_dayone)
-        )
+        setupAttributionContainer(action.attribution)
 
         answerButton.setOnClickListener {
             action.onClickAction?.invoke(action.promptId)
@@ -35,5 +31,26 @@ class CompactBloggingPromptCardViewHolder(
         }
         uiHelpers.updateVisibility(answeredButton, action.isAnswered)
         uiHelpers.updateVisibility(answerButton, !action.isAnswered)
+    }
+
+    private fun BloggingPromptCardCompactBinding.setupAttributionContainer(
+        attribution: BloggingPromptAttribution
+    ) {
+        uiHelpers.updateVisibility(attributionContainer, attribution != BloggingPromptAttribution.NO_ATTRIBUTION)
+
+        val context = attributionContainer.context
+
+        attribution.contentRes
+            .takeIf { it != -1 }
+            ?.let { context.getString(it) }
+            ?.let { content ->
+                attributionContent.text = htmlCompatWrapper.fromHtml(content)
+            }
+
+        attribution.iconRes
+            .takeIf { it != -1 }
+            ?.let { iconRes ->
+                attributionIcon.setImageResource(iconRes)
+            }
     }
 }

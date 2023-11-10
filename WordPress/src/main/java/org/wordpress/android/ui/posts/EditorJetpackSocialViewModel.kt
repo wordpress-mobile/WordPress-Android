@@ -29,7 +29,6 @@ import org.wordpress.android.usecase.social.GetJetpackSocialShareMessageUseCase
 import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
 import org.wordpress.android.usecase.social.JetpackSocialFlow
 import org.wordpress.android.usecase.social.ShareLimit
-import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 import org.wordpress.android.util.extensions.doesNotContain
 import org.wordpress.android.util.extensions.updatePublicizeSkipConnections
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -39,7 +38,6 @@ import javax.inject.Named
 
 class EditorJetpackSocialViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
-    private val jetpackSocialFeatureConfig: JetpackSocialFeatureConfig,
     private val accountStore: AccountStore,
     private val getPublicizeConnectionsForUserUseCase: GetPublicizeConnectionsForUserUseCase,
     private val getJetpackSocialShareMessageUseCase: GetJetpackSocialShareMessageUseCase,
@@ -101,7 +99,6 @@ class EditorJetpackSocialViewModel @Inject constructor(
     }
 
     fun onResume(jetpackSocialFlow: JetpackSocialFlow) {
-        if (!jetpackSocialFeatureConfig.isEnabled()) return
         _jetpackSocialUiState.value?.let { uiState ->
             if (uiState is JetpackSocialUiState.Loaded && uiState.showShareLimitUi) {
                 jetpackSocialSharingTracker.trackShareLimitDisplayed(jetpackSocialFlow)
@@ -190,8 +187,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
         }
     }
 
-    private fun shouldShowJetpackSocial() = jetpackSocialFeatureConfig.isEnabled()
-            && !editPostRepository.isPage
+    private fun shouldShowJetpackSocial() = !editPostRepository.isPage
             && siteModel.supportsPublicize()
             && currentPost?.status != PostStatus.PRIVATE.toString()
 

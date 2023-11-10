@@ -76,10 +76,11 @@
             tools:visibility="visible">
 
             <ImageView
+                android:id="@+id/attribution_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="16dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/ic_dayone_24dp" />
+                tools:src="@drawable/ic_dayone_24dp" />
 
             <TextView
                 android:id="@+id/attribution_content"
