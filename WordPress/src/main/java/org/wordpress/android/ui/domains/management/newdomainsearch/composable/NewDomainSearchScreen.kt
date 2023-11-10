@@ -83,7 +83,7 @@ fun NewDomainSearchScreen(
                     is UiState.Loading -> LoadingPlaceholder(modifier = Modifier.weight(1f))
                     is UiState.Error -> ErrorScreen(
                         titleRes = R.string.new_domain_search_screen_error_title,
-                        descriptionRes = R.string.new_domain_search_screen_error_subtitle,
+                        descriptionRes = R.string.domain_management_error_subtitle,
                         onRefresh = onRefresh,
                         modifier = Modifier.weight(1f)
                     )
