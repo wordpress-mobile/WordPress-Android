@@ -267,7 +267,7 @@ class MySiteViewModel @Inject constructor(
         }
 
     val uiModel: LiveData<State> = merge(state, quickLinks) { cards, quickLinks ->
-        val nonNullCards = cards ?: return@merge buildNoSiteState(cards?.currentAvatarUrl, cards?.avatarName)
+        val nonNullCards = cards ?: return@merge buildNoSiteState(null, null)
         with(nonNullCards) {
             val state = if (site != null) {
                 cardsUpdate?.checkAndShowSnackbarError()
