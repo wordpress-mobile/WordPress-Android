@@ -2635,6 +2635,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_link_item_tapped";
             case POST_LIST_CREATE_POST_TAPPED:
                 return "post_list_create_post_tapped";
+            case DOMAIN_MANAGEMENT_ME_DOMAINS_TAPPED:
+                return "domain_management_me_domains_tapped";
+            case DOMAIN_MANAGEMENT_DOMAINS_DASHBOARD_ALL_DOMAINS_TAPPED:
+                return "domain_management_domains_dashboard_all_domains_tapped";
             case DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN:
                 return "domain_management_my_domains_screen_shown";
             case DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED:
