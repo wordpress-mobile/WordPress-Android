@@ -2657,8 +2657,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domain_management_transfer_domain_tapped";
             case LOGIN_SECURITY_KEY_FAILURE:
                 return "login_security_key_failure";
-            case LOGIN_SECURITY_KEY_NEEDED:
-                return "login_security_key_needed";
+            case LOGIN_2FA_NEEDED:
+                return "login_2fa_needed";
             case LOGIN_SECURITY_KEY_SUCCESS:
                 return "login_security_key_success";
             case LOGIN_SECURITY_KEY_CLICKED:
