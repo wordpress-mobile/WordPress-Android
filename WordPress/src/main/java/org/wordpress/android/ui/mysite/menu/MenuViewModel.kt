@@ -282,6 +282,12 @@ class MenuViewModel @Inject constructor(
         removeFocusPoints()
     }
 
+    fun handleSiteRemoved() {
+        selectedSiteRepository.removeSite()
+        _onSelectedSiteMissing.value = Unit
+        return
+    }
+
     data class SnackbarMessage(
         val message: String,
         val actionLabel: String? = null,
