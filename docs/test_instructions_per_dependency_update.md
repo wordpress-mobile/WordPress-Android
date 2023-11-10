@@ -145,7 +145,23 @@ rather than strict requirements.
 
 -----
 
-### Preference [[androidxPreferenceVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="preference"></a>
+### Preference (AndroidX) [[androidxPreferenceVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="preference"></a>
+
+<details>
+  <summary>1. [JP] Notifications Settings [NotificationsSettingsFragment.java]</summary>
+
+- Go to `Notifications` tab.
+- Click on the `Gear` setting button (top-right).
+- Verify that the `Notification Settings` screen is displayed.
+- Click on each of the settings within the `Notification Settings` settings screen and verify that
+  every setting works as expected.
+
+</details>
+
+### Preference (Android) [[N/A](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)]
+
+ℹ️ Note that this is not an actual dependency, it being part of the `Android` SDK, that it is
+   deprecated and will be migrated to its `AndroidX` equivalent in the future. [[Issue](https://github.com/wordpress-mobile/WordPress-Android/issues/17962)]
 
 <details>
   <summary>1. [JP/WP] Account Settings [AccountSettingsFragment.kt]</summary>
