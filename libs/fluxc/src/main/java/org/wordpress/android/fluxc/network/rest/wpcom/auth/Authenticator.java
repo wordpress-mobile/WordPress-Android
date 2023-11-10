@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -159,6 +160,7 @@ public class Authenticator {
     private static class OauthRequest extends Request<OauthResponse> {
         private static final String DATA = "data";
         private static final String BEARER_TOKEN = "bearer_token";
+        private static final String ACCESS_TOKEN = "access_token";
         private final Listener mListener;
         protected Map<String, String> mParams = new HashMap<>();
 
@@ -183,18 +185,30 @@ public class Authenticator {
         protected Response<OauthResponse> parseNetworkResponse(NetworkResponse response) {
             try {
                 String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                JSONObject responseData = new JSONObject(jsonString).getJSONObject(DATA);
-                String bearerToken = responseData.optString(BEARER_TOKEN);
-                if (bearerToken.isEmpty()) {
-                    return Response.success(new TwoFactorResponse(responseData),
-                            HttpHeaderParser.parseCacheHeaders(response));
+                JSONObject responseJson = new JSONObject(jsonString);
+                JSONObject responseData = responseJson.optJSONObject(DATA);
+                Cache.Entry headers = HttpHeaderParser.parseCacheHeaders(response);
+                if (responseData != null) {
+                    return handleDataObjectResponse(headers, responseData);
+                } else {
+                    String accessToken = responseJson.getString(ACCESS_TOKEN);
+                    return Response.success(new Token(accessToken), headers);
                 }
 
-                return Response.success(new Token(bearerToken),
-                        HttpHeaderParser.parseCacheHeaders(response));
             } catch (UnsupportedEncodingException | JSONException e) {
                 return Response.error(new ParseError(e));
             }
+        }
+
+        @NonNull
+        private static Response<OauthResponse> handleDataObjectResponse(Cache.Entry headers, JSONObject responseData)
+                throws JSONException {
+            String bearerToken = responseData.optString(BEARER_TOKEN);
+            if (bearerToken.isEmpty()) {
+                return Response.success(new TwoFactorResponse(responseData), headers);
+            }
+
+            return Response.success(new Token(bearerToken), headers);
         }
     }
 
@@ -213,7 +227,7 @@ public class Authenticator {
     public static class TwoFactorRequest extends OauthRequest {
         public TwoFactorRequest(String appId, String appSecret, String username, String password, String twoStepCode,
                                 boolean shouldSendTwoStepSMS, Listener listener, ErrorListener errorListener) {
-            super(LOGIN_BASE_ENDPOINT, appId, appSecret, listener, errorListener);
+            super(TOKEN_ENDPOINT, appId, appSecret, listener, errorListener);
             mParams.put(USERNAME_PARAM_NAME, username);
             mParams.put(PASSWORD_PARAM_NAME, password);
             mParams.put(GRANT_TYPE_PARAM_NAME, PASSWORD_GRANT_TYPE);
