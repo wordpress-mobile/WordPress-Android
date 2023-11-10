@@ -11,7 +11,7 @@ class DomainManagementDetailsWebViewNavigationDelegateTest : BaseUnitTest() {
     private val navigationDelegate = DomainManagementDetailsWebViewNavigationDelegate("some.domain")
 
     @Test
-    fun `when browsing in the domains path, then the web view can navigate`() {
+    fun `when browsing in the domain details edit path, then the web view can navigate`() {
         Assertions.assertThat(
             buildUrls(
                 "/domains/manage/all/some.domain/edit/some.slug", // standard details page
@@ -22,10 +22,10 @@ class DomainManagementDetailsWebViewNavigationDelegateTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when browsing outside the domains path, then the web view cannot navigate`() {
+    fun `when browsing outside the domain details path, then the web view cannot navigate`() {
         Assertions.assertThat(
             buildUrls(
-                "/domains/manage/all/some.domain/dns/some.slug", // standard details page
+                "/domains/manage/all/some.domain/dns/some.slug", // dns page
                 "/domains/mapping/some.domain/setup/some.domain?step=&show-errors=false&firstVisit=false",// some errors
                 "/email/antonis.me/manage/some.domain", // setup email
                 "/support/domains/https-ssl/" // support
