@@ -158,6 +158,7 @@ public class Authenticator {
 
     private static class OauthRequest extends Request<OauthResponse> {
         private static final String DATA = "data";
+        private static final String BEARER_TOKEN = "bearer_token";
         private final Listener mListener;
         protected Map<String, String> mParams = new HashMap<>();
 
@@ -182,10 +183,10 @@ public class Authenticator {
         protected Response<OauthResponse> parseNetworkResponse(NetworkResponse response) {
             try {
                 String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                JSONObject responseData = new JSONObject(jsonString);
-                JSONObject successData = responseData.optJSONObject(DATA);
-                if (successData != null) {
-                    return Response.success(new TwoFactorResponse(successData),
+                JSONObject responseData = new JSONObject(jsonString).getJSONObject(DATA);
+                JSONObject bearerToken = responseData.optJSONObject(BEARER_TOKEN);
+                if (bearerToken == null) {
+                    return Response.success(new TwoFactorResponse(responseData),
                             HttpHeaderParser.parseCacheHeaders(response));
                 }
 
