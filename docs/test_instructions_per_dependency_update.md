@@ -433,6 +433,7 @@ Step.3:
 - Go back to the `Help` settings screen and then click on `Contact Support`.
 - Verify that the `Help` Zendesk related screen opens and that you are prompt to `Send a message...`.
 - Type `Testing Zendesk X.Y.Z update, please ignore and thank you!` and then send your message.
+- After sending the first message, tap the `Contact support 📢` button to create the support ticket.
 - Go back to the `Help` settings screen and then click on `Tickets` again.
 - Verify that your previously sent message is listed in there and that you can click on it.
   PS: You could also check your emails and verify that you got a
