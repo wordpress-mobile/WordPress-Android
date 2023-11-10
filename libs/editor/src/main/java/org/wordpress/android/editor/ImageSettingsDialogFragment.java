@@ -96,20 +96,11 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     private boolean mPreviousHomeAsUpEnabled;
     private View mPreviousCustomView;
 
-    public static ImageSettingsDialogFragment newInstance(
-        int requestCode,
-        String src,
-        String title,
-        String caption,
-        String alt,
-        String align,
-        String urlLink,
-        int naturalWidth,
-        int dimenWidth,
-        @NonNull String maxWidth,
-        Boolean isImageFeatured,
-        Boolean isFeatured,
-        Boolean isAztecEnabled
+    public static ImageSettingsDialogFragment newInstance(int requestCode, String src, String title,
+                                                          String caption, String alt, String align,
+                                                          String urlLink, int naturalWidth, int dimenWidth,
+                                                          @NonNull String maxWidth, Boolean isImageFeatured,
+                                                          Boolean isFeatured, Boolean isAztecEnabled
     ) throws JSONException {
         JSONObject imageMeta = new JSONObject();
         imageMeta.put(ATTR_SRC, src);
@@ -124,24 +115,16 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         return newInstance(requestCode, imageMeta, maxWidth, isImageFeatured, isFeatured, isAztecEnabled);
     }
 
-    public static ImageSettingsDialogFragment newInstance(
-            int requestCode,
-            @NonNull JSONObject imageMeta,
-            @NonNull String maxWidth,
-            Boolean isImageFeatured,
-            Boolean isFeatured,
-            Boolean isAztecEnabled
+    public static ImageSettingsDialogFragment newInstance(int requestCode, @NonNull JSONObject imageMeta,
+                                                          @NonNull String maxWidth, Boolean isImageFeatured,
+                                                          Boolean isFeatured, Boolean isAztecEnabled
     ) {
         return newInstance(requestCode, imageMeta.toString(), maxWidth, isImageFeatured, isFeatured, isAztecEnabled);
     }
 
-    public static ImageSettingsDialogFragment newInstance(
-        int requestCode,
-        @NonNull String imageMeta,
-        @NonNull String maxWidth,
-        Boolean isImageFeatured,
-        Boolean isFeatured,
-        Boolean isAztecEnabled
+    public static ImageSettingsDialogFragment newInstance(int requestCode, @NonNull String imageMeta,
+                                                          @NonNull String maxWidth, Boolean isImageFeatured,
+                                                          Boolean isFeatured, Boolean isAztecEnabled
     ) {
         ImageSettingsDialogFragment imageSettingsDialogFragment = new ImageSettingsDialogFragment();
         Bundle bundle = new Bundle();
