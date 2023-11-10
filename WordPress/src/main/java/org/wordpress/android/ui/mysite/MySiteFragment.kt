@@ -382,9 +382,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner) { uiModel ->
             hideRefreshIndicatorIfNeeded()
-            when (val state = uiModel) {
-                is State.SiteSelected -> loadData(state)
-                is State.NoSites -> loadEmptyView(state)
+            when (uiModel) {
+                is State.SiteSelected -> loadData(uiModel)
+                is State.NoSites -> loadEmptyView(uiModel)
             }
         }
         viewModel.onBasicDialogShown.observeEvent(viewLifecycleOwner) { model ->
