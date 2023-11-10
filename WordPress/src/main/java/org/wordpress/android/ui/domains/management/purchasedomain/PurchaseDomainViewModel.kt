@@ -112,6 +112,7 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         object SubmittingJustDomainCart : UiState
         object SubmittingSiteDomainCart : UiState
         object ErrorSubmittingCart : UiState
+        object ErrorInCheckout : UiState
     }
 
     sealed class ActionEvent {
