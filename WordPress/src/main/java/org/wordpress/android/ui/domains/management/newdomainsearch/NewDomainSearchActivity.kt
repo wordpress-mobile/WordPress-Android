@@ -30,6 +30,7 @@ class NewDomainSearchActivity : AppCompatActivity() {
                 NewDomainSearchScreen(
                     uiState = uiState,
                     onSearchQueryChanged = viewModel::onSearchQueryChanged,
+                    onRefresh = viewModel::onRefresh,
                     onTransferDomainClicked = viewModel::onTransferDomainClicked,
                     onDomainTapped = viewModel::onDomainTapped,
                     onBackPressed = viewModel::onBackPressed,

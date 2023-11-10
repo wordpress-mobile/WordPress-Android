@@ -23,5 +23,6 @@ class BloggingPromptsPostTagProvider @Inject constructor(
 
     companion object {
         const val BLOGGING_PROMPT_TAG = "dailyprompt"
+        const val BLOGANUARY_TAG = "bloganuary"
     }
 }

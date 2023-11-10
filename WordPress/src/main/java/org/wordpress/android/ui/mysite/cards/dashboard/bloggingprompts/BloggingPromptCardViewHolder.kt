@@ -9,7 +9,7 @@ import org.wordpress.android.databinding.MySiteBloggingPromptCardBinding
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
-import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution.DAY_ONE
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution.NO_ATTRIBUTION
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.extensions.getColorStateListFromAttributeOrRes
@@ -31,11 +31,7 @@ class BloggingPromptCardViewHolder(
         uiHelpers.setTextOrHide(promptContent, cardPrompt)
         uiHelpers.updateVisibility(answerButton, !card.isAnswered)
 
-        uiHelpers.updateVisibility(attributionContainer, card.attribution == DAY_ONE)
-
-        attributionContent.text = htmlCompatWrapper.fromHtml(
-            attributionContent.context.getString(R.string.my_site_blogging_prompt_card_attribution_dayone)
-        )
+        setupAttributionContainer(card.attribution)
 
         bloggingPromptCardMenu.setOnClickListener {
             bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuClicked()
@@ -57,6 +53,27 @@ class BloggingPromptCardViewHolder(
         uiHelpers.updateVisibility(answeredPromptControls, card.isAnswered)
 
         setupAnsweredUsersContainer(card)
+    }
+
+    private fun MySiteBloggingPromptCardBinding.setupAttributionContainer(
+        attribution: BloggingPromptAttribution
+    ) {
+        uiHelpers.updateVisibility(attributionContainer, attribution != NO_ATTRIBUTION)
+
+        val context = attributionContainer.context
+
+        attribution.contentRes
+            .takeIf { it != -1 }
+            ?.let { context.getString(it) }
+            ?.let { content ->
+                attributionContent.text = htmlCompatWrapper.fromHtml(content)
+            }
+
+        attribution.iconRes
+            .takeIf { it != -1 }
+            ?.let { iconRes ->
+                attributionIcon.setImageResource(iconRes)
+            }
     }
 
     @Suppress("NestedBlockDepth")
