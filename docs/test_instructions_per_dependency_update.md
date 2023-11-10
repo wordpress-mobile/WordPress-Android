@@ -659,15 +659,15 @@ all sites have this option.
 
 -----
 
-### GoogleServices [[googleServicesVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#1)] <a name="googleservices"></a>
+### GoogleServices [[googleServicesVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle)] <a name="googleservices"></a>
 
 -----
 
-### Dagger [[daggerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#1)] <a name="dagger"></a>
+### Dagger [[daggerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle)] <a name="dagger"></a>
 
 -----
 
-### Kotlin [[kotlinVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#1)] + [[androidxComposeCompilerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="kotlin"></a>
+### Kotlin [[kotlinVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle)] + [[androidxComposeCompilerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="kotlin"></a>
 
 -----
 
