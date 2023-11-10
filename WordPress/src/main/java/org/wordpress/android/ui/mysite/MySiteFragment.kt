@@ -523,6 +523,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
         appbarMain.visibility = View.VISIBLE
         siteInfo.loadMySiteDetails(state.siteInfoHeader)
+        appbarMain.setExpanded(true, true)
 
         recyclerView.setVisible(true)
         (recyclerView.adapter as? MySiteAdapter)?.submitList(state.dashboardData)
