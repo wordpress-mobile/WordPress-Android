@@ -564,6 +564,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
+        recyclerView.setVisible(false)
+        siteInfo.siteInfoCard.setVisible(false)
+
         if (!noSitesView.actionableEmptyView.isVisible) {
             noSitesView.actionableEmptyView.setVisible(true)
             noSitesView.actionableEmptyView.image.setVisible(state.shouldShowImage)
