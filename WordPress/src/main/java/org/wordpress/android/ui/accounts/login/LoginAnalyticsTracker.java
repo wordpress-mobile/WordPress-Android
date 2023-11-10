@@ -396,15 +396,15 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SECURITY_KEY_FAILURE);
     }
 
-    @Override public void trackLoginSecurityKeyNeeded() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SECURITY_KEY_NEEDED);
-    }
-
     @Override public void trackLoginSecurityKeySuccess() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SECURITY_KEY_SUCCESS);
     }
 
     @Override public void trackUseSecurityKeyClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SECURITY_KEY_CLICKED);
+    }
+
+    @Override public void trackLogin2faNeeded() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_2FA_NEEDED);
     }
 }
