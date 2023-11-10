@@ -184,13 +184,13 @@ public class Authenticator {
             try {
                 String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
                 JSONObject responseData = new JSONObject(jsonString).getJSONObject(DATA);
-                JSONObject bearerToken = responseData.optJSONObject(BEARER_TOKEN);
-                if (bearerToken == null) {
+                String bearerToken = responseData.optString(BEARER_TOKEN);
+                if (bearerToken.isEmpty()) {
                     return Response.success(new TwoFactorResponse(responseData),
                             HttpHeaderParser.parseCacheHeaders(response));
                 }
 
-                return Response.success(Token.fromJSONObject(responseData),
+                return Response.success(new Token(bearerToken),
                         HttpHeaderParser.parseCacheHeaders(response));
             } catch (UnsupportedEncodingException | JSONException e) {
                 return Response.error(new ParseError(e));
@@ -237,24 +237,10 @@ public class Authenticator {
     public interface OauthResponse {}
 
     public static class Token implements OauthResponse {
-        private static final String TOKEN_TYPE_FIELD_NAME = "token_type";
-        private static final String ACCESS_TOKEN_FIELD_NAME = "access_token";
-        private static final String SITE_URL_FIELD_NAME = "blog_url";
-        private static final String SCOPE_FIELD_NAME = "scope";
-        private static final String SITE_ID_FIELD_NAME = "blog_id";
-
-        private String mTokenType;
-        private String mScope;
         private String mAccessToken;
-        private String mSiteUrl;
-        private String mSiteId;
 
-        public Token(String accessToken, String siteUrl, String siteId, String scope, String tokenType) {
+        public Token(String accessToken) {
             mAccessToken = accessToken;
-            mSiteUrl = siteUrl;
-            mSiteId = siteId;
-            mScope = scope;
-            mTokenType = tokenType;
         }
 
         public String getAccessToken() {
@@ -263,12 +249,6 @@ public class Authenticator {
 
         public String toString() {
             return getAccessToken();
-        }
-
-        public static Token fromJSONObject(JSONObject tokenJSON) throws JSONException {
-            return new Token(tokenJSON.getString(ACCESS_TOKEN_FIELD_NAME), tokenJSON.getString(SITE_URL_FIELD_NAME),
-                    tokenJSON.getString(SITE_ID_FIELD_NAME), tokenJSON.getString(SCOPE_FIELD_NAME),
-                    tokenJSON.getString(TOKEN_TYPE_FIELD_NAME));
         }
     }
 
