@@ -360,7 +360,7 @@ class MySiteViewModel @Inject constructor(
                 getPositionOfQuickStartItem(siteItems)
             )
         }
-        // It is okay to use !! here because we are explicitly creating the lists
+
         return SiteSelected(
             siteInfoHeader = siteInfo,
             dashboardData = siteItems
