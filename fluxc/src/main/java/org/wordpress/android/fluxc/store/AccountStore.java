@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.OauthResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.SupportedAuthTypes;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.TwoFactorResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnChallengeInfo;
@@ -475,6 +476,7 @@ public class AccountStore extends Store {
         public final String mBackupNonce;
         public final String authenticatorNonce;
         public final String pushNonce;
+        public final List<SupportedAuthTypes> mSupportedAuthTypes;
 
         public OnTwoFactorAuthStarted(TwoFactorResponse response) {
             userId = response.mUserId;
@@ -482,6 +484,7 @@ public class AccountStore extends Store {
             mBackupNonce = response.mBackupNonce;
             authenticatorNonce = response.mAuthenticatorNonce;
             pushNonce = response.mPushNonce;
+            mSupportedAuthTypes = response.mSupportedAuthTypes;
         }
     }
 
