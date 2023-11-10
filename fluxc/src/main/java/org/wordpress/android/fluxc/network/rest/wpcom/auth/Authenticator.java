@@ -282,7 +282,7 @@ public class Authenticator {
         public final String mBackupNonce;
         public final String mAuthenticatorNonce;
         public final String mPushNonce;
-        public final List<String> mSupportedAuthTypes;
+        public final List<SupportedAuthTypes> mSupportedAuthTypes;
 
         public TwoFactorResponse(JSONObject data) throws JSONException {
             mUserId = data.getString(USER_ID);
@@ -295,11 +295,37 @@ public class Authenticator {
                 throw new JSONException("No supported auth types found");
             }
 
-            ArrayList<String> supportedAuthTypes = new ArrayList<>();
+            ArrayList<SupportedAuthTypes> supportedAuthTypes = new ArrayList<>();
             for (int i = 0; i < supportedTypes.length(); i++) {
-                supportedAuthTypes.add(supportedTypes.getString(i));
+                SupportedAuthTypes type = SupportedAuthTypes.fromString(supportedTypes.getString(i));
+                if (type != SupportedAuthTypes.UNKNOWN) {
+                    supportedAuthTypes.add(type);
+                }
             }
             mSupportedAuthTypes = supportedAuthTypes;
+        }
+    }
+
+    public enum SupportedAuthTypes {
+        WEBAUTHN,
+        BACKUP,
+        AUTHENTICATOR,
+        PUSH,
+        UNKNOWN;
+
+        static SupportedAuthTypes fromString(String value) {
+            switch (value) {
+                case "webauthn":
+                    return WEBAUTHN;
+                case "backup":
+                    return BACKUP;
+                case "authenticator":
+                    return AUTHENTICATOR;
+                case "push":
+                    return PUSH;
+                default:
+                    return UNKNOWN;
+            }
         }
     }
 
