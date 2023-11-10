@@ -75,7 +75,7 @@ rather than strict requirements.
 
 -----
 
-### Navigation [[navigationVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#L1)] <a name="navigation"></a>
+### Navigation [[navigationVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle)] <a name="navigation"></a>
 
 <details>
     <summary>1. [JP/WP] Image Editing Flow [libs:image-editor]</summary>
@@ -92,7 +92,7 @@ rather than strict requirements.
 
 -----
 
-### WorkManager [[androidxWorkManagerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="workmanager"></a>
+### WorkManager [[androidxWorkManagerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="workmanager"></a>
 
 <details>
   <summary>1. [JP/WP] UploadWorker.kt</summary>
@@ -145,7 +145,7 @@ rather than strict requirements.
 
 -----
 
-### Preference [[androidxPreferenceVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="preference"></a>
+### Preference [[androidxPreferenceVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="preference"></a>
 
 <details>
   <summary>1. [JP/WP] Account Settings [AccountSettingsFragment.kt]</summary>
@@ -216,7 +216,7 @@ rather than strict requirements.
 
 -----
 
-### ExoPlayer [[googleExoPlayerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="exoplayer"></a>
+### ExoPlayer [[googleExoPlayerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="exoplayer"></a>
 
 <details>
   <summary>1. [JP/WP] Image Preview</summary>
@@ -247,7 +247,7 @@ rather than strict requirements.
 
 -----
 
-### Webkit [[androidxWebkitVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="webkit"></a>
+### Webkit [[androidxWebkitVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="webkit"></a>
 
 <details>
     <summary>1. [TODO] TODO</summary>
@@ -260,7 +260,7 @@ rather than strict requirements.
 
 -----
 
-### Firebase [[firebaseBomVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="firebase"></a>
+### Firebase [[firebaseBomVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="firebase"></a>
 
 <details>
     <summary>1. [JP/WP] Push Notification on Post Being Published [GCMMessageService.java]</summary>
@@ -276,7 +276,7 @@ rather than strict requirements.
 
 -----
 
-### FirebaseIid [[firebaseIidVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="firebaseiid"></a>
+### FirebaseIid [[firebaseIidVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="firebaseiid"></a>
 
 <details>
     <summary>1. [TODO] TODO</summary>
@@ -289,7 +289,7 @@ rather than strict requirements.
 
 -----
 
-### MLKitBarcodeScanning [[googleMLKitBarcodeScanningVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="mlkitbarcodescanning"></a>
+### MLKitBarcodeScanning [[googleMLKitBarcodeScanningVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="mlkitbarcodescanning"></a>
 
 
 <details>
@@ -303,7 +303,7 @@ rather than strict requirements.
 
 -----
 
-### PlayServicesAuth [[googlePlayServicesAuthVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="playservicesauth"></a>
+### PlayServicesAuth [[googlePlayServicesAuthVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="playservicesauth"></a>
 
 <details>
   <summary>1. [JP] Google Sign-in on Jetpack</summary>
@@ -367,7 +367,7 @@ rather than strict requirements.
 
 -----
 
-### PlayServicesCodeScanner [[googlePlayServicesCodeScannerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="playservicescodescanner"></a>
+### PlayServicesCodeScanner [[googlePlayServicesCodeScannerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="playservicescodescanner"></a>
 
 <details>
   <summary>1. [JP] Scan Login Code</summary>
@@ -401,7 +401,7 @@ Step.3:
 
 -----
 
-### Okio [[squareupOkioVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="okio"></a>
+### Okio [[squareupOkioVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="okio"></a>
 
 <details>
     <summary>1. [JP/WP] Me Screen [GravatarApi.java + StreamingRequest.java]</summary>
@@ -416,7 +416,7 @@ Step.3:
 
 -----
 
-### Zendesk [[zendeskVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="zendesk"></a>
+### Zendesk [[zendeskVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="zendesk"></a>
 
 <details>
     <summary>1. [JP] Zendesk Update [Tickets & Contact Support]</summary>
@@ -440,7 +440,7 @@ Step.3:
 
 -----
 
-### JSoup [[jsoupVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="jsoup"></a>
+### JSoup [[jsoupVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="jsoup"></a>
 
 <details>
     <summary>1. [JP/WP] Classic Editor [Aztec]</summary>
@@ -492,7 +492,7 @@ Step.3:
 
 -----
 
-### AutoService [[googleAutoServiceVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="autoservice"></a>
+### AutoService [[googleAutoServiceVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="autoservice"></a>
 
 <details>
     <summary>1. [JP/WP] Remote Features [@Feature]</summary>
@@ -524,7 +524,7 @@ Step.3:
 
 -----
 
-### KotlinPoet [[squareupKotlinPoetVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="kotlinpoet"></a>
+### KotlinPoet [[squareupKotlinPoetVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="kotlinpoet"></a>
 
 <details>
     <summary>1. [JP/WP] Remote Features [@Feature]</summary>
@@ -556,7 +556,7 @@ Step.3:
 
 -----
 
-### Lottie [[lottieVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="lottie"></a>
+### Lottie [[lottieVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="lottie"></a>
 
 <details>
     <summary>1. [JP/WP] JP Install Full Plugin Animation [JPInstallFullPluginAnimation.kt]</summary>
@@ -587,7 +587,7 @@ Step.3:
 
 -----
 
-### UCrop [[uCropVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="ucrop"></a>
+### UCrop [[uCropVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="ucrop"></a>
 
 <details>
     <summary>1. [JP/WP] Image Edit Screen [PreviewImageFragment.kt + CropFragment.kt]</summary>
@@ -656,103 +656,103 @@ Step.3:
 
 -----
 
-### Kotlin [[kotlinVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#1)] + [[androidxComposeCompilerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="kotlin"></a>
+### Kotlin [[kotlinVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#1)] + [[androidxComposeCompilerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="kotlin"></a>
 
 -----
 
-### Coroutines [[kotlinxCoroutinesVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="coroutines"></a>
+### Coroutines [[kotlinxCoroutinesVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="coroutines"></a>
 
 -----
 
-### EventBus [[eventBusVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="eventbus"></a>
+### EventBus [[eventBusVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="eventbus"></a>
 
 -----
 
-### Annotation [[androidxAnnotationVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="annotation"></a>
+### Annotation [[androidxAnnotationVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="annotation"></a>
 
 -----
 
-### ArchCore [[androidxArchCoreVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="archcore"></a>
+### ArchCore [[androidxArchCoreVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="archcore"></a>
 
 -----
 
-### Lifecycle [[androidxLifecycleVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="lifecycle"></a>
+### Lifecycle [[androidxLifecycleVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="lifecycle"></a>
 
 -----
 
-### Core [[androidxCoreVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="core"></a>
+### Core [[androidxCoreVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="core"></a>
 
 -----
 
-### Activity [[androidxActivityVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="activity"></a>
+### Activity [[androidxActivityVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="activity"></a>
 
 -----
 
-### Fragment [[androidxFragmentVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="fragment"></a>
+### Fragment [[androidxFragmentVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="fragment"></a>
 
 -----
 
-### AppCompat [[androidxAppcompatVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="appcompat"></a>
+### AppCompat [[androidxAppcompatVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="appcompat"></a>
 
 -----
 
-### Compose [[androidxComposeBomVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="compose"></a>
+### Compose [[androidxComposeBomVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="compose"></a>
 
 -----
 
-### ComposeMaterial3 [[androidxComposeMaterial3Version](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="composematerial3"></a>
+### ComposeMaterial3 [[androidxComposeMaterial3Version](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="composematerial3"></a>
 
 -----
 
-### ComposeConstraintLayout [[androidxConstraintlayoutComposeVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="composeconstraintlayout"></a>
+### ComposeConstraintLayout [[androidxConstraintlayoutComposeVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="composeconstraintlayout"></a>
 
 -----
 
-### Coil [[coilComposeVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="coil"></a>
+### Coil [[coilComposeVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="coil"></a>
 
 -----
 
-### RecyclerView [[androidxRecyclerviewVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="recyclerview"></a>
+### RecyclerView [[androidxRecyclerviewVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="recyclerview"></a>
 
 -----
 
-### ViewPager2 [[androidxViewpager2Version](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="viewpager2"></a>
+### ViewPager2 [[androidxViewpager2Version](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="viewpager2"></a>
 
 -----
 
-### Material [[googleMaterialVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="material"></a>
+### Material [[googleMaterialVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="material"></a>
 
 -----
 
-### ConstraintLayout [[androidxConstraintlayoutVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="constraintlayout"></a>
+### ConstraintLayout [[androidxConstraintlayoutVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="constraintlayout"></a>
 
 -----
 
-### Retrofit [[squareupRetrofitVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="retrofit"></a>
+### Retrofit [[squareupRetrofitVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="retrofit"></a>
 
 -----
 
-### Volley [[androidVolleyVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="volley"></a>
+### Volley [[androidVolleyVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="volley"></a>
 
 -----
 
-### Glide [[glideVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] + [[glideVolleyVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="glide"></a>
+### Glide [[glideVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] + [[glideVolleyVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="glide"></a>
 
 -----
 
-### Gson [[googleGsonVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="gson"></a>
+### Gson [[googleGsonVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="gson"></a>
 
 -----
 
-### InstallReferrer [[androidInstallReferrerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="installreferrer"></a>
+### InstallReferrer [[androidInstallReferrerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="installreferrer"></a>
 
 -----
 
-### ApacheCommons [[apacheCommonsTextVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="apachecommons"></a>
+### ApacheCommons [[apacheCommonsTextVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="apachecommons"></a>
 
 -----
 
-### Desugar [[androidDesugarVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="desugar"></a>
+### Desugar [[androidDesugarVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="desugar"></a>
 
 <details>
     <summary>Extra</summary>
@@ -795,7 +795,7 @@ and [here](https://github.com/orgs/wordpress-mobile/projects/95)).
 
 -----
 
-### AGP [[agpVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#L1)] <a name="agp"></a>
+### AGP [[agpVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle)] <a name="agp"></a>
 
 <details>
     <summary>Why & How</summary>
@@ -808,7 +808,7 @@ and [here](https://github.com/orgs/wordpress-mobile/projects/95)).
 
 -----
 
-### Sentry [[sentryVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#L1)] <a name="sentry"></a>
+### Sentry [[sentryVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle)] <a name="sentry"></a>
 
 <details>
     <summary>Why & How</summary>
@@ -821,7 +821,7 @@ and [here](https://github.com/orgs/wordpress-mobile/projects/95)).
 
 -----
 
-### Detekt [[detektVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#L1)] <a name="detekt"></a>
+### Detekt [[detektVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle)] <a name="detekt"></a>
 
 <details>
     <summary>Why & How</summary>
@@ -834,7 +834,7 @@ and [here](https://github.com/orgs/wordpress-mobile/projects/95)).
 
 -----
 
-### ViolationComments [[violationCommentsVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle#L1)] <a name="violationcomments"></a>
+### ViolationComments [[violationCommentsVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle)] <a name="violationcomments"></a>
 
 <details>
     <summary>Why & How</summary>
@@ -847,7 +847,7 @@ and [here](https://github.com/orgs/wordpress-mobile/projects/95)).
 
 -----
 
-### ReactNative [[facebookReactVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="reactnative"></a>
+### ReactNative [[facebookReactVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="reactnative"></a>
 
 <details>
     <summary>Why & How</summary>
