@@ -305,6 +305,10 @@ rather than strict requirements.
 
 ### PlayServicesAuth [[googlePlayServicesAuthVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="playservicesauth"></a>
 
+ℹ️ These set of testing instructions are for internal contributors only, which can have access to
+   upload an `.aab` to Google Play Store. As such, external contributors can't possibly test this
+   update.
+
 <details>
   <summary>1. [JP] Google Sign-in on Jetpack</summary>
 
