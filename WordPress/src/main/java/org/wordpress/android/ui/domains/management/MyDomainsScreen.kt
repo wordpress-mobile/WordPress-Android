@@ -47,7 +47,7 @@ import org.wordpress.android.ui.domains.management.composable.PrimaryButton
 fun MyDomainsScreen(
     uiState: UiState,
     onSearchQueryChanged: (String) -> Unit,
-    onDomainTapped: (detailUrl: String) -> Unit,
+    onDomainTapped: (String, String) -> Unit,
     onAddDomainTapped: () -> Unit,
     onFindDomainTapped: () -> Unit,
     onBackTapped: () -> Unit,
@@ -162,7 +162,7 @@ fun MyDomainsSearchInput(
 fun MyDomainsList(
     listUiState: PopulatedList,
     listState: LazyListState,
-    onDomainTapped: (detailUrl: String) -> Unit,
+    onDomainTapped: (domain: String, detailUrl: String) -> Unit,
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -202,11 +202,10 @@ fun PreviewMyDomainsScreen() {
             uiState = PopulatedList.Initial,
             onSearchQueryChanged = {},
             onAddDomainTapped = {},
-            onDomainTapped = {},
+            onDomainTapped = { _, _ ->},
             onFindDomainTapped = {},
             onBackTapped = {},
-            onRefresh = {},
-        )
+        ) {}
     }
 }
 
@@ -219,11 +218,10 @@ fun PreviewMyDomainsScreenError() {
             uiState = Error,
             onSearchQueryChanged = {},
             onAddDomainTapped = {},
-            onDomainTapped = {},
+            onDomainTapped = { _, _ ->},
             onFindDomainTapped = {},
             onBackTapped = {},
-            onRefresh = {},
-        )
+        ) {}
     }
 }
 
@@ -236,10 +234,9 @@ fun PreviewMyDomainsScreenEmpty() {
             uiState = Empty,
             onSearchQueryChanged = {},
             onAddDomainTapped = {},
-            onDomainTapped = {},
+            onDomainTapped = { _, _ ->},
             onFindDomainTapped = {},
             onBackTapped = {},
-            onRefresh = {},
-        )
+        ) {}
     }
 }

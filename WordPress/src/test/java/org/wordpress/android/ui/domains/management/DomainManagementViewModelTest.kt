@@ -58,15 +58,15 @@ class DomainManagementViewModelTest : BaseUnitTest() {
     @Test
     fun `WHEN a domain is tapped THEN track DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED event`() = test {
         initializeViewModel()
-        viewModel.onDomainTapped(testDomain)
+        viewModel.onDomainTapped(testDomain, testDomainDetailUrl)
         verify(analyticsTracker).track(DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED)
     }
 
     @Test
     fun `WHEN a domain is tapped THEN send DomainTapped action event`() = testWithActionEvents { events ->
-        viewModel.onDomainTapped(testDomain)
+        viewModel.onDomainTapped(testDomain, testDomainDetailUrl)
         advanceUntilIdle()
-        assertThat(events.last()).isEqualTo(ActionEvent.DomainTapped(testDomain))
+        assertThat(events.last()).isEqualTo(ActionEvent.DomainTapped(testDomain, testDomainDetailUrl))
     }
 
     @Test
@@ -175,5 +175,6 @@ class DomainManagementViewModelTest : BaseUnitTest() {
 
     companion object {
         private const val testDomain = "domain"
+        private const val testDomainDetailUrl = "domainDetailUrl"
     }
 }
