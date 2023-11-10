@@ -67,9 +67,12 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    fun onDomainRegistrationComplete(event: DomainRegistrationCompletedEvent?) {
-        // TODO Handle domain registration complete
+    fun onDomainRegistrationComplete(event: DomainRegistrationCompletedEvent?) = event?.also {
+        launch {
+            _actionEvents.emit(ActionEvent.OpenDomainManagement)
+        }
+    } ?: run {
+        _uiStateFlow.value = UiState.ErrorInCheckout
     }
 
     private val SiteModel.shouldOfferPlans
