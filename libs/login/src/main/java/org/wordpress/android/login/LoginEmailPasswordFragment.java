@@ -348,7 +348,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     public void onTwoFactorAuthStarted(TwoFactorRequested event) {
         onLoginFinished(false);
         mLoginListener.needs2fa(mEmailAddress, mRequestedPassword, event.userId,
-                event.webauthnNonce, event.authenticatorNonce, event.backupNonce, event.pushNonce);
+                event.webauthnNonce, event.authenticatorNonce, event.backupNonce,
+                event.pushNonce, event.supportedAuthTypes);
         LoginWpcomService.clearLoginServiceState();
     }
 

@@ -34,6 +34,7 @@ import org.wordpress.android.util.AutoForeground;
 import org.wordpress.android.util.AutoForegroundNotification;
 import org.wordpress.android.util.ToastUtils;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -161,14 +162,17 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         public final String backupNonce;
         public final String authenticatorNonce;
         public final String pushNonce;
+        public final List<String> supportedAuthTypes;
 
         TwoFactorRequested(String userId, String webauthnNonce, String backupNonce,
-                           String authenticatorNonce, String pushNonce) {
+                           String authenticatorNonce, String pushNonce,
+                           List<String> supportedAuthTypes) {
             this.userId = userId;
             this.webauthnNonce = webauthnNonce;
             this.backupNonce = backupNonce;
             this.authenticatorNonce = authenticatorNonce;
             this.pushNonce = pushNonce;
+            this.supportedAuthTypes = supportedAuthTypes;
         }
     }
 
@@ -353,7 +357,8 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         signalCredentialsOK();
         setState(LoginStep.SECURITY_KEY_NEEDED);
         TwoFactorRequested twoFactorRequest = new TwoFactorRequested(event.userId,
-                event.webauthnNonce, event.mBackupNonce, event.authenticatorNonce, event.pushNonce);
+                event.webauthnNonce, event.mBackupNonce, event.authenticatorNonce,
+                event.pushNonce, event.mSupportedAuthTypes);
         EventBus.getDefault().post(twoFactorRequest);
     }
 
