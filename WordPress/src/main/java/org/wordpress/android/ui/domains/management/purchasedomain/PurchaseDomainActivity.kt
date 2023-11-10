@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity
 import org.wordpress.android.ui.domains.management.M3Theme
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoBack
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToSitePicker
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingSiteCheckout
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToExistingSitePlans
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.OpenDomainManagement
 import org.wordpress.android.ui.domains.management.purchasedomain.composable.PurchaseDomainScreen
 import org.wordpress.android.ui.main.SitePickerContract
 import javax.inject.Inject
@@ -108,6 +110,9 @@ class PurchaseDomainActivity : AppCompatActivity() {
                 )
             }
             GoBack -> onBackPressedDispatcher.onBackPressed()
+            OpenDomainManagement -> {
+                ActivityLauncher.openDomainManagement(this)
+            }
         }
     }
 
