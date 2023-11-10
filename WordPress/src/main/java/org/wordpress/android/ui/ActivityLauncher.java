@@ -1927,6 +1927,7 @@ public class ActivityLauncher {
 
     public static void openDomainManagement(@NonNull Context context) {
         Intent intent = new Intent(context, DomainManagementActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }
 
