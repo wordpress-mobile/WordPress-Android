@@ -92,7 +92,7 @@ rather than strict requirements.
 
 -----
 
-### WorkManager [[androidxWorkManagerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L54)] <a name="workmanager"></a>
+### WorkManager [[androidxWorkManagerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="workmanager"></a>
 
 <details>
   <summary>1. [JP/WP] UploadWorker.kt</summary>
@@ -145,7 +145,7 @@ rather than strict requirements.
 
 -----
 
-### Preference [[androidxPreferenceVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L50)] <a name="preference"></a>
+### Preference [[androidxPreferenceVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle#L1)] <a name="preference"></a>
 
 <details>
   <summary>1. [JP/WP] Account Settings [AccountSettingsFragment.kt]</summary>
