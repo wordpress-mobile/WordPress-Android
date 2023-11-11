@@ -248,8 +248,11 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    private fun onAnswerPromptActionClicked(promptId: Int) {
-        analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_ANSWER_PROMPT_TAPPED)
+    private fun onAnswerPromptActionClicked(promptId: Int, attribution: BloggingPromptAttribution) {
+        analyticsTracker.track(
+            Stat.MY_SITE_CREATE_SHEET_ANSWER_PROMPT_TAPPED,
+            mapOf("attribution" to attribution.value).filterValues { !it.isNullOrBlank() }
+        )
         _isBottomSheetShowing.postValue(Event(false))
         _createPostWithBloggingPrompt.postValue(promptId)
     }

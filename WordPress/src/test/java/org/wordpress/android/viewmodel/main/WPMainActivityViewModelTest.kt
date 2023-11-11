@@ -48,6 +48,7 @@ import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptActi
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.privacy.banner.domain.ShouldAskPrivacyConsent
@@ -356,7 +357,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
         val promptId = 123
 
-        action!!.onClickAction?.invoke(promptId)
+        action!!.onClickAction?.invoke(promptId, BloggingPromptAttribution.BLOGANUARY)
         assertThat(viewModel.createPostWithBloggingPrompt.value).isEqualTo(promptId)
     }
 
