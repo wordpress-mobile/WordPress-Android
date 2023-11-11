@@ -1,3 +1,0 @@
-23.5:
-Nell'editor a blocchi puoi ora dividere un blocco formattato o uscirne premendo il tasto "Invio" per tre volte.
-Il bordo sinistro è inoltre sempre visibile per i blocchi Citazione, anche nei temi basati su blocchi in dark mode. E su questo puoi anche citarci.
