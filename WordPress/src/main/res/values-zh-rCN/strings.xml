@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-18 13:54:08+0000
+Translation-Revision-Date: 2023-11-02 13:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_s_block_converted_to_blocks">‘%s’区块已转换为多个区块</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">或者，您可以将内容转换为多个区块。</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">添加或删除快捷键</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">禁用快捷键</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">启用快捷键</string>
+    <string name="personalization_screen_shortcuts_tab_title">快捷键</string>
+    <string name="personalization_screen_cards_tab_title">卡片</string>
+    <string name="purchase_domain_screen_discount_notice">* 所有付费年度套餐均包含为期一年的免费域名。</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">选择站点</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">与您已投入使用的站点搭配使用。</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">现有 WordPress.com 站点</string>
+    <string name="purchase_domain_screen_new_domain_card_button">获取域名</string>
+    <string name="purchase_domain_screen_new_domain_card_description">稍后添加站点。</string>
+    <string name="purchase_domain_screen_new_domain_card_title">直接购买域名</string>
+    <string name="purchase_domain_screen_description">别担心，您可以在之后轻松添加站点。</string>
+    <string name="purchase_domain_screen_header_double_line">选择如何\n使用您的域名</string>
+    <string name="purchase_domain_screen_header_single_line">选择如何使用您的域名</string>
+    <string name="purchase_domain_screen_title">购买域名</string>
+    <string name="domain_management_empty_find_domain">查找域名</string>
+    <string name="domain_management_empty_subtitle">轻点下方，查找最适合的域名。</string>
+    <string name="domain_management_empty_title">您没有任何域名。</string>
+    <string name="domain_management_error_subtitle">检查您是否在线并刷新。</string>
+    <string name="domain_management_error_title">无法更新</string>
+    <string name="domain_management_open_domain_details">打开域名详细信息</string>
+    <string name="domain_management_search_your_domains">搜索您的域名</string>
+    <string name="domain_management_purchase_a_domain">购买域名</string>
+    <string name="domain_management_my_domains_title">我的域名</string>
+    <string name="domain_management_expires">到期日期：%1$s</string>
     <string name="account_and_settings">账户和设置</string>
     <string name="site_creation_plans_selection_title">选择套餐</string>
     <string name="site_creation_domain_free_with_annual_plan">订阅年度付费套餐即可享受首年免费使用权</string>
@@ -35,9 +63,7 @@ Language: zh_CN
     <string name="personalization_screen_draft_posts_card_description">您最近的文章草稿</string>
     <string name="personalization_screen_draft_posts_card_title">文章草稿</string>
     <string name="personalization_screen_stats_card_description">浏览次数、访客人数和点赞数</string>
-    <string name="personalization_screen_footer_cards">卡片可能会显示不同的内容，具体取决于您站点上的情况</string>
-    <string name="personalization_screen_description">添加或隐藏卡片</string>
-    <string name="personalization_screen_title">对“首页”选项卡进行个性化</string>
+    <string name="personalization_screen_tab_cards_footer_cards">卡片可能会显示不同的内容，具体取决于您站点的情况</string>
     <string name="personalize_card_content_description">轻点以对您的“首页”选项卡进行个性化</string>
     <string name="personalize_card_text">对您的“首页”选项卡进行个性化</string>
     <string name="partial_media_access_prompt_change_settings">更改设置</string>

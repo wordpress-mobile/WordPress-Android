@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-18 14:54:08+0000
+Translation-Revision-Date: 2023-11-02 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Je kan ook de inhoud naar blokken omzetten.</string>
+    <string name="purchase_domain_screen_discount_notice">*Bij alle betaalde jaarabonnementen is een gratis domein voor een jaar inbegrepen.</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">Site kiezen</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">Gebruiken met een site die je al hebt aangemaakt.</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">Bestaande WordPress.com-site</string>
+    <string name="purchase_domain_screen_new_domain_card_button">Neem een domein</string>
+    <string name="purchase_domain_screen_new_domain_card_description">Later een site toevoegen.</string>
+    <string name="purchase_domain_screen_description">Geen zorgen, je kan later nog heel eenvoudig een site toevoegen</string>
+    <string name="purchase_domain_screen_header_double_line">Kies hoe je\njouw domein gebruikt</string>
+    <string name="purchase_domain_screen_header_single_line">Kies hoe je jouw domein gebruikt</string>
+    <string name="purchase_domain_screen_title">Domein kopen</string>
+    <string name="domain_management_empty_find_domain">Een domein vinden</string>
+    <string name="domain_management_empty_subtitle">Tik hieronder om jouw ideale domein te vinden.</string>
+    <string name="domain_management_empty_title">Je hebt nog geen domeinen</string>
+    <string name="domain_management_error_title">Update mislukt</string>
+    <string name="domain_management_open_domain_details">Domeingegevens openen</string>
+    <string name="domain_management_search_your_domains">Je domeinen zoeken</string>
+    <string name="domain_management_purchase_a_domain">Een domein kopen</string>
+    <string name="domain_management_expires">Verloopt op %1$s</string>
     <string name="site_creation_domain_free_with_annual_plan">Het eerste jaar gratis bij elk betaald abonnement</string>
     <string name="gutenberg_native_ungroup_block">Groeperen blok ongedaan maken</string>
     <string name="gutenberg_native_tap_here_to_show_more_details">Tik hier voor meer informatie.</string>
@@ -25,8 +44,6 @@ Language: nl
     <string name="personalization_screen_scheduled_posts_card_title">Ingeplande berichten</string>
     <string name="personalization_screen_draft_posts_card_title">Conceptberichten</string>
     <string name="personalization_screen_stats_card_description">Weergaven, bezoekers en likes</string>
-    <string name="personalization_screen_description">Kaarten toevoegen of verbergen</string>
-    <string name="personalization_screen_title">Startpagina personaliseren</string>
     <string name="personalize_card_content_description">Tik om je startpagina te personaliseren</string>
     <string name="personalize_card_text">Personaliseer je startpagina</string>
     <string name="partial_media_access_prompt_change_settings">Wijzig instellingen</string>

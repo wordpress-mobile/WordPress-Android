@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-19 09:54:08+0000
+Translation-Revision-Date: 2023-11-02 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_s_block_converted_to_blocks">블록으로 \'%s\' 블록 변환됨</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">콘텐츠를 블록으로 변환할 수도 있습니다.</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">단축키 추가 또는 제거</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">비활성 단축키</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">활성 단축키</string>
+    <string name="personalization_screen_shortcuts_tab_title">단축키</string>
+    <string name="personalization_screen_cards_tab_title">카드</string>
+    <string name="purchase_domain_screen_discount_notice">*모든 유료 연간 요금제에는 1년 무료 도메인이 포함됩니다.</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">사이트 선택</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">이미 시작한 사이트와 함께 사용하세요.</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">기존 워드프레스닷컴 사이트</string>
+    <string name="purchase_domain_screen_new_domain_card_button">도메인 받기</string>
+    <string name="purchase_domain_screen_new_domain_card_description">나중에 사이트를 추가하세요.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">도메인만 구매</string>
+    <string name="purchase_domain_screen_description">나중에 사이트를 쉽게 추가할 수 있으니 걱정하지 마세요.</string>
+    <string name="purchase_domain_screen_header_double_line">도메인 사용\n방법 선택</string>
+    <string name="purchase_domain_screen_header_single_line">도메인 사용 방법 선택</string>
+    <string name="purchase_domain_screen_title">도메인 구매</string>
+    <string name="domain_management_empty_find_domain">도메인 찾기</string>
+    <string name="domain_management_empty_subtitle">아래를 눌러서 알맞은 도메인을 찾아보세요.</string>
+    <string name="domain_management_empty_title">도메인이 없습니다.</string>
+    <string name="domain_management_error_subtitle">온라인 상태인지 확인하고 새로 고치세요.</string>
+    <string name="domain_management_error_title">업데이트할 수 없음</string>
+    <string name="domain_management_open_domain_details">도메인 상세 정보 열기</string>
+    <string name="domain_management_search_your_domains">도메인 검색</string>
+    <string name="domain_management_purchase_a_domain">도메인 구매</string>
+    <string name="domain_management_my_domains_title">내 도메인</string>
+    <string name="domain_management_expires">%1$s 만료</string>
     <string name="account_and_settings">계정 및 설정</string>
     <string name="site_creation_plans_selection_title">요금제 선택</string>
     <string name="site_creation_domain_free_with_annual_plan">연간 유료 요금제에서는 첫해 무료</string>
@@ -35,9 +63,6 @@ Language: ko_KR
     <string name="personalization_screen_draft_posts_card_description">최근 임시글입니다.</string>
     <string name="personalization_screen_draft_posts_card_title">임시글</string>
     <string name="personalization_screen_stats_card_description">조회수, 방문자 수 및 좋아요 개수</string>
-    <string name="personalization_screen_footer_cards">사이트에서 발생하는 상황에 따라 다른 콘텐츠가 카드에 표시될 수 있습니다.</string>
-    <string name="personalization_screen_description">카드 추가 또는 숨기기</string>
-    <string name="personalization_screen_title">홈 탭 개인 설정</string>
     <string name="personalize_card_content_description">눌러서 홈 탭 개인 설정</string>
     <string name="personalize_card_text">홈 탭 개인 설정</string>
     <string name="partial_media_access_prompt_change_settings">설정 변경</string>

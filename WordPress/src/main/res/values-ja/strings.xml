@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-19 11:54:08+0000
+Translation-Revision-Date: 2023-11-02 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_s_block_converted_to_blocks">「%s」ブロックがブロックに変換されました</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">またはコンテンツをブロックに変換することもできます。</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">ショートカットを追加または削除</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">無効なショートカット</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">有効なショートカット</string>
+    <string name="personalization_screen_shortcuts_tab_title">ショートカット</string>
+    <string name="personalization_screen_cards_tab_title">カード</string>
+    <string name="purchase_domain_screen_discount_notice">* すべての有料年間プランに1年間の無料ドメインが含まれています。</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">サイトを選択</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">お持ちのサイトと一緒に使用しましょう。</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">既存の WordPress.com サイト</string>
+    <string name="purchase_domain_screen_new_domain_card_button">ドメインを取得</string>
+    <string name="purchase_domain_screen_new_domain_card_description">サイトは後で追加します。</string>
+    <string name="purchase_domain_screen_new_domain_card_title">ドメインだけを購入</string>
+    <string name="purchase_domain_screen_description">サイトは後から簡単に追加できます。</string>
+    <string name="purchase_domain_screen_header_double_line">ドメインの使用方法を\n 選択してください</string>
+    <string name="purchase_domain_screen_header_single_line">ドメインの使用方法を選択してください</string>
+    <string name="purchase_domain_screen_title">ドメインを購入する</string>
+    <string name="domain_management_empty_find_domain">ドメインを探す</string>
+    <string name="domain_management_empty_subtitle">以下をタップして最適なドメインを見つけてください。</string>
+    <string name="domain_management_empty_title">ドメインがありません</string>
+    <string name="domain_management_error_subtitle">オンラインであることを確認して更新してください。</string>
+    <string name="domain_management_error_title">更新できませんでした</string>
+    <string name="domain_management_open_domain_details">ドメインの詳細を開く</string>
+    <string name="domain_management_search_your_domains">ドメインを検索</string>
+    <string name="domain_management_purchase_a_domain">ドメインを購入する</string>
+    <string name="domain_management_my_domains_title">自分のドメイン</string>
+    <string name="domain_management_expires">有効期限: %1$s</string>
     <string name="account_and_settings">アカウントと設定</string>
     <string name="site_creation_plans_selection_title">プランを選択</string>
     <string name="site_creation_domain_free_with_annual_plan">年間有料プランでは初年度無料</string>
@@ -35,9 +63,6 @@ Language: ja_JP
     <string name="personalization_screen_draft_posts_card_description">最新の投稿の下書き。</string>
     <string name="personalization_screen_draft_posts_card_title">投稿を下書きする</string>
     <string name="personalization_screen_stats_card_description">表示数、訪問者数、いいねの数</string>
-    <string name="personalization_screen_footer_cards">サイトで発生した内容に基づいて、さまざまなコンテンツがカードに表示されることがあります</string>
-    <string name="personalization_screen_description">カードを追加または非表示にします</string>
-    <string name="personalization_screen_title">ホームタブをパーソナライズする</string>
     <string name="personalize_card_content_description">タップしてホームタブをパーソナライズします</string>
     <string name="personalize_card_text">ホームタブをパーソナライズ</string>
     <string name="partial_media_access_prompt_change_settings">設定を変更</string>
