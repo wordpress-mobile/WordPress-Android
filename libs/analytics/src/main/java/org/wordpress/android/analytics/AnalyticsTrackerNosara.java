@@ -1931,6 +1931,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domain_management_my_domains_screen_shown";
             case DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED:
                 return "domain_management_my_domains_screen_domain_tapped";
+            case DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_ADD_DOMAIN_TAPPED:
+                return "domain_management_my_domains_screen_add_domain_tapped";
             case DOMAINS_DASHBOARD_VIEWED:
                 return "domains_dashboard_viewed";
             case DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED:
@@ -2637,12 +2639,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "more_menu_item_tapped";
             case QUICK_LINK_ITEM_TAPPED:
                 return "quick_link_item_tapped";
+            case POST_LIST_CREATE_POST_TAPPED:
+                return "post_list_create_post_tapped";
             case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_SHOWN:
                 return "domain_management_purchase_domain_screen_shown";
             case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED:
                 return "domain_management_purchase_domain_screen_new_domain_tapped";
-            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_DOMAIN_TAPPED:
-                return "domain_management_purchase_domain_screen_existing_domain_tapped";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED:
+                return "domain_management_purchase_domain_screen_existing_site_tapped";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN:
+                return "domain_management_purchase_domain_screen_existing_site_chosen";
+            case DOMAIN_MANAGEMENT_SEARCH_FOR_A_DOMAIN_SCREEN_SHOWN:
+                return "domain_management_search_for_a_domain_screen_shown";
+            case DOMAIN_MANAGEMENT_SEARCH_DOMAIN_TAPPED:
+                return "domain_management_search_domain_tapped";
+            case DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED:
+                return "domain_management_transfer_domain_tapped";
         }
         return null;
     }

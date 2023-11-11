@@ -87,7 +87,7 @@ class UpdateMediaModelUseCaseTest {
             }
 
         fun createMediaModel(uploadState: MediaUploadState = MediaUploadState.QUEUED) =
-            MediaModel().apply {
+            MediaModel(0, 0).apply {
                 this.uploadState = uploadState.name
                 this.id = 1
                 this.postId = 2

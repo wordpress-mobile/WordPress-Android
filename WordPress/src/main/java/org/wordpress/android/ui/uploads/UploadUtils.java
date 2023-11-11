@@ -169,11 +169,11 @@ public class UploadUtils {
         return errorMessage;
     }
 
-    public static @NonNull
-    String getErrorMessageFromMedia(Context context, @NonNull MediaModel media) {
+    @NonNull
+    public static String getErrorMessageFromMedia(Context context, @NonNull MediaModel media) {
         MediaUploadModel uploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(media.getId());
 
-        MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR, null, null);
+        MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
 
         if (uploadModel != null) {
             MediaError errorFromUploadModel = uploadModel.getMediaError();

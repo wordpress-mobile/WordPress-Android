@@ -1,7 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
 import android.annotation.SuppressLint
-import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
@@ -35,24 +34,25 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
-import org.wordpress.android.ui.pages.PageItem.Action
-import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
-import org.wordpress.android.ui.pages.PageItem.Action.COPY
-import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
-import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
-import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
-import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
-import org.wordpress.android.ui.pages.PageItem.Action.PROMOTE_WITH_BLAZE
-import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
-import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
-import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
-import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
-import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.VirtualHomepage
 import org.wordpress.android.ui.pages.PagesAuthorFilterUIState
+import org.wordpress.android.ui.pages.PagesListAction
+import org.wordpress.android.ui.pages.PagesListAction.CANCEL_AUTO_UPLOAD
+import org.wordpress.android.ui.pages.PagesListAction.COPY
+import org.wordpress.android.ui.pages.PagesListAction.COPY_LINK
+import org.wordpress.android.ui.pages.PagesListAction.DELETE_PERMANENTLY
+import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_DRAFT
+import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PagesListAction.PROMOTE_WITH_BLAZE
+import org.wordpress.android.ui.pages.PagesListAction.PUBLISH_NOW
+import org.wordpress.android.ui.pages.PagesListAction.SET_AS_HOMEPAGE
+import org.wordpress.android.ui.pages.PagesListAction.SET_AS_POSTS_PAGE
+import org.wordpress.android.ui.pages.PagesListAction.SET_PARENT
+import org.wordpress.android.ui.pages.PagesListAction.VIEW_PAGE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AuthorFilterListItemUIState
 import org.wordpress.android.ui.posts.AuthorFilterSelection
@@ -72,7 +72,6 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.extensions.clipboardManager
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -462,7 +461,7 @@ class PagesViewModel
         }
     }
 
-    fun onMenuAction(action: Action, page: Page, context: Context? = null): Boolean {
+    fun onMenuAction(action: PagesListAction, page: Page, context: Context? = null): Boolean {
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
@@ -571,27 +570,14 @@ class PagesViewModel
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private fun copyPageLink(page: Page, context: Context) {
-        try {
-            // Get the link to the page
-            val pageLink = postStore.getPostByLocalPostId(page.localId).link
-            // Copy the link to the clipboard
-            context.clipboardManager?.setPrimaryClip(
-                ClipData.newPlainText("${page.localId}", pageLink)
-            ) ?: throw NullPointerException("ClipboardManager is not supported on this device")
-
-            _showSnackbarMessage.postValue(
-                SnackbarMessageHolder(UiStringRes(R.string.media_edit_copy_url_toast))
-            )
-        } catch (e: Throwable) {
-            /**
-             * Ignore any exceptions here as certain devices have bugs and will fail.
-             * See https://crrev.com/542cb9cfcc927295615809b0c99917b09a219d9f for more info.
-             */
-            AppLog.e(PAGES, e)
-            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
-        }
+        // Get the link to the page
+        val pageLink = postStore.getPostByLocalPostId(page.localId).link
+        ActivityLauncher.openShareIntent(
+            context,
+            pageLink,
+            page.title
+        )
     }
 
     private fun previewPage(page: Page) {
@@ -660,7 +646,7 @@ class PagesViewModel
         }
     }
 
-    private fun trackMenuSelectionEvent(action: Action) {
+    private fun trackMenuSelectionEvent(action: PagesListAction) {
         val menu = when (action) {
             VIEW_PAGE -> "view"
             CANCEL_AUTO_UPLOAD -> "cancel_auto_upload"
@@ -989,11 +975,13 @@ class PagesViewModel
      * 2) Jetpack sites - we need to pass in the self-hosted user id to be able to filter for authors
      * which we currently can't
      * 3) Sites on which the user doesn't have permissions to edit posts of other users.
+     * 4) Single user sites - there is no point in filtering by author on single user sites.
      *
      * This behavior is consistent with Calypso and Posts as of 11/4/2019.
      */
     private val isFilteringByAuthorSupported: Boolean by lazy {
-        site.isWPCom && site.hasCapabilityEditOthersPages
+        site.isUsingWpComRestApi && site.hasCapabilityEditOthersPages
+                && (site.isSingleUserSite != null && !site.isSingleUserSite)
     }
 
     @SuppressLint("NullSafeMutableLiveData")

@@ -1,0 +1,24 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  Exclude:
+    - vendor/**/*
+  NewCops: enable
+
+Metrics/BlockLength:
+  Exclude:
+    - fastlane/Fastfile
+    - fastlane/lanes/*.rb
+
+Metrics/MethodLength:
+  Max: 30
+
+Layout/LineLength:
+  Max: 180
+
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - fastlane/lanes/localization.rb
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never

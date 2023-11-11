@@ -1344,7 +1344,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
-        if (event.media.getMarkedLocallyAsFeatured()) {
+        if (event.media != null && event.media.getMarkedLocallyAsFeatured()) {
             refreshViews();
         }
     }

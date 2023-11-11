@@ -39,9 +39,11 @@ class StockMediaInsertUseCaseTest : BaseUnitTest() {
     @Test
     fun `uploads media on insert`() = test {
         val itemToInsert = Identifier.StockMediaIdentifier(url, name, title)
-        val insertedMediaModel = MediaModel()
         val mediaId: Long = 10
-        insertedMediaModel.mediaId = mediaId
+        val insertedMediaModel = MediaModel(
+            site.id,
+            mediaId
+        )
         whenever(stockMediaStore.performUploadStockMedia(any(), any())).thenReturn(
             OnStockMediaUploaded(
                 site, listOf(

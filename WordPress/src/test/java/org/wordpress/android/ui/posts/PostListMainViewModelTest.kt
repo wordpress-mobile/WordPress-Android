@@ -7,7 +7,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
@@ -19,11 +18,8 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
-import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
-import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
-import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
@@ -47,18 +43,13 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
-    @Mock
-    lateinit var siteUtilsWrapper: SiteUtilsWrapper
     private lateinit var viewModel: PostListMainViewModel
 
+    @Mock
+    lateinit var prefs: AppPrefsWrapper
     @Before
     fun setUp() {
-        val prefs = mock<AppPrefsWrapper> {
-            on { postListViewLayoutType } doReturn STANDARD
-        }
-
         whenever(editPostRepository.postChanged).thenReturn(MutableLiveData(Event(PostModel())))
-        whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(true)
 
         viewModel = PostListMainViewModel(
             dispatcher = dispatcher,
@@ -75,9 +66,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
             postListEventListenerFactory = mock(),
             uploadStarter = uploadStarter,
             uploadActionUseCase = mock(),
-            savePostToDbUseCase = savePostToDbUseCase,
-            jetpackFeatureRemovalPhaseHelper = mock(),
-            siteUtilsWrapper = siteUtilsWrapper
+            savePostToDbUseCase = savePostToDbUseCase
         )
     }
 
@@ -145,25 +134,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `search is using compact view mode independently from normal post list`() {
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
-        assertThat(viewModel.viewLayoutType.value).isEqualTo(STANDARD) // default value
-
-        var viewLayoutType: PostListViewLayoutType? = null
-        viewModel.viewLayoutType.observeForever {
-            viewLayoutType = it
-        }
-
-        viewModel.onSearchExpanded(false)
-
-        assertThat(viewLayoutType).isEqualTo(COMPACT)
-
-        viewModel.onSearchCollapsed()
-
-        assertThat(viewLayoutType).isEqualTo(STANDARD)
-    }
-
-    @Test
     fun `if currentBottomSheetPostId isn't 0 then set the post in editPostRepository from the postStore`() {
         // arrange
         val bottomSheetPostId = LocalId(2)
@@ -207,25 +177,5 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
         // assert
         verify(savePostToDbUseCase, times(1)).savePostToDb(any(), any())
-    }
-
-    @Test
-    fun `if onFabClicked then _onFabClicked is called`() {
-        whenever(site.isWPCom).thenReturn(true)
-
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
-        viewModel.fabClicked()
-
-        assertThat(viewModel.onFabClicked.value?.peekContent()).isNotNull
-    }
-
-    @Test
-    fun `if onFabLongPressed then onFabLongPressedForCreateMenu is called`() {
-        whenever(site.isWPCom).thenReturn(true)
-
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
-        viewModel.onFabLongPressed()
-
-        assertThat(viewModel.onFabLongPressedForCreateMenu.value?.peekContent()).isNotNull
     }
 }

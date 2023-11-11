@@ -83,13 +83,13 @@ public class PersonDetailFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+        ((WordPress) requireActivity().getApplicationContext()).component().inject(this);
 
         if (savedInstanceState == null) {
-            mCurrentUserId = getArguments().getLong(ARG_CURRENT_USER_ID);
-            mPersonId = getArguments().getLong(ARG_PERSON_ID);
-            mLocalTableBlogId = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
-            mPersonType = (Person.PersonType) getArguments().getSerializable(ARG_PERSON_TYPE);
+            mCurrentUserId = requireArguments().getLong(ARG_CURRENT_USER_ID);
+            mPersonId = requireArguments().getLong(ARG_PERSON_ID);
+            mLocalTableBlogId = requireArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
+            mPersonType = (Person.PersonType) requireArguments().getSerializable(ARG_PERSON_TYPE);
         } else {
             mCurrentUserId = savedInstanceState.getLong(ARG_CURRENT_USER_ID);
             mPersonId = savedInstanceState.getLong(ARG_PERSON_ID);
@@ -121,8 +121,8 @@ public class PersonDetailFragment extends Fragment {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.person_detail_fragment, container, false);
 
         Toolbar toolbar = rootView.findViewById(R.id.toolbar_main);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -257,7 +257,7 @@ public class PersonDetailFragment extends Fragment {
                 mSiteStore.getSiteByLocalId(
                         mLocalTableBlogId),
                 person.getRole());
-        dialog.show(getFragmentManager(), null);
+        dialog.show(getChildFragmentManager(), null);
     }
 
     // used to optimistically update the role

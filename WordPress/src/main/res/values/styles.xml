@@ -371,7 +371,7 @@
         <item name="android:duplicateParentState">true</item>
         <item name="tabTextColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="tabSelectedTextColor">?attr/colorOnSurface</item>
-        <item name="tabIndicatorColor">?attr/colorPrimary</item>
+        <item name="tabIndicatorColor">@color/tab_indicator</item>
         <item name="tabBackground">@drawable/tab_indicator_color</item>
         <item name="android:layout_marginBottom">@dimen/bottom_tabs_divider_size</item>
     </style>
@@ -982,29 +982,8 @@
         <item name="android:paddingStart">@dimen/margin_extra_medium_large</item>
     </style>
 
-    <!-- Pages styles -->
-    <style name="PageListItemTextStyle" parent="PageListTopLevelItemTextStyle">
-        <item name="android:fontFamily">serif</item>
-    </style>
-
-    <style name="PageListTopLevelItemTextStyle">
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
     <style name="LinearProgress" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/primary_50</item>
-    </style>
-
-    <!--Post List Skeleton-->
-    <style name="PostListRowSkeletonButton">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:gravity">center</item>
-        <item name="android:enabled">false</item>
     </style>
 
     <!-- Site Creation: Domain Search Example-->
@@ -1707,5 +1686,23 @@
     <!-- Media Picker -->
     <style name="MediaPickerPartialAccessTextButton" parent="TextAppearance.Material3.LabelLarge">
         <item name="android:textColor">@color/primary_emphasis_medium_selector</item>
+    </style>
+
+    <!-- Post List Item -->
+    <style name="PostList.Item.Title" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+    </style>
+
+    <style name="PostList.Item.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+    </style>
+
+    <!-- Pages List Item -->
+    <style name="Pages.Item.Title" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+    </style>
+
+    <style name="PagesList.Item.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
     </style>
 </resources>

@@ -52,13 +52,12 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
         model = BloggingPromptModel(
             id = 123,
             text = "title",
-            title = "",
-            content = "content",
             date = Date(),
             isAnswered = false,
             attribution = "",
             respondentsCount = 5,
-            respondentsAvatarUrls = listOf()
+            respondentsAvatarUrls = listOf(),
+            answeredLink = "https://wordpress.com/tag/dailyprompt-123"
         )
     )
 

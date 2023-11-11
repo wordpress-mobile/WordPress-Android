@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainStatus
 import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
+import org.wordpress.android.ui.domains.management.composable.PendingGhostStrip
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle

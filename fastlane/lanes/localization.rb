@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # NOTE: When updating this list, ensure the locales having `promo_config: {…}` matches the list of locales
 # used in the `raw-screenshots` CI job for Firebase Test Lab
 #
@@ -30,7 +32,8 @@ ALL_LOCALES = [
   { glotpress: 'vi', android: 'vi',    google_play: 'vi',     promo_config: {} },
   { glotpress: 'zh-cn', android: 'zh-rCN', google_play: 'zh-CN',  promo_config: {} },
   { glotpress: 'zh-tw', android: 'zh-rTW', google_play: 'zh-TW',  promo_config: {} },
-  # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key. See `WP_RELEASE_NOTES_LOCALES` below.
+  # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key.
+  # See `WP_RELEASE_NOTES_LOCALES` below.
   { glotpress: 'az', android: 'az', promo_config: false },
   { glotpress: 'bg', android: 'bg', promo_config: false },
   { glotpress: 'cs', android: 'cs', promo_config: false },
@@ -62,21 +65,21 @@ ALL_LOCALES = [
   { glotpress: 'sk', android: 'sk', promo_config: false },
   { glotpress: 'sq', android: 'sq', promo_config: false },
   { glotpress: 'uz', android: 'uz', promo_config: false },
-  { glotpress: 'zh-tw', android: 'zh-rHK', promo_config: false },
+  { glotpress: 'zh-tw', android: 'zh-rHK', promo_config: false }
 ].freeze
 
 WP_APP_LOCALES = ALL_LOCALES
 JP_APP_LOCALES = ALL_LOCALES
-  .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
+                 .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
 
 WP_RELEASE_NOTES_LOCALES = ALL_LOCALES
-  .reject { |h| h[:google_play].nil? }
-  .map { |h| [h[:glotpress], h[:google_play]] }
+                           .reject { |h| h[:google_play].nil? }
+                           .map { |h| [h[:glotpress], h[:google_play]] }
 
 JP_RELEASE_NOTES_LOCALES = ALL_LOCALES
-  .reject { |h| h[:google_play].nil? }
-  .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
-  .map { |h| [h[:glotpress], h[:google_play]] }
+                           .reject { |h| h[:google_play].nil? }
+                           .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
+                           .map { |h| [h[:glotpress], h[:google_play]] }
 
 platform :android do
   ########################################################################
@@ -220,12 +223,12 @@ platform :android do
         FileUtils.cp(File.join(metadata_source_dir, source_file), File.join(download_path, 'en-US', h[:desc]))
       end
 
-      unless skip_commit
-        git_add(path: download_path)
-        message = "Update #{app_values[:display_name]} metadata translations"
-        message += " for #{version}" unless version.nil?
-        git_commit(path: download_path, message: message, allow_nothing_to_commit: true)
-      end
+      next if skip_commit
+
+      git_add(path: download_path)
+      message = "Update #{app_values[:display_name]} metadata translations"
+      message += " for #{version}" unless version.nil?
+      git_commit(path: download_path, message: message, allow_nothing_to_commit: true)
     end
     push_to_git_remote unless skip_commit || skip_git_push
   end
@@ -241,10 +244,10 @@ platform :android do
   JETPACK_MAIN_STRINGS_PATH = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', 'jetpack', 'res', 'values', 'strings.xml').freeze
   JETPACK_FROZEN_STRINGS_DIR_PATH = File.join(FASTLANE_FOLDER, 'jetpack_resources', 'values').freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
-    # Note: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
+    # NOTE: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
     # Which will correctly detect strings from the app's `strings.xml` being used by one of the module.
-    { library: "Image Editor", strings_path: "./libs/image-editor/src/main/res/values/strings.xml", source_id: 'module:image-editor' },
-    { library: "Editor", strings_path: "./libs/editor/src/main/res/values/strings.xml", source_id: 'module:editor' }
+    { library: 'Image Editor', strings_path: './libs/image-editor/src/main/res/values/strings.xml', source_id: 'module:image-editor' },
+    { library: 'Editor', strings_path: './libs/editor/src/main/res/values/strings.xml', source_id: 'module:editor' }
   ].freeze
   REMOTE_LIBRARIES_STRINGS_PATHS = [
     {
@@ -263,19 +266,19 @@ platform :android do
       source_id: 'login'
     },
     {
-      name: "Stories Library",
-      import_key: "automatticStoriesVersion",
-      repository: "Automattic/stories-android",
-      strings_file_path: "stories/src/main/res/values/strings.xml",
+      name: 'Stories Library',
+      import_key: 'automatticStoriesVersion',
+      repository: 'Automattic/stories-android',
+      strings_file_path: 'stories/src/main/res/values/strings.xml',
       source_id: 'stories'
     },
     {
-      name: "About Library",
-      import_key: "automatticAboutVersion",
-      repository: "Automattic/about-automattic-android",
-      strings_file_path: "library/src/main/res/values/strings.xml",
+      name: 'About Library',
+      import_key: 'automatticAboutVersion',
+      repository: 'Automattic/about-automattic-android',
+      strings_file_path: 'library/src/main/res/values/strings.xml',
       source_id: 'about'
-    },
+    }
   ].freeze
 
   lane :update_frozen_strings_for_translation do
@@ -323,7 +326,7 @@ platform :android do
           add_ignore_attr: true # The linter is not be able to detect if a merged string is actually used by a binary dependency
         }]
         an_localize_libs(app_strings_path: WORDPRESS_MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
-        File.delete(download_path) if File.exist?(download_path)
+        FileUtils.rm_f(download_path)
       end
     end
 
@@ -381,7 +384,7 @@ platform :android do
   #        Typically one of the `WP_APP_LOCALES` or `JP_APP_LOCALES` constants
   def check_declared_locales_consistency(app_flavor:, locales_list:)
     output = gradle(task: 'printResourceConfigurations', flags: '--quiet')
-    resource_configs = output.match(/^#{app_flavor}: \[(.*)\]$/)&.captures&.first&.gsub(' ','')&.split(',')&.sort
+    resource_configs = output.match(/^#{app_flavor}: \[(.*)\]$/)&.captures&.first&.gsub(' ', '')&.split(',')&.sort
     if resource_configs.nil? || resource_configs.empty?
       UI.message("No `resourceConfigurations` field set in `build.gradle` for the `#{app_flavor}` flavor. Nothing to check.")
       return

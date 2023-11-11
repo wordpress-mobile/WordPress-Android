@@ -43,38 +43,22 @@ private val RESPONDENTS = listOf(
 class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private lateinit var builder: BloggingPromptCardBuilder
 
-    @Suppress("MaxLineLength")
-    private val bloggingPrompt = BloggingPromptModel(
-        id = 123,
-        text = PROMPT_TITLE,
-        title = "",
-        content = "<!-- wp:pullquote -->\n" +
-                "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
-                "<!-- /wp:pullquote -->",
-        date = Date(),
-        isAnswered = false,
-        attribution = "dayone",
-        respondentsCount = 5,
-        respondentsAvatarUrls = RESPONDENTS
-    )
-
     @Before
     fun setUp() {
         builder = BloggingPromptCardBuilder()
     }
 
     @Test
-    fun `given blogging prompt, when card is built, then return card`() {
-        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt)
-
-        assertThat(statCard).isNotNull()
-    }
-
-    @Test
-    fun `given blogging prompt, when card is built without showing view answers action, then return matching card`() {
-        val statCard = buildBloggingPromptCardBuilderParams(bloggingPrompt)
-
-        assertThat(statCard).isEqualTo(bloggingPromptCard())
+    fun `given blogging prompt, when card is built then return matching card`() {
+        // lets test all possible attribution types to verify proper mapping
+        mapOf(
+            "dayone" to BloggingPromptAttribution.DAY_ONE,
+            "bloganuary" to BloggingPromptAttribution.BLOGANUARY,
+            "" to BloggingPromptAttribution.NO_ATTRIBUTION
+        ).forEach { (attributionString, attribution) ->
+            val promptCard = buildBloggingPromptCardBuilderParams(bloggingPromptModel(attributionString))
+            assertThat(promptCard).isEqualTo(bloggingPromptCard(attribution))
+        }
     }
 
     @Test
@@ -102,17 +86,32 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private val onAnswerClick: (promptId: Int) -> Unit = { }
     private val onSkipClick: () -> Unit = { }
     private val onViewMoreClick: () -> Unit = { }
-    private val onViewAnswersClick: (promptId: Int) -> Unit = { }
+    private val onViewAnswersClick: (tagUrl: String) -> Unit = { }
     private val onRemoveClick: () -> Unit = { }
 
+    private fun bloggingPromptModel(
+        attribution: String
+    ) = BloggingPromptModel(
+        id = 123,
+        text = PROMPT_TITLE,
+        date = Date(),
+        isAnswered = false,
+        attribution = attribution,
+        respondentsCount = 5,
+        respondentsAvatarUrls = RESPONDENTS,
+        answeredLink = "https://wordpress.com/tag/dailyprompt-123"
+    )
+
     private fun bloggingPromptCard(
+        attribution: BloggingPromptAttribution
     ) = BloggingPromptCardWithData(
         prompt = UiStringText(PROMPT_TITLE),
         respondents = RESPONDENTS_IN_CARD_VIEW_ANSWERS,
         numberOfAnswers = NUMBER_OF_RESPONDENTS,
         false,
         promptId = 123,
-        attribution = BloggingPromptAttribution.DAY_ONE,
+        tagUrl = "https://wordpress.com/tag/dailyprompt-123",
+        attribution = attribution,
         onShareClick = onShareClick,
         onAnswerClick = onAnswerClick,
         onSkipClick = onSkipClick,

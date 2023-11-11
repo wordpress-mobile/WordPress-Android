@@ -11,10 +11,10 @@ import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.BloggingPromptCardNavigationAction
 import org.wordpress.android.ui.mysite.BloggingPromptsCardTrackHelper
-import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteSourceManager
 import org.wordpress.android.ui.mysite.MySiteUiState
+import org.wordpress.android.ui.mysite.MySiteViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -31,7 +31,8 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
-    private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper
+    private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
+    private val bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider,
 ) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage as LiveData<Event<SnackbarMessageHolder>>
@@ -52,7 +53,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         return MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams(
             bloggingPrompt = bloggingPromptUpdate?.promptModel,
             onShareClick = this::onBloggingPromptShareClick,
-            onAnswerClick = this::onBloggingPromptAnswerClick,
+            onAnswerClick = { id -> onBloggingPromptAnswerClick(id, bloggingPromptUpdate?.promptModel?.attribution) },
             onSkipClick = this::onBloggingPromptSkipClick,
             onViewMoreClick = this::onBloggingPromptViewMoreClick,
             onViewAnswersClick = this::onBloggingPromptViewAnswersClick,
@@ -64,8 +65,8 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         _onNavigation.value = Event(BloggingPromptCardNavigationAction.SharePrompt(message))
     }
 
-    private fun onBloggingPromptAnswerClick(promptId: Int) {
-        bloggingPromptsCardAnalyticsTracker.trackMySiteCardAnswerPromptClicked()
+    private fun onBloggingPromptAnswerClick(promptId: Int, attribution: String?) {
+        bloggingPromptsCardAnalyticsTracker.trackMySiteCardAnswerPromptClicked(attribution)
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         _onNavigation.value = Event(BloggingPromptCardNavigationAction.AnswerPrompt(selectedSite, promptId))
     }
@@ -92,9 +93,9 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         }
     }
 
-    private fun onBloggingPromptViewAnswersClick(promptId: Int) {
+    private fun onBloggingPromptViewAnswersClick(tagUrl: String) {
         bloggingPromptsCardAnalyticsTracker.trackMySiteCardViewAnswersClicked()
-        val tag = BloggingPromptsPostTagProvider.promptIdSearchReaderTag(promptId)
+        val tag = bloggingPromptsPostTagProvider.promptIdSearchReaderTag(tagUrl)
         _onNavigation.value = Event(BloggingPromptCardNavigationAction.ViewAnswers(tag))
     }
 
@@ -105,8 +106,12 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private fun onBloggingPromptRemoveClick() {
         scope.launch(bgDispatcher) {
             updatePromptsCardEnabled(isEnabled = false).join()
-            _onNavigation.postValue(Event(BloggingPromptCardNavigationAction
-                .CardRemoved(this@BloggingPromptCardViewModelSlice::onBloggingPromptUndoClick)))
+            _onNavigation.postValue(
+                Event(
+                    BloggingPromptCardNavigationAction
+                        .CardRemoved(this@BloggingPromptCardViewModelSlice::onBloggingPromptUndoClick)
+                )
+            )
         }
     }
 
@@ -122,16 +127,18 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         }
     }
 
-    fun onDashboardCardsUpdated(scope: CoroutineScope,
-                                bloggingPromptCard: List<MySiteCardAndItem.Card.BloggingPromptCard>) {
-        bloggingPromptsCardTrackHelper.onDashboardCardsUpdated(scope, bloggingPromptCard)
+    fun onDashboardCardsUpdated(
+        scope: CoroutineScope,
+        state: MySiteViewModel.State.SiteSelected?
+    ) {
+        bloggingPromptsCardTrackHelper.onDashboardCardsUpdated(scope, state)
     }
 
-    fun onSiteChanged(siteId: Int?) {
-        bloggingPromptsCardTrackHelper.onSiteChanged(siteId)
+    fun onSiteChanged(siteId: Int?, state: MySiteViewModel.State.SiteSelected?) {
+        bloggingPromptsCardTrackHelper.onSiteChanged(siteId, state)
     }
 
-    fun onResume() {
-        bloggingPromptsCardTrackHelper.onResume()
+    fun onResume(state: MySiteViewModel.State.SiteSelected?) {
+        bloggingPromptsCardTrackHelper.onResume(state)
     }
 }

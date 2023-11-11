@@ -358,13 +358,12 @@ class MySiteViewModelTest : BaseUnitTest() {
             promptModel = BloggingPromptModel(
                 id = bloggingPromptId,
                 text = "text",
-                title = "",
-                content = "content",
                 date = Date(),
                 isAnswered = false,
                 attribution = "dayone",
                 respondentsCount = 5,
-                respondentsAvatarUrls = listOf()
+                respondentsAvatarUrls = listOf(),
+                answeredLink = "https://wordpress.com/tag/$bloggingPromptId"
             )
         )
     )
@@ -906,11 +905,13 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given blogging prompt card, when resuming dashboard, then tracker helper called as expected`() = test {
         initSelectedSite()
 
-        verify(bloggingPromptCardViewModelSlice, atLeastOnce()).onSiteChanged(siteLocalId)
+        val siteSelected = uiModels.last() as SiteSelected
+
+        verify(bloggingPromptCardViewModelSlice, atLeastOnce()).onSiteChanged(siteLocalId, siteSelected)
 
         viewModel.onResume()
 
-        verify(bloggingPromptCardViewModelSlice).onResume()
+        verify(bloggingPromptCardViewModelSlice).onResume(siteSelected)
         verify(bloggingPromptCardViewModelSlice, atLeastOnce())
             .onDashboardCardsUpdated(
                 any(),
@@ -922,11 +923,13 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given no blogging prompt card, when resuming dashboard, then tracker helper called as expected`() = test {
         initSelectedSite()
 
-        verify(bloggingPromptCardViewModelSlice, atLeastOnce()).onSiteChanged(siteLocalId)
+        val siteSelected = uiModels.last() as SiteSelected
+
+        verify(bloggingPromptCardViewModelSlice, atLeastOnce()).onSiteChanged(siteLocalId, siteSelected)
 
         viewModel.onResume()
 
-        verify(bloggingPromptCardViewModelSlice).onResume()
+        verify(bloggingPromptCardViewModelSlice).onResume(siteSelected)
         verify(bloggingPromptCardViewModelSlice, atMost(1))
             .onDashboardCardsUpdated(
                 any(),
@@ -938,11 +941,13 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given blogging prompt card, when resuming menu, then tracker helper called as expected`() = test {
         initSelectedSite()
 
-        verify(bloggingPromptCardViewModelSlice, atLeastOnce()).onSiteChanged(siteLocalId)
+        val siteSelected = uiModels.last() as SiteSelected
+
+        verify(bloggingPromptCardViewModelSlice, atLeastOnce()).onSiteChanged(siteLocalId, siteSelected)
 
         viewModel.onResume()
 
-        verify(bloggingPromptCardViewModelSlice).onResume()
+        verify(bloggingPromptCardViewModelSlice).onResume(siteSelected)
         verify(bloggingPromptCardViewModelSlice, atLeastOnce())
             .onDashboardCardsUpdated(
                 any(),

@@ -13,7 +13,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.view.View.OnClickListener
-import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -147,6 +146,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     private val viewModel: MeViewModel by viewModels()
 
+    private val shouldShowDomainButton
+        get() = BuildConfig.IS_JETPACK_APP && domainManagementFeatureConfig.isEnabled() && accountStore.hasAccessToken()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
@@ -213,15 +214,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             viewModel.showUnifiedAbout()
         }
 
-        if (shouldShowQrCodeLogin()) {
-            rowScanLoginCode.isVisible = true
-            scanLoginCodeDivider.isVisible = true
-
-            rowScanLoginCode.setOnClickListener {
-                viewModel.showScanLoginCode()
-            }
-        }
-
         initRecommendUiState()
 
         rowLogout.setOnClickListener {
@@ -236,11 +228,29 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        if (BuildConfig.IS_JETPACK_APP && domainManagementFeatureConfig.isEnabled()) {
-            domainManagementContainer.visibility = VISIBLE
+        refreshWPCOMLoggedInOnlyButtonsVisibility()
+    }
+
+    private fun MeFragmentBinding.refreshWPCOMLoggedInOnlyButtonsVisibility() {
+        if (shouldShowQrCodeLogin()) {
+            rowScanLoginCode.isVisible = true
+            scanLoginCodeDivider.isVisible = true
+
+            rowScanLoginCode.setOnClickListener {
+                viewModel.showScanLoginCode()
+            }
+        } else {
+            rowScanLoginCode.isVisible = false
+            scanLoginCodeDivider.isVisible = false
+        }
+
+        if (shouldShowDomainButton) {
+            domainManagementContainer.visibility = View.VISIBLE
             domainManagementContainer.setOnClickListener {
                 context?.let { ActivityLauncher.openDomainManagement(it) }
             }
+        } else {
+            domainManagementContainer.visibility = View.GONE
         }
     }
 
@@ -271,22 +281,25 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
+        viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner) {
             startActivity(Intent(activity, UnifiedAboutActivity::class.java))
-        })
+        }
 
-        viewModel.showDisconnectDialog.observeEvent(viewLifecycleOwner, {
+        viewModel.showDisconnectDialog.observeEvent(viewLifecycleOwner) {
             when (it) {
                 true -> showDisconnectDialog()
-                false -> hideDisconnectDialog()
+                false -> {
+                    hideDisconnectDialog()
+                    refreshWPCOMLoggedInOnlyButtonsVisibility()
+                }
             }
-        })
+        }
 
-        viewModel.recommendUiState.observeEvent(viewLifecycleOwner, {
+        viewModel.recommendUiState.observeEvent(viewLifecycleOwner) {
             if (!isAdded) return@observeEvent
 
             manageRecommendUiState(it)
-        })
+        }
 
         viewModel.showScanLoginCode.observeEvent(viewLifecycleOwner) {
             ActivityLauncher.startQRCodeAuthFlow(requireContext())
@@ -436,7 +449,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     }
 
     private fun MeFragmentBinding.loadAvatar(injectFilePath: String?) {
-        val newAvatarUploaded = injectFilePath != null && injectFilePath.isNotEmpty()
+        val newAvatarUploaded = !injectFilePath.isNullOrEmpty()
         val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl)
         meGravatarLoader.load(
             newAvatarUploaded,
@@ -554,7 +567,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         when (requestCode) {
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
                 val mediaUriStringsArray = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
-                if (mediaUriStringsArray == null || mediaUriStringsArray.size == 0) {
+                if (mediaUriStringsArray.isNullOrEmpty()) {
                     AppLog.e(
                         UTILS,
                         "Can't resolve picked or captured image"

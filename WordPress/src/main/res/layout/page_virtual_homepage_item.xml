@@ -16,7 +16,7 @@
         android:minHeight="@dimen/page_list_row_min_height"
         android:background="?selectableItemBackground">
 
-        <org.wordpress.android.widgets.WPTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/page_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -26,9 +26,8 @@
             android:ellipsize="end"
             android:fontFamily="serif"
             android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
+            style="@style/Pages.Item.Title"
             android:textAlignment="textStart"
-            android:textStyle="bold"
             android:text="@string/virtual_homepage_title"
             app:layout_goneMarginEnd="@dimen/page_item_horizontal_padding"
             app:layout_constraintBottom_toTopOf="@+id/page_subtitle"
@@ -38,13 +37,12 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
 
-        <org.wordpress.android.widgets.WPTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/page_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_extra_small"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/wpColorOnSurfaceMedium"
+            style="@style/PagesList.Item.Body"
             android:text="@string/virtual_homepage_subtitle"
             app:layout_constrainedWidth="true"
             app:layout_goneMarginBottom="@dimen/margin_large"
