@@ -1,8 +1,16 @@
 {
     "request": {
         "method": "POST",
-        "urlPath": "/wp-login.php?action=login-endpoint",
+        "urlPath": "/wp-login.php",
+        "queryParameters": {
+            "action": {
+                "equalTo": "login-endpoint"
+            }
+        },
         "bodyPatterns": [
+            {
+                "matches": ".*client_id=.*"
+            },
             {
                 "matches": ".*username=[^&]+.*"
             },
@@ -14,8 +22,15 @@
             },
             {
                 "matches": ".*get_bearer_token=.*"
+            },
+            {
+                "matches": ".*wpcom_supports_2fa=.*"
+            },
+            {
+                "matches": ".*grant_type=.*"
             }
         ]
+
     },
     "response": {
         "status": 200,
@@ -26,10 +41,6 @@
                 "token_links": [
                     "https://jetpack.com/remote-login.php?wpcom_remote_login=validate&wpcomid=20115252&token=valid_token&host=https%3A%2F%2Fjetpack.com"
                 ]
-            },
-            "headers": {
-                "Content-Type": "application/json",
-                "Connection": "keep-alive"
             }
         }
     }
