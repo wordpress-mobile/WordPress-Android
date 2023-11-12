@@ -24,7 +24,7 @@ class CompactBloggingPromptCardViewHolder(
         setupAttributionContainer(action.attribution)
 
         answerButton.setOnClickListener {
-            action.onClickAction?.invoke(action.promptId)
+            action.onClickAction?.invoke(action.promptId, action.attribution)
         }
         promptHelpButtonContainer.setOnClickListener {
             action.onHelpAction?.invoke()

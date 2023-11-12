@@ -30,9 +30,14 @@ class BloggingPromptsCardTrackHelper @Inject constructor(
     private val waitingToTrack = AtomicBoolean(false)
     private val currentSite = AtomicReference<Int?>(null)
 
-    private fun onDashboardRefreshed() {
+    private fun onDashboardRefreshed(state: MySiteViewModel.State.SiteSelected?) {
+        val bloggingPromptCards = state?.dashboardData
+            ?.filterIsInstance<BloggingPromptCard>()
+            ?: listOf()
+
         latestPromptCardVisible.get()?.let { isPromptCardVisible ->
-            if (isPromptCardVisible) tracker.trackMySiteCardViewed()
+            val attribution = bloggingPromptCards.firstOrNull()?.attribution
+            if (isPromptCardVisible) tracker.trackMySiteCardViewed(attribution)
             waitingToTrack.set(false)
         } ?: run {
             waitingToTrack.set(true)
@@ -40,7 +45,11 @@ class BloggingPromptsCardTrackHelper @Inject constructor(
     }
 
 
-    fun onDashboardCardsUpdated(scope: CoroutineScope, bloggingPromptCards: List<BloggingPromptCard>) {
+    fun onDashboardCardsUpdated(scope: CoroutineScope, state: MySiteViewModel.State.SiteSelected?) {
+        val bloggingPromptCards = state?.dashboardData
+            ?.filterIsInstance<BloggingPromptCard>()
+            ?: listOf()
+
         // cancel any existing job (debouncing mechanism)
         dashboardUpdateDebounceJob?.cancel()
 
@@ -52,7 +61,8 @@ class BloggingPromptsCardTrackHelper @Inject constructor(
 
             latestPromptCardVisible.set(isVisible)
             if (isVisible && waitingToTrack.getAndSet(false)) {
-                tracker.trackMySiteCardViewed()
+                val attribution = bloggingPromptCards.firstOrNull()?.attribution
+                tracker.trackMySiteCardViewed(attribution)
             }
         }.also {
             it.invokeOnCompletion { cause ->
@@ -62,16 +72,21 @@ class BloggingPromptsCardTrackHelper @Inject constructor(
         }
     }
 
-    fun onResume() {
-        onDashboardRefreshed()
+    fun onResume(state: MySiteViewModel.State.SiteSelected?) {
+        onDashboardRefreshed(state)
     }
 
-    fun onSiteChanged(siteId: Int?) {
+    fun onSiteChanged(siteId: Int?, state: MySiteViewModel.State.SiteSelected?) {
         if (currentSite.getAndSet(siteId) != siteId) {
             latestPromptCardVisible.set(null)
-            onDashboardRefreshed()
+            onDashboardRefreshed(state)
         }
     }
+
+    private val BloggingPromptCard.attribution: String?
+        get() {
+            return (this as? BloggingPromptCard.BloggingPromptCardWithData)?.attribution?.value
+        }
 
     companion object {
         private const val PROMPT_CARD_VISIBLE_DEBOUNCE = 500L

@@ -618,6 +618,15 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
+    public void needs2fa(String email, String password, String userId, String webauthnNonce, String nonceAuthenticator,
+                         String nonceBackup, String noncePush, List<String> supportedAuthTypes) {
+        mLoginAnalyticsListener.trackLogin2faNeeded();
+        Login2FaFragment login2FaFragment = Login2FaFragment.newInstance(email, password, userId, webauthnNonce,
+                nonceAuthenticator, nonceBackup, noncePush, supportedAuthTypes);
+        slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
+    }
+
+    @Override
     public void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup,
                                String nonceSms) {
         mLoginAnalyticsListener.trackLoginSocial2faNeeded();
