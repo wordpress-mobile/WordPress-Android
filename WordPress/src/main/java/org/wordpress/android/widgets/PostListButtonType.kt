@@ -162,7 +162,7 @@ enum class PostListButtonType constructor(
         18,
         R.string.button_promote_with_blaze,
         R.drawable.ic_blaze_flame_24dp,
-        0,
+        MaterialR.attr.colorOnSurface,
         SHARE_AND_PROMOTE_GROUP_ID,
         2
     ),

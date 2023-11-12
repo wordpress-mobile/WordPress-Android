@@ -110,6 +110,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/more"
             android:src="@drawable/gb_ic_more_vertical"
+            android:padding="8dp"
             app:tint="?attr/colorOnSurface"
             app:layout_constraintBottom_toBottomOf="@+id/featured_image"
             app:layout_constraintEnd_toEndOf="parent"
