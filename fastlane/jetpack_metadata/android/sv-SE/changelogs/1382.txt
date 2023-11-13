@@ -1,0 +1,5 @@
+23.6:
+- Nya alternativ för domän/paket och kassafönster i skapandeprocessen för webbplatsen
+- Min webbplatsnavigering har länkar till gemensamma sektioner
+- Inaktiva sociala ikoner och rubriker för synkroniserade mönster syns i mörkt läge för blockbaserade teman
+- Innehåll kan konverteras till block i den klassiska redigeraren

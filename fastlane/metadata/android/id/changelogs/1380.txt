@@ -1,3 +1,0 @@
-23.5:
-Di editor blok, Anda sekarang bisa memecah atau keluar dari blok yang telah diformat dengan menekan Enter tiga kali.
-Tepi sebelah kiri blok kutipan sekarang juga selalu ditampilkan meski menggunakan tema berbasis blok pada mode gelap. Kami berani jamin!

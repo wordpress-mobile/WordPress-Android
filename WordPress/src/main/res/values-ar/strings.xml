@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-18 14:54:08+0000
+Translation-Revision-Date: 2023-11-01 13:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.11
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_s_block_converted_to_blocks">تم تحويل مكوّن \"%s\" إلى المكوّنات</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">بدلاً من ذلك، يمكنك تحويل المحتوى إلى مكوّنات.</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">إضافة الاختصارات أو إزالتها</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">اختصارات غير نشطة</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">اختصارات نشطة</string>
+    <string name="personalization_screen_shortcuts_tab_title">الاختصارات</string>
+    <string name="personalization_screen_cards_tab_title">البطاقات</string>
+    <string name="purchase_domain_screen_discount_notice">* تتضمّن جميع الخطط السنوية المدفوعة نطاقًا مجانيًّا لمدة عام كامل.</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">اختيار موقع</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">الاستخدام مع أي موقع بدأته بالفعل.</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">موقع ووردبريس.كوم الحالي</string>
+    <string name="purchase_domain_screen_new_domain_card_button">الحصول على نطاق</string>
+    <string name="purchase_domain_screen_new_domain_card_description">أضف موقعًا لاحقًا.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">شراء نطاق فقط</string>
+    <string name="purchase_domain_screen_description">لا تقلق، يمكنك بسهولة إضافة موقع لاحقًا.</string>
+    <string name="purchase_domain_screen_header_double_line">اختيار كيفية\nاستخدام نطاقك</string>
+    <string name="purchase_domain_screen_header_single_line">اختيار طريقة استخدام نطاقك</string>
+    <string name="purchase_domain_screen_title">شراء النطاق</string>
+    <string name="domain_management_empty_find_domain">العثور على نطاق</string>
+    <string name="domain_management_empty_subtitle">اضغط أدناه للعثور على نطاقك المثالي.</string>
+    <string name="domain_management_empty_title">لا تتوافر لديك أي نطاقات</string>
+    <string name="domain_management_error_subtitle">تحقق من أنك متصلاً بالإنترنت، وقم بالتحديث.</string>
+    <string name="domain_management_error_title">يتعذر التحديث</string>
+    <string name="domain_management_open_domain_details">فتح تفاصيل النطاق</string>
+    <string name="domain_management_search_your_domains">البحث في نطاقاتك</string>
+    <string name="domain_management_purchase_a_domain">شراء نطاق</string>
+    <string name="domain_management_my_domains_title">النطاقات الخاصة بي</string>
+    <string name="domain_management_expires">تنتهي الصلاحية بتاريخ ⁦%1$s⁩</string>
     <string name="account_and_settings">الحساب والإعدادات</string>
     <string name="site_creation_plans_selection_title">تحديد خطة</string>
     <string name="site_creation_domain_free_with_annual_plan">مجاني للعام الأول مع الخطط السنوية المدفوعة</string>
@@ -35,14 +63,11 @@ Language: ar
     <string name="personalization_screen_stats_card_description">المشاهدات والزائرون والإعجابات</string>
     <string name="personalization_screen_scheduled_posts_card_title">تدوينات مجدولة</string>
     <string name="personalization_screen_draft_posts_card_title">إعداد مسودة للتدوينات</string>
-    <string name="personalization_screen_footer_cards">قد تعرض البطاقات محتوى مختلفًا استنادًا إلى ما يحدث من خلال موقعك</string>
     <string name="personalize_card_content_description">النقر على علامة تبويب تخصيص صفحتك الرئيسية</string>
     <string name="personalize_card_text">علامة تبويب تخصيص صفحتك الرئيسية</string>
     <string name="partial_media_access_prompt_change_settings">تغيير الإعدادات</string>
     <string name="partial_media_access_prompt_select_more">تحديد مزيد</string>
     <string name="partial_media_access_prompt_text">لا تتوافر سوى الصور والفيديوهات المُحدَّدة التي منحت حق الوصول إليها.</string>
-    <string name="personalization_screen_description">إضافة بطاقات أو إخفاؤها</string>
-    <string name="personalization_screen_title">علامة تبويب تخصيص الصفحة الرئيسية</string>
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">عرض كل الحملات</string>
     <string name="dashboard_activity_card_menu_all_activity">كل النشاط</string>
     <string name="dashboard_pages_card_more_menu_all_pages">كل الصفحات</string>

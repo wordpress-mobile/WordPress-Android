@@ -1,0 +1,5 @@
+23.6:
+- Neue Domain-/Tarifoptionen und Bezahlbildschirme bei der Website-Erstellung
+- Die Navigation „Meine Website“ enthält Links zu häufigen Abschnitten
+- Inaktive Social-Icons und Titel der synchronisierten Vorlagen werden bei blockbasierten Themes im dunklen Modus angezeigt
+- Im klassischen Editor können Inhalte in Blöcke konvertiert werden

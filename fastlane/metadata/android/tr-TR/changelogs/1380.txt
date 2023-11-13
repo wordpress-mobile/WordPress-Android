@@ -1,3 +1,0 @@
-23.5:
-Blok düzenleyicide artık “enter” tuşuna üç kez basarak biçimlendirilmiş bir bloku bölebilir veya bloktan çıkabilirsiniz.
-Soldaki kenar, karanlık moddaki blok tabanlı temalarda bile alıntı blokları için her zaman görünür. Bu konuda bize güvenebilirsiniz.

@@ -1,0 +1,5 @@
+23.6:
+- Nieuwe domein-/abonnementopties en afrekenschermen tijdens het aanmaakproces voor sites
+- Mijn site-navigatie bevat links naar algemene gedeelten
+- Inactieve social media-pictogrammen en gesynchroniseerde patroontitels zijn zichtbaar in de donkere modus voor thema's op blokbasis
+- Inhoud kan worden omgezet naar blokken in de klassieke editor

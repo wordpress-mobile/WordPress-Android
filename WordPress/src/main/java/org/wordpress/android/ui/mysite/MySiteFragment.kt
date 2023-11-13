@@ -382,9 +382,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner) { uiModel ->
             hideRefreshIndicatorIfNeeded()
-            when (val state = uiModel) {
-                is State.SiteSelected -> loadData(state)
-                is State.NoSites -> loadEmptyView(state)
+            when (uiModel) {
+                is State.SiteSelected -> loadData(uiModel)
+                is State.NoSites -> loadEmptyView(uiModel)
             }
         }
         viewModel.onBasicDialogShown.observeEvent(viewLifecycleOwner) { model ->
@@ -523,6 +523,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
         appbarMain.visibility = View.VISIBLE
         siteInfo.loadMySiteDetails(state.siteInfoHeader)
+        appbarMain.setExpanded(true, true)
 
         recyclerView.setVisible(true)
         (recyclerView.adapter as? MySiteAdapter)?.submitList(state.dashboardData)
@@ -560,10 +561,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         siteInfoContainer.subtitle.text = siteInfoHeader.url
         siteInfoContainer.subtitle.setOnClickListener { siteInfoHeader.onUrlClick.click() }
         switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
+        siteInfoCard.visibility = View.VISIBLE
     }
 
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
+        recyclerView.setVisible(false)
+        siteInfo.siteInfoCard.setVisible(false)
+
         if (!noSitesView.actionableEmptyView.isVisible) {
             noSitesView.actionableEmptyView.setVisible(true)
             noSitesView.actionableEmptyView.image.setVisible(state.shouldShowImage)
@@ -715,7 +720,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             action.activityId,
             action.isRewindable
         )
-        is SiteNavigationAction.TriggerCreatePageFlow -> Unit // no-op
+        is SiteNavigationAction.TriggerCreatePageFlow -> wpMainActivityViewModel.triggerCreatePageFlow()
         is SiteNavigationAction.OpenPagesDraftsTab -> ActivityLauncher.viewCurrentBlogPagesOfType(
             requireActivity(),
             action.site,

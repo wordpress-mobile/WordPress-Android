@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-20 09:24:49+0000
+Translation-Revision-Date: 2023-10-31 06:28:06+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_s_block_converted_to_blocks">Am convertit blocul „%s” în blocuri</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Ca alternativă, poți să convertești conținutul în blocuri.</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Adaugă sau înlătură scurtături</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Scurtături inactive</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">Scurtături active</string>
+    <string name="personalization_screen_shortcuts_tab_title">Scurtături</string>
+    <string name="personalization_screen_cards_tab_title">Cartușe</string>
+    <string name="purchase_domain_screen_discount_notice">*Este inclus un domeniu gratuit pentru un an în toate planurile cu plată anuală.</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">Alege site-ul</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">Folosește-l cu un site pe care îl ai deja.</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">Site WordPress.com existent</string>
+    <string name="purchase_domain_screen_new_domain_card_button">Ia domeniul</string>
+    <string name="purchase_domain_screen_new_domain_card_description">Adaugă un site mai târziu.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">Doar cumpără un domeniu</string>
+    <string name="purchase_domain_screen_description">Nu-ți face griji, poți să adaugi cu ușurință un site mai târziu.</string>
+    <string name="purchase_domain_screen_header_double_line">Alege cum vrei\nsă-ți folosești domeniul</string>
+    <string name="purchase_domain_screen_header_single_line">Alege cum vrei să-ți folosești domeniul</string>
+    <string name="purchase_domain_screen_title">Cumpără domeniul</string>
+    <string name="domain_management_empty_find_domain">Găsește un domeniu</string>
+    <string name="domain_management_empty_subtitle">Atinge mai jos ca să găsești domeniul perfect pentru tine.</string>
+    <string name="domain_management_empty_title">Nu ai niciun domeniu</string>
+    <string name="domain_management_error_subtitle">Verifică dacă ești online și reîmprospătează.</string>
+    <string name="domain_management_error_title">Nu am putut să actualizez</string>
+    <string name="domain_management_open_domain_details">Deschide detaliile despre domeniu</string>
+    <string name="domain_management_search_your_domains">Caută domeniile tale</string>
+    <string name="domain_management_purchase_a_domain">Cumpără un domeniu</string>
+    <string name="domain_management_my_domains_title">Domeniile mele</string>
+    <string name="domain_management_expires">Expiră %1$s</string>
     <string name="account_and_settings">Cont și setări</string>
     <string name="site_creation_plans_selection_title">Selectează un plan</string>
     <string name="site_creation_domain_free_with_annual_plan">Gratuit în primul an, cu orice plan cu plată anuală</string>
@@ -35,9 +63,9 @@ Language: ro
     <string name="personalization_screen_draft_posts_card_description">Articole ciornă recente.</string>
     <string name="personalization_screen_draft_posts_card_title">Articole ciornă</string>
     <string name="personalization_screen_stats_card_description">Vizualizări, vizitatori și aprecieri</string>
-    <string name="personalization_screen_footer_cards">Cartușele pot să afișeze conținut diferit în funcție de ceea ce se întâmplă cu site-ul tău</string>
-    <string name="personalization_screen_description">Adaugă cartușe sau ascunde-le</string>
-    <string name="personalization_screen_title">Personalizează fila Prima pagină</string>
+    <string name="personalization_screen_tab_cards_footer_cards">Cartușele pot să afișeze conținut diferit în funcție de ceea ce se întâmplă cu site-ul tău</string>
+    <string name="personalization_screen_tab_cards_description">Adaugă cartușe sau ascunde-le</string>
+    <string name="personalization_screen_title"> Personalizează fila Prima pagină</string>
     <string name="personalize_card_content_description">Atinge ca să personalizezi fila Prima pagină</string>
     <string name="personalize_card_text">Personalizează fila Prima pagină</string>
     <string name="partial_media_access_prompt_change_settings">Modifică setările</string>

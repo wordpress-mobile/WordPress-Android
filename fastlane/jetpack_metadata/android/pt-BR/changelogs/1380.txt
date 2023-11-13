@@ -1,3 +1,0 @@
-23.5:
-Fizemos algumas alterações visuais na seção do leitor, incluindo cartões de feed, cabeçalhos, botões, recomendações e muito mais.
-No editor de blocos, agora é possível dividir ou sair de um bloco formatado pressionando a tecla "Enter" três vezes. Além disso, a borda esquerda fica sempre visível para blocos de citação.
