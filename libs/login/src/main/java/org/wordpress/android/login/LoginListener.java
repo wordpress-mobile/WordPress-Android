@@ -53,7 +53,7 @@ public interface LoginListener {
                   String nonceAuthenticator, String nonceBackup, String noncePush,
                   List<String> supportedAuthTypes);
     void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup,
-                        String nonceSms, List<String> supportedAuthTypes);
+                        String nonceSms, String nonceWebauthn, List<String> supportedAuthTypes);
     void needs2faSocialConnect(String email, String password, String idToken, String service);
     void loggedInViaPassword(ArrayList<Integer> oldSitesIds);
     void helpEmailPasswordScreen(String email);
