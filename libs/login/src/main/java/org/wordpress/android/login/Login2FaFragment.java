@@ -34,7 +34,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
-import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticateTwoFactorPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.FinishWebauthnChallengePayload;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
@@ -55,6 +55,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -85,7 +86,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
     private static final String ARG_WEBAUTHN_NONCE = "WEBAUTHN_NONCE";
-    private static final String ARG_DISPLAY_SECURITY_KEY_BUTTON = "ARG_DISPLAY_SECURITY_KEY_BUTTON";
+    private static final String ARG_2FA_SUPPORTED_AUTH_TYPES = "ARG_2FA_SUPPORTED_AUTH_TYPES";
     private static final int LENGTH_NONCE_AUTHENTICATOR = 6;
     private static final int LENGTH_NONCE_BACKUP = 8;
     private static final int LENGTH_NONCE_SMS = 7;
@@ -123,7 +124,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private boolean mIsSocialLogin;
     private boolean mIsSocialLoginConnect;
     private boolean mSentSmsCode;
-    private boolean mIsSecurityKeyEnabled;
+    private List<SupportedAuthTypes> mSupportedAuthTypes;
     @Nullable private PasskeyCredentialsHandler mPasskeyCredentialsHandler = null;
     @Nullable private ActivityResultLauncher<IntentSenderRequest> mResultLauncher = null;
 
@@ -136,16 +137,21 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         return fragment;
     }
 
-    public static Login2FaFragment newInstanceSecurityKey(String emailAddress, String password,
-                                                          String userId, String webauthnNonce) {
+    public static Login2FaFragment newInstance(String emailAddress, String password,
+                                               String userId, String webauthnNonce,
+                                               String authenticatorNonce, String backupNonce,
+                                               String smsNonce, List<String> authTypes) {
+        boolean supportsWebauthn = webauthnNonce != null && !webauthnNonce.isEmpty();
         Login2FaFragment fragment = new Login2FaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
         args.putString(ARG_PASSWORD, password);
         args.putString(ARG_2FA_USER_ID, userId);
         args.putString(ARG_WEBAUTHN_NONCE, webauthnNonce);
-        args.putString(ARG_2FA_NONCE_AUTHENTICATOR, webauthnNonce);
-        args.putBoolean(ARG_DISPLAY_SECURITY_KEY_BUTTON, true);
+        args.putString(ARG_2FA_NONCE_AUTHENTICATOR, authenticatorNonce);
+        args.putString(ARG_2FA_NONCE_BACKUP, backupNonce);
+        args.putString(ARG_2FA_NONCE_SMS, smsNonce);
+        args.putStringArrayList(ARG_2FA_SUPPORTED_AUTH_TYPES, new ArrayList<>(authTypes));
         fragment.setArguments(args);
         return fragment;
     }
@@ -210,7 +216,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         // restrict the allowed input chars to just numbers
         m2FaInput.getEditText().setKeyListener(DigitsKeyListener.getInstance("0123456789"));
 
+        boolean isSmsEnabled = mSupportedAuthTypes.contains(SupportedAuthTypes.PUSH);
         mOtpButton = rootView.findViewById(R.id.login_otp_button);
+        mOtpButton.setVisibility(isSmsEnabled ? View.VISIBLE : View.GONE);
         mOtpButton.setText(mSentSmsCode ? R.string.login_text_otp_another : R.string.login_text_otp);
         mOtpButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -222,8 +230,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             }
         });
 
+        boolean isSecurityKeyEnabled = mSupportedAuthTypes.contains(SupportedAuthTypes.WEBAUTHN);
         mSecurityKeyButton = rootView.findViewById(R.id.login_security_key_button);
-        mSecurityKeyButton.setVisibility(mIsSecurityKeyEnabled ? View.VISIBLE : View.GONE);
+        mSecurityKeyButton.setVisibility(isSecurityKeyEnabled ? View.VISIBLE : View.GONE);
         mSecurityKeyButton.setOnClickListener(view -> doAuthWithSecurityKeyAction());
     }
 
@@ -274,7 +283,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mIsSocialLoginConnect = getArguments().getBoolean(ARG_2FA_IS_SOCIAL_CONNECT);
         mService = getArguments().getString(ARG_2FA_SOCIAL_SERVICE);
         mWebauthnNonce = getArguments().getString(ARG_WEBAUTHN_NONCE);
-        mIsSecurityKeyEnabled = getArguments().getBoolean(ARG_DISPLAY_SECURITY_KEY_BUTTON, false);
+        mSupportedAuthTypes = handleSupportedAuthTypesParameter(
+                getArguments().getStringArrayList(ARG_2FA_SUPPORTED_AUTH_TYPES));
 
         if (savedInstanceState != null) {
             // Overwrite argument nonce values with saved state values on device rotation.
@@ -292,6 +302,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         onCredentialsResultAvailable(result.getData());
+                    } else {
+                        handleWebauthnError();
                     }
                 });
     }
@@ -366,10 +378,10 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 mDispatcher.dispatch(AccountActionBuilder.newPushSocialAuthAction(payload));
             }
         } else {
-            AuthenticatePayload payload = new AuthenticatePayload(mEmailAddress, mPassword);
-            payload.twoStepCode = twoStepCode;
-            payload.shouldSendTwoStepSms = shouldSendTwoStepSMS;
-            mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
+            AuthenticateTwoFactorPayload payload = new AuthenticateTwoFactorPayload(mEmailAddress,
+                    mPassword, twoStepCode, shouldSendTwoStepSMS);
+            mDispatcher.dispatch(AuthenticationActionBuilder
+                    .newAuthenticateTwoFactorAction(payload));
         }
     }
 
@@ -455,6 +467,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 break;
             case INVALID_REQUEST:
                 // TODO: FluxC: could be specific?
+            case WEBAUTHN_FAILED:
+                mAnalyticsListener.trackLoginSecurityKeyFailure();
+                ToastUtils.showToast(getActivity(),
+                        errorMessage == null ? getString(R.string.error_generic) : errorMessage);
+                break;
             default:
                 AppLog.e(T.NUX, "Server response: " + errorMessage);
                 mAnalyticsListener.trackFailure(errorMessage);
@@ -588,11 +605,12 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     }
 
     private void doAuthWithSecurityKeyAction() {
+        mAnalyticsListener.trackUseSecurityKeyClicked();
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
-        startProgress(false);
+        startProgress();
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
 
         StartWebauthnChallengePayload payload = new StartWebauthnChallengePayload(
@@ -606,7 +624,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     public void onWebauthnChallengeReceived(WebauthnChallengeReceived event) {
         if (event.isError()) {
             endProgress();
-            handleAuthError(event.error.type, event.error.message);
+            handleAuthError(event.error.type, getString(R.string.login_error_security_key));
             return;
         }
         mPasskeyCredentialsHandler = new PasskeyCredentialsHandler(
@@ -616,18 +634,22 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mPasskeyCredentialsHandler.createIntentSender(
                 requireContext(),
                 intent -> {
-                    assert mResultLauncher != null;
-                    mResultLauncher.launch(intent);
+                    if (mResultLauncher != null) {
+                        mResultLauncher.launch(intent);
+                    }
                 });
     }
 
     private void onCredentialsResultAvailable(@NonNull Intent resultData) {
         if (resultData.hasExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA)) {
             byte[] credentialBytes = resultData.getByteArrayExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA);
-            assert credentialBytes != null;
+            if (credentialBytes == null || mPasskeyCredentialsHandler == null) {
+                handleWebauthnError();
+                return;
+            }
+
             PublicKeyCredential credentials =
                     PublicKeyCredential.deserializeFromBytes(credentialBytes);
-            assert mPasskeyCredentialsHandler != null;
             FinishWebauthnChallengePayload payload =
                     mPasskeyCredentialsHandler.onCredentialsAvailable(credentials);
             mDispatcher.dispatch(
@@ -640,9 +662,53 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     public void onSecurityKeyCheckFinished(WebauthnPasskeyAuthenticated event) {
         if (event.isError()) {
             endProgress();
-            handleAuthError(event.error.type, event.error.message);
+            handleAuthError(event.error.type, getString(R.string.login_error_security_key));
             return;
         }
+        mAnalyticsListener.trackLoginSecurityKeySuccess();
         doFinishLogin();
+    }
+
+    private void handleWebauthnError() {
+        String errorMessage = getString(R.string.login_error_security_key);
+        endProgress();
+        handleAuthError(AuthenticationErrorType.WEBAUTHN_FAILED, errorMessage);
+    }
+
+    @NonNull private ArrayList<SupportedAuthTypes> handleSupportedAuthTypesParameter(
+            ArrayList<String> supportedTypes) {
+        ArrayList<SupportedAuthTypes> supportedAuthTypes = new ArrayList<>();
+        if (supportedTypes != null) {
+            for (String type : supportedTypes) {
+                SupportedAuthTypes parsedType = SupportedAuthTypes.fromString(type);
+                if (parsedType != SupportedAuthTypes.UNKNOWN) {
+                    supportedAuthTypes.add(parsedType);
+                }
+            }
+        }
+        return supportedAuthTypes;
+    }
+
+    public enum SupportedAuthTypes {
+        WEBAUTHN,
+        BACKUP,
+        AUTHENTICATOR,
+        PUSH,
+        UNKNOWN;
+
+        static SupportedAuthTypes fromString(String value) {
+            switch (value) {
+                case "webauthn":
+                    return WEBAUTHN;
+                case "backup":
+                    return BACKUP;
+                case "authenticator":
+                    return AUTHENTICATOR;
+                case "push":
+                    return PUSH;
+                default:
+                    return UNKNOWN;
+            }
+        }
     }
 }

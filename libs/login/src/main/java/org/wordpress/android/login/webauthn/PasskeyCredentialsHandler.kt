@@ -72,12 +72,8 @@ class PasskeyCredentialsHandler(
                 "hybrid" -> Transport.HYBRID
                 else -> null
             }
-        }.takeIf { it.isNotEmpty() } ?: listOf(
-                Transport.USB,
-                Transport.NFC,
-                Transport.BLUETOOTH_LOW_ENERGY,
-                Transport.HYBRID,
-                Transport.INTERNAL
-        )
+        }.ifEmpty {
+            listOf(Transport.USB, Transport.NFC, Transport.BLUETOOTH_LOW_ENERGY, Transport.HYBRID, Transport.INTERNAL)
+        }
     }
 }

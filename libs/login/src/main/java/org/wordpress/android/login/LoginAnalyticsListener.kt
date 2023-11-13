@@ -72,6 +72,10 @@ interface LoginAnalyticsListener {
     fun magicLinkRequestScreenResumed()
     fun magicLinkSentScreenResumed()
     fun usernamePasswordScreenResumed()
+    fun trackLogin2faNeeded()
+    fun trackLoginSecurityKeySuccess()
+    fun trackLoginSecurityKeyFailure()
+    fun trackUseSecurityKeyClicked()
 
     enum class CreatedAccountSource {
         EMAIL,
