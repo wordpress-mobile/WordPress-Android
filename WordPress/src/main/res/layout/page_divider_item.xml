@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/page_list_divider_height">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/page_list_divider_vertical_padding">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/divider_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
         android:layout_marginStart="@dimen/page_item_horizontal_padding"
+        android:gravity="center_vertical"
         android:textAppearance="?attr/textAppearanceSubtitle2"
         android:textColor="?attr/wpColorOnSurfaceMedium"
         tools:text="First part of pages" />
