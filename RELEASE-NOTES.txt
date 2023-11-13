@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+23.8
+-----
+
+
 23.7
 -----
 * [***] [Jetpack-only] Added the All Domains screen enabling the users to manage their domains from within the app [https://github.com/wordpress-mobile/WordPress-Android/pull/19599]
