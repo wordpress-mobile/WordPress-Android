@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsR
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse.Extra
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse.Product
 import org.wordpress.android.fluxc.store.TransactionsStore
+import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoBack
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToDomainPurchasing
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.SubmittingJustDomainCart
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.SubmittingSiteDomainCart
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.ErrorSubmittingCart
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.ErrorInCheckout
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -39,6 +41,9 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     private lateinit var analyticsTracker: AnalyticsTrackerWrapper
     @Mock
     private lateinit var createCartUseCase: CreateCartUseCase
+
+    @Mock
+    private lateinit var testFreeSite: SiteModel
 
     private lateinit var viewModel: PurchaseDomainViewModel
 
@@ -116,6 +121,33 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
         assertThat(viewModel.uiStateFlow.value).isEqualTo(ErrorSubmittingCart)
     }
 
+    @Test
+    fun `WHEN check out fails THEN the ui is set to the ErrorInCheckout state`() = test {
+        viewModel.onDomainRegistrationComplete(null)
+        assertThat(viewModel.uiStateFlow.value).isEqualTo(ErrorInCheckout)
+    }
+
+    @Test
+    fun `WHEN check out is successful THEN go to the all domains screen`() = testWithActionEvents { events ->
+        viewModel.onDomainRegistrationComplete(
+            DomainRegistrationCompletedEvent("example.com", "joe@schmo.co")
+        )
+        advanceUntilIdle()
+
+        // Then
+        assertThat(events.last()).isEqualTo(ActionEvent.OpenDomainManagement)
+    }
+
+    @Test
+    fun `WHEN check out is cancelled THEN go to the all domains screen`() = testWithActionEvents { events ->
+        viewModel.onDomainRegistrationComplete(
+            DomainRegistrationCompletedEvent("example.com", "joe@schmo.co", true)
+        )
+        advanceUntilIdle()
+
+        // Then
+        assertThat(events.last()).isEqualTo(ActionEvent.OpenDomainManagement)
+    }
 
     @Test
     fun `WHEN the error button is tapped THEN the ui is set to the Initial state`() = test {
@@ -126,11 +158,28 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN a site is chosen THEN send the GoToExistingSite action event`() = testWithActionEvents { events ->
+    @Suppress("MaxLineLength")
+    fun `WHEN a plans eligible site is chosen THEN send the GoToExistingSitePlans action event`() = testWithActionEvents { events ->
+        // Given
+        whenever(testFreeSite.hasFreePlan).thenReturn(true)
+        whenever(testFreeSite.isWPCom).thenReturn(true)
+        whenever(testFreeSite.isAdmin).thenReturn(true)
+
+        // When
+        viewModel.onSiteChosen(testFreeSite)
+        advanceUntilIdle()
+
+        // Then
+        assertThat(events.last()).isEqualTo(ActionEvent.GoToExistingSitePlans(domain, testFreeSite))
+    }
+
+    @Test
+    @Suppress("MaxLineLength")
+    fun `WHEN a paid site is chosen THEN send the GoToExistingSiteCheckout action event`() = testWithActionEvents { events ->
         viewModel.onSiteChosen(testSite)
         advanceUntilIdle()
 
-        assertThat(events.last()).isEqualTo(ActionEvent.GoToExistingSite(domain, testSite))
+        assertThat(events.last()).isEqualTo(ActionEvent.GoToExistingSiteCheckout(domain, testSite))
     }
 
     @Test
@@ -189,6 +238,18 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
                 TransactionsRestClient.CreateShoppingCartResponse(siteId.toInt(), cartKey, listOf(testProduct))
             )
         )
+        whenever(
+            createCartUseCase.execute(
+                testFreeSite, productId, domain,
+                isDomainPrivacyEnabled = true,
+                isTemporary = false,
+                planProductId = null
+            )
+        ).thenReturn(
+            TransactionsStore.OnShoppingCartCreated(
+                TransactionsRestClient.CreateShoppingCartResponse(siteId.toInt(), cartKey, listOf(testProduct))
+            )
+        )
     }
 
     private fun mockCartError() = test {
@@ -219,7 +280,7 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
         private const val cartKey = "cart_key"
         private const val siteId = 5L
         private const val supportsPrivacy = true
-        private val testSite = SiteModel().also { it.siteId = siteId }
+        private val testSite = SiteModel().apply { siteId = siteId }
         private val testProduct = Product(productId, domain, Extra(privacy = true))
         private val shoppingCartCreateError = TransactionsStore.CreateShoppingCartError(
             TransactionsStore.CreateCartErrorType.GENERIC_ERROR,

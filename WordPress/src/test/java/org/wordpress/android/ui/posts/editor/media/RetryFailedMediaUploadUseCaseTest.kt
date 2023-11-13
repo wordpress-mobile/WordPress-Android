@@ -132,7 +132,7 @@ class RetryFailedMediaUploadUseCaseTest : BaseUnitTest() {
         }
 
         fun createMediaModel(mediaModelId: Int) =
-            MediaModel().apply {
+            MediaModel(0, 0).apply {
                 this.id = mediaModelId
                 this.uploadState = MediaUploadState.FAILED.name
             }

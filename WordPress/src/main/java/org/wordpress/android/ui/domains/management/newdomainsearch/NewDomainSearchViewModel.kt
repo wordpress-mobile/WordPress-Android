@@ -3,6 +3,7 @@ package org.wordpress.android.ui.domains.management.newdomainsearch
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -10,11 +11,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.management.newdomainsearch.domainsfetcher.NewDomainsSearchRepository
+import org.wordpress.android.ui.domains.management.newdomainsearch.domainsfetcher.NewDomainsSearchRepository.DomainsResult
 import org.wordpress.android.ui.domains.management.newdomainsearch.domainsfetcher.ProposedDomain
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -23,7 +27,7 @@ import javax.inject.Named
 
 private const val SEARCH_QUERY_DELAY_MS = 250L
 
-@OptIn(FlowPreview::class)
+@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class NewDomainSearchViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -43,24 +47,37 @@ class NewDomainSearchViewModel @Inject constructor(
         debouncedQuery
             .filter { it.isNotBlank() }
             .debounce(SEARCH_QUERY_DELAY_MS)
-            .onEach(::fetchDomains)
+            .flatMapLatest { query -> flowOf(fetchDomains(query)) }
+            .onEach(::handleDomainsResult)
             .launchIn(viewModelScope)
     }
 
-    private suspend fun fetchDomains(query: String) {
+    private suspend fun fetchDomains(query: String): DomainsResult {
         _uiStateFlow.emit(UiState.Loading)
-        val result = newDomainsSearchRepository.searchForDomains(query)
+        return newDomainsSearchRepository.searchForDomains(query)
+    }
+
+    private suspend fun handleDomainsResult(result: DomainsResult) {
         _uiStateFlow.emit(
             when (result) {
-                is NewDomainsSearchRepository.DomainsResult.Success -> UiState.PopulatedDomains(result.proposedDomains)
-                is NewDomainsSearchRepository.DomainsResult.Error -> UiState.Error
+                is DomainsResult.Success -> UiState.PopulatedDomains(result.proposedDomains)
+                is DomainsResult.Error -> UiState.Error
             }
         )
     }
 
     fun onSearchQueryChanged(query: String) {
         launch {
-           debouncedQuery.emit(query.trim())
+            debouncedQuery.emit(query.trim())
+        }
+    }
+
+    fun onRefresh() {
+        launch {
+            val query = debouncedQuery.value.trim()
+            if (query.isEmpty()) return@launch
+            val result = fetchDomains(query)
+            handleDomainsResult(result)
         }
     }
 
@@ -99,6 +116,7 @@ class NewDomainSearchViewModel @Inject constructor(
             val domain: String,
             val supportsPrivacy: Boolean
         ) : ActionEvent()
+
         data class TransferDomain(val url: String) : ActionEvent()
         object GoBack : ActionEvent()
     }

@@ -48,6 +48,7 @@
             android:layout_height="@dimen/post_list_more_icon_size"
             android:importantForAccessibility="no"
             android:src="@drawable/gb_ic_more_vertical"
+            android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

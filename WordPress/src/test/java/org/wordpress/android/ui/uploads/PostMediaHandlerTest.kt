@@ -38,8 +38,8 @@ class PostMediaHandlerTest {
     fun setUp() {
         postMediaHandler = PostMediaHandler(mediaStore, dispatcher)
         post = PostModel()
-        firstMediaItem = MediaModel()
-        secondMediaItem = MediaModel()
+        firstMediaItem = MediaModel(0, 0)
+        secondMediaItem = MediaModel(0, 0)
         actions.clear()
         doAnswer {
             actions.add(it.getArgument(0))

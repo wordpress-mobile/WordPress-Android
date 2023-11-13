@@ -273,7 +273,8 @@ public class SitePickerActivity extends LocaleAwareActivity
         if (getAdapter().getIsInSearchMode()
             || mSitePickerMode == null
             || mSitePickerMode.isReblogMode()
-            || mSitePickerMode.isBloggingPromptsMode()) {
+            || mSitePickerMode.isBloggingPromptsMode()
+            || mSitePickerMode == SitePickerMode.SIMPLE_MODE) {
             mMenuEdit.setVisible(false);
             mMenuAdd.setVisible(false);
         } else {

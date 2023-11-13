@@ -12,10 +12,11 @@ class BloggingPromptsCardAnalyticsTrackerTest {
 
     @Test
     fun `Should track my site card answer prompt clicked`() {
-        classToTest.trackMySiteCardAnswerPromptClicked()
+        val attribution = "attribution"
+        classToTest.trackMySiteCardAnswerPromptClicked(attribution)
         verify(analyticsTracker).track(
             Stat.BLOGGING_PROMPTS_MY_SITE_CARD_ANSWER_PROMPT_CLICKED,
-            emptyMap()
+            mapOf("attribution" to attribution)
         )
     }
 
