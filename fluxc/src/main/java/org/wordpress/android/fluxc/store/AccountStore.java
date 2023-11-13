@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.yarolegovich.wellsql.WellSql;
 
@@ -40,7 +41,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.OauthResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.WebauthnResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.TwoFactorResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnChallengeInfo;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnToken;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
@@ -62,15 +63,30 @@ import static org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErr
 @Singleton
 public class AccountStore extends Store {
     // Payloads
-    public static class AuthenticatePayload extends Payload<BaseNetworkError> {
+    public static class AuthenticationRequestPayload extends Payload<BaseNetworkError> {
+        public Action nextAction;
+    }
+
+    public static class AuthenticatePayload extends AuthenticationRequestPayload {
+        public String username;
+        public String password;
+        public AuthenticatePayload(@NonNull String username, @NonNull String password) {
+            this.username = username;
+            this.password = password;
+        }
+    }
+
+    public static class AuthenticateTwoFactorPayload extends AuthenticationRequestPayload {
         public String username;
         public String password;
         public String twoStepCode;
         public boolean shouldSendTwoStepSms;
-        public Action nextAction;
-        public AuthenticatePayload(@NonNull String username, @NonNull String password) {
+        public AuthenticateTwoFactorPayload(@NonNull String username, @NonNull String password,
+                                            @NonNull String twoStepCode, boolean shouldSendTwoStepSms) {
             this.username = username;
             this.password = password;
+            this.twoStepCode = twoStepCode;
+            this.shouldSendTwoStepSms = shouldSendTwoStepSms;
         }
     }
 
@@ -455,21 +471,21 @@ public class AccountStore extends Store {
         public String username;
     }
 
-    public static class OnSecurityKeyAuthStarted extends OnChanged<AuthenticationError> {
+    public static class OnTwoFactorAuthStarted extends OnChanged<AuthenticationError> {
         public final String userId;
         public final String webauthnNonce;
         public final String mBackupNonce;
         public final String authenticatorNonce;
         public final String pushNonce;
-        public final boolean isSocialLogin;
+        public final List<String> mSupportedAuthTypes;
 
-        public OnSecurityKeyAuthStarted(WebauthnResponse response) {
+        public OnTwoFactorAuthStarted(TwoFactorResponse response) {
             userId = response.mUserId;
             webauthnNonce = response.mWebauthnNonce;
             mBackupNonce = response.mBackupNonce;
             authenticatorNonce = response.mAuthenticatorNonce;
             pushNonce = response.mPushNonce;
-            isSocialLogin = response.isSocialLogin();
+            mSupportedAuthTypes = response.mSupportedAuthTypes;
         }
     }
 
@@ -1035,6 +1051,9 @@ public class AccountStore extends Store {
             case AUTHENTICATE:
                 authenticate((AuthenticatePayload) payload);
                 break;
+            case AUTHENTICATE_TWO_FACTOR:
+                authenticateTwoFactor((AuthenticateTwoFactorPayload) payload);
+                break;
             case AUTHENTICATE_ERROR:
                 handleAuthenticateError((AuthenticateErrorPayload) payload);
                 break;
@@ -1336,6 +1355,12 @@ public class AccountStore extends Store {
     }
 
     private void authenticate(final AuthenticatePayload payload) {
+        mAuthenticator.authenticate(payload.username, payload.password,
+                response -> handleAuthResponse(response, payload),
+                this::handleAuthError);
+    }
+
+    private void authenticateTwoFactor(final AuthenticateTwoFactorPayload payload) {
         mAuthenticator.authenticate(payload.username, payload.password, payload.twoStepCode,
                 payload.shouldSendTwoStepSms,
                 response -> handleAuthResponse(response, payload),
@@ -1351,7 +1376,7 @@ public class AccountStore extends Store {
         emitChange(event);
     }
 
-    private void handleAuthResponse(OauthResponse response, AuthenticatePayload payload) {
+    private void handleAuthResponse(OauthResponse response, AuthenticationRequestPayload payload) {
         // Oauth endpoint can return a Token or a WebauthnResponse
         if (response instanceof Token) {
             Token token = (Token) response;
@@ -1360,8 +1385,9 @@ public class AccountStore extends Store {
                 mDispatcher.dispatch(payload.nextAction);
             }
             emitChange(new OnAuthenticationChanged());
-        } else if (response instanceof WebauthnResponse) {
-            OnSecurityKeyAuthStarted event = new OnSecurityKeyAuthStarted((WebauthnResponse) response);
+        } else if (response instanceof TwoFactorResponse) {
+            TwoFactorResponse twoFactorResponse = (TwoFactorResponse) response;
+            OnTwoFactorAuthStarted event = new OnTwoFactorAuthStarted(twoFactorResponse);
             if (payload.nextAction != null) {
                 mDispatcher.dispatch(payload.nextAction);
             }
@@ -1386,7 +1412,7 @@ public class AccountStore extends Store {
 
     private void requestWebauthnChallenge(final StartWebauthnChallengePayload payload) {
         mAuthenticator.makeRequest(payload.mUserId, payload.mWebauthnNonce,
-                info -> {
+                (Response.Listener<WebauthnChallengeInfo>) info -> {
                     WebauthnChallengeReceived event = new WebauthnChallengeReceived();
                     event.mChallengeInfo = info;
                     event.mUserId = payload.mUserId;

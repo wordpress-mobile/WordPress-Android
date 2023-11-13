@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
+import java.lang.reflect.Type
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
@@ -48,6 +49,55 @@ class WPComGsonRequestBuilder
         forced: Boolean = false
     ) = suspendCancellableCoroutine<Response<T>> { cont ->
         val request = WPComGsonRequest.buildGetRequest(url, params, clazz, {
+            cont.resume(Success(it))
+        }, {
+            cont.resume(Error(it))
+        })
+        cont.invokeOnCancellation { request.cancel() }
+        if (enableCaching) {
+            request.enableCaching(cacheTimeToLive)
+        }
+        if (forced) {
+            request.setShouldForceUpdate()
+        }
+        restClient.add(request)
+    }
+
+    /**
+     * Creates a new GET request.
+     * @param url the request URL
+     * @param params the parameters to append to the request URL
+     * @param type the type defining the expected response
+     * @param listener the success listener
+     * @param errorListener the error listener
+     */
+    fun <T> buildGetRequest(
+        url: String,
+        params: Map<String, String>,
+        type: Type,
+        listener: (T) -> Unit,
+        errorListener: (WPComGsonNetworkError) -> Unit
+    ): WPComGsonRequest<T> {
+        return WPComGsonRequest.buildGetRequest(url, params, type, listener, errorListener)
+    }
+
+    /**
+     * Creates a new GET request.
+     * @param restClient rest client that handles the request
+     * @param url the request URL
+     * @param params the parameters to append to the request URL
+     * @param type the type defining the expected response
+     */
+    suspend fun <T> syncGetRequest(
+        restClient: BaseWPComRestClient,
+        url: String,
+        params: Map<String, String>,
+        type: Type,
+        enableCaching: Boolean = false,
+        cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
+        forced: Boolean = false
+    ) = suspendCancellableCoroutine<Response<T>> { cont ->
+        val request = WPComGsonRequest.buildGetRequest<T>(url, params, type, {
             cont.resume(Success(it))
         }, {
             cont.resume(Error(it))
