@@ -37,7 +37,7 @@ fun DomainsSearchTextField(
         onValueChange = onValueChange,
         enabled = enabled,
         placeholder = { Text(stringResource(placeholder)) },
-        shape = RoundedCornerShape(50),
+        shape = RoundedCornerShape(4.dp),
         leadingIcon = {
             Icon(
                 painter = painterResource(id = R.drawable.ic_search_white_24dp),
