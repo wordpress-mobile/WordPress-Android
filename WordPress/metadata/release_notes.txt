@@ -1,2 +1,5 @@
-- Inactive social icons and Synced Pattern titles are no longer invisible in block-based themes using dark mode. Good try, fellas, but you’re not as ninja as you think.
-- In the Classic editor, you can now convert your content into blocks with the click of a button.
+* [*] Block Editor: Fix error when pasting deeply nested structure content [https://github.com/WordPress/gutenberg/pull/55613]
+* [*] Block Editor: Fix crash related to accessing undefined value in `TextColorEdit` [https://github.com/WordPress/gutenberg/pull/55664]
+* [**] Posts & Pages: Redesigned the posts and pages screen. We’ve consolidated the “default” and “compact” display options [https://github.com/wordpress-mobile/WordPress-Android/issues/19341] &  [https://github.com/wordpress-mobile/WordPress-Android/issues/19348]
+* [*] Posts & Pages: Moved actions to a context menu and added new actions such as “comment”, “settings”  [https://github.com/wordpress-mobile/WordPress-Android/issues/19343] & [https://github.com/wordpress-mobile/WordPress-Android/issues/19356]
+
