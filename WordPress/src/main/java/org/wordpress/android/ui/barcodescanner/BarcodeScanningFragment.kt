@@ -23,6 +23,12 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class BarcodeScanningFragment : Fragment() {
     private val viewModel: BarcodeScanningViewModel by viewModels()
+    private var resultListener: BarcodeScannerResultListener? = null
+
+    fun setResultListener(listener: BarcodeScannerResultListener) {
+        resultListener = listener
+    }
+
 
     @Inject
     lateinit var codeScanner: GoogleMLKitCodeScanner
@@ -56,18 +62,11 @@ class BarcodeScanningFragment : Fragment() {
                             viewLifecycleOwner.lifecycleScope.launch {
                                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                                     codeScannerStatus.collect { status ->
+                                    // todo: annmarie - remove log lines
                                         Log.i(javaClass.simpleName, "***=> onScannedResult $status")
-                                        // todo: annmarie this should finish with result
-                                        val resultIntent = Intent().apply {
-                                            // Add any data you want to send back to the calling activity
-                                            putExtra(KEY_BARCODE_SCANNING_SCAN_STATUS, status)
-                                        }
-
-                                        // Set the result code and the Intent containing the result data
-                                        requireActivity().setResult(Activity.RESULT_OK, resultIntent)
-
-                                        // Finish the activity
-                                        requireActivity().finish()
+                                        resultListener?.onBarcodeScanned(status)
+                                        Log.i(javaClass.simpleName, "***=> onScannedResult pop back stack")
+                                        requireActivity().supportFragmentManager.popBackStack()
                                     }
                                 }
                             }
