@@ -1,5 +1,2 @@
-* [*] Block Editor: Fix error when pasting deeply nested structure content [https://github.com/WordPress/gutenberg/pull/55613]
-* [*] Block Editor: Fix crash related to accessing undefined value in `TextColorEdit` [https://github.com/WordPress/gutenberg/pull/55664]
-* [**] Posts & Pages: Redesigned the posts and pages screen. We’ve consolidated the “default” and “compact” display options [https://github.com/wordpress-mobile/WordPress-Android/issues/19341] &  [https://github.com/wordpress-mobile/WordPress-Android/issues/19348]
-* [*] Posts & Pages: Moved actions to a context menu and added new actions such as “comment”, “settings”  [https://github.com/wordpress-mobile/WordPress-Android/issues/19343] & [https://github.com/wordpress-mobile/WordPress-Android/issues/19356]
-
+- The Posts & Pages screen now has clean, simple display options. The context menu also lets you access comments, settings, and other actions for a post or page.
+- We fixed block editor issues caused by pasting deeply nested content, or using text colors in older site themes.
