@@ -11,6 +11,7 @@ sealed class MainActionListItem {
     enum class ActionType {
         NO_ACTION,
         CREATE_NEW_PAGE,
+        CREATE_NEW_PAGE_FROM_PAGES_CARD,
         CREATE_NEW_POST,
         CREATE_NEW_STORY,
         ANSWER_BLOGGING_PROMPT
@@ -30,7 +31,7 @@ sealed class MainActionListItem {
         val isAnswered: Boolean,
         val promptId: Int,
         val attribution: BloggingPromptAttribution,
-        val onClickAction: ((promptId: Int) -> Unit)?,
+        val onClickAction: ((promptId: Int, attribution: BloggingPromptAttribution) -> Unit)?,
         val onHelpAction: (() -> Unit)?
     ) : MainActionListItem()
 }

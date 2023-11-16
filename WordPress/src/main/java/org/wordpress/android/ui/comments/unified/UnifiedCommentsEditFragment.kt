@@ -6,7 +6,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.core.widget.doAfterTextChanged
@@ -34,8 +34,11 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
+import android.R as AndroidR
 
 class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_fragment), MenuProvider {
     @Inject
@@ -61,11 +64,9 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
         super.onViewCreated(view, savedInstanceState)
         requireActivity().addMenuProvider(this, viewLifecycleOwner)
 
-        val site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
+        val site = requireNotNull(arguments?.getSerializableCompat<SiteModel>(WordPress.SITE))
         val commentIdentifier = requireNotNull(
-            requireArguments().getParcelable<CommentIdentifier>(
-                KEY_COMMENT_IDENTIFIER
-            )
+            requireArguments().getParcelableCompat<CommentIdentifier>(KEY_COMMENT_IDENTIFIER)
         )
 
         UnifiedCommentsEditFragmentBinding.bind(view).apply {
@@ -82,15 +83,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
             it.setDisplayHomeAsUpEnabled(true)
             it.setHomeAsUpIndicator(R.drawable.ic_cross_white_24dp)
         }
-        activity.onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(
-                true
-            ) {
-                override fun handleOnBackPressed() {
-                    viewModel.onBackPressed()
-                }
-            })
+        activity.onBackPressedDispatcher.addCallback(this@UnifiedCommentsEditFragment) { viewModel.onBackPressed() }
     }
 
     private fun hideKeyboard() {
@@ -219,7 +212,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
-        android.R.id.home -> {
+        AndroidR.id.home -> {
             viewModel.onBackPressed()
             true
         }

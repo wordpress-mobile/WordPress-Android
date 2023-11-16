@@ -43,17 +43,17 @@ class WPWebViewViewModel
     private val _loadNeeded = SingleLiveEvent<Boolean>()
     val loadNeeded: LiveData<Boolean> = _loadNeeded
 
-    private val _navigateBack = SingleLiveEvent<Unit>()
-    val navigateBack: LiveData<Unit> = _navigateBack
+    private val _navigateBack = SingleLiveEvent<Unit?>()
+    val navigateBack: LiveData<Unit?> = _navigateBack
 
-    private val _navigateForward = SingleLiveEvent<Unit>()
-    val navigateForward: LiveData<Unit> = _navigateForward
+    private val _navigateForward = SingleLiveEvent<Unit?>()
+    val navigateForward: LiveData<Unit?> = _navigateForward
 
-    private val _share = SingleLiveEvent<Unit>()
-    val share: LiveData<Unit> = _share
+    private val _share = SingleLiveEvent<Unit?>()
+    val share: LiveData<Unit?> = _share
 
-    private val _openInExternalBrowser = SingleLiveEvent<Unit>()
-    val openExternalBrowser: LiveData<Unit> = _openInExternalBrowser
+    private val _openInExternalBrowser = SingleLiveEvent<Unit?>()
+    val openExternalBrowser: LiveData<Unit?> = _openInExternalBrowser
 
     private val _previewModeSelector = MutableLiveData<PreviewModeSelectorStatus>()
     val previewModeSelector: LiveData<PreviewModeSelectorStatus> = _previewModeSelector
@@ -66,7 +66,7 @@ class WPWebViewViewModel
 
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
-        override fun getLifecycle(): Lifecycle = lifecycleRegistry
+        override val lifecycle: Lifecycle = lifecycleRegistry
     }
 
     private val defaultPreviewMode: PreviewMode
@@ -207,8 +207,12 @@ class WPWebViewViewModel
         }
     }
 
-    fun track(stat: Stat) {
-        analyticsTrackerWrapper.track(stat)
+    @JvmOverloads
+    fun track(stat: Stat, source: WPWebViewSource? = null) {
+        source?.let {
+            val props = mapOf(WPWebViewSource.KEY to it.value)
+            analyticsTrackerWrapper.track(stat, props)
+        } ?: analyticsTrackerWrapper.track(stat)
     }
 
     private fun getPreviewHintResId(previewMode: PreviewMode) = when (previewMode) {

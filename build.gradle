@@ -10,96 +10,101 @@ plugins {
 
 ext {
     minSdkVersion = 24
-    compileSdkVersion = 31
-    targetSdkVersion = 31
+    compileSdkVersion = 34
+    targetSdkVersion = 33
 }
 
 ext {
     // libs
-    automatticAboutVersion = '1.0.0'
+    automatticAboutVersion = '1.3.0'
     automatticRestVersion = '1.0.8'
-    automatticStoriesVersion = '2.0.0'
-    automatticTracksVersion = '2.2.0'
-    gutenbergMobileVersion = 'v1.91.0'
-    wordPressAztecVersion = 'v1.6.3'
-    wordPressFluxCVersion = '2.17.0'
-    wordPressLoginVersion = '1.0.0'
+    automatticStoriesVersion = '2.4.0'
+    automatticTracksVersion = '3.3.0'
+    gutenbergMobileVersion = 'v1.108.0'
+    wordPressAztecVersion = 'v1.8.0'
+    wordPressFluxCVersion = '2.55.0'
+    wordPressLoginVersion = '1.8.0'
     wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressUtilsVersion = '3.3.0'
+    wordPressUtilsVersion = '3.10.0'
+    indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 
     // debug
     stethoVersion = '1.6.0'
 
     // main
     androidInstallReferrerVersion = '2.2'
-    androidVolleyVersion = '1.1.1'
-    androidxAppcompatVersion = '1.4.2'
-    androidxArchCoreVersion = '2.1.0'
-    androidxComposeVersion = '1.1.1'
-    androidxComposeCompilerVersion = '1.1.1'
-    androidxComposeLifecycleVersion = '2.5.1'
+    androidVolleyVersion = '1.2.1'
+    androidxAnnotationVersion = '1.6.0'
+    androidxAppcompatVersion = '1.6.1'
+    androidxArchCoreVersion = '2.2.0'
+    androidxComposeBomVersion = '2023.10.00'
+    androidxComposeCompilerVersion = '1.5.3'
     androidxCardviewVersion = '1.0.0'
-    androidxConstraintlayoutVersion = '1.1.3'
+    androidxConstraintlayoutVersion = '2.1.4'
     androidxConstraintlayoutComposeVersion = '1.0.1'
-    androidxCoreVersion = '1.8.0'
-    androidxActivityVersion = '1.5.1'
-    androidxFragmentVersion = '1.5.5'
+    androidxCoreVersion = '1.10.0'
+    androidxActivityVersion = '1.8.0'
+    androidxFragmentVersion = '1.5.7'
     androidxGridlayoutVersion = '1.0.0'
-    androidxLifecycleVersion = '2.5.1'
+    androidxLifecycleVersion = '2.6.2'
     androidxPercentlayoutVersion = '1.0.0'
     androidxPreferenceVersion = '1.2.0'
-    androidxRecyclerviewVersion = '1.2.1'
+    androidxRecyclerviewVersion = '1.3.0'
     androidxSwipeToRefreshVersion = '1.1.0'
     androidxViewpager2Version = '1.0.0'
-    androidxWorkManagerVersion = "2.7.1"
+    androidxWorkManagerVersion = "2.8.1"
+    androidxWebkitVersion =  '1.7.0'
+    androidxComposeMaterial3Version = '1.1.1'
     apacheCommonsTextVersion = '1.10.0'
-    coilComposeVersion = '1.4.0'
+    coilComposeVersion = '2.4.0'
     chrisbanesPhotoviewVersion = '2.3.0'
     eventBusVersion = '3.3.1'
     facebookShimmerVersion = '0.5.0'
-    firebaseConfigVersion = '19.1.3'
-    firebaseMessagingVersion = '21.1.0'
-    glassfishJavaxAnnotationVersion = '10.0-b28'
-    glideVersion = '4.10.0'
-    glideVolleyVersion = '4.6.1@aar'
-    googleAutoServiceVersion = '1.0'
+    firebaseBomVersion = '32.1.0'
+    firebaseIidVersion = '21.1.0'
+    glideVersion = '4.15.1'
+    googleAutoServiceVersion = '1.0.1'
     googleExoPlayerVersion = '2.13.3'
     googleFlexboxlayoutVersion = '3.0.0'
     googleGsonVersion = '2.10.1'
-    googleMaterialVersion = '1.2.1'
+    googleMaterialVersion = '1.9.0'
+
     googleMLKitBarcodeScanningVersion = '17.0.0'
     googlePlayServicesAuthVersion = '20.4.1'
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
-    jsoupVersion = '1.10.3'
-    kotlinxCoroutinesVersion = '1.6.4'
-    lottieVersion = '5.2.0'
+    jsoupVersion = '1.16.2'
+    kotlinxCoroutinesVersion = '1.7.3'
+    lottieVersion = '6.1.0'
     philjayMpAndroidChartVersion = 'v3.1.0'
     squareupKotlinPoetVersion = '1.6.0'
-    squareupOkioVersion = '2.8.0'
+    squareupOkioVersion = '3.6.0'
     squareupRetrofitVersion = '2.9.0'
     uCropVersion = '2.2.8'
-    zendeskVersion = '5.1.1'
+    zendeskVersion = '5.1.2'
     googlePlayInAppUpdateVersion = '2.0.1'
+
+    // react native
+    facebookReactVersion = '0.71.11'
 
     // test
     assertjVersion = '3.23.1'
     junitVersion = '4.13.2'
-    mockitoVersion = '5.1.1'
+    mockitoVersion = '5.3.1'
     mockitoKotlinVersion = '4.1.0'
 
     // android test
     androidxTestCoreVersion = '1.5.0'
     androidxTestEspressoVersion = '3.4.0'
-    androidxTestExtJunitVersion = '1.1.4'
+    androidxTestExtJunitVersion = '1.1.5'
     androidxTestUiAutomatorVersion = '2.2.0'
     screengrabVersion = '2.1.1'
-    squareupMockWebServerVersion = '4.9.3'
+    squareupMockWebServerVersion = '4.12.0'
     wiremockVersion = '2.26.3'
     wiremockHttpClientVersion = '4.3.5.1'
 
     // other
     androidDesugarVersion = '1.1.8'
-    wordPressLintVersion = '1.1.0'
+    wordPressLintVersion = '2.0.0'
 }
 
 allprojects {
@@ -157,7 +162,7 @@ allprojects {
             jvmTarget = JavaVersion.VERSION_1_8
             allWarningsAsErrors = true
             freeCompilerArgs += [
-                    "-Xopt-in=kotlin.RequiresOptIn",
+                    "-opt-in=kotlin.RequiresOptIn",
                     "-Xjvm-default=all"
             ]
         }

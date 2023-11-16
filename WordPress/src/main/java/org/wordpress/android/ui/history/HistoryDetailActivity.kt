@@ -1,12 +1,15 @@
 package org.wordpress.android.ui.history
 
 import android.os.Bundle
+import androidx.activity.addCallback
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.HistoryDetailActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.history.HistoryListItem.Revision
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.onBackPressedCompat
 
 class HistoryDetailActivity : LocaleAwareActivity() {
     companion object {
@@ -19,10 +22,16 @@ class HistoryDetailActivity : LocaleAwareActivity() {
             setContentView(root)
             setSupportActionBar(toolbarMain)
         }
+
+        onBackPressedDispatcher.addCallback(this) {
+            AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED)
+            onBackPressedDispatcher.onBackPressedCompat(this)
+        }
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val extras = requireNotNull(intent.extras)
-        val revision = extras.getParcelable<Revision>(HistoryDetailContainerFragment.EXTRA_CURRENT_REVISION)
+        val revision = extras.getParcelableCompat<Revision>(HistoryDetailContainerFragment.EXTRA_CURRENT_REVISION)
         val previousRevisionsIds =
             extras.getLongArray(HistoryDetailContainerFragment.EXTRA_PREVIOUS_REVISIONS_IDS)
         val postId = extras.getLong(HistoryDetailContainerFragment.EXTRA_POST_ID)
@@ -43,10 +52,5 @@ class HistoryDetailActivity : LocaleAwareActivity() {
         AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED)
         finish()
         return true
-    }
-
-    override fun onBackPressed() {
-        AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED)
-        super.onBackPressed()
     }
 }

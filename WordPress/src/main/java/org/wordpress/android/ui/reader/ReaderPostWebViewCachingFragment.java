@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -17,16 +18,18 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
 
 import javax.inject.Inject;
 
-import dagger.android.support.DaggerFragment;
+import dagger.hilt.android.AndroidEntryPoint;
 
 /**
  * Fragment responsible for caching post content into WebView.
  * Caching happens on UI thread, so any configuration change will restart it from scratch.
  */
-public class ReaderPostWebViewCachingFragment extends DaggerFragment {
+@AndroidEntryPoint
+public class ReaderPostWebViewCachingFragment extends Fragment {
     private static final String ARG_BLOG_ID = "blog_id";
     private static final String ARG_POST_ID = "post_id";
 
@@ -34,6 +37,8 @@ public class ReaderPostWebViewCachingFragment extends DaggerFragment {
     private long mPostId;
 
     @Inject ReaderCssProvider mReaderCssProvider;
+
+    @Inject ReaderImprovementsFeatureConfig mReaderImprovementsFeatureConfig;
 
     public static ReaderPostWebViewCachingFragment newInstance(long blogId, long postId) {
         ReaderPostWebViewCachingFragment fragment = new ReaderPostWebViewCachingFragment();
@@ -44,7 +49,8 @@ public class ReaderPostWebViewCachingFragment extends DaggerFragment {
         return fragment;
     }
 
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mBlogId = getArguments().getLong(ARG_BLOG_ID);
@@ -72,8 +78,8 @@ public class ReaderPostWebViewCachingFragment extends DaggerFragment {
                     }
                 });
 
-                ReaderPostRenderer rendered =
-                        new ReaderPostRenderer((ReaderWebView) view, post, mReaderCssProvider);
+                ReaderPostRenderer rendered = new ReaderPostRenderer((ReaderWebView) view, post,
+                        mReaderCssProvider, mReaderImprovementsFeatureConfig.isEnabled());
                 rendered.beginRender(); // rendering will cache post content using native WebView implementation.
             } else {
                 // abort mission if post is not available

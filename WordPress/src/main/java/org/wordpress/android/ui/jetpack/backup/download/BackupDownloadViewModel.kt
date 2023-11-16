@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_CONFIRMED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_ERROR
@@ -58,6 +58,7 @@ import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -139,7 +140,7 @@ class BackupDownloadViewModel @Inject constructor(
             // Show the next step only if it's a fresh activity so we can handle the navigation
             wizardManager.showNextStep()
         } else {
-            backupDownloadState = requireNotNull(savedInstanceState.getParcelable(KEY_BACKUP_DOWNLOAD_STATE))
+            backupDownloadState = requireNotNull(savedInstanceState.getParcelableCompat(KEY_BACKUP_DOWNLOAD_STATE))
             val currentStepIndex = savedInstanceState.getInt(KEY_BACKUP_DOWNLOAD_CURRENT_STEP)
             wizardManager.setCurrentStepIndex(currentStepIndex)
         }
@@ -436,10 +437,10 @@ class BackupDownloadViewModel @Inject constructor(
     }
 
     companion object {
-        private val NetworkUnavailableMsg = SnackbarMessageHolder(UiStringRes(string.error_network_connection))
-        private val GenericFailureMsg = SnackbarMessageHolder(UiStringRes(string.backup_download_generic_failure))
+        private val NetworkUnavailableMsg = SnackbarMessageHolder(UiStringRes(R.string.error_network_connection))
+        private val GenericFailureMsg = SnackbarMessageHolder(UiStringRes(R.string.backup_download_generic_failure))
         private val OtherRequestRunningMsg = SnackbarMessageHolder(
-            UiStringRes(string.backup_download_another_download_running)
+            UiStringRes(R.string.backup_download_another_download_running)
         )
     }
 

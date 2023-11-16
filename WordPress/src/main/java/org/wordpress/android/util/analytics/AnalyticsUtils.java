@@ -32,7 +32,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
@@ -336,8 +335,12 @@ public class AnalyticsUtils {
      * @param comment      The comment object
      * @param source       The source of the comment action
      */
-    public static void trackCommentReplyWithDetails(boolean isQuickReply, SiteModel site,
-                                                    CommentModel comment, AnalyticsCommentActionSource source) {
+    public static void trackCommentReplyWithDetails(
+            boolean isQuickReply,
+            @NonNull SiteModel site,
+            @NonNull CommentModel comment,
+            AnalyticsCommentActionSource source
+    ) {
         AnalyticsTracker.Stat legacyTracker = null;
         if (source == AnalyticsCommentActionSource.NOTIFICATIONS) {
             legacyTracker = isQuickReply ? AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_REPLIED_TO
@@ -347,7 +350,7 @@ public class AnalyticsUtils {
         AnalyticsTracker.Stat stat = isQuickReply
                 ? AnalyticsTracker.Stat.COMMENT_QUICK_ACTION_REPLIED_TO
                 : AnalyticsTracker.Stat.COMMENT_REPLIED_TO;
-        if (site == null || !SiteUtils.isAccessedViaWPComRest(site)) {
+        if (!SiteUtils.isAccessedViaWPComRest(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack."
                                      + " Tracking analytics without blog info");
             AnalyticsTracker.track(stat);
@@ -638,12 +641,6 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT, properties);
     }
 
-    public static void trackAnalyticsPostListToggleLayout(PostListViewLayoutType viewLayoutType) {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("post_list_view_layout_type", viewLayoutType.toString());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.POST_LIST_VIEW_LAYOUT_TOGGLED, properties);
-    }
-
     private static Map<String, String> createNewsCardProperties(String origin, int version) {
         Map<String, String> properties = new HashMap<>();
         properties.put(NEWS_CARD_ORIGIN, origin);
@@ -713,8 +710,11 @@ public class AnalyticsUtils {
         }
     }
 
-    public static void trackCommentActionWithSiteDetails(AnalyticsTracker.Stat stat,
-                                                         AnalyticsCommentActionSource actionSource, SiteModel site) {
+    public static void trackCommentActionWithSiteDetails(
+            AnalyticsTracker.Stat stat,
+            AnalyticsCommentActionSource actionSource,
+            @Nullable SiteModel site
+    ) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(COMMENT_ACTION_SOURCE, actionSource.toString());
 

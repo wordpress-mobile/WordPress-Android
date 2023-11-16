@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
 import org.wordpress.android.ui.history.HistoryListItem.Revision
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.widgets.DiffView
 
 class HistoryDetailFragment : Fragment() {
@@ -16,9 +17,9 @@ class HistoryDetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         mRevision = if (savedInstanceState != null) {
-            savedInstanceState.getParcelable(KEY_REVISION)
+            savedInstanceState.getParcelableCompat(KEY_REVISION)
         } else {
-            arguments?.getParcelable(EXTRA_REVISION)
+            arguments?.getParcelableCompat(EXTRA_REVISION)
         }
     }
 

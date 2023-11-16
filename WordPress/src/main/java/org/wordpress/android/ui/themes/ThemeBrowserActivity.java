@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.View.OnScrollChangeListener;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
@@ -18,7 +20,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -47,6 +48,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.widgets.HeaderGridView;
 
 import java.util.HashMap;
@@ -76,7 +78,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     @Inject UiHelpers mUiHelpers;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDispatcher.register(this);
 
@@ -92,6 +94,19 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
         }
 
         setContentView(R.layout.theme_browser_activity);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                FragmentManager fm = getSupportFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    fm.popBackStack();
+                } else {
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         if (savedInstanceState == null) {
             addBrowserFragment();
@@ -120,30 +135,20 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     }
 
     @Override
-    protected void onSaveInstanceState(@NotNull Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @Override
@@ -164,27 +169,27 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     }
 
     @Override
-    public void onActivateSelected(String themeId) {
+    public void onActivateSelected(@NonNull String themeId) {
         activateTheme(themeId);
     }
 
     @Override
-    public void onTryAndCustomizeSelected(String themeId) {
+    public void onTryAndCustomizeSelected(@Nullable String themeId) {
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.PREVIEW);
     }
 
     @Override
-    public void onViewSelected(String themeId) {
+    public void onViewSelected(@NonNull String themeId) {
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.DEMO);
     }
 
     @Override
-    public void onDetailsSelected(String themeId) {
+    public void onDetailsSelected(@Nullable String themeId) {
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.DETAILS);
     }
 
     @Override
-    public void onSupportSelected(String themeId) {
+    public void onSupportSelected(@Nullable String themeId) {
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.SUPPORT);
     }
 

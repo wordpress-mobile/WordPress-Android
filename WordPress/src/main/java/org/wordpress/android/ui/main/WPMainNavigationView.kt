@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main
 
 import android.content.Context
+import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -11,6 +12,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
@@ -19,15 +21,20 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigation.NavigationBarView.OnItemReselectedListener
 import com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType.ME
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.main.jetpack.staticposter.JetpackStaticPosterFragment
 import org.wordpress.android.ui.main.jetpack.staticposter.UiData
+import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteFragment
 import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint
@@ -35,13 +42,19 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.extensions.getColorStateListFromAttribute
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType
+import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
  * four primary views - note that we ignore the built-in icons and labels and
  * insert our own custom views so we have more control over their appearance
  */
+@AndroidEntryPoint
 class WPMainNavigationView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -55,8 +68,14 @@ class WPMainNavigationView @JvmOverloads constructor(
     private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
     private val unselectedButtonAlpha = ResourcesCompat.getFloat(
         resources,
-        R.dimen.material_emphasis_disabled
+        MaterialR.dimen.material_emphasis_disabled
     )
+
+    @Inject
+    lateinit var meGravatarLoader: MeGravatarLoader
+
+    @Inject
+    lateinit var accountStore: AccountStore
 
     private var currentPosition: Int
         get() = getPositionForItemId(selectedItemId)
@@ -104,10 +123,61 @@ class WPMainNavigationView @JvmOverloads constructor(
                 customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
             }
 
+            if (i == getPosition(ME)) {
+                loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
+            }
+
             itemView.addView(customView)
         }
 
         currentPosition = getMainPageIndex()
+    }
+
+    private fun loadGravatar(imgIcon: ImageView, avatarUrl: String) {
+        if (avatarUrl.isEmpty()) {
+            AppLog.d(AppLog.T.MAIN, "Attempted to load an empty Gravatar URL!")
+            return
+        }
+        AppLog.d(AppLog.T.MAIN, meGravatarLoader.constructGravatarUrl(avatarUrl))
+        imgIcon.let {
+            meGravatarLoader.load(
+                false,
+                meGravatarLoader.constructGravatarUrl(avatarUrl),
+                null,
+                it,
+                ImageType.USER,
+                object : ImageManager.RequestListener<android.graphics.drawable.Drawable> {
+                    override fun onLoadFailed(e: Exception?, model: Any?) {
+                        val appLogMessage = "onLoadFailed while loading Gravatar image!"
+                        if (e == null) {
+                            AppLog.e(
+                                AppLog.T.MAIN,
+                                "$appLogMessage e == null"
+                            )
+                        } else {
+                            AppLog.e(
+                                AppLog.T.MAIN,
+                                appLogMessage,
+                                e
+                            )
+                        }
+                    }
+
+                    override fun onResourceReady(resource: android.graphics.drawable.Drawable, model: Any?) {
+                        ImageViewCompat.setImageTintList(imgIcon, null)
+                        if (resource is BitmapDrawable) {
+                            var bitmap = resource.bitmap
+                            // create a copy since the original bitmap may by automatically recycled
+                            bitmap = bitmap.copy(bitmap.config, true)
+                            WordPress.getBitmapCache().put(
+                                avatarUrl,
+                                bitmap
+                            )
+                        }
+                    }
+                }
+            )
+        }
     }
 
     private fun getMainPageIndex(): Int {
@@ -149,7 +219,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         return when (itemId) {
             R.id.nav_sites -> MY_SITE
             R.id.nav_reader -> READER
-            else -> NOTIFS
+            R.id.nav_notifications -> NOTIFS
+            else -> ME
         }
     }
 
@@ -158,7 +229,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         return when (getPageTypeOrNull(position)) {
             MY_SITE -> R.id.nav_sites
             READER -> R.id.nav_reader
-            else -> R.id.nav_notifications
+            NOTIFS -> R.id.nav_notifications
+            else -> R.id.nav_me
         }
     }
 
@@ -218,7 +290,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         return when (getPageTypeOrNull(position)) {
             MY_SITE -> R.drawable.ic_my_sites_white_24dp
             READER -> R.drawable.ic_reader_white_24dp
-            else -> R.drawable.ic_bell_white_24dp
+            NOTIFS -> R.drawable.ic_bell_white_24dp
+            else -> R.drawable.ic_user_primary_white_24
         }
     }
 
@@ -226,7 +299,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         @StringRes val idRes: Int = when (pages().getOrNull(position)) {
             MY_SITE -> R.string.my_site_section_screen_title
             READER -> R.string.reader_screen_title
-            else -> R.string.notifications_screen_title
+            NOTIFS -> R.string.notifications_screen_title
+            else -> R.string.me_section_screen_title
         }
         return context.getString(idRes)
     }
@@ -235,7 +309,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         @StringRes val idRes: Int = when (pages().getOrNull(position)) {
             MY_SITE -> R.string.tabbar_accessibility_label_my_site
             READER -> R.string.tabbar_accessibility_label_reader
-            else -> R.string.tabbar_accessibility_label_notifications
+            NOTIFS -> R.string.tabbar_accessibility_label_notifications
+            else -> R.string.tabbar_accessibility_label_me
         }
         return context.getString(idRes)
     }
@@ -249,6 +324,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             MY_SITE -> TAG_MY_SITE
             READER -> TAG_READER
             NOTIFS -> TAG_NOTIFS
+            ME -> TAG_ME
         }
     }
 
@@ -313,6 +389,7 @@ class WPMainNavigationView @JvmOverloads constructor(
                 NOTIFS -> if (shouldUseStaticPostersFragment)
                     JetpackStaticPosterFragment.newInstance(UiData.NOTIFICATIONS)
                 else NotificationsListFragment.newInstance()
+                ME -> MeFragment.newInstance()
             }
             fragmentManager?.beginTransaction()
                 ?.add(R.id.fragment_container, fragment, getTagForPageType(pageType))
@@ -360,11 +437,16 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     companion object {
-        private val pages = if (BuildConfig.ENABLE_READER) listOf(MY_SITE, READER, NOTIFS) else listOf(MY_SITE, NOTIFS)
+        private val pages = if (BuildConfig.ENABLE_READER) {
+            listOf(MY_SITE, READER, NOTIFS, ME)
+        } else {
+            listOf(MY_SITE, NOTIFS, ME)
+        }
 
         private const val TAG_MY_SITE = "tag-mysite"
         private const val TAG_READER = "tag-reader"
         private const val TAG_NOTIFS = "tag-notifs"
+        private const val TAG_ME = "tag-me"
 
         private fun numPages(): Int = pages.size
 
@@ -385,6 +467,6 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     enum class PageType {
-        MY_SITE, READER, NOTIFS
+        MY_SITE, READER, NOTIFS, ME
     }
 }

@@ -1,7 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
 import android.annotation.SuppressLint
-import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
@@ -10,7 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -33,27 +31,28 @@ import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteOptionsStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
-import org.wordpress.android.ui.pages.PageItem.Action
-import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
-import org.wordpress.android.ui.pages.PageItem.Action.COPY
-import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
-import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
-import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
-import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
-import org.wordpress.android.ui.pages.PageItem.Action.PROMOTE_WITH_BLAZE
-import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
-import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
-import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
-import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
-import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
+import org.wordpress.android.ui.pages.PageItem.VirtualHomepage
 import org.wordpress.android.ui.pages.PagesAuthorFilterUIState
+import org.wordpress.android.ui.pages.PagesListAction
+import org.wordpress.android.ui.pages.PagesListAction.CANCEL_AUTO_UPLOAD
+import org.wordpress.android.ui.pages.PagesListAction.COPY
+import org.wordpress.android.ui.pages.PagesListAction.COPY_LINK
+import org.wordpress.android.ui.pages.PagesListAction.DELETE_PERMANENTLY
+import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_DRAFT
+import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PagesListAction.PROMOTE_WITH_BLAZE
+import org.wordpress.android.ui.pages.PagesListAction.PUBLISH_NOW
+import org.wordpress.android.ui.pages.PagesListAction.SET_AS_HOMEPAGE
+import org.wordpress.android.ui.pages.PagesListAction.SET_AS_POSTS_PAGE
+import org.wordpress.android.ui.pages.PagesListAction.SET_PARENT
+import org.wordpress.android.ui.pages.PagesListAction.VIEW_PAGE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AuthorFilterListItemUIState
 import org.wordpress.android.ui.posts.AuthorFilterSelection
@@ -73,7 +72,7 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.extensions.clipboardManager
+import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -124,7 +123,6 @@ class PagesViewModel
     private val accountStore: AccountStore,
     private val prefs: AppPrefsWrapper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val blazeStore: BlazeStore,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -143,8 +141,8 @@ class PagesViewModel
     private val _searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>?> = MutableLiveData()
     val searchPages: LiveData<SortedMap<PageListType, List<PageModel>>?> = _searchPages
 
-    private val _createNewPage = SingleLiveEvent<Unit>()
-    val createNewPage: LiveData<Unit> = _createNewPage
+    private val _createNewPage = SingleLiveEvent<Unit?>()
+    val createNewPage: LiveData<Unit?> = _createNewPage
 
     private val _editPage = SingleLiveEvent<Triple<SiteModel, PostModel?, LoadAutoSaveRevision>>()
     val editPage: LiveData<Triple<SiteModel, PostModel?, LoadAutoSaveRevision>> = _editPage
@@ -176,8 +174,17 @@ class PagesViewModel
     private val _publishAction = SingleLiveEvent<PageModel>()
     val publishAction = _publishAction
 
+    private val _launchPageListType = SingleLiveEvent<PageListType>()
+    val launchPageListType = _launchPageListType
+
     private val _navigateToBlazeOverlay = SingleLiveEvent<PageModel>()
     val navigateToBlazeOverlay = _navigateToBlazeOverlay
+
+    private val _openExternalLink = SingleLiveEvent<String>()
+    val openExternalLink: LiveData<String> = _openExternalLink
+
+    private val _openSiteEditorWebView = SingleLiveEvent<SiteEditorData>()
+    val openSiteEditorWebView: LiveData<SiteEditorData> = _openSiteEditorWebView
 
     private var isInitialized = false
     private var scrollToPageId: Long? = null
@@ -228,12 +235,14 @@ class PagesViewModel
     private val _authorUIState = MutableLiveData<PagesAuthorFilterUIState>()
     val authorUIState: LiveData<PagesAuthorFilterUIState> = _authorUIState
 
-    private val _blazeSiteEligibility = MutableLiveData(false)
-    val blazeSiteEligibility: LiveData<Boolean> = _blazeSiteEligibility
-
     data class BrowsePreview(
         val post: PostModel,
         val previewType: RemotePreviewType
+    )
+
+    data class SiteEditorData(
+        val url: String,
+        val useWpComCredentials: Boolean,
     )
 
     fun start(site: SiteModel) {
@@ -241,7 +250,6 @@ class PagesViewModel
         if (_site == null) {
             _site = site
 
-            checkBlazeEligibility()
             loadPagesAsync()
             uploadStarter.queueUploadFromSite(site)
         }
@@ -275,20 +283,8 @@ class PagesViewModel
 
     override fun onCleared() {
         actionPerformer.onCleanup()
-        pageListEventListener.onDestroy()
-    }
-
-    private fun checkBlazeEligibility() {
-        // If the user is not an admin, we don't need to check for Blaze eligibility
-        if (!blazeFeatureUtils.isBlazeEligibleForUser(site)) return
-        launch {
-            blazeStore.getBlazeStatus(site.siteId)
-                .map { status -> status.model?.firstOrNull() }
-                .collect {
-                    it?.let {
-                        _blazeSiteEligibility.postValue(it.isEligible)
-                    }
-                }
+        if (::pageListEventListener.isInitialized) {
+            pageListEventListener.onDestroy()
         }
     }
 
@@ -347,6 +343,10 @@ class PagesViewModel
         }
     }
 
+    fun onSpecificPageListTypeRequested(pageListType: PageListType) {
+        _launchPageListType.postValue(pageListType)
+    }
+
     fun onPageTypeChanged(type: PageListType) {
         trackTabChangeEvent(type)
 
@@ -366,10 +366,7 @@ class PagesViewModel
     }
 
     fun checkIfNewPageButtonShouldBeVisible() {
-        val isNotEmpty = pageMap.values.any { currentPageType.pageStatuses.contains(it.status) }
-        val hasNoExceptions = !currentPageType.pageStatuses.contains(PageStatus.TRASHED) &&
-                _isSearchExpanded.value != true
-        _isNewPageButtonVisible.postOnUi(isNotEmpty && hasNoExceptions)
+        _isNewPageButtonVisible.postOnUi(_isSearchExpanded.value != true)
     }
 
     fun onSearch(searchQuery: String, delay: Long = SEARCH_DELAY) {
@@ -464,7 +461,7 @@ class PagesViewModel
         }
     }
 
-    fun onMenuAction(action: Action, page: Page, context: Context? = null): Boolean {
+    fun onMenuAction(action: PagesListAction, page: Page, context: Context? = null): Boolean {
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
@@ -524,6 +521,7 @@ class PagesViewModel
                             appLogWrapper.d(PAGES, "${result.error.type}: ${result.error.message}")
                             R.string.page_homepage_update_failed
                         }
+
                         false -> {
                             R.string.page_homepage_successfully_updated
                         }
@@ -555,6 +553,7 @@ class PagesViewModel
                             appLogWrapper.d(PAGES, "${result.error.type}: ${result.error.message}")
                             R.string.page_posts_page_update_failed
                         }
+
                         false -> {
                             R.string.page_posts_page_successfully_updated
                         }
@@ -571,27 +570,14 @@ class PagesViewModel
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private fun copyPageLink(page: Page, context: Context) {
-        try {
-            // Get the link to the page
-            val pageLink = postStore.getPostByLocalPostId(page.localId).link
-            // Copy the link to the clipboard
-            context.clipboardManager?.setPrimaryClip(
-                ClipData.newPlainText("${page.localId}", pageLink)
-            ) ?: throw NullPointerException("ClipboardManager is not supported on this device")
-
-            _showSnackbarMessage.postValue(
-                SnackbarMessageHolder(UiStringRes(R.string.media_edit_copy_url_toast))
-            )
-        } catch (e: Throwable) {
-            /**
-             * Ignore any exceptions here as certain devices have bugs and will fail.
-             * See https://crrev.com/542cb9cfcc927295615809b0c99917b09a219d9f for more info.
-             */
-            AppLog.e(PAGES, e)
-            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
-        }
+        // Get the link to the page
+        val pageLink = postStore.getPostByLocalPostId(page.localId).link
+        ActivityLauncher.openShareIntent(
+            context,
+            pageLink,
+            page.title
+        )
     }
 
     private fun previewPage(page: Page) {
@@ -660,7 +646,7 @@ class PagesViewModel
         }
     }
 
-    private fun trackMenuSelectionEvent(action: Action) {
+    private fun trackMenuSelectionEvent(action: PagesListAction) {
         val menu = when (action) {
             VIEW_PAGE -> "view"
             CANCEL_AUTO_UPLOAD -> "cancel_auto_upload"
@@ -713,6 +699,34 @@ class PagesViewModel
         }
 
         editPage(RemoteId(page.remoteId))
+    }
+
+    fun onVirtualHomepageAction(action: VirtualHomepage.Action) {
+        trackVirtualHomepageAction(action)
+        when (action) {
+            is VirtualHomepage.Action.OpenExternalLink -> {
+                _openExternalLink.postValue(action.url)
+            }
+
+            VirtualHomepage.Action.OpenSiteEditor -> {
+                _openSiteEditorWebView.postValue(
+                    SiteEditorData(
+                        VirtualHomepage.Action.OpenSiteEditor.getUrl(site),
+                        useWpComCredentials = site.isWPCom || site.isWPComAtomic || site.isPrivateWPComAtomic
+                    )
+                )
+            }
+        }.exhaustive
+    }
+
+    private fun trackVirtualHomepageAction(action: VirtualHomepage.Action) {
+        val stat = when (action) {
+            VirtualHomepage.Action.OpenExternalLink.TemplateSupport ->
+                AnalyticsTracker.Stat.PAGES_EDIT_HOMEPAGE_INFO_PRESSED
+
+            VirtualHomepage.Action.OpenSiteEditor -> AnalyticsTracker.Stat.PAGES_EDIT_HOMEPAGE_ITEM_PRESSED
+        }
+        analyticsTracker.track(stat, site)
     }
 
     fun onNewPageButtonTapped() {
@@ -961,11 +975,13 @@ class PagesViewModel
      * 2) Jetpack sites - we need to pass in the self-hosted user id to be able to filter for authors
      * which we currently can't
      * 3) Sites on which the user doesn't have permissions to edit posts of other users.
+     * 4) Single user sites - there is no point in filtering by author on single user sites.
      *
      * This behavior is consistent with Calypso and Posts as of 11/4/2019.
      */
     private val isFilteringByAuthorSupported: Boolean by lazy {
-        site.isWPCom && site.hasCapabilityEditOthersPages
+        site.isUsingWpComRestApi && site.hasCapabilityEditOthersPages
+                && (site.isSingleUserSite != null && !site.isSingleUserSite)
     }
 
     @SuppressLint("NullSafeMutableLiveData")

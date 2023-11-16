@@ -8,6 +8,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.prefs.AppSettingsFragment.LANGUAGE_CHANGED
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class MeActivity : LocaleAwareActivity() {
@@ -17,8 +18,8 @@ class MeActivity : LocaleAwareActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            onBackPressed()
+        if (item.itemId == AndroidR.id.home) {
+            onBackPressedDispatcher.onBackPressed()
             return true
         }
         return super.onOptionsItemSelected(item)

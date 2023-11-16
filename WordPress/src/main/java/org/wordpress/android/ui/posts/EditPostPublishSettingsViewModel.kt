@@ -20,7 +20,7 @@ class EditPostPublishSettingsViewModel @Inject constructor(
     private val peopleUtilsWrapper: PeopleUtilsWrapper,
     localeManagerWrapper: LocaleManagerWrapper,
     postSchedulingNotificationStore: PostSchedulingNotificationStore,
-    private val siteStore: SiteStore
+    private val siteStore: SiteStore,
 ) : PublishSettingsViewModel(
     resourceProvider,
     postSettingsUtils,
@@ -41,11 +41,12 @@ class EditPostPublishSettingsViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
 
-        postRepository?.let {
-            val site = siteStore.getSiteByLocalId(it.localSiteId) ?: return@let
-            if (site.hasCapabilityListUsers) {
-                fetchAuthors(site)
-            }
+        val siteModel = postRepository?.localSiteId?.let {
+            siteStore.getSiteByLocalId(it)
+        } ?: return
+
+        if (siteModel.hasCapabilityListUsers) {
+            fetchAuthors(siteModel)
         }
     }
 

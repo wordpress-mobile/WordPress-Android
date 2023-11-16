@@ -7,6 +7,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 import org.wordpress.android.util.AppLog
@@ -19,7 +20,7 @@ import kotlin.coroutines.CoroutineContext
 @AndroidEntryPoint
 class ReaderDiscoverJobService : JobService(), ServiceCompletionListener, CoroutineScope {
     @Inject
-    @field:Named("IO_THREAD")
+    @Named(IO_THREAD)
     lateinit var ioDispatcher: CoroutineDispatcher
 
     @Inject
@@ -37,7 +38,7 @@ class ReaderDiscoverJobService : JobService(), ServiceCompletionListener, Corout
     override fun onStartJob(params: JobParameters): Boolean {
         AppLog.i(READER, "reader discover job service > started")
 
-        val task = DiscoverTasks.values()[(params.extras[ReaderDiscoverServiceStarter.ARG_DISCOVER_TASK] as Int)]
+        val task = DiscoverTasks.values()[params.extras.getInt(ReaderDiscoverServiceStarter.ARG_DISCOVER_TASK)]
 
         readerDiscoverLogic.performTasks(task, params, this, this)
         return true

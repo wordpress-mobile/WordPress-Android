@@ -2,6 +2,8 @@ package org.wordpress.android.ui.reader.services.post;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
@@ -309,8 +311,16 @@ public class ReaderPostLogic {
         if (tag.tagType == ReaderTagType.DEFAULT) {
             return null;
         }
+        return formatRelativeEndpointForTag(tag.getTagSlug());
+    }
 
-        return String.format("read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tag.getTagSlug()));
+    private static String formatRelativeEndpointForTag(@NonNull final String tagSlug) {
+        return String.format("read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tagSlug));
+    }
+
+    public static String formatFullEndpointForTag(@NonNull final String tagSlug) {
+        return WordPress.getRestClientUtilsV1_2().getRestClient().getEndpointURL()
+               + formatRelativeEndpointForTag(tagSlug);
     }
 
     /*

@@ -1,0 +1,92 @@
+{
+    "request": {
+        "urlPath": "/rest/v1.1/read/sites/70135762",
+        "method": "GET",
+        "queryParameters": {
+            "locale": {
+                "matches": "(.*)"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "ID": 70135762,
+            "name": "Longreads",
+            "description": "The best longform stories on the web",
+            "URL": "http:\/\/longreads.com",
+            "jetpack": false,
+            "jetpack_connection": false,
+            "subscribers_count": 27,
+            "lang": false,
+            "icon": {
+                "img": "https:\/\/secure.gravatar.com\/blavatar\/e68667ec6ee7cdd0c6b5416a84c52a9c",
+                "ico": "https:\/\/secure.gravatar.com\/blavatar\/e68667ec6ee7cdd0c6b5416a84c52a9c"
+            },
+            "logo": {
+                "id": 0,
+                "sizes": [],
+                "url": ""
+            },
+            "visible": null,
+            "is_private": false,
+            "is_coming_soon": false,
+            "is_following": false,
+            "organization_id": 0,
+            "meta": {
+                "links": {
+                    "self": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/read\/sites\/70135762",
+                    "help": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/read\/sites\/70135762\/help",
+                    "posts": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/read\/sites\/70135762\/posts\/",
+                    "comments": "https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/70135762\/comments\/",
+                    "xmlrpc": "https:\/\/longreadsblog.wordpress.com\/xmlrpc.php"
+                }
+            },
+            "launch_status": false,
+            "site_migration": null,
+            "is_fse_active": false,
+            "is_fse_eligible": false,
+            "is_core_site_editor_enabled": false,
+            "is_wpcom_atomic": false,
+            "is_wpcom_staging_site": false,
+            "capabilities": {
+                "edit_pages": false,
+                "edit_posts": false,
+                "edit_others_posts": false,
+                "edit_theme_options": false,
+                "list_users": false,
+                "manage_categories": false,
+                "manage_options": false,
+                "publish_posts": false,
+                "upload_files": false,
+                "view_stats": false
+            },
+            "is_multi_author": true,
+            "header_image": false,
+            "owner": {
+                "ID": 26957695,
+                "login": "a8cuser",
+                "name": "Automattic",
+                "first_name": "Automattic",
+                "last_name": "",
+                "nice_name": "a8cuser",
+                "URL": "",
+                "avatar_URL": "https:\/\/1.gravatar.com\/avatar\/a64c4a50f3f38f02cd27a9bfb3f11b62?s=96&d=identicon&r=G",
+                "profile_URL": "https:\/\/en.gravatar.com\/a8cuser",
+                "ip_address": false,
+                "site_visible": true,
+                "has_avatar": true
+            },
+            "subscription": {
+                "delivery_methods": {
+                    "email": null,
+                    "notification": {
+                        "send_posts": false
+                    }
+                }
+            },
+            "is_blocked": false,
+            "unseen_count": 0
+        }
+    }
+}

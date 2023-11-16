@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainRegistrationActivityBinding
@@ -12,19 +13,25 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenCheckout.CheckoutDetails
+import org.wordpress.android.ui.domains.DomainRegistrationCheckoutWebViewActivity.OpenPlans.PlanDetails
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.FinishDomainRegistration
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationCheckout
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationDetails
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainRegistrationResult
 import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenDomainSuggestions
+import org.wordpress.android.ui.domains.DomainRegistrationNavigationAction.OpenFreeDomainWithAnnualPlan
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
+import android.R as AndroidR
 
+@AndroidEntryPoint
 class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
     enum class DomainRegistrationPurpose {
         AUTOMATED_TRANSFER,
         CTA_DOMAIN_CREDIT_REDEMPTION,
-        DOMAIN_PURCHASE
+        DOMAIN_PURCHASE,
+        FREE_DOMAIN_WITH_ANNUAL_PLAN
     }
 
     companion object {
@@ -43,16 +50,22 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         }
     }
 
+    private val openPlans = registerForActivityResult(DomainRegistrationCheckoutWebViewActivity.OpenPlans()) {
+        it?.let {
+            viewModel.completeDomainRegistration(it)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as WordPress).component().inject(this)
         with(DomainRegistrationActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
             binding = this
 
-            val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-            val domainRegistrationPurpose = intent.getSerializableExtra(DOMAIN_REGISTRATION_PURPOSE_KEY)
-                    as DomainRegistrationPurpose
+            val site = requireNotNull(intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
+            val domainRegistrationPurpose = requireNotNull(
+                intent.getSerializableExtraCompat<DomainRegistrationPurpose>(DOMAIN_REGISTRATION_PURPOSE_KEY)
+            )
 
             setupToolbar()
             setupViewModel(site, domainRegistrationPurpose)
@@ -77,6 +90,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         viewModel.onNavigation.observeEvent(this) {
             when (it) {
                 is OpenDomainSuggestions -> showDomainSuggestions()
+                is OpenFreeDomainWithAnnualPlan -> openFreeDomainWithAnnualPlanWebView(it.site, it.details)
                 is OpenDomainRegistrationCheckout -> openDomainRegistrationCheckoutWebView(it.site, it.details)
                 is OpenDomainRegistrationDetails -> showDomainRegistrationDetails(it.details)
                 is OpenDomainRegistrationResult -> showDomainRegistrationResult(it.event)
@@ -89,6 +103,10 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
         showFragment(DomainSuggestionsFragment.TAG, true) {
             DomainSuggestionsFragment.newInstance()
         }
+    }
+
+    private fun openFreeDomainWithAnnualPlanWebView(site: SiteModel, details: DomainProductDetails) {
+        openPlans.launch(PlanDetails(site, details.domainName))
     }
 
     private fun openDomainRegistrationCheckoutWebView(site: SiteModel, details: DomainProductDetails) {
@@ -133,8 +151,8 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            onBackPressed()
+        if (item.itemId == AndroidR.id.home) {
+            onBackPressedDispatcher.onBackPressed()
             return true
         }
         return super.onOptionsItemSelected(item)

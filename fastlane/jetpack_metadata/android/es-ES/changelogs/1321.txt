@@ -1,3 +1,0 @@
-21.9:
-¡Noticias frescas! Ahora Jetpack es compatible con Blaze, así que podrás promocionar entradas o páginas en la aplicación para llegar a nuevos lectores.
-Además, hemos añadido una tarjeta de preguntas frecuentes tras la migración a la pantalla Ayuda. Esta tarjeta se mostrará cuando pases de la aplicación de WordPress a Jetpack.

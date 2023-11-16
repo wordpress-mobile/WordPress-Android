@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 GOOGLE_FIREBASE_SECRETS_PATH = File.join(Dir.home, '.configure', 'wordpress-android', 'secrets', 'firebase.secrets.json')
 
 platform :android do
@@ -11,8 +13,8 @@ platform :android do
   # bundle exec fastlane build_and_run_instrumented_test app:jetpack
   #
   #####################################################################################
-  desc "Build the application and instrumented tests, then run the tests in Firebase Test Lab"
-  lane :build_and_run_instrumented_test do | options |
+  desc 'Build the application and instrumented tests, then run the tests in Firebase Test Lab'
+  lane :build_and_run_instrumented_test do |options|
     app = get_app_name_option!(options)
 
     gradle(tasks: ["WordPress:assemble#{app.to_s.capitalize}VanillaDebug", "WordPress:assemble#{app.to_s.capitalize}VanillaDebugAndroidTest"])
@@ -28,7 +30,7 @@ platform :android do
       project_id: firebase_secret(name: 'project_id'),
       key_file: GOOGLE_FIREBASE_SECRETS_PATH,
       model: 'Pixel2.arm',
-      version: 32,
+      version: 30,
       test_apk_path: File.join(apk_dir, 'androidTest', "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug-androidTest.apk"),
       apk_path: File.join(apk_dir, "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug.apk"),
       test_targets: 'notPackage org.wordpress.android.ui.screenshots',

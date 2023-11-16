@@ -2,9 +2,11 @@ package org.wordpress.android.ui.posts
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.databinding.FragmentJetpackSecuritySettingsBinding
+import android.R as AndroidR
 
 class JetpackSecuritySettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,10 +15,15 @@ class JetpackSecuritySettingsActivity : AppCompatActivity() {
             setContentView(root)
             setupToolbar()
         }
+
+        onBackPressedDispatcher.addCallback(this) {
+            setResult(RESULT_OK, null)
+            finish()
+        }
     }
 
     private fun FragmentJetpackSecuritySettingsBinding.setupToolbar() {
-        title = resources.getText(string.jetpack_security_setting_title)
+        title = resources.getText(R.string.jetpack_security_setting_title)
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
         if (actionBar != null) {
@@ -27,17 +34,12 @@ class JetpackSecuritySettingsActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val itemID = item.itemId
-        if (itemID == android.R.id.home) {
+        if (itemID == AndroidR.id.home) {
             setResult(RESULT_OK, null)
             finish()
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed() {
-        setResult(RESULT_OK, null)
-        finish()
     }
 
     companion object {

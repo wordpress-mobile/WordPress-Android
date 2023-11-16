@@ -7,6 +7,8 @@
  */
 package org.wordpress.android.ui.notifications;
 
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.models.Note;
 
 public interface NotificationFragment {
@@ -14,6 +16,7 @@ public interface NotificationFragment {
         void onPostClicked(Note note, long remoteBlogId, int postId);
     }
 
+    @Nullable
     Note getNote();
 
     void setNote(String noteId);

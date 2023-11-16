@@ -23,6 +23,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 class HomepageSettingsDialog : DialogFragment() {
     @Inject
@@ -39,9 +40,9 @@ class HomepageSettingsDialog : DialogFragment() {
         var pageForPostsId: Long? = null
         (arguments ?: savedInstanceState)?.let { bundle ->
             siteId = bundle.getInt(KEY_SITE_ID)
-            isClassicBlog = bundle.get(KEY_IS_CLASSIC_BLOG)?.let { it as Boolean }
-            pageOnFrontId = bundle.get(KEY_PAGE_ON_FRONT)?.let { it as Long }
-            pageForPostsId = bundle.get(KEY_PAGE_FOR_POSTS)?.let { it as Long }
+            isClassicBlog = bundle.getBoolean(KEY_IS_CLASSIC_BLOG)
+            pageOnFrontId = bundle.getLong(KEY_PAGE_ON_FRONT)
+            pageForPostsId = bundle.getLong(KEY_PAGE_FOR_POSTS)
         } ?: throw IllegalArgumentException("Site has to be initialized")
         val builder = MaterialAlertDialogBuilder(requireActivity())
         builder.setPositiveButton(R.string.site_settings_accept_homepage) { _, _ -> }
@@ -55,8 +56,10 @@ class HomepageSettingsDialog : DialogFragment() {
             }
             builder.setView(root)
 
-            viewModel = ViewModelProvider(this@HomepageSettingsDialog, viewModelFactory)
-                .get(HomepageSettingsViewModel::class.java)
+            viewModel = ViewModelProvider(
+                this@HomepageSettingsDialog,
+                viewModelFactory
+            )[HomepageSettingsViewModel::class.java]
             viewModel.uiState.observe(this@HomepageSettingsDialog) { uiState ->
                 uiState?.let {
                     loadingPages.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
@@ -114,9 +117,9 @@ class HomepageSettingsDialog : DialogFragment() {
         val button = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
         button.isEnabled = enabled
         val textColor = if (enabled) {
-            requireContext().getColorResIdFromAttribute(R.attr.colorPrimary)
+            requireContext().getColorResIdFromAttribute(MaterialR.attr.colorPrimary)
         } else {
-            R.color.material_on_surface_disabled
+            MaterialR.color.material_on_surface_disabled
         }
         button.setTextColor(ContextCompat.getColor(requireContext(), textColor))
     }

@@ -12,9 +12,9 @@ import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
+import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
 import org.wordpress.android.ui.quickstart.QuickStartType
 
@@ -133,7 +133,7 @@ class SiteItemsBuilderTest {
                 site = siteModel,
                 onClick = SITE_ITEM_ACTION,
                 activeTask = QuickStartNewSiteTask.CHECK_STATS,
-                enableStatsFocusPoint = enableStatsFocusPoint
+                enableFocusPoints = enableStatsFocusPoint
             )
         )
 
@@ -152,7 +152,7 @@ class SiteItemsBuilderTest {
                 site = siteModel,
                 onClick = SITE_ITEM_ACTION,
                 activeTask = QuickStartNewSiteTask.CHECK_STATS,
-                enableStatsFocusPoint = enableStatsFocusPoint
+                enableFocusPoints = enableStatsFocusPoint
             )
         )
 
@@ -171,7 +171,7 @@ class SiteItemsBuilderTest {
                 site = siteModel,
                 onClick = SITE_ITEM_ACTION,
                 activeTask = QuickStartExistingSiteTask.CHECK_STATS,
-                enableStatsFocusPoint = enableStatsFocusPoint
+                enableFocusPoints = enableStatsFocusPoint
             )
         )
 
@@ -190,46 +190,11 @@ class SiteItemsBuilderTest {
                 site = siteModel,
                 onClick = SITE_ITEM_ACTION,
                 activeTask = QuickStartExistingSiteTask.CHECK_STATS,
-                enableStatsFocusPoint = enableStatsFocusPoint
+                enableFocusPoints = enableStatsFocusPoint
             )
         )
 
         assertThat(buildSiteItems).contains(STATS_ITEM.copy(showFocusPoint = enableStatsFocusPoint))
-    }
-
-    /* INFO ITEM */
-
-    @Test
-    fun `when build info item is invoked, then info item is built`() {
-        val infoItem = siteItemsBuilder.build(
-            InfoItemBuilderParams(
-                isStaleMessagePresent = true
-            )
-        )
-
-        assertThat(infoItem).isNotNull
-    }
-
-    @Test
-    fun `given stale message present, when build info item is invoked, then info item is built`() {
-        val infoItem = siteItemsBuilder.build(
-            InfoItemBuilderParams(
-                isStaleMessagePresent = true
-            )
-        )
-
-        assertThat(infoItem).isNotNull
-    }
-
-    @Test
-    fun `given stale message not present, when build info item is invoked, then info item is not built`() {
-        val infoItem = siteItemsBuilder.build(
-            InfoItemBuilderParams(
-                isStaleMessagePresent = false
-            )
-        )
-
-        assertThat(infoItem).isNull()
     }
 
     @Test

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
+
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -296,7 +297,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackConnectedSiteInfoSucceeded(@NotNull Map<String, ?> properties) {
+    public void trackConnectedSiteInfoSucceeded(@NonNull Map<String, ?> properties) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_CONNECTED_SITE_INFO_SUCCEEDED, properties);
     }
 
@@ -389,5 +390,21 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
 
     @Override public void usernamePasswordScreenResumed() {
         mUnifiedLoginTracker.setStep(Step.USERNAME_PASSWORD);
+    }
+
+    @Override public void trackLoginSecurityKeyFailure() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SECURITY_KEY_FAILURE);
+    }
+
+    @Override public void trackLoginSecurityKeySuccess() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SECURITY_KEY_SUCCESS);
+    }
+
+    @Override public void trackUseSecurityKeyClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SECURITY_KEY_CLICKED);
+    }
+
+    @Override public void trackLogin2faNeeded() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_2FA_NEEDED);
     }
 }

@@ -2,8 +2,7 @@ package org.wordpress.android.ui.mysite.cards.dashboard
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.QuickStartSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
@@ -24,7 +23,14 @@ class CardsTracker @Inject constructor(
         STATS("stats"),
         POST("post"),
         BLOGGING_PROMPT("blogging_prompt"),
-        PROMOTE_WITH_BLAZE("promote_with_blaze")
+        PROMOTE_WITH_BLAZE("promote_with_blaze"),
+        BLAZE_CAMPAIGNS("blaze_campaigns"),
+        PAGES("pages"),
+        ACTIVITY("activity_log"),
+        DASHBOARD_CARD_PLANS("dashboard_card_plans"),
+        DASHBOARD_CARD_DOMAIN_TRANSFER("dashboard_card_domain_transfer"),
+        PERSONALIZE_CARD("personalize"),
+        NO_CARDS("no_cards")
     }
 
     enum class QuickStartSubtype(val label: String) {
@@ -40,37 +46,31 @@ class CardsTracker @Inject constructor(
     }
 
     enum class PostSubtype(val label: String) {
-        CREATE_FIRST("create_first"),
-        CREATE_NEXT("create_next"),
         DRAFT("draft"),
         SCHEDULED("scheduled")
+    }
+
+    enum class ActivityLogSubtype(val label: String) {
+        ACTIVITY_LOG("activity_log")
+    }
+
+    enum class PagesSubType(val label: String) {
+        CREATE_PAGE("create_page"),
+        DRAFT("draft"),
+        SCHEDULED("scheduled"),
+        PUBLISHED("published")
+    }
+
+    enum class BlazeSubtype(val label: String) {
+        NO_CAMPAIGNS("no_campaigns"),
+        CAMPAIGNS("campaigns")
     }
 
     fun trackQuickStartCardItemClicked(quickStartTaskType: QuickStartTaskType) {
         trackCardItemClicked(Type.QUICK_START.label, quickStartTaskType.toSubtypeValue().label)
     }
 
-    fun trackTodaysStatsCardGetMoreViewsNudgeClicked() {
-        trackCardItemClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS_NUDGE.label)
-    }
-
-    fun trackTodaysStatsCardFooterLinkClicked() {
-        trackCardFooterLinkClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS.label)
-    }
-
-    fun trackTodaysStatsCardClicked() {
-        trackCardItemClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS.label)
-    }
-
-    fun trackPostCardFooterLinkClicked(postCardType: PostCardType) {
-        trackCardFooterLinkClicked(Type.POST.label, postCardType.toSubtypeValue().label)
-    }
-
-    fun trackPostItemClicked(postCardType: PostCardType) {
-        trackCardItemClicked(Type.POST.label, postCardType.toSubtypeValue().label)
-    }
-
-    private fun trackCardFooterLinkClicked(type: String, subtype: String) {
+    fun trackCardFooterLinkClicked(type: String, subtype: String) {
         analyticsTrackerWrapper.track(
             Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
             mapOf(
@@ -80,7 +80,7 @@ class CardsTracker @Inject constructor(
         )
     }
 
-    private fun trackCardItemClicked(type: String, subtype: String) {
+    fun trackCardItemClicked(type: String, subtype: String) {
         val props = mapOf(TYPE to type, SUBTYPE to subtype)
         if (type == Type.QUICK_START.label) {
             quickStartTracker.track(Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED, props)
@@ -89,11 +89,25 @@ class CardsTracker @Inject constructor(
         }
     }
 
+    fun trackCardMoreMenuItemClicked(card: String, item: String) {
+        analyticsTrackerWrapper.track(
+            Stat.MY_SITE_DASHBOARD_CARD_MENU_ITEM_TAPPED,
+            mapOf(
+                CARD to card,
+                ITEM to item
+            )
+        )
+    }
+
+    fun trackCardMoreMenuClicked(type: String) {
+        analyticsTrackerWrapper.track(Stat.MY_SITE_DASHBOARD_CONTEXTUAL_MENU_ACCESSED, mapOf(CARD to type))
+    }
+
     fun resetShown() {
         cardsShownTracker.reset()
     }
 
-    fun trackShown(dashboardCards: DashboardCards) {
+    fun trackShown(dashboardCards: List<MySiteCardAndItem.Card>) {
         cardsShownTracker.track(dashboardCards)
     }
 
@@ -105,31 +119,42 @@ class CardsTracker @Inject constructor(
         const val TYPE = "type"
         const val SUBTYPE = "subtype"
         const val STATS = "stats"
+        const val ITEM = "item"
+        const val CARD = "card"
     }
 }
 
-fun DashboardCardType.toTypeValue(): Type {
+@Suppress("ComplexMethod")
+fun MySiteCardAndItem.Type.toTypeValue(): Type {
     return when (this) {
-        DashboardCardType.ERROR_CARD -> Type.ERROR
-        DashboardCardType.QUICK_START_CARD -> Type.QUICK_START
-        DashboardCardType.TODAYS_STATS_CARD_ERROR -> Type.ERROR
-        DashboardCardType.TODAYS_STATS_CARD -> Type.STATS
-        DashboardCardType.POST_CARD_ERROR -> Type.ERROR
-        DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS -> Type.POST
-        DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST
-        DashboardCardType.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
-        DashboardCardType.PROMOTE_WITH_BLAZE_CARD -> Type.PROMOTE_WITH_BLAZE
+        MySiteCardAndItem.Type.ERROR_CARD -> Type.ERROR
+        MySiteCardAndItem.Type.QUICK_START_CARD -> Type.QUICK_START
+        MySiteCardAndItem.Type.TODAYS_STATS_CARD_ERROR -> Type.ERROR
+        MySiteCardAndItem.Type.TODAYS_STATS_CARD -> Type.STATS
+        MySiteCardAndItem.Type.POST_CARD_ERROR -> Type.ERROR
+        MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS -> Type.POST
+        MySiteCardAndItem.Type.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
+        MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE_CARD -> Type.PROMOTE_WITH_BLAZE
+        MySiteCardAndItem.Type.DASHBOARD_DOMAIN_TRANSFER_CARD -> Type.DASHBOARD_CARD_DOMAIN_TRANSFER
+        MySiteCardAndItem.Type.BLAZE_CAMPAIGNS_CARD -> Type.BLAZE_CAMPAIGNS
+        MySiteCardAndItem.Type.DASHBOARD_PLANS_CARD -> Type.DASHBOARD_CARD_PLANS
+        MySiteCardAndItem.Type.PAGES_CARD -> Type.PAGES
+        MySiteCardAndItem.Type.PAGES_CARD_ERROR -> Type.ERROR
+        MySiteCardAndItem.Type.ACTIVITY_CARD -> Type.ACTIVITY
+        else -> {
+            Type.ERROR
+        }
     }
 }
 
 fun PostCardType.toSubtypeValue(): PostSubtype {
     return when (this) {
-        PostCardType.CREATE_FIRST -> PostSubtype.CREATE_FIRST
-        PostCardType.CREATE_NEXT -> PostSubtype.CREATE_NEXT
         PostCardType.DRAFT -> PostSubtype.DRAFT
         PostCardType.SCHEDULED -> PostSubtype.SCHEDULED
     }
 }
+
+
 
 fun QuickStartTaskType.toSubtypeValue(): QuickStartSubtype {
     return when (this) {

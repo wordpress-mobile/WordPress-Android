@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.ActivityLauncherWrapper;
@@ -20,6 +22,7 @@ import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.PackageManagerWrapper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UriWrapper;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 import javax.inject.Inject;
 
@@ -47,8 +50,18 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     private JetpackFeatureFullScreenOverlayViewModel mJetpackFullScreenViewModel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                finish();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
         mViewModel = new ViewModelProvider(this).get(DeepLinkingIntentReceiverViewModel.class);
         mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
         setupObservers();
@@ -138,11 +151,5 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         } else {
             finish();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 }

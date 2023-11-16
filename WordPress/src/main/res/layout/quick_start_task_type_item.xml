@@ -8,7 +8,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/item_title"
-        style="@style/QuickStartTypeTitle"
+        style="@style/MySiteCardQuickStartItemTitle"
         android:text="@string/quick_start_sites_type_customize"
         app:layout_constraintEnd_toStartOf="@+id/item_progress"
         app:layout_constraintTop_toTopOf="parent" />

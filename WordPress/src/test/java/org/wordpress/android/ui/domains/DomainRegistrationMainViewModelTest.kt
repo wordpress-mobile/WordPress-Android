@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.AUTOMATED_TRANSFER
@@ -72,5 +73,12 @@ class DomainRegistrationMainViewModelTest : BaseUnitTest() {
         viewModel.completeDomainRegistration(domainRegisteredEvent)
 
         assertThat(navigationActions.last()).isEqualTo(FinishDomainRegistration(domainRegisteredEvent))
+    }
+
+    @Test
+    fun `completing domain registration is tracked`() {
+        viewModel.start(site, DOMAIN_PURCHASE)
+        viewModel.finishDomainRegistration(domainRegisteredEvent)
+        verify(tracker).trackDomainsPurchaseDomainSuccess(isSiteCreation = false)
     }
 }

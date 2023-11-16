@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.ComponentDialog
+import androidx.activity.addCallback
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.DialogFragment
@@ -13,6 +15,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.FeatureIntroductionDialogFragmentBinding
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 import javax.inject.Inject
 
@@ -31,12 +34,11 @@ abstract class FeatureIntroductionDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        object : Dialog(requireContext(), theme) {
-            override fun onBackPressed() {
+        super.onCreateDialog(savedInstanceState).apply {
+            (this as ComponentDialog).onBackPressedDispatcher.addCallback(this@FeatureIntroductionDialogFragment) {
                 viewModel.onBackButtonClick()
-                super.onBackPressed()
+                onBackPressedDispatcher.onBackPressedCompat(this)
             }
-        }.apply {
             setStatusBarAsSurfaceColor()
         }
 

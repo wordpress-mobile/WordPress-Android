@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # NOTE: When updating this list, ensure the locales having `promo_config: {…}` matches the list of locales
 # used in the `raw-screenshots` CI job for Firebase Test Lab
 #
@@ -30,14 +32,17 @@ ALL_LOCALES = [
   { glotpress: 'vi', android: 'vi',    google_play: 'vi',     promo_config: {} },
   { glotpress: 'zh-cn', android: 'zh-rCN', google_play: 'zh-CN',  promo_config: {} },
   { glotpress: 'zh-tw', android: 'zh-rTW', google_play: 'zh-TW',  promo_config: {} },
-  # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key. See `WP_RELEASE_NOTES_LOCALES` below.
+  # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key.
+  # See `WP_RELEASE_NOTES_LOCALES` below.
   { glotpress: 'az', android: 'az', promo_config: false },
   { glotpress: 'bg', android: 'bg', promo_config: false },
   { glotpress: 'cs', android: 'cs', promo_config: false },
   { glotpress: 'cy', android: 'cy', promo_config: false },
   { glotpress: 'da', android: 'da', promo_config: false },
   { glotpress: 'el', android: 'el', promo_config: false },
-  { glotpress: 'en-au', android: 'en-rAU', promo_config: false },
+  # Temporarily disable 'en-au' translations to address some issues:
+  # https://wordpress.slack.com/archives/C02RP50LK/p1693431282243939
+  # { glotpress: 'en-au', android: 'en-rAU', promo_config: false },
   { glotpress: 'en-ca', android: 'en-rCA', promo_config: false },
   { glotpress: 'en-gb', android: 'en-rGB', promo_config: false },
   { glotpress: 'es-cl', android: 'es-rCL', promo_config: false },
@@ -60,21 +65,21 @@ ALL_LOCALES = [
   { glotpress: 'sk', android: 'sk', promo_config: false },
   { glotpress: 'sq', android: 'sq', promo_config: false },
   { glotpress: 'uz', android: 'uz', promo_config: false },
-  { glotpress: 'zh-tw', android: 'zh-rHK', promo_config: false },
+  { glotpress: 'zh-tw', android: 'zh-rHK', promo_config: false }
 ].freeze
 
 WP_APP_LOCALES = ALL_LOCALES
 JP_APP_LOCALES = ALL_LOCALES
-  .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
+                 .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
 
 WP_RELEASE_NOTES_LOCALES = ALL_LOCALES
-  .reject { |h| h[:google_play].nil? }
-  .map { |h| [h[:glotpress], h[:google_play]] }
+                           .reject { |h| h[:google_play].nil? }
+                           .map { |h| [h[:glotpress], h[:google_play]] }
 
 JP_RELEASE_NOTES_LOCALES = ALL_LOCALES
-  .reject { |h| h[:google_play].nil? }
-  .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
-  .map { |h| [h[:glotpress], h[:google_play]] }
+                           .reject { |h| h[:google_play].nil? }
+                           .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
+                           .map { |h| [h[:glotpress], h[:google_play]] }
 
 platform :android do
   ########################################################################
@@ -98,12 +103,12 @@ platform :android do
   lane :update_appstore_strings do |options|
     # If no `app:` is specified, call this for both WordPress and Jetpack
     apps = options[:app].nil? ? %i[wordpress jetpack] : Array(options[:app]&.downcase&.to_sym)
+    version = options.fetch(:version, current_release_version)
 
     apps.each do |app|
       app_values = APP_SPECIFIC_VALUES[app]
 
       metadata_folder = File.join(PROJECT_ROOT_FOLDER, 'WordPress', app_values[:metadata_dir])
-      version = options.fetch(:version, android_get_app_version)
 
       # <key in po file> => <path to txt file to read the content from>
       files = {
@@ -126,6 +131,11 @@ platform :android do
         commit_message: "Update #{app_values[:display_name]} `PlayStoreStrings.po` for version #{version}"
       )
     end
+
+    push_to_git_remote(tags: false)
+
+    release_branch = "release/#{version}"
+    create_release_management_pull_request(release_branch, "Merge #{version} editorialized release notes to #{release_branch}")
   end
 
   # Updates the metadata in the Play Store (Main store listing) from the content of `fastlane/{metadata|jetpack_metadata}/android/*/*.txt` files
@@ -137,12 +147,11 @@ platform :android do
     app = get_app_name_option!(options)
     package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
     metadata_dir = File.join(FASTLANE_FOLDER, APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
-    version_code = android_get_release_version['code']
 
     upload_to_play_store(
       package_name: package_name,
       track: 'production',
-      version_code: version_code, # Apparently required by fastlane… even if the "Main Store Listing" isn't be attached to a specific build ¯\_(ツ)_/¯
+      version_code: current_build_code, # Apparently required by fastlane… even if the "Main Store Listing" isn't be attached to a specific build ¯\_(ツ)_/¯
       metadata_path: metadata_dir,
       skip_upload_apk: true,
       skip_upload_aab: true,
@@ -168,12 +177,12 @@ platform :android do
   desc 'Downloads translated metadata from GlotPress'
   lane :download_metadata_strings do |options|
     skip_release_notes = options.fetch(:skip_release_notes, false)
-    version = skip_release_notes ? nil : options.fetch(:version, android_get_app_version)
-    build_number = skip_release_notes ? nil : options.fetch(:build_number, android_get_release_version['code'])
+    version = skip_release_notes ? nil : options.fetch(:version, current_release_version)
+    build_number = skip_release_notes ? nil : options.fetch(:build_number, current_build_code)
 
     skip_commit = options.fetch(:skip_commit, false)
     skip_git_push = options.fetch(:skip_git_push, false)
-    
+
     # If no `app:` is specified, call this for both WordPress and Jetpack
     apps = options[:app].nil? ? %i[wordpress jetpack] : Array(options[:app]&.to_s&.downcase&.to_sym)
 
@@ -213,13 +222,13 @@ platform :android do
         source_file = key.to_s.start_with?('release_note_') ? 'release_notes.txt' : h[:desc]
         FileUtils.cp(File.join(metadata_source_dir, source_file), File.join(download_path, 'en-US', h[:desc]))
       end
-      
-      unless skip_commit
-        git_add(path: download_path)
-        message = "Update #{app_values[:display_name]} metadata translations"
-        message += " for #{version}" unless version.nil?
-        git_commit(path: download_path, message: message, allow_nothing_to_commit: true)
-      end
+
+      next if skip_commit
+
+      git_add(path: download_path)
+      message = "Update #{app_values[:display_name]} metadata translations"
+      message += " for #{version}" unless version.nil?
+      git_commit(path: download_path, message: message, allow_nothing_to_commit: true)
     end
     push_to_git_remote unless skip_commit || skip_git_push
   end
@@ -235,10 +244,10 @@ platform :android do
   JETPACK_MAIN_STRINGS_PATH = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', 'jetpack', 'res', 'values', 'strings.xml').freeze
   JETPACK_FROZEN_STRINGS_DIR_PATH = File.join(FASTLANE_FOLDER, 'jetpack_resources', 'values').freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
-    # Note: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
+    # NOTE: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
     # Which will correctly detect strings from the app's `strings.xml` being used by one of the module.
-    { library: "Image Editor", strings_path: "./libs/image-editor/src/main/res/values/strings.xml", source_id: 'module:image-editor' },
-    { library: "Editor", strings_path: "./libs/editor/src/main/res/values/strings.xml", source_id: 'module:editor' }
+    { library: 'Image Editor', strings_path: './libs/image-editor/src/main/res/values/strings.xml', source_id: 'module:image-editor' },
+    { library: 'Editor', strings_path: './libs/editor/src/main/res/values/strings.xml', source_id: 'module:editor' }
   ].freeze
   REMOTE_LIBRARIES_STRINGS_PATHS = [
     {
@@ -257,19 +266,19 @@ platform :android do
       source_id: 'login'
     },
     {
-      name: "Stories Library",
-      import_key: "automatticStoriesVersion",
-      repository: "Automattic/stories-android",
-      strings_file_path: "stories/src/main/res/values/strings.xml",
+      name: 'Stories Library',
+      import_key: 'automatticStoriesVersion',
+      repository: 'Automattic/stories-android',
+      strings_file_path: 'stories/src/main/res/values/strings.xml',
       source_id: 'stories'
     },
     {
-      name: "About Library",
-      import_key: "automatticAboutVersion",
-      repository: "Automattic/about-automattic-android",
-      strings_file_path: "library/src/main/res/values/strings.xml",
+      name: 'About Library',
+      import_key: 'automatticAboutVersion',
+      repository: 'Automattic/about-automattic-android',
+      strings_file_path: 'library/src/main/res/values/strings.xml',
       source_id: 'about'
-    },
+    }
   ].freeze
 
   lane :update_frozen_strings_for_translation do
@@ -296,7 +305,8 @@ platform :android do
         library_name: lib[:name],
         import_key: lib[:import_key],
         repository: lib[:repository],
-        file_path: lib[:strings_file_path]
+        file_path: lib[:strings_file_path],
+        build_gradle_path: File.join(PROJECT_ROOT_FOLDER, 'build.gradle')
       )
 
       if download_path.nil?
@@ -316,7 +326,7 @@ platform :android do
           add_ignore_attr: true # The linter is not be able to detect if a merged string is actually used by a binary dependency
         }]
         an_localize_libs(app_strings_path: WORDPRESS_MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
-        File.delete(download_path) if File.exist?(download_path)
+        FileUtils.rm_f(download_path)
       end
     end
 
@@ -374,13 +384,18 @@ platform :android do
   #        Typically one of the `WP_APP_LOCALES` or `JP_APP_LOCALES` constants
   def check_declared_locales_consistency(app_flavor:, locales_list:)
     output = gradle(task: 'printResourceConfigurations', flags: '--quiet')
-    resource_configs = output.match(/^#{app_flavor}: \[(.*)\]$/)&.captures&.first&.gsub(' ','')&.split(',')&.sort
+    resource_configs = output.match(/^#{app_flavor}: \[(.*)\]$/)&.captures&.first&.gsub(' ', '')&.split(',')&.sort
     if resource_configs.nil? || resource_configs.empty?
       UI.message("No `resourceConfigurations` field set in `build.gradle` for the `#{app_flavor}` flavor. Nothing to check.")
       return
     end
 
-    expected_locales = locales_list.map { |l| l[:android] }.sort
+    expected_locales = locales_list.map { |l| l[:android] }
+    # Support for legacy locale codes
+    expected_locales << 'in' if expected_locales.include?('id')
+    expected_locales << 'iw' if expected_locales.include?('he')
+    expected_locales.sort!
+
     if resource_configs == expected_locales
       UI.message("The `resourceConfigurations` field set in `build.gradle` for the `#{app_flavor}` flavor matches what is set in our Fastfile. All is good!")
     else

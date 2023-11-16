@@ -12,6 +12,7 @@ import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.Med
 
 enum MediaBlockType {
     IMAGE("image"),
+    VIDEOPRESS("videopress/video"),
     VIDEO("video"),
     MEDIA_TEXT("media-text"),
     GALLERY("gallery"),

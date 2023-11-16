@@ -25,16 +25,16 @@ class CommentListActionModeCallback(
     private val activityViewModel: UnifiedCommentActivityViewModel
 ) : Callback,
     LifecycleOwner {
-    private lateinit var lifecycleRegistry: LifecycleRegistry
+    private val lifecycleRegistry = LifecycleRegistry(this)
     override fun onCreateActionMode(
         actionMode: ActionMode,
         menu: Menu
     ): Boolean {
-        lifecycleRegistry = LifecycleRegistry(this)
         lifecycleRegistry.handleLifecycleEvent(ON_START)
         val inflater = actionMode.menuInflater
         inflater.inflate(R.menu.menu_unified_comments_list, menu)
 
+        @Suppress("DEPRECATION")
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { uiState ->
                 when (val uiModel = uiState.actionModeUiModel) {
@@ -73,15 +73,16 @@ class CommentListActionModeCallback(
     private fun setItemEnabled(menuItem: MenuItem, actionUiModel: ActionUiModel) {
         menuItem.isVisible = actionUiModel.isVisible
         menuItem.isEnabled = actionUiModel.isEnabled
-        if (menuItem.icon != null) {
+        val currentIcon = menuItem.icon
+        currentIcon?.let {
             // must mutate the drawable to avoid affecting other instances of it
-            val icon = menuItem.icon.mutate()
+            val icon = it.mutate()
             icon.alpha = if (actionUiModel.isEnabled) ICON_ALPHA_ENABLED else ICON_ALPHA_DISABLED
             menuItem.icon = icon
         }
     }
 
-    override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         return false
     }
 
@@ -129,7 +130,7 @@ class CommentListActionModeCallback(
         lifecycleRegistry.handleLifecycleEvent(ON_STOP)
     }
 
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+    override val lifecycle: Lifecycle = lifecycleRegistry
 
     companion object {
         const val ICON_ALPHA_ENABLED = 255

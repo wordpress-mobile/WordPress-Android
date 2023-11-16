@@ -3,29 +3,17 @@ package org.wordpress.android.ui.debug
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R
+import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.NavigationAction.DebugCookies
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Button
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.DISABLED
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.ENABLED
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature.State.UNKNOWN
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Field
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Row
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.ToggleAction
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.BUTTON
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.FEATURE
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.HEADER
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Type.ROW
 import org.wordpress.android.ui.debug.previews.PREVIEWS
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.NotificationManagerWrapper
-import org.wordpress.android.ui.utils.ListItemInteraction
-import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.util.DebugUtils
+import org.wordpress.android.ui.debug.UiItem.FeatureFlag.RemoteFeatureFlag
+import org.wordpress.android.ui.debug.UiItem.FeatureFlag.LocalFeatureFlag
+import org.wordpress.android.ui.debug.UiItem.Field
 import org.wordpress.android.util.config.FeatureFlagConfig
 import org.wordpress.android.util.config.FeaturesInDevelopment
 import org.wordpress.android.util.config.ManualFeatureConfig
@@ -58,44 +46,32 @@ class DebugSettingsViewModel
     val onNavigation: LiveData<Event<NavigationAction>> = _onNavigation
     private var hasChange: Boolean = false
 
-    fun start() {
+    private lateinit var debugSettingsType: DebugSettingsType
+
+    fun start(type: DebugSettingsType) {
+        this.debugSettingsType = type
         launch {
-            refresh()
+            refresh(type)
         }
     }
 
-    private fun refresh() {
-        val uiItems = mutableListOf<UiItem>()
-        val remoteFeatures = buildRemoteFeatures().map {
-            it.apply {
-                preview = { onFeaturePreviewClick(title) }.takeIf { state == ENABLED && PREVIEWS.contains(title) }
-            }
+    private fun refresh(debugSettingsType: DebugSettingsType) {
+        val uiItems: MutableList<UiItem> = when (debugSettingsType) {
+            DebugSettingsType.REMOTE_FEATURES -> buildRemoteFeatures().map {
+                it.apply {
+                    preview = { onFeaturePreviewClick(this.remoteKey) }.takeIf {
+                        state == UiItem.FeatureFlag.State.ENABLED && PREVIEWS.contains(remoteKey)
+                    }
+                }
+            }.toMutableList()
+
+            DebugSettingsType.REMOTE_FIELD_CONFIGS -> buildRemoteFieldConfigs().toMutableList()
+            DebugSettingsType.FEATURES_IN_DEVELOPMENT -> buildDevelopedFeatures().toMutableList()
         }
-        if (remoteFeatures.isNotEmpty()) {
-            uiItems.add(Header(R.string.debug_settings_remote_features))
-            uiItems.addAll(remoteFeatures)
-        }
-        val developedFeatures = buildDevelopedFeatures()
-        if (remoteFeatures.isNotEmpty()) {
-            uiItems.add(Header(R.string.debug_settings_features_in_development))
-            uiItems.addAll(developedFeatures)
-        }
-        val remoteFieldConfigs = buildRemoteFieldConfigs()
-        if (remoteFieldConfigs.isNotEmpty()) {
-            uiItems.add(Header(R.string.debug_settings_remote_field_configs))
-            uiItems.addAll(remoteFieldConfigs)
-        }
-        uiItems.add(Header(R.string.debug_settings_missing_developed_feature))
-        if (hasChange) {
-            uiItems.add(Button(R.string.debug_settings_restart_app, debugUtils::restartApp))
-        }
-        uiItems.add(Header(R.string.debug_settings_tools))
-        uiItems.add(Row(R.string.debug_cookies_title, create(this::onDebugCookiesClick)))
-        uiItems.add(Row(R.string.debug_settings_force_show_weekly_roundup, create(this::onForceShowWeeklyRoundupClick)))
         _uiState.value = UiState(uiItems)
     }
 
-    private fun onDebugCookiesClick() {
+    fun onDebugCookiesClick() {
         _onNavigation.value = Event(DebugCookies)
     }
 
@@ -103,7 +79,7 @@ class DebugSettingsViewModel
         _onNavigation.value = Event(NavigationAction.PreviewFragment(key))
     }
 
-    private fun onForceShowWeeklyRoundupClick() = launch(bgDispatcher) {
+    fun onForceShowWeeklyRoundupClick() = launch(bgDispatcher) {
         if (!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications())
             return@launch
         weeklyRoundupNotifier.buildNotifications().forEach {
@@ -111,18 +87,21 @@ class DebugSettingsViewModel
         }
     }
 
-    private fun buildDevelopedFeatures(): List<Feature> {
+    private fun buildDevelopedFeatures(): List<LocalFeatureFlag> {
         return FeaturesInDevelopment.featuresInDevelopment.map { name ->
             val value = if (manualFeatureConfig.hasManualSetup(name)) {
                 manualFeatureConfig.isManuallyEnabled(name)
             } else {
                 null
             }
-            Feature(name, value, ToggleAction(name, value?.not() ?: true, this::toggleFeature))
+            LocalFeatureFlag(
+                name, value,
+                UiItem.ToggleAction(name, value?.not() ?: true, this::toggleFeature)
+            )
         }.sortedBy { it.title }
     }
 
-    private fun buildRemoteFeatures(): List<Feature> {
+    private fun buildRemoteFeatures(): List<RemoteFeatureFlag> {
         return RemoteFeatureConfigDefaults.remoteFeatureConfigDefaults.mapNotNull { (key, defaultValue) ->
             val value = if (manualFeatureConfig.hasManualSetup(key)) {
                 manualFeatureConfig.isManuallyEnabled(key)
@@ -132,12 +111,25 @@ class DebugSettingsViewModel
                     else -> null
                 }
             }
+            val source = if (manualFeatureConfig.hasManualSetup(key)) {
+                "Manual"
+            } else {
+                featureFlagConfig.flags.find { it.key == key }?.source?.toUiValue()?: "Unknown"
+            }
             if (value != null) {
-                Feature(key, value, ToggleAction(key, !value, this::toggleFeature))
+                RemoteFeatureFlag(key, value, UiItem.ToggleAction(key, !value, this::toggleFeature), source)
             } else {
                 null
             }
-        }.sortedBy { it.title }
+        }.sortedBy { it.remoteKey }
+    }
+
+    private fun FeatureFlagConfigDao.FeatureFlagValueSource.toUiValue(): String? {
+        return when (this) {
+            FeatureFlagConfigDao.FeatureFlagValueSource.BUILD_CONFIG -> "Local value"
+            FeatureFlagConfigDao.FeatureFlagValueSource.REMOTE -> "Remote Value"
+            else -> null
+        }
     }
 
     private fun buildRemoteFieldConfigs(): List<Field> {
@@ -154,47 +146,12 @@ class DebugSettingsViewModel
         launch {
             hasChange = true
             manualFeatureConfig.setManuallyEnabled(remoteKey, value)
-            refresh()
+            refresh(debugSettingsType)
         }
     }
 
-    data class UiState(val uiItems: List<UiItem>)
-    sealed class UiItem(val type: Type) {
-        data class Header(val header: Int) : UiItem(HEADER)
-        data class Button(val text: Int, val clickAction: () -> Unit) : UiItem(BUTTON)
-        data class Feature(val title: String, val state: State, val toggleAction: ToggleAction) : UiItem(FEATURE) {
-            constructor(title: String, enabled: Boolean?, toggleAction: ToggleAction) : this(
-                title,
-                when (enabled) {
-                    true -> ENABLED
-                    false -> DISABLED
-                    null -> UNKNOWN
-                },
-                toggleAction
-            )
-
-            enum class State { ENABLED, DISABLED, UNKNOWN }
-
-            @Suppress("DataClassShouldBeImmutable") // We're not in prod code or diffing here, the rule is moot
-            var preview: (() -> Unit)? = null
-        }
-
-        data class Field(val remoteFieldKey: String, val remoteFieldValue: String, val remoteFieldSource: String) :
-            UiItem(Type.FIELD)
-
-        data class Row(val title: Int, val onClick: ListItemInteraction) : UiItem(ROW)
-
-        data class ToggleAction(
-            val key: String,
-            val value: Boolean,
-            val toggleAction: (key: String, value: Boolean) -> Unit
-        ) {
-            fun toggle() = toggleAction(key, value)
-        }
-
-        enum class Type {
-            HEADER, FEATURE, BUTTON, ROW, FIELD
-        }
+    fun onRestartAppClick() {
+        debugUtils.restartApp()
     }
 
     sealed class NavigationAction {

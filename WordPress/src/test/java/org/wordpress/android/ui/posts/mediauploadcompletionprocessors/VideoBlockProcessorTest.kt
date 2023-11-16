@@ -29,4 +29,12 @@ class VideoBlockProcessorTest {
         val processedBlock = processor.processBlock(TestContent.oldVideoBlockIdNotFirst)
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.newVideoBlockIdNotFirst)
     }
+
+    @Test
+    fun `processBlock leaves VideoPress block unchanged`() {
+        val nonMatchingId = "123"
+        val processor = VideoPressBlockProcessor(nonMatchingId, mediaFile)
+        val processedBlock = processor.processBlock(TestContent.oldVideoPressBlockWithDefaultAttrs, true)
+        Assertions.assertThat(processedBlock).isEqualTo(TestContent.oldVideoPressBlockWithDefaultAttrs)
+    }
 }

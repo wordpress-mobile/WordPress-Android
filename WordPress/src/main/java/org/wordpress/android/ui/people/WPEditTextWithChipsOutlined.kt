@@ -33,6 +33,7 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.WpEditTextWithChipsOutlinedBinding
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
+import com.google.android.material.R as MaterialR
 
 /**
  * As of our understanding, currently the TextInputLayout (that is a LinearLayout) works in OutlinedBox mode having
@@ -103,8 +104,8 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     }
 
     enum class ItemValidationState(@AttrRes val colorAttr: Int) {
-        NEUTRAL(R.attr.colorOnSurface),
-        VALIDATED(R.attr.colorPrimary),
+        NEUTRAL(MaterialR.attr.colorOnSurface),
+        VALIDATED(MaterialR.attr.colorPrimary),
         VALIDATED_WITH_ERRORS(R.attr.wpColorError);
 
         @ColorInt
@@ -246,17 +247,17 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     private fun loadColors() {
         outlineColorDefault = ContextCompat.getColor(context,
             TypedValue().let {
-                getContext().theme.resolveAttribute(R.attr.colorOnSurface, it, true)
+                getContext().theme.resolveAttribute(MaterialR.attr.colorOnSurface, it, true)
                 it.resourceId
             })
         outlineColorFocused = ContextCompat.getColor(context,
             TypedValue().let {
-                getContext().theme.resolveAttribute(R.attr.colorPrimary, it, true)
+                getContext().theme.resolveAttribute(MaterialR.attr.colorPrimary, it, true)
                 it.resourceId
             })
         colorSurface = ContextCompat.getColor(context,
             TypedValue().let {
-                getContext().theme.resolveAttribute(R.attr.colorSurface, it, true)
+                getContext().theme.resolveAttribute(MaterialR.attr.colorSurface, it, true)
                 it.resourceId
             })
 
@@ -275,6 +276,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         )
     }
 
+    @Suppress("CyclomaticComplexMethod")
     private fun setListeners() {
         editor.setOnFocusChangeListener { _, hasFocus ->
             val canAnimate = hint.width > 0 && label.width > 0 && hint.height > 0 && label.height > 0
@@ -551,18 +553,18 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                     .scaleY(1f)
                     .setDuration(LABEL_ANIMATION_DURATION)
                     .setListener(object : Animator.AnimatorListener {
-                        override fun onAnimationStart(animation: Animator?) {
+                        override fun onAnimationStart(animation: Animator) {
                             label.visibility = View.INVISIBLE
                             hint.visibility = View.VISIBLE
                         }
 
-                        override fun onAnimationEnd(animation: Animator?) {
+                        override fun onAnimationEnd(animation: Animator) {
                         }
 
-                        override fun onAnimationCancel(animation: Animator?) {
+                        override fun onAnimationCancel(animation: Animator) {
                         }
 
-                        override fun onAnimationRepeat(animation: Animator?) {
+                        override fun onAnimationRepeat(animation: Animator) {
                         }
                     }).start()
             }
@@ -581,21 +583,21 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                     .scaleY(label.height.toFloat() / hint.height)
                     .setDuration(LABEL_ANIMATION_DURATION)
                     .setListener(object : Animator.AnimatorListener {
-                        override fun onAnimationStart(animation: Animator?) {
+                        override fun onAnimationStart(animation: Animator) {
                             setLabelColor(label, colorSurface, outlineColorAlphaFocused)
                             label.visibility = View.VISIBLE
                             hint.visibility = View.VISIBLE
                         }
 
-                        override fun onAnimationEnd(animation: Animator?) {
+                        override fun onAnimationEnd(animation: Animator) {
                             hint.visibility = View.INVISIBLE
                             setLabelColor(label, outlineColorFocused, outlineColorAlphaFocused)
                         }
 
-                        override fun onAnimationCancel(animation: Animator?) {
+                        override fun onAnimationCancel(animation: Animator) {
                         }
 
-                        override fun onAnimationRepeat(animation: Animator?) {
+                        override fun onAnimationRepeat(animation: Animator) {
                         }
                     }).start()
             }

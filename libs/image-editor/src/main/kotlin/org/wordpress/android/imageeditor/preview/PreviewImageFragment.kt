@@ -40,6 +40,8 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.UiState
 import org.wordpress.android.imageeditor.utils.ToastUtils
 import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
 import org.wordpress.android.imageeditor.utils.UiHelpers
+import org.wordpress.android.imageeditor.utils.getParcelableArrayListExtraCompat
+import org.wordpress.android.imageeditor.utils.getParcelableExtraCompat
 import java.io.File
 
 class PreviewImageFragment : Fragment(R.layout.preview_image_fragment), MenuProvider {
@@ -150,7 +152,7 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment), MenuProv
         viewModel = ViewModelProvider(this@PreviewImageFragment).get(PreviewImageViewModel::class.java)
         parentViewModel = ViewModelProvider(requireActivity()).get(EditImageViewModel::class.java)
         setupObservers()
-        val inputData = nonNullIntent.getParcelableArrayListExtra<EditImageData.InputData>(ARG_EDIT_IMAGE_DATA)
+        val inputData = nonNullIntent.getParcelableArrayListExtraCompat<EditImageData.InputData>(ARG_EDIT_IMAGE_DATA)
 
         inputData?.let { viewModel.onCreateView(it, ImageEditor.instance) }
     }
@@ -186,7 +188,7 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment), MenuProv
                 if (it.resultCode == RESULT_OK) {
                     val data: Intent = it.data
                     if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
-                        val imageUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI) as? Uri
+                        val imageUri = data.getParcelableExtraCompat<Uri>(UCrop.EXTRA_OUTPUT_URI)
                         imageUri?.let { uri ->
                             viewModel.onCropResult(uri.toString())
                         }

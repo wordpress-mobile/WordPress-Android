@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import androidx.activity.ComponentDialog;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -166,12 +168,14 @@ public class FullScreenDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         initBuilderArguments();
 
-        Dialog dialog = new Dialog(getActivity(), getTheme()) {
+        ComponentDialog dialog = (ComponentDialog) super.onCreateDialog(savedInstanceState);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
-            public void onBackPressed() {
+            public void handleOnBackPressed() {
                 onDismissClicked();
             }
         };
+        dialog.getOnBackPressedDispatcher().addCallback(this, callback);
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         return dialog;
@@ -211,7 +215,7 @@ public class FullScreenDialogFragment extends DialogFragment {
             showActivityBar();
         }
 
-        getFragmentManager().popBackStackImmediate();
+        getParentFragmentManager().popBackStackImmediate();
     }
 
     @Override
@@ -297,8 +301,14 @@ public class FullScreenDialogFragment extends DialogFragment {
 
         mToolbar.setTitle(mTitle);
         mToolbar.setSubtitle(mSubtitle);
-        mToolbar.setNavigationIcon(ColorUtils.applyTintToDrawable(context, R.drawable.ic_close_white_24dp,
-                ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorControlNormal)));
+        mToolbar.setNavigationIcon(ColorUtils.applyTintToDrawable(
+                context,
+                R.drawable.ic_close_white_24dp,
+                ContextExtensionsKt.getColorResIdFromAttribute(
+                        context,
+                        com.google.android.material.R.attr.colorControlNormal
+                )
+        ));
         mToolbar.setNavigationContentDescription(R.string.close_dialog_button_desc);
         mToolbar.setNavigationOnClickListener(v -> onDismissClicked());
 
@@ -326,12 +336,6 @@ public class FullScreenDialogFragment extends DialogFragment {
                         }
                     }
             );
-        }
-    }
-
-    public void onBackPressed() {
-        if (isAdded()) {
-            onDismissClicked();
         }
     }
 

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-03-12 19:02:43+0000
+Translation-Revision-Date: 2023-06-13 08:27:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.11
 Language: el_GR
 -->
 <resources>
     <string name="site_creation_domain_tag_sale">Προσφορά</string>
     <string name="site_creation_domain_tag_recommended">Προτεινόμενο</string>
     <string name="site_creation_domain_tag_best_alternative">Καλύτερη Εναλλακτική</string>
-    <string name="site_creation_domain_cost">%s/χρ</string>
     <string name="me_btn_help">Βοήθεια</string>
     <string name="help_buttons_screen_title">Βοήθεια</string>
     <string name="free">Δωρεάν</string>
     <string name="tickets">Εισιτήρια</string>
-    <string name="jetpack_full_plugin_install_error_title">Παρουσιάστηκε ένα πρόβλημα</string>
-    <string name="jetpack_full_plugin_install_error_image_content_description">Εικονίδιο σφάλματος</string>
+    <string name="site_creation_domain_cost">ανά έτος</string>
+    <string name="jetpack_plugin_install_error_title">Παρουσιάστηκε ένα πρόβλημα</string>
+    <string name="jetpack_plugin_install_error_image_content_description">Εικονίδιο σφάλματος</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d Απαντήσεις</string>
     <string name="blogging_prompts_list_number_of_answers_one">1 απάντηση</string>
     <string name="blogging_prompts_list_number_of_answers_zero">0 απαντήσεις</string>
@@ -35,6 +35,7 @@ Language: el_GR
     <string name="gutenberg_native_width_settings">Ρυθμίσεις πλάτους</string>
     <string name="gutenberg_native_column_settings">Ρυθμίσεις Στήλης</string>
     <string name="gutenberg_native_link_rel">Σχέση συνδέσμου (Rel)</string>
+    <string name="gutenberg_native_no_description">Χωρίς περιγραφή</string>
     <string name="user_profile_untitled_site">(Χωρίς τίτλο)</string>
     <string name="user_profile_site_section_header">Ιστότοπος</string>
     <string name="gutenberg_native_mention">Αναφορά</string>
@@ -44,7 +45,6 @@ Language: el_GR
     <string name="button_copy">Διπλότυπο</string>
     <string name="toast_edit_story_update_in_progress_title">Η ιστορία αποθηκευεται, παρακαλούμε περιμένετε…</string>
     <string name="gutenberg_native_file_name">Όνομα αρχείου</string>
-    <string name="gutenberg_native_choose_a_file">ΕΠΙΛΕΞΤΕ ΕΝΑ ΑΡΧΕΙΟ</string>
     <string name="activity_log_activity_type_filter_apply">Εκτέλεση</string>
     <string name="activity_log_activity_type_filter_clear">Καθαρισμός</string>
     <string name="label_done_button">Ολοκληρώθηκε</string>
@@ -198,16 +198,9 @@ Language: el_GR
     <string name="my_site_create_new_site_title">Δεν έχετε ιστότοπους</string>
     <string name="content_description_more">Περισσότερα</string>
     <string name="reader_empty_followed_tags_title">Μη ακολουθούμενα θέματα</string>
-    <string name="install_jetpack">Εγκατάσταση Jetpack</string>
-    <string name="install_jetpack_retry">Προσπαθήστε ξανά</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Συχνές Ερωτήσεις για το Jetpack</string>
-    <string name="jetpack_installation_problem">Παρουσιάστηκε ένα πρόβλημα</string>
-    <string name="jetpack_installed">Το Jetpack εγκαταστάθηκε</string>
-    <string name="installing_jetpack">Εγκατάσταση Jetpack</string>
     <string name="login_to_to_connect_jetpack">Συνδεθείτε στο WordPress.com λογαριασμό σας που χρησιμοποιείτε για να συνδεθείτε με το Jetpack.</string>
-    <string name="jetpack_installation_problem_message">Το Jetpack δεν ήταν δυνατό να εγκατασταθεί αυτή τη στιγμή.</string>
-    <string name="installing_jetpack_message">Το Jetpack εγκαθίσταται στον ιστότοπο σας. Αυτό μπορεί να διαρκέσει μερικά λεπτά για να ολοκληρωθεί.</string>
     <string name="reader_label_post_search_explainer">Τι θα θέλατε να βρείτε;</string>
     <string name="site_settings_tags_empty_title">Δεν έχετε κάποια ετικέτα</string>
     <string name="site_settings_tags_empty_button">Δημιουργήστε μια ετικέτα</string>
@@ -529,8 +522,6 @@ Language: el_GR
     <string name="share_btn_disconnect">Αποσύνδεση</string>
     <string name="share_btn_connect">Σύνδεση</string>
     <string name="connected_accounts_label">Συνδεδεμένοι λογαριασμοί</string>
-    <string name="sharing">Κοινοποίηση</string>
-    <string name="my_site_btn_sharing">Κοινοποίηση</string>
     <string name="button_not_now">Όχι τώρα</string>
     <string name="media_downloading">Αποθήκευση πολυμέσων σε αυτήν τη συσκευή</string>
     <string name="error_media_save">Αδυναμία αποθήκευσης πολυμέσων</string>
@@ -1119,7 +1110,6 @@ Language: el_GR
     <string name="category_name">Όνομα κατηγορίας</string>
     <string name="select_categories">Επιλογή κατηγοριών</string>
     <string name="connection_error">Σφάλμα σύνδεσης</string>
-    <string name="cancel_edit">Ακύρωση επεξεργασίας</string>
     <string name="edit_comment">Επεξεργασία σχόλιου</string>
     <string name="saving_changes">Αποθήκευση αλλαγών</string>
     <string name="new_post">Νέα ανάρτηση</string>
@@ -1148,9 +1138,6 @@ Language: el_GR
     <string name="mnu_comment_unapprove">Αποέγκριση</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="trash">Διαγραφή</string>
-    <string name="sure_to_cancel_edit_comment">Ακύρωση επεξεργασίας αυτού του σχολίου;</string>
-    <string name="content_required">Απαιτείται σχόλιο</string>
-    <string name="toast_comment_unedited">Το σχόλιο δεν έχει αλλάξει</string>
     <string name="view_in_browser">Προβολή στον περιηγητή</string>
     <string name="add_new_category">Προσθήκη νέας κατηγορίας</string>
     <string name="file_error_create">Αδυναμία δημιουργίας προσωρινού αρχείου για μεταφόρτωση πολυμέσων. Βεβαιωθείτε ότι υπάρχει αρκετός ελεύθερος χώρος στη συσκευή σας.</string>
@@ -1258,9 +1245,11 @@ Language: el_GR
     <string name="tags_separate_with_commas">Διαχωρίστε τις ετικέτες με κόμματα</string>
     <string name="sdcard_title">Κάρτα SD Είναι Απαραίτητη</string>
     <string name="media">Πολυμέσα</string>
+    <string name="updating_cat_success">Επιτυχής ενημέρωση κατηγορίας</string>
     <string name="approve">Έγκριση</string>
     <string name="delete">Διαγραφή</string>
     <string name="none">Κανένα</string>
+    <string name="updating_cat_failed">Η ενημέρωση της κατηγορίας απέτυχε</string>
     <string name="reply">Απάντηση</string>
     <string name="yes">Ναι</string>
     <string name="no">Όχι</string>

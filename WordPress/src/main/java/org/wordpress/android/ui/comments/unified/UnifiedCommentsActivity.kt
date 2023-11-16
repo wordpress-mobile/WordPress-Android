@@ -9,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_FILTER_CHANGED
@@ -25,6 +24,8 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
+import android.R as AndroidR
+import com.google.android.material.R as MaterialR
 
 class UnifiedCommentsActivity : LocaleAwareActivity() {
     @Inject
@@ -51,7 +52,7 @@ class UnifiedCommentsActivity : LocaleAwareActivity() {
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(UnifiedCommentActivityViewModel::class.java)
         val disabledAlpha = TypedValue()
-        resources.getValue(dimen.material_emphasis_disabled, disabledAlpha, true)
+        resources.getValue(MaterialR.dimen.material_emphasis_disabled, disabledAlpha, true)
         disabledTabsOpacity = disabledAlpha.float
 
         if (selectedSiteRepository.getSelectedSite() == null) {
@@ -98,6 +99,7 @@ class UnifiedCommentsActivity : LocaleAwareActivity() {
     }
 
     private fun UnifiedCommentActivityBinding.setupObservers() {
+        @Suppress("DEPRECATION")
         lifecycleScope.launchWhenStarted {
             viewModel.uiState.collect { uiState ->
                 viewPager.isUserInputEnabled = uiState.isTabBarEnabled
@@ -115,8 +117,8 @@ class UnifiedCommentsActivity : LocaleAwareActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            onBackPressed()
+        if (item.itemId == AndroidR.id.home) {
+            onBackPressedDispatcher.onBackPressed()
             return true
         }
         return super.onOptionsItemSelected(item)

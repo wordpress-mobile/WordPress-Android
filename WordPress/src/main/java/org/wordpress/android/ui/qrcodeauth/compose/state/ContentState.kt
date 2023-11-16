@@ -30,7 +30,7 @@ import org.wordpress.android.ui.qrcodeauth.compose.components.Subtitle
 import org.wordpress.android.ui.qrcodeauth.compose.components.Title
 
 @Composable
-fun ContentState(uiState: QRCodeAuthUiState.Content) = with(uiState) {
+fun ContentState(uiState: QRCodeAuthUiState.Content): Unit = with(uiState) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier

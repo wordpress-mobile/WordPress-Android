@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,11 +17,13 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.CloseWithResultOk;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.CreateNewSite;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.SelectSite;
+import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowJetpackIndividualPluginOverlay;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowNoJetpackSites;
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowPostSignupInterstitialScreen;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueListener;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
@@ -44,7 +47,7 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
     @Inject LoginEpilogueViewModel mViewModel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
@@ -80,6 +83,8 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
                 closeWithResultOk();
             } else if (loginEvent instanceof ShowNoJetpackSites) {
                 showNoJetpackSites();
+            } else if (loginEvent instanceof ShowJetpackIndividualPluginOverlay) {
+                showJetpackIndividualPluginOverlay();
             }
         });
     }
@@ -148,6 +153,10 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
         }
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
         fragmentTransaction.commit();
+    }
+
+    private void showJetpackIndividualPluginOverlay() {
+        WPJetpackIndividualPluginFragment.show(getSupportFragmentManager());
     }
 
     @Override

@@ -13,7 +13,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,6 +29,7 @@ import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.SuggestionAutoCompleteText
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogContent {
     @Inject
     lateinit var viewModel: CommentFullScreenDialogViewModel
@@ -124,11 +125,6 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
 
     override fun onViewCreated(controller: CollapseFullScreenDialogController) {
         dialogController = controller
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        AndroidSupportInjection.inject(this)
     }
 
     companion object {

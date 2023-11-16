@@ -24,6 +24,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
 import javax.inject.Inject
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class ActivityLogListActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
@@ -107,8 +108,8 @@ class ActivityLogListActivity : LocaleAwareActivity(), ScrollableViewInitialized
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            onBackPressed()
+        if (item.itemId == AndroidR.id.home) {
+            onBackPressedDispatcher.onBackPressed()
             return true
         }
         return super.onOptionsItemSelected(item)

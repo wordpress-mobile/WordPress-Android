@@ -46,36 +46,43 @@ class ReaderResourceVars {
         mMarginMediumPx = resources.getDimensionPixelSize(R.dimen.margin_medium);
 
         int onSurfaceColor = ContextExtensionsKt
-                .getColorFromAttribute(context, R.attr.colorOnSurface);
+                .getColorFromAttribute(context, com.google.android.material.R.attr.colorOnSurface);
 
         String onSurfaceHighType = "rgba(" + Color.red(onSurfaceColor) + ", "
-                                 + Color.green(onSurfaceColor) + ", " + Color
-                                         .blue(onSurfaceColor) + ", " + ResourcesCompat
-                                         .getFloat(resources, R.dimen.material_emphasis_high_type) + ")";
+                                   + Color.green(onSurfaceColor) + ", "
+                                   + Color.blue(onSurfaceColor) + ", "
+                                   + ResourcesCompat.getFloat(resources,
+                com.google.android.material.R.dimen.material_emphasis_high_type)
+                                   + ")";
 
         mGreyMediumDarkStr = "rgba(" + Color.red(onSurfaceColor) + ", "
-                                 + Color.green(onSurfaceColor) + ", " + Color
-                                         .blue(onSurfaceColor) + ", " + ResourcesCompat
-                                         .getFloat(resources, R.dimen.material_emphasis_medium) + ")";
+                             + Color.green(onSurfaceColor) + ", "
+                             + Color.blue(onSurfaceColor) + ", "
+                             + ResourcesCompat.getFloat(resources,
+                com.google.android.material.R.dimen.material_emphasis_medium)
+                             + ")";
 
         mGreyLightStr = "rgba(" + Color.red(onSurfaceColor) + ", "
-                        + Color.green(onSurfaceColor) + ", " + Color
-                                           .blue(onSurfaceColor) + ", " + ResourcesCompat
-                                           .getFloat(resources, R.dimen.material_emphasis_disabled) + ")";
+                        + Color.green(onSurfaceColor) + ", "
+                        + Color.blue(onSurfaceColor) + ", "
+                        + ResourcesCompat.getFloat(resources,
+                com.google.android.material.R.dimen.material_emphasis_disabled)
+                        + ")";
 
         mGreyExtraLightStr = "rgba(" + Color.red(onSurfaceColor) + ", "
-                             + Color.green(onSurfaceColor) + ", " + Color
-                                     .blue(onSurfaceColor) + ", " + ResourcesCompat
-                                     .getFloat(resources, R.dimen.emphasis_low) + ")";
+                             + Color.green(onSurfaceColor) + ", "
+                             + Color.blue(onSurfaceColor) + ", "
+                             + ResourcesCompat.getFloat(resources, R.dimen.emphasis_low) + ")";
 
         mGreyDisabledStr = "rgba(" + Color.red(onSurfaceColor) + ", "
-                             + Color.green(onSurfaceColor) + ", " + Color
-                                     .blue(onSurfaceColor) + ", " + ResourcesCompat
-                                     .getFloat(resources, R.dimen.material_emphasis_disabled) + ")";
+                           + Color.green(onSurfaceColor) + ", "
+                           + Color.blue(onSurfaceColor) + ", "
+                           + ResourcesCompat.getFloat(resources,
+                com.google.android.material.R.dimen.material_emphasis_disabled)
+                           + ")";
 
         mTextColor = onSurfaceHighType;
-        mLinkColorStr = HtmlUtils.colorResToHtmlColor(context,
-                ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorPrimary));
+        mLinkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.reader_post_body_link);
 
         // full-size image width must take margin into account
         mFullSizeImageWidthPx = displayWidthPx - (detailMarginWidthPx * 2);

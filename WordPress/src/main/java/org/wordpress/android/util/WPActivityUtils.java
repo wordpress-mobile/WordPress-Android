@@ -17,7 +17,6 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -96,37 +95,6 @@ public class WPActivityUtils {
         toolbar.setTitle(title);
         toolbar.setNavigationOnClickListener(v -> dialog.dismiss());
         toolbar.setNavigationContentDescription(R.string.navigate_up_desc);
-    }
-
-    /**
-     * Checks for a {@link Toolbar} at the first child element of a given {@link Dialog} and
-     * removes it if it exists.
-     * <p>
-     * Originally added to prevent a crash that occurs with nested PreferenceScreens that added
-     * a toolbar via {@link WPActivityUtils#addToolbarToDialog(android.app.Fragment, Dialog, String)}. The
-     * crash can be reproduced by turning 'Don't keep activities' on from Developer options.
-     */
-
-    // TODO: android.app.Fragment  is deprecated since Android P.
-    // Needs to be replaced with android.support.v4.app.Fragment
-    // See https://developer.android.com/reference/android/app/Fragment
-    public static void removeToolbarFromDialog(final android.app.Fragment context, final Dialog dialog) {
-        if (dialog == null || !context.isAdded()) {
-            return;
-        }
-
-        View dialogContainerView = DialogExtensionsKt.getPreferenceDialogContainerView(dialog);
-
-        if (dialogContainerView == null) {
-            AppLog.e(T.SETTINGS, "Preference Dialog View was null when removing Toolbar");
-            return;
-        }
-
-        ViewGroup root = (ViewGroup) dialogContainerView.getParent().getParent();
-
-        if (root.getChildAt(0) instanceof Toolbar) {
-            root.removeViewAt(0);
-        }
     }
 
     public static Context getThemedContext(Context context) {

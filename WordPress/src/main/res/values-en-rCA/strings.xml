@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-01-31 12:32:57+0000
+Translation-Revision-Date: 2023-04-07 20:35:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.11
 Language: en_CA
 -->
 <resources>
+    <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Your site has the Jetpack plugin</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Get notifications for new comments, likes, views, and more.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Watch your traffic grow with helpful insights and comprehensive stats.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Find and follow your favourite sites and communities, and share you content.</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Stats &amp; Insights</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_title">Blogging Prompts hidden</string>
+    <string name="wp_jetpack_feature_removal_phase_new_users_title">Give WordPress a boost with Jetpack</string>
+    <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Visit &lt;b&gt;Site Settings&lt;/b&gt; to turn back on</string>
+    <string name="blogging_reminders_prompt_subtitle">Notification will include a word or short phrase for inspiration</string>
+    <string name="site_settings_blogging">Blogging</string>
+    <string name="site_settings_blogging_prompts_title">Show prompts</string>
+    <string name="support_forum_title">Community forums</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Turn off prompts</string>
+    <string name="site_settings_blogging_reminders_notification_title">Blogging reminders</string>
+    <string name="support_forum_caption">Get help from our group of volunteers.</string>
     <string name="install_play_store_to_get_jetpack">Please install Google Play Store to get the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Stats, Reader, Notifications and other Jetpack powered features have been removed from the WordPress app.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack features have moved.</string>
@@ -28,7 +43,6 @@ Language: en_CA
     <string name="weeks_quantity_other">%d weeks</string>
     <string name="wp_jetpack_powered_phase_2">Get the Jetpack app</string>
     <string name="my_site_blogging_prompt_card_attribution_dayone">From &lt;b&gt;DayOne&lt;/b&gt;</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Hide this</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
@@ -51,7 +65,6 @@ Language: en_CA
     <string name="blogging_prompts_list_answered_prompt">✓ Answered</string>
     <string name="blogging_prompts_list_title">Prompts</string>
     <string name="close_desc">close</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternatively, you can detach and edit this block separately by tapping “Convert to regular block”.</string>
     <string name="deleting_cat_failed">Deleting category failed</string>
     <string name="deleting_cat_success">Category deleted successfully</string>
     <string name="dlg_confirm_delete_category">Permanently delete \'%s\' Category?</string>
@@ -73,7 +86,6 @@ Language: en_CA
     <string name="wp_jetpack_feature_removal_site_creation_overlay_title">Create a new WordPress site with the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Switch to the Jetpack app to find, follow, and like all your favorite sites and posts with Reader.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Switch to the Jetpack app to watch your site’s traffic grow with stats and insights.</string>
-    <string name="jp_migration_delete_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to avoid data conflicts.</string>
     <string name="jp_migration_got_it_button">Got it</string>
     <string name="jp_migration_need_help_button">Need help?</string>
     <string name="preference_open_links_in_jetpack">Open links in Jetpack</string>
@@ -82,14 +94,11 @@ Language: en_CA
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Get your notifications with the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Follow any site with the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Get your stats using the new Jetpack app</string>
-    <string name="jp_migration_delete_subtitle">It looks like you still have the WordPress app installed. We recommend you delete the WordPress app to avoid data conflicts.</string>
-    <string name="jp_migration_delete_title">You no longer need the WordPress app</string>
     <string name="jp_migration_generic_error_message">Please contact support or try again later.</string>
     <string name="jp_migration_generic_error_subtitle">We’re sorry but something didn’t go as planned. Your data is safe, but we’re unable to transfer it at this time.</string>
     <string name="jp_migration_network_error_message">We are unable to transfer your data and settings without a network connection.</string>
     <string name="jp_migration_network_error_subtitle">Please check to make sure your network connection is working and try again.</string>
     <string name="jp_migration_network_error_title">Unable to connect to the internet.</string>
-    <string name="jp_migration_done_delete_wp_message">Please &lt;b&gt;delete the WordPress app&lt;/b&gt; to avoid data conflicts.</string>
     <string name="jp_migration_finish_button">Finish</string>
     <string name="jp_migration_generic_error_title">Uh oh, something went wrong..</string>
     <string name="jp_migration_remove_wp_app_icon_content_description">Remove WordPress App icon</string>
@@ -98,8 +107,6 @@ Language: en_CA
     <string name="jp_migration_done_title">Thanks for switching to Jetpack!</string>
     <string name="jp_migration_notifications_disabled_in_wp_message">We\'ll turn off notifications from the WordPress app.</string>
     <string name="jp_migration_notifications_subtitle">You’ll get all the same notifications but now they’ll come from the Jetpack app.</string>
-    <string name="jp_migration_notifications_title">Notifications now come from Jetpack</string>
-    <string name="jp_migration_success_card_message">Please delete the WordPress app</string>
     <string name="notification_disable_broadcast_permission_desc">Allows the app to disable WordPress notifications.</string>
     <string name="notification_disable_broadcast_permission_label">disable WordPress notifications</string>
     <string name="support_title">Support</string>
@@ -371,7 +378,6 @@ Language: en_CA
     <string name="error_edit_notification">An error occurred while updating the notification content</string>
     <string name="my_site_error_within_card_subtitle">Check your internet connection and refresh the page.</string>
     <string name="my_site_todays_stat_card_title">Today\'s Stats</string>
-    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Go to stats</string>
     <string name="reader_comment_menu_edit">Edit</string>
     <string name="comment_moderation_error">Failed to moderate comments</string>
     <string name="reader_comment_menu_spam">Mark as Spam</string>
@@ -380,8 +386,6 @@ Language: en_CA
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navigates to layout selection screen</string>
     <string name="gutenberg_native_tiled_gallery_settings">Tiled gallery settings</string>
     <string name="gutenberg_native_gallery_style">Gallery style</string>
-    <string name="sharing_facebook_warning_message">You can connect your Facebook account on the WordPress.com website. When you\'re done, return to the WordPress app to change your Sharing settings.</string>
-    <string name="sharing_facebook_warning_positive_button">Go to web</string>
     <string name="about_automattic_app_icon_description">App icon</string>
     <string name="about_automattic_back_icon_description">Back icon</string>
     <string name="about_automattic_logo_description">Automattic logo</string>
@@ -440,8 +444,6 @@ Language: en_CA
     <string name="gutenberg_native_featured_image">Featured Image</string>
     <string name="gutenberg_native_from_clipboard">From clipboard</string>
     <string name="me_btn_about">About WordPress</string>
-    <string name="my_site_post_card_link_go_to_drafts">Go to drafts</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Go to scheduled posts</string>
     <string name="button_copy_link">Copy link</string>
     <string name="comment_author_badge">Author</string>
     <string name="menu_html_mode_switched_notice">Switched to HTML mode</string>
@@ -460,8 +462,6 @@ Language: en_CA
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Free for the first year &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at %s</string>
     <string name="gutenberg_native_create_link">Create link</string>
-    <string name="domain_registration_result_title">Congratulations on your purchase!</string>
-    <string name="domain_registration_result_description">Your new domain &lt;b&gt;%s&lt;/b&gt; is being set up. It may take up to 30 minutes for your domain to start working.</string>
     <string name="domains_title">Domains</string>
     <string name="post_status_sticky">Sticky</string>
     <string name="domains_suggestions_select_domain">Select domain</string>
@@ -605,7 +605,6 @@ Language: en_CA
     <string name="blogging_reminders_notification_title">It\'s time to blog on %s</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Editing reusable blocks is not yet supported on WordPress for iOS</string>
     <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Editing reusable blocks is not yet supported on WordPress for Android</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Alternatively, you can detach and edit these blocks separately by tapping “Convert to regular blocks”.</string>
     <string name="blogging_reminders_done">Done</string>
     <string name="blogging_reminders_notify_me">Notify me</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to enable one click site restores from backups.</string>
@@ -677,6 +676,7 @@ Language: en_CA
     <string name="gutenberg_native_one">One</string>
     <string name="gutenberg_native_no_preview_available">No preview available</string>
     <string name="gutenberg_native_text_color">Text colour</string>
+    <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_featured">Featured</string>
     <string name="gutenberg_native_four">Four</string>
@@ -742,7 +742,6 @@ Language: en_CA
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;All tasks completed&lt;/b&gt;&lt;br/&gt;You’ve customized your site. Well done!</string>
     <string name="invite_links_disable_dialog_message">Once this invite link is disabled, nobody will be able to use it to join your team. Are you sure?</string>
     <string name="magic_link_not_meaning_to_create_account">Didn\'t mean to create a new account? Go back to re-enter your email address.</string>
-    <string name="quick_start_card_menu_hide">Hide for now</string>
     <string name="invite_links_bad_format_response">Invalid response received</string>
     <string name="invite_links_cannot_get_role_data_error">There was an error getting data for role %1$s</string>
     <string name="invite_links_cannot_get_roles_error">There was an error getting roles</string>
@@ -764,7 +763,6 @@ Language: en_CA
     <string name="disable">Disable</string>
     <string name="scan_fixing_threats_title_singular">Fixing Threat</string>
     <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
-    <string name="quick_start_card_menu_unpin">Unpin this</string>
     <string name="quick_start_list_follow_site_subtitle">Discover and follow sites that inspire you.</string>
     <string name="quick_start_list_enable_sharing_subtitle">Automatically share new posts to your social media.</string>
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic.</string>
@@ -803,7 +801,6 @@ Language: en_CA
     <string name="gutenberg_native_audio_player">Audio Player</string>
     <string name="gutenberg_native_audio_caption_s">Audio caption. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Audio caption. Empty</string>
-    <string name="gutenberg_native_add_audio">ADD AUDIO</string>
     <string name="continue_with_wpcom">Log in or sign up with WordPress.com</string>
     <string name="photo_picker_use_audio">Use this audio</string>
     <string name="photo_picker_choose_audio">Choose audio from device</string>
@@ -859,12 +856,10 @@ Language: en_CA
     <string name="backup_download_complete_failed_title">Download failed</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Mobile</string>
-    <string name="quick_start_card_menu_remove">Don\'t show again</string>
     <string name="quick_start_dialog_review_pages_message_short">Select %1$s Pages %2$s to see your page list.</string>
     <string name="quick_start_dialog_review_pages_message">Change, add, or remove your site\'s pages.</string>
     <string name="quick_start_dialog_review_pages_title">Review site pages</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Select %1$s Homepage %2$s to edit your Homepage.</string>
-    <string name="quick_start_card_menu_pin">Pin this</string>
     <string name="reader_menu_mark_as_unseen">Mark as unseen</string>
     <string name="reader_menu_mark_as_seen">Mark as seen</string>
     <string name="error_media_upload_failed_for_reason">Media upload failed.\n%1$s</string>
@@ -1007,9 +1002,7 @@ Language: en_CA
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Failed to save files.\nPlease tap for options.</string>
     <string name="gutenberg_native_edit_file">Edit file</string>
     <string name="gutenberg_native_copy_file_url">Copy file URL</string>
-    <string name="gutenberg_native_choose_a_file">CHOOSE A FILE</string>
     <string name="new_site_creation_domain_header_title">Choose a domain</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack Settings</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Following conversation by email</string>
     <string name="reader_btn_follow_comments">Follow conversation by email</string>
@@ -1095,7 +1088,6 @@ Language: en_CA
     <string name="stories_intro_description_first">Combine photos, videos, and text to create engaging and tappable story posts that your visitors will love.</string>
     <string name="mlp_notice_blank_page_created">Blank page created</string>
     <string name="mlp_notice_page_created">Page created</string>
-    <string name="media_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s and %3$s.</string>
     <string name="stories_intro_title_first">Now stories are for everyone</string>
     <string name="stories_intro_image_caption_second">Example story title</string>
     <string name="stories_intro_image_caption_first">How to create a story post</string>
@@ -1573,9 +1565,6 @@ Language: en_CA
     <string name="gutenberg_native_choose_from_device">Choose from device</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">An unknown error occurred. Please try again.</string>
     <string name="gutenberg_native_alt_text">Alt Text</string>
-    <string name="gutenberg_native_add_video">ADD VIDEO</string>
-    <string name="gutenberg_native_add_image_or_video">ADD IMAGE OR VIDEO</string>
-    <string name="gutenberg_native_add_image">ADD IMAGE</string>
     <string name="gutenberg_native_add_block_here">ADD BLOCK HERE</string>
     <string name="gutenberg_native_add_url">Add URL</string>
     <string name="gutenberg_native_add_alt_text">Add alt text</string>
@@ -1783,7 +1772,6 @@ Language: en_CA
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
-    <string name="jetpack_plugin_install_remote_plugin_done_description">Now that Jetpack is installed, we just need to get you set up. This will only take a minute.</string>
     <string name="stats_view_follower_totals">Follower Totals</string>
     <string name="stats_menu_remove">Remove from insights</string>
     <string name="stats_menu_move_down">Move down</string>
@@ -1867,9 +1855,6 @@ Language: en_CA
     <string name="quick_start_dialog_enable_sharing_title">Enable post sharing</string>
     <string name="quick_start_dialog_enable_sharing_message">Automatically share new posts to your social media accounts.</string>
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
-    <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
     <string name="quick_start_dialog_check_stats_message">Keep up to date with your site\'s performance.</string>
     <string name="quick_start_task_skip_menu_title">Skip task</string>
     <string name="notification_channel_reminder_title">Reminder</string>
@@ -2035,7 +2020,6 @@ Language: en_CA
     <string name="quick_start_dialog_view_site_title">View your site</string>
     <string name="quick_start_dialog_share_site_title">Share your site</string>
     <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tap %1$s Sharing %2$s to continue</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
     <string name="quick_start_dialog_view_site_message">Preview your site to see what your visitors will see.</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
@@ -2050,17 +2034,8 @@ Language: en_CA
     <string name="reader_empty_followed_tags_title">No followed topics</string>
     <string name="reader_empty_followed_tags_subtitle">Add topics here to find posts about your favourite topics</string>
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
-    <string name="install_jetpack_retry">Retry</string>
-    <string name="jetpack_plugin_install_remote_plugin_done_button">Set up</string>
-    <string name="jetpack_installation_problem">There was a problem</string>
-    <string name="jetpack_installed">Jetpack installed</string>
-    <string name="installing_jetpack">Installing Jetpack</string>
-    <string name="install_jetpack">Install Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
-    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time.</string>
-    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete.</string>
-    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack.</string>
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
     <string name="themes_empty_list">No themes matching your search</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
@@ -2268,8 +2243,6 @@ Language: en_CA
     <string name="permissions_denied_message">It looks like you turned off permissions required for this feature.&lt;br/&gt;&lt;br/&gt;To change this, edit your permissions and make sure &lt;strong&gt;%s&lt;/strong&gt; is enabled.</string>
     <string name="permissions_denied_title">Permissions</string>
     <string name="plugin_caption_featured">Featured</string>
-    <string name="sharing_disabled_description">You cannot access your sharing settings because your Sharing Jetpack module is disabled.</string>
-    <string name="sharing_disabled">Sharing module disabled</string>
     <string name="version_with_name_param">Version %s</string>
     <string name="notification_sound_has_invalid_path">The chosen sound has invalid path. Please choose another.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
@@ -2478,7 +2451,6 @@ Language: en_CA
     <string name="share_intent_pick_site">Pick site</string>
     <string name="share_action_media">Add to media library</string>
     <string name="share_action_post">Add to new post</string>
-    <string name="share_media_permission_required">Permissions required in order to share images or videos</string>
     <string name="invalid_ip_or_range">Invalid IP or IP range</string>
     <string name="deleting_media_dlg">Deleting</string>
     <string name="confirm_delete_media_video">Delete this video?</string>
@@ -2612,7 +2584,6 @@ Language: en_CA
     <string name="media_documents">Documents</string>
     <string name="media_images">Images</string>
     <string name="media_all">All</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="reader_view_comments">View comments</string>
     <string name="site_settings_video_quality_hint">Quality of videos. Higher values mean better quality videos.</string>
     <string name="site_settings_video_width_hint">Resizes videos in posts to this size</string>
@@ -2659,11 +2630,9 @@ Language: en_CA
     <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
     <string name="connected_accounts_label">Connected accounts</string>
     <string name="connections_description">Connect your favourite social media services to automatically share new posts with friends.</string>
-    <string name="sharing">Sharing</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
-    <string name="my_site_btn_sharing">Sharing</string>
     <string name="button_not_now">Not now</string>
     <string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your app\'s settings</string>
     <string name="media_downloading">Saving media to this device</string>
@@ -3252,7 +3221,6 @@ Language: en_CA
     <string name="error_deleting_post">An error occurred while deleting the post</string>
     <string name="select_categories">Select categories</string>
     <string name="connection_error">Connection error</string>
-    <string name="cancel_edit">Cancel edit</string>
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
     <string name="learn_more">Learn more</string>
     <string name="media_gallery_type_thumbnail_grid">Thumbnail grid</string>
@@ -3272,9 +3240,6 @@ Language: en_CA
     <string name="mnu_comment_unapprove">Unapprove</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="saving_changes">Saving changes</string>
-    <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
-    <string name="content_required">Comment is required</string>
-    <string name="toast_comment_unedited">Comment hasn\'t changed</string>
     <string name="remove_account">Remove site</string>
     <string name="view_in_browser">View in browser</string>
     <string name="add_new_category">Add new category</string>

@@ -1,13 +1,16 @@
 package org.wordpress.android.ui.domains
 
-import android.net.Uri
+import org.wordpress.android.ui.utils.AbstractAllowedUrlsWebViewNavigationDelegate
 
-object DomainRegistrationCheckoutWebViewNavigationDelegate {
+object DomainRegistrationCheckoutWebViewNavigationDelegate : AbstractAllowedUrlsWebViewNavigationDelegate() {
     private val optionalLanguagePath = "(?:/(?:\\w{2}-)?\\w{2})?".toRegex()
-    private val allowedUrls = listOf(
+
+    override val allowedUrls = listOf(
         UrlMatcher(
             ".*wordpress.com".toRegex(),
             listOf(
+                "/jetpack-app".toRegex(),
+                "/plans.*?.*".toRegex(),
                 "/automattic-domain-name-registration-agreement.*".toRegex(),
                 "/checkout.*".toRegex(),
                 "$optionalLanguagePath/tos.*".toRegex(),
@@ -15,19 +18,4 @@ object DomainRegistrationCheckoutWebViewNavigationDelegate {
             )
         )
     )
-
-    fun canNavigateTo(url: Url) = allowedUrls.any { it.matches(url) }
-
-    data class UrlMatcher(
-        private val host: Regex,
-        private val paths: List<Regex>
-    ) {
-        private fun matchesHost(url: Url) = url.host.matches(host)
-        private fun matchesPath(url: Url) = paths.any { url.path.matches(it) }
-        fun matches(url: Url) = matchesHost(url) && matchesPath(url)
-    }
-
-    data class Url(val host: String, val path: String)
-
-    fun Uri.toUrl() = Url(host.orEmpty(), path.orEmpty())
 }

@@ -38,6 +38,14 @@ class MediaUploadCompletionProcessorTest {
     }
 
     @Test
+    fun `processPost splices id and guid for a VideoPress block`() {
+        whenever(mediaFile.videoPressGuid).thenReturn(TestContent.videoPressGuid)
+        processor = MediaUploadCompletionProcessor(TestContent.localMediaId, mediaFile, TestContent.siteUrl)
+        val blocks = processor.processContent(TestContent.oldPostVideoPress)
+        Assertions.assertThat(blocks).isEqualTo(TestContent.newPostVideoPress)
+    }
+
+    @Test
     fun `processPost splices id and url for a media-text block`() {
         val blocks = processor.processContent(TestContent.oldPostMediaText)
         Assertions.assertThat(blocks).isEqualTo(TestContent.newPostMediaText)

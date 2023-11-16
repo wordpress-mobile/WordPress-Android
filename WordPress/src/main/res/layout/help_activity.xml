@@ -141,6 +141,7 @@
                     tools:visibility="visible">
 
                     <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/support_forums_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/support_forum_title"
@@ -162,6 +163,12 @@
                     android:id="@+id/tickets_button"
                     style="@style/HelpActivitySingleText"
                     android:text="@string/tickets" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/debug_settings_button"
+                    style="@style/HelpActivitySingleText"
+                    android:visibility="gone"
+                    android:text="@string/preference_open_debug_settings" />
 
                 <LinearLayout
                     android:id="@+id/contactEmailContainer"

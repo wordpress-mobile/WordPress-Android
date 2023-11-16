@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/publicize_webview_nested_scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <org.wordpress.android.ui.WPWebView
+        <org.wordpress.android.widgets.NestedWebView
             android:id="@+id/webView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -23,5 +19,4 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
-    </RelativeLayout>
-</androidx.core.widget.NestedScrollView>
+</RelativeLayout>

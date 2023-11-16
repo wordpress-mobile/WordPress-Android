@@ -1,12 +1,13 @@
 package org.wordpress.android.ui.pages
 
 import androidx.annotation.ColorRes
-import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.pages.PageItem.Type.DIVIDER
 import org.wordpress.android.ui.pages.PageItem.Type.EMPTY
 import org.wordpress.android.ui.pages.PageItem.Type.PAGE
+import org.wordpress.android.ui.pages.PageItem.Type.VIRTUAL_HOMEPAGE
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
@@ -24,7 +25,7 @@ sealed class PageItem(open val type: Type) {
         @ColorRes open val labelsColor: Int?,
         open var indent: Int,
         open var imageUrl: String?,
-        open val actions: Set<Action>,
+        open val actions: List<PagesListAction>,
         open var actionsEnabled: Boolean,
         open val tapActionEnabled: Boolean,
         open val progressBarUiState: ProgressBarUiState,
@@ -45,7 +46,7 @@ sealed class PageItem(open val type: Type) {
         override val labelsColor: Int? = null,
         override var indent: Int = 0,
         override var imageUrl: String? = null,
-        override val actions: Set<Action>,
+        override val actions: List<PagesListAction>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
@@ -79,7 +80,7 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<UiString> = emptyList(),
         override val labelsColor: Int? = null,
         override var imageUrl: String? = null,
-        override val actions: Set<Action>,
+        override val actions: List<PagesListAction>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
@@ -113,7 +114,7 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<UiString> = emptyList(),
         override val labelsColor: Int? = null,
         override var imageUrl: String? = null,
-        override val actions: Set<Action>,
+        override val actions: List<PagesListAction>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
@@ -147,7 +148,7 @@ sealed class PageItem(open val type: Type) {
         override val labels: List<UiString> = emptyList(),
         override val labelsColor: Int? = null,
         override var imageUrl: String? = null,
-        override val actions: Set<Action>,
+        override val actions: List<PagesListAction>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
@@ -188,33 +189,26 @@ sealed class PageItem(open val type: Type) {
         val isImageVisible: Boolean = true
     ) : PageItem(EMPTY)
 
+    object VirtualHomepage : PageItem(VIRTUAL_HOMEPAGE) {
+        sealed class Action {
+            object OpenSiteEditor : Action() {
+                fun getUrl(site: SiteModel): String = site.adminUrl + "site-editor.php?canvas=edit"
+            }
+
+            sealed class OpenExternalLink(
+                val url: String
+            ) : Action() {
+                object TemplateSupport : OpenExternalLink("https://wordpress.com/support/templates/")
+            }
+        }
+    }
+
     enum class Type(val viewType: Int) {
         PAGE(1),
         DIVIDER(2),
         EMPTY(3),
         PARENT(4),
-        TOP_LEVEL_PARENT(5)
-    }
-
-    enum class Action(@IdRes val itemId: Int) {
-        VIEW_PAGE(R.id.view_page),
-        CANCEL_AUTO_UPLOAD(R.id.cancel_auto_upload),
-        SET_PARENT(R.id.set_parent),
-        SET_AS_HOMEPAGE(R.id.set_as_homepage),
-        SET_AS_POSTS_PAGE(R.id.set_as_posts_page),
-        COPY(R.id.copy),
-        COPY_LINK(R.id.copy_page_link),
-        PUBLISH_NOW(R.id.publish_now),
-        PROMOTE_WITH_BLAZE(R.id.promote_with_blaze),
-        MOVE_TO_DRAFT(R.id.move_to_draft),
-        DELETE_PERMANENTLY(R.id.delete_permanently),
-        MOVE_TO_TRASH(R.id.move_to_trash);
-
-        companion object {
-            fun fromItemId(itemId: Int): Action {
-                return values().firstOrNull { it.itemId == itemId }
-                    ?: throw IllegalArgumentException("Unexpected item ID in context menu")
-            }
-        }
+        TOP_LEVEL_PARENT(5),
+        VIRTUAL_HOMEPAGE(6),
     }
 }

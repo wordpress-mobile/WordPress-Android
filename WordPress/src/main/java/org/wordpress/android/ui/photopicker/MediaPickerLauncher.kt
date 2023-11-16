@@ -47,7 +47,8 @@ class MediaPickerLauncher @Inject constructor(
             primaryDataSource = DEVICE,
             availableDataSources = availableDataSources,
             canMultiselect = false,
-            requiresStoragePermissions = true,
+            requiresPhotosVideosPermissions = true,
+            requiresMusicAudioPermissions = false,
             allowedTypes = setOf(IMAGE),
             cameraSetup = ENABLED,
             systemPickerEnabled = true,
@@ -62,14 +63,6 @@ class MediaPickerLauncher @Inject constructor(
             site,
             localPostId
         )
-        activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
-    }
-
-    fun showSiteIconPicker(
-        activity: Activity,
-        site: SiteModel?
-    ) {
-        val intent = buildSitePickerIntent(activity, site)
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
     }
 
@@ -90,7 +83,8 @@ class MediaPickerLauncher @Inject constructor(
             primaryDataSource = DEVICE,
             availableDataSources = setOf(WP_LIBRARY),
             canMultiselect = false,
-            requiresStoragePermissions = true,
+            requiresPhotosVideosPermissions = true,
+            requiresMusicAudioPermissions = false,
             allowedTypes = setOf(IMAGE),
             cameraSetup = ENABLED,
             systemPickerEnabled = true,
@@ -142,7 +136,8 @@ class MediaPickerLauncher @Inject constructor(
             primaryDataSource = DEVICE,
             availableDataSources = setOf(),
             canMultiselect = false,
-            requiresStoragePermissions = true,
+            requiresPhotosVideosPermissions = true,
+            requiresMusicAudioPermissions = false,
             allowedTypes = setOf(IMAGE),
             cameraSetup = ENABLED,
             systemPickerEnabled = true,
@@ -192,7 +187,8 @@ class MediaPickerLauncher @Inject constructor(
             primaryDataSource = DEVICE,
             availableDataSources = setOf(),
             canMultiselect = canMultiselect,
-            requiresStoragePermissions = true,
+            requiresPhotosVideosPermissions = allowedTypes.contains(IMAGE) || allowedTypes.contains(VIDEO),
+            requiresMusicAudioPermissions = allowedTypes.contains(AUDIO),
             allowedTypes = allowedTypes,
             cameraSetup = HIDDEN,
             systemPickerEnabled = true,
@@ -236,7 +232,8 @@ class MediaPickerLauncher @Inject constructor(
             primaryDataSource = STOCK_LIBRARY,
             availableDataSources = setOf(),
             canMultiselect = allowMultipleSelection,
-            requiresStoragePermissions = false,
+            requiresPhotosVideosPermissions = false,
+            requiresMusicAudioPermissions = false,
             allowedTypes = setOf(IMAGE),
             cameraSetup = HIDDEN,
             systemPickerEnabled = false,
@@ -267,7 +264,8 @@ class MediaPickerLauncher @Inject constructor(
             primaryDataSource = GIF_LIBRARY,
             availableDataSources = setOf(),
             canMultiselect = allowMultipleSelection,
-            requiresStoragePermissions = false,
+            requiresPhotosVideosPermissions = false,
+            requiresMusicAudioPermissions = false,
             allowedTypes = setOf(IMAGE),
             cameraSetup = HIDDEN,
             systemPickerEnabled = false,
@@ -303,7 +301,8 @@ class MediaPickerLauncher @Inject constructor(
             primaryDataSource = DEVICE,
             availableDataSources = if (browserType.isWPStoriesPicker) setOf(WP_LIBRARY) else setOf(),
             canMultiselect = browserType.canMultiselect(),
-            requiresStoragePermissions = true,
+            requiresPhotosVideosPermissions = browserType.isImagePicker || browserType.isVideoPicker,
+            requiresMusicAudioPermissions = browserType.isAudioPicker,
             allowedTypes = allowedTypes,
             cameraSetup = if (browserType.isWPStoriesPicker) STORIES else HIDDEN,
             systemPickerEnabled = true,
@@ -335,7 +334,8 @@ class MediaPickerLauncher @Inject constructor(
             primaryDataSource = WP_LIBRARY,
             availableDataSources = setOf(),
             canMultiselect = browserType.canMultiselect(),
-            requiresStoragePermissions = false,
+            requiresPhotosVideosPermissions = false,
+            requiresMusicAudioPermissions = false,
             allowedTypes = allowedTypes,
             cameraSetup = if (browserType.isWPStoriesPicker) STORIES else HIDDEN,
             systemPickerEnabled = false,

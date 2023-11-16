@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2018-12-10 19:56:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.11
 Language: bg
 -->
 <resources>
@@ -78,7 +78,6 @@ Language: bg
     <string name="share_intent_pick_site">Изберете сайт</string>
     <string name="jetpack_site_settings_category_title">Настройки на Jetpack</string>
     <string name="share_action_media">Добавяне към библиотеката</string>
-    <string name="share_media_permission_required">Необходимо е да имате права, за да споделите изображение или видео</string>
     <string name="share_action_post">Добавяне към нова публикация</string>
     <string name="invalid_ip_or_range">Невалиден IP адрес или блок от IP адреси</string>
     <string name="deleting_media_dlg">Изтриване</string>
@@ -154,7 +153,6 @@ Language: bg
     <string name="media_all">Всички</string>
     <string name="media_audio">Аудио</string>
     <string name="media_videos">Видео файлове</string>
-    <string name="photo_picker_soft_ask_permissions_denied">Достъпът на %1$s до вашите снимки беше ограничен. За да поправите това редактирайте вашите правомощия и включете %2$s.</string>
     <string name="reader_view_comments">Преглед на коментарите</string>
     <string name="site_settings_video_width_hint">Променя размера на видеоклиповете в публикациите до този</string>
     <string name="site_settings_optimize_video_summary">Включва преоразмеряването и компресията на видеото</string>
@@ -189,8 +187,6 @@ Language: bg
     <string name="share_btn_connect">Свързване</string>
     <string name="share_btn_disconnect">Изключване на връзката</string>
     <string name="share_btn_reconnect">Повторен опит за свързване</string>
-    <string name="sharing">Споделяне</string>
-    <string name="my_site_btn_sharing">Споделяне</string>
     <string name="button_not_now">Не сега</string>
     <string name="media_downloading">Запазване на медийни файлове на това устройство</string>
     <string name="editor_draft_saved_locally">Черновата е запазена на устройството</string>
@@ -731,11 +727,9 @@ Language: bg
     <string name="link_enter_url_text">Текст на връзката (по избор)</string>
     <string name="fatal_db_error">Възникна грешка при създаване на базата от данни на приложението. Моля преинсталирайте приложението.</string>
     <string name="comment_status_unapproved">Предстоящ</string>
-    <string name="sure_to_cancel_edit_comment">Преустановяване редактирането на този коментар?</string>
     <string name="post_not_found">Възникна грешка при зареждане на тази плубликация. Опреснете Вашите публикации и опитайте отново.</string>
     <string name="trash">Кошче</string>
     <string name="media_gallery_type_thumbnail_grid">Решетка с малки изображения</string>
-    <string name="cancel_edit">Отказване</string>
     <string name="learn_more">Още</string>
     <string name="cannot_delete_multi_media_items">Някои от файловете не могат да бъдат изтрити в момента. Опитайте по-късно.</string>
     <string name="create_a_link">Създаване на връзка</string>
@@ -744,8 +738,6 @@ Language: bg
     <string name="mnu_comment_unapprove">Неодобряване</string>
     <string name="dlg_confirm_trash_comments">Изпращане в кошчето</string>
     <string name="remove_account">Премахване на сайта</string>
-    <string name="content_required">Коментарът е задължителен</string>
-    <string name="toast_comment_unedited">Коментарът не беше променен</string>
     <string name="view_in_browser">Преглед в браузър</string>
     <string name="add_new_category">Добавяне на нова категория</string>
     <string name="file_error_create">Грешка при създаване на временния файл. Уверете се че има достатъчно свободно място на вашето устройство.</string>

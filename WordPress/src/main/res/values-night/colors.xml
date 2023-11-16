@@ -45,6 +45,7 @@
 
     <!-- Reader Post Card -->
     <color name="reader_post_list_background">@color/background_dark</color>
+    <color name="reader_post_list_background_new">@color/background_dark</color>
     <color name="reader_welcome_card_background">@color/background_dark</color>
     <color name="reader_welcome_card_text">@color/white</color>
 
@@ -65,24 +66,6 @@
     <color name="quick_start_task_card_background">@color/material_on_surface_emphasis_low</color>
     <color name="quick_start_task_card_completed_checkmark">@color/material_on_surface_disabled</color>
 
-    <!-- Quick Start Task Dynamic Cards -->
-    <color name="quick_start_task_card_illustration_background">#2C2C2E</color>
-    <color name="quick_start_task_card_illustration_surface">@color/gray_0</color>
-    <color name="quick_start_task_card_illustration_details">@color/gray_50</color>
-    <color name="quick_start_task_card_illustration_line">@color/gray_50</color>
-    <color name="quick_start_task_card_illustration_area">@color/gray_40</color>
-    <color name="quick_start_task_card_illustration_mountain">@color/gray_60</color>
-
-    <color name="quick_start_task_card_illustration_check_site_stats_stroke">@color/gray_60</color>
-    <color name="quick_start_task_card_illustration_edit_site_icon_area">@color/white</color>
-    <color name="quick_start_task_card_illustration_edit_site_icon_mountain_fill">@color/gray_10</color>
-    <color name="quick_start_task_card_illustration_edit_site_icon_mountain_stroke">@color/gray_50</color>
-    <color name="quick_start_task_card_illustration_follow_other_sites_fill">@color/gray_0</color>
-    <color name="quick_start_task_card_illustration_set_site_title_header">@color/gray_10</color>
-    <color name="quick_start_task_card_illustration_set_site_title_body">@color/gray_0</color>
-    <color name="quick_start_task_card_illustration_set_site_title_box_stroke">@color/gray_50</color>
-    <color name="quick_start_task_card_illustration_visit_your_site_star">@color/purple_30</color>
-
     <!-- Reader Topics You Might Like Chips -->
     <color name="reader_topics_you_might_like_chip_green_stroke">@color/green_100</color>
     <color name="reader_topics_you_might_like_chip_green_font">@color/green_40</color>
@@ -99,10 +82,31 @@
 
     <!-- Site creation  -->
     <color name="site_creation_intent_item_emoji_bg">#3d3d3d</color>
+    <color name="site_creation_preview_card_border">@color/white_translucent_20</color>
 
     <!-- Jetpack Migration -->
     <color name="bg_jp_migration_buttons_panel">#E6121212</color>
 
     <!-- Jetpack feture removal overlay secondary button color -->
     <color name="jp_feature_removal_overlay_secondary_button_color">@color/white</color>
+
+    <!-- Dashboard Card Plans -->
+    <color name="dashboard_card_plans_info_background">@color/gray_80</color>
+    <color name="dashboard_card_plans_info_text_color">@color/gray_20</color>
+
+    <!-- Partial Media Access -->
+    <color name="partial_media_access_prompt_background">#444444</color>
+
+    <!-- Reader Improvements -->
+    <color name="reader_you_might_like_background">#1FFFFFFF</color>
+    <color name="reader_improvements_recommended_section_text">#99FFFFFF</color>
+    <color name="reader_following_button_stroke">#40FFFFFF</color>
+    <color name="reader_follow_button">@color/white</color>
+    <color name="reader_follow_button_text_color">@color/black</color>
+    <color name="reader_following_button_text_color">#99FFFFFF</color>
+    <color name="reader_follow_button_ripple">@color/reader_follow_button_ripple_selector_dark</color>
+    <color name="reader_blog_section_avatar_internal_border">@color/white_translucent_20</color>
+    <color name="reader_post_body_link">@color/blue_30</color>
+    <color name="reader_footer_progress_background">@color/background_dark_elevated</color>
+
 </resources>

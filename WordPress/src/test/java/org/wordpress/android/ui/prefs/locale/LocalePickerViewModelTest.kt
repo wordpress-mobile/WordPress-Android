@@ -36,16 +36,16 @@ class LocalePickerViewModelTest : BaseUnitTest() {
     lateinit var selectedLocaleObserver: Observer<String>
 
     @Mock
-    lateinit var dismissBottomSheetObserver: Observer<Unit>
+    lateinit var dismissBottomSheetObserver: Observer<Unit?>
 
     @Mock
-    lateinit var expandBottomSheetObserver: Observer<Unit>
+    lateinit var expandBottomSheetObserver: Observer<Unit?>
 
     @Mock
-    lateinit var hideKeyboardObserver: Observer<Unit>
+    lateinit var hideKeyboardObserver: Observer<Unit?>
 
     @Mock
-    lateinit var clearSearchFieldObserver: Observer<Unit>
+    lateinit var clearSearchFieldObserver: Observer<Unit?>
 
     private lateinit var viewModel: LocalePickerViewModel
 

@@ -2,7 +2,7 @@ package org.wordpress.android.ui.domains
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -19,13 +19,12 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.FREE_DOMAIN_WITH_ANNUAL_PLAN
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 import org.wordpress.android.util.extensions.isOnSale
-import org.wordpress.android.util.extensions.saleCostForDisplay
 import org.wordpress.android.util.helpers.Debouncer
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -39,7 +38,6 @@ class DomainSuggestionsViewModel @Inject constructor(
     private val domainsRegistrationTracker: DomainsRegistrationTracker,
     private val dispatcher: Dispatcher,
     private val debouncer: Debouncer,
-    private val siteDomainsFeatureConfig: SiteDomainsFeatureConfig,
     private val createCartUseCase: CreateCartUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
@@ -60,7 +58,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private val _selectedSuggestion = MutableLiveData<DomainSuggestionItem?>()
 
-    val selectDomainButtonEnabledState = Transformations.map(_selectedSuggestion) { it is DomainSuggestionItem }
+    val selectDomainButtonEnabledState = _selectedSuggestion.map { it is DomainSuggestionItem }
 
     private val _isIntroVisible = MutableLiveData(true)
     val isIntroVisible: LiveData<Boolean> = _isIntroVisible
@@ -73,6 +71,9 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private val _onDomainSelected = MutableLiveData<Event<DomainProductDetails>>()
     val onDomainSelected: LiveData<Event<DomainProductDetails>> = _onDomainSelected
+
+    private val _onFreeDomainSelected = MutableLiveData<Event<DomainProductDetails>>()
+    val onFreeDomainSelected: LiveData<Event<DomainProductDetails>> = _onFreeDomainSelected
 
     private var searchQuery: String by Delegates.observable("") { _, oldValue, newValue ->
         if (newValue != oldValue) {
@@ -186,7 +187,7 @@ class DomainSuggestionsViewModel @Inject constructor(
                     domainName = it.domain_name,
                     cost = it.cost,
                     isOnSale = product.isOnSale(),
-                    saleCost = product.saleCostForDisplay(),
+                    saleCost = product?.combinedSaleCostDisplay.orEmpty(),
                     isFree = it.is_free,
                     supportsPrivacy = it.supports_privacy,
                     productId = it.product_id,
@@ -194,8 +195,8 @@ class DomainSuggestionsViewModel @Inject constructor(
                     vendor = it.vendor,
                     relevance = it.relevance,
                     isSelected = _selectedSuggestion.value?.domainName == it.domain_name,
-                    isCostVisible = siteDomainsFeatureConfig.isEnabled(),
-                    isFreeWithCredits = domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION,
+                    isCostVisible = true,
+                    isFreeWithCredits = domainRegistrationPurpose(),
                     isEnabled = true
                 )
             }
@@ -205,6 +206,9 @@ class DomainSuggestionsViewModel @Inject constructor(
                 suggestions = ListState.Success(it)
             }
     }
+
+    private fun domainRegistrationPurpose() = domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION ||
+                domainRegistrationPurpose == FREE_DOMAIN_WITH_ANNUAL_PLAN
 
     fun onDomainSuggestionSelected(selectedSuggestion: DomainSuggestionItem?) {
         _selectedSuggestion.postValue(selectedSuggestion)
@@ -217,7 +221,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     fun onSelectDomainButtonClicked() {
         val selectedSuggestion = _selectedSuggestion.value ?: throw IllegalStateException("Selected suggestion is null")
         when (domainRegistrationPurpose) {
-            DOMAIN_PURCHASE -> createCart(selectedSuggestion)
+            DOMAIN_PURCHASE, FREE_DOMAIN_WITH_ANNUAL_PLAN -> createCart(selectedSuggestion)
             else -> selectDomain(selectedSuggestion)
         }
 
@@ -255,8 +259,18 @@ class DomainSuggestionsViewModel @Inject constructor(
             // TODO Handle failed cart creation
         } else {
             AppLog.d(T.DOMAIN_REGISTRATION, "Successful cart creation: ${event.cartDetails}")
-            selectDomain(selectedSuggestion)
+            if (domainRegistrationPurpose == FREE_DOMAIN_WITH_ANNUAL_PLAN) {
+                openPlans(selectedSuggestion)
+            } else {
+                selectDomain(selectedSuggestion)
+            }
         }
+    }
+
+    private fun openPlans(selectedSuggestion: DomainSuggestionItem) {
+        val domainProductDetails = DomainProductDetails(selectedSuggestion.productId, selectedSuggestion.domainName)
+        _onFreeDomainSelected.postValue(Event(domainProductDetails))
+        domainsRegistrationTracker.trackDomainsPurchaseWebviewViewed(site, isSiteCreation = false)
     }
 
     private fun selectDomain(selectedSuggestion: DomainSuggestionItem) {

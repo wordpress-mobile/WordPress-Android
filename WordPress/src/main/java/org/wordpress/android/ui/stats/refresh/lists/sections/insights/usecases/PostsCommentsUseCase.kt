@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
@@ -67,7 +66,7 @@ class PostsCommentsUseCase @Inject constructor(
             val header = Header(
                 R.string.posts,
                 R.string.stats_comments_label,
-                listOf(resourceProvider.getString(string.posts))
+                listOf(resourceProvider.getString(R.string.posts))
             )
             items.add(header)
             items.addAll(domainModel.posts.mapIndexed { index, post ->
@@ -88,5 +87,5 @@ class PostsCommentsUseCase @Inject constructor(
         return items
     }
 
-    private fun buildTitle() = Title(string.posts, menuAction = null)
+    private fun buildTitle() = Title(R.string.posts, menuAction = null)
 }

@@ -9,8 +9,6 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/title"
         style="@style/SiteCreationHeaderV2Title"
-        android:lineSpacingExtra="-4sp"
-        android:letterSpacing="0.01"
         android:paddingBottom="@dimen/margin_large"
         app:fixWidowWords="true"
         app:autoSizeTextType="uniform"
@@ -20,8 +18,6 @@
         android:id="@+id/subtitle"
         style="@style/SiteCreationHeaderV2Subtitle"
         android:paddingBottom="@dimen/margin_extra_medium_large"
-        android:lineSpacingExtra="5sp"
-        android:letterSpacing="0.01"
         app:fixWidowWords="true"
         tools:text="@string/new_site_creation_intents_header_subtitle" />
 </LinearLayout>

@@ -30,6 +30,8 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.EmptyViewRecyclerView
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
@@ -175,11 +177,14 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     }
 
     private fun getSite(savedInstanceState: Bundle?): SiteModel {
-        return if (savedInstanceState == null) {
-            requireActivity().intent.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
+        val site = requireNotNull(
+            if (savedInstanceState == null) {
+                requireActivity().intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+            } else {
+                savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)
+            }
+        )
+        return site
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -187,15 +192,13 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         super.onSaveInstanceState(outState)
     }
 
-    fun onNewIntent(intent: Intent?) {
-        intent?.let {
-            val threatId = intent.getLongExtra(ScanActivity.REQUEST_FIX_STATE, 0L)
-            val messageRes = intent.getIntExtra(ScanActivity.REQUEST_SCAN_STATE, 0)
-            if (threatId > 0L) {
-                viewModel.onFixStateRequested(threatId)
-            } else if (messageRes > 0) {
-                viewModel.onScanStateRequestedWithMessage(messageRes)
-            }
+    fun onNewIntent(intent: Intent) {
+        val threatId = intent.getLongExtra(ScanActivity.REQUEST_FIX_STATE, 0L)
+        val messageRes = intent.getIntExtra(ScanActivity.REQUEST_SCAN_STATE, 0)
+        if (threatId > 0L) {
+            viewModel.onFixStateRequested(threatId)
+        } else if (messageRes > 0) {
+            viewModel.onScanStateRequestedWithMessage(messageRes)
         }
     }
 

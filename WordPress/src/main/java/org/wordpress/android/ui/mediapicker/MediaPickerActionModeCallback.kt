@@ -12,7 +12,6 @@ import androidx.lifecycle.Lifecycle.Event.ON_START
 import androidx.lifecycle.Lifecycle.Event.ON_STOP
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.Observer
 import org.wordpress.android.R
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -20,16 +19,15 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 
 class MediaPickerActionModeCallback(private val viewModel: MediaPickerViewModel) : Callback,
     LifecycleOwner {
-    private lateinit var lifecycleRegistry: LifecycleRegistry
+    private val lifecycleRegistry = LifecycleRegistry(this)
     override fun onCreateActionMode(
         actionMode: ActionMode,
         menu: Menu
     ): Boolean {
-        lifecycleRegistry = LifecycleRegistry(this)
         lifecycleRegistry.handleLifecycleEvent(ON_START)
         val inflater = actionMode.menuInflater
         inflater.inflate(R.menu.photo_picker_action_mode, menu)
-        viewModel.uiState.observe(this, Observer { uiState ->
+        viewModel.uiState.observe(this) { uiState ->
             when (val uiModel = uiState.actionModeUiModel) {
                 is ActionModeUiModel.Hidden -> {
                     actionMode.finish()
@@ -42,19 +40,20 @@ class MediaPickerActionModeCallback(private val viewModel: MediaPickerViewModel)
                     if (editItemUiModel.isVisible) {
                         editItem.isVisible = true
 
-                        editItem.actionView.let { actionView ->
+                        editItem.actionView?.let { actionView ->
                             actionView.setOnClickListener {
                                 onActionItemClicked(actionMode, editItem)
                             }
                             TooltipCompat.setTooltipText(actionView, editItem.title)
                         }
 
-                        val editItemBadge = editItem.actionView.findViewById<TextView>(R.id.customize_icon_count)
-                        if (editItemUiModel.isCounterBadgeVisible) {
-                            editItemBadge.visibility = View.VISIBLE
-                            editItemBadge.text = editItemUiModel.counterBadgeValue.toString()
-                        } else {
-                            editItemBadge.visibility = View.GONE
+                        editItem.actionView?.findViewById<TextView>(R.id.customize_icon_count)?.let { editItemBadge ->
+                            if (editItemUiModel.isCounterBadgeVisible) {
+                                editItemBadge.visibility = View.VISIBLE
+                                editItemBadge.text = editItemUiModel.counterBadgeValue.toString()
+                            } else {
+                                editItemBadge.visibility = View.GONE
+                            }
                         }
                     } else {
                         editItem.isVisible = false
@@ -67,11 +66,11 @@ class MediaPickerActionModeCallback(private val viewModel: MediaPickerViewModel)
                     }
                 }
             }
-        })
+        }
         return true
     }
 
-    override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         return false
     }
 
@@ -98,5 +97,5 @@ class MediaPickerActionModeCallback(private val viewModel: MediaPickerViewModel)
         lifecycleRegistry.handleLifecycleEvent(ON_STOP)
     }
 
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+    override val lifecycle: Lifecycle = lifecycleRegistry
 }

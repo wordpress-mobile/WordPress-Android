@@ -20,3 +20,15 @@ data class UriWrapper(val uri: Uri) {
         return this.copy(uri = newUri)
     }
 }
+
+/**
+ * Note, java.net.URLEncoder is not currently a suitable alternative to using Uri.encode in the main codebase.
+ * This is because java.net.URLEncoder requires API 33 or later (we support down to API 24 at the time of writing).
+ * However, java.net.URLEncoder can be used in unit tests to avoid fully mocking the encode function.
+ * e.g. whenever(uriWrapper.encode(value)).thenReturn(URLEncoder.encode(value, StandardCharsets.UTF_8))
+ */
+class UriEncoder {
+    fun encode(input: String): String {
+        return Uri.encode(input)
+    }
+}

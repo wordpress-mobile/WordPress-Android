@@ -6,7 +6,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.engagement.EngageItem.LikedItem
@@ -37,7 +37,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
-import org.wordpress.android.util.map
+import org.wordpress.android.util.mapSafe
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -62,7 +62,7 @@ class EngagedPeopleListViewModel @Inject constructor(
     private val _onServiceRequestEvent = MutableLiveData<Event<EngagedListServiceRequestEvent>>()
 
     val onSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = _onSnackbarMessage
-    val uiState: LiveData<EngagedPeopleListUiState> = _updateLikesState.map { state ->
+    val uiState: LiveData<EngagedPeopleListUiState> = _updateLikesState.mapSafe { state ->
         buildUiState(state, listScenario)
     }
     val onNavigationEvent: LiveData<Event<EngagedListNavigationEvent>> = _onNavigationEvent
@@ -230,7 +230,7 @@ class EngagedPeopleListViewModel @Inject constructor(
             showEmptyState = showEmptyState,
             emptyStateTitle = emptyStateTitle,
             emptyStateAction = emptyStateAction,
-            emptyStateButtonText = emptyStateAction?.let { UiStringRes(string.retry) }
+            emptyStateButtonText = emptyStateAction?.let { UiStringRes(R.string.retry) }
         )
     }
 

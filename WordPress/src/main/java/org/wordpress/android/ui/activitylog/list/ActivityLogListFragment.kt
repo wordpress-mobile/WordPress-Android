@@ -29,6 +29,8 @@ import org.wordpress.android.ui.prefs.EmptyViewRecyclerView
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
@@ -39,6 +41,7 @@ import org.wordpress.android.viewmodel.activitylog.DateRange
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
+import android.R as AndroidR
 
 private const val ACTIVITY_TYPE_FILTER_TAG = "activity_log_type_filter_tag"
 private const val DATE_PICKER_TAG = "activity_log_date_picker_tag"
@@ -73,7 +76,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         viewModel = ViewModelProvider(
             this@ActivityLogListFragment,
             viewModelFactory
-        ).get(ActivityLogViewModel::class.java)
+        )[ActivityLogViewModel::class.java]
 
         with(ActivityLogListFragmentBinding.bind(view)) {
             listView = logListView
@@ -87,12 +90,14 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
                 }
             }
 
-            val site = if (savedInstanceState == null) {
-                val nonNullIntent = checkNotNull(nonNullActivity.intent)
-                nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
-            } else {
-                savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-            }
+            val site = requireNotNull(
+                if (savedInstanceState == null) {
+                    val nonNullIntent = checkNotNull(nonNullActivity.intent)
+                    nonNullIntent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+                } else {
+                    savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)
+                }
+            )
             val rewindableOnly = nonNullActivity.intent.getBooleanExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)
 
             logListView.setEmptyView(actionableEmptyView)
@@ -110,7 +115,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         }
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         with(requireActivity()) {
@@ -200,7 +205,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
         })
 
         viewModel.showSnackbarMessage.observe(viewLifecycleOwner, { message ->
-            val parent: View? = activity?.findViewById(android.R.id.content)
+            val parent: View? = activity?.findViewById(AndroidR.id.content)
             if (message != null && parent != null) {
                 WPSnackbar.make(parent, message, Snackbar.LENGTH_LONG).show()
             }

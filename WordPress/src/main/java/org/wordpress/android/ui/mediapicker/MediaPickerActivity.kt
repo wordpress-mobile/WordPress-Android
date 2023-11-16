@@ -50,8 +50,11 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import java.io.File
 import javax.inject.Inject
+import android.R as AndroidR
 
 class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     private var mediaCapturePath: String? = null
@@ -118,11 +121,11 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         }
         if (savedInstanceState == null) {
             mediaPickerSetup = MediaPickerSetup.fromIntent(intent)
-            site = intent.getSerializableExtra(WordPress.SITE) as? SiteModel
+            site = intent.getSerializableExtraCompat(WordPress.SITE)
             localPostId = intent.getIntExtra(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID)
         } else {
             mediaPickerSetup = MediaPickerSetup.fromBundle(savedInstanceState)
-            site = savedInstanceState.getSerializable(WordPress.SITE) as? SiteModel
+            site = savedInstanceState.getSerializableCompat(WordPress.SITE)
             localPostId = savedInstanceState.getInt(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID)
         }
         var fragment = pickerFragment
@@ -170,7 +173,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == AndroidR.id.home) {
             setResult(Activity.RESULT_CANCELED)
             finish()
             return true

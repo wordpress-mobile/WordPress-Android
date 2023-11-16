@@ -311,6 +311,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             .thenReturn(listOf(COMMENT_ENTITY))
         whenever(commentsStore.updateEditComment(eq(site), any()))
             .thenReturn(CommentsActionPayload(CommentsActionData(emptyList(), 0)))
+        whenever(notificationActionsWrapper.downloadNoteAndUpdateDB(noteId))
+            .thenReturn(true)
         viewModel.start(site, notificationCommentIdentifier)
         viewModel.onActionMenuClicked()
         verify(notificationActionsWrapper).downloadNoteAndUpdateDB(noteId)

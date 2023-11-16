@@ -14,6 +14,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PagesListFragmentBinding
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.viewmodel.pages.PagesViewModel
 import org.wordpress.android.viewmodel.pages.SearchListViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
@@ -66,7 +67,7 @@ class SearchListFragment : Fragment(R.layout.pages_list_fragment) {
 
     private fun PagesListFragmentBinding.initializeViews(savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
+        savedInstanceState?.getParcelableCompat<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 

@@ -34,7 +34,8 @@ private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
     123,
     "slug",
     "domain",
-    null
+    null,
+    true,
 )
 
 private val IDLE_STATE = SiteCreationServiceState(IDLE)

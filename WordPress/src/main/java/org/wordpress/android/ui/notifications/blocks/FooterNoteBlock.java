@@ -5,7 +5,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
+
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.fluxc.tools.FormattableRange;
@@ -81,7 +82,7 @@ public class FooterNoteBlock extends NoteBlock {
         return view;
     }
 
-    @NotNull
+    @NonNull
     private String getNoticonGlyph() {
         return FormattableContentUtilsKt.getRangeValueOrEmpty(getNoteData(), 0);
     }

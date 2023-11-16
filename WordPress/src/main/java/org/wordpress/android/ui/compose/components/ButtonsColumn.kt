@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import org.wordpress.android.R.color
+import org.wordpress.android.R
 
 @Composable
 fun ButtonsColumn(
@@ -19,7 +19,7 @@ fun ButtonsColumn(
         modifier = modifier.padding(bottom = 10.dp)
     ) {
         Divider(
-            color = colorResource(color.gray_10),
+            color = colorResource(R.color.gray_10),
             thickness = 0.5.dp,
         )
         content()

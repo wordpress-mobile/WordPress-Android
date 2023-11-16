@@ -2,18 +2,18 @@ package org.wordpress.android.ui.mysite.cards.dashboard
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.blaze.BlazeFlowSource
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PromoteWithBlazeCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainTransferCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.StatsSubtype
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.BlazeSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -28,67 +28,94 @@ class CardsShownTracker @Inject constructor(
         cardsShownTracked.clear()
     }
 
-    fun track(dashboardCards: DashboardCards) {
-        dashboardCards.cards.takeIf { it.isNotEmpty() }?.forEach {
+    fun track(dashboardCards: List<Card>) {
+        dashboardCards.takeIf { it.isNotEmpty() }?.forEach {
             trackCardShown(it)
         }
     }
 
-    private fun trackCardShown(card: DashboardCard) = when (card) {
+    @Suppress("LongMethod")
+    private fun trackCardShown(card: Card) = when (card) {
         is ErrorCard -> trackCardShown(
             Pair(
-                card.dashboardCardType.toTypeValue().label,
+                card.type.toTypeValue().label,
                 Type.ERROR.label
             )
         )
         is TodaysStatsCard.Error -> trackCardShown(
             Pair(
-                card.dashboardCardType.toTypeValue().label,
+                card.type.toTypeValue().label,
                 StatsSubtype.TODAYS_STATS.label
             )
         )
         is TodaysStatsCardWithData -> trackCardShown(
             Pair(
-                card.dashboardCardType.toTypeValue().label,
+                card.type.toTypeValue().label,
                 StatsSubtype.TODAYS_STATS.label
             )
         )
         is PostCard.Error -> trackCardShown(
             Pair(
-                card.dashboardCardType.toTypeValue().label,
+                card.type.toTypeValue().label,
                 Type.POST.label
-            )
-        )
-        is PostCardWithoutPostItems -> trackCardShown(
-            Pair(
-                card.dashboardCardType.toTypeValue().label,
-                card.postCardType.toSubtypeValue().label
             )
         )
         is PostCardWithPostItems -> trackCardShown(
             Pair(
-                card.dashboardCardType.toTypeValue().label,
+                card.type.toTypeValue().label,
                 card.postCardType.toSubtypeValue().label
             )
         )
         is BloggingPromptCardWithData -> trackCardShown(
             Pair(
-                card.dashboardCardType.toTypeValue().label,
+                card.type.toTypeValue().label,
                 Type.BLOGGING_PROMPT.label
             )
         )
-        is PromoteWithBlazeCard -> trackCardShown(
+        is Card.BlazeCard.PromoteWithBlazeCard -> trackCardShown(
             Pair(
-                card.dashboardCardType.toTypeValue().label,
-                Type.PROMOTE_WITH_BLAZE.label
+                card.type.toTypeValue().label,
+                BlazeSubtype.NO_CAMPAIGNS.label
             )
         )
+        is DomainTransferCardModel -> trackCardShown(
+            Pair(
+                card.type.toTypeValue().label,
+                Type.DASHBOARD_CARD_DOMAIN_TRANSFER.label
+            )
+        )
+        is Card.BlazeCard.BlazeCampaignsCardModel -> trackCardShown(
+            Pair(
+                card.type.toTypeValue().label,
+                BlazeSubtype.CAMPAIGNS.label
+            )
+        )
+        is DashboardPlansCard -> trackCardShown(
+            Pair(
+                card.type.toTypeValue().label,
+                Type.DASHBOARD_CARD_PLANS.label
+            )
+        )
+        is Card.PagesCard -> trackCardShown(
+            Pair(
+                card.type.toTypeValue().label,
+                Type.PAGES.label
+            )
+        )
+        is Card.ActivityCard.ActivityCardWithItems -> trackCardShown(
+            Pair(
+                card.type.toTypeValue().label,
+                Type.ACTIVITY.label
+            )
+        )
+
+        else -> {}
     }
 
     fun trackQuickStartCardShown(quickStartType: QuickStartType) {
         trackCardShown(
             Pair(
-                DashboardCardType.QUICK_START_CARD.toTypeValue().label,
+                MySiteCardAndItem.Type.QUICK_START_CARD.toTypeValue().label,
                 "quick_start_${quickStartType.trackingLabel}"
             )
         )

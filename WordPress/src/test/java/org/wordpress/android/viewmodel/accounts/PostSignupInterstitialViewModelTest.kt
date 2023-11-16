@@ -2,22 +2,27 @@ package org.wordpress.android.viewmodel.accounts
 
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_ADD_SELF_HOSTED_SITE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_CREATE_NEW_SITE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_DISMISSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_SHOWN
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.DISMISS
+import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.DISMISS_FOR_JETPACK_REMOVAL
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.START_SITE_CONNECTION_FLOW
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction.START_SITE_CREATION_FLOW
 
@@ -27,23 +32,55 @@ class PostSignupInterstitialViewModelTest : BaseUnitTest() {
     private val appPrefs: AppPrefsWrapper = mock()
     private val unifiedLoginTracker: UnifiedLoginTracker = mock()
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()
+    private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper = mock()
     private val observer: Observer<NavigationAction> = mock()
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper = mock()
 
     private lateinit var viewModel: PostSignupInterstitialViewModel
 
     @Before
     fun setUp() {
-        viewModel = PostSignupInterstitialViewModel(appPrefs, unifiedLoginTracker, analyticsTracker)
+        viewModel = PostSignupInterstitialViewModel(
+            appPrefs,
+            unifiedLoginTracker,
+            analyticsTracker,
+            wpJetpackIndividualPluginHelper,
+            jetpackFeatureRemovalPhaseHelper
+        )
         viewModel.navigationAction.observeForever(observer)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
     }
 
     @Test
-    fun `when interstitial is shown should update preference value`() {
+    fun `when interstitial is shown should update preference value`() = test {
+        whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(false)
+
         viewModel.onInterstitialShown()
 
         verify(analyticsTracker).track(WELCOME_NO_SITES_INTERSTITIAL_SHOWN)
         verify(appPrefs).shouldShowPostSignupInterstitial = false
     }
+
+    @Test
+    fun `given overlay should show when interstitial is shown then show jetpack individual plugin overlay`() = test {
+        whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(true)
+
+        viewModel.onInterstitialShown()
+        advanceUntilIdle()
+
+        assertThat(viewModel.navigationAction.value).isEqualTo(NavigationAction.SHOW_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY)
+    }
+
+    @Test
+    fun `given overlay should not show when interstitial is shown then don't show jetpack individual plugin overlay`() =
+        test {
+            whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(false)
+
+            viewModel.onInterstitialShown()
+            advanceUntilIdle()
+
+            assertThat(viewModel.navigationAction.value).isNull()
+        }
 
     @Test
     fun `when create new site button is pressed should start site creation flow`() {
@@ -62,7 +99,9 @@ class PostSignupInterstitialViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when dismissal button is pressed should dismiss`() {
+    fun `given showJPFeatures should not show, when dismissal button is pressed should dismiss`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
+
         viewModel.onDismissButtonPressed()
 
         verify(analyticsTracker).track(WELCOME_NO_SITES_INTERSTITIAL_DISMISSED)
@@ -70,10 +109,32 @@ class PostSignupInterstitialViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when back button is pressed should dismiss`() {
+    fun `given showJPFeatures should not show, when back button is pressed should dismiss`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
+
         viewModel.onBackButtonPressed()
 
         verify(analyticsTracker).track(WELCOME_NO_SITES_INTERSTITIAL_DISMISSED)
         verify(observer).onChanged(DISMISS)
+    }
+
+    @Test
+    fun `given showJPFeatures should show, when dismissal button is pressed should dismiss for jetpack removal`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+
+        viewModel.onDismissButtonPressed()
+
+        verify(analyticsTracker).track(WELCOME_NO_SITES_INTERSTITIAL_DISMISSED)
+        verify(observer).onChanged(DISMISS_FOR_JETPACK_REMOVAL)
+    }
+
+    @Test
+    fun `given showJPFeatures should show, when back button is pressed should dismiss for jetpack removal`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+
+        viewModel.onBackButtonPressed()
+
+        verify(analyticsTracker).track(WELCOME_NO_SITES_INTERSTITIAL_DISMISSED)
+        verify(observer).onChanged(DISMISS_FOR_JETPACK_REMOVAL)
     }
 }

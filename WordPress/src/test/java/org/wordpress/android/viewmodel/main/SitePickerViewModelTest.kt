@@ -7,13 +7,16 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.AskForSiteSelection
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.ContinueReblogTo
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.NavigateToState
+import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.ShowJetpackIndividualPluginOverlay
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.NavigateState.TO_NO_SITE_SELECTED
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.NavigateState.TO_SITE_SELECTED
 
@@ -25,9 +28,12 @@ class SitePickerViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var siteRecord: SiteRecord
 
+    @Mock
+    private lateinit var wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper
+
     @Before
     fun setUp() {
-        viewModel = SitePickerViewModel()
+        viewModel = SitePickerViewModel(wpJetpackIndividualPluginHelper)
     }
 
     @Test
@@ -87,4 +93,26 @@ class SitePickerViewModelTest : BaseUnitTest() {
         viewModel.onRefreshReblogActionMode()
         assertThat(result!!.peekContent()).isEqualTo(NavigateToState(TO_SITE_SELECTED, siteRecord))
     }
+
+    @Test
+    fun `when onSiteListLoaded is invoked then show jetpack individual plugin overlay`() =
+        test {
+            whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(true)
+
+            viewModel.onSiteListLoaded()
+            advanceUntilIdle()
+
+            assertThat(viewModel.onActionTriggered.value?.peekContent()).isEqualTo(ShowJetpackIndividualPluginOverlay)
+        }
+
+    @Test
+    fun `when onSiteListLoaded is invoked then don't show jetpack individual plugin overlay`() =
+        test {
+            whenever(wpJetpackIndividualPluginHelper.shouldShowJetpackIndividualPluginOverlay()).thenReturn(false)
+
+            viewModel.onSiteListLoaded()
+            advanceUntilIdle()
+
+            assertThat(viewModel.onActionTriggered.value?.peekContent()).isNull()
+        }
 }

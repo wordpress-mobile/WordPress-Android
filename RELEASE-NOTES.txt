@@ -1,8 +1,136 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-22.1
+23.8
 -----
 
+
+23.7
+-----
+* [***] [Jetpack-only] Added the All Domains screen enabling the users to manage their domains from within the app [https://github.com/wordpress-mobile/WordPress-Android/pull/19599]
+* [*] Block Editor: Fix error when pasting deeply nested structure content [https://github.com/WordPress/gutenberg/pull/55613]
+* [*] Block Editor: Fix crash related to accessing undefined value in `TextColorEdit` [https://github.com/WordPress/gutenberg/pull/55664]
+* [**] Posts & Pages: Redesigned the posts and pages screen. We’ve consolidated the “default” and “compact” display options [https://github.com/wordpress-mobile/WordPress-Android/issues/19341] &  [https://github.com/wordpress-mobile/WordPress-Android/issues/19348]
+* [*] Posts & Pages: Moved actions to a context menu and added new actions such as “comment”, “settings”  [https://github.com/wordpress-mobile/WordPress-Android/issues/19343] & [https://github.com/wordpress-mobile/WordPress-Android/issues/19356]
+
+23.6
+-----
+* [*] Block Editor Social Icons: Fix visibility of inactive icons when used with block based themes in dark mode [https://github.com/WordPress/gutenberg/pull/55398]
+* [*] Block Editor Classic block: Add option to convert to blocks [https://github.com/WordPress/gutenberg/pull/55461]
+* [*] Block Editor Synced Patterns: Fix visibility of heading section when used with block based themes in dark mode [https://github.com/WordPress/gutenberg/pull/55399]
+* [***] [Jetpack-only] [***] Added domain selection, plan selection, and checkout screens in site creation flow [https://github.com/wordpress-mobile/WordPress-Android/pull/19304]
+* [**] [Jetpack-only] Update the main site navigation on the My Site screen, making it easier to access the common site sections. The new shortcuts can be modified using the Personalize Home Tab screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/19151]
+
+23.5
+-----
+* [*] Block Editor: Split formatted text on triple Enter [https://github.com/WordPress/gutenberg/pull/53354]
+* [*] Block Editor: Quote block: Ensure border is visible with block-based themes in dark [https://github.com/WordPress/gutenberg/pull/54964]
+* [**] [Jetpack-only] Reader: Improvement of core UI elements, including feed cards, tag and site headers, buttons and recommendation sections [https://github.com/wordpress-mobile/WordPress-Android/pull/19267]
+
+23.4
+-----
+* [*] Block Editor: Prevent crash from invalid media URLs [https://github.com/WordPress/gutenberg/pull/54834]
+* [*] Block Editor: Limit inner blocks nesting depth to avoid call stack size exceeded crash [https://github.com/WordPress/gutenberg/pull/54382]
+* [**] Block Editor: Fallback to Twitter provider when embedding X URLs [https://github.com/WordPress/gutenberg/pull/54876]
+
+23.3
+-----
+* [*] Block editor: Fix the obscurred "Insert from URL" input for media blocks when using a device in landscape orientation. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6143]
+* [**] Block editor: Updated placeholder text colors for block-based themes [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6182]
+* [**] [Jetpack-only] Add a "Personalize Home Tab" button to the bottom of the My Site Dashboard that opens a new screen where you can customize which dashboard cards are visible. You can now also hide any of the dashboard cards directly from My Site Dashboard using the "more" menu. [https://github.com/wordpress-mobile/WordPress-Android/pull/19178]
+
+23.2
+-----
+* [*] The Zendesk ticket screen will be displayed for error dialogs resulting from account closure. [https://github.com/wordpress-mobile/WordPress-Android/pull/19023]
+* [*] Block Editor: Fix crash when using the Search block TextInput in the block inserter [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6090]
+* [**] [Jetpack-only] Block Editor: Add basic support to view, relocate, and remove the Jetpack Paywall block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6076]
+* [*] Block Editor: Columns block - Fix transforming into a Group block crash [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6129]
+* [**] Block Editor: Add block outline to all Social Link blocks when selected [https://github.com/WordPress/gutenberg/pull/54011]
+* [***] [Jetpack-only] Contact Support: Add a new chat-based support channel where users can get answers from a bot trained to help app users. Users can still create a support ticket to talk to a Happiness Engineer if they don't find the answer they're looking for  [https://github.com/wordpress-mobile/WordPress-Android/pull/18879]
+* [*] [Jetpack-only] Block editor: Fix crash when contacting customer support within the editor [https://github.com/wordpress-mobile/WordPress-Android/pull/19102]
+
+23.1
+-----
+* [*] Block editor: Hide undo/redo buttons when using the HTML editor [https://github.com/wordpress-mobile/WordPress-Android/pull/18889]
+* [*] Block editor: Display custom color value in mobile Cover Block color picker [https://github.com/WordPress/gutenberg/pull/51414]
+* [**] Block editor: Display outline around selected Social Link block [https://github.com/WordPress/gutenberg/pull/53377]
+
+23.0
+-----
+* [**] [Jetpack-only] Blaze Manage Campaigns: Added a dashboard card that displays the most recent campaign, a campaigns list screen, and a campaign details screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/18783]
+* [**] [internal] Upgrade React Native to 0.71.11 [https://github.com/wordpress-mobile/WordPress-Android/pull/18613]
+* [**] [Jetpack-only] Adds a dashboard card for domain transfers campaign [https://github.com/wordpress-mobile/WordPress-Android/pull/18852]
+
+* [*] Block editor: Remove visual gap in mobile toolbar when a Gallery block is selected [https://github.com/WordPress/gutenberg/pull/52966]
+* [*] Block editor: Remove Gallery caption button on mobile [https://github.com/WordPress/gutenberg/pull/53010]
+* [*] Block editor: Fix Gallery block selection when adding media [https://github.com/WordPress/gutenberg/pull/53127]
+* [**] Fixed occasional crashes on plugin installs [https://github.com/wordpress-mobile/WordPress-Android/pull/18890]
+* [***] [Jetpack-only] Jetpack Social: Control your post's social sharing settings from the post editor [https://github.com/wordpress-mobile/WordPress-Android/pull/18897]
+
+22.9
+-----
+* [**] Block editor: Move undo/redo buttons to the navigation bar [https://github.com/wordpress-mobile/WordPress-Android/pull/18705]
+* [***] Block editor: Editor UX improvements with new icons, colors and additional design enhancements. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5985]
+
+22.8
+-----
+* [*] Fixes the crash that occurs after deleting the site [https://github.com/wordpress-mobile/WordPress-Android/pull/18736]
+* [*] [Jetpack-only] Block editor: Rename "Reusable blocks" to "Synced patterns", aligning with the web editor. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5885]
+* [**] [internal] Block editor: Fix a crash related to Reanimated when closing the editor [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5938]
+
+22.7
+-----
+* [*] Updates Floating Action Button(FAB) color to black, shape to squircle, and icon to plus [https://github.com/wordpress-mobile/WordPress-Android/pull/18599]
+* [*] Block editor: Image block - Fix issue where in some cases the image doesn't display the right aspect ratio [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5869]
+* [*] Me, and gravatar is moved to bottom navigation as fourth tab [https://github.com/wordpress-mobile/WordPress-Android/pull/18606]
+* [*] [internal] We now display a privacy popup requiring consent from users residing in GDPR jurisdictions after login. [https://github.com/wordpress-mobile/WordPress-Android/pull/18696]
+
+22.6
+-----
+
+* [*] [internal] Block editor: Upgrade Android 13 [https://github.com/wordpress-mobile/WordPress-Android/pull/18477]
+* [***] [Jetpack-only] Plans: Bringing WPCOM plans to Jetpack app [https://github.com/wordpress-mobile/WordPress-Android/issues/18417]
+* [*] Block editor: Display lock icon in disabled state of `Cell` component [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5798]
+* [*] Block editor: Show "No title"/"No description" placeholder for not belonged videos in VideoPress block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5840]
+
+22.5
+-----
+* [**] [Jetpack-only] Block Editor: Enable VideoPress block (only on Simple WPCOM sites) [https://github.com/wordpress-mobile/WordPress-Android/pull/18440]
+* [***] Enables editing of the site homepage for sites using block-based themes directly from the pages list. [https://github.com/wordpress-mobile/WordPress-Android/pull/18454]
+* [*] Adds a button to enable account closure from the account settings screen [https://github.com/wordpress-mobile/WordPress-Android/pull/18412]
+* [*] Fixes an issue on the plugins screen [https://github.com/wordpress-mobile/WordPress-Android/pull/18498]
+* [*] Block editor: Add disabled style to `Cell` component [https://github.com/WordPress/gutenberg/pull/50665]
+* [**] Block editor: Fix undo/redo history when inserting a link configured to open in a new tab [https://github.com/WordPress/gutenberg/pull/50460]
+* [**] [Jetpack-only] Block editor: Disable details settings for not belonged VideoPress videos [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5782]
+* [*] Block editor: [List block] Fix an issue when merging a list item into a Paragraph would remove its nested list items [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5785]
+* [*] Block editor: [Gallery block] Fixes a compatibility issue with Gallery block [https://github.com/wordpress-mobile/WordPress-Android/pull/18519]
+* [**] Block editor: Tapping any type of nested block moves focus to the nested block directly, rather than requiring multiple taps to navigate down each nesting levels. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5781]
+
+22.4
+-----
+* [**] [Jetpack-only] Adds a dashboard card for viewing activity log [https://github.com/wordpress-mobile/WordPress-Android/pull/18306]
+* [**] [Jetpack-only] Adds a dashboard card for viewing pages [https://github.com/wordpress-mobile/WordPress-Android/pull/18337]
+* [**] [internal] Block editor: Add fullscreen embed preview to Android [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5743]
+* [*] [Jetpack-only] Block editor: Fix crash when trying to convert to regular blocks an undefined/deleted reusable block [https://github.com/WordPress/gutenberg/pull/50475]
+* [**] Block editor: Tapping on a nested block now gets focus directly instead of having to tap multiple times depending on the nesting levels. [https://github.com/WordPress/gutenberg/pull/50108]
+* [*] [Jetpack-only] Block editor: Use host app namespace in reusable block message [https://github.com/WordPress/gutenberg/pull/50478]
+* [*] [internal] [Jetpack-only] Enables domain purchases in site creation A/B experiment. [https://github.com/wordpress-mobile/WordPress-Android/pull/18414]
+
+22.3
+-----
+* [*] [internal] Allow updating specific fields when updating media details. [https://github.com/wordpress-mobile/WordPress-Android/pull/18327]
+
+22.2
+-----
+* [*] Adds runtime notifications permission [https://github.com/wordpress-mobile/WordPress-Android/pull/18239]
+* [**] Adds media permissions support for Android 13 [https://github.com/wordpress-mobile/WordPress-Android/pull/18183]
+* [**] [Jetpack-only] Adds a dashboard card for purchasing domains. [https://github.com/wordpress-mobile/WordPress-Android/pull/18240]
+* [**] [Jetpack-only] Blogging Prompts: adds the ability to view other users' responses to a prompt. [https://github.com/wordpress-mobile/WordPress-Android/pull/18265]
+* [*] [internal] [Jetpack-only] Redesigned the migration success card. [https://github.com/wordpress-mobile/WordPress-Android/pull/18271]
+
+22.1
+-----
+* [**] [WordPress-only] Warns user about sites with only individual plugins not supporting core app features and offers the option to switch to the Jetpack app. [https://github.com/wordpress-mobile/WordPress-Android/pull/18199]
+* [*] Block editor: Avoid empty Gallery block error [https://github.com/WordPress/gutenberg/pull/49557]
 
 22.0
 -----

@@ -56,6 +56,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/site_creation_search_input_item" />
 
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/site_example_compose_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/site_creation_search_input_item" />
+
     <View
         android:id="@+id/create_site_button_shadow"
         android:layout_width="match_parent"

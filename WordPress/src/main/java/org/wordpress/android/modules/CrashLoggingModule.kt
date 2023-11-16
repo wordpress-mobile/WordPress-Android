@@ -1,6 +1,6 @@
 package org.wordpress.android.modules
 
-import android.content.Context
+import android.app.Application
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.automattic.android.tracks.crashlogging.CrashLoggingDataProvider
 import com.automattic.android.tracks.crashlogging.CrashLoggingProvider
@@ -8,9 +8,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.util.crashlogging.WPCrashLoggingDataProvider
+import javax.inject.Named
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -20,10 +21,11 @@ interface CrashLoggingModule {
         @Provides
         @Singleton
         fun provideCrashLogging(
-            @ApplicationContext context: Context,
-            crashLoggingDataProvider: CrashLoggingDataProvider
+            application: Application,
+            crashLoggingDataProvider: CrashLoggingDataProvider,
+            @Named(APPLICATION_SCOPE) appScope: CoroutineScope
         ): CrashLogging {
-            return CrashLoggingProvider.createInstance(context, crashLoggingDataProvider)
+            return CrashLoggingProvider.createInstance(application, crashLoggingDataProvider, appScope)
         }
     }
 

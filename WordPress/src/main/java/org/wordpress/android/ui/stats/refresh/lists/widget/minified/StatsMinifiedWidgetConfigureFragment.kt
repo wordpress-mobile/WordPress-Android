@@ -6,8 +6,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_WIDGET_ADDED
 import org.wordpress.android.databinding.StatsWidgetConfigureFragmentBinding
@@ -27,7 +28,8 @@ import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-class StatsMinifiedWidgetConfigureFragment : DaggerFragment(R.layout.stats_widget_configure_fragment) {
+@AndroidEntryPoint
+class StatsMinifiedWidgetConfigureFragment : Fragment(R.layout.stats_widget_configure_fragment) {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -50,7 +52,7 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment(R.layout.stats_widge
     private lateinit var colorSelectionViewModel: StatsColorSelectionViewModel
     private lateinit var dataTypeSelectionViewModel: StatsDataTypeSelectionViewModel
 
-    @Suppress("DEPRECATION", "LongMethod")
+    @Suppress("LongMethod")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val nonNullActivity = requireActivity()
@@ -91,23 +93,26 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment(R.layout.stats_widge
                 viewModel.addWidget()
             }
 
-            siteSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
-                StatsWidgetSiteSelectionDialogFragment().show(requireFragmentManager(), "stats_site_selection_fragment")
-            })
+            siteSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner) {
+                StatsWidgetSiteSelectionDialogFragment().show(
+                    childFragmentManager,
+                    "stats_site_selection_fragment"
+                )
+            }
 
-            colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
+            colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner) {
                 StatsWidgetColorSelectionDialogFragment().show(
-                    requireFragmentManager(),
+                    childFragmentManager,
                     "stats_view_mode_selection_fragment"
                 )
-            })
+            }
 
-            dataTypeSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
+            dataTypeSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner) {
                 StatsWidgetDataTypeSelectionDialogFragment().show(
-                    requireFragmentManager(),
+                    childFragmentManager,
                     "stats_data_type_selection_fragment"
                 )
-            })
+            }
 
             mergeNotNull(
                 siteSelectionViewModel.notification,

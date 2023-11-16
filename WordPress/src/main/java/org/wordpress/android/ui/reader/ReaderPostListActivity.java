@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -8,7 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -41,12 +44,16 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 /*
  * serves as the host for ReaderPostListFragment when showing blog preview & tag preview
  */
+@AndroidEntryPoint
 public class ReaderPostListActivity extends LocaleAwareActivity {
     private String mSource;
     private ReaderPostListType mPostListType;
@@ -61,11 +68,21 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.reader_activity_post_list);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                ReaderPostListFragment fragment = getListFragment();
+                if (fragment == null || !fragment.onActivityBackPressed()) {
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -84,17 +101,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
 
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW
             || getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            // show an X in the toolbar which closes the activity - if this is blog preview
-            boolean showCrossButton = getPostListType() == ReaderPostListType.BLOG_PREVIEW;
-            if (showCrossButton) {
-                toolbar.setNavigationIcon(R.drawable.ic_cross_white_24dp);
-            }
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    finish();
-                }
-            });
+            toolbar.setNavigationOnClickListener(view -> finish());
 
             if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 setTitle(R.string.reader_title_blog_preview);
@@ -189,15 +196,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        ReaderPostListFragment fragment = getListFragment();
-        if (fragment == null || !fragment.onActivityBackPressed()) {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
             getMenuInflater().inflate(R.menu.share, menu);
         }
@@ -206,10 +205,11 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @SuppressLint("NonConstantResourceId")
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
                 return true;
             case R.id.menu_share:
                 shareSite();
@@ -260,6 +260,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
+        setTitle("");
     }
 
     /*
@@ -274,12 +275,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
-
-        String title = ReaderBlogTable.getBlogName(blogId);
-        if (title.isEmpty()) {
-            title = getString(R.string.reader_title_blog_preview);
-        }
-        setTitle(title);
+        setTitle("");
     }
 
     private void showListFragmentForFeed(long feedId) {

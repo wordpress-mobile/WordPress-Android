@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.compose.utils
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Build
 import androidx.compose.material.LocalContentAlpha
@@ -34,8 +35,9 @@ fun withFullContentAlpha(content: @Composable () -> Unit): @Composable () -> Uni
  * @param content The Composable function to be rendered with the overridden locale.
  */
 
-@Suppress("DEPRECATION")
 @Composable
+@Suppress("DEPRECATION")
+@SuppressLint("AppBundleLocaleChanges")
 fun LocaleAwareComposable(
     locale: Locale = Locale.getDefault(),
     onLocaleChange: (Locale) -> Unit = {},

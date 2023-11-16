@@ -79,8 +79,7 @@ abstract class PublishSettingsFragment : Fragment() {
     private fun observeOnAddToCalendar() {
         viewModel.onAddToCalendar.observeEvent(viewLifecycleOwner) { calendarEvent ->
             val calIntent = Intent(Intent.ACTION_INSERT)
-            calIntent.data = Events.CONTENT_URI
-            calIntent.type = "vnd.android.cursor.item/event"
+            calIntent.setDataAndType(Events.CONTENT_URI, "vnd.android.cursor.item/event")
             calIntent.putExtra(Events.TITLE, calendarEvent.title)
             calIntent.putExtra(Events.DESCRIPTION, calendarEvent.description)
             calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendarEvent.startTime)

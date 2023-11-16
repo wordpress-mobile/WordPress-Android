@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.ComponentDialog
+import androidx.activity.addCallback
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,6 +32,7 @@ import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.Jetpa
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.compose.state.LoadedState
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.extensions.exhaustive
+import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 
 @AndroidEntryPoint
@@ -59,15 +62,14 @@ class JetpackFullPluginInstallOnboardingDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        object : Dialog(requireContext(), theme) {
-            override fun onBackPressed() {
-                viewModel.onDismissScreenClick()
-                super.onBackPressed()
-            }
-        }.apply {
+        super.onCreateDialog(savedInstanceState).apply {
+            (this as ComponentDialog).onBackPressedDispatcher
+                .addCallback(this@JetpackFullPluginInstallOnboardingDialogFragment) {
+                    viewModel.onDismissScreenClick()
+                    onBackPressedDispatcher.onBackPressedCompat(this)
+                }
             setStatusBarAsSurfaceColor()
         }
-
 
     @Composable
     private fun JetpackFullPluginInstallOnboardingScreen(

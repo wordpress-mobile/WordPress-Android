@@ -4,6 +4,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -32,6 +35,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 import java.util.List;
 
@@ -94,11 +98,21 @@ public class PeopleManagementActivity extends LocaleAwareActivity
     private SiteModel mSite;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDispatcher.register(this);
 
         setContentView(R.layout.people_management_activity);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (!navigateBackToPeopleListFragment()) {
+                    CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -218,16 +232,9 @@ public class PeopleManagementActivity extends LocaleAwareActivity
     }
 
     @Override
-    public void onBackPressed() {
-        if (!navigateBackToPeopleListFragment()) {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.remove_person) {
             confirmRemovePerson();
@@ -239,7 +246,7 @@ public class PeopleManagementActivity extends LocaleAwareActivity
             if (peopleInviteFragment == null) {
                 peopleInviteFragment = PeopleInviteFragment.newInstance(mSite);
             }
-            if (peopleInviteFragment != null && !peopleInviteFragment.isAdded()) {
+            if (!peopleInviteFragment.isAdded()) {
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, peopleInviteFragment, KEY_PEOPLE_INVITE_FRAGMENT);
                 fragmentTransaction.addToBackStack(null);

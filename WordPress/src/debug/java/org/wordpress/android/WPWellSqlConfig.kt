@@ -12,6 +12,7 @@ import com.yarolegovich.wellsql.WellTableManager
 import org.wordpress.android.fluxc.persistence.WellSqlConfig
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import android.R as AndroidR
 
 class WPWellSqlConfig(context: Context) : WellSqlConfig(context) {
     /**
@@ -28,7 +29,7 @@ class WPWellSqlConfig(context: Context) : WellSqlConfig(context) {
             val toast = Toast.makeText(context, "Database downgraded, recreating tables and loading sites", LENGTH_LONG)
             toast.view?.let { view ->
                 view.background.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN)
-                view.findViewById<TextView>(android.R.id.message)?.setTextColor(Color.WHITE)
+                view.findViewById<TextView>(AndroidR.id.message)?.setTextColor(Color.WHITE)
             }
             toast.setGravity(Gravity.CENTER, 0, 0)
             toast.show()

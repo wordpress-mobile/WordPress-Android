@@ -4,16 +4,19 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.pages.PageItem.Page
+import org.wordpress.android.ui.pages.PageItem.VirtualHomepage
 import org.wordpress.android.ui.pages.PageItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageDividerViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
+import org.wordpress.android.ui.pages.PageItemViewHolder.VirtualHomepageViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
 @Suppress("LongParameterList")
 class PageListAdapter(
-    private val onMenuAction: (PageItem.Action, Page) -> Boolean,
+    private val onMenuAction: (PagesListAction, Page) -> Boolean,
     private val onItemTapped: (Page) -> Unit,
+    private val onVirtualHomepageAction: (VirtualHomepage.Action) -> Unit,
     private val onEmptyActionButtonTapped: () -> Unit,
     private val isSitePhotonCapable: Boolean,
     private val isPrivateAtSite: Boolean,
@@ -30,6 +33,7 @@ class PageListAdapter(
             )
             PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
             PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent, onEmptyActionButtonTapped)
+            PageItem.Type.VIRTUAL_HOMEPAGE.viewType -> VirtualHomepageViewHolder(parent, onVirtualHomepageAction)
             else -> throw Throwable("Unexpected view type")
         }
     }

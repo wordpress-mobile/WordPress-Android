@@ -2,6 +2,7 @@
 
 package org.wordpress.android.ui.posts
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
@@ -13,11 +14,10 @@ import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Spinner
 import android.widget.Toast
-import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.snackbar.Snackbar
@@ -40,7 +40,6 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils.observeBottomSheet
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel
-import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -49,22 +48,25 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissBy
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostListType.SEARCH
-import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment.Companion.newInstance
+import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.observeEvent
-import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel
 import javax.inject.Inject
+import android.R as AndroidR
 
 const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
 const val STATE_KEY_PREVIEW_STATE = "stateKeyPreviewState"
@@ -132,11 +134,11 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun getEditPostRepository() = editPostRepository
 
     private lateinit var viewModel: PostListMainViewModel
-    private lateinit var postListCreateMenuViewModel: PostListCreateMenuViewModel
 
     private lateinit var postsPagerAdapter: PostsPagerAdapter
     private lateinit var searchActionButton: MenuItem
-    private lateinit var toggleViewLayoutMenuItem: MenuItem
+    private lateinit var authorFilterMenuItem: MenuItem
+    private lateinit var authorFilterSpinner: Spinner
 
     private var restorePreviousSearch = false
 
@@ -165,7 +167,7 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     private fun restartWhenSiteHasChanged(intent: Intent) {
-        val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+        val site = requireNotNull(intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
         if (site.id != this.site.id) {
             finish()
             startActivity(intent)
@@ -180,14 +182,14 @@ class PostsListActivity : LocaleAwareActivity(),
             setContentView(root)
             binding = this
 
-            site = if (savedInstanceState == null) {
-                checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
-                    "SiteModel cannot be null, check the PendingIntent starting PostsListActivity"
+            site = requireNotNull(
+                if (savedInstanceState == null) {
+                    intent.getSerializableExtraCompat(WordPress.SITE)
+                } else {
+                    restorePreviousSearch = true
+                    savedInstanceState.getSerializableCompat(WordPress.SITE)
                 }
-            } else {
-                restorePreviousSearch = true
-                savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-            }
+            ) { "SiteModel cannot be null, check the PendingIntent starting PostsListActivity" }
 
             val initPreviewState = if (savedInstanceState == null) {
                 PostListRemotePreviewState.NONE
@@ -201,14 +203,13 @@ class PostsListActivity : LocaleAwareActivity(),
                 LocalId(savedInstanceState.getInt(STATE_KEY_BOTTOMSHEET_POST_ID, 0))
             }
 
-            val actionsShownByDefault = intent.getBooleanExtra(ACTIONS_SHOWN_BY_DEFAULT, false)
             val tabIndex = intent.getIntExtra(TAB_INDEX, PostListType.PUBLISHED.ordinal)
 
             setupActionBar()
             setupContent()
             initViewModel(initPreviewState, currentBottomSheetPostId)
             initBloggingReminders()
-            initCreateMenuViewModel(tabIndex, actionsShownByDefault)
+            initTabLayout(tabIndex)
             loadIntentData(intent)
         }
     }
@@ -223,17 +224,6 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     private fun PostListActivityBinding.setupContent() {
-        val authorSelectionAdapter = AuthorSelectionAdapter(this@PostsListActivity)
-        postListAuthorSelection.adapter = authorSelectionAdapter
-
-        postListAuthorSelection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                viewModel.updateAuthorFilterSelection(id)
-            }
-        }
-
         // Just a safety measure - there shouldn't by any existing listeners since this method is called just once.
         postPager.clearOnPageChangeListeners()
 
@@ -245,83 +235,39 @@ class PostsListActivity : LocaleAwareActivity(),
         }
 
         fabButton.setOnLongClickListener {
-            viewModel.onFabLongPressed()
+            if (fabButton.isHapticFeedbackEnabled) {
+                fabButton.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            }
+
+            Toast.makeText(fabButton.context, R.string.create_post_fab_tooltip, Toast.LENGTH_SHORT).show()
             return@setOnLongClickListener true
         }
 
         fabButton.redirectContextClickToLongPressListener()
 
-        fabTooltip.setOnClickListener {
-            postListCreateMenuViewModel.onTooltipTapped()
-        }
-
         postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, supportFragmentManager)
         postPager.adapter = postsPagerAdapter
     }
 
-    private fun PostListActivityBinding.initCreateMenuViewModel(tabIndex: Int, actionsShownByDefault: Boolean) {
-        postListCreateMenuViewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)
-            .get(PostListCreateMenuViewModel::class.java)
-
-        postListCreateMenuViewModel.isBottomSheetShowing.observeEvent(this@PostsListActivity, { isBottomSheetShowing ->
-            var createMenuFragment = supportFragmentManager.findFragmentByTag(PostListCreateMenuFragment.TAG)
-            if (createMenuFragment == null) {
-                if (isBottomSheetShowing) {
-                    createMenuFragment = PostListCreateMenuFragment.newInstance()
-                    createMenuFragment.show(supportFragmentManager, PostListCreateMenuFragment.TAG)
-                }
-            } else {
-                if (!isBottomSheetShowing) {
-                    createMenuFragment as PostListCreateMenuFragment
-                    createMenuFragment.dismiss()
-                }
-            }
-        })
-
-        postListCreateMenuViewModel.fabUiState.observe(this@PostsListActivity, { fabUiState ->
-            val message = resources.getString(fabUiState.CreateContentMessageId)
-
-            if (fabUiState.isFabTooltipVisible) {
-                fabTooltip.setMessage(message)
-                fabTooltip.show()
-            } else {
-                fabTooltip.hide()
-            }
-
-            fabButton.contentDescription = message
-        })
-
-        postListCreateMenuViewModel.createAction.observe(this@PostsListActivity, { createAction ->
-            when (createAction) {
-                ActionType.CREATE_NEW_POST -> viewModel.newPost()
-                ActionType.CREATE_NEW_STORY -> viewModel.newStoryPost()
-                ActionType.CREATE_NEW_PAGE -> Unit // Do nothing
-                ActionType.NO_ACTION -> Unit // Do nothing
-                ActionType.ANSWER_BLOGGING_PROMPT -> Unit // Do nothing
-                null -> Unit // Do nothing
-            }
-        })
-
-        // Notification opens in Drafts tab
+    private fun PostListActivityBinding.initTabLayout(tabIndex: Int) {
+       // Notification opens in Drafts tab
         tabLayout.getTabAt(tabIndex)?.select()
-
-        postListCreateMenuViewModel.start(site, actionsShownByDefault)
     }
 
     private fun PostListActivityBinding.initViewModel(
         initPreviewState: PostListRemotePreviewState,
         currentBottomSheetPostId: LocalId
     ) {
-        viewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory).get(PostListMainViewModel::class.java)
+        viewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)[PostListMainViewModel::class.java]
         viewModel.start(site, initPreviewState, currentBottomSheetPostId, editPostRepository)
 
-        viewModel.viewState.observe(this@PostsListActivity, { state ->
+        viewModel.viewState.observe(this@PostsListActivity) { state ->
             state?.let {
                 loadViewState(state)
             }
-        })
+        }
 
-        viewModel.postListAction.observe(this@PostsListActivity, { postListAction ->
+        viewModel.postListAction.observe(this@PostsListActivity) { postListAction ->
             postListAction?.let { action ->
                 handlePostListAction(
                     this@PostsListActivity,
@@ -332,33 +278,33 @@ class PostsListActivity : LocaleAwareActivity(),
                     blazeFeatureUtils
                 )
             }
-        })
-        viewModel.selectTab.observe(this@PostsListActivity, { tabIndex ->
+        }
+        viewModel.selectTab.observe(this@PostsListActivity) { tabIndex ->
             tabIndex?.let {
                 tabLayout.getTabAt(tabIndex)?.select()
             }
-        })
-        viewModel.scrollToLocalPostId.observe(this@PostsListActivity, { targetLocalPostId ->
+        }
+        viewModel.scrollToLocalPostId.observe(this@PostsListActivity) { targetLocalPostId ->
             targetLocalPostId?.let {
                 postsPagerAdapter.getItemAtPosition(postPager.currentItem)?.scrollToTargetPost(targetLocalPostId)
             }
-        })
-        viewModel.snackBarMessage.observe(this@PostsListActivity, {
+        }
+        viewModel.snackBarMessage.observe(this@PostsListActivity) {
             it?.let { snackBarHolder -> showSnackBar(snackBarHolder) }
-        })
-        viewModel.toastMessage.observe(this@PostsListActivity, {
+        }
+        viewModel.toastMessage.observe(this@PostsListActivity) {
             it?.show(this@PostsListActivity)
-        })
-        viewModel.previewState.observe(this@PostsListActivity, {
+        }
+        viewModel.previewState.observe(this@PostsListActivity) {
             progressDialog = progressDialogHelper.updateProgressDialogState(
                 this@PostsListActivity,
                 progressDialog,
                 it.progressDialogUiState,
                 uiHelpers
             )
-        })
+        }
         setupActions()
-        viewModel.openPrepublishingBottomSheet.observeEvent(this@PostsListActivity, {
+        viewModel.openPrepublishingBottomSheet.observeEvent(this@PostsListActivity) {
             val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
             if (fragment == null) {
                 val prepublishingFragment = newInstance(
@@ -368,36 +314,33 @@ class PostsListActivity : LocaleAwareActivity(),
                 )
                 prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
             }
-        })
-
-        setupFabEvents()
+        }
     }
 
     private fun initBloggingReminders() {
         bloggingRemindersViewModel = ViewModelProvider(
             this,
             viewModelFactory
-        ).get(BloggingRemindersViewModel::class.java)
+        )[BloggingRemindersViewModel::class.java]
 
         observeBottomSheet(
             bloggingRemindersViewModel.isBottomSheetShowing,
             this,
-            BLOGGING_REMINDERS_FRAGMENT_TAG,
-            {
-                if (!this.isFinishing) {
-                    this.supportFragmentManager
-                } else {
-                    null
-                }
+            BLOGGING_REMINDERS_FRAGMENT_TAG
+        ) {
+            if (!this.isFinishing) {
+                this.supportFragmentManager
+            } else {
+                null
             }
-        )
+        }
     }
 
     private fun setupActions() {
-        viewModel.dialogAction.observe(this@PostsListActivity, {
+        viewModel.dialogAction.observe(this@PostsListActivity) {
             it?.show(this@PostsListActivity, supportFragmentManager, uiHelpers)
-        })
-        viewModel.postUploadAction.observe(this@PostsListActivity, {
+        }
+        viewModel.postUploadAction.observe(this@PostsListActivity) {
             it?.let { uploadAction ->
                 handleUploadAction(
                     uploadAction,
@@ -409,25 +352,7 @@ class PostsListActivity : LocaleAwareActivity(),
                     bloggingRemindersViewModel.onPublishingPost(site.id, isFirstTimePublishing)
                 }
             }
-        })
-    }
-
-    private fun PostListActivityBinding.setupFabEvents() {
-        viewModel.onFabClicked.observeEvent(this@PostsListActivity, {
-            postListCreateMenuViewModel.onFabClicked()
-        })
-
-        viewModel.onFabLongPressedForCreateMenu.observeEvent(this@PostsListActivity, {
-            postListCreateMenuViewModel.onFabLongPressed()
-            Toast.makeText(fabButton.context, R.string.create_post_story_fab_tooltip, Toast.LENGTH_SHORT).show()
-        })
-
-        viewModel.onFabLongPressedForPostList.observe(this@PostsListActivity, {
-            if (fabButton.isHapticFeedbackEnabled) {
-                fabButton.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-            }
-            Toast.makeText(fabButton.context, R.string.create_post_fab_tooltip, Toast.LENGTH_SHORT).show()
-        })
+        }
     }
 
     private fun PostListActivityBinding.loadViewState(state: PostListMainViewState) {
@@ -437,20 +362,19 @@ class PostsListActivity : LocaleAwareActivity(),
             fabButton.hide()
         }
 
-        val authorSelectionVisibility = if (state.isAuthorFilterVisible) View.VISIBLE else View.GONE
-        postListAuthorSelection.visibility = authorSelectionVisibility
-        postListTabLayoutFadingEdge.visibility = authorSelectionVisibility
+        // The author selection is in the toolbar, which doesn't get initialized until
+        // after loadViewState is invoked. After the toolbar is initialized, the state is
+        // updated and the adapter can be set properly. The visibility of the author filter
+        // is handled in the viewModel itself
+        if (::authorFilterMenuItem.isInitialized && ::authorFilterSpinner.isInitialized) {
+            authorFilterMenuItem.isVisible = state.isAuthorFilterVisible
 
-        val tabLayoutPaddingStart =
-            if (state.isAuthorFilterVisible) {
-                resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
-            } else 0
-        tabLayout.setPaddingRelative(tabLayoutPaddingStart, 0, 0, 0)
-        val authorSelectionAdapter = postListAuthorSelection.adapter as AuthorSelectionAdapter
-        authorSelectionAdapter.updateItems(state.authorFilterItems)
+            val authorSelectionAdapter = authorFilterSpinner.adapter as AuthorSelectionAdapter
+            authorSelectionAdapter.updateItems(state.authorFilterItems)
 
-        authorSelectionAdapter.getIndexOfSelection(state.authorFilterSelection)?.let { selectionIndex ->
-            postListAuthorSelection.setSelection(selectionIndex)
+            authorSelectionAdapter.getIndexOfSelection(state.authorFilterSelection)?.let { selectionIndex ->
+                authorFilterSpinner.setSelection(selectionIndex)
+            }
         }
     }
 
@@ -477,8 +401,9 @@ class PostsListActivity : LocaleAwareActivity(),
 
     private fun loadIntentData(intent: Intent) {
         if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
-            val notificationType: NotificationType =
-                intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
+            val notificationType = requireNotNull(
+                intent.getSerializableExtraCompat<NotificationType>(ARG_NOTIFICATION_TYPE)
+            )
             systemNotificationTracker.trackTappedNotification(notificationType)
         }
 
@@ -491,7 +416,6 @@ class PostsListActivity : LocaleAwareActivity(),
     public override fun onResume() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.POSTS)
-        postListCreateMenuViewModel.onResume()
     }
 
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
@@ -512,9 +436,11 @@ class PostsListActivity : LocaleAwareActivity(),
 
                 viewModel.handleEditPostResult(data)
             }
+
             requestCode == RequestCodes.REMOTE_PREVIEW_POST -> {
                 viewModel.handleRemotePreviewClosing()
             }
+
             requestCode == RequestCodes.PHOTO_PICKER &&
                     resultCode == Activity.RESULT_OK &&
                     data != null -> {
@@ -525,6 +451,7 @@ class PostsListActivity : LocaleAwareActivity(),
                     STORY_FROM_POSTS_LIST
                 )
             }
+
             requestCode == RequestCodes.CREATE_STORY -> {
                 val isNewStory = data?.getStringExtra(GutenbergEditorFragment.ARG_STORY_BLOCK_ID) == null
                 bloggingRemindersViewModel.onPublishingPost(
@@ -536,11 +463,10 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            onBackPressed()
+        if (item.itemId == AndroidR.id.home) {
+            onBackPressedDispatcher.onBackPressed()
             return true
-        } else if (item.itemId == R.id.toggle_post_list_item_layout) {
-            viewModel.toggleViewLayout()
+        } else if (item.itemId == R.id.author_filter_menu_item) {
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -548,22 +474,17 @@ class PostsListActivity : LocaleAwareActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.posts_list_toggle_view_layout, menu)
-        toggleViewLayoutMenuItem = menu.findItem(R.id.toggle_post_list_item_layout)
-        viewModel.viewLayoutTypeMenuUiState.observe(this, { menuUiState ->
-            menuUiState?.let {
-                updateMenuIcon(menuUiState.iconRes, toggleViewLayoutMenuItem)
-                updateMenuTitle(menuUiState.title, toggleViewLayoutMenuItem)
-            }
-        })
-
-        searchActionButton = menu.findItem(R.id.toggle_post_search)
+        menuInflater.inflate(R.menu.posts_and_pages_list_menu, menu)
+        authorFilterMenuItem = menu.findItem(R.id.author_filter_menu_item)
+        searchActionButton = menu.findItem(R.id.toggle_search)
 
         initSearchFragment()
         binding.initSearchView()
+        initAuthorFilter(authorFilterMenuItem)
         return true
     }
 
+    @SuppressLint("CommitTransaction")
     private fun initSearchFragment() {
         val searchFragmentTag = "search_fragment"
 
@@ -578,14 +499,40 @@ class PostsListActivity : LocaleAwareActivity(),
         }
     }
 
+    private fun initAuthorFilter(menuItem: MenuItem) {
+        // Get the action view (Spinner) from the menu item
+        val actionView = menuItem.actionView
+        if (actionView is Spinner) {
+            authorFilterSpinner = actionView
+            val authorSelectionAdapter = AuthorSelectionAdapter(this@PostsListActivity)
+            authorFilterSpinner.adapter = authorSelectionAdapter
+
+            // Set a listener if needed
+            authorFilterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parentView: AdapterView<*>?,
+                    selectedItemView: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    viewModel.updateAuthorFilterSelection(id)
+                }
+
+                override fun onNothingSelected(parentView: AdapterView<*>?) {
+                    // Do nothing here
+                }
+            }
+            viewModel.refreshUiStateForAuthorFilter()
+        }
+    }
     private fun PostListActivityBinding.initSearchView() {
         searchActionButton.setOnActionExpandListener(object : OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 viewModel.onSearchExpanded(restorePreviousSearch)
                 return true
             }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 viewModel.onSearchCollapsed()
                 return true
             }
@@ -609,10 +556,10 @@ class PostsListActivity : LocaleAwareActivity(),
             }
         })
 
-        viewModel.isSearchExpanded.observe(this@PostsListActivity, { isExpanded ->
-            toggleViewLayoutMenuItem.isVisible = !isExpanded
+        viewModel.isSearchExpanded.observe(this@PostsListActivity) { isExpanded ->
+            authorFilterMenuItem.isVisible = !isExpanded
             toggleSearch(isExpanded)
-        })
+        }
     }
 
     private fun PostListActivityBinding.toggleSearch(isExpanded: Boolean) {
@@ -663,18 +610,6 @@ class PostsListActivity : LocaleAwareActivity(),
 
     override fun onDismissByOutsideTouch(instanceTag: String) {
         viewModel.onDismissByOutsideTouchForBasicDialog(instanceTag)
-    }
-
-    // Menu PostListViewLayoutType handling
-
-    private fun updateMenuIcon(@DrawableRes iconRes: Int, menuItem: MenuItem) {
-        ContextCompat.getDrawable(this, iconRes)?.let { drawable ->
-            menuItem.setIcon(drawable)
-        }
-    }
-
-    private fun updateMenuTitle(title: UiString, menuItem: MenuItem): MenuItem? {
-        return menuItem.setTitle(uiHelpers.getTextOfUiString(this@PostsListActivity, title))
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {

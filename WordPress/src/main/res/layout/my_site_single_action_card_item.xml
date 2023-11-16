@@ -19,7 +19,6 @@
             android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_extra_large"
             android:contentDescription="@null"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_wordpress_blue_32dp" />
@@ -30,13 +29,30 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/single_action_card_padding"
             android:layout_marginStart="@dimen/single_action_card_padding"
+            android:layout_marginTop="@dimen/margin_extra_large"
             android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/text_sz_large"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/learn_more"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/single_action_card_image"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/jp_migration_success_card_message" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/learn_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:gravity="center_vertical|start"
+            android:text="@string/learn_more"
+            android:textAlignment="viewStart"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="@dimen/text_sz_large"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_extra_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/single_action_card_text"
+            app:layout_constraintTop_toBottomOf="@+id/single_action_card_text" />
 
         <View
             android:id="@+id/single_action_card_cover"

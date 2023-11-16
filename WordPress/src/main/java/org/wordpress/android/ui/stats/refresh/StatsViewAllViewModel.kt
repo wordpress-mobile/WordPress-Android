@@ -20,7 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.map
+import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.throttle
 import org.wordpress.android.viewmodel.Event
@@ -42,7 +42,7 @@ class StatsViewAllViewModel(
 
     val navigationTarget: LiveData<Event<NavigationTarget>> = useCase.navigationTarget
 
-    val data: LiveData<StatsBlock> = useCase.liveData.map { useCaseModel ->
+    val data: LiveData<StatsBlock> = useCase.liveData.mapSafe { useCaseModel ->
         when (useCaseModel.state) {
             SUCCESS -> StatsBlock.Success(useCaseModel.type, useCaseModel.data ?: listOf())
             ERROR -> StatsBlock.Error(useCaseModel.type, useCaseModel.stateData ?: useCaseModel.data ?: listOf())
@@ -57,7 +57,7 @@ class StatsViewAllViewModel(
     private val _showSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val showSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = _showSnackbarMessage
 
-    val toolbarHasShadow = dateSelectorData.map { !it.isVisible }
+    val toolbarHasShadow = dateSelectorData.mapSafe { !it.isVisible }
 
     fun start(startDate: SelectedDate?) {
         launch {

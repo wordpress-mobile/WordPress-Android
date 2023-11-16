@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.main.jetpack.staticposter.compose
 
+import android.annotation.SuppressLint
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -16,9 +20,11 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -36,6 +42,7 @@ import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.components.buttons.PrimaryButton
 import org.wordpress.android.ui.compose.components.buttons.SecondaryButton
+import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.theme.JpColorPalette
 import org.wordpress.android.ui.compose.utils.uiStringText
@@ -45,12 +52,13 @@ import org.wordpress.android.ui.main.jetpack.staticposter.toContentUiState
 import org.wordpress.android.util.extensions.isRtl
 
 @Composable
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 fun JetpackStaticPoster(
     uiState: UiState.Content,
     onPrimaryClick: () -> Unit = {},
     onSecondaryClick: () -> Unit = {},
     onBackClick: () -> Unit = {},
-) = with(uiState) {
+): Unit = with(uiState) {
     Scaffold(
         topBar = {
             if (showTopBar) {
@@ -62,12 +70,18 @@ fun JetpackStaticPoster(
             }
         },
     ) {
+        val orientation = LocalConfiguration.current.orientation
+        val verticalPadding = remember(orientation) {
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) 60.dp else 30.dp
+        }
+
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(horizontal = 30.dp)
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 30.dp, vertical = verticalPadding)
         ) {
             Column(
                 horizontalAlignment = Alignment.Start,
@@ -76,7 +90,7 @@ fun JetpackStaticPoster(
                     .padding(bottom = 20.dp)
                     .fillMaxWidth(),
             ) {
-                val animRes = if (LocalContext.current.isRtl()) animResLtrToRtl.second else animResLtrToRtl.first
+                val animRes = if (LocalContext.current.isRtl()) R.raw.wp2jp_rtl else R.raw.wp2jp_left
                 val lottieComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(animRes))
                 LottieAnimation(lottieComposition)
                 Text(
@@ -101,7 +115,7 @@ fun JetpackStaticPoster(
                 onPrimaryClick,
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = JpColorPalette().primary,
-                    contentColor = JpColorPalette().onPrimary,
+                    contentColor = AppColor.White,
                 ),
                 padding = PaddingValues(bottom = 15.dp),
                 textStyle = MaterialTheme.typography.body1.copy(fontSize = 17.sp, fontWeight = FontWeight.SemiBold),

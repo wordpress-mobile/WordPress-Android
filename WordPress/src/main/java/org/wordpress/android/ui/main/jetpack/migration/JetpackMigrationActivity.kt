@@ -8,6 +8,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ActivityJetpackMigrationBinding
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
+import org.wordpress.android.util.extensions.getParcelableExtraCompat
 
 @AndroidEntryPoint
 class JetpackMigrationActivity : AppCompatActivity() {
@@ -18,7 +19,7 @@ class JetpackMigrationActivity : AppCompatActivity() {
             setContentView(root)
             if (savedInstanceState == null) {
                 val showDeleteWpState = intent.getBooleanExtra(KEY_SHOW_DELETE_WP_STATE, false)
-                val deepLinkData = intent.getParcelableExtra<PreMigrationDeepLinkData>(KEY_DEEP_LINK_DATA)
+                val deepLinkData = intent.getParcelableExtraCompat<PreMigrationDeepLinkData>(KEY_DEEP_LINK_DATA)
                 val fragment = JetpackMigrationFragment.newInstance(showDeleteWpState, deepLinkData)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment)

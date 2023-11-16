@@ -45,6 +45,7 @@ import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -219,7 +220,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ProfilingUtils.start("Visual Editor Startup");
@@ -292,8 +293,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mFormattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
         mFormattingToolbar.setExpanded(mIsToolbarExpanded);
 
-        View mediaCollapseButton = mFormattingToolbar.findViewById(R.id.format_bar_button_media_collapsed);
-        View mediaExpandButton = mFormattingToolbar.findViewById(R.id.format_bar_button_media_expanded);
+        View mediaCollapseButton = mFormattingToolbar.findViewById(
+                org.wordpress.aztec.R.id.format_bar_button_media_collapsed
+        );
+        View mediaExpandButton = mFormattingToolbar.findViewById(
+                org.wordpress.aztec.R.id.format_bar_button_media_expanded
+        );
 
         mediaCollapseButton.setBackgroundTintList(ContextCompat
                 .getColorStateList(mediaExpandButton.getContext(), R.color.media_button_background_tint_selector));
@@ -451,28 +456,25 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_aztec, menu);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         // TODO: disable undo/redo in media mode
         boolean canRedo = mContent.history.redoValid();
         boolean canUndo = mContent.history.undoValid();
 
-        if (menu != null) {
-            MenuItem redoItem = menu.findItem(R.id.redo);
-            if (redoItem != null) {
-                setUndoRedoAppearance(redoItem, canRedo);
-            }
-
-            MenuItem undoItem = menu.findItem(R.id.undo);
-            if (undoItem != null) {
-                setUndoRedoAppearance(undoItem, canUndo);
-            }
+        MenuItem redoItem = menu.findItem(R.id.redo);
+        if (redoItem != null) {
+            setUndoRedoAppearance(redoItem, canRedo);
         }
 
+        MenuItem undoItem = menu.findItem(R.id.undo);
+        if (undoItem != null) {
+            setUndoRedoAppearance(undoItem, canUndo);
+        }
 
         super.onPrepareOptionsMenu(menu);
     }
@@ -498,7 +500,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.undo) {
             if (mContent.getVisibility() == View.VISIBLE) {
                 mContent.undo();
@@ -977,7 +979,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.AttributePredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
         Drawable iconDrawable = getResources().getDrawable(R.drawable.media_retry_image);
-        float textSize = getResources().getDimension(R.dimen.text_header);
+        float textSize = getResources().getDimension(org.wordpress.aztec.R.dimen.text_header);
         TextDrawable textDrawable = new TextDrawable(getResources(),
                 getString(R.string.editor_failed_to_insert_media_tap_to_retry), textSize);
         // Divide icon height by 2 and shift the text vertically (note: both elements are vertically centered)
@@ -1674,6 +1676,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override public void showEditorHelp() {
+    }
+
+    @Override public void onUndoPressed() {
+    }
+
+    @Override public void onRedoPressed() {
     }
 
     private void onMediaTapped(@NonNull final AztecAttributes attrs, int naturalWidth, int naturalHeight,

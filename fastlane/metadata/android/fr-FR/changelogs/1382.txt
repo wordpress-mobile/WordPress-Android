@@ -1,0 +1,3 @@
+23.6 :
+- Les icônes de réseaux sociaux inactives et les URL de compositions synchronisées ne sont plus invisibles dans les thèmes reposant sur les blocs qui utilisent le mode sombre. Bien essayé les gars, mais contrairement à ce que vous pensez, vous n’êtes pas des ninjas.
+- Dans l’éditeur classique, vous pouvez désormais convertir votre contenu en blocs d’un simple clic sur un bouton.

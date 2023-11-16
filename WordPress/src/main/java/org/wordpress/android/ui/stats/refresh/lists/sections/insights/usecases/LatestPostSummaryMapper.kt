@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithImage
@@ -29,7 +28,7 @@ class LatestPostSummaryMapper
     ): ListItemWithImage {
         if (model == null) {
             return ListItemWithImage(
-                title = resourceProvider.getString(string.stats_insights_latest_post_empty),
+                title = resourceProvider.getString(R.string.stats_insights_latest_post_empty),
                 imageUrl = null
             )
         }

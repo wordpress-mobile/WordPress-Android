@@ -3,6 +3,7 @@ package org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.comp
 import android.content.res.Configuration
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
@@ -27,7 +28,8 @@ fun JPInstallFullPluginAnimation(
     val lottieComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(animationRawRes))
     LottieAnimation(
         modifier = modifier,
-        composition = lottieComposition
+        composition = lottieComposition,
+        alignment = Alignment.CenterStart
     )
 }
 

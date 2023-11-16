@@ -3,10 +3,15 @@ package org.wordpress.android.ui.domains
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.DomainsDashboardFragmentBinding
@@ -18,20 +23,30 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistr
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.config.DomainManagementFeatureConfig
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
+class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment), MenuProvider {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
     lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var domainManagementFeatureConfig: DomainManagementFeatureConfig
+
     private lateinit var viewModel: DomainsDashboardViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
+
+        if (BuildConfig.IS_JETPACK_APP && domainManagementFeatureConfig.isEnabled()) {
+            requireActivity().addMenuProvider(this, viewLifecycleOwner)
+        }
 
         with(DomainsDashboardFragmentBinding.bind(view)) {
             setupViews()
@@ -44,10 +59,22 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
         contentRecyclerView.adapter = DomainsDashboardAdapter(uiHelpers)
     }
 
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.domains_dashboard_menu, menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+        R.id.all_domains_item -> {
+            context?.let { ActivityLauncher.openDomainManagement(it) }
+            true
+        }
+        else -> true
+    }
+
     private fun setupViewModel() {
         val intent = requireActivity().intent
-        val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(DomainsDashboardViewModel::class.java)
+        val site = requireNotNull(intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[DomainsDashboardViewModel::class.java]
         viewModel.start(site)
     }
 

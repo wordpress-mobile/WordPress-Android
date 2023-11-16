@@ -105,7 +105,7 @@ class SiteCreationServiceManager @Inject constructor(
         launch {
             AppLog.i(
                 T.SITE_CREATION,
-                "Dispatching Create Site Action, SiteName: ${siteData.domain}"
+                "Dispatching Create Site Action, SiteName: ${siteData.domain}, isFree: ${siteData.isFree}"
             )
             val createSiteEvent: OnNewSiteCreated
             try {

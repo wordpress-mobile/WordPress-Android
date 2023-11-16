@@ -26,7 +26,7 @@ class HelpViewModelTest : BaseUnitTest() {
     lateinit var wordPress: WordPress
 
     @Mock
-    private lateinit var onSignoutCompletedObserver: Observer<Unit>
+    private lateinit var onSignoutCompletedObserver: Observer<Unit?>
 
     private val accountStore = mock<AccountStore>()
     private val siteStore = mock<SiteStore>()

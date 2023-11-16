@@ -353,7 +353,7 @@ class StoriesEventListener @Inject constructor(
                     dialog.show()
                     return
                 }
-                if (media.url != null && media.uploadState == UPLOADED.toString()) {
+                if (media.url.isNotBlank() && media.uploadState == UPLOADED.toString()) {
                     // Note: we should actually do this when the editor fragment starts instead of waiting for user
                     // input.
                     // Notify the editor fragment upload was successful and it should replace the local url by the

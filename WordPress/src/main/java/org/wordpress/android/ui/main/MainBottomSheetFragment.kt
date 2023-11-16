@@ -16,6 +16,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.RecyclerViewBottomSheetBinding
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 class MainBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject
@@ -46,7 +47,7 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
                 val sheetDialog = dialogInterface as? BottomSheetDialog
 
                 val bottomSheet = sheetDialog?.findViewById<View>(
-                    com.google.android.material.R.id.design_bottom_sheet
+                    MaterialR.id.design_bottom_sheet
                 ) as? FrameLayout
 
                 bottomSheet?.let {

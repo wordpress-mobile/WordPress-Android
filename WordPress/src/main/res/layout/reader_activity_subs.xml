@@ -89,8 +89,8 @@
             android:layout_alignBottom="@+id/edit_add"
             android:layout_alignParentEnd="true"
             android:contentDescription="@string/add"
-            android:layout_marginStart="@dimen/margin_extra_medium_large"
-            android:layout_marginEnd="@dimen/margin_extra_medium_large"/>
+            android:layout_marginStart="@dimen/margin_extra_small_large"
+            android:layout_marginEnd="@dimen/margin_extra_small_large"/>
 
     </RelativeLayout>
 

@@ -13,4 +13,5 @@ sealed class LoginNavigationEvents {
     object CloseWithResultOk : LoginNavigationEvents()
     object ShowEmailLoginScreen : LoginNavigationEvents()
     object ShowLoginViaSiteAddressScreen : LoginNavigationEvents()
+    object ShowJetpackIndividualPluginOverlay : LoginNavigationEvents()
 }

@@ -108,9 +108,9 @@ class AddExistingMediaToPostUseCaseTest : BaseUnitTest() {
             }
         }
 
-        fun createMediaModel(mediaModelId: Long) =
-            MediaModel().apply {
-                this.mediaId = mediaModelId
-            }
+        fun createMediaModel(mediaModelId: Long) = MediaModel(
+            0,
+            mediaModelId
+        )
     }
 }

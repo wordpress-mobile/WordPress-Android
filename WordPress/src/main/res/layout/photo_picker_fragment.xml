@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/wp_stories_take_picture"
@@ -19,43 +18,73 @@
         android:visibility="gone"
         tools:ignore="InconsistentLayout" />
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
             android:id="@+id/recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/container_media_source_bar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:fadeScrollbars="true"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/barrier_bottom_bar"
+            app:layout_constraintTop_toBottomOf="@id/partial_media_access_prompt" />
 
         <org.wordpress.android.ui.ActionableEmptyView
             android:id="@+id/actionable_empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/container_media_source_bar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:visibility="gone"
             app:aevImage="@drawable/img_illustration_media_105dp"
             app:aevTitle="@string/media_empty_list"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/barrier_bottom_bar"
+            app:layout_constraintTop_toBottomOf="@id/partial_media_access_prompt"
             tools:visibility="visible" />
 
         <org.wordpress.android.ui.ActionableEmptyView
             android:id="@+id/soft_ask_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:visibility="gone"
             app:aevButton="@string/photo_picker_soft_ask_allow"
             app:aevImage="@drawable/img_illustration_add_media_150dp"
             app:aevTitle="@string/photo_picker_soft_ask_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/barrier_bottom_bar"
+            app:layout_constraintTop_toBottomOf="@id/partial_media_access_prompt"
             tools:visibility="visible" />
 
+        <include
+            layout="@layout/media_picker_include_partial_access_prompt"
+            android:id="@+id/partial_media_access_prompt"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_bottom_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top"
+            app:constraint_referenced_ids="container_insert_edit_bar,container_media_source_bar" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/container_media_source_bar"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_alignParentBottom="true"
             app:cardCornerRadius="0dp"
             app:cardElevation="@dimen/appbar_elevation">
@@ -103,9 +132,11 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container_insert_edit_bar"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:background="?attr/colorSurface"
             android:elevation="@dimen/message_bar_elevation"
             android:visibility="gone"
@@ -122,7 +153,7 @@
                 android:textAppearance="?attr/textAppearanceButton"
                 android:textColor="?attr/colorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/container_selection_bar" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/text_insert"
@@ -135,7 +166,7 @@
                 android:textAppearance="?attr/textAppearanceButton"
                 android:textColor="?attr/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/container_selection_bar" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

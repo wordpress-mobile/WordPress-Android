@@ -24,7 +24,7 @@ import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsFeature
 import java.util.Date
 
 /* SITE */
@@ -36,17 +36,12 @@ const val SITE_LOCAL_ID = 1
 private val PROMPT = BloggingPromptModel(
     id = 1234,
     text = "prompt text",
-    title = "",
-    content = "<!-- wp:pullquote -->\n" +
-            "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world" +
-            " live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of" +
-            " plinky.com)</cite></blockquote></figure>\n" +
-            "<!-- /wp:pullquote -->",
     date = Date(),
     isAnswered = false,
     attribution = "",
     respondentsCount = 5,
-    respondentsAvatarUrls = listOf()
+    respondentsAvatarUrls = listOf(),
+    answeredLink = "https://wordpress.com/tag/dailyprompt-1234",
 )
 
 @ExperimentalCoroutinesApi
@@ -58,7 +53,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     private lateinit var bloggingPromptsStore: BloggingPromptsStore
 
     @Mock
-    private lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    private lateinit var bloggingPromptsFeature: BloggingPromptsFeature
 
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
@@ -89,14 +84,14 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         bloggingPromptCardSource = BloggingPromptCardSource(
             selectedSiteRepository,
             bloggingPromptsStore,
-            bloggingPromptsFeatureConfig,
+            bloggingPromptsFeature,
             bloggingPromptsSettingsHelper,
             testDispatcher()
         )
     }
 
     private fun setUpMocks(isBloggingPromptFeatureEnabled: Boolean) = runBlocking {
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptFeatureEnabled)
+        whenever(bloggingPromptsFeature.isEnabled()).thenReturn(isBloggingPromptFeatureEnabled)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(appPrefsWrapper.getSkippedPromptDay(any())).thenReturn(null)
         whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(isBloggingPromptFeatureEnabled)

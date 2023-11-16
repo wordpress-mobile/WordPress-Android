@@ -16,7 +16,7 @@ class ReaderPage {
         return this
     }
 
-    fun openPost(postTitle: String?): ReaderViewPage {
+    fun openBlogOrPost(postTitle: String): ReaderViewPage {
         val post = Espresso.onView(ViewMatchers.withChild(ViewMatchers.withText(postTitle)))
         WPSupportUtils.scrollIntoView(R.id.reader_recycler_view, post, 1f)
         WPSupportUtils.clickOn(postTitle)

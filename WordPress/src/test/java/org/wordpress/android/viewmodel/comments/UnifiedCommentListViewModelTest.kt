@@ -15,7 +15,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_ERROR
@@ -96,7 +96,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         whenever(paginateCommentsResourceProvider.networkUtilsWrapper).thenReturn(networkUtilsWrapper)
         whenever(paginateCommentsResourceProvider.resourceProvider).thenReturn(resourceProvider)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(resourceProvider.getString(string.no_network_message)).thenReturn("No network")
+        whenever(resourceProvider.getString(R.string.no_network_message)).thenReturn("No network")
 
         batchModerateCommentsUseCase = BatchModerateCommentsUseCase(moderateCommentsResourceProvider)
         moderationWithUndoUseCase = ModerateCommentWithUndoUseCase(moderateCommentsResourceProvider)
@@ -191,7 +191,7 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         viewModel.reload()
 
         assert(result.size == 1)
-        assert(result.first().message == UiStringRes(string.no_network_message))
+        assert(result.first().message == UiStringRes(R.string.no_network_message))
 
         job.cancel()
     }

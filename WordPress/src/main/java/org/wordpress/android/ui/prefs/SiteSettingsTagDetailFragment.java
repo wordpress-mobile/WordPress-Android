@@ -54,8 +54,7 @@ public class SiteSettingsTagDetailFragment extends android.app.Fragment {
         Bundle args = new Bundle();
         if (term == null) {
             args.putBoolean(ARGS_IS_NEW_TERM, true);
-            term = new TermModel();
-            term.setTaxonomy(TaxonomyStore.DEFAULT_TAXONOMY_TAG);
+            term = new TermModel(TaxonomyStore.DEFAULT_TAXONOMY_TAG);
         }
         args.putSerializable(ARGS_TERM, term);
         fragment.setArguments(args);
@@ -63,7 +62,7 @@ public class SiteSettingsTagDetailFragment extends android.app.Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -95,20 +94,20 @@ public class SiteSettingsTagDetailFragment extends android.app.Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.tag_detail, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.menu_trash).setVisible(!mIsNewTerm);
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_trash && mListener != null) {
             mListener.onRequestDeleteTag(mTerm);
             return true;

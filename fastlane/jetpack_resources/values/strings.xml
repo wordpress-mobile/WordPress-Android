@@ -45,4 +45,6 @@
 
     <!-- Share button in Me -->
     <string name="me_btn_share">Share Jetpack with a friend</string>
+
+    <string name="missing_splits_dialog_message">The app Jetpack is missing required components and must be reinstalled from the Google Play Store.</string>
 </resources>

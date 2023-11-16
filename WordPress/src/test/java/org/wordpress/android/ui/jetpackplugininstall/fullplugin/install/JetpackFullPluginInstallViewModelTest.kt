@@ -142,9 +142,20 @@ class JetpackFullPluginInstallViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should track error screen shown when onErrorShown is called`() {
+    fun `Should track error screen shown when onErrorShown is called without description`() {
         classToTest.onErrorShown()
-        verify(analyticsTracker).trackScreenShown(Status.Error)
+        verify(analyticsTracker).trackScreenShown(Status.Error, null)
+    }
+
+    @Test
+    fun `Should track error screen shown when onErrorShown is called with description`() {
+        val event = PluginStore.OnSitePluginInstalled(null, null).apply {
+            error = PluginStore.InstallSitePluginError("GENERIC_ERROR", "description")
+        }
+
+        classToTest.onSitePluginInstalled(event)
+        classToTest.onErrorShown()
+        verify(analyticsTracker).trackScreenShown(Status.Error, "GENERIC_ERROR: description")
     }
 
     @Test

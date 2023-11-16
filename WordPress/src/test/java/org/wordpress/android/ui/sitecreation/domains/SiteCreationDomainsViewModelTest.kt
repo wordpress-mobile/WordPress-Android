@@ -5,15 +5,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.firstValue
 import org.mockito.kotlin.lastValue
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.secondValue
@@ -31,12 +32,12 @@ import org.wordpress.android.fluxc.store.ProductsStore
 import org.wordpress.android.fluxc.store.ProductsStore.OnProductsFetched
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainModel
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.CreateSiteButtonState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Cost
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Variant
+import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.New.DomainUiState.Tag
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.ListItemUiState.Old.DomainUiState.UnavailableDomain
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -45,7 +46,7 @@ import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_MOBIL
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
+import org.wordpress.android.util.config.PlansInSiteCreationFeatureConfig
 import kotlin.test.assertIs
 
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
@@ -66,22 +67,22 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     private lateinit var productsStore: ProductsStore
 
     @Mock
-    lateinit var purchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig
+    lateinit var plansInSiteCreationFeatureConfig: PlansInSiteCreationFeatureConfig
 
     @Mock
     private lateinit var tracker: SiteCreationTracker
 
     @Mock
-    private lateinit var uiStateObserver: Observer<DomainsUiState>
+    private lateinit var uiStateObserver: Observer<DomainsUiState?>
 
     @Mock
-    private lateinit var createSiteBtnObserver: Observer<String>
+    private lateinit var createSiteBtnObserver: Observer<DomainModel>
 
     @Mock
-    private lateinit var clearBtnObserver: Observer<Unit>
+    private lateinit var clearBtnObserver: Observer<Unit?>
 
     @Mock
-    private lateinit var onHelpClickedObserver: Observer<Unit>
+    private lateinit var onHelpClickedObserver: Observer<Unit?>
 
     @Mock
     private lateinit var networkUtils: NetworkUtilsWrapper
@@ -99,7 +100,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             dispatcher = dispatcher,
             fetchDomainsUseCase = fetchDomainsUseCase,
             productsStore = productsStore,
-            purchasingFeatureConfig = purchasingFeatureConfig,
+            plansInSiteCreationFeatureConfig = plansInSiteCreationFeatureConfig,
             tracker = tracker,
             bgDispatcher = testDispatcher(),
             mainDispatcher = testDispatcher()
@@ -292,17 +293,38 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         verify(clearBtnObserver, times(1)).onChanged(captor.capture())
     }
 
-    /**
-     * Verifies that create site button is properly propagated when a domain is selected.
-     */
     @Test
-    fun verifyCreateSiteBtnClickedPropagated() = testWithSuccessResponse {
-        val domainName = "test.domain"
-        viewModel.onDomainSelected(mockDomain(domainName))
+    fun `verify click on the create site button emits the selected domain`() = testWithSuccessResponse {
+        val selectedDomain = mockDomain("test.domain")
+        viewModel.onDomainSelected(selectedDomain)
+
         viewModel.onCreateSiteBtnClicked()
-        val captor = ArgumentCaptor.forClass(String::class.java)
-        verify(createSiteBtnObserver, times(1)).onChanged(captor.capture())
-        assertThat(captor.firstValue).isEqualTo(domainName)
+
+        verify(createSiteBtnObserver).onChanged(argWhere { it == selectedDomain })
+    }
+
+    @Test
+    fun `click on the create site button tracks the selected free domain`() = testWithSuccessResponse {
+        val selectedDomain = mockDomain("test.domain")
+        val expectedCost = "Free"
+        whenever(selectedDomain.cost).thenReturn(expectedCost)
+        viewModel.onDomainSelected(selectedDomain)
+
+        viewModel.onCreateSiteBtnClicked()
+
+        verify(tracker).trackDomainSelected(selectedDomain.domainName, "", expectedCost)
+    }
+
+    @Test
+    fun `click on the create site button tracks the selected paid domain`() = testWithSuccessResponse {
+        val selectedDomain = mockDomain("test.domain", free = false)
+        val expectedCost = "1.23 USD"
+        whenever(selectedDomain.cost).thenReturn(expectedCost)
+        viewModel.onDomainSelected(selectedDomain)
+
+        viewModel.onCreateSiteBtnClicked()
+
+        verify(tracker).trackDomainSelected(selectedDomain.domainName, "", expectedCost)
     }
 
     @Test
@@ -320,10 +342,19 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         )
     }
 
+    @Test
+    fun `verify create site button text is not changed when purchasing feature is OFF`() = testWithSuccessResponse {
+        viewModel.start()
+
+        viewModel.onDomainSelected(mock())
+
+        assertIs<CreateSiteButtonState.Old>(viewModel.uiState.value?.createSiteButtonState)
+    }
+
     // region New UI
 
     private fun testNewUi(block: suspend CoroutineScope.() -> Unit) = test {
-        whenever(purchasingFeatureConfig.isEnabledOrManuallyOverridden()).thenReturn(true)
+        whenever(plansInSiteCreationFeatureConfig.isEnabled()).thenReturn(true)
         whenever(productsStore.fetchProducts(any())).thenReturn(mock())
         block()
     }
@@ -336,10 +367,11 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
         val suggestions = List(size) {
             DomainSuggestionResponse().apply {
-                domain_name = "$query-$it.com"
+                domain_name = if (it == 0) query else "$query-$it.com"
                 is_free = it % 2 == 0
                 cost = if (is_free) "Free" else "$$it.00"
                 product_id = it
+                supports_privacy = !is_free
             }
         }
 
@@ -351,7 +383,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     private val uiDomains get() = assertIs<List<New.DomainUiState>>(viewModel.uiState.value?.contentState?.items)
 
     @Test
-    fun verifyFetchFreeAndPaidDomainsWhenPurchasingFeatureConfigIsEnabled() = testNewUi {
+    fun verifyFetchFreeAndPaidDomainsWhenPurchasingFeatureConfigIsEnabled() = testWithSuccessResultNewUi {
         val (query, size) = MULTI_RESULT_DOMAIN_FETCH_QUERY
         viewModel.start()
 
@@ -373,6 +405,25 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
         verify(productsStore).fetchProducts(eq(TYPE_DOMAINS_PRODUCT))
     }
+
+    @Test
+    fun `verify create site button text changes when selecting a free domain`() = testNewUi {
+        viewModel.start()
+
+        viewModel.onDomainSelected(mockDomain(free = true))
+
+        assertIs<CreateSiteButtonState.Free>(viewModel.uiState.value?.createSiteButtonState)
+    }
+
+    @Test
+    fun `verify create site button text changes when selecting a non-free domain`() = testNewUi {
+        viewModel.start()
+
+        viewModel.onDomainSelected(mockDomain(free = false))
+
+        assertIs<CreateSiteButtonState.Paid>(viewModel.uiState.value?.createSiteButtonState)
+    }
+
 
     @Test
     fun `verify all domain results from api are visible`() = testWithSuccessResultNewUi { (query, results) ->
@@ -406,7 +457,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         assertThat(uiDomains).filteredOn { it.cost is Cost.Paid }.hasSameSizeAs(apiPaidDomains)
     }
 
-    @Test
+    @Test @Ignore("It is removed from UI for now, for being Free with annual plan")
     fun `verify cost of sale domain results from api is 'OnSale'`() = testWithSuccessResultNewUi { (query) ->
         whenever(productsStore.fetchProducts(any())).thenReturn(OnProductsFetched(SALE_PRODUCTS))
 
@@ -418,8 +469,8 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         assertThat(uiDomains).filteredOn { it.cost is Cost.OnSale }.hasSameSizeAs(SALE_PRODUCTS)
     }
 
-    @Test
-    fun `verify sale domain results from api have variant 'Sale'`() = testWithSuccessResultNewUi { (query) ->
+    @Test @Ignore("It is removed from UI for now, for being Free with annual plan")
+    fun `verify sale domain results from api have tag 'Sale'`() = testWithSuccessResultNewUi { (query) ->
         whenever(productsStore.fetchProducts(any())).thenReturn(OnProductsFetched(SALE_PRODUCTS))
 
         viewModel.start()
@@ -427,7 +478,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         viewModel.onQueryChanged(query)
         advanceUntilIdle()
 
-        assertThat(uiDomains).filteredOn { it.variant is Variant.Sale }.hasSameSizeAs(SALE_PRODUCTS)
+        assertThat(uiDomains.flatMap { it.tags }).filteredOn { it is Tag.Sale }.hasSameSizeAs(SALE_PRODUCTS)
     }
 
     @Test
@@ -437,7 +488,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         viewModel.onQueryChanged(query)
         advanceUntilIdle()
 
-        assertThat(uiDomains.map { it.variant }).containsOnlyOnce(Variant.Recommended)
+        assertThat(uiDomains.flatMap { it.tags }).filteredOn { it is Tag.Recommended }.singleElement()
     }
 
     @Test
@@ -447,7 +498,18 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         viewModel.onQueryChanged(query)
         advanceUntilIdle()
 
-        assertThat(uiDomains.map { it.variant }).containsOnlyOnce(Variant.BestAlternative)
+        assertThat(uiDomains.flatMap { it.tags }).filteredOn { it is Tag.BestAlternative }.singleElement()
+    }
+
+    @Test
+    fun `verify selected domain is propagated to UI on click`() = testWithSuccessResultNewUi { (query) ->
+        viewModel.start()
+
+        viewModel.onQueryChanged(query)
+        advanceUntilIdle()
+        viewModel.onDomainSelected(mockDomain(query))
+
+        assertThat(uiDomains.map { it.isSelected }).containsOnlyOnce(true)
     }
 
     // endregion
@@ -464,7 +526,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         assertThat(uiState.searchInputUiState.showProgress).isEqualTo(showProgress)
         assertThat(uiState.searchInputUiState.showClearButton).isEqualTo(showClearButton)
         assertThat(uiState.contentState).isInstanceOf(DomainsUiContentState.Initial::class.java)
-        assertThat(uiState.createSiteButtonContainerVisibility).isEqualTo(false)
+        assertThat(uiState.createSiteButtonState).isNull()
     }
 
     /**

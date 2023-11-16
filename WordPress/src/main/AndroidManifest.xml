@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="org.wordpress.android"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="auto">
 
@@ -16,9 +15,19 @@
 
     <!-- Dangerous permissions, access must be requested at runtime -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Required for storing and retrieving screenshots, taking photos, accessing media files -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
     <!-- GCM all build types configuration -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -86,6 +95,12 @@
             android:name=".ui.main.WPMainActivity"
             android:theme="@style/Wordpress.BottomBar"
             android:label="" />
+
+        <activity
+            android:name=".ui.mysite.menu.MenuActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:label="@string/my_site_section_screen_title"
+            android:exported="false" />
 
         <!-- Account activities -->
         <activity
@@ -208,10 +223,6 @@
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/edit_comment"/>
         <activity
-            android:name=".ui.comments.EditCommentActivity"
-            android:theme="@style/WordPress.NoActionBar"
-            android:label="@string/edit_comment"/>
-        <activity
             android:name=".ui.comments.CommentsDetailActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize"
@@ -261,6 +272,10 @@
         <activity
             android:name=".ui.posts.PostSettingsTagsActivity"
             android:label="@string/post_settings_tags"
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity
+            android:name=".ui.posts.sharemessage.EditJetpackSocialShareMessageActivity"
+            android:label="@string/post_settings_jetpack_social_share_message_title"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- History -->
@@ -642,6 +657,7 @@
         <activity
             android:name="org.wordpress.android.ui.debug.DebugSettingsActivity"
             android:launchMode="singleTop"
+            android:label="@string/preference_open_debug_settings"
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
@@ -706,7 +722,7 @@
         <!-- Domains -->
         <activity
             android:name=".ui.domains.DomainsDashboardActivity"
-            android:label="@string/domains_title"
+            android:label="@string/site_domain_title"
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
@@ -724,6 +740,12 @@
             android:name=".ui.prefs.MyProfileActivity"
             android:label="@string/my_profile"
             android:theme="@style/WordPress.NoActionBar" />
+
+        <activity
+            android:name=".support.SupportWebViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/WordPress.NoActionBar"
+            tools:ignore="LockedOrientationActivity"/>
 
         <!-- Lib activities-->
         <activity
@@ -774,6 +796,22 @@
         <!-- Jetpack full plugin install -->
         <activity
             android:name=".ui.jetpackplugininstall.fullplugin.install.JetpackFullPluginInstallActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+
+        <!-- Domain Management -->
+        <activity
+            android:name=".ui.domains.management.DomainManagementActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+
+        <activity
+            android:name=".ui.domains.management.details.DomainManagementDetailsActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity
+            android:name=".ui.domains.management.purchasedomain.PurchaseDomainActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+
+        <activity
+            android:name=".ui.domains.management.newdomainsearch.NewDomainSearchActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Services -->
@@ -830,11 +868,6 @@
             android:name=".ui.reader.services.comment.ReaderCommentService"
             android:exported="false"
             android:label="Reader Comment Service" />
-        <service
-            android:name=".ui.publicize.services.PublicizeUpdateService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:label="Publicize Update Service"
-            android:exported="false" />
 
         <service
             android:name=".ui.suggestion.service.SuggestionService"
@@ -1059,9 +1092,15 @@
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="barcode_ui"/>
 
-        <activity android:name=".ui.blaze.BlazeParentActivity"
+        <activity android:name=".ui.blaze.blazepromote.BlazePromoteParentActivity"
             android:exported="false"
             android:label="@string/blaze_activity_title"
+            android:screenOrientation="portrait"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <activity android:name=".ui.blaze.blazecampaigns.BlazeCampaignParentActivity"
+            android:exported="false"
+            android:label="@string/blaze_campaigns_page_title"
             android:screenOrientation="portrait"
             android:theme="@style/WordPress.NoActionBar"/>
 
@@ -1069,6 +1108,13 @@
             android:exported="false"
             android:label="@string/stats"
             android:theme="@style/WordPress.NoActionBar"/>
+
+        <activity android:name=".ui.mysite.personalization.PersonalizationActivity"
+            android:exported="false"
+            android:label="@string/stats"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <meta-data android:name="io.sentry.traces.activity.enable" android:value="false" />
 
     </application>
     <queries>

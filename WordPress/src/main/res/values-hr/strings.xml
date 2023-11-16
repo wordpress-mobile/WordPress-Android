@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-10-18 07:57:05+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.11
 Language: hr
 -->
 <resources>
@@ -577,7 +577,6 @@ Language: hr
     <string name="post_settings">Postavke objave</string>
     <string name="select_categories">Odaberite kateogrije</string>
     <string name="connection_error">Greška spajanja</string>
-    <string name="cancel_edit">Otkaži uređivanje</string>
     <string name="learn_more">Saznajte više</string>
     <string name="media_gallery_type_thumbnail_grid">Rešetka sličica</string>
     <string name="media_error_no_permission">Nemate dopuštenje za pregled galerije medijske zbirke</string>
@@ -595,9 +594,6 @@ Language: hr
     <string name="mnu_comment_unapprove">Ne odobri</string>
     <string name="dlg_confirm_trash_comments">Poslati u smeće?</string>
     <string name="saving_changes">Snimanje promjena</string>
-    <string name="sure_to_cancel_edit_comment">Otkazati uređivanje komentara?</string>
-    <string name="content_required">Komentar je obavezan</string>
-    <string name="toast_comment_unedited">Komentar nije promjenjen</string>
     <string name="view_in_browser">Pregled u pregledniku</string>
     <string name="new_post">Nova objava</string>
     <string name="new_media">Novi medijski zapis</string>

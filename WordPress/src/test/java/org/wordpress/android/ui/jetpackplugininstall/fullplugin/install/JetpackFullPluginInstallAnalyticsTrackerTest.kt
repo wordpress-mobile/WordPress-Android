@@ -14,10 +14,20 @@ class JetpackFullPluginInstallAnalyticsTrackerTest {
     )
 
     @Test
-    fun `Should track screen status when trackScreenShown is called`() {
+    fun `Should track screen status when trackScreenShown is called without description`() {
         classToTest.trackScreenShown(Status.Initial)
         verify(analyticsTrackerWrapper)
             .track(Stat.JETPACK_INSTALL_FULL_PLUGIN_FLOW_VIEWED, mapOf("status" to "initial"))
+    }
+
+    @Test
+    fun `Should track screen status when trackScreenShown is called with description`() {
+        classToTest.trackScreenShown(Status.Error, "description")
+        verify(analyticsTrackerWrapper)
+            .track(
+                Stat.JETPACK_INSTALL_FULL_PLUGIN_FLOW_VIEWED,
+                mapOf("status" to "error", "description" to "description")
+            )
     }
 
     @Test

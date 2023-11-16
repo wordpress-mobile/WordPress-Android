@@ -6,7 +6,7 @@ import android.view.MenuItem
 import androidx.core.text.HtmlCompat
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsJetpackConnectionActivityBinding
 import org.wordpress.android.fluxc.Dispatcher
@@ -22,7 +22,9 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
+import android.R as AndroidR
 
 /**
  * An activity that shows when user tries to open Stats without Jetpack connected.
@@ -42,8 +44,8 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
         initDagger()
         with(StatsJetpackConnectionActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
-            setActionBar()
-            setTitle(string.stats)
+            initActionBar()
+            setTitle(R.string.stats)
             checkAndContinueJetpackConnectionFlow(savedInstanceState)
             initViews()
         }
@@ -53,11 +55,11 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
         (application as WordPress).component().inject(this)
     }
 
-    private fun StatsJetpackConnectionActivityBinding.setActionBar() {
+    private fun StatsJetpackConnectionActivityBinding.initActionBar() {
         setSupportActionBar(toolbarLayout.toolbarMain)
         val actionBar = supportActionBar
         if (actionBar != null) {
-            actionBar.setTitle(string.stats)
+            actionBar.setTitle(R.string.stats)
             actionBar.setDisplayShowTitleEnabled(true)
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
@@ -72,20 +74,24 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
             if (TextUtils.isEmpty(mAccountStore.account.userName)) {
                 mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
             } else {
-                startJetpackConnectionFlow(intent.getSerializableExtra(WordPress.SITE) as SiteModel)
+                startJetpackConnectionFlow(
+                    requireNotNull(intent.getSerializableExtraCompat(WordPress.SITE))
+                )
             }
         }
     }
 
     private fun StatsJetpackConnectionActivityBinding.initViews() {
         jetpackSetup.setOnClickListener {
-            startJetpackConnectionFlow(intent.getSerializableExtra(WordPress.SITE) as SiteModel)
+            startJetpackConnectionFlow(
+                requireNotNull(intent.getSerializableExtraCompat(WordPress.SITE))
+            )
         }
         jetpackFaq.setOnClickListener {
             WPWebViewActivity.openURL(this@StatsConnectJetpackActivity, FAQ_URL)
         }
         jetpackTermsAndConditions.text = HtmlCompat.fromHtml(
-            String.format(resources.getString(string.jetpack_connection_terms_and_conditions), "<u>", "</u>"),
+            String.format(resources.getString(R.string.jetpack_connection_terms_and_conditions), "<u>", "</u>"),
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
         jetpackTermsAndConditions.setOnClickListener {
@@ -108,7 +114,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            android.R.id.home -> {
+            AndroidR.id.home -> {
                 finish()
                 true
             }
@@ -133,7 +139,7 @@ class StatsConnectJetpackActivity : LocaleAwareActivity() {
                 event.causeOfChange == FETCH_ACCOUNT &&
                 !TextUtils.isEmpty(mAccountStore.account.userName)
             ) {
-                startJetpackConnectionFlow(intent.getSerializableExtra(WordPress.SITE) as SiteModel)
+                startJetpackConnectionFlow(requireNotNull(intent.getSerializableExtraCompat(WordPress.SITE)))
             }
         }
     }

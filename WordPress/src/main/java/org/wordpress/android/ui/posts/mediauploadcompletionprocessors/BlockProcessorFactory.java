@@ -12,6 +12,7 @@ import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.Med
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaBlockType.IMAGE;
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaBlockType.MEDIA_TEXT;
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaBlockType.VIDEO;
+import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaBlockType.VIDEOPRESS;
 
 class BlockProcessorFactory {
     private final MediaUploadCompletionProcessor mMediaUploadCompletionProcessor;
@@ -34,6 +35,7 @@ class BlockProcessorFactory {
      */
     BlockProcessorFactory init(String localId, MediaFile mediaFile, String siteUrl) {
         mMediaBlockTypeBlockProcessorMap.put(IMAGE, new ImageBlockProcessor(localId, mediaFile));
+        mMediaBlockTypeBlockProcessorMap.put(VIDEOPRESS, new VideoPressBlockProcessor(localId, mediaFile));
         mMediaBlockTypeBlockProcessorMap.put(VIDEO, new VideoBlockProcessor(localId, mediaFile));
         mMediaBlockTypeBlockProcessorMap.put(MEDIA_TEXT, new MediaTextBlockProcessor(localId, mediaFile));
         mMediaBlockTypeBlockProcessorMap.put(GALLERY, new GalleryBlockProcessor(localId, mediaFile, siteUrl,

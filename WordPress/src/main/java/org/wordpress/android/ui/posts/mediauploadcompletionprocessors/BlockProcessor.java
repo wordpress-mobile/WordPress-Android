@@ -12,6 +12,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import java.util.regex.Matcher;
 
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK_CAPTURES;
+import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_SELF_CLOSING_BLOCK_CAPTURES;
 
 /**
  * Abstract class to be extended for each enumerated {@link MediaBlockType}.
@@ -30,6 +31,7 @@ public abstract class BlockProcessor {
     String mLocalId;
     String mRemoteId;
     String mRemoteUrl;
+    String mRemoteGuid;
 
     private String mBlockName;
     private JsonObject mJsonAttributes;
@@ -46,6 +48,7 @@ public abstract class BlockProcessor {
         mRemoteId = mediaFile.getMediaId();
         mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaFile
                 .getOptimalFileURL()));
+        mRemoteGuid = mediaFile.getVideoPressGuid();
     }
 
     private JsonObject parseJson(String blockJson) {
@@ -60,16 +63,18 @@ public abstract class BlockProcessor {
         return document;
     }
 
-    private boolean splitBlock(String block) {
-        Matcher captures = PATTERN_BLOCK_CAPTURES.matcher(block);
+    private boolean splitBlock(String block, Boolean isSelfClosingTag) {
+        Matcher captures = (
+                isSelfClosingTag ? PATTERN_SELF_CLOSING_BLOCK_CAPTURES : PATTERN_BLOCK_CAPTURES
+        ).matcher(block);
 
         boolean capturesFound = captures.find();
 
         if (capturesFound) {
             mBlockName = captures.group(1);
             mJsonAttributes = parseJson(captures.group(2));
-            mBlockContentDocument = parseHTML(captures.group(3));
-            mClosingComment = captures.group(4);
+            mBlockContentDocument = isSelfClosingTag ? null : parseHTML(captures.group(3));
+            mClosingComment = isSelfClosingTag ? null : captures.group(4);
             return true;
         } else {
             mBlockName = null;
@@ -85,12 +90,22 @@ public abstract class BlockProcessor {
      * method should return the original block contents unchanged.
      *
      * @param block The raw block contents
+     * @param isSelfClosingTag True if the block tag is self-closing (e.g. <!-- wp:videopress/video {"id":100} /-->)
      * @return A string containing content with ids and urls replaced
      */
-    String processBlock(String block) {
-        if (splitBlock(block)) {
+    String processBlock(String block, Boolean isSelfClosingTag) {
+        if (splitBlock(block, isSelfClosingTag)) {
             if (processBlockJsonAttributes(mJsonAttributes)) {
-                if (processBlockContentDocument(mBlockContentDocument)) {
+                if (isSelfClosingTag) {
+                    // return injected block
+                    return new StringBuilder()
+                            .append("<!-- wp:")
+                            .append(mBlockName)
+                            .append(" ")
+                            .append(mJsonAttributes) // json parser output
+                            .append(" /-->")
+                            .toString();
+                } else if (processBlockContentDocument(mBlockContentDocument)) {
                     // return injected block
                     return new StringBuilder()
                             .append("<!-- wp:")
@@ -108,6 +123,10 @@ public abstract class BlockProcessor {
         }
         // leave block unchanged
         return block;
+    }
+
+    String processBlock(String block) {
+        return processBlock(block, false);
     }
 
     /**

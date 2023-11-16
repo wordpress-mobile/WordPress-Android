@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.comments.unified
 
-import android.R.attr
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
@@ -9,9 +8,10 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.RecyclerView.State
-import org.wordpress.android.R.dimen
+import org.wordpress.android.R
 import org.wordpress.android.util.RtlUtils
 import kotlin.math.roundToInt
+import android.R as AndroidR
 
 /**
  * This ItemDecoration adds margin to the start of the divider and skipp drawing divider for list sub-headers.
@@ -78,13 +78,13 @@ class UnifiedCommentListItemDecoration(val context: Context) : ItemDecoration() 
     }
 
     companion object {
-        private val ATTRS = intArrayOf(attr.listDivider)
+        private val ATTRS = intArrayOf(AndroidR.attr.listDivider)
     }
 
     init {
         val attrs = context.obtainStyledAttributes(ATTRS)
         divider = attrs.getDrawable(0)
         attrs.recycle()
-        dividerStartOffset = context.resources.getDimensionPixelOffset(dimen.comment_list_divider_start_offset)
+        dividerStartOffset = context.resources.getDimensionPixelOffset(R.dimen.comment_list_divider_start_offset)
     }
 }

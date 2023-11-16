@@ -13,7 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -79,6 +81,7 @@ import org.wordpress.android.util.UrlUtilsWrapper;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
@@ -174,12 +177,30 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         mJetpackFullScreenViewModel = new ViewModelProvider(this).get(JetpackFeatureFullScreenOverlayViewModel.class);
 
         setContentView(R.layout.reader_activity_post_pager);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                ReaderPostDetailFragment fragment = getActiveDetailFragment();
+                if (fragment != null && fragment.isCustomViewShowing()) {
+                    // if full screen video is showing, hide the custom view rather than navigate back
+                    fragment.hideCustomView();
+                } else {
+                    if (fragment != null && fragment.goBackInPostHistory()) {
+                        // noop - fragment moved back to a previous post
+                    } else {
+                        CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+                    }
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         // Start migration flow passing deep link data if requirements are met
         if (mJetpackAppMigrationFlowUtils.shouldShowMigrationFlow()) {
@@ -639,7 +660,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
@@ -705,21 +726,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
             return null;
         }
         return adapter.getBlogIdPostIdAtPosition(position);
-    }
-
-    @Override
-    public void onBackPressed() {
-        ReaderPostDetailFragment fragment = getActiveDetailFragment();
-        if (fragment != null && fragment.isCustomViewShowing()) {
-            // if full screen video is showing, hide the custom view rather than navigate back
-            fragment.hideCustomView();
-        } else {
-            if (fragment != null && fragment.goBackInPostHistory()) {
-                // noop - fragment moved back to a previous post
-            } else {
-                super.onBackPressed();
-            }
-        }
     }
 
     /*

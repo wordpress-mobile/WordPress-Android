@@ -2,7 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import androidx.core.text.HtmlCompat
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_TOTAL_LIKES_GUIDE_TAPPED
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -48,7 +48,7 @@ class TotalLikesUseCase @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val statsWidgetUpdaters: StatsWidgetUpdaters
 ) : StatelessUseCase<VisitsAndViewsModel>(TOTAL_LIKES, mainDispatcher, bgDispatcher) {
-    override fun buildLoadingItem() = listOf(TitleWithMore(string.stats_view_total_likes))
+    override fun buildLoadingItem() = listOf(TitleWithMore(R.string.stats_view_total_likes))
 
     override fun buildEmptyItem() = listOf(buildTitle(), Empty())
 
@@ -96,7 +96,7 @@ class TotalLikesUseCase @Inject constructor(
     }
 
     private fun buildTitle() = TitleWithMore(
-        string.stats_view_total_likes,
+        R.string.stats_view_total_likes,
         navigationAction = ListItemInteraction.create(this::onViewMoreClick)
     )
 
@@ -112,9 +112,9 @@ class TotalLikesUseCase @Inject constructor(
                     ListItemGuideCard(
                         text = resourceProvider.getString(
                             if (it.postLikeCount <= 1) {
-                                string.stats_insights_like_guide_card
+                                R.string.stats_insights_like_guide_card
                             } else {
-                                string.stats_insights_likes_guide_card
+                                R.string.stats_insights_likes_guide_card
                             },
                             htmlTitle,
                             it.postLikeCount

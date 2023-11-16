@@ -31,7 +31,7 @@ class ReaderFileDownloadManager
             request.addRequestHeader(entry.key, entry.value)
         }
 
-        val fileName = downloadManager.guessUrl(fileUrl)
+        val fileName = downloadManager.guessFileName(fileUrl)
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
         request.setMimeType(downloadManager.getMimeType(fileUrl))

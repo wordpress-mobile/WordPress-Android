@@ -37,6 +37,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.util.image.ImageType;
 
@@ -818,6 +819,10 @@ public class WPSupportUtils {
     }
 
     public static void dismissJetpackAdIfPresent() {
+        if (BuildConfig.IS_JETPACK_APP) {
+            return;
+        }
+
         String jetpackAdText = "Stats, Reader, Notifications, and other features are powered by Jetpack.";
         ViewInteraction jetpackBanner = onView(withText(jetpackAdText));
 

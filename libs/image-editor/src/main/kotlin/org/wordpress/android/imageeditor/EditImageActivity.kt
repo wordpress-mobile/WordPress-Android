@@ -1,6 +1,7 @@
 package org.wordpress.android.imageeditor
 
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
@@ -10,6 +11,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.navigateUp
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorCancelled
+import org.wordpress.android.imageeditor.utils.onBackPressedCompat
 
 class EditImageActivity : AppCompatActivity() {
     private lateinit var viewModel: EditImageViewModel
@@ -24,6 +26,13 @@ class EditImageActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this).get(EditImageViewModel::class.java)
         setContentView(R.layout.activity_edit_image)
+
+        onBackPressedDispatcher.addCallback(this) {
+            onBackPressedDispatcher.onBackPressedCompat(this)
+            if (hostFragment.childFragmentManager.backStackEntryCount == 0) {
+                ImageEditor.instance.onEditorAction(EditorCancelled)
+            }
+        }
 
         hostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment?
@@ -40,7 +49,7 @@ class EditImageActivity : AppCompatActivity() {
         // Passing in an empty set of top-level destination to display back button on the start destination
         appBarConfiguration = AppBarConfiguration.Builder().setFallbackOnNavigateUpListener {
             // Handle app bar's back button on start destination
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
             true
         }.build()
 
@@ -53,17 +62,10 @@ class EditImageActivity : AppCompatActivity() {
             // Using popUpToInclusive for popping the start destination of the graph off the back stack
             // in a multi-module project doesn't seem to be working. Explicitly invoking back action as a workaround.
             // Related issue: https://issuetracker.google.com/issues/147312109
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
             true
         } else {
             navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-        }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        if (hostFragment.childFragmentManager.backStackEntryCount == 0) {
-            ImageEditor.instance.onEditorAction(EditorCancelled)
         }
     }
 }

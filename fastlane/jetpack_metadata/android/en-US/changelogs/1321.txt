@@ -1,2 +1,0 @@
-Hot news—Jetpack now supports Blaze, so you can reach new readers by promoting a post or page from within the app.
-We also added a post-migration FAQ card to the Help screen, which you’ll see after switching from the WordPress app over to Jetpack.

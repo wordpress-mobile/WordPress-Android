@@ -12,6 +12,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
@@ -27,6 +28,8 @@ import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.util.WebViewUtils;
 import org.wordpress.android.util.helpers.WebChromeClientWithVideoPoster;
 
+import java.util.Objects;
+
 import javax.inject.Inject;
 
 public class PublicizeWebViewFragment extends PublicizeBaseFragment {
@@ -35,7 +38,6 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     private int mConnectionId;
     private WebView mWebView;
     private ProgressBar mProgress;
-    private View mNestedScrollView;
 
     @Inject AccountStore mAccountStore;
 
@@ -72,7 +74,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -98,13 +100,13 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
 
         mProgress = rootView.findViewById(R.id.progress);
         mWebView = rootView.findViewById(R.id.webView);
-        mNestedScrollView = rootView.findViewById(R.id.publicize_webview_nested_scroll_view);
 
         mWebView.setWebViewClient(new PublicizeWebViewClient());
         mWebView.setWebChromeClient(new PublicizeWebChromeClient());
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
+        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
 
         return rootView;
     }
@@ -127,7 +129,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         super.onResume();
         setNavigationIcon(R.drawable.ic_close_white_24dp);
         if (getActivity() instanceof ScrollableViewInitializedListener) {
-            ((ScrollableViewInitializedListener) getActivity()).onScrollableViewInitialized(mNestedScrollView.getId());
+            ((ScrollableViewInitializedListener) getActivity()).onScrollableViewInitialized(mWebView.getId());
         }
     }
 
@@ -173,9 +175,9 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
             // does this url denotes that we made it past the auth stage?
             if (isAdded() && url != null) {
                 Uri uri = Uri.parse(url);
-                if (uri.getHost().equals("public-api.wordpress.com")
-                    && uri.getPath().equals("/connect/")
-                    && uri.getQueryParameter("action").equals("verify")) {
+                if (Objects.equals(uri.getHost(), "public-api.wordpress.com")
+                    && Objects.equals(uri.getPath(), "/connect/")
+                    && Objects.equals(uri.getQueryParameter("action"), "verify")) {
                     // "denied" param will appear on failure or cancellation
                     String denied = uri.getQueryParameter("denied");
                     if (!TextUtils.isEmpty(denied)) {
@@ -195,7 +197,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
 
     private class PublicizeWebChromeClient extends WebChromeClientWithVideoPoster {
         PublicizeWebChromeClient() {
-            super(mWebView, R.drawable.media_movieclip);
+            super(mWebView, org.wordpress.android.editor.R.drawable.media_movieclip);
         }
 
         @Override

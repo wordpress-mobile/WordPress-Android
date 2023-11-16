@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 platform :android do
   #####################################################################################
   # build_and_upload_release
@@ -15,17 +17,28 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_and_upload_release do |options|
-    android_build_prechecks(skip_confirm: options[:skip_confirm], final: true) unless options[:skip_prechecks]
-    android_build_preflight() unless options[:skip_prechecks]
+    unless options[:skip_prechecks]
+      ensure_git_branch(branch: '^release/') unless is_ci
+
+      UI.user_error!("Can't build a final release out of this branch because it's configured as a beta release!") if current_version_name.include? '-rc-'
+
+      ensure_git_status_clean unless is_ci
+
+      UI.important("Building version #{current_release_version} (#{current_build_code}) for upload to Release Channel")
+
+      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
+
+      android_build_preflight
+    end
 
     # Create the file names
     app = get_app_name_option!(options)
-    version = android_get_release_version()
-    build_bundle(app: app, version: version, flavor: 'Vanilla', buildType: 'Release')
+    version_name = current_version_name
+    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
-    upload_build_to_play_store(app: app, version: version, track: 'production')
+    upload_build_to_play_store(app: app, version_name: version_name, track: 'production')
 
-    create_gh_release(app: app, version: version) if options[:create_release]
+    create_gh_release(app: app, version_name: version_name) if options[:create_release]
   end
 
   #####################################################################################
@@ -43,8 +56,18 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_and_upload_pre_releases do |options|
-    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless options[:skip_prechecks]
-    android_build_preflight() unless options[:skip_prechecks]
+    unless options[:skip_prechecks]
+      ensure_git_branch(branch: '^release/') unless is_ci
+
+      ensure_git_status_clean unless is_ci
+
+      UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
+
+      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
+
+      android_build_preflight
+    end
+
     app = get_app_name_option!(options)
     build_beta(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
   end
@@ -64,17 +87,26 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_beta do |options|
-    android_build_prechecks(skip_confirm: options[:skip_confirm], beta: true) unless options[:skip_prechecks]
-    android_build_preflight() unless options[:skip_prechecks]
+    unless options[:skip_prechecks]
+      ensure_git_branch(branch: '^release/') unless is_ci
+
+      ensure_git_status_clean unless is_ci
+
+      UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
+
+      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
+
+      android_build_preflight
+    end
 
     # Create the file names
     app = get_app_name_option!(options)
-    version = android_get_release_version()
-    build_bundle(app: app, version: version, flavor: 'Vanilla', buildType: 'Release')
+    version_name = current_version_name
+    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
-    upload_build_to_play_store(app: app, version: version, track: 'beta') if options[:upload_to_play_store]
+    upload_build_to_play_store(app: app, version_name: version_name, track: 'beta') if options[:upload_to_play_store]
 
-    create_gh_release(app: app, version: version, prerelease: true) if options[:create_release]
+    create_gh_release(app: app, version_name: version_name, prerelease: true) if options[:create_release]
   end
 
   #####################################################################################
@@ -83,11 +115,11 @@ platform :android do
   # This lane uploads the build to Play Store for the given version to the given track
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane upload_build_to_play_store app:<wordpress|jetpack> version:<version> track:<track>
+  # bundle exec fastlane upload_build_to_play_store app:<wordpress|jetpack> version_name:<version_name> track:<track>
   #
   # Example:
-  # bundle exec fastlane upload_build_to_play_store app:wordpress version:15.0 track:production
-  # bundle exec fastlane upload_build_to_play_store app:jetpack version:15.0-rc-1 track:beta
+  # bundle exec fastlane upload_build_to_play_store app:wordpress version_name:15.0 track:production
+  # bundle exec fastlane upload_build_to_play_store app:jetpack version_name:15.0-rc-1 track:beta
   #####################################################################################
   desc 'Upload Build to Play Store'
   lane :upload_build_to_play_store do |options|
@@ -95,14 +127,14 @@ platform :android do
     package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
     metadata_dir = File.join(FASTLANE_FOLDER, APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
 
-    version = options[:version]
+    version_name = options[:version_name]
 
-    if version.nil?
+    if version_name.nil?
       UI.message("No version available for #{options[:track]} track for #{app}")
       next
     end
 
-    aab_file_path = bundle_file_path(app, version)
+    aab_file_path = bundle_file_path(app, version_name)
 
     if File.exist? aab_file_path
       retry_count = 2
@@ -122,7 +154,7 @@ platform :android do
       rescue FastlaneCore::Interface::FastlaneError => e
         # Sometimes the upload fails randomly with a "Google Api Error: Invalid request - This Edit has been deleted.".
         # It seems one reason might be a race condition when we do multiple edits at the exact same time (WP beta, JP beta). Retrying usually fixes it
-        if e.message.start_with?('Google Api Error') && (retry_count -= 1) > 0
+        if e.message.start_with?('Google Api Error') && (retry_count -= 1).positive?
           UI.error 'Upload failed with Google API error. Retrying in 2mn...'
           sleep(120)
           retry
@@ -131,6 +163,36 @@ platform :android do
       end
     else
       UI.error("Unable to find a build artifact at #{aab_file_path}")
+    end
+  end
+
+  #####################################################################################
+  # download_signed_apks_from_google_play
+  # -----------------------------------------------------------------------------------
+  # This lane downloads the signed apks from Play Store for the given app and version
+  #
+  # If no argument is provided, it'll download both WordPress & Jetpack apks using the version from version.properties
+  # If only 'app' argument is provided, it'll download the apk for the given app using the version from version.properties
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane download_signed_apks_from_google_play # Download WordPress & Jetpack apks using the version from version.properties
+  # bundle exec fastlane download_signed_apks_from_google_play app:<wordpress|jetpack> # Download given app's apk using the version from version.properties
+  # bundle exec fastlane download_signed_apks_from_google_play app:<wordpress|jetpack> build_code:build_code
+  #####################################################################################
+  lane :download_signed_apks_from_google_play do |options|
+    # If no `app:` is specified, call this for both WordPress and Jetpack
+    apps = options[:app].nil? ? %i[wordpress jetpack] : Array(options[:app]&.downcase&.to_sym)
+    build_code = options[:build_code] || current_build_code
+
+    apps.each do |app|
+      package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
+
+      download_universal_apk_from_google_play(
+        package_name: package_name,
+        version_code: build_code,
+        destination: signed_apk_path(app, current_version_name),
+        json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
+      )
     end
   end
 
@@ -146,15 +208,15 @@ platform :android do
   lane :build_and_upload_wordpress_prototype_build do
     UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
 
-    versionName = generate_prototype_build_number
+    version_name = generate_prototype_build_number
     gradle(
       task: 'assemble',
       flavor: "WordPress#{PROTOTYPE_BUILD_FLAVOR}",
       build_type: PROTOTYPE_BUILD_TYPE,
-      properties: { prototypeBuildVersionName: versionName }
+      properties: { prototypeBuildVersionName: version_name }
     )
 
-    upload_prototype_build(product: 'WordPress', versionName: versionName)
+    upload_prototype_build(product: 'WordPress', version_name: version_name)
   end
 
   #####################################################################################
@@ -169,15 +231,15 @@ platform :android do
   lane :build_and_upload_jetpack_prototype_build do
     UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
 
-    versionName = generate_prototype_build_number
+    version_name = generate_prototype_build_number
     gradle(
       task: 'assemble',
       flavor: "Jetpack#{PROTOTYPE_BUILD_FLAVOR}",
       build_type: PROTOTYPE_BUILD_TYPE,
-      properties: { prototypeBuildVersionName: versionName }
+      properties: { prototypeBuildVersionName: version_name }
     )
 
-    upload_prototype_build(product: 'Jetpack', versionName: versionName)
+    upload_prototype_build(product: 'Jetpack', version_name: version_name)
   end
 
   #####################################################################################
@@ -186,25 +248,22 @@ platform :android do
   # This lane builds an app bundle
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_bundle app:<wordpress|jetpack> version:<versionName,versionCode> flavor:<flavor> buildType:<debug|release> [skip_lint:<true|false>]
+  # bundle exec fastlane build_bundle app:<wordpress|jetpack> version_name:string, build_code:string flavor:<flavor> buildType:<debug|release> [skip_lint:<true|false>]
   #####################################################################################
   desc 'Builds an app bundle'
   lane :build_bundle do |options|
     # Create the file names
-    version = options[:version]
+    version_name = options[:version_name]
+    build_code = options[:build_code]
     app = get_app_name_option!(options)
 
-    if version.nil?
-      UI.message("Version specified for #{app} bundle is nil. Skipping ahead")
+    if version_name.nil?
+      UI.message("Version name specified for #{app} bundle is nil. Skipping ahead")
       next
     end
 
     prefix = APP_SPECIFIC_VALUES[app.to_sym][:bundle_name_prefix]
-    if version.is_a?(String) # for when calling from command line
-      (version_name, version_code) = version.split(',')
-      version = { 'name' => version_name, 'code' => version_code || '1' }
-    end
-    name = "#{prefix}-#{version['name']}.aab"
+    name = "#{prefix}-#{version_name}.aab"
 
     aab_file = "org.wordpress.android-#{app}-#{options[:flavor]}-#{options[:buildType]}.aab".downcase
     output_dir = 'WordPress/build/outputs/bundle/'
@@ -231,8 +290,8 @@ platform :android do
         UI.message('Skipping lint...')
       end
 
-      UI.message("Building #{version['name']} / #{version['code']} - #{aab_file}...")
-      sh("echo \"Building #{version['name']} / #{version['code']} - #{aab_file}...\" >> #{logfile_path}")
+      UI.message("Building #{version_name} / #{build_code} - #{aab_file}...")
+      sh("echo \"Building #{version_name} / #{build_code} - #{aab_file}...\" >> #{logfile_path}")
       sh("./gradlew bundle#{app}#{options[:flavor]}#{options[:buildType]} >> #{logfile_path} 2>&1")
 
       UI.crash!("Unable to find a bundle at #{bundle_path}") unless File.file?(bundle_path)
@@ -248,14 +307,14 @@ platform :android do
   #
   # @param [String] product the display name of the app to upload to S3. 'WordPress' or 'Jetpack'
   #
-  def upload_prototype_build(product:, versionName:)
-    filename = "#{product.downcase}-prototype-build-#{versionName}.apk"
+  def upload_prototype_build(product:, version_name:)
+    filename = "#{product.downcase}-prototype-build-#{version_name}.apk"
 
     upload_path = upload_to_s3(
       bucket: 'a8c-apps-public-artifacts',
       key: filename,
       file: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-      skip_if_exists: true
+      if_exists: :skip
     )
 
     return if ENV['BUILDKITE_PULL_REQUEST'].nil?
@@ -265,31 +324,31 @@ platform :android do
       app_display_name: product,
       app_icon: ":#{product.downcase}:", # Use Buildkite emoji based on product name
       download_url: install_url,
-      metadata: { Flavor: PROTOTYPE_BUILD_FLAVOR, 'Build Type': PROTOTYPE_BUILD_TYPE, 'Version': versionName },
+      metadata: { Flavor: PROTOTYPE_BUILD_FLAVOR, 'Build Type': PROTOTYPE_BUILD_TYPE, Version: version_name },
       footnote: '<em>Note: Google Login is not supported on these builds.</em>',
       fold: true
     )
 
     comment_on_pr(
       project: GHHELPER_REPO,
-      pr_number: Integer(ENV['BUILDKITE_PULL_REQUEST']),
+      pr_number: Integer(ENV.fetch('BUILDKITE_PULL_REQUEST', nil)),
       reuse_identifier: "#{product.downcase}-prototype-build-link",
       body: comment_body
     )
 
-    if ENV['BUILDKITE']
-      message = "#{product} Prototype Build: [#{filename}](#{install_url})"
-      buildkite_annotate(style: 'info', context: "prototype-build-#{product}", message: message)
-      buildkite_metadata(set: { versionName: versionName, 'build:flavor': PROTOTYPE_BUILD_FLAVOR, 'build:type': PROTOTYPE_BUILD_TYPE })
-    end
+    return unless ENV['BUILDKITE']
+
+    message = "#{product} Prototype Build: [#{filename}](#{install_url})"
+    buildkite_annotate(style: 'info', context: "prototype-build-#{product}", message: message)
+    buildkite_metadata(set: { versionName: version_name, 'build:flavor': PROTOTYPE_BUILD_FLAVOR, 'build:type': PROTOTYPE_BUILD_TYPE })
   end
 
   # This function is Buildkite-specific
   def generate_prototype_build_number
     if ENV['BUILDKITE']
-      commit = ENV['BUILDKITE_COMMIT'][0, 7]
+      commit = ENV.fetch('BUILDKITE_COMMIT', nil)[0, 7]
       branch = ENV['BUILDKITE_BRANCH'].parameterize
-      pr_num = ENV['BUILDKITE_PULL_REQUEST']
+      pr_num = ENV.fetch('BUILDKITE_PULL_REQUEST', nil)
 
       pr_num == 'false' ? "#{branch}-#{commit}" : "pr#{pr_num}-#{commit}"
     else

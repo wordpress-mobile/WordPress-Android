@@ -9,8 +9,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel
+import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsViewModel
+import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
+import android.R as AndroidR
 
 class PostDatePickerDialogFragment : DialogFragment() {
     @Inject
@@ -18,15 +20,19 @@ class PostDatePickerDialogFragment : DialogFragment() {
     private lateinit var viewModel: PublishSettingsViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val publishSettingsFragmentType = arguments?.getParcelable<PublishSettingsFragmentType>(
+        val publishSettingsFragmentType = arguments?.getParcelableCompat<PublishSettingsFragmentType>(
             ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE
         )
 
         viewModel = when (publishSettingsFragmentType) {
-            PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(EditPostPublishSettingsViewModel::class.java)
-            PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(PrepublishingPublishSettingsViewModel::class.java)
+            PublishSettingsFragmentType.EDIT_POST -> ViewModelProvider(
+                requireActivity(),
+                viewModelFactory
+            )[EditPostPublishSettingsViewModel::class.java]
+            PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> ViewModelProvider(
+                requireActivity(),
+                viewModelFactory
+            )[PrepublishingPublishSettingsViewModel::class.java]
             null -> error("PublishSettingsViewModel not initialized")
         }
 
@@ -40,7 +46,7 @@ class PostDatePickerDialogFragment : DialogFragment() {
         )
         datePickerDialog.setButton(
             DialogInterface.BUTTON_POSITIVE,
-            getString(android.R.string.ok)
+            getString(AndroidR.string.ok)
         ) { _, _ ->
             viewModel.onDateSelected(
                 datePickerDialog.datePicker.year,

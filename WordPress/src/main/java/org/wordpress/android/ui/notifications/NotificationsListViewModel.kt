@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NOTIFICATIONS
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -16,6 +17,7 @@ import javax.inject.Named
 @HiltViewModel
 class NotificationsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    private val appPrefsWrapper: AppPrefsWrapper,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
@@ -25,6 +27,9 @@ class NotificationsListViewModel @Inject constructor(
 
     private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
     val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
+
+    val isNotificationsPermissionsWarningDismissed
+        get() = appPrefsWrapper.notificationPermissionsWarningDismissed
 
     init {
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
@@ -41,5 +46,13 @@ class NotificationsListViewModel @Inject constructor(
 
     private fun showJetpackOverlay() {
         _showJetpackOverlay.value = Event(true)
+    }
+
+    fun onNotificationsPermissionWarningDismissed() {
+        appPrefsWrapper.notificationPermissionsWarningDismissed = true
+    }
+
+    fun resetNotificationsPermissionWarningDismissState() {
+        appPrefsWrapper.notificationPermissionsWarningDismissed = false
     }
 }

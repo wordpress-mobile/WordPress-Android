@@ -15,9 +15,7 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
-import org.wordpress.android.R.id
-import org.wordpress.android.R.layout
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_DISABLED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED
@@ -28,6 +26,7 @@ import org.wordpress.android.ui.prefs.notifications.PrefMainSwitchToolbarView.Ma
 import org.wordpress.android.ui.prefs.notifications.usecase.UpdateNotificationSettingsUseCase
 import javax.inject.Inject
 import javax.inject.Named
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarListener {
@@ -45,8 +44,8 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(layout.notifications_settings_activity)
-        fragmentContainer = findViewById(id.fragment_container)
+        setContentView(R.layout.notifications_settings_activity)
+        fragmentContainer = findViewById(R.id.fragment_container)
 
         setUpPrimaryToolbar()
 
@@ -55,12 +54,12 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
         if (savedInstanceState == null) {
             @Suppress("DEPRECATION")
             fragmentManager.beginTransaction()
-                .add(id.fragment_container, NotificationsSettingsFragment())
+                .add(R.id.fragment_container, NotificationsSettingsFragment())
                 .commit()
         }
 
-        messageContainer = findViewById(id.notifications_settings_message_container)
-        messageTextView = findViewById(id.notifications_settings_message)
+        messageContainer = findViewById(R.id.notifications_settings_message_container)
+        messageTextView = findViewById(R.id.notifications_settings_message)
     }
 
     override fun onStop() {
@@ -75,8 +74,8 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
+            AndroidR.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
                 return true
             }
         }
@@ -97,7 +96,7 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
      * Set up primary toolbar for navigation and search
      */
     private fun setUpPrimaryToolbar() {
-        val toolbar = findViewById<Toolbar>(id.toolbar_with_search)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar_with_search)
 
         toolbar?.let { setSupportActionBar(it) }
 
@@ -111,12 +110,12 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
      * Sets up main switch to disable/enable all notification settings
      */
     private fun setUpMainSwitch() {
-        val mainSwitchToolBarView = findViewById<PrefMainSwitchToolbarView>(id.main_switch)
+        val mainSwitchToolBarView = findViewById<PrefMainSwitchToolbarView>(R.id.main_switch)
         mainSwitchToolBarView.setMainSwitchToolbarListener(this)
 
         // Set main switch state from shared preferences.
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@NotificationsSettingsActivity)
-        val isMainChecked = sharedPreferences.getBoolean(getString(string.wp_pref_notifications_main), true)
+        val isMainChecked = sharedPreferences.getBoolean(getString(R.string.wp_pref_notifications_main), true)
         mainSwitchToolBarView.loadInitialState(isMainChecked)
         hideDisabledView(isMainChecked)
     }
@@ -139,7 +138,7 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
      * @param isMainChecked TRUE to hide disabled view, FALSE to show disabled view
      */
     private fun hideDisabledView(isMainChecked: Boolean) {
-        val notificationsDisabledView = findViewById<LinearLayout>(id.notification_settings_disabled_view)
+        val notificationsDisabledView = findViewById<LinearLayout>(R.id.notification_settings_disabled_view)
         notificationsDisabledView.visibility = if (isMainChecked) View.INVISIBLE else View.VISIBLE
         fragmentContainer.visibility = if (isMainChecked) View.VISIBLE else View.GONE
     }

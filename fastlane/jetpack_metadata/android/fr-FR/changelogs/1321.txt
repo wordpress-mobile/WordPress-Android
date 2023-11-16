@@ -1,3 +1,0 @@
-21.9 :
-Scoop — Jetpack prend désormais en charge Blaze. Vous allez pouvoir atteindre de nouveaux lecteurs lorsque vous ferez la promotion d’un article ou d’une page depuis l’application.
-Nous avons également ajouté une FAQ post-migration dans la section d’aide, à laquelle vous pourrez accéder après être passé de l’application WordPress à Jetpack.

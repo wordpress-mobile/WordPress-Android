@@ -38,8 +38,8 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onDesignActionPressed = SingleLiveEvent<DesignSelectionAction>()
     val onDesignActionPressed: LiveData<DesignSelectionAction> = _onDesignActionPressed
 
-    private val _onBackButtonPressed = SingleLiveEvent<Unit>()
-    val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
+    private val _onBackButtonPressed = SingleLiveEvent<Unit?>()
+    val onBackButtonPressed: LiveData<Unit?> = _onBackButtonPressed
 
     private var vertical: String = ""
 

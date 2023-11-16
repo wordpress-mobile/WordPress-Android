@@ -42,6 +42,8 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents = _actionEvents
 
+    private var trackErrorDescription: String? = null
+
     init {
         dispatcher.register(this)
     }
@@ -60,7 +62,8 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
     }
 
     fun onErrorShown() {
-        analyticsTracker.trackScreenShown(Status.Error)
+        analyticsTracker.trackScreenShown(Status.Error, trackErrorDescription)
+        trackErrorDescription = null
     }
 
     fun onContinueClick() {
@@ -110,7 +113,7 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
         // Refresh the site regardless any event error if possible
         event.site?.let {
             dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(it))
-        } ?: postUiState(uiStateMapper.mapError())
+        } ?: postErrorState(event.error?.type?.name, event.error?.message)
     }
 
     @Suppress("unused")
@@ -126,7 +129,7 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
         // Refresh the site regardless any event error if possible
         event.site?.let {
             dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(it))
-        } ?: postUiState(uiStateMapper.mapError())
+        } ?: postErrorState(event.error?.type?.name, event.error?.message)
     }
 
     @Suppress("unused")
@@ -151,7 +154,7 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
             analyticsTracker.trackJetpackInstallationSuccess()
             postUiState(uiStateMapper.mapDone())
         } else {
-            postUiState(uiStateMapper.mapError())
+            postErrorState(event.error?.type?.name, event.error?.message)
         }
     }
 
@@ -177,6 +180,11 @@ class JetpackFullPluginInstallViewModel @Inject constructor(
             analyticsTracker.trackCancelButtonClicked(status)
         }
         postActionEvent(ActionEvent.Dismiss)
+    }
+
+    private fun postErrorState(type: String?, message: String?) {
+        trackErrorDescription = "${type ?: "EMPTY_TYPE"}: ${message ?: "EMPTY_MESSAGE"}"
+        postUiState(uiStateMapper.mapError())
     }
 
     private fun postUiState(uiState: UiState) {

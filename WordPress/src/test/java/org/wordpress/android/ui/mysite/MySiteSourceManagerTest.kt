@@ -12,20 +12,16 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
-import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardSource
+import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardSource
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
-import org.wordpress.android.ui.quickstart.QuickStartTracker
 
 /* SITE */
 
@@ -35,19 +31,13 @@ const val SITE_LOCAL_ID = 1
 @RunWith(MockitoJUnitRunner::class)
 class MySiteSourceManagerTest : BaseUnitTest() {
     @Mock
-    lateinit var quickStartTracker: QuickStartTracker
-
-    @Mock
     lateinit var domainRegistrationSource: DomainRegistrationSource
 
     @Mock
     lateinit var scanAndBackupSource: ScanAndBackupSource
 
     @Mock
-    lateinit var currentAvatarSource: CurrentAvatarSource
-
-    @Mock
-    lateinit var dynamicCardsSource: DynamicCardsSource
+    lateinit var accountDataSource: AccountDataSource
 
     @Mock
     lateinit var cardsSource: CardsSource
@@ -65,10 +55,13 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     lateinit var bloggingPromptCardSource: BloggingPromptCardSource
 
     @Mock
-    lateinit var promoteWithBlazeCardSource: PromoteWithBlazeCardSource
+    lateinit var blazeCardSource: BlazeCardSource
 
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Mock
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Mock
     lateinit var siteModel: SiteModel
@@ -84,32 +77,31 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     fun setUp() = test {
         selectedSite.value = null
         whenever(siteModel.isUsingWpComRestApi).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(true)
 
         mySiteSourceManager = MySiteSourceManager(
-            quickStartTracker,
-            currentAvatarSource,
+            accountDataSource,
             domainRegistrationSource,
-            dynamicCardsSource,
             quickStartCardSource,
             scanAndBackupSource,
             selectedSiteSource,
             cardsSource,
             siteIconProgressSource,
             bloggingPromptCardSource,
-            promoteWithBlazeCardSource,
-            selectedSiteRepository
+            blazeCardSource,
+            selectedSiteRepository,
+            jetpackFeatureRemovalPhaseHelper
         )
 
         allRefreshedMySiteSources = listOf(
             selectedSiteSource,
             siteIconProgressSource,
             quickStartCardSource,
-            currentAvatarSource,
+            accountDataSource,
             domainRegistrationSource,
             scanAndBackupSource,
-            dynamicCardsSource,
             cardsSource
         )
 
@@ -117,19 +109,18 @@ class MySiteSourceManagerTest : BaseUnitTest() {
             selectedSiteSource,
             siteIconProgressSource,
             quickStartCardSource,
-            currentAvatarSource,
+            accountDataSource,
             domainRegistrationSource,
             scanAndBackupSource,
-            dynamicCardsSource
         )
 
         siteIndependentMySiteSources = listOf(
-            currentAvatarSource
+            accountDataSource
         )
 
         selectRefreshedMySiteSources = listOf(
             quickStartCardSource,
-            currentAvatarSource
+            accountDataSource
         )
 
         siteDependentMySiteSources = allRefreshedMySiteSources.filterNot(SiteIndependentSource::class.java::isInstance)
@@ -195,6 +186,19 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         verify(cardsSource, times(0)).build(coroutineScope, SITE_LOCAL_ID)
     }
 
+
+    @Test
+    fun `given jetpack removal phase, when build, then all sources except cards source are built`() {
+        val coroutineScope = testScope()
+        whenever(siteModel.isUsingWpComRestApi).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowDashboard()).thenReturn(false)
+
+        mySiteSourceManager.build(coroutineScope, SITE_LOCAL_ID)
+
+        allRefreshedMySiteSourcesExceptCardsSource.forEach { verify(it).build(coroutineScope, SITE_LOCAL_ID) }
+        verify(cardsSource, times(0)).build(coroutineScope, SITE_LOCAL_ID)
+    }
+
     /* ON REFRESH */
 
     @Test
@@ -246,7 +250,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     fun `given site selected, when on resume, then refresh current avatar`() {
         mySiteSourceManager.onResume(true)
 
-        verify(currentAvatarSource).refresh()
+        verify(accountDataSource).refresh()
     }
 
     @Test
@@ -277,26 +281,6 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         mySiteSourceManager.clear()
 
         verify(selectedSiteSource).clear()
-    }
-
-    /* DYNAMIC CARDS HIDE/REMOVE */
-
-    @Test
-    fun `when dynamic QS hide menu item is clicked, then the card is hidden`() = test {
-        val id = DynamicCardType.CUSTOMIZE_QUICK_START
-        mySiteSourceManager.onQuickStartMenuInteraction(DynamicCardMenuInteraction.Hide(id))
-
-        verify(quickStartTracker).track(Stat.QUICK_START_HIDE_CARD_TAPPED)
-        verify(dynamicCardsSource).hideItem(id)
-    }
-
-    @Test
-    fun `when dynamic QS remove menu item is clicked, then the card is removed`() = test {
-        val id = DynamicCardType.CUSTOMIZE_QUICK_START
-        mySiteSourceManager.onQuickStartMenuInteraction(DynamicCardMenuInteraction.Remove(id))
-
-        verify(quickStartTracker).track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
-        verify(dynamicCardsSource).removeItem(id)
     }
 
     /* QUICK START */

@@ -24,10 +24,10 @@ class StoriesIntroViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: StoriesIntroViewModel
 
     @Mock
-    lateinit var onDialogClosedObserver: Observer<Unit>
+    lateinit var onDialogClosedObserver: Observer<Unit?>
 
     @Mock
-    lateinit var onCreateButtonClickedObserver: Observer<Unit>
+    lateinit var onCreateButtonClickedObserver: Observer<Unit?>
 
     @Mock
     lateinit var onStoryOpenRequestedObserver: Observer<String>

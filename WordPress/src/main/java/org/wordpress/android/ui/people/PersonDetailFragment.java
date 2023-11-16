@@ -11,19 +11,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
@@ -31,7 +33,6 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -80,15 +81,15 @@ public class PersonDetailFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+        ((WordPress) requireActivity().getApplicationContext()).component().inject(this);
 
         if (savedInstanceState == null) {
-            mCurrentUserId = getArguments().getLong(ARG_CURRENT_USER_ID);
-            mPersonId = getArguments().getLong(ARG_PERSON_ID);
-            mLocalTableBlogId = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
-            mPersonType = (Person.PersonType) getArguments().getSerializable(ARG_PERSON_TYPE);
+            mCurrentUserId = requireArguments().getLong(ARG_CURRENT_USER_ID);
+            mPersonId = requireArguments().getLong(ARG_PERSON_ID);
+            mLocalTableBlogId = requireArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
+            mPersonType = (Person.PersonType) requireArguments().getSerializable(ARG_PERSON_TYPE);
         } else {
             mCurrentUserId = savedInstanceState.getLong(ARG_CURRENT_USER_ID);
             mPersonId = savedInstanceState.getLong(ARG_PERSON_ID);
@@ -101,7 +102,7 @@ public class PersonDetailFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(@NotNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(ARG_CURRENT_USER_ID, mCurrentUserId);
         outState.putLong(ARG_PERSON_ID, mPersonId);
@@ -110,7 +111,7 @@ public class PersonDetailFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.person_detail, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -120,8 +121,8 @@ public class PersonDetailFragment extends Fragment {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.person_detail_fragment, container, false);
 
         Toolbar toolbar = rootView.findViewById(R.id.toolbar_main);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -256,7 +257,7 @@ public class PersonDetailFragment extends Fragment {
                 mSiteStore.getSiteByLocalId(
                         mLocalTableBlogId),
                 person.getRole());
-        dialog.show(getFragmentManager(), null);
+        dialog.show(getChildFragmentManager(), null);
     }
 
     // used to optimistically update the role

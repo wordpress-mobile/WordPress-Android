@@ -32,7 +32,7 @@
             android:textSize="@dimen/text_sz_medium"
             app:layout_constraintTop_toBottomOf="@+id/sheet_handle" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <org.wordpress.android.widgets.WPSwitchCompat
             android:id="@+id/enable_push_notifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

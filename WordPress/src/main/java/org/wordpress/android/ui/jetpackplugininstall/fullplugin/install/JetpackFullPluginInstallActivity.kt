@@ -42,6 +42,7 @@ class JetpackFullPluginInstallActivity : AppCompatActivity() {
         observeActionEvents()
     }
 
+    @Suppress("OVERRIDE_DEPRECATION","MissingSuperCall")
     override fun onBackPressed() {
         if (!viewModel.uiState.value.showCloseButton) return
 

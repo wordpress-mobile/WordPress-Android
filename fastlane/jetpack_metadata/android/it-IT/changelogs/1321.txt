@@ -1,3 +1,0 @@
-21.9:
-Grandi notizie: Jetpack ora supporta Blaze. In questo modo puoi raggiungere nuovi lettori promuovendo un articolo o una pagina dall'interno dell'app.
-Abbiamo anche aggiunto una scheda per le domande frequenti sulla migrazione dell'articolo alla schermata Guida, che vedrai dopo il passaggio dall'app di WordPress a Jetpack.

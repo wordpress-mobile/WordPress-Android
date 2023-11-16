@@ -15,7 +15,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title"
-            style="@style/MySiteCardItemTitle"
+            style="@style/DomainRegistrationCardTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/register_domain"
@@ -25,7 +25,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/description"
-            style="@style/MySiteCardItemSubtitle"
+            style="@style/DomainRegistrationCardSubTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:maxLines="5"

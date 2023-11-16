@@ -136,4 +136,32 @@ class ReaderUtilsTest {
         val result = ReaderUtils.sanitizeWithDashes(nonUrlEncodedString)
         assertThat(result).isEqualTo("nonurlencodedstring")
     }
+
+    @Test
+    fun `given valid reader tag link, when isTagUrl is invoked, then returns true`() {
+        val tagLink = "https://wordpress.com/tag/dailyprompt-123"
+        val result = ReaderUtils.isTagUrl(tagLink)
+        assertThat(result).isEqualTo(true)
+    }
+
+    @Test
+    fun `given invalid reader tag link, when isTagUrl is invoked, then returns false`() {
+        val tagLink = "https://wordpress.com/tag/dailyprompt-123/abc"
+        val result = ReaderUtils.isTagUrl(tagLink)
+        assertThat(result).isEqualTo(false)
+    }
+
+    @Test
+    fun `given valid reader tag link, when getTagFromTagUrl is invoked, then returns only tag slug`() {
+        val tagLink = "https://wordpress.com/tag/dailyprompt-123"
+        val result = ReaderUtils.getTagFromTagUrl(tagLink)
+        assertThat(result).isEqualTo("dailyprompt-123")
+    }
+
+    @Test
+    fun `given invalid reader tag link, when isTagUrl is invoked, then returns empty string`() {
+        val tagLink = "https://wordpress.com/tag/dailyprompt-123/abc"
+        val result = ReaderUtils.getTagFromTagUrl(tagLink)
+        assertThat(result).isEqualTo("")
+    }
 }

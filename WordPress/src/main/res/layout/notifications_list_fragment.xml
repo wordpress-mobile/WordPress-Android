@@ -21,12 +21,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar_main"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:theme="@style/WordPress.ActionBar" />
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:theme="@style/WordPress.ActionBar" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
@@ -37,6 +37,44 @@
             app:tabGravity="fill"
             app:tabMode="scrollable" />
 
+        <LinearLayout
+            android:id="@+id/notification_permission_warning"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tab_height"
+            android:background="@color/warning_0"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_weight="1"
+                android:gravity="start|center_vertical"
+                android:text="@string/notifications_permission_off_desc"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="@android:color/black" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/min_touch_target_sz"
+                android:gravity="center"
+                android:minWidth="@dimen/min_touch_target_sz"
+                android:text="@string/notifications_permission_fix"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                android:textColor="@color/warning_60" />
+
+            <ImageView
+                android:id="@+id/permission_dismiss_button"
+                android:layout_width="@dimen/min_touch_target_sz"
+                android:layout_height="@dimen/min_touch_target_sz"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/notifications_permission_dismiss_content_description"
+                android:padding="@dimen/margin_large"
+                android:src="@drawable/ic_cross_small_white_24dp"
+                app:tint="@android:color/black" />
+        </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout

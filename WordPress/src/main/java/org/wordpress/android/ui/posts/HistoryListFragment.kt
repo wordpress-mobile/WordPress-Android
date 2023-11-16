@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,6 +16,7 @@ import org.wordpress.android.ui.history.HistoryAdapter
 import org.wordpress.android.ui.history.HistoryListItem
 import org.wordpress.android.ui.history.HistoryListItem.Revision
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.history.HistoryViewModel
 import org.wordpress.android.viewmodel.history.HistoryViewModel.HistoryListStatus
@@ -33,7 +33,7 @@ class HistoryListFragment : Fragment(R.layout.history_list_fragment) {
         private const val KEY_POST_LOCAL_ID = "key_post_local_id"
         private const val KEY_SITE = "key_site"
 
-        fun newInstance(postId: Int, @NonNull site: SiteModel): HistoryListFragment {
+        fun newInstance(postId: Int, site: SiteModel): HistoryListFragment {
             val fragment = HistoryListFragment()
             val bundle = Bundle()
             bundle.putInt(KEY_POST_LOCAL_ID, postId)
@@ -84,10 +84,11 @@ class HistoryListFragment : Fragment(R.layout.history_list_fragment) {
 
             (nonNullActivity.application as WordPress).component().inject(this@HistoryListFragment)
 
-            viewModel = ViewModelProvider(this@HistoryListFragment, viewModelFactory).get(HistoryViewModel::class.java)
+            viewModel = ViewModelProvider(this@HistoryListFragment, viewModelFactory)[HistoryViewModel::class.java]
+            val site = requireNotNull(arguments?.getSerializableCompat<SiteModel>(KEY_SITE))
             viewModel.create(
                 localPostId = arguments?.getInt(KEY_POST_LOCAL_ID) ?: 0,
-                site = arguments?.get(KEY_SITE) as SiteModel
+                site = site
             )
             updatePostOrPageEmptyView()
             setObservers()

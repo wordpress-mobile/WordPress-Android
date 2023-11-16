@@ -14,19 +14,24 @@ class EditCategoryUseCase @Inject constructor(
     private val dispatcher: Dispatcher
 ) {
     fun editCategory(
+        existingCategory: TermModel,
         categoryId: Long,
-        existingCategorySlug: String,
         categoryName: String,
         parentCategoryId: Long,
         siteModel: SiteModel
     ) {
-        val existingCategory = TermModel()
-        existingCategory.remoteTermId = categoryId
-        existingCategory.taxonomy = TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
-        existingCategory.name = categoryName
-        existingCategory.slug = existingCategorySlug
-        existingCategory.parentRemoteId = parentCategoryId
-        val payload = RemoteTermPayload(existingCategory, siteModel)
+        val editedCategory = TermModel(
+            existingCategory.id,
+            existingCategory.localSiteId,
+            categoryId,
+            TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+            categoryName,
+            existingCategory.slug,
+            existingCategory.description,
+            parentCategoryId,
+            existingCategory.postCount
+        )
+        val payload = RemoteTermPayload(editedCategory, siteModel)
         dispatcher.dispatch(TaxonomyActionBuilder.newPushTermAction(payload))
     }
 }

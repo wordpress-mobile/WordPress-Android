@@ -34,6 +34,7 @@ import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import java.util.Locale
+import com.google.android.material.R as MaterialR
 
 object QuickStartUtils {
     private val themeBrowserUtils = ThemeBrowserUtils()
@@ -83,7 +84,7 @@ object QuickStartUtils {
         )
         // nothing to highlight
         if (startOfHighlight != -1 && endOfHighlight != -1) {
-            val highlightColor = activityContext.getColorFromAttribute(R.attr.colorSurface)
+            val highlightColor = activityContext.getColorFromAttribute(MaterialR.attr.colorSurface)
             mutableSpannedMessage.setSpan(
                 ForegroundColorSpan(highlightColor),
                 startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE

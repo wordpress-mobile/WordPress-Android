@@ -4,7 +4,6 @@ import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_SHARE_POST_TAPPED
@@ -150,7 +149,7 @@ class LatestPostSummaryUseCase
     private fun buildQuickScanItems(domainModel: InsightsLatestPostModel) =
         QuickScanItem(
             Column(
-                label = string.stats_views,
+                label = R.string.stats_views,
                 value = statsUtils.toFormattedString(domainModel.postViewsCount, startValue = MILLION),
                 tooltip = contentDescriptionHelper.buildContentDescription(
                     R.string.stats_views,
@@ -158,7 +157,7 @@ class LatestPostSummaryUseCase
                 )
             ),
             Column(
-                label = string.stats_likes,
+                label = R.string.stats_likes,
                 value = statsUtils.toFormattedString(domainModel.postLikeCount),
                 tooltip = contentDescriptionHelper.buildContentDescription(
                     R.string.stats_likes,
@@ -166,7 +165,7 @@ class LatestPostSummaryUseCase
                 )
             ),
             Column(
-                label = string.stats_comments,
+                label = R.string.stats_comments,
                 value = statsUtils.toFormattedString(domainModel.postCommentCount),
                 tooltip = contentDescriptionHelper.buildContentDescription(
                     R.string.stats_comments,

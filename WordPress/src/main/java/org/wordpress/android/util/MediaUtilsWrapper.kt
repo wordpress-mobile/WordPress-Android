@@ -26,8 +26,6 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
 
     fun isVideo(mediaUriString: String) = MediaUtils.isVideo(mediaUriString)
 
-    fun getLastRecordedVideoUri(): Uri = MediaUtils.getLastRecordedVideoUri(appContext)
-
     fun getOptimizedMedia(path: String, isVideo: Boolean): Uri? =
         WPMediaUtils.getOptimizedMedia(appContext, path, isVideo)
 

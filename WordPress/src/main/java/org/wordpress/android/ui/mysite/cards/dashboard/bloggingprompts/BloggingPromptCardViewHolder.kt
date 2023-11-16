@@ -1,36 +1,27 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
-import android.content.Context
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.MenuCompat
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexWrap
-import com.google.android.flexbox.FlexboxLayoutManager
-import com.google.android.flexbox.JustifyContent
+import androidx.core.view.isVisible
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteBloggingPromptCardBinding
-import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
-import org.wordpress.android.ui.avatars.AvatarItemDecorator
-import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
-import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
-import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution.DAY_ONE
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution.NO_ATTRIBUTION
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.HtmlCompatWrapper
-import org.wordpress.android.util.RtlUtils
+import org.wordpress.android.util.extensions.getColorStateListFromAttributeOrRes
 import org.wordpress.android.util.extensions.viewBinding
-import org.wordpress.android.util.image.ImageManager
 
 class BloggingPromptCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers,
-    private val imageManager: ImageManager,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val htmlCompatWrapper: HtmlCompatWrapper,
     private val learnMoreClicked: () -> Unit
-) : CardViewHolder<MySiteBloggingPromptCardBinding>(
+) : MySiteCardAndItemViewHolder<MySiteBloggingPromptCardBinding>(
     parent.viewBinding(MySiteBloggingPromptCardBinding::inflate)
 ) {
     fun bind(card: BloggingPromptCardWithData) = with(binding) {
@@ -40,11 +31,7 @@ class BloggingPromptCardViewHolder(
         uiHelpers.setTextOrHide(promptContent, cardPrompt)
         uiHelpers.updateVisibility(answerButton, !card.isAnswered)
 
-        uiHelpers.updateVisibility(attributionContainer, card.attribution == DAY_ONE)
-
-        attributionContent.text = htmlCompatWrapper.fromHtml(
-            attributionContent.context.getString(R.string.my_site_blogging_prompt_card_attribution_dayone)
-        )
+        setupAttributionContainer(card.attribution)
 
         bloggingPromptCardMenu.setOnClickListener {
             bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuClicked()
@@ -65,52 +52,67 @@ class BloggingPromptCardViewHolder(
         }
         uiHelpers.updateVisibility(answeredPromptControls, card.isAnswered)
 
-        val layoutManager = FlexboxLayoutManager(
-            answeredUsersRecycler.context,
-            FlexDirection.ROW,
-            FlexWrap.NOWRAP
-        ).apply { justifyContent = JustifyContent.CENTER }
-
-        if (card.numberOfAnswers > 0) {
-            uiHelpers.updateVisibility(answeredUsersContainer, true)
-            answeredUsersRecycler.addItemDecoration(
-                AvatarItemDecorator(
-                    RtlUtils.isRtl(answeredUsersRecycler.context),
-                    answeredUsersRecycler.context,
-                    AVATAR_LEFT_OFFSET_DIMEN
-                )
-            )
-            answeredUsersRecycler.layoutManager = layoutManager
-
-            val adapter = TrainOfAvatarsAdapter(
-                imageManager,
-                uiHelpers
-            )
-            answeredUsersRecycler.adapter = adapter
-
-            adapter.loadData(card.respondents)
-
-            card.onViewAnswersClick?.let { onClick ->
-                answeredUsersContainer.setOnClickListener { onClick(card.promptId) }
-            }
-            answeredUsersContainer.contentDescription = createViewAnswersContentDescription(
-                answeredUsersContainer.context,
-                card.respondents
-            )
-        } else {
-            uiHelpers.updateVisibility(answeredUsersContainer, false)
-        }
+        setupAnsweredUsersContainer(card)
     }
 
-    private fun createViewAnswersContentDescription(
-        context: Context,
-        respondents: List<TrainOfAvatarsItem>,
-    ): CharSequence? {
-        return respondents
-            .filterIsInstance<TrainOfAvatarsItem.TrailingLabelTextItem>()
-            .firstOrNull()
-            ?.text
-            ?.let { uiHelpers.getTextOfUiString(context, it) }
+    private fun MySiteBloggingPromptCardBinding.setupAttributionContainer(
+        attribution: BloggingPromptAttribution
+    ) {
+        uiHelpers.updateVisibility(attributionContainer, attribution != NO_ATTRIBUTION)
+
+        val context = attributionContainer.context
+
+        attribution.contentRes
+            .takeIf { it != -1 }
+            ?.let { context.getString(it) }
+            ?.let { content ->
+                attributionContent.text = htmlCompatWrapper.fromHtml(content)
+            }
+
+        attribution.iconRes
+            .takeIf { it != -1 }
+            ?.let { iconRes ->
+                attributionIcon.setImageResource(iconRes)
+            }
+    }
+
+    @Suppress("NestedBlockDepth")
+    private fun setupAnsweredUsersContainer(
+        card: BloggingPromptCardWithData,
+    ) = with(binding) {
+        if (card.numberOfAnswers <= 0) {
+            answeredUsersAvatars.isVisible = false
+            answeredUsersLabel.isVisible = false
+            return@with
+        }
+
+        answeredUsersAvatars.apply {
+            isVisible = true
+            avatars = card.respondents
+                .filterIsInstance(TrainOfAvatarsItem.AvatarItem::class.java)
+        }
+
+        answeredUsersLabel.apply {
+            card.respondents
+                .filterIsInstance(TrainOfAvatarsItem.TrailingLabelTextItem::class.java)
+                .firstOrNull()
+                ?.let {
+                    isVisible = true
+                    text = uiHelpers.getTextOfUiString(
+                        context,
+                        it.text
+                    )
+                    setTextColor(
+                        context.getColorStateListFromAttributeOrRes(it.labelColor)
+                    )
+                    card.onViewAnswersClick?.let { onClick ->
+                        setOnClickListener { onClick(card.tagUrl) }
+                    }
+                }
+                ?: run {
+                    isVisible = false
+                }
+        }
     }
 
     private fun MySiteBloggingPromptCardBinding.showCardMenu(card: BloggingPromptCardWithData) {
@@ -121,14 +123,17 @@ class BloggingPromptCardViewHolder(
                         bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuViewMorePromptsClicked()
                         card.onViewMoreClick.invoke()
                     }
+
                     R.id.skip -> {
                         bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
                         card.onSkipClick.invoke()
                     }
+
                     R.id.remove -> {
                         bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuRemoveFromDashboardClicked()
                         card.onRemoveClick.invoke()
                     }
+
                     R.id.learn_more -> {
                         bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuLearnMoreClicked()
                         learnMoreClicked()
@@ -137,8 +142,6 @@ class BloggingPromptCardViewHolder(
                 return@setOnMenuItemClickListener true
             }
             inflate(R.menu.blogging_prompt_card_menu)
-            menu.findItem(R.id.view_more)?.isVisible = card.showViewMoreAction
-            menu.findItem(R.id.remove)?.isVisible = card.showRemoveAction
             MenuCompat.setGroupDividerEnabled(menu, true)
         }.also {
             it.show()

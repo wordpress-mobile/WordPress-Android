@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 
@@ -22,6 +23,7 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
 
     private static final String WP_LOGIN_URL_SUFFIX = "wp-login.php";
     private static final String REMOTE_LOGIN_URL_SUFFIX = "remote-login.php";
+    private static final String BLOB_URL_PREFIX = "blob:";
 
     public URLFilteredWebViewClient(String url, ErrorManagedWebViewClientListener listener) {
         super(listener);
@@ -66,6 +68,7 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
 
             boolean isRemoteLoginUrl = url.endsWith(REMOTE_LOGIN_URL_SUFFIX);
             boolean isLoginUrl = url.endsWith(WP_LOGIN_URL_SUFFIX);
+            boolean isBlobUrl = url.startsWith(BLOB_URL_PREFIX);
 
             Uri currentUri = Uri.parse((view.getUrl()));
             Uri incomingUri = Uri.parse(url);
@@ -73,8 +76,8 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
             boolean newUrlIsOnTheSameHost =
                     currentUri.getHost() != null && currentUri.getHost().equals(incomingUri.getHost());
 
-            boolean openInExternalBrowser =
-                    !isRemoteLoginUrl && !isLoginUrl && !isComingFromLoginUrl && !newUrlIsOnTheSameHost;
+            boolean openInExternalBrowser = !isRemoteLoginUrl && !isLoginUrl && !isComingFromLoginUrl
+                                            && !newUrlIsOnTheSameHost && !isBlobUrl;
 
             if (openInExternalBrowser) {
                 ReaderActivityLauncher.openUrl(view.getContext(), url, ReaderActivityLauncher.OpenUrlType.EXTERNAL);
@@ -85,7 +88,7 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
         } else {
             // show "links are disabled" message.
             Context ctx = WordPress.getContext();
-            int linksDisabledMessageResId = org.wordpress.android.R.string.preview_screen_links_disabled;
+            int linksDisabledMessageResId = R.string.preview_screen_links_disabled;
             Toast.makeText(ctx, ctx.getText(linksDisabledMessageResId), Toast.LENGTH_SHORT).show();
         }
         return true;

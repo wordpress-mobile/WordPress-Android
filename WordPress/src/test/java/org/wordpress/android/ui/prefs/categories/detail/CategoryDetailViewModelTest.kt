@@ -10,13 +10,14 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.TaxonomyAction.REMOVE_TERM
+import org.wordpress.android.fluxc.action.TaxonomyAction
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.TermModel
+import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError
-import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.AddCategoryUseCase
@@ -227,8 +228,11 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
 
         assertThat(InProgress(R.string.updating_cat)).isEqualTo(onCategoryPushStates[0].peekContent())
         verify(editCategoryUseCase).editCategory(
-            14L, "dog",
-            updatedCategoryName, 1, siteModel
+            getChildTermModel(),
+            14L,
+            updatedCategoryName,
+            1,
+            siteModel
         )
     }
 
@@ -326,40 +330,48 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     }
 
     private fun getParentTermModel(): TermModel {
-        val termModel = TermModel()
-        termModel.name = "Animals"
-        termModel.remoteTermId = 1
-        termModel.slug = "Animals"
-        return termModel
+        return TermModel(
+            0,
+            6,
+            1,
+            TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+            "Animals",
+            "animals",
+            null,
+            0,
+            0
+        )
     }
 
     private fun getChildTermModel(): TermModel {
-        val termModel = TermModel()
-        termModel.name = "Dog"
-        termModel.remoteTermId = 14
-        termModel.parentRemoteId = 1
-        termModel.slug = "dog"
-        return termModel
+        return TermModel(
+            0,
+            6,
+            14,
+            TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+            "Dog",
+            "dog",
+            null,
+            1,
+            0
+        )
     }
 
-    private fun getTermUploadSuccess() = OnTermUploaded(TermModel())
+    private fun getTermUploadSuccess() = OnTermUploaded(TermModel(TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY))
 
     private fun getTermUploadError(): OnTermUploaded {
-        val event = OnTermUploaded(TermModel())
-        event.error = TaxonomyError(GENERIC_ERROR)
+        val event = OnTermUploaded(TermModel(TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY))
+        event.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR)
         return event
     }
 
     private fun getTaxonomyChangedCallback(): OnTaxonomyChanged {
-        val taxonomyChanged = OnTaxonomyChanged(0)
-        taxonomyChanged.causeOfChange = REMOVE_TERM
-        return taxonomyChanged
+        return OnTaxonomyChanged(0, TaxonomyAction.REMOVE_TERM)
     }
 
     private fun getTaxonomyChangedErrorCallback(): OnTaxonomyChanged {
-        val taxonomyChanged = OnTaxonomyChanged(0)
-        taxonomyChanged.causeOfChange = REMOVE_TERM
-        taxonomyChanged.error = TaxonomyError(GENERIC_ERROR)
+        val taxonomyChanged = OnTaxonomyChanged(0, TaxonomyAction.REMOVE_TERM)
+        taxonomyChanged.error = TaxonomyError(TaxonomyErrorType.GENERIC_ERROR)
         return taxonomyChanged
     }
 }

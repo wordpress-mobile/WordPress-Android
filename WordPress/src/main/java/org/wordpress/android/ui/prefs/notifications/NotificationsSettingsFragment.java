@@ -1,19 +1,18 @@
 package org.wordpress.android.ui.prefs.notifications;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff.Mode;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +24,7 @@ import android.widget.ListView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.ViewCompat;
@@ -58,6 +58,7 @@ import org.wordpress.android.fluxc.store.AccountStore.SubscriptionType;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateSubscriptionPayload.SubscriptionFrequency;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
@@ -76,12 +77,11 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
+import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 
 import java.util.ArrayList;
@@ -99,6 +99,7 @@ import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpda
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionEmailPostFrequencyAction;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 import static org.wordpress.android.ui.RequestCodes.NOTIFICATION_SETTINGS;
+import static org.wordpress.android.util.WPPermissionUtils.NOTIFICATIONS_PERMISSION_REQUEST_CODE;
 
 public class NotificationsSettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -137,7 +138,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject FollowedBlogsProvider mFollowedBlogsProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject UiHelpers mUiHelpers;
 
@@ -147,7 +147,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     private static final String BLOGGING_REMINDERS_BOTTOM_SHEET_TAG = "blogging-reminders-dialog-tag";
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -225,6 +225,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         initBloggingReminders();
     }
 
+    @Override public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        PreferenceScreen otherBlogsScreen = (PreferenceScreen) findPreference(
+                getString(R.string.pref_notification_other_blogs));
+        addToolbarToDialog(otherBlogsScreen);
+    }
+
     private void addJetpackBadgeAsFooterIfEnabled(ListView listView) {
         if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
             final JetpackPoweredScreen screen = JetpackPoweredScreen.WithDynamicText.NOTIFICATIONS_SETTINGS;
@@ -272,7 +279,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.notifications_settings, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_notifications_settings_search);
@@ -304,7 +311,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
         mSearchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
                 mSearchMenuItemCollapsed = false;
                 configureBlogsSettings(mBlogsCategory, true);
                 configureFollowedBlogsSettings(mFollowedBlogsCategory, true);
@@ -312,7 +319,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 mSearchMenuItemCollapsed = true;
                 configureBlogsSettings(mBlogsCategory, false);
                 configureFollowedBlogsSettings(mFollowedBlogsCategory, false);
@@ -545,7 +552,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
     // Updates the UI for preference screens based on if notifications are enabled or not
     private void updateUIForNotificationsEnabledState() {
-        if (mTypePreferenceCategories == null || mTypePreferenceCategories.size() == 0) {
+        if (mTypePreferenceCategories.size() == 0) {
             return;
         }
 
@@ -554,21 +561,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                 category.removePreference(category.getPreference(TYPE_COUNT));
             } else if (!mNotificationsEnabled && category.getPreferenceCount() == TYPE_COUNT) {
                 Preference disabledMessage = new Preference(getActivity());
-                disabledMessage.setSummary(R.string.notifications_disabled);
-                disabledMessage.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        Intent intent = new Intent();
-                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri =
-                                Uri.fromParts("package", getActivity().getApplicationContext().getPackageName(), null);
-                        intent.setData(uri);
-
-                        startActivity(intent);
-                        return true;
-                    }
-                });
-
                 category.addPreference(disabledMessage);
             }
 
@@ -576,7 +568,50 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                 && category.getPreference(TYPE_COUNT - 1) != null) {
                 category.getPreference(TYPE_COUNT - 1).setEnabled(mNotificationsEnabled);
             }
+
+            if (category.getPreferenceCount() > TYPE_COUNT
+                && category.getPreference(TYPE_COUNT) != null) {
+                updateDisabledMessagePreference(category.getPreference(TYPE_COUNT));
+            }
         }
+    }
+
+    private void updateDisabledMessagePreference(Preference disabledMessagePreference) {
+        disabledMessagePreference.setSummary(getDisabledMessageResId());
+        disabledMessagePreference.setOnPreferenceClickListener(preference -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && shouldRequestRuntimePermission()) {
+                // Request runtime permission.
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        NOTIFICATIONS_PERMISSION_REQUEST_CODE);
+            } else {
+                // Navigate to app settings.
+                WPPermissionUtils.showNotificationsSettings(getContext());
+            }
+            return true;
+        });
+    }
+
+    private boolean shouldRequestRuntimePermission() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+               && !WPPermissionUtils.isPermissionAlwaysDenied(getActivity(), Manifest.permission.POST_NOTIFICATIONS);
+    }
+
+    @StringRes
+    private int getDisabledMessageResId() {
+        if (shouldRequestRuntimePermission()) {
+            return R.string.notifications_disabled_permission_dialog;
+        } else {
+            return R.string.notifications_disabled;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        WPPermissionUtils.setPermissionListAsked(getActivity(), requestCode, permissions, grantResults, false);
     }
 
     private void configureBlogsSettings(PreferenceCategory blogsCategory, boolean showAll) {
@@ -912,17 +947,21 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         super.onPreferenceTreeClick(preferenceScreen, preference);
 
         if (preference instanceof PreferenceScreen) {
-            Dialog prefDialog = ((PreferenceScreen) preference).getDialog();
-            if (prefDialog != null) {
-                String title = String.valueOf(preference.getTitle());
-                WPActivityUtils.addToolbarToDialog(this, prefDialog, title);
-            }
+            addToolbarToDialog(preference);
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_STREAMS_OPENED);
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_DETAILS_OPENED);
         }
 
         return false;
+    }
+
+    private void addToolbarToDialog(Preference preference) {
+        Dialog prefDialog = ((PreferenceScreen) preference).getDialog();
+        if (prefDialog != null) {
+            String title = String.valueOf(preference.getTitle());
+            WPActivityUtils.addToolbarToDialog(this, prefDialog, title);
+        }
     }
 
     @Override
@@ -966,10 +1005,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     }
 
     private final BloggingRemindersProvider mBloggingRemindersProvider = new BloggingRemindersProvider() {
-        @Override public boolean isEnabled() {
-            return mBloggingRemindersFeatureConfig.isEnabled();
-        }
-
         @Override public String getSummary(long blogId) {
             UiString uiString = mBloggingRemindersSummariesBySiteId.get(blogId);
             return uiString != null ? mUiHelpers.getTextOfUiString(getContext(), uiString).toString() : null;

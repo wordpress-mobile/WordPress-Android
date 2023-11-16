@@ -146,7 +146,7 @@ public class NumberPickerDialog extends DialogFragment
     }
 
     private View getDialogTitleView(String title) {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
         @SuppressLint("InflateParams")
         View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
         TextView titleText = titleView.findViewById(R.id.title);

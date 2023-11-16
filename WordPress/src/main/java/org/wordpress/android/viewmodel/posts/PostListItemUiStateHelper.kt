@@ -47,8 +47,9 @@ import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiStat
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_COMMENTS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY
-import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY_URL
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SHARE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -65,8 +66,6 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
 import javax.inject.Inject
 
-private const val MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD = 3
-
 /**
  * Helper class which encapsulates logic for creating UiStates for items in the PostsList.
  */
@@ -80,6 +79,7 @@ class PostListItemUiStateHelper @Inject constructor(
     @Suppress("LongParameterList", "LongMethod")
     fun createPostListItemUiState(
         authorFilterSelection: AuthorFilterSelection,
+        isFilteringByAuthorSupported: Boolean,
         post: PostModel,
         site: SiteModel,
         unhandledConflicts: Boolean,
@@ -92,7 +92,6 @@ class PostListItemUiStateHelper @Inject constructor(
         isSearch: Boolean,
         uploadStatusTracker: PostModelUploadStatusTracker,
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit,
-        isSiteBlazeEligible: Boolean
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
         val uploadUiState = uploadUiStateUseCase.createUploadUiState(post, site, uploadStatusTracker)
@@ -109,23 +108,29 @@ class PostListItemUiStateHelper @Inject constructor(
             statsSupported = statsSupported,
             shouldShowStatsInJetpackRemovalPhase =
             jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton(),
-            shouldShowPromoteWithBlaze = isSiteBlazeEligible && blazeFeatureUtils.isPostBlazeEligible(
+            shouldShowPromoteWithBlaze = blazeFeatureUtils.isPostBlazeEligible(
+                site,
                 postStatus,
                 post
             ),
         )
-        val defaultActions = createDefaultViewActions(buttonTypes, onButtonClicked)
-        val compactActions = createCompactViewActions(buttonTypes, onButtonClicked)
+        val moreActions = createMoreActions(buttonTypes, onButtonClicked)
 
         val remotePostId = RemotePostId(RemoteId(post.remotePostId))
         val localPostId = LocalPostId(LocalId(post.id))
-        val title = getTitle(post = post)
+        val baseTitle = getTitle(post = post)
+        val excerpt = getExcerpt(post = post)
+
+        val title =
+            if (baseTitle == UiStringRes(R.string.untitled_in_parentheses) && excerpt != null) null else baseTitle
+
         val postInfo = getPostInfoLabels(
             postStatus,
             formattedDate,
             post.authorDisplayName,
             authorFilterSelection,
-            isSearch
+            isSearch,
+            isFilteringByAuthorSupported
         )
         val statuses = getStatuses(
             postStatus = postStatus,
@@ -145,6 +150,7 @@ class PostListItemUiStateHelper @Inject constructor(
                         POST_LIST_ITEM_SELECTED
                     )
                 }
+
                 UNKNOWN, PUBLISHED, DRAFT, PRIVATE, PENDING, SCHEDULED -> onAction.invoke(
                     post,
                     BUTTON_EDIT,
@@ -156,7 +162,7 @@ class PostListItemUiStateHelper @Inject constructor(
             remotePostId = remotePostId,
             localPostId = localPostId,
             title = title,
-            excerpt = getExcerpt(post = post),
+            excerpt = excerpt,
             imageUrl = featuredImageUrl,
             postInfo = postInfo,
             statuses = statuses,
@@ -175,27 +181,21 @@ class PostListItemUiStateHelper @Inject constructor(
 
         return PostListItemUiState(
             data = itemUiData,
-            actions = defaultActions,
-            compactActions = compactActions,
+            moreActions = moreActions,
             onSelected = onSelected
         )
     }
 
+    @Suppress("LongParameterList")
     private fun getPostInfoLabels(
         postStatus: PostStatus,
         formattedDate: String,
         displayName: String?,
         authorFilterSelection: AuthorFilterSelection,
-        isSearch: Boolean
+        isSearch: Boolean,
+        isAuthorFilterVisible: Boolean
     ): List<UiString> {
         val uiStrings: MutableList<UiString> = mutableListOf()
-
-        if (!formattedDate.isBlank()) {
-            uiStrings.add(UiStringText(formattedDate))
-        }
-        if (authorFilterSelection == EVERYONE && !displayName.isNullOrBlank()) {
-            uiStrings.add(UiStringText(displayName))
-        }
 
         if (isSearch) {
             val postStatusText = when (postStatus) {
@@ -208,6 +208,13 @@ class PostListItemUiStateHelper @Inject constructor(
                 SCHEDULED -> R.string.post_status_post_scheduled
             }
             uiStrings.add(UiStringRes(postStatusText))
+        }
+
+        if (formattedDate.isNotBlank()) {
+            uiStrings.add(UiStringText(formattedDate))
+        }
+        if (isAuthorFilterVisible && authorFilterSelection == EVERYONE && !displayName.isNullOrBlank()) {
+            uiStrings.add(UiStringText(displayName))
         }
         return uiStrings
     }
@@ -223,7 +230,11 @@ class PostListItemUiStateHelper @Inject constructor(
             .takeIf { !it.isNullOrBlank() }
             ?.let { StringEscapeUtils.unescapeHtml4(it) }
             ?.let { PostUtils.collapseShortcodes(it) }
-            ?.let { UiStringText(it) }
+            ?.let { UiStringText(getTextBeforeLargeSpaceGap(it)) }
+    private fun getTextBeforeLargeSpaceGap(input: String): String {
+        val parts = input.split(Regex("\\s+\\n+"))
+        return parts.first()
+    }
 
     private fun getProgressBarState(
         uploadUiState: PostUploadUiState,
@@ -254,13 +265,15 @@ class PostListItemUiStateHelper @Inject constructor(
         val labels: MutableList<UiString> = ArrayList()
         when {
             uploadUiState is UploadFailed -> {
-                getErrorLabel(uploadUiState, postStatus)?.let { labels.add(it) }
+                getErrorLabel(uploadUiState, postStatus).let { labels.add(it) }
             }
+
             uploadUiState is UploadingPost -> if (uploadUiState.isDraft) {
                 labels.add(UiStringRes(R.string.post_uploading_draft))
             } else {
                 labels.add(UiStringRes(R.string.post_uploading))
             }
+
             uploadUiState is UploadingMedia -> labels.add(UiStringRes(R.string.uploading_media))
             uploadUiState is UploadQueued -> labels.add(UiStringRes(R.string.post_queued))
             uploadUiState is UploadWaitingForConnection -> {
@@ -268,6 +281,7 @@ class PostListItemUiStateHelper @Inject constructor(
                     labels.add(it)
                 }
             }
+
             hasUnhandledConflicts -> labels.add(UiStringRes(R.string.local_post_is_conflicted))
             hasAutoSave -> labels.add(UiStringRes(R.string.local_post_autosave_revision_available))
         }
@@ -326,7 +340,7 @@ class PostListItemUiStateHelper @Inject constructor(
         return labels
     }
 
-    private fun getErrorLabel(uploadUiState: UploadFailed, postStatus: PostStatus): UiString? {
+    private fun getErrorLabel(uploadUiState: UploadFailed, postStatus: PostStatus): UiString {
         return when {
             uploadUiState.error.mediaError != null -> getMediaUploadErrorMessage(uploadUiState, postStatus)
             uploadUiState.error.postError != null -> UploadUtils.getErrorMessageResIdFromPostError(
@@ -335,6 +349,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 uploadUiState.error.postError,
                 uploadUiState.isEligibleForAutoUpload
             )
+
             else -> {
                 val errorMsg = "MediaError and postError are both null."
                 if (BuildConfig.DEBUG) {
@@ -356,6 +371,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted_retrying)
                 DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_generic_error_retrying)
             }
+
             uploadUiState.retryWillPushChanges -> when (postStatus) {
                 PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published)
                 PRIVATE -> UiStringRes(R.string.error_media_recover_post_not_published_private)
@@ -363,6 +379,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted)
                 DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_media_recover_post)
             }
+
             else -> UiStringRes(R.string.error_media_recover_post)
         }
     }
@@ -398,14 +415,10 @@ class PostListItemUiStateHelper @Inject constructor(
                 !isLocallyChanged &&
                 shouldShowStatsInJetpackRemovalPhase
         val canShowCopy = postStatus == PUBLISHED || postStatus == DRAFT
-        val canShowCopyUrlButton = !isLocalDraft && postStatus != TRASHED
+        val canShowShareButton = !isLocalDraft && postStatus != TRASHED
         val canShowViewButton = !canRetryUpload && postStatus != TRASHED
         val canShowPublishButton = canRetryUpload || canPublishPost
         val buttonTypes = ArrayList<PostListButtonType>()
-
-        if (postStatus != TRASHED) {
-            buttonTypes.add(BUTTON_EDIT)
-        }
 
         if (canCancelPendingAutoUpload) {
             buttonTypes.add(BUTTON_CANCEL_PENDING_AUTO_UPLOAD)
@@ -436,8 +449,8 @@ class PostListItemUiStateHelper @Inject constructor(
 
         buttonTypes.addMoveToDraftActionIfAvailable(postStatus)
 
-        if (canShowCopyUrlButton) {
-            buttonTypes.add(BUTTON_COPY_URL)
+        if (canShowShareButton) {
+            buttonTypes.add(BUTTON_SHARE)
         }
 
         if (shouldShowPromoteWithBlaze) {
@@ -446,7 +459,16 @@ class PostListItemUiStateHelper @Inject constructor(
 
         buttonTypes.addDeletingOrTrashAction(isLocalDraft, postStatus)
 
-        return buttonTypes
+        buttonTypes.addCommentActionIfNeeded(postStatus)
+
+        return sortPostListButtons(buttonTypes)
+    }
+
+    private fun sortPostListButtons(list: List<PostListButtonType>): List<PostListButtonType> {
+        return list.sortedWith(compareBy(
+            { it.groupId },
+            { it.positionInGroup }
+        ))
     }
 
     private fun MutableList<PostListButtonType>.addViewOrPreviewAction(shouldShowPreview: Boolean) {
@@ -472,29 +494,13 @@ class PostListItemUiStateHelper @Inject constructor(
         }
     }
 
-    private fun createDefaultViewActions(
-        buttonTypes: List<PostListButtonType>,
-        onButtonClicked: (PostListButtonType) -> Unit
-    ): List<PostListItemAction> {
-        val createSinglePostListItem = { buttonType: PostListButtonType ->
-            PostListItemAction.SingleItem(buttonType, onButtonClicked)
-        }
-        return if (buttonTypes.size > MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD) {
-            val visibleItems = buttonTypes.take(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1)
-                .map(createSinglePostListItem)
-            val itemsUnderMore = buttonTypes.subList(
-                kotlin.math.max(MAX_NUMBER_OF_VISIBLE_ACTIONS_STANDARD - 1, 0),
-                buttonTypes.size
-            )
-                .map(createSinglePostListItem)
-
-            visibleItems.plus(PostListItemAction.MoreItem(itemsUnderMore, onButtonClicked))
-        } else {
-            buttonTypes.map(createSinglePostListItem)
+    private fun MutableList<PostListButtonType>.addCommentActionIfNeeded(postStatus: PostStatus) {
+        if (postStatus == PUBLISHED) {
+            add(BUTTON_COMMENTS)
         }
     }
 
-    private fun createCompactViewActions(
+    private fun createMoreActions(
         buttonTypes: List<PostListButtonType>,
         onButtonClicked: (PostListButtonType) -> Unit
     ): PostListItemAction.MoreItem {

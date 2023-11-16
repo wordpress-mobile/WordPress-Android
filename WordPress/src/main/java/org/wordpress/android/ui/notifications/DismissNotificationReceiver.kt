@@ -7,6 +7,7 @@ import androidx.core.app.NotificationManagerCompat
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 class DismissNotificationReceiver : BroadcastReceiver() {
@@ -21,7 +22,7 @@ class DismissNotificationReceiver : BroadcastReceiver() {
     }
 
     private fun trackAnalyticsEvent(intent: Intent) {
-        val stat = intent.getSerializableExtra(EXTRA_STAT_TO_TRACK) as Stat?
+        val stat = intent.getSerializableExtraCompat<Stat>(EXTRA_STAT_TO_TRACK)
         if (stat != null) {
             analyticsTrackerWrapper.track(stat)
         }

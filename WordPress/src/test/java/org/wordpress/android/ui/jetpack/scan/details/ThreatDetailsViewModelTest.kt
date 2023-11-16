@@ -38,6 +38,7 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.ScanTracker
+import org.wordpress.android.util.config.RemoteConfigWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -81,6 +82,9 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var scanStore: ScanStore
 
+    @Mock
+    private lateinit var remoteConfigWrapper: RemoteConfigWrapper
+
     private lateinit var viewModel: ThreatDetailsViewModel
     private val threatId = 1L
     private val fakeUiStringText = UiStringText("")
@@ -99,7 +103,8 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
             builder,
             htmlMessageUtils,
             resourceProvider,
-            scanTracker
+            scanTracker,
+            remoteConfigWrapper
         )
         whenever(site.name).thenReturn(TEST_SITE_NAME)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
@@ -116,6 +121,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
             DescriptionState(UiStringRes(R.string.threat_fix_fixable_edit))
         }
         whenever(scanStore.hasValidCredentials(site)).thenReturn(true)
+        whenever(remoteConfigWrapper.getCodeableGetFreeEstimateUrl()).thenReturn("https://www.wordpress.com")
     }
 
     @Test

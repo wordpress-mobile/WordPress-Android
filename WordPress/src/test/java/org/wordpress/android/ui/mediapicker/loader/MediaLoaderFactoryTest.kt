@@ -7,7 +7,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
@@ -58,14 +58,15 @@ class MediaLoaderFactoryTest {
             DEVICE,
             availableDataSources = setOf(),
             canMultiselect = true,
-            requiresStoragePermissions = true,
+            requiresPhotosVideosPermissions = true,
+            requiresMusicAudioPermissions = true,
             allowedTypes = setOf(),
             cameraSetup = HIDDEN,
             systemPickerEnabled = true,
             editingEnabled = true,
             queueResults = false,
             defaultSearchView = false,
-            title = string.wp_media_title
+            title = R.string.wp_media_title
         )
         whenever(deviceListBuilderFactory.build(setOf(), site)).thenReturn(deviceListBuilder)
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
@@ -79,14 +80,15 @@ class MediaLoaderFactoryTest {
             WP_LIBRARY,
             availableDataSources = setOf(),
             canMultiselect = true,
-            requiresStoragePermissions = false,
+            requiresPhotosVideosPermissions = false,
+            requiresMusicAudioPermissions = false,
             allowedTypes = setOf(),
             cameraSetup = HIDDEN,
             systemPickerEnabled = false,
             editingEnabled = false,
             queueResults = false,
             defaultSearchView = false,
-            title = string.wp_media_title
+            title = R.string.wp_media_title
         )
         whenever(mediaLibraryDataSourceFactory.build(site, setOf())).thenReturn(mediaLibraryDataSource)
 
@@ -101,14 +103,15 @@ class MediaLoaderFactoryTest {
             STOCK_LIBRARY,
             availableDataSources = setOf(),
             canMultiselect = true,
-            requiresStoragePermissions = false,
+            requiresPhotosVideosPermissions = false,
+            requiresMusicAudioPermissions = false,
             allowedTypes = setOf(),
             cameraSetup = HIDDEN,
             systemPickerEnabled = false,
             editingEnabled = false,
             queueResults = false,
             defaultSearchView = false,
-            title = string.wp_media_title
+            title = R.string.wp_media_title
         )
 
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
@@ -122,14 +125,15 @@ class MediaLoaderFactoryTest {
             GIF_LIBRARY,
             availableDataSources = setOf(),
             canMultiselect = true,
-            requiresStoragePermissions = false,
+            requiresPhotosVideosPermissions = false,
+            requiresMusicAudioPermissions = false,
             allowedTypes = setOf(),
             cameraSetup = HIDDEN,
             systemPickerEnabled = false,
             editingEnabled = false,
             queueResults = false,
             defaultSearchView = true,
-            title = string.photo_picker_gif
+            title = R.string.photo_picker_gif
         )
 
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)

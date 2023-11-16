@@ -143,46 +143,6 @@ class EditorMediaTest : BaseUnitTest() {
     }
 
     @Test
-    fun `addFreshlyTakenVideoToEditor invokes addNewMediaToEditorAsync with last recorded video`() =
-        test {
-            // Arrange
-            val lastRecoredVideoUri = mock<Uri>()
-            val mediaUtilsWrapper = createMediaUtilsWrapper(lastRecordedVideoUri = lastRecoredVideoUri)
-            val addLocalMediaToPostUseCase = createAddLocalMediaToPostUseCase()
-
-            // Act
-            createEditorMedia(
-                mediaUtilsWrapper = mediaUtilsWrapper,
-                addLocalMediaToPostUseCase = addLocalMediaToPostUseCase
-            )
-                .addFreshlyTakenVideoToEditor()
-            // Assert
-            verify(addLocalMediaToPostUseCase).addNewMediaToEditorAsync(
-                eq(listOf(lastRecoredVideoUri)),
-                anyOrNull(), anyBoolean(), anyOrNull(), anyBoolean(), anyBoolean()
-            )
-        }
-
-    @Test
-    fun `addFreshlyTakenVideoToEditor does NOT show AdvertiseImageOptimization dialog`() =
-        test {
-            // Arrange
-            val lastRecoredVideoUri = mock<Uri>()
-            val mediaUtilsWrapper = createMediaUtilsWrapper(lastRecordedVideoUri = lastRecoredVideoUri)
-            val editorMediaListener = mock<EditorMediaListener>()
-
-            // Act
-            createEditorMedia(
-                mediaUtilsWrapper = mediaUtilsWrapper,
-                editorMediaListener = editorMediaListener
-            )
-                .addFreshlyTakenVideoToEditor()
-            // Assert
-            verify(editorMediaListener, never()).advertiseImageOptimization(anyOrNull())
-            verify(mediaUtilsWrapper, never()).shouldAdvertiseImageOptimization()
-        }
-
-    @Test
     fun `onPhotoPickerMediaChosen does NOT invoke shouldAdvertiseImageOptimization when only video files`() =
         test {
             // Arrange
@@ -416,13 +376,11 @@ class EditorMediaTest : BaseUnitTest() {
         }
 
         fun createMediaUtilsWrapper(
-            shouldAdvertiseImageOptimization: Boolean = false,
-            lastRecordedVideoUri: Uri = mock()
+            shouldAdvertiseImageOptimization: Boolean = false
         ) =
             mock<MediaUtilsWrapper> {
                 on { shouldAdvertiseImageOptimization() }
                     .thenReturn(shouldAdvertiseImageOptimization)
-                on { getLastRecordedVideoUri() }.thenReturn(lastRecordedVideoUri)
                 on { isVideo(VIDEO_URI.toString()) }.thenReturn(true)
                 on { isVideo(IMAGE_URI.toString()) }.thenReturn(false)
             }
@@ -457,9 +415,6 @@ class EditorMediaTest : BaseUnitTest() {
             on { isNetworkAvailable() }.thenReturn(isOnline)
         }
 
-        fun createMediaModel(localId: Int = 1, mediaId: Long) = MediaModel().apply {
-            this.mediaId = mediaId
-            this.id = localId
-        }
+        fun createMediaModel(localId: Int = 1, mediaId: Long) = MediaModel(0, mediaId).apply { id = localId }
     }
 }

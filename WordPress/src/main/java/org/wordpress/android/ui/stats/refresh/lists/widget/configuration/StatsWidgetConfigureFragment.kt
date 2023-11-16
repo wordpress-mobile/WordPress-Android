@@ -10,8 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_WIDGET_ADDED
 import org.wordpress.android.databinding.StatsWidgetConfigureFragmentBinding
@@ -33,7 +34,8 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-class StatsWidgetConfigureFragment : DaggerFragment() {
+@AndroidEntryPoint
+class StatsWidgetConfigureFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -88,7 +90,7 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
         return inflater.inflate(R.layout.stats_widget_configure_fragment, container, false)
     }
 
-    @Suppress("DEPRECATION", "LongMethod")
+    @Suppress("LongMethod")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val nonNullActivity = requireActivity()
@@ -123,16 +125,19 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
                 viewModel.addWidget()
             }
 
-            siteSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
-                StatsWidgetSiteSelectionDialogFragment().show(requireFragmentManager(), "stats_site_selection_fragment")
-            })
+            siteSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner) {
+                StatsWidgetSiteSelectionDialogFragment().show(
+                    childFragmentManager,
+                    "stats_site_selection_fragment"
+                )
+            }
 
-            colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner, {
+            colorSelectionViewModel.dialogOpened.observeEvent(viewLifecycleOwner) {
                 StatsWidgetColorSelectionDialogFragment().show(
-                    requireFragmentManager(),
+                    childFragmentManager,
                     "stats_view_mode_selection_fragment"
                 )
-            })
+            }
 
             merge(siteSelectionViewModel.notification, colorSelectionViewModel.notification).observeEvent(
                 viewLifecycleOwner,

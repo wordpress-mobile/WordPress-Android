@@ -20,6 +20,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.FullscreenErrorWithRetryBinding
 import org.wordpress.android.databinding.ScanHistoryFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.TabUiState
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiState.ContentUiState
@@ -27,9 +28,11 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiStat
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvider, ScrollableViewInitializedListener {
@@ -121,11 +124,14 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvid
     }
 
     private fun getSite(savedInstanceState: Bundle?): SiteModel {
-        return if (savedInstanceState == null) {
-            requireActivity().intent.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
+        val site = requireNotNull(
+            if (savedInstanceState == null) {
+                requireActivity().intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+            } else {
+                savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)
+            }
+        )
+        return site
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -138,8 +144,8 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvid
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
-        android.R.id.home -> {
-            requireActivity().onBackPressed()
+        AndroidR.id.home -> {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
             true
         }
         else -> false

@@ -14,14 +14,13 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardMode
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.FooterLink
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.HtmlMessageUtils
-import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 private const val TODAYS_STATS_VIEWS = 10000
@@ -56,6 +55,10 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
         likes = TODAYS_STATS_LIKES,
         comments = TODAYS_STATS_COMMENTS
     )
+
+    private val onMoreMenuClick: () -> Unit = {}
+    private val onViewStatsMenuItemClick: () -> Unit = {}
+    private val onHideThisMenuItemClick: () -> Unit = {}
 
     @Before
     fun setUp() {
@@ -174,23 +177,28 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
                 todaysStatsCardModel,
                 onTodaysStatsCardClick,
                 onGetMoreViewsClick,
-                onTodaysStatsCardFooterLinkClick
+                moreMenuClickParams = TodaysStatsCardBuilderParams.MoreMenuParams(
+                    onMoreMenuClick,
+                    onHideThisMenuItemClick,
+                    onViewStatsMenuItemClick
+                )
             )
         )
     }
 
     private val onGetMoreViewsClick: () -> Unit = { }
-    private val onTodaysStatsCardFooterLinkClick: () -> Unit = { }
     private val onTodaysStatsCardClick: () -> Unit = { }
 
     private val todaysStatsCard = TodaysStatsCardWithData(
+        title = UiString.UiStringRes(R.string.my_site_todays_stat_card_title),
         views = UiStringText(TODAYS_STATS_VIEWS_FORMATTED_STRING),
         visitors = UiStringText(TODAYS_STATS_VISITORS_FORMATTED_STRING),
         likes = UiStringText(TODAYS_STATS_LIKES_FORMATTED_STRING),
         onCardClick = onTodaysStatsCardClick,
-        footerLink = FooterLink(
-            label = UiStringRes(R.string.my_site_todays_stats_card_footer_link_go_to_stats),
-            onClick = onTodaysStatsCardFooterLinkClick
+        moreMenuOptions = TodaysStatsCard.MoreMenuOptions(
+            onMoreMenuClick = onMoreMenuClick,
+            onHideThisMenuItemClick = onHideThisMenuItemClick,
+            onViewStatsMenuItemClick = onViewStatsMenuItemClick
         )
     )
 }

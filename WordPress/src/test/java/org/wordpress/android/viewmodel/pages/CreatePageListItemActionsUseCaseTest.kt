@@ -4,26 +4,23 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SiteModel.ORIGIN_WPCOM_REST
-import org.wordpress.android.ui.blaze.BlazeFeatureUtils
-import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
-import org.wordpress.android.ui.pages.PageItem.Action.COPY
-import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
-import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
-import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
-import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
-import org.wordpress.android.ui.pages.PageItem.Action.PROMOTE_WITH_BLAZE
-import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
-import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
-import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
-import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
-import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
+import org.wordpress.android.ui.pages.PagesListAction.CANCEL_AUTO_UPLOAD
+import org.wordpress.android.ui.pages.PagesListAction.COPY
+import org.wordpress.android.ui.pages.PagesListAction.COPY_LINK
+import org.wordpress.android.ui.pages.PagesListAction.DELETE_PERMANENTLY
+import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_DRAFT
+import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PagesListAction.PROMOTE_WITH_BLAZE
+import org.wordpress.android.ui.pages.PagesListAction.PUBLISH_NOW
+import org.wordpress.android.ui.pages.PagesListAction.SET_AS_HOMEPAGE
+import org.wordpress.android.ui.pages.PagesListAction.SET_AS_POSTS_PAGE
+import org.wordpress.android.ui.pages.PagesListAction.SET_PARENT
+import org.wordpress.android.ui.pages.PagesListAction.VIEW_PAGE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
@@ -33,23 +30,27 @@ import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostU
 
 @RunWith(MockitoJUnitRunner::class)
 class CreatePageListItemActionsUseCaseTest {
-    @Mock
-    private lateinit var blazeFeatureUtils: BlazeFeatureUtils
-
     private lateinit var site: SiteModel
     private lateinit var useCase: CreatePageListItemActionsUseCase
     private val defaultRemoteId: Long = 1
 
     @Before
     fun setUp() {
-        useCase = CreatePageListItemActionsUseCase(blazeFeatureUtils)
+        useCase = CreatePageListItemActionsUseCase()
         site = SiteModel()
     }
 
     @Test
     fun `Verify DRAFT actions`() {
         // Arrange
-        val expectedActions = setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, COPY_LINK)
+        val expectedActions = listOf(
+            VIEW_PAGE,
+            SET_PARENT,
+            PUBLISH_NOW,
+            COPY,
+            COPY_LINK,
+            MOVE_TO_TRASH
+        )
 
         // Act
         val draftActions = useCase.setupPageActions(DRAFTS, mock(), site, defaultRemoteId)
@@ -61,7 +62,7 @@ class CreatePageListItemActionsUseCaseTest {
     @Test
     fun `Verify TRASH actions`() {
         // Arrange
-        val expectedActions = setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY)
+        val expectedActions = listOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY)
 
         // Act
         val trashedActions = useCase.setupPageActions(TRASHED, mock(), site, defaultRemoteId)
@@ -73,13 +74,13 @@ class CreatePageListItemActionsUseCaseTest {
     @Test
     fun `verify PUBLISHED actions`() {
         // Arrange
-        val expectedActions = setOf(
+        val expectedActions = listOf(
             VIEW_PAGE,
             SET_PARENT,
             MOVE_TO_DRAFT,
-            MOVE_TO_TRASH,
             COPY,
-            COPY_LINK
+            COPY_LINK,
+            MOVE_TO_TRASH,
         )
 
         // Act
@@ -92,15 +93,15 @@ class CreatePageListItemActionsUseCaseTest {
     @Test
     fun `verify PUBLISHED actions contain HOMEPAGE settings when site has static homepage and is WPCom`() {
         // Arrange
-        val expectedActions = setOf(
+        val expectedActions = listOf(
             VIEW_PAGE,
             SET_PARENT,
             SET_AS_HOMEPAGE,
             SET_AS_POSTS_PAGE,
             MOVE_TO_DRAFT,
-            MOVE_TO_TRASH,
             COPY,
-            COPY_LINK
+            COPY_LINK,
+            MOVE_TO_TRASH
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.setIsWPCom(true)
@@ -115,15 +116,15 @@ class CreatePageListItemActionsUseCaseTest {
     @Test
     fun `verify PUBLISHED actions contain HOMEPAGE settings when site has static homepage and is Jetpack`() {
         // Arrange
-        val expectedActions = setOf(
+        val expectedActions = listOf(
             VIEW_PAGE,
             SET_PARENT,
             SET_AS_HOMEPAGE,
             SET_AS_POSTS_PAGE,
             MOVE_TO_DRAFT,
-            MOVE_TO_TRASH,
             COPY,
-            COPY_LINK
+            COPY_LINK,
+            MOVE_TO_TRASH,
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.setIsJetpackConnected(true)
@@ -139,7 +140,7 @@ class CreatePageListItemActionsUseCaseTest {
     @Test
     fun `verify PUBLISHED actions cannot set page as homepage when it is already set`() {
         // Arrange
-        val expectedActions = setOf(
+        val expectedActions = listOf(
             VIEW_PAGE,
             SET_PARENT,
             SET_AS_POSTS_PAGE,
@@ -160,14 +161,14 @@ class CreatePageListItemActionsUseCaseTest {
     @Test
     fun `verify PUBLISHED actions cannot set page for posts when it is already set`() {
         // Arrange
-        val expectedActions = setOf(
+        val expectedActions = listOf(
             VIEW_PAGE,
             SET_PARENT,
             SET_AS_HOMEPAGE,
             MOVE_TO_DRAFT,
-            MOVE_TO_TRASH,
             COPY,
-            COPY_LINK
+            COPY_LINK,
+            MOVE_TO_TRASH
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.pageForPosts = defaultRemoteId
@@ -183,7 +184,7 @@ class CreatePageListItemActionsUseCaseTest {
     @Test
     fun `verify PUBLISHED actions does not contant HOMEPAGE settings when site has no remote id`() {
         // Arrange
-        val expectedActions = setOf(
+        val expectedActions = listOf(
             VIEW_PAGE,
             SET_PARENT,
             COPY,
@@ -202,13 +203,13 @@ class CreatePageListItemActionsUseCaseTest {
     @Test
     fun `verify PUBLISHED actions does not contant HOMEPAGE settings when site is self hosted`() {
         // Arrange
-        val expectedActions = setOf(
+        val expectedActions = listOf(
             VIEW_PAGE,
             SET_PARENT,
             MOVE_TO_DRAFT,
-            MOVE_TO_TRASH,
             COPY,
-            COPY_LINK
+            COPY_LINK,
+            MOVE_TO_TRASH
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.setIsWPCom(false)
@@ -224,12 +225,12 @@ class CreatePageListItemActionsUseCaseTest {
     @Test
     fun `verify SCHEDULED actions`() {
         // Arrange
-        val expectedActions = setOf(
+        val expectedActions = listOf(
             VIEW_PAGE,
             SET_PARENT,
             MOVE_TO_DRAFT,
-            MOVE_TO_TRASH,
-            COPY_LINK
+            COPY_LINK,
+            MOVE_TO_TRASH
         )
 
         // Act
@@ -266,21 +267,20 @@ class CreatePageListItemActionsUseCaseTest {
     @Test
     fun `verify PUBLISHED actions contains PROMOTE_WITH_BLAZE when feature enabled`() {
         // Arrange
-        val expectedActions = setOf(
+        val expectedActions = listOf(
             VIEW_PAGE,
-            COPY,
-            COPY_LINK,
             SET_PARENT,
             SET_AS_HOMEPAGE,
             SET_AS_POSTS_PAGE,
             MOVE_TO_DRAFT,
-            MOVE_TO_TRASH,
-            PROMOTE_WITH_BLAZE
+            COPY,
+            COPY_LINK,
+            PROMOTE_WITH_BLAZE,
+            MOVE_TO_TRASH
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.setIsWPCom(true)
         site.setIsJetpackConnected(true)
-        whenever(blazeFeatureUtils.isBlazeEnabled()).thenReturn(true)
 
         // Act
         val publishedActions = useCase.setupPageActions(PUBLISHED, mock(), site, defaultRemoteId, true)

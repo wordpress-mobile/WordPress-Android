@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import org.wordpress.android.R
 import org.wordpress.android.databinding.PromoteWithBlazeCardBinding
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PromoteWithBlazeCard
-import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.PromoteWithBlazeCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
@@ -14,7 +14,7 @@ import org.wordpress.android.util.extensions.viewBinding
 class PromoteWithBlazeCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
-) : CardViewHolder<PromoteWithBlazeCardBinding>(
+) : MySiteCardAndItemViewHolder<PromoteWithBlazeCardBinding>(
     parent.viewBinding(PromoteWithBlazeCardBinding::inflate)
 ) {
     fun bind(card: PromoteWithBlazeCard) = with(binding) {
@@ -22,14 +22,16 @@ class PromoteWithBlazeCardViewHolder(
         mySitePromoteWithBlazeCardCta.setOnClickListener { card.onClick.click() }
         mySitePromoteWithBlazeCardMore.setOnClickListener {
             showMoreMenu(
-                card.onHideMenuItemClick,
-                card.onMoreMenuClick,
+                card.moreMenuOptions.learnMoreClick,
+                card.moreMenuOptions.hideThisMenuItemClick,
+                card.moreMenuOptions.onMoreClick,
                 mySitePromoteWithBlazeCardMore,
             )
         }
     }
 
     private fun showMoreMenu(
+        onLearnMoreClick: ListItemInteraction,
         onHideMenuItemClick: ListItemInteraction,
         onMoreMenuClick: ListItemInteraction,
         anchor: View
@@ -40,6 +42,10 @@ class PromoteWithBlazeCardViewHolder(
             when (it.itemId) {
                 R.id.promote_with_blaze_card_menu_item_hide_this -> {
                     onHideMenuItemClick.click()
+                    return@setOnMenuItemClickListener true
+                }
+                R.id.promote_with_blaze_card_menu_item_learn_more -> {
+                    onLearnMoreClick.click()
                     return@setOnMenuItemClickListener true
                 }
                 else -> return@setOnMenuItemClickListener true

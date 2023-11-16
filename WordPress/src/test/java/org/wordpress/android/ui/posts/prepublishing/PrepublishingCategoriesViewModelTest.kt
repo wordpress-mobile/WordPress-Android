@@ -30,9 +30,8 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AddCategoryUseCase
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
-import org.wordpress.android.ui.posts.PrepublishingAddCategoryRequest
-import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel
-import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel.UiState
+import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesViewModel
+import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesViewModel.UiState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -348,10 +347,16 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
         )
 
     private fun getTermModel(): TermModel {
-        val termModel = TermModel()
-        termModel.name = "Cars"
-        termModel.remoteTermId = 20
-        termModel.slug = "Cars"
-        return termModel
+        return TermModel(
+            0,
+            6,
+            20,
+            TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+            "Cars",
+            "cars",
+            null,
+            0,
+            0
+        )
     }
 }

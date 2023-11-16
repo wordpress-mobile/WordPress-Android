@@ -17,6 +17,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -24,7 +25,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.snackbar.Snackbar
@@ -40,6 +40,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
@@ -56,6 +57,8 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -70,9 +73,11 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBL
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PagesViewModel
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewSource
 import org.wordpress.android.widgets.WPSnackbar
 import java.lang.ref.WeakReference
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializedListener {
     @Inject
@@ -81,6 +86,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     private lateinit var mlpViewModel: ModalLayoutPickerViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var actionMenuItem: MenuItem
+    private lateinit var authorFilterMenuItem: MenuItem
+    private lateinit var authorFilterSpinner: Spinner
     private var binding: PagesFragmentBinding? = null
 
     /**
@@ -134,8 +141,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         val nonNullActivity = requireActivity()
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
-        viewModel = ViewModelProvider(nonNullActivity, viewModelFactory).get(PagesViewModel::class.java)
-        mlpViewModel = ViewModelProvider(nonNullActivity, viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
+        viewModel = ViewModelProvider(nonNullActivity, viewModelFactory)[PagesViewModel::class.java]
+        mlpViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)[ModalLayoutPickerViewModel::class.java]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -161,7 +168,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         binding = null
     }
 
-    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
             if (EditPostActivity.checkToRestart(data)) {
@@ -197,6 +204,10 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
     fun onSpecificPageRequested(remotePageId: Long) {
         viewModel.onSpecificPageRequested(remotePageId)
+    }
+
+    fun onSpecificPageListTypeRequested(pageListType: PageListType) {
+        viewModel.onSpecificPageListTypeRequested(pageListType)
     }
 
     private fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -253,24 +264,16 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         }
 
         authorSelectionAdapter = AuthorSelectionAdapter(activity)
-        pagesAuthorSelection.adapter = authorSelectionAdapter
-        pagesAuthorSelection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                viewModel.updateAuthorFilterSelection(id)
-            }
-        }
     }
 
     private fun PagesFragmentBinding.initializeSearchView() {
         actionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 viewModel.onSearchExpanded(restorePreviousSearch)
                 return true
             }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 viewModel.onSearchCollapsed()
                 return true
             }
@@ -295,17 +298,17 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         })
 
         // fix the search view margins to match the action bar
-        val searchEditFrame = actionMenuItem.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
-        (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
+        val searchEditFrame = actionMenuItem.actionView?.findViewById<LinearLayout>(MaterialR.id.search_edit_frame)
+        (searchEditFrame?.layoutParams as LinearLayout.LayoutParams)
             .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
 
-        viewModel.isSearchExpanded.observe(this@PagesFragment, Observer {
+        viewModel.isSearchExpanded.observe(this@PagesFragment) {
             if (it == true) {
                 showSearchList(actionMenuItem)
             } else {
                 hideSearchList(actionMenuItem)
             }
-        })
+        }
     }
 
     private fun PagesFragmentBinding.initializeViewModelObservers(
@@ -315,33 +318,24 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         setupObservers(activity)
         setupActions(activity)
         setupMlpObservers(activity)
+        setupVirtualHomepageObservers(activity)
 
-        val site = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
-            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            restorePreviousSearch = true
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
-
-        viewModel.authorUIState.observe(activity, Observer { state ->
-            state?.let {
-                uiHelpers.updateVisibility(pagesAuthorSelection, state.isAuthorFilterVisible)
-                uiHelpers.updateVisibility(pagesTabLayoutFadingEdge, state.isAuthorFilterVisible)
-
-                val tabLayoutPaddingStart =
-                    if (state.isAuthorFilterVisible) {
-                        resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
-                    } else 0
-                tabLayout.setPaddingRelative(tabLayoutPaddingStart, 0, 0, 0)
-
-                authorSelectionAdapter.updateItems(state.authorFilterItems)
-
-                authorSelectionAdapter.getIndexOfSelection(state.authorFilterSelection)?.let { selectionIndex ->
-                    pagesAuthorSelection.setSelection(selectionIndex)
-                }
+        // It is possible that we deep link to pages while we have no sites, at which time using requireNotNull will
+        // cause a crash. We should finish the activity and not throw an exception.
+        val site =
+            if (savedInstanceState == null) {
+                val nonNullIntent = checkNotNull(activity.intent)
+                nonNullIntent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+            } else {
+                restorePreviousSearch = true
+                savedInstanceState.getSerializableCompat<SiteModel>(WordPress.SITE)
             }
-        })
+
+        if (site == null) {
+            showToast(ToastMessageHolder(R.string.pages_no_site_something_went_wrong, Duration.LONG))
+            requireActivity().finish()
+            return
+        }
 
         viewModel.start(site)
     }
@@ -370,56 +364,58 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         )
     }
 
+    @Suppress("LongMethod")
     private fun PagesFragmentBinding.setupObservers(activity: FragmentActivity) {
-        viewModel.listState.observe(viewLifecycleOwner, {
+        viewModel.listState.observe(viewLifecycleOwner) {
             refreshProgressBars(it)
-        })
+        }
 
-        viewModel.createNewPage.observe(viewLifecycleOwner, {
+        viewModel.createNewPage.observe(viewLifecycleOwner) {
             if (mlpViewModel.canShowModalLayoutPicker()
-                && jetpackFeatureRemovalPhaseHelper.shouldShowTemplateSelectionInPages()) {
+                && jetpackFeatureRemovalPhaseHelper.shouldShowTemplateSelectionInPages()
+            ) {
                 mlpViewModel.createPageFlowTriggered()
             } else {
                 createNewPage()
             }
-        })
+        }
 
-        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, { holder ->
+        viewModel.showSnackbarMessage.observe(viewLifecycleOwner) { holder ->
             showSnackbarInActivity(activity, holder)
-        })
+        }
 
-        viewModel.editPage.observe(viewLifecycleOwner, { (site, page, loadAutoRevision) ->
+        viewModel.editPage.observe(viewLifecycleOwner) { (site, page, loadAutoRevision) ->
             page?.let {
                 ActivityLauncher.editPageForResult(this@PagesFragment, site, page.id, loadAutoRevision)
             }
-        })
+        }
 
-        viewModel.previewPage.observe(viewLifecycleOwner, { post ->
+        viewModel.previewPage.observe(viewLifecycleOwner) { post ->
             post?.let {
                 previewPage(activity, post)
             }
-        })
+        }
 
-        viewModel.browsePreview.observe(viewLifecycleOwner, { preview ->
+        viewModel.browsePreview.observe(viewLifecycleOwner) { preview ->
             preview?.let {
                 ActivityLauncher.previewPostOrPageForResult(activity, viewModel.site, preview.post, preview.previewType)
             }
-        })
+        }
 
-        viewModel.previewState.observe(viewLifecycleOwner, {
+        viewModel.previewState.observe(viewLifecycleOwner) {
             progressDialog = progressDialogHelper.updateProgressDialogState(
                 activity,
                 progressDialog,
                 it.progressDialogUiState,
                 uiHelpers
             )
-        })
+        }
 
-        viewModel.setPageParent.observe(viewLifecycleOwner, { page ->
+        viewModel.setPageParent.observe(viewLifecycleOwner) { page ->
             page?.let { ActivityLauncher.viewPageParentForResult(this@PagesFragment, it.site, it.remoteId) }
-        })
+        }
 
-        viewModel.isNewPageButtonVisible.observe(viewLifecycleOwner, { isVisible ->
+        viewModel.isNewPageButtonVisible.observe(viewLifecycleOwner) { isVisible ->
             isVisible?.let {
                 if (isVisible) {
                     newPageButton.show()
@@ -427,15 +423,20 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                     newPageButton.hide()
                 }
             }
-        })
+        }
 
-        viewModel.scrollToPage.observe(viewLifecycleOwner, { requestedPage ->
+        viewModel.scrollToPage.observe(viewLifecycleOwner) { requestedPage ->
             requestedPage?.let { page ->
                 val pagerIndex = PagesPagerAdapter.pageTypes.indexOf(PageListType.fromPageStatus(page.status))
                 pagesPager.currentItem = pagerIndex
                 (pagesPager.adapter as PagesPagerAdapter).scrollToPage(page)
             }
-        })
+        }
+
+        viewModel.launchPageListType.observe(viewLifecycleOwner) { pageListType ->
+            val pagerIndex = PagesPagerAdapter.pageTypes.indexOf(pageListType)
+            pagesPager.currentItem = pagerIndex
+        }
     }
 
     private fun showSnackbarInActivity(
@@ -470,11 +471,11 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     }
 
     private fun setupActions(activity: FragmentActivity) {
-        viewModel.dialogAction.observe(viewLifecycleOwner, {
+        viewModel.dialogAction.observe(viewLifecycleOwner) {
             it?.show(activity, activity.supportFragmentManager, uiHelpers)
-        })
+        }
 
-        viewModel.postUploadAction.observe(viewLifecycleOwner, {
+        viewModel.postUploadAction.observe(viewLifecycleOwner) {
             it?.let { (post, site, data) ->
                 uploadUtilsWrapper.handleEditPostResultSnackbars(
                     activity,
@@ -492,25 +493,21 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                     }
                 )
             }
-        })
-
-        viewModel.publishAction.observe(viewLifecycleOwner, {
-            it?.let {
-                uploadUtilsWrapper.publishPost(activity, it.post, it.site)
-            }
-        })
-
-        viewModel.navigateToBlazeOverlay.observe(viewLifecycleOwner) {
-            it?.let { page ->
-                ActivityLauncher.openPromoteWithBlaze(
-                    activity,
-                    page,
-                    BlazeFlowSource.PAGES_LIST
-                )
-            }
         }
 
-        viewModel.uploadFinishedAction.observe(viewLifecycleOwner, {
+        viewModel.publishAction.observe(viewLifecycleOwner) { page ->
+            uploadUtilsWrapper.publishPost(activity, page.post, page.site)
+        }
+
+        viewModel.navigateToBlazeOverlay.observe(viewLifecycleOwner) { page ->
+            ActivityLauncher.openPromoteWithBlaze(
+                activity,
+                page,
+                BlazeFlowSource.PAGES_LIST
+            )
+        }
+
+        viewModel.uploadFinishedAction.observe(viewLifecycleOwner) {
             it?.let { (page, isError, isFirstTimePublish) ->
                 uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                     activity,
@@ -522,14 +519,14 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                     page.site
                 )
             }
-        })
+        }
     }
 
     private fun setupMlpObservers(activity: FragmentActivity) {
-        mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, { request ->
+        mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner) { request ->
             createNewPage(request.title, "", request.template)
-        })
-        mlpViewModel.isModalLayoutPickerShowing.observeEvent(viewLifecycleOwner, { isShowing ->
+        }
+        mlpViewModel.isModalLayoutPickerShowing.observeEvent(viewLifecycleOwner) { isShowing ->
             val fm = activity.supportFragmentManager
             var mlpFragment = fm.findFragmentByTag(MODAL_LAYOUT_PICKER_TAG) as ModalLayoutPickerFragment?
             if (isShowing && mlpFragment == null) {
@@ -538,7 +535,27 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
             } else if (!isShowing && mlpFragment != null) {
                 mlpFragment.dismiss()
             }
-        })
+        }
+    }
+
+    private fun setupVirtualHomepageObservers(activity: FragmentActivity) {
+        viewModel.openExternalLink.observe(viewLifecycleOwner) { url ->
+            ActivityLauncher.openUrlExternal(activity, url)
+        }
+
+        viewModel.openSiteEditorWebView.observe(viewLifecycleOwner) { data ->
+            with(data) {
+                if (useWpComCredentials) {
+                    WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
+                        activity,
+                        url,
+                        WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE
+                    )
+                } else {
+                    WPWebViewActivity.openURL(activity, url, WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE)
+                }
+            }
+        }
     }
 
     /**
@@ -554,14 +571,57 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         )
     }
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_search, menu)
-        actionMenuItem = checkNotNull(menu.findItem(R.id.action_search)) {
+        inflater.inflate(R.menu.posts_and_pages_list_menu, menu)
+        actionMenuItem = checkNotNull(menu.findItem(R.id.toggle_search)) {
             "Menu does not contain mandatory search item"
         }
+        authorFilterMenuItem = checkNotNull(menu.findItem(R.id.author_filter_menu_item)) {
+            "Menu does not contain mandatory author filter item"
+        }
+
+        initAuthorFilter(authorFilterMenuItem)
 
         binding!!.initializeSearchView()
+    }
+
+    private fun initAuthorFilter(menuItem: MenuItem) {
+        // Get the action view (Spinner) from the menu item
+        val actionView = menuItem.actionView
+        if (actionView is Spinner) {
+            authorFilterSpinner = actionView
+            val authorSelectionAdapter = AuthorSelectionAdapter(requireContext())
+            authorFilterSpinner.adapter = authorSelectionAdapter
+
+            // Set a listener if needed
+            authorFilterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parentView: AdapterView<*>?,
+                    selectedItemView: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    viewModel.updateAuthorFilterSelection(id)
+                }
+
+                override fun onNothingSelected(parentView: AdapterView<*>?) {
+                    // Do nothing here
+                }
+            }
+            viewModel.authorUIState.observe(requireActivity()) { state ->
+                state?.let {
+                    uiHelpers.updateVisibility(authorFilterSpinner, state.isAuthorFilterVisible)
+
+                    authorSelectionAdapter.updateItems(state.authorFilterItems)
+
+                    authorSelectionAdapter.getIndexOfSelection(state.authorFilterSelection)?.let { selectionIndex ->
+                        authorFilterSpinner.setSelection(selectionIndex)
+                    }
+                }
+            }
+        }
     }
 
     private fun refreshProgressBars(listState: PageListState?) {
@@ -575,11 +635,12 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     private fun PagesFragmentBinding.hideSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.VISIBLE
         tabLayout.visibility = View.VISIBLE
-        tabContainer.visibility = View.VISIBLE
         searchFrame.visibility = View.GONE
         if (myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.collapseActionView()
         }
+        authorFilterMenuItem.isVisible = true
+        authorFilterSpinner.visibility = View.VISIBLE
         appbarMain.getTag(R.id.pages_non_search_recycler_view_id_tag_key)?.let {
             appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(it as Int)
         }
@@ -588,8 +649,9 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     private fun PagesFragmentBinding.showSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.GONE
         tabLayout.visibility = View.GONE
-        tabContainer.visibility = View.GONE
         searchFrame.visibility = View.VISIBLE
+        authorFilterMenuItem.isVisible = false
+        authorFilterSpinner.visibility = View.GONE
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
         }

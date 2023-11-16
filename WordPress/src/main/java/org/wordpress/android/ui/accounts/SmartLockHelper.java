@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.IntentSender;
 import android.net.Uri;
@@ -134,6 +135,7 @@ public class SmartLockHelper {
         Auth.CredentialsApi.save(mCredentialsClient, credential).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
+                    @SuppressLint("VisibleForTests")
                     public void onResult(@NonNull Status status) {
                         if (!status.isSuccess() && status.hasResolution()) {
                             try {

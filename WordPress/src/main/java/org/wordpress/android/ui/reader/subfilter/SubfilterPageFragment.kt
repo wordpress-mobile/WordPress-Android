@@ -16,12 +16,11 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.HiddenEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.VisibleEmptyUiState
@@ -35,11 +34,13 @@ import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.widgets.WPTextView
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-class SubfilterPageFragment : DaggerFragment() {
+@AndroidEntryPoint
+class SubfilterPageFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -80,10 +81,10 @@ class SubfilterPageFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val category = requireArguments().getSerializable(CATEGORY_KEY) as SubfilterCategory
+        val category = requireNotNull(arguments?.getSerializableCompat<SubfilterCategory>(CATEGORY_KEY))
         val subfilterVmKey = requireArguments().getString(SUBFILTER_VIEW_MODEL_KEY)!!
 
-        viewModel = ViewModelProvider(this, viewModelFactory).get(SubfilterPageViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[SubfilterPageViewModel::class.java]
         viewModel.start(category)
 
         recyclerView = view.findViewById(R.id.content_recycler_view)
@@ -99,7 +100,7 @@ class SubfilterPageFragment : DaggerFragment() {
             viewModelFactory
         ).get(subfilterVmKey, SubFilterViewModel::class.java)
 
-        subFilterViewModel.subFilters.observe(viewLifecycleOwner, Observer {
+        subFilterViewModel.subFilters.observe(viewLifecycleOwner) {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->
                 var items = it?.filter { it.type == category.type } ?: listOf()
 
@@ -116,9 +117,9 @@ class SubfilterPageFragment : DaggerFragment() {
                 adapter.update(items)
                 subFilterViewModel.onSubfilterPageUpdated(category, items.size)
             }
-        })
+        }
 
-        viewModel.emptyState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.emptyState.observe(viewLifecycleOwner) { uiState ->
             if (isAdded) {
                 when (uiState) {
                     HiddenEmptyUiState -> emptyStateContainer.visibility = View.GONE
@@ -132,7 +133,7 @@ class SubfilterPageFragment : DaggerFragment() {
                     }
                 }
             }
-        })
+        }
     }
 
     fun setNestedScrollBehavior(enable: Boolean) {

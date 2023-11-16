@@ -315,7 +315,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
     }
 
     private fun whenJpDeadlineIs(daysAway: Int?) {
-        whenever(jpDeadlineConfig.appConfig.getRemoteFieldConfigValue(any())).thenReturn(daysAway?.toString())
+        whenever(jpDeadlineConfig.appConfig.getRemoteFieldConfigValue(any())).thenReturn(daysAway?.toString() ?: "")
         daysAway?.toLong()?.let {
             val today = Date(System.currentTimeMillis())
             val deadline = Date.from(today.toInstant().atZone(ZoneId.systemDefault()).plusDays(it).toInstant())

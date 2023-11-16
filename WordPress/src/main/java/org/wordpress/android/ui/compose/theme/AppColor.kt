@@ -21,7 +21,13 @@ object AppColor {
     val DarkGray = Color(0xFF121212)
 
     @Stable
+    val Gray30 = Color(0xFF8c8f94)
+
+    @Stable
     val Gray40 = Color(0xFF787c82)
+
+    @Stable
+    val Gray50 = Color(0xFF646970)
 
     // Blues (Automattic Color Studio)
     @Stable
@@ -46,8 +52,19 @@ object AppColor {
 
     // Jetpack Greens (Automattic Color Studio)
     @Stable
-    val JetpackGreen40 = Color(0xFF069E08)
+    val JetpackGreen30 = Color(0xFF2FB41F)
 
     @Stable
     val JetpackGreen50 = Color(0xFF008710)
+
+    // Yellows
+    @Stable
+    val Yellow50 = Color(0xFF9D6E00)
+
+    // Oranges
+    @Stable
+    val Orange40 = Color(0xFFD67709)
+
+    @Stable
+    val Orange50 = Color(0xFFB26200)
 }

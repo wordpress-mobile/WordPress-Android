@@ -24,6 +24,7 @@ import kotlin.coroutines.CoroutineContext
 const val QUEUE_SIZE_LIMIT: Int = 5
 
 @Singleton
+@Suppress("NestedBlockDepth")
 class SnackbarSequencer @Inject constructor(
     private val uiHelper: UiHelpers,
     private val wpSnackbarWrapper: WPSnackbarWrapper,
@@ -35,10 +36,16 @@ class SnackbarSequencer @Inject constructor(
 
     private var lastSnackBarReference: SoftReference<Snackbar?>? = null
 
+    private var showSnackbarComposeCallback: ((SnackbarItem) -> Unit)? = null
+
+    fun setComposeSnackbarCallback(callback: (SnackbarItem?) -> Unit) { showSnackbarComposeCallback = callback }
+
+    fun clearComposeSnackbarCallback() { showSnackbarComposeCallback = null }
+
     override val coroutineContext: CoroutineContext
         get() = mainDispatcher + job
 
-    fun enqueue(item: SnackbarItem) {
+    fun  enqueue(item: SnackbarItem) {
         // This needs to be run on a single thread or synchronized - we are accessing a critical zone (`snackBarQueue`)
         launch {
             AppLog.d(T.UTILS, "SnackbarSequencer > New item added")
@@ -66,7 +73,16 @@ class SnackbarSequencer @Inject constructor(
             } as? Activity
 
             if (context != null && isContextAlive(context)) {
-                item?.let { prepareSnackBar(context, it)?.show() }
+                item?.let {
+                    if (showSnackbarComposeCallback != null) {
+                        showSnackbarComposeCallback?.invoke(it)
+                    } else {
+                        // prepareSnackBar(context, it)?.show()
+                        prepareSnackBar(context, it)?.show()
+                        AppLog.d(T.UTILS, "SnackbarSequencer > before delay")
+                    }
+                }
+
                 AppLog.d(T.UTILS, "SnackbarSequencer > before delay")
                 /**
                  * Delay showing the next snackbar only if the current snack bar is important.

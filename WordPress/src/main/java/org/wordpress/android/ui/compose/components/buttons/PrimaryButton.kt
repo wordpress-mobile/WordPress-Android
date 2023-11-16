@@ -10,6 +10,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.modifiers.conditionalThen
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 
@@ -32,6 +34,7 @@ fun PrimaryButton(
     isInProgress: Boolean = false,
     colors: ButtonColors = ButtonDefaults.buttonColors(
         contentColor = AppColor.White,
+        disabledContentColor = AppColor.White.copy(alpha = ContentAlpha.disabled),
         disabledBackgroundColor = colorResource(R.color.jetpack_green_70),
     ),
     padding: PaddingValues = PaddingValues(
@@ -40,8 +43,10 @@ fun PrimaryButton(
         end = dimensionResource(R.dimen.jp_migration_buttons_padding_horizontal),
         bottom = 10.dp
     ),
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     textStyle: TextStyle = LocalTextStyle.current,
     buttonSize: ButtonSize = ButtonSize.NORMAL,
+    fillMaxWidth: Boolean = true,
 ) {
     Button(
         onClick = onClick,
@@ -52,9 +57,13 @@ fun PrimaryButton(
         ),
         colors = colors,
         modifier = modifier
-            .padding(padding)
+            .padding(paddingValues = padding)
             .defaultMinSize(minHeight = buttonSize.height)
-            .fillMaxWidth(),
+            .conditionalThen(
+                predicate = fillMaxWidth,
+                other = Modifier.fillMaxWidth()
+            ),
+        contentPadding = contentPadding,
     ) {
         if (isInProgress) {
             CircularProgressIndicator(

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.media;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -10,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -41,7 +43,6 @@ import com.google.android.material.tabs.TabLayout;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -160,7 +161,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ((WordPress) getApplication()).component().inject(this);
@@ -241,7 +242,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         showQuota(true);
     }
 
-    @Override protected void onNewIntent(Intent intent) {
+    @Override
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
 
         if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
@@ -445,7 +447,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    protected void onSaveInstanceState(@NotNull Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putString(SAVED_QUERY, mQuery);
@@ -480,9 +482,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         );
     }
 
-    private void checkRecordedVideoDurationBeforeUploadAndTrack() {
-        Uri uri = MediaUtils.getLastRecordedVideoUri(this);
-
+    private void checkRecordedVideoDurationBeforeUploadAndTrack(Uri uri) {
         if (mMediaUtilsWrapper.isProhibitedVideoDuration(this, mSite, uri)) {
             ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, LONG);
         } else {
@@ -522,7 +522,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 break;
             case RequestCodes.TAKE_VIDEO:
                 if (resultCode == Activity.RESULT_OK) {
-                    checkRecordedVideoDurationBeforeUploadAndTrack();
+                    Uri uri = data.getData();
+                    checkRecordedVideoDurationBeforeUploadAndTrack(uri);
                 }
                 break;
             case RequestCodes.MEDIA_SETTINGS:
@@ -596,7 +597,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         mMenu = menu;
         getMenuInflater().inflate(R.menu.media_browser, menu);
 
@@ -636,10 +637,11 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @SuppressLint("NonConstantResourceId")
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                getOnBackPressedDispatcher().onBackPressed();
                 return true;
             case R.id.menu_new_media:
                 // Do Nothing (handled in action view click listener)
@@ -664,7 +666,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public boolean onMenuItemActionExpand(MenuItem item) {
+    public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(false);
         mMediaGridFragment.showActionableEmptyViewButton(false);
 
@@ -680,7 +682,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     @Override
-    public boolean onMenuItemActionCollapse(MenuItem item) {
+    public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
         mMediaGridFragment.showActionableEmptyViewButton(true);
         invalidateOptionsMenu();
@@ -802,17 +804,15 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
         switch (event.cause) {
             case DELETE_MEDIA:
-                if (event.mediaList != null) {
-                    // If the media was deleted, remove it from multi select if it was selected
-                    for (MediaModel mediaModel : event.mediaList) {
-                        int localMediaId = mediaModel.getId();
-                        mMediaGridFragment.removeFromMultiSelect(localMediaId);
-                    }
+                // If the media was deleted, remove it from multi select if it was selected
+                for (MediaModel mediaModel : event.mediaList) {
+                    int localMediaId = mediaModel.getId();
+                    mMediaGridFragment.removeFromMultiSelect(localMediaId);
                 }
                 break;
         }
 
-        if (event.mediaList != null && event.mediaList.size() == 1) {
+        if (event.mediaList.size() == 1) {
             updateMediaGridItem(event.mediaList.get(0), true);
         } else {
             reloadMediaGrid();
@@ -1002,13 +1002,13 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
         // stock photos item requires no permission, all other items do
         if (item != AddMenuItem.ITEM_CHOOSE_STOCK_MEDIA) {
-            String[] permissions;
+            String[] permissions = null;
             if (item == AddMenuItem.ITEM_CAPTURE_PHOTO || item == AddMenuItem.ITEM_CAPTURE_VIDEO) {
-                permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-            } else {
+                permissions = PermissionUtils.getCameraAndStoragePermissions();
+            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
             }
-            if (!PermissionUtils.checkAndRequestPermissions(
+            if (permissions != null && !PermissionUtils.checkAndRequestPermissions(
                     this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE, permissions)) {
                 return;
             }

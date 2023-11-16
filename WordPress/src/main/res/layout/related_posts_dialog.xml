@@ -16,7 +16,7 @@
         android:paddingEnd="@dimen/related_posts_dialog_padding_right"
         android:paddingBottom="@dimen/related_posts_dialog_padding_bottom">
 
-        <androidx.appcompat.widget.SwitchCompat
+        <org.wordpress.android.widgets.WPSwitchCompat
             android:id="@+id/toggle_related_posts_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
             android:text="@string/site_settings_rp_switch_summary"
             android:textAppearance="?attr/textAppearanceCaption" />
 
-        <com.google.android.material.checkbox.MaterialCheckBox
+        <CheckBox
             android:id="@+id/show_header_checkbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             android:textAlignment="viewStart"
             android:textAppearance="?attr/textAppearanceSubtitle1" />
 
-        <com.google.android.material.checkbox.MaterialCheckBox
+        <CheckBox
             android:id="@+id/show_images_checkbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

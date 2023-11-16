@@ -10,6 +10,9 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -35,6 +38,7 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.util.helpers.ListScrollPositionManager;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
@@ -66,9 +70,19 @@ public class SelectCategoriesActivity extends LocaleAwareActivity {
     @Inject Dispatcher mDispatcher;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                saveAndFinish();
+                CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
         mDispatcher.register(this);
 
         if (savedInstanceState == null) {
@@ -193,7 +207,7 @@ public class SelectCategoriesActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.categories, menu);
@@ -215,7 +229,7 @@ public class SelectCategoriesActivity extends LocaleAwareActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_new_category) {
             if (NetworkUtils.checkConnection(this)) {
@@ -235,12 +249,6 @@ public class SelectCategoriesActivity extends LocaleAwareActivity {
         mListScrollPositionManager.saveScrollOffset();
         updateSelectedCategoryList();
         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(mSite));
-    }
-
-    @Override
-    public void onBackPressed() {
-        saveAndFinish();
-        super.onBackPressed();
     }
 
     private void updateSelectedCategoryList() {

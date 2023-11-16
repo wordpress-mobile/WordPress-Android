@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts.signup
 import android.os.Bundle
 import android.text.Spanned
 import androidx.core.text.HtmlCompat
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController
@@ -10,6 +11,7 @@ import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogControl
 /**
  * Implements functionality specific to the Username Changer functionality in the sign-up flow.
  */
+@AndroidEntryPoint
 class UsernameChangerFullScreenDialogFragment : BaseUsernameChangerFullScreenDialogFragment() {
     override fun getSuggestionsFailedStat() = SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED
     override fun canHeaderTextLiveUpdate() = true

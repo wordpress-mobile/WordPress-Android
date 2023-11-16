@@ -136,6 +136,7 @@ import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -208,6 +209,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     private boolean mIsUpdating;
     private boolean mWasPaused;
+    private boolean mHasRequestedPosts;
     private boolean mHasUpdatedPosts;
     private boolean mIsAnimatingOutNewPostsBar;
 
@@ -236,6 +238,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject ReaderTracker mReaderTracker;
     @Inject SnackbarSequencer mSnackbarSequencer;
     @Inject DisplayUtilsWrapper mDisplayUtilsWrapper;
+    @Inject ReaderImprovementsFeatureConfig mReaderImprovementsFeatureConfig;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -378,7 +381,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -415,6 +418,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
             mSiteSearchRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION);
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
+            mHasRequestedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
             mHasUpdatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mFirstLoad = savedInstanceState.getBoolean(ReaderConstants.KEY_FIRST_LOAD);
             mSearchTabsPos = savedInstanceState.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION);
@@ -895,8 +899,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (isAdded() && mRecyclerView.getAdapter() == null) {
             mRecyclerView.setAdapter(getPostAdapter());
             refreshPosts();
-            if (!mHasUpdatedPosts && NetworkUtils.isNetworkAvailable(getActivity())) {
-                mHasUpdatedPosts = true;
+            if (!mHasRequestedPosts && NetworkUtils.isNetworkAvailable(getActivity())) {
+                mHasRequestedPosts = true;
                 if (getPostListType().isTagType()) {
                     updateCurrentTagIfTime();
                 } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
@@ -965,6 +969,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
         outState.putLong(ReaderConstants.ARG_FEED_ID, mCurrentFeedId);
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasRequestedPosts);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasUpdatedPosts);
         outState.putBoolean(ReaderConstants.KEY_FIRST_LOAD, mFirstLoad);
         if (mRecyclerView != null) {
@@ -1009,7 +1014,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (forced) {
             // Update the tags on post refresh since following some sites (like P2) will change followed tags and blogs
             ReaderUpdateServiceStarter.startService(getContext(),
-                    EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
+                    EnumSet.of(UpdateTask.TAGS));
         }
 
         if (mFirstLoad) {
@@ -1113,12 +1118,27 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
         });
 
+        // set the background color as we have different colors for the new and legacy designs that are not easy to
+        // change via styles, because of the FeatureConfig logic
+        int backgroundColor = mReaderImprovementsFeatureConfig.isEnabled()
+                ? R.color.reader_post_list_background_new
+                : R.color.reader_post_list_background;
+        mRecyclerView.setBackgroundColor(ContextCompat.getColor(requireContext(), backgroundColor));
+
         // add the item decoration (dividers) to the recycler, skipping the first item if the first
         // item is the tag toolbar (shown when viewing posts in followed tags) - this is to avoid
         // having the tag toolbar take up more vertical space than necessary
+        int spacingVerticalRes = mReaderImprovementsFeatureConfig.isEnabled()
+                ? R.dimen.reader_card_gutters_new
+                : R.dimen.reader_card_gutters;
         int spacingHorizontal = getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
-        int spacingVertical = getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
+        int spacingVertical = getResources().getDimensionPixelSize(spacingVerticalRes);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
+
+        // add a proper item divider to the RecyclerView when Reader Improvements are enabled
+        if (mReaderImprovementsFeatureConfig.isEnabled()) {
+            mRecyclerView.addItemDivider(R.drawable.default_list_divider);
+        }
 
         mRecyclerView.setToolbarBackgroundColor(0);
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
@@ -1208,14 +1228,14 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         // this is hacky, but we want to change the SearchView's autocomplete to show suggestions
         // after a single character is typed, and there's no less hacky way to do this...
-        View view = mSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        View view = mSearchView.findViewById(com.google.android.material.R.id.search_src_text);
         if (view instanceof AutoCompleteTextView) {
             ((AutoCompleteTextView) view).setThreshold(1);
         }
 
         mSearchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
                 if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
                     mReaderTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED);
                 }
@@ -1231,7 +1251,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 requireActivity().finish();
                 return false;
             }
@@ -1639,6 +1659,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         UpdateAction updateAction = event.getOffset() == 0 ? UpdateAction.REQUEST_NEWER : UpdateAction.REQUEST_OLDER;
         setIsUpdating(true, updateAction);
         setEmptyTitleDescriptionAndButton(false);
+        if (isPostAdapterEmpty()) showEmptyView();
     }
 
     @SuppressWarnings("unused")
@@ -1892,7 +1913,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
-            if (!isAdded()) {
+            if (!isAdded() || !mHasUpdatedPosts) {
                 return;
             }
             if (isEmpty) {
@@ -2245,6 +2266,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
         setIsUpdating(true, event.getAction());
         setEmptyTitleDescriptionAndButton(false);
+        if (isPostAdapterEmpty()) showEmptyView();
     }
 
     @SuppressWarnings("unused")
@@ -2258,6 +2280,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             return;
         }
         setIsUpdating(false, event.getAction());
+        mHasUpdatedPosts = true;
 
         // don't show new posts if user is searching - posts will automatically
         // appear when search is exited
@@ -2365,10 +2388,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (updateAction == UpdateAction.REQUEST_OLDER) {
             // show/hide progress bar at bottom if these are older posts
             showLoadingProgress(isUpdating);
-        } else if (isUpdating && isPostAdapterEmpty()) {
-            // show swipe-to-refresh if update started and no posts are showing
+        } else if (isUpdating) {
+            // show swipe-to-refresh if update started
             mRecyclerView.setRefreshing(true);
-        } else if (!isUpdating) {
+        } else {
             // hide swipe-to-refresh progress if update is complete
             mRecyclerView.setRefreshing(false);
         }

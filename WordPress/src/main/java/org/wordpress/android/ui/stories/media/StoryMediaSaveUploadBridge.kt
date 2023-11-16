@@ -12,7 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
@@ -36,6 +36,7 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
 import javax.inject.Named
@@ -189,7 +190,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 override fun showVideoDurationLimitWarning(fileName: String) {
                     ToastUtils.showToast(
                         appContext,
-                        string.error_media_video_duration_exceeds_limit,
+                        R.string.error_media_video_duration_exceeds_limit,
                         LONG
                     )
                 }
@@ -239,7 +240,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
         storiesTrackerHelper.trackStorySaveResultEvent(event)
 
         event.metadata?.let {
-            val site = it.getSerializable(WordPress.SITE) as SiteModel
+            val site = requireNotNull(it.getSerializableCompat<SiteModel>(WordPress.SITE))
             val story = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)
             saveStoryGutenbergBlockUseCase.saveNewLocalFilesToStoriesPrefsTempSlides(
                 site,

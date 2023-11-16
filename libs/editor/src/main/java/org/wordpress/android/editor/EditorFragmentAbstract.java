@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.view.DragEvent;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
@@ -50,6 +51,10 @@ public abstract class EditorFragmentAbstract extends Fragment {
     // Called from EditPostActivity to let the block editor know when a media selection is cancelled
     public abstract void mediaSelectionCancelled();
     public abstract void showEditorHelp();
+
+    public abstract void onUndoPressed();
+
+    public abstract void onRedoPressed();
 
 
     public enum MediaType {
@@ -122,7 +127,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
@@ -208,6 +213,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onAddFileClicked(boolean allowMultipleSelection);
         void onAddAudioFileClicked(boolean allowMultipleSelection);
         void onPerformFetch(String path, boolean enableCaching, Consumer<String> onResult, Consumer<Bundle> onError);
+        void onPerformPost(String path, Map<String, Object> body, Consumer<String> onResult, Consumer<Bundle> onError);
         void showUserSuggestions(Consumer<String> onResult);
         void showXpostSuggestions(Consumer<String> onResult);
         void onGutenbergEditorSetFocalPointPickerTooltipShown(boolean tooltipShown);
@@ -226,6 +232,10 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onContactCustomerSupport();
         void onGotoCustomerSupportOptions();
         void onSendEventToHost(String eventName, Map<String, Object> properties);
+
+        void onToggleUndo(boolean isDisabled);
+
+        void onToggleRedo(boolean isDisabled);
     }
 
     /**

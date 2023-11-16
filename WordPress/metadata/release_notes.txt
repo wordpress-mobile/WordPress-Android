@@ -1,2 +1,2 @@
-* [*] Block editor: Allow new block transforms for most blocks. [https://github.com/WordPress/gutenberg/pull/48792]
-
+- The Posts & Pages screen now has clean, simple display options. The context menu also lets you access comments, settings, and other actions for a post or page.
+- We fixed block editor issues caused by pasting deeply nested content, or using text colors in older site themes.

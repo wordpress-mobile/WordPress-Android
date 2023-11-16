@@ -39,7 +39,6 @@ import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
@@ -63,13 +62,13 @@ import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListen
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
-import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
-import org.wordpress.android.ui.posts.PublishPost
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
+import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
+import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.StoryMediaFileData
 import org.wordpress.android.ui.stories.media.StoryEditorMedia
@@ -86,11 +85,16 @@ import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
+import org.wordpress.android.util.extensions.getParcelableCompat
+import org.wordpress.android.util.extensions.getParcelableExtraCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.Objects
 import javax.inject.Inject
+import com.wordpress.stories.R as StoriesR
 
 class StoryComposerActivity : ComposeLoopFrameActivity(),
     SnackbarProvider,
@@ -197,10 +201,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     private fun initSite(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null) {
-            site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+        site = if (savedInstanceState == null) {
+            intent.getSerializableExtraCompat(WordPress.SITE)
         } else {
-            site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            savedInstanceState.getSerializableCompat(WordPress.SITE)
         }
     }
 
@@ -211,10 +215,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
         if (savedInstanceState == null) {
             localPostId = getBackingPostIdFromIntent()
-            originalStorySaveResult = intent.getParcelableExtra(KEY_STORY_SAVE_RESULT) as StorySaveResult?
+            originalStorySaveResult = intent.getParcelableExtraCompat(KEY_STORY_SAVE_RESULT)
 
             if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
-                notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
+                notificationType = intent.getSerializableExtraCompat(ARG_NOTIFICATION_TYPE)
             }
         } else {
             if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
@@ -222,7 +226,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             }
             if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_STORY_SAVE_RESULT)) {
                 originalStorySaveResult =
-                    savedInstanceState.getParcelable(STATE_KEY_ORIGINAL_STORY_SAVE_RESULT) as StorySaveResult?
+                    savedInstanceState.getParcelableCompat(STATE_KEY_ORIGINAL_STORY_SAVE_RESULT)
             }
         }
 
@@ -230,8 +234,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             PostEditorAnalyticsSession.fromBundle(bundle, STATE_KEY_EDITOR_SESSION_DATA, analyticsTrackerWrapper)
         }
 
-        viewModel = ViewModelProvider(this, viewModelFactory)
-            .get(StoryComposerViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[StoryComposerViewModel::class.java]
 
         site?.let {
             val postInitialized = viewModel.start(
@@ -370,8 +373,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         var localPostId = intent.getIntExtra(KEY_POST_LOCAL_ID, 0)
         if (localPostId == 0) {
             if (intent.hasExtra(KEY_STORY_SAVE_RESULT)) {
-                val storySaveResult =
-                    intent.getParcelableExtra(KEY_STORY_SAVE_RESULT) as StorySaveResult?
+                val storySaveResult = intent.getParcelableExtraCompat<StorySaveResult>(KEY_STORY_SAVE_RESULT)
                 storySaveResult?.let {
                     localPostId = it.metadata?.getInt(KEY_POST_LOCAL_ID, 0) ?: 0
                 }
@@ -457,7 +459,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         )
         storyEditorMedia.snackBarMessage.observeEvent(this,
             { messageHolder ->
-                findViewById<View>(R.id.compose_loop_frame_layout)?.let {
+                findViewById<View>(StoriesR.id.compose_loop_frame_layout)?.let {
                     WPSnackbar
                         .make(
                             it,
@@ -495,7 +497,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun showVideoDurationLimitWarning(fileName: String) {
-        ToastUtils.showToast(this, string.error_media_video_duration_exceeds_limit, LONG)
+        ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, LONG)
     }
 
     private fun updateAddingMediaToStoryComposerProgressDialogState(uiState: ProgressDialogUiState) {
@@ -662,18 +664,20 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                             )
                             storyMediaFileDataList.add(storyMediaFileData)
                         } else {
-                            val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
-                            val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(mediaModel)
-                            mediaFile?.let { mediafile ->
-                                mediaFile.alt = StoryFrameItem.getAltTextFromFrameAddedViews(frame)
-                                mediaModel.alt = mediaFile.alt
-                                val storyMediaFileData =
-                                    saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
-                                        mediaFile = mediafile,
-                                        temporaryId = assignedTempId
-                                    )
-                                frame.id = storyMediaFileData.id
-                                storyMediaFileDataList.add(storyMediaFileData)
+                            site?.let { site ->
+                                val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
+                                val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(mediaModel)
+                                mediaFile?.let { mediafile ->
+                                    mediaFile.alt = StoryFrameItem.getAltTextFromFrameAddedViews(frame)
+                                    mediaModel?.alt = mediaFile.alt
+                                    val storyMediaFileData =
+                                        saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
+                                            mediaFile = mediafile,
+                                            temporaryId = assignedTempId
+                                        )
+                                    frame.id = storyMediaFileData.id
+                                    storyMediaFileDataList.add(storyMediaFileData)
+                                }
                             }
                         }
                     }

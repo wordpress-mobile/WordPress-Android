@@ -35,14 +35,12 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.usecase.SaveFirstBlog
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.config.BloggingPromptsSocialFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
 @ExperimentalCoroutinesApi
 class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
-    private val bloggingPromptsSocialFeatureConfig: BloggingPromptsSocialFeatureConfig = mock()
-    private val uiStateMapper = BloggingPromptsOnboardingUiStateMapper(bloggingPromptsSocialFeatureConfig)
+    private val uiStateMapper = BloggingPromptsOnboardingUiStateMapper()
     private val siteStore: SiteStore = mock()
     private val selectedSiteRepository: SelectedSiteRepository = mock()
     private val bloggingPromptsStore: BloggingPromptsStore = mock()
@@ -54,13 +52,12 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
         model = BloggingPromptModel(
             id = 123,
             text = "title",
-            title = "",
-            content = "content",
             date = Date(),
             isAnswered = false,
             attribution = "",
             respondentsCount = 5,
-            respondentsAvatarUrls = listOf()
+            respondentsAvatarUrls = listOf(),
+            answeredLink = "https://wordpress.com/tag/dailyprompt-123"
         )
     )
 
@@ -130,6 +127,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
         val siteModel = SiteModel().apply { id = 123 }
         whenever(siteStore.sitesCount).thenReturn(1)
         whenever(siteStore.sites).thenReturn(listOf(siteModel))
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
 
         val startState = viewStates[0]
         (startState as Ready).onPrimaryButtonClick()
@@ -142,6 +140,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
         val siteModel = SiteModel().apply { id = 123 }
         whenever(siteStore.sitesCount).thenReturn(1)
         whenever(siteStore.sites).thenReturn(listOf(siteModel))
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(getIsFirstBloggingPromptsOnboardingUseCase.execute()).thenReturn(false)
         classToTest.start(ONBOARDING)
         val startState = viewStates[0]
@@ -206,6 +205,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     fun `Should track try it now clicked when onPrimaryButtonClick is called with ONBOARDING`() = test {
         classToTest.start(ONBOARDING)
         val startState = viewStates[0]
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(SiteModel())
         (startState as Ready).onPrimaryButtonClick()
         verify(analyticsTracker).trackTryItNowClicked()
     }

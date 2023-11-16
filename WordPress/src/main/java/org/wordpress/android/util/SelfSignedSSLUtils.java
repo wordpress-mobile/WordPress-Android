@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import org.wordpress.android.R;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog.T;
@@ -30,9 +31,9 @@ public class SelfSignedSSLUtils {
                                             @NonNull final MemorizingTrustManager memorizingTrustManager,
                                             @Nullable final Callback callback) {
         AlertDialog.Builder alert = new MaterialAlertDialogBuilder(context);
-        alert.setTitle(context.getString(org.wordpress.android.R.string.ssl_certificate_error));
-        alert.setMessage(context.getString(org.wordpress.android.R.string.ssl_certificate_ask_trust));
-        alert.setPositiveButton(org.wordpress.android.R.string.yes, new DialogInterface.OnClickListener() {
+        alert.setTitle(context.getString(R.string.ssl_certificate_error));
+        alert.setMessage(context.getString(R.string.ssl_certificate_ask_trust));
+        alert.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         // Add the certificate to our list
                                         memorizingTrustManager.storeLastFailure();
@@ -43,7 +44,7 @@ public class SelfSignedSSLUtils {
                                     }
                                 }
                                );
-        alert.setNeutralButton(org.wordpress.android.R.string.ssl_certificate_details,
+        alert.setNeutralButton(R.string.ssl_certificate_details,
                                new DialogInterface.OnClickListener() {
                                    public void onClick(DialogInterface dialog, int which) {
                                        ActivityLauncher.viewSSLCerts(context, memorizingTrustManager.getLastFailure()

@@ -1,20 +1,19 @@
 package org.wordpress.android.ui.posts
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.text.SpannableStringBuilder
-import android.text.style.ImageSpan
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.ImageView.ScaleType
-import android.widget.PopupMenu
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.ColorRes
@@ -22,8 +21,12 @@ import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.GravityCompat
+import androidx.core.view.MenuCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
+import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.extensions.expandTouchTargetArea
@@ -32,16 +35,15 @@ import org.wordpress.android.util.extensions.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.posts.PostListItemAction
-import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
-import org.wordpress.android.viewmodel.posts.PostListItemAction.SingleItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateData
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
-import org.wordpress.android.widgets.PostListButton
-import org.wordpress.android.widgets.WPTextView
 import java.util.concurrent.atomic.AtomicBoolean
+import android.R as AndroidR
+import androidx.appcompat.widget.PopupMenu as AppCompatPopupMenu
+import com.google.android.material.R as MaterialR
 
-const val POST_LIST_ICON_PADDING = 8
+const val MAX_TITLE_EXCERPT_LINES = 2
 
 sealed class PostListItemViewHolder(
     @LayoutRes layout: Int,
@@ -50,16 +52,20 @@ sealed class PostListItemViewHolder(
     private val uiHelpers: UiHelpers
 ) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     private val featuredImageView: ImageView = itemView.findViewById(R.id.image_featured)
-    private val titleTextView: WPTextView = itemView.findViewById(R.id.title)
-    private val postInfoTextView: WPTextView = itemView.findViewById(R.id.post_info)
-    private val statusesTextView: WPTextView = itemView.findViewById(R.id.statuses_label)
+    private val titleTextView: TextView = itemView.findViewById(R.id.title)
+    private val postInfoTextView: TextView = itemView.findViewById(R.id.post_info)
+    private val statusesTextView: TextView = itemView.findViewById(R.id.statuses_label)
     private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
     private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
     private val container: ConstraintLayout = itemView.findViewById(R.id.container)
+    private val excerptTextView: TextView = itemView.findViewById(R.id.excerpt)
+    private val moreButton: ImageButton = itemView.findViewById(R.id.more)
+
     private val selectableBackground: Drawable? = parent.context.getDrawableFromAttribute(
-        android.R.attr.selectableItemBackground
+        AndroidR.attr.selectableItemBackground
     )
 
+    private val noTitle = UiString.UiStringRes(R.string.untitled_in_parentheses)
     /**
      * Url of an image loaded in the `featuredImageView`.
      */
@@ -74,49 +80,15 @@ sealed class PostListItemViewHolder(
     class Standard(
         parent: ViewGroup,
         imageManager: ImageManager,
-        private val uiHelpers: UiHelpers
+        uiHelpers: UiHelpers
     ) : PostListItemViewHolder(R.layout.post_list_item, parent, imageManager, uiHelpers) {
-        private val excerptTextView: WPTextView = itemView.findViewById(R.id.excerpt)
-        private val actionButtons: List<PostListButton> = listOf(
-            itemView.findViewById(R.id.btn_primary),
-            itemView.findViewById(R.id.btn_secondary),
-            itemView.findViewById(R.id.btn_ternary)
-        )
-
         override fun onBind(item: PostListItemUiState) {
             setBasicValues(item.data)
+            setMoreActions(item.moreActions.actions)
 
-            uiHelpers.setTextOrHide(excerptTextView, item.data.excerpt)
             itemView.setOnClickListener {
                 if (isSafeClick(it)) {
                     item.onSelected.invoke()
-                }
-            }
-
-            actionButtons.forEachIndexed { index, button ->
-                updateMenuItem(button, item.actions.getOrNull(index))
-            }
-        }
-
-        private fun updateMenuItem(postListButton: PostListButton, action: PostListItemAction?) {
-            uiHelpers.updateVisibility(postListButton, action != null)
-            if (action != null) {
-                when (action) {
-                    is SingleItem -> {
-                        postListButton.updateButtonType(action.buttonType)
-                        postListButton.setOnClickListener {
-                            if (isSafeClick(it)) {
-                                action.onButtonClicked.invoke(action.buttonType)
-                            }
-                        }
-                    }
-                    is MoreItem -> {
-                        postListButton.updateButtonType(action.buttonType)
-                        postListButton.setOnClickListener { view ->
-                            action.onButtonClicked.invoke(action.buttonType)
-                            onMoreClicked(action.actions, view)
-                        }
-                    }
                 }
             }
         }
@@ -134,25 +106,9 @@ sealed class PostListItemViewHolder(
         }
     }
 
-    class Compact(
-        parent: ViewGroup,
-        imageManager: ImageManager,
-        private val uiHelpers: UiHelpers
-    ) : PostListItemViewHolder(R.layout.post_list_item_compact, parent, imageManager, uiHelpers) {
-        private val moreButton: ImageButton = itemView.findViewById(R.id.more_button)
-
-        override fun onBind(item: PostListItemUiState) {
-            setBasicValues(item.data)
-
-            itemView.setOnClickListener { item.onSelected.invoke() }
-            uiHelpers.updateVisibility(moreButton, item.compactActions.actions.isNotEmpty())
-            moreButton.expandTouchTargetArea(R.dimen.post_list_more_button_extra_padding)
-            moreButton.setOnClickListener { onMoreClicked(item.compactActions.actions, moreButton) }
-        }
-    }
-
     protected fun setBasicValues(data: PostListItemUiStateData) {
         uiHelpers.setTextOrHide(titleTextView, data.title)
+        uiHelpers.setTextOrHide(excerptTextView, data.excerpt)
         updatePostInfoLabel(postInfoTextView, data.postInfo)
         uiHelpers.updateVisibility(statusesTextView, data.statuses.isNotEmpty())
         updateStatusesLabel(statusesTextView, data.statuses, data.statusesDelimiter, data.statusesColor)
@@ -164,6 +120,37 @@ sealed class PostListItemViewHolder(
         } else {
             container.background = selectableBackground
         }
+
+        if ((data.title != null && data.title != noTitle) && data.excerpt != null) {
+            titleTextView.maxLines = MAX_TITLE_EXCERPT_LINES
+            excerptTextView.maxLines = MAX_TITLE_EXCERPT_LINES
+            titleTextView.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    // Remove the listener to avoid multiple callbacks
+                    titleTextView.viewTreeObserver.removeOnPreDrawListener(this)
+
+                    // Get the layout of the title text
+                    val titleLayout = titleTextView.layout
+
+                    // Check if the title occupies more than 2 lines
+                    when (titleLayout.lineCount) {
+                        1 -> {
+                            excerptTextView.maxLines = 2
+                        }
+                        else -> {
+                            excerptTextView.maxLines = 1
+                            titleTextView.maxLines = 2
+                        }
+                    }
+                    return true
+                }
+            })
+        }
+    }
+
+    protected fun setMoreActions(actions: List<PostListItemAction>) {
+        moreButton.expandTouchTargetArea(R.dimen.post_list_more_button_extra_padding)
+        moreButton.setOnClickListener { onMoreClicked(actions, moreButton) }
     }
 
     private fun updatePostInfoLabel(view: TextView, uiStrings: List<UiString>?) {
@@ -173,21 +160,66 @@ sealed class PostListItemViewHolder(
         uiHelpers.setTextOrHide(view, concatenatedText)
     }
 
-    protected fun onMoreClicked(actions: List<PostListItemAction>, v: View) {
-        val menu = PopupMenu(v.context, v)
+    private fun onMoreClicked(actions: List<PostListItemAction>, v: View) {
+        val emptyDrawable = ContextCompat.getDrawable(v.context, R.drawable.ic_placeholder_24dp)
+        val menu = AppCompatPopupMenu(v.context, v, GravityCompat.END)
+        MenuCompat.setGroupDividerEnabled(menu.menu, true)
+        menu.setForceShowIcon(true)
         actions.forEach { singleItemAction ->
             val menuItem = menu.menu.add(
-                Menu.NONE,
+                singleItemAction.buttonType.groupId,
                 singleItemAction.buttonType.value,
                 Menu.NONE,
-                getMenuItemTitleWithIcon(v.context, singleItemAction)
+                singleItemAction.buttonType.textResId
             )
             menuItem.setOnMenuItemClickListener {
                 singleItemAction.onButtonClicked.invoke(singleItemAction.buttonType)
                 true
             }
+
+            setIconAndIconColorIfNeeded(v.context, menuItem, singleItemAction, emptyDrawable)
+            setTextColorIfNeeded(v.context, menuItem, singleItemAction)
         }
         menu.show()
+    }
+
+    private fun setIconAndIconColorIfNeeded(
+        context: Context,
+        menuItem: MenuItem,
+        singleItemAction: PostListItemAction,
+        emptyDrawable: Drawable?
+    ) {
+        if (singleItemAction.buttonType.iconResId > 0) {
+            val icon: Drawable = setTint(
+                context,
+                ContextCompat.getDrawable(context, singleItemAction.buttonType.iconResId)!!,
+                singleItemAction.buttonType.colorAttrId
+            )
+            menuItem.icon = icon
+        } else {
+            // Leave space for the icon so the text lines up
+            menuItem.icon = emptyDrawable
+        }
+    }
+
+    private fun setTextColorIfNeeded(context: Context,
+                                     menuItem: MenuItem,
+                                     singleItemAction: PostListItemAction) {
+        if (singleItemAction.buttonType.colorAttrId > 0 &&
+            singleItemAction.buttonType.colorAttrId != MaterialR.attr.colorOnSurface) {
+            val menuTitle = context.getText(singleItemAction.buttonType.textResId)
+            val spannableString = SpannableString(menuTitle)
+            val textColor = context.getColorFromAttribute(singleItemAction.buttonType.colorAttrId)
+
+            spannableString.setSpan(
+                ForegroundColorSpan(textColor),
+                0,
+                spannableString.length,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            )
+
+            menuItem.title = spannableString
+        }
     }
 
     private fun updateProgressBarState(progressBarUiState: ProgressBarUiState) {
@@ -203,7 +235,7 @@ sealed class PostListItemViewHolder(
     }
 
     private fun updateStatusesLabel(
-        view: WPTextView,
+        view: TextView,
         statuses: List<UiString>,
         delimiter: UiString,
         @ColorRes color: Int?
@@ -230,7 +262,15 @@ sealed class PostListItemViewHolder(
             imageManager.cancelRequestAndClearImageView(featuredImageView)
         } else {
             featuredImageView.visibility = View.VISIBLE
-            imageManager.load(featuredImageView, ImageType.PHOTO, imageUrl, ScaleType.CENTER_CROP)
+            imageManager.loadImageWithCorners(
+                featuredImageView,
+                ImageType.PHOTO_ROUNDED_CORNERS,
+                imageUrl,
+                uiHelpers.getPxOfUiDimen(
+                    WordPress.getContext(),
+                    UiDimen.UIDimenRes(R.dimen.my_site_post_item_image_corner_radius)
+                )
+            )
         }
         loadedFeaturedImgUrl = imageUrl
     }
@@ -242,28 +282,5 @@ sealed class PostListItemViewHolder(
             DrawableCompat.setTint(wrappedDrawable, iconColor)
         }
         return wrappedDrawable
-    }
-
-    @Suppress("ComplexMethod")
-    private fun getMenuItemTitleWithIcon(context: Context, item: PostListItemAction): SpannableStringBuilder {
-        var icon: Drawable? = setTint(
-            context,
-            context.getDrawable(item.buttonType.iconResId)!!, item.buttonType.colorAttrId
-        )
-        // If there's no icon, we insert a transparent one to keep the title aligned with the items which have icons.
-        if (icon == null) icon = ColorDrawable(Color.TRANSPARENT)
-        val iconSize: Int = context.getResources().getDimensionPixelSize(R.dimen.menu_item_icon_size)
-        icon.setBounds(0, 0, iconSize, iconSize)
-        val imageSpan = ImageSpan(icon)
-
-        // Add a space placeholder for the icon, before the title.
-        val menuTitle = context.getText(item.buttonType.textResId)
-        val ssb = SpannableStringBuilder(
-            menuTitle.padStart(menuTitle.length + POST_LIST_ICON_PADDING)
-        )
-
-        // Replace the space placeholder with the icon.
-        ssb.setSpan(imageSpan, 1, 2, 0)
-        return ssb
     }
 }

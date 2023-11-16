@@ -35,4 +35,4 @@ class AppendMediaToEditorUseCase @Inject constructor(private val fluxCUtilsWrapp
 }
 
 private val MediaModel.urlToUse
-    get() = if (url.isNullOrBlank()) filePath else url
+    get() = url.ifBlank { filePath }

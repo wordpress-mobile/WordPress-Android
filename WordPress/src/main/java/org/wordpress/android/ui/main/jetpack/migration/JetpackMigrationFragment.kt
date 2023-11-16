@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.main.jetpack.migration
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
@@ -30,6 +32,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FinishActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.Logout
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.RequestNotificationPermission
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error
@@ -44,6 +47,8 @@ import org.wordpress.android.ui.utils.PreMigrationDeepLinkData
 import org.wordpress.android.util.AppThemeUtils
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.WPPermissionUtils
+import org.wordpress.android.util.extensions.getParcelableCompat
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -77,7 +82,7 @@ class JetpackMigrationFragment : Fragment() {
         observeViewModelEvents()
         observeRefreshAppThemeEvents()
         val showDeleteWpState = arguments?.getBoolean(KEY_SHOW_DELETE_WP_STATE, false) ?: false
-        val deepLinkData = arguments?.getParcelable<PreMigrationDeepLinkData>(KEY_DEEP_LINK_DATA)
+        val deepLinkData = arguments?.getParcelableCompat<PreMigrationDeepLinkData>(KEY_DEEP_LINK_DATA)
         initBackPressHandler(showDeleteWpState)
         viewModel.start(
             showDeleteWpState,
@@ -112,6 +117,7 @@ class JetpackMigrationFragment : Fragment() {
             }
             is Logout -> (requireActivity().application as? WordPress)?.let { viewModel.signOutWordPress(it) }
             is ShowHelp -> launchHelpScreen()
+            is RequestNotificationPermission -> requestNotificationPermission()
             is FinishActivity -> requireActivity().finish()
         }
     }
@@ -125,17 +131,34 @@ class JetpackMigrationFragment : Fragment() {
         )
     }
 
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            !WPPermissionUtils.isPermissionAlwaysDenied(requireActivity(), Manifest.permission.POST_NOTIFICATIONS)
+        ) {
+            @Suppress("DEPRECATION")
+            requestPermissions(
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                WPPermissionUtils.NOTIFICATIONS_PERMISSION_REQUEST_CODE
+            )
+        } else {
+            // This case is not expected. But just in case, behave as if permission has been changed to continue the
+            // flow.
+            viewModel.onPermissionChange()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == WPPermissionUtils.NOTIFICATIONS_PERMISSION_REQUEST_CODE) {
+            WPPermissionUtils.setPermissionListAsked(requireActivity(), requestCode, permissions, grantResults, false)
+            viewModel.onPermissionChange()
+        }
+    }
+
     private fun initBackPressHandler(showDeleteWpState: Boolean) {
         if (showDeleteWpState) return
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(
-                true
-            ) {
-                override fun handleOnBackPressed() {
-                    viewModel.logoutAndFallbackToLogin()
-                }
-            })
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            viewModel.logoutAndFallbackToLogin()
+        }
     }
 
     companion object {

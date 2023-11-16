@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import org.wordpress.android.databinding.DebugCookiesActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
+import android.R as AndroidR
 
 class DebugCookiesActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,8 +13,8 @@ class DebugCookiesActivity : LocaleAwareActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        android.R.id.home -> {
-            onBackPressed()
+        AndroidR.id.home -> {
+            onBackPressedDispatcher.onBackPressed()
             true
         }
         else -> super.onOptionsItemSelected(item)

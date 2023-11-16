@@ -76,9 +76,7 @@ class HistoryViewModel @Inject constructor(
 
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
-        override fun getLifecycle(): Lifecycle {
-            return lifecycleRegistry
-        }
+        override val lifecycle: Lifecycle = lifecycleRegistry
     }
 
     init {

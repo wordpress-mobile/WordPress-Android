@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.photopicker
 
-import android.Manifest.permission
 import android.net.Uri
+import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -34,7 +34,6 @@ import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.ViewWrapper
-import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.distinct
@@ -68,16 +67,17 @@ class PhotoPickerViewModel @Inject constructor(
     private val _photoPickerItems = MutableLiveData<List<PhotoPickerItem>>()
     private val _selectedIds = MutableLiveData<List<Long>?>()
     private val _onIconClicked = MutableLiveData<Event<IconClickEvent>>()
-    private val _onPermissionsRequested = MutableLiveData<Event<PermissionsRequested>>()
+    private val _onCameraPermissionsRequested = MutableLiveData<Event<Unit>>()
     private val _softAskRequest = MutableLiveData<SoftAskRequest>()
     private val _showProgressDialog = MutableLiveData<ProgressDialogUiModel>()
+    private val _showPartialMediaAccessPrompt = MutableLiveData<Boolean>()
 
     val onNavigateToPreview: LiveData<Event<UriWrapper>> = _navigateToPreview
     val onInsert: LiveData<Event<List<UriWrapper>>> = _onInsert
     val onIconClicked: LiveData<Event<IconClickEvent>> = _onIconClicked
 
     val onShowPopupMenu: LiveData<Event<PopupMenuUiModel>> = _showPopupMenu
-    val onPermissionsRequested: LiveData<Event<PermissionsRequested>> = _onPermissionsRequested
+    val onCameraPermissionsRequested: LiveData<Event<Unit>> = _onCameraPermissionsRequested
 
     val selectedIds: LiveData<List<Long>?> = _selectedIds
 
@@ -86,21 +86,23 @@ class PhotoPickerViewModel @Inject constructor(
         _photoPickerItems.distinct(),
         _selectedIds.distinct(),
         _softAskRequest,
-        _showProgressDialog
-    ) { photoPickerItems, selectedIds, softAskRequest, progressDialogModel ->
+        _showProgressDialog,
+        _showPartialMediaAccessPrompt
+    ) { photoPickerItems, selectedIds, softAskRequest, progressDialogModel, showPartialAccessPrompt ->
         PhotoPickerUiState(
-            buildPhotoPickerUiModel(photoPickerItems, selectedIds),
+            buildPhotoPickerUiModel(photoPickerItems, selectedIds, softAskRequest),
             buildBottomBar(
                 photoPickerItems,
                 selectedIds,
-                softAskRequest?.show == true
+                softAskRequest?.show == true,
             ),
             buildSoftAskView(softAskRequest),
             FabUiModel(browserType.isWPStoriesPicker && selectedIds.isNullOrEmpty()) {
                 clickIcon(PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE)
             },
             buildActionModeUiModel(selectedIds),
-            progressDialogModel ?: ProgressDialogUiModel.Hidden
+            progressDialogModel ?: ProgressDialogUiModel.Hidden,
+            showPartialAccessPrompt ?: false,
         )
     }
 
@@ -112,10 +114,13 @@ class PhotoPickerViewModel @Inject constructor(
     @Suppress("DEPRECATION")
     private fun buildPhotoPickerUiModel(
         data: List<PhotoPickerItem>?,
-        selectedIds: List<Long>?
+        selectedIds: List<Long>?,
+        softAskRequest: SoftAskRequest?,
     ): PhotoListUiModel {
         var isVideoSelected = false
-        return if (data != null) {
+        return if (null != softAskRequest && softAskRequest.show) {
+            PhotoListUiModel.Hidden
+        } else if (data != null) {
             val uiItems = data.map {
                 val showOrderCounter = browserType.canMultiselect()
                 val toggleAction = PhotoPickerUiItem.ToggleAction(it.id, showOrderCounter, this::toggleItem)
@@ -163,11 +168,11 @@ class PhotoPickerViewModel @Inject constructor(
         if (numSelected == 0) {
             return ActionModeUiModel.Hidden
         }
-        val title: UiString? = when {
-            numSelected == 0 -> null
+        val title: UiString = when {
             browserType.canMultiselect() -> {
                 UiStringText(String.format(resourceProvider.getString(R.string.cab_selected), numSelected))
             }
+
             else -> {
                 if (browserType.isImagePicker && browserType.isVideoPicker) {
                     UiStringRes(R.string.photo_picker_use_media)
@@ -219,14 +224,13 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     fun refreshData(forceReload: Boolean) {
-        if (!permissionsHandler.hasWriteStoragePermission()) {
-            return
-        }
-        launch(bgDispatcher) {
-            val result = deviceMediaListBuilder.buildDeviceMedia(browserType)
-            val currentItems = _photoPickerItems.value ?: listOf()
-            if (forceReload || currentItems != result) {
-                _photoPickerItems.postValue(result)
+        if (!needPhotosVideoPermission() && !needMusicAudioPermission()) {
+            launch(bgDispatcher) {
+                val result = deviceMediaListBuilder.buildDeviceMedia(browserType)
+                val currentItems = _photoPickerItems.value ?: listOf()
+                if (forceReload || currentItems != result) {
+                    _photoPickerItems.postValue(result)
+                }
             }
         }
     }
@@ -318,8 +322,8 @@ class PhotoPickerViewModel @Inject constructor(
             icon == PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_VIDEO ||
             icon == PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE
         ) {
-            if (!permissionsHandler.hasPermissionsToAccessPhotos()) {
-                _onPermissionsRequested.value = Event(PermissionsRequested.CAMERA)
+            if (!permissionsHandler.hasPermissionsToTakePhoto()) {
+                _onCameraPermissionsRequested.value = Event(Unit)
                 lastTappedIcon = icon
                 return
             }
@@ -329,24 +333,29 @@ class PhotoPickerViewModel @Inject constructor(
                 MEDIA_PICKER_OPEN_CAPTURE_MEDIA,
                 false
             )
+
             PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_VIDEO -> trackSelectedOtherSourceEvents(
                 MEDIA_PICKER_OPEN_CAPTURE_MEDIA,
                 true
             )
+
             PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO -> trackSelectedOtherSourceEvents(
                 MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
                 false
             )
+
             PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_VIDEO -> trackSelectedOtherSourceEvents(
                 MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
                 true
             )
+
             PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA -> AnalyticsTracker.track(MEDIA_PICKER_OPEN_WP_MEDIA)
             PhotoPickerFragment.PhotoPickerIcon.STOCK_MEDIA -> Unit // Do nothing
             PhotoPickerFragment.PhotoPickerIcon.GIF -> Unit // Do nothing
             PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE -> AnalyticsTracker.track(
                 MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
             )
+
             PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO -> Unit // Do nothing
         }
         _onIconClicked.postValue(Event(IconClickEvent(icon, browserType.canMultiselect())))
@@ -417,36 +426,73 @@ class PhotoPickerViewModel @Inject constructor(
         }
     }
 
-    fun checkStoragePermission(isAlwaysDenied: Boolean) {
-        if (permissionsHandler.hasWriteStoragePermission()) {
+    fun checkMediaPermissions(
+        isPhotosVideosAlwaysDenied: Boolean,
+        isMusicAudioAlwaysDenied: Boolean,
+        didJustRequestPermissions: Boolean,
+    ) {
+        val isPartialAccessGranted = permissionsHandler.hasOnlyPartialAccessPhotosVideosPermission()
+        val isAlwaysDenied = (
+                (browserType.isImagePicker || browserType.isVideoPicker) &&
+                        isPhotosVideosAlwaysDenied &&
+                        !isPartialAccessGranted
+                ) || (browserType.isAudioPicker && isMusicAudioAlwaysDenied)
+
+        if (!needPhotosVideoPermission() && !needMusicAudioPermission()) {
+            _showPartialMediaAccessPrompt.value = isPartialAccessGranted
             _softAskRequest.value = SoftAskRequest(show = false, isAlwaysDenied = isAlwaysDenied)
-            if (_photoPickerItems.value.isNullOrEmpty()) {
-                refreshData(false)
+            if (didJustRequestPermissions || _photoPickerItems.value.isNullOrEmpty()) {
+                refreshData(didJustRequestPermissions)
             }
         } else {
+            _showPartialMediaAccessPrompt.value = false
             _softAskRequest.value = SoftAskRequest(show = true, isAlwaysDenied = isAlwaysDenied)
         }
     }
+
+    private fun getRequiredPermissionsNames(): String {
+        val permissionName = when {
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU -> R.string.permission_storage
+            needPhotosVideoPermission() && needMusicAudioPermission() -> R.string.permission_images_video_audio
+            needPhotosVideoPermission() -> R.string.permission_images
+            needMusicAudioPermission() -> R.string.permission_audio
+            else -> R.string.unknown
+        }
+        return resourceProvider.getString(permissionName)
+    }
+
+    private fun needPhotosVideoPermission() =
+        (browserType.isImagePicker || browserType.isVideoPicker) && !permissionsHandler.hasPhotosVideosPermission()
+
+    private fun needMusicAudioPermission() =
+        browserType.isAudioPicker && !permissionsHandler.hasMusicAudioPermission()
 
     private fun buildSoftAskView(softAskRequest: SoftAskRequest?): SoftAskViewUiModel {
         if (softAskRequest != null && softAskRequest.show) {
             val appName = "<strong>${resourceProvider.getString(R.string.app_name)}</strong>"
             val label = if (softAskRequest.isAlwaysDenied) {
-                val permissionName = ("<strong>${
-                    WPPermissionUtils.getPermissionName(
-                        resourceProvider,
-                        permission.WRITE_EXTERNAL_STORAGE
-                    )
-                }</strong>")
+                val permission = ("<strong>${getRequiredPermissionsNames()}</strong>")
                 String.format(
-                    resourceProvider.getString(R.string.photo_picker_soft_ask_permissions_denied), appName,
-                    permissionName
+                    resourceProvider.getString(R.string.media_picker_soft_ask_media_permissions_denied),
+                    appName,
+                    permission
                 )
             } else {
-                String.format(
-                    resourceProvider.getString(R.string.photo_picker_soft_ask_label),
-                    appName
-                )
+                val description = when {
+                    browserType.isImagePicker && browserType.isVideoPicker && browserType.isAudioPicker -> {
+                        R.string.photo_picker_soft_ask_photos_videos_audio_label
+                    }
+
+                    browserType.isImagePicker && browserType.isVideoPicker -> {
+                        R.string.photo_picker_soft_ask_photos_videos_label
+                    }
+
+                    browserType.isImagePicker -> R.string.photo_picker_soft_ask_photos_label
+                    browserType.isVideoPicker -> R.string.photo_picker_soft_ask_videos_label
+                    browserType.isAudioPicker -> R.string.photo_picker_soft_ask_audios_label
+                    else -> R.string.unknown
+                }
+                String.format(resourceProvider.getString(description), appName)
             }
             val allowId = if (softAskRequest.isAlwaysDenied) {
                 R.string.button_edit_permissions
@@ -471,7 +517,7 @@ class PhotoPickerViewModel @Inject constructor(
         }
     }
 
-    fun copySelectedUrisLocally(uris: List<UriWrapper>) {
+    private fun copySelectedUrisLocally(uris: List<UriWrapper>) {
         launch {
             _showProgressDialog.value = ProgressDialogUiModel.Visible(R.string.uploading_title) {
                 _showProgressDialog.postValue(ProgressDialogUiModel.Hidden)
@@ -491,7 +537,8 @@ class PhotoPickerViewModel @Inject constructor(
         val softAskViewUiModel: SoftAskViewUiModel,
         val fabUiModel: FabUiModel,
         val actionModeUiModel: ActionModeUiModel,
-        val progressDialogUiModel: ProgressDialogUiModel
+        val progressDialogUiModel: ProgressDialogUiModel,
+        val isPartialMediaAccessPromptVisible: Boolean,
     )
 
     @Suppress("DEPRECATION")
@@ -500,6 +547,8 @@ class PhotoPickerViewModel @Inject constructor(
             PhotoListUiModel()
 
         object Empty : PhotoListUiModel()
+
+        object Hidden : PhotoListUiModel()
     }
 
     data class BottomBarUiModel(
@@ -539,10 +588,6 @@ class PhotoPickerViewModel @Inject constructor(
         val icon: PhotoPickerFragment.PhotoPickerIcon,
         val allowMultipleSelection: Boolean
     )
-
-    enum class PermissionsRequested {
-        CAMERA, STORAGE
-    }
 
     data class PopupMenuUiModel(val view: ViewWrapper, val items: List<PopupMenuItem>) {
         data class PopupMenuItem(val title: UiStringRes, val action: () -> Unit)

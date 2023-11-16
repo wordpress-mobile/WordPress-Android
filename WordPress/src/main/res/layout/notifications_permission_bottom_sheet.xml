@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/handle"
+        layout="@layout/bottom_sheet_handle_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_small" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="130dp"
+        android:layout_gravity="center"
+        android:importantForAccessibility="no"
+        android:src="@drawable/img_illustration_bell_yellow_96dp" />
+
+    <TextView
+        style="@style/WordPress.BottomSheetDialogTheme.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_extra_large"
+        android:paddingHorizontal="@dimen/margin_extra_extra_medium_large"
+        android:text="@string/notifications_permission_bottom_sheet_title" />
+
+    <TextView
+        style="@style/WordPress.BottomSheetDialogTheme.Caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_extra_large"
+        android:paddingHorizontal="@dimen/margin_extra_large"
+        android:text="@string/notifications_permission_bottom_sheet_description_1" />
+
+    <TextView
+        android:id="@+id/description"
+        style="@style/WordPress.BottomSheetDialogTheme.Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_extra_large"
+        android:paddingHorizontal="@dimen/margin_extra_large"
+        tools:text="@string/notifications_permission_bottom_sheet_description_2" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/primary_button"
+        style="@style/WordPress.BottomSheetDialogTheme.PrimaryButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/margin_extra_large"
+        android:text="@string/notifications_permission_bottom_sheet_button" />
+</LinearLayout>

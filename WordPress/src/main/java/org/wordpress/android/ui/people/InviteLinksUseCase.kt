@@ -4,7 +4,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -89,7 +89,7 @@ class InviteLinksUseCase @Inject constructor(
             flow.emit(InviteLinksLoading(scenarioContext))
             delay(PROGRESS_DELAY_MS)
             if (!networkUtilsWrapper.isNetworkAvailable()) {
-                flow.emit(InviteLinksError(scenarioContext, UiStringRes(string.error_network_connection)))
+                flow.emit(InviteLinksError(scenarioContext, UiStringRes(R.string.error_network_connection)))
                 properties.addInviteLinksActionResult(ERROR, NO_NETWORK.errorMessage)
             } else {
                 val actionResult = strategy.invoke(flow, blogId, scenarioContext)

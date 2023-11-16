@@ -4,7 +4,6 @@ package org.wordpress.android.ui.domains
 
 import android.app.Dialog
 import android.app.ProgressDialog
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
@@ -21,7 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -47,6 +46,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.Domai
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 class DomainRegistrationDetailsFragment : Fragment() {
@@ -89,10 +89,11 @@ class DomainRegistrationDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-            .get(DomainRegistrationMainViewModel::class.java)
-        viewModel = ViewModelProvider(this, viewModelFactory)
-            .get(DomainRegistrationDetailsViewModel::class.java)
+        mainViewModel = ViewModelProvider(
+            requireActivity(),
+            viewModelFactory
+        )[DomainRegistrationMainViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[DomainRegistrationDetailsViewModel::class.java]
         with(DomainRegistrationDetailsFragmentBinding.bind(view)) {
             binding = this
             setupObservers()
@@ -100,7 +101,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
             val domainProductDetails = requireNotNull(
                 arguments?.getParcelable<DomainProductDetails?>(EXTRA_DOMAIN_PRODUCT_DETAILS)
             )
-            val site = requireActivity().intent?.getSerializableExtra(WordPress.SITE) as SiteModel
+            val site = requireNotNull(activity?.intent?.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
 
             viewModel.start(site, domainProductDetails)
 
@@ -378,22 +379,18 @@ class DomainRegistrationDetailsFragment : Fragment() {
         )
     }
 
-    @Suppress("DEPRECATION")
     private fun showStatePicker(states: List<SupportedStateResponse>) {
         val dialogFragment = StatePickerDialogFragment.newInstance(states.toCollection(ArrayList()))
-        dialogFragment.setTargetFragment(this, 0)
-        dialogFragment.show(requireFragmentManager(), StatePickerDialogFragment.TAG)
+        dialogFragment.show(childFragmentManager, StatePickerDialogFragment.TAG)
     }
 
-    @Suppress("DEPRECATION")
     private fun showCountryPicker(countries: List<SupportedDomainCountry>) {
         val dialogFragment = CountryPickerDialogFragment.newInstance(
             countries.toCollection(
                 ArrayList()
             )
         )
-        dialogFragment.setTargetFragment(this, 0)
-        dialogFragment.show(requireFragmentManager(), CountryPickerDialogFragment.TAG)
+        dialogFragment.show(childFragmentManager, CountryPickerDialogFragment.TAG)
     }
 
     private fun DomainRegistrationDetailsFragmentBinding.toggleFormProgressIndictor(visible: Boolean) {
@@ -444,6 +441,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
         }
     }
 
+    @AndroidEntryPoint
     class StatePickerDialogFragment : DialogFragment() {
         private lateinit var states: ArrayList<SupportedStateResponse>
 
@@ -470,13 +468,9 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     as ArrayList<SupportedStateResponse>
         }
 
-        @Suppress("DEPRECATION", "UseCheckOrError")
+        @Suppress("UseCheckOrError")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            if (targetFragment == null) {
-                throw IllegalStateException("StatePickerDialogFragment is missing a targetFragment ")
-            }
-
-            viewModel = ViewModelProvider(targetFragment!!, viewModelFactory)
+            viewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
             val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(R.string.domain_registration_state_picker_dialog_title)
@@ -490,13 +484,9 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
             return builder.create()
         }
-
-        override fun onAttach(context: Context) {
-            super.onAttach(context)
-            AndroidSupportInjection.inject(this)
-        }
     }
 
+    @AndroidEntryPoint
     class CountryPickerDialogFragment : DialogFragment() {
         private lateinit var countries: ArrayList<SupportedDomainCountry>
 
@@ -523,13 +513,9 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     as ArrayList<SupportedDomainCountry>
         }
 
-        @Suppress("DEPRECATION", "UseCheckOrError")
+        @Suppress("UseCheckOrError")
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            if (targetFragment == null) {
-                throw IllegalStateException("CountryPickerDialogFragment is missing a targetFragment ")
-            }
-
-            viewModel = ViewModelProvider(targetFragment!!, viewModelFactory)
+            viewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
             val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(R.string.domain_registration_country_picker_dialog_title)
@@ -542,11 +528,6 @@ class DomainRegistrationDetailsFragment : Fragment() {
             }
 
             return builder.create()
-        }
-
-        override fun onAttach(context: Context) {
-            super.onAttach(context)
-            AndroidSupportInjection.inject(this)
         }
     }
 

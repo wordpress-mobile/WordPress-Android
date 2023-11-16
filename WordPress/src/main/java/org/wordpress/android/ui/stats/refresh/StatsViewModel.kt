@@ -52,7 +52,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
@@ -76,7 +76,6 @@ class StatsViewModel
     newsCardHandler: NewsCardHandler,
     private val statsModuleActivateUseCase: StatsModuleActivateUseCase,
     private val notificationsTracker: SystemNotificationsTracker,
-    private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 ) : ScopedViewModel(mainDispatcher) {
@@ -114,10 +113,10 @@ class StatsViewModel
     fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
 
-        val launchedFrom = intent.getSerializableExtra(StatsActivity.ARG_LAUNCHED_FROM)
+        val launchedFrom = intent.getSerializableExtraCompat<Serializable>(StatsActivity.ARG_LAUNCHED_FROM)
         val initialTimeFrame = getInitialTimeFrame(intent)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
-        val notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as? NotificationType
+        val notificationType = intent.getSerializableExtraCompat<NotificationType>(ARG_NOTIFICATION_TYPE)
         start(localSiteId, launchedFrom, initialTimeFrame, initialSelectedPeriod, restart, notificationType)
     }
 
@@ -135,7 +134,7 @@ class StatsViewModel
     }
 
     private fun getInitialTimeFrame(intent: Intent): StatsSection? {
-        return when (intent.getSerializableExtra(StatsActivity.ARG_DESIRED_TIMEFRAME)) {
+        return when (intent.getSerializableExtraCompat<Serializable>(StatsActivity.ARG_DESIRED_TIMEFRAME)) {
             StatsTimeframe.INSIGHTS -> StatsSection.INSIGHTS
             DAY -> StatsSection.DAYS
             WEEK -> StatsSection.WEEKS
@@ -161,12 +160,7 @@ class StatsViewModel
         if (!isInitialized || restart) {
             isInitialized = true
 
-            // Added today's stats feature config to check whether that card is enabled when stats screen is accessed
-            analyticsTracker.track(
-                stat = AnalyticsTracker.Stat.STATS_ACCESSED,
-                site = statsSiteProvider.siteModel,
-                feature = todaysStatsCardFeatureConfig
-            )
+            analyticsTracker.track(stat = AnalyticsTracker.Stat.STATS_ACCESSED, site = statsSiteProvider.siteModel)
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
             trackSectionSelected(initialSection ?: StatsSection.INSIGHTS)

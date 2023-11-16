@@ -3,14 +3,14 @@ package org.wordpress.android.ui.domains
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
+import org.wordpress.android.util.config.PlansInSiteCreationFeatureConfig
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DomainsRegistrationTracker @Inject constructor(
     val tracker: AnalyticsTrackerWrapper,
-    private val purchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig,
+    private val plansInSiteCreationFeatureConfig: PlansInSiteCreationFeatureConfig
 ) {
     private enum class PROPERTY(val key: String) {
         ORIGIN("origin"),
@@ -22,7 +22,7 @@ class DomainsRegistrationTracker @Inject constructor(
     }
 
     fun trackDomainsPurchaseWebviewViewed(site: SiteModel?, isSiteCreation: Boolean) {
-        if (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
+        if (plansInSiteCreationFeatureConfig.isEnabled()) {
             val origin = if (isSiteCreation) VALUE.ORIGIN_SITE_CREATION.key else VALUE.ORIGIN_MENU.key
             tracker.track(
                 AnalyticsTracker.Stat.DOMAINS_PURCHASE_WEBVIEW_VIEWED, site, mutableMapOf(PROPERTY.ORIGIN.key to origin)
@@ -44,8 +44,9 @@ class DomainsRegistrationTracker @Inject constructor(
         tracker.track(AnalyticsTracker.Stat.DOMAINS_REGISTRATION_FORM_SUBMITTED)
     }
 
-    fun trackDomainsPurchaseDomainSuccess() {
-        tracker.track(AnalyticsTracker.Stat.DOMAINS_PURCHASE_DOMAIN_SUCCESS)
+    fun trackDomainsPurchaseDomainSuccess(isSiteCreation: Boolean) {
+        val origin = if (isSiteCreation) VALUE.ORIGIN_SITE_CREATION.key else VALUE.ORIGIN_MENU.key
+        tracker.track(AnalyticsTracker.Stat.DOMAINS_PURCHASE_DOMAIN_SUCCESS, mapOf(PROPERTY.ORIGIN.key to origin))
     }
 
     fun trackDomainCreditNameSelected() {

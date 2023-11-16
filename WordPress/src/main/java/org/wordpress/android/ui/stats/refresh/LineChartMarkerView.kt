@@ -101,17 +101,15 @@ class LineChartMarkerView @Inject constructor(
         return offset
     }
 
-    override fun draw(canvas: Canvas?, posX: Float, posY: Float) {
+    override fun draw(canvas: Canvas, posX: Float, posY: Float) {
         super.draw(canvas, posX, posY)
 
-        val saveId = canvas?.save()
+        val saveId = canvas.save()
 
         drawToolTip(canvas, posX, posY)
         draw(canvas)
 
-        saveId?.let {
-            canvas.restoreToCount(it)
-        }
+        canvas.restoreToCount(saveId)
     }
 
     @Suppress("LongMethod")

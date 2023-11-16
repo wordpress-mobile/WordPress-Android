@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.CREATE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogContent
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -28,6 +27,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.QuickStartUtils.getQuickStartListSkippedTracker
 import org.wordpress.android.util.QuickStartUtils.getQuickStartListTappedTracker
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import java.io.Serializable
 import javax.inject.Inject
@@ -74,7 +74,7 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        tasksType = arguments?.getSerializable(EXTRA_TYPE) as QuickStartTaskType? ?: QuickStartTaskType.UNKNOWN
+        tasksType = arguments?.getSerializableCompat(EXTRA_TYPE) ?: QuickStartTaskType.UNKNOWN
         quickStartTracker.trackQuickStartListViewed(tasksType)
         binding.setupQuickStartList()
     }
@@ -150,7 +150,7 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
     )
 
     private fun buildTaskCards(): List<QuickStartTaskCard> {
-        val tasks = QuickStartTask.getTasksByTaskType(tasksType).filterNot { it.taskType == UNKNOWN }
+        val tasks = QuickStartTask.getTasksByTaskType(tasksType).filterNot { it.taskType == QuickStartTaskType.UNKNOWN }
         val selectedSiteLocalId = selectedSiteRepository.getSelectedSiteLocalId().toLong()
         val tasksCompleted = quickStartStore.getCompletedTasksByType(selectedSiteLocalId, tasksType)
         return tasks.mapToQuickStartTaskCard(tasksCompleted)

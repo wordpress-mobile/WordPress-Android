@@ -15,8 +15,7 @@ const val BLAZE_NON_DISMISSABLE_HASH_DEFAULT = "step-4"
 class BlazeNonDismissableHashConfig @Inject constructor(appConfig: AppConfig) :
     RemoteConfigField<String>(
         appConfig,
-        BLAZE_NON_DISMISSABLE_HASH_REMOTE_FIELD,
-        BLAZE_NON_DISMISSABLE_HASH_DEFAULT
+        BLAZE_NON_DISMISSABLE_HASH_REMOTE_FIELD
     )
 
 
@@ -30,6 +29,5 @@ const val BLAZE_COMPLETED_STEP_HASH_DEFAULT = "step-5"
 class BlazeCompletedStepHashConfig @Inject constructor(appConfig: AppConfig) :
     RemoteConfigField<String>(
         appConfig,
-        BLAZE_COMPLETED_STEP_HASH_REMOTE_FIELD,
-        BLAZE_COMPLETED_STEP_HASH_DEFAULT
+        BLAZE_COMPLETED_STEP_HASH_REMOTE_FIELD
     )

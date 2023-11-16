@@ -154,7 +154,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mDoLoginUpdate = requireArguments().getBoolean(ARG_DO_LOGIN_UPDATE, false);
@@ -228,6 +228,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                             mBottomShadow.setVisibility(View.GONE);
                         }
                     }
+
+                    mParentViewModel.onSiteListLoaded();
                 });
             }
         };
@@ -395,5 +397,10 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         mSitesList.setAdapter(mAdapter);
 
         mParentViewModel.onLoginFinished(mDoLoginUpdate);
+    }
+
+    @Override
+    protected boolean isJetpackAppLogin() {
+        return mDoLoginUpdate && mBuildConfigWrapper.isJetpackApp();
     }
 }

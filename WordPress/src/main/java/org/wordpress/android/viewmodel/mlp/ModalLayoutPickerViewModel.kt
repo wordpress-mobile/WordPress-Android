@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -60,6 +60,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     private val _onCreateNewPageRequested = SingleLiveEvent<PageRequest.Create>()
     val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
+
+    var createPageDashboardSource: CreatePageDashboardSource?=null
 
     private val site: SiteModel? by lazy {
         siteStore.getSiteByLocalId(selectedSiteRepository.getSelectedSiteLocalId(true))
@@ -131,9 +133,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     private fun setErrorState() {
         if (networkUtils.isNetworkAvailable()) {
-            updateUiState(Error(string.mlp_error_title, string.mlp_error_subtitle))
+            updateUiState(Error(R.string.mlp_error_title, R.string.mlp_error_subtitle))
         } else {
-            updateUiState(Error(string.mlp_network_error_title, string.mlp_network_error_subtitle))
+            updateUiState(Error(R.string.mlp_network_error_title, R.string.mlp_network_error_subtitle))
         }
     }
 
@@ -147,7 +149,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
     /**
      * Triggers the create page flow and shows the MLP
      */
-    fun createPageFlowTriggered() {
+    fun createPageFlowTriggered(createPageDashboardSource: CreatePageDashboardSource? = null) {
+        this.createPageDashboardSource = createPageDashboardSource
         _isModalLayoutPickerShowing.value = Event(true)
         initializePreviewMode(displayUtilsWrapper.isTablet())
         fetchLayouts()
@@ -183,5 +186,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
             return
         }
         _onCreateNewPageRequested.value = PageRequest.Blank
+    }
+
+    enum class CreatePageDashboardSource {
+        FLOATING_ACTION_BUTTON,
+        PAGES_CARD
     }
 }

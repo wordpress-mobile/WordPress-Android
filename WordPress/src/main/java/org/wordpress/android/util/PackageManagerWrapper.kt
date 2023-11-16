@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.extensions.getActivityInfoCompat
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,7 +39,7 @@ class PackageManagerWrapper @Inject constructor(
         intent.component?.let {
             try {
                 val context = contextProvider.getContext()
-                val activityInfo = context.packageManager.getActivityInfo(it, PackageManager.GET_META_DATA)
+                val activityInfo = context.packageManager.getActivityInfoCompat(it, PackageManager.GET_META_DATA)
                 return activityInfo.labelRes
             } catch (ex: PackageManager.NameNotFoundException) {
                 AppLog.e(T.UTILS, "Unable to extract label res from activity info")

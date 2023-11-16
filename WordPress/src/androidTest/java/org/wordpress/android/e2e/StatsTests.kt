@@ -4,11 +4,15 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
+import org.junit.Assume.assumeTrue
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.e2e.pages.MySitesPage
 import org.wordpress.android.support.BaseTest
+import org.wordpress.android.support.ComposeEspressoLink
 import org.wordpress.android.support.WPSupportUtils
 import org.wordpress.android.util.StatsKeyValueData
 import org.wordpress.android.util.StatsMocksReader
@@ -18,6 +22,10 @@ import org.wordpress.android.util.StatsVisitsData
 class StatsTests : BaseTest() {
     @Before
     fun setUp() {
+        // We're not running Stats tests for JP.
+        // See https://github.com/wordpress-mobile/WordPress-Android/issues/18065
+        assumeTrue(!BuildConfig.IS_JETPACK_APP)
+        ComposeEspressoLink().unregister()
         logoutIfNecessary()
         wpLogin()
     }
@@ -31,6 +39,7 @@ class StatsTests : BaseTest() {
         }
     }
 
+    @Ignore("Will be taken care of in a future PR - scrollToPosts is not working")
     @Test
     fun e2eAllDayStatsLoad() {
         val todayVisits = StatsVisitsData("97", "28", "14", "11")
