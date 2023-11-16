@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.barcodescanner
 
 import android.Manifest
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -23,12 +23,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class BarcodeScanningFragment : Fragment() {
     private val viewModel: BarcodeScanningViewModel by viewModels()
-    private var resultListener: BarcodeScannerResultListener? = null
-
-    fun setResultListener(listener: BarcodeScannerResultListener) {
-        resultListener = listener
-    }
-
 
     @Inject
     lateinit var codeScanner: GoogleMLKitCodeScanner
@@ -37,7 +31,6 @@ class BarcodeScanningFragment : Fragment() {
         ComposeView(requireContext())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.i(javaClass.simpleName, "***=> onViewCreated")
         view as ComposeView
         view.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         observeCameraPermissionState(view)
@@ -45,7 +38,6 @@ class BarcodeScanningFragment : Fragment() {
     }
 
     private fun observeCameraPermissionState(view: ComposeView) {
-        Log.i(javaClass.simpleName, "***=> observeCameraPermissionState")
         viewModel.permissionState.observe(viewLifecycleOwner) { permissionState ->
             view.setContent {
                 AppTheme {
@@ -62,10 +54,7 @@ class BarcodeScanningFragment : Fragment() {
                             viewLifecycleOwner.lifecycleScope.launch {
                                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                                     codeScannerStatus.collect { status ->
-                                    // todo: annmarie - remove log lines
-                                        Log.i(javaClass.simpleName, "***=> onScannedResult $status")
-                                        resultListener?.onBarcodeScanned(status)
-                                        Log.i(javaClass.simpleName, "***=> onScannedResult pop back stack")
+                                        setFragmentResult(KEY_BARCODE_SCANNING_REQUEST, bundleOf(KEY_BARCODE_SCANNING_SCAN_STATUS to status))
                                         requireActivity().supportFragmentManager.popBackStack()
                                     }
                                 }
@@ -80,7 +69,6 @@ class BarcodeScanningFragment : Fragment() {
         viewModel.event.observe(viewLifecycleOwner) { event ->
             when (event) {
                 is BarcodeScanningViewModel.ScanningEvents.LaunchCameraPermission -> {
-                    Log.i(javaClass.simpleName, "***=> LaunchCameraPermission")
                     event.cameraLauncher.launch(KEY_CAMERA_PERMISSION)
                 }
 
@@ -99,6 +87,7 @@ class BarcodeScanningFragment : Fragment() {
 
     companion object {
         const val KEY_BARCODE_SCANNING_SCAN_STATUS = "barcode_scanning_scan_status"
+        const val KEY_BARCODE_SCANNING_REQUEST = "key_barcode_scanning_request"
         const val KEY_CAMERA_PERMISSION = Manifest.permission.CAMERA
     }
 }

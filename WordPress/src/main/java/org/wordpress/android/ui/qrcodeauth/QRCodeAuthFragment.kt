@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -24,8 +25,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.ui.barcodescanner.BarcodeScannerResultListener
 import org.wordpress.android.ui.barcodescanner.BarcodeScanningFragment
+import org.wordpress.android.ui.barcodescanner.BarcodeScanningFragment.Companion.KEY_BARCODE_SCANNING_REQUEST
+import org.wordpress.android.ui.barcodescanner.BarcodeScanningFragment.Companion.KEY_BARCODE_SCANNING_SCAN_STATUS
 import org.wordpress.android.ui.barcodescanner.CodeScannerStatus
 import org.wordpress.android.ui.compose.components.VerticalScrollBox
 import org.wordpress.android.ui.compose.theme.AppTheme
@@ -48,12 +50,21 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class QRCodeAuthFragment : Fragment(), BarcodeScannerResultListener {
+class QRCodeAuthFragment : Fragment() {
     @Inject
     lateinit var uiHelpers: UiHelpers
 
     private val qrCodeAuthViewModel: QRCodeAuthViewModel by viewModels()
     private val dialogViewModel: BasicDialogViewModel by activityViewModels()
+
+    @Suppress("DEPRECATION")
+    private val resultListener = FragmentResultListener { requestKey, result ->
+        if (requestKey == KEY_BARCODE_SCANNING_REQUEST) {
+            val resultValue = result.getParcelable<CodeScannerStatus?>(KEY_BARCODE_SCANNING_SCAN_STATUS)
+            // Handle the result value
+            resultValue?.let { onBarcodeScanned(it) }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,6 +83,7 @@ class QRCodeAuthFragment : Fragment(), BarcodeScannerResultListener {
         initBackPressHandler()
         initViewModel(savedInstanceState)
         observeViewModel()
+        requireActivity().supportFragmentManager.setFragmentResultListener(KEY_BARCODE_SCANNING_REQUEST, viewLifecycleOwner, resultListener)
     }
 
     private fun observeViewModel() {
@@ -116,7 +128,6 @@ class QRCodeAuthFragment : Fragment(), BarcodeScannerResultListener {
         // Todo: annmarie use the fragment manager to launch the scanner fragment - observe events
         // state handler, sll sort of other things to concern yourself about
         val fragment = BarcodeScanningFragment()
-        fragment.setResultListener(this)
         replaceFragment(fragment)
     }
 
@@ -138,7 +149,7 @@ class QRCodeAuthFragment : Fragment(), BarcodeScannerResultListener {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onBarcodeScanned(status: CodeScannerStatus) {
+    private fun onBarcodeScanned(status: CodeScannerStatus) {
         when (status) {
             is CodeScannerStatus.Success -> qrCodeAuthViewModel.onScanSuccess(status.code)
             is CodeScannerStatus.Failure -> qrCodeAuthViewModel.onScanFailure()
