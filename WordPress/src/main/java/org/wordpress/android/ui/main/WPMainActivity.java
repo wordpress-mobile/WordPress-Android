@@ -100,11 +100,11 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
+import org.wordpress.android.ui.mysite.BloggingPromptsOnboardingListener;
 import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
-import org.wordpress.android.ui.mysite.BloggingPromptsOnboardingListener;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
@@ -164,6 +164,7 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointIn
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.CreatePageDashboardSource;
 import org.wordpress.android.widgets.AppRatingDialog;
+import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationScheduler;
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
 
@@ -1473,7 +1474,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case InAppUpdateManager.APP_UPDATE_IMMEDIATE_REQUEST_CODE:
                 if (resultCode == RESULT_CANCELED) {
                     removeInstallStateUpdateListener();
+                    break;
                 }
+                showSnackBarForUpdate();
+                break;
         }
     }
 
@@ -1900,12 +1904,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void showSnackBarForUpdate() {
         Log.e("WPMainActivity", "showSnackBarForUpdate()");
-        Snackbar.make(findViewById(R.id.coordinator), R.string.update_available, Snackbar.LENGTH_LONG)
-                .setAction(R.string.update_now, v -> {
+        WPSnackbar.make(findViewById(R.id.coordinator), R.string.update_available, Snackbar.LENGTH_LONG)
+                  .setAction(R.string.update_now, v -> {
                     mInAppUpdateManager.completeUpdate();
                     // todo: AnalyticsTracker.track(Stat.IN_APP_UPDATE_COMPLETED);
                 })
-                .show();
+                  .show();
     }
 
     // We dismiss the QuickStart SnackBar every time activity is paused because
