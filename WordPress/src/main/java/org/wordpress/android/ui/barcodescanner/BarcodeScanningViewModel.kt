@@ -5,25 +5,20 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-// import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.viewmodel.ScopedViewModel
-// todo: annmarie remove these
 import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
 class BarcodeScanningViewModel @Inject constructor(
-    // savedState: SavedStateHandle,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
-    // todo: annmarie implement the savedStateHandle - WHAT THE HELL IS THIS?
     private val _permissionState = MutableLiveData<PermissionState>()
     val permissionState: LiveData<PermissionState> = _permissionState
 
-    // todo: annmarie figure out a way to navigate events here - need to figure out who listens to this!!
     private val _event: MutableLiveData<ScanningEvents> = MutableLiveData()
     val event: LiveData<ScanningEvents> = _event
 
@@ -41,9 +36,7 @@ class BarcodeScanningViewModel @Inject constructor(
                 _permissionState.value = PermissionState.Granted
             }
 
-            // todo: annmarie these triggerEvents ???
             // It will launch events that some place can response to
-            // Note: the event may need to be a multiple live event
             shouldShowRequestPermissionRationale -> {
                 // Denied once, ask to grant camera permission
                 _permissionState.value = PermissionState.ShouldShowRationale(
