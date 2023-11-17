@@ -1089,6 +1089,8 @@ public final class AnalyticsTracker {
         LOGIN_2FA_NEEDED,
         LOGIN_SECURITY_KEY_SUCCESS,
         LOGIN_SECURITY_KEY_CLICKED,
+        BARCODE_SCANNING_SUCCESS,
+        BARCODE_SCANNING_FAILURE,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
