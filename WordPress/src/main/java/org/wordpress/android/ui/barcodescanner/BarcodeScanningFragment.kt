@@ -2,10 +2,10 @@ package org.wordpress.android.ui.barcodescanner
 
 import android.Manifest
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.os.bundleOf
@@ -18,6 +18,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.util.WPPermissionUtils
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -35,6 +36,7 @@ class BarcodeScanningFragment : Fragment() {
         view.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         observeCameraPermissionState(view)
         observeViewModelEvents()
+        initBackPressHandler()
     }
 
     private fun observeCameraPermissionState(view: ComposeView) {
@@ -54,8 +56,7 @@ class BarcodeScanningFragment : Fragment() {
                             viewLifecycleOwner.lifecycleScope.launch {
                                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                                     codeScannerStatus.collect { status ->
-                                        setFragmentResult(KEY_BARCODE_SCANNING_REQUEST, bundleOf(KEY_BARCODE_SCANNING_SCAN_STATUS to status))
-                                        requireActivity().supportFragmentManager.popBackStack()
+                                        setResultAndPopStack(status)
                                     }
                                 }
                             }
@@ -73,16 +74,24 @@ class BarcodeScanningFragment : Fragment() {
                 }
 
                 is BarcodeScanningViewModel.ScanningEvents.OpenAppSettings -> {
-                   Log.i(javaClass.simpleName, "***=> OpenAppSettings")
-                    // todo: annmarie  do we have a utils method to showAppSettings
+                    WPPermissionUtils.showAppSettings(requireContext())
                 }
 
                 is BarcodeScanningViewModel.ScanningEvents.Exit -> {
-                    Log.i(javaClass.simpleName, "***=> Exit")
-                    // todo: annmarie go home findNavController().navigateUp()
+                    setResultAndPopStack(CodeScannerStatus.Exit)
                 }
             }
         }
+    }
+
+    private fun initBackPressHandler() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            setResultAndPopStack(CodeScannerStatus.NavigateUp) }
+    }
+
+    private fun setResultAndPopStack(status: CodeScannerStatus) {
+        setFragmentResult(KEY_BARCODE_SCANNING_REQUEST, bundleOf(KEY_BARCODE_SCANNING_SCAN_STATUS to status))
+        requireActivity().supportFragmentManager.popBackStack()
     }
 
     companion object {
