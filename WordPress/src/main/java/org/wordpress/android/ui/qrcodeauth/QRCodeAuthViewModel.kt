@@ -95,7 +95,7 @@ class QRCodeAuthViewModel @Inject constructor(
             location = savedInstanceState.getString(LOCATION_KEY, null)
             trackingOrigin = savedInstanceState.getString(TRACKING_ORIGIN_KEY, ORIGIN_MENU)
             lastState = QRCodeAuthUiStateType.fromString(savedInstanceState.getString(LAST_STATE_KEY, null))
-        }
+         }
     }
 
     private fun startOrRestoreUiState() {
@@ -310,7 +310,7 @@ class QRCodeAuthViewModel @Inject constructor(
         when (interaction) {
             is Positive -> postActionEvent(FinishActivity)
             is Negative -> onScanAgainClicked()
-            is Dismissed -> onScanAgainClicked()
+            is Dismissed -> Unit
         }
     }
 
