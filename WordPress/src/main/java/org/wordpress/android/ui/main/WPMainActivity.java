@@ -1154,11 +1154,15 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Nullable InstallStateUpdatedListener mInstallStateUpdatedListener = state -> {
         Log.e("WPMainActivity", "installStateUpdatedListener: " + state.installStatus());
         if (state.installStatus() == InstallStatus.DOWNLOADED) {
+            removeInstallStateUpdateListener();
             showSnackBarForUpdate();
         } else if (state.installStatus() == InstallStatus.INSTALLED) {
             removeInstallStateUpdateListener();
-        } else {
-            Log.e("WPMainActivity", "InstallStateUpdatedListener: state: " + state.installStatus());
+            showSnackBarForUpdate();
+        } else if (state.installStatus() == InstallStatus.CANCELED || InstallStatus.FAILED == state.installStatus()) {
+            removeInstallStateUpdateListener();
+        } else if (state.installStatus() == InstallStatus.PENDING) {
+            showSnackBarForUpdate();
         }
     };
 
@@ -1284,7 +1288,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
-                     mAnalyticsTrackerWrapper.track(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite());
+                    mAnalyticsTrackerWrapper.track(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite());
                 }
                 break;
             case READER:
@@ -1905,9 +1909,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         Log.e("WPMainActivity", "showSnackBarForUpdate()");
         WPSnackbar.make(findViewById(R.id.coordinator), R.string.update_available, Snackbar.LENGTH_LONG)
                   .setAction(R.string.update_now, v -> {
-                    mInAppUpdateManager.completeUpdate();
-                    // todo: AnalyticsTracker.track(Stat.IN_APP_UPDATE_COMPLETED);
-                })
+                      mInAppUpdateManager.completeUpdate();
+                      // todo: AnalyticsTracker.track(Stat.IN_APP_UPDATE_COMPLETED);
+                  })
                   .show();
     }
 
