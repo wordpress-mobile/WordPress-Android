@@ -19,7 +19,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-// todo: annmarie import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -132,9 +131,7 @@ class QRCodeAuthFragment : Fragment() {
 
     private fun launchScanner() {
         qrCodeAuthViewModel.track(Stat.QRLOGIN_SCANNER_DISPLAYED)
-        // Todo: annmarie you want to do something here, just not sure what yet
-        val fragment = BarcodeScanningFragment()
-        replaceFragment(fragment)
+        replaceFragment(BarcodeScanningFragment())
     }
 
     private fun replaceFragment(fragment: Fragment) {
