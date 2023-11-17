@@ -1138,9 +1138,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void checkForAnyPendingInAppUpdates() {
-        mInAppUpdateManager.checkForAppUpdate(WPMainActivity.this);
-        mInAppUpdateManager.registerUpdateListener(installStateUpdatedListener);
-
         mInAppUpdateManager.getInAppUpdateManager().addOnSuccessListener(appUpdateInfo -> {
             Log.e("WPMainActivity", "checkForAnyPendingInAppUpdates: " + appUpdateInfo);
             if (mInAppUpdateManager.isImmediateUpdateInProgress(appUpdateInfo)) {
@@ -1149,19 +1146,19 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 showSnackBarForUpdate();
             } else {
                 mInAppUpdateManager.checkForAppUpdate(WPMainActivity.this);
-                mInAppUpdateManager.registerUpdateListener(installStateUpdatedListener);
+                mInAppUpdateManager.registerUpdateListener(mInstallStateUpdatedListener);
             }
         });
     }
 
-    InstallStateUpdatedListener installStateUpdatedListener = state -> {
+    @Nullable InstallStateUpdatedListener mInstallStateUpdatedListener = state -> {
         Log.e("WPMainActivity", "installStateUpdatedListener: " + state.installStatus());
         if (state.installStatus() == InstallStatus.DOWNLOADED) {
             showSnackBarForUpdate();
         } else if (state.installStatus() == InstallStatus.INSTALLED) {
             removeInstallStateUpdateListener();
         } else {
-            AppLog.d(AppLog.T.MAIN, "InstallStateUpdatedListener: state: " + state.installStatus());
+            Log.e("WPMainActivity", "InstallStateUpdatedListener: state: " + state.installStatus());
         }
     };
 
@@ -1343,6 +1340,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override
     @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("WPMainActivity", "onActivityResult: " + requestCode + " " + resultCode);
         super.onActivityResult(requestCode, resultCode, data);
         if (!mSelectedSiteRepository.hasSelectedSite()) {
             initSelectedSite();
@@ -1472,6 +1470,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 break;
             case InAppUpdateManager.APP_UPDATE_FLEXIBLE_REQUEST_CODE:
             case InAppUpdateManager.APP_UPDATE_IMMEDIATE_REQUEST_CODE:
+                Log.e("Update request code", "onActivityResult: " + requestCode + " " + resultCode);
                 if (resultCode == RESULT_CANCELED) {
                     removeInstallStateUpdateListener();
                     break;
@@ -1482,7 +1481,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void removeInstallStateUpdateListener() {
-        mInAppUpdateManager.unregisterListener(installStateUpdatedListener);
+        mInAppUpdateManager.unregisterListener(mInstallStateUpdatedListener);
     }
 
     private void appLanguageChanged() {

@@ -34,12 +34,15 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
         Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update")
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
         appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            Log.e("AppUpdateChecker", appUpdateInfo.toString())
+            Log.e("AppUpdateChecker", appUpdateInfo.updateAvailability().toString())
             Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, success")
             if (isImmediateUpdateNecessary(appUpdateInfo)) {
                 requestImmediateUpdate(appUpdateInfo, activity)
             } else if (isFlexibleUpdateNecessary(appUpdateInfo)) {
                 requestFlexibleUpdate(appUpdateInfo, activity)
             }
+            requestFlexibleUpdate(appUpdateInfo, activity)
         }
 
         appUpdateInfoTask.addOnFailureListener { exception ->
@@ -72,21 +75,33 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
     }
 
     fun requestImmediateUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
-        appUpdateManager.startUpdateFlowForResult(
-            appUpdateInfo,
-            AppUpdateType.IMMEDIATE,
-            activity,
-            APP_UPDATE_IMMEDIATE_REQUEST_CODE
-        )
+        Log.e("AppUpdateChecker", "requestImmediateUpdate called")
+        try {
+            appUpdateManager.startUpdateFlowForResult(
+                appUpdateInfo,
+                AppUpdateType.IMMEDIATE,
+                activity,
+                APP_UPDATE_IMMEDIATE_REQUEST_CODE
+            )
+        } catch (e: Exception) {
+            Log.e("AppUpdateChecker", "requestImmediateUpdate called, exception")
+            Log.e("AppUpdateChecker", e.message.toString())
+        }
     }
 
     fun requestFlexibleUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
-        appUpdateManager.startUpdateFlowForResult(
-            appUpdateInfo,
-            AppUpdateType.FLEXIBLE,
-            activity,
-            APP_UPDATE_FLEXIBLE_REQUEST_CODE
-        )
+        Log.e("AppUpdateChecker", "requestFlexibleUpdate called")
+        try {
+            appUpdateManager.startUpdateFlowForResult(
+                appUpdateInfo,
+                AppUpdateType.FLEXIBLE,
+                activity,
+                APP_UPDATE_FLEXIBLE_REQUEST_CODE
+            )
+        } catch (e: Exception) {
+            Log.e("AppUpdateChecker", "requestFlexibleUpdate called, exception")
+            Log.e("AppUpdateChecker", e.message.toString())
+        }
     }
 
     fun isImmediateUpdateInProgress(appUpdateInfo: AppUpdateInfo): Boolean {
