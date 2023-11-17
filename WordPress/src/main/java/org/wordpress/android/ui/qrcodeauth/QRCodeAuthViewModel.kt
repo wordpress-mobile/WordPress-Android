@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthError
 import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore
 import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore.QRCodeAuthResult
 import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore.QRCodeAuthValidateResult
+import org.wordpress.android.ui.barcodescanner.CodeScannerStatus
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
@@ -123,15 +124,31 @@ class QRCodeAuthViewModel @Inject constructor(
         }
     }
 
+    fun handleScanningResult(status: CodeScannerStatus) {
+        when (status) {
+            is CodeScannerStatus.Success -> onScanSuccess(status.code)
+            is CodeScannerStatus.Failure -> onScanFailure()
+            is CodeScannerStatus.Exit -> onExit()
+            is CodeScannerStatus.NavigateUp -> onBackPressed()
+        }
+    }
+
     //  https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=asdfadsfa&data=asdfasdf
     fun onScanSuccess(scannedValue: String?) {
-        track(Stat.QRLOGIN_SCANNER_SCANNED_CODE)
+        // todo: annmarie track properly
+        // track(Stat.QRLOGIN_SCANNER_SCANNED_CODE)
         process(scannedValue)
     }
 
     fun onScanFailure() {
-        // Note: This is a result of the tap on "X" within the scanner view
-        track(Stat.QRLOGIN_SCANNER_DISMISSED)
+        // todo: annmarie implement the tracking class
+        // track(Stat.QRLOGIN_SCANNER_DISMISSED)
+        postActionEvent(FinishActivity)
+    }
+
+    private fun onExit() {
+        // todo: annmarie - this was an exit because of permissions track properly
+        // track(Stat.QRLOGIN_SCANNER_DISMISSED)
         postActionEvent(FinishActivity)
     }
 
@@ -140,17 +157,19 @@ class QRCodeAuthViewModel @Inject constructor(
     }
 
     private fun onCancelClicked() {
-        track(Stat.QRLOGIN_VERIFY_CANCELLED)
+        // todo: annmarie - this is the dialog cancelled by user
+        // track(Stat.QRLOGIN_VERIFY_CANCELLED)
         postActionEvent(FinishActivity)
     }
 
     private fun onScanAgainClicked() {
-        track(Stat.QRLOGIN_VERIFY_SCAN_AGAIN)
+        // todo: annmarie - this is the dialog - qrcode verify scan again
+        // track(Stat.QRLOGIN_VERIFY_SCAN_AGAIN)
         postActionEvent(LaunchScanner)
     }
 
     private fun onDismissClicked() {
-        track(Stat.QRLOGIN_VERIFY_DISMISS)
+        // track(Stat.QRLOGIN_VERIFY_DISMISS)
         postActionEvent(FinishActivity)
     }
 
@@ -290,8 +309,8 @@ class QRCodeAuthViewModel @Inject constructor(
     fun onDialogInteraction(interaction: DialogInteraction) {
         when (interaction) {
             is Positive -> postActionEvent(FinishActivity)
-            is Negative -> Unit
-            is Dismissed -> Unit
+            is Negative -> onScanAgainClicked()
+            is Dismissed -> onScanAgainClicked()
         }
     }
 
