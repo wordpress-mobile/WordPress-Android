@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-16 22:27:10+0000
+Translation-Revision-Date: 2023-10-31 16:40:30+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_s_block_converted_to_blocks">Блок \'%s\' сконвертирован в блоки</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Альтернативно вы можете конвертировать содержимое в блоки.</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Добавить или удалить ярлыки</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Неактивные ярлыки</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">Активные ярлыки</string>
+    <string name="personalization_screen_shortcuts_tab_title">Ярлыки</string>
+    <string name="personalization_screen_cards_tab_title">Карточки</string>
+    <string name="purchase_domain_screen_discount_notice">* Бесплатный домен на один год доступен со всеми тарифными планами с ежегодной оплатой.</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">Выберите сайт</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">Использовать с уже имеющимся сайтом.</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">Существующий сайт WordPress.com</string>
+    <string name="purchase_domain_screen_new_domain_card_button">Получить домен</string>
+    <string name="purchase_domain_screen_new_domain_card_description">Добавить сайт позже.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">Просто купить домен</string>
+    <string name="purchase_domain_screen_description">Не волнуйтесь, вы сможете с лёгкостью добавить сайт позже.</string>
+    <string name="purchase_domain_screen_header_double_line">Выберите как\nвы используете домен</string>
+    <string name="purchase_domain_screen_header_single_line">Выберите, как вы будете использовать ваш домен</string>
+    <string name="purchase_domain_screen_title">Купить домен</string>
+    <string name="domain_management_empty_find_domain">Найти домен</string>
+    <string name="domain_management_empty_subtitle">Нажмите ниже, чтобы найти ваш идеальный домен.</string>
+    <string name="domain_management_empty_title">У вас еще нет доменов</string>
+    <string name="domain_management_error_subtitle">Убедитесь, что вы онлайн, и обновите.</string>
+    <string name="domain_management_error_title">Не удалось обновить</string>
+    <string name="domain_management_open_domain_details">Открыть подробности по домену</string>
+    <string name="domain_management_search_your_domains">Поиск среди ваших доменов</string>
+    <string name="domain_management_purchase_a_domain">Купить домен</string>
+    <string name="domain_management_my_domains_title">Мои домены</string>
+    <string name="domain_management_expires">Истекает %1$s</string>
     <string name="account_and_settings">Учетная запись и настройки</string>
     <string name="site_creation_plans_selection_title">Выберите тарифный план</string>
     <string name="site_creation_domain_free_with_annual_plan">Бесплатно на первый год при покупке любого годового тарифного плана</string>
@@ -35,9 +63,9 @@ Language: ru
     <string name="personalization_screen_draft_posts_card_description">Ваши недавние черновики записей.</string>
     <string name="personalization_screen_draft_posts_card_title">Черновики записей</string>
     <string name="personalization_screen_stats_card_description">Просмотры, посетители и отметки \"нравится\"</string>
-    <string name="personalization_screen_footer_cards">На карточках может отображаться разное содержимое в зависимости от того, что происходит с вашим сайтом</string>
-    <string name="personalization_screen_description">Добавление и скрытие карточек</string>
-    <string name="personalization_screen_title">Настроить домашнюю вкладку</string>
+    <string name="personalization_screen_tab_cards_footer_cards">На карточках может отображаться разное содержимое в зависимости от того, что происходит с вашим сайтом</string>
+    <string name="personalization_screen_tab_cards_description">Добавление и скрытие карточек</string>
+    <string name="personalization_screen_title"> Настроить домашнюю вкладку</string>
     <string name="personalize_card_content_description">Нажмите для настройки домашней вкладки</string>
     <string name="personalize_card_text">Настроить домашнюю вкладку</string>
     <string name="partial_media_access_prompt_change_settings">Изменить настройки</string>

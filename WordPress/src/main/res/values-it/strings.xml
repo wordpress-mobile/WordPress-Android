@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-26 19:16:38+0000
+Translation-Revision-Date: 2023-11-02 13:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_s_block_converted_to_blocks">Blocco \"%s\" convertito in blocchi</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">In alternativa, puoi convertire i contenuti in blocchi.</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Aggiungi o rimuovi scorciatoie</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Scorciatoie non attive</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">Scorciatoie attive</string>
+    <string name="personalization_screen_shortcuts_tab_title">Scorciatoie</string>
+    <string name="personalization_screen_cards_tab_title">Schede</string>
+    <string name="purchase_domain_screen_discount_notice">*Dominio gratuito per un anno incluso in tutti i piani annuali a pagamento.</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">Scegli un sito</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">Usa con un sito già esistente.</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">Sito WordPress.com esistente</string>
+    <string name="purchase_domain_screen_new_domain_card_button">Ottieni un dominio</string>
+    <string name="purchase_domain_screen_new_domain_card_description">Aggiungi un sito in seguito.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">Acquista un dominio</string>
+    <string name="purchase_domain_screen_description">Non preoccuparti, puoi facilmente aggiungere un sito più tardi.</string>
+    <string name="purchase_domain_screen_header_double_line">Scegli come\nusare il tuo dominio</string>
+    <string name="purchase_domain_screen_header_single_line">Scegli come usare il tuo dominio</string>
+    <string name="purchase_domain_screen_title">Acquista un dominio</string>
+    <string name="domain_management_empty_find_domain">Scegli un dominio</string>
+    <string name="domain_management_empty_subtitle">Tocca qui sotto per trovare il dominio perfetto.</string>
+    <string name="domain_management_empty_title">Non disponi di un dominio</string>
+    <string name="domain_management_error_subtitle">Verifica di essere online e aggiorna.</string>
+    <string name="domain_management_error_title">Impossibile effettuare l\'aggiornamento</string>
+    <string name="domain_management_open_domain_details">Apri dettagli del dominio</string>
+    <string name="domain_management_search_your_domains">Cerca domini</string>
+    <string name="domain_management_purchase_a_domain">Acquista un dominio</string>
+    <string name="domain_management_my_domains_title">I miei domini</string>
+    <string name="domain_management_expires">Scade il giorno %1$s</string>
     <string name="account_and_settings">Account e impostazioni</string>
     <string name="site_creation_plans_selection_title">Seleziona un piano</string>
     <string name="site_creation_domain_free_with_annual_plan">Gratis per il primo anno con piani annuali a pagamento</string>
@@ -35,9 +63,6 @@ Language: it
     <string name="personalization_screen_draft_posts_card_description">I tuoi articoli in bozza recenti.</string>
     <string name="personalization_screen_draft_posts_card_title">Articoli in bozza</string>
     <string name="personalization_screen_stats_card_description">Visualizzazioni, visitatori e mi piace</string>
-    <string name="personalization_screen_footer_cards">Le schede possono mostrare contenuti diversi a seconda di ciò che sta accadendo al sito</string>
-    <string name="personalization_screen_description">Aggiungi o nascondi schede</string>
-    <string name="personalization_screen_title">Personalizza la scheda home</string>
     <string name="personalize_card_content_description">Tocca per personalizzare la scheda home</string>
     <string name="personalize_card_text">Personalizza la scheda home</string>
     <string name="partial_media_access_prompt_change_settings">Modifica le impostazioni</string>
@@ -176,7 +201,7 @@ Language: it
     <string name="site_creation_domain_cost_sale">per il primo anno</string>
     <string name="site_creation_error_cart_subtitle">Il tuo sito web è stato creato correttamente, ma abbiamo riscontrato un problema durante la preparazione del dominio personalizzato per il pagamento. Prova di nuovo o contatta il supporto per ricevere assistenza.</string>
     <string name="new_site_creation_preview_caption_paid">Potrebbero essere necessari fino a 30 minuti prima che il tuo dominio personalizzato inizi a funzionare.</string>
-    <string name="new_site_creation_preview_subtitle_paid">Ti abbiamo inviato la ricevuta tramite e-mail. %s</string>
+    <string name="new_site_creation_preview_subtitle_paid">Ti abbiamo inviato la ricevuta tramite email. %s</string>
     <string name="notifications_disabled_permission_dialog">Le notifiche della app sono state disattivate. Tocca qui per attivarle.</string>
     <string name="jp_migration_delete_message">Ti consigliamo di &lt;b&gt;disinstallare l\'app WordPress&lt;/b&gt; sul dispositivo per evitare conflitti di dati.</string>
     <string name="jp_migration_delete_subtitle">Sembra che tu abbia ancora l\'app WordPress installata.</string>

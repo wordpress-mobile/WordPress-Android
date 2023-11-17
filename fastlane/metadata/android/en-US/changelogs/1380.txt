@@ -1,2 +1,0 @@
-In the block editor, you can now split or exit a formatted block by pressing the “enter” key three times.
-The left-hand border is always visible for quote blocks, too, even in block-based themes on dark mode. And you can quote us on that.

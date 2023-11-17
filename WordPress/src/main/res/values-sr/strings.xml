@@ -17,10 +17,8 @@ Language: sr_RS
     <string name="personalization_screen_draft_posts_card_title">Нацрти чланака</string>
     <string name="my_site_dashboard_no_cards_message_title">Све кртице су скривене</string>
     <string name="personalization_screen_stats_card_description">Прегледи, посетиоци и свиђања</string>
-    <string name="personalization_screen_description">Додај или сакриј картице</string>
     <string name="partial_media_access_prompt_select_more">Означи више</string>
     <string name="partial_media_access_prompt_change_settings">Измени подешавања</string>
-    <string name="personalization_screen_title">Персонализуј почетни језичак</string>
     <string name="gutenberg_native_choose_a_file">Одабери датотеку</string>
     <string name="my_site_post_card_menu_view_all_drafts">Види све нацрте</string>
     <string name="my_site_post_card_menu_view_all_scheduled_posts">Види све заказане чланке</string>
