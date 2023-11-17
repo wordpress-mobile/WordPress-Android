@@ -61,8 +61,7 @@ class QRCodeAuthFragment : Fragment() {
     private val resultListener = FragmentResultListener { requestKey, result ->
         if (requestKey == KEY_BARCODE_SCANNING_REQUEST) {
             val resultValue = result.getParcelable<CodeScannerStatus?>(KEY_BARCODE_SCANNING_SCAN_STATUS)
-            // Handle the result value
-            resultValue?.let { onBarcodeScanned(it) }
+            resultValue?.let { qrCodeAuthViewModel.handleScanningResult(it) }
         }
     }
 
@@ -82,8 +81,8 @@ class QRCodeAuthFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initBackPressHandler()
         initViewModel(savedInstanceState)
+        initScannerResultListener()
         observeViewModel()
-        requireActivity().supportFragmentManager.setFragmentResultListener(KEY_BARCODE_SCANNING_REQUEST, viewLifecycleOwner, resultListener)
     }
 
     private fun observeViewModel() {
@@ -99,6 +98,14 @@ class QRCodeAuthFragment : Fragment() {
         } ?: (null to false)
 
         qrCodeAuthViewModel.start(uri, isDeepLink, savedInstanceState)
+    }
+
+    private fun initScannerResultListener() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            KEY_BARCODE_SCANNING_REQUEST,
+            viewLifecycleOwner,
+            resultListener
+        )
     }
 
     private fun handleActionEvents(actionEvent: QRCodeAuthActionEvent) {
@@ -125,8 +132,7 @@ class QRCodeAuthFragment : Fragment() {
 
     private fun launchScanner() {
         qrCodeAuthViewModel.track(Stat.QRLOGIN_SCANNER_DISPLAYED)
-        // Todo: annmarie use the fragment manager to launch the scanner fragment - observe events
-        // state handler, sll sort of other things to concern yourself about
+        // Todo: annmarie you want to do something here, just not sure what yet
         val fragment = BarcodeScanningFragment()
         replaceFragment(fragment)
     }
@@ -147,13 +153,6 @@ class QRCodeAuthFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         qrCodeAuthViewModel.writeToBundle(outState)
         super.onSaveInstanceState(outState)
-    }
-
-    private fun onBarcodeScanned(status: CodeScannerStatus) {
-        when (status) {
-            is CodeScannerStatus.Success -> qrCodeAuthViewModel.onScanSuccess(status.code)
-            is CodeScannerStatus.Failure -> qrCodeAuthViewModel.onScanFailure()
-        }
     }
 }
 
