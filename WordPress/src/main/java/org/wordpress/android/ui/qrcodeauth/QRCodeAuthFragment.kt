@@ -124,7 +124,8 @@ class QRCodeAuthFragment : Fragment() {
                 getString(model.message),
                 getString(model.positiveButtonLabel),
                 model.negativeButtonLabel?.let { label -> getString(label) },
-                model.cancelButtonLabel?.let { label -> getString(label) }
+                model.cancelButtonLabel?.let { label -> getString(label) },
+                false
             )
         )
     }
