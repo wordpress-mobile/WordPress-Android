@@ -149,8 +149,7 @@ class QRCodeAuthViewModel @Inject constructor(
     }
 
     private fun onExit() {
-        // Exit happens when the user does not give permission for the scanner to access the camera
-        track(Stat.QRLOGIN_SCANNER_DISMISSED)
+        track(Stat.QRLOGIN_SCANNER_DISMISSED_CAMERA_PERMISSION_DENIED)
         postActionEvent(FinishActivity)
     }
 
@@ -308,7 +307,10 @@ class QRCodeAuthViewModel @Inject constructor(
 
     fun onDialogInteraction(interaction: DialogInteraction) {
         when (interaction) {
-            is Positive -> postActionEvent(FinishActivity)
+            is Positive -> {
+                track(Stat.QRLOGIN_SCANNER_DISMISSED)
+                postActionEvent(FinishActivity)
+            }
             is Negative -> onScanAgainClicked()
             is Dismissed -> Unit
         }
