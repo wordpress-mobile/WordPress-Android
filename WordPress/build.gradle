@@ -420,7 +420,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-process:$androidxLifecycleVersion"
     implementation "com.android.volley:volley:$androidVolleyVersion"
     implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
-    implementation "com.google.android.gms:play-services-code-scanner:$googlePlayServicesCodeScannerVersion"
     implementation "com.google.mlkit:barcode-scanning-common:$googleMLKitBarcodeScanningVersion"
     implementation "com.google.mlkit:text-recognition:$mlkitTextRecognitionVersion"
     implementation "com.google.mlkit:barcode-scanning:$mlkitBarcodeScanningVersion"
