@@ -37,12 +37,38 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
             Log.e("AppUpdateChecker", appUpdateInfo.toString())
             Log.e("AppUpdateChecker", appUpdateInfo.updateAvailability().toString())
             Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, success")
-            if (isImmediateUpdateNecessary(appUpdateInfo)) {
-                requestImmediateUpdate(appUpdateInfo, activity)
-            } else if (isFlexibleUpdateNecessary(appUpdateInfo)) {
-                requestFlexibleUpdate(appUpdateInfo, activity)
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_NOT_AVAILABLE) {
+                Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, no update available")
+            } else if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
+                Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, update available")
+                if (isImmediateUpdateNecessary(appUpdateInfo)) {
+                    Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, immediate update")
+                    requestImmediateUpdate(appUpdateInfo, activity)
+                } else {
+                    Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, flexible update")
+                    requestFlexibleUpdate(appUpdateInfo, activity)
+                }
+            } else if (
+                appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+            ) {
+                Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, update in progress")
+                if (isImmediateUpdateInProgress(appUpdateInfo)) {
+                    Log.e(
+                        "AppUpdateChecker",
+                        "checkPlayStoreUpdate called, checcking update, immediate update in progress"
+                    )
+                    requestImmediateUpdate(appUpdateInfo, activity)
+                } else if (isFlexibleUpdateInProgress(appUpdateInfo)) {
+                    Log.e(
+                        "AppUpdateChecker",
+                        "checkPlayStoreUpdate called, checcking update, flexible update in progress"
+                    )
+                    requestFlexibleUpdate(appUpdateInfo, activity)
+                }
+            } else {
+                Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, update available")
+                return@addOnSuccessListener
             }
-            requestFlexibleUpdate(appUpdateInfo, activity)
         }
 
         appUpdateInfoTask.addOnFailureListener { exception ->
@@ -52,8 +78,7 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
     }
 
     private fun isImmediateUpdateNecessary(appUpdateInfo: AppUpdateInfo): Boolean {
-        return appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                && (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
+        return (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
                 && isUpdatePriorityHigh(appUpdateInfo)) || isClientVersionOlderThanThreshold(
             appUpdateInfo
         )
@@ -66,12 +91,6 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
     private fun isClientVersionOlderThanThreshold(appUpdateInfo: AppUpdateInfo): Boolean {
         return (appUpdateInfo.clientVersionStalenessDays()
             ?: -1) >= MAXIMUM_THRESHOLD_FOR_FLEXIBLE_UPDATES
-    }
-
-    private fun isFlexibleUpdateNecessary(appUpdateInfo: AppUpdateInfo): Boolean {
-        return appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
-                && !isUpdatePriorityHigh(appUpdateInfo)
     }
 
     fun requestImmediateUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
