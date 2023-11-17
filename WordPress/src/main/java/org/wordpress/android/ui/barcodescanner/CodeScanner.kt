@@ -17,6 +17,10 @@ sealed class CodeScannerStatus : Parcelable {
         val error: String?,
         val type: CodeScanningErrorType
     ) : CodeScannerStatus()
+    @Parcelize
+    data object NavigateUp : CodeScannerStatus()
+    @Parcelize
+    data object Exit : CodeScannerStatus()
 }
 
 sealed class CodeScanningErrorType : Parcelable {
