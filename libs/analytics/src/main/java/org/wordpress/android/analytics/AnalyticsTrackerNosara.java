@@ -2667,6 +2667,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "barcode_scanning_success";
             case BARCODE_SCANNING_FAILURE:
                 return "barcode_scanning_failure";
+            case QRLOGIN_SCANNER_DISMISSED_CAMERA_PERMISSION_DENIED:
+                return "qrlogin_scanner_dismissed_camera_permission_denied";
         }
         return null;
     }

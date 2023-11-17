@@ -1091,6 +1091,7 @@ public final class AnalyticsTracker {
         LOGIN_SECURITY_KEY_CLICKED,
         BARCODE_SCANNING_SUCCESS,
         BARCODE_SCANNING_FAILURE,
+        QRLOGIN_SCANNER_DISMISSED_CAMERA_PERMISSION_DENIED,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
