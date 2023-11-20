@@ -100,6 +100,7 @@ public class AccountRestClient extends BaseWPComRestClient {
             this.twoStepNonceAuthenticator = response.two_step_nonce_authenticator;
             this.twoStepNonceBackup = response.two_step_nonce_backup;
             this.twoStepNonceSms = response.two_step_nonce_sms;
+            this.twoStepNonceWebauthn = response.two_step_nonce_webauthn;
             this.twoStepNotificationSent = response.two_step_notification_sent;
             this.twoStepTypes = convertJsonArrayToStringList(response.two_step_supported_auth_types);
             this.userId = response.user_id;
@@ -114,6 +115,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         public String twoStepNonceAuthenticator;
         public String twoStepNonceBackup;
         public String twoStepNonceSms;
+        public String twoStepNonceWebauthn;
         public String twoStepNotificationSent;
         public String userId;
         public String userName;
