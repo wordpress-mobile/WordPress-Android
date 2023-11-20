@@ -158,7 +158,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
     public static Login2FaFragment newInstanceSocial(String emailAddress, String userId,
                                                      String nonceAuthenticator, String nonceBackup,
-                                                     String nonceSms) {
+                                                     String nonceSms, String nonceWebauthn,
+                                                     List<String> authTypes) {
         Login2FaFragment fragment = new Login2FaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
@@ -166,9 +167,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         args.putString(ARG_2FA_NONCE_AUTHENTICATOR, nonceAuthenticator);
         args.putString(ARG_2FA_NONCE_BACKUP, nonceBackup);
         args.putString(ARG_2FA_NONCE_SMS, nonceSms);
+        args.putString(ARG_WEBAUTHN_NONCE, nonceWebauthn);
         args.putBoolean(ARG_2FA_IS_SOCIAL, true);
         // Social account connected, connect call not needed.
         args.putBoolean(ARG_2FA_IS_SOCIAL_CONNECT, false);
+        args.putStringArrayList(ARG_2FA_SUPPORTED_AUTH_TYPES, new ArrayList<>(authTypes));
         fragment.setArguments(args);
         return fragment;
     }

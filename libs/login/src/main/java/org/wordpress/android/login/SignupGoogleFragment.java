@@ -269,7 +269,7 @@ public class SignupGoogleFragment extends GoogleFragment {
             AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - 2fa required");
             mAnalyticsListener.trackSignupSocialToLogin();
             mLoginListener.needs2faSocial(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup,
-                    event.nonceSms);
+                    event.nonceSms, event.nonceWebauthn, event.twoStepTypes);
             finishFlow();
         } else {
             AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - google login success");
