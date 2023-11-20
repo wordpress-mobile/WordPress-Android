@@ -64,6 +64,16 @@ class SiteCreationPlansViewModel @Inject constructor(
         postUiState(SiteCreationPlansUiState.GenericError(this@SiteCreationPlansViewModel::launchPlans))
     }
 
+    fun onCalypsoError() {
+        val planModel = PlanModel(
+            productId = 0,
+            productSlug = "",
+            isCurrentPlan = false,
+            hasDomainCredit = false
+        )
+        postActionEvent(SiteCreationPlansActionEvent.CreateSite(planModel, ""))
+    }
+
     private fun showPlans() {
         postUiState(SiteCreationPlansUiState.Preparing)
         if (!checkForInternetConnectivityAndPostErrorIfNeeded()) return
