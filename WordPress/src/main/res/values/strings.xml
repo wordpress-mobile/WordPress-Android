@@ -2722,6 +2722,7 @@
     <string name="domain_management_empty_subtitle">Tap below to find your perfect domain.</string>
     <string name="domain_management_empty_find_domain">Find a domain</string>
     <string name="domain_management_site_domains_button">All</string>
+    <string name="domain_management_clear_search">Clear search</string>
 
     <!-- Domain Management - Purchase Domain Screen -->
     <string name="purchase_domain_screen_title">Purchase Domain</string>
