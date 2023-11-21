@@ -2535,11 +2535,11 @@ Language: es_VE
     <string name="editor_post_saved_online">La entrada se ha guardado online</string>
     <string name="site_settings_image_quality_hint">Calidad de las imágenes: cuanto más alto es el valor, más calidad tienen las imágenes.</string>
     <string name="site_settings_optimize_images_summary">Activa la opción para cambiar el tamaño de las imágenes y comprimirlas</string>
-    <string name="media_encoder_quality_100">Máxima</string>
-    <string name="media_encoder_quality_95">Muy alta</string>
-    <string name="media_encoder_quality_90">Alta</string>
-    <string name="media_encoder_quality_85">Media</string>
-    <string name="media_encoder_quality_80">Baja</string>
+    <string name="media_encoder_quality_maximum">Máxima</string>
+    <string name="media_encoder_quality_very_high">Muy alta</string>
+    <string name="media_encoder_quality_high">Alta</string>
+    <string name="media_encoder_quality_medium">Media</string>
+    <string name="media_encoder_quality_low">Baja</string>
     <string name="media_upload_state_uploaded">Subido</string>
     <string name="media_upload_state_failed">Fallo al subir</string>
     <string name="media_upload_state_deleted">Se ha eliminado</string>

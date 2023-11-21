@@ -356,11 +356,11 @@
     </string-array>
 
     <string-array name="site_settings_image_quality_entries" translatable="false">
-        <item>@string/media_encoder_quality_80</item>
-        <item>@string/media_encoder_quality_85</item>
-        <item>@string/media_encoder_quality_90</item>
-        <item>@string/media_encoder_quality_95</item>
-        <item>@string/media_encoder_quality_100</item>
+        <item>@string/media_encoder_quality_low</item>
+        <item>@string/media_encoder_quality_medium</item>
+        <item>@string/media_encoder_quality_high</item>
+        <item>@string/media_encoder_quality_very_high</item>
+        <item>@string/media_encoder_quality_maximum</item>
     </string-array>
 
     <string-array name="site_settings_image_quality_values" translatable="false">
@@ -386,11 +386,11 @@
     </string-array>
 
     <string-array name="site_settings_video_bitrate_entries" translatable="false">
-        <item>@string/media_encoder_quality_80</item>
-        <item>@string/media_encoder_quality_85</item>
-        <item>@string/media_encoder_quality_90</item>
-        <item>@string/media_encoder_quality_95</item>
-        <item>@string/media_encoder_quality_100</item>
+        <item>@string/media_encoder_quality_low</item>
+        <item>@string/media_encoder_quality_medium</item>
+        <item>@string/media_encoder_quality_high</item>
+        <item>@string/media_encoder_quality_very_high</item>
+        <item>@string/media_encoder_quality_maximum</item>
     </string-array>
 
     <string-array name="site_settings_video_bitrate_values" translatable="false">
