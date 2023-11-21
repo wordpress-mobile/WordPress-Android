@@ -1,5 +1,6 @@
 package org.wordpress.android.localcontentmigration
 
+import android.util.Log
 import com.wellsql.generated.PostModelTable
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.LocalDraftContentIsPresent
@@ -19,11 +20,14 @@ class LocalEligibilityStatusProviderHelper @Inject constructor(
     // TODO: check for eligibility of media? - I guess this might be covered by posts and pages - except for
     // media that is not part of a post or page ??
     override fun getData(localEntityId: Int?): LocalContentEntityData {
-        val (eligibleSites) = localMigrationSiteProviderHelper.getData()
+        val sitesData = localMigrationSiteProviderHelper.getData()
+        if (!sitesData.isLoggedOn) {
+            return EligibilityStatusData(false, WPNotLoggedIn)
+        }
         return when {
-            eligibleSites.isEmpty() -> EligibilityStatusData(false, WPNotLoggedIn)
+            sitesData.sites.isEmpty() -> EligibilityStatusData(true)
             else -> when {
-                eligibleSites.flatMap(::getLocalDraftPostAndPageIdsForSite).isNotEmpty() ->
+                sitesData.sites.flatMap(::getLocalDraftPostAndPageIdsForSite).isNotEmpty() ->
                     EligibilityStatusData(false, LocalDraftContentIsPresent)
                 else -> EligibilityStatusData(true)
             }
