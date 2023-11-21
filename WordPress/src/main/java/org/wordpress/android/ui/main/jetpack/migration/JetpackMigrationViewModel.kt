@@ -338,7 +338,9 @@ class JetpackMigrationViewModel @Inject constructor(
     private fun onFinishClicked() {
         _refreshAppTheme.value = Unit
         migrationAnalyticsTracker.trackThanksScreenFinishButtonTapped()
-        migrationEmailHelper.notifyMigrationComplete()
+         if (siteStore.sites.isNotEmpty()) {
+            migrationEmailHelper.notifyMigrationComplete()
+        }
         appPrefsWrapper.setJetpackMigrationCompleted(true)
         appPrefsWrapper.setJetpackMigrationInProgress(false)
         dispatchFetchAccountActionIfNeeded()
@@ -400,10 +402,10 @@ class JetpackMigrationViewModel @Inject constructor(
                 title = UiStringRes(R.string.jp_migration_welcome_title),
                 subtitle = UiStringRes(R.string.jp_migration_welcome_subtitle),
                 message = UiStringRes(
-                    if (sites.size > 1) {
-                        R.string.jp_migration_welcome_sites_found_message
-                    } else {
-                        R.string.jp_migration_welcome_site_found_message
+                    when (sites.size) {
+                        0 -> R.string.jp_migration_welcome_no_sites_message
+                        1 -> R.string.jp_migration_welcome_site_found_message
+                        else -> R.string.jp_migration_welcome_sites_found_message
                     }
                 ),
             )
