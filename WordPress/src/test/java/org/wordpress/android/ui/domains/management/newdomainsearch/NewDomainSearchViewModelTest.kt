@@ -10,9 +10,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.doSuspendableAnswer
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -68,15 +66,7 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
         viewModel.onDomainTapped(domain)
         advanceUntilIdle()
 
-        verify(analyticsTracker)
-            .track(
-                eq(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_SEARCH_DOMAIN_TAPPED),
-                argWhere<Map<String, Any?>> {
-                    assertThat(it).hasSize(1)
-                    assertThat(it).containsEntry("domain_name", "test.com")
-                    true
-                }
-            )
+        verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_SEARCH_DOMAIN_TAPPED)
     }
 
     @Test
