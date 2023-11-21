@@ -50,7 +50,7 @@ fun DomainsSearchTextField(
                 IconButton(onClick = { onValueChange("") }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_cross_in_circle_white_24dp),
-                        contentDescription = "",
+                        contentDescription = stringResource(R.string.domain_management_clear_search),
                         tint = MaterialTheme.colorScheme.outline,
                     )
                 }
