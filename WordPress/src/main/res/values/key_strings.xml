@@ -364,8 +364,8 @@
     </string-array>
 
     <string-array name="site_settings_image_quality_values" translatable="false">
+        <item>70</item>
         <item>80</item>
-        <item>85</item>
         <item>90</item>
         <item>95</item>
         <item>100</item>
