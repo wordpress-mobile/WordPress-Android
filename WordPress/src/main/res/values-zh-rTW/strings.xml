@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-19 13:54:29+0000
+Translation-Revision-Date: 2023-11-02 13:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_s_block_converted_to_blocks">\'%s\' 個區塊已轉換成區塊</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">此外，您也可以將內容轉換成區塊。</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">新增或移除捷徑</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">未啟用捷徑</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">啟用中捷徑</string>
+    <string name="personalization_screen_shortcuts_tab_title">捷徑</string>
+    <string name="personalization_screen_cards_tab_title">卡片</string>
+    <string name="purchase_domain_screen_discount_notice">所有已支付年費方案皆隨附一年免費網域。</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">選擇網站</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">使用您已開始經營的網站。</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">現有的 WordPress.com 網站</string>
+    <string name="purchase_domain_screen_new_domain_card_button">取得網域</string>
+    <string name="purchase_domain_screen_new_domain_card_description">稍後新增網站。</string>
+    <string name="purchase_domain_screen_new_domain_card_title">單純購買網域</string>
+    <string name="purchase_domain_screen_description">別擔心，您之後也能輕易地新增網站。</string>
+    <string name="purchase_domain_screen_header_double_line">選擇如何\n使用您的網域</string>
+    <string name="purchase_domain_screen_header_single_line">選擇您網域的使用方式。</string>
+    <string name="purchase_domain_screen_title">購買網域</string>
+    <string name="domain_management_empty_find_domain">尋找網域</string>
+    <string name="domain_management_empty_subtitle">點選以下以發現您的完美網域名稱。</string>
+    <string name="domain_management_empty_title">您沒有任何網域。</string>
+    <string name="domain_management_error_subtitle">請確認您為上線狀態再重新整理。</string>
+    <string name="domain_management_error_title">無法更新。</string>
+    <string name="domain_management_open_domain_details">開啟網域詳細資料</string>
+    <string name="domain_management_search_your_domains">搜尋您的網域</string>
+    <string name="domain_management_purchase_a_domain">購買網域</string>
+    <string name="domain_management_my_domains_title">我的網域</string>
+    <string name="domain_management_expires">有效期限%1$s</string>
     <string name="account_and_settings">帳號與設定</string>
     <string name="site_creation_plans_selection_title">選取方案</string>
     <string name="site_creation_domain_free_with_annual_plan">選購任何年繳方案，第一年完全免費</string>
@@ -35,9 +63,7 @@ Language: zh_TW
     <string name="personalization_screen_draft_posts_card_description">你近期的草稿文章。</string>
     <string name="personalization_screen_draft_posts_card_title">草稿文章</string>
     <string name="personalization_screen_stats_card_description">點閱數、訪客數與按讚數</string>
-    <string name="personalization_screen_footer_cards">卡片可根據網站活動顯示不同內容</string>
-    <string name="personalization_screen_description">新增或隱藏卡片</string>
-    <string name="personalization_screen_title">打造個人版首頁分頁</string>
+    <string name="personalization_screen_tab_cards_footer_cards">卡片可根據您的網站活動顯示不同內容</string>
     <string name="personalize_card_content_description">點選以打造個人化「首頁」分頁</string>
     <string name="personalize_card_text">打造你的個人化「首頁」分頁</string>
     <string name="partial_media_access_prompt_change_settings">變更設定</string>

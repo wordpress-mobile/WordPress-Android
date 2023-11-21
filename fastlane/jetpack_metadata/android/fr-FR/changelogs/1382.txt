@@ -1,0 +1,5 @@
+23.6 :
+- Nouvelles options de domaine/plan et nouveaux écrans de validation de la commande lors du processus de création de site
+- La navigation sur Mon site propose des liens vers les sections fréquemment utilisées
+- Les icônes de réseaux sociaux inactives et les URL de compositions synchronisées sont visibles en mode sombre avec les thèmes reposant sur les blocs
+- Le contenu peut être converti en blocs dans l’éditeur classique

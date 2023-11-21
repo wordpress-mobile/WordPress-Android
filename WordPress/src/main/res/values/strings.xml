@@ -3016,7 +3016,7 @@
     <string name="get_started" tools:ignore="UnusedResources" a8c-src-lib="login">Get Started</string>
     <string name="next">Next</string>
     <string name="check_email" tools:ignore="UnusedResources" a8c-src-lib="login">Check email</string>
-    <string name="enter_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Almost there! Please enter the verification code from your Authenticator app.</string>
+    <string name="enter_verification_code" tools:ignore="UnusedResources" a8c-src-lib="login">Almost there! Please enter the verification code for WordPress.com from your authenticator app.</string>
     <string name="enter_verification_code_sms" tools:ignore="UnusedResources" a8c-src-lib="login">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
     <string name="login_text_otp" tools:ignore="UnusedResources" a8c-src-lib="login">Text me a code instead</string>
     <string name="login_text_otp_another" tools:ignore="UnusedResources" a8c-src-lib="login">Text me another code instead</string>
@@ -4797,4 +4797,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="account_and_settings">Account and Settings</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can convert the content to blocks.</string>
     <string name="gutenberg_native_s_block_converted_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">\'%s\' block converted to blocks</string>
+    <string name="login_text_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">Use a security key</string>
+    <string name="login_error_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">There was some trouble with the Security key login</string>
+    <string name="notification_security_key_needed" tools:ignore="UnusedResources" a8c-src-lib="login">Please provide your security key to continue.</string>
 </resources>

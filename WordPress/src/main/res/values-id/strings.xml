@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-18 12:54:08+0000
+Translation-Revision-Date: 2023-11-02 09:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_s_block_converted_to_blocks">Blok \'%s\' dikonversi menjadi blok</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Anda dapat mengonversi konten menjadi blok.</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Tambah atau Hapus pintasan</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Pintasan Tidak Aktif</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">Pintasan Aktif</string>
+    <string name="personalization_screen_shortcuts_tab_title">Pintasan</string>
+    <string name="personalization_screen_cards_tab_title">Kartu</string>
+    <string name="purchase_domain_screen_discount_notice">*Domain gratis selama setahun dalam semua paket tahunan berbayar.</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">Pilih Situs</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">Gunakan dengan situs yang sudah Anda buat.</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">Situs WordPress.com yang sudah ada</string>
+    <string name="purchase_domain_screen_new_domain_card_button">Dapatkan Domain</string>
+    <string name="purchase_domain_screen_new_domain_card_description">Tambahkan situs nanti.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">Beli domain saja</string>
+    <string name="purchase_domain_screen_description">Jangan khawatir. Anda bisa dengan mudah menambahkan situs di lain waktu.</string>
+    <string name="purchase_domain_screen_header_double_line">Pilih cara\nmenggunakan domain Anda</string>
+    <string name="purchase_domain_screen_header_single_line">Pilih cara menggunakan domain</string>
+    <string name="purchase_domain_screen_title">Beli Domain</string>
+    <string name="domain_management_empty_find_domain">Cari domain</string>
+    <string name="domain_management_empty_subtitle">Ketuk di bawah untuk mencari domain ideal.</string>
+    <string name="domain_management_empty_title">Anda belum memiliki domain</string>
+    <string name="domain_management_error_subtitle">Periksa apakah Anda online dan segarkan.</string>
+    <string name="domain_management_error_title">Tidak Dapat Memperbarui</string>
+    <string name="domain_management_open_domain_details">Buka detail domain</string>
+    <string name="domain_management_search_your_domains">Cari domain</string>
+    <string name="domain_management_purchase_a_domain">Beli domain</string>
+    <string name="domain_management_my_domains_title">Domain Saya</string>
+    <string name="domain_management_expires">Kedaluwarsa %1$s</string>
     <string name="account_and_settings">Akun dan Pengaturan</string>
     <string name="site_creation_plans_selection_title">Pilih paket</string>
     <string name="site_creation_domain_free_with_annual_plan">Gratis selama satu tahun pertama dengan paket berbayar tahunan</string>
@@ -35,9 +63,6 @@ Language: id
     <string name="personalization_screen_draft_posts_card_description">Konsep pos terbaru Anda.</string>
     <string name="personalization_screen_draft_posts_card_title">Buat konsep pos</string>
     <string name="personalization_screen_stats_card_description">Kunjungan, Pengunjung, dan suka</string>
-    <string name="personalization_screen_footer_cards">Kartu bisa saja menampilkan konten berbeda, tergantung pada apa yang terjadi di situs Anda</string>
-    <string name="personalization_screen_description">Tambahkan atau sembunyikan Kartu</string>
-    <string name="personalization_screen_title">Personalisasikan tab beranda</string>
     <string name="personalize_card_content_description">Ketuk untuk mempersonalisasikan tab beranda Anda</string>
     <string name="personalize_card_text">Personalisasikan tab beranda Anda</string>
     <string name="partial_media_access_prompt_change_settings">Ubah Pengaturan</string>

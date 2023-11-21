@@ -1,0 +1,5 @@
+23.6:
+- Site oluşturma sürecinde yeni alan adı/paket seçenekleri ve ödeme ekranları
+- Site gezinmemde genel bölümlere bağlantılar var
+- Etkin olmayan sosyal simgeler ve Senkronize Edilmiş Desen başlıkları artık karanlık modu kullanan blok tabanlı temalarda görünmez değil.
+- İçerikler, Klasik düzenleyicide bloklara dönüştürülebilir.

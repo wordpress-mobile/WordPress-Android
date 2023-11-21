@@ -1,0 +1,3 @@
+23.6:
+- Inaktive Social-Icons und Titel der synchronisierten Vorlagen sind in blockbasierten Themes nicht länger unsichtbar, wenn der dunkle Modus verwendet wird. Super, oder?
+- Im klassischen Editor kannst du deine Inhalte per Button-Klick in Blöcke umwandeln.

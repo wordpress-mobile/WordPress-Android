@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-18 12:54:08+0000
+Translation-Revision-Date: 2023-11-01 13:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_s_block_converted_to_blocks">\'%s\' block konverterade till block</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Alternativt kan du konvertera innehållet till block.</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Lägg till eller ta bort genvägar</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Inaktiva genvägar</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">Aktiva genvägar</string>
+    <string name="personalization_screen_shortcuts_tab_title">Genvägar</string>
+    <string name="personalization_screen_cards_tab_title">Kort</string>
+    <string name="purchase_domain_screen_discount_notice">*En gratis domän i ett år är inkluderat med alla betalda årliga paket.</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">Välj webbplats</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">Använd med en webbplats du redan startat.</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">Befintlig WordPress.com-webbplats</string>
+    <string name="purchase_domain_screen_new_domain_card_button">Skaffa domän</string>
+    <string name="purchase_domain_screen_new_domain_card_description">Lägg till en webbplats senare.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">Köp bara en domän</string>
+    <string name="purchase_domain_screen_description">Oroa dig inte, du kan enkelt lägga till en webbplats senare.</string>
+    <string name="purchase_domain_screen_header_double_line">Välj hur du vill\nanvända din domän</string>
+    <string name="purchase_domain_screen_header_single_line">Välj hur du vill använda din domän</string>
+    <string name="purchase_domain_screen_title">Köp domän</string>
+    <string name="domain_management_empty_find_domain">Hitta en domän</string>
+    <string name="domain_management_empty_subtitle">Tryck nedan för att hitta din perfekta domän.</string>
+    <string name="domain_management_empty_title">Du har inga domäner</string>
+    <string name="domain_management_error_subtitle">Kontrollera att du är online och uppdatera.</string>
+    <string name="domain_management_error_title">Kunde inte uppdatera</string>
+    <string name="domain_management_open_domain_details">Öppna domändetaljer</string>
+    <string name="domain_management_search_your_domains">Sök dina domäner</string>
+    <string name="domain_management_purchase_a_domain">Köp en domän</string>
+    <string name="domain_management_my_domains_title">Mina domäner</string>
+    <string name="domain_management_expires">Löper ut %1$s</string>
     <string name="account_and_settings">Konto och inställningar</string>
     <string name="site_creation_plans_selection_title">Välj ett paket</string>
     <string name="site_creation_domain_free_with_annual_plan">Gratis första året med årliga betalpaket</string>
@@ -35,9 +63,9 @@ Language: sv_SE
     <string name="personalization_screen_draft_posts_card_description">Dina senaste inläggsutkast.</string>
     <string name="personalization_screen_draft_posts_card_title">Inläggsutkast</string>
     <string name="personalization_screen_stats_card_description">Visningar, besökare och gilla-markeringar</string>
-    <string name="personalization_screen_footer_cards">Kort kan visa olika innehåll beroende på vad som händer med din webbplats</string>
-    <string name="personalization_screen_description"> Visa eller dölj kort</string>
-    <string name="personalization_screen_title">Anpassa Hem-fliken</string>
+    <string name="personalization_screen_tab_cards_footer_cards">Kort kan visa olika innehåll beroende på vad som händer med din webbplats</string>
+    <string name="personalization_screen_tab_cards_description">Lägg till eller dölj kort</string>
+    <string name="personalization_screen_title"> personifiera hem-fliken</string>
     <string name="personalize_card_content_description">Tryck för att anpassa din Hem-flik</string>
     <string name="personalize_card_text">Anpassa din Hem-flik</string>
     <string name="partial_media_access_prompt_change_settings">Ändra inställningar</string>

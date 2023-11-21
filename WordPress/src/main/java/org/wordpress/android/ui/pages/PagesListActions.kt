@@ -71,7 +71,6 @@ enum class PagesListAction(
     PROMOTE_WITH_BLAZE(
         R.string.pages_promote_with_blaze,
         R.drawable.ic_blaze_flame_24dp,
-        0,
         actionGroup = ActionGroup.SHARE_AND_PROMOTE,
         positionInGroup = 2,
     ),

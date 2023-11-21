@@ -1,3 +1,0 @@
-23.5:
-I blockredigeraren kan du nu dela eller lämna ett formaterat block genom att trycka på returtangenten tre gånger.
-Den vänstra kantlinjen är dessutom alltid synlig för citatblock, även i blockbaserade teman i mörkt läge. Och det kan du citera oss på.

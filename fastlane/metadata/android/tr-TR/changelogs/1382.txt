@@ -1,0 +1,3 @@
+23.6:
+- Devre dışı sosyal simgeler ve senkronize model başlıkları artık koyu moddaki blok temelli temalarda görünmez değiller. İyi deneme dostlar ama sandığınız kadar ninja değilsiniz.
+- Klasik düzenleyicide artık içeriklerinizi tek tuş ile bloklara dönüştürebiliyorsunuz.

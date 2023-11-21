@@ -61,7 +61,7 @@ class DashboardCardPersonalizationViewModelSlice @Inject constructor(
     }
 
     private suspend fun getBloggingPromptCardState(): DashboardCardState? {
-        return if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
+        return if (bloggingPromptsSettingsHelper.shouldShowPromptsSetting()) {
             DashboardCardState(
                 title = R.string.personalization_screen_blogging_prompts_card_title,
                 description = R.string.personalization_screen_blogging_prompts_card_description,
@@ -179,9 +179,12 @@ class DashboardCardPersonalizationViewModelSlice @Inject constructor(
 
     private fun updateCardState(cardType: CardType, enabled: Boolean) {
         val currentCards: MutableList<DashboardCardState> = _uiState.value!!.toMutableList()
-        val updated = currentCards.find { it.cardType == cardType }!!.copy(enabled = enabled)
-        currentCards[cardType.order] = updated
-        _uiState.postValue(currentCards)
+        val cardIndex = currentCards.indexOfFirst { it.cardType == cardType }
+        if (cardIndex != -1) {
+            val updated = currentCards[cardIndex].copy(enabled = enabled)
+            currentCards[cardIndex] = updated
+            _uiState.postValue(currentCards)
+        }
     }
 
     private fun isStatsCardShown(siteId: Long) = !appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(siteId)
