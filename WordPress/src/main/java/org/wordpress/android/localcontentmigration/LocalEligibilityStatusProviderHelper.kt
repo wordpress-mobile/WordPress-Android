@@ -1,6 +1,5 @@
 package org.wordpress.android.localcontentmigration
 
-import android.util.Log
 import com.wellsql.generated.PostModelTable
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.localcontentmigration.LocalContentEntityData.Companion.IneligibleReason.LocalDraftContentIsPresent
