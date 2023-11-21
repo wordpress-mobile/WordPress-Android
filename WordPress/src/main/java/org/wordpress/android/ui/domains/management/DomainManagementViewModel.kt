@@ -84,7 +84,6 @@ class DomainManagementViewModel @Inject constructor(
     }
 
     fun onDomainTapped(domain: String, detailUrl: String) {
-        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_DOMAIN_DETAILS_WEB_VIEW_SHOWN)
         launch {
             _actionEvents.emit(ActionEvent.DomainTapped(domain, detailUrl))
         }
