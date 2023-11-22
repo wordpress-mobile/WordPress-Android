@@ -54,8 +54,8 @@ public class WPMediaUtils {
         void onMediaCapturePathReady(String mediaCapturePath);
     }
 
-    // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
-    public static final int OPTIMIZE_IMAGE_MAX_SIZE = 3000;
+    // 3000px is the utmost max resolution you can set in the picker but 2000px is the default max for optimized images.
+    public static final int OPTIMIZE_IMAGE_MAX_SIZE = 2000;
     public static final int OPTIMIZE_IMAGE_ENCODER_QUALITY = 85;
     public static final int OPTIMIZE_VIDEO_MAX_WIDTH = 1280;
     public static final int OPTIMIZE_VIDEO_ENCODER_BITRATE_KB = 3000;
