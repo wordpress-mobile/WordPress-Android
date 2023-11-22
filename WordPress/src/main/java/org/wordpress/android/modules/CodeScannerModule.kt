@@ -35,8 +35,4 @@ class CodeScannerModule {
     @Provides
     @Reusable
     fun providesGoogleBarcodeScanner() = BarcodeScanning.getClient()
-
-    @Provides
-    @Reusable
-    fun provideInputImageProvider() = MediaImageProvider()
 }
