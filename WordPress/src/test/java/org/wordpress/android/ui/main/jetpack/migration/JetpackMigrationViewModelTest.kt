@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
