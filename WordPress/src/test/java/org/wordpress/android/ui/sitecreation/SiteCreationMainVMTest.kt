@@ -200,7 +200,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun `on site created for free domain shows next step`() {
         viewModel.onDomainsScreenFinished(FREE_DOMAIN).run { clearInvocations(wizardManager) }
-        viewModel.onFreeSiteCreated(SITE_MODEL)
+        viewModel.onFreeSiteCreated(SITE_MODEL).run { clearInvocations(wizardManager) }
         viewModel.onPlanSelection(FREE_PLAN, domainName = SITE_SLUG)
         verify(wizardManager).showNextStep()
     }
@@ -208,7 +208,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun `on site created for paid domain does not show next step`() {
         viewModel.onDomainsScreenFinished(PAID_DOMAIN).run { clearInvocations(wizardManager) }
-        viewModel.onFreeSiteCreated(SITE_MODEL)
+        viewModel.onFreeSiteCreated(SITE_MODEL).run { clearInvocations(wizardManager) }
         verifyNoMoreInteractions(wizardManager)
     }
 

@@ -47,12 +47,7 @@ class SiteCreationPlansViewModel @Inject constructor(
         val planSlug = uri.getQueryParameter(PLAN_SLUG_PARAM).orEmpty()
         val domainNameFromRedirectUrl = uri.getQueryParameter(DOMAIN_NAME_PARAM)
 
-        val planModel = PlanModel(
-            productId = planId,
-            productSlug = planSlug,
-            isCurrentPlan = false,
-            hasDomainCredit = false
-        )
+        val planModel = PlanModel(productId = planId, productSlug = planSlug)
         postActionEvent(SiteCreationPlansActionEvent.CreateSite(planModel, domainNameFromRedirectUrl))
     }
 
@@ -62,6 +57,10 @@ class SiteCreationPlansViewModel @Inject constructor(
 
     fun onWebViewError() {
         postUiState(SiteCreationPlansUiState.GenericError(this@SiteCreationPlansViewModel::launchPlans))
+    }
+
+    fun onCalypsoError() {
+        postActionEvent(SiteCreationPlansActionEvent.CreateSite(null, ""))
     }
 
     private fun showPlans() {
@@ -172,5 +171,5 @@ class SiteCreationPlansViewModel @Inject constructor(
 }
 
 sealed class SiteCreationPlansActionEvent {
-    data class CreateSite(val planModel: PlanModel, val domainName: String?) : SiteCreationPlansActionEvent()
+    data class CreateSite(val planModel: PlanModel?, val domainName: String?) : SiteCreationPlansActionEvent()
 }
