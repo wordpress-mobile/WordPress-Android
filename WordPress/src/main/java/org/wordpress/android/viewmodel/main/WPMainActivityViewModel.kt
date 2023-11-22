@@ -185,7 +185,7 @@ class WPMainActivityViewModel @Inject constructor(
                         promptTitle = UiStringText(it.text),
                         isAnswered = prompt.isAnswered,
                         promptId = prompt.id,
-                        attribution = BloggingPromptAttribution.fromString(prompt.attribution),
+                        attribution = BloggingPromptAttribution.fromPrompt(prompt),
                         onClickAction = ::onAnswerPromptActionClicked,
                         onHelpAction = ::onHelpPrompActionClicked
                     )

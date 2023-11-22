@@ -28,7 +28,7 @@ class BloggingPromptCardBuilder @Inject constructor() {
             isAnswered = params.bloggingPrompt.isAnswered,
             promptId = params.bloggingPrompt.id,
             tagUrl = params.bloggingPrompt.answeredLink,
-            attribution = BloggingPromptAttribution.fromString(params.bloggingPrompt.attribution),
+            attribution = BloggingPromptAttribution.fromPrompt(params.bloggingPrompt),
             onShareClick = params.onShareClick,
             onAnswerClick = params.onAnswerClick,
             onSkipClick = params.onSkipClick,
