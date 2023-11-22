@@ -123,14 +123,18 @@ class JetpackMigrationViewModel @Inject constructor(
             }
 
             migrationState is Initial -> emit(Loading)
+
             migrationState is Migrating
-                    || migrationState is Successful && !continueClicked -> emit(
-                initWelcomeScreenUi(migrationState.data, continueClicked)
-            )
+                    || migrationState is Successful && !continueClicked && migrationState.data.sites.isNotEmpty() ->
+                emit(initWelcomeScreenUi(migrationState.data, continueClicked))
 
             migrationState is Successful -> when {
-                !notificationContinueClicked -> emit(initNotificationsScreenUi())
-                else -> emit(initSuccessScreenUi())
+                !notificationContinueClicked && migrationState.data.sites.isNotEmpty() ->
+                    emit(initNotificationsScreenUi())
+                else -> {
+                    if (migrationState.data.sites.isNotEmpty()) emit(initSuccessScreenUi())
+                    else emit(initSuccessScreenUiForNoSites())
+                }
             }
 
             migrationState is Failure -> emit(initErrorScreenUi())
@@ -150,7 +154,9 @@ class JetpackMigrationViewModel @Inject constructor(
         if (showDeleteState) return
 
         this.deepLinkData = deepLinkData
+
         tryMigration(application)
+        // todo: set the flow
     }
 
     private fun resetIfNeeded(application: WordPress) {
@@ -219,6 +225,16 @@ class JetpackMigrationViewModel @Inject constructor(
 
         return Done(
             primaryActionButton = DonePrimaryButton(::onFinishClicked)
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun initSuccessScreenUiForNoSites(): Done {
+        migrationAnalyticsTracker.trackThanksScreenShown()
+
+        return Done(
+            showDeleteWPApp = false,
+            primaryActionButton = ActionButton.DoneNoSitesFlowPrimaryButton(::onFinishClicked)
         )
     }
 
@@ -422,6 +438,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
             data class Done(
                 override val primaryActionButton: ActionButton,
+                val showDeleteWPApp: Boolean = true
             ) : Content(
                 primaryActionButton = primaryActionButton,
                 screenIconRes = R.drawable.ic_jetpack_migration_success,
@@ -430,6 +447,7 @@ class JetpackMigrationViewModel @Inject constructor(
                 message = UiStringRes(R.string.jp_migration_done_delete_wp_message),
             ) {
                 val deleteWpIcon = R.drawable.ic_jetpack_migration_delete_wp
+                val noSitesMessage = UiStringRes(R.string.jp_migration_done_no_sites_message)
             }
 
             data class Delete(
@@ -508,10 +526,17 @@ class JetpackMigrationViewModel @Inject constructor(
         )
 
         data class DonePrimaryButton(
-            override val onClick: () -> Unit,
+            override val onClick: () -> Unit
         ) : ActionButton(
             onClick = onClick,
             text = UiStringRes(R.string.jp_migration_finish_button),
+        )
+
+        data class DoneNoSitesFlowPrimaryButton(
+            override val onClick: () -> Unit,
+        ) : ActionButton(
+            onClick = onClick,
+            text = UiStringRes(R.string.jp_migration_lets_go_button),
         )
 
         data class ErrorPrimaryButton(
