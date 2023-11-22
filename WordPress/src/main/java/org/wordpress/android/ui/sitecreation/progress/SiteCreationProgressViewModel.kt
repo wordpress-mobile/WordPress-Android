@@ -175,7 +175,7 @@ class SiteCreationProgressViewModel @Inject constructor(
 
                 val isFreePlan = siteCreationState.plan?.productSlug == "free_plan"
 
-                if (isFreePlan) {
+                if (siteCreationState.plan == null || isFreePlan) {
                     _onFreeSiteCreated.postValue(site) // MainVM will navigate forward if the domain is free
                 } else {
                     createCart()
