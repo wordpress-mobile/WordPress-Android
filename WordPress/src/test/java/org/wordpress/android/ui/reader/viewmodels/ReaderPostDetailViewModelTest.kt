@@ -1011,7 +1011,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         val navigation = init().navigation
 
-        viewModel.onLikeFacesClicked()
+        viewModel.onLikesClicked()
 
         assertThat(navigation.last().peekContent()).isInstanceOf(ShowEngagedPeopleList::class.java)
     }

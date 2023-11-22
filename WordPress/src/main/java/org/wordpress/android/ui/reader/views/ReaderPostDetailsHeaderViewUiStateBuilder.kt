@@ -28,7 +28,9 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         post: ReaderPost,
         onBlogSectionClicked: (Long, Long) -> Unit,
         onFollowClicked: () -> Unit,
-        onTagItemClicked: (String) -> Unit
+        onTagItemClicked: (String) -> Unit,
+        onLikesClicked: () -> Unit,
+        onCommentsClicked: () -> Unit,
     ): ReaderPostDetailsHeaderUiState {
         val hasAccessToken = accountStore.hasAccessToken()
         val textTitle = post
@@ -44,7 +46,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             blogSectionUiState = buildBlogSectionUiState(post, onBlogSectionClicked),
             followButtonUiState = buildFollowButtonUiState(onFollowClicked, post, hasAccessToken),
             dateLine = buildDateLine(post),
-            interactionSectionUiState = buildInteractionSection(post)
+            interactionSectionUiState = buildInteractionSection(post, onLikesClicked, onCommentsClicked)
         )
     }
 
@@ -80,10 +82,14 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     private fun buildDateLine(post: ReaderPost) =
         dateTimeUtilsWrapper.javaDateToTimeSpan(post.getDisplayDate(dateTimeUtilsWrapper))
 
-    private fun buildInteractionSection(post: ReaderPost) = InteractionSectionUiState(
+    private fun buildInteractionSection(
+        post: ReaderPost,
+        onLikesClicked: () -> Unit,
+        onCommentsClicked: () -> Unit,
+    ) = InteractionSectionUiState(
         likeCount = post.numLikes,
         commentCount = post.numReplies,
-        onLikesClicked = { /* TODO thomashortadev */ },
-        onCommentsClicked = { /* TODO thomashortadev */ }
+        onLikesClicked = onLikesClicked,
+        onCommentsClicked = onCommentsClicked,
     )
 }

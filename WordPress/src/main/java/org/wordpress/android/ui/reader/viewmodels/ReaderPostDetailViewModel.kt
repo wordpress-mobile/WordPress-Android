@@ -59,6 +59,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSiteP
 import org.wordpress.android.ui.reader.discover.ReaderPostActions
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
@@ -472,6 +473,19 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
+    private fun onCommentsClicked() {
+        post?.let {
+            launch {
+                readerPostCardActionsHandler.onAction(
+                    it,
+                    COMMENTS,
+                    isBookmarkList = false,
+                    source = ReaderTracker.SOURCE_POST_DETAIL,
+                )
+            }
+        }
+    }
+
     fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         onActionClicked(postId, blogId, type, ReaderTracker.SOURCE_POST_DETAIL)
     }
@@ -577,7 +591,9 @@ class ReaderPostDetailViewModel @Inject constructor(
             onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked,
             onBlogSectionClicked = this@ReaderPostDetailViewModel::onBlogSectionClicked,
             onFollowClicked = { onButtonClicked(post.postId, post.blogId, FOLLOW) },
-            onTagItemClicked = this@ReaderPostDetailViewModel::onTagItemClicked
+            onTagItemClicked = this@ReaderPostDetailViewModel::onTagItemClicked,
+            onLikesClicked = ::onLikesClicked,
+            onCommentsClicked = ::onCommentsClicked,
         )
     }
 
@@ -832,7 +848,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         return iLiked ?: post?.isLikedByCurrentUser ?: false
     }
 
-    fun onLikeFacesClicked() {
+    fun onLikesClicked() {
         post?.let { readerPost ->
             _navigationEvents.value = Event(
                 ShowEngagedPeopleList(

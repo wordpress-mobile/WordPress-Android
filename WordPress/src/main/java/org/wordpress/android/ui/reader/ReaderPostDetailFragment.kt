@@ -734,7 +734,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             likeFacesTrain.setOnClickListener {
                 if (!isAdded) return@setOnClickListener
 
-                viewModel.onLikeFacesClicked()
+                viewModel.onLikesClicked()
             }
         }
     }
