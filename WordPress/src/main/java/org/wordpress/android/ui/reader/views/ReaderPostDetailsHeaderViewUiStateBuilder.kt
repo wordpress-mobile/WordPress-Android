@@ -7,6 +7,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.discover.ReaderPostTagsUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
+import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -42,7 +43,8 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             tagItemsVisibility = buildTagItemsVisibility(post),
             blogSectionUiState = buildBlogSectionUiState(post, onBlogSectionClicked),
             followButtonUiState = buildFollowButtonUiState(onFollowClicked, post, hasAccessToken),
-            dateLine = buildDateLine(post)
+            dateLine = buildDateLine(post),
+            interactionSectionUiState = buildInteractionSection(post)
         )
     }
 
@@ -77,4 +79,11 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
 
     private fun buildDateLine(post: ReaderPost) =
         dateTimeUtilsWrapper.javaDateToTimeSpan(post.getDisplayDate(dateTimeUtilsWrapper))
+
+    private fun buildInteractionSection(post: ReaderPost) = InteractionSectionUiState(
+        likeCount = post.numLikes,
+        commentCount = post.numReplies,
+        onLikesClicked = { /* TODO thomashortadev */ },
+        onCommentsClicked = { /* TODO thomashortadev */ }
+    )
 }
