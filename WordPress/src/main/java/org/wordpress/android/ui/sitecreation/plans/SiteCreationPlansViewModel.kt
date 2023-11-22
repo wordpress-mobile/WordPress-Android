@@ -60,13 +60,7 @@ class SiteCreationPlansViewModel @Inject constructor(
     }
 
     fun onCalypsoError() {
-        val planModel = PlanModel(
-            productId = 0,
-            productSlug = "",
-            isCurrentPlan = false,
-            hasDomainCredit = false
-        )
-        postActionEvent(SiteCreationPlansActionEvent.CreateSite(planModel, ""))
+        postActionEvent(SiteCreationPlansActionEvent.CreateSite(null, ""))
     }
 
     private fun showPlans() {
@@ -177,5 +171,5 @@ class SiteCreationPlansViewModel @Inject constructor(
 }
 
 sealed class SiteCreationPlansActionEvent {
-    data class CreateSite(val planModel: PlanModel, val domainName: String?) : SiteCreationPlansActionEvent()
+    data class CreateSite(val planModel: PlanModel?, val domainName: String?) : SiteCreationPlansActionEvent()
 }
