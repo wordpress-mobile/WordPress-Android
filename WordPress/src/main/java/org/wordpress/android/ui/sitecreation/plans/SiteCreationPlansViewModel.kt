@@ -59,6 +59,10 @@ class SiteCreationPlansViewModel @Inject constructor(
         postUiState(SiteCreationPlansUiState.GenericError(this@SiteCreationPlansViewModel::launchPlans))
     }
 
+    fun onCalypsoError() {
+        postActionEvent(SiteCreationPlansActionEvent.CreateSite(null, ""))
+    }
+
     private fun showPlans() {
         postUiState(SiteCreationPlansUiState.Preparing)
         if (!checkForInternetConnectivityAndPostErrorIfNeeded()) return
@@ -167,5 +171,5 @@ class SiteCreationPlansViewModel @Inject constructor(
 }
 
 sealed class SiteCreationPlansActionEvent {
-    data class CreateSite(val planModel: PlanModel, val domainName: String?) : SiteCreationPlansActionEvent()
+    data class CreateSite(val planModel: PlanModel?, val domainName: String?) : SiteCreationPlansActionEvent()
 }

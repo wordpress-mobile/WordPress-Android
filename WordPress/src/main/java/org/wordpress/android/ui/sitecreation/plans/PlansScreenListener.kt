@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 interface PlansScreenListener {
-    fun onPlanSelected(plan: PlanModel, domainName: String?)
+    fun onPlanSelected(plan: PlanModel?, domainName: String?)
 }
 
 @Parcelize
