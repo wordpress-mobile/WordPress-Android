@@ -47,12 +47,7 @@ class SiteCreationPlansViewModel @Inject constructor(
         val planSlug = uri.getQueryParameter(PLAN_SLUG_PARAM).orEmpty()
         val domainNameFromRedirectUrl = uri.getQueryParameter(DOMAIN_NAME_PARAM)
 
-        val planModel = PlanModel(
-            productId = planId,
-            productSlug = planSlug,
-            isCurrentPlan = false,
-            hasDomainCredit = false
-        )
+        val planModel = PlanModel(productId = planId, productSlug = planSlug)
         postActionEvent(SiteCreationPlansActionEvent.CreateSite(planModel, domainNameFromRedirectUrl))
     }
 

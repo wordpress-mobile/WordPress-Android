@@ -8,9 +8,4 @@ interface PlansScreenListener {
 }
 
 @Parcelize
-data class PlanModel(
-    val productId: Int?,
-    val productSlug: String?,
-    val isCurrentPlan: Boolean,
-    val hasDomainCredit: Boolean
-) : Parcelable
+data class PlanModel(val productId: Int?, val productSlug: String?) : Parcelable
