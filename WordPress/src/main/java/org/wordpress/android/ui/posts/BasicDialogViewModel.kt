@@ -43,7 +43,8 @@ class BasicDialogViewModel
         val message: String,
         val positiveButtonLabel: String,
         val negativeButtonLabel: String? = null,
-        val cancelButtonLabel: String? = null
+        val cancelButtonLabel: String? = null,
+        val allowDismissOnOutsideTouch: Boolean = true
     ) : Parcelable
 
     sealed class DialogInteraction(open val tag: String) {
