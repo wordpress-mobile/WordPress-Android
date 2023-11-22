@@ -419,7 +419,6 @@ class JetpackMigrationViewModel @Inject constructor(
                 subtitle = UiStringRes(R.string.jp_migration_welcome_subtitle),
                 message = UiStringRes(
                     when (sites.size) {
-                        0 -> R.string.jp_migration_welcome_no_sites_message
                         1 -> R.string.jp_migration_welcome_site_found_message
                         else -> R.string.jp_migration_welcome_sites_found_message
                     }
