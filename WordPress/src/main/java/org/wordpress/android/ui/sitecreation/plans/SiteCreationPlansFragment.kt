@@ -173,7 +173,8 @@ class SiteCreationPlansFragment : Fragment(), SiteCreationPlansWebViewClientList
                     webChromeClient = object : WebChromeClient() {
                         override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
                             consoleMessage?.let { message ->
-                                if (message.message().contains("Uncaught TypeError: window.AppBoot is not a function")) {
+                                val calypsoErrorMessage = "Uncaught TypeError: window.AppBoot is not a function"
+                                if (message.message().contains(calypsoErrorMessage)) {
                                     viewModel.onCalypsoError()
                                 }
                             }
