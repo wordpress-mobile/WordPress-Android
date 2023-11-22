@@ -156,7 +156,6 @@ class JetpackMigrationViewModel @Inject constructor(
         this.deepLinkData = deepLinkData
 
         tryMigration(application)
-        // todo: set the flow
     }
 
     private fun resetIfNeeded(application: WordPress) {
@@ -230,7 +229,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun initSuccessScreenUiForNoSites(): Done {
-        migrationAnalyticsTracker.trackThanksScreenShown()
+        migrationAnalyticsTracker.trackNoSitesFlowThanksScreenShown()
 
         return Done(
             showDeleteWPApp = false,
@@ -353,10 +352,13 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun onFinishClicked() {
         _refreshAppTheme.value = Unit
-        migrationAnalyticsTracker.trackThanksScreenFinishButtonTapped()
+
          if (siteStore.sites.isNotEmpty()) {
+            migrationAnalyticsTracker.trackThanksScreenFinishButtonTapped()
             migrationEmailHelper.notifyMigrationComplete()
-        }
+        } else {
+             migrationAnalyticsTracker.trackNoSitesFlowThanksScreenFinishButtonTapped()
+         }
         appPrefsWrapper.setJetpackMigrationCompleted(true)
         appPrefsWrapper.setJetpackMigrationInProgress(false)
         dispatchFetchAccountActionIfNeeded()
