@@ -25,7 +25,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig,
 ) {
-    // todo hthomas refactor this
     fun mapPostToUiState(
         post: ReaderPost,
         onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,

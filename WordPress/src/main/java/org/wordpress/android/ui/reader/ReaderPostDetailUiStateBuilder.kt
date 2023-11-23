@@ -68,7 +68,6 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
     private val relatedPostFeaturedImageHeight: Int = (relatedPostFeaturedImageWidth
             * RELATED_POST_IMAGE_HEIGHT_WIDTH_RATION).toInt()
 
-    // hthomas todo hthomas refactor this
     fun mapPostToUiState(
         post: ReaderPost,
         moreMenuItems: List<SecondaryAction>? = null,
@@ -228,7 +227,6 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         post.isPrivateAtomic
     )
 
-    // todo hthomas refactor this
     private fun buildPostDetailsHeaderUiState(
         post: ReaderPost,
         onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
