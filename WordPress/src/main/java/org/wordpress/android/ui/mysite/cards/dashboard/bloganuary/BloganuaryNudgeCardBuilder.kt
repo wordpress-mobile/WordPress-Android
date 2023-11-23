@@ -14,6 +14,7 @@ class BloganuaryNudgeCardBuilder @Inject constructor() {
                 title = UiStringRes(R.string.bloganuary_dashboard_nudge_title),
                 text = UiStringRes(R.string.bloganuary_dashboard_nudge_text),
                 onLearnMoreClick = ListItemInteraction.create(params.onLearnMoreClick),
+                onMoreMenuClick = ListItemInteraction.create(params.onMoreMenuClick),
                 onHideMenuItemClick = ListItemInteraction.create(params.onHideMenuItemClick),
             )
         } else {

@@ -63,6 +63,7 @@ sealed class MySiteCardAndItemBuilderParams {
         val onErrorRetryClick: () -> Unit,
         val todaysStatsCardBuilderParams: TodaysStatsCardBuilderParams,
         val postCardBuilderParams: PostCardBuilderParams,
+        val bloganuaryNudgeCardBuilderParams: BloganuaryNudgeCardBuilderParams,
         val bloggingPromptCardBuilderParams: BloggingPromptCardBuilderParams,
         val domainTransferCardBuilderParams: DomainTransferCardBuilderParams? = null,
         val blazeCardBuilderParams: BlazeCardBuilderParams? = null,
@@ -154,6 +155,7 @@ sealed class MySiteCardAndItemBuilderParams {
     data class BloganuaryNudgeCardBuilderParams(
         val isEligible: Boolean,
         val onLearnMoreClick: () -> Unit,
+        val onMoreMenuClick: () -> Unit,
         val onHideMenuItemClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 

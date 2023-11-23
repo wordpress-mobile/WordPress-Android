@@ -307,6 +307,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val title: UiString,
             val text: UiString,
             val onLearnMoreClick: ListItemInteraction,
+            val onMoreMenuClick: ListItemInteraction,
             val onHideMenuItemClick: ListItemInteraction,
         ) : Card(Type.BLOGANUARY_NUDGE_CARD)
 

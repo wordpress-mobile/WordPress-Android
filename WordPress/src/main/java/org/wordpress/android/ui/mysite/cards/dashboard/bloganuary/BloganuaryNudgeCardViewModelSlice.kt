@@ -30,19 +30,24 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
 
         return BloganuaryNudgeCardBuilderParams(
             isEligible = isEligible,
-            onLearnMoreClick = ::openBloganuaryNudgeLearnMore,
-            onHideMenuItemClick = ::hideCard,
+            onLearnMoreClick = ::onLearnMoreClick,
+            onMoreMenuClick = ::onMoreMenuClick,
+            onHideMenuItemClick = ::onHideMenuItemClick,
         )
     }
 
-    private fun openBloganuaryNudgeLearnMore() {
+    private fun onLearnMoreClick() {
         scope.launch {
             val isPromptsEnabled = bloggingPromptsSettingsHelper.isPromptsSettingEnabled()
             _onNavigation.value = Event(SiteNavigationAction.OpenBloganuaryNudgeOverlay(isPromptsEnabled))
         }
     }
 
-    private fun hideCard() {
+    private fun onMoreMenuClick() {
+        // TODO thomashortadev: track analytics for this action
+    }
+
+    private fun onHideMenuItemClick() {
         // TODO thomashortadev: create an AppPref and store hide state
     }
 }
