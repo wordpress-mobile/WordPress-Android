@@ -3006,11 +3006,11 @@ Language: tr
     <string name="editor_post_saved_online">Yazı çevrimiçi kaydedildi.</string>
     <string name="site_settings_image_quality_hint">Görüntülerin kalitesi. Daha yüksek değerler daha kaliteli görüntü anlamına gelir.</string>
     <string name="site_settings_optimize_images_summary">Görüntülerin boyutlandırılıp sıkıştırılabilmelerini etkinleştir</string>
-    <string name="media_encoder_quality_100">En yüksek</string>
-    <string name="media_encoder_quality_95">Çok yüksek</string>
-    <string name="media_encoder_quality_90">Yüksek</string>
-    <string name="media_encoder_quality_85">Orta</string>
-    <string name="media_encoder_quality_80">Düşük</string>
+    <string name="media_encoder_quality_maximum">En yüksek</string>
+    <string name="media_encoder_quality_very_high">Çok yüksek</string>
+    <string name="media_encoder_quality_high">Yüksek</string>
+    <string name="media_encoder_quality_medium">Orta</string>
+    <string name="media_encoder_quality_low">Düşük</string>
     <string name="media_upload_state_uploaded">Yüklendi</string>
     <string name="media_upload_state_failed">Yükleme başarısız oldu</string>
     <string name="media_upload_state_deleted">Silindi</string>

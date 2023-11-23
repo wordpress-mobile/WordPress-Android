@@ -2996,11 +2996,11 @@ Language: ar
     <string name="editor_post_saved_online">تم حفظ المقالة على الإنترنت</string>
     <string name="site_settings_image_quality_hint">جودة الصور. تُشير القيم الأعلى إلى الصور ذات الجودة الأفضل.</string>
     <string name="site_settings_optimize_images_summary">تمكين تغيير حجم الصور وضغطها</string>
-    <string name="media_encoder_quality_100">الحد الأقصى</string>
-    <string name="media_encoder_quality_95">مرتفع للغاية</string>
-    <string name="media_encoder_quality_90">مرتفع</string>
-    <string name="media_encoder_quality_85">متوسط</string>
-    <string name="media_encoder_quality_80">منخفض</string>
+    <string name="media_encoder_quality_maximum">الحد الأقصى</string>
+    <string name="media_encoder_quality_very_high">مرتفع للغاية</string>
+    <string name="media_encoder_quality_high">مرتفع</string>
+    <string name="media_encoder_quality_medium">متوسط</string>
+    <string name="media_encoder_quality_low">منخفض</string>
     <string name="media_upload_state_uploaded">تم الرفع</string>
     <string name="media_upload_state_deleted">محذوف</string>
     <string name="media_upload_state_queued">تم الوضع في قائمة الانتظار</string>

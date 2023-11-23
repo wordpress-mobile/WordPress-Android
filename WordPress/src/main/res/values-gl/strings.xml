@@ -3006,11 +3006,11 @@ Language: gl_ES
     <string name="editor_post_saved_online">A entrada gardouse en liña</string>
     <string name="site_settings_image_quality_hint">Calidade das imaxes: canto máis alto é o valor, máis calidade teñen as imaxes.</string>
     <string name="site_settings_optimize_images_summary">Activa a opción para cambiar o tamaño das imaxes e comprimilas</string>
-    <string name="media_encoder_quality_100">Máxima</string>
-    <string name="media_encoder_quality_95">Moi alta</string>
-    <string name="media_encoder_quality_90">Alta</string>
-    <string name="media_encoder_quality_85">Media</string>
-    <string name="media_encoder_quality_80">Baixa</string>
+    <string name="media_encoder_quality_maximum">Máxima</string>
+    <string name="media_encoder_quality_very_high">Moi alta</string>
+    <string name="media_encoder_quality_high">Alta</string>
+    <string name="media_encoder_quality_medium">Media</string>
+    <string name="media_encoder_quality_low">Baixa</string>
     <string name="media_upload_state_uploaded">Subida</string>
     <string name="media_upload_state_failed">Fallou a subida.</string>
     <string name="media_upload_state_deleted">Borrado</string>

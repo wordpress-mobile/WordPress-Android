@@ -3000,11 +3000,11 @@ Language: ko_KR
     <string name="editor_post_saved_online">글이 온라인으로 저장되었습니다.</string>
     <string name="site_settings_image_quality_hint">사진 품질. 값이 클수록 고품질의 사진을 의미합니다.</string>
     <string name="site_settings_optimize_images_summary">사진 크기를 조정하고 압축할 수 있습니다.</string>
-    <string name="media_encoder_quality_100">최대</string>
-    <string name="media_encoder_quality_95">매우 높음</string>
-    <string name="media_encoder_quality_90">높음</string>
-    <string name="media_encoder_quality_85">보통</string>
-    <string name="media_encoder_quality_80">낮음</string>
+    <string name="media_encoder_quality_maximum">최대</string>
+    <string name="media_encoder_quality_very_high">매우 높음</string>
+    <string name="media_encoder_quality_high">높음</string>
+    <string name="media_encoder_quality_medium">보통</string>
+    <string name="media_encoder_quality_low">낮음</string>
     <string name="media_upload_state_uploaded">업로드됨</string>
     <string name="media_upload_state_failed">실패</string>
     <string name="media_upload_state_deleted">삭제됨</string>

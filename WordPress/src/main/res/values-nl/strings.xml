@@ -2955,11 +2955,11 @@ Language: nl
     <string name="editor_post_saved_online">Het bericht is online opgeslagen</string>
     <string name="site_settings_image_quality_hint">Kwaliteit van afbeeldingen. Hoe hoger de waarde, hoe beter de kwaliteit van je afbeeldingen.</string>
     <string name="site_settings_optimize_images_summary">Het aanpassen van de grootte en het comprimeren van afbeeldingen inschakelen</string>
-    <string name="media_encoder_quality_100">Maximaal</string>
-    <string name="media_encoder_quality_95">Zeer hoog</string>
-    <string name="media_encoder_quality_90">Hoog</string>
-    <string name="media_encoder_quality_85">Gemiddeld</string>
-    <string name="media_encoder_quality_80">Laag</string>
+    <string name="media_encoder_quality_maximum">Maximaal</string>
+    <string name="media_encoder_quality_very_high">Zeer hoog</string>
+    <string name="media_encoder_quality_high">Hoog</string>
+    <string name="media_encoder_quality_medium">Gemiddeld</string>
+    <string name="media_encoder_quality_low">Laag</string>
     <string name="media_upload_state_uploaded">Geüpload</string>
     <string name="media_upload_state_failed">Upload mislukt</string>
     <string name="media_upload_state_deleted">Verwijderd</string>

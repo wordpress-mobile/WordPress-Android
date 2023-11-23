@@ -3006,11 +3006,11 @@ Language: ru
     <string name="editor_post_saved_online">Запись сохранена в Интернете.</string>
     <string name="site_settings_image_quality_hint">Качество фотографий. Чем выше значение, тем выше качество изображений.</string>
     <string name="site_settings_optimize_images_summary">Включить функцию изменения размера и сжатия изображений</string>
-    <string name="media_encoder_quality_100">Максимальное</string>
-    <string name="media_encoder_quality_95">Очень высокое</string>
-    <string name="media_encoder_quality_90">Высокое</string>
-    <string name="media_encoder_quality_85">Среднее</string>
-    <string name="media_encoder_quality_80">Низкое</string>
+    <string name="media_encoder_quality_maximum">Максимальное</string>
+    <string name="media_encoder_quality_very_high">Очень высокое</string>
+    <string name="media_encoder_quality_high">Высокое</string>
+    <string name="media_encoder_quality_medium">Среднее</string>
+    <string name="media_encoder_quality_low">Низкое</string>
     <string name="media_upload_state_uploaded">Загружено</string>
     <string name="media_upload_state_failed">Загрузка не удалась</string>
     <string name="media_upload_state_deleted">Удалено</string>
