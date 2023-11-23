@@ -38,9 +38,9 @@ import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.ReaderCommentList
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
-import org.wordpress.android.ui.engagement.EngageItem.Liker
 import org.wordpress.android.ui.engagement.EngagementUtils
 import org.wordpress.android.ui.engagement.GetLikesHandler
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
@@ -98,6 +98,7 @@ import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
@@ -114,9 +115,7 @@ import org.wordpress.android.viewmodel.Event
 
 private const val POST_PARAM_POSITION = 0
 private const val ON_BUTTON_CLICKED_PARAM_POSITION = 2
-private const val ON_POST_BLOG_SECTION_CLICKED_PARAM_POSITION = 3
-private const val ON_POST_FOLLOW_BUTTON_CLICKED_PARAM_POSITION = 4
-private const val ON_TAG_CLICKED_PARAM_POSITION = 5
+private const val ON_HEADER_ACTION_PARAM_POSITION = 3
 
 private const val IS_GLOBAL_RELATED_POSTS_PARAM_POSITION = 2
 private const val ON_RELATED_POST_ITEM_CLICKED_PARAM_POSITION = 3
@@ -216,6 +215,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
     private lateinit var relatedPosts: ReaderSimplePostList
 
+    private lateinit var capturedOnHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit
+
     @Before
     @Suppress("LongMethod")
     fun setUp() = test {
@@ -280,18 +281,14 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
-                anyOrNull(),
-                anyOrNull()
             )
         ).thenAnswer {
             val post = it.getArgument<ReaderPost>(POST_PARAM_POSITION)
+            capturedOnHeaderAction = it.getArgument(ON_HEADER_ACTION_PARAM_POSITION)
             // propagate some of the arguments
             createDummyReaderPostDetailsUiState(
                 post,
-                it.getArgument(ON_TAG_CLICKED_PARAM_POSITION),
-                it.getArgument(ON_BUTTON_CLICKED_PARAM_POSITION),
-                it.getArgument(ON_POST_BLOG_SECTION_CLICKED_PARAM_POSITION),
-                it.getArgument(ON_POST_FOLLOW_BUTTON_CLICKED_PARAM_POSITION)
+                onButtonClicked = it.getArgument(ON_BUTTON_CLICKED_PARAM_POSITION),
             )
         }
 
@@ -629,19 +626,20 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     @Test
     fun `when tag is clicked, then posts for tag are shown`() = test {
         val observers = init()
-        val uiState = (observers.uiStates.last() as ReaderPostDetailsUiState)
+        // trigger mapping and header action callback capture
+        (observers.uiStates.last() as ReaderPostDetailsUiState)
 
-        uiState.headerUiState.tagItems[0].onClick!!.invoke("t")
+        capturedOnHeaderAction.invoke(ReaderPostDetailsHeaderAction.TagItemClicked("t"))
 
         assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowPostsByTag::class.java)
     }
 
     @Test
     fun `when header blog section is clicked, then selected blog's header click action is invoked`() = test {
-        val uiState = (init().uiStates.last() as ReaderPostDetailsUiState)
+        // trigger mapping and header action callback capture
+        (init().uiStates.last() as ReaderPostDetailsUiState)
 
-        uiState.headerUiState.blogSectionUiState.blogSectionClickData!!.onBlogSectionClicked!!
-            .invoke(readerPost.postId, readerPost.blogId)
+        capturedOnHeaderAction.invoke(ReaderPostDetailsHeaderAction.BlogSectionClicked)
 
         verify(readerPostCardActionsHandler).handleHeaderClicked(
             eq(readerPost.blogId),
@@ -652,9 +650,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when header follow button is clicked, then follow action is invoked`() = test {
-        val uiState = (init().uiStates.last() as ReaderPostDetailsUiState)
+        // trigger mapping and header action callback capture
+        (init().uiStates.last() as ReaderPostDetailsUiState)
 
-        uiState.headerUiState.followButtonUiState.onFollowButtonClicked!!.invoke()
+        capturedOnHeaderAction.invoke(ReaderPostDetailsHeaderAction.FollowClicked)
 
         verify(readerPostCardActionsHandler).onAction(
             eq(readerPost),
@@ -985,7 +984,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     @Test
     fun `ui state shows empty state on failure and no cached data`() {
         val likesState = getGetLikesState(TEST_CONFIG_5) as Failure
-        val likers = listOf<Liker>()
+        val likers = listOf<TrainOfAvatarsItem>()
 
         getLikesState.value = likesState
         val post = mock<ReaderPost>()
@@ -1097,12 +1096,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             add(comment)
         }
 
+    @Suppress("LongParameterList")
     private fun createDummyReaderPostDetailsUiState(
         post: ReaderPost,
-        onTagClicked: (String) -> Unit,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
-        onBlogSectionClicked: (Long, Long) -> Unit,
-        onFollowButtonClicked: (() -> Unit)
     ): ReaderPostDetailsUiState {
         return ReaderPostDetailsUiState(
             postId = post.postId,
@@ -1111,7 +1108,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             headerUiState = ReaderPostDetailsHeaderUiState(
                 UiStringText(post.title),
                 post.authorName,
-                listOf(TagUiState("", "", false, onTagClicked)),
+                listOf(TagUiState("", "", false, mock())),
                 true,
                 ReaderBlogSectionUiState(
                     postId = post.postId,
@@ -1123,10 +1120,10 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                     authorAvatarUrl = "",
                     isAuthorAvatarVisible = false,
                     blavatarType = BLAVATAR_CIRCULAR,
-                    blogSectionClickData = ReaderBlogSectionClickData(onBlogSectionClicked, 0)
+                    blogSectionClickData = ReaderBlogSectionClickData(mock(), 0)
                 ),
                 FollowButtonUiState(
-                    onFollowButtonClicked = onFollowButtonClicked,
+                    onFollowButtonClicked = mock(),
                     isFollowed = false,
                     isEnabled = true,
                     isVisible = true
@@ -1135,8 +1132,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 InteractionSectionUiState(
                     likeCount = 42,
                     commentCount = 13,
-                    onLikesClicked = {},
-                    onCommentsClicked = {},
+                    onLikesClicked = mock(),
+                    onCommentsClicked = mock(),
                 )
             ),
             excerptFooterUiState = mock(),

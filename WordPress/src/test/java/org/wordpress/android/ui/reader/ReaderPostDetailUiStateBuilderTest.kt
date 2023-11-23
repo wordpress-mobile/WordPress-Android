@@ -360,7 +360,7 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         whenever(readerUtilsWrapper.getResizedImageUrl(any(), any(), any(), any(), any()))
             .thenReturn(dummyFeaturedImageUrl)
 
-        whenever(headerViewUiStateBuilder.mapPostToUiState(any(), any(), any(), any(), any())).thenReturn(mock())
+        whenever(headerViewUiStateBuilder.mapPostToUiState(any(), any())).thenReturn(mock())
         whenever(postUiStateBuilder.mapPostToActions(any(), any())).thenReturn(mock())
 
         return builder.mapPostToUiState(
@@ -368,9 +368,6 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
             moreMenuItems = null,
             onButtonClicked = mock(),
             onHeaderAction = mock(),
-            onBlogSectionClicked = mock(),
-            onFollowClicked = mock(),
-            onTagItemClicked = mock()
         )
     }
 }
