@@ -18,18 +18,13 @@ class LocalEligibilityStatusProviderHelper @Inject constructor(
     @Suppress("ForbiddenComment")
     // TODO: check for eligibility of media? - I guess this might be covered by posts and pages - except for
     // media that is not part of a post or page ??
-    override fun getData(localEntityId: Int?): LocalContentEntityData {
-        val sitesData = localMigrationSiteProviderHelper.getData()
-        if (!sitesData.isLoggedOn) {
-            return EligibilityStatusData(false, WPNotLoggedIn)
-        }
-        return when {
-            sitesData.sites.isEmpty() -> EligibilityStatusData(true)
-            else -> when {
-                sitesData.sites.flatMap(::getLocalDraftPostAndPageIdsForSite).isNotEmpty() ->
-                    EligibilityStatusData(false, LocalDraftContentIsPresent)
-                else -> EligibilityStatusData(true)
-            }
+    override fun getData(localEntityId: Int?) = with(localMigrationSiteProviderHelper.getData()) {
+        when {
+            !isLoggedOn -> EligibilityStatusData(false, WPNotLoggedIn)
+            sites.isEmpty() -> EligibilityStatusData(true)
+            sites.flatMap(::getLocalDraftPostAndPageIdsForSite).isNotEmpty() ->
+                EligibilityStatusData(false, LocalDraftContentIsPresent)
+            else -> EligibilityStatusData(true)
         }
     }
 
