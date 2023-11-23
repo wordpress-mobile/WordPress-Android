@@ -1698,7 +1698,6 @@ Language: nb_NO
     <string name="password_incorrect">Det ser ut til at dette passordet er feil. Vennligst dobbeltsjekk informasjonen din og prøv igjen.</string>
     <string name="requesting_otp">Ber om en verifiseringskode via SMS.</string>
     <string name="login_text_otp">Send meg en kode i stedet</string>
-    <string name="enter_verification_code">Nesten framme! Vennligst skriv inn verifiseringskoden fra autentiseringsappen din.</string>
     <string name="next">Neste</string>
     <string name="enter_email_wordpress_com">Logg inn på WordPress.com ved å bruke en E-postadresse, for å behandle alle dine WordPress-nettsteder.</string>
     <string name="image_optimization_promo_desc">Bildeoptimalisering krymper bilder for raskere opplastning.\n\nDu kan endre dette til enhver tid i nettstedets innstillinger.</string>

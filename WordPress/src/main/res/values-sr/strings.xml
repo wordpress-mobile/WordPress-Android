@@ -1354,7 +1354,6 @@ Language: sr_RS
     <string name="enter_wpcom_password">Унесите своју WordPress.com лозинку.</string>
     <string name="login_continue">Настави</string>
     <string name="connect_more">Повежи други сајт</string>
-    <string name="enter_verification_code">Скоро смо тамо! Унесите верификациони код из апликације Authenticator.</string>
     <string name="next">Следећи</string>
     <string name="open_mail">Отвори пошту</string>
     <string name="image_optimization_promo_title">Укључи оптимизацију слика</string>

@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-31 14:06:51+0000
+Translation-Revision-Date: 2023-11-15 11:27:49+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: es
 -->
 <resources>
+    <string name="notification_security_key_needed">Introduce tu clave de seguridad para continuar.</string>
+    <string name="login_error_security_key">Hubo algunos problemas con el inicio de sesión de la clave de seguridad</string>
+    <string name="login_text_security_key">Usa una clave de seguridad</string>
+    <string name="new_domain_search_screen_error_title">No se han podido recuperar los dominios</string>
+    <string name="new_domain_search_screen_list_item_sale_price">%s durante el primer año</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s / año</string>
+    <string name="new_domain_search_screen_transfer_domain_button">Transferir dominio</string>
+    <string name="new_domain_search_screen_transfer_domain_description">¿Quieres transferir un dominio que ya tienes?</string>
+    <string name="new_domain_search_screen_input_placeholder">Teclea para obtener más sugerencias</string>
+    <string name="new_domain_search_screen_title">Buscar un dominio</string>
+    <string name="purchase_domain_screen_error_button_title">OK</string>
+    <string name="purchase_domain_screen_error_subtitle">Algo ha ido mal al añadir el dominio al carrito. Asegúrate de que estás conectado y vuelve a intentarlo.</string>
+    <string name="purchase_domain_screen_error_title">Error</string>
+    <string name="domain_management_site_domains_button">Todos</string>
+    <string name="domain_management_error_title">No se han podido recuperar tus dominios</string>
+    <string name="site_domain_title">Dominio del sitio</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">De &lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">Editado</string>
+    <string name="post_list_toggle_author_filter">Filtrar por autor</string>
     <string name="gutenberg_native_s_block_converted_to_blocks">Bloque \'%s\' convertido a bloques</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Alternativamente, puedes convertir el contenido en bloques.</string>
     <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Añadir o eliminar atajos</string>
@@ -27,12 +46,11 @@ Language: es
     <string name="domain_management_empty_find_domain">Buscar un dominio</string>
     <string name="domain_management_empty_subtitle">Pulsa abajo para encontrar tu dominio perfecto.</string>
     <string name="domain_management_empty_title">No tienes dominios</string>
-    <string name="domain_management_error_subtitle">Comprueba que estás conectado y actualiza.</string>
-    <string name="domain_management_error_title">No se pudo actualizar</string>
+    <string name="domain_management_error_subtitle">Comprueba que estás conectado y tira para actualizar.</string>
     <string name="domain_management_open_domain_details">Abrir detalles del dominio</string>
     <string name="domain_management_search_your_domains">Busca en tus dominios</string>
     <string name="domain_management_purchase_a_domain">Comprar un dominio</string>
-    <string name="domain_management_my_domains_title">Mis dominios</string>
+    <string name="domain_management_my_domains_title">Todos los dominios</string>
     <string name="domain_management_expires">Caduca el %1$s</string>
     <string name="account_and_settings">Cuenta y ajustes</string>
     <string name="site_creation_plans_selection_title">Elige un plan</string>
@@ -1624,6 +1642,7 @@ Language: es
     <string name="ccpa_privacy_notice_header">Aviso de privacidad para usuarios de California</string>
     <string name="status_and_visibility">Estado y visibilidad</string>
     <string name="update_now">Actualizar ahora</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir el menú de acciones de bloques</string>
     <string name="gutenberg_native_move_to_top">Mover arriba</string>
     <string name="gutenberg_native_insert_mention">Insertar una mención</string>
@@ -2862,7 +2881,7 @@ Language: es
     <string name="password_incorrect">Parece que esta contraseña es incorrecta. Por favor, vuelve a comprobar tu información e inténtalo de nuevo.</string>
     <string name="requesting_otp">Solicitando un código de verificación por SMS.</string>
     <string name="login_text_otp">Envíame un mensaje con un código en su lugar</string>
-    <string name="enter_verification_code">¡Casi lo tenemos! Por favor, introduce un código de verificación desde tu aplicación Authenticator.</string>
+    <string name="enter_verification_code">¡Casi lo tenemos! Por favor, introduce el código de verificación de tu aplicación Authenticator.</string>
     <string name="open_mail">Abrir correo electrónico</string>
     <string name="next">Siguiente</string>
     <string name="enter_email_wordpress_com">Accede a WordPress.com usando una dirección de correo electrónico para gestionar todos tus sitios WordPress.</string>

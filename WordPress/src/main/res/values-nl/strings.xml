@@ -20,7 +20,6 @@ Language: nl
     <string name="domain_management_empty_find_domain">Een domein vinden</string>
     <string name="domain_management_empty_subtitle">Tik hieronder om jouw ideale domein te vinden.</string>
     <string name="domain_management_empty_title">Je hebt nog geen domeinen</string>
-    <string name="domain_management_error_title">Update mislukt</string>
     <string name="domain_management_open_domain_details">Domeingegevens openen</string>
     <string name="domain_management_search_your_domains">Je domeinen zoeken</string>
     <string name="domain_management_purchase_a_domain">Een domein kopen</string>
@@ -2811,7 +2810,6 @@ Language: nl
     <string name="password_incorrect">Het lijkt erop alsof dit wachtwoord onjuist is. Controleer je gegevens en probeer het nogmaals.</string>
     <string name="requesting_otp">Verificatiecode via sms aanvragen.</string>
     <string name="login_text_otp">Sms  mij een code in plaats daarvan</string>
-    <string name="enter_verification_code">Bijna klaar! Voer de verificatiecode uit je Authenticator-app in.</string>
     <string name="open_mail">Open e-mail</string>
     <string name="next">Volgende</string>
     <string name="enter_email_wordpress_com">Log in op WordPress.com met behulp van een e-mailadres om al je WordPress-sites te beheren.</string>
