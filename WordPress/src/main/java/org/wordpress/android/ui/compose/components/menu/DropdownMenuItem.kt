@@ -1,15 +1,46 @@
 package org.wordpress.android.ui.compose.components.menu
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 
 @Composable
-fun DropdownMenuItem(dropdownMenuItemData: DropdownMenuItemData) {
+fun DropdownMenuItem(itemData: DropdownMenuItemData) {
 }
 
 sealed class DropdownMenuItemData {
-    data class Text(@StringRes val text: Int) : DropdownMenuItemData()
+    /**
+     * @param onClick callback that returns the defined id
+     */
+    data class Text(
+        val id: String,
+        val text: String,
+        val onClick: (String) -> Unit,
+        val isDefault: Boolean = false,
+    ) : DropdownMenuItemData()
 
-    data class TextAndIcon(@StringRes val text: Int, @DrawableRes val icon: Int) : DropdownMenuItemData()
+    /**
+     * @param onClick callback that returns the defined id
+     */
+    data class TextAndIcon(
+        val id: String,
+        val text: String,
+        @DrawableRes val icon: Int,
+        val onClick: (String) -> Unit,
+        val isDefault: Boolean = false,
+    ) : DropdownMenuItemData()
+
+    data class SubMenu(
+        val text: String,
+        val items: List<Item>,
+    ) : DropdownMenuItemData() {
+        /**
+         * @param onClick callback that returns the defined id
+         */
+        data class Item(
+            val id: String,
+            val text: String,
+            val onClick: (String) -> Unit,
+            val isDefault: Boolean = false,
+        )
+    }
 }
