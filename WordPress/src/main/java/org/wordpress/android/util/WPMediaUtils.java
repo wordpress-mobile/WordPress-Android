@@ -147,8 +147,8 @@ public class WPMediaUtils {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_OPTIMIZE_IMAGES_POPUP_TAPPED,
                         Collections.singletonMap("option", propertyValue));
 
-                if (which == DialogInterface.BUTTON_NEGATIVE) {
-                    if (AppPrefs.isImageOptimize()) AppPrefs.setImageOptimize(false);
+                if (which == DialogInterface.BUTTON_NEGATIVE && AppPrefs.isImageOptimize()) {
+                    AppPrefs.setImageOptimize(false);
                 }
 
                 listener.done();
