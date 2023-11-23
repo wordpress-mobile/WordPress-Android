@@ -9,6 +9,7 @@ import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Sub
 import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Text
 import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.TextAndIcon
 import org.wordpress.android.ui.compose.theme.AppThemeEditor
+import java.lang.IllegalArgumentException
 
 /**
  * DropdownMenu component. Consists of a DropdownMenuButton that opens a DropdownMenuItemsContainer when tapped.
@@ -16,9 +17,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeEditor
  */
 @Composable
 fun DropdownMenu(items: List<DropdownMenuItemData>) {
-    if (items.hasSingleDefaultItem()) {
-        throw DropdownMenuDefaultItemException()
-    }
+    require (items.hasSingleDefaultItem()) { "DropdownMenu must have one default item." }
     Column {
         DropdownMenuButton(
             selectedItem = items.defaultItem(),
@@ -31,7 +30,8 @@ fun DropdownMenu(items: List<DropdownMenuItemData>) {
 
 private fun List<DropdownMenuItemData>.hasSingleDefaultItem() = filter { it.isDefault }.size == 1
 
-private fun List<DropdownMenuItemData>.defaultItem() = find { it.isDefault } ?: throw DropdownMenuDefaultItemException()
+private fun List<DropdownMenuItemData>.defaultItem() =
+    find { it.isDefault } ?: throw IllegalArgumentException("Default item must not be null.")
 
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
