@@ -7,7 +7,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -32,6 +36,7 @@ import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Tex
 import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.TextAndIcon
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
+import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
 fun DropdownMenuItemList(items: List<DropdownMenuItemData>) {
@@ -50,23 +55,26 @@ fun DropdownMenuItemList(items: List<DropdownMenuItemData>) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal))
-                        .clickable { item.onClick(item.id) },
+                        .clickable { item.onClick(item.id) }
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .padding(all = Margin.MediumLarge.value),
                 ) {
+                    val iconTextMargin = Margin.Medium.value
                     if (item is TextAndIcon) {
                         Icon(
                             modifier = Modifier.align(Alignment.CenterVertically),
                             painter = painterResource(id = item.iconRes),
                             contentDescription = null,
                         )
+                        Spacer(Modifier.width(iconTextMargin))
+                    } else {
+                        // item is Text
+                        val defaultIconSize = 24.dp
+                        val textOnlyMargin = iconTextMargin + defaultIconSize
+                        Spacer(Modifier.width(textOnlyMargin))
                     }
                     Text(
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .weight(
-                                weight = 1f,
-                                fill = false,
-                            ),
                         text = item.text,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
@@ -76,8 +84,6 @@ fun DropdownMenuItemList(items: List<DropdownMenuItemData>) {
                 Divider(
                     color = colorResource(R.color.gray_10),
                     thickness = 0.5.dp,
-                    modifier = Modifier
-                        .padding(horizontal = dimensionResource(R.dimen.jp_migration_padding_horizontal)),
                 )
             }
         }
