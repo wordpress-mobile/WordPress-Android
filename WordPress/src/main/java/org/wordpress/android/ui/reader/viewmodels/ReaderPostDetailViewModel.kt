@@ -604,8 +604,6 @@ class ReaderPostDetailViewModel @Inject constructor(
             onBlogSectionClicked = this@ReaderPostDetailViewModel::onBlogSectionClicked,
             onFollowClicked = { onButtonClicked(post.postId, post.blogId, FOLLOW) },
             onTagItemClicked = this@ReaderPostDetailViewModel::onTagItemClicked,
-            onLikesClicked = ::onLikesClicked,
-            onCommentsClicked = ::onCommentsClicked,
         )
     }
 

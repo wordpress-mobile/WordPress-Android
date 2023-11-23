@@ -32,8 +32,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         onBlogSectionClicked: (Long, Long) -> Unit,
         onFollowClicked: () -> Unit,
         onTagItemClicked: (String) -> Unit,
-        onLikesClicked: () -> Unit,
-        onCommentsClicked: () -> Unit,
     ): ReaderPostDetailsHeaderUiState {
         val hasAccessToken = accountStore.hasAccessToken()
         val textTitle = post
@@ -49,7 +47,11 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             blogSectionUiState = buildBlogSectionUiState(post, onBlogSectionClicked),
             followButtonUiState = buildFollowButtonUiState(onFollowClicked, post, hasAccessToken),
             dateLine = buildDateLine(post),
-            interactionSectionUiState = buildInteractionSection(post, onLikesClicked, onCommentsClicked)
+            interactionSectionUiState = buildInteractionSection(
+                post,
+                onLikesClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.LikesClicked) },
+                onCommentsClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.CommentsClicked) }
+            )
         )
     }
 
