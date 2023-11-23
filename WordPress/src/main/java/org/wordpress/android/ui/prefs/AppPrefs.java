@@ -779,6 +779,7 @@ public class AppPrefs {
 
     public static int getImageOptimizeQuality() {
         int quality = getInt(DeletablePrefKey.IMAGE_OPTIMIZE_QUALITY, 0);
+        int defaultQuality = WPMediaUtils.OPTIMIZE_IMAGE_ENCODER_QUALITY;
 
         // It's necessary to check that the quality int exists in the quality array in case of changes
         // See #19644 for an example of when the array's values were changed
@@ -788,7 +789,8 @@ public class AppPrefs {
 
         // If quality int does not exist in settings array, return the default quality value instead
         if (!isQualityValid) {
-            setImageOptimizeQuality(WPMediaUtils.OPTIMIZE_IMAGE_ENCODER_QUALITY);
+            setImageOptimizeQuality(defaultQuality);
+            return defaultQuality;
         }
 
         return quality;
