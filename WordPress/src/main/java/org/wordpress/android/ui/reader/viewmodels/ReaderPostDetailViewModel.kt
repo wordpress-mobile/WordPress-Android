@@ -78,6 +78,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiSt
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiDimen
@@ -527,6 +528,16 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
+    private fun onHeaderAction(post: ReaderPost, action: ReaderPostDetailsHeaderAction) {
+        when (action) {
+            is ReaderPostDetailsHeaderAction.BlogSectionClicked -> onBlogSectionClicked(post.postId, post.blogId)
+            is ReaderPostDetailsHeaderAction.FollowClicked -> onButtonClicked(post.postId, post.blogId, FOLLOW)
+            is ReaderPostDetailsHeaderAction.LikesClicked -> onLikesClicked()
+            is ReaderPostDetailsHeaderAction.CommentsClicked -> onCommentsClicked()
+            is ReaderPostDetailsHeaderAction.TagItemClicked -> onTagItemClicked(action.tagSlug)
+        }
+    }
+
     private fun onBlogSectionClicked(postId: Long, blogId: Long) {
         launch {
             findPost(postId, blogId)?.let {
@@ -589,6 +600,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         return postDetailUiStateBuilder.mapPostToUiState(
             post = post,
             onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked,
+            onHeaderAction = { action -> onHeaderAction(post, action) },
             onBlogSectionClicked = this@ReaderPostDetailViewModel::onBlogSectionClicked,
             onFollowClicked = { onButtonClicked(post.postId, post.blogId, FOLLOW) },
             onTagItemClicked = this@ReaderPostDetailViewModel::onTagItemClicked,

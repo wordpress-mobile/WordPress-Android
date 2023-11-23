@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState.Bu
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState.CommentState
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState.LoadingState
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState.TextMessage
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.HtmlUtilsWrapper
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
@@ -67,10 +68,12 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
     private val relatedPostFeaturedImageHeight: Int = (relatedPostFeaturedImageWidth
             * RELATED_POST_IMAGE_HEIGHT_WIDTH_RATION).toInt()
 
+    // hthomas todo hthomas refactor this
     fun mapPostToUiState(
         post: ReaderPost,
         moreMenuItems: List<SecondaryAction>? = null,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
+        onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
         onBlogSectionClicked: (Long, Long) -> Unit,
         onFollowClicked: () -> Unit,
         onTagItemClicked: (String) -> Unit,
@@ -82,6 +85,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         featuredImageUiState = buildReaderPostFeaturedImageUiState(post),
         headerUiState = buildPostDetailsHeaderUiState(
             post,
+            onHeaderAction,
             onBlogSectionClicked,
             onFollowClicked,
             onTagItemClicked,
@@ -234,8 +238,10 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         post.isPrivateAtomic
     )
 
+    // todo hthomas refactor this
     private fun buildPostDetailsHeaderUiState(
         post: ReaderPost,
+        onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
         onBlogSectionClicked: (Long, Long) -> Unit,
         onFollowClicked: () -> Unit,
         onTagItemClicked: (String) -> Unit,
@@ -243,6 +249,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         onCommentsClicked: () -> Unit,
     ) = postDetailsHeaderViewUiStateBuilder.mapPostToUiState(
         post,
+        onHeaderAction,
         onBlogSectionClicked,
         onFollowClicked,
         onTagItemClicked,
