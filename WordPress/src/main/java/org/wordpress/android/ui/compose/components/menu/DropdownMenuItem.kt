@@ -5,42 +5,46 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun DropdownMenuItem(itemData: DropdownMenuItemData) {
+    itemData.text
 }
 
 sealed class DropdownMenuItemData(
-    val isDefault: Boolean = false,
-    ) {
+    open val text: String,
+    open val isDefault: Boolean,
+) {
     /**
      * @param onClick callback that returns the defined id
      */
     data class Text(
         val id: String,
-        val text: String,
+        override val text: String,
+        override val isDefault: Boolean = false,
         val onClick: (String) -> Unit,
-    ) : DropdownMenuItemData()
+    ) : DropdownMenuItemData(
+        text = text,
+        isDefault = isDefault,
+    )
 
     /**
      * @param onClick callback that returns the defined id
      */
     data class TextAndIcon(
         val id: String,
-        val text: String,
-        @DrawableRes val icon: Int,
+        override val text: String,
+        @DrawableRes val iconRes: Int,
+        override val isDefault: Boolean = false,
         val onClick: (String) -> Unit,
-    ) : DropdownMenuItemData()
+    ) : DropdownMenuItemData(
+        text = text,
+        isDefault = isDefault,
+    )
 
     data class SubMenu(
-        val text: String,
-        val items: List<Item>,
-    ) : DropdownMenuItemData() {
-        /**
-         * @param onClick callback that returns the defined id
-         */
-        data class Item(
-            val id: String,
-            val text: String,
-            val onClick: (String) -> Unit,
-            val isCurrentlySelected: Boolean = false,
-        )
-    }
+        override val text: String,
+        override val isDefault: Boolean = false,
+        val items: List<DropdownMenuItemData>,
+    ) : DropdownMenuItemData(
+        text = text,
+        isDefault = isDefault,
+    )
 }
