@@ -1,33 +1,37 @@
 package org.wordpress.android.ui.compose.components.menu
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.*
+import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.SubMenu
+import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Text
+import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.TextAndIcon
 import org.wordpress.android.ui.compose.theme.AppThemeEditor
 
 /**
- * DropdownMenu component.
+ * DropdownMenu component. Consists of a DropdownMenuButton that opens a DropdownMenuItemsContainer when tapped.
  * @param items the dropdown menu items to be shown. There should be only one default item.
  */
 @Composable
 fun DropdownMenu(items: List<DropdownMenuItemData>) {
     if (items.hasSingleDefaultItem()) {
-        throw IllegalArgumentException("DropdownMenu ")
+        throw DropdownMenuDefaultItemException()
+    }
+    Column {
+        DropdownMenuButton(
+            selectedItem = items.defaultItem(),
+            onClick = {
+                TODO("Open menu")
+            }
+        )
     }
 }
 
-fun List<DropdownMenuItemData>.hasSingleDefaultItem(): Boolean {
-    val defaultTextSize = filterIsInstance<Text>()
-        .filter { it.isDefault }.size
-    val defaultTextAndIconSize = filterIsInstance<TextAndIcon>()
-        .filter { it.isDefault }.size
-    val defaultSubmenuItemsSize = filterIsInstance<SubMenu>()
-        .flatMap { it.items }
-        .filter { it.isDefault }.size
-    return (defaultTextSize + defaultTextAndIconSize + defaultSubmenuItemsSize) == 1
-}
+private fun List<DropdownMenuItemData>.hasSingleDefaultItem() = filter { it.isDefault }.size == 1
+
+private fun List<DropdownMenuItemData>.defaultItem() = find { it.isDefault } ?: throw DropdownMenuDefaultItemException()
 
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -45,17 +49,23 @@ fun EditPostSettingsJetpackSocialSharesContainerPreview() {
                 TextAndIcon(
                     id = "item1",
                     text = "Item 1",
-                    icon = R.drawable.ic_jetpack_logo_24dp,
+                    iconRes = R.drawable.ic_jetpack_logo_24dp,
                     onClick = {},
                 ),
                 SubMenu(
                     text = "SubMenu",
                     items = listOf(
-                        SubMenu.Item(
+                        Text(
                             id = "item1",
                             text = "Item 1",
                             onClick = {},
                             isDefault = true,
+                        ),
+                        TextAndIcon(
+                            id = "item1",
+                            text = "Item 1",
+                            iconRes = R.drawable.ic_jetpack_logo_24dp,
+                            onClick = {},
                         )
                     )
                 ),
