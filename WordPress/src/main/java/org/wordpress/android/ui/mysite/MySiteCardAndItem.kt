@@ -44,6 +44,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         POST_CARD_ERROR,
         POST_CARD_WITH_POST_ITEMS,
         BLOGGING_PROMPT_CARD,
+        BLOGANUARY_NUDGE_CARD,
         PROMOTE_WITH_BLAZE_CARD,
         DASHBOARD_DOMAIN_TRANSFER_CARD,
         BLAZE_CAMPAIGNS_CARD,
@@ -301,6 +302,13 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 val onRemoveClick: () -> Unit,
             ) : BloggingPromptCard(type = Type.BLOGGING_PROMPT_CARD)
         }
+
+        data class BloganuaryNudgeCardModel(
+            val title: UiString,
+            val text: UiString,
+            val onLearnMoreClick: ListItemInteraction,
+            val onHideMenuItemClick: ListItemInteraction,
+        ) : Card(Type.BLOGANUARY_NUDGE_CARD)
 
         data class DomainTransferCardModel(
             @StringRes val title: Int,

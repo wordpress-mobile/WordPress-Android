@@ -23,6 +23,7 @@ class CardsTracker @Inject constructor(
         STATS("stats"),
         POST("post"),
         BLOGGING_PROMPT("blogging_prompt"),
+        BLOGANUARY_NUDGE("bloganuary_nudge"),
         PROMOTE_WITH_BLAZE("promote_with_blaze"),
         BLAZE_CAMPAIGNS("blaze_campaigns"),
         PAGES("pages"),
