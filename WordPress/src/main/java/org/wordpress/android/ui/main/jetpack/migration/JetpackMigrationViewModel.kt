@@ -124,17 +124,15 @@ class JetpackMigrationViewModel @Inject constructor(
 
             migrationState is Initial -> emit(Loading)
 
-            migrationState is Migrating
-                    || migrationState is Successful && !continueClicked && migrationState.data.sites.isNotEmpty() ->
+            (migrationState is Migrating || migrationState is Successful) && migrationState.data.sites.isEmpty() ->
+                emit(initSuccessScreenUiForNoSites())
+
+            migrationState is Migrating || (migrationState is Successful && !continueClicked) ->
                 emit(initWelcomeScreenUi(migrationState.data, continueClicked))
 
             migrationState is Successful -> when {
-                !notificationContinueClicked && migrationState.data.sites.isNotEmpty() ->
-                    emit(initNotificationsScreenUi())
-                else -> {
-                    if (migrationState.data.sites.isNotEmpty()) emit(initSuccessScreenUi())
-                    else emit(initSuccessScreenUiForNoSites())
-                }
+                !notificationContinueClicked -> emit(initNotificationsScreenUi())
+                else -> emit(initSuccessScreenUi())
             }
 
             migrationState is Failure -> emit(initErrorScreenUi())
