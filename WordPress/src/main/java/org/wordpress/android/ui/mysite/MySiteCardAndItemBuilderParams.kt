@@ -151,6 +151,12 @@ sealed class MySiteCardAndItemBuilderParams {
         val onRemoveClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
+    data class BloganuaryNudgeCardBuilderParams(
+        val isEligible: Boolean,
+        val onLearnMoreClick: () -> Unit,
+        val onHideMenuItemClick: () -> Unit
+    ) : MySiteCardAndItemBuilderParams()
+
     sealed class BlazeCardBuilderParams : MySiteCardAndItemBuilderParams() {
         data class PromoteWithBlazeCardBuilderParams(
             val onClick: () -> Unit,
