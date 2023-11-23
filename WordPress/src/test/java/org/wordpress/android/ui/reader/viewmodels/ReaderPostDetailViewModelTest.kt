@@ -663,6 +663,32 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         )
     }
 
+    @Test
+    fun `when header likes count is clicked, then like action is invoked`() = test {
+        val observers = init()
+        // trigger mapping and header action callback capture
+        (observers.uiStates.last() as ReaderPostDetailsUiState)
+
+        capturedOnHeaderAction.invoke(ReaderPostDetailsHeaderAction.LikesClicked)
+
+        assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowEngagedPeopleList::class.java)
+    }
+
+    @Test
+    fun `when header comments count is clicked, then comments action is invoked`() = test {
+        // trigger mapping and header action callback capture
+        (init().uiStates.last() as ReaderPostDetailsUiState)
+
+        capturedOnHeaderAction.invoke(ReaderPostDetailsHeaderAction.CommentsClicked)
+
+        verify(readerPostCardActionsHandler).onAction(
+            eq(readerPost),
+            eq(COMMENTS),
+            eq(false),
+            anyString()
+        )
+    }
+
     /* EXCERPT FOOTER */
     @Test
     fun `when visit excerpt link is clicked, then post blog url is opened`() = test {
