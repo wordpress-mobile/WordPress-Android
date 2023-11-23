@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class MediaTestUtils {
     public static int insertMediaIntoDatabase(MediaModel media) {
@@ -18,13 +18,16 @@ public class MediaTestUtils {
     public static List<MediaModel> insertRandomMediaIntoDatabase(int localSiteId, int count) {
         List<MediaModel> insertedMedia = generateRandomizedMediaList(count, localSiteId);
         for (MediaModel media : insertedMedia) {
-            assertTrue(MediaSqlUtils.insertOrUpdateMedia(media) == 1);
+            assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(media));
         }
         return insertedMedia;
     }
 
     public static MediaModel generateMedia(String title, String desc, String caption, String alt) {
-        MediaModel media = new MediaModel();
+        MediaModel media = new MediaModel(
+                0,
+                0
+        );
         media.setTitle(title);
         media.setDescription(desc);
         media.setCaption(caption);
@@ -33,9 +36,10 @@ public class MediaTestUtils {
     }
 
     public static MediaModel generateMediaFromPath(int localSiteId, long mediaId, String filePath) {
-        MediaModel media = new MediaModel();
-        media.setLocalSiteId(localSiteId);
-        media.setMediaId(mediaId);
+        MediaModel media = new MediaModel(
+                localSiteId,
+                mediaId
+        );
         media.setFilePath(filePath);
         media.setFileName(MediaUtils.getFileName(filePath));
         media.setFileExtension(MediaUtils.getExtension(filePath));
