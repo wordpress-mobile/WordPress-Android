@@ -31,7 +31,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
         onBlogSectionClicked: (Long, Long) -> Unit,
         onFollowClicked: () -> Unit,
-        onTagItemClicked: (String) -> Unit,
     ): ReaderPostDetailsHeaderUiState {
         val hasAccessToken = accountStore.hasAccessToken()
         val textTitle = post
@@ -42,7 +41,10 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         return ReaderPostDetailsHeaderUiState(
             title = textTitle,
             authorName = post.authorName,
-            tagItems = buildTagItems(post, onTagItemClicked),
+            tagItems = buildTagItems(
+                post,
+                onClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.TagItemClicked(it)) }
+            ),
             tagItemsVisibility = buildTagItemsVisibility(post),
             blogSectionUiState = buildBlogSectionUiState(post, onBlogSectionClicked),
             followButtonUiState = buildFollowButtonUiState(onFollowClicked, post, hasAccessToken),
