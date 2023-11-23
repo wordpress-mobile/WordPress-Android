@@ -71,7 +71,6 @@ import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.ExceptionLogger;
-import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.gutenberg.DialogVisibility;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
@@ -1487,17 +1486,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private boolean handleBackPressed() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(
-                ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
-        if (fragment != null && fragment.isVisible()) {
-            if (fragment instanceof ImageSettingsDialogFragment) {
-                ImageSettingsDialogFragment imFragment = (ImageSettingsDialogFragment) fragment;
-                imFragment.dismissFragment();
-            }
-
-            return false;
-        }
-
         if (mViewPager.getCurrentItem() == PAGE_PUBLISH_SETTINGS) {
             mViewPager.setCurrentItem(PAGE_SETTINGS);
             invalidateOptionsMenu();
