@@ -2275,6 +2275,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_settings_privacy_settings_tapped";
             case APP_SETTINGS_OPEN_DEVICE_SETTINGS_TAPPED:
                 return "app_settings_open_device_settings_tapped";
+            case APP_SETTINGS_OPTIMIZE_IMAGES_POPUP_TAPPED:
+                return "app_settings_optimize_images_popup_tapped";
             case APP_SETTINGS_MAX_IMAGE_SIZE_CHANGED:
                 return "app_settings_max_image_size_changed";
             case APP_SETTINGS_IMAGE_QUALITY_CHANGED:
@@ -2287,8 +2289,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_settings_max_video_size_changed";
             case APP_SETTINGS_VIDEO_QUALITY_CHANGED:
                 return "app_settings_video_quality_changed";
-            case APP_SETTINGS_OPTIMIZE_IMAGES_POPUP_TAPPED:
-                return "app_settings_optimize_images_popup_changed";
             case PRIVACY_CHOICES_BANNER_PRESENTED:
                 return "privacy_choices_banner_presented";
             case PRIVACY_CHOICES_BANNER_SETTINGS_BUTTON_TAPPED:
