@@ -50,7 +50,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -415,8 +414,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 error -> {
                     String message = "Error response from XMLRPC.DELETE_MEDIA:" + error;
                     AppLog.e(T.MEDIA, message);
-                    MediaErrorType mediaErrorType = MediaErrorType.fromBaseNetworkError(error);
-                    MediaError mediaError = new MediaError(mediaErrorType);
+                    MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                     mediaError.logMessage = "XMLRPC: " + message;
                     notifyMediaDeleted(site, media, mediaError);
                 }));
@@ -544,35 +542,39 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             return null;
         }
 
-        MediaModel media = new MediaModel();
-        media.setMediaId(MapUtils.getMapLong(response, "attachment_id"));
-        media.setPostId(MapUtils.getMapLong(response, "parent"));
-        media.setTitle(StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(response, "title")));
-        media.setCaption(StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(response, "caption")));
-        media.setDescription(StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(response, "description")));
-        media.setVideoPressGuid(MapUtils.getMapStr(response, "videopress_shortcode"));
-        media.setThumbnailUrl(MapUtils.getMapStr(response, "thumbnail"));
-        Date uploadDate = MapUtils.getMapDate(response, "date_created_gmt");
-        media.setUploadDate(DateTimeUtils.iso8601UTCFromDate(uploadDate));
         String link = MapUtils.getMapStr(response, "link");
         String fileExtension = MediaUtils.getExtension(link);
-        media.setUrl(link);
-        media.setFileName(MediaUtils.getFileName(link));
-        media.setFileExtension(fileExtension);
-        media.setMimeType(MediaUtils.getMimeTypeForExtension(fileExtension));
-
-        Object metadataObject = response.get("metadata");
-        if (metadataObject instanceof Map) {
-            Map metadataMap = (Map) metadataObject;
-            media.setWidth(MapUtils.getMapInt(metadataMap, "width"));
-            media.setHeight(MapUtils.getMapInt(metadataMap, "height"));
-            media.setFileUrlMediumSize(getFileUrlForSize(link, metadataMap, "medium"));
-            media.setFileUrlMediumLargeSize(getFileUrlForSize(link, metadataMap, "medium_large"));
-            media.setFileUrlLargeSize(getFileUrlForSize(link, metadataMap, "large"));
+        Map metadataMap = null;
+        if (response.get("metadata") instanceof Map) {
+            metadataMap = (Map) response.get("metadata");
         }
-
-        media.setUploadState(MediaUploadState.UPLOADED);
-        return media;
+        return new MediaModel(
+                0,
+                MapUtils.getMapLong(response, "attachment_id"),
+                MapUtils.getMapLong(response, "parent"),
+                0,
+                "",
+                DateTimeUtils.iso8601UTCFromDate(MapUtils.getMapDate(response, "date_created_gmt")),
+                link,
+                MapUtils.getMapStr(response, "thumbnail"),
+                MediaUtils.getFileName(link),
+                fileExtension,
+                MediaUtils.getMimeTypeForExtension(fileExtension),
+                StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(response, "title")),
+                StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(response, "caption")),
+                StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(response, "description")),
+                "",
+                metadataMap != null ? MapUtils.getMapInt(metadataMap, "width") : 0,
+                metadataMap != null ? MapUtils.getMapInt(metadataMap, "height") : 0,
+                0,
+                MapUtils.getMapStr(response, "videopress_shortcode"),
+                false,
+                MediaUploadState.UPLOADED,
+                metadataMap != null ? getFileUrlForSize(link, metadataMap, "medium") : null,
+                metadataMap != null ? getFileUrlForSize(link, metadataMap, "medium_large") : null,
+                metadataMap != null ? getFileUrlForSize(link, metadataMap, "large") : null,
+                false
+        );
     }
 
     @Nullable

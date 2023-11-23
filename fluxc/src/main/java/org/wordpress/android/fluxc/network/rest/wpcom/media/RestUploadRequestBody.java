@@ -84,15 +84,19 @@ public class RestUploadRequestBody extends BaseUploadRequestBody {
         }
 
         // add media file data
-        File mediaFile = new File(media.getFilePath());
-        RequestBody body = RequestBody.create(MediaType.parse(media.getMimeType()), mediaFile);
-        String fileName = media.getFileName();
-        try {
-            fileName = URLEncoder.encode(media.getFileName(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        String filePath = media.getFilePath();
+        String mimeType = media.getMimeType();
+        if (filePath != null && mimeType != null) {
+            File mediaFile = new File(filePath);
+            RequestBody body = RequestBody.create(MediaType.parse(mimeType), mediaFile);
+            String fileName = media.getFileName();
+            try {
+                fileName = URLEncoder.encode(media.getFileName(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            builder.addFormDataPart(MEDIA_DATA_KEY, fileName, body);
         }
-        builder.addFormDataPart(MEDIA_DATA_KEY, fileName, body);
 
         return builder.build();
     }
