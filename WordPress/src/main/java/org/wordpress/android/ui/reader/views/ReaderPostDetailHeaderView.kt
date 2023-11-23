@@ -85,7 +85,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         blogSectionRoot.apply {
             setBackgroundResource(context.getDrawableResIdFromAttribute(state.blogSectionClickData?.background ?: 0))
             state.blogSectionClickData?.onBlogSectionClicked?.let { onClick ->
-                setOnClickListener { onClick.invoke(state.postId, state.blogId) }
+                setOnClickListener { onClick.invoke() }
             } ?: run {
                 setOnClickListener(null)
                 isClickable = false

@@ -29,7 +29,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     fun mapPostToUiState(
         post: ReaderPost,
         onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
-        onBlogSectionClicked: (Long, Long) -> Unit,
     ): ReaderPostDetailsHeaderUiState {
         val hasAccessToken = accountStore.hasAccessToken()
         val textTitle = post
@@ -45,7 +44,10 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
                 onClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.TagItemClicked(it)) }
             ),
             tagItemsVisibility = buildTagItemsVisibility(post),
-            blogSectionUiState = buildBlogSectionUiState(post, onBlogSectionClicked),
+            blogSectionUiState = buildBlogSectionUiState(
+                post,
+                onBlogSectionClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.BlogSectionClicked) }
+            ),
             followButtonUiState = buildFollowButtonUiState(
                 post,
                 hasAccessToken,
@@ -62,7 +64,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
 
     private fun buildBlogSectionUiState(
         post: ReaderPost,
-        onBlogSectionClicked: (Long, Long) -> Unit
+        onBlogSectionClicked: () -> Unit
     ): ReaderBlogSectionUiState {
         return postUiStateBuilder.mapPostToBlogSectionUiState(
             post,
