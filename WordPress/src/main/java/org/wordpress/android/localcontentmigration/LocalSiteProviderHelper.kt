@@ -10,9 +10,11 @@ class LocalSiteProviderHelper @Inject constructor(
     private val accountStore: AccountStore,
 ) : LocalDataProviderHelper {
     override fun getData(localEntityId: Int?): SitesData =
-        if (accountStore.hasAccessToken())
-            SitesData(sites = siteStore.sites)
-        else
-        // self-hosted only
-            SitesData(sites = siteStore.sites.filter { !it.isUsingWpComRestApi })
+        if (accountStore.hasAccessToken()) {
+            SitesData(sites = siteStore.sites, true)
+        } else {
+            // self-hosted only
+            val sites = siteStore.sites.filter { !it.isUsingWpComRestApi }
+            SitesData(sites = sites, sites.isNotEmpty())
+        }
 }

@@ -4473,6 +4473,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_delete_message">We recommend &lt;b&gt;uninstalling the WordPress app&lt;/b&gt; on your device to avoid data conflicts.</string>
     <string name="jp_migration_got_it_button">Got it</string>
     <string name="jp_migration_need_help_button">Need help?</string>
+    <string name="jp_migration_done_no_sites_message">It\'s time to continue your WordPress journey on the Jetpack app.</string>
+    <string name="jp_migration_lets_go_button">Let\'s go</string>
 
     <!-- Open Web Links With Jetpack -->
     <string name="preference_open_links_in_jetpack">Open links in Jetpack</string>
