@@ -7,7 +7,9 @@ import androidx.compose.runtime.Composable
 fun DropdownMenuItem(itemData: DropdownMenuItemData) {
 }
 
-sealed class DropdownMenuItemData {
+sealed class DropdownMenuItemData(
+    val isDefault: Boolean = false,
+    ) {
     /**
      * @param onClick callback that returns the defined id
      */
@@ -15,7 +17,6 @@ sealed class DropdownMenuItemData {
         val id: String,
         val text: String,
         val onClick: (String) -> Unit,
-        val isDefault: Boolean = false,
     ) : DropdownMenuItemData()
 
     /**
@@ -26,7 +27,6 @@ sealed class DropdownMenuItemData {
         val text: String,
         @DrawableRes val icon: Int,
         val onClick: (String) -> Unit,
-        val isDefault: Boolean = false,
     ) : DropdownMenuItemData()
 
     data class SubMenu(
@@ -40,7 +40,7 @@ sealed class DropdownMenuItemData {
             val id: String,
             val text: String,
             val onClick: (String) -> Unit,
-            val isDefault: Boolean = false,
+            val isCurrentlySelected: Boolean = false,
         )
     }
 }
