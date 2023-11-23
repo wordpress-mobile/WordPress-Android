@@ -75,7 +75,6 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
         onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
         onBlogSectionClicked: (Long, Long) -> Unit,
-        onFollowClicked: () -> Unit,
     ) = ReaderPostDetailsUiState(
         postId = post.postId,
         blogId = post.blogId,
@@ -84,7 +83,6 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             post,
             onHeaderAction,
             onBlogSectionClicked,
-            onFollowClicked,
         ),
         excerptFooterUiState = buildExcerptFooterUiState(post),
         moreMenuItems = moreMenuItems,
@@ -237,12 +235,10 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         post: ReaderPost,
         onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
         onBlogSectionClicked: (Long, Long) -> Unit,
-        onFollowClicked: () -> Unit,
     ) = postDetailsHeaderViewUiStateBuilder.mapPostToUiState(
         post,
         onHeaderAction,
         onBlogSectionClicked,
-        onFollowClicked,
     )
 
     private fun buildExcerptFooterUiState(post: ReaderPost): ExcerptFooterUiState? =

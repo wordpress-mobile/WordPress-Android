@@ -602,7 +602,6 @@ class ReaderPostDetailViewModel @Inject constructor(
             onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked,
             onHeaderAction = { action -> onHeaderAction(post, action) },
             onBlogSectionClicked = this@ReaderPostDetailViewModel::onBlogSectionClicked,
-            onFollowClicked = { onButtonClicked(post.postId, post.blogId, FOLLOW) },
         )
     }
 
