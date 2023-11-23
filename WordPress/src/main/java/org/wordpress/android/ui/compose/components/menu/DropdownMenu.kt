@@ -53,6 +53,7 @@ fun EditPostSettingsJetpackSocialSharesContainerPreview() {
                     onClick = {},
                 ),
                 SubMenu(
+                    id = "subMenu1",
                     text = "SubMenu",
                     items = listOf(
                         Text(
@@ -67,7 +68,8 @@ fun EditPostSettingsJetpackSocialSharesContainerPreview() {
                             iconRes = R.drawable.ic_jetpack_logo_24dp,
                             onClick = {},
                         )
-                    )
+                    ),
+                    onClick = {},
                 ),
             )
         )

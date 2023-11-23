@@ -82,17 +82,15 @@ fun DropdownMenuButton(
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun DropdownMenuButtonText() {
+private fun DropdownMenuButtonPreview() {
     AppTheme {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            
         ) {
             DropdownMenuButton(
                 selectedItem = Text(
                     id = "text1",
                     text = "Text only",
-                    isDefault = true,
                     onClick = {},
                 ),
                 onClick = {}
@@ -102,7 +100,6 @@ private fun DropdownMenuButtonText() {
                     id = "textAndIcon1",
                     text = "Text and Icon",
                     iconRes = R.drawable.ic_jetpack_logo_white_24dp,
-                    isDefault = true,
                     onClick = {},
                 ),
                 onClick = {}
@@ -111,7 +108,6 @@ private fun DropdownMenuButtonText() {
                 selectedItem = Text(
                     id = "textAndIcon1",
                     text = "Text type with a really long text as the button label",
-                    isDefault = true,
                     onClick = {},
                 ),
                 onClick = {}
@@ -121,7 +117,6 @@ private fun DropdownMenuButtonText() {
                     id = "textAndIcon1",
                     text = "Text and Icon type with a really long text as the button label",
                     iconRes = R.drawable.ic_jetpack_logo_white_24dp,
-                    isDefault = true,
                     onClick = {},
                 ),
                 onClick = {}
