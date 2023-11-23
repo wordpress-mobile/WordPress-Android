@@ -107,6 +107,8 @@ sealed class SiteNavigationAction {
 
     data class OpenDomainTransferPage(val url: String) : SiteNavigationAction()
     object OpenDashboardPersonalization : SiteNavigationAction()
+
+    data class OpenBloganuaryNudgeOverlay(val isPromptsEnabled: Boolean): SiteNavigationAction()
 }
 
 sealed class BloggingPromptCardNavigationAction: SiteNavigationAction() {

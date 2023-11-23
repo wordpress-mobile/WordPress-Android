@@ -751,6 +751,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenDashboardPersonalization -> activityNavigator.openDashboardPersonalization(
             requireActivity()
         )
+
+        is SiteNavigationAction.OpenBloganuaryNudgeOverlay -> {
+            TODO("thomashortadev: Implement Bloganuary nudge overlay")
+        }
     }
 
     private fun handleNavigation(action: BloggingPromptCardNavigationAction) {

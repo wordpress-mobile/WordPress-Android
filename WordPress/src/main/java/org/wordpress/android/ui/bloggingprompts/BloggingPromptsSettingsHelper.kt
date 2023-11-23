@@ -50,9 +50,7 @@ class BloggingPromptsSettingsHelper @Inject constructor(
     }
 
     suspend fun shouldShowPromptsFeature(): Boolean {
-        val siteId = selectedSiteRepository.getSelectedSite()?.localId()?.value ?: return false
-
-        return isPromptsFeatureAvailable() && isPromptsSettingEnabled(siteId) && !isPromptSkippedForToday()
+        return isPromptsFeatureAvailable() && isPromptsSettingEnabled() && !isPromptSkippedForToday()
     }
 
     fun shouldShowPromptsSetting(): Boolean {
@@ -66,12 +64,13 @@ class BloggingPromptsSettingsHelper @Inject constructor(
         return promptSkippedDate != null && isSameDay(promptSkippedDate, Date())
     }
 
-    private suspend fun isPromptsSettingEnabled(
-        siteId: Int
-    ): Boolean = bloggingRemindersStore
-        .bloggingRemindersModel(siteId)
-        .firstOrNull()
-        ?.isPromptsCardEnabled == true
+    suspend fun isPromptsSettingEnabled(): Boolean {
+        val siteId = selectedSiteRepository.getSelectedSite()?.localId()?.value ?: return false
+        return bloggingRemindersStore
+            .bloggingRemindersModel(siteId)
+            .firstOrNull()
+            ?.isPromptsCardEnabled == true
+    }
 
     companion object {
         private const val TRACK_PROPERTY_ENABLED = "enabled"
