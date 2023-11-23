@@ -33,6 +33,7 @@ public class WPComThemeResponse {
     @Nullable public String demo_uri;
     @Nullable public String version;
     @NonNull public String screenshot;
+    @Nullable public String theme_type;
     @NonNull public String description;
     @Nullable public String download_uri;
     @Nullable public String price;
