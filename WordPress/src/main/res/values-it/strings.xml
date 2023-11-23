@@ -3002,11 +3002,11 @@ Language: it
     <string name="editor_post_saved_online">L\'articolo è stato salvato online</string>
     <string name="site_settings_image_quality_hint">Qualità delle immagini. Valori più elevati indicano una migliore qualità delle immagini.</string>
     <string name="site_settings_optimize_images_summary">Consenti di ridimensionare e comprimere le immagini</string>
-    <string name="media_encoder_quality_100">Massima</string>
-    <string name="media_encoder_quality_95">Molto alta</string>
-    <string name="media_encoder_quality_90">Alta</string>
-    <string name="media_encoder_quality_85">Media</string>
-    <string name="media_encoder_quality_80">Bassa</string>
+    <string name="media_encoder_quality_maximum">Massima</string>
+    <string name="media_encoder_quality_very_high">Molto alta</string>
+    <string name="media_encoder_quality_high">Alta</string>
+    <string name="media_encoder_quality_medium">Media</string>
+    <string name="media_encoder_quality_low">Bassa</string>
     <string name="media_upload_state_uploaded">Caricato</string>
     <string name="media_upload_state_failed">Caricamento fallito</string>
     <string name="media_upload_state_deleted">Eliminato</string>

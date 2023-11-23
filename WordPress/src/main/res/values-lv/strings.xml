@@ -2920,11 +2920,11 @@ Language: lv
     <string name="editor_post_saved_online">Ziņa saglabāta tiešsaistē</string>
     <string name="site_settings_image_quality_hint">Attēlu kvalitāte. Augstākas vērtības nozīmē labākas kvalitātes attēlus.</string>
     <string name="site_settings_optimize_images_summary">Iespējot attēlu lieluma maiņu un saspiešanu</string>
-    <string name="media_encoder_quality_100">Maksimāla</string>
-    <string name="media_encoder_quality_95">Ļoti augsta</string>
-    <string name="media_encoder_quality_90">Augsta</string>
-    <string name="media_encoder_quality_85">Vidēja</string>
-    <string name="media_encoder_quality_80">Zema</string>
+    <string name="media_encoder_quality_maximum">Maksimāla</string>
+    <string name="media_encoder_quality_very_high">Ļoti augsta</string>
+    <string name="media_encoder_quality_high">Augsta</string>
+    <string name="media_encoder_quality_medium">Vidēja</string>
+    <string name="media_encoder_quality_low">Zema</string>
     <string name="media_upload_state_uploaded">Augšupielādēts</string>
     <string name="media_upload_state_failed">Augšupielāde neizdevās</string>
     <string name="media_upload_state_deleted">Dzēsts</string>

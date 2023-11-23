@@ -2833,11 +2833,11 @@ Language: en_GB
     <string name="editor_post_saved_online">Post saved online</string>
     <string name="site_settings_image_quality_hint">Quality of pictures. Higher values mean better quality pictures.</string>
     <string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
-    <string name="media_encoder_quality_100">Maximum</string>
-    <string name="media_encoder_quality_95">Very High</string>
-    <string name="media_encoder_quality_90">High</string>
-    <string name="media_encoder_quality_85">Medium</string>
-    <string name="media_encoder_quality_80">Low</string>
+    <string name="media_encoder_quality_maximum">Maximum</string>
+    <string name="media_encoder_quality_very_high">Very High</string>
+    <string name="media_encoder_quality_high">High</string>
+    <string name="media_encoder_quality_medium">Medium</string>
+    <string name="media_encoder_quality_low">Low</string>
     <string name="media_upload_state_uploaded">Uploaded</string>
     <string name="media_upload_state_deleted">Deleted</string>
     <string name="media_upload_state_deleting">Deleting</string>

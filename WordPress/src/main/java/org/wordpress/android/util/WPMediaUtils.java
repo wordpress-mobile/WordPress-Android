@@ -46,6 +46,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class WPMediaUtils {
@@ -53,9 +54,9 @@ public class WPMediaUtils {
         void onMediaCapturePathReady(String mediaCapturePath);
     }
 
-    // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
-    public static final int OPTIMIZE_IMAGE_MAX_SIZE = 3000;
-    public static final int OPTIMIZE_IMAGE_ENCODER_QUALITY = 85;
+    // 3000px is the utmost max resolution you can set in the picker but 2000px is the default max for optimized images.
+    public static final int OPTIMIZE_IMAGE_MAX_SIZE = 2000;
+    public static final int OPTIMIZE_IMAGE_ENCODER_QUALITY = 80;
     public static final int OPTIMIZE_VIDEO_MAX_WIDTH = 1280;
     public static final int OPTIMIZE_VIDEO_ENCODER_BITRATE_KB = 3000;
 
@@ -107,8 +108,8 @@ public class WPMediaUtils {
      * Check if we should advertise image optimization feature for the current site.
      * <p>
      * The following condition need to be all true:
-     * 1) Image optimization is OFF on the site.
-     * 2) Didn't already ask to enable the feature.
+     * 1) Image optimization is ON on the site.
+     * 2) Didn't already ask to keep or disable the feature.
      * 3) The user has granted storage access to the app.
      * This is because we don't want to ask so much things to users the first time they try to add a picture to the app.
      *
@@ -129,8 +130,8 @@ public class WPMediaUtils {
             return false;
         }
 
-        // Check whether image optimization is already available for the site
-        return !AppPrefs.isImageOptimize();
+        // Check whether image optimization is enabled for the site
+        return AppPrefs.isImageOptimize();
     }
 
     public interface OnAdvertiseImageOptimizationListener {
@@ -142,12 +143,12 @@ public class WPMediaUtils {
         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (which == DialogInterface.BUTTON_POSITIVE) {
-                    if (AppPrefs.isImageOptimize()) {
-                        // null or image optimization already ON. We should not be here though.
-                    } else {
-                        AppPrefs.setImageOptimize(true);
-                    }
+                String propertyValue = (which == DialogInterface.BUTTON_POSITIVE) ? "on" : "off";
+                AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_OPTIMIZE_IMAGES_POPUP_TAPPED,
+                        Collections.singletonMap("option", propertyValue));
+
+                if (which == DialogInterface.BUTTON_NEGATIVE && AppPrefs.isImageOptimize()) {
+                    AppPrefs.setImageOptimize(false);
                 }
 
                 listener.done();

@@ -2493,11 +2493,11 @@ Language: vi_VN
     <string name="editor_post_saved_online">Đã lưu bài viết online</string>
     <string name="site_settings_image_quality_hint">Chất lượng ảnh. Thông số càng cao thì chất lượng ảnh càng cao.</string>
     <string name="site_settings_optimize_images_summary">Thay đổi kích thước và nén hình</string>
-    <string name="media_encoder_quality_100">Tối đa</string>
-    <string name="media_encoder_quality_95">Rất cao</string>
-    <string name="media_encoder_quality_90">Cao</string>
-    <string name="media_encoder_quality_85">Trung bình</string>
-    <string name="media_encoder_quality_80">Thấp</string>
+    <string name="media_encoder_quality_maximum">Tối đa</string>
+    <string name="media_encoder_quality_very_high">Rất cao</string>
+    <string name="media_encoder_quality_high">Cao</string>
+    <string name="media_encoder_quality_medium">Trung bình</string>
+    <string name="media_encoder_quality_low">Thấp</string>
     <string name="media_upload_state_uploaded">Đã tải lên</string>
     <string name="media_upload_state_failed">Tải lên thất bại</string>
     <string name="media_upload_state_deleted">Đã xóa</string>

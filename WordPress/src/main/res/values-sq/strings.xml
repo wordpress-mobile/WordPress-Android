@@ -2997,11 +2997,11 @@ Language: sq_AL
     <string name="editor_post_saved_online">Postimi u ruajt në internet</string>
     <string name="site_settings_image_quality_hint">Cilësi fotosh. Vlera më të mëdha do të thotë cilësi më e lartë fotosh.</string>
     <string name="site_settings_optimize_images_summary">Aktivizojeni që të ripërmasoni dhe ngjeshni foto</string>
-    <string name="media_encoder_quality_100">Maksimum</string>
-    <string name="media_encoder_quality_95">Shumë e Lartë</string>
-    <string name="media_encoder_quality_90">E lartë</string>
-    <string name="media_encoder_quality_85">E mesme</string>
-    <string name="media_encoder_quality_80">E ulët</string>
+    <string name="media_encoder_quality_maximum">Maksimum</string>
+    <string name="media_encoder_quality_very_high">Shumë e Lartë</string>
+    <string name="media_encoder_quality_high">E lartë</string>
+    <string name="media_encoder_quality_medium">E mesme</string>
+    <string name="media_encoder_quality_low">E ulët</string>
     <string name="media_upload_state_uploaded">U ngarkua</string>
     <string name="media_upload_state_failed">Ngarkimi Dështoi</string>
     <string name="media_upload_state_deleted">U fshi</string>

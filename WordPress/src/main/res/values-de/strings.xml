@@ -3003,11 +3003,11 @@ Language: de
     <string name="editor_post_saved_online">Der Beitrag wurde online gespeichert</string>
     <string name="site_settings_image_quality_hint">Qualität der Bilder. Höhere Werte bedeuten bessere Bilder.</string>
     <string name="site_settings_optimize_images_summary">Aktivieren, um die Größe von Bildern zu ändern und sie zu komprimieren</string>
-    <string name="media_encoder_quality_100">Maximal</string>
-    <string name="media_encoder_quality_95">Sehr hoch</string>
-    <string name="media_encoder_quality_90">Hoch</string>
-    <string name="media_encoder_quality_85">Mittel</string>
-    <string name="media_encoder_quality_80">Niedrig</string>
+    <string name="media_encoder_quality_maximum">Maximal</string>
+    <string name="media_encoder_quality_very_high">Sehr hoch</string>
+    <string name="media_encoder_quality_high">Hoch</string>
+    <string name="media_encoder_quality_medium">Mittel</string>
+    <string name="media_encoder_quality_low">Niedrig</string>
     <string name="media_upload_state_uploaded">Hochgeladen</string>
     <string name="media_upload_state_failed">Hochladen fehlgeschlagen</string>
     <string name="media_upload_state_deleted">Gelöscht</string>

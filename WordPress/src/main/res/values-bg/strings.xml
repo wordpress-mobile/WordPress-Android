@@ -221,11 +221,11 @@ Language: bg
     <string name="photo_picker_title">Избор на изображение</string>
     <string name="editor_post_saved_online">Публикацията е запазена онлайн.</string>
     <string name="site_settings_image_quality_hint">Качество на изображенията. Високите стойности означават снимки с по-високо качество.</string>
-    <string name="media_encoder_quality_100">Максимум</string>
-    <string name="media_encoder_quality_95">Много високо</string>
-    <string name="media_encoder_quality_90">Високо</string>
-    <string name="media_encoder_quality_85">Средно</string>
-    <string name="media_encoder_quality_80">Ниско</string>
+    <string name="media_encoder_quality_maximum">Максимум</string>
+    <string name="media_encoder_quality_very_high">Много високо</string>
+    <string name="media_encoder_quality_high">Високо</string>
+    <string name="media_encoder_quality_medium">Средно</string>
+    <string name="media_encoder_quality_low">Ниско</string>
     <string name="media_upload_state_uploaded">Качено</string>
     <string name="media_upload_state_deleted">Изтрито</string>
     <string name="media_upload_state_deleting">Изтрива се</string>

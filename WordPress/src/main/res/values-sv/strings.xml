@@ -3006,11 +3006,11 @@ Language: sv_SE
     <string name="editor_post_saved_online">Inlägget har sparats on-line</string>
     <string name="site_settings_image_quality_hint">Bildkvalitet. Ett högre värde innebär bilder med högre kvalitet.</string>
     <string name="site_settings_optimize_images_summary">Gör det möjligt att ändra storlek på och komprimera bildfiler</string>
-    <string name="media_encoder_quality_100">Max</string>
-    <string name="media_encoder_quality_95">Mycket hög</string>
-    <string name="media_encoder_quality_90">Hög</string>
-    <string name="media_encoder_quality_85">Medium</string>
-    <string name="media_encoder_quality_80">Låg</string>
+    <string name="media_encoder_quality_maximum">Max</string>
+    <string name="media_encoder_quality_very_high">Mycket hög</string>
+    <string name="media_encoder_quality_high">Hög</string>
+    <string name="media_encoder_quality_medium">Medium</string>
+    <string name="media_encoder_quality_low">Låg</string>
     <string name="media_upload_state_uploaded">Uppladdat</string>
     <string name="media_upload_state_failed">Uppladdningen misslyckades</string>
     <string name="media_upload_state_deleted">Raderat</string>

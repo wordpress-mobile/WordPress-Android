@@ -3003,11 +3003,11 @@ Language: id
     <string name="editor_post_saved_online">Pos disimpan secara online</string>
     <string name="site_settings_image_quality_hint">Kualitas gambar. Semakin tinggi nilainya, semakin bagus kualitas gambarnya.</string>
     <string name="site_settings_optimize_images_summary">Memungkinkan pengubahan ukuran dan kompresi gambar</string>
-    <string name="media_encoder_quality_100">Maksimum</string>
-    <string name="media_encoder_quality_95">Sangat Tinggi</string>
-    <string name="media_encoder_quality_90">Tinggi</string>
-    <string name="media_encoder_quality_85">Sedang</string>
-    <string name="media_encoder_quality_80">Rendah</string>
+    <string name="media_encoder_quality_maximum">Maksimum</string>
+    <string name="media_encoder_quality_very_high">Sangat Tinggi</string>
+    <string name="media_encoder_quality_high">Tinggi</string>
+    <string name="media_encoder_quality_medium">Sedang</string>
+    <string name="media_encoder_quality_low">Rendah</string>
     <string name="media_upload_state_uploaded">Diunggah</string>
     <string name="media_upload_state_failed">Unggahan Gagal</string>
     <string name="media_upload_state_deleted">Dihapus</string>

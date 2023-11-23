@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import androidx.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -747,7 +749,7 @@ public class AppPrefs {
     }
 
     public static boolean isImageOptimize() {
-        return getBoolean(DeletablePrefKey.IMAGE_OPTIMIZE_ENABLED, false);
+        return getBoolean(DeletablePrefKey.IMAGE_OPTIMIZE_ENABLED, true);
     }
 
     public static void setImageOptimize(boolean optimize) {
@@ -777,7 +779,21 @@ public class AppPrefs {
 
     public static int getImageOptimizeQuality() {
         int quality = getInt(DeletablePrefKey.IMAGE_OPTIMIZE_QUALITY, 0);
-        return quality > 1 ? quality : WPMediaUtils.OPTIMIZE_IMAGE_ENCODER_QUALITY;
+        int defaultQuality = WPMediaUtils.OPTIMIZE_IMAGE_ENCODER_QUALITY;
+
+        // It's necessary to check that the quality int exists in the quality array in case of changes
+        // See #19644 for an example of when the array's values were changed
+        Context context = WordPress.getContext();
+        String[] validQualityValues = context.getResources().getStringArray(R.array.site_settings_image_quality_values);
+        boolean isQualityValid = Arrays.asList(validQualityValues).contains(String.valueOf(quality));
+
+        // If quality int does not exist in settings array, return the default quality value instead
+        if (!isQualityValid) {
+            setImageOptimizeQuality(defaultQuality);
+            return defaultQuality;
+        }
+
+        return quality;
     }
 
     public static boolean isVideoOptimize() {
