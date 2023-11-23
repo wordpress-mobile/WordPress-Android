@@ -80,4 +80,7 @@ public class RequestCodes {
 
     // Comments related
     public static final int READER_FOLLOW_CONVERSATION = 10000;
+
+    // Image settings
+    public static final int IMAGE_SETTINGS_DIALOG_REQUEST_CODE = 5;
 }

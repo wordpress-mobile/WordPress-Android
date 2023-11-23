@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +23,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -102,7 +102,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (getFragmentManager().getBackStackEntryCount() > 0) {
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                     SiteSettingsTagDetailFragment fragment = getDetailFragment();
                     if (fragment != null && fragment.hasChanges()) {
                         saveTag(fragment.getTerm(), fragment.isNewTerm());
@@ -302,8 +302,9 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
         mRecycler.setAdapter(mAdapter);
     }
 
+    @Nullable
     private SiteSettingsTagDetailFragment getDetailFragment() {
-        return (SiteSettingsTagDetailFragment) getFragmentManager()
+        return (SiteSettingsTagDetailFragment) getSupportFragmentManager()
                 .findFragmentByTag(SiteSettingsTagDetailFragment.TAG);
     }
 
@@ -314,7 +315,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
         SiteSettingsTagDetailFragment fragment = SiteSettingsTagDetailFragment.newInstance(term);
         fragment.setOnTagDetailListener(this);
 
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                             .add(R.id.container, fragment, SiteSettingsTagDetailFragment.TAG)
                             .addToBackStack(null)
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -331,7 +332,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
     private void hideDetailFragment() {
         SiteSettingsTagDetailFragment fragment = getDetailFragment();
         if (fragment != null) {
-            getFragmentManager().popBackStack();
+            getSupportFragmentManager().popBackStack();
             ActivityUtils.hideKeyboard(this);
             showFabWithConditions();
             setTitle(R.string.site_settings_tags_title);

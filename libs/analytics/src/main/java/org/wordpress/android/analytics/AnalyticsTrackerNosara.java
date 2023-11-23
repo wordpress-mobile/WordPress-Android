@@ -2669,6 +2669,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_security_key_success";
             case LOGIN_SECURITY_KEY_CLICKED:
                 return "login_security_key_clicked";
+            case BARCODE_SCANNING_SUCCESS:
+                return "barcode_scanning_success";
+            case BARCODE_SCANNING_FAILURE:
+                return "barcode_scanning_failure";
+            case QRLOGIN_SCANNER_DISMISSED_CAMERA_PERMISSION_DENIED:
+                return "qrlogin_scanner_dismissed_camera_permission_denied";
         }
         return null;
     }

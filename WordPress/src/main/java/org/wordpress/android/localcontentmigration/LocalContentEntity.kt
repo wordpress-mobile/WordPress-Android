@@ -43,7 +43,7 @@ sealed class LocalContentEntityData {
 
     data class ReaderPostsData(val posts: ReaderPostList) : LocalContentEntityData()
     data class BloggingRemindersData(val reminders: List<BloggingRemindersModel>) : LocalContentEntityData()
-    data class SitesData(val sites: List<SiteModel>) : LocalContentEntityData()
+    data class SitesData(val sites: List<SiteModel>, val isLoggedOn: Boolean) : LocalContentEntityData()
     data class PostsData(val localIds: List<Int>) : LocalContentEntityData()
     data class PostData(val post: PostModel) : LocalContentEntityData()
     object EmptyData : LocalContentEntityData()

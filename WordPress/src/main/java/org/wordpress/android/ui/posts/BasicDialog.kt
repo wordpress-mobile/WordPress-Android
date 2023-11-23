@@ -52,7 +52,9 @@ class BasicDialog : AppCompatDialogFragment() {
             .setPositiveButton(model.positiveButtonLabel) { _, _ ->
                 dismissedByPositiveButton = true
                 viewModel.onPositiveClicked(model.tag)
-            }.setCancelable(true)
+            }.setCancelable(model.allowDismissOnOutsideTouch)
+
+        isCancelable = model.allowDismissOnOutsideTouch
 
         model.title?.let {
             builder.setTitle(it)
