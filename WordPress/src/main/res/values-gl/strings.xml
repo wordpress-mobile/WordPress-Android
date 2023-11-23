@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-02 23:44:40+0000
+Translation-Revision-Date: 2023-11-14 08:48:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: gl_ES
@@ -27,12 +27,11 @@ Language: gl_ES
     <string name="domain_management_empty_find_domain">Busca un dominio</string>
     <string name="domain_management_empty_subtitle">Toca a continuación para atopar o teu dominio perfecto.</string>
     <string name="domain_management_empty_title">Non tes ningún dominio</string>
-    <string name="domain_management_error_subtitle">Comproba que estás en liña e actualiza.</string>
-    <string name="domain_management_error_title">Non se puido actualizar</string>
+    <string name="domain_management_error_subtitle">Comproba que estás en liña e tira para actualizar.</string>
     <string name="domain_management_open_domain_details">Abre os detalles do dominio</string>
     <string name="domain_management_search_your_domains">Busca nos teus dominios</string>
     <string name="domain_management_purchase_a_domain">Comprar un dominio</string>
-    <string name="domain_management_my_domains_title">Os meus dominios</string>
+    <string name="domain_management_my_domains_title">Todos os dominios</string>
     <string name="domain_management_expires">Caduca o %1$s</string>
     <string name="account_and_settings">Conta e axustes</string>
     <string name="site_creation_plans_selection_title">Selecciona un plan</string>
@@ -1624,6 +1623,7 @@ Language: gl_ES
     <string name="ccpa_privacy_notice_header">Aviso de privacidade para usuarios de California</string>
     <string name="status_and_visibility">Estado e visibilidade</string>
     <string name="update_now">Actualizar agora</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir o menú de accións de bloques</string>
     <string name="gutenberg_native_move_to_top">Mover arriba</string>
     <string name="gutenberg_native_insert_mention">Insertar unha mención</string>
@@ -2862,7 +2862,7 @@ Language: gl_ES
     <string name="password_incorrect">Parece que este contrasinal é incorrecto. Por favor, volve a comprobar a túa información e inténtao de novo.</string>
     <string name="requesting_otp">Solicitando un código de verificación por SMS.</string>
     <string name="login_text_otp">Envíame un código en texto no seu lugar</string>
-    <string name="enter_verification_code">Case o temos! Por favor, introduce un código de verificación desde a túa aplicación Authenticator.</string>
+    <string name="enter_verification_code">Case o temos! Por favor, introduce o código de verificación para WordPress.com desde a túa aplicación Authenticator.</string>
     <string name="open_mail">Abrir correo electrónico</string>
     <string name="next">Seguinte</string>
     <string name="enter_email_wordpress_com">Accede a WordPress.com usando un enderezo de correo electrónico para xestionar todos os teus sitios WordPress.</string>

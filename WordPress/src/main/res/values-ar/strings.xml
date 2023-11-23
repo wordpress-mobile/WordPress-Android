@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-01 13:54:07+0000
+Translation-Revision-Date: 2023-11-15 20:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.11
 Language: ar
 -->
 <resources>
+    <string name="notification_security_key_needed">يرجى إدخال مفتاح الأمان الخاص بك للاستمرار.</string>
+    <string name="login_error_security_key">كانت هناك بعض المشكلات عند تسجيل الدخول باستخدام مفتاح الأمان</string>
+    <string name="login_text_security_key">استخدام مفتاح الأمان</string>
+    <string name="new_domain_search_screen_error_title">يتعذر استرداد النطاقات</string>
+    <string name="new_domain_search_screen_list_item_sale_price">%s للعام الأول</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s في العام</string>
+    <string name="new_domain_search_screen_transfer_domain_button">نقل النطاق</string>
+    <string name="new_domain_search_screen_transfer_domain_description">هل تبحث عن نطاق تمتلكه بالفعل؟</string>
+    <string name="new_domain_search_screen_input_placeholder">الكتابة للحصول على مزيد من الاقتراحات</string>
+    <string name="new_domain_search_screen_title">البحث عن نطاق</string>
+    <string name="purchase_domain_screen_error_button_title">موافق</string>
+    <string name="purchase_domain_screen_error_subtitle">حدث خطأ في أثناء إضافة النطاق إلى عربة التسوق. تأكد من أنك متصل بالإنترنت وحاول مجددًا.</string>
+    <string name="purchase_domain_screen_error_title">خطأ</string>
+    <string name="domain_management_site_domains_button">الكل</string>
+    <string name="domain_management_error_title">يتعذر استرداد نطاقاتك</string>
+    <string name="site_domain_title">نطاق الموقع</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">من &lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">تم التحرير</string>
+    <string name="post_list_toggle_author_filter">التصفية حسب المؤلف</string>
     <string name="gutenberg_native_s_block_converted_to_blocks">تم تحويل مكوّن \"%s\" إلى المكوّنات</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">بدلاً من ذلك، يمكنك تحويل المحتوى إلى مكوّنات.</string>
     <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">إضافة الاختصارات أو إزالتها</string>
@@ -27,13 +46,12 @@ Language: ar
     <string name="domain_management_empty_find_domain">العثور على نطاق</string>
     <string name="domain_management_empty_subtitle">اضغط أدناه للعثور على نطاقك المثالي.</string>
     <string name="domain_management_empty_title">لا تتوافر لديك أي نطاقات</string>
-    <string name="domain_management_error_subtitle">تحقق من أنك متصلاً بالإنترنت، وقم بالتحديث.</string>
-    <string name="domain_management_error_title">يتعذر التحديث</string>
     <string name="domain_management_open_domain_details">فتح تفاصيل النطاق</string>
     <string name="domain_management_search_your_domains">البحث في نطاقاتك</string>
     <string name="domain_management_purchase_a_domain">شراء نطاق</string>
-    <string name="domain_management_my_domains_title">النطاقات الخاصة بي</string>
     <string name="domain_management_expires">تنتهي الصلاحية بتاريخ ⁦%1$s⁩</string>
+    <string name="domain_management_error_subtitle">تحقق من أنك متصل بالإنترنت، واسحب للتحديث.</string>
+    <string name="domain_management_my_domains_title">جميع النطاقات</string>
     <string name="account_and_settings">الحساب والإعدادات</string>
     <string name="site_creation_plans_selection_title">تحديد خطة</string>
     <string name="site_creation_domain_free_with_annual_plan">مجاني للعام الأول مع الخطط السنوية المدفوعة</string>
@@ -2852,7 +2870,7 @@ Language: ar
     <string name="password_incorrect">يبدو أن كلمة المرور هذه غير صحيحة. يرجى التحقق مجددًا من معلوماتك والمحاولة مرة أخرى.</string>
     <string name="requesting_otp">طلب رمز تحقق عن طريق رسالة نصية قصيرة (SMS).</string>
     <string name="login_text_otp">أرسل إليّ رمزًا بدلاً من ذلك.</string>
-    <string name="enter_verification_code">تقريبًا هناك! يرجى إدخال رمز التحقق من تطبيق الموثق الخاص بك.</string>
+    <string name="enter_verification_code">تقريبًا هناك! يرجى إدخال كود التحقق الخاص بووردبريس.كوم من تطبيق الموثق الخاص بك.</string>
     <string name="open_mail">فتح البريد</string>
     <string name="next">التالي</string>
     <string name="enter_email_wordpress_com">سجِّل الدخول إلى WordPress.com باستخدام عنوان بريد إلكتروني لإدارة جميع مواقع ووردبريس الخاصة بك.</string>

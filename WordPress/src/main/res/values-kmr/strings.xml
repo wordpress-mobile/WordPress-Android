@@ -1521,7 +1521,6 @@ Language: ku_TR
     <string name="password_incorrect">Wisa dixuye ku ev pêborîn xelet e. Ji kerema xwe du caran agahiyên xwe kontrol bike û careke din biceribîne.</string>
     <string name="requesting_otp">Xwestina kodeke rastandinê bi rêya SMSê.</string>
     <string name="login_text_otp">Jê dêvla wê kodekê ji min re bişîne</string>
-    <string name="enter_verification_code">Hema hema qediya. Ji kerema xwe, ji sepana xwe ya rastandinê koda pejirandinê têkeve.</string>
     <string name="next">Pêşve</string>
     <string name="enter_email_wordpress_com">Ji bo ku tu hemû malperên xwe yên WordPressê bi rê ve bibî bi rêya bikaranîna navnîşaneke emailê têkeve WordPress.com\'ê.</string>
     <string name="image_optimization_promo_desc">Optîmîzasyona wêneyê ji bo hilxistina bilez, wêneyan biçûk dike.\n\nTu her tim dikarî vê ji sazkariyên malperê biguherînî.</string>

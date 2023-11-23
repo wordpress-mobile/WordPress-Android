@@ -1927,12 +1927,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domain_credit_suggestion_queried";
             case DOMAIN_CREDIT_NAME_SELECTED:
                 return "domain_credit_name_selected";
-            case DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN:
-                return "domain_management_my_domains_screen_shown";
-            case DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED:
-                return "domain_management_my_domains_screen_domain_tapped";
-            case DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_ADD_DOMAIN_TAPPED:
-                return "domain_management_my_domains_screen_add_domain_tapped";
             case DOMAINS_DASHBOARD_VIEWED:
                 return "domains_dashboard_viewed";
             case DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED:
@@ -2643,20 +2637,32 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_link_item_tapped";
             case POST_LIST_CREATE_POST_TAPPED:
                 return "post_list_create_post_tapped";
+            case DOMAIN_MANAGEMENT_ME_DOMAINS_TAPPED:
+                return "domain_management_me_domains_tapped";
+            case DOMAIN_MANAGEMENT_DOMAINS_DASHBOARD_ALL_DOMAINS_TAPPED:
+                return "domain_management_domains_dashboard_all_domains_tapped";
+            case DOMAIN_MANAGEMENT_DOMAINS_LIST_SHOWN:
+                return "domain_management_domains_list_shown";
+            case DOMAIN_MANAGEMENT_DOMAIN_DETAILS_WEB_VIEW_SHOWN:
+                return "domain_management_domain_details_web_view_shown";
+            case DOMAIN_MANAGEMENT_ADD_DOMAIN_TAPPED:
+                return "domain_management_add_domain_tapped";
             case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_SHOWN:
                 return "domain_management_purchase_domain_screen_shown";
-            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED:
-                return "domain_management_purchase_domain_screen_new_domain_tapped";
-            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED:
-                return "domain_management_purchase_domain_screen_existing_site_tapped";
-            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN:
-                return "domain_management_purchase_domain_screen_existing_site_chosen";
-            case DOMAIN_MANAGEMENT_SEARCH_FOR_A_DOMAIN_SCREEN_SHOWN:
-                return "domain_management_search_for_a_domain_screen_shown";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_GET_DOMAIN_TAPPED:
+                return "domain_management_purchase_domain_get_domain_tapped";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_CHOOSE_SITE_TAPPED:
+                return "domain_management_purchase_domain_choose_site_tapped";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SITE_SELECTED:
+                return "domain_management_purchase_domain_site_selected";
+            case DOMAIN_MANAGEMENT_DOMAINS_SEARCH_SHOWN:
+                return "domain_management_domains_search_shown";
             case DOMAIN_MANAGEMENT_SEARCH_DOMAIN_TAPPED:
                 return "domain_management_search_domain_tapped";
-            case DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED:
-                return "domain_management_transfer_domain_tapped";
+            case DOMAIN_MANAGEMENT_DOMAINS_SEARCH_TRANSFER_DOMAIN_TAPPED:
+                return "domain_management_domains_search_transfer_domain_tapped";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_COMPLETED:
+                return "domain_management_purchase_domain_completed";
             case LOGIN_SECURITY_KEY_FAILURE:
                 return "login_security_key_failure";
             case LOGIN_2FA_NEEDED:

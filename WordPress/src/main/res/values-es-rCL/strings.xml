@@ -705,7 +705,6 @@ Language: es_CL
     <string name="login_magic_link_email_requesting">Solicitando correo de acceso</string>
     <string name="password_incorrect">Parece que esta contraseña es incorrecta. Por favor revisa tu información y vuelva a intentarlo.</string>
     <string name="requesting_otp">Solicitando un código de verificación vía SMS.</string>
-    <string name="enter_verification_code">¡Ya casi! Por favor ingresa el código de verificación de tu aplicación de Autenticación.</string>
     <string name="next">Siguiente</string>
     <string name="enter_email_wordpress_com">Inicia sesión en WordPress.com usando una dirección de correo electrónico para administrar todos tus sitios de WordPress.</string>
     <string name="image_optimization_promo_desc">La optimización de imagen reduce las imágenes para una carga más rápida.\n\nPuedes cambiarlo en cualquier momento en la configuración del sitio.</string>
