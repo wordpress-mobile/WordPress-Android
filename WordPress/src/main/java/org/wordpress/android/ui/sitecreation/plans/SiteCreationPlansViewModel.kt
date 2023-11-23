@@ -60,7 +60,7 @@ class SiteCreationPlansViewModel @Inject constructor(
     }
 
     fun onCalypsoError() {
-        postActionEvent(SiteCreationPlansActionEvent.CreateSite(null, ""))
+        postActionEvent(SiteCreationPlansActionEvent.CreateSite(null, domain.domainName))
     }
 
     private fun showPlans() {
