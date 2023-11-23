@@ -62,6 +62,7 @@ public class AccountSocialRequest extends BaseRequest<AccountSocialResponse> {
             parsed.two_step_nonce_authenticator = data.optString("two_step_nonce_authenticator");
             parsed.two_step_nonce_backup = data.optString("two_step_nonce_backup");
             parsed.two_step_nonce_sms = data.optString("two_step_nonce_sms");
+            parsed.two_step_nonce_webauthn = data.optString("two_step_nonce_webauthn");
             parsed.two_step_notification_sent = data.optString("two_step_notification_sent");
             parsed.user_id = data.optString("user_id");
             parsed.username = data.optString("username");

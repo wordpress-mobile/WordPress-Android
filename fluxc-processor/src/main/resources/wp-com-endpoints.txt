@@ -28,6 +28,7 @@
 /me/transactions/supported-countries/
 /me/transactions/
 /me/shopping-cart/$site
+/me/shopping-cart/no-site
 
 /me/account/close
 

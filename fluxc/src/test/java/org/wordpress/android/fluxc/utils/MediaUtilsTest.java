@@ -5,30 +5,30 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MediaUtilsTest {
-    private String[] mSupportedImageSubtypes = {
+    private final String[] mSupportedImageSubtypes = {
             "jpeg", "png", "gif"
     };
-    private String[] mSupportedVideoSubtypes = {
+    private final String[] mSupportedVideoSubtypes = {
             "mp4", "quicktime", "x-ms-wmv", "avi", "mpeg", "mp2p", "ogg", "3gpp", "3gpp2"
     };
-    private String[] mSupportedAudioSubtypes = {
+    private final String[] mSupportedAudioSubtypes = {
             "mpeg", "mp4", "ogg", "x-wav"
     };
-    private String[] mSupportedApplicationSubtypes = {
+    private final String[] mSupportedApplicationSubtypes = {
             "pdf", "msword", "vnd.openxmlformats-officedocument.wordprocessingml.document", "mspowerpoint",
             "vnd.openxmlformats-officedocument.presentationml.presentation", "vnd.oasis.opendocument.text",
             "vnd.ms-excel", "vnd.openxmlformats-officedocument.spreadsheetml.sheet", "keynote", "zip"
     };
-    private String[] mSupportedImageExtensions = {
+    private final String[] mSupportedImageExtensions = {
             "jpg", "jpeg", "png", "gif"
     };
-    private String[] mSupportedVideoExtensions = {
+    private final String[] mSupportedVideoExtensions = {
             "mp4", "m4v", "mov", "wmv", "avi", "mpg", "ogv", "3gp", "3g2"
     };
-    private String[] mSupportedAudioExtensions = {
+    private final String[] mSupportedAudioExtensions = {
             "mp3", "m4a", "ogg", "wav"
     };
-    private String[] mSupportedApplicationExtensions = {
+    private final String[] mSupportedApplicationExtensions = {
             "pdf", "doc", "ppt", "odt", "pptx", "docx", "xls", "xlsx", "key", "zip"
     };
 

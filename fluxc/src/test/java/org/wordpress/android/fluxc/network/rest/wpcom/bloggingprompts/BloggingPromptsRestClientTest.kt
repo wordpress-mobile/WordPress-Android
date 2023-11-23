@@ -34,54 +34,42 @@ import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPr
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsErrorType.TIMEOUT
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsRestClient.BloggingPromptResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsRestClient.BloggingPromptsListResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsRestClient.BloggingPromptsRespondentAvatar
 import org.wordpress.android.fluxc.test
 import java.util.Date
 
 /* RESPONSE */
+private const val ANSWERED_LINK_PREFIX = "https://wordpress.com/tag/dailyprompt-"
 
 private val PROMPT_ONE = BloggingPromptResponse(
     id = 1010,
     text = "You have 15 minutes to address the whole world live (on television or radio — " +
         "choose your format). What would you say?",
-    title = "Prompt number 4",
-    content = "<!-- wp:pullquote -->\n" +
-        "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the" +
-        " whole world live (on television or radio — choose your format). What would you say?</p>" +
-        "<cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
-        "<!-- /wp:pullquote -->",
     date = "2022-01-04",
     attribution = "",
     isAnswered = false,
     respondentsCount = 0,
-    respondentsAvatars = emptyList()
+    respondentsAvatars = emptyList(),
+    answeredLink = ANSWERED_LINK_PREFIX + "1010",
+    answeredLinkText = "View all responses",
+    bloganuaryId = "bloganuary-2022-04",
 )
 
 private val PROMPT_TWO = BloggingPromptResponse(
     id = 1011,
     text = "Do you play in your daily life? What says “playtime” to you?",
-    title = "Prompt number 5",
-    content = "<!-- wp:pullquote -->\n" +
-        "<figure class=\"wp-block-pullquote\"><blockquote><p>Do you play in your daily life? What " +
-        "says “playtime” to you?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
-        "<!-- /wp:pullquote -->",
     date = "2022-01-05",
     attribution = "dayone",
     isAnswered = true,
     respondentsCount = 1,
-    respondentsAvatars = listOf(BloggingPromptsRespondentAvatar("http://site/avatar1.jpg"))
+    respondentsAvatars = listOf(BloggingPromptsRespondentAvatar("http://site/avatar1.jpg")),
+    answeredLink = ANSWERED_LINK_PREFIX + "1011",
+    answeredLinkText = "View all responses",
 )
 
 private val PROMPT_THREE = BloggingPromptResponse(
     id = 1012,
     text = "Are you good at what you do? What would you like to be better at.",
-    title = "Prompt number 6",
-    content = "<!-- wp:pullquote -->\n" +
-        "<figure class=\"wp-block-pullquote\"><blockquote><p>Are you good at what you do? What" +
-        " would you like to be better at.</p><cite>(courtesy of plinky.com)</cite></blockquote>" +
-        "</figure>\n" +
-        "<!-- /wp:pullquote -->",
     date = "2022-01-06",
     isAnswered = false,
     attribution = "",
@@ -89,11 +77,15 @@ private val PROMPT_THREE = BloggingPromptResponse(
     respondentsAvatars = listOf(
         BloggingPromptsRespondentAvatar("http://site/avatar2.jpg"),
         BloggingPromptsRespondentAvatar("http://site/avatar3.jpg")
-    )
+    ),
+    answeredLink = ANSWERED_LINK_PREFIX + "1012",
+    answeredLinkText = "View all responses",
 )
 
-private val PROMPTS_RESPONSE = BloggingPromptsListResponse(
-    prompts = listOf(PROMPT_ONE, PROMPT_TWO, PROMPT_THREE)
+private val PROMPTS_RESPONSE: BloggingPromptsListResponse = listOf(
+    PROMPT_ONE,
+    PROMPT_TWO,
+    PROMPT_THREE
 )
 
 @RunWith(MockitoJUnitRunner::class)
@@ -213,11 +205,11 @@ class BloggingPromptsRestClientTest {
         val nonNullData = data ?: mock()
         val response = if (error != null) Response.Error(error) else Success(nonNullData)
         whenever(
-            wpComGsonRequestBuilder.syncGetRequest(
+            wpComGsonRequestBuilder.syncGetRequest<BloggingPromptsListResponse>(
                 eq(restClient),
                 urlCaptor.capture(),
                 paramsCaptor.capture(),
-                eq(BloggingPromptsListResponse::class.java),
+                eq(BloggingPromptsListResponseTypeToken.type),
                 eq(false),
                 any(),
                 eq(false)
@@ -252,7 +244,7 @@ class BloggingPromptsRestClientTest {
     }
 
     companion object {
-        private const val API_BASE_PATH = "https://public-api.wordpress.com/wpcom/v2"
+        private const val API_BASE_PATH = "https://public-api.wordpress.com/wpcom/v3"
         private const val API_SITE_PATH = "$API_BASE_PATH/sites"
         private const val API_BLOGGING_PROMPTS_PATH = "blogging-prompts/"
 

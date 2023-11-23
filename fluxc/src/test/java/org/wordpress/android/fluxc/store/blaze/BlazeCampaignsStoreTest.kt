@@ -63,7 +63,8 @@ private val CAMPAIGN_RESPONSE = Campaign(
     budgetCents = BUDGET_CENTS,
     uiStatus = UI_STATUS,
     contentConfig = CONTENT_CONFIG_RESPONSE,
-    campaignStats = CONTENT_CAMPAIGN_STATS
+    campaignStats = CONTENT_CAMPAIGN_STATS,
+    targetUrn = "urn:wpcom:post:199247490:9"
 )
 
 private val BLAZE_CAMPAIGNS_RESPONSE = BlazeCampaignsResponse(
@@ -83,7 +84,8 @@ private val BLAZE_CAMPAIGN_MODEL = BlazeCampaignEntity(
     uiStatus = UI_STATUS,
     budgetCents = BUDGET_CENTS,
     impressions = IMPRESSIONS,
-    clicks = CLICKS
+    clicks = CLICKS,
+    targetUrn = "urn:wpcom:post:199247490:9"
 )
 private val BLAZE_CAMPAIGNS_MODEL = BlazeCampaignsModel(
     campaigns = listOf(BLAZE_CAMPAIGN_MODEL.toDomainModel()),
