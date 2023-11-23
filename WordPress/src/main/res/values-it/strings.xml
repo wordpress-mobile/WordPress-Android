@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-02 13:54:07+0000
+Translation-Revision-Date: 2023-11-15 13:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: it
 -->
 <resources>
+    <string name="notification_security_key_needed">Fornisci una chiave di sicurezza per continuare.</string>
+    <string name="login_error_security_key">Si è verificato un errore con l\'accesso alla chiave di sicurezza</string>
+    <string name="login_text_security_key">Usa una chiave di sicurezza</string>
+    <string name="new_domain_search_screen_error_title">Impossibile recuperare i domini</string>
+    <string name="new_domain_search_screen_list_item_sale_price">%s per il primo anno</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s all\'anno</string>
+    <string name="new_domain_search_screen_transfer_domain_button">Trasferisci il dominio</string>
+    <string name="new_domain_search_screen_transfer_domain_description">Vuoi trasferire un dominio che già possiedi?</string>
+    <string name="new_domain_search_screen_input_placeholder">Digita per ottenere ulteriori suggerimenti</string>
+    <string name="new_domain_search_screen_title">Cerca un dominio</string>
+    <string name="purchase_domain_screen_error_subtitle">Si è verificato un errore durante l\'aggiunta del dominio al carrello. Assicurati di essere online e riprova.</string>
+    <string name="purchase_domain_screen_error_title">Errore</string>
+    <string name="domain_management_site_domains_button">Tutti</string>
+    <string name="domain_management_error_title">Impossibile recuperare i tuoi domini</string>
+    <string name="site_domain_title">Dominio del sito</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">Da &lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">Modificato</string>
+    <string name="post_list_toggle_author_filter">Filtra per autore</string>
     <string name="gutenberg_native_s_block_converted_to_blocks">Blocco \"%s\" convertito in blocchi</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">In alternativa, puoi convertire i contenuti in blocchi.</string>
     <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Aggiungi o rimuovi scorciatoie</string>
@@ -27,12 +45,11 @@ Language: it
     <string name="domain_management_empty_find_domain">Scegli un dominio</string>
     <string name="domain_management_empty_subtitle">Tocca qui sotto per trovare il dominio perfetto.</string>
     <string name="domain_management_empty_title">Non disponi di un dominio</string>
-    <string name="domain_management_error_subtitle">Verifica di essere online e aggiorna.</string>
-    <string name="domain_management_error_title">Impossibile effettuare l\'aggiornamento</string>
+    <string name="domain_management_error_subtitle">Verifica di essere online e trascina per aggiornare.</string>
     <string name="domain_management_open_domain_details">Apri dettagli del dominio</string>
     <string name="domain_management_search_your_domains">Cerca domini</string>
     <string name="domain_management_purchase_a_domain">Acquista un dominio</string>
-    <string name="domain_management_my_domains_title">I miei domini</string>
+    <string name="domain_management_my_domains_title">Tutti i domini</string>
     <string name="domain_management_expires">Scade il giorno %1$s</string>
     <string name="account_and_settings">Account e impostazioni</string>
     <string name="site_creation_plans_selection_title">Seleziona un piano</string>
@@ -2858,7 +2875,7 @@ Language: it
     <string name="password_incorrect">Sembra che la password non sia corretta. Verifica attentamente le informazioni e riprova.</string>
     <string name="requesting_otp">Richiesta codice di verifica tramite SMS.</string>
     <string name="login_text_otp">Inviami invece un messaggio con un codice</string>
-    <string name="enter_verification_code">Ci sei quasi! Inserisci il codice di verifica dalla tua app di autenticazione.</string>
+    <string name="enter_verification_code">Ci sei quasi. Inserisci il codice di verifica per WordPress.com dalla tua app di autenticazione.</string>
     <string name="open_mail">Apri email</string>
     <string name="next">Successivo</string>
     <string name="enter_email_wordpress_com">Accedi a WordPress.com utilizzando un indirizzo email per gestire tutti i tuoi siti WordPress.com.</string>

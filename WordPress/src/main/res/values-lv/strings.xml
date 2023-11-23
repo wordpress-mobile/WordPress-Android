@@ -2776,7 +2776,6 @@ Language: lv
     <string name="password_incorrect">Izskatās, ka šī parole nav pareiza. Lūdzu, vēlreiz pārbaudiet savu informāciju un mēģiniet vēlreiz.</string>
     <string name="requesting_otp">Verifikācijas koda pieprasīšana, izmantojot īsziņu.</string>
     <string name="login_text_otp">Tā vietā nosūtiet man kodu</string>
-    <string name="enter_verification_code">Gandrīz klāt! Lūdzu, ievadiet verifikācijas kodu no lietotnes Authenticator.</string>
     <string name="open_mail">Open Mail</string>
     <string name="next">Nākamais</string>
     <string name="enter_email_wordpress_com">Piesakieties vietnē WordPress.com, izmantojot e-pasta adresi, lai pārvaldītu visas savas WordPress vietnes.</string>

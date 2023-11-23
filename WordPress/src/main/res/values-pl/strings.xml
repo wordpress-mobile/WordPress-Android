@@ -2391,7 +2391,6 @@ Language: pl
     <string name="password_incorrect">Wygląda na to, że hasło jest nieprawidłowe. Proszę sprawdzić te dane i spróbować ponownie.</string>
     <string name="requesting_otp">Żądanie kodu weryfikacyjnego przez SMS</string>
     <string name="login_text_otp">Wyślij mi zamiast tego kod przez SMS</string>
-    <string name="enter_verification_code">Już prawie! Proszę wprowadzić kod weryfikacyjny z aplikacji do Uwierzytelnienia.</string>
     <string name="open_mail">Otwórz pocztę</string>
     <string name="next">Następny</string>
     <string name="enter_email_wordpress_com">Zaloguj się do WordPress.com używając adresu email aby zarządzać wszystkimi swoimi witrynami WordPress.</string>

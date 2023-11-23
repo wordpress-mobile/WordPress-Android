@@ -128,7 +128,6 @@ Language: ms
     <string name="login_magic_link_email_requesting">Memohon emel log masuk</string>
     <string name="password_incorrect">Nampaknya seperti kata laluan ini tidak betul. Sila periksa semula maklumat anda dan cuba lagi.</string>
     <string name="requesting_otp">Memohon ko pengesahan melalui SMS.</string>
-    <string name="enter_verification_code">Hampir di sana! Sila masukkan kod pengesahan daripada aplikasi Authenticator anda.</string>
     <string name="enter_email_wordpress_com">Log masuk ke WordPress.com menggunakan alamat emel untuk mengurus semua laman WordPress anda.</string>
     <string name="next">Seterusnya</string>
     <string name="image_optimization_promo_desc">Pengoptimuman imej menecutkan imej untuk muat naik yang lebih laju.\n\nAnda boleh mengubahnya bila-bila masa dalam tetapan laman.</string>

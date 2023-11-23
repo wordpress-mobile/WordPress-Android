@@ -120,7 +120,6 @@ Language: bg
     <string name="enter_wpcom_password">Въведете вашата WordPress.com парола.</string>
     <string name="login_continue">Напред</string>
     <string name="password_incorrect">Изглежда вашата парола е грешна. Моля проверете информацията повторно и пробвайте отново.</string>
-    <string name="enter_verification_code">Моля, въведете кода за потвърждение от вашето приложение Authenticator.</string>
     <string name="next">Следващ</string>
     <string name="image_optimization_promo_title">Да се включи ли оптимизацията на изображения?</string>
     <string name="me_profile_photo">Снимка на профила</string>

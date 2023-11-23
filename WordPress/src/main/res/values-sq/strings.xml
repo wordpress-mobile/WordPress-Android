@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-05 16:58:20+0000
+Translation-Revision-Date: 2023-11-15 11:51:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: sq_AL
 -->
 <resources>
+    <string name="notification_security_key_needed">Ju lutemi, që të vazhdohet, jepni kyçin tuaj të sigurisë.</string>
+    <string name="login_error_security_key">Pati ca problem me hyrjen me kyç sigurie</string>
+    <string name="login_text_security_key">Përdorni një kyç sigurie</string>
+    <string name="new_domain_search_screen_error_title">S’u morën dot përkatësi</string>
+    <string name="new_domain_search_screen_list_item_sale_price">%s për vitin e parë</string>
+    <string name="new_domain_search_screen_list_item_regular_price">$%s / vit</string>
+    <string name="new_domain_search_screen_transfer_domain_button">Shpërngule përkatësinë</string>
+    <string name="new_domain_search_screen_transfer_domain_description">Po shihni si të shpërngulni një përkatësi që e zotëroni tashmë?</string>
+    <string name="new_domain_search_screen_input_placeholder">Shtypni që të merrni më tepër sugjerime</string>
+    <string name="new_domain_search_screen_title">Kërkoni për një përkatësi</string>
+    <string name="purchase_domain_screen_error_button_title">OK</string>
+    <string name="purchase_domain_screen_error_subtitle">Diç shkoi ters, teksa shtohej përkatësia te shporta. Sigurohuni se jeni në linjë dhe riprovoni.</string>
+    <string name="purchase_domain_screen_error_title">Gabim</string>
+    <string name="domain_management_site_domains_button">Krejt</string>
+    <string name="domain_management_error_title">S’u morën dot përkatësitë tuaja</string>
+    <string name="site_domain_title">Përkatësi Sajti</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">Nga &lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">I përpunuar</string>
+    <string name="post_list_toggle_author_filter">Filtroji sipas autorësh</string>
     <string name="gutenberg_native_s_block_converted_to_blocks">Blloku “%s ” u shndërrua në blloqe</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Ndryshe, mund ta shndërroni lëndën në blloqe.</string>
     <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Shtoni ose Hiqni shkurtore</string>
@@ -27,12 +46,11 @@ Language: sq_AL
     <string name="domain_management_empty_find_domain">Gjeni një përkatësi</string>
     <string name="domain_management_empty_subtitle">Prekni më poshtë që të gjeni përkatësinë tuaj të përsosur.</string>
     <string name="domain_management_empty_title">S’keni ndonjë përkatësi</string>
-    <string name="domain_management_error_subtitle">Kontrolloni nëse jeni në linjë dhe rifreksojeni.</string>
-    <string name="domain_management_error_title">S’u Përditësua Dot</string>
+    <string name="domain_management_error_subtitle">Kontrolloni nëse jeni në linjë dhe tërhiqeni që të rifreskohet.</string>
     <string name="domain_management_open_domain_details">Hapni hollësi përkatësie</string>
     <string name="domain_management_search_your_domains">Kërkoni te përkatësitë tuaja</string>
     <string name="domain_management_purchase_a_domain">Blini një përkatësi</string>
-    <string name="domain_management_my_domains_title">Përkatësitë e Mia</string>
+    <string name="domain_management_my_domains_title">Krejt Përkatësitë</string>
     <string name="domain_management_expires">Skadon më %1$s</string>
     <string name="account_and_settings">Rregullime dhe Llogari</string>
     <string name="site_creation_plans_selection_title">Përzgjidhni një plan</string>
@@ -143,6 +161,7 @@ Language: sq_AL
     <string name="campaign_status_active">AKTIVE</string>
     <string name="blaze_campaigns_card_footer_label">Krijoni Fushatë</string>
     <string name="blaze_campaigns_card_title">Fushatë Blaze</string>
+    <string name="promote_blaze_flow_error">S’u ngarkua dot rrjedhë promocioni Blaze</string>
     <string name="prepublishing_nudges_social_new_connection_text">Shtoni trafikun tuaj, duke ndarë automatikisht postimet tuaja me shokët në tuaja në media shoqërore.</string>
     <string name="menu_close_editor">Mbylle përpunuesin</string>
     <string name="menu_redo_context">Ribëj ndryshimin e fundit</string>
@@ -1615,6 +1634,7 @@ Language: sq_AL
     <string name="ccpa_privacy_notice_header">Shënim mbi privatësinë për përdorues në Kaliforni</string>
     <string name="status_and_visibility">Gjendje &amp; Dukshmëri</string>
     <string name="update_now">Përditësojeni Tani</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">Hap Menu Veprimesh Blloqesh</string>
     <string name="gutenberg_native_move_to_top">Ngjite në krye</string>
     <string name="gutenberg_native_insert_mention">Futni përmendje</string>
@@ -2853,7 +2873,7 @@ Language: sq_AL
     <string name="password_incorrect">Duket sikur ky fjalëkalim është i pasaktë. Ju lutemi, kontrollojeni edhe një herë informacionin tuaj dhe riprovoni.</string>
     <string name="requesting_otp">Po kërkohet një kod verifikimi përmes SMS-je.</string>
     <string name="login_text_otp">Më mirë më dërgoni kod me tekst</string>
-    <string name="enter_verification_code">Thuajse arritëm! Ju lutemi, jepni kodin e verifikimit prej aplikacionit tuaj Authenticator.</string>
+    <string name="enter_verification_code">Thuajse arritëm! Ju lutemi, jepni kodin e verifikimit për WordPress.com prej aplikacionit tuaj të mirëfilltësimeve.</string>
     <string name="open_mail">Hap Postën</string>
     <string name="next">Pasuesi</string>
     <string name="enter_email_wordpress_com">Që të administroni krejt sajtet tuaj WordPress, bëni hyrjen te WordPress.com.</string>

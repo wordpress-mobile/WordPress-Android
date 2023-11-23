@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-02 11:54:08+0000
+Translation-Revision-Date: 2023-11-22 22:17:17+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: ja_JP
 -->
 <resources>
+    <string name="notification_security_key_needed">続行するにはセキュリティキーを入力してください。</string>
+    <string name="login_error_security_key">セキュリティキーログインで問題が発生しました</string>
+    <string name="login_text_security_key">セキュリティキーを使用</string>
+    <string name="new_domain_search_screen_error_title">ドメインを取得できませんでした</string>
+    <string name="new_domain_search_screen_list_item_sale_price">初年度: %s</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s / 年</string>
+    <string name="new_domain_search_screen_transfer_domain_button">ドメイン移管</string>
+    <string name="new_domain_search_screen_transfer_domain_description">すでにお持ちのドメインの転送を希望していますか ?</string>
+    <string name="new_domain_search_screen_input_placeholder">入力してさらに候補を表示</string>
+    <string name="new_domain_search_screen_title">ドメインを検索</string>
+    <string name="purchase_domain_screen_error_button_title">OK</string>
+    <string name="purchase_domain_screen_error_subtitle">ドメインをカートに追加する際に問題が発生しました。 オンラインであることを確認して再試行してください。</string>
+    <string name="purchase_domain_screen_error_title">エラー</string>
+    <string name="domain_management_site_domains_button">すべて</string>
+    <string name="domain_management_error_title">プロフィールを読み込めませんでした</string>
+    <string name="site_domain_title">サイトドメイン</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">&lt;b&gt;Bloganuary&lt;/b&gt; より</string>
+    <string name="post_status_post_edited">編集済み</string>
+    <string name="post_list_toggle_author_filter">投稿者別に絞り込む</string>
     <string name="gutenberg_native_s_block_converted_to_blocks">「%s」ブロックがブロックに変換されました</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">またはコンテンツをブロックに変換することもできます。</string>
     <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">ショートカットを追加または削除</string>
@@ -27,12 +46,11 @@ Language: ja_JP
     <string name="domain_management_empty_find_domain">ドメインを探す</string>
     <string name="domain_management_empty_subtitle">以下をタップして最適なドメインを見つけてください。</string>
     <string name="domain_management_empty_title">ドメインがありません</string>
-    <string name="domain_management_error_subtitle">オンラインであることを確認して更新してください。</string>
-    <string name="domain_management_error_title">更新できませんでした</string>
+    <string name="domain_management_error_subtitle">オンラインであることを確認し、プルして更新してください。</string>
     <string name="domain_management_open_domain_details">ドメインの詳細を開く</string>
     <string name="domain_management_search_your_domains">ドメインを検索</string>
     <string name="domain_management_purchase_a_domain">ドメインを購入する</string>
-    <string name="domain_management_my_domains_title">自分のドメイン</string>
+    <string name="domain_management_my_domains_title">すべてのドメイン</string>
     <string name="domain_management_expires">有効期限: %1$s</string>
     <string name="account_and_settings">アカウントと設定</string>
     <string name="site_creation_plans_selection_title">プランを選択</string>
@@ -973,6 +991,7 @@ Language: ja_JP
     <string name="gutenberg_native_width_settings">幅設定</string>
     <string name="gutenberg_native_link_rel">リンク rel</string>
     <string name="gutenberg_native_column_settings">カラム設定</string>
+    <string name="gutenberg_native_no_description">説明はありません</string>
     <string name="user_profile_untitled_site">(無題)</string>
     <string name="user_profile_site_section_header">サイト</string>
     <string name="user_profile_bottom_sheet_description">ユーザープロフィールボトムシート情報</string>
@@ -1617,6 +1636,7 @@ Language: ja_JP
     <string name="ccpa_privacy_notice_header">カリフォルニア州のユーザーへのプライバシー通知</string>
     <string name="status_and_visibility">ステータスと公開状態</string>
     <string name="update_now">今すぐ更新</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">ブロックの操作メニューを開く</string>
     <string name="gutenberg_native_move_to_top">トップに移動</string>
     <string name="gutenberg_native_insert_mention">メンションを挿入</string>
@@ -2853,7 +2873,7 @@ Language: ja_JP
     <string name="password_incorrect">このパスワードは間違っているようです。入力した情報をもう一度確認してから、やり直してください。</string>
     <string name="requesting_otp">SMS 経由で認証コードをリクエスト。</string>
     <string name="login_text_otp">代わりに SMS でコードを送信する</string>
-    <string name="enter_verification_code">もう少しで完了です。認証アプリから認証コードを入力してください。</string>
+    <string name="enter_verification_code">もう少しです ! 認証アプリから WordPress.com の認証コードを入力してください。</string>
     <string name="open_mail">メールを開く</string>
     <string name="next">次へ</string>
     <string name="enter_email_wordpress_com">メールアドレスを使用して WordPress.com にログインすると、自分のすべての WordPress サイトを管理できます。</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-04-09 10:22:41+0000
+Translation-Revision-Date: 2023-11-18 17:35:24+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: sk
@@ -160,6 +160,7 @@ Language: sk
     <string name="page_moved_to_published">Stránka sa zverejnila</string>
     <string name="page_moved_to_trash">Stránka sa vymazala</string>
     <string name="page_moved_to_scheduled">Stránka sa naplánovala</string>
+    <string name="dismiss">Zamietnuť</string>
     <string name="quick_start_focus_point_description">Ťuknite sem</string>
     <string name="quick_start_list_create_site_title">Vytvorte si webovú stránku</string>
     <string name="quick_start_completed_tour_subtitle">Nie je to dobrý pocit odškrtávať veci zo zoznamu?</string>
@@ -389,6 +390,8 @@ Language: sk
     <string name="permissions_denied_message">Zdá sa, že ste vypli oprávnenia požadované pre túto funkciu.&lt;br/&gt;&lt;br/&gt;Ak to chcete zmeniť, upravte svoje oprávnenia a uistite sa, že je povolené &lt;strong&gt;%s&lt;/strong&gt;.</string>
     <string name="permissions_denied_title">Oprávnenia</string>
     <string name="plugin_caption_featured">Odporúčaný</string>
+    <string name="sharing_disabled_description">Nemáte prístup k nastaveniam zdieľania na sociálnych sieťach, pretože modul Jetpack Social je vypnutý.</string>
+    <string name="sharing_disabled">Sociálny modul vypnutý</string>
     <string name="notification_sound_has_invalid_path">Zvolený zvuk má neplatnú cestu. Vyberte iný.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d zostávajúcich stránok / príspevkov</string>
@@ -675,7 +678,7 @@ Language: sk
     <string name="password_incorrect">Zdá sa, že heslo je nesprávne. Prosím, skontrolujte informáciu a skúste opäť.</string>
     <string name="requesting_otp">Vyžaduje sa overenie kódu prostredníctvom SMS.</string>
     <string name="login_text_otp">Radšej mi pošlite kód</string>
-    <string name="enter_verification_code">Takmer dokončené! Prosím, zadajte overovací kód z vašej aplikácie Authenticator.</string>
+    <string name="enter_verification_code">Už je to takmer hotové! Zadajte overovací kód pre WordPress.com z aplikácie autentifikátora.</string>
     <string name="open_mail">Otvoriť e-mail</string>
     <string name="next">Ďalej</string>
     <string name="enter_email_wordpress_com">Prihláste sa do WordPress.com použití e-mailovej adresy a spravujte všetky vaše webové stránky WordPress.</string>
@@ -728,6 +731,7 @@ Language: sk
     <string name="media_documents">Dokumenty</string>
     <string name="media_images">Obrázky</string>
     <string name="media_all">Všetko</string>
+    <string name="media_picker_soft_ask_media_permissions_denied">%1$s bol zamietnutý prístup k vašim mediálnym súborom. Ak to chcete napraviť, upravte svoje oprávnenia a zapnite %2$s.</string>
     <string name="reader_view_comments">Zobraziť komentáre</string>
     <string name="site_settings_video_quality_hint">Kvalita videí. Čím vyššie hodnoty, tým kvalitnejšie videá.</string>
     <string name="site_settings_video_width_hint">Zmeňte veľkosť článkov na požadovanú veľkosť</string>
@@ -778,6 +782,7 @@ Language: sk
     <string name="tabbar_accessibility_label_reader">Čitateľ. Nasledovať obsah z ostatných webový stránok.</string>
     <string name="tabbar_accessibility_label_my_site">Moja webová stránka. Zobraziť moju webovú stránku a spravovať ju, vrátane štatistky.</string>
     <string name="button_not_now">Teraz nie</string>
+    <string name="my_site_btn_sharing">Sociálne siete</string>
     <string name="media_error_internal_server_error">Nahraná chyba. Skúste zmeniť Optimalizovať Obrázky v nastaveniach aplikácie.</string>
     <string name="media_downloading">Ukladanie médií na toto zariadenie</string>
     <string name="error_media_save">Nemožno uložiť dáta</string>
@@ -1335,6 +1340,7 @@ Language: sk
     <string name="reader_title_blog_preview">Webová stránka čítačky</string>
     <string name="reader_page_followed_tags">Sledované témy</string>
     <string name="reader_hint_add_tag_or_url">Zadajte adresu URL alebo tému, ktorú chcete sledovať</string>
+    <string name="reader_label_followers_count">%s odberateľov</string>
     <string name="help">Pomocník</string>
     <string name="ssl_certificate_error">Neplatný SSL certifikát</string>
     <string name="ssl_certificate_ask_trust">Ak sa bežne pripájate bez problémov, táto chyba môže znamenať, že sa niekto pokúša prevziať vašu identitu. Neodporúčame vám pokračovať. Chcete aj napriek tomu dôverovať tomuto certifikátu?</string>
