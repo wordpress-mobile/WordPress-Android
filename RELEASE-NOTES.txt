@@ -2,7 +2,7 @@
 
 23.8
 -----
-* [**] Enable Optimize Image setting (via Me → App Settings) by default. [https://github.com/wordpress-mobile/WordPress-Android/pull/19556]
+* [**] Enable Optimize Image setting (via Me → App Settings) by default, and change default compression and resolution values. [https://github.com/wordpress-mobile/WordPress-Android/pull/19581]
 
 23.7
 -----
