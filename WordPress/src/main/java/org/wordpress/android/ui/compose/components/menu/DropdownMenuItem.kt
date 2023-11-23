@@ -5,11 +5,11 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 
 @Composable
-fun DropdownMenuItem(itemType: ItemType) {
+fun DropdownMenuItem(dropdownMenuItemData: DropdownMenuItemData) {
 }
 
-sealed class ItemType {
-    data class Text(@StringRes val text: Int) : ItemType()
+sealed class DropdownMenuItemData {
+    data class Text(@StringRes val text: Int) : DropdownMenuItemData()
 
-    data class TextAndIcon(@StringRes val text: Int, @DrawableRes val icon: Int) : ItemType()
+    data class TextAndIcon(@StringRes val text: Int, @DrawableRes val icon: Int) : DropdownMenuItemData()
 }
