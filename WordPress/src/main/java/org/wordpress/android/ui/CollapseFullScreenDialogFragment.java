@@ -191,8 +191,10 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
             showActivityBar();
         }
 
-        if (getFragmentManager() != null) {
-            getFragmentManager().popBackStackImmediate();
+        try {
+            getParentFragmentManager().popBackStackImmediate();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
         }
     }
 

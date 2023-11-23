@@ -83,6 +83,7 @@
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_optimize_image"
+            android:defaultValue="true"
             android:key="@string/pref_key_optimize_image"
             android:summary="@string/site_settings_optimize_images_summary"
             android:title="@string/site_settings_optimize_images" />

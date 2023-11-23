@@ -2,7 +2,7 @@ package org.wordpress.android.ui.reader;
 
 public class ReaderConstants {
     // max # posts to request when updating posts
-    public static final int READER_MAX_POSTS_TO_REQUEST = 7;
+    public static final int READER_MAX_POSTS_TO_REQUEST = 20;
 
     // max # results to request when searching posts & sites
     public static final int READER_MAX_SEARCH_RESULTS_TO_REQUEST = 20;
@@ -59,6 +59,7 @@ public class ReaderConstants {
 
     static final String KEY_POST_SLUGS_RESOLUTION_UNDERWAY = "post_slugs_resolution_underway";
     static final String KEY_ALREADY_UPDATED = "already_updated";
+    static final String KEY_ALREADY_REQUESTED = "already_requested";
     static final String KEY_RESTORE_POSITION = "restore_position";
     static final String KEY_SITE_SEARCH_RESTORE_POSITION = "site_search_restore_position";
     static final String KEY_WAS_PAUSED = "was_paused";

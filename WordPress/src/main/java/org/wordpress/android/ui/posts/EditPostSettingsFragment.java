@@ -182,7 +182,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+        ((WordPress) requireActivity().getApplicationContext()).component().inject(this);
         mDispatcher.register(this);
 
         // Early load the default lists for post format keys and names.
@@ -191,7 +191,7 @@ public class EditPostSettingsFragment extends Fragment {
                 new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
         mDefaultPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
                 .getStringArray(R.array.post_format_display_names)));
-        mPublishedViewModel = new ViewModelProvider(getActivity(), mViewModelFactory)
+        mPublishedViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
                 .get(EditPostPublishSettingsViewModel.class);
     }
 
@@ -650,14 +650,14 @@ public class EditPostSettingsFragment extends Fragment {
                         updateSlug(input);
                     }
                 });
-        dialog.show(getFragmentManager(), null);
+        dialog.show(getChildFragmentManager(), null);
     }
 
     private void showCategoriesActivity() {
         if (!isAdded()) {
             return;
         }
-        Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
+        Intent categoriesIntent = new Intent(requireActivity(), SelectCategoriesActivity.class);
         categoriesIntent.putExtra(WordPress.SITE, getSite());
         categoriesIntent.putExtra(EXTRA_POST_LOCAL_ID, getEditPostRepository().getId());
         startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
@@ -671,7 +671,7 @@ public class EditPostSettingsFragment extends Fragment {
         SiteModel siteModel = getSite();
         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(siteModel));
 
-        Intent tagsIntent = new Intent(getActivity(), PostSettingsTagsActivity.class);
+        Intent tagsIntent = new Intent(requireActivity(), PostSettingsTagsActivity.class);
         tagsIntent.putExtra(WordPress.SITE, siteModel);
         String tags = TextUtils.join(",", getEditPostRepository().getTagNameList());
         tagsIntent.putExtra(PostSettingsTagsActivity.KEY_TAGS, tags);
@@ -732,7 +732,7 @@ public class EditPostSettingsFragment extends Fragment {
 
         boolean isSiteHomepage = isSiteHomepage();
         int index = isSiteHomepage ? getCurrentHomepageStatusIndex() : getCurrentPostStatusIndex();
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = getChildFragmentManager();
 
         DialogType statusType = isSiteHomepage ? DialogType.HOMEPAGE_STATUS : DialogType.POST_STATUS;
         PostSettingsListDialogFragment fragment =
@@ -750,7 +750,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
 
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = getChildFragmentManager();
 
         PostSettingsListDialogFragment fragment = PostSettingsListDialogFragment.newAuthorListInstance(getAuthorId());
         fragment.show(fm, PostSettingsListDialogFragment.TAG);
@@ -781,7 +781,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         }
 
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = getChildFragmentManager();
         PostSettingsListDialogFragment fragment =
                 PostSettingsListDialogFragment.newInstance(DialogType.POST_FORMAT, checkedIndex);
         fragment.show(fm, PostSettingsListDialogFragment.TAG);
@@ -803,7 +803,7 @@ public class EditPostSettingsFragment extends Fragment {
                         updatePassword(input);
                     }
                 });
-        dialog.show(getFragmentManager(), null);
+        dialog.show(getChildFragmentManager(), null);
     }
 
     // Helpers
@@ -1344,7 +1344,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
-        if (event.media.getMarkedLocallyAsFeatured()) {
+        if (event.media != null && event.media.getMarkedLocallyAsFeatured()) {
             refreshViews();
         }
     }

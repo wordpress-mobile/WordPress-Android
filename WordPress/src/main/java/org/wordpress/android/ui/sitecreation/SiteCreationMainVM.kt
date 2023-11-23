@@ -183,6 +183,9 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun preloadThumbnails(context: Context) {
+        if (jetpackFeatureRemovalOverlayUtil.shouldDisableSiteCreation()) {
+            return // no need to preload thumbnails if site creation is disabled
+        }
         if (preloadingJob == null) {
             preloadingJob = viewModelScope.launch(Dispatchers.IO) {
                 if (networkUtils.isNetworkAvailable()) {
@@ -192,9 +195,6 @@ class SiteCreationMainVM @Inject constructor(
                     // https://github.com/wordpress-mobile/WordPress-Android/issues/17020
                     if (response.isError) {
                         AppLog.e(T.THEMES, "Error preloading starter designs: ${response.error}")
-                        return@launch
-                    } else if (response.designs == null) {
-                        AppLog.e(T.THEMES, "Null starter designs response: $response")
                         return@launch
                     }
 
@@ -274,7 +274,7 @@ class SiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
-    fun onPlanSelection(plan: PlanModel, domainName: String?) {
+    fun onPlanSelection(plan: PlanModel?, domainName: String?) {
         siteCreationState = siteCreationState.copy(plan = plan)
         domainName?.let {
             siteCreationState = siteCreationState.copy(domain = siteCreationState.domain?.copy(domainName = it))
@@ -302,7 +302,9 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun onCartCreated(checkoutDetails: CheckoutDetails) {
-        siteCreationState = siteCreationState.copy(result = CreatedButNotFetched.InCart(checkoutDetails.site))
+        checkoutDetails.site?.let{
+            siteCreationState = siteCreationState.copy(result = CreatedButNotFetched.InCart(it))
+        }
         domainsRegistrationTracker.trackDomainsPurchaseWebviewViewed(checkoutDetails.site, isSiteCreation = true)
         _showDomainCheckout.value = checkoutDetails
     }
@@ -330,7 +332,7 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onFreeSiteCreated(site: SiteModel) {
         siteCreationState = siteCreationState.copy(result = CreatedButNotFetched.NotInLocalDb(site))
-        if (siteCreationState.plan?.productSlug == "free_plan") {
+        if (siteCreationState.plan == null || siteCreationState.plan?.productSlug == "free_plan") {
             wizardManager.showNextStep()
         }
     }

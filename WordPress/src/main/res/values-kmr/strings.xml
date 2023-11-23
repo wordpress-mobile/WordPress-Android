@@ -1521,7 +1521,6 @@ Language: ku_TR
     <string name="password_incorrect">Wisa dixuye ku ev pêborîn xelet e. Ji kerema xwe du caran agahiyên xwe kontrol bike û careke din biceribîne.</string>
     <string name="requesting_otp">Xwestina kodeke rastandinê bi rêya SMSê.</string>
     <string name="login_text_otp">Jê dêvla wê kodekê ji min re bişîne</string>
-    <string name="enter_verification_code">Hema hema qediya. Ji kerema xwe, ji sepana xwe ya rastandinê koda pejirandinê têkeve.</string>
     <string name="next">Pêşve</string>
     <string name="enter_email_wordpress_com">Ji bo ku tu hemû malperên xwe yên WordPressê bi rê ve bibî bi rêya bikaranîna navnîşaneke emailê têkeve WordPress.com\'ê.</string>
     <string name="image_optimization_promo_desc">Optîmîzasyona wêneyê ji bo hilxistina bilez, wêneyan biçûk dike.\n\nTu her tim dikarî vê ji sazkariyên malperê biguherînî.</string>
@@ -1661,11 +1660,11 @@ Language: ku_TR
     <string name="editor_post_saved_online">Şandî bi serhêlî hat tomarkirin</string>
     <string name="site_settings_image_quality_hint">Kalîteya wêneyan. Nirxên bilindtir tê wateya wêneyên kalîteya wan çêtir.</string>
     <string name="site_settings_optimize_images_summary">Dewisandin û ji nû ve rehendina wêneyan biçalakîne</string>
-    <string name="media_encoder_quality_100">Herî bilind</string>
-    <string name="media_encoder_quality_95">Pir bilind</string>
-    <string name="media_encoder_quality_90">Bilind</string>
-    <string name="media_encoder_quality_85">Navîn</string>
-    <string name="media_encoder_quality_80">Nizm</string>
+    <string name="media_encoder_quality_maximum">Herî bilind</string>
+    <string name="media_encoder_quality_very_high">Pir bilind</string>
+    <string name="media_encoder_quality_high">Bilind</string>
+    <string name="media_encoder_quality_medium">Navîn</string>
+    <string name="media_encoder_quality_low">Nizm</string>
     <string name="media_upload_state_uploaded">Hat hilxistin</string>
     <string name="media_upload_state_deleted">Hat jêbirin</string>
     <string name="media_upload_state_deleting">Tê jêbirin</string>

@@ -1,11 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-18 16:54:08+0000
+Translation-Revision-Date: 2023-11-15 11:54:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: tr
 -->
 <resources>
+    <string name="notification_security_key_needed">Lütfen devam etmek için güvenlik anahtarınızı girin.</string>
+    <string name="login_error_security_key">Güvenlik anahtarıyla oturum açarken bir sorunla karşılaştık</string>
+    <string name="login_text_security_key">Bir güvenlik anahtarı kullanın</string>
+    <string name="new_domain_search_screen_error_title">Alan adları alınamadı</string>
+    <string name="new_domain_search_screen_list_item_sale_price">İlk yıl için %s</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s/yıl</string>
+    <string name="new_domain_search_screen_transfer_domain_button">Alan adını aktar</string>
+    <string name="new_domain_search_screen_transfer_domain_description">Zaten sahip olduğunuz bir alan adını aktarmak mı istiyorsunuz?</string>
+    <string name="new_domain_search_screen_input_placeholder">Daha fazla tavsiye için yazın</string>
+    <string name="new_domain_search_screen_title">Bir alan adı arayın</string>
+    <string name="purchase_domain_screen_error_button_title">Tamam</string>
+    <string name="purchase_domain_screen_error_subtitle">Alan adı sepete eklenirken bir hata oldu. Çevrimiçi olduğunuzdan emin olup yeniden deneyin.</string>
+    <string name="purchase_domain_screen_error_title">Hata</string>
+    <string name="domain_management_site_domains_button">Tümü</string>
+    <string name="domain_management_error_title">Alan adlarınız alınamadı</string>
+    <string name="site_domain_title">Site Alan Adı</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">&lt;b&gt;Bloganuary&lt;/b&gt;\'den</string>
+    <string name="post_status_post_edited">Düzenlendi</string>
+    <string name="post_list_toggle_author_filter">Yazara göre filtrele</string>
+    <string name="gutenberg_native_s_block_converted_to_blocks">\"%s\" blok, bloklara dönüştürüldü</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Alternatif olarak içeriği bloklara dönüştürebilirsiniz.</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Kısayollar Ekle veya Kaldır</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Etkin Olmayan Kısayollar</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">Etkin Kısayollar</string>
+    <string name="personalization_screen_shortcuts_tab_title">Kısayollar</string>
+    <string name="personalization_screen_cards_tab_title">Kartlar</string>
+    <string name="purchase_domain_screen_discount_notice">*Tüm ücretli yıllık paketlere bir yıllık ücretsiz alan adı dahildir.</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">Site Seç</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">Zaten başlatmış olduğunuz bir siteyle kullanın.</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">Mevcut WordPress.com sitesi</string>
+    <string name="purchase_domain_screen_new_domain_card_button">Alan Adı Al</string>
+    <string name="purchase_domain_screen_new_domain_card_description">Siteyi daha sonra ekleyin.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">Sadece alan adı satın alın</string>
+    <string name="purchase_domain_screen_description">Merak etmeyin, daha sonra site ekleyebilirsiniz.</string>
+    <string name="purchase_domain_screen_header_double_line">Alan adınızı nasıl\nkullanacağınızı seçin</string>
+    <string name="purchase_domain_screen_header_single_line">Alan adınızı nasıl kullanacağınızı seçin</string>
+    <string name="purchase_domain_screen_title">Alan Adı Satın Alın</string>
+    <string name="domain_management_empty_find_domain">Bir alan adı bulun</string>
+    <string name="domain_management_empty_subtitle">Mükemmel alan adınızı bulmak için aşağıya tıklayın.</string>
+    <string name="domain_management_empty_title">Alan adınız yok</string>
+    <string name="domain_management_error_subtitle">Çevrimiçi olup olmadığınızı kontrol edin ve yenilemek için çekin.</string>
+    <string name="domain_management_open_domain_details">Ayrıntıları açın</string>
+    <string name="domain_management_search_your_domains">Alan adı arayın</string>
+    <string name="domain_management_purchase_a_domain">Alan adı satın alın</string>
+    <string name="domain_management_my_domains_title">Tüm Alan Adları</string>
+    <string name="domain_management_expires">Son Kullanma Tarihi: %1$s</string>
     <string name="account_and_settings">Hesap ve Ayarlar</string>
     <string name="site_creation_plans_selection_title">Paket seçin</string>
     <string name="site_creation_domain_free_with_annual_plan">Yıllık ücretli paketlerde ilk yıl ücretsizdir.</string>
@@ -35,9 +81,9 @@ Language: tr
     <string name="personalization_screen_draft_posts_card_description">En son taslak gönderileriniz.</string>
     <string name="personalization_screen_draft_posts_card_title">Taslak gönderiler</string>
     <string name="personalization_screen_stats_card_description">Görüntülemeler, Ziyaretçiler ve beğeniler</string>
-    <string name="personalization_screen_footer_cards">Sitenizde olanlara göre kartlar farklı içerik gösterebilir.</string>
-    <string name="personalization_screen_description">Kart ekle veya gizle</string>
-    <string name="personalization_screen_title">Ana sayfa sekmesini kişiselleştir</string>
+    <string name="personalization_screen_tab_cards_footer_cards">Sitenizde olanlara göre kartlar farklı içerik gösterebilir.</string>
+    <string name="personalization_screen_tab_cards_description">Kart ekle veya gizle</string>
+    <string name="personalization_screen_title"> Ana sayfa sekmesini kişiselleştir</string>
     <string name="personalize_card_content_description">Ana sayfa sekmenizi kişiselleştirmek için dokunun</string>
     <string name="personalize_card_text">Ana sayfa sekmenizi kişiselleştirin</string>
     <string name="partial_media_access_prompt_change_settings">Ayarları Değiştir</string>
@@ -2834,7 +2880,7 @@ Language: tr
     <string name="password_incorrect">Bu parola yanlış gibi görünüyor. Lütfen bilgilerinizi iki kez kontrol edin ve tekrar deneyin.</string>
     <string name="requesting_otp">SMS ile bir doğrulama kodu istemek.</string>
     <string name="login_text_otp">Bunun yerine bana SMS ile bir kod gönder</string>
-    <string name="enter_verification_code">Neredeyse tamam. Lütfen kimlik doğrulayıcı uygulamanızdan doğrulama kodunu girin.</string>
+    <string name="enter_verification_code">Çok az kaldı! Lütfen WordPress.com için kimlik doğrulayıcı uygulamanızdaki doğrulama kodunu girin.</string>
     <string name="open_mail">E-postayı Aç</string>
     <string name="next">Sonraki</string>
     <string name="enter_email_wordpress_com">Tüm WordPress sitelerinizi yönetmek için bir e-posta adresi kullanarak WordPress.com\'a oturum açın.</string>
@@ -2978,11 +3024,11 @@ Language: tr
     <string name="editor_post_saved_online">Yazı çevrimiçi kaydedildi.</string>
     <string name="site_settings_image_quality_hint">Görüntülerin kalitesi. Daha yüksek değerler daha kaliteli görüntü anlamına gelir.</string>
     <string name="site_settings_optimize_images_summary">Görüntülerin boyutlandırılıp sıkıştırılabilmelerini etkinleştir</string>
-    <string name="media_encoder_quality_100">En yüksek</string>
-    <string name="media_encoder_quality_95">Çok yüksek</string>
-    <string name="media_encoder_quality_90">Yüksek</string>
-    <string name="media_encoder_quality_85">Orta</string>
-    <string name="media_encoder_quality_80">Düşük</string>
+    <string name="media_encoder_quality_maximum">En yüksek</string>
+    <string name="media_encoder_quality_very_high">Çok yüksek</string>
+    <string name="media_encoder_quality_high">Yüksek</string>
+    <string name="media_encoder_quality_medium">Orta</string>
+    <string name="media_encoder_quality_low">Düşük</string>
     <string name="media_upload_state_uploaded">Yüklendi</string>
     <string name="media_upload_state_failed">Yükleme başarısız oldu</string>
     <string name="media_upload_state_deleted">Silindi</string>
@@ -3495,6 +3541,7 @@ Language: tr
     <string name="reader_toast_err_already_follow_blog">Bu siteyi zaten takip ediyorsunuz</string>
     <string name="reader_toast_err_get_blog_info">Bu site gösterilemiyor</string>
     <string name="reader_label_followed_blog">Site takip edildi</string>
+    <string name="reader_label_followers_count">%s takipçi</string>
     <string name="reader_hint_add_tag_or_url">Bir URL veya takip etmek istediğiniz konuyu girin</string>
     <string name="reader_page_followed_blogs">Takip edilen siteler</string>
     <string name="reader_page_followed_tags">Takip edilen konular</string>

@@ -1,3 +1,0 @@
-23.5:
-Vi har gjort några visuella ändringar i läsaren, inklusive vad gäller flödeskort, rubriker, knappar, rekommendationer med mera.
-I blockredigeraren kan du nu dela eller lämna ett formaterat block genom att trycka på returtangenten tre gånger. Den vänstra kantlinjen är dessutom alltid synlig för citatblock.

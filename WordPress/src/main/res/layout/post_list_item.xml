@@ -1,166 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_gravity="center">
 
-    <FrameLayout
+    <Space
+        android:id="@+id/topspace"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- text area -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/final_text_unit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/post_list_content_margin_standard"
-        android:layout_marginEnd="@dimen/post_list_content_margin_standard">
+        android:layout_gravity="center"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topspace">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/post_info"
+            style="@style/PostList.Item.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/more"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constrainedWidth="true"
+            tools:text="Private · Local Changes Private · FirstName LastName" />
+
+        <ImageButton
+            android:id="@+id/more"
+            android:layout_width="@dimen/post_list_more_icon_size"
+            android:layout_height="@dimen/post_list_more_icon_size"
+            android:importantForAccessibility="no"
+            android:src="@drawable/gb_ic_more_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/more"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorOnSurface" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- mid section area -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/final_mid_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/final_text_unit">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/container"
-            android:layout_width="match_parent"
+            android:id="@+id/text_container"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="?selectableItemBackground">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/space_between"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/image_featured"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title"
+                style="@style/PostList.Item.Title"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/postlist_featured_image_height"
-                android:layout_marginStart="@dimen/margin_extra_large"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:layout_marginEnd="@dimen/margin_extra_large"
-                android:contentDescription="@string/featured_image_desc"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="visible" />
+                tools:text="My Title is super duper long and longer than the fox that is running into the area of large text and will have to cut off the remaining" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_extra_large"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:layout_marginEnd="@dimen/margin_extra_large"
-                android:ellipsize="end"
-                android:fontFamily="serif"
-                android:maxLines="2"
-                android:textAppearance="?attr/textAppearanceSubtitle1"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image_featured"
-                app:layout_goneMarginTop="@dimen/margin_extra_large"
-                tools:text="Testing title Testing title Testing title Testing title Testing title Testing title Testing title Testing title" />
-
-            <org.wordpress.android.widgets.WPTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/excerpt"
+                style="@style/PostList.Item.Body"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_extra_large"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginTop="2dp"
                 android:ellipsize="end"
-                android:importantForAccessibility="no"
-                android:lineSpacingMultiplier="1.1"
                 android:maxLines="3"
-                android:textAppearance="?attr/textAppearanceBody2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title"
-                tools:text="text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt " />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/post_info"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_extra_large"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:layout_marginEnd="@dimen/margin_extra_large"
-                android:alpha="0.6"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textAppearance="?attr/textAppearanceBody2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/excerpt"
-                tools:text="99 days ago 99 days ago 99 days ago 99 days ago 99 days ago 99 days ago 99 days ago " />
-
-            <LinearLayout
-                android:id="@+id/layout_buttons"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:clickable="false"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/upload_progress"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/statuses_label">
-
-                <org.wordpress.android.widgets.PostListButton
-                    android:id="@+id/btn_primary"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center" />
-
-                <org.wordpress.android.widgets.PostListButton
-                    android:id="@+id/btn_secondary"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center" />
-
-                <org.wordpress.android.widgets.PostListButton
-                    android:id="@+id/btn_ternary"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center" />
-            </LinearLayout>
-
-            <FrameLayout
-                android:id="@+id/disabled_overlay"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:alpha="@dimen/material_emphasis_medium"
-                android:background="?attr/colorSurface"
-                android:clickable="true"
-                android:focusable="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/statuses_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_extra_large"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:layout_marginEnd="@dimen/margin_extra_large"
-                android:textAppearance="?attr/textAppearanceBody2"
-                app:layout_constraintBottom_toTopOf="@+id/layout_buttons"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/post_info"
-                app:layout_goneMarginBottom="@dimen/margin_extra_large"
-                tools:text="Private · Local Changes Private · Local Changes Private · Local Changes Private · Local Changes Private · Local Changes " />
-
-            <ProgressBar
-                android:id="@+id/upload_progress"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_buttons" />
-
+                tools:text="this is the excerpt that will possibly show in this area" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </FrameLayout>
+
+        <Space
+            android:id="@+id/space_between"
+            android:layout_width="8dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/image_featured"
+            app:layout_constraintStart_toEndOf="@+id/text_container"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/image_featured"
+            android:layout_width="@dimen/postlist_featured_image_height"
+            android:layout_height="@dimen/postlist_featured_image_height"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@+id/text_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_container"
+            tools:srcCompat="@tools:sample/avatars" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/disabled_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="@dimen/material_emphasis_medium"
+        android:background="?attr/colorSurface"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/statuses_label"
+        style="@style/PostList.Item.Body"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        app:layout_constraintBottom_toTopOf="@+id/upload_progress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/final_mid_section"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="Private · Local Changes Private · Local Changes Private · Local Changes Private · Local Changes Private · Local Changes " />
+
+    <ProgressBar
+        android:id="@+id/upload_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statuses_label" />
+
+    <Space
+        android:id="@+id/space2"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upload_progress" />
 
     <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="16dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/space2" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

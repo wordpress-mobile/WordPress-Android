@@ -20,8 +20,8 @@ class ReattachUploadingMediaUseCaseTest {
     private val uploadServiceFacade: UploadServiceFacade = mock()
     private val editorMediaUploadListener: EditorMediaUploadListener = mock()
 
-    private val mediaModel1 = MediaModel().apply { id = 1 }
-    private val mediaModel2 = MediaModel().apply { id = 2 }
+    private val mediaModel1 = MediaModel(0, 0).apply { id = 1 }
+    private val mediaModel2 = MediaModel(0, 0).apply { id = 2 }
 
     @Before
     fun setUp() {

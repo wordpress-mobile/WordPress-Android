@@ -12,11 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,26 +36,29 @@ import androidx.compose.ui.zIndex
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState
-import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.PopulatedList
-import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.Error
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.Empty
+import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.Error
+import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.PopulatedList
 import org.wordpress.android.ui.domains.management.composable.DomainsSearchTextField
+import org.wordpress.android.ui.domains.management.composable.PrimaryButton
 
 @Composable
 fun MyDomainsScreen(
     uiState: UiState,
-    onDomainTapped: (detailUrl: String) -> Unit,
+    onSearchQueryChanged: (String) -> Unit,
+    onDomainTapped: (String, String) -> Unit,
     onAddDomainTapped: () -> Unit,
     onFindDomainTapped: () -> Unit,
+    onBackTapped: () -> Unit,
+    onRefresh: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             MainTopAppBar(
                 title = stringResource(R.string.domain_management_my_domains_title),
                 navigationIcon = NavigationIcons.BackIcon,
-                onNavigationIconClick = {},
+                onNavigationIconClick = onBackTapped,
                 actions = {
                     IconButton(
                         onClick = onAddDomainTapped,
@@ -75,7 +75,7 @@ fun MyDomainsScreen(
             )
         },
     ) { paddingValues ->
-        Column (Modifier.padding(paddingValues)) {
+        Column(Modifier.padding(paddingValues)) {
             var queryString by rememberSaveable { mutableStateOf("") }
             val listState = rememberLazyListState()
 
@@ -86,45 +86,35 @@ fun MyDomainsScreen(
             MyDomainsSearchInput(
                 elevation.value,
                 queryString = queryString,
-                onQueryStringChanged = { queryString = it },
+                onQueryStringChanged = {
+                    queryString = it
+                    onSearchQueryChanged(it)
+                },
                 enabled = uiState is PopulatedList.Loaded,
             )
             when (uiState) {
                 is PopulatedList -> MyDomainsList(
-                    listUiState = uiState.filter(queryString),
+                    listUiState = uiState,
                     listState = listState,
                     onDomainTapped,
                 )
-                Error -> ErrorScreen()
+
+                Error -> ErrorScreen(
+                    titleRes = R.string.domain_management_error_title,
+                    descriptionRes = R.string.domain_management_error_subtitle,
+                    onRefresh = onRefresh
+                )
                 Empty -> EmptyScreen(onFindDomainTapped)
             }
         }
     }
 }
 
-@Composable
-fun ErrorScreen() {
-    Column (
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        Text(
-            text = stringResource(R.string.domain_management_error_title),
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.outline,
-        )
-        Text(
-            text = stringResource(R.string.domain_management_error_subtitle),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.outline,
-        )
-    }
-}
+
 
 @Composable
 fun EmptyScreen(onFindDomainTapped: () -> Unit) {
-    Column (
+    Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize(),
@@ -149,28 +139,6 @@ fun EmptyScreen(onFindDomainTapped: () -> Unit) {
     }
 }
 
-@Composable
-fun PrimaryButton(
-    onClick: () -> Unit,
-    text: String,
-    modifier: Modifier = Modifier,
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier,
-        shape = RoundedCornerShape(4.dp),
-        colors = ButtonDefaults.buttonColors(
-            contentColor = AppColor.White,
-        ),
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelLarge,
-        )
-    }
-}
-
-
 
 @Composable
 fun MyDomainsSearchInput(
@@ -179,7 +147,7 @@ fun MyDomainsSearchInput(
     onQueryStringChanged: (String) -> Unit,
     enabled: Boolean = false,
 ) {
-    Surface (shadowElevation = elevation, modifier = Modifier.zIndex(1f)) {
+    Surface(shadowElevation = elevation, modifier = Modifier.zIndex(1f)) {
         DomainsSearchTextField(
             value = queryString,
             onValueChange = onQueryStringChanged,
@@ -194,7 +162,7 @@ fun MyDomainsSearchInput(
 fun MyDomainsList(
     listUiState: PopulatedList,
     listState: LazyListState,
-    onDomainTapped: (detailUrl: String) -> Unit,
+    onDomainTapped: (domain: String, detailUrl: String) -> Unit,
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -209,8 +177,15 @@ fun MyDomainsList(
                         DomainListCard(uiState = DomainCardUiState.Initial)
                     }
                 }
-            is PopulatedList.Loaded -> {
-                items(items = listUiState.domains) {
+
+            is PopulatedList.Loaded.Complete -> {
+                items(items = listUiState.allDomains) {
+                    DomainListCard(uiState = DomainCardUiState.fromDomain(domain = it), onDomainTapped)
+                }
+            }
+
+            is PopulatedList.Loaded.Filtered -> {
+                items(items = listUiState.filtered) {
                     DomainListCard(uiState = DomainCardUiState.fromDomain(domain = it), onDomainTapped)
                 }
             }
@@ -223,15 +198,30 @@ fun MyDomainsList(
 @Composable
 fun PreviewMyDomainsScreen() {
     M3Theme {
-        MyDomainsScreen(PopulatedList.Initial, onAddDomainTapped = {}, onDomainTapped = {}, onFindDomainTapped = {})
+        MyDomainsScreen(
+            uiState = PopulatedList.Initial,
+            onSearchQueryChanged = {},
+            onAddDomainTapped = {},
+            onDomainTapped = { _, _ ->},
+            onFindDomainTapped = {},
+            onBackTapped = {},
+        ) {}
     }
 }
+
 @Preview(device = Devices.PIXEL_3A, group = "Error / Offline")
 @Preview(device = Devices.PIXEL_3A, uiMode = UI_MODE_NIGHT_YES, group = "Error / Offline")
 @Composable
 fun PreviewMyDomainsScreenError() {
     M3Theme {
-        MyDomainsScreen(Error, onAddDomainTapped = {}, onDomainTapped = {}, onFindDomainTapped = {})
+        MyDomainsScreen(
+            uiState = Error,
+            onSearchQueryChanged = {},
+            onAddDomainTapped = {},
+            onDomainTapped = { _, _ ->},
+            onFindDomainTapped = {},
+            onBackTapped = {},
+        ) {}
     }
 }
 
@@ -240,6 +230,13 @@ fun PreviewMyDomainsScreenError() {
 @Composable
 fun PreviewMyDomainsScreenEmpty() {
     M3Theme {
-        MyDomainsScreen(Empty, onAddDomainTapped = {}, onDomainTapped = {}, onFindDomainTapped = {})
+        MyDomainsScreen(
+            uiState = Empty,
+            onSearchQueryChanged = {},
+            onAddDomainTapped = {},
+            onDomainTapped = { _, _ ->},
+            onFindDomainTapped = {},
+            onBackTapped = {},
+        ) {}
     }
 }

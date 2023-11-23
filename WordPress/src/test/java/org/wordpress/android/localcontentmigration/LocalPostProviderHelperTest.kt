@@ -45,7 +45,7 @@ class LocalPostProviderHelperTest {
         whenever(mockPostModel.id).thenReturn(mockPostId)
         whenever(mockPostModel2.id).thenReturn(mockPostId2)
         whenever(postStore.getPostsForSite(mockSiteModel)).thenReturn(mockPostList)
-        whenever(siteProviderHelper.getData()).thenReturn(SitesData(sites = listOf(mockSiteModel)))
+        whenever(siteProviderHelper.getData()).thenReturn(SitesData(sites = listOf(mockSiteModel), true))
         whenever(mockSiteModel.id).thenReturn(mockSiteId)
         whenever(dbWrapper.giveMeReadableDb()).thenReturn(mockDb)
         whenever(

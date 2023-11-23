@@ -34,6 +34,7 @@ import androidx.compose.ui.zIndex
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
+import org.wordpress.android.ui.domains.management.ErrorScreen
 import org.wordpress.android.ui.domains.management.composable.DomainsSearchTextField
 import org.wordpress.android.ui.domains.management.composable.PendingGhostStrip
 import org.wordpress.android.ui.domains.management.newdomainsearch.NewDomainSearchViewModel.UiState
@@ -44,6 +45,7 @@ import org.wordpress.android.ui.domains.management.success
 fun NewDomainSearchScreen(
     uiState: UiState,
     onSearchQueryChanged: (String) -> Unit,
+    onRefresh: () -> Unit,
     onTransferDomainClicked: () -> Unit,
     onDomainTapped: (domain: ProposedDomain) -> Unit,
     onBackPressed: () -> Unit,
@@ -79,7 +81,12 @@ fun NewDomainSearchScreen(
                         modifier = Modifier.weight(1f)
                     )
                     is UiState.Loading -> LoadingPlaceholder(modifier = Modifier.weight(1f))
-                    is UiState.Error -> Spacer(modifier = Modifier.weight(1f))
+                    is UiState.Error -> ErrorScreen(
+                        titleRes = R.string.new_domain_search_screen_error_title,
+                        descriptionRes = R.string.domain_management_error_subtitle,
+                        onRefresh = onRefresh,
+                        modifier = Modifier.weight(1f)
+                    )
                 }
                 TransferDomainFooter(onTransferDomainClicked = onTransferDomainClicked)
             }
@@ -231,16 +238,19 @@ fun NewDomainSearchScreenPreview() {
                     domain = "example.com",
                     price = "USD 100",
                     salePrice = "USD 30",
+                    supportsPrivacy = true,
                 ),
                 ProposedDomain(
                     productId = 0,
                     domain = "example.blog",
                     price = "USD 100",
                     salePrice = null,
+                    supportsPrivacy = true,
                 ),
             )
         ),
         onSearchQueryChanged = {},
+        onRefresh = {},
         onTransferDomainClicked = {},
         onDomainTapped = {},
         onBackPressed = {}

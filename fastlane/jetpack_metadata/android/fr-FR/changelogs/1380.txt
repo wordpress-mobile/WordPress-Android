@@ -1,3 +1,0 @@
-23.5 :
-Nous avons apporté des modifications visuelles au lecteur, notamment aux fiches du flux, aux en-têtes, aux boutons, aux recommandations, etc.
-Dans l’éditeur de blocs, vous pouvez maintenant scinder ou quitter un bloc mis en forme en appuyant sur la touche Entrée trois fois. La bordure gauche est toujours visible pour les blocs de citation également.

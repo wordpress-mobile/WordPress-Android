@@ -50,6 +50,7 @@ class NewDomainsSearchRepository @Inject constructor(
                         domain = domain.domain_name,
                         price = domain.cost,
                         salePrice = product?.combinedSaleCostDisplay,
+                        supportsPrivacy = domain.supports_privacy
                     )
                 }
             DomainsResult.Success(suggestions)

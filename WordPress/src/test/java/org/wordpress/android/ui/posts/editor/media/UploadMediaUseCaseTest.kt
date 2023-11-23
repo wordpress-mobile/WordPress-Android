@@ -88,6 +88,6 @@ class UploadMediaUseCaseTest {
         }
 
         private fun createMediaModel(uploadState: MediaUploadState = MediaUploadState.QUEUED) =
-            MediaModel().apply { this.uploadState = uploadState.name }
+            MediaModel(0, 0).apply { this.uploadState = uploadState.name }
     }
 }

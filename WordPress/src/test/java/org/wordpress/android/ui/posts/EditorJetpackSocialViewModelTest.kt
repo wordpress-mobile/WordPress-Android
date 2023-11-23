@@ -9,6 +9,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -36,15 +37,11 @@ import org.wordpress.android.usecase.social.GetJetpackSocialShareMessageUseCase
 import org.wordpress.android.usecase.social.GetPublicizeConnectionsForUserUseCase
 import org.wordpress.android.usecase.social.JetpackSocialFlow
 import org.wordpress.android.usecase.social.ShareLimit
-import org.wordpress.android.util.config.JetpackSocialFeatureConfig
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class EditorJetpackSocialViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var dispatcher: Dispatcher
-
-    @Mock
-    lateinit var jetpackSocialFeatureConfig: JetpackSocialFeatureConfig
 
     @Mock
     lateinit var accountStore: AccountStore
@@ -89,7 +86,6 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
     fun setUp() {
         classToTest = EditorJetpackSocialViewModel(
             dispatcher = dispatcher,
-            jetpackSocialFeatureConfig = jetpackSocialFeatureConfig,
             accountStore = accountStore,
             getPublicizeConnectionsForUserUseCase = getPublicizeConnectionsForUserUseCase,
             getJetpackSocialShareMessageUseCase = getJetpackSocialShareMessageUseCase,
@@ -111,17 +107,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should NOT load jetpack social if FF is disabled`() = test {
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(false)
-        classToTest.start(FAKE_SITE_MODEL, editPostRepository)
-        verify(getPublicizeConnectionsForUserUseCase, never()).execute(any(), any(), any())
-    }
-
-    @Test
     fun `Should NOT load jetpack social if post is page`() = test {
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         whenever(editPostRepository.isPage).thenReturn(true)
         classToTest.start(FAKE_SITE_MODEL, editPostRepository)
         verify(getPublicizeConnectionsForUserUseCase, never()).execute(any(), any(), any())
@@ -129,8 +115,6 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
 
     @Test
     fun `Should NOT load jetpack social if PostStatus is PRIVATE`() = test {
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         whenever(editPostRepository.isPage).thenReturn(false)
         whenever(editPostRepository.getPost()).thenReturn(PostModel().apply {
             setStatus(PostStatus.PRIVATE.toString())
@@ -139,55 +123,42 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
         verify(getPublicizeConnectionsForUserUseCase, never()).execute(any(), any(), any())
     }
 
-    @Test
-    fun `Should hide jetpack social container if FF is disabled`() = test {
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(false)
-        classToTest.start(FAKE_SITE_MODEL, editPostRepository)
-        verify(showJetpackSocialContainerObserver).onChanged(JetpackSocialContainerVisibility.ALL_HIDDEN)
-    }
 
     @Test
-    fun `Should show jetpack social container if FF is enabled`() = test {
+    fun `Should show jetpack social container`() = test {
         mockUserId()
         whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
             .thenReturn(emptyList())
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         classToTest.start(fakeSiteModel(true), editPostRepository)
         verify(showJetpackSocialContainerObserver).onChanged(JetpackSocialContainerVisibility.ALL_VISIBLE)
     }
 
     @Test
-    fun `Should get publicize connections for user if jetpack social FF is enabled`() = test {
+    fun `Should get publicize connections for user`() = test {
         mockUserId()
         whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
             .thenReturn(emptyList())
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         classToTest.start(fakeSiteModel(), editPostRepository)
         verify(getPublicizeConnectionsForUserUseCase).execute(FAKE_REMOTE_SITE_ID, FAKE_USER_ID)
     }
 
     @Test
-    fun `Should get jetpack social share limit status if jetpack social FF is enabled`() = test {
+    fun `Should get jetpack social share limit status`() = test {
         mockUserId()
         whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
             .thenReturn(emptyList())
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         classToTest.start(fakeSiteModel(), editPostRepository)
         verify(getJetpackSocialShareLimitStatusUseCase).execute(FAKE_SITE_MODEL)
     }
 
     @Test
-    fun `Should map no connections UI if connections are empty, FF is enabled and never dismissed by user`() = test {
+    fun `Should map no connections UI if connections are empty and never dismissed by user`() = test {
         mockUserId()
         whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
             .thenReturn(emptyList())
@@ -195,8 +166,6 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(ShareLimit.Disabled)
         whenever(publicizeTableWrapper.getServiceList())
             .thenReturn(listOf(PublicizeService().apply { status = PublicizeService.Status.OK }))
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         whenever(appPrefsWrapper.getShouldShowJetpackSocialNoConnections(any(), any()))
             .thenReturn(true)
 
@@ -205,7 +174,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should emit no connections UI if connections are empty, FF is enabled and never dismissed by user`() = test {
+    fun `Should emit no connections UI if connections are empty and never dismissed by user`() = test {
         val noConnections = JetpackSocialUiState.NoConnections(
             trainOfIconsModels = listOf(),
             message = "message",
@@ -221,8 +190,6 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(ShareLimit.Disabled)
         whenever(publicizeTableWrapper.getServiceList())
             .thenReturn(listOf(PublicizeService().apply { status = PublicizeService.Status.OK }))
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         whenever(jetpackUiStateMapper.mapNoConnections(any(), any()))
             .thenReturn(noConnections)
         whenever(appPrefsWrapper.getShouldShowJetpackSocialNoConnections(any(), any()))
@@ -240,8 +207,6 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(ShareLimit.Disabled)
         whenever(publicizeTableWrapper.getServiceList())
             .thenReturn(listOf(PublicizeService().apply { status = PublicizeService.Status.OK }))
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         whenever(appPrefsWrapper.getShouldShowJetpackSocialNoConnections(any(), any()))
             .thenReturn(false)
 
@@ -250,7 +215,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should map loaded UI state if connections list is NOT empty and jetpack social FF is enabled`() = test {
+    fun `Should map loaded UI state if connections list is NOT empty`() = test {
         mockUserId()
         whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
             .thenReturn(listOf(FAKE_PUBLICIZE_CONNECTION))
@@ -258,14 +223,12 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn("Message")
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         classToTest.start(fakeSiteModel(true), editPostRepository)
         verify(jetpackUiStateMapper).mapLoaded(any(), any(), any(), any(), any(), any(), any(), any())
     }
 
     @Test
-    fun `Should emit loaded UI state if connections list is NOT empty and jetpack social FF is enabled`() = test {
+    fun `Should emit loaded UI state if connections list is NOT empty`() = test {
         val loaded = JetpackSocialUiState.Loaded(
             jetpackSocialConnectionDataList = listOf(
                 JetpackSocialConnectionData(
@@ -289,8 +252,6 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(ShareLimit.Disabled)
         whenever(getJetpackSocialShareMessageUseCase.execute(any()))
             .thenReturn("Message")
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any(), any(), any(), any(), any(), any()))
             .thenReturn(loaded)
         classToTest.start(fakeSiteModel(true), editPostRepository)
@@ -322,8 +283,6 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(ShareLimit.Disabled)
         whenever(getJetpackSocialShareMessageUseCase.execute(any()))
             .thenReturn("Message")
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any(), any(), any(), any(), any(), any()))
             .thenReturn(loaded)
 
@@ -340,7 +299,12 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should emit OpenSocialConnectionList when onJetpackSocialConnectProfilesClick is called`() {
+    fun `Should emit OpenSocialConnectionList when onJetpackSocialConnectProfilesClick is called`() = test {
+        mockUserId()
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+            .thenReturn(emptyList())
+        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+            .thenReturn(ShareLimit.Disabled)
         classToTest.start(fakeSiteModel(), editPostRepository)
         classToTest.onJetpackSocialConnectProfilesClick(JetpackSocialFlow.POST_SETTINGS)
         verify(actionEventsObserver).onChanged(
@@ -368,8 +332,6 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(ShareLimit.Disabled)
         whenever(publicizeTableWrapper.getServiceList())
             .thenReturn(listOf(PublicizeService().apply { status = PublicizeService.Status.OK }))
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         whenever(jetpackUiStateMapper.mapNoConnections(any(), any()))
             .thenReturn(noConnections)
         whenever(appPrefsWrapper.getShouldShowJetpackSocialNoConnections(any(), any()))
@@ -393,8 +355,6 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(ShareLimit.Disabled)
         whenever(publicizeTableWrapper.getServiceList())
             .thenReturn(listOf(PublicizeService().apply { status = PublicizeService.Status.OK }))
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         whenever(appPrefsWrapper.getShouldShowJetpackSocialNoConnections(any(), any()))
             .thenReturn(false)
 
@@ -433,8 +393,6 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(mock())
         whenever(getJetpackSocialShareMessageUseCase.execute(any()))
             .thenReturn("Message")
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any(), any(), any(), any(), any(), any()))
             .thenReturn(loaded)
         classToTest.start(fakeSiteModel(true), editPostRepository)
@@ -472,8 +430,6 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(mock())
         whenever(getJetpackSocialShareMessageUseCase.execute(any()))
             .thenReturn("Message")
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         whenever(jetpackUiStateMapper.mapLoaded(any(), any(), any(), any(), any(), any(), any(), any()))
             .thenReturn(loaded)
         classToTest.start(fakeSiteModel(true), editPostRepository)
@@ -492,8 +448,6 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(emptyList())
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         classToTest.start(fakeSiteModel(true), editPostRepository)
 
         classToTest.onJetpackSocialConnectProfilesClick(JetpackSocialFlow.POST_SETTINGS)
@@ -507,8 +461,6 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(emptyList())
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         classToTest.start(fakeSiteModel(true), editPostRepository)
 
         classToTest.onJetpackSocialNotNowClick(JetpackSocialFlow.POST_SETTINGS)
@@ -522,8 +474,6 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(emptyList())
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         classToTest.start(fakeSiteModel(true), editPostRepository)
 
         classToTest.onJetpackSocialSubscribeClick(JetpackSocialFlow.POST_SETTINGS)
@@ -537,8 +487,6 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
             .thenReturn(emptyList())
         whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
             .thenReturn(ShareLimit.Disabled)
-        whenever(jetpackSocialFeatureConfig.isEnabled())
-            .thenReturn(true)
         classToTest.start(fakeSiteModel(true), editPostRepository)
 
         classToTest.onJetpackSocialConnectionClick(mock(), true, JetpackSocialFlow.POST_SETTINGS)
@@ -549,9 +497,18 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should start jetpack social if onPostVisibilityChanged is called`() {
+    fun `Should start jetpack social if onPostVisibilityChanged is called`() = test {
+        // Initialize EditPostRepository
+        mockUserId()
+        whenever(getPublicizeConnectionsForUserUseCase.execute(any(), any(), any()))
+            .thenReturn(emptyList())
+        whenever(getJetpackSocialShareLimitStatusUseCase.execute(any()))
+            .thenReturn(ShareLimit.Disabled)
+        classToTest.start(fakeSiteModel(true), editPostRepository)
+        //
         classToTest.onPostStatusChanged()
-        verify(showJetpackSocialContainerObserver).onChanged(any())
+        // verify 2 times: one for start method and another for onPostStatusChanged method
+        verify(showJetpackSocialContainerObserver, times(2)).onChanged(any())
     }
 
     private fun fakeSiteModel(supportsPublicize: Boolean = false): SiteModel = FAKE_SITE_MODEL.apply {

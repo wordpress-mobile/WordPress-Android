@@ -10,6 +10,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.domains.management.DomainManagementViewModel.ActionEvent
+import org.wordpress.android.ui.domains.management.details.DomainManagementDetailsActivity
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
@@ -20,11 +22,15 @@ class DomainManagementActivity : AppCompatActivity() {
         setContent {
             M3Theme {
                 val uiState by viewModel.uiStateFlow.collectAsState()
+
                 MyDomainsScreen(
                     uiState = uiState,
+                    onSearchQueryChanged = viewModel::onSearchQueryChanged,
                     onDomainTapped = viewModel::onDomainTapped,
                     onAddDomainTapped = viewModel::onAddDomainClicked,
-                    onFindDomainTapped = viewModel::onAddDomainClicked
+                    onFindDomainTapped = viewModel::onAddDomainClicked,
+                    onBackTapped = viewModel::onBackTapped,
+                    onRefresh = viewModel::onRefresh,
                 )
             }
         }
@@ -32,12 +38,19 @@ class DomainManagementActivity : AppCompatActivity() {
         viewModel.actionEvents.onEach(this::handleActionEvents).launchIn(lifecycleScope)
     }
 
-    private fun handleActionEvents(actionEvent: DomainManagementViewModel.ActionEvent) {
+    private fun handleActionEvents(actionEvent: ActionEvent) {
         when (actionEvent) {
-            is DomainManagementViewModel.ActionEvent.DomainTapped -> {
-                startActivity(DomainManagementDetailsActivity.createIntent(this, actionEvent.detailUrl))
+            is ActionEvent.DomainTapped -> {
+                startActivity(
+                    DomainManagementDetailsActivity.createIntent(
+                        this,
+                        actionEvent.domain,
+                        actionEvent.detailUrl
+                    )
+                )
             }
-            is DomainManagementViewModel.ActionEvent.AddDomainTapped -> ActivityLauncher.openNewDomainSearch(this)
+            is ActionEvent.AddDomainTapped -> ActivityLauncher.openNewDomainSearch(this)
+            is ActionEvent.NavigateBackTapped -> onBackPressedDispatcher.onBackPressed()
         }
     }
 }

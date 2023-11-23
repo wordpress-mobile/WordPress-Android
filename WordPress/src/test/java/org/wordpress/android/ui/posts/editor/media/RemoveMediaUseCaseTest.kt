@@ -42,7 +42,7 @@ class RemoveMediaUseCaseTest : BaseUnitTest() {
             uploadServiceFacade,
             testDispatcher()
         )
-        whenever(mediaStore.getMediaWithLocalId(anyInt())).thenReturn(MediaModel().apply {
+        whenever(mediaStore.getMediaWithLocalId(anyInt())).thenReturn(MediaModel(0, 0).apply {
             uploadState = "non-empty-state"
         })
         whenever(mediaUtilsWrapper.isLocalFile(anyString())).thenReturn(true)

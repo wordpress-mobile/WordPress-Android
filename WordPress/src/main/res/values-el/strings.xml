@@ -561,11 +561,11 @@ Language: el_GR
     <string name="editor_post_saved_online">Το άρθρο αποθηκεύτηκε διαδικτυακά</string>
     <string name="site_settings_image_quality_hint">Ποιότητα εικόνων. Υψηλότερες τιμές σημαίνουν εικόνες καλύτερης ποιότητας.</string>
     <string name="site_settings_optimize_images_summary">Ενεργοποιήστε για αλλαγή μεγέθους και συμπίεσης εικόνων</string>
-    <string name="media_encoder_quality_100">Μέγιστο</string>
-    <string name="media_encoder_quality_95">Πολύ Υψηλό</string>
-    <string name="media_encoder_quality_90">Υψηλό</string>
-    <string name="media_encoder_quality_85">Μεσαίο</string>
-    <string name="media_encoder_quality_80">Χαμηλό</string>
+    <string name="media_encoder_quality_maximum">Μέγιστο</string>
+    <string name="media_encoder_quality_very_high">Πολύ Υψηλό</string>
+    <string name="media_encoder_quality_high">Υψηλό</string>
+    <string name="media_encoder_quality_medium">Μεσαίο</string>
+    <string name="media_encoder_quality_low">Χαμηλό</string>
     <string name="media_upload_state_uploaded">Μεταφορτώθηκε</string>
     <string name="media_upload_state_deleted">Διαγράφηκε</string>
     <string name="media_upload_state_deleting">Γίνεται διαγραφή</string>

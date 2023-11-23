@@ -705,7 +705,6 @@ Language: es_CL
     <string name="login_magic_link_email_requesting">Solicitando correo de acceso</string>
     <string name="password_incorrect">Parece que esta contraseña es incorrecta. Por favor revisa tu información y vuelva a intentarlo.</string>
     <string name="requesting_otp">Solicitando un código de verificación vía SMS.</string>
-    <string name="enter_verification_code">¡Ya casi! Por favor ingresa el código de verificación de tu aplicación de Autenticación.</string>
     <string name="next">Siguiente</string>
     <string name="enter_email_wordpress_com">Inicia sesión en WordPress.com usando una dirección de correo electrónico para administrar todos tus sitios de WordPress.</string>
     <string name="image_optimization_promo_desc">La optimización de imagen reduce las imágenes para una carga más rápida.\n\nPuedes cambiarlo en cualquier momento en la configuración del sitio.</string>
@@ -844,11 +843,11 @@ Language: es_CL
     <string name="editor_post_saved_online">Entrada guardada en línea</string>
     <string name="site_settings_image_quality_hint">Calidad de las imágenes. Valores más altos significan imágenes de mejor calidad.</string>
     <string name="site_settings_optimize_images_summary">Habilitar para cambiar el tamaño y comprimir imágenes</string>
-    <string name="media_encoder_quality_90">Alto</string>
-    <string name="media_encoder_quality_85">Mediano</string>
-    <string name="media_encoder_quality_100">Máximo</string>
-    <string name="media_encoder_quality_80">Baja</string>
-    <string name="media_encoder_quality_95">Muy alta</string>
+    <string name="media_encoder_quality_high">Alto</string>
+    <string name="media_encoder_quality_medium">Mediano</string>
+    <string name="media_encoder_quality_maximum">Máximo</string>
+    <string name="media_encoder_quality_low">Baja</string>
+    <string name="media_encoder_quality_very_high">Muy alta</string>
     <string name="media_upload_state_uploaded">Subido</string>
     <string name="media_upload_state_failed">Falló la Carga</string>
     <string name="media_upload_state_deleted">Eliminado</string>

@@ -48,6 +48,7 @@ import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptActi
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.privacy.banner.domain.ShouldAskPrivacyConsent
@@ -142,13 +143,12 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         model = BloggingPromptModel(
             id = 123,
             text = "title",
-            title = "",
-            content = "content",
             date = Date(),
             isAnswered = false,
             attribution = "",
             respondentsCount = 5,
-            respondentsAvatarUrls = listOf()
+            respondentsAvatarUrls = listOf(),
+            answeredLink = "https://wordpress.com/tag/dailyprompt-123",
         )
     )
     private lateinit var activeTask: MutableLiveData<QuickStartTask?>
@@ -357,7 +357,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
         val promptId = 123
 
-        action!!.onClickAction?.invoke(promptId)
+        action!!.onClickAction?.invoke(promptId, BloggingPromptAttribution.BLOGANUARY)
         assertThat(viewModel.createPostWithBloggingPrompt.value).isEqualTo(promptId)
     }
 

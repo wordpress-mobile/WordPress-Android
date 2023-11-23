@@ -28,6 +28,10 @@ import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore
 import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore.QRCodeAuthAuthenticateResult
 import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore.QRCodeAuthResult
 import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore.QRCodeAuthValidateResult
+import org.wordpress.android.ui.barcodescanner.BarcodeScanningTracker
+import org.wordpress.android.ui.barcodescanner.CodeScannerStatus
+import org.wordpress.android.ui.barcodescanner.CodeScanningErrorType
+import org.wordpress.android.ui.barcodescanner.ScanningSource
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content.Done
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content.Validated
@@ -79,6 +83,9 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
+    @Mock
+    lateinit var barcodeScanningTracker: BarcodeScanningTracker
     private val uiStateMapper = QRCodeAuthUiStateMapper()
 
     private val validQueryParams = mapOf(DATA_KEY to DATA, TOKEN_KEY to TOKEN)
@@ -88,6 +95,8 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     private val errorTrackingMapAuthFailed = mutableMapOf("error" to "authentication_failed", "origin" to "menu")
     private val errorTrackingMapExpiredToken = mutableMapOf("error" to "expired_token", "origin" to "menu")
 
+    private val failureStatus = CodeScannerStatus.Failure("Failure", CodeScanningErrorType.Unknown)
+
     @Before
     fun setUp() {
         viewModel = QRCodeAuthViewModel(
@@ -95,7 +104,8 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
             uiStateMapper,
             networkUtilsWrapper,
             validator,
-            analyticsTrackerWrapper
+            analyticsTrackerWrapper,
+            barcodeScanningTracker
         )
 
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
@@ -197,6 +207,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
             viewModel.start()
             viewModel.onScanSuccess(SCANNED_VALUE)
 
+            verify(barcodeScanningTracker).trackSuccess(ScanningSource.QRCODE_LOGIN)
             verify(analyticsTrackerWrapper).track(eq(QRLOGIN_VERIFY_FAILED), eq(errorTrackingMapInvalidData))
         }
     }
@@ -509,9 +520,19 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     fun `when scan fails, then finish activity event is raised`() {
         val actionEvents = mutableListOf<QRCodeAuthActionEvent>()
         testWithData(actionEvents = actionEvents) {
-            viewModel.onScanFailure()
+            viewModel.onScanFailure(failureStatus)
 
             assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.FinishActivity::class.java)
+        }
+    }
+
+    @Test
+    fun `when scan fails, then scan failed is tracked`() {
+        val actionEvents = mutableListOf<QRCodeAuthActionEvent>()
+        testWithData(actionEvents = actionEvents) {
+            viewModel.onScanFailure(failureStatus)
+
+            verify(barcodeScanningTracker).trackScanFailure(ScanningSource.QRCODE_LOGIN, failureStatus.type)
         }
     }
 

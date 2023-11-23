@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
@@ -85,15 +84,13 @@ fun ColumnWithFrostedGlassBackground(
 
         val clippedBackgroundPlaceables = subcompose(ClippedBackground) {
             background(
-                clipModifier = Modifier.clip(buttonsClipShape),
-                blurModifier = Modifier.composed {
-                    if (VERSION.SDK_INT >= VERSION_CODES.S) {
-                        blur(blurRadius, BlurredEdgeTreatment.Unbounded)
-                    } else {
-                        // On versions older than Android 12 the blur modifier is not supported,
-                        // so we make the text transparent to have the buttons stand out.
-                        alpha(0.05f)
-                    }
+                Modifier.clip(buttonsClipShape),
+                if (VERSION.SDK_INT >= VERSION_CODES.S) {
+                    Modifier.blur(blurRadius, BlurredEdgeTreatment.Unbounded)
+                } else {
+                    // On versions older than Android 12 the blur modifier is not supported,
+                    // so we make the text transparent to have the buttons stand out.
+                    Modifier.alpha(0.05f)
                 }
             )
         }.map { it.measure(constraints) }

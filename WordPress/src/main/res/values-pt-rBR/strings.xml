@@ -2669,7 +2669,6 @@ Language: pt_BR
     <string name="password_incorrect">Parece que esta senha está errada. Verifique seus dados e tente novamente.</string>
     <string name="requesting_otp">Solicitando um código de verificação via SMS.</string>
     <string name="login_text_otp">Envie-me uma mensagem de texto com o código em vez disso.</string>
-    <string name="enter_verification_code">Quase lá! Digite o código de verificação do seu aplicativo de autenticação.</string>
     <string name="open_mail">Abrir o Mail</string>
     <string name="next">Próximo</string>
     <string name="enter_email_wordpress_com">Fazer login no WordPress.com usando um endereço de e-mail para gerenciar todos os seus sites WordPress.</string>
@@ -2812,11 +2811,11 @@ Language: pt_BR
     <string name="editor_post_saved_online">Post salvo online</string>
     <string name="site_settings_image_quality_hint">Qualidade das imagens. Valores maiores significam melhor qualidade das imagens.</string>
     <string name="site_settings_optimize_images_summary">Habilite para redimensionar e comprimir imagens</string>
-    <string name="media_encoder_quality_100">Máxima</string>
-    <string name="media_encoder_quality_95">Muito alta</string>
-    <string name="media_encoder_quality_90">Alta</string>
-    <string name="media_encoder_quality_85">Média</string>
-    <string name="media_encoder_quality_80">Baixa</string>
+    <string name="media_encoder_quality_maximum">Máxima</string>
+    <string name="media_encoder_quality_very_high">Muito alta</string>
+    <string name="media_encoder_quality_high">Alta</string>
+    <string name="media_encoder_quality_medium">Média</string>
+    <string name="media_encoder_quality_low">Baixa</string>
     <string name="media_upload_state_uploaded">Upload realizado</string>
     <string name="media_upload_state_failed">Falha no upload</string>
     <string name="media_upload_state_deleted">Excluído</string>

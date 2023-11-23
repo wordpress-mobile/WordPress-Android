@@ -225,7 +225,7 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
 
         private fun createFluxCUtilsWrapper() = mock<FluxCUtilsWrapper> {
             on { mediaModelFromLocalUri(any(), anyOrNull(), eq(LOCAL_SITE_ID)) }.thenReturn(
-                MediaModel()
+                MediaModel(0, 0)
             )
         }
 

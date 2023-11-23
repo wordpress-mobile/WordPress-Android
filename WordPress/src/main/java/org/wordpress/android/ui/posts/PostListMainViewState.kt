@@ -14,18 +14,6 @@ data class PostListMainViewState(
     val authorFilterItems: List<AuthorFilterListItemUIState>
 )
 
-sealed class PostListViewLayoutTypeMenuUiState(@DrawableRes val iconRes: Int, val title: UiString) {
-    object StandardViewLayoutTypeMenuUiState : PostListViewLayoutTypeMenuUiState(
-        iconRes = R.drawable.ic_view_post_compact_white_24dp,
-        title = UiStringRes(R.string.post_list_toggle_item_layout_list_view)
-    )
-
-    object CompactViewLayoutTypeMenuUiState : PostListViewLayoutTypeMenuUiState(
-        iconRes = R.drawable.ic_view_post_full_white_24dp,
-        title = UiStringRes(R.string.post_list_toggle_item_layout_cards_view)
-    )
-}
-
 sealed class AuthorFilterListItemUIState(
     val id: Long,
     val text: UiString,
@@ -55,7 +43,7 @@ fun getAuthorFilterItems(
             ME -> AuthorFilterListItemUIState.Me(avatarUrl, selection == value)
             EVERYONE -> AuthorFilterListItemUIState.Everyone(
                 selection == value,
-                R.drawable.bg_oval_neutral_30_multiple_users_white_40dp
+                R.drawable.ic_people_white_24dp
             )
         }
     }

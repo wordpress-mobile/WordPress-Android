@@ -69,7 +69,7 @@ class GifMediaInsertUseCaseTest : BaseUnitTest() {
         whenever(uriWrapper.toString()).thenReturn("https://sampleutl.org")
 
         val itemToInsert = GifMediaIdentifier(uriWrapper, null)
-        val insertedMediaModel = MediaModel().apply { id = 100 }
+        val insertedMediaModel = MediaModel(0, 0).apply { id = 100 }
 
         whenever(wpMediaUtilsWrapper.fetchMediaToUriWrapper(any())).thenReturn(mock())
         whenever(mimeTypeMapUtilsWrapper.getFileExtensionFromUrl(any())).thenReturn("png")

@@ -1,0 +1,4 @@
+- New domain/plan options and checkout screens in site creation process
+- My Site navigation has links to common sections
+- Inactive social icons and Synced Pattern titles are visible in dark mode for block-based themes
+- Content can be converted into blocks in the Classic editor

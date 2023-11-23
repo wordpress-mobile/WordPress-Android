@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-19 08:38:48+0000
+Translation-Revision-Date: 2023-11-14 11:17:15+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: cs_CZ
@@ -2632,7 +2632,7 @@ Language: cs_CZ
     <string name="password_incorrect">Zdá se, že zadané heslo je nesprávné. Zkontrolujte prosím své údaje a zkuste to znovu.</string>
     <string name="requesting_otp">Vyžádání ověřovacího kódu pomocí SMS.</string>
     <string name="login_text_otp">Pošlete mi raději kód.</string>
-    <string name="enter_verification_code">Téměř hotovo! Zadejte ověřovací kód z aplikace Authenticator.</string>
+    <string name="enter_verification_code">Už to skoro je! Zadejte ověřovací kód pro WordPress.com z aplikace autentizátoru.</string>
     <string name="next">Další</string>
     <string name="open_mail">Otevřít e-mail</string>
     <string name="enter_email_wordpress_com">Přihlaste se na stránku WordPress.com pomocí e-mailové adresy pro správu všech vašich stránek na WordPress.</string>
@@ -2776,11 +2776,11 @@ Language: cs_CZ
     <string name="editor_post_saved_online">Příspěvek je uložený online</string>
     <string name="site_settings_image_quality_hint">Kvalita obrázků. Vyšší hodnoty znamenají lepší kvalitu obrázků.</string>
     <string name="site_settings_optimize_images_summary">Povolit změnu velikosti a kompresi obrázků</string>
-    <string name="media_encoder_quality_100">Maximální</string>
-    <string name="media_encoder_quality_95">Hodně vysoká</string>
-    <string name="media_encoder_quality_90">Vysoká</string>
-    <string name="media_encoder_quality_85">Střední</string>
-    <string name="media_encoder_quality_80">Nízká</string>
+    <string name="media_encoder_quality_maximum">Maximální</string>
+    <string name="media_encoder_quality_very_high">Hodně vysoká</string>
+    <string name="media_encoder_quality_high">Vysoká</string>
+    <string name="media_encoder_quality_medium">Střední</string>
+    <string name="media_encoder_quality_low">Nízká</string>
     <string name="media_upload_state_uploaded">Nahráno</string>
     <string name="media_upload_state_deleted">Smazáno</string>
     <string name="media_upload_state_deleting">Mazání</string>

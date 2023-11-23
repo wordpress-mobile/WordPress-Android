@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
@@ -62,19 +61,19 @@ fun WelcomeStep(uiState: UiState.Content.Welcome): Unit = with(uiState) {
                 SiteList(
                     uiState = uiState,
                     listState = listState,
+                    modifier = clipModifier,
                     userScrollEnabled = !isProcessing,
                     bottomPaddingPx = buttonsHeightPx,
-                    modifier = clipModifier,
                 )
             },
             blurBackground = { clipModifier, blurModifier, buttonsHeightPx ->
                 SiteList(
                     uiState = uiState,
                     listState = blurredListState,
-                    userScrollEnabled = false,
-                    bottomPaddingPx = buttonsHeightPx,
                     modifier = clipModifier.clearAndSetSemantics {},
                     blurModifier = blurModifier,
+                    userScrollEnabled = false,
+                    bottomPaddingPx = buttonsHeightPx,
                 )
             },
             buttonsColumn = {
@@ -153,10 +152,7 @@ private fun SiteListScaffold(
         }
 
         val siteListPlaceables = subcompose(SlotsEnum.SiteList) {
-            siteList(
-                clipModifier = Modifier.clip(siteListClipShape),
-                buttonsHeightPx = buttonsHeight
-            )
+            siteList(Modifier.clip(siteListClipShape), buttonsHeight)
         }.map { it.measure(constraints) }
 
         val buttonsClipShape = object : Shape {
@@ -174,15 +170,13 @@ private fun SiteListScaffold(
 
         val clippedBackgroundPlaceables = subcompose(SlotsEnum.ClippedBackground) {
             blurBackground(
-                clipModifier = Modifier.clip(buttonsClipShape),
-                blurModifier = Modifier.composed {
-                    if (VERSION.SDK_INT >= VERSION_CODES.S) {
-                        blur(blurRadius, BlurredEdgeTreatment.Unbounded)
-                    } else {
-                        alpha(0.05f)
-                    }
+                Modifier.clip(buttonsClipShape),
+                if (VERSION.SDK_INT >= VERSION_CODES.S) {
+                    Modifier.blur(blurRadius, BlurredEdgeTreatment.Unbounded)
+                } else {
+                    Modifier.alpha(0.05f)
                 },
-                buttonsHeightPx = buttonsHeight,
+                buttonsHeight,
             )
         }.map { it.measure(constraints) }
 

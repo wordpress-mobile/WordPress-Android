@@ -166,7 +166,7 @@ class MySiteViewModel @Inject constructor(
     private val bloggingPromptCardViewModelSlice: BloggingPromptCardViewModelSlice,
     private val noCardsMessageViewModelSlice: NoCardsMessageViewModelSlice,
     private val siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice,
-    private val quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice
+    private val quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -267,7 +267,7 @@ class MySiteViewModel @Inject constructor(
         }
 
     val uiModel: LiveData<State> = merge(state, quickLinks) { cards, quickLinks ->
-        val nonNullCards = cards ?: return@merge buildNoSiteState(cards?.currentAvatarUrl, cards?.avatarName)
+        val nonNullCards = cards ?: return@merge buildNoSiteState(null, null)
         with(nonNullCards) {
             val state = if (site != null) {
                 cardsUpdate?.checkAndShowSnackbarError()
@@ -288,13 +288,13 @@ class MySiteViewModel @Inject constructor(
 
                 bloggingPromptCardViewModelSlice.onDashboardCardsUpdated(
                     viewModelScope,
-                    state.dashboardData.filterIsInstance<MySiteCardAndItem.Card.BloggingPromptCard>()
+                    state as? SiteSelected
                 )
                 state
             } else {
                 buildNoSiteState(currentAvatarUrl, avatarName)
             }
-            bloggingPromptCardViewModelSlice.onSiteChanged(site?.id)
+            bloggingPromptCardViewModelSlice.onSiteChanged(site?.id, state as? SiteSelected)
 
             dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
 
@@ -360,7 +360,7 @@ class MySiteViewModel @Inject constructor(
                 getPositionOfQuickStartItem(siteItems)
             )
         }
-        // It is okay to use !! here because we are explicitly creating the lists
+
         return SiteSelected(
             siteInfoHeader = siteInfo,
             dashboardData = siteItems
@@ -695,7 +695,7 @@ class MySiteViewModel @Inject constructor(
         isSiteSelected = false
         checkAndShowJetpackFullPluginInstallOnboarding()
         checkAndShowQuickStartNotice()
-        bloggingPromptCardViewModelSlice.onResume()
+        bloggingPromptCardViewModelSlice.onResume(uiModel.value as? SiteSelected)
         dashboardCardPlansUtils.onResume(uiModel.value as? SiteSelected)
         quickLinksItemViewModelSlice.onResume()
     }

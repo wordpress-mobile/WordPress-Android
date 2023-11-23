@@ -1,5 +1,2 @@
-* [*] Block Editor Social Icons: Fix visibility of inactive icons when used with block based themes in dark mode [https://github.com/WordPress/gutenberg/pull/55398]
-* [*] Block Editor Classic block: Add option to convert to blocks [https://github.com/WordPress/gutenberg/pull/55461]
-* [*] Block Editor Synced Patterns: Fix visibility of heading section when used with block based themes in dark mode [https://github.com/WordPress/gutenberg/pull/55399]
-
-
+- The Posts & Pages screen now has clean, simple display options. The context menu also lets you access comments, settings, and other actions for a post or page.
+- We fixed block editor issues caused by pasting deeply nested content, or using text colors in older site themes.

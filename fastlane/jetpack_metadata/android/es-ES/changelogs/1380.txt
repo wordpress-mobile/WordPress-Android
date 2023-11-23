@@ -1,3 +1,0 @@
-23,5:
-Hemos introducido algunos cambios visuales en el lector, como tarjetas de feed, encabezados, botones, recomendaciones y mucho más.
-En el editor de bloques, ahora puedes dividir un bloque con formato o salir de este pulsando tres veces la tecla «intro». El borde izquierdo también es siempre visible en los bloques de citas.

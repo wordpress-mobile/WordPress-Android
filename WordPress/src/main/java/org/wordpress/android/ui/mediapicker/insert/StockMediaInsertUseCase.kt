@@ -31,7 +31,7 @@ class StockMediaInsertUseCase(
         })
         emit(
             when {
-                result.error != null -> InsertModel.Error(result.error.message)
+                result.error != null -> InsertModel.Error(result.error.message ?: "")
                 else -> {
                     trackUploadedStockMediaEvent(result.mediaList)
                     InsertModel.Success(result.mediaList.mapNotNull { Identifier.RemoteId(it.mediaId) })

@@ -47,9 +47,9 @@ import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.blaze.BlazeFlowSource;
-import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity;
 import org.wordpress.android.ui.blaze.PageUIModel;
 import org.wordpress.android.ui.blaze.PostUIModel;
+import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity;
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
@@ -415,13 +415,15 @@ public class ActivityLauncher {
     public static Intent openEditorWithPromptAndDismissNotificationIntent(
         @NonNull final Context context,
         final int notificationId,
-        final BloggingPromptModel bloggingPrompt,
+        @Nullable final BloggingPromptModel bloggingPrompt,
         @Nullable final Stat stat,
         final EntryPoint entryPoint
     ) {
+        int promptId = bloggingPrompt != null ? bloggingPrompt.getId() : -1;
+
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
-        intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, bloggingPrompt.getId());
+        intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, promptId);
         intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
         intent.putExtra(WPMainActivity.ARG_EDITOR_ORIGIN, entryPoint);
         intent.putExtra(WPMainActivity.ARG_STAT_TO_TRACK, stat);
@@ -1925,11 +1927,20 @@ public class ActivityLauncher {
 
     public static void openDomainManagement(@NonNull Context context) {
         Intent intent = new Intent(context, DomainManagementActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }
 
     public static void openNewDomainSearch(@NonNull Context context) {
         Intent intent = new Intent(context, NewDomainSearchActivity.class);
         context.startActivity(intent);
+    }
+
+    public static void openShareIntent(@NonNull Context context, @NonNull String link, @Nullable String title) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, link);
+        intent.putExtra(Intent.EXTRA_TITLE, title);
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_link)));
     }
 }

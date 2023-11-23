@@ -10,8 +10,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.argWhere
-import org.mockito.kotlin.eq
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -47,35 +46,27 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN ViewModel initialized THEN track DOMAIN_MANAGEMENT_SEARCH_FOR_A_DOMAIN_SCREEN_SHOWN event`() {
-        verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_SEARCH_FOR_A_DOMAIN_SCREEN_SHOWN)
+    fun `WHEN ViewModel initialized THEN track DOMAIN_MANAGEMENT_DOMAINS_SEARCH_SHOWN event`() {
+        verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAINS_SEARCH_SHOWN)
     }
 
     @Test
     fun `WHEN a domain is tapped THEN send PurchaseDomain action event`() = testWithActionEvents { events ->
-        val domain = ProposedDomain(1, "test.com", "1", null)
+        val domain = ProposedDomain(1, "test.com", "1", null, true)
         viewModel.onDomainTapped(domain)
         advanceUntilIdle()
 
-        val expectedEvent = ActionEvent.PurchaseDomain(domain)
+        val expectedEvent = ActionEvent.PurchaseDomain(domain.productId, domain.domain, domain.supportsPrivacy)
         assertThat(events.last()).isEqualTo(expectedEvent)
     }
 
     @Test
     fun `WHEN a domain is tapped THEN track DOMAIN_MANAGEMENT_SEARCH_DOMAIN_TAPPED event`() = test {
-        val domain = ProposedDomain(1, "test.com", "1", null)
+        val domain = ProposedDomain(1, "test.com", "1", null, true)
         viewModel.onDomainTapped(domain)
         advanceUntilIdle()
 
-        verify(analyticsTracker)
-            .track(
-                eq(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_SEARCH_DOMAIN_TAPPED),
-                argWhere<Map<String, Any?>> {
-                    assertThat(it).hasSize(1)
-                    assertThat(it).containsEntry("domain_name", "test.com")
-                    true
-                }
-            )
+        verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_SEARCH_DOMAIN_TAPPED)
     }
 
     @Test
@@ -87,13 +78,14 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
         assertThat(events.last()).isEqualTo(ActionEvent.TransferDomain(expectedTransferUrl))
     }
 
+    @Suppress("MaxLineLength")
     @Test
-    fun `WHEN transfer domain button pressed THEN track DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED event`() = test {
-            viewModel.onTransferDomainClicked()
-            advanceUntilIdle()
+    fun `WHEN transfer domain button pressed THEN track DOMAIN_MANAGEMENT_DOMAINS_SEARCH_TRANSFER_DOMAIN_TAPPED event`() = test {
+        viewModel.onTransferDomainClicked()
+        advanceUntilIdle()
 
-            verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED)
-        }
+        verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAINS_SEARCH_TRANSFER_DOMAIN_TAPPED)
+    }
 
     @Test
     fun `WHEN back button pressed THEN send GoBack action event`() = testWithActionEvents { events ->
@@ -106,8 +98,9 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
     @Suppress("MaxLineLength")
     @Test
     fun `GIVEN few queries requested within 250 ms query delay WHEN onSearchQueryChanged THEN search for domains with the last query only`() =
-        test {
-            whenever(repository.searchForDomains("third")).thenReturn(DomainsResult.Success(emptyList()))
+        testWithUiStates { states ->
+            val result = listOf(ProposedDomain(0, "", "", "", true))
+            whenever(repository.searchForDomains("third")).thenReturn(DomainsResult.Success(result))
 
             viewModel.onSearchQueryChanged("first")
             delay(200)
@@ -118,16 +111,22 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
 
             verify(repository, never()).searchForDomains("first")
             verify(repository, never()).searchForDomains("second")
-            verify(repository).searchForDomains("third")
+
+            assertThat(states.first()).isEqualTo(UiState.PopulatedDomains(emptyList())) // Initial
+            assertThat(states[1]).isEqualTo(UiState.Loading)
+            assertThat(states[2]).isEqualTo(UiState.PopulatedDomains(result))
         }
 
     @Suppress("MaxLineLength")
     @Test
     fun `GIVEN few queries requested outside 250 ms delay WHEN onSearchQueryChanged THEN search for domains with all the queries`() =
-        test {
-            whenever(repository.searchForDomains("first")).thenReturn(DomainsResult.Success(emptyList()))
-            whenever(repository.searchForDomains("second")).thenReturn(DomainsResult.Success(emptyList()))
-            whenever(repository.searchForDomains("third")).thenReturn(DomainsResult.Success(emptyList()))
+        testWithUiStates { states ->
+            val firstResult = listOf(ProposedDomain(0, "", "", "", true))
+            val secondResult = listOf(ProposedDomain(1, "", "", "", true))
+            val thirdResult = listOf(ProposedDomain(2, "", "", "", true))
+            whenever(repository.searchForDomains("first")).thenReturn(DomainsResult.Success(firstResult))
+            whenever(repository.searchForDomains("second")).thenReturn(DomainsResult.Success(secondResult))
+            whenever(repository.searchForDomains("third")).thenReturn(DomainsResult.Success(thirdResult))
 
             viewModel.onSearchQueryChanged("first")
             delay(250)
@@ -136,9 +135,36 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
             viewModel.onSearchQueryChanged("third")
             advanceUntilIdle()
 
-            verify(repository).searchForDomains("first")
-            verify(repository).searchForDomains("second")
-            verify(repository).searchForDomains("third")
+            assertThat(states.first()).isEqualTo(UiState.PopulatedDomains(emptyList())) // Initial
+            assertThat(states[1]).isEqualTo(UiState.Loading)
+            assertThat(states[2]).isEqualTo(UiState.PopulatedDomains(firstResult))
+            assertThat(states[3]).isEqualTo(UiState.Loading)
+            assertThat(states[4]).isEqualTo(UiState.PopulatedDomains(secondResult))
+            assertThat(states[5]).isEqualTo(UiState.Loading)
+            assertThat(states[6]).isEqualTo(UiState.PopulatedDomains(thirdResult))
+        }
+
+    @Suppress("MaxLineLength")
+    @Test
+    fun `GIVEN recent query is appeared when previous request is in progress WHEN onSearchQueryChanged THEN cancel previous request and return result for the last query only`() =
+        testWithUiStates { states ->
+            val firstResult = listOf(ProposedDomain(0, "", "", "", true))
+            val secondResult = listOf(ProposedDomain(1, "", "", "", true))
+
+            whenever(repository.searchForDomains("first")).doSuspendableAnswer {
+                delay(301)
+                DomainsResult.Success(firstResult)
+            }
+            whenever(repository.searchForDomains("second")).thenReturn(DomainsResult.Success(secondResult))
+
+            viewModel.onSearchQueryChanged("first")
+            delay(300)
+            viewModel.onSearchQueryChanged("second")
+            advanceUntilIdle()
+
+            assertThat(states.first()).isEqualTo(UiState.PopulatedDomains(emptyList())) // Initial
+            assertThat(states[1]).isEqualTo(UiState.Loading)
+            assertThat(states[2]).isEqualTo(UiState.PopulatedDomains(secondResult))
         }
 
     @Test
@@ -149,7 +175,8 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
                     productId = 0,
                     domain = "domain.com",
                     price = "USD 100",
-                    salePrice = null
+                    salePrice = null,
+                    supportsPrivacy = true
                 )
             )
             val result = DomainsResult.Success(domains)
@@ -183,22 +210,46 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
         verifyNoInteractions(repository)
     }
 
+    @Test
+    fun `GIVEN empty saved query WHEN onRefresh THEN do not fetch domains`() =
+        test {
+            viewModel.onRefresh()
+            advanceUntilIdle()
+
+            verifyNoInteractions(repository)
+        }
+
+    @Test
+    fun `GIVEN recent search call returns error WHEN onRefresh THEN fetch domains with the saved query`() =
+        testWithUiStates { states ->
+            whenever(repository.searchForDomains("query")).thenReturn(DomainsResult.Error)
+            viewModel.onSearchQueryChanged("query")
+            val domains = listOf(ProposedDomain(0, "", "", "", true))
+            whenever(repository.searchForDomains("query")).thenReturn(DomainsResult.Success(domains))
+
+            viewModel.onRefresh()
+            advanceUntilIdle()
+
+            assertThat(states.last()).isEqualTo(UiState.PopulatedDomains(domains = domains))
+        }
+
     @Suppress("MaxLineLength")
     @Test
-    fun `GIVEN repeated queries with redundant blank symbols WHEN onSearchQueryChanged THEN fetch domains only once`() = test {
-        whenever(repository.searchForDomains("query")).thenReturn(DomainsResult.Success(emptyList()))
+    fun `GIVEN repeated queries with redundant blank symbols WHEN onSearchQueryChanged THEN fetch domains only once`() =
+        test {
+            whenever(repository.searchForDomains("query")).thenReturn(DomainsResult.Success(emptyList()))
 
-        viewModel.onSearchQueryChanged("query")
-        delay(250)
-        viewModel.onSearchQueryChanged(" query")
-        delay(250)
-        viewModel.onSearchQueryChanged("query ")
-        advanceUntilIdle()
+            viewModel.onSearchQueryChanged("query")
+            delay(250)
+            viewModel.onSearchQueryChanged(" query")
+            delay(250)
+            viewModel.onSearchQueryChanged("query ")
+            advanceUntilIdle()
 
-        verify(repository, times(1)).searchForDomains("query")
-        verify(repository, never()).searchForDomains(" query")
-        verify(repository, never()).searchForDomains("query ")
-    }
+            verify(repository, times(1)).searchForDomains("query")
+            verify(repository, never()).searchForDomains(" query")
+            verify(repository, never()).searchForDomains("query ")
+        }
 
     private fun testWithActionEvents(block: suspend TestScope.(events: List<ActionEvent>) -> Unit) = test {
         val actionEvents = mutableListOf<ActionEvent>()

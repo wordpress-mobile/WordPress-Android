@@ -18,7 +18,7 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.P2_BLAVATAR -> R.drawable.bg_rectangle_placeholder_p2_32dp
             ImageType.BLAVATAR_ROUNDED_CORNERS -> R.drawable.bg_rectangle_placeholder_radius_4dp_globe_32dp
             ImageType.P2_BLAVATAR_ROUNDED_CORNERS -> R.drawable.bg_rectangle_placeholder_radius_4dp_p2_32dp
-            ImageType.BLAVATAR_CIRCULAR -> R.drawable.bg_oval_placeholder_globe_32dp
+            ImageType.BLAVATAR_CIRCULAR -> R.drawable.bg_oval_placeholder_image_32dp
             ImageType.P2_BLAVATAR_CIRCULAR -> R.drawable.bg_oval_placeholder_p2_32dp
             ImageType.IMAGE -> null // don't display any error drawable
             ImageType.PHOTO -> R.color.placeholder
@@ -44,7 +44,7 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.P2_BLAVATAR -> R.color.placeholder
             ImageType.BLAVATAR_ROUNDED_CORNERS -> R.drawable.bg_rectangle_placeholder_radius_4dp
             ImageType.P2_BLAVATAR_ROUNDED_CORNERS -> R.drawable.bg_rectangle_placeholder_radius_4dp_p2_32dp
-            ImageType.BLAVATAR_CIRCULAR -> R.drawable.bg_oval_placeholder_globe_32dp
+            ImageType.BLAVATAR_CIRCULAR -> R.drawable.bg_oval_placeholder_image_32dp
             ImageType.P2_BLAVATAR_CIRCULAR -> R.drawable.bg_oval_placeholder_p2_32dp
             ImageType.IMAGE -> null // don't display any placeholder
             ImageType.PHOTO -> R.color.placeholder

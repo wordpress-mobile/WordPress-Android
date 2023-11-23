@@ -1,0 +1,5 @@
+23.6:
+- Opsi domain/paket dan layar checkout baru dalam proses pembuatan situs
+- Navigasi Situs Saya menampilkan tautan ke bagian-bagian umum
+- Ikon media sosial dan judul Pola Tersinkron yang nonaktif kini terlihat dalam mode gelap di tema berbasis blok
+- Konten dapat dikonversi menjadi blok dalam editor Klasik
