@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 197
+        return 198
     }
 
     override fun getDbName(): String {
@@ -1992,6 +1992,10 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 196 -> migrate(version) {
                     db.execSQL("ALTER TABLE SiteModel ADD IS_SINGLE_USER_SITE BOOLEAN")
+                }
+                197 -> migrate(version) {
+                    db.execSQL("ALTER TABLE ThemeModel ADD THEME_TYPE TEXT")
+                    db.execSQL("ALTER TABLE ThemeModel ADD IS_EXTERNAL_THEME BOOLEAN")
                 }
             }
         }
