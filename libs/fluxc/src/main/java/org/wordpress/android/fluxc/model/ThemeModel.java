@@ -25,6 +25,7 @@ public class ThemeModel implements Identifiable, Serializable {
     @Column private String mAuthorUrl;
     @Column private String mThemeUrl;
     @Column private String mScreenshotUrl;
+    @Column private String mThemeType;
     @Column private String mDemoUrl;
     @Column private String mDownloadUrl;
     @Column private String mStylesheet;
@@ -36,6 +37,7 @@ public class ThemeModel implements Identifiable, Serializable {
     @Column private boolean mAutoUpdateTranslation;
 
     // local use only
+    @Column private boolean mIsExternalTheme;
     @Column private boolean mIsWpComTheme;
 
     @Override
@@ -157,6 +159,14 @@ public class ThemeModel implements Identifiable, Serializable {
         mScreenshotUrl = screenshotUrl;
     }
 
+    public String getThemeType() {
+        return mThemeType;
+    }
+
+    public void setThemeType(String themeType) {
+        mThemeType = themeType;
+    }
+
     public String getDemoUrl() {
         return mDemoUrl;
     }
@@ -231,6 +241,14 @@ public class ThemeModel implements Identifiable, Serializable {
 
     public void setAutoUpdateTranslation(boolean autoUpdateTranslation) {
         mAutoUpdateTranslation = autoUpdateTranslation;
+    }
+
+    public boolean isExternalTheme() {
+        return mIsExternalTheme;
+    }
+
+    public void setIsExternalTheme(boolean isExternalTheme) {
+        mIsExternalTheme = isExternalTheme;
     }
 
     public boolean isWpComTheme() {
