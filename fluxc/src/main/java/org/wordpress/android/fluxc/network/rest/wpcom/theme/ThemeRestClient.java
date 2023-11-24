@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.JetpackThemeResponse.JetpackThemeListResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.WPComThemeListResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.WPComThemeMobileFriendlyTaxonomy;
+import org.wordpress.android.fluxc.store.ThemeStore.FetchWPComThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedSiteThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedStarterDesignsPayload;
@@ -127,9 +128,13 @@ public class ThemeRestClient extends BaseWPComRestClient {
      *
      * @see <a href="https://developer.wordpress.com/docs/api/1.1/get/themes/">Previous version</a>
      */
-    public void fetchWpComThemes() {
+    public void fetchWpComThemes(@Nullable String filter) {
         String url = WPCOMREST.themes.getUrlV1_2() + "?" + WP_THEME_FETCH_NUMBER_PARAM;
-        add(WPComGsonRequest.buildGetRequest(url, null, WPComThemeListResponse.class,
+        Map<String, String> params = new HashMap<>();
+        if (filter != null) {
+            params.put("filter", filter);
+        }
+        add(WPComGsonRequest.buildGetRequest(url, params, WPComThemeListResponse.class,
                 response -> {
                     AppLog.d(AppLog.T.API, "Received response to WP.com themes fetch request.");
                     List<ThemeModel> themes = createThemeListFromArrayResponse(response);

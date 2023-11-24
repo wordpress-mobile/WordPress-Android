@@ -34,6 +34,14 @@ public class ThemeStore extends Store {
     public static final String MOBILE_FRIENDLY_CATEGORY_PORTFOLIO = "starting-portfolio";
 
     // Payloads
+    public static class FetchWPComThemesPayload extends Payload<BaseNetworkError> {
+        @Nullable public String filter;
+
+        public FetchWPComThemesPayload(@Nullable String filter) {
+            this.filter = filter;
+        }
+    }
+
     public static class FetchedCurrentThemePayload extends Payload<ThemesError> {
         @NonNull public SiteModel site;
         @Nullable public ThemeModel theme;
@@ -260,7 +268,7 @@ public class ThemeStore extends Store {
         }
         switch ((ThemeAction) actionType) {
             case FETCH_WP_COM_THEMES:
-                fetchWpComThemes();
+                fetchWpComThemes((FetchWPComThemesPayload) action.getPayload());
                 break;
             case FETCHED_WP_COM_THEMES:
                 handleWpComThemesFetched((FetchedWpComThemesPayload) action.getPayload());
@@ -348,8 +356,8 @@ public class ThemeStore extends Store {
         ThemeSqlUtils.insertOrReplaceActiveThemeForSite(site, theme);
     }
 
-    private void fetchWpComThemes() {
-        mThemeRestClient.fetchWpComThemes();
+    private void fetchWpComThemes(@NonNull FetchWPComThemesPayload payload) {
+        mThemeRestClient.fetchWpComThemes(payload.filter);
     }
 
     private void fetchStarterDesigns(@NonNull FetchStarterDesignsPayload payload) {
