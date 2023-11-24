@@ -39,12 +39,12 @@ import org.wordpress.android.R
  * those values internally to closely match my_site_card_toolbar.xml.
  *
  * It's important to note this component is stateful, meaning the UI for the context menu is managed internally. Use
- * [onContextMenuClick] and the [menuItems] click callbacks to handle behavior NOT related to the dropdown menu UI.
+ * [onContextMenuClick] and the [contextMenuItems] callbacks to handle behavior NOT related to the dropdown menu UI.
  *
  * @param modifier Modifier to be applied to the toolbar (should not be used in most cases).
  * @param onContextMenuClick Callback to be invoked when the context menu is clicked.
- * @param menuItems List of [MySiteCardToolbarContextMenuItem] to be displayed in the context menu.
- * @param showContextMenu Whether or not to show the context menu. Default: true if [menuItems] is not empty.
+ * @param contextMenuItems List of [MySiteCardToolbarContextMenuItem] to be displayed in the context menu.
+ * @param showContextMenu Whether or not to show the context menu. Default: true if [contextMenuItems] is not empty.
  * @param content Content to be displayed in the toolbar. Usually some sort of title that will be left aligned and
  * vertically aligned with the context menu. If null, the context menu will be right aligned.
  */
@@ -52,8 +52,8 @@ import org.wordpress.android.R
 fun MySiteCardToolbar(
     modifier: Modifier = Modifier,
     onContextMenuClick: (() -> Unit)? = null,
-    menuItems: List<MySiteCardToolbarContextMenuItem> = emptyList(),
-    showContextMenu: Boolean = menuItems.isNotEmpty(),
+    contextMenuItems: List<MySiteCardToolbarContextMenuItem> = emptyList(),
+    showContextMenu: Boolean = contextMenuItems.isNotEmpty(),
     content: @Composable (RowScope.() -> Unit)? = null,
 ) {
     val horizontalArrangement = Arrangement.SpaceBetween.takeIf { content != null } ?: Arrangement.End
@@ -75,19 +75,19 @@ fun MySiteCardToolbar(
         Spacer(modifier = Modifier.width(16.dp)) // minimum spacing between content and context menu
 
         if (showContextMenu) {
-            GenericCardDropDownMenu(
+            CardDropDownMenu(
                 onContextMenuClick = onContextMenuClick,
-                menuItems = menuItems,
+                contextMenuItems = contextMenuItems,
             )
         }
     }
 }
 
 @Composable
-private fun GenericCardDropDownMenu(
+private fun CardDropDownMenu(
     modifier: Modifier = Modifier,
     onContextMenuClick: (() -> Unit)? = null,
-    menuItems: List<MySiteCardToolbarContextMenuItem> = emptyList(),
+    contextMenuItems: List<MySiteCardToolbarContextMenuItem> = emptyList(),
 ) {
     Box(modifier = modifier) {
         var isExpanded by remember { mutableStateOf(false) }
@@ -111,7 +111,7 @@ private fun GenericCardDropDownMenu(
             onDismissRequest = { isExpanded = false },
             modifier = Modifier.background(MaterialTheme.colors.surface.copy(alpha = ContentAlpha.high))
         ) {
-            menuItems.map { item ->
+            contextMenuItems.map { item ->
                 when (item) {
                     is MySiteCardToolbarContextMenuItem.Option -> {
                         DropdownMenuItem(

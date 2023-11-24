@@ -98,7 +98,7 @@ private fun CardToolbar(
 ) {
     MySiteCardToolbar(
         onContextMenuClick = { blazeCampaignCardModel.moreMenuOptions.onMoreClick.click() },
-        menuItems = listOf(
+        contextMenuItems = listOf(
             MySiteCardToolbarContextMenuItem.Option(
                 text = stringResource(id = R.string.blaze_campaigns_card_more_menu_view_all_campaigns),
                 onClick = { blazeCampaignCardModel.moreMenuOptions.viewAllCampaignsItemClick.click() }
