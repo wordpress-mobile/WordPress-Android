@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.mysite.cards.compose
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -29,8 +31,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.card.UnelevatedCard
+import org.wordpress.android.ui.compose.styles.DashboardCardTypography
+import org.wordpress.android.ui.compose.theme.AppTheme
 
 /**
  * A toolbar for MySite cards written in Compose, that tries to match behavior and positioning of cards written in XML.
@@ -137,4 +143,82 @@ sealed interface MySiteCardToolbarContextMenuItem {
     ) : MySiteCardToolbarContextMenuItem
 
     data object Divider : MySiteCardToolbarContextMenuItem
+}
+
+@Preview(
+    name = "Light Mode"
+)
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_YES
+)
+@Composable
+private fun MySiteCardToolbarPreview() {
+    AppTheme {
+        MySiteCardToolbar(
+            onContextMenuClick = {},
+            contextMenuItems = listOf(
+                MySiteCardToolbarContextMenuItem.Option(
+                    text = "An option",
+                    onClick = {}
+                ),
+                MySiteCardToolbarContextMenuItem.Divider,
+                MySiteCardToolbarContextMenuItem.Option(
+                    text = "Another option",
+                    onClick = {}
+                ),
+            ),
+        ) {
+            Text(
+                text = "Card Title",
+                style = DashboardCardTypography.smallTitle,
+            )
+        }
+    }
+}
+
+@Preview(
+    name = "Light Mode"
+)
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    uiMode = UI_MODE_NIGHT_YES
+)
+@Composable
+private fun MySiteCardToolbarInCardPreview() {
+    AppTheme {
+        UnelevatedCard(
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Column {
+                MySiteCardToolbar(
+                    onContextMenuClick = {},
+                    contextMenuItems = listOf(
+                        MySiteCardToolbarContextMenuItem.Option(
+                            text = "An option",
+                            onClick = {}
+                        ),
+                        MySiteCardToolbarContextMenuItem.Divider,
+                        MySiteCardToolbarContextMenuItem.Option(
+                            text = "Another option",
+                            onClick = {}
+                        ),
+                    ),
+                ) {
+                    Text(
+                        text = "Card Title",
+                        style = DashboardCardTypography.smallTitle,
+                    )
+                }
+
+                Box(Modifier.padding(16.dp)) {
+                    Text(
+                        text = "This is my card content!"
+                    )
+                }
+            }
+        }
+    }
 }
