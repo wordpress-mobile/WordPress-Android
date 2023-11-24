@@ -102,7 +102,7 @@ sealed class DropdownMenuItemData(
         override val onClick: (String) -> Unit,
         @DrawableRes override val leftIcon: Int = NO_ICON,
         @DrawableRes override val rightIcon: Int = NO_ICON,
-        val items: List<DropdownMenuItemData>,
+        val items: List<Item>,
     ) : DropdownMenuItemData(
         text = text,
         isDefault = isDefault,
