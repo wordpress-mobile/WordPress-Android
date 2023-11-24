@@ -486,7 +486,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return Unit.INSTANCE;
         };
 
-        Function2<Long, Long, Unit> onPostHeaderClicked = (postId, blogId) -> {
+        Function0<Unit> onPostHeaderClicked = () -> {
             ReaderActivityLauncher.showReaderBlogPreview(
                     ctx,
                     post,

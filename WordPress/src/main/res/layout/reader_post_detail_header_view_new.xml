@@ -43,6 +43,56 @@
         app:layout_constraintTop_toBottomOf="@id/layout_blog_section"
         tools:text="Post Title: This could be a quite big title for this nice post" />
 
+    <!-- like and comment counts start -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/header_like_count"
+        style="@style/ReaderTextView.Post.New.Interactions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/header_dot_separator"
+        app:layout_constraintTop_toBottomOf="@id/text_title"
+        app:layout_constrainedWidth="true"
+        tools:text="15 likes" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/header_dot_separator"
+        style="@style/ReaderTextView.Post.New.Interactions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:text="@string/reader_dot_separator"
+        android:textAlignment="viewStart"
+        android:importantForAccessibility="no"
+        app:layout_constraintStart_toEndOf="@id/header_like_count"
+        app:layout_constraintEnd_toStartOf="@id/header_comment_count"
+        app:layout_constraintTop_toBottomOf="@id/text_title"
+        app:layout_constrainedWidth="true" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/header_comment_count"
+        style="@style/ReaderTextView.Post.New.Interactions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        app:layout_constraintStart_toEndOf="@id/header_dot_separator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_title"
+        app:layout_constrainedWidth="true"
+        tools:text="4 comments" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/reader_card_interactions_bottom_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="header_comment_count,header_like_count" />
+
+    <!-- like and comment counts end -->
+
     <org.wordpress.android.ui.reader.views.ReaderExpandableTagsView
         android:id="@+id/expandable_tags_view"
         android:layout_width="0dp"
@@ -55,7 +105,7 @@
         app:chipSpacingVertical="@dimen/margin_medium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_title"
+        app:layout_constraintTop_toBottomOf="@id/reader_card_interactions_bottom_barrier"
         tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

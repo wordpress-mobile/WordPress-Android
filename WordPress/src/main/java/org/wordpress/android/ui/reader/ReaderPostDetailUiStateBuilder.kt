@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState.Bu
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState.CommentState
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState.LoadingState
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState.TextMessage
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.HtmlUtilsWrapper
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
@@ -71,18 +72,14 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         post: ReaderPost,
         moreMenuItems: List<SecondaryAction>? = null,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
-        onBlogSectionClicked: (Long, Long) -> Unit,
-        onFollowClicked: () -> Unit,
-        onTagItemClicked: (String) -> Unit
+        onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
     ) = ReaderPostDetailsUiState(
         postId = post.postId,
         blogId = post.blogId,
         featuredImageUiState = buildReaderPostFeaturedImageUiState(post),
         headerUiState = buildPostDetailsHeaderUiState(
             post,
-            onBlogSectionClicked,
-            onFollowClicked,
-            onTagItemClicked
+            onHeaderAction,
         ),
         excerptFooterUiState = buildExcerptFooterUiState(post),
         moreMenuItems = moreMenuItems,
@@ -232,14 +229,10 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
 
     private fun buildPostDetailsHeaderUiState(
         post: ReaderPost,
-        onBlogSectionClicked: (Long, Long) -> Unit,
-        onFollowClicked: () -> Unit,
-        onTagItemClicked: (String) -> Unit
+        onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
     ) = postDetailsHeaderViewUiStateBuilder.mapPostToUiState(
         post,
-        onBlogSectionClicked,
-        onFollowClicked,
-        onTagItemClicked
+        onHeaderAction,
     )
 
     private fun buildExcerptFooterUiState(post: ReaderPost): ExcerptFooterUiState? =
