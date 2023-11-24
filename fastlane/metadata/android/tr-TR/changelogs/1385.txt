@@ -1,0 +1,3 @@
+23.7:
+- Gönderiler ve Sayfalar ekranında artık temiz ve basit görüntüleme seçenekleri bulunuyor. Bağlam menüsü ayrıca bir gönderinin veya sayfanın yorumlarına, ayarlarına ve diğer işlemlerine erişmenizi sağlar.
+- Derin şekilde iç içe geçmiş içerik yapıştırmaktan veya daha eski site temalarında metin renkleri kullanmaktan kaynaklanan blok düzenleyici sorunlarını düzelttik.

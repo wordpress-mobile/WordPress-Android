@@ -1,3 +1,0 @@
-23.6:
-- Los iconos sociales y títulos de patrones sincronizados inacxtivos ya no son visibles en los temas basados en bloques al usar el modo oscuro. Buen intento amigos, pero no sois tan ninjas como pensábais.
-- En el editor clásico ahora puedes convertir tu contenido a bloques con un clic de un botón.
