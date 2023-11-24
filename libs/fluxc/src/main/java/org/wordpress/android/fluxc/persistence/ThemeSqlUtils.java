@@ -93,6 +93,14 @@ public class ThemeSqlUtils {
                 .endWhere().getAsModel();
     }
 
+    public static List<ThemeModel> getWpComThemes(@NonNull List<String> themeIds) {
+        return WellSql.select(ThemeModel.class)
+                .where()
+                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
+                .isIn(ThemeModelTable.THEME_ID, themeIds)
+                .endWhere().getAsModel();
+    }
+
     public static List<ThemeModel> getWpComMobileFriendlyThemes(String categorySlug) {
         return WellSql.select(ThemeModel.class)
                 .where()
