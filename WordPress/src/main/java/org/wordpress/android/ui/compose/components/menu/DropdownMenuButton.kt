@@ -30,7 +30,7 @@ fun DropdownMenuButton(
     selectedItem: DropdownMenuItemData,
     onClick: () -> Unit,
 ) {
-    require(selectedItem is SubMenu) { "DropdownMenuButton selected item cannot be a SubMenu" }
+    require(selectedItem !is SubMenu) { "DropdownMenuButton selected item cannot be a SubMenu" }
     Button(
         modifier = Modifier.defaultMinSize(minHeight = 40.dp),
         onClick = onClick,
