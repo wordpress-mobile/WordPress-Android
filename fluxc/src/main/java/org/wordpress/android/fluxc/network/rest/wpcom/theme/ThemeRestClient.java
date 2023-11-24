@@ -21,7 +21,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.JetpackThemeResponse.JetpackThemeListResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.WPComThemeListResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.WPComThemeMobileFriendlyTaxonomy;
-import org.wordpress.android.fluxc.store.ThemeStore.FetchWPComThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedSiteThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedStarterDesignsPayload;
@@ -43,10 +42,6 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ThemeRestClient extends BaseWPComRestClient {
-    /**
-     * Used by {@link #fetchWpComThemes()} request all themes in a single fetch.
-     */
-    private static final String WP_THEME_FETCH_NUMBER_PARAM = "number=500";
     private static final String WPCOM_MOBILE_FRIENDLY_TAXONOMY_SLUG = "mobile-friendly";
     private static final String THEME_TYPE_EXTERNAL = "managed-external";
 
@@ -128,9 +123,10 @@ public class ThemeRestClient extends BaseWPComRestClient {
      *
      * @see <a href="https://developer.wordpress.com/docs/api/1.1/get/themes/">Previous version</a>
      */
-    public void fetchWpComThemes(@Nullable String filter) {
-        String url = WPCOMREST.themes.getUrlV1_2() + "?" + WP_THEME_FETCH_NUMBER_PARAM;
+    public void fetchWpComThemes(@Nullable String filter, int resultsLimit) {
+        String url = WPCOMREST.themes.getUrlV1_2();
         Map<String, String> params = new HashMap<>();
+        params.put("number", String.valueOf(resultsLimit));
         if (filter != null) {
             params.put("filter", filter);
         }
