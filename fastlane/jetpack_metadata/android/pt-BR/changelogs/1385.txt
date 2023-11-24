@@ -1,0 +1,4 @@
+23.7:
+- A tela Todos os domínios permite que você gerencie todos os seus domínios no app.
+- A seção Posts e páginas conta com opções de exibição melhoradas e um menu de contexto expandido.
+- Corrigimos problemas no editor de blocos causados ao colar conteúdo bastante aninhado ou ao usar cores de texto em temas de sites mais antigos.
