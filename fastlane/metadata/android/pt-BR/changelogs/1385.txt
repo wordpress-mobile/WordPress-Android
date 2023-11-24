@@ -1,0 +1,3 @@
+23.7:
+- A tela Posts e páginas agora tem opções de exibição claras e simples. O menu de contexto também permite acessar comentários, configurações e outras ações para um post ou página.
+- Corrigimos problemas no editor de blocos causados ao colar conteúdo bastante aninhado ou ao usar cores de texto em temas de sites mais antigos.
