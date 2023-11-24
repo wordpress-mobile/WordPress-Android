@@ -1,11 +1,12 @@
 package org.wordpress.android.ui.compose.components.menu
 
+import android.content.res.Configuration
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
@@ -15,6 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import org.wordpress.android.R
+import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
 
@@ -24,18 +29,15 @@ fun DropdownMenuItem(item: DropdownMenuItemData) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .clickable { item.onClick(item.id) }
-            .fillMaxWidth()
-            .fillMaxHeight()
             .padding(all = Margin.MediumLarge.value),
     ) {
-        val iconTextMargin = Margin.Medium.value
         if (item.leftIcon != NO_ICON) {
             Icon(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 painter = painterResource(id = item.leftIcon),
                 contentDescription = null,
             )
-            Spacer(Modifier.width(iconTextMargin))
+            Spacer(Modifier.width(Margin.Medium.value))
         }
         Text(
             text = item.text,
@@ -44,15 +46,16 @@ fun DropdownMenuItem(item: DropdownMenuItemData) {
             fontSize = FontSize.Large.value,
         )
         if (item.rightIcon != NO_ICON) {
+            Spacer(Modifier.width(Margin.Medium.value))
             Icon(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 painter = painterResource(id = item.rightIcon),
                 contentDescription = null,
             )
-            Spacer(Modifier.width(iconTextMargin))
         }
     }
 }
+
 @Suppress("LongParameterList")
 sealed class DropdownMenuItemData(
     open val text: String,
@@ -108,3 +111,54 @@ sealed class DropdownMenuItemData(
 }
 
 internal const val NO_ICON = -1
+
+@Preview
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun DropdownMenuButtonPreview() {
+    AppTheme {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            DropdownMenuItem(
+                item = DropdownMenuItemData.Item(
+                    id = "text1",
+                    text = "Text only",
+                    onClick = {},
+                )
+            )
+            DropdownMenuItem(
+                item = DropdownMenuItemData.Item(
+                    id = "textAndIcon1",
+                    text = "Text and left icon",
+                    leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
+                    onClick = {},
+                ),
+            )
+            DropdownMenuItem(
+                item = DropdownMenuItemData.Item(
+                    id = "textAndIcon1",
+                    text = "Text and right icon",
+                    rightIcon = R.drawable.ic_jetpack_logo_white_24dp,
+                    onClick = {},
+                ),
+            )
+            DropdownMenuItem(
+                item = DropdownMenuItemData.Item(
+                    id = "textAndIcon1",
+                    text = "Text, left and, right icon",
+                    leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
+                    rightIcon = R.drawable.ic_jetpack_logo_white_24dp,
+                    onClick = {},
+                ),
+            )
+            DropdownMenuItem(
+                item = DropdownMenuItemData.Item(
+                    id = "textAndIcon1",
+                    text = "Text type with a really long text as the button label",
+                    onClick = {},
+                ),
+            )
+        }
+    }
+}
