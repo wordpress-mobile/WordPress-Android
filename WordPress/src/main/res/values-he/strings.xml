@@ -27,12 +27,9 @@ Language: he_IL
     <string name="domain_management_empty_find_domain">למצוא דומיין</string>
     <string name="domain_management_empty_subtitle">לאיתור הדומיין המושלם יש להקיש למטה.</string>
     <string name="domain_management_empty_title">עדיין אין לך דומיינים</string>
-    <string name="domain_management_error_subtitle">יש לוודא שהחיבור לאינטרנט פעיל ולרענן את העמוד.</string>
-    <string name="domain_management_error_title">אין אפשרות לעדכן</string>
     <string name="domain_management_open_domain_details">להציג פרטי דומיין</string>
     <string name="domain_management_search_your_domains">לחפש בדומיינים שלך</string>
     <string name="domain_management_purchase_a_domain">לרכוש דומיין</string>
-    <string name="domain_management_my_domains_title">הדומיינים שלי</string>
     <string name="domain_management_expires">בתוקף עד ⁦%1$s⁩</string>
     <string name="account_and_settings">חשבון והגדרות</string>
     <string name="site_creation_plans_selection_title">לבחור תוכנית</string>
@@ -2853,7 +2850,6 @@ Language: he_IL
     <string name="password_incorrect">נראה שהסיסמה הזו שגויה. יש לבדוק את המידע שהזנת ולנסות שוב.</string>
     <string name="requesting_otp">שולח קוד אימות באמצעות SMS.</string>
     <string name="login_text_otp">שליחת קוד במקום</string>
-    <string name="enter_verification_code">כמעט סיימת! יש להזין את קוד האימות מאפליקציית האימות.</string>
     <string name="open_mail">לפתוח את הדואר</string>
     <string name="next">הבא</string>
     <string name="enter_email_wordpress_com">התחברות ל-WordPress.com באמצעות כתובת אימייל כדי לנהל את האתרים שלך ב-WordPress.</string>
@@ -2997,11 +2993,11 @@ Language: he_IL
     <string name="editor_post_saved_online">הפוסט נשמר ברשת</string>
     <string name="site_settings_image_quality_hint">איכות תמונות. ערכים גבוהים יותר מאפשרים איכות טובה יותר של התמונות.</string>
     <string name="site_settings_optimize_images_summary">הפעלת עריכה של גודל תמונות ודחיסתן</string>
-    <string name="media_encoder_quality_100">מקסימום</string>
-    <string name="media_encoder_quality_95">גבוהה מאוד</string>
-    <string name="media_encoder_quality_90">גבוהה</string>
-    <string name="media_encoder_quality_85">בינונית</string>
-    <string name="media_encoder_quality_80">נמוכה</string>
+    <string name="media_encoder_quality_maximum">מקסימום</string>
+    <string name="media_encoder_quality_very_high">גבוהה מאוד</string>
+    <string name="media_encoder_quality_high">גבוהה</string>
+    <string name="media_encoder_quality_medium">בינונית</string>
+    <string name="media_encoder_quality_low">נמוכה</string>
     <string name="media_upload_state_uploaded">הועלה</string>
     <string name="media_upload_state_failed">העלאה נכשלה</string>
     <string name="media_upload_state_deleted">נמחק</string>

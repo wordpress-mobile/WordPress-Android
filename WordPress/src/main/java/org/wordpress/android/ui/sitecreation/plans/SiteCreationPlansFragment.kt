@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.ConsoleMessage
+import android.webkit.WebChromeClient
 import android.webkit.WebView
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -162,11 +164,24 @@ class SiteCreationPlansFragment : Fragment(), SiteCreationPlansWebViewClientList
     @Composable
     private fun SiteCreationPlansWebView(uiState: SiteCreationPlansUiState) {
         var webView: WebView? by remember { mutableStateOf(null) }
+        val viewModel: SiteCreationPlansViewModel = viewModel()
 
         if (uiState is SiteCreationPlansUiState.Prepared) {
             val model = uiState.model
             LaunchedEffect(true) {
                 webView = WebView(requireContext()).apply {
+                    webChromeClient = object : WebChromeClient() {
+                        override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
+                            consoleMessage?.let { message ->
+                                val calypsoErrorMessage = "Uncaught TypeError: window.AppBoot is not a function"
+                                if (message.message().contains(calypsoErrorMessage)) {
+                                    viewModel.onCalypsoError()
+                                }
+                            }
+                            return super.onConsoleMessage(consoleMessage)
+                        }
+                    }
+
                     layoutParams = ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT

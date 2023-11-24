@@ -102,7 +102,7 @@ class LocalMigrationResultTest {
     @Test
     fun `Should emitTo correct state if current state IS Initial and data IS SitesData`() {
         val sites = listOf(SiteModel(), SiteModel())
-        val data = SitesData(sites)
+        val data = SitesData(sites, true)
         val mutableStateFlow: MutableStateFlow<LocalMigrationState> = MutableStateFlow(Initial)
         Success(data).emitTo(mutableStateFlow)
         val expected = Migrating(WelcomeScreenData(sites = sites)).data
@@ -125,7 +125,7 @@ class LocalMigrationResultTest {
     @Test
     fun `Should emitTo correct state if current state IS NOT Initial and data IS SitesData`() {
         val sites = listOf(SiteModel(), SiteModel())
-        val data = SitesData(sites)
+        val data = SitesData(sites, true)
         val mutableStateFlow: MutableStateFlow<LocalMigrationState> = MutableStateFlow(Migrating(WelcomeScreenData()))
         Success(data).emitTo(mutableStateFlow)
         val expected = Migrating(WelcomeScreenData(sites = sites)).data

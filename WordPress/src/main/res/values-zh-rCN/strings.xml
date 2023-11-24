@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-02 13:54:07+0000
+Translation-Revision-Date: 2023-11-15 09:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: zh_CN
 -->
 <resources>
+    <string name="notification_security_key_needed">请提供您的安全密钥以继续。</string>
+    <string name="login_error_security_key">安全密钥登录出现问题</string>
+    <string name="login_text_security_key">使用安全密钥</string>
+    <string name="new_domain_search_screen_error_title">无法检索域名</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s/年</string>
+    <string name="new_domain_search_screen_transfer_domain_button">转移域名</string>
+    <string name="new_domain_search_screen_transfer_domain_description">想要转移已有的域名？</string>
+    <string name="new_domain_search_screen_input_placeholder">输入以获取更多建议</string>
+    <string name="new_domain_search_screen_title">搜索域名</string>
+    <string name="purchase_domain_screen_error_button_title">确定</string>
+    <string name="purchase_domain_screen_error_subtitle">添加域名至购物车时出错。 请检查您的网络，然后重试。</string>
+    <string name="purchase_domain_screen_error_title">错误</string>
+    <string name="domain_management_site_domains_button">所有</string>
+    <string name="domain_management_error_title">无法检索您的域名</string>
+    <string name="site_domain_title">站点域名</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">来自 &lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">已编辑</string>
+    <string name="post_list_toggle_author_filter">按作者筛选</string>
     <string name="gutenberg_native_s_block_converted_to_blocks">‘%s’区块已转换为多个区块</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">或者，您可以将内容转换为多个区块。</string>
     <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">添加或删除快捷键</string>
@@ -27,12 +45,11 @@ Language: zh_CN
     <string name="domain_management_empty_find_domain">查找域名</string>
     <string name="domain_management_empty_subtitle">轻点下方，查找最适合的域名。</string>
     <string name="domain_management_empty_title">您没有任何域名。</string>
-    <string name="domain_management_error_subtitle">检查您是否在线并刷新。</string>
-    <string name="domain_management_error_title">无法更新</string>
+    <string name="domain_management_error_subtitle">请检查您的网络，然后下拉刷新页面。</string>
     <string name="domain_management_open_domain_details">打开域名详细信息</string>
     <string name="domain_management_search_your_domains">搜索您的域名</string>
     <string name="domain_management_purchase_a_domain">购买域名</string>
-    <string name="domain_management_my_domains_title">我的域名</string>
+    <string name="domain_management_my_domains_title">所有域名</string>
     <string name="domain_management_expires">到期日期：%1$s</string>
     <string name="account_and_settings">账户和设置</string>
     <string name="site_creation_plans_selection_title">选择套餐</string>
@@ -1617,6 +1634,7 @@ Language: zh_CN
     <string name="ccpa_privacy_notice_header">面向加州用户的隐私声明</string>
     <string name="status_and_visibility">状态和可见性</string>
     <string name="update_now">现在更新</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">打开区块操作菜单</string>
     <string name="gutenberg_native_move_to_top">移到顶部</string>
     <string name="gutenberg_native_insert_mention">插入提及</string>
@@ -2852,7 +2870,7 @@ Language: zh_CN
     <string name="password_incorrect">密码似乎不对。请仔细检查您的信息，然后再试一次。</string>
     <string name="requesting_otp">正在请求短信验证码。</string>
     <string name="login_text_otp">通过短信向我发送代码</string>
-    <string name="enter_verification_code">马上就好！请输入验证器应用中的验证码。</string>
+    <string name="enter_verification_code">马上就好！ 请输入身份验证器应用程序中的 WordPress.com 验证码。</string>
     <string name="open_mail">打开邮件</string>
     <string name="next">下一步</string>
     <string name="enter_email_wordpress_com">使用电子邮件地址登录 WordPress.com 以便管理您的所有 WordPress 站点。</string>
@@ -2996,11 +3014,11 @@ Language: zh_CN
     <string name="editor_post_saved_online">文章已在线保存</string>
     <string name="site_settings_image_quality_hint">图片质量。值越高，表示图片质量越好。</string>
     <string name="site_settings_optimize_images_summary">启用以调整图片大小和压缩图片</string>
-    <string name="media_encoder_quality_100">最大值</string>
-    <string name="media_encoder_quality_95">非常高</string>
-    <string name="media_encoder_quality_90">高</string>
-    <string name="media_encoder_quality_85">中</string>
-    <string name="media_encoder_quality_80">低</string>
+    <string name="media_encoder_quality_maximum">最大值</string>
+    <string name="media_encoder_quality_very_high">非常高</string>
+    <string name="media_encoder_quality_high">高</string>
+    <string name="media_encoder_quality_medium">中</string>
+    <string name="media_encoder_quality_low">低</string>
     <string name="media_upload_state_uploaded">已上传</string>
     <string name="media_upload_state_failed">上传失败</string>
     <string name="media_upload_state_deleted">已删除</string>

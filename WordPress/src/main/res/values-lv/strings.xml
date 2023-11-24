@@ -2776,7 +2776,6 @@ Language: lv
     <string name="password_incorrect">Izskatās, ka šī parole nav pareiza. Lūdzu, vēlreiz pārbaudiet savu informāciju un mēģiniet vēlreiz.</string>
     <string name="requesting_otp">Verifikācijas koda pieprasīšana, izmantojot īsziņu.</string>
     <string name="login_text_otp">Tā vietā nosūtiet man kodu</string>
-    <string name="enter_verification_code">Gandrīz klāt! Lūdzu, ievadiet verifikācijas kodu no lietotnes Authenticator.</string>
     <string name="open_mail">Open Mail</string>
     <string name="next">Nākamais</string>
     <string name="enter_email_wordpress_com">Piesakieties vietnē WordPress.com, izmantojot e-pasta adresi, lai pārvaldītu visas savas WordPress vietnes.</string>
@@ -2920,11 +2919,11 @@ Language: lv
     <string name="editor_post_saved_online">Ziņa saglabāta tiešsaistē</string>
     <string name="site_settings_image_quality_hint">Attēlu kvalitāte. Augstākas vērtības nozīmē labākas kvalitātes attēlus.</string>
     <string name="site_settings_optimize_images_summary">Iespējot attēlu lieluma maiņu un saspiešanu</string>
-    <string name="media_encoder_quality_100">Maksimāla</string>
-    <string name="media_encoder_quality_95">Ļoti augsta</string>
-    <string name="media_encoder_quality_90">Augsta</string>
-    <string name="media_encoder_quality_85">Vidēja</string>
-    <string name="media_encoder_quality_80">Zema</string>
+    <string name="media_encoder_quality_maximum">Maksimāla</string>
+    <string name="media_encoder_quality_very_high">Ļoti augsta</string>
+    <string name="media_encoder_quality_high">Augsta</string>
+    <string name="media_encoder_quality_medium">Vidēja</string>
+    <string name="media_encoder_quality_low">Zema</string>
     <string name="media_upload_state_uploaded">Augšupielādēts</string>
     <string name="media_upload_state_failed">Augšupielāde neizdevās</string>
     <string name="media_upload_state_deleted">Dzēsts</string>

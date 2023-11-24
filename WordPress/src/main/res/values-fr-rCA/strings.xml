@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-02 17:54:08+0000
+Translation-Revision-Date: 2023-11-15 09:54:12+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: fr
 -->
 <resources>
+    <string name="notification_security_key_needed">Veuillez fournir votre clé de sécurité pour continuer.</string>
+    <string name="login_error_security_key">La connexion via la clé de sécurité rencontre des soucis</string>
+    <string name="login_text_security_key">Utiliser une clé de sécurité</string>
+    <string name="new_domain_search_screen_error_title">Impossible de récupérer les domaines</string>
+    <string name="new_domain_search_screen_list_item_sale_price">%s la première année</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s/an</string>
+    <string name="new_domain_search_screen_transfer_domain_button">Transférer un domaine</string>
+    <string name="new_domain_search_screen_transfer_domain_description">Vous désirez transférer un domaine que vous possédez déjà ?</string>
+    <string name="new_domain_search_screen_input_placeholder">Saisir du contenu pour obtenir d’autres suggestions</string>
+    <string name="new_domain_search_screen_title">Rechercher un domaine</string>
+    <string name="purchase_domain_screen_error_subtitle">Une erreur est survenue lors de l’ajout du domaine au panier. Vérifiez que vous êtes en ligne et réessayez.</string>
+    <string name="purchase_domain_screen_error_title">Erreur</string>
+    <string name="domain_management_site_domains_button">Tout</string>
+    <string name="domain_management_error_title">Impossible de récupérer vos domaines</string>
+    <string name="site_domain_title">Domaine de site</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">De &lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">Modifié</string>
+    <string name="post_list_toggle_author_filter">Filtrer par auteur</string>
     <string name="gutenberg_native_s_block_converted_to_blocks">Bloc « %s » converti en blocs</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Vous pouvez également convertir le contenu en blocs.</string>
     <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Ajouter ou supprimer des raccourcis</string>
@@ -27,12 +45,11 @@ Language: fr
     <string name="domain_management_empty_find_domain">Trouver un domaine</string>
     <string name="domain_management_empty_subtitle">Appuyez ci-dessous pour trouver le domaine idéal.</string>
     <string name="domain_management_empty_title">Vous n’avez pas de domaine</string>
-    <string name="domain_management_error_subtitle">Vérifiez que vous êtes en ligne et actualisez.</string>
-    <string name="domain_management_error_title">Mise à jour impossible</string>
+    <string name="domain_management_error_subtitle">Vérifiez que vous êtes en ligne et appuyez pour actualiser.</string>
     <string name="domain_management_open_domain_details">Ouvrir les détails du domaine</string>
     <string name="domain_management_search_your_domains">Rechercher vos domaines</string>
     <string name="domain_management_purchase_a_domain">Acheter un domaine</string>
-    <string name="domain_management_my_domains_title">Mes domaines</string>
+    <string name="domain_management_my_domains_title">Tous les domaines</string>
     <string name="domain_management_expires">Expire le %1$s</string>
     <string name="account_and_settings">Compte et réglages</string>
     <string name="site_creation_plans_selection_title">Sélectionner un plan</string>
@@ -2856,7 +2873,7 @@ Language: fr
     <string name="password_incorrect">Il semblerait que ce mot de passe est incorrect. Veuillez vérifier et essayer à nouveau.</string>
     <string name="requesting_otp">Demande d’un code de vérification par SMS.</string>
     <string name="login_text_otp">Envoyez-moi un code par SMS à la place</string>
-    <string name="enter_verification_code">On y est presque ! Veuillez saisir le code de vérification de votre app d’authentification.</string>
+    <string name="enter_verification_code">Vous y êtes presque ! Veuillez saisir le code de vérification WordPress.com de votre application d’authentification.</string>
     <string name="open_mail">Ouvrir la messagerie</string>
     <string name="next">Suivant</string>
     <string name="enter_email_wordpress_com">Connectez-vous à WordPress.com en utilisant une adresse de messagerie pour gérer tous vos sites WordPress.com.</string>
@@ -3000,11 +3017,11 @@ Language: fr
     <string name="editor_post_saved_online">Article enregistré en ligne</string>
     <string name="site_settings_image_quality_hint">Qualité des images. Des valeurs élevées signifient une meilleure qualité d’image.</string>
     <string name="site_settings_optimize_images_summary">Autoriser le redimensionnement et la compression des images</string>
-    <string name="media_encoder_quality_100">Maximum</string>
-    <string name="media_encoder_quality_95">Très élevé</string>
-    <string name="media_encoder_quality_90">Élevé</string>
-    <string name="media_encoder_quality_85">Moyen</string>
-    <string name="media_encoder_quality_80">Faible</string>
+    <string name="media_encoder_quality_maximum">Maximum</string>
+    <string name="media_encoder_quality_very_high">Très élevé</string>
+    <string name="media_encoder_quality_high">Élevé</string>
+    <string name="media_encoder_quality_medium">Moyen</string>
+    <string name="media_encoder_quality_low">Faible</string>
     <string name="media_upload_state_uploaded">Téléversé</string>
     <string name="media_upload_state_failed">Téléversement échoué</string>
     <string name="media_upload_state_deleted">Supprimé</string>

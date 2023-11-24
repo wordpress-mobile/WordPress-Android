@@ -224,7 +224,7 @@ class LocalMigrationOrchestratorTest : BaseUnitTest() {
     private fun mockHappyPath() {
         whenever(eligibilityHelper.validate()).thenReturn(Success(EligibilityStatusData(true)))
         whenever(sharedLoginHelper.login()).thenReturn(Success(AccessTokenData("", avatarUrl)))
-        whenever(sitesMigrationHelper.migrateSites()).thenReturn(Success(SitesData(sites)))
+        whenever(sitesMigrationHelper.migrateSites()).thenReturn(Success(SitesData(sites, true)))
         whenever(userFlagsHelper.migrateUserFlags()).thenReturn(Success(UserFlagsData(mapOf(), listOf(), listOf())))
         whenever(readerSavedPostsHelper.migrateReaderSavedPosts())
             .thenReturn(Success(ReaderPostsData(ReaderPostList())))

@@ -174,11 +174,11 @@
     <string name="media_upload_state_failed">Upload Failed</string>
     <string name="media_upload_state_uploaded">Uploaded</string>
 
-    <string name="media_encoder_quality_80">Low</string>
-    <string name="media_encoder_quality_85">Medium</string>
-    <string name="media_encoder_quality_90">High</string>
-    <string name="media_encoder_quality_95">Very High</string>
-    <string name="media_encoder_quality_100">Maximum</string>
+    <string name="media_encoder_quality_low">Low</string>
+    <string name="media_encoder_quality_medium">Medium</string>
+    <string name="media_encoder_quality_high">High</string>
+    <string name="media_encoder_quality_very_high">Very High</string>
+    <string name="media_encoder_quality_maximum">Maximum</string>
     <string name="media_browse_for_items">Browse for items</string>
 
     <!-- Edit Media -->
@@ -2975,10 +2975,10 @@
     <string name="permission_microphone">Microphone</string>
 
     <!-- Image Optimization promo -->
-    <string name="turn_on">Turn on</string>
-    <string name="leave_off">Leave off</string>
-    <string name="image_optimization_promo_title">Turn on image optimization?</string>
-    <string name="image_optimization_promo_desc">Image optimization shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
+    <string name="turn_on">Yes, leave on</string>
+    <string name="leave_off">No, turn off</string>
+    <string name="image_optimization_promo_title">Keep optimizing images?</string>
+    <string name="image_optimization_promo_desc">Image optimization shrinks images for faster uploading.\n\nThis option is enabled by default, but you can change it in the app settings at any time.</string>
 
     <!-- Login -->
     <!-- If any of these appear unused, be sure to check the same string in the login library -
@@ -4473,6 +4473,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jp_migration_delete_message">We recommend &lt;b&gt;uninstalling the WordPress app&lt;/b&gt; on your device to avoid data conflicts.</string>
     <string name="jp_migration_got_it_button">Got it</string>
     <string name="jp_migration_need_help_button">Need help?</string>
+    <string name="jp_migration_done_no_sites_message">It\'s time to continue your WordPress journey on the Jetpack app.</string>
+    <string name="jp_migration_lets_go_button">Let\'s go</string>
 
     <!-- Open Web Links With Jetpack -->
     <string name="preference_open_links_in_jetpack">Open links in Jetpack</string>
