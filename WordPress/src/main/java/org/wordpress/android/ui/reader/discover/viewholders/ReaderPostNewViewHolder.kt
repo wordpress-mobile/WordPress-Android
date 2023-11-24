@@ -89,7 +89,6 @@ class ReaderPostNewViewHolder(
     }
 
     private fun updateInteractionCountsSection(state: ReaderPostNewUiState) = with(binding) {
-        // here
         val likeCount = state.interactionSection.likeCount
         val commentCount = state.interactionSection.commentCount
 

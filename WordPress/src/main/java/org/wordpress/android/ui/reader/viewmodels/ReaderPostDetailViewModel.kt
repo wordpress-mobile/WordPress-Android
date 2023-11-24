@@ -469,7 +469,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         onActionClicked(
             postId,
             blogId,
-            ReaderPostCardActionType.COMMENTS,
+            COMMENTS,
             ReaderTracker.SOURCE_POST_DETAIL_COMMENT_SNIPPET
         )
     }
@@ -478,8 +478,8 @@ class ReaderPostDetailViewModel @Inject constructor(
         post?.let {
             launch {
                 readerPostCardActionsHandler.onAction(
-                    it,
-                    COMMENTS,
+                    post = it,
+                    type = COMMENTS,
                     isBookmarkList = false,
                     source = ReaderTracker.SOURCE_POST_DETAIL,
                 )
