@@ -84,7 +84,6 @@ private fun DropdownMenuItemsListPreview() {
                             onClick = {},
                         )
                     ),
-                    rightIcon = R.drawable.ic_arrow_right_black_24dp,
                     onClick = {},
                 )
             )

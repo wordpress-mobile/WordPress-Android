@@ -19,8 +19,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.SubMenu
 import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Item
+import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.SubMenu
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
@@ -61,10 +61,10 @@ fun DropdownMenuButton(
                         weight = 1f,
                         fill = false,
                     ),
+                style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
                 text = selectedItem.text,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
-                fontSize = FontSize.Medium.value,
             )
             Icon(
                 modifier = Modifier.align(Alignment.CenterVertically),

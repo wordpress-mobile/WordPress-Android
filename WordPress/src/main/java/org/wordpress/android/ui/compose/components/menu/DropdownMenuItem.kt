@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,10 +45,10 @@ fun DropdownMenuItem(
         Text(
             modifier = Modifier
                 .weight(1f),
+            style = MaterialTheme.typography.bodyLarge,
             text = item.text,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
-            fontSize = FontSize.Large.value,
         )
         if (item.rightIcon != NO_ICON) {
             Spacer(Modifier.width(Margin.Medium.value))
@@ -100,8 +101,6 @@ sealed class DropdownMenuItemData(
         override val isDefault: Boolean = false,
         override val hasDivider: Boolean = false,
         override val onClick: (String) -> Unit,
-        @DrawableRes override val leftIcon: Int = NO_ICON,
-        @DrawableRes override val rightIcon: Int = NO_ICON,
         val items: List<Item>,
     ) : DropdownMenuItemData(
         text = text,
@@ -109,8 +108,8 @@ sealed class DropdownMenuItemData(
         hasDivider = hasDivider,
         id = id,
         onClick = onClick,
-        leftIcon = leftIcon,
-        rightIcon = rightIcon,
+        leftIcon = NO_ICON,
+        rightIcon = R.drawable.ic_arrow_right_black_24dp,
     )
 }
 

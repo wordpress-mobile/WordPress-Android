@@ -1,12 +1,18 @@
 package org.wordpress.android.ui.compose.components.menu
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Item
@@ -44,35 +50,38 @@ private fun List<DropdownMenuItemData>.defaultItem() =
 @Composable
 fun EditPostSettingsJetpackSocialSharesContainerPreview() {
     AppThemeEditor {
-        DropdownMenu(
-            items = listOf(
-                Item(
-                    id = "text1",
-                    text = "Text only",
-                    onClick = {},
-                ),
-                Item(
-                    id = "textAndIcon1",
-                    text = "Text and Icon",
-                    isDefault = true,
-                    leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
-                    hasDivider = true,
-                    onClick = {},
-                ),
-                SubMenu(
-                    id = "subMenu1",
-                    text = "SubMenu",
-                    items = listOf(
-                        Item(
-                            id = "subMenu1_text1",
-                            text = "Text only",
-                            onClick = {},
-                        )
+        Box(modifier = Modifier.background(Color.Gray)
+            .fillMaxWidth()
+            .fillMaxHeight()) {
+            DropdownMenu(
+                items = listOf(
+                    Item(
+                        id = "text1",
+                        text = "Text only",
+                        onClick = {},
                     ),
-                    rightIcon = R.drawable.ic_arrow_right_black_24dp,
-                    onClick = {},
-                ),
+                    Item(
+                        id = "textAndIcon1",
+                        text = "Text and Icon",
+                        isDefault = true,
+                        leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
+                        hasDivider = true,
+                        onClick = {},
+                    ),
+                    SubMenu(
+                        id = "subMenu1",
+                        text = "SubMenu",
+                        items = listOf(
+                            Item(
+                                id = "subMenu1_text1",
+                                text = "Text only",
+                                onClick = {},
+                            )
+                        ),
+                        onClick = {},
+                    ),
+                )
             )
-        )
+        }
     }
 }
