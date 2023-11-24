@@ -24,10 +24,13 @@ import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
-fun DropdownMenuItem(item: DropdownMenuItemData) {
+fun DropdownMenuItem(
+    item: DropdownMenuItemData,
+    modifier: Modifier = Modifier,
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .clickable { item.onClick(item.id) }
             .padding(all = Margin.MediumLarge.value),
     ) {

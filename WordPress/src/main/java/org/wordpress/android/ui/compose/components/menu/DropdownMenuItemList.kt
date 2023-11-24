@@ -3,6 +3,7 @@ package org.wordpress.android.ui.compose.components.menu
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,8 +18,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.SubMenu
 import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Item
+import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.SubMenu
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
@@ -38,8 +39,10 @@ fun DropdownMenuItemList(items: List<DropdownMenuItemData>) {
                     items = items,
                     key = { it.id },
                 ) { item ->
-                    DropdownMenuItem(item)
-
+                    DropdownMenuItem(
+                        item = item,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                     if (item.hasDivider) {
                         Divider(
                             color = colorResource(R.color.gray_10),
