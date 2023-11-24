@@ -53,7 +53,7 @@ fun DropdownMenuItem(item: DropdownMenuItemData) {
         }
     }
 }
-
+@Suppress("LongParameterList")
 sealed class DropdownMenuItemData(
     open val text: String,
     open val isDefault: Boolean,
