@@ -20,8 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.SubMenu
-import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Text
-import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.TextAndIcon
+import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Item
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
@@ -48,10 +47,10 @@ fun DropdownMenuButton(
         Row(
             horizontalArrangement = Arrangement.spacedBy(Margin.Medium.value),
         ) {
-            if (selectedItem is TextAndIcon) {
+            if (selectedItem.leftIcon != NO_ICON) {
                 Icon(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    painter = painterResource(id = selectedItem.iconRes),
+                    painter = painterResource(id = selectedItem.leftIcon),
                     contentDescription = null,
                 )
             }
@@ -86,7 +85,7 @@ private fun DropdownMenuButtonPreview() {
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             DropdownMenuButton(
-                selectedItem = Text(
+                selectedItem = Item(
                     id = "text1",
                     text = "Text only",
                     onClick = {},
@@ -94,30 +93,30 @@ private fun DropdownMenuButtonPreview() {
                 onClick = {}
             )
             DropdownMenuButton(
-                selectedItem = TextAndIcon(
+                selectedItem = Item(
                     id = "textAndIcon1",
                     text = "Text and Icon",
-                    iconRes = R.drawable.ic_jetpack_logo_white_24dp,
+                    leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
                     onClick = {},
                 ),
-                onClick = {}
+                onClick = {},
             )
             DropdownMenuButton(
-                selectedItem = Text(
+                selectedItem = Item(
                     id = "textAndIcon1",
                     text = "Text type with a really long text as the button label",
                     onClick = {},
                 ),
-                onClick = {}
+                onClick = {},
             )
             DropdownMenuButton(
-                selectedItem = TextAndIcon(
+                selectedItem = Item(
                     id = "textAndIcon1",
-                    text = "Text and Icon type with a really long text as the button label",
-                    iconRes = R.drawable.ic_jetpack_logo_white_24dp,
+                    text = "Text type with a really long text as the button label",
+                    leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
                     onClick = {},
                 ),
-                onClick = {}
+                onClick = {},
             )
         }
     }

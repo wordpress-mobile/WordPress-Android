@@ -18,8 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.SubMenu
-import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Text
-import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.TextAndIcon
+import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Item
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
@@ -60,15 +59,15 @@ private fun DropdownMenuItemsListPreview() {
     AppTheme {
         DropdownMenuItemList(
             items = listOf(
-                Text(
+                Item(
                     id = "text1",
                     text = "Text only",
                     onClick = {},
                 ),
-                TextAndIcon(
+                Item(
                     id = "textAndIcon1",
                     text = "Text and Icon",
-                    iconRes = R.drawable.ic_jetpack_logo_white_24dp,
+                    leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
                     hasDivider = true,
                     onClick = {},
                 ),
@@ -76,7 +75,7 @@ private fun DropdownMenuItemsListPreview() {
                     id = "subMenu1",
                     text = "SubMenu",
                     items = listOf(
-                        Text(
+                        Item(
                             id = "subMenu1_text1",
                             text = "Text only",
                             onClick = {},

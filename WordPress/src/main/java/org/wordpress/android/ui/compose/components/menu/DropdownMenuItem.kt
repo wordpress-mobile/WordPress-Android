@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
 
@@ -30,18 +29,13 @@ fun DropdownMenuItem(item: DropdownMenuItemData) {
             .padding(all = Margin.MediumLarge.value),
     ) {
         val iconTextMargin = Margin.Medium.value
-        if (item is DropdownMenuItemData.TextAndIcon) {
+        if (item.leftIcon != NO_ICON) {
             Icon(
                 modifier = Modifier.align(Alignment.CenterVertically),
-                painter = painterResource(id = item.iconRes),
+                painter = painterResource(id = item.leftIcon),
                 contentDescription = null,
             )
             Spacer(Modifier.width(iconTextMargin))
-        } else {
-            // item is Text
-            val defaultIconSize = 24.dp
-            val textOnlyMargin = iconTextMargin + defaultIconSize
-            Spacer(Modifier.width(textOnlyMargin))
         }
         Text(
             text = item.text,
@@ -49,6 +43,14 @@ fun DropdownMenuItem(item: DropdownMenuItemData) {
             maxLines = 1,
             fontSize = FontSize.Large.value,
         )
+        if (item.rightIcon != NO_ICON) {
+            Icon(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                painter = painterResource(id = item.rightIcon),
+                contentDescription = null,
+            )
+            Spacer(Modifier.width(iconTextMargin))
+        }
     }
 }
 
@@ -58,54 +60,51 @@ sealed class DropdownMenuItemData(
     open val hasDivider: Boolean,
     open val id: String,
     open val onClick: (String) -> Unit,
+    @DrawableRes open val leftIcon: Int,
+    @DrawableRes open val rightIcon: Int,
 ) {
     /**
      * @param onClick callback that returns the defined id
      */
-    data class Text(
+    data class Item(
         override val id: String,
         override val text: String,
         override val isDefault: Boolean = false,
         override val hasDivider: Boolean = false,
         override val onClick: (String) -> Unit,
+        @DrawableRes override val leftIcon: Int = NO_ICON,
+        @DrawableRes override val rightIcon: Int = NO_ICON,
     ) : DropdownMenuItemData(
         text = text,
         isDefault = isDefault,
         hasDivider = hasDivider,
         id = id,
         onClick = onClick,
+        leftIcon = leftIcon,
+        rightIcon = rightIcon,
     )
 
     /**
      * @param onClick callback that returns the defined id
      */
-    data class TextAndIcon(
-        override val id: String,
-        override val text: String,
-        @DrawableRes val iconRes: Int,
-        override val isDefault: Boolean = false,
-        override val hasDivider: Boolean = false,
-        override val onClick: (String) -> Unit,
-    ) : DropdownMenuItemData(
-        text = text,
-        isDefault = isDefault,
-        hasDivider = hasDivider,
-        id = id,
-        onClick = onClick,
-    )
-
     data class SubMenu(
         override val id: String,
         override val text: String,
         override val isDefault: Boolean = false,
         override val hasDivider: Boolean = false,
-        val items: List<DropdownMenuItemData>,
         override val onClick: (String) -> Unit,
+        @DrawableRes override val leftIcon: Int = NO_ICON,
+        @DrawableRes override val rightIcon: Int = NO_ICON,
+        val items: List<DropdownMenuItemData>,
     ) : DropdownMenuItemData(
         text = text,
         isDefault = isDefault,
         hasDivider = hasDivider,
         id = id,
         onClick = onClick,
+        leftIcon = leftIcon,
+        rightIcon = rightIcon,
     )
 }
+
+internal const val NO_ICON = -1

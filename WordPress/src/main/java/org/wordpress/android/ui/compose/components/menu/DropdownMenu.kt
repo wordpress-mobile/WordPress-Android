@@ -6,8 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.SubMenu
-import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Text
-import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.TextAndIcon
+import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Item
 import org.wordpress.android.ui.compose.theme.AppThemeEditor
 import java.lang.IllegalArgumentException
 
@@ -40,32 +39,32 @@ fun EditPostSettingsJetpackSocialSharesContainerPreview() {
     AppThemeEditor {
         DropdownMenu(
             items = listOf(
-                Text(
+                Item(
                     id = "item1",
                     text = "Item 1",
                     onClick = {},
                     isDefault = true,
                 ),
-                TextAndIcon(
+                Item(
                     id = "item1",
                     text = "Item 1",
-                    iconRes = R.drawable.ic_jetpack_logo_24dp,
+                    leftIcon = R.drawable.ic_jetpack_logo_24dp,
                     onClick = {},
                 ),
                 SubMenu(
                     id = "subMenu1",
                     text = "SubMenu",
                     items = listOf(
-                        Text(
+                        Item(
                             id = "item1",
                             text = "Item 1",
                             onClick = {},
                             isDefault = true,
                         ),
-                        TextAndIcon(
+                        Item(
                             id = "item1",
                             text = "Item 1",
-                            iconRes = R.drawable.ic_jetpack_logo_24dp,
+                            leftIcon = R.drawable.ic_jetpack_logo_24dp,
                             onClick = {},
                         )
                     ),
