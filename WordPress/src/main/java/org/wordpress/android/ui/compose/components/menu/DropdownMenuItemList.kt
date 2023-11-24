@@ -2,9 +2,8 @@ package org.wordpress.android.ui.compose.components.menu
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -33,6 +32,7 @@ fun DropdownMenuItemList(items: List<DropdownMenuItemData>) {
             LazyColumn(
                 state = listState,
                 modifier = Modifier
+                    .width(200.dp)
                     .background(MaterialTheme.colors.background)
             ) {
                 items(
@@ -55,36 +55,32 @@ fun DropdownMenuItemList(items: List<DropdownMenuItemData>) {
 @Composable
 private fun DropdownMenuItemsListPreview() {
     AppTheme {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            DropdownMenuItemList(
-                items = listOf(
-                    Text(
-                        id = "text1",
-                        text = "Text only",
-                        onClick = {},
+        DropdownMenuItemList(
+            items = listOf(
+                Text(
+                    id = "text1",
+                    text = "Text only",
+                    onClick = {},
+                ),
+                TextAndIcon(
+                    id = "textAndIcon1",
+                    text = "Text and Icon",
+                    iconRes = R.drawable.ic_jetpack_logo_white_24dp,
+                    onClick = {},
+                ),
+                SubMenu(
+                    id = "subMenu1",
+                    text = "SubMenu",
+                    items = listOf(
+                        Text(
+                            id = "subMenu1_text1",
+                            text = "Text only",
+                            onClick = {},
+                        )
                     ),
-                    TextAndIcon(
-                        id = "textAndIcon1",
-                        text = "Text and Icon",
-                        iconRes = R.drawable.ic_jetpack_logo_white_24dp,
-                        onClick = {},
-                    ),
-                    SubMenu(
-                        id = "subMenu1",
-                        text = "SubMenu",
-                        items = listOf(
-                            Text(
-                                id = "subMenu1_text1",
-                                text = "Text only",
-                                onClick = {},
-                            )
-                        ),
-                        onClick = {},
-                    )
+                    onClick = {},
                 )
             )
-        }
+        )
     }
 }
