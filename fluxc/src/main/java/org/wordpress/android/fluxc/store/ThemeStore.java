@@ -41,6 +41,8 @@ public class ThemeStore extends Store {
         @Nullable public String filter;
         public int resultsLimit = DEFAULT_LIMIT_OF_THEME_RESULTS;
 
+        public FetchWPComThemesPayload() {}
+
         public FetchWPComThemesPayload(@Nullable String filter) {
             this.filter = filter;
         }
