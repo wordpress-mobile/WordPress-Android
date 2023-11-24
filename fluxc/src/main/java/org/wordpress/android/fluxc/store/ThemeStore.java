@@ -333,6 +333,10 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getWpComThemes();
     }
 
+    public List<ThemeModel> getWpComThemes(@NonNull List<String> themeIds) {
+        return ThemeSqlUtils.getWpComThemes(themeIds);
+    }
+
     public List<ThemeModel> getWpComMobileFriendlyThemes(String categorySlug) {
         return ThemeSqlUtils.getWpComMobileFriendlyThemes(categorySlug);
     }
