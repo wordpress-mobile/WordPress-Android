@@ -3,12 +3,15 @@ package org.wordpress.android.ui.compose.components.menu
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.SubMenu
 import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Item
+import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.SubMenu
 import org.wordpress.android.ui.compose.theme.AppThemeEditor
-import java.lang.IllegalArgumentException
 
 /**
  * DropdownMenu component. Consists of a DropdownMenuButton that opens a DropdownMenuItemsContainer when tapped.
@@ -16,14 +19,18 @@ import java.lang.IllegalArgumentException
  */
 @Composable
 fun DropdownMenu(items: List<DropdownMenuItemData>) {
-    require (items.hasSingleDefaultItem()) { "DropdownMenu must have one default item." }
+    require(items.hasSingleDefaultItem()) { "DropdownMenu must have one default item." }
     Column {
+        var isMenuOpen by remember { mutableStateOf(false) }
         DropdownMenuButton(
             selectedItem = items.defaultItem(),
             onClick = {
-                TODO("Open menu")
+                isMenuOpen = !isMenuOpen
             }
         )
+        if (isMenuOpen) {
+            DropdownMenuItemList(items)
+        }
     }
 }
 
@@ -40,15 +47,16 @@ fun EditPostSettingsJetpackSocialSharesContainerPreview() {
         DropdownMenu(
             items = listOf(
                 Item(
-                    id = "item1",
-                    text = "Item 1",
+                    id = "text1",
+                    text = "Text only",
                     onClick = {},
-                    isDefault = true,
                 ),
                 Item(
-                    id = "item1",
-                    text = "Item 1",
-                    leftIcon = R.drawable.ic_jetpack_logo_24dp,
+                    id = "textAndIcon1",
+                    text = "Text and Icon",
+                    isDefault = true,
+                    leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
+                    hasDivider = true,
                     onClick = {},
                 ),
                 SubMenu(
@@ -56,18 +64,12 @@ fun EditPostSettingsJetpackSocialSharesContainerPreview() {
                     text = "SubMenu",
                     items = listOf(
                         Item(
-                            id = "item1",
-                            text = "Item 1",
-                            onClick = {},
-                            isDefault = true,
-                        ),
-                        Item(
-                            id = "item1",
-                            text = "Item 1",
-                            leftIcon = R.drawable.ic_jetpack_logo_24dp,
+                            id = "subMenu1_text1",
+                            text = "Text only",
                             onClick = {},
                         )
                     ),
+                    rightIcon = R.drawable.ic_arrow_right_black_24dp,
                     onClick = {},
                 ),
             )
