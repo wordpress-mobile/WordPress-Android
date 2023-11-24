@@ -78,7 +78,10 @@ public class ThemeRestClient extends BaseWPComRestClient {
      * [Undocumented!] Endpoint: v1.1/sites/$siteId/themes/$themeId/install
      */
     public void installTheme(@NonNull final SiteModel site, @NonNull final ThemeModel theme) {
-        String themeId = getThemeIdWithWpComSuffix(theme);
+        String themeId = theme.getThemeId();
+        if (!site.isWPComAtomic()) {
+            themeId = getThemeIdWithWpComSuffix(theme);
+        }
         String url = WPCOMREST.sites.site(site.getSiteId()).themes.theme(themeId).install.getUrlV1_1();
         add(WPComGsonRequest.buildPostRequest(url, null, JetpackThemeResponse.class,
                 response -> {
