@@ -36,13 +36,14 @@ fun DropdownMenuItem(
     ) {
         if (item.leftIcon != NO_ICON) {
             Icon(
-                modifier = Modifier.align(Alignment.CenterVertically),
                 painter = painterResource(id = item.leftIcon),
                 contentDescription = null,
             )
             Spacer(Modifier.width(Margin.Medium.value))
         }
         Text(
+            modifier = Modifier
+                .weight(1f),
             text = item.text,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
@@ -149,7 +150,7 @@ private fun DropdownMenuButtonPreview() {
             DropdownMenuItem(
                 item = DropdownMenuItemData.Item(
                     id = "textAndIcon1",
-                    text = "Text, left and, right icon",
+                    text = "Text, left and, right icon. The text is really long.",
                     leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
                     rightIcon = R.drawable.ic_jetpack_logo_white_24dp,
                     onClick = {},
