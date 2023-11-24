@@ -40,10 +40,13 @@ fun DropdownMenuItemList(items: List<DropdownMenuItemData>) {
                     key = { it.id },
                 ) { item ->
                     DropdownMenuItem(item)
-                    Divider(
-                        color = colorResource(R.color.gray_10),
-                        thickness = 0.5.dp,
-                    )
+
+                    if (item.hasDivider) {
+                        Divider(
+                            color = colorResource(R.color.gray_10),
+                            thickness = 0.5.dp,
+                        )
+                    }
                 }
             }
         }
@@ -66,6 +69,7 @@ private fun DropdownMenuItemsListPreview() {
                     id = "textAndIcon1",
                     text = "Text and Icon",
                     iconRes = R.drawable.ic_jetpack_logo_white_24dp,
+                    hasDivider = true,
                     onClick = {},
                 ),
                 SubMenu(

@@ -55,6 +55,7 @@ fun DropdownMenuItem(item: DropdownMenuItemData) {
 sealed class DropdownMenuItemData(
     open val text: String,
     open val isDefault: Boolean,
+    open val hasDivider: Boolean,
     open val id: String,
     open val onClick: (String) -> Unit,
 ) {
@@ -65,10 +66,12 @@ sealed class DropdownMenuItemData(
         override val id: String,
         override val text: String,
         override val isDefault: Boolean = false,
+        override val hasDivider: Boolean = false,
         override val onClick: (String) -> Unit,
     ) : DropdownMenuItemData(
         text = text,
         isDefault = isDefault,
+        hasDivider = hasDivider,
         id = id,
         onClick = onClick,
     )
@@ -81,10 +84,12 @@ sealed class DropdownMenuItemData(
         override val text: String,
         @DrawableRes val iconRes: Int,
         override val isDefault: Boolean = false,
+        override val hasDivider: Boolean = false,
         override val onClick: (String) -> Unit,
     ) : DropdownMenuItemData(
         text = text,
         isDefault = isDefault,
+        hasDivider = hasDivider,
         id = id,
         onClick = onClick,
     )
@@ -93,11 +98,13 @@ sealed class DropdownMenuItemData(
         override val id: String,
         override val text: String,
         override val isDefault: Boolean = false,
+        override val hasDivider: Boolean = false,
         val items: List<DropdownMenuItemData>,
         override val onClick: (String) -> Unit,
     ) : DropdownMenuItemData(
         text = text,
         isDefault = isDefault,
+        hasDivider = hasDivider,
         id = id,
         onClick = onClick,
     )
