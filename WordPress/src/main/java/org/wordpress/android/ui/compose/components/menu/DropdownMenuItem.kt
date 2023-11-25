@@ -21,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
@@ -33,7 +32,12 @@ fun DropdownMenuItem(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .clickable { item.onClick(item.id) }
-            .padding(all = Margin.MediumLarge.value),
+            .padding(
+                start = Margin.MediumLarge.value,
+                top = Margin.ExtraLarge.value,
+                end = Margin.MediumLarge.value,
+                bottom = Margin.ExtraLarge.value
+            ),
     ) {
         if (item.leftIcon != NO_ICON) {
             Icon(
