@@ -27,11 +27,14 @@ import org.wordpress.android.ui.compose.unit.Margin
 fun DropdownMenuItem(
     item: DropdownMenuItemData,
     modifier: Modifier = Modifier,
+    onItemClick: (String) -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .clickable { item.onClick(item.id) }
+            .clickable {
+                onItemClick(item.id)
+            }
             .padding(
                 start = Margin.MediumLarge.value,
                 top = Margin.ExtraLarge.value,
@@ -132,7 +135,8 @@ private fun DropdownMenuButtonPreview() {
                     id = "text1",
                     text = "Text only",
                     onClick = {},
-                )
+                ),
+                onItemClick = {}
             )
             DropdownMenuItem(
                 item = DropdownMenuItemData.Item(
@@ -141,6 +145,7 @@ private fun DropdownMenuButtonPreview() {
                     leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
                     onClick = {},
                 ),
+                onItemClick = {}
             )
             DropdownMenuItem(
                 item = DropdownMenuItemData.Item(
@@ -149,6 +154,7 @@ private fun DropdownMenuButtonPreview() {
                     rightIcon = R.drawable.ic_jetpack_logo_white_24dp,
                     onClick = {},
                 ),
+                onItemClick = {}
             )
             DropdownMenuItem(
                 item = DropdownMenuItemData.Item(
@@ -158,6 +164,7 @@ private fun DropdownMenuButtonPreview() {
                     rightIcon = R.drawable.ic_jetpack_logo_white_24dp,
                     onClick = {},
                 ),
+                onItemClick = {}
             )
             DropdownMenuItem(
                 item = DropdownMenuItemData.Item(
@@ -165,6 +172,7 @@ private fun DropdownMenuButtonPreview() {
                     text = "Text type with a really long text as the button label",
                     onClick = {},
                 ),
+                onItemClick = {}
             )
         }
     }

@@ -23,7 +23,10 @@ import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Sub
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
-fun DropdownMenuItemList(items: List<DropdownMenuItemData>) {
+fun DropdownMenuItemList(
+    items: List<DropdownMenuItemData>,
+    onItemClick: (String) -> Unit = {},
+) {
     Box {
         val listState = rememberLazyListState()
         Card(
@@ -41,7 +44,8 @@ fun DropdownMenuItemList(items: List<DropdownMenuItemData>) {
                 ) { item ->
                     DropdownMenuItem(
                         item = item,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        onItemClick = { onItemClick(it) },
                     )
                     if (item.hasDivider) {
                         Divider(
@@ -86,7 +90,8 @@ private fun DropdownMenuItemsListPreview() {
                     ),
                     onClick = {},
                 )
-            )
+            ),
+            onItemClick = {},
         )
     }
 }

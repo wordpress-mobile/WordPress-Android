@@ -31,18 +31,40 @@ fun DropdownMenu(items: List<DropdownMenuItemData>) {
     require(items.hasSingleDefaultItem()) { "DropdownMenu must have one default item." }
     Column {
         var isMenuOpen by remember { mutableStateOf(false) }
+        var openSubMenuId by remember { mutableStateOf("") }
         DropdownMenuButton(
             selectedItem = items.defaultItem(),
             onClick = {
                 isMenuOpen = !isMenuOpen
+                openSubMenuId = ""
             }
         )
-        AnimatedVisibility(
-            visible = isMenuOpen,
-            enter = expandVertically(),
-            exit = shrinkVertically(),
-        ) {
-            DropdownMenuItemList(items)
+        if (openSubMenuId.isNotEmpty()) {
+            AnimatedVisibility(
+                visible = openSubMenuId.isNotEmpty(),
+            ) {
+                DropdownMenuItemList(
+                    items = (items.find { it.id == openSubMenuId } as SubMenu).items,
+                )
+            }
+        } else {
+            AnimatedVisibility(
+                visible = isMenuOpen,
+                enter = expandVertically(),
+                exit = shrinkVertically(),
+            ) {
+                DropdownMenuItemList(
+                    items = items,
+                    onItemClick = { id ->
+                        items.firstOrNull { it.id == id }?.let {
+                            it.onClick(it.id)
+                            if (it is SubMenu) {
+                                openSubMenuId = id
+                            }
+                        }
+                    },
+                )
+            }
         }
     }
 }
@@ -57,9 +79,12 @@ private fun List<DropdownMenuItemData>.defaultItem() =
 @Composable
 fun EditPostSettingsJetpackSocialSharesContainerPreview() {
     AppThemeEditor {
-        Box(modifier = Modifier.background(Color.Gray)
-            .fillMaxWidth()
-            .fillMaxHeight()) {
+        Box(
+            modifier = Modifier
+                .background(Color.Gray)
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
             DropdownMenu(
                 items = listOf(
                     Item(
