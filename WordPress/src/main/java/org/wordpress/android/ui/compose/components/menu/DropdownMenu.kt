@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.compose.components.menu
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,7 +37,11 @@ fun DropdownMenu(items: List<DropdownMenuItemData>) {
                 isMenuOpen = !isMenuOpen
             }
         )
-        if (isMenuOpen) {
+        AnimatedVisibility(
+            visible = isMenuOpen,
+            enter = expandVertically(),
+            exit = shrinkVertically(),
+        ) {
             DropdownMenuItemList(items)
         }
     }
