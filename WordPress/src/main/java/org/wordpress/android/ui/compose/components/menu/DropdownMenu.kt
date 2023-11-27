@@ -30,24 +30,52 @@ import org.wordpress.android.ui.compose.theme.AppThemeEditor
 fun DropdownMenu(items: List<DropdownMenuItemData>) {
     require(items.hasSingleDefaultItem()) { "DropdownMenu must have one default item." }
     Column {
+        var selectedItem by remember { mutableStateOf(items.defaultItem()) }
         var isMenuOpen by remember { mutableStateOf(false) }
         var openSubMenuId by remember { mutableStateOf("") }
+        val onItemClick: (String) -> Unit = { id ->
+            val clickedItem = if (openSubMenuId.isNotEmpty()) {
+                // Clicked item is inside a sub-menu
+                (items.firstOrNull { it.id == openSubMenuId } as SubMenu).items
+                    .find { it.id == id }
+            } else {
+                // Clicked item is not inside a sub-menu
+                items.firstOrNull { it.id == id }
+            }
+            clickedItem?.let {
+                it.onClick(it.id)
+                if (it is SubMenu) {
+                    // If the clicked item is a SubMenu we should keep its id to update the UI
+                    openSubMenuId = id
+                } else {
+                    // If the clicked item is not a SubMenu, we should close the menu and update selectedItem
+                    // The open sub-menu ID should also be changed to the default value (empty string) since the
+                    // menu will be closed.
+                    openSubMenuId = ""
+                    selectedItem = it
+                    isMenuOpen = false
+                }
+            }
+        }
         DropdownMenuButton(
-            selectedItem = items.defaultItem(),
+            selectedItem = selectedItem,
             onClick = {
                 isMenuOpen = !isMenuOpen
                 openSubMenuId = ""
             }
         )
         if (openSubMenuId.isNotEmpty()) {
+            // Sub-menu is open. Show sub-menu.
             AnimatedVisibility(
                 visible = openSubMenuId.isNotEmpty(),
             ) {
                 DropdownMenuItemList(
                     items = (items.find { it.id == openSubMenuId } as SubMenu).items,
+                    onItemClick = onItemClick
                 )
             }
         } else {
+            // Sub-menu is not open. Show the default menu.
             AnimatedVisibility(
                 visible = isMenuOpen,
                 enter = expandVertically(),
@@ -55,14 +83,7 @@ fun DropdownMenu(items: List<DropdownMenuItemData>) {
             ) {
                 DropdownMenuItemList(
                     items = items,
-                    onItemClick = { id ->
-                        items.firstOrNull { it.id == id }?.let {
-                            it.onClick(it.id)
-                            if (it is SubMenu) {
-                                openSubMenuId = id
-                            }
-                        }
-                    },
+                    onItemClick = onItemClick,
                 )
             }
         }
