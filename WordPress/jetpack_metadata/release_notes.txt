@@ -1,3 +1,6 @@
-- The All Domains screen lets you manage all your domains in the app.
-- Posts & Pages has improved display options and an expanded context menu.
-- We fixed block editor issues caused by pasting deeply nested content, or using text colors in older site themes.
+* [*] [Jetpack-only] Block Editor: Ensure text is always visible within Contact Info block [https://github.com/Automattic/jetpack/pull/33873]
+* [*] Block Editor: Ensure uploaded audio is always visible within Audio block [https://github.com/WordPress/gutenberg/pull/55627]
+* [*] Block Editor: In the deeply nested block warning, only display the ungroup option for blocks that support it [https://github.com/WordPress/gutenberg/pull/56445]
+* [**] Enable Optimize Image setting (via Me → App Settings) by default, and change default compression and resolution values. [https://github.com/wordpress-mobile/WordPress-Android/pull/19581]
+* [*] Fixed an issue that prevented theme installation on atomic sites [https://github.com/wordpress-mobile/WordPress-Android/pull/19668]
+
