@@ -6,7 +6,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloganuaryNudgeCardBuilderParams
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.config.BloganuaryNudgeFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -14,9 +16,14 @@ import javax.inject.Inject
 class BloganuaryNudgeCardViewModelSlice @Inject constructor(
     private val bloganuaryNudgeFeatureConfig: BloganuaryNudgeFeatureConfig,
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val appPrefsWrapper: AppPrefsWrapper,
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
+
+    private val _refresh = MutableLiveData<Event<Boolean>>()
+    val refresh = _refresh
 
     private lateinit var scope: CoroutineScope
 
@@ -27,7 +34,8 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
     fun getBuilderParams(): BloganuaryNudgeCardBuilderParams {
         // TODO thomashortadev: check if current device date is in December 2023
         val isEligible = bloganuaryNudgeFeatureConfig.isEnabled() &&
-                bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()
+                bloggingPromptsSettingsHelper.isPromptsFeatureAvailable() &&
+                !isCardHiddenByUser()
 
         return BloganuaryNudgeCardBuilderParams(
             isEligible = isEligible,
@@ -37,7 +45,13 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
         )
     }
 
+    private fun isCardHiddenByUser(): Boolean {
+        val siteId = selectedSiteRepository.getSelectedSite()?.siteId ?: return true
+        return appPrefsWrapper.getShouldHideBloganuaryNudgeCard(siteId)
+    }
+
     private fun onLearnMoreClick() {
+        // TODO thomashortadev: track analytics for this action
         scope.launch {
             val isPromptsEnabled = bloggingPromptsSettingsHelper.isPromptsSettingEnabled()
             _onNavigation.value = Event(SiteNavigationAction.OpenBloganuaryNudgeOverlay(isPromptsEnabled))
@@ -49,6 +63,11 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
     }
 
     private fun onHideMenuItemClick() {
-        // TODO thomashortadev: create an AppPref and store hide state
+        // TODO thomashortadev: track analytics for this action
+        scope.launch {
+            val siteId = selectedSiteRepository.getSelectedSite()?.siteId ?: return@launch
+            appPrefsWrapper.setShouldHideBloganuaryNudgeCard(siteId, true)
+            _refresh.postValue(Event(true))
+        }
     }
 }
