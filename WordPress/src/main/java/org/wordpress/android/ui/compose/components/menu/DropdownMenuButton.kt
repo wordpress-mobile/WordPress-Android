@@ -22,7 +22,6 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.Item
 import org.wordpress.android.ui.compose.components.menu.DropdownMenuItemData.SubMenu
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.compose.unit.FontSize
 import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
