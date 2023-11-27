@@ -87,7 +87,7 @@ private fun CardToolbar(
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_bloganuary_24dp),
-            contentDescription = null,
+            contentDescription = stringResource(R.string.bloganuary_dashboard_nudge_icon_content_description),
             modifier = Modifier.size(24.dp),
             tint = MaterialTheme.colors.onSurface
         )
