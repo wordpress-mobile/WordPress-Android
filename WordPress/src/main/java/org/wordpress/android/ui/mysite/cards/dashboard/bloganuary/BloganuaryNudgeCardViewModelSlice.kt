@@ -25,6 +25,7 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
     }
 
     fun getBuilderParams(): BloganuaryNudgeCardBuilderParams {
+        // TODO thomashortadev: check if current device date is in December 2023
         val isEligible = bloganuaryNudgeFeatureConfig.isEnabled() &&
                 bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()
 
