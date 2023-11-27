@@ -4819,4 +4819,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Bloganuary -->
     <string name="bloganuary_dashboard_nudge_title">Bloganuary is coming!</string>
     <string name="bloganuary_dashboard_nudge_text">For the month of January, blogging prompts will come from Bloganuary - our community challenge to build a blogging habit for the new year.</string>
+    <string name="bloganuary_dashboard_nudge_learn_more">@string/learn_more</string>
 </resources>
