@@ -138,7 +138,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given site is not selected, when isPromptsFeatureActive, then returns false`() = test {
+    fun `given site is not selected, when shouldShowPromptsFeature, then returns false`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 
         val result = helper.shouldShowPromptsFeature()
@@ -147,7 +147,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given prompts feature not available, when isPromptsFeatureActive, then returns false`() = test {
+    fun `given prompts feature not available, when shouldShowPromptsFeature, then returns false`() = test {
         whenever(bloggingPromptsFeature.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
 
@@ -157,7 +157,7 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given prompts setting off, when isPromptsFeatureActive, then returns false`() = test {
+    fun `given prompts setting off, when shouldShowPromptsFeature, then returns false`() = test {
         // prompts feature is available
         whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
@@ -172,9 +172,8 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
         assertThat(result).isFalse
     }
 
-    @Suppress("MaxLineLength")
     @Test
-    fun `given prompts setting on and skipped for today, when isPromptsFeatureActive, then returns false`() =
+    fun `given prompts setting on and skipped for today, when shouldShowPromptsFeature, then returns false`() =
         test {
             // prompts feature is available
             whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
@@ -193,9 +192,8 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
         }
 
 
-    @Suppress("MaxLineLength")
     @Test
-    fun `given prompts setting on and not skipped for today, when isPromptsFeatureActive, then returns false`() =
+    fun `given prompts setting on and not skipped for today, when shouldShowPromptsFeature, then returns true`() =
         test {
             // prompts feature is available
             whenever(bloggingPromptsFeature.isEnabled()).thenReturn(true)
@@ -251,7 +249,40 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
 
         val result = helper.shouldShowPromptsSetting()
 
-        assertThat(result).isTrue()
+        assertThat(result).isTrue
+    }
+
+    @Test
+    fun `given site is not selected, when isPromptsSettingEnabled, then returns false`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+
+        val result = helper.isPromptsSettingEnabled()
+
+        assertThat(result).isFalse
+    }
+
+    @Test
+    fun `given prompts card setting disabled, when isPromptsSettingEnabled, then returns false`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
+        whenever(bloggingRemindersStore.bloggingRemindersModel(any())).doAnswer {
+            flowOf(createRemindersModel(isPromptsCardEnabled = false))
+        }
+
+        val result = helper.isPromptsSettingEnabled()
+
+        assertThat(result).isFalse
+    }
+
+    @Test
+    fun `given prompts card setting enabled, when isPromptsSettingEnabled, then returns true`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
+        whenever(bloggingRemindersStore.bloggingRemindersModel(any())).doAnswer {
+            flowOf(createRemindersModel(isPromptsCardEnabled = true))
+        }
+
+        val result = helper.isPromptsSettingEnabled()
+
+        assertThat(result).isTrue
     }
 
     companion object {
