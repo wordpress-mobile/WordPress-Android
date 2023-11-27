@@ -753,7 +753,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         )
 
         is SiteNavigationAction.OpenBloganuaryNudgeOverlay -> {
-            TODO("thomashortadev: Implement Bloganuary nudge overlay")
+            // TODO thomashortadev: Implement Bloganuary nudge overlay
+            AppLog.d(AppLog.T.MY_SITE_DASHBOARD, "TODO: open Bloganuary nudge overlay")
         }
     }
 
