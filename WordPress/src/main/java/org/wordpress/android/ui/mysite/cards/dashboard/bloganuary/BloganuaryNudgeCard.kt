@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -100,18 +99,14 @@ private fun CardToolbar(
 @Composable
 fun BloganuaryNudgeCardPreview() {
     AppTheme {
-        Surface(
-            modifier = Modifier.padding(8.dp)
-        ) {
-            BloganuaryNudgeCard(
-                model = BloganuaryNudgeCardModel(
-                    UiString.UiStringRes(R.string.bloganuary_dashboard_nudge_title),
-                    UiString.UiStringRes(R.string.bloganuary_dashboard_nudge_text),
-                    onLearnMoreClick = ListItemInteraction.create { },
-                    onMoreMenuClick = ListItemInteraction.create { },
-                    onHideMenuItemClick = ListItemInteraction.create { },
-                )
+        BloganuaryNudgeCard(
+            model = BloganuaryNudgeCardModel(
+                UiString.UiStringRes(R.string.bloganuary_dashboard_nudge_title),
+                UiString.UiStringRes(R.string.bloganuary_dashboard_nudge_text),
+                onLearnMoreClick = ListItemInteraction.create { },
+                onMoreMenuClick = ListItemInteraction.create { },
+                onHideMenuItemClick = ListItemInteraction.create { },
             )
-        }
+        )
     }
 }
