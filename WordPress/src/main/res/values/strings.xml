@@ -4817,7 +4817,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="notification_security_key_needed" tools:ignore="UnusedResources" a8c-src-lib="login">Please provide your security key to continue.</string>
 
     <!-- Bloganuary -->
-    <string name="bloganuary_dashboard_nudge_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_title">Bloganuary is coming!</string>
     <string name="bloganuary_dashboard_nudge_text">For the month of January, blogging prompts will come from Bloganuary - our community challenge to build a blogging habit for the new year.</string>
     <string name="bloganuary_dashboard_nudge_learn_more">@string/learn_more</string>

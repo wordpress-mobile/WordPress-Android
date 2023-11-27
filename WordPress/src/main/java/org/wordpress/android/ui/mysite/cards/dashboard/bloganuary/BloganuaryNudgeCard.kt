@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -34,7 +35,7 @@ fun BloganuaryNudgeCard(
     modifier: Modifier = Modifier,
 ) {
     UnelevatedCard(
-        modifier = modifier,
+        modifier = modifier.semantics(mergeDescendants = true) {},
     ) {
         Column {
             CardToolbar(model)
@@ -87,7 +88,7 @@ private fun CardToolbar(
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_bloganuary_24dp),
-            contentDescription = stringResource(R.string.bloganuary_dashboard_nudge_icon_content_description),
+            contentDescription = null,
             modifier = Modifier.size(24.dp),
             tint = MaterialTheme.colors.onSurface
         )
