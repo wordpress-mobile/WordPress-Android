@@ -78,7 +78,10 @@ fun MySiteCardToolbar(
     ) {
         content?.invoke(this)
 
-        Spacer(modifier = Modifier.width(16.dp)) // minimum spacing between content and context menu
+        if (content != null && showContextMenu) {
+            // minimum spacing between content and context menu if both are shown
+            Spacer(modifier = Modifier.width(16.dp))
+        }
 
         if (showContextMenu) {
             CardDropDownMenu(
