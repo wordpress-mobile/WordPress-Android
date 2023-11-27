@@ -33,7 +33,26 @@ public class ThemeStore extends Store {
     public static final String MOBILE_FRIENDLY_CATEGORY_WEBSITE = "starting-website";
     public static final String MOBILE_FRIENDLY_CATEGORY_PORTFOLIO = "starting-portfolio";
 
+    // A high number to ensure we get all themes in one request
+    private static final int DEFAULT_LIMIT_OF_THEME_RESULTS = 500;
+
     // Payloads
+    public static class FetchWPComThemesPayload extends Payload<BaseNetworkError> {
+        @Nullable public String filter;
+        public int resultsLimit = DEFAULT_LIMIT_OF_THEME_RESULTS;
+
+        public FetchWPComThemesPayload() {}
+
+        public FetchWPComThemesPayload(@Nullable String filter) {
+            this.filter = filter;
+        }
+
+        public FetchWPComThemesPayload(@Nullable String filter, int resultsLimit) {
+            this.filter = filter;
+            this.resultsLimit = resultsLimit;
+        }
+    }
+
     public static class FetchedCurrentThemePayload extends Payload<ThemesError> {
         @NonNull public SiteModel site;
         @Nullable public ThemeModel theme;
@@ -260,7 +279,7 @@ public class ThemeStore extends Store {
         }
         switch ((ThemeAction) actionType) {
             case FETCH_WP_COM_THEMES:
-                fetchWpComThemes();
+                fetchWpComThemes((FetchWPComThemesPayload) action.getPayload());
                 break;
             case FETCHED_WP_COM_THEMES:
                 handleWpComThemesFetched((FetchedWpComThemesPayload) action.getPayload());
@@ -316,6 +335,10 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getWpComThemes();
     }
 
+    public List<ThemeModel> getWpComThemes(@NonNull List<String> themeIds) {
+        return ThemeSqlUtils.getWpComThemes(themeIds);
+    }
+
     public List<ThemeModel> getWpComMobileFriendlyThemes(String categorySlug) {
         return ThemeSqlUtils.getWpComMobileFriendlyThemes(categorySlug);
     }
@@ -348,8 +371,8 @@ public class ThemeStore extends Store {
         ThemeSqlUtils.insertOrReplaceActiveThemeForSite(site, theme);
     }
 
-    private void fetchWpComThemes() {
-        mThemeRestClient.fetchWpComThemes();
+    private void fetchWpComThemes(@NonNull FetchWPComThemesPayload payload) {
+        mThemeRestClient.fetchWpComThemes(payload.filter, payload.resultsLimit);
     }
 
     private void fetchStarterDesigns(@NonNull FetchStarterDesignsPayload payload) {
