@@ -28,13 +28,13 @@ class CardsBuilder @Inject constructor(
         jetpackInstallFullPluginCardBuilder.build(jetpackInstallFullPluginCardBuilderParams)?.let {
             cards.add(it)
         }
-        if (domainRegistrationCardBuilderParams.isDomainCreditAvailable) {
-            cards.add(trackAndBuildDomainRegistrationCard(domainRegistrationCardBuilderParams))
-        }
         quickStartCardBuilderParams.quickStartCategories.takeIf { it.isNotEmpty() }?.let {
             cards.add(quickStartCardBuilder.build(quickStartCardBuilderParams))
         }
         cards.addAll(dashboardCardsBuilder.build(dashboardCardsBuilderParams))
+        if (domainRegistrationCardBuilderParams.isDomainCreditAvailable) {
+            cards.add(trackAndBuildDomainRegistrationCard(domainRegistrationCardBuilderParams))
+        }
         return cards
     }
 
