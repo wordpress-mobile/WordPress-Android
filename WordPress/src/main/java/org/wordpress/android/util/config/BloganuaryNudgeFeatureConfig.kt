@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 private const val BLOGANUARY_NUDGE_REMOTE_FIELD = "bloganuary_dashboard_nudge"
 
-@Feature(BLOGANUARY_NUDGE_REMOTE_FIELD, false)
+@Feature(BLOGANUARY_NUDGE_REMOTE_FIELD, true)
 class BloganuaryNudgeFeatureConfig @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
