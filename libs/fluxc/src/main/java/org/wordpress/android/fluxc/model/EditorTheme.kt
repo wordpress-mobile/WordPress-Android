@@ -39,7 +39,7 @@ data class EditorTheme(
                     blockEditorSettings.gradients,
                     null,
                     blockEditorSettings.styles?.toString(),
-                    blockEditorSettings.features?.toString(),
+                    blockEditorSettings.featuresFiltered?.toString(),
                     blockEditorSettings.isBlockBasedTheme,
                     blockEditorSettings.galleryWithImageBlocks,
                     blockEditorSettings.quoteBlockV2,
@@ -83,7 +83,25 @@ data class BlockEditorSettings(
     @SerializedName("__experimentalFeatures") val features: JsonElement?,
     @JsonAdapter(EditorThemeElementListSerializer::class) val colors: List<EditorThemeElement>?,
     @JsonAdapter(EditorThemeElementListSerializer::class) val gradients: List<EditorThemeElement>?
-)
+) {
+    val featuresFiltered: JsonElement?
+        get() = features?.removeFontFamilies()
+
+    private fun JsonElement.removeFontFamilies(): JsonElement {
+        if (isJsonObject && asJsonObject.has("typography")) {
+            val featuresObject = asJsonObject
+            val typography = featuresObject.get("typography")
+            if (typography.isJsonObject) {
+                val typographyObject = typography.asJsonObject
+                if (typographyObject.has("fontFamilies")) {
+                    typographyObject.remove("fontFamilies")
+                    return featuresObject
+                }
+            }
+        }
+        return this
+    }
+}
 
 data class EditorThemeSupport(
     @JsonAdapter(EditorThemeElementListSerializer::class)
