@@ -26,8 +26,8 @@ import org.wordpress.android.ui.compose.unit.Margin
 @Composable
 fun DropdownMenuItem(
     item: DropdownMenuItemData,
-    modifier: Modifier = Modifier,
     onItemClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
