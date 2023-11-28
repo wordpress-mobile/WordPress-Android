@@ -51,6 +51,7 @@ public class XMLRPCRequest extends BaseRequest<Object> {
     public XMLRPCRequest(@NonNull String url, XMLRPC method, List<Object> params, Listener<? super Object[]> listener,
                          BaseErrorListener errorListener) {
         super(Method.POST, url, errorListener);
+        addHeader("Accept", "*/*");
         mListener = listener;
         mMethod = method;
         // First params are always username/password
