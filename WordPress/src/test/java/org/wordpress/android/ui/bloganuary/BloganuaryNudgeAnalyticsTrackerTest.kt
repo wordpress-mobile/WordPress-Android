@@ -7,6 +7,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker.BloganuaryNudgeCardMenuItem
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -48,7 +49,7 @@ class BloganuaryNudgeAnalyticsTrackerTest : BaseUnitTest() {
 
     @Test
     fun `WHEN trackMySiteCardMoreMenuItemTapped is called THEN cardsTracker is called correctly`() {
-        BloganuaryNudgeAnalyticsTracker.MySiteCardMenuItemType.entries.forEach {
+        BloganuaryNudgeCardMenuItem.entries.forEach {
             tracker.trackMySiteCardMoreMenuItemTapped(it)
 
             verify(cardsTracker).trackCardMoreMenuItemClicked(

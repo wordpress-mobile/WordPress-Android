@@ -18,12 +18,13 @@ class BloganuaryNudgeAnalyticsTracker @Inject constructor(
         CardsTracker.Type.BLOGANUARY_NUDGE.label
     )
 
-    fun trackMySiteCardMoreMenuItemTapped(item: MySiteCardMenuItemType) = cardsTracker.trackCardMoreMenuItemClicked(
-        CardsTracker.Type.BLOGANUARY_NUDGE.label,
-        item.label
-    )
+    fun trackMySiteCardMoreMenuItemTapped(item: BloganuaryNudgeCardMenuItem) = cardsTracker
+        .trackCardMoreMenuItemClicked(
+            CardsTracker.Type.BLOGANUARY_NUDGE.label,
+            item.label
+        )
 
-    enum class MySiteCardMenuItemType(val label: String) {
+    enum class BloganuaryNudgeCardMenuItem(val label: String) {
         HIDE_THIS("hide_this"),
     }
 }
