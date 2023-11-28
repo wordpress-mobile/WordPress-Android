@@ -95,8 +95,8 @@ private fun DropdownMenuButtonPreview() {
                 selectedItem = Item(
                     id = "textAndIcon1",
                     text = "Text and Icon",
-                    leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
                     onClick = {},
+                    leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
                 ),
                 onClick = {},
             )
@@ -112,8 +112,8 @@ private fun DropdownMenuButtonPreview() {
                 selectedItem = Item(
                     id = "textAndIcon1",
                     text = "Text type with a really long text as the button label",
-                    leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
                     onClick = {},
+                    leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
                 ),
                 onClick = {},
             )

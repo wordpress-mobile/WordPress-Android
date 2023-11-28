@@ -142,14 +142,15 @@ fun EditPostSettingsJetpackSocialSharesContainerPreview() {
                     Item(
                         id = "textAndIcon1",
                         text = "Text and Icon",
-                        isDefault = true,
-                        leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
-                        hasDivider = true,
                         onClick = {},
+                        isDefault = true,
+                        hasDivider = true,
+                        leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
                     ),
                     SubMenu(
                         id = "subMenu1",
                         text = "SubMenu",
+                        onClick = {},
                         items = listOf(
                             Item(
                                 id = "subMenu1_text1",
@@ -157,7 +158,6 @@ fun EditPostSettingsJetpackSocialSharesContainerPreview() {
                                 onClick = {},
                             )
                         ),
-                        onClick = {},
                     ),
                 )
             )

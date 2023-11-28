@@ -74,9 +74,9 @@ private fun DropdownMenuItemsListPreview() {
                 Item(
                     id = "textAndIcon1",
                     text = "Text and Icon",
-                    leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
-                    hasDivider = true,
                     onClick = {},
+                    hasDivider = true,
+                    leftIcon = R.drawable.ic_jetpack_logo_white_24dp,
                 ),
                 SubMenu(
                     id = "subMenu1",

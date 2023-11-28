@@ -84,9 +84,9 @@ sealed class DropdownMenuItemData(
     data class Item(
         override val id: String,
         override val text: String,
+        override val onClick: (String) -> Unit,
         override val isDefault: Boolean = false,
         override val hasDivider: Boolean = false,
-        override val onClick: (String) -> Unit,
         @DrawableRes override val leftIcon: Int = NO_ICON,
         @DrawableRes override val rightIcon: Int = NO_ICON,
     ) : DropdownMenuItemData(
@@ -105,9 +105,9 @@ sealed class DropdownMenuItemData(
     data class SubMenu(
         override val id: String,
         override val text: String,
+        override val onClick: (String) -> Unit,
         override val isDefault: Boolean = false,
         override val hasDivider: Boolean = false,
-        override val onClick: (String) -> Unit,
         val items: List<Item>,
     ) : DropdownMenuItemData(
         text = text,
