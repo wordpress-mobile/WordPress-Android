@@ -25,15 +25,15 @@ import org.wordpress.android.ui.compose.theme.AppThemeEditor
 
 /**
  * DropdownMenu component. Consists of a DropdownMenuButton that opens a DropdownMenuItemsContainer when tapped.
- * @param items the dropdown menu items to be shown. There should be only one default item.
+ * @param menuItems the dropdown menu items to be shown. There should be only one default item.
  */
 @Composable
-fun DropdownMenu(items: List<DropdownMenuItemData>) {
-    require(items.hasSingleDefaultItem()) { "DropdownMenu must have one default item." }
+fun DropdownMenu(menuItems: List<DropdownMenuItemData>) {
+    require(menuItems.hasSingleDefaultItem()) { "DropdownMenu must have one default item." }
     // currentMenuItems can either be the default menu received as a parameter OR the sub-menu items if a
     // sub-menu is selected.
-    var currentMenuItems by remember { mutableStateOf(items) }
-    var selectedItem by remember { mutableStateOf(items.defaultItem()) }
+    var currentMenuItems by remember { mutableStateOf(menuItems) }
+    var selectedItem by remember { mutableStateOf(menuItems.defaultItem()) }
     var openSubMenuId by remember { mutableStateOf("") }
     val menuVisibleState = remember { MutableTransitionState(false) }
     Column {
@@ -52,21 +52,38 @@ fun DropdownMenu(items: List<DropdownMenuItemData>) {
             DropdownMenuItemList(
                 items = currentMenuItems,
                 onItemClick = { id ->
+                    if (id == BACK_BUTTON_ID) {
+                        openSubMenuId = ""
+                        currentMenuItems = menuItems
+                        return@DropdownMenuItemList
+                    }
                     val clickedItem = if (openSubMenuId.isNotEmpty()) {
                         // Clicked item is inside a sub-menu
-                        (items.firstOrNull { it.id == openSubMenuId } as SubMenu).items
+                        (menuItems.firstOrNull { it.id == openSubMenuId } as SubMenu).items
                             .find { it.id == id }
                     } else {
                         // Clicked item is not inside a sub-menu
-                        items.firstOrNull { it.id == id }
+                        menuItems.firstOrNull { it.id == id }
                     }
                     clickedItem?.let {
                         it.onClick(it.id)
                         if (it is SubMenu) {
                             // If the clicked item is of SubMenu type we should keep its ID
                             openSubMenuId = id
-                            // We should also update the currentMenuItems to match the sub-menu items
-                            currentMenuItems = it.items
+                            // We should also update the currentMenuItems to match the sub-menu items.
+                            // By design the first item on every sub-menu should be a back button
+                            // that leads user back to the default menu.
+                            val backMenuItem = Item(
+                                id = BACK_BUTTON_ID,
+                                text = "",
+                                onClick = {},
+                                leftIcon = R.drawable.ic_arrow_left_white_24dp,
+                            )
+                            val itemsWithBackButton = mutableListOf<DropdownMenuItemData>().apply {
+                                add(backMenuItem)
+                                addAll(it.items)
+                            }
+                            currentMenuItems = itemsWithBackButton
                         } else {
                             // If the clicked item is not a SubMenu, we should close the menu (by making the menu
                             // visible state target state false) and update the selectedItem.
@@ -88,7 +105,7 @@ fun DropdownMenu(items: List<DropdownMenuItemData>) {
             // The menu has been closed. We should set the currentMenuItems to be the default menu.
             // We should only update the items after the menu close animation has ended, otherwise
             // the user can potentially see the wrong items being shown while a sub-menu closes.
-            currentMenuItems = items
+            currentMenuItems = menuItems
         }
     }
 }
@@ -97,6 +114,8 @@ private fun List<DropdownMenuItemData>.hasSingleDefaultItem() = filter { it.isDe
 
 private fun List<DropdownMenuItemData>.defaultItem() =
     find { it.isDefault } ?: throw IllegalArgumentException("Default item must not be null.")
+
+private const val BACK_BUTTON_ID = "back"
 
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -110,7 +129,7 @@ fun EditPostSettingsJetpackSocialSharesContainerPreview() {
                 .fillMaxHeight()
         ) {
             DropdownMenu(
-                items = listOf(
+                menuItems = listOf(
                     Item(
                         id = "text1",
                         text = "Text only",

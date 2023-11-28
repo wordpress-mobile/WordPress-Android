@@ -116,7 +116,7 @@ sealed class DropdownMenuItemData(
         id = id,
         onClick = onClick,
         leftIcon = NO_ICON,
-        rightIcon = R.drawable.ic_arrow_right_black_24dp,
+        rightIcon = R.drawable.ic_caret_right_black_24dp,
     )
 }
 
