@@ -77,8 +77,8 @@ fun DropdownMenu(items: List<DropdownMenuItemData>) {
                 },
             )
         }
-        if (openSubMenuId.isNotEmpty()) {
-            currentMenuItems = (items.find { it.id == openSubMenuId } as SubMenu).items
+        currentMenuItems = if (openSubMenuId.isNotEmpty()) {
+            (items.find { it.id == openSubMenuId } as SubMenu).items
         } else {
             items
         }
