@@ -124,7 +124,7 @@ class BlazePromoteWebViewFragment: Fragment(), OnBlazeWebViewClientListener,
 
     @Suppress("DEPRECATION")
     override fun startActivityForFileChooserResult(intent: Intent?, requestCode: Int) {
-        startActivityForResult(intent, requestCode)
+        intent?.let { startActivityForResult(it, requestCode) }
     }
 
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
