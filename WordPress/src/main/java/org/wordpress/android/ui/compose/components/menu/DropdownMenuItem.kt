@@ -106,9 +106,9 @@ sealed class DropdownMenuItemData(
         override val id: String,
         override val text: String,
         override val onClick: (String) -> Unit,
+        val items: List<Item>,
         override val isDefault: Boolean = false,
         override val hasDivider: Boolean = false,
-        val items: List<Item>,
     ) : DropdownMenuItemData(
         text = text,
         isDefault = isDefault,
