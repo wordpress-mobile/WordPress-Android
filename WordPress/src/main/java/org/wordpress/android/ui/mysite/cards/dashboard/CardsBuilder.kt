@@ -32,10 +32,6 @@ class CardsBuilder @Inject constructor(
             bloggingPromptCardBuilder.build(dashboardCardsBuilderParams.bloggingPromptCardBuilderParams)
                 ?.let { add(it) }
 
-            domainTransferCardBuilder
-                .build(dashboardCardsBuilderParams.domainTransferCardBuilderParams)
-                ?.let { add(it) }
-
             if (dashboardCardsBuilderParams.blazeCardBuilderParams != null) {
                 add(blazeCardBuilder.build(dashboardCardsBuilderParams.blazeCardBuilderParams))
             }
@@ -52,6 +48,10 @@ class CardsBuilder @Inject constructor(
             pagesCardBuilder.build(dashboardCardsBuilderParams.pagesCardBuilderParams)?.let { add(it) }
 
             activityCardBuilder.build(dashboardCardsBuilderParams.activityCardBuilderParams)?.let { add(it) }
+
+            domainTransferCardBuilder
+                .build(dashboardCardsBuilderParams.domainTransferCardBuilderParams)
+                ?.let { add(it) }
         }
     }.toList()
 
