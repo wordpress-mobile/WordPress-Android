@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.DiffUtil
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.BlazeCampaignsCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.PromoteWithBlazeCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloganuaryNudgeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
@@ -44,6 +45,7 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
             oldItem is TodaysStatsCardWithData && updatedItem is TodaysStatsCardWithData -> true
             oldItem is PostCardWithPostItems && updatedItem is PostCardWithPostItems -> true
             oldItem is BloggingPromptCardWithData && updatedItem is BloggingPromptCardWithData -> true
+            oldItem is BloganuaryNudgeCardModel && updatedItem is BloganuaryNudgeCardModel -> true
             oldItem is PromoteWithBlazeCard && updatedItem is PromoteWithBlazeCard -> true
             oldItem is BlazeCampaignsCardModel && updatedItem is BlazeCampaignsCardModel -> true
             oldItem is DomainTransferCardModel && updatedItem is DomainTransferCardModel -> true
