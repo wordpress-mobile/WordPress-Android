@@ -4,7 +4,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeCoroutineRestCl
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ThemeCoroutineStore @Inject constructor(
     private val coroutineEngine: CoroutineEngine,
     private val themeRestClient: ThemeCoroutineRestClient,

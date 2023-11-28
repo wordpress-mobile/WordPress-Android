@@ -19,7 +19,6 @@ class ThemeCoroutineRestClient @Inject constructor(
     @Named("custom-ssl") requestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
-
     suspend fun fetchThemeDemoPages(
         themeDemoUrl: String
     ): ThemeDemoDataWPAPIPayload<Array<DemoPageResponse>> {
