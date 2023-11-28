@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,12 +34,12 @@ fun DropdownMenu(menuItems: List<DropdownMenuItemData>) {
     // currentMenuItems can either be the default menu received as a parameter OR the sub-menu items if a
     // sub-menu is selected.
     var currentMenuItems by remember { mutableStateOf(menuItems) }
-    var selectedItem by remember { mutableStateOf(menuItems.defaultItem()) }
+    var selectedItemId by rememberSaveable { mutableStateOf(menuItems.defaultItem().id) }
     var openSubMenuId by remember { mutableStateOf("") }
     val menuVisibleState = remember { MutableTransitionState(false) }
     Column {
         DropdownMenuButton(
-            selectedItem = selectedItem,
+            selectedItem = menuItems.findById(selectedItemId) ?: menuItems.defaultItem(),
             onClick = {
                 menuVisibleState.targetState = !menuVisibleState.targetState
                 openSubMenuId = ""
@@ -90,7 +91,7 @@ fun DropdownMenu(menuItems: List<DropdownMenuItemData>) {
                             // The open sub-menu ID should also be changed to its default value (empty string) since
                             // the menu will be closed.
                             menuVisibleState.targetState = false
-                            selectedItem = it
+                            selectedItemId = it.id
                             openSubMenuId = ""
                             // The currentMenuItems are not updated here because we have to wait until the menu closing
                             // animation ends.
@@ -114,6 +115,9 @@ private fun List<DropdownMenuItemData>.hasSingleDefaultItem() = filter { it.isDe
 
 private fun List<DropdownMenuItemData>.defaultItem() =
     find { it.isDefault } ?: throw IllegalArgumentException("Default item must not be null.")
+
+private fun List<DropdownMenuItemData>.findById(id: String) =
+    firstOrNull { it.id == id } ?: filterIsInstance<SubMenu>().flatMap { it.items }.firstOrNull { it.id == id }
 
 private const val BACK_BUTTON_ID = "back"
 
