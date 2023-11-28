@@ -26,7 +26,7 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
 
     private val _refresh = MutableLiveData<Event<Boolean>>()
-    val refresh = _refresh
+    val refresh = _refresh as LiveData<Event<Boolean>>
 
     private lateinit var scope: CoroutineScope
 
