@@ -2,6 +2,7 @@ package org.wordpress.android.ui.compose.components.menu
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
@@ -33,19 +34,18 @@ fun DropdownMenu(items: List<DropdownMenuItemData>) {
     // sub-menu is selected.
     var currentMenuItems by remember { mutableStateOf(items) }
     var selectedItem by remember { mutableStateOf(items.defaultItem()) }
-    var isMenuOpen by remember { mutableStateOf(false) }
     var openSubMenuId by remember { mutableStateOf("") }
+    val menuVisibleState = remember { MutableTransitionState(false) }
     Column {
         DropdownMenuButton(
             selectedItem = selectedItem,
             onClick = {
-                isMenuOpen = !isMenuOpen
+                menuVisibleState.targetState = !menuVisibleState.targetState
                 openSubMenuId = ""
             }
         )
-        // Sub-menu is not open. Show the default menu.
         AnimatedVisibility(
-            visible = isMenuOpen,
+            visibleState = menuVisibleState,
             enter = expandVertically(),
             exit = shrinkVertically(),
         ) {
@@ -63,24 +63,32 @@ fun DropdownMenu(items: List<DropdownMenuItemData>) {
                     clickedItem?.let {
                         it.onClick(it.id)
                         if (it is SubMenu) {
-                            // If the clicked item is a SubMenu we should keep its id to update the UI
+                            // If the clicked item is of SubMenu type we should keep its ID
                             openSubMenuId = id
+                            // We should also update the currentMenuItems to match the sub-menu items
+                            currentMenuItems = it.items
                         } else {
-                            // If the clicked item is not a SubMenu, we should close the menu and update selectedItem
-                            // The open sub-menu ID should also be changed to the default value (empty string) since the
-                            // menu will be closed.
-                            openSubMenuId = ""
+                            // If the clicked item is not a SubMenu, we should close the menu (by making the menu
+                            // visible state target state false) and update the selectedItem.
+                            // The open sub-menu ID should also be changed to its default value (empty string) since
+                            // the menu will be closed.
+                            menuVisibleState.targetState = false
                             selectedItem = it
-                            isMenuOpen = false
+                            openSubMenuId = ""
+                            // The currentMenuItems are not updated here because we have to wait until the menu closing
+                            // animation ends.
                         }
                     }
                 },
             )
         }
-        currentMenuItems = if (openSubMenuId.isNotEmpty()) {
-            (items.find { it.id == openSubMenuId } as SubMenu).items
-        } else {
-            items
+
+        // Close menu animation has ended
+        if (!menuVisibleState.targetState && !menuVisibleState.currentState) {
+            // The menu has been closed. We should set the currentMenuItems to be the default menu.
+            // We should only update the items after the menu close animation has ended, otherwise
+            // the user can potentially see the wrong items being shown while a sub-menu closes.
+            currentMenuItems = items
         }
     }
 }
