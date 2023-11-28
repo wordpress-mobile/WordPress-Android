@@ -21,6 +21,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.card.UnelevatedCard
 import org.wordpress.android.ui.compose.styles.DashboardCardTypography
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloganuaryNudgeCardModel
 import org.wordpress.android.ui.mysite.cards.compose.MySiteCardToolbar
@@ -39,27 +40,27 @@ fun BloganuaryNudgeCard(
         Column {
             CardToolbar(model)
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(Margin.Medium.value))
 
             Text(
                 text = uiStringText(model.title),
                 style = DashboardCardTypography.subTitle,
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(horizontal = Margin.ExtraLarge.value),
             )
 
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(Margin.Small.value))
 
             Text(
                 text = uiStringText(model.text),
                 style = DashboardCardTypography.detailText,
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(horizontal = Margin.ExtraLarge.value),
             )
 
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(Margin.Small.value))
 
             TextButton(
                 onClick = { model.onLearnMoreClick.click() },
-                modifier = Modifier.padding(horizontal = 4.dp)
+                modifier = Modifier.padding(horizontal = Margin.Small.value)
             ) {
                 Text(
                     text = stringResource(id = R.string.bloganuary_dashboard_nudge_learn_more),
@@ -67,7 +68,7 @@ fun BloganuaryNudgeCard(
                 )
             }
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(Margin.Medium.value))
         }
     }
 }
