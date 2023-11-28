@@ -112,7 +112,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Test
     fun `verify that page home actions are propagated to prepublishingHomeUiState once the viewModel is started`() {
         // arrange
-        val expectedActionsAmount = 2
+        val expectedActionsAmount = 1
         whenever(editPostRepository.isPage).thenReturn(true)
 
         // act
@@ -146,6 +146,30 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         // assert
         assertThat(getHomeUiState(PrepublishingScreenNavigation.Tags)).isNull()
+    }
+
+    @Test
+    fun `verify that categories actions is propagated to prepublishingHomeUiState once post is not a page`() {
+        // arrange
+        whenever(editPostRepository.isPage).thenReturn(false)
+
+        // act
+        viewModel.start(editPostRepository, site, false)
+
+        // assert
+        assertThat(getHomeUiState(PrepublishingScreenNavigation.Categories)).isNotNull()
+    }
+
+    @Test
+    fun `verify that categories actions is not propagated to prepublishingHomeUiState once post is a page`() {
+        // arrange
+        whenever(editPostRepository.isPage).thenReturn(true)
+
+        // act
+        viewModel.start(editPostRepository, site, false)
+
+        // assert
+        assertThat(getHomeUiState(PrepublishingScreenNavigation.Categories)).isNull()
     }
 
     @Test
