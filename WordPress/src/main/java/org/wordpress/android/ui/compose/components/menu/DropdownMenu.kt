@@ -29,37 +29,13 @@ import org.wordpress.android.ui.compose.theme.AppThemeEditor
 @Composable
 fun DropdownMenu(items: List<DropdownMenuItemData>) {
     require(items.hasSingleDefaultItem()) { "DropdownMenu must have one default item." }
+    // currentMenuItems can either be the default menu received as a parameter OR the sub-menu items if a
+    // sub-menu is selected.
+    var currentMenuItems by remember { mutableStateOf(items) }
+    var selectedItem by remember { mutableStateOf(items.defaultItem()) }
+    var isMenuOpen by remember { mutableStateOf(false) }
+    var openSubMenuId by remember { mutableStateOf("") }
     Column {
-        // currentMenuItems can either be the default menu received as a parameter OR the sub-menu items if a
-        // sub-menu is selected.
-        var currentMenuItems by remember { mutableStateOf(items) }
-        var selectedItem by remember { mutableStateOf(items.defaultItem()) }
-        var isMenuOpen by remember { mutableStateOf(false) }
-        var openSubMenuId by remember { mutableStateOf("") }
-        val onItemClick: (String) -> Unit = { id ->
-            val clickedItem = if (openSubMenuId.isNotEmpty()) {
-                // Clicked item is inside a sub-menu
-                (items.firstOrNull { it.id == openSubMenuId } as SubMenu).items
-                    .find { it.id == id }
-            } else {
-                // Clicked item is not inside a sub-menu
-                items.firstOrNull { it.id == id }
-            }
-            clickedItem?.let {
-                it.onClick(it.id)
-                if (it is SubMenu) {
-                    // If the clicked item is a SubMenu we should keep its id to update the UI
-                    openSubMenuId = id
-                } else {
-                    // If the clicked item is not a SubMenu, we should close the menu and update selectedItem
-                    // The open sub-menu ID should also be changed to the default value (empty string) since the
-                    // menu will be closed.
-                    openSubMenuId = ""
-                    selectedItem = it
-                    isMenuOpen = false
-                }
-            }
-        }
         DropdownMenuButton(
             selectedItem = selectedItem,
             onClick = {
@@ -75,13 +51,36 @@ fun DropdownMenu(items: List<DropdownMenuItemData>) {
         ) {
             DropdownMenuItemList(
                 items = currentMenuItems,
-                onItemClick = onItemClick,
+                onItemClick = { id ->
+                    val clickedItem = if (openSubMenuId.isNotEmpty()) {
+                        // Clicked item is inside a sub-menu
+                        (items.firstOrNull { it.id == openSubMenuId } as SubMenu).items
+                            .find { it.id == id }
+                    } else {
+                        // Clicked item is not inside a sub-menu
+                        items.firstOrNull { it.id == id }
+                    }
+                    clickedItem?.let {
+                        it.onClick(it.id)
+                        if (it is SubMenu) {
+                            // If the clicked item is a SubMenu we should keep its id to update the UI
+                            openSubMenuId = id
+                        } else {
+                            // If the clicked item is not a SubMenu, we should close the menu and update selectedItem
+                            // The open sub-menu ID should also be changed to the default value (empty string) since the
+                            // menu will be closed.
+                            openSubMenuId = ""
+                            selectedItem = it
+                            isMenuOpen = false
+                        }
+                    }
+                },
             )
         }
         if (openSubMenuId.isNotEmpty()) {
             currentMenuItems = (items.find { it.id == openSubMenuId } as SubMenu).items
         } else {
-            currentMenuItems = items
+            items
         }
     }
 }
