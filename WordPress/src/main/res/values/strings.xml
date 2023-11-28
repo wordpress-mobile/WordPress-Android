@@ -4531,7 +4531,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_deep_link_overlay_description">It looks like you have the Jetpack app installed.\n\nWould you like to open links in the Jetpack app in the future?\n\nYou can always change this in App Settings &gt; Open links in Jetpack</string>
     <string name="wp_jetpack_deep_link_open_in_jetpack" translatable="false">@string/preference_open_links_in_jetpack</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">Open links in WordPress</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit this block separately by tapping “Detach pattern”.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit this block separately by tapping “Detach”.</string>
     <string name="gutenberg_native_s_converted_to_regular_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s converted to regular block</string>
 
     <!-- Jetpack Feature Card -->
@@ -4790,7 +4790,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <string name="pages_no_site_something_went_wrong">Uh oh, something went wrong. Please try again later.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block cannot be rendered because it is deeply nested. Tap here for more details.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks nested deeper than %d levels may not render properly in the mobile editor. For this reason, we recommend flattening the content by ungrouping the block or editing the block using your web browser.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks nested deeper than %d levels may not render properly in the mobile editor.</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks nested deeper than %d levels may not render properly in the mobile editor. For this reason, we recommend flattening the content by ungrouping the block or editing the block using the web editor.</string>
     <string name="gutenberg_native_deeply_nested_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Deeply nested block</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Synced patterns</string>
@@ -4815,4 +4815,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="login_text_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">Use a security key</string>
     <string name="login_error_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">There was some trouble with the Security key login</string>
     <string name="notification_security_key_needed" tools:ignore="UnusedResources" a8c-src-lib="login">Please provide your security key to continue.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can flatten the content by ungrouping the block.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">For this reason, we recommend editing the block using the web editor.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">For this reason, we recommend editing the block using your web browser.</string>
 </resources>

@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+23.9
+-----
+
+
 23.8
 -----
 * [*] [Jetpack-only] Block Editor: Ensure text is always visible within Contact Info block [https://github.com/Automattic/jetpack/pull/33873]
