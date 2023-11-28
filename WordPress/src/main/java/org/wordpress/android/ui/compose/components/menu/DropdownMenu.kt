@@ -30,6 +30,9 @@ import org.wordpress.android.ui.compose.theme.AppThemeEditor
 fun DropdownMenu(items: List<DropdownMenuItemData>) {
     require(items.hasSingleDefaultItem()) { "DropdownMenu must have one default item." }
     Column {
+        // currentMenuItems can either be the default menu received as a parameter OR the sub-menu items if a
+        // sub-menu is selected.
+        var currentMenuItems by remember { mutableStateOf(items) }
         var selectedItem by remember { mutableStateOf(items.defaultItem()) }
         var isMenuOpen by remember { mutableStateOf(false) }
         var openSubMenuId by remember { mutableStateOf("") }
@@ -64,28 +67,21 @@ fun DropdownMenu(items: List<DropdownMenuItemData>) {
                 openSubMenuId = ""
             }
         )
+        // Sub-menu is not open. Show the default menu.
+        AnimatedVisibility(
+            visible = isMenuOpen,
+            enter = expandVertically(),
+            exit = shrinkVertically(),
+        ) {
+            DropdownMenuItemList(
+                items = currentMenuItems,
+                onItemClick = onItemClick,
+            )
+        }
         if (openSubMenuId.isNotEmpty()) {
-            // Sub-menu is open. Show sub-menu.
-            AnimatedVisibility(
-                visible = openSubMenuId.isNotEmpty(),
-            ) {
-                DropdownMenuItemList(
-                    items = (items.find { it.id == openSubMenuId } as SubMenu).items,
-                    onItemClick = onItemClick
-                )
-            }
+            currentMenuItems = (items.find { it.id == openSubMenuId } as SubMenu).items
         } else {
-            // Sub-menu is not open. Show the default menu.
-            AnimatedVisibility(
-                visible = isMenuOpen,
-                enter = expandVertically(),
-                exit = shrinkVertically(),
-            ) {
-                DropdownMenuItemList(
-                    items = items,
-                    onItemClick = onItemClick,
-                )
-            }
+            currentMenuItems = items
         }
     }
 }
@@ -127,7 +123,7 @@ fun EditPostSettingsJetpackSocialSharesContainerPreview() {
                         items = listOf(
                             Item(
                                 id = "subMenu1_text1",
-                                text = "Text only",
+                                text = "Text only sub-menu",
                                 onClick = {},
                             )
                         ),
