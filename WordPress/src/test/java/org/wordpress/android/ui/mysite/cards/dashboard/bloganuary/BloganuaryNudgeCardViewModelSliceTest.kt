@@ -11,6 +11,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker
+import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker.BloganuaryNudgeCardMenuItem
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -31,6 +33,9 @@ class BloganuaryNudgeCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
+    @Mock
+    lateinit var tracker: BloganuaryNudgeAnalyticsTracker
+
     lateinit var viewModel: BloganuaryNudgeCardViewModelSlice
 
     @Before
@@ -40,6 +45,7 @@ class BloganuaryNudgeCardViewModelSliceTest : BaseUnitTest() {
             bloggingPromptsSettingsHelper,
             selectedSiteRepository,
             appPrefsWrapper,
+            tracker,
         )
         viewModel.initialize(testScope())
     }
@@ -132,7 +138,52 @@ class BloganuaryNudgeCardViewModelSliceTest : BaseUnitTest() {
         assertThat(viewModel.refresh.value?.peekContent()).isTrue
     }
 
-    // TODO thomashortadev: test onHideMenuItemClick when it is implemented
+    // region Analytics
+    @Test
+    fun `GIVEN builder params, WHEN calling onLearnMoreClick, THEN track analytics`() = test {
+        val isPromptsEnabled = true
+        whenever(bloggingPromptsSettingsHelper.isPromptsSettingEnabled()).thenReturn(isPromptsEnabled)
+
+        whenever(bloganuaryNudgeFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()).thenReturn(true)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSiteModel)
+        whenever(appPrefsWrapper.getShouldHideBloganuaryNudgeCard(SITE_ID)).thenReturn(false)
+
+        val params = viewModel.getBuilderParams()
+        params.onLearnMoreClick.invoke()
+
+        advanceUntilIdle()
+        verify(tracker).trackMySiteCardLearnMoreTapped(isPromptsEnabled)
+    }
+
+    @Test
+    fun `GIVEN builder params, WHEN calling onMoreMenuClick, THEN track analytics`() = test {
+        whenever(bloganuaryNudgeFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()).thenReturn(true)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSiteModel)
+        whenever(appPrefsWrapper.getShouldHideBloganuaryNudgeCard(SITE_ID)).thenReturn(false)
+
+        val params = viewModel.getBuilderParams()
+        params.onMoreMenuClick.invoke()
+
+        advanceUntilIdle()
+        verify(tracker).trackMySiteCardMoreMenuTapped()
+    }
+
+    @Test
+    fun `GIVEN builder params, WHEN calling onHideMenuItemClick, THEN track analytics`() = test {
+        whenever(bloganuaryNudgeFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()).thenReturn(true)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSiteModel)
+        whenever(appPrefsWrapper.getShouldHideBloganuaryNudgeCard(SITE_ID)).thenReturn(false)
+
+        val params = viewModel.getBuilderParams()
+        params.onHideMenuItemClick.invoke()
+
+        advanceUntilIdle()
+        verify(tracker).trackMySiteCardMoreMenuItemTapped(BloganuaryNudgeCardMenuItem.HIDE_THIS)
+    }
+    // endregion
 
     companion object {
         private const val SITE_ID = 1L
