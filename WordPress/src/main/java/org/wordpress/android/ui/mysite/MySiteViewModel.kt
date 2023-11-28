@@ -245,7 +245,8 @@ class MySiteViewModel @Inject constructor(
             pagesCardViewModelSlice.refresh,
             todaysStatsViewModelSlice.refresh,
             postsCardViewModelSlice.refresh,
-            activityLogCardViewModelSlice.refresh
+            activityLogCardViewModelSlice.refresh,
+            bloganuaryNudgeCardViewModelSlice.refresh,
         )
     val domainTransferCardRefresh = domainTransferCardViewModel.refresh
 
