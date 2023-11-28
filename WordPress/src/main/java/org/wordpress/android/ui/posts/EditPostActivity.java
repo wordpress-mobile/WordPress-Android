@@ -2475,6 +2475,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
         boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
         boolean shouldUseFastImage = !mSite.isPrivate() && !mSite.isPrivateWPComAtomic();
+        boolean isNetworkConnected = true;
 
         String hostAppNamespace = mBuildConfigWrapper.isJetpackApp() ? "Jetpack" : "WordPress";
 
@@ -2504,7 +2505,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     postType,
                     hostAppNamespace,
                     featuredImageId,
-                    themeBundle
+                    themeBundle,
+                    isNetworkConnected
             );
         }
 
@@ -2531,7 +2533,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 postType,
                 hostAppNamespace,
                 featuredImageId,
-                themeBundle
+                themeBundle,
+                isNetworkConnected
         );
     }
 
