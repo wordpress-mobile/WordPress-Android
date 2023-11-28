@@ -22,12 +22,12 @@ class ThemeCoroutineRestClient @Inject constructor(
 
     suspend fun fetchThemeDemoPages(
         themeDemoUrl: String
-    ): ThemeDemoDataWPAPIPayload<DemoThemePagesResponse> {
+    ): ThemeDemoDataWPAPIPayload<Array<DemoPageResponse>> {
         val url = themeDemoUrl + WP_DEMO_THEME_PAGES_URL
         val response = wpApiGsonRequestBuilder.syncGetRequest(
             restClient = this,
             url = url,
-            clazz = DemoThemePagesResponse::class.java
+            clazz = Array<DemoPageResponse>::class.java
         )
         return when (response) {
             is WPAPIResponse.Success -> ThemeDemoDataWPAPIPayload(response.data)
