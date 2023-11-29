@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
@@ -19,8 +22,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.R
@@ -28,6 +33,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import androidx.compose.material.MaterialTheme as Material2Theme
 
 @Composable
 fun BloganuaryNudgeLearnMoreOverlay(
@@ -43,7 +49,7 @@ fun BloganuaryNudgeLearnMoreOverlay(
         ) {
             Icon(
                 imageVector = Icons.Rounded.Close,
-                contentDescription = stringResource(R.string.label_close_button)
+                contentDescription = stringResource(R.string.label_close_button),
             )
         }
 
@@ -57,6 +63,7 @@ fun BloganuaryNudgeLearnMoreOverlay(
                 contentDescription = stringResource(
                     R.string.bloganuary_dashboard_nudge_overlay_icon_content_description
                 ),
+                colorFilter = ColorFilter.tint(Material2Theme.colors.onSurface)
             )
 
             OverlayContent(
@@ -67,7 +74,8 @@ fun BloganuaryNudgeLearnMoreOverlay(
                 uiStringText(model.noteText),
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 textAlign = TextAlign.Center,
-                // TODO thomashortadev: add proper text style
+                style = MaterialTheme.typography.bodyMedium,
+                color = LocalContentColor.current.copy(alpha = ContentAlpha.medium),
             )
         }
 
@@ -79,13 +87,18 @@ fun BloganuaryNudgeLearnMoreOverlay(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding
-                    (horizontal = Margin.ExtraExtraMediumLarge.value,
+                    (
+                    horizontal = Margin.ExtraExtraMediumLarge.value,
                     vertical = Margin.ExtraMediumLarge.value
                 )
         ) {
             Button(
                 onClick = { onAction(model.action) },
                 modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Material2Theme.colors.onSurface,
+                    contentColor = Material2Theme.colors.surface,
+                ),
             ) {
                 Text(stringResource(model.action.textRes))
             }
@@ -104,15 +117,15 @@ private fun OverlayContent(
 
         Text(
             stringResource(R.string.bloganuary_dashboard_nudge_overlay_title),
-            style = MaterialTheme.typography.titleLarge,
-            // TODO thomashortadev: add proper text style
+            style = MaterialTheme.typography.headlineLarge,
+            fontWeight = FontWeight.Bold
         )
 
         Spacer(Modifier.height(Margin.ExtraMediumLarge.value))
 
         Text(
             stringResource(R.string.bloganuary_dashboard_nudge_overlay_text),
-            // TODO thomashortadev: add proper text style
+            style = MaterialTheme.typography.bodyLarge,
         )
 
         Spacer(Modifier.weight(0.3f))
