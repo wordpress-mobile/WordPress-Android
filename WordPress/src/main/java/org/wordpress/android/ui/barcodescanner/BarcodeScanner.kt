@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.flowOf
 import org.wordpress.android.ui.compose.theme.AppTheme
 import androidx.camera.core.Preview as CameraPreview
 
+@Suppress("DEPRECATION")
 @Composable
 fun BarcodeScanner(
     codeScanner: CodeScanner,
