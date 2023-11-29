@@ -23,6 +23,7 @@ import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBlockTypeImpressionsEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnConnectionStatusEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOptionsListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
@@ -95,6 +96,7 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnSendEventToHostListener onSendEventToHostListener,
                                   OnToggleUndoButtonListener onToggleUndoButtonListener,
                                   OnToggleRedoButtonListener onToggleRedoButtonListener,
+                                  OnConnectionStatusEventListener onConnectionStatusEventListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
@@ -120,6 +122,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onSendEventToHostListener,
                     onToggleUndoButtonListener,
                     onToggleRedoButtonListener,
+                    onConnectionStatusEventListener,
                     isDarkMode);
     }
 
