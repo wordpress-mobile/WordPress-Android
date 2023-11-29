@@ -37,7 +37,7 @@ ext {
     androidxAnnotationVersion = '1.6.0'
     androidxAppcompatVersion = '1.6.1'
     androidxArchCoreVersion = '2.2.0'
-    androidxCameraVersion = '1.2.3'
+    androidxCameraVersion = '1.3.0'
     androidxComposeBomVersion = '2023.10.00'
     androidxComposeCompilerVersion = '1.5.3'
     androidxCardviewVersion = '1.0.0'
