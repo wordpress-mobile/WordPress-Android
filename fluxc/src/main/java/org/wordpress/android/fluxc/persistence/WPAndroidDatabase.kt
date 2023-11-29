@@ -338,7 +338,9 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                             "respondentsCount, attribution, respondentsAvatars, answeredLink) " +
                             "SELECT id, siteLocalId, text, date, isAnswered, " +
                             "respondentsCount, attribution, respondentsAvatars, " +
-                            "'$tagPrefix' || id FROM BloggingPrompts"
+                            "'$tagPrefix' || id FROM BloggingPrompts " +
+                            "WHERE true " +
+                            "ON CONFLICT DO NOTHING"
                     )
 
                     execSQL("DROP TABLE `BloggingPrompts`")
