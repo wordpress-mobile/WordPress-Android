@@ -83,7 +83,7 @@ ext {
     squareupOkioVersion = '3.6.0'
     squareupRetrofitVersion = '2.9.0'
     uCropVersion = '2.2.8'
-    zendeskVersion = '5.1.2'
+    zendeskVersion = '5.2.0'
 
     // react native
     facebookReactVersion = '0.71.11'
