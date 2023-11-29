@@ -105,7 +105,6 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 .addMigrations(MIGRATION_18_19)
                 .addMigrations(MIGRATION_19_20)
                 .addMigrations(MIGRATION_20_21)
-                .addMigrations(MIGRATION_21_22)
                 .build()
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -308,43 +307,6 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                     execSQL(
                         "ALTER TABLE `BlazeCampaigns` ADD COLUMN `targetUrn` TEXT"
                     )
-                }
-            }
-        }
-
-        val MIGRATION_21_22 = object : Migration(21, 22) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                // migrate old data to new table schema
-                database.apply {
-                    execSQL(
-                        "CREATE TABLE IF NOT EXISTS `BloggingPrompts_new` (" +
-                            "`id` INTEGER NOT NULL," +
-                            "`siteLocalId` INTEGER NOT NULL," +
-                            "`text` TEXT NOT NULL," +
-                            "`date` TEXT NOT NULL," +
-                            "`isAnswered` INTEGER NOT NULL," +
-                            "`respondentsCount` INTEGER NOT NULL," +
-                            "`attribution` TEXT NOT NULL," +
-                            "`respondentsAvatars` TEXT NOT NULL," +
-                            "`answeredLink` TEXT NOT NULL," +
-                            "PRIMARY KEY(`date`)" +
-                            ")"
-                    )
-
-                    val tagPrefix = "https://wordpress.com/tag/dailyprompt-"
-                    execSQL(
-                        "INSERT INTO BloggingPrompts_new (" +
-                            "id, siteLocalId, text, date, isAnswered, " +
-                            "respondentsCount, attribution, respondentsAvatars, answeredLink) " +
-                            "SELECT id, siteLocalId, text, date, isAnswered, " +
-                            "respondentsCount, attribution, respondentsAvatars, " +
-                            "'$tagPrefix' || id FROM BloggingPrompts " +
-                            "WHERE true " +
-                            "ON CONFLICT DO NOTHING"
-                    )
-
-                    execSQL("DROP TABLE `BloggingPrompts`")
-                    execSQL("ALTER TABLE `BloggingPrompts_new` RENAME TO `BloggingPrompts`")
                 }
             }
         }
