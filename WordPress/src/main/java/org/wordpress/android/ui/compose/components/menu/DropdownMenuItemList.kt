@@ -48,10 +48,7 @@ fun DropdownMenuItemList(
                         onItemClick = { onItemClick(it) },
                     )
                     if (item.hasDivider) {
-                        Divider(
-                            color = colorResource(R.color.gray_10),
-                            thickness = 0.5.dp,
-                        )
+                        Divider()
                     }
                 }
             }
