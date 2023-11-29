@@ -121,6 +121,7 @@ import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
+import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -3821,6 +3822,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditorMediaUploadListener.onMediaUploadRetry(localMediaId, mediaType);
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
+        ((GutenbergEditorFragment) mEditorFragment).onConnectionStatusChange(event.isConnected());
     }
 
     private void refreshEditorTheme() {

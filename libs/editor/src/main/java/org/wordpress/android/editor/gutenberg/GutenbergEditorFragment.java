@@ -99,7 +99,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorThemeUpdateListener,
         StorySaveMediaListener,
         GutenbergDialogPositiveClickInterface,
-        GutenbergDialogNegativeClickInterface {
+        GutenbergDialogNegativeClickInterface,
+        GutenbergNetworkConnectionListener {
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
@@ -1568,5 +1569,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 // Dismiss dialog with no action.
                 break;
         }
+    }
+
+    @Override
+    public void onConnectionStatusChange(boolean isConnected) {
+        getGutenbergContainerFragment().onConnectionStatusChange(isConnected);
     }
 }

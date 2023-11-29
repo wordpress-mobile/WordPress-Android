@@ -320,4 +320,8 @@ public class GutenbergContainerFragment extends Fragment {
     public void sendToJSFeaturedImageId(int mediaId) {
         mWPAndroidGlueCode.sendToJSFeaturedImageId(mediaId);
     }
+
+    public void onConnectionStatusChange(boolean isConnected) {
+        mWPAndroidGlueCode.connectionStatusChange(isConnected);
+    }
 }
