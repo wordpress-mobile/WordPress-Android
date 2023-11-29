@@ -4,7 +4,9 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -43,15 +45,14 @@ fun DropdownMenuButton(
         ),
         shape = RoundedCornerShape(50),
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(Margin.Medium.value),
-        ) {
+        Row {
             if (selectedItem.leftIcon != NO_ICON) {
                 Icon(
                     modifier = Modifier.align(Alignment.CenterVertically),
                     painter = painterResource(id = selectedItem.leftIcon),
                     contentDescription = null,
                 )
+                Spacer(Modifier.width(Margin.Small.value))
             }
             Text(
                 modifier = Modifier
@@ -65,6 +66,7 @@ fun DropdownMenuButton(
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
+            Spacer(Modifier.width(Margin.Small.value))
             Icon(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 painter = painterResource(id = R.drawable.ic_chevron_down_white_16dp),
