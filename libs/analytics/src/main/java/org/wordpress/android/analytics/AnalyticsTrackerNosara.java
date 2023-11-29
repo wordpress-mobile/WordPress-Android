@@ -2677,6 +2677,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "barcode_scanning_failure";
             case QRLOGIN_SCANNER_DISMISSED_CAMERA_PERMISSION_DENIED:
                 return "qrlogin_scanner_dismissed_camera_permission_denied";
+            case BLOGANUARY_NUDGE_MY_SITE_CARD_LEARN_MORE_TAPPED:
+                return "bloganuary_nudge_my_site_card_learn_more_tapped";
         }
         return null;
     }

@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker
+import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker.BloganuaryNudgeCardMenuItem
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloganuaryNudgeCardBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -18,12 +20,13 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val tracker: BloganuaryNudgeAnalyticsTracker,
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
 
     private val _refresh = MutableLiveData<Event<Boolean>>()
-    val refresh = _refresh
+    val refresh = _refresh as LiveData<Event<Boolean>>
 
     private lateinit var scope: CoroutineScope
 
@@ -51,19 +54,19 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
     }
 
     private fun onLearnMoreClick() {
-        // TODO thomashortadev: track analytics for this action
         scope.launch {
             val isPromptsEnabled = bloggingPromptsSettingsHelper.isPromptsSettingEnabled()
+            tracker.trackMySiteCardLearnMoreTapped(isPromptsEnabled)
             _onNavigation.value = Event(SiteNavigationAction.OpenBloganuaryNudgeOverlay(isPromptsEnabled))
         }
     }
 
     private fun onMoreMenuClick() {
-        // TODO thomashortadev: track analytics for this action
+        tracker.trackMySiteCardMoreMenuTapped()
     }
 
     private fun onHideMenuItemClick() {
-        // TODO thomashortadev: track analytics for this action
+        tracker.trackMySiteCardMoreMenuItemTapped(BloganuaryNudgeCardMenuItem.HIDE_THIS)
         scope.launch {
             val siteId = selectedSiteRepository.getSelectedSite()?.siteId ?: return@launch
             appPrefsWrapper.setShouldHideBloganuaryNudgeCard(siteId, true)
