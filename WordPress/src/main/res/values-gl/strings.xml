@@ -45,7 +45,6 @@ Language: gl_ES
     <string name="gutenberg_native_synced_patterns">Padróns sincronizados</string>
     <string name="gutenberg_native_deeply_nested_block">Bloque profundamente aniñado</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">É posible que os bloques aniñados a máis de %d niveis non se amosen correctamente no editor móbil. Por este motivo, recomendamos aplanar o contido desagrupando o bloque ou editando o bloque mediante o editor web.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">É posible que os bloques aniñados a máis de %d niveis non se amosen correctamente no editor móbil. Por este motivo, recomendamos aplanar o contido desagrupando o bloque ou editando o bloque co teu navegador web.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">O bloque non se pode renderizar porque está profundamente aniñado. Toca aquí para obter máis detalles.</string>
     <string name="pages_no_site_something_went_wrong">Algo saíu mal. Por favor inténtao de novo máis tarde.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Ir á web</string>
@@ -375,7 +374,6 @@ Language: gl_ES
     <string name="blogging_prompts_list_answered_prompt">✓ Respondido</string>
     <string name="blogging_prompts_list_title">Peticións</string>
     <string name="close_desc">pechar</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativamente, podes separar e editar este bloque por separado tocando en «Separar padrón».</string>
     <string name="dlg_confirm_delete_category">Borrar permanentemente a categoría «%s»?</string>
     <string name="deleting_cat_success">Categoría borrada correctamente</string>
     <string name="deleting_cat_failed">Borrando a categoría que fallou</string>
@@ -2866,10 +2864,6 @@ Language: gl_ES
     <string name="open_mail">Abrir correo electrónico</string>
     <string name="next">Seguinte</string>
     <string name="enter_email_wordpress_com">Accede a WordPress.com usando un enderezo de correo electrónico para xestionar todos os teus sitios WordPress.</string>
-    <string name="image_optimization_promo_desc">A optimización da imaxe reduce as imaxes para que suban máis rápido.\n\nPodes cambiar isto en calquera momento nos axustes do sitio.</string>
-    <string name="image_optimization_promo_title">Activar optimización da imaxe?</string>
-    <string name="leave_off">Deter</string>
-    <string name="turn_on">Activar</string>
     <string name="me_profile_photo">Foto de perfil</string>
     <string name="error_media_parse_error">Resposta inesperada do servidor</string>
     <string name="upload_finished_toast">Non se pode detener a subida porque xa finalizou</string>
@@ -3006,11 +3000,6 @@ Language: gl_ES
     <string name="editor_post_saved_online">A entrada gardouse en liña</string>
     <string name="site_settings_image_quality_hint">Calidade das imaxes: canto máis alto é o valor, máis calidade teñen as imaxes.</string>
     <string name="site_settings_optimize_images_summary">Activa a opción para cambiar o tamaño das imaxes e comprimilas</string>
-    <string name="media_encoder_quality_maximum">Máxima</string>
-    <string name="media_encoder_quality_very_high">Moi alta</string>
-    <string name="media_encoder_quality_high">Alta</string>
-    <string name="media_encoder_quality_medium">Media</string>
-    <string name="media_encoder_quality_low">Baixa</string>
     <string name="media_upload_state_uploaded">Subida</string>
     <string name="media_upload_state_failed">Fallou a subida.</string>
     <string name="media_upload_state_deleted">Borrado</string>

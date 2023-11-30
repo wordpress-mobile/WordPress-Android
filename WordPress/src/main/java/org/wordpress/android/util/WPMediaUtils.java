@@ -163,10 +163,10 @@ public class WPMediaUtils {
         };
 
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(context);
-        builder.setTitle(R.string.image_optimization_promo_title);
-        builder.setMessage(R.string.image_optimization_promo_desc);
-        builder.setPositiveButton(R.string.turn_on, onClickListener);
-        builder.setNegativeButton(R.string.leave_off, onClickListener);
+        builder.setTitle(R.string.image_optimization_popup_title);
+        builder.setMessage(R.string.image_optimization_popup_desc);
+        builder.setPositiveButton(R.string.leave_on, onClickListener);
+        builder.setNegativeButton(R.string.turn_off, onClickListener);
         builder.setOnCancelListener(onCancelListener);
         builder.show();
         // Do not ask again

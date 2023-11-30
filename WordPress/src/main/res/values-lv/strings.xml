@@ -297,7 +297,6 @@ Language: lv
     <string name="blogging_prompts_list_answered_prompt">✓ Atbildēts</string>
     <string name="blogging_prompts_list_title">Uzvednes</string>
     <string name="close_desc">aizvērt</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Varat arī atdalīt un rediģēt šo bloku atsevišķi, piesitiet \"Atvienot modeli\".</string>
     <string name="dlg_confirm_delete_category">Vai neatgriezeniski dzēst kategoriju \"%s\"?</string>
     <string name="deleting_cat_success">Kategorija veiksmīgi izdzēsta</string>
     <string name="deleting_cat_failed">Neizdevās dzēst kategoriju</string>
@@ -2779,10 +2778,6 @@ Language: lv
     <string name="open_mail">Open Mail</string>
     <string name="next">Nākamais</string>
     <string name="enter_email_wordpress_com">Piesakieties vietnē WordPress.com, izmantojot e-pasta adresi, lai pārvaldītu visas savas WordPress vietnes.</string>
-    <string name="image_optimization_promo_desc">Attēlu optimizācija samazina attēlus, lai tos varētu augšupielādēt ātrāk. Vietnes iestatījumos to var mainīt jebkurā laikā.</string>
-    <string name="image_optimization_promo_title">Vai ieslēgt attēla optimizāciju?</string>
-    <string name="leave_off">Atstājiet</string>
-    <string name="turn_on">Ieslēdziet</string>
     <string name="me_profile_photo">Profila fotoattēls</string>
     <string name="error_media_parse_error">Negaidīta atbilde no servera</string>
     <string name="upload_finished_toast">Nevar apturēt augšupielādi, jo tā jau ir pabeigta</string>
@@ -2919,11 +2914,6 @@ Language: lv
     <string name="editor_post_saved_online">Ziņa saglabāta tiešsaistē</string>
     <string name="site_settings_image_quality_hint">Attēlu kvalitāte. Augstākas vērtības nozīmē labākas kvalitātes attēlus.</string>
     <string name="site_settings_optimize_images_summary">Iespējot attēlu lieluma maiņu un saspiešanu</string>
-    <string name="media_encoder_quality_maximum">Maksimāla</string>
-    <string name="media_encoder_quality_very_high">Ļoti augsta</string>
-    <string name="media_encoder_quality_high">Augsta</string>
-    <string name="media_encoder_quality_medium">Vidēja</string>
-    <string name="media_encoder_quality_low">Zema</string>
     <string name="media_upload_state_uploaded">Augšupielādēts</string>
     <string name="media_upload_state_failed">Augšupielāde neizdevās</string>
     <string name="media_upload_state_deleted">Dzēsts</string>
