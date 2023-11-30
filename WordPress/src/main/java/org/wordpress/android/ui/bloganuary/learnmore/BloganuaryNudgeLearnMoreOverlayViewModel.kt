@@ -32,19 +32,18 @@ class BloganuaryNudgeLearnMoreOverlayViewModel @Inject constructor() : ViewModel
         )
     }
 
-    fun onOverlayShown() {
+    fun onDialogShown() {
         // TODO thomashortadev add analytics
     }
 
     fun onActionClick(action: BloganuaryNudgeLearnMoreOverlayAction) {
+        // TODO thomashortadev add analytics
         when (action) {
             BloganuaryNudgeLearnMoreOverlayAction.DISMISS -> {
-                // TODO thomashortadev add analytics
                 _dismissDialog.value = Unit
             }
 
             BloganuaryNudgeLearnMoreOverlayAction.TURN_ON_PROMPTS -> {
-                // TODO thomashortadev add analytics
                 // TODO thomashortadev add action to turn on prompts
                 _dismissDialog.value = Unit
             }

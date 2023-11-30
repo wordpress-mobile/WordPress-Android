@@ -45,7 +45,7 @@ class BloganuaryNudgeLearnMoreOverlayFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.dismissDialog.observe(viewLifecycleOwner) { dismiss() }
-        viewModel.onOverlayShown()
+        viewModel.onDialogShown()
     }
 
     override fun onDismiss(dialog: DialogInterface) {
