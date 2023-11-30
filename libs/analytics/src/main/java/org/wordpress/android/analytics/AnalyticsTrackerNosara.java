@@ -2269,6 +2269,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_settings_privacy_settings_tapped";
             case APP_SETTINGS_OPEN_DEVICE_SETTINGS_TAPPED:
                 return "app_settings_open_device_settings_tapped";
+            case APP_SETTINGS_OPTIMIZE_IMAGES_POPUP_TAPPED:
+                return "app_settings_optimize_images_popup_tapped";
             case APP_SETTINGS_MAX_IMAGE_SIZE_CHANGED:
                 return "app_settings_max_image_size_changed";
             case APP_SETTINGS_IMAGE_QUALITY_CHANGED:
@@ -2669,6 +2671,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_security_key_success";
             case LOGIN_SECURITY_KEY_CLICKED:
                 return "login_security_key_clicked";
+            case BARCODE_SCANNING_SUCCESS:
+                return "barcode_scanning_success";
+            case BARCODE_SCANNING_FAILURE:
+                return "barcode_scanning_failure";
+            case QRLOGIN_SCANNER_DISMISSED_CAMERA_PERMISSION_DENIED:
+                return "qrlogin_scanner_dismissed_camera_permission_denied";
         }
         return null;
     }

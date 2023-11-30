@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.blaze
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,21 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,6 +30,8 @@ import org.wordpress.android.ui.compose.styles.DashboardCardTypography
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.BlazeCampaignsCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.BlazeCampaignsCardModel.BlazeCampaignsCardItem.BlazeCampaignStats
+import org.wordpress.android.ui.mysite.cards.compose.MySiteCardToolbar
+import org.wordpress.android.ui.mysite.cards.compose.MySiteCardToolbarContextMenuItem
 import org.wordpress.android.ui.utils.UiString
 
 @Composable
@@ -55,21 +43,8 @@ fun BlazeCampaignsCard(
     UnelevatedCard(
         modifier = modifier.clickable { blazeCampaignCardModel.onClick.click() },
         content = {
-            Column(
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                        text = uiStringText(uiString = blazeCampaignCardModel.title),
-                        style = DashboardCardTypography.smallTitle,
-                        textAlign = TextAlign.Start,
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    CardDropDownMenu(moreMenuOptions = blazeCampaignCardModel.moreMenuOptions)
-                }
+            Column {
+                CardToolbar(blazeCampaignCardModel)
                 Column(
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
@@ -115,6 +90,35 @@ fun BlazeCampaignsCard(
             }
         },
     )
+}
+
+@Composable
+private fun CardToolbar(
+    blazeCampaignCardModel: BlazeCampaignsCardModel,
+) {
+    MySiteCardToolbar(
+        onContextMenuClick = { blazeCampaignCardModel.moreMenuOptions.onMoreClick.click() },
+        contextMenuItems = listOf(
+            MySiteCardToolbarContextMenuItem.Option(
+                text = stringResource(id = R.string.blaze_campaigns_card_more_menu_view_all_campaigns),
+                onClick = { blazeCampaignCardModel.moreMenuOptions.viewAllCampaignsItemClick.click() }
+            ),
+            MySiteCardToolbarContextMenuItem.Option(
+                text = stringResource(id = R.string.blaze_campaigns_card_more_menu_learn_more),
+                onClick = { blazeCampaignCardModel.moreMenuOptions.learnMoreClick.click() }
+            ),
+            MySiteCardToolbarContextMenuItem.Option(
+                text = stringResource(id = R.string.blaze_campaigns_card_more_menu_hide_this),
+                onClick = { blazeCampaignCardModel.moreMenuOptions.hideThisMenuItemClick.click() }
+            ),
+        ),
+    ) {
+        Text(
+            text = uiStringText(uiString = blazeCampaignCardModel.title),
+            style = DashboardCardTypography.smallTitle,
+            textAlign = TextAlign.Start,
+        )
+    }
 }
 
 @Composable
@@ -190,53 +194,5 @@ private fun CampaignStat(title: String, value: UiString, modifier: Modifier = Mo
             style = DashboardCardTypography.largeText,
             textAlign = TextAlign.Start
         )
-    }
-}
-
-
-@Composable
-private fun CardDropDownMenu(moreMenuOptions: BlazeCampaignsCardModel.MoreMenuOptions, modifier: Modifier = Modifier) {
-    Box(modifier = modifier) {
-        var isExpanded by remember { mutableStateOf(false) }
-
-        IconButton(onClick = {
-            isExpanded = true
-            moreMenuOptions.onMoreClick.click()
-        }) {
-            Icon(
-                imageVector = Icons.Rounded.MoreVert,
-                contentDescription = stringResource(id = R.string.more),
-                tint = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
-            )
-        }
-
-        DropdownMenu(
-            expanded = isExpanded,
-            onDismissRequest = { isExpanded = false },
-            modifier = Modifier
-                .background(MaterialTheme.colors.surface.copy(alpha = ContentAlpha.high))
-        ) {
-            DropdownMenuItem(
-                text = { Text(stringResource(id = R.string.blaze_campaigns_card_more_menu_view_all_campaigns)) },
-                onClick = {
-                    isExpanded = false
-                    moreMenuOptions.viewAllCampaignsItemClick.click()
-                }
-            )
-            DropdownMenuItem(
-                text = { Text(stringResource(id = R.string.blaze_campaigns_card_more_menu_learn_more)) },
-                onClick = {
-                    isExpanded = false
-                    moreMenuOptions.learnMoreClick.click()
-                }
-            )
-            DropdownMenuItem(
-                text = { Text(stringResource(id = R.string.blaze_campaigns_card_more_menu_hide_this)) },
-                onClick = {
-                    isExpanded = false
-                    moreMenuOptions.hideThisMenuItemClick.click()
-                }
-            )
-        }
     }
 }

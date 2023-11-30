@@ -3,28 +3,16 @@ package org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -38,6 +26,8 @@ import org.wordpress.android.ui.compose.components.card.UnelevatedCard
 import org.wordpress.android.ui.compose.styles.DashboardCardTypography
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainTransferCardModel
+import org.wordpress.android.ui.mysite.cards.compose.MySiteCardToolbar
+import org.wordpress.android.ui.mysite.cards.compose.MySiteCardToolbarContextMenuItem
 import org.wordpress.android.ui.utils.ListItemInteraction
 
 @Composable
@@ -49,39 +39,7 @@ fun DomainTransferCard(
         modifier = modifier.clickable { domainTransferCardModel.onClick.click() },
         content = {
             Column {
-                Row(
-                    Modifier.padding(start = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(id = domainTransferCardModel.title),
-                        style = DashboardCardTypography.smallTitle,
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Box() {
-                        var isExpanded by remember { mutableStateOf(false) }
-
-                        IconButton(onClick = {
-                            isExpanded = true
-                            domainTransferCardModel.onMoreMenuClick.click()
-                        }) {
-                            Icon(
-                                imageVector = Icons.Rounded.MoreVert,
-                                contentDescription = stringResource(id = R.string.more),
-                                tint = MaterialTheme.colors.onSurface
-                            )
-                        }
-
-                        DropdownMenu(
-                            expanded = isExpanded,
-                            onDismissRequest = { isExpanded = false }) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(id = R.string.domain_transfer_card_more_menu_hide_this)) },
-                                onClick = { domainTransferCardModel.onHideMenuItemClick.click() }
-                            )
-                        }
-                    }
-                }
+                CardToolbar(domainTransferCardModel)
                 Row(
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -116,6 +74,26 @@ fun DomainTransferCard(
                 }
             }
         })
+}
+
+@Composable
+private fun CardToolbar(
+    domainTransferCardModel: DomainTransferCardModel,
+) {
+    MySiteCardToolbar(
+        onContextMenuClick = { domainTransferCardModel.onMoreMenuClick.click() },
+        contextMenuItems = listOf(
+            MySiteCardToolbarContextMenuItem.Option(
+                text = stringResource(id = R.string.domain_transfer_card_more_menu_hide_this),
+                onClick = { domainTransferCardModel.onHideMenuItemClick.click() }
+            ),
+        ),
+    ) {
+        Text(
+            text = stringResource(id = domainTransferCardModel.title),
+            style = DashboardCardTypography.smallTitle,
+        )
+    }
 }
 
 @Preview(

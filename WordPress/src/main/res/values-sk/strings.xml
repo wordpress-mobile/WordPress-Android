@@ -822,11 +822,11 @@ Language: sk
     <string name="editor_post_saved_online">článok uložený online.</string>
     <string name="site_settings_image_quality_hint">Kvalita obrázkov. Vyššie hodnoty znamenajú lepšiu kvalitu obrázkov.</string>
     <string name="site_settings_optimize_images_summary">Povoliť zmenu veľkosti a komprimovanie obrázkov.</string>
-    <string name="media_encoder_quality_100">Maximálna</string>
-    <string name="media_encoder_quality_95">Veľmi vysoká</string>
-    <string name="media_encoder_quality_90">Vysoká</string>
-    <string name="media_encoder_quality_85">Stredná</string>
-    <string name="media_encoder_quality_80">Nízka</string>
+    <string name="media_encoder_quality_maximum">Maximálna</string>
+    <string name="media_encoder_quality_very_high">Veľmi vysoká</string>
+    <string name="media_encoder_quality_high">Vysoká</string>
+    <string name="media_encoder_quality_medium">Stredná</string>
+    <string name="media_encoder_quality_low">Nízka</string>
     <string name="media_upload_state_uploaded">Nahraté</string>
     <string name="media_upload_state_failed">Nahrávanie zlyhalo</string>
     <string name="media_upload_state_deleted">Vymazané</string>

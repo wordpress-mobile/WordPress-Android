@@ -3017,11 +3017,11 @@ Language: ja_JP
     <string name="editor_post_saved_online">投稿をオンラインで保存しました</string>
     <string name="site_settings_image_quality_hint">写真の画質。値が高いほど、画質が良いことを意味します。</string>
     <string name="site_settings_optimize_images_summary">写真をリサイズして圧縮できます</string>
-    <string name="media_encoder_quality_100">最高</string>
-    <string name="media_encoder_quality_95">非常に高い</string>
-    <string name="media_encoder_quality_90">高い</string>
-    <string name="media_encoder_quality_85">普通</string>
-    <string name="media_encoder_quality_80">低い</string>
+    <string name="media_encoder_quality_maximum">最高</string>
+    <string name="media_encoder_quality_very_high">非常に高い</string>
+    <string name="media_encoder_quality_high">高い</string>
+    <string name="media_encoder_quality_medium">普通</string>
+    <string name="media_encoder_quality_low">低い</string>
     <string name="media_upload_state_uploaded">アップロード済み</string>
     <string name="media_upload_state_failed">アップロード失敗</string>
     <string name="media_upload_state_deleted">削除済み</string>

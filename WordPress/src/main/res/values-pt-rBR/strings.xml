@@ -2811,11 +2811,11 @@ Language: pt_BR
     <string name="editor_post_saved_online">Post salvo online</string>
     <string name="site_settings_image_quality_hint">Qualidade das imagens. Valores maiores significam melhor qualidade das imagens.</string>
     <string name="site_settings_optimize_images_summary">Habilite para redimensionar e comprimir imagens</string>
-    <string name="media_encoder_quality_100">Máxima</string>
-    <string name="media_encoder_quality_95">Muito alta</string>
-    <string name="media_encoder_quality_90">Alta</string>
-    <string name="media_encoder_quality_85">Média</string>
-    <string name="media_encoder_quality_80">Baixa</string>
+    <string name="media_encoder_quality_maximum">Máxima</string>
+    <string name="media_encoder_quality_very_high">Muito alta</string>
+    <string name="media_encoder_quality_high">Alta</string>
+    <string name="media_encoder_quality_medium">Média</string>
+    <string name="media_encoder_quality_low">Baixa</string>
     <string name="media_upload_state_uploaded">Upload realizado</string>
     <string name="media_upload_state_failed">Falha no upload</string>
     <string name="media_upload_state_deleted">Excluído</string>

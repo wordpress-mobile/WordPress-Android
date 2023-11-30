@@ -843,11 +843,11 @@ Language: es_CL
     <string name="editor_post_saved_online">Entrada guardada en línea</string>
     <string name="site_settings_image_quality_hint">Calidad de las imágenes. Valores más altos significan imágenes de mejor calidad.</string>
     <string name="site_settings_optimize_images_summary">Habilitar para cambiar el tamaño y comprimir imágenes</string>
-    <string name="media_encoder_quality_90">Alto</string>
-    <string name="media_encoder_quality_85">Mediano</string>
-    <string name="media_encoder_quality_100">Máximo</string>
-    <string name="media_encoder_quality_80">Baja</string>
-    <string name="media_encoder_quality_95">Muy alta</string>
+    <string name="media_encoder_quality_high">Alto</string>
+    <string name="media_encoder_quality_medium">Mediano</string>
+    <string name="media_encoder_quality_maximum">Máximo</string>
+    <string name="media_encoder_quality_low">Baja</string>
+    <string name="media_encoder_quality_very_high">Muy alta</string>
     <string name="media_upload_state_uploaded">Subido</string>
     <string name="media_upload_state_failed">Falló la Carga</string>
     <string name="media_upload_state_deleted">Eliminado</string>

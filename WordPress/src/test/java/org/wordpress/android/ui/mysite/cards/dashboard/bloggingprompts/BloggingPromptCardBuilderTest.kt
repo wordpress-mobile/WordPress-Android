@@ -62,6 +62,14 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given blogging prompt with bloganuary_id, when card is built, then return matching card`() {
+        val promptCard = buildBloggingPromptCardBuilderParams(
+            bloggingPromptModel("dayone").copy(bloganuaryId = "bloganuary-2023-01")
+        )
+        assertThat(promptCard).isEqualTo(bloggingPromptCard(BloggingPromptAttribution.BLOGANUARY))
+    }
+
+    @Test
     fun `given no blogging prompt, when card is built, then return null`() {
         val statCard = buildBloggingPromptCardBuilderParams(null)
 

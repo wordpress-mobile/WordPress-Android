@@ -3017,11 +3017,11 @@ Language: zh_TW
     <string name="editor_post_saved_online">文章已在線上儲存</string>
     <string name="site_settings_image_quality_hint">照片品質。越高的值代表越高的照片品質。</string>
     <string name="site_settings_optimize_images_summary">啟用即可調整照片大小和壓縮照片</string>
-    <string name="media_encoder_quality_100">上限</string>
-    <string name="media_encoder_quality_95">超高</string>
-    <string name="media_encoder_quality_90">高</string>
-    <string name="media_encoder_quality_85">中</string>
-    <string name="media_encoder_quality_80">低</string>
+    <string name="media_encoder_quality_maximum">上限</string>
+    <string name="media_encoder_quality_very_high">超高</string>
+    <string name="media_encoder_quality_high">高</string>
+    <string name="media_encoder_quality_medium">中</string>
+    <string name="media_encoder_quality_low">低</string>
     <string name="media_upload_state_uploaded">已上傳</string>
     <string name="media_upload_state_failed">上傳失敗</string>
     <string name="media_upload_state_deleted">已刪除</string>

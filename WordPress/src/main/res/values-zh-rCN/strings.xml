@@ -3014,11 +3014,11 @@ Language: zh_CN
     <string name="editor_post_saved_online">文章已在线保存</string>
     <string name="site_settings_image_quality_hint">图片质量。值越高，表示图片质量越好。</string>
     <string name="site_settings_optimize_images_summary">启用以调整图片大小和压缩图片</string>
-    <string name="media_encoder_quality_100">最大值</string>
-    <string name="media_encoder_quality_95">非常高</string>
-    <string name="media_encoder_quality_90">高</string>
-    <string name="media_encoder_quality_85">中</string>
-    <string name="media_encoder_quality_80">低</string>
+    <string name="media_encoder_quality_maximum">最大值</string>
+    <string name="media_encoder_quality_very_high">非常高</string>
+    <string name="media_encoder_quality_high">高</string>
+    <string name="media_encoder_quality_medium">中</string>
+    <string name="media_encoder_quality_low">低</string>
     <string name="media_upload_state_uploaded">已上传</string>
     <string name="media_upload_state_failed">上传失败</string>
     <string name="media_upload_state_deleted">已删除</string>

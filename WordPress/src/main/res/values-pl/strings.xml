@@ -2534,12 +2534,12 @@ Language: pl
     <string name="editor_post_saved_online">Wpis został zapisany online</string>
     <string name="site_settings_image_quality_hint">Jakość obrazków. Wyższa wartość oznacza lepszą jakość.</string>
     <string name="site_settings_optimize_images_summary">Uaktywnij aby zmienić rozmiar i skompresować obrazki</string>
-    <string name="media_encoder_quality_95">Bardzo wysoka</string>
-    <string name="media_encoder_quality_90">Wysoka</string>
-    <string name="media_encoder_quality_80">Niska</string>
+    <string name="media_encoder_quality_very_high">Bardzo wysoka</string>
+    <string name="media_encoder_quality_high">Wysoka</string>
+    <string name="media_encoder_quality_low">Niska</string>
     <string name="media_upload_state_uploaded">Wysłano</string>
-    <string name="media_encoder_quality_85">Średnio</string>
-    <string name="media_encoder_quality_100">Maksimum</string>
+    <string name="media_encoder_quality_medium">Średnio</string>
+    <string name="media_encoder_quality_maximum">Maksimum</string>
     <string name="media_upload_state_deleted">Usunięto</string>
     <string name="media_upload_state_deleting">Usuwanie</string>
     <string name="media_upload_state_uploading">Przesyłanie</string>

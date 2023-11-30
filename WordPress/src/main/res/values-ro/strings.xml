@@ -3025,11 +3025,11 @@ Language: ro
     <string name="editor_post_saved_online">Articol salvat online</string>
     <string name="site_settings_image_quality_hint">Calitatea imaginilor. Valorile mai mari înseamnă imagini de calitate mai bună.</string>
     <string name="site_settings_optimize_images_summary">Activează pentru a redimensiona și comprima imagini</string>
-    <string name="media_encoder_quality_100">Maximă</string>
-    <string name="media_encoder_quality_95">Foarte bună</string>
-    <string name="media_encoder_quality_90">Bună</string>
-    <string name="media_encoder_quality_85">Medie</string>
-    <string name="media_encoder_quality_80">Slabă</string>
+    <string name="media_encoder_quality_maximum">Maximă</string>
+    <string name="media_encoder_quality_very_high">Foarte bună</string>
+    <string name="media_encoder_quality_high">Bună</string>
+    <string name="media_encoder_quality_medium">Medie</string>
+    <string name="media_encoder_quality_low">Slabă</string>
     <string name="media_upload_state_uploaded">Încărcată</string>
     <string name="media_upload_state_failed">Încărcarea a eșuat</string>
     <string name="media_upload_state_deleted">Ștearsă</string>

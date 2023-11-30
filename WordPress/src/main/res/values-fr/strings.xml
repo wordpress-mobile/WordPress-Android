@@ -3017,11 +3017,11 @@ Language: fr
     <string name="editor_post_saved_online">Article enregistré en ligne</string>
     <string name="site_settings_image_quality_hint">Qualité des images. Des valeurs élevées signifient une meilleure qualité d’image.</string>
     <string name="site_settings_optimize_images_summary">Autoriser le redimensionnement et la compression des images</string>
-    <string name="media_encoder_quality_100">Maximum</string>
-    <string name="media_encoder_quality_95">Très élevé</string>
-    <string name="media_encoder_quality_90">Élevé</string>
-    <string name="media_encoder_quality_85">Moyen</string>
-    <string name="media_encoder_quality_80">Faible</string>
+    <string name="media_encoder_quality_maximum">Maximum</string>
+    <string name="media_encoder_quality_very_high">Très élevé</string>
+    <string name="media_encoder_quality_high">Élevé</string>
+    <string name="media_encoder_quality_medium">Moyen</string>
+    <string name="media_encoder_quality_low">Faible</string>
     <string name="media_upload_state_uploaded">Téléversé</string>
     <string name="media_upload_state_failed">Téléversement échoué</string>
     <string name="media_upload_state_deleted">Supprimé</string>
