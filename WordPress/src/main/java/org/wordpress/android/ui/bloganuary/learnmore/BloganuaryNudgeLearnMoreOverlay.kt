@@ -2,12 +2,14 @@ package org.wordpress.android.ui.bloganuary.learnmore
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ContentAlpha
@@ -45,7 +47,7 @@ fun BloganuaryNudgeLearnMoreOverlay(
     Column(modifier) {
         IconButton(
             onClick = onCloseClick,
-            modifier = Modifier.align(Alignment.End),
+            modifier = Modifier.align(Alignment.End)
         ) {
             Icon(
                 imageVector = Icons.Rounded.Close,
@@ -56,7 +58,8 @@ fun BloganuaryNudgeLearnMoreOverlay(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = Margin.ExtraExtraMediumLarge.value)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = Margin.ExtraMediumLarge.value)
         ) {
             Image(
                 painter = painterResource(R.drawable.logo_bloganuary),
@@ -74,7 +77,7 @@ fun BloganuaryNudgeLearnMoreOverlay(
                 uiStringText(model.noteText),
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodySmall,
                 color = LocalContentColor.current.copy(alpha = ContentAlpha.medium),
             )
         }
@@ -83,25 +86,19 @@ fun BloganuaryNudgeLearnMoreOverlay(
 
         Divider()
 
-        Box(
+        Button(
+            onClick = { onActionClick(model.action) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding
-                    (
-                    horizontal = Margin.ExtraExtraMediumLarge.value,
-                    vertical = Margin.ExtraMediumLarge.value
-                )
+                .padding(Margin.ExtraMediumLarge.value),
+            elevation = null,
+            contentPadding = PaddingValues(vertical = Margin.Large.value),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Material2Theme.colors.onSurface,
+                contentColor = Material2Theme.colors.surface,
+            ),
         ) {
-            Button(
-                onClick = { onActionClick(model.action) },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Material2Theme.colors.onSurface,
-                    contentColor = Material2Theme.colors.surface,
-                ),
-            ) {
-                Text(stringResource(model.action.textRes))
-            }
+            Text(stringResource(model.action.textRes))
         }
     }
 }
@@ -117,7 +114,7 @@ private fun OverlayContent(
 
         Text(
             stringResource(R.string.bloganuary_dashboard_nudge_overlay_title),
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
 
@@ -125,7 +122,7 @@ private fun OverlayContent(
 
         Text(
             stringResource(R.string.bloganuary_dashboard_nudge_overlay_text),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
         )
 
         Spacer(Modifier.weight(0.3f))
