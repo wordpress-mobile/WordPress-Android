@@ -113,27 +113,11 @@ fun BloganuaryNudgeLearnMoreOverlay(
                 Spacer(Modifier.height(Margin.ExtraExtraMediumLarge.value))
 
                 // Bullet points
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
+                OverlayContent(
                     modifier = Modifier
                         .widthIn(max = 400.dp)
                         .padding(horizontal = Margin.ExtraMediumLarge.value),
-                ) {
-                    OverlayContentItem(
-                        iconRes = R.drawable.ic_dayone_24dp,
-                        textRes = R.string.bloganuary_dashboard_nudge_overlay_text_one,
-                    )
-
-                    OverlayContentItem(
-                        iconRes = R.drawable.ic_dayone_24dp,
-                        textRes = R.string.bloganuary_dashboard_nudge_overlay_text_two,
-                    )
-
-                    OverlayContentItem(
-                        iconRes = R.drawable.ic_dayone_24dp,
-                        textRes = R.string.bloganuary_dashboard_nudge_overlay_text_three,
-                    )
-                }
+                )
 
                 // min spacing
                 Spacer(Modifier.height(Margin.ExtraLarge.value))
@@ -166,6 +150,31 @@ fun BloganuaryNudgeLearnMoreOverlay(
         ) {
             Text(stringResource(model.action.textRes))
         }
+    }
+}
+
+@Composable
+private fun OverlayContent(
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
+        modifier = modifier,
+    ) {
+        OverlayContentItem(
+            iconRes = R.drawable.ic_bloganuary_learn_more_item_one,
+            textRes = R.string.bloganuary_dashboard_nudge_overlay_text_one,
+        )
+
+        OverlayContentItem(
+            iconRes = R.drawable.ic_bloganuary_learn_more_item_two,
+            textRes = R.string.bloganuary_dashboard_nudge_overlay_text_two,
+        )
+
+        OverlayContentItem(
+            iconRes = R.drawable.ic_bloganuary_learn_more_item_three,
+            textRes = R.string.bloganuary_dashboard_nudge_overlay_text_three,
+        )
     }
 }
 
