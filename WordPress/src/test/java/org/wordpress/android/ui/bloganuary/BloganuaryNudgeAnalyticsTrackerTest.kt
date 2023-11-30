@@ -8,6 +8,7 @@ import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker.BloganuaryNudgeCardMenuItem
+import org.wordpress.android.ui.bloganuary.learnmore.BloganuaryNudgeLearnMoreOverlayAction
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -55,6 +56,39 @@ class BloganuaryNudgeAnalyticsTrackerTest : BaseUnitTest() {
             verify(cardsTracker).trackCardMoreMenuItemClicked(
                 CardsTracker.Type.BLOGANUARY_NUDGE.label,
                 it.label
+            )
+        }
+    }
+
+    @Test
+    fun `WHEN trackLearnMoreOverlayShown is called THEN analyticsTracker is called correctly`() {
+        listOf(true, false).forEach { isPromptsEnabled ->
+            tracker.trackLearnMoreOverlayShown(isPromptsEnabled)
+
+            verify(analyticsTracker).track(
+                Stat.BLOGANUARY_NUDGE_LEARN_MORE_MODAL_SHOWN,
+                mapOf("prompts_enabled" to isPromptsEnabled.toString())
+            )
+        }
+    }
+
+    @Test
+    fun `WHEN trackLearnMoreOverlayDismissed is called THEN analyticsTracker is called correctly`() {
+        tracker.trackLearnMoreOverlayDismissed()
+
+        verify(analyticsTracker).track(
+            Stat.BLOGANUARY_NUDGE_LEARN_MORE_MODAL_DISMISSED
+        )
+    }
+
+    @Test
+    fun `WHEN trackLearnMoreOverlayActionTapped is called THEN analyticsTracker is called correctly`() {
+        BloganuaryNudgeLearnMoreOverlayAction.entries.forEach {
+            tracker.trackLearnMoreOverlayActionTapped(it)
+
+            verify(analyticsTracker).track(
+                Stat.BLOGANUARY_NUDGE_LEARN_MORE_MODAL_ACTION_TAPPED,
+                mapOf("action" to it.analyticsLabel)
             )
         }
     }
