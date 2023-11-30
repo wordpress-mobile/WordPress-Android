@@ -304,9 +304,6 @@ class CardsBuilderTest : BaseUnitTest() {
                 bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                     mock(), mock(), mock(), mock(), mock(), mock(), mock()
                 ),
-                domainTransferCardBuilderParams = DomainTransferCardBuilderParams(
-                    isEligibleForDomainTransferCard, mock(), mock(), mock()
-                ),
                 blazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
                     mock(),
                     mock()
@@ -326,6 +323,9 @@ class CardsBuilderTest : BaseUnitTest() {
                     mock(),
                     mock(),
                     mock()
+                ),
+                domainTransferCardBuilderParams = DomainTransferCardBuilderParams(
+                    isEligibleForDomainTransferCard, mock(), mock(), mock()
                 )
             )
         )
