@@ -99,6 +99,22 @@ class BloggingPromptsSettingsHelperTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when updatePromptsCardEnabledForCurrentSite, then updates the store model`() = test {
+        val expectedState = true
+        val model = createRemindersModel(isPromptsCardEnabled = false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
+        whenever(bloggingRemindersStore.bloggingRemindersModel(any())).doAnswer {
+            flowOf(model)
+        }
+
+        helper.updatePromptsCardEnabledForCurrentSite(isEnabled = expectedState)
+
+        verify(bloggingRemindersStore).updateBloggingReminders(
+            argThat { siteId == 123 && isPromptsCardEnabled == expectedState }
+        )
+    }
+
+    @Test
     fun `given prompts FF is off and site is wpcom site, when isPromptsFeatureAvailable, then returns false`() {
         whenever(bloggingPromptsFeature.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(createSiteModel())
