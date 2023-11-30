@@ -1356,10 +1356,7 @@ Language: sr_RS
     <string name="connect_more">Повежи други сајт</string>
     <string name="next">Следећи</string>
     <string name="open_mail">Отвори пошту</string>
-    <string name="image_optimization_promo_title">Укључи оптимизацију слика</string>
     <string name="me_profile_photo">Профилна слика</string>
-    <string name="leave_off">Остави искључено</string>
-    <string name="turn_on">Укључи</string>
     <string name="error_media_parse_error">Неочекивани одговор од сервера</string>
     <string name="post_title">Наслов</string>
     <string name="menu_redo">Понови</string>
@@ -1454,11 +1451,6 @@ Language: sr_RS
     <string name="photo_picker_title">Одабери фотографију</string>
     <string name="editor_post_saved_online">Чланак сачуван онлајн</string>
     <string name="site_settings_image_quality_hint">Квалитет слика. Више вредности представљају слике бољег квалитета.</string>
-    <string name="media_encoder_quality_maximum">Максималан</string>
-    <string name="media_encoder_quality_very_high">Врло висок</string>
-    <string name="media_encoder_quality_high">Висок</string>
-    <string name="media_encoder_quality_medium">Средњи</string>
-    <string name="media_encoder_quality_low">Низак</string>
     <string name="media_upload_state_uploaded">Отпремљено</string>
     <string name="media_upload_state_failed">Неуспело отпремање</string>
     <string name="media_upload_state_deleted">Обрисано</string>

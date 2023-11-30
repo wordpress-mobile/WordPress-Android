@@ -98,8 +98,6 @@ Language: hi_IN
     <string name="login_continue">जारी रखें</string>
     <string name="next">अगला</string>
     <string name="open_mail">मेल खोलें</string>
-    <string name="turn_on">चालू करें</string>
-    <string name="leave_off">छोड़ दें</string>
     <string name="post_title">शीर्षक</string>
     <string name="media_audio">ऑडियो</string>
     <string name="permission_camera">कैमरा</string>
@@ -108,7 +106,6 @@ Language: hi_IN
     <string name="editor_post_saved_locally">पोस्ट डिवाइस पर सहेजा गया</string>
     <string name="button_sync">सिंक</string>
     <string name="wp_media_title">वर्डप्रेस मीडिया </string>
-    <string name="media_encoder_quality_low">निम्न</string>
     <string name="error_unknown_post_type">अज्ञात पोस्ट प्रारूप</string>
     <string name="confirm">पुष्टि करें</string>
     <string name="reader_label_visit">साईट पर जाये</string>

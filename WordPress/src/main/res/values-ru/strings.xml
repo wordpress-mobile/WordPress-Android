@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-14 06:06:01+0000
+Translation-Revision-Date: 2023-11-28 07:45:26+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">По этой причине мы рекомендуем редактировать блок с помощью веб-браузера.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">По этой причине мы рекомендуем редактировать блок с помощью веб-редактора.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Альтернативно вы можете сгладить содержимое, разгруппировав блок.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Перейти к настройкам</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">Отменить</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Предоставить</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Вы бессрочно запретили разрешение для камеры. Оно является обязательным для сканирования штрихкода. Предоставьте его в настройках приложения</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">Разрешите доступ к камере, чтобы сканировать штрихкод</string>
+    <string name="barcode_scanning_alert_dialog_title">Разрешить доступ к камере</string>
+    <string name="barcode_scanning_camera_permission_denied">Разрешите доступ к камере, чтобы сканировать штрихкод.</string>
+    <string name="barcode_scanning_title">Сканировать штрихкод</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Блоки, вложенные глубже, чем %d уровней, могут отображаться неправильно в мобильном редакторе.</string>
+    <string name="jp_migration_lets_go_button">Поехали!</string>
+    <string name="jp_migration_done_no_sites_message">Пришло время продолжить путешествие по WordPress в приложении Jetpack!</string>
+    <string name="image_optimization_promo_desc">Оптимизация изображений сжимает изображения для более быстрой загрузки.\n\nЭта опция включена по умолчанию, но вы можете изменить ее в настройках приложения в любой момент.</string>
+    <string name="image_optimization_promo_title">Продолжать оптимизировать изображения?</string>
+    <string name="leave_off">Нет, отключить</string>
+    <string name="turn_on">Да, оставить</string>
+    <string name="domain_management_clear_search">Очистить поиск</string>
+    <string name="media_encoder_quality_very_high">Очень высокое</string>
     <string name="notification_security_key_needed">Пожалуйста предоставьте ключ безопасности для продолжения.</string>
     <string name="login_error_security_key">Возникла проблема со входом в систему с помощью ключа безопасности</string>
     <string name="login_text_security_key">Использовать ключ безопасности</string>
@@ -64,7 +84,6 @@ Language: ru
     <string name="gutenberg_native_synced_patterns">Синхронизированные паттерны</string>
     <string name="gutenberg_native_deeply_nested_block">Глубоко вложенный блок</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Блоки, вложенные глубже, чем %d уровней, могут отображаться неправильно в мобильном редакторе. По этой причине мы рекомендуем сгладить содержимое, разгруппировав блок или отредактировать блок с помощью веб-редактора.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Блоки, вложенные глубже, чем %d уровней, могут отображаться неправильно в мобильном редакторе. По этой причине мы рекомендуем сгладить содержимое, разгруппировав блок или отредактировать его с помощью веб-браузера.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Блок невозможно отобразить, поскольку он глубоко вложен. Нажмите здесь, чтобы получить более подробную информацию.</string>
     <string name="pages_no_site_something_went_wrong">Что-то пошло не так. Попробуйте еще раз.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Переход на веб-сайт</string>
@@ -394,7 +413,7 @@ Language: ru
     <string name="blogging_prompts_list_answered_prompt">✓ Ответ дан</string>
     <string name="blogging_prompts_list_title">Подсказки</string>
     <string name="close_desc">закрыть</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Кроме того, вы можете отсоединить и отредактировать этот блок отдельно, нажав «Отсоединить паттерн».</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Кроме того, вы можете отсоединить и отредактировать этот блок отдельно, нажав «Отсоединить».</string>
     <string name="dlg_confirm_delete_category">Навсегда удалить рубрику \'%s\'?</string>
     <string name="deleting_cat_success">Рубрика удалена</string>
     <string name="deleting_cat_failed">Не удалось удалить рубрику</string>
@@ -2885,10 +2904,6 @@ Language: ru
     <string name="open_mail">Открыть почту</string>
     <string name="next">Вперед</string>
     <string name="enter_email_wordpress_com">Для управления всеми своими сайтами WordPress войдите в систему WordPress.com с помощью адреса электронной почты.</string>
-    <string name="image_optimization_promo_desc">Средство оптимизации изображений сжимает их для ускорения загрузки.\n\nВы в любой момент можете изменить это в настройках сайта.</string>
-    <string name="image_optimization_promo_title">Включить оптимизацию изображений?</string>
-    <string name="leave_off">Не включать</string>
-    <string name="turn_on">Включить</string>
     <string name="me_profile_photo">Фотография профиля</string>
     <string name="error_media_parse_error">Непредвиденный ответ сервера.</string>
     <string name="upload_finished_toast">Загрузку нельзя остановить, так как она уже завершена.</string>
@@ -3026,7 +3041,6 @@ Language: ru
     <string name="site_settings_image_quality_hint">Качество фотографий. Чем выше значение, тем выше качество изображений.</string>
     <string name="site_settings_optimize_images_summary">Включить функцию изменения размера и сжатия изображений</string>
     <string name="media_encoder_quality_maximum">Максимальное</string>
-    <string name="media_encoder_quality_very_high">Очень высокое</string>
     <string name="media_encoder_quality_high">Высокое</string>
     <string name="media_encoder_quality_medium">Среднее</string>
     <string name="media_encoder_quality_low">Низкое</string>

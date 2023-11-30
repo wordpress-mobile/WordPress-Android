@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-15 20:54:09+0000
+Translation-Revision-Date: 2023-11-29 17:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.11
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">لهذا السبب، نوصي بتحرير المكوّن باستخدام متصفح الويب لديك.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">لهذا السبب، نوصي بتحرير المكوّن باستخدام محرر الويب.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">بدلاً من ذلك، يمكنك تمهيد المحتوى عن طريق فك تجميع المكوّن.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">الانتقال إلى الإعدادات</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">إلغاء</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">منح</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">لقد رفضت صلاحية الكاميرا بشكل دائم. إنها مطلوبة من أجل مسح الرمز الشريطي ضوئيًا. يرجى تمكينها من إعدادات التطبيق</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">صلاحية الكاميرا مطلوبة من أجل مسح الرمز الشريطي ضوئيًا</string>
+    <string name="barcode_scanning_alert_dialog_title">منح صلاحية الكاميرا</string>
+    <string name="barcode_scanning_camera_permission_denied">تلزم صلاحية الكاميرا لمسح الرمز الشريطي.</string>
+    <string name="barcode_scanning_title">مسح الرمز الشريطي ضوئيًا</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">قد لا تظهر المكوّنات المتداخلة بشكل أكثر عمقًا من %d من المستويات بشكل صحيح في محرر الهاتف المحمول.</string>
+    <string name="jp_migration_lets_go_button">لنبدأ</string>
+    <string name="jp_migration_done_no_sites_message">حان الوقت لمواصلة رحلتك في ووردبريس.كوم على تطبيق Jetpack.</string>
+    <string name="image_optimization_promo_desc">يؤدي تحسين الصورة إلى تقليل حجم الصور المطلوب رفعها بسرعة.\n\nتم تمكين هذا الخيار افتراضيًا، لكن يمكنك تغييره ضمن إعدادات التطبيق في أي وقت.</string>
+    <string name="image_optimization_promo_title">هل تريد الاستمرار في تحسين الصور؟</string>
+    <string name="leave_off">لا، توقف عن الاستخدام</string>
+    <string name="turn_on">نعم، واصل الاستخدام</string>
+    <string name="domain_management_clear_search">مسح البحث</string>
+    <string name="media_encoder_quality_very_high">مرتفع للغاية</string>
     <string name="notification_security_key_needed">يرجى إدخال مفتاح الأمان الخاص بك للاستمرار.</string>
     <string name="login_error_security_key">كانت هناك بعض المشكلات عند تسجيل الدخول باستخدام مفتاح الأمان</string>
     <string name="login_text_security_key">استخدام مفتاح الأمان</string>
@@ -64,7 +84,6 @@ Language: ar
     <string name="gutenberg_native_synced_patterns">الأنماط التي تمت مزامنتها</string>
     <string name="gutenberg_native_deeply_nested_block">مكوّن متداخل بشكل عميق</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">قد لا تظهر المكوّنات المتداخلة بشكل أكثر عمقًا من %d من المستويات بشكل صحيح في محرر الهاتف المحمول. لهذا السبب، نوصي بتهيئة المحتوى عن طريق إلغاء تجميع المكوّن أو تحرير المكوّن باستخدام محرر الويب.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">قد لا تظهر المكوّنات المتداخلة بشكل أكثر عمقًا من %d من المستويات بشكل صحيح في محرر الهاتف المحمول. لهذا السبب، نوصي بتهيئة المحتوى عن طريق إلغاء تجميع المكوّن أو تحرير المكوّن باستخدام متصفح الويب لديك.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">يتعذر عرض المكوّن نظرًا إلى تداخله بشكل عميق. اضغط هنا للحصول على مزيد من التفاصيل.</string>
     <string name="pages_no_site_something_went_wrong">حسنًا، حدث خطأ. ترجى المحاولة مرة أخرى لاحقًا.</string>
     <string name="sharing_connect_via_web_warning_positive_button">الانتقال إلى الويب</string>
@@ -388,7 +407,7 @@ Language: ar
     <string name="blogging_prompts_list_answered_prompt">✓ تم الرد</string>
     <string name="blogging_prompts_list_title">المطالبات</string>
     <string name="close_desc">إغلاق</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">وبدلاً من ذلك، يمكنك فصل هذا المكوّن وتحريره على حدة عن طريق النقر على \"فصل النمط\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">بدلاً من ذلك، يمكنك فصل هذا المكوّن وتحريره على حدة عن طريق النقر على \"فصل\".</string>
     <string name="dlg_confirm_delete_category">هل تريد حذف تصنيف \"%s\" بشكل دائم؟</string>
     <string name="deleting_cat_success">نجح حذف التصنيف</string>
     <string name="deleting_cat_failed">فشل حذف التصنيف</string>
@@ -2874,10 +2893,6 @@ Language: ar
     <string name="open_mail">فتح البريد</string>
     <string name="next">التالي</string>
     <string name="enter_email_wordpress_com">سجِّل الدخول إلى WordPress.com باستخدام عنوان بريد إلكتروني لإدارة جميع مواقع ووردبريس الخاصة بك.</string>
-    <string name="image_optimization_promo_desc">يقلل تحسين الصورة حجم الصور لتحميلها بسرعة.\n\nيمكنك تغيير هذا في أي وقت في إعدادات الموقع.</string>
-    <string name="image_optimization_promo_title">هل تريد تشغيل تحسين الصورة؟</string>
-    <string name="leave_off">التوقف عن الاستخدام</string>
-    <string name="turn_on">التشغيل</string>
     <string name="me_profile_photo">صورة الملف الشخصي</string>
     <string name="error_media_parse_error">استجابة غير متوقعة من الخادم</string>
     <string name="upload_finished_toast">يتعذر إيقاف التحميل لأنه انتهى بالفعل</string>
@@ -3014,11 +3029,6 @@ Language: ar
     <string name="editor_post_saved_online">تم حفظ المقالة على الإنترنت</string>
     <string name="site_settings_image_quality_hint">جودة الصور. تُشير القيم الأعلى إلى الصور ذات الجودة الأفضل.</string>
     <string name="site_settings_optimize_images_summary">تمكين تغيير حجم الصور وضغطها</string>
-    <string name="media_encoder_quality_maximum">الحد الأقصى</string>
-    <string name="media_encoder_quality_very_high">مرتفع للغاية</string>
-    <string name="media_encoder_quality_high">مرتفع</string>
-    <string name="media_encoder_quality_medium">متوسط</string>
-    <string name="media_encoder_quality_low">منخفض</string>
     <string name="media_upload_state_uploaded">تم الرفع</string>
     <string name="media_upload_state_deleted">محذوف</string>
     <string name="media_upload_state_queued">تم الوضع في قائمة الانتظار</string>

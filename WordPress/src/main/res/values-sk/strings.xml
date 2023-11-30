@@ -682,10 +682,6 @@ Language: sk
     <string name="open_mail">Otvoriť e-mail</string>
     <string name="next">Ďalej</string>
     <string name="enter_email_wordpress_com">Prihláste sa do WordPress.com použití e-mailovej adresy a spravujte všetky vaše webové stránky WordPress.</string>
-    <string name="image_optimization_promo_desc">Optimalizácia obrázkov zmenší obrázky pre rýchlejšie nahranie.\n\nPokyn môžete kedykoľvek zmeniť v nastaveniach webovej stránky.</string>
-    <string name="image_optimization_promo_title">Zapnúť optimalizáciu obrázkov?</string>
-    <string name="leave_off">Vynechať</string>
-    <string name="turn_on">Zapnúť</string>
     <string name="me_profile_photo">Profilová fotografia</string>
     <string name="error_media_parse_error">Neočakávaná odpoveď od serveru</string>
     <string name="upload_finished_toast">Nemožno zastaviť nahrávanie, pretože je už dokončené.</string>
@@ -822,11 +818,6 @@ Language: sk
     <string name="editor_post_saved_online">článok uložený online.</string>
     <string name="site_settings_image_quality_hint">Kvalita obrázkov. Vyššie hodnoty znamenajú lepšiu kvalitu obrázkov.</string>
     <string name="site_settings_optimize_images_summary">Povoliť zmenu veľkosti a komprimovanie obrázkov.</string>
-    <string name="media_encoder_quality_maximum">Maximálna</string>
-    <string name="media_encoder_quality_very_high">Veľmi vysoká</string>
-    <string name="media_encoder_quality_high">Vysoká</string>
-    <string name="media_encoder_quality_medium">Stredná</string>
-    <string name="media_encoder_quality_low">Nízka</string>
     <string name="media_upload_state_uploaded">Nahraté</string>
     <string name="media_upload_state_failed">Nahrávanie zlyhalo</string>
     <string name="media_upload_state_deleted">Vymazané</string>
