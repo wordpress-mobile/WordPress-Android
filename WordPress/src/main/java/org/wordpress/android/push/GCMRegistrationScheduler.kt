@@ -10,7 +10,7 @@ import javax.inject.Inject
 class GCMRegistrationScheduler @Inject constructor(
     val contextProvider: ContextProvider
 ) {
-    val workManager by lazy { WorkManager.getInstance(contextProvider.getContext()) }
+    private val workManager by lazy { WorkManager.getInstance(contextProvider.getContext()) }
 
     fun scheduleRegistration() {
         workManager.enqueueUniqueWork(
@@ -18,10 +18,6 @@ class GCMRegistrationScheduler @Inject constructor(
             ExistingWorkPolicy.KEEP,
             buildOneTimeWorkRequest()
         )
-    }
-
-    fun cancelScheduledRegistration() {
-        workManager.cancelAllWorkByTag(UNIQUE_WORK_NAME)
     }
 
     private fun buildOneTimeWorkRequest() =
