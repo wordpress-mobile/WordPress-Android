@@ -64,7 +64,6 @@ Language: he_IL
     <string name="gutenberg_native_synced_patterns">מקבצים מסונכרנים</string>
     <string name="gutenberg_native_deeply_nested_block">בלוק בקינון עמוק</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">בעורך לנייד ייתכן עיבוד לא תקין של בלוקים בקינון עמוק מ-%d רמות. מסיבה זו מומלץ \'לשטח\' את התוכן על ידי ביטול הקבצת הבלוק או לערוך את הבלוק בעזרת עורך האינטרנט.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">בעורך לנייד ייתכן עיבוד לא תקין של בלוקים בקינון עמוק מ-%d רמות. מסיבה זו מומלץ \'לשטח\' את התוכן על ידי ביטול הקבצת הבלוק או לערוך את הבלוק בעזרת דפדפן האינטרנט.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">לא ניתן לעבד את הבלוק בגלל קינון עמוק. לקבלת פרטים נוספים יש להקיש כאן.</string>
     <string name="pages_no_site_something_went_wrong">אופס, משהו השתבש. נא לנסות שוב מאוחר יותר.</string>
     <string name="sharing_connect_via_web_warning_positive_button">מעבר לאתר בדפדפן</string>
@@ -390,7 +389,6 @@ Language: he_IL
     <string name="blogging_prompts_list_answered_prompt">✓ תשובה התקבלה</string>
     <string name="blogging_prompts_list_title">הצעות</string>
     <string name="close_desc">לסגור</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">לחלופין, ניתן לנתק ולערוך את הבלוק הזה בנפרד על ידי הקשה על \'להפריד מקבץ\'.</string>
     <string name="dlg_confirm_delete_category">למחוק לצמיתות את הקטגוריה \'%s\'?</string>
     <string name="deleting_cat_success">מחקת את הקטגוריה בהצלחה</string>
     <string name="deleting_cat_failed">מחיקת הקטגוריה נכשלה</string>
@@ -2876,10 +2874,6 @@ Language: he_IL
     <string name="open_mail">לפתוח את הדואר</string>
     <string name="next">הבא</string>
     <string name="enter_email_wordpress_com">התחברות ל-WordPress.com באמצעות כתובת אימייל כדי לנהל את האתרים שלך ב-WordPress.</string>
-    <string name="image_optimization_promo_desc">מיטוב התמונות מכווץ כעת תמונות להעלאה מהירה יותר.\n\nאפשר לשנות את האפשרות הזו בכל עת דרך הגדרות האתר.</string>
-    <string name="image_optimization_promo_title">להפעיל את מיטוב התמונות?</string>
-    <string name="leave_off">להשאיר מכובה</string>
-    <string name="turn_on">הפעלה</string>
     <string name="me_profile_photo">תמונת פרופיל</string>
     <string name="error_media_parse_error">תגובה לא צפויה מהשרת</string>
     <string name="upload_finished_toast">לא ניתן להפסיק את ההעלאה כיוון שכבר הסתיימה</string>
@@ -3016,11 +3010,6 @@ Language: he_IL
     <string name="editor_post_saved_online">הפוסט נשמר ברשת</string>
     <string name="site_settings_image_quality_hint">איכות תמונות. ערכים גבוהים יותר מאפשרים איכות טובה יותר של התמונות.</string>
     <string name="site_settings_optimize_images_summary">הפעלת עריכה של גודל תמונות ודחיסתן</string>
-    <string name="media_encoder_quality_maximum">מקסימום</string>
-    <string name="media_encoder_quality_very_high">גבוהה מאוד</string>
-    <string name="media_encoder_quality_high">גבוהה</string>
-    <string name="media_encoder_quality_medium">בינונית</string>
-    <string name="media_encoder_quality_low">נמוכה</string>
     <string name="media_upload_state_uploaded">הועלה</string>
     <string name="media_upload_state_failed">העלאה נכשלה</string>
     <string name="media_upload_state_deleted">נמחק</string>

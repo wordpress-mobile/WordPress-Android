@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-14 07:49:24+0000
+Translation-Revision-Date: 2023-11-29 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Aus diesem Grund empfehlen wir, den Block in deinem Webbrowser zu bearbeiten.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Aus diesem Grund empfehlen wir, den Block im Webeditor zu bearbeiten.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternativ kannst du die Tiefe des Inhalts reduzieren, indem du die Gruppierung des Blocks aufhebst.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Zu den Einstellungen</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">Abbrechen</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Gewähren</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Du hast die Berechtigung zum Zugriff auf deine Kamera dauerhaft abgelehnt. Sie ist erforderlich, um den Barcode zu scannen. Bitte aktiviere die Option in den App-Einstellungen</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">Zum Scannen des Barcodes ist die Berechtigung für den Zugriff auf deine Kamera erforderlich</string>
+    <string name="barcode_scanning_alert_dialog_title">Berechtigung zum Zugriff auf deine Kamera gewähren</string>
+    <string name="barcode_scanning_camera_permission_denied">Zum Scannen des Barcodes ist die Berechtigung zum Zugriff auf deine Kamera erforderlich.</string>
+    <string name="barcode_scanning_title">Barcode scannen</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blöcke, die tiefer als %d Ebenen verschachtelt sind, werden im mobilen Editor möglicherweise nicht richtig dargestellt.</string>
+    <string name="jp_migration_lets_go_button">Los geht\'s</string>
+    <string name="jp_migration_done_no_sites_message">Es ist an der Zeit, deine WordPress-Reise in der Jetpack-App fortzusetzen.</string>
+    <string name="image_optimization_promo_desc">Die Bildoptimierung schrumpft Bilder für schnelleres Hochladen.\n\nDiese Option ist standardmäßig aktiviert, aber du kannst jederzeit Änderungen in den App-Einstellungen vornehmen.</string>
+    <string name="image_optimization_promo_title">Sollen Bilder weiterhin optimiert werden?</string>
+    <string name="leave_off">Nein, deaktivieren</string>
+    <string name="turn_on">Ja, aktiviert lassen</string>
+    <string name="domain_management_clear_search">Suche löschen</string>
+    <string name="media_encoder_quality_very_high">Sehr hoch</string>
     <string name="notification_security_key_needed">Bitte gib deinen Sicherheitsschlüssel an, um fortzufahren.</string>
     <string name="login_error_security_key">Es gab einige Probleme mit der Anmeldung per Sicherheitsschlüssel</string>
     <string name="login_text_security_key">Sicherheitsschlüssel verwenden</string>
@@ -64,7 +84,6 @@ Language: de
     <string name="gutenberg_native_synced_patterns">Synchronisierte Vorlagen</string>
     <string name="gutenberg_native_deeply_nested_block">Tief verschachtelter Block</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Blöcke, die tiefer als %d Ebenen verschachtelt sind, werden im mobilen Editor möglicherweise nicht richtig dargestellt. Aus diesem Grund empfehlen wir, die Tiefe des Inhalts zu reduzieren, indem du die Gruppierung des Blocks aufhebst oder den Block mit dem Webeditor bearbeitest.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blöcke, die tiefer als %d Ebenen verschachtelt sind, werden im mobilen Editor möglicherweise nicht richtig dargestellt. Aus diesem Grund empfehlen wir, die Tiefe des Inhalts zu reduzieren, indem du die Gruppierung des Blocks aufhebst oder den Block mit deinem Webbrowser bearbeitest.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Der Block kann nicht gerendert werden, weil er tief verschachtelt ist. Tippe hier für weitere Details.</string>
     <string name="pages_no_site_something_went_wrong">Huch, etwas ist schiefgelaufen. Bitte versuche es später erneut.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Internet öffnen</string>
@@ -394,7 +413,7 @@ Language: de
     <string name="blogging_prompts_list_answered_prompt">✓ Geantwortet</string>
     <string name="blogging_prompts_list_title">Schreibanregungen</string>
     <string name="close_desc">Tag schließen</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativ kannst du diese Blöcke loslösen und separat bearbeiten, indem du auf „Vorlage loslösen“ tippst.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativ kannst du diesen Block trennen und separat bearbeiten, indem du auf „Loslösen“ tippst.</string>
     <string name="dlg_confirm_delete_category">Kategorie „%s“ dauerhaft löschen?</string>
     <string name="deleting_cat_success">Kategorie erfolgreich gelöscht</string>
     <string name="deleting_cat_failed">Löschen der Kategorie fehlgeschlagen</string>
@@ -2885,10 +2904,6 @@ Language: de
     <string name="open_mail">E-Mail öffnen</string>
     <string name="next">Weiter</string>
     <string name="enter_email_wordpress_com">Melde dich auf WordPress.com mit einer E-Mail-Adresse an, um alle deine WordPress-Websites zu verwalten.</string>
-    <string name="image_optimization_promo_desc">Bildoptimierung schrumpft Bilder für schnelleres Hochladen.\n\nDies kannst du in den Website-Einstellungen jederzeit ändern.</string>
-    <string name="image_optimization_promo_title">Bildoptimierung einschalten?</string>
-    <string name="leave_off">Weiterhin ausschalten</string>
-    <string name="turn_on">Einschalten</string>
     <string name="me_profile_photo">Profilfoto</string>
     <string name="error_media_parse_error">Unerwartete Serverantwort</string>
     <string name="upload_finished_toast">Das Hochladen kann nicht unterbrochen werden, weil es bereits beendet wurde</string>
@@ -3025,11 +3040,6 @@ Language: de
     <string name="editor_post_saved_online">Der Beitrag wurde online gespeichert</string>
     <string name="site_settings_image_quality_hint">Qualität der Bilder. Höhere Werte bedeuten bessere Bilder.</string>
     <string name="site_settings_optimize_images_summary">Aktivieren, um die Größe von Bildern zu ändern und sie zu komprimieren</string>
-    <string name="media_encoder_quality_maximum">Maximal</string>
-    <string name="media_encoder_quality_very_high">Sehr hoch</string>
-    <string name="media_encoder_quality_high">Hoch</string>
-    <string name="media_encoder_quality_medium">Mittel</string>
-    <string name="media_encoder_quality_low">Niedrig</string>
     <string name="media_upload_state_uploaded">Hochgeladen</string>
     <string name="media_upload_state_failed">Hochladen fehlgeschlagen</string>
     <string name="media_upload_state_deleted">Gelöscht</string>

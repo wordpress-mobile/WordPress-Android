@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-15 13:54:11+0000
+Translation-Revision-Date: 2023-11-29 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Per questo motivo consigliamo di modificare il blocco tramite il browser web.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Per questo motivo consigliamo di modificare il blocco tramite l\'editor web.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">In alternativa, puoi uniformare i contenuti separando il blocco.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Vai a Impostazioni</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">Annulla</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Concedi</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Hai negato in maniera definitiva l\'autorizzazione alla fotocamera. È richiesta per la scansione del codice a barre. Procedi all\'abilitazione nelle impostazioni dell\'app</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">Per poter scansionare il codice a barre è richiesta l\'autorizzazione della fotocamera</string>
+    <string name="barcode_scanning_alert_dialog_title">Concedi autorizzazione per l\'uso della fotocamera</string>
+    <string name="barcode_scanning_camera_permission_denied">Per la scansione del codice a barre è richiesta l\'autorizzazione per l\'uso della fotocamera.</string>
+    <string name="barcode_scanning_title">Scansiona codice a barre</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">I blocchi con più di %d livelli di nidificazione potrebbero non essere visualizzati correttamente nell\'editor per dispositivi mobili.</string>
+    <string name="jp_migration_lets_go_button">Iniziamo</string>
+    <string name="jp_migration_done_no_sites_message">È ora di continuare il tuo viaggio con WordPress sull\'app Jetpack.</string>
+    <string name="image_optimization_promo_desc">L\'ottimizzazione delle immagini restringe l\'immagine per un caricamento più veloce.\n\nQuesta opzione viene attivata per impostazione predefinita, ma puoi modificarla nelle impostazioni dell\'app in qualsiasi momento.</string>
+    <string name="image_optimization_promo_title">Vuoi continuare a ottimizzare le immagini?</string>
+    <string name="leave_off">No, disattiva</string>
+    <string name="turn_on">Si, continua</string>
+    <string name="domain_management_clear_search">Cancella ricerca</string>
+    <string name="media_encoder_quality_very_high">Molto alta</string>
     <string name="notification_security_key_needed">Fornisci una chiave di sicurezza per continuare.</string>
     <string name="login_error_security_key">Si è verificato un errore con l\'accesso alla chiave di sicurezza</string>
     <string name="login_text_security_key">Usa una chiave di sicurezza</string>
@@ -63,7 +83,6 @@ Language: it
     <string name="gutenberg_native_synced_patterns">Pattern sincronizzati</string>
     <string name="gutenberg_native_deeply_nested_block">Blocco con molti livelli di nidificazione</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">I blocchi con più di %d livelli di nidificazione potrebbero non essere visualizzati correttamente nell\'editor per dispositivi mobili. Per questo motivo, consigliamo di uniformare i contenuti separando il blocco o modificandolo tramite l\'editor web.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">I blocchi con più di %d livelli di nidificazione potrebbero non essere visualizzati correttamente nell\'editor per dispositivi mobili. Per questo motivo consigliamo di uniformare i contenuti separando il blocco o modificandolo tramite il browser web.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Il blocco non può essere visualizzato perché ha troppi livelli di nidificazione. Tocca qui per ulteriori dettagli.</string>
     <string name="pages_no_site_something_went_wrong">Oh oh, si è verificato un problema. Riprova più tardi.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Vai al web</string>
@@ -390,7 +409,7 @@ Language: it
     <string name="blogging_prompts_list_answered_prompt">✓ Risposta</string>
     <string name="blogging_prompts_list_title">Richieste</string>
     <string name="close_desc">chiudi</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">In alternativa, puoi staccare e modificare questo blocco separatamente toccando “Scollega pattern”.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">In alternativa, puoi scollegare e modificare questo blocco separatamente toccando “Scollega”.</string>
     <string name="dlg_confirm_delete_category">Eliminare definitivamente la Categoria \'%s\'?</string>
     <string name="deleting_cat_success">Categoria eliminata correttamente</string>
     <string name="deleting_cat_failed">Impossibile eliminare la categoria</string>
@@ -2879,10 +2898,6 @@ Language: it
     <string name="open_mail">Apri email</string>
     <string name="next">Successivo</string>
     <string name="enter_email_wordpress_com">Accedi a WordPress.com utilizzando un indirizzo email per gestire tutti i tuoi siti WordPress.com.</string>
-    <string name="image_optimization_promo_desc">L\'ottimizzazione dell\'immagine restringe l\'immagine per un caricamento più veloce.\n\nPuoi modificare questa opzione in qualsiasi momento nelle impostazioni del sito.</string>
-    <string name="image_optimization_promo_title">Attivare l\'ottimizzazione dell\'immagine?</string>
-    <string name="leave_off">Escludi</string>
-    <string name="turn_on">Attiva</string>
     <string name="me_profile_photo">Foto profilo</string>
     <string name="error_media_parse_error">Risposta imprevista dal server</string>
     <string name="upload_finished_toast">Impossibile interrompere il caricamento perché è già stato terminato</string>
@@ -3019,11 +3034,6 @@ Language: it
     <string name="editor_post_saved_online">L\'articolo è stato salvato online</string>
     <string name="site_settings_image_quality_hint">Qualità delle immagini. Valori più elevati indicano una migliore qualità delle immagini.</string>
     <string name="site_settings_optimize_images_summary">Consenti di ridimensionare e comprimere le immagini</string>
-    <string name="media_encoder_quality_maximum">Massima</string>
-    <string name="media_encoder_quality_very_high">Molto alta</string>
-    <string name="media_encoder_quality_high">Alta</string>
-    <string name="media_encoder_quality_medium">Media</string>
-    <string name="media_encoder_quality_low">Bassa</string>
     <string name="media_upload_state_uploaded">Caricato</string>
     <string name="media_upload_state_failed">Caricamento fallito</string>
     <string name="media_upload_state_deleted">Eliminato</string>

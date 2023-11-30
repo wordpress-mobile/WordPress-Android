@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-15 16:54:09+0000
+Translation-Revision-Date: 2023-11-29 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">因此，我們建議使用網頁瀏覽器來編輯區塊。</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">因此，我們建議使用網頁編輯器來編輯區塊。</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">或者，你可以取消區塊群組來簡化內容。</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">前往「設定」</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">取消</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">授予</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">你已永久拒絕相機授權。 掃瞄條碼必須獲得此授權。 請在應用程式設定中啟用該權限</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">需要相機權限才能掃瞄條碼</string>
+    <string name="barcode_scanning_alert_dialog_title">授予相機使用權限</string>
+    <string name="barcode_scanning_camera_permission_denied">需要相機權限才能掃瞄條碼。</string>
+    <string name="barcode_scanning_title">掃瞄條碼</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">行動編輯器可能無法正確顯示內嵌超過 %d 層的區塊。</string>
+    <string name="jp_migration_lets_go_button">我們開始吧</string>
+    <string name="jp_migration_done_no_sites_message">現在就在 Jetpack 應用程式上繼續你的 WordPress 旅程。</string>
+    <string name="image_optimization_promo_desc">圖片最佳化會壓縮圖片，以加快上傳速度。\n\n系統預設啟用此選項，但你可以隨時在應用程式設定中變更。</string>
+    <string name="image_optimization_promo_title">要繼續最佳化圖片嗎？</string>
+    <string name="leave_off">不，關閉設定</string>
+    <string name="turn_on">是，繼續使用</string>
+    <string name="domain_management_clear_search">清除搜尋</string>
+    <string name="media_encoder_quality_very_high">超高</string>
     <string name="notification_security_key_needed">請提供安全性金鑰以繼續使用。</string>
     <string name="login_error_security_key">使用安全性金鑰登入時遇到問題</string>
     <string name="login_text_security_key">使用安全性金鑰</string>
@@ -64,7 +84,6 @@ Language: zh_TW
     <string name="gutenberg_native_synced_patterns">同步的版面配置</string>
     <string name="gutenberg_native_deeply_nested_block">向下內嵌區塊</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">向下內嵌超過 %d 層的區塊，在行動編輯器中可能無法正常轉譯。 因此我們建議藉由取消區塊群組，或使用你的網頁編輯器編輯區塊來減少內容。</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">向下內嵌超過 %d 層的區塊，在行動編輯器中可能無法正常轉譯。 因此我們建議藉由取消區塊群組，或使用你的網頁瀏覽器編輯區塊來減少內容。</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">由於區塊已向下內嵌，故無法轉譯。 點選以瞭解更多詳細資訊。</string>
     <string name="pages_no_site_something_went_wrong">糟糕，發生錯誤… 請稍後再試。</string>
     <string name="sharing_connect_via_web_warning_positive_button">前往網頁</string>
@@ -390,7 +409,7 @@ Language: zh_TW
     <string name="blogging_prompts_list_answered_prompt">✓ 已回答</string>
     <string name="blogging_prompts_list_title">提示</string>
     <string name="close_desc">關閉</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">你可以改為點選「中斷連結版面配置」，然後中斷連結並單獨編輯此區塊。</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">你也可以改為點選「中斷連結」，然後中斷連結並單獨編輯此區塊。</string>
     <string name="dlg_confirm_delete_category">是否要永久刪除「%s」分類？</string>
     <string name="deleting_cat_success">分類已成功刪除</string>
     <string name="deleting_cat_failed">刪除分類失敗</string>
@@ -2877,10 +2896,6 @@ Language: zh_TW
     <string name="open_mail">開啟郵件</string>
     <string name="next">下一篇</string>
     <string name="enter_email_wordpress_com">使用電子郵件地址登入 WordPress.com，即可管理你的所有 WordPress 網站。</string>
-    <string name="image_optimization_promo_desc">圖片最佳化會壓縮圖片，以加快上傳速度。\n\n你可以隨時在網站設定變更此設定。</string>
-    <string name="image_optimization_promo_title">開啟圖片最佳化？</string>
-    <string name="leave_off">保持關閉</string>
-    <string name="turn_on">開啟</string>
     <string name="me_profile_photo">個人檔案照片</string>
     <string name="error_media_parse_error">從伺服器傳來未預期的回應</string>
     <string name="upload_finished_toast">上傳已經結束，無法停止上傳</string>
@@ -3017,11 +3032,8 @@ Language: zh_TW
     <string name="editor_post_saved_online">文章已在線上儲存</string>
     <string name="site_settings_image_quality_hint">照片品質。越高的值代表越高的照片品質。</string>
     <string name="site_settings_optimize_images_summary">啟用即可調整照片大小和壓縮照片</string>
-    <string name="media_encoder_quality_maximum">上限</string>
-    <string name="media_encoder_quality_very_high">超高</string>
-    <string name="media_encoder_quality_high">高</string>
-    <string name="media_encoder_quality_medium">中</string>
-    <string name="media_encoder_quality_low">低</string>
+    <string name="media_encoder_quality_maximum">最高</string>
+    <string name="media_encoder_quality_medium">中等</string>
     <string name="media_upload_state_uploaded">已上傳</string>
     <string name="media_upload_state_failed">上傳失敗</string>
     <string name="media_upload_state_deleted">已刪除</string>
