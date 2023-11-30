@@ -31,6 +31,7 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity
+import org.wordpress.android.ui.bloganuary.learnmore.BloganuaryNudgeLearnMoreOverlayFragment
 import org.wordpress.android.ui.domains.DomainRegistrationActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -753,8 +754,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         )
 
         is SiteNavigationAction.OpenBloganuaryNudgeOverlay -> {
-            // TODO thomashortadev: Implement Bloganuary nudge overlay
-            AppLog.d(AppLog.T.MY_SITE_DASHBOARD, "TODO: open Bloganuary nudge overlay")
+            BloganuaryNudgeLearnMoreOverlayFragment
+                .newInstance(action.isPromptsEnabled)
+                .show(requireActivity().supportFragmentManager, BloganuaryNudgeLearnMoreOverlayFragment.TAG)
         }
     }
 
