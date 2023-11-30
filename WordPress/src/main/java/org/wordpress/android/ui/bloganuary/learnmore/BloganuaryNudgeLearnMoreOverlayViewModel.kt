@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -15,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BloganuaryNudgeLearnMoreOverlayViewModel @Inject constructor(
     private val promptsSettingsHelper: BloggingPromptsSettingsHelper,
+    private val tracker: BloganuaryNudgeAnalyticsTracker,
 ) : ViewModel() {
     data class DismissEvent(val refreshDashboard: Boolean = false)
 
@@ -39,12 +41,12 @@ class BloganuaryNudgeLearnMoreOverlayViewModel @Inject constructor(
         )
     }
 
-    fun onDialogShown() {
-        // TODO thomashortadev add analytics
+    fun onDialogShown(isPromptsEnabled: Boolean) {
+        tracker.trackLearnMoreOverlayShown(isPromptsEnabled)
     }
 
     fun onActionClick(action: BloganuaryNudgeLearnMoreOverlayAction) {
-        // TODO thomashortadev add analytics
+        tracker.trackLearnMoreOverlayActionTapped(action)
         when (action) {
             BloganuaryNudgeLearnMoreOverlayAction.DISMISS -> {
                 _dismissDialog.value = DismissEvent()
@@ -62,6 +64,6 @@ class BloganuaryNudgeLearnMoreOverlayViewModel @Inject constructor(
     }
 
     fun onDialogDismissed() {
-        // TODO thomashortadev add analytics
+        tracker.trackLearnMoreOverlayDismissed()
     }
 }
