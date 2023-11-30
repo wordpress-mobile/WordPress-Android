@@ -1,4 +1,5 @@
 package org.wordpress.android.ui.qrcodeauth
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -40,6 +41,7 @@ import org.wordpress.android.ui.qrcodeauth.compose.state.LoadingState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
+
 @AndroidEntryPoint
 class QRCodeAuthFragment : Fragment() {
     @Inject
