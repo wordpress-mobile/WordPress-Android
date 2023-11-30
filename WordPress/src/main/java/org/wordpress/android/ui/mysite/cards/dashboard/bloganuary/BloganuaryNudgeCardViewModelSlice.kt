@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.bloganuary
 
+import android.icu.util.Calendar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
@@ -35,8 +36,8 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
     }
 
     fun getBuilderParams(): BloganuaryNudgeCardBuilderParams {
-        // TODO thomashortadev: check if current device date is in December 2023
         val isEligible = bloganuaryNudgeFeatureConfig.isEnabled() &&
+                Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER &&
                 bloggingPromptsSettingsHelper.isPromptsFeatureAvailable() &&
                 !isCardHiddenByUser()
 
