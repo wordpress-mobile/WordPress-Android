@@ -38,13 +38,13 @@ import androidx.compose.material.MaterialTheme as Material2Theme
 @Composable
 fun BloganuaryNudgeLearnMoreOverlay(
     model: BloganuaryNudgeLearnMoreOverlayUiState,
-    onAction: (BloganuaryNudgeLearnMoreOverlayAction) -> Unit,
-    onDismiss: () -> Unit,
+    onActionClick: (BloganuaryNudgeLearnMoreOverlayAction) -> Unit,
+    onCloseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
         IconButton(
-            onClick = onDismiss,
+            onClick = onCloseClick,
             modifier = Modifier.align(Alignment.End),
         ) {
             Icon(
@@ -93,7 +93,7 @@ fun BloganuaryNudgeLearnMoreOverlay(
                 )
         ) {
             Button(
-                onClick = { onAction(model.action) },
+                onClick = { onActionClick(model.action) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Material2Theme.colors.onSurface,
@@ -144,8 +144,8 @@ private fun BloganuaryNudgeLearnMoreOverlayPreview() {
                 ),
                 action = BloganuaryNudgeLearnMoreOverlayAction.DISMISS,
             ),
-            onAction = {},
-            onDismiss = {},
+            onActionClick = {},
+            onCloseClick = {},
         )
     }
 }
