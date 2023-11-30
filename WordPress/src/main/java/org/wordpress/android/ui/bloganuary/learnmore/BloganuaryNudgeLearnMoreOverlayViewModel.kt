@@ -29,6 +29,10 @@ class BloganuaryNudgeLearnMoreOverlayViewModel : ViewModel() {
         )
     }
 
+    fun onOverlayShown() {
+        // TODO thomashortadev add analytics
+    }
+
     fun onActionClick(action: BloganuaryNudgeLearnMoreOverlayAction) {
         when (action) {
             BloganuaryNudgeLearnMoreOverlayAction.DISMISS -> {
