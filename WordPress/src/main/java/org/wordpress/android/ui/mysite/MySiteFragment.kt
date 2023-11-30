@@ -450,8 +450,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             if (quickStartScrollPosition > 0) recyclerView.scrollToPosition(quickStartScrollPosition)
             else appbarMain.setExpanded(true)
         }
-    }
 
+        wpMainActivityViewModel.mySiteDashboardRefreshRequested.observeEvent(viewLifecycleOwner) {
+            viewModel.refresh()
+        }
+    }
 
     private fun MySiteFragmentBinding.hideRefreshIndicatorIfNeeded() {
         swipeRefreshLayout.postDelayed({
