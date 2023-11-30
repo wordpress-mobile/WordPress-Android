@@ -12,6 +12,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.Bloganuary
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.config.BloganuaryNudgeFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -22,6 +23,7 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val tracker: BloganuaryNudgeAnalyticsTracker,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
@@ -36,8 +38,9 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
     }
 
     fun getBuilderParams(): BloganuaryNudgeCardBuilderParams {
+        val now = dateTimeUtilsWrapper.getCalendarInstance()
         val isEligible = bloganuaryNudgeFeatureConfig.isEnabled() &&
-                Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER &&
+                now.get(Calendar.MONTH) == Calendar.DECEMBER &&
                 bloggingPromptsSettingsHelper.isPromptsFeatureAvailable() &&
                 !isCardHiddenByUser()
 
