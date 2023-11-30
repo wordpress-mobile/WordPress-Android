@@ -2,12 +2,15 @@ package org.wordpress.android.ui.bloganuary.learnmore
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import javax.inject.Inject
 
-class BloganuaryNudgeLearnMoreOverlayViewModel : ViewModel() {
+@HiltViewModel
+class BloganuaryNudgeLearnMoreOverlayViewModel @Inject constructor() : ViewModel() {
     private val _dismissDialog = SingleLiveEvent<Unit>()
     val dismissDialog = _dismissDialog as LiveData<Unit>
 
