@@ -4822,7 +4822,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="bloganuary_dashboard_nudge_learn_more">@string/learn_more</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Join our month-long writing challenge</string>
-    <string name="bloganuary_dashboard_nudge_overlay_text">Receive a new prompt to inspire you each day.\n\nPublish your response.\n\nRead other bloggers’ responses to get inspiration and make new connections.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">Receive a new prompt to inspire you each day.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">Publish your response.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">Read other bloggers’ responses to get inspiration and make new connections.</string>
     <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Bloganuary will take over the normal blogging prompts you see from Day One for January. To join Bloganuary you need to enable Blogging Prompts.</string>
     <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary will take over the normal blogging prompts you see from Day One for January.</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Turn on blogging prompts</string>
