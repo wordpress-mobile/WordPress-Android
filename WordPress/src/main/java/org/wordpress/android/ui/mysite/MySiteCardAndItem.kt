@@ -380,6 +380,12 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onMoreMenuClick: ListItemInteraction,
         ) : Card(type = Type.DASHBOARD_PLANS_CARD)
 
+        data class WpSotw2023NudgeCardModel(
+            val onMoreMenuClick: ListItemInteraction,
+            val onHideMenuItemClick: ListItemInteraction,
+            val onCtaClick: ListItemInteraction,
+        )
+
         data class NoCardsMessage(val title: UiString, val message: UiString)  : Card(Type.NO_CARDS_MESSAGE)
         data class PersonalizeCardModel(val onClick: () -> Unit) : Card(Type.PERSONALIZE_CARD)
     }
