@@ -4,11 +4,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Ignore
-
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenExternalUrl
 import org.wordpress.android.util.config.WpSotw2023NudgeFeatureConfig
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -39,7 +39,17 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
 
         val card = viewModelSlice.buildCard()
 
-        assertThat(card!!).isNotNull
+        assertThat(card).isNotNull
+    }
+
+    @Test
+    fun `WHEN card onCtaClick is clicked THEN navigate to URL`() {
+        whenever(featureConfig.isEnabled()).thenReturn(true)
+
+        val card = viewModelSlice.buildCard()!!
+
+        card.onCtaClick.click()
+        assertThat(viewModelSlice.onNavigation.value?.peekContent()).isInstanceOf(OpenExternalUrl::class.java)
     }
 
     @Ignore("TODO thomashortadev")
@@ -48,22 +58,16 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
         // TODO thomashortadev implement when done
     }
 
-    @Ignore("TODO thomashortadev")
-    @Test
-    fun `WHEN card onCtaClick is clicked THEN navigate to URL`() {
-        // TODO thomashortadev implement when done
-    }
-
     // region Analytics
     @Ignore("TODO thomashortadev")
     @Test
-    fun `WHEN card onHideMenuItemClick is clicked THEN analytics is tracked`() {
+    fun `WHEN card onCtaClick is clicked THEN analytics is tracked`() {
         // TODO thomashortadev implement when done
     }
 
     @Ignore("TODO thomashortadev")
     @Test
-    fun `WHEN card onCtaClick is clicked THEN analytics is tracked`() {
+    fun `WHEN card onHideMenuItemClick is clicked THEN analytics is tracked`() {
         // TODO thomashortadev implement when done
     }
     // endregion Analytics
