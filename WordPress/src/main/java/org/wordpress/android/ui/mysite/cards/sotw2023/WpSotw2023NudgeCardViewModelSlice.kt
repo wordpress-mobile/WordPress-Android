@@ -19,12 +19,12 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
     ).takeIf { featureConfig.isEnabled() }
 
     private fun onHideMenuItemClick() {
-        // TODO analytics
-        // TODO hide card and refresh
+        // TODO thomashortadev analytics
+        // TODO thomashortadev hide card and refresh
     }
 
     private fun onCtaClick() {
-        // TODO analytics
-        // TODO navigation event to open SotW recording URL
+        // TODO thomashortadev analytics
+        // TODO thomashortadev navigation event to open SotW recording URL
     }
 }
