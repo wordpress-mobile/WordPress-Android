@@ -66,7 +66,6 @@ private fun CardToolbar(
     model: WpSotw2023NudgeCardModel
 ) {
     MySiteCardToolbar(
-        onContextMenuClick = { model.onMoreMenuClick.click() },
         contextMenuItems = listOf(
             MySiteCardToolbarContextMenuItem.Option(
                 text = stringResource(R.string.my_site_dashboard_card_more_menu_hide_card),
@@ -93,7 +92,6 @@ fun WpSotw2023NudgeCardPreview() {
                 title = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_title),
                 text = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_text),
                 ctaText = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_cta),
-                onMoreMenuClick = ListItemInteraction.create {},
                 onHideMenuItemClick = ListItemInteraction.create {},
                 onCtaClick = ListItemInteraction.create {},
             )

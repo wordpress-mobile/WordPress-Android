@@ -385,7 +385,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val title: UiString,
             val text: UiString,
             val ctaText: UiString,
-            val onMoreMenuClick: ListItemInteraction,
             val onHideMenuItemClick: ListItemInteraction,
             val onCtaClick: ListItemInteraction,
         ) : Card(type = Type.WP_SOTW_2023_NUDGE_CARD)

@@ -14,14 +14,9 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
         title = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_title),
         text = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_text),
         ctaText = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_cta),
-        onMoreMenuClick = ListItemInteraction.create(::onMoreMenuClick),
         onHideMenuItemClick = ListItemInteraction.create(::onHideMenuItemClick),
         onCtaClick = ListItemInteraction.create(::onCtaClick),
     ).takeIf { featureConfig.isEnabled() }
-
-    private fun onMoreMenuClick() {
-        // TODO analytics
-    }
 
     private fun onHideMenuItemClick() {
         // TODO analytics
