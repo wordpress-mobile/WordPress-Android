@@ -26,7 +26,8 @@ class ThemeCoroutineRestClient @Inject constructor(
         val response = wpApiGsonRequestBuilder.syncGetRequest(
             restClient = this,
             url = url,
-            clazz = Array<DemoPageResponse>::class.java
+            clazz = Array<DemoPageResponse>::class.java,
+            params = mapOf("per_page" to MAX_NUMBER_OF_DEMO_PAGES.toString()),
         )
         return when (response) {
             is WPAPIResponse.Success -> ThemeDemoDataWPAPIPayload(response.data)
@@ -43,6 +44,7 @@ class ThemeCoroutineRestClient @Inject constructor(
     }
 
     companion object {
+        private const val MAX_NUMBER_OF_DEMO_PAGES = 30
         private const val WP_DEMO_THEME_PAGES_URL = "/wp-json/wp/v2/pages"
     }
 }
