@@ -421,6 +421,9 @@
                 <data
                     android:host="home"
                     android:scheme="wordpress" />
+                <data
+                    android:host="media"
+                    android:scheme="wordpress" />
             </intent-filter>
         </activity-alias>
 
@@ -477,6 +480,12 @@
                 android:host="wordpress.com"
                 android:pathPattern="/notifications/.*"
                 android:scheme="http" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/media/..*"
+                    android:scheme="http" />
+
             </intent-filter>
         </activity-alias>
 
