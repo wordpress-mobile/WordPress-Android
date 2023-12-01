@@ -133,7 +133,7 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
         with (Mockito.lenient()) {
             whenever(featureConfig.isEnabled()).thenReturn(isFeatureEnabled)
             whenever(appPrefsWrapper.getShouldHideSotw2023NudgeCard()).thenReturn(isCardHidden)
-            val date = if (isDateAfterEvent) "2023-12-12T00:00:00Z" else "2021-12-11T00:00:00Z"
+            val date = if (isDateAfterEvent) "2023-12-12T00:00:01Z" else "2021-12-11T00:00:00Z"
             whenever(dateTimeUtilsWrapper.getInstantNow()).thenReturn(Instant.parse(date))
             val language = if (isLanguageEnglish) "en_US" else "fr_FR"
             whenever(localeManagerWrapper.getLanguage()).thenReturn(language)

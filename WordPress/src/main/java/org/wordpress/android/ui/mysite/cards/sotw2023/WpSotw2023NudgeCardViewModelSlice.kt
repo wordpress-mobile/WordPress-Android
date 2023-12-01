@@ -55,7 +55,7 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
     }
 
     private fun isEligible(): Boolean {
-        val eventTime = Instant.parse(EVENT_DATE)
+        val eventTime = Instant.parse(POST_EVENT_START)
         val now = dateTimeUtilsWrapper.getInstantNow()
         val isDateEligible = now.isAfter(eventTime)
 
@@ -71,7 +71,7 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
     companion object {
         private const val URL = "https://wordpress.org/state-of-the-word/" +
                 "?utm_source=mobile&utm_medium=appnudge&utm_campaign=sotw2023"
-        private const val EVENT_DATE = "2023-12-11T15:00:00.00Z"
+        private const val POST_EVENT_START = "2023-12-12T00:00:00.00Z"
         private const val TARGET_LANGUAGE = "en"
     }
 }
