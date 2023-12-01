@@ -6,12 +6,16 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenExternalUrl
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.config.WpSotw2023NudgeFeatureConfig
+import java.time.Instant
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
@@ -21,17 +25,28 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
+    @Mock
+    lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
+    @Mock
+    lateinit var localeManagerWrapper: LocaleManagerWrapper
+
     private lateinit var viewModelSlice: WpSotw2023NudgeCardViewModelSlice
 
     @Before
     fun setUp() {
-        viewModelSlice = WpSotw2023NudgeCardViewModelSlice(featureConfig, appPrefsWrapper)
+        viewModelSlice = WpSotw2023NudgeCardViewModelSlice(
+            featureConfig,
+            appPrefsWrapper,
+            dateTimeUtilsWrapper,
+            localeManagerWrapper
+        )
         viewModelSlice.initialize(testScope())
     }
 
     @Test
     fun `WHEN feature is disabled THEN buildCard returns null `() {
-        whenever(featureConfig.isEnabled()).thenReturn(false)
+        mockCardRequisites(isFeatureEnabled = false)
 
         val card = viewModelSlice.buildCard()
 
@@ -40,8 +55,25 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `WHEN card is hidden in app prefs THEN buildCard returns null`() {
-        whenever(featureConfig.isEnabled()).thenReturn(true)
-        whenever(appPrefsWrapper.getShouldHideSotw2023NudgeCard()).thenReturn(true)
+        mockCardRequisites(isCardHidden = true)
+
+        val card = viewModelSlice.buildCard()
+
+        assertThat(card).isNull()
+    }
+
+    @Test
+    fun `WHEN date is before event THEN buildCard returns null`() {
+        mockCardRequisites(isDateAfterEvent = false)
+
+        val card = viewModelSlice.buildCard()
+
+        assertThat(card).isNull()
+    }
+
+    @Test
+    fun `WHEN language is not english THEN buildCard returns null`() {
+        mockCardRequisites(isLanguageEnglish = false)
 
         val card = viewModelSlice.buildCard()
 
@@ -92,9 +124,20 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
     }
     // endregion Analytics
 
-    private fun mockCardRequisites() {
-        whenever(featureConfig.isEnabled()).thenReturn(true)
-        whenever(appPrefsWrapper.getShouldHideSotw2023NudgeCard()).thenReturn(false)
+    private fun mockCardRequisites(
+        isFeatureEnabled: Boolean = true,
+        isCardHidden: Boolean = false,
+        isDateAfterEvent: Boolean = true,
+        isLanguageEnglish: Boolean = true
+    ) {
+        with (Mockito.lenient()) {
+            whenever(featureConfig.isEnabled()).thenReturn(isFeatureEnabled)
+            whenever(appPrefsWrapper.getShouldHideSotw2023NudgeCard()).thenReturn(isCardHidden)
+            val date = if (isDateAfterEvent) "2023-12-12T00:00:01Z" else "2021-12-11T00:00:00Z"
+            whenever(dateTimeUtilsWrapper.getInstantNow()).thenReturn(Instant.parse(date))
+            val language = if (isLanguageEnglish) "en_US" else "fr_FR"
+            whenever(localeManagerWrapper.getLanguage()).thenReturn(language)
+        }
     }
 
     companion object {
