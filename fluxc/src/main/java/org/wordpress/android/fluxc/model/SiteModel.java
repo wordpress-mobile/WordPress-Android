@@ -1090,8 +1090,8 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         return mCanBlaze;
     }
 
-    public void setCanBlaze(Boolean mCanBlaze) {
-        this.mCanBlaze = mCanBlaze;
+    public void setCanBlaze(Boolean canBlaze) {
+        this.mCanBlaze = canBlaze;
     }
 
     public Boolean getWasEcommerceTrial() {
