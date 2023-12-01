@@ -1,5 +1,6 @@
 package org.wordpress.android.util
 
+import android.icu.util.Calendar
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.ContextProvider
 import java.text.SimpleDateFormat
@@ -52,5 +53,9 @@ class DateTimeUtilsWrapper @Inject constructor(
     fun getRelativeTimeSpanString(date: Date): String {
         return DateUtils.getRelativeTimeSpanString(date.time, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
             .toString()
+    }
+
+    fun getCalendarInstance(): Calendar {
+        return Calendar.getInstance()
     }
 }
