@@ -64,7 +64,7 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
         val card = viewModelSlice.buildCard()!!
 
         card.onCtaClick.click()
-        assertThat(viewModelSlice.onNavigation.value?.peekContent()).isInstanceOf(OpenExternalUrl::class.java)
+        assertThat(viewModelSlice.onNavigation.value?.peekContent()).isEqualTo(OpenExternalUrl(EXPECTED_URL))
     }
 
     @Test
@@ -95,5 +95,10 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
     private fun mockCardRequisites() {
         whenever(featureConfig.isEnabled()).thenReturn(true)
         whenever(appPrefsWrapper.getShouldHideSotw2023NudgeCard()).thenReturn(false)
+    }
+
+    companion object {
+        private const val EXPECTED_URL = "https://wordpress.org/state-of-the-word/" +
+                "?utm_source=mobile&utm_medium=appnudge&utm_campaign=sotw2023"
     }
 }
