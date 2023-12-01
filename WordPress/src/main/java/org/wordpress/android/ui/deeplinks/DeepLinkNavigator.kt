@@ -83,6 +83,8 @@ class DeepLinkNavigator
                 ActivityLauncher.openJetpackForDeeplink(activity, navigateAction.action, navigateAction.uri)
             is NavigateAction.OpenJetpackStaticPosterView ->
                 ActivityLauncher.showJetpackStaticPoster(activity)
+            is NavigateAction.OpenMediaForSite -> ActivityLauncher.openMediaInNewStack(activity, navigateAction.site)
+            NavigateAction.OpenMedia -> ActivityLauncher.openMediaInNewStack(activity)
         }
         if (navigateAction != LoginForResult) {
             activity.finish()
@@ -114,5 +116,7 @@ class DeepLinkNavigator
         object OpenLoginPrologue : NavigateAction()
         data class OpenJetpackForDeepLink(val action: String?, val uri: UriWrapper) : NavigateAction()
         object OpenJetpackStaticPosterView : NavigateAction()
+        data class OpenMediaForSite(val site: SiteModel) : NavigateAction()
+        object OpenMedia : NavigateAction()
     }
 }
