@@ -21,6 +21,7 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModelSlice = WpSotw2023NudgeCardViewModelSlice(featureConfig)
+        viewModelSlice.initialize(testScope())
     }
 
     @Test
