@@ -382,6 +382,9 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         ) : Card(type = Type.DASHBOARD_PLANS_CARD)
 
         data class WpSotw2023NudgeCardModel(
+            val title: UiString,
+            val text: UiString,
+            val ctaText: UiString,
             val onMoreMenuClick: ListItemInteraction,
             val onHideMenuItemClick: ListItemInteraction,
             val onCtaClick: ListItemInteraction,
