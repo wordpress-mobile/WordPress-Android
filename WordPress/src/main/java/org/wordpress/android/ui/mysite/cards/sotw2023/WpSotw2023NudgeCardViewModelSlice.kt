@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.WpSotw2023NudgeCardModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenExternalUrl
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.config.WpSotw2023NudgeFeatureConfig
@@ -42,6 +43,11 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
 
     private fun onCtaClick() {
         // TODO thomashortadev analytics
-        // TODO thomashortadev navigation event to open SotW recording URL
+        _onNavigation.value = Event(OpenExternalUrl(URL))
+    }
+
+    companion object {
+        private const val URL = "https://wordpress.org/state-of-the-word/" +
+                "?utm_source=mobile&utm_medium=appnudge&utm_campaign=sotw2023"
     }
 }
