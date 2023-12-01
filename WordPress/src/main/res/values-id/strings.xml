@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-29 11:54:08+0000
+Translation-Revision-Date: 2023-11-29 09:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: id
@@ -20,10 +20,6 @@ Language: id
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blok bertingkat yang kedalamannya melebihi %d level mungkin tidak dapat ditampilkan dengan benar di editor seluler.</string>
     <string name="jp_migration_lets_go_button">Ayo</string>
     <string name="jp_migration_done_no_sites_message">Waktunya untuk melanjutkan perjalanan WordPress Anda di aplikasi Jetpack!</string>
-    <string name="image_optimization_promo_desc">Pengoptimalan gambar mengecilkan gambar agar bisa diunggah lebih cepat.\n\nPilihan ini diaktifkan sesuai dengan pengaturan asal, tetapi Anda dapat mengubahnya di pengaturan aplikasi kapan saja.</string>
-    <string name="image_optimization_promo_title">Teruskan pengoptimalan gambar?</string>
-    <string name="leave_off">Tidak, matikan</string>
-    <string name="turn_on">Ya, biarkan</string>
     <string name="domain_management_clear_search">Hapus pencarian</string>
     <string name="media_encoder_quality_very_high">Sangat Tinggi</string>
     <string name="notification_security_key_needed">Silakan berikan kunci keamanan Anda untuk melanjutkan.</string>

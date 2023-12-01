@@ -20,10 +20,6 @@ Language: it
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">I blocchi con più di %d livelli di nidificazione potrebbero non essere visualizzati correttamente nell\'editor per dispositivi mobili.</string>
     <string name="jp_migration_lets_go_button">Iniziamo</string>
     <string name="jp_migration_done_no_sites_message">È ora di continuare il tuo viaggio con WordPress sull\'app Jetpack.</string>
-    <string name="image_optimization_promo_desc">L\'ottimizzazione delle immagini restringe l\'immagine per un caricamento più veloce.\n\nQuesta opzione viene attivata per impostazione predefinita, ma puoi modificarla nelle impostazioni dell\'app in qualsiasi momento.</string>
-    <string name="image_optimization_promo_title">Vuoi continuare a ottimizzare le immagini?</string>
-    <string name="leave_off">No, disattiva</string>
-    <string name="turn_on">Si, continua</string>
     <string name="domain_management_clear_search">Cancella ricerca</string>
     <string name="media_encoder_quality_very_high">Molto alta</string>
     <string name="notification_security_key_needed">Fornisci una chiave di sicurezza per continuare.</string>

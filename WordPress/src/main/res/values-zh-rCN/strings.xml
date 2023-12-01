@@ -20,10 +20,6 @@ Language: zh_CN
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">嵌套深度超过 %d 层级的区块在移动端编辑器中可能无法正常渲染。</string>
     <string name="jp_migration_lets_go_button">开始使用</string>
     <string name="jp_migration_done_no_sites_message">是时候在 Jetpack 应用程序上继续您的 WordPress 之旅了。</string>
-    <string name="image_optimization_promo_desc">优化图像可缩小图像尺寸，以便更快地上传。\n\n默认启用该选项，但是您可以随时在应用程序设置中进行更改。</string>
-    <string name="image_optimization_promo_title">继续优化图像？</string>
-    <string name="leave_off">不，停止优化</string>
-    <string name="turn_on">是，继续优化</string>
     <string name="domain_management_clear_search">清除搜索</string>
     <string name="media_encoder_quality_very_high">非常高</string>
     <string name="notification_security_key_needed">请提供您的安全密钥以继续。</string>

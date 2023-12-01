@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-28 09:04:57+0000
+Translation-Revision-Date: 2023-11-30 22:45:00+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: ro
 -->
 <resources>
+    <string name="turn_off">Nu, oprește</string>
+    <string name="leave_on">Da, lasă în continuare</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Din acest motiv, recomandăm să editezi blocul folosind navigatorul web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Din acest motiv, recomandăm să editezi blocul folosind editorul web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Ca alternativă, poți să aplatizezi conținutul prin anularea grupării blocurilor.</string>
@@ -20,10 +22,8 @@ Language: ro
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Este posibil ca blocurile imbricate mai adânc de %d niveluri să nu fie randate corect în editorul aplicației pentru mobil.</string>
     <string name="jp_migration_lets_go_button">Să-i dăm drumul</string>
     <string name="jp_migration_done_no_sites_message">Este timpul să-ți continui călătoria WordPress în aplicația Jetpack.</string>
-    <string name="image_optimization_promo_desc">Optimizarea imaginilor micșorează imaginile pentru o încărcare mai rapidă.\n\nAceastă opțiune este activată implicit, dar poți să o modifici oricând în setările aplicației.</string>
-    <string name="image_optimization_promo_title">Continui optimizarea imaginilor?</string>
-    <string name="leave_off">Nu, oprește</string>
-    <string name="turn_on">Da, lasă în continuare</string>
+    <string name="image_optimization_popup_desc">Optimizarea imaginilor micșorează imaginile pentru o încărcare mai rapidă.\n\nAceastă opțiune este activată implicit, dar poți să o modifici oricând în setările aplicației.</string>
+    <string name="image_optimization_popup_title">Continui optimizarea imaginilor?</string>
     <string name="domain_management_clear_search">Șterge căutarea</string>
     <string name="media_encoder_quality_very_high">Foarte mare</string>
     <string name="notification_security_key_needed">Pentru a continua, trebuie să furnizezi cheia de securitate.</string>
