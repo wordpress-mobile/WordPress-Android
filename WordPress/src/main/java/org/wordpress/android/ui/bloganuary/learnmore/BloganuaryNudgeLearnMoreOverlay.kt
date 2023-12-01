@@ -34,6 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -43,11 +44,30 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.ContentAlphaProvider
+import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import androidx.compose.material.MaterialTheme as Material2Theme
+
+private val contentIconForegroundColor: Color
+    get() = AppColor.White
+
+private val contentIconBackgroundColor: Color
+    @Composable get() = if (Material2Theme.colors.isLight) {
+        AppColor.Black
+    } else {
+        AppColor.White.copy(alpha = 0.18f)
+    }
+
+private val contentTextEmphasis: Float
+    @Composable get() = if (Material2Theme.colors.isLight) {
+        1f
+    } else {
+        ContentAlpha.medium
+    }
 
 @Composable
 fun BloganuaryNudgeLearnMoreOverlay(
@@ -92,7 +112,7 @@ fun BloganuaryNudgeLearnMoreOverlay(
                 Image(
                     painter = painterResource(R.drawable.logo_bloganuary),
                     colorFilter = ColorFilter.tint(Material2Theme.colors.onSurface),
-                    modifier = Modifier.width(140.dp),
+                    modifier = Modifier.width(180.dp),
                     contentScale = ContentScale.Inside,
                     contentDescription = stringResource(
                         R.string.bloganuary_dashboard_nudge_overlay_icon_content_description
@@ -104,7 +124,7 @@ fun BloganuaryNudgeLearnMoreOverlay(
                 // Title
                 Text(
                     stringResource(R.string.bloganuary_dashboard_nudge_overlay_title),
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                 )
@@ -191,14 +211,14 @@ private fun OverlayContentItem(
             modifier = Modifier
                 .size(48.dp)
                 .background(
-                    color = Material2Theme.colors.onSurface,
+                    color = contentIconBackgroundColor,
                     shape = CircleShape,
                 ),
         ) {
             Image(
                 painter = painterResource(iconRes),
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(Material2Theme.colors.surface),
+                colorFilter = ColorFilter.tint(contentIconForegroundColor),
                 modifier = Modifier
                     .size(24.dp)
                     .align(Alignment.Center)
@@ -207,10 +227,12 @@ private fun OverlayContentItem(
 
         Spacer(Modifier.width(Margin.ExtraLarge.value))
 
-        Text(
-            stringResource(textRes),
-            style = MaterialTheme.typography.titleMedium,
-        )
+        ContentAlphaProvider(contentTextEmphasis) {
+            Text(
+                stringResource(textRes),
+                style = MaterialTheme.typography.titleMedium,
+            )
+        }
     }
 }
 
