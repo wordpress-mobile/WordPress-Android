@@ -13,21 +13,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentResultListener
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.ui.barcodescanner.BarcodeScanningFragment
-import org.wordpress.android.ui.barcodescanner.BarcodeScanningFragment.Companion.KEY_BARCODE_SCANNING_REQUEST
-import org.wordpress.android.ui.barcodescanner.BarcodeScanningFragment.Companion.KEY_BARCODE_SCANNING_SCAN_STATUS
-import org.wordpress.android.ui.barcodescanner.CodeScannerStatus
 import org.wordpress.android.ui.compose.components.VerticalScrollBox
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.posts.BasicDialogViewModel
@@ -52,17 +46,8 @@ import javax.inject.Inject
 class QRCodeAuthFragment : Fragment() {
     @Inject
     lateinit var uiHelpers: UiHelpers
-
     private val qrCodeAuthViewModel: QRCodeAuthViewModel by viewModels()
     private val dialogViewModel: BasicDialogViewModel by activityViewModels()
-
-    @Suppress("DEPRECATION")
-    private val resultListener = FragmentResultListener { requestKey, result ->
-        if (requestKey == KEY_BARCODE_SCANNING_REQUEST) {
-            val resultValue = result.getParcelable<CodeScannerStatus?>(KEY_BARCODE_SCANNING_SCAN_STATUS)
-            resultValue?.let { qrCodeAuthViewModel.handleScanningResult(it) }
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,12 +60,10 @@ class QRCodeAuthFragment : Fragment() {
             }
         }
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initBackPressHandler()
         initViewModel(savedInstanceState)
-        initScannerResultListener()
         observeViewModel()
     }
 
@@ -88,23 +71,13 @@ class QRCodeAuthFragment : Fragment() {
         qrCodeAuthViewModel.actionEvents.onEach(this::handleActionEvents).launchIn(viewLifecycleOwner.lifecycleScope)
         dialogViewModel.onInteraction.observeEvent(viewLifecycleOwner, qrCodeAuthViewModel::onDialogInteraction)
     }
-
     private fun initViewModel(savedInstanceState: Bundle?) {
         val (uri, isDeepLink) = requireActivity().intent?.extras?.let {
             val uri = it.getString(DEEP_LINK_URI_KEY, null)
             val isDeepLink = it.getBoolean(IS_DEEP_LINK_KEY, false)
             uri to isDeepLink
         } ?: (null to false)
-
         qrCodeAuthViewModel.start(uri, isDeepLink, savedInstanceState)
-    }
-
-    private fun initScannerResultListener() {
-        requireActivity().supportFragmentManager.setFragmentResultListener(
-            KEY_BARCODE_SCANNING_REQUEST,
-            viewLifecycleOwner,
-            resultListener
-        )
     }
 
     private fun handleActionEvents(actionEvent: QRCodeAuthActionEvent) {
@@ -114,7 +87,6 @@ class QRCodeAuthFragment : Fragment() {
             is FinishActivity -> requireActivity().finish()
         }
     }
-
     private fun launchDismissDialog(model: QRCodeAuthDialogModel) {
         dialogViewModel.showDialog(
             requireActivity().supportFragmentManager,
@@ -124,22 +96,17 @@ class QRCodeAuthFragment : Fragment() {
                 getString(model.message),
                 getString(model.positiveButtonLabel),
                 model.negativeButtonLabel?.let { label -> getString(label) },
-                model.cancelButtonLabel?.let { label -> getString(label) },
-                false
+                model.cancelButtonLabel?.let { label -> getString(label) }
             )
         )
     }
 
     private fun launchScanner() {
         qrCodeAuthViewModel.track(Stat.QRLOGIN_SCANNER_DISPLAYED)
-        replaceFragment(BarcodeScanningFragment())
-    }
-
-    private fun replaceFragment(fragment: Fragment) {
-        val transaction: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        val scanner = GmsBarcodeScanning.getClient(requireContext())
+        scanner.startScan()
+            .addOnSuccessListener { barcode -> qrCodeAuthViewModel.onScanSuccess(barcode.rawValue) }
+            .addOnFailureListener { qrCodeAuthViewModel.onScanFailure() }
     }
 
     private fun initBackPressHandler() {
@@ -147,13 +114,11 @@ class QRCodeAuthFragment : Fragment() {
             qrCodeAuthViewModel.onBackPressed()
         }
     }
-
     override fun onSaveInstanceState(outState: Bundle) {
         qrCodeAuthViewModel.writeToBundle(outState)
         super.onSaveInstanceState(outState)
     }
 }
-
 @Composable
 private fun QRCodeAuthScreen(viewModel: QRCodeAuthViewModel = viewModel()) {
     VerticalScrollBox(
@@ -161,7 +126,6 @@ private fun QRCodeAuthScreen(viewModel: QRCodeAuthViewModel = viewModel()) {
         modifier = Modifier.fillMaxSize()
     ) {
         val uiState by viewModel.uiState.collectAsState()
-
         @Suppress("UnnecessaryVariable") // See: https://stackoverflow.com/a/69558316/4129245
         when (val state = uiState) {
             is Content -> ContentState(state)
