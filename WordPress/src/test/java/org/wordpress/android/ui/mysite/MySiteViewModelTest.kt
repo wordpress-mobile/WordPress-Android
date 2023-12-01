@@ -76,6 +76,7 @@ import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
+import org.wordpress.android.ui.mysite.cards.dashboard.bloganuary.BloganuaryNudgeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
@@ -277,6 +278,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice
 
+    @Mock
+    lateinit var bloganuaryNudgeViewModelSlice: BloganuaryNudgeCardViewModelSlice
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<MySiteViewModel.State>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -412,6 +416,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(activityLogCardViewModelSlice.getActivityLogCardBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(personalizeCardViewModelSlice.getBuilderParams()).thenReturn(mock())
         whenever(personalizeCardBuilder.build(any())).thenReturn(mock())
+        whenever(bloganuaryNudgeViewModelSlice.getBuilderParams()).thenReturn(mock())
         whenever(bloggingPromptCardViewModelSlice.getBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(quickLinksItemViewModelSlice.uiState).thenReturn(mock())
         whenever(quickStartRepository.quickStartMenuStep).thenReturn(mock())
@@ -467,7 +472,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             bloggingPromptCardViewModelSlice,
             noCardsMessageViewModelSlice,
             siteInfoHeaderCardViewModelSlice,
-            quickLinksItemViewModelSlice
+            quickLinksItemViewModelSlice,
+            bloganuaryNudgeViewModelSlice,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()

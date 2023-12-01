@@ -31,6 +31,7 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity
+import org.wordpress.android.ui.bloganuary.learnmore.BloganuaryNudgeLearnMoreOverlayFragment
 import org.wordpress.android.ui.domains.DomainRegistrationActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -449,8 +450,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             if (quickStartScrollPosition > 0) recyclerView.scrollToPosition(quickStartScrollPosition)
             else appbarMain.setExpanded(true)
         }
-    }
 
+        wpMainActivityViewModel.mySiteDashboardRefreshRequested.observeEvent(viewLifecycleOwner) {
+            viewModel.refresh()
+        }
+    }
 
     private fun MySiteFragmentBinding.hideRefreshIndicatorIfNeeded() {
         swipeRefreshLayout.postDelayed({
@@ -751,6 +755,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenDashboardPersonalization -> activityNavigator.openDashboardPersonalization(
             requireActivity()
         )
+
+        is SiteNavigationAction.OpenBloganuaryNudgeOverlay -> {
+            BloganuaryNudgeLearnMoreOverlayFragment
+                .newInstance(action.isPromptsEnabled)
+                .show(requireActivity().supportFragmentManager, BloganuaryNudgeLearnMoreOverlayFragment.TAG)
+        }
     }
 
     private fun handleNavigation(action: BloggingPromptCardNavigationAction) {

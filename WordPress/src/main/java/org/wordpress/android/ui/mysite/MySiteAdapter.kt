@@ -8,6 +8,7 @@ import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.BlazeCampaignsCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.PromoteWithBlazeCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloganuaryNudgeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCampaignsCardViewHolder
 import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityCardViewHolder
+import org.wordpress.android.ui.mysite.cards.dashboard.bloganuary.BloganuaryNudgeCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewHolder
@@ -104,6 +106,7 @@ class MySiteAdapter(
                 learnMoreClicked
             )
 
+            MySiteCardAndItem.Type.BLOGANUARY_NUDGE_CARD.ordinal -> BloganuaryNudgeCardViewHolder(parent)
             MySiteCardAndItem.Type.DASHBOARD_DOMAIN_TRANSFER_CARD.ordinal -> DomainTransferCardViewHolder(parent)
             MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE_CARD.ordinal -> PromoteWithBlazeCardViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.BLAZE_CAMPAIGNS_CARD.ordinal -> BlazeCampaignsCardViewHolder(parent)
@@ -140,6 +143,7 @@ class MySiteAdapter(
             is TodaysStatsCardViewHolder -> holder.bind(getItem(position)  as TodaysStatsCardWithData)
             is PostCardViewHolder<*> -> holder.bind(getItem(position)  as PostCard)
             is BloggingPromptCardViewHolder -> holder.bind(getItem(position)  as BloggingPromptCardWithData)
+            is BloganuaryNudgeCardViewHolder -> holder.bind(getItem(position)  as BloganuaryNudgeCardModel)
             is DomainTransferCardViewHolder -> holder.bind(getItem(position)  as DomainTransferCardModel)
             is PromoteWithBlazeCardViewHolder -> holder.bind(getItem(position)  as PromoteWithBlazeCard)
             is BlazeCampaignsCardViewHolder -> holder.bind(getItem(position)  as BlazeCampaignsCardModel)
