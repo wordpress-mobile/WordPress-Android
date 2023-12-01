@@ -1700,10 +1700,6 @@ Language: nb_NO
     <string name="login_text_otp">Send meg en kode i stedet</string>
     <string name="next">Neste</string>
     <string name="enter_email_wordpress_com">Logg inn på WordPress.com ved å bruke en E-postadresse, for å behandle alle dine WordPress-nettsteder.</string>
-    <string name="image_optimization_promo_desc">Bildeoptimalisering krymper bilder for raskere opplastning.\n\nDu kan endre dette til enhver tid i nettstedets innstillinger.</string>
-    <string name="image_optimization_promo_title">Vil du skru på bildeoptimalisering?</string>
-    <string name="leave_off">La forbli skrudd av</string>
-    <string name="turn_on">Skru på</string>
     <string name="me_profile_photo">Profilbilde</string>
     <string name="error_media_parse_error">Uventet tilbakemelding fra tjeneren</string>
     <string name="upload_finished_toast">Kan ikke avbryte opplastningen, ettersom den allerede er fullført</string>
@@ -1838,11 +1834,6 @@ Language: nb_NO
     <string name="editor_post_saved_online">Innlegget ble lagret på nettet</string>
     <string name="site_settings_image_quality_hint">Bildenes kvalitet. Høyere verdier = bedre kvalitet.</string>
     <string name="site_settings_optimize_images_summary">Aktiver for å komprimere og endre størrelsen på bilder</string>
-    <string name="media_encoder_quality_maximum">Maksimum</string>
-    <string name="media_encoder_quality_very_high">Veldig høy</string>
-    <string name="media_encoder_quality_high">Høy</string>
-    <string name="media_encoder_quality_medium">Middels</string>
-    <string name="media_encoder_quality_low">Lav</string>
     <string name="media_upload_state_uploaded">Lastet opp</string>
     <string name="media_upload_state_failed">Opplastingmislyktes</string>
     <string name="media_upload_state_deleted">Slettet</string>

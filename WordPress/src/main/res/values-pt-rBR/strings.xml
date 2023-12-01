@@ -2672,10 +2672,6 @@ Language: pt_BR
     <string name="open_mail">Abrir o Mail</string>
     <string name="next">Próximo</string>
     <string name="enter_email_wordpress_com">Fazer login no WordPress.com usando um endereço de e-mail para gerenciar todos os seus sites WordPress.</string>
-    <string name="image_optimization_promo_desc">A otimização de imagens as deixa mais leves, tornando seu upload mais rápido.\n\nVocê pode alterar essa funcionalidade a qualquer momento nas configurações do site.</string>
-    <string name="image_optimization_promo_title">Habilitar  otimização de imagens?</string>
-    <string name="leave_off">Permanecer desligado</string>
-    <string name="turn_on">Habilitar</string>
     <string name="me_profile_photo">Foto de perfil</string>
     <string name="error_media_parse_error">Resposta inesperada do servidor</string>
     <string name="upload_finished_toast">Não é possível parar o upload porque já foi concluído</string>
@@ -2811,11 +2807,6 @@ Language: pt_BR
     <string name="editor_post_saved_online">Post salvo online</string>
     <string name="site_settings_image_quality_hint">Qualidade das imagens. Valores maiores significam melhor qualidade das imagens.</string>
     <string name="site_settings_optimize_images_summary">Habilite para redimensionar e comprimir imagens</string>
-    <string name="media_encoder_quality_maximum">Máxima</string>
-    <string name="media_encoder_quality_very_high">Muito alta</string>
-    <string name="media_encoder_quality_high">Alta</string>
-    <string name="media_encoder_quality_medium">Média</string>
-    <string name="media_encoder_quality_low">Baixa</string>
     <string name="media_upload_state_uploaded">Upload realizado</string>
     <string name="media_upload_state_failed">Falha no upload</string>
     <string name="media_upload_state_deleted">Excluído</string>

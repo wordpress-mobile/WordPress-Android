@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-15 11:27:49+0000
+Translation-Revision-Date: 2023-12-01 10:32:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Por esta razón, te recomendamos que edites el bloque utilizando tu navegador web.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Por este motivo, te recomendamos que edites el bloque utilizando el editor web.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">También puedes aplanar el contenido desagrupando el bloque.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Ir a los ajustes</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">Cancelar</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Conceder</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Has denegado de forma permanente el permiso de la cámara. Es necesario para escanear el código de barras. Actívalo en los ajustes de la aplicación</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">Se necesita el permiso de la cámara para escanear el código de barras</string>
+    <string name="barcode_scanning_alert_dialog_title">Conceder permiso de la cámara</string>
+    <string name="barcode_scanning_camera_permission_denied">Se necesita el permiso de la cámara para escanear el código de barras.</string>
+    <string name="barcode_scanning_title">Escanear código de barras</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Es posible que los bloques anidados a más de %d niveles no se muestren correctamente en el editor móvil.</string>
+    <string name="jp_migration_lets_go_button">Vamos</string>
+    <string name="jp_migration_done_no_sites_message">Es hora de continuar tu viaje por WordPress en la aplicación Jetpack.</string>
+    <string name="image_optimization_popup_desc">La optimización de imágenes las reduce para subirlas más rápido.\n\nEsta opción está activada por defecto, pero puedes cambiarla en los ajustes de la aplicación en cualquier momento.</string>
+    <string name="image_optimization_popup_title">¿Seguir optimizando las imágenes?</string>
+    <string name="domain_management_clear_search">Vaciar la búsqueda</string>
+    <string name="media_encoder_quality_very_high">Muy alta</string>
     <string name="notification_security_key_needed">Introduce tu clave de seguridad para continuar.</string>
     <string name="login_error_security_key">Hubo algunos problemas con el inicio de sesión de la clave de seguridad</string>
     <string name="login_text_security_key">Usa una clave de seguridad</string>
@@ -64,7 +82,6 @@ Language: es
     <string name="gutenberg_native_synced_patterns">Patrones sincronizados</string>
     <string name="gutenberg_native_deeply_nested_block">Bloque profundamente anidado</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Los bloques anidados a más profundidad de %d niveles puede que no se procesen correctamente en el editor móvil. Por este motivo, recomendamos allanar el contenido desagrupando el bloque o editando el bloque usando el editor web.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Los bloques anidados a más profundidad de %d niveles puede que no se procesen correctamente en el editor móvil. Por este motivo, recomendamos allanar el contenido desagrupando el bloque o editando el bloque usando tu navegador web.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">El bloque no se puede procesar debido a que está profundamente anidado. Toca aquí para más detalles.</string>
     <string name="pages_no_site_something_went_wrong">Uy, vaya, algo ha salido mal. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Ir a la web</string>
@@ -394,7 +411,7 @@ Language: es
     <string name="blogging_prompts_list_answered_prompt">✓ Respondido</string>
     <string name="blogging_prompts_list_title">Peticiones</string>
     <string name="close_desc">cerrar</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativamente, puedes separar y editar este bloque por separado tocando en «Separar patrón».</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativamente, puedes separar y editar este bloque por separado tocando en «Separar».</string>
     <string name="dlg_confirm_delete_category">¿Borrar permanentemente la categoría \'%s\'?</string>
     <string name="deleting_cat_success">Categoría borrada correctamente</string>
     <string name="deleting_cat_failed">Borrando la categoría que ha fallado</string>
@@ -2885,10 +2902,6 @@ Language: es
     <string name="open_mail">Abrir correo electrónico</string>
     <string name="next">Siguiente</string>
     <string name="enter_email_wordpress_com">Accede a WordPress.com usando una dirección de correo electrónico para gestionar todos tus sitios WordPress.</string>
-    <string name="image_optimization_promo_desc">La optimización de imagen reduce las imágenes para que suban más rápido.\n\nPuedes cambiar esto en cualquier momento en los ajustes del sitio.</string>
-    <string name="image_optimization_promo_title">¿Activar optimización de la imagen?</string>
-    <string name="leave_off">Detener</string>
-    <string name="turn_on">Activar</string>
     <string name="me_profile_photo">Foto de perfil</string>
     <string name="error_media_parse_error">Respuesta inesperada del servidor</string>
     <string name="upload_finished_toast">No se puede detener la subida porque ya ha finalizado</string>
@@ -3026,7 +3039,6 @@ Language: es
     <string name="site_settings_image_quality_hint">Calidad de las imágenes: cuanto más alto es el valor, más calidad tienen las imágenes.</string>
     <string name="site_settings_optimize_images_summary">Activa la opción para cambiar el tamaño de las imágenes y comprimirlas</string>
     <string name="media_encoder_quality_maximum">Máxima</string>
-    <string name="media_encoder_quality_very_high">Muy alta</string>
     <string name="media_encoder_quality_high">Alta</string>
     <string name="media_encoder_quality_medium">Media</string>
     <string name="media_encoder_quality_low">Baja</string>

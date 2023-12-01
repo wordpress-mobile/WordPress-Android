@@ -1523,10 +1523,6 @@ Language: ku_TR
     <string name="login_text_otp">Jê dêvla wê kodekê ji min re bişîne</string>
     <string name="next">Pêşve</string>
     <string name="enter_email_wordpress_com">Ji bo ku tu hemû malperên xwe yên WordPressê bi rê ve bibî bi rêya bikaranîna navnîşaneke emailê têkeve WordPress.com\'ê.</string>
-    <string name="image_optimization_promo_desc">Optîmîzasyona wêneyê ji bo hilxistina bilez, wêneyan biçûk dike.\n\nTu her tim dikarî vê ji sazkariyên malperê biguherînî.</string>
-    <string name="image_optimization_promo_title">Bila optîmîzasyona wêneyê vebe?</string>
-    <string name="leave_off">Girtî bihêle</string>
-    <string name="turn_on">Veke</string>
     <string name="me_profile_photo">Wêneyê Profîlê</string>
     <string name="error_media_parse_error">Bersiva nehêvîkirî ji serverê</string>
     <string name="upload_finished_toast">Hilxistin nayê rawestandin ji ber ku ji zû ve qediya ye</string>
@@ -1660,11 +1656,6 @@ Language: ku_TR
     <string name="editor_post_saved_online">Şandî bi serhêlî hat tomarkirin</string>
     <string name="site_settings_image_quality_hint">Kalîteya wêneyan. Nirxên bilindtir tê wateya wêneyên kalîteya wan çêtir.</string>
     <string name="site_settings_optimize_images_summary">Dewisandin û ji nû ve rehendina wêneyan biçalakîne</string>
-    <string name="media_encoder_quality_maximum">Herî bilind</string>
-    <string name="media_encoder_quality_very_high">Pir bilind</string>
-    <string name="media_encoder_quality_high">Bilind</string>
-    <string name="media_encoder_quality_medium">Navîn</string>
-    <string name="media_encoder_quality_low">Nizm</string>
     <string name="media_upload_state_uploaded">Hat hilxistin</string>
     <string name="media_upload_state_deleted">Hat jêbirin</string>
     <string name="media_upload_state_deleting">Tê jêbirin</string>

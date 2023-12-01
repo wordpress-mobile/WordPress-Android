@@ -65,7 +65,6 @@ Language: en_GB
     <string name="gutenberg_native_tap_here_to_show_more_details">Tap here to show more details.</string>
     <string name="gutenberg_native_ungroup_block">Ungroup block</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Block cannot be rendered because it is deeply nested. Tap here for more details.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blocks nested deeper than %d levels may not render properly in the mobile editor. For this reason, we recommend flattening the content by ungrouping the block or editing the block using your web browser.</string>
     <string name="pages_no_site_something_went_wrong">Uh oh, something went wrong. Please try again later.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Go to web</string>
     <string name="my_site_dashboard_no_cards_message_description">Tap the personalise button to show more cards.</string>
@@ -394,7 +393,6 @@ Language: en_GB
     <string name="blogging_prompts_list_answered_prompt">✓ Answered</string>
     <string name="close_desc">close</string>
     <string name="blogging_prompts_list_title">Prompts</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternatively, you can detach and edit this block separately by tapping “Detach pattern”.</string>
     <string name="deleting_cat_success">Category deleted successfully</string>
     <string name="deleting_cat_failed">Deleting category failed</string>
     <string name="dlg_confirm_delete_category">Permanently delete \'%s\' Category?</string>
@@ -2885,10 +2883,6 @@ Language: en_GB
     <string name="next">Next</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
     <string name="open_mail">Open Mail</string>
-    <string name="image_optimization_promo_desc">Image optimisation shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
-    <string name="image_optimization_promo_title">Turn on image optimisation?</string>
-    <string name="leave_off">Leave off</string>
-    <string name="turn_on">Turn on</string>
     <string name="me_profile_photo">Profile Photo</string>
     <string name="error_media_parse_error">Unexpected response from server</string>
     <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
@@ -3025,11 +3019,6 @@ Language: en_GB
     <string name="editor_post_saved_online">Post saved online</string>
     <string name="site_settings_image_quality_hint">Quality of pictures. Higher values mean better quality pictures.</string>
     <string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
-    <string name="media_encoder_quality_maximum">Maximum</string>
-    <string name="media_encoder_quality_very_high">Very High</string>
-    <string name="media_encoder_quality_high">High</string>
-    <string name="media_encoder_quality_medium">Medium</string>
-    <string name="media_encoder_quality_low">Low</string>
     <string name="media_upload_state_uploaded">Uploaded</string>
     <string name="media_upload_state_deleted">Deleted</string>
     <string name="media_upload_state_deleting">Deleting</string>

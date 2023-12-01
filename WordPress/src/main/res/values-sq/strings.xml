@@ -64,7 +64,6 @@ Language: sq_AL
     <string name="gutenberg_native_synced_patterns">Modele të njëkohësuar</string>
     <string name="gutenberg_native_deeply_nested_block">Bllok i futur thellë brenda të tjerësh</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Blloqe brenda të tjerësh më thellë se %d shkallë mund të mos vizatohen si duhet në përpunuesin për celular. Për këtë arsye, rekomandojmë sheshimin e lëndë duke hequr grupin e bllokut, ose përpunimin e bllokut duke përdorur përpunuesin web.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blloqe brenda të tjerësh më thellë se %d shkallë mund të mos vizatohen si duhet në përpunuesin për celular. Për këtë arsye, rekomandojmë sheshimin e lëndë duke hequr grupin e bllokut, ose përpunimin e bllokut duke përdorur shfletuesin tuaj.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Blloku s’vizatohet dot, ngaqë është i futur thellë të tjerësh. Për më tepër hollësi, prekni këtu.</string>
     <string name="pages_no_site_something_went_wrong">Hëm, diç shkoi ters. Ju lutemi, riprovoni më vonë.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Kaloni në web</string>
@@ -393,7 +392,6 @@ Language: sq_AL
     <string name="blogging_prompts_list_answered_prompt">✓ Me Përgjigje</string>
     <string name="blogging_prompts_list_title">Cytje</string>
     <string name="close_desc">mbylle</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Ndryshe, mund ta shkëputni dhe përpunoni ndarazi këtë bllok, duke prekur “Shkëpute modelin”.</string>
     <string name="dlg_confirm_delete_category">Të fshihet përgjithmonë Kategoria \'%s\'?</string>
     <string name="deleting_cat_success">Kategoria u fshi me sukses</string>
     <string name="deleting_cat_failed">Fshirja e kategorisëdështoi</string>
@@ -2877,10 +2875,6 @@ Language: sq_AL
     <string name="open_mail">Hap Postën</string>
     <string name="next">Pasuesi</string>
     <string name="enter_email_wordpress_com">Që të administroni krejt sajtet tuaj WordPress, bëni hyrjen te WordPress.com.</string>
-    <string name="image_optimization_promo_desc">Optimizimi i figurave i mpak figurat, për ngarkim më të shpejtë.\n\nKëtë mund ta ndryshoni kurdo, te rregullimet e sajtit.</string>
-    <string name="image_optimization_promo_title">Të aktivizohet optimizimi i figurave?</string>
-    <string name="leave_off">Lëre joaktive</string>
-    <string name="turn_on">Aktivizoje</string>
     <string name="me_profile_photo">Foto Profili</string>
     <string name="error_media_parse_error">Përgjigje e papritur nga shërbyesi</string>
     <string name="upload_finished_toast">Ngarkimi s’mund të ndalet, ngaqë ka mbaruar tashmë</string>
@@ -3017,11 +3011,6 @@ Language: sq_AL
     <string name="editor_post_saved_online">Postimi u ruajt në internet</string>
     <string name="site_settings_image_quality_hint">Cilësi fotosh. Vlera më të mëdha do të thotë cilësi më e lartë fotosh.</string>
     <string name="site_settings_optimize_images_summary">Aktivizojeni që të ripërmasoni dhe ngjeshni foto</string>
-    <string name="media_encoder_quality_maximum">Maksimum</string>
-    <string name="media_encoder_quality_very_high">Shumë e Lartë</string>
-    <string name="media_encoder_quality_high">E lartë</string>
-    <string name="media_encoder_quality_medium">E mesme</string>
-    <string name="media_encoder_quality_low">E ulët</string>
     <string name="media_upload_state_uploaded">U ngarkua</string>
     <string name="media_upload_state_failed">Ngarkimi Dështoi</string>
     <string name="media_upload_state_deleted">U fshi</string>

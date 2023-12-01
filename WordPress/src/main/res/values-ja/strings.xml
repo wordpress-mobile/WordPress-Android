@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-22 22:17:17+0000
+Translation-Revision-Date: 2023-11-29 13:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">このため、Web ブラウザーでブロックを編集することをお勧めします。</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">このため、Web エディターでブロックを編集することをお勧めします。</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">あるいは、ブロックのグループ化を解除してコンテンツをフラットにすることもできます。</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">設定に移動</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">キャンセル</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">付与</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">カメラの権限を永久に拒否しました。 バーコードをスキャンする際に必要です。 アプリ設定から有効化してください</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">バーコードをスキャンするにはカメラの権限が必要です</string>
+    <string name="barcode_scanning_alert_dialog_title">カメラの権限を付与</string>
+    <string name="barcode_scanning_camera_permission_denied">バーコードをスキャンするにはカメラの権限が必要です。</string>
+    <string name="barcode_scanning_title">バーコードをスキャンする</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%dレベルよりも深くネストされたブロックは、モバイルエディターで適切にレンダリングされない場合があります。</string>
+    <string name="jp_migration_lets_go_button">スタート</string>
+    <string name="jp_migration_done_no_sites_message">Jetpack アプリで WordPress のジャーニーを続ける時が来ました。</string>
+    <string name="domain_management_clear_search">検索をクリア</string>
+    <string name="media_encoder_quality_very_high">非常に高い</string>
     <string name="notification_security_key_needed">続行するにはセキュリティキーを入力してください。</string>
     <string name="login_error_security_key">セキュリティキーログインで問題が発生しました</string>
     <string name="login_text_security_key">セキュリティキーを使用</string>
@@ -64,7 +80,6 @@ Language: ja_JP
     <string name="gutenberg_native_synced_patterns">同期済みパターン</string>
     <string name="gutenberg_native_deeply_nested_block">深くネストされたブロック</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">%dレベルよりも深くネストされたブロックは、モバイルエディターで適切にレンダリングされない場合があります。 このため、ブロックのグループを解除するか Web エディターでブロックを編集して、コンテンツをフラット化することをお勧めします。</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%dレベルよりも深くネストされたブロックは、モバイルエディターで適切にレンダリングされない場合があります。 このため、ブロックのグループを解除するか Web ブラウザーでブロックを編集して、コンテンツをフラット化することをお勧めします。</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">ブロックは深くネストされているためレンダリングできません。 こちらをタップして詳細を表示。</string>
     <string name="pages_no_site_something_went_wrong">エラーが発生しました。 後でもう一度お試しください。</string>
     <string name="sharing_connect_via_web_warning_positive_button">ウェブに移動</string>
@@ -390,7 +405,7 @@ Language: ja_JP
     <string name="blogging_prompts_list_answered_prompt">✓回答済み</string>
     <string name="blogging_prompts_list_title">プロンプト</string>
     <string name="close_desc">閉</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">または、「パターンを切り離す」をタップして、このブロックを個別に切り離して編集できます。</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">または、「切り離す」をタップして、このブロックを個別に切り離して編集できます。</string>
     <string name="dlg_confirm_delete_category">「%s」カテゴリーを完全に削除しますか ?</string>
     <string name="deleting_cat_success">カテゴリーを削除しました</string>
     <string name="deleting_cat_failed">カテゴリーの削除に失敗しました</string>
@@ -2877,10 +2892,6 @@ Language: ja_JP
     <string name="open_mail">メールを開く</string>
     <string name="next">次へ</string>
     <string name="enter_email_wordpress_com">メールアドレスを使用して WordPress.com にログインすると、自分のすべての WordPress サイトを管理できます。</string>
-    <string name="image_optimization_promo_desc">画像の最適化により、画像サイズを縮小して迅速に読み込めます。\n\nこれはサイト設定でいつでも変更できます。</string>
-    <string name="image_optimization_promo_title">画像の最適化を有効にしますか ?</string>
-    <string name="leave_off">無効のままにする</string>
-    <string name="turn_on">有効化する</string>
     <string name="me_profile_photo">プロフィール写真</string>
     <string name="error_media_parse_error">サーバーから予期しない応答が返されました</string>
     <string name="upload_finished_toast">読み込みはすでに完了しているため、停止することはできません</string>
@@ -3017,11 +3028,6 @@ Language: ja_JP
     <string name="editor_post_saved_online">投稿をオンラインで保存しました</string>
     <string name="site_settings_image_quality_hint">写真の画質。値が高いほど、画質が良いことを意味します。</string>
     <string name="site_settings_optimize_images_summary">写真をリサイズして圧縮できます</string>
-    <string name="media_encoder_quality_maximum">最高</string>
-    <string name="media_encoder_quality_very_high">非常に高い</string>
-    <string name="media_encoder_quality_high">高い</string>
-    <string name="media_encoder_quality_medium">普通</string>
-    <string name="media_encoder_quality_low">低い</string>
     <string name="media_upload_state_uploaded">アップロード済み</string>
     <string name="media_upload_state_failed">アップロード失敗</string>
     <string name="media_upload_state_deleted">削除済み</string>

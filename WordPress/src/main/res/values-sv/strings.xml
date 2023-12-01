@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-15 13:54:11+0000
+Translation-Revision-Date: 2023-11-30 21:33:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: sv_SE
 -->
 <resources>
+    <string name="turn_off">Nej, stäng av</string>
+    <string name="leave_on">Ja, lämna på</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Av den här anledningen rekommenderar vi att du redigerar blocket i din webbläsare.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Av den här anledningen rekommenderar vi att du redigerar blocket med webbredigeraren.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternativt kan du platta ut innehållet genom att avgruppera blocket.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Gå till inställningarna</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">Avbryt</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Bevilja</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Du har nekat kameraåtkomst permanent. Det krävs för streckkodsskanning. Aktivera det i appinställningarna</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">Kameraåtkomst krävs för streckkodsskanning.</string>
+    <string name="barcode_scanning_alert_dialog_title">Bevilja kameraåtkomst</string>
+    <string name="barcode_scanning_camera_permission_denied">Kameraåtkomst krävs för streckkodsskanning.</string>
+    <string name="barcode_scanning_title">Skanna streckkod</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Block som är inbäddade djupare än %d kanske inte renderas korrekt i den mobila redigeraren.</string>
+    <string name="jp_migration_lets_go_button">Sätt igång</string>
+    <string name="jp_migration_done_no_sites_message">Det är dags att fortsätta din WordPress-resa med Jetpack-appen.</string>
+    <string name="image_optimization_popup_desc">Bildoptimering förminskar bilder för snabbare uppladdning.\n\nDetta alternativ är aktiverat som standard, men du kan ändra det i appinställningarna när som helst.</string>
+    <string name="image_optimization_popup_title">Fortsätt optimera bilder?</string>
+    <string name="domain_management_clear_search">Rensa sökning</string>
+    <string name="media_encoder_quality_very_high">Mycket hög</string>
     <string name="notification_security_key_needed">Ange din säkerhetsnyckel för att fortsätta.</string>
     <string name="login_error_security_key">Det uppstod vissa problem med säkerhetsnyckelsinloggningen</string>
     <string name="login_text_security_key">Använd en säkerhetsnyckel</string>
@@ -64,7 +84,6 @@ Language: sv_SE
     <string name="gutenberg_native_synced_patterns">Synkroniserade mönster</string>
     <string name="gutenberg_native_deeply_nested_block">Djupt inbäddat block</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Block som är inbäddade djupare än %d kanske inte renderas korrekt i den mobila redigeraren. Av den här anledningen rekommenderar vi att du plattar ut innehållet genom att avgruppera blocket eller att du redigerar blocket med webbredigeraren.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Block som är inbäddade djupare än %d kanske inte renderas korrekt i den mobila redigeraren. Av den här anledningen rekommenderar vi att du plattar ut innehållet genom att avgruppera blocket eller att du redigerar blocket i din webbläsare.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Blocket kan inte renderas eftersom det är djupt inbäddat. Tryck här för mer information.</string>
     <string name="pages_no_site_something_went_wrong">Hoppsan, något gick fel. Försök igen senare.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Gå till webben</string>
@@ -394,7 +413,7 @@ Language: sv_SE
     <string name="blogging_prompts_list_answered_prompt">✓ Besvarat</string>
     <string name="blogging_prompts_list_title">Förslag</string>
     <string name="close_desc">stäng</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Du kan även frikoppla och redigera det här blocket separat genom att trycka på Frikoppla mönster.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Du kan även frikoppla och redigera det här blocket separat genom att trycka på \"Frikoppla\".</string>
     <string name="dlg_confirm_delete_category">Ta bort kategori \'%s\' permanent?</string>
     <string name="deleting_cat_success">Kategori borttagen</string>
     <string name="deleting_cat_failed">Misslyckades att ta bort kategori</string>
@@ -2885,10 +2904,6 @@ Language: sv_SE
     <string name="open_mail">Öppna e-posten</string>
     <string name="next">Nästa</string>
     <string name="enter_email_wordpress_com">Logga in på WordPress.com med hjälp av en e-postadress för att hantera alla dina WordPress-webbplatser.</string>
-    <string name="image_optimization_promo_desc">Bildoptimering minskar storleken på blder för snabbare uppladdning.\n\nDu kan när som helst ändra detta i webbplatsinställningarna.</string>
-    <string name="image_optimization_promo_title">Aktivera bildoptimering?</string>
-    <string name="leave_off">Behåll avstängt</string>
-    <string name="turn_on">Slå på</string>
     <string name="me_profile_photo">Profilfoto</string>
     <string name="error_media_parse_error">Oväntat svar från servern</string>
     <string name="upload_finished_toast">Det går inte att stoppa uppladdningen eftersom den redan är klar</string>
@@ -3026,7 +3041,6 @@ Language: sv_SE
     <string name="site_settings_image_quality_hint">Bildkvalitet. Ett högre värde innebär bilder med högre kvalitet.</string>
     <string name="site_settings_optimize_images_summary">Gör det möjligt att ändra storlek på och komprimera bildfiler</string>
     <string name="media_encoder_quality_maximum">Max</string>
-    <string name="media_encoder_quality_very_high">Mycket hög</string>
     <string name="media_encoder_quality_high">Hög</string>
     <string name="media_encoder_quality_medium">Medium</string>
     <string name="media_encoder_quality_low">Låg</string>

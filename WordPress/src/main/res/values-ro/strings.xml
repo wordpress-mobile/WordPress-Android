@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-15 14:48:06+0000
+Translation-Revision-Date: 2023-11-30 22:45:00+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: ro
 -->
 <resources>
+    <string name="turn_off">Nu, oprește</string>
+    <string name="leave_on">Da, lasă în continuare</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Din acest motiv, recomandăm să editezi blocul folosind navigatorul web.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Din acest motiv, recomandăm să editezi blocul folosind editorul web.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Ca alternativă, poți să aplatizezi conținutul prin anularea grupării blocurilor.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Mergi la Setări</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">Anulează</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Acordă</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Ai refuzat permisiunea pentru cameră. Permisiunea este obligatorie pentru scanarea codului de bare. Activeaz-o în setările aplicației</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">Permisiunea pentru cameră este obligatorie pentru a scana codul de bare.</string>
+    <string name="barcode_scanning_alert_dialog_title">Acordă permisiune pentru cameră</string>
+    <string name="barcode_scanning_camera_permission_denied">Permisiunea pentru cameră este obligatorie pentru scanarea codului de bare.</string>
+    <string name="barcode_scanning_title">Scanează codul de bare</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Este posibil ca blocurile imbricate mai adânc de %d niveluri să nu fie randate corect în editorul aplicației pentru mobil.</string>
+    <string name="jp_migration_lets_go_button">Să-i dăm drumul</string>
+    <string name="jp_migration_done_no_sites_message">Este timpul să-ți continui călătoria WordPress în aplicația Jetpack.</string>
+    <string name="image_optimization_popup_desc">Optimizarea imaginilor micșorează imaginile pentru o încărcare mai rapidă.\n\nAceastă opțiune este activată implicit, dar poți să o modifici oricând în setările aplicației.</string>
+    <string name="image_optimization_popup_title">Continui optimizarea imaginilor?</string>
+    <string name="domain_management_clear_search">Șterge căutarea</string>
+    <string name="media_encoder_quality_very_high">Foarte mare</string>
     <string name="notification_security_key_needed">Pentru a continua, trebuie să furnizezi cheia de securitate.</string>
     <string name="login_error_security_key">Au fost unele probleme la autentificarea cu cheia de securitate</string>
     <string name="login_text_security_key">Folosește o cheie de securitate</string>
@@ -64,7 +84,6 @@ Language: ro
     <string name="gutenberg_native_synced_patterns">Modele sincronizate</string>
     <string name="gutenberg_native_deeply_nested_block">Bloc imbricat în adâncime</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Blocurile imbricate în adâncime pe mai mult de %d niveluri pot să nu fie randate corect în editorul pentru dispozitive mobile. Din acest motiv, recomandăm aplatizarea conținutului prin anularea grupării blocului sau prin editarea blocului folosind editorul web.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blocurile imbricate în adâncime pe mai mult de %d niveluri pot să nu fie randate corect în editorul pentru dispozitive mobile. Din acest motiv, recomandăm aplatizarea conținutului prin anularea grupării blocului sau prin editarea blocului folosind navigatorul tău web.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Blocul nu poate fi randat deoarece este imbricat în adâncime. Atinge aici pentru mai multe detalii.</string>
     <string name="pages_no_site_something_went_wrong">Of, nu, ceva nu a mers bine. Te rog reîncearcă mai târziu.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Mergi pe web</string>
@@ -394,7 +413,7 @@ Language: ro
     <string name="blogging_prompts_list_answered_prompt">✓ Am răspuns</string>
     <string name="blogging_prompts_list_title">Îndemnuri</string>
     <string name="close_desc">închide</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Ca alternativă, poți să detașezi și să editezi separat acest bloc atingând „Detașează modulele”.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Ca alternativă, poți să detașezi și să editezi separat acest bloc atingând „Detașează”.</string>
     <string name="dlg_confirm_delete_category">Ștergi definitiv categoria „%s”?</string>
     <string name="deleting_cat_success">Am șters cu succes categoria</string>
     <string name="deleting_cat_failed">Ștergerea categoriei a eșuat</string>
@@ -2885,10 +2904,6 @@ Language: ro
     <string name="open_mail">Deschide corespondența</string>
     <string name="next">Următor</string>
     <string name="enter_email_wordpress_com">Autentifică-te în WordPress.com folosind o adresă de email pentru a-ți administra toate site-urile WordPress.</string>
-    <string name="image_optimization_promo_desc">Optimizarea imaginilor micșorează imaginile pentru a le încărca mai rapid.\n\nPoți modifica asta oricând în setările site-ului.</string>
-    <string name="image_optimization_promo_title">Pornești optimizarea imaginilor?</string>
-    <string name="leave_off">Las-o oprită</string>
-    <string name="turn_on">Pornește</string>
     <string name="me_profile_photo">Fotografie de profil</string>
     <string name="error_media_parse_error">Răspuns neașteptat de la server</string>
     <string name="upload_finished_toast">Nu pot opri încărcarea deoarece este deja terminată</string>
@@ -3026,10 +3041,9 @@ Language: ro
     <string name="site_settings_image_quality_hint">Calitatea imaginilor. Valorile mai mari înseamnă imagini de calitate mai bună.</string>
     <string name="site_settings_optimize_images_summary">Activează pentru a redimensiona și comprima imagini</string>
     <string name="media_encoder_quality_maximum">Maximă</string>
-    <string name="media_encoder_quality_very_high">Foarte bună</string>
-    <string name="media_encoder_quality_high">Bună</string>
+    <string name="media_encoder_quality_high">Mare</string>
     <string name="media_encoder_quality_medium">Medie</string>
-    <string name="media_encoder_quality_low">Slabă</string>
+    <string name="media_encoder_quality_low">Mică</string>
     <string name="media_upload_state_uploaded">Încărcată</string>
     <string name="media_upload_state_failed">Încărcarea a eșuat</string>
     <string name="media_upload_state_deleted">Ștearsă</string>
