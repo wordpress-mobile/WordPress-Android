@@ -4836,7 +4836,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
 
     <!-- State of the Word 2023 -->
-    <string name="wp_sotw_2023_dashboard_nudge_title">State of the Word 2023</string>
-    <string name="wp_sotw_2023_dashboard_nudge_text">Check out WordPress co-founder Matt Mullenweg’s annual keynote to stay on top of what’s coming in 2024 and beyond.</string>
-    <string name="wp_sotw_2023_dashboard_nudge_cta">Watch now</string>
+    <string name="wp_sotw_2023_dashboard_nudge_title" translatable="false">State of the Word 2023</string>
+    <string name="wp_sotw_2023_dashboard_nudge_text" translatable="false">Check out WordPress co-founder Matt Mullenweg’s annual keynote to stay on top of what’s coming in 2024 and beyond.</string>
+    <string name="wp_sotw_2023_dashboard_nudge_cta" translatable="false">Watch now</string>
 </resources>
