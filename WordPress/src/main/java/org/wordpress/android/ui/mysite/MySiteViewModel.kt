@@ -233,7 +233,8 @@ class MySiteViewModel @Inject constructor(
         bloganuaryNudgeCardViewModelSlice.onNavigation,
         personalizeCardViewModelSlice.onNavigation,
         siteInfoHeaderCardViewModelSlice.onNavigation,
-        quickLinksItemViewModelSlice.navigation
+        quickLinksItemViewModelSlice.navigation,
+        sotw2023NudgeCardViewModelSlice.onNavigation,
     )
 
     val onMediaUpload = siteInfoHeaderCardViewModelSlice.onMediaUpload
@@ -249,6 +250,7 @@ class MySiteViewModel @Inject constructor(
             postsCardViewModelSlice.refresh,
             activityLogCardViewModelSlice.refresh,
             bloganuaryNudgeCardViewModelSlice.refresh,
+            sotw2023NudgeCardViewModelSlice.refresh,
         )
     val domainTransferCardRefresh = domainTransferCardViewModel.refresh
 
@@ -324,6 +326,7 @@ class MySiteViewModel @Inject constructor(
         siteInfoHeaderCardViewModelSlice.initialize(viewModelScope)
         quickLinksItemViewModelSlice.initialization(viewModelScope)
         quickLinksItemViewModelSlice.start()
+        sotw2023NudgeCardViewModelSlice.initialize(viewModelScope)
     }
 
     @Suppress("LongParameterList")
