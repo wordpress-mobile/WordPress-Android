@@ -49,15 +49,13 @@ class BloganuaryNudgeAnalyticsTrackerTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN trackMySiteCardMoreMenuItemTapped is called THEN cardsTracker is called correctly`() {
-        BloganuaryNudgeCardMenuItem.entries.forEach {
-            tracker.trackMySiteCardMoreMenuItemTapped(it)
+    fun `WHEN trackMySiteCardMoreMenuItemTapped is called for hide_this THEN cardsTracker is called correctly`() {
+        tracker.trackMySiteCardMoreMenuItemTapped(BloganuaryNudgeCardMenuItem.HIDE_THIS)
 
-            verify(cardsTracker).trackCardMoreMenuItemClicked(
-                CardsTracker.Type.BLOGANUARY_NUDGE.label,
-                it.label
-            )
-        }
+        verify(cardsTracker).trackCardMoreMenuItemClicked(
+            CardsTracker.Type.BLOGANUARY_NUDGE.label,
+            "hide_this"
+        )
     }
 
     @Test
@@ -82,14 +80,22 @@ class BloganuaryNudgeAnalyticsTrackerTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN trackLearnMoreOverlayActionTapped is called THEN analyticsTracker is called correctly`() {
-        BloganuaryNudgeLearnMoreOverlayAction.entries.forEach {
-            tracker.trackLearnMoreOverlayActionTapped(it)
+    fun `WHEN trackLearnMoreOverlayActionTapped for dismiss THEN analyticsTracker is called correctly`() {
+        tracker.trackLearnMoreOverlayActionTapped(BloganuaryNudgeLearnMoreOverlayAction.DISMISS)
 
-            verify(analyticsTracker).track(
-                Stat.BLOGANUARY_NUDGE_LEARN_MORE_MODAL_ACTION_TAPPED,
-                mapOf("action" to it.analyticsLabel)
-            )
-        }
+        verify(analyticsTracker).track(
+            Stat.BLOGANUARY_NUDGE_LEARN_MORE_MODAL_ACTION_TAPPED,
+            mapOf("action" to "dismiss")
+        )
+    }
+
+    @Test
+    fun `WHEN trackLearnMoreOverlayActionTapped for turn_prompts_on THEN analyticsTracker is called correctly`() {
+        tracker.trackLearnMoreOverlayActionTapped(BloganuaryNudgeLearnMoreOverlayAction.TURN_ON_PROMPTS)
+
+        verify(analyticsTracker).track(
+            Stat.BLOGANUARY_NUDGE_LEARN_MORE_MODAL_ACTION_TAPPED,
+            mapOf("action" to "turn_on_prompts")
+        )
     }
 }
