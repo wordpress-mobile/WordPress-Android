@@ -7,6 +7,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.WpSotw2023NudgeCardModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenExternalUrl
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.config.WpSotw2023NudgeFeatureConfig
@@ -15,6 +16,7 @@ import javax.inject.Inject
 
 class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
     private val featureConfig: WpSotw2023NudgeFeatureConfig,
+    private val appPrefsWrapper: AppPrefsWrapper,
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
@@ -34,11 +36,14 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
         ctaText = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_cta),
         onHideMenuItemClick = ListItemInteraction.create(::onHideMenuItemClick),
         onCtaClick = ListItemInteraction.create(::onCtaClick),
-    ).takeIf { featureConfig.isEnabled() }
+    ).takeIf {
+        featureConfig.isEnabled() && !appPrefsWrapper.getShouldHideSotw2023NudgeCard()
+    }
 
     private fun onHideMenuItemClick() {
         // TODO thomashortadev analytics
-        // TODO thomashortadev hide card and refresh
+        appPrefsWrapper.setShouldHideSotw2023NudgeCard(true)
+        _refresh.value = Event(true)
     }
 
     private fun onCtaClick() {
