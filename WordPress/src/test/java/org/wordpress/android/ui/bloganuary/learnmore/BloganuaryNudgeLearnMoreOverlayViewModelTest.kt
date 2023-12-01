@@ -5,17 +5,24 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
+import org.mockito.Mock
+import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.ui.bloganuary.learnmore.BloganuaryNudgeLearnMoreOverlayViewModel.DismissEvent
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class BloganuaryNudgeLearnMoreOverlayViewModelTest : BaseUnitTest() {
+    @Mock
+    lateinit var promptsSettingsHelper: BloggingPromptsSettingsHelper
+
     lateinit var viewModel: BloganuaryNudgeLearnMoreOverlayViewModel
 
     @Before
     fun setUp() {
-        viewModel = BloganuaryNudgeLearnMoreOverlayViewModel()
+        viewModel = BloganuaryNudgeLearnMoreOverlayViewModel(promptsSettingsHelper)
     }
 
     @Test
@@ -46,29 +53,28 @@ class BloganuaryNudgeLearnMoreOverlayViewModelTest : BaseUnitTest() {
     fun `onActionClick should dismiss dialog when action is DISMISS`() {
         viewModel.onActionClick(BloganuaryNudgeLearnMoreOverlayAction.DISMISS)
 
-        assertThat(viewModel.dismissDialog.value).isEqualTo(Unit)
+        assertThat(viewModel.dismissDialog.value).isEqualTo(DismissEvent())
     }
 
     @Test
-    @Ignore("WIP")
-    fun `onActionClick should turn on blogging prompts when action is TURN_ON_PROMPTS`() {
+    fun `onActionClick should turn on blogging prompts when action is TURN_ON_PROMPTS`() = test {
         viewModel.onActionClick(BloganuaryNudgeLearnMoreOverlayAction.TURN_ON_PROMPTS)
 
-        // TODO thomashortadev implement this when we have the action to turn on prompts
+        verify(promptsSettingsHelper).updatePromptsCardEnabledForCurrentSite(true)
     }
 
     @Test
-    fun `onActionClick should dismiss dialog when action is TURN_ON_PROMPTS`() {
+    fun `onActionClick should dismiss dialog requesting refresh when action is TURN_ON_PROMPTS`() {
         viewModel.onActionClick(BloganuaryNudgeLearnMoreOverlayAction.TURN_ON_PROMPTS)
 
-        assertThat(viewModel.dismissDialog.value).isEqualTo(Unit)
+        assertThat(viewModel.dismissDialog.value).isEqualTo(DismissEvent(refreshDashboard = true))
     }
 
     @Test
     fun `onCloseClick should dismiss dialog`() {
         viewModel.onCloseClick()
 
-        assertThat(viewModel.dismissDialog.value).isEqualTo(Unit)
+        assertThat(viewModel.dismissDialog.value).isEqualTo(DismissEvent())
     }
 
     // region Analytics

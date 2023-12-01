@@ -44,6 +44,13 @@ class BloggingPromptsSettingsHelper @Inject constructor(
         bloggingRemindersStore.updateBloggingReminders(current.copy(isPromptsCardEnabled = isEnabled))
     }
 
+    suspend fun updatePromptsCardEnabledForCurrentSite(isEnabled: Boolean) {
+        val siteId = selectedSiteRepository.getSelectedSite()?.localId()?.value ?: return
+        val current = bloggingRemindersStore.bloggingRemindersModel(siteId).firstOrNull() ?: return
+        bloggingRemindersStore.updateBloggingReminders(current.copy(isPromptsCardEnabled = isEnabled))
+    }
+
+
     fun isPromptsFeatureAvailable(): Boolean {
         val selectedSite = selectedSiteRepository.getSelectedSite() ?: return false
         return bloggingPromptsFeature.isEnabled() && selectedSite.isUsingWpComRestApi
