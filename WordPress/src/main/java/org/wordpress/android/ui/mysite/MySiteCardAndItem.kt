@@ -59,7 +59,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         JETPACK_INSTALL_FULL_PLUGIN_CARD,
         NO_CARDS_MESSAGE,
         PERSONALIZE_CARD,
-        SOTW_2023_NUDGE_CARD,
+        WP_SOTW_2023_NUDGE_CARD,
     }
 
     data class SiteInfoHeaderCard(
@@ -385,7 +385,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onMoreMenuClick: ListItemInteraction,
             val onHideMenuItemClick: ListItemInteraction,
             val onCtaClick: ListItemInteraction,
-        ) : Card(type = Type.SOTW_2023_NUDGE_CARD)
+        ) : Card(type = Type.WP_SOTW_2023_NUDGE_CARD)
 
         data class NoCardsMessage(val title: UiString, val message: UiString)  : Card(Type.NO_CARDS_MESSAGE)
         data class PersonalizeCardModel(val onClick: () -> Unit) : Card(Type.PERSONALIZE_CARD)
