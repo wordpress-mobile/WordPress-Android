@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite.cards.sotw2023
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -31,6 +30,9 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
 
+    @Mock
+    lateinit var tracker: WpSotw2023NudgeCardAnalyticsTracker
+
     private lateinit var viewModelSlice: WpSotw2023NudgeCardViewModelSlice
 
     @Before
@@ -39,7 +41,8 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
             featureConfig,
             appPrefsWrapper,
             dateTimeUtilsWrapper,
-            localeManagerWrapper
+            localeManagerWrapper,
+            tracker,
         )
         viewModelSlice.initialize(testScope())
     }
@@ -94,8 +97,8 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
         mockCardRequisites()
 
         val card = viewModelSlice.buildCard()!!
-
         card.onCtaClick.click()
+
         assertThat(viewModelSlice.onNavigation.value?.peekContent()).isEqualTo(OpenExternalUrl(EXPECTED_URL))
     }
 
@@ -104,23 +107,39 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
         mockCardRequisites()
 
         val card = viewModelSlice.buildCard()!!
-
         card.onHideMenuItemClick.click()
+
         verify(appPrefsWrapper).setShouldHideSotw2023NudgeCard(true)
         assertThat(viewModelSlice.refresh.value?.peekContent()).isTrue
     }
 
     // region Analytics
-    @Ignore("TODO thomashortadev")
     @Test
-    fun `WHEN card onCtaClick is clicked THEN analytics is tracked`() {
-        // TODO thomashortadev implement when done
+    fun `WHEN card is shown THEN analytics is tracked`() {
+        mockCardRequisites()
+
+        viewModelSlice.trackShown()
+
+        verify(tracker).trackShown()
     }
 
-    @Ignore("TODO thomashortadev")
+    @Test
+    fun `WHEN card onCtaClick is clicked THEN analytics is tracked`() {
+        mockCardRequisites()
+
+        val card = viewModelSlice.buildCard()!!
+        card.onCtaClick.click()
+        verify(tracker).trackCtaTapped()
+    }
+
     @Test
     fun `WHEN card onHideMenuItemClick is clicked THEN analytics is tracked`() {
-        // TODO thomashortadev implement when done
+        mockCardRequisites()
+
+        val card = viewModelSlice.buildCard()!!
+        card.onHideMenuItemClick.click()
+
+        verify(tracker).trackHideTapped()
     }
     // endregion Analytics
 
@@ -130,7 +149,7 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
         isDateAfterEvent: Boolean = true,
         isLanguageEnglish: Boolean = true
     ) {
-        with (Mockito.lenient()) {
+        with(Mockito.lenient()) {
             whenever(featureConfig.isEnabled()).thenReturn(isFeatureEnabled)
             whenever(appPrefsWrapper.getShouldHideSotw2023NudgeCard()).thenReturn(isCardHidden)
             val date = if (isDateAfterEvent) "2023-12-12T00:00:01Z" else "2021-12-11T00:00:00Z"
