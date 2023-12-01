@@ -4803,14 +4803,14 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!--
          Barcode Scanning
     -->
-    <string name="barcode_scanning_title">Scan Barcode</string>
-    <string name="barcode_scanning_camera_permission_denied">Camera permission is required to scan the barcode.</string>
-    <string name="barcode_scanning_alert_dialog_title">Grant Camera Permission</string>
-    <string name="barcode_scanning_alert_dialog_rationale_message">Camera permission is required in order to scan the barcode</string>
-    <string name="barcode_scanning_alert_dialog_permanently_denied_message">You have permanently denied Camera permission. It is required in order to scan the barcode. Please enable it from the app settings</string>
-    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Grant</string>
-    <string name="barcode_scanning_alert_dialog_dismiss_label">Cancel</string>
-    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Go to settings</string>
+    <string name="barcode_scanning_title" tools:ignore="UnusedResources">Scan Barcode</string>
+    <string name="barcode_scanning_camera_permission_denied" tools:ignore="UnusedResources">Camera permission is required to scan the barcode.</string>
+    <string name="barcode_scanning_alert_dialog_title" tools:ignore="UnusedResources">Grant Camera Permission</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message" tools:ignore="UnusedResources">Camera permission is required in order to scan the barcode</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message" tools:ignore="UnusedResources">You have permanently denied Camera permission. It is required in order to scan the barcode. Please enable it from the app settings</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label" tools:ignore="UnusedResources">Grant</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label" tools:ignore="UnusedResources">Cancel</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label" tools:ignore="UnusedResources">Go to settings</string>
 
     <string name="login_text_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">Use a security key</string>
     <string name="login_error_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">There was some trouble with the Security key login</string>

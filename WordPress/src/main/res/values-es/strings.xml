@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-29 07:58:29+0000
+Translation-Revision-Date: 2023-12-01 10:32:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: es
@@ -20,10 +20,8 @@ Language: es
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Es posible que los bloques anidados a más de %d niveles no se muestren correctamente en el editor móvil.</string>
     <string name="jp_migration_lets_go_button">Vamos</string>
     <string name="jp_migration_done_no_sites_message">Es hora de continuar tu viaje por WordPress en la aplicación Jetpack.</string>
-    <string name="image_optimization_promo_desc">La optimización de imágenes las reduce para subirlas más rápido.\n\nEsta opción está activada por defecto, pero puedes cambiarla en los ajustes de la aplicación en cualquier momento.</string>
-    <string name="image_optimization_promo_title">¿Seguir optimizando las imágenes?</string>
-    <string name="leave_off">No, apágala</string>
-    <string name="turn_on">Sí, déjala encendida</string>
+    <string name="image_optimization_popup_desc">La optimización de imágenes las reduce para subirlas más rápido.\n\nEsta opción está activada por defecto, pero puedes cambiarla en los ajustes de la aplicación en cualquier momento.</string>
+    <string name="image_optimization_popup_title">¿Seguir optimizando las imágenes?</string>
     <string name="domain_management_clear_search">Vaciar la búsqueda</string>
     <string name="media_encoder_quality_very_high">Muy alta</string>
     <string name="notification_security_key_needed">Introduce tu clave de seguridad para continuar.</string>

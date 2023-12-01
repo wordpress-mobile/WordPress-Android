@@ -20,10 +20,6 @@ Language: ar
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">قد لا تظهر المكوّنات المتداخلة بشكل أكثر عمقًا من %d من المستويات بشكل صحيح في محرر الهاتف المحمول.</string>
     <string name="jp_migration_lets_go_button">لنبدأ</string>
     <string name="jp_migration_done_no_sites_message">حان الوقت لمواصلة رحلتك في ووردبريس.كوم على تطبيق Jetpack.</string>
-    <string name="image_optimization_promo_desc">يؤدي تحسين الصورة إلى تقليل حجم الصور المطلوب رفعها بسرعة.\n\nتم تمكين هذا الخيار افتراضيًا، لكن يمكنك تغييره ضمن إعدادات التطبيق في أي وقت.</string>
-    <string name="image_optimization_promo_title">هل تريد الاستمرار في تحسين الصور؟</string>
-    <string name="leave_off">لا، توقف عن الاستخدام</string>
-    <string name="turn_on">نعم، واصل الاستخدام</string>
     <string name="domain_management_clear_search">مسح البحث</string>
     <string name="media_encoder_quality_very_high">مرتفع للغاية</string>
     <string name="notification_security_key_needed">يرجى إدخال مفتاح الأمان الخاص بك للاستمرار.</string>

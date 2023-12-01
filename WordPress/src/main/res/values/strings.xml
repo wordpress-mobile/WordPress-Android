@@ -4803,19 +4803,34 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!--
          Barcode Scanning
     -->
-    <string name="barcode_scanning_title">Scan Barcode</string>
-    <string name="barcode_scanning_camera_permission_denied">Camera permission is required to scan the barcode.</string>
-    <string name="barcode_scanning_alert_dialog_title">Grant Camera Permission</string>
-    <string name="barcode_scanning_alert_dialog_rationale_message">Camera permission is required in order to scan the barcode</string>
-    <string name="barcode_scanning_alert_dialog_permanently_denied_message">You have permanently denied Camera permission. It is required in order to scan the barcode. Please enable it from the app settings</string>
-    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Grant</string>
-    <string name="barcode_scanning_alert_dialog_dismiss_label">Cancel</string>
-    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Go to settings</string>
+    <string name="barcode_scanning_title" tools:ignore="UnusedResources">Scan Barcode</string>
+    <string name="barcode_scanning_camera_permission_denied" tools:ignore="UnusedResources">Camera permission is required to scan the barcode.</string>
+    <string name="barcode_scanning_alert_dialog_title" tools:ignore="UnusedResources">Grant Camera Permission</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message" tools:ignore="UnusedResources">Camera permission is required in order to scan the barcode</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message" tools:ignore="UnusedResources">You have permanently denied Camera permission. It is required in order to scan the barcode. Please enable it from the app settings</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label" tools:ignore="UnusedResources">Grant</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label" tools:ignore="UnusedResources">Cancel</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label" tools:ignore="UnusedResources">Go to settings</string>
 
     <string name="login_text_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">Use a security key</string>
     <string name="login_error_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">There was some trouble with the Security key login</string>
     <string name="notification_security_key_needed" tools:ignore="UnusedResources" a8c-src-lib="login">Please provide your security key to continue.</string>
+
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can flatten the content by ungrouping the block.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">For this reason, we recommend editing the block using the web editor.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">For this reason, we recommend editing the block using your web browser.</string>
+
+    <!-- Bloganuary -->
+    <string name="bloganuary_dashboard_nudge_title">Bloganuary is coming!</string>
+    <string name="bloganuary_dashboard_nudge_text">For the month of January, blogging prompts will come from Bloganuary - our community challenge to build a blogging habit for the new year.</string>
+    <string name="bloganuary_dashboard_nudge_learn_more">@string/learn_more</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">Join our month-long writing challenge</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">Receive a new prompt to inspire you each day.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">Publish your response.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">Read other bloggers’ responses to get inspiration and make new connections.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Bloganuary will use Daily Blogging Prompts to send you topics for the month of January. You have Blogging Prompts currently disabled.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary will use Daily Blogging Prompts to send you topics for the month of January.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Turn on blogging prompts</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Let’s go!</string>
 </resources>

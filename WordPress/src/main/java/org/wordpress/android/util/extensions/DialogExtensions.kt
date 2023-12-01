@@ -39,15 +39,15 @@ fun BottomSheetDialog.fillScreen(isDraggable: Boolean = false) {
             MaterialR.id.design_bottom_sheet
         ) ?: return@setOnShowListener
 
+        bottomSheet.layoutParams?.let { layoutParams ->
+            layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
+            bottomSheet.layoutParams = layoutParams
+        }
+
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         bottomSheetBehavior.maxWidth = ViewGroup.LayoutParams.MATCH_PARENT
         bottomSheetBehavior.isDraggable = isDraggable
         bottomSheetBehavior.skipCollapsed = true
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-
-        bottomSheet.layoutParams?.let { layoutParams ->
-            layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
-            bottomSheet.layoutParams = layoutParams
-        }
     }
 }

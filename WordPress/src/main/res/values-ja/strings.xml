@@ -20,10 +20,6 @@ Language: ja_JP
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%dレベルよりも深くネストされたブロックは、モバイルエディターで適切にレンダリングされない場合があります。</string>
     <string name="jp_migration_lets_go_button">スタート</string>
     <string name="jp_migration_done_no_sites_message">Jetpack アプリで WordPress のジャーニーを続ける時が来ました。</string>
-    <string name="image_optimization_promo_desc">画像の最適化により、画像のサイズを縮小して迅速に読み込めます。\n\nこのオプションはデフォルトで有効になっていますが、アプリの設定でいつでも変更できます。</string>
-    <string name="image_optimization_promo_title">画像の最適化を続けますか ?</string>
-    <string name="leave_off">オフにする</string>
-    <string name="turn_on">そのままにする</string>
     <string name="domain_management_clear_search">検索をクリア</string>
     <string name="media_encoder_quality_very_high">非常に高い</string>
     <string name="notification_security_key_needed">続行するにはセキュリティキーを入力してください。</string>

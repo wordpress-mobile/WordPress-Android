@@ -63,6 +63,7 @@ import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
+import org.wordpress.android.ui.mysite.cards.dashboard.bloganuary.BloganuaryNudgeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
@@ -167,6 +168,7 @@ class MySiteViewModel @Inject constructor(
     private val noCardsMessageViewModelSlice: NoCardsMessageViewModelSlice,
     private val siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice,
     private val quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice,
+    private val bloganuaryNudgeCardViewModelSlice: BloganuaryNudgeCardViewModelSlice,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -226,6 +228,7 @@ class MySiteViewModel @Inject constructor(
         activityLogCardViewModelSlice.onNavigation,
         siteItemsViewModelSlice.onNavigation,
         bloggingPromptCardViewModelSlice.onNavigation,
+        bloganuaryNudgeCardViewModelSlice.onNavigation,
         personalizeCardViewModelSlice.onNavigation,
         siteInfoHeaderCardViewModelSlice.onNavigation,
         quickLinksItemViewModelSlice.navigation
@@ -242,7 +245,8 @@ class MySiteViewModel @Inject constructor(
             pagesCardViewModelSlice.refresh,
             todaysStatsViewModelSlice.refresh,
             postsCardViewModelSlice.refresh,
-            activityLogCardViewModelSlice.refresh
+            activityLogCardViewModelSlice.refresh,
+            bloganuaryNudgeCardViewModelSlice.refresh,
         )
     val domainTransferCardRefresh = domainTransferCardViewModel.refresh
 
@@ -314,6 +318,7 @@ class MySiteViewModel @Inject constructor(
     init {
         dispatcher.register(this)
         bloggingPromptCardViewModelSlice.initialize(viewModelScope, mySiteSourceManager)
+        bloganuaryNudgeCardViewModelSlice.initialize(viewModelScope)
         siteInfoHeaderCardViewModelSlice.initialize(viewModelScope)
         quickLinksItemViewModelSlice.initialization(viewModelScope)
         quickLinksItemViewModelSlice.start()
@@ -475,6 +480,7 @@ class MySiteViewModel @Inject constructor(
                 postCardBuilderParams = postsCardViewModelSlice.getPostsCardBuilderParams(
                     cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel
                 ),
+                bloganuaryNudgeCardBuilderParams = bloganuaryNudgeCardViewModelSlice.getBuilderParams(),
                 bloggingPromptCardBuilderParams = bloggingPromptCardViewModelSlice.getBuilderParams(
                     bloggingPromptUpdate
                 ),

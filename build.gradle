@@ -37,7 +37,6 @@ ext {
     androidxAnnotationVersion = '1.6.0'
     androidxAppcompatVersion = '1.6.1'
     androidxArchCoreVersion = '2.2.0'
-    androidxCameraVersion = '1.2.3'
     androidxComposeBomVersion = '2023.10.00'
     androidxComposeCompilerVersion = '1.5.3'
     androidxCardviewVersion = '1.0.0'
@@ -70,8 +69,6 @@ ext {
     googleGsonVersion = '2.10.1'
     googleMaterialVersion = '1.9.0'
 
-    mlkitBarcodeScanningVersion = '17.2.0'
-    mlkitTextRecognitionVersion = '16.0.0'
     googleMLKitBarcodeScanningVersion = '17.0.0'
     googlePlayServicesAuthVersion = '20.4.1'
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
