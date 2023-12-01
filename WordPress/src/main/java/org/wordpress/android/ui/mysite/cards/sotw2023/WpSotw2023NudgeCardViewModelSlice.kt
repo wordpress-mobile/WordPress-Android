@@ -22,6 +22,7 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val localeManagerWrapper: LocaleManagerWrapper,
+    private val tracker: WpSotw2023NudgeCardAnalyticsTracker,
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
@@ -43,14 +44,22 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
         onCtaClick = ListItemInteraction.create(::onCtaClick),
     ).takeIf { isEligible() }
 
+    fun trackShown() {
+        tracker.trackShown()
+    }
+
+    fun resetShown() {
+        tracker.resetShown()
+    }
+
     private fun onHideMenuItemClick() {
-        // TODO thomashortadev analytics
+        tracker.trackHideTapped()
         appPrefsWrapper.setShouldHideSotw2023NudgeCard(true)
         _refresh.value = Event(true)
     }
 
     private fun onCtaClick() {
-        // TODO thomashortadev analytics
+        tracker.trackCtaTapped()
         _onNavigation.value = Event(OpenExternalUrl(URL))
     }
 

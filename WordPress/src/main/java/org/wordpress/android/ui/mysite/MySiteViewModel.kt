@@ -996,7 +996,8 @@ class MySiteViewModel @Inject constructor(
             .forEach { personalizeCardViewModelSlice.trackShown(it.type) }
         siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>()
             .forEach { noCardsMessageViewModelSlice.trackShown(it.type) }
-        // TODO thomashortadev add shown tracking for SotW card here
+        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.WpSotw2023NudgeCardModel>()
+            .forEach { _ -> sotw2023NudgeCardViewModelSlice.trackShown() }
     }
 
     private fun resetShownTrackers() {
@@ -1006,6 +1007,7 @@ class MySiteViewModel @Inject constructor(
         jetpackFeatureCardShownTracker.resetShown()
         jetpackInstallFullPluginShownTracker.resetShown()
         personalizeCardViewModelSlice.resetShown()
+        sotw2023NudgeCardViewModelSlice.resetShown()
     }
 
     // FluxC events
