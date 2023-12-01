@@ -224,6 +224,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_EDITOR_ORIGIN = "editor_origin";
     public static final String ARG_CURRENT_FOCUS = "CURRENT_FOCUS";
     public static final String ARG_BYPASS_MIGRATION = "bypass_migration";
+    public static final String ARG_MEDIA = "show_media";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -925,6 +926,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     break;
                 case ARG_BLOGGING_PROMPTS_ONBOARDING:
                     showBloggingPromptsOnboarding();
+                    break;
+                case ARG_MEDIA:
+                    if (!mSelectedSiteRepository.hasSelectedSite()) {
+                        initSelectedSite();
+                    }
+                    ActivityLauncher.viewCurrentBlogMedia(this, getSelectedSite());
                     break;
             }
         } else {
