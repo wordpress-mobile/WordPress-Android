@@ -57,7 +57,7 @@ class BloganuaryNudgeLearnMoreOverlayFragment : BottomSheetDialogFragment() {
             dismiss()
             if (it.refreshDashboard) wpMainActivityViewModel.requestMySiteDashboardRefresh()
         }
-        viewModel.onDialogShown()
+        viewModel.onDialogShown(isPromptsEnabled)
     }
 
     override fun onDismiss(dialog: DialogInterface) {

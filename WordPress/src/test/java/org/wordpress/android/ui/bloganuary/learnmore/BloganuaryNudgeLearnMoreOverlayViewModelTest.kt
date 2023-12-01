@@ -3,12 +3,12 @@ package org.wordpress.android.ui.bloganuary.learnmore
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker
 import org.wordpress.android.ui.bloganuary.learnmore.BloganuaryNudgeLearnMoreOverlayViewModel.DismissEvent
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -18,11 +18,14 @@ class BloganuaryNudgeLearnMoreOverlayViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var promptsSettingsHelper: BloggingPromptsSettingsHelper
 
+    @Mock
+    lateinit var tracker: BloganuaryNudgeAnalyticsTracker
+
     lateinit var viewModel: BloganuaryNudgeLearnMoreOverlayViewModel
 
     @Before
     fun setUp() {
-        viewModel = BloganuaryNudgeLearnMoreOverlayViewModel(promptsSettingsHelper)
+        viewModel = BloganuaryNudgeLearnMoreOverlayViewModel(promptsSettingsHelper, tracker)
     }
 
     @Test
@@ -79,28 +82,28 @@ class BloganuaryNudgeLearnMoreOverlayViewModelTest : BaseUnitTest() {
 
     // region Analytics
     @Test
-    @Ignore("WIP")
     fun `onDialogShown should track analytics`() {
-        viewModel.onDialogShown()
+        listOf(true, false).forEach { isPromptsEnabled ->
+            viewModel.onDialogShown(isPromptsEnabled)
 
-        // TODO thomashortadev assert analytics event is tracked
-    }
-
-    @Test
-    @Ignore("WIP")
-    fun `onActionClick should track analytics`() {
-        BloganuaryNudgeLearnMoreOverlayAction.entries.forEach {
-            viewModel.onActionClick(it)
-            // TODO thomashortadev assert analytics event is tracked
+            verify(tracker).trackLearnMoreOverlayShown(isPromptsEnabled)
         }
     }
 
     @Test
-    @Ignore("WIP")
+    fun `onActionClick should track analytics`() {
+        BloganuaryNudgeLearnMoreOverlayAction.entries.forEach {
+            viewModel.onActionClick(it)
+
+            verify(tracker).trackLearnMoreOverlayActionTapped(it)
+        }
+    }
+
+    @Test
     fun `onDialogDismissed should track analytics`() {
         viewModel.onDialogDismissed()
 
-        // TODO thomashortadev assert analytics event is tracked
+        verify(tracker).trackLearnMoreOverlayDismissed()
     }
     // endregion
 }
