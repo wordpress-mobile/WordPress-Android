@@ -14,8 +14,6 @@ import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.config.WpSotw2023NudgeFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
@@ -41,9 +39,7 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
         ctaText = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_cta),
         onHideMenuItemClick = ListItemInteraction.create(::onHideMenuItemClick),
         onCtaClick = ListItemInteraction.create(::onCtaClick),
-    ).takeIf {
-        featureConfig.isEnabled() && !appPrefsWrapper.getShouldHideSotw2023NudgeCard()
-    }
+    ).takeIf { isEligible() }
 
     private fun onHideMenuItemClick() {
         // TODO thomashortadev analytics
