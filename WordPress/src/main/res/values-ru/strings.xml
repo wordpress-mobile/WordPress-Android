@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-28 07:45:26+0000
+Translation-Revision-Date: 2023-12-01 06:22:55+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: ru
 -->
 <resources>
+    <string name="turn_off">Нет, отключить</string>
+    <string name="leave_on">Да, оставить</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">По этой причине мы рекомендуем редактировать блок с помощью веб-браузера.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">По этой причине мы рекомендуем редактировать блок с помощью веб-редактора.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Альтернативно вы можете сгладить содержимое, разгруппировав блок.</string>
@@ -20,10 +22,8 @@ Language: ru
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Блоки, вложенные глубже, чем %d уровней, могут отображаться неправильно в мобильном редакторе.</string>
     <string name="jp_migration_lets_go_button">Поехали!</string>
     <string name="jp_migration_done_no_sites_message">Пришло время продолжить путешествие по WordPress в приложении Jetpack!</string>
-    <string name="image_optimization_promo_desc">Оптимизация изображений сжимает изображения для более быстрой загрузки.\n\nЭта опция включена по умолчанию, но вы можете изменить ее в настройках приложения в любой момент.</string>
-    <string name="image_optimization_promo_title">Продолжать оптимизировать изображения?</string>
-    <string name="leave_off">Нет, отключить</string>
-    <string name="turn_on">Да, оставить</string>
+    <string name="image_optimization_popup_desc">Оптимизация изображений сжимает изображения для более быстрой загрузки.\n\nЭта опция включена по умолчанию, но вы можете изменить ее в настройках приложения в любой момент.</string>
+    <string name="image_optimization_popup_title">Продолжать оптимизировать изображения?</string>
     <string name="domain_management_clear_search">Очистить поиск</string>
     <string name="media_encoder_quality_very_high">Очень высокое</string>
     <string name="notification_security_key_needed">Пожалуйста предоставьте ключ безопасности для продолжения.</string>

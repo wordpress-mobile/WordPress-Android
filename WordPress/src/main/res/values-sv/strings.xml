@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-29 11:54:09+0000
+Translation-Revision-Date: 2023-11-30 21:33:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: sv_SE
 -->
 <resources>
+    <string name="turn_off">Nej, stäng av</string>
+    <string name="leave_on">Ja, lämna på</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Av den här anledningen rekommenderar vi att du redigerar blocket i din webbläsare.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Av den här anledningen rekommenderar vi att du redigerar blocket med webbredigeraren.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternativt kan du platta ut innehållet genom att avgruppera blocket.</string>
@@ -20,10 +22,8 @@ Language: sv_SE
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Block som är inbäddade djupare än %d kanske inte renderas korrekt i den mobila redigeraren.</string>
     <string name="jp_migration_lets_go_button">Sätt igång</string>
     <string name="jp_migration_done_no_sites_message">Det är dags att fortsätta din WordPress-resa med Jetpack-appen.</string>
-    <string name="image_optimization_promo_desc">Bildoptimering minskar storleken på bilder för snabbare uppladdning.\n\nDet här alternativet är aktiverat som standard, men du kan ändra det i appinställningarna när som helst.</string>
-    <string name="image_optimization_promo_title">Vill du fortsätta optimera bilder?</string>
-    <string name="leave_off">Nej, stäng av det</string>
-    <string name="turn_on">Ja, lämna det på</string>
+    <string name="image_optimization_popup_desc">Bildoptimering förminskar bilder för snabbare uppladdning.\n\nDetta alternativ är aktiverat som standard, men du kan ändra det i appinställningarna när som helst.</string>
+    <string name="image_optimization_popup_title">Fortsätt optimera bilder?</string>
     <string name="domain_management_clear_search">Rensa sökning</string>
     <string name="media_encoder_quality_very_high">Mycket hög</string>
     <string name="notification_security_key_needed">Ange din säkerhetsnyckel för att fortsätta.</string>

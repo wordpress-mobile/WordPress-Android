@@ -20,10 +20,6 @@ Language: zh_TW
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">行動編輯器可能無法正確顯示內嵌超過 %d 層的區塊。</string>
     <string name="jp_migration_lets_go_button">我們開始吧</string>
     <string name="jp_migration_done_no_sites_message">現在就在 Jetpack 應用程式上繼續你的 WordPress 旅程。</string>
-    <string name="image_optimization_promo_desc">圖片最佳化會壓縮圖片，以加快上傳速度。\n\n系統預設啟用此選項，但你可以隨時在應用程式設定中變更。</string>
-    <string name="image_optimization_promo_title">要繼續最佳化圖片嗎？</string>
-    <string name="leave_off">不，關閉設定</string>
-    <string name="turn_on">是，繼續使用</string>
     <string name="domain_management_clear_search">清除搜尋</string>
     <string name="media_encoder_quality_very_high">超高</string>
     <string name="notification_security_key_needed">請提供安全性金鑰以繼續使用。</string>

@@ -20,10 +20,6 @@ Language: tr
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%d seviyelerinden daha derin bir şekilde iç içe geçmiş bloklar, mobil düzenleyicide düzgün şekilde oluşmayabilir.</string>
     <string name="jp_migration_lets_go_button">Haydi başlayalım</string>
     <string name="jp_migration_done_no_sites_message">Jetpack uygulamasındaki WordPress yolculuğunuza devam etme vakti.</string>
-    <string name="image_optimization_promo_desc">Görsel iyileştirme özelliği, daha hızlı yüklenmeleri için görselleri küçültür.\n\nBu seçenek varsayılan olarak etkindir, ancak dilediğiniz zaman uygulama ayarlarından değiştirebilirsiniz.</string>
-    <string name="image_optimization_promo_title">Görseller iyileştirilmeye devam edilsin mi?</string>
-    <string name="leave_off">Hayır, kapat</string>
-    <string name="turn_on">Evet, açık kalsın</string>
     <string name="domain_management_clear_search">Aramayı temizle</string>
     <string name="media_encoder_quality_very_high">Çok Yüksek</string>
     <string name="notification_security_key_needed">Lütfen devam etmek için güvenlik anahtarınızı girin.</string>
