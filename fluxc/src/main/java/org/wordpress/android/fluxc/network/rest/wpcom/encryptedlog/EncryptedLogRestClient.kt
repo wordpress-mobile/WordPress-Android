@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog
 
 import com.android.volley.NoConnectionError
 import com.android.volley.RequestQueue
-import com.android.volley.Response
 import com.android.volley.VolleyError
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.json.JSONException
@@ -12,6 +11,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.UploadEncryptedLogResult.LogUploadFailed
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.UploadEncryptedLogResult.LogUploaded
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.API
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -58,6 +59,7 @@ class EncryptedLogRestClient @Inject constructor(
             val json = try {
                 JSONObject(dataString)
             } catch (jsonException: JSONException) {
+                AppLog.e(API, "Received response not in JSON format: " + jsonException.message)
                 return UploadEncryptedLogError.Unknown(message = dataString)
             }
             val errorMessage = json.getString("message")
