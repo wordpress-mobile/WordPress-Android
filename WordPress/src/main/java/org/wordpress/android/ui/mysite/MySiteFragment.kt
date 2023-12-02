@@ -704,7 +704,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
         is SiteNavigationAction.OpenStatsInsights ->
             ActivityLauncher.viewBlogStatsForTimeframe(requireActivity(), action.site, StatsTimeframe.INSIGHTS)
-        is SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl ->
+        is SiteNavigationAction.OpenExternalUrl ->
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
         is SiteNavigationAction.OpenJetpackPoweredBottomSheet -> showJetpackPoweredBottomSheet()
         is SiteNavigationAction.OpenJetpackMigrationDeleteWP -> showJetpackMigrationDeleteWP()
