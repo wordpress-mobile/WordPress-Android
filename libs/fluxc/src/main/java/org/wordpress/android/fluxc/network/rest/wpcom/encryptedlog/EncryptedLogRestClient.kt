@@ -27,9 +27,9 @@ class EncryptedLogRestClient @Inject constructor(
 ) {
     suspend fun uploadLog(logUuid: String, contents: String): UploadEncryptedLogResult {
         return suspendCancellableCoroutine { cont ->
-            val request = EncryptedLogUploadRequest(logUuid, contents, appSecrets.appSecret, Response.Listener {
+            val request = EncryptedLogUploadRequest(logUuid, contents, appSecrets.appSecret, {
                 cont.resume(LogUploaded)
-            }, Response.ErrorListener { error ->
+            }, { error ->
                 cont.resume(LogUploadFailed(mapError(error)))
             })
             cont.invokeOnCancellation { request.cancel() }
