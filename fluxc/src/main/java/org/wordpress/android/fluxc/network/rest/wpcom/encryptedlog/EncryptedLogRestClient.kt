@@ -5,6 +5,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import kotlinx.coroutines.suspendCancellableCoroutine
+import org.json.JSONException
 import org.json.JSONObject
 import org.wordpress.android.fluxc.network.EncryptedLogUploadRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
@@ -53,7 +54,12 @@ class EncryptedLogRestClient @Inject constructor(
         }
         error.networkResponse?.let { networkResponse ->
             val statusCode = networkResponse.statusCode
-            val json = JSONObject(String(networkResponse.data))
+            val dataString = String(networkResponse.data)
+            val json = try {
+                JSONObject(dataString)
+            } catch (jsonException: JSONException) {
+                return UploadEncryptedLogError.Unknown(message = dataString)
+            }
             val errorMessage = json.getString("message")
             json.getString("error").let { errorType ->
                 if (errorType == INVALID_REQUEST) {
