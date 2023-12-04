@@ -28,7 +28,7 @@ data class MediaWPRESTResponse(
     @SerializedName("media_type") val mediaType: String,
     @SerializedName("mime_type") val mimeType: String,
     @SerializedName("media_details") val mediaDetails: MediaDetails,
-    @SerializedName("source_url") val sourceURL: String
+    @SerializedName("source_url") val sourceURL: String?
 ) {
     data class Attribute(
         val rendered: String
@@ -68,7 +68,7 @@ fun MediaWPRESTResponse.toMediaModel(localSiteId: Int) = MediaModel(
     DateTimeUtils.iso8601FromDate(
         SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT).parse(dateGmt)
     ),
-    sourceURL,
+    sourceURL.orEmpty(),
     mediaDetails.sizes?.thumbnail?.sourceURL,
     mediaDetails.file,
     mediaDetails.file?.substringAfterLast('.', ""),
