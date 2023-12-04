@@ -1046,21 +1046,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onPrepareMenu(menu: Menu) {
-        val isReaderImprovementsEnabled = readerImprovementsFeatureConfig.isEnabled()
-
         val postHasUrl = viewModel.post?.hasUrl() == true
         val menuBrowse = menu.findItem(R.id.menu_browse)
-        menuBrowse?.isVisible = if (!isReaderImprovementsEnabled) {
-            // browse require the post to have a URL (some feed-based posts don't have one) or an intercepted URI
-            postHasUrl || viewModel.interceptedUri != null
-        } else {
-            // in the Reader improvements we are only showing this as a fallback for posts with intercepted URI only
-            !postHasUrl && viewModel.interceptedUri != null
-        }
-
+        // browse require the post to have a URL (some feed-based posts don't have one) or an intercepted URI
+        menuBrowse?.isVisible = postHasUrl || viewModel.interceptedUri != null
+        // share require the post to have a URL
         val menuShare = menu.findItem(R.id.menu_share)
-        // share should not be shown as a TopBar item after Reader improvements (only in the "more" menu)
-        menuShare?.isVisible = postHasUrl && !isReaderImprovementsEnabled
+        menuShare?.isVisible = postHasUrl
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
@@ -1074,6 +1066,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 ReaderActivityLauncher.openUrl(activity, interceptedUri, OpenUrlType.EXTERNAL)
                 requireActivity().finish()
             }
+            true
+        }
+        R.id.menu_share -> {
+            readerTracker.track(AnalyticsTracker.Stat.SHARED_ITEM)
+            ReaderActivityLauncher.sharePost(context, viewModel.post)
             true
         }
         R.id.menu_more -> {
