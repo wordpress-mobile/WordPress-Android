@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
+import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 
 /**
@@ -36,13 +37,13 @@ class ActivityLauncherWrapper @Inject constructor() {
     ) = ActivityLauncher.previewPostOrPageForResult(activity, site, post, remotePreviewType)
 
     @Suppress("SwallowedException")
-    fun openPlayStoreLink(activity: Activity, packageName: String) {
+    fun openPlayStoreLink(activity: Activity, packageName: String, utmCampaign: String? = null) {
         var intent: Intent? = activity.packageManager.getLaunchIntentForPackage(packageName)
         val isAppAlreadyInstalled = intent != null
 
         if (intent == null) {
             intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                data = Uri.parse(getPlayStoreUrl(activity.application.packageName, packageName, utmCampaign))
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 setPackage("com.android.vending")
             }
@@ -60,6 +61,15 @@ class ActivityLauncherWrapper @Inject constructor() {
         }
     }
 
+    fun getPlayStoreUrl(appPackageName: String, destinationPackageName: String, utmCampaign: String? = null): String {
+        val referrer = utmCampaign?.let {
+            val encoded = UrlUtils.urlEncode("$GOOGLE_STORE_UTM_SOURCE=$appPackageName&$GOOGLE_STORE_UTM_CAMPAIGN=$it")
+            "$GOOGLE_STORE_REFERRER=$encoded"
+        }
+        val storeUrl = "$GOOGLE_STORE_URL_APP_DETAILS?$GOOGLE_STORE_URL_APP_ID=$destinationPackageName"
+        return referrer?.let { "$storeUrl&$it" } ?: storeUrl
+    }
+
     private fun preventBackNavigation(activity: Activity, shouldPrevent: Boolean) {
         if (shouldPrevent) {
             activity.finishAffinity()
@@ -68,5 +78,15 @@ class ActivityLauncherWrapper @Inject constructor() {
 
     companion object {
         const val JETPACK_PACKAGE_NAME = "com.jetpack.android"
+        const val GOOGLE_STORE_URL_APP_DETAILS = "https://play.google.com/store/apps/details"
+        const val GOOGLE_STORE_URL_APP_ID = "id"
+        const val GOOGLE_STORE_REFERRER = "referrer"
+        const val GOOGLE_STORE_UTM_SOURCE = "utm_source"
+        const val GOOGLE_STORE_UTM_CAMPAIGN = "utm_campaign"
+        const val CAMPAIGN_SITE_CREATION = "site_creation"
+        const val CAMPAIGN_BOTTOM_SHEET = "bottom_sheet"
+        const val CAMPAIGN_STATIC_POSTER = "static_poster"
+        const val CAMPAIGN_INDIVIDUAL_PLUGIN = "individual_plugin"
+        const val CAMPAIGN_JETPACK_OVERLAY = "jetpack_overlay"
     }
 }

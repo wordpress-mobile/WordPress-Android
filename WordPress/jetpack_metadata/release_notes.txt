@@ -1,4 +1,3 @@
-- New domain/plan options and checkout screens in site creation process
-- My Site navigation has links to common sections
-- Inactive social icons and Synced Pattern titles are visible in dark mode for block-based themes
-- Content can be converted into blocks in the Classic editor
+- Block editor only shows the “ungroup” option for nested blocks that support it.
+- Optimize Images setting uses optimal size and quality by default.
+- Themes install properly for sites on Business and Commerce plans.

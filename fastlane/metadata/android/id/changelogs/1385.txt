@@ -1,0 +1,3 @@
+23.7:
+- Layar Pos & Halaman sekarang dilengkapi opsi tampilan yang simpel nan bersih. Mengakses komentar, pengaturan, dan opsi lain kini bisa dilakukan dari menu konteks pos atau halaman.
+- Error di editor blok akibat menempel konten yang lapisannya jauh di bawah atau akibat mengaktifkan warna teks di tema situs lawas sudah kami atasi.

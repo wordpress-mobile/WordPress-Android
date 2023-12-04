@@ -1,3 +1,0 @@
-23.5:
-We hebben wat visuele veranderingen aangebracht aan de reader, waaronder feedkaarten, headers, knoppen, aanbevelingen en meer.
-In de blokeditor kan je nu een geformatteerd blok splitsen of verlaten door drie keer op enter te drukken. De linkergrens is altijd zichtbaar voor blokquotes.

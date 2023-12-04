@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
@@ -45,16 +46,20 @@ class EditorBloggingPromptsViewModel
                     EditorLoadedPrompt(
                         promptId,
                         content,
-                        createPromptTags(prompt.answeredLink)
+                        createPromptTags(prompt)
                     )
                 )
             )
         }
     }
 
-    private fun createPromptTags(tagUrl: String): List<String> = mutableListOf<String>().apply {
+    private fun createPromptTags(prompt: BloggingPromptModel): List<String> = mutableListOf<String>().apply {
         add(BloggingPromptsPostTagProvider.BLOGGING_PROMPT_TAG)
-        add(bloggingPromptsPostTagProvider.promptIdTag(tagUrl))
+        add(bloggingPromptsPostTagProvider.promptIdTag(prompt.answeredLink))
+        prompt.bloganuaryId?.let { bloganuaryIdTag ->
+            add(BloggingPromptsPostTagProvider.BLOGANUARY_TAG)
+            add(bloganuaryIdTag)
+        }
     }
 
     data class EditorLoadedPrompt(val promptId: Int, val content: String, val tags: List<String>)

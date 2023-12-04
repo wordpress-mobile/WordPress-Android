@@ -138,11 +138,11 @@ android {
         buildConfigField "boolean", "ENABLE_BLAZE_FEATURE", "false"
         buildConfigField "boolean", "WP_INDIVIDUAL_PLUGIN_OVERLAY", "false"
         buildConfigField "boolean", "SITE_EDITOR_MVP", "false"
-        buildConfigField "boolean", "JETPACK_SOCIAL", "false"
         buildConfigField "boolean", "CONTACT_SUPPORT_CHATBOT", "false"
         buildConfigField "boolean", "ENABLE_DOMAIN_MANAGEMENT_FEATURE", "false"
         buildConfigField "boolean", "PLANS_IN_SITE_CREATION", "false"
         buildConfigField "boolean", "READER_IMPROVEMENTS", "false"
+        buildConfigField "boolean", "BLOGANUARY_DASHBOARD_NUDGE", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -423,6 +423,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
     implementation "com.google.android.gms:play-services-code-scanner:$googlePlayServicesCodeScannerVersion"
     implementation "com.google.mlkit:barcode-scanning-common:$googleMLKitBarcodeScanningVersion"
+
     implementation "com.android.installreferrer:installreferrer:$androidInstallReferrerVersion"
     implementation "com.github.chrisbanes:PhotoView:$chrisbanesPhotoviewVersion"
     implementation "org.greenrobot:eventbus:$eventBusVersion"

@@ -1,0 +1,4 @@
+23.7:
+- Lewat layar Semua Domain, Anda bisa mengelola semua domain langsung dari aplikasi.
+- Di layar Pos & Halaman, opsi tampilan telah disempurnakan dan menu konteks kini lebih lengkap.
+- Error di editor blok akibat menempel konten yang lapisannya jauh di bawah atau akibat mengaktifkan warna teks di tema situs lawas sudah kami atasi.

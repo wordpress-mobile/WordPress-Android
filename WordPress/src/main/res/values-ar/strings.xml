@@ -1,11 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-18 14:54:08+0000
+Translation-Revision-Date: 2023-11-29 17:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.11
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">لهذا السبب، نوصي بتحرير المكوّن باستخدام متصفح الويب لديك.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">لهذا السبب، نوصي بتحرير المكوّن باستخدام محرر الويب.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">بدلاً من ذلك، يمكنك تمهيد المحتوى عن طريق فك تجميع المكوّن.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">الانتقال إلى الإعدادات</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">إلغاء</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">منح</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">لقد رفضت صلاحية الكاميرا بشكل دائم. إنها مطلوبة من أجل مسح الرمز الشريطي ضوئيًا. يرجى تمكينها من إعدادات التطبيق</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">صلاحية الكاميرا مطلوبة من أجل مسح الرمز الشريطي ضوئيًا</string>
+    <string name="barcode_scanning_alert_dialog_title">منح صلاحية الكاميرا</string>
+    <string name="barcode_scanning_camera_permission_denied">تلزم صلاحية الكاميرا لمسح الرمز الشريطي.</string>
+    <string name="barcode_scanning_title">مسح الرمز الشريطي ضوئيًا</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">قد لا تظهر المكوّنات المتداخلة بشكل أكثر عمقًا من %d من المستويات بشكل صحيح في محرر الهاتف المحمول.</string>
+    <string name="jp_migration_lets_go_button">لنبدأ</string>
+    <string name="jp_migration_done_no_sites_message">حان الوقت لمواصلة رحلتك في ووردبريس.كوم على تطبيق Jetpack.</string>
+    <string name="domain_management_clear_search">مسح البحث</string>
+    <string name="media_encoder_quality_very_high">مرتفع للغاية</string>
+    <string name="notification_security_key_needed">يرجى إدخال مفتاح الأمان الخاص بك للاستمرار.</string>
+    <string name="login_error_security_key">كانت هناك بعض المشكلات عند تسجيل الدخول باستخدام مفتاح الأمان</string>
+    <string name="login_text_security_key">استخدام مفتاح الأمان</string>
+    <string name="new_domain_search_screen_error_title">يتعذر استرداد النطاقات</string>
+    <string name="new_domain_search_screen_list_item_sale_price">%s للعام الأول</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s في العام</string>
+    <string name="new_domain_search_screen_transfer_domain_button">نقل النطاق</string>
+    <string name="new_domain_search_screen_transfer_domain_description">هل تبحث عن نطاق تمتلكه بالفعل؟</string>
+    <string name="new_domain_search_screen_input_placeholder">الكتابة للحصول على مزيد من الاقتراحات</string>
+    <string name="new_domain_search_screen_title">البحث عن نطاق</string>
+    <string name="purchase_domain_screen_error_button_title">موافق</string>
+    <string name="purchase_domain_screen_error_subtitle">حدث خطأ في أثناء إضافة النطاق إلى عربة التسوق. تأكد من أنك متصل بالإنترنت وحاول مجددًا.</string>
+    <string name="purchase_domain_screen_error_title">خطأ</string>
+    <string name="domain_management_site_domains_button">الكل</string>
+    <string name="domain_management_error_title">يتعذر استرداد نطاقاتك</string>
+    <string name="site_domain_title">نطاق الموقع</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">من &lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">تم التحرير</string>
+    <string name="post_list_toggle_author_filter">التصفية حسب المؤلف</string>
+    <string name="gutenberg_native_s_block_converted_to_blocks">تم تحويل مكوّن \"%s\" إلى المكوّنات</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">بدلاً من ذلك، يمكنك تحويل المحتوى إلى مكوّنات.</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">إضافة الاختصارات أو إزالتها</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">اختصارات غير نشطة</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">اختصارات نشطة</string>
+    <string name="personalization_screen_shortcuts_tab_title">الاختصارات</string>
+    <string name="personalization_screen_cards_tab_title">البطاقات</string>
+    <string name="purchase_domain_screen_discount_notice">* تتضمّن جميع الخطط السنوية المدفوعة نطاقًا مجانيًّا لمدة عام كامل.</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">اختيار موقع</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">الاستخدام مع أي موقع بدأته بالفعل.</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">موقع ووردبريس.كوم الحالي</string>
+    <string name="purchase_domain_screen_new_domain_card_button">الحصول على نطاق</string>
+    <string name="purchase_domain_screen_new_domain_card_description">أضف موقعًا لاحقًا.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">شراء نطاق فقط</string>
+    <string name="purchase_domain_screen_description">لا تقلق، يمكنك بسهولة إضافة موقع لاحقًا.</string>
+    <string name="purchase_domain_screen_header_double_line">اختيار كيفية\nاستخدام نطاقك</string>
+    <string name="purchase_domain_screen_header_single_line">اختيار طريقة استخدام نطاقك</string>
+    <string name="purchase_domain_screen_title">شراء النطاق</string>
+    <string name="domain_management_empty_find_domain">العثور على نطاق</string>
+    <string name="domain_management_empty_subtitle">اضغط أدناه للعثور على نطاقك المثالي.</string>
+    <string name="domain_management_empty_title">لا تتوافر لديك أي نطاقات</string>
+    <string name="domain_management_open_domain_details">فتح تفاصيل النطاق</string>
+    <string name="domain_management_search_your_domains">البحث في نطاقاتك</string>
+    <string name="domain_management_purchase_a_domain">شراء نطاق</string>
+    <string name="domain_management_expires">تنتهي الصلاحية بتاريخ ⁦%1$s⁩</string>
+    <string name="domain_management_error_subtitle">تحقق من أنك متصل بالإنترنت، واسحب للتحديث.</string>
+    <string name="domain_management_my_domains_title">جميع النطاقات</string>
     <string name="account_and_settings">الحساب والإعدادات</string>
     <string name="site_creation_plans_selection_title">تحديد خطة</string>
     <string name="site_creation_domain_free_with_annual_plan">مجاني للعام الأول مع الخطط السنوية المدفوعة</string>
@@ -18,7 +80,6 @@ Language: ar
     <string name="gutenberg_native_synced_patterns">الأنماط التي تمت مزامنتها</string>
     <string name="gutenberg_native_deeply_nested_block">مكوّن متداخل بشكل عميق</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">قد لا تظهر المكوّنات المتداخلة بشكل أكثر عمقًا من %d من المستويات بشكل صحيح في محرر الهاتف المحمول. لهذا السبب، نوصي بتهيئة المحتوى عن طريق إلغاء تجميع المكوّن أو تحرير المكوّن باستخدام محرر الويب.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">قد لا تظهر المكوّنات المتداخلة بشكل أكثر عمقًا من %d من المستويات بشكل صحيح في محرر الهاتف المحمول. لهذا السبب، نوصي بتهيئة المحتوى عن طريق إلغاء تجميع المكوّن أو تحرير المكوّن باستخدام متصفح الويب لديك.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">يتعذر عرض المكوّن نظرًا إلى تداخله بشكل عميق. اضغط هنا للحصول على مزيد من التفاصيل.</string>
     <string name="pages_no_site_something_went_wrong">حسنًا، حدث خطأ. ترجى المحاولة مرة أخرى لاحقًا.</string>
     <string name="sharing_connect_via_web_warning_positive_button">الانتقال إلى الويب</string>
@@ -35,14 +96,11 @@ Language: ar
     <string name="personalization_screen_stats_card_description">المشاهدات والزائرون والإعجابات</string>
     <string name="personalization_screen_scheduled_posts_card_title">تدوينات مجدولة</string>
     <string name="personalization_screen_draft_posts_card_title">إعداد مسودة للتدوينات</string>
-    <string name="personalization_screen_footer_cards">قد تعرض البطاقات محتوى مختلفًا استنادًا إلى ما يحدث من خلال موقعك</string>
     <string name="personalize_card_content_description">النقر على علامة تبويب تخصيص صفحتك الرئيسية</string>
     <string name="personalize_card_text">علامة تبويب تخصيص صفحتك الرئيسية</string>
     <string name="partial_media_access_prompt_change_settings">تغيير الإعدادات</string>
     <string name="partial_media_access_prompt_select_more">تحديد مزيد</string>
     <string name="partial_media_access_prompt_text">لا تتوافر سوى الصور والفيديوهات المُحدَّدة التي منحت حق الوصول إليها.</string>
-    <string name="personalization_screen_description">إضافة بطاقات أو إخفاؤها</string>
-    <string name="personalization_screen_title">علامة تبويب تخصيص الصفحة الرئيسية</string>
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">عرض كل الحملات</string>
     <string name="dashboard_activity_card_menu_all_activity">كل النشاط</string>
     <string name="dashboard_pages_card_more_menu_all_pages">كل الصفحات</string>
@@ -345,7 +403,7 @@ Language: ar
     <string name="blogging_prompts_list_answered_prompt">✓ تم الرد</string>
     <string name="blogging_prompts_list_title">المطالبات</string>
     <string name="close_desc">إغلاق</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">وبدلاً من ذلك، يمكنك فصل هذا المكوّن وتحريره على حدة عن طريق النقر على \"فصل النمط\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">بدلاً من ذلك، يمكنك فصل هذا المكوّن وتحريره على حدة عن طريق النقر على \"فصل\".</string>
     <string name="dlg_confirm_delete_category">هل تريد حذف تصنيف \"%s\" بشكل دائم؟</string>
     <string name="deleting_cat_success">نجح حذف التصنيف</string>
     <string name="deleting_cat_failed">فشل حذف التصنيف</string>
@@ -2827,14 +2885,10 @@ Language: ar
     <string name="password_incorrect">يبدو أن كلمة المرور هذه غير صحيحة. يرجى التحقق مجددًا من معلوماتك والمحاولة مرة أخرى.</string>
     <string name="requesting_otp">طلب رمز تحقق عن طريق رسالة نصية قصيرة (SMS).</string>
     <string name="login_text_otp">أرسل إليّ رمزًا بدلاً من ذلك.</string>
-    <string name="enter_verification_code">تقريبًا هناك! يرجى إدخال رمز التحقق من تطبيق الموثق الخاص بك.</string>
+    <string name="enter_verification_code">تقريبًا هناك! يرجى إدخال كود التحقق الخاص بووردبريس.كوم من تطبيق الموثق الخاص بك.</string>
     <string name="open_mail">فتح البريد</string>
     <string name="next">التالي</string>
     <string name="enter_email_wordpress_com">سجِّل الدخول إلى WordPress.com باستخدام عنوان بريد إلكتروني لإدارة جميع مواقع ووردبريس الخاصة بك.</string>
-    <string name="image_optimization_promo_desc">يقلل تحسين الصورة حجم الصور لتحميلها بسرعة.\n\nيمكنك تغيير هذا في أي وقت في إعدادات الموقع.</string>
-    <string name="image_optimization_promo_title">هل تريد تشغيل تحسين الصورة؟</string>
-    <string name="leave_off">التوقف عن الاستخدام</string>
-    <string name="turn_on">التشغيل</string>
     <string name="me_profile_photo">صورة الملف الشخصي</string>
     <string name="error_media_parse_error">استجابة غير متوقعة من الخادم</string>
     <string name="upload_finished_toast">يتعذر إيقاف التحميل لأنه انتهى بالفعل</string>
@@ -2971,11 +3025,6 @@ Language: ar
     <string name="editor_post_saved_online">تم حفظ المقالة على الإنترنت</string>
     <string name="site_settings_image_quality_hint">جودة الصور. تُشير القيم الأعلى إلى الصور ذات الجودة الأفضل.</string>
     <string name="site_settings_optimize_images_summary">تمكين تغيير حجم الصور وضغطها</string>
-    <string name="media_encoder_quality_100">الحد الأقصى</string>
-    <string name="media_encoder_quality_95">مرتفع للغاية</string>
-    <string name="media_encoder_quality_90">مرتفع</string>
-    <string name="media_encoder_quality_85">متوسط</string>
-    <string name="media_encoder_quality_80">منخفض</string>
     <string name="media_upload_state_uploaded">تم الرفع</string>
     <string name="media_upload_state_deleted">محذوف</string>
     <string name="media_upload_state_queued">تم الوضع في قائمة الانتظار</string>

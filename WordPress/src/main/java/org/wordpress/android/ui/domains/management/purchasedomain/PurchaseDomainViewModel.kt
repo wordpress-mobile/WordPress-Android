@@ -39,12 +39,12 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     }
 
     fun onNewDomainSelected() {
-        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED)
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_GET_DOMAIN_TAPPED)
         createCart(null, productId, domain, privacy)
     }
 
     fun onExistingSiteSelected() {
-        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED)
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_CHOOSE_SITE_TAPPED)
         launch {
             _actionEvents.emit(ActionEvent.GoToSitePicker(domain = domain))
         }
@@ -57,7 +57,7 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     }
 
     fun onSiteChosen(site: SiteModel?) {
-        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN)
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SITE_SELECTED)
         createCart(site, productId, domain, privacy)
     }
 
@@ -67,9 +67,13 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    fun onDomainRegistrationComplete(event: DomainRegistrationCompletedEvent?) {
-        // TODO Handle domain registration complete
+    fun onDomainRegistrationComplete(event: DomainRegistrationCompletedEvent?) = event?.also {
+        launch {
+            analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_COMPLETED)
+            _actionEvents.emit(ActionEvent.OpenDomainManagement)
+        }
+    } ?: run {
+        _uiStateFlow.value = UiState.ErrorInCheckout
     }
 
     private val SiteModel.shouldOfferPlans
@@ -112,6 +116,7 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         object SubmittingJustDomainCart : UiState
         object SubmittingSiteDomainCart : UiState
         object ErrorSubmittingCart : UiState
+        object ErrorInCheckout : UiState
     }
 
     sealed class ActionEvent {
@@ -120,6 +125,7 @@ class PurchaseDomainViewModel @AssistedInject constructor(
         data class GoToSitePicker(val domain: String) : ActionEvent()
         data class GoToExistingSiteCheckout(val domain: String, val siteModel: SiteModel) : ActionEvent()
         data class GoToExistingSitePlans(val domain: String, val siteModel: SiteModel) : ActionEvent()
+        object OpenDomainManagement : ActionEvent()
     }
 
     @AssistedFactory

@@ -17,7 +17,7 @@ data class ReaderBlogSectionUiState(
     val blogSectionClickData: ReaderBlogSectionClickData?
 ) {
     data class ReaderBlogSectionClickData(
-        val onBlogSectionClicked: ((Long, Long) -> Unit)?,
+        val onBlogSectionClicked: (() -> Unit)?,
         @AttrRes val background: Int
     )
 

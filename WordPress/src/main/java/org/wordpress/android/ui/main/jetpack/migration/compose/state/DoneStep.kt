@@ -30,6 +30,7 @@ import org.wordpress.android.ui.compose.components.text.Title
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.htmlToAnnotatedString
 import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState
 import org.wordpress.android.ui.main.jetpack.migration.compose.components.ScreenIcon
@@ -49,27 +50,31 @@ fun DoneStep(uiState: UiState.Content.Done): Unit = with(uiState) {
             Title(text = uiStringText(title))
             Subtitle(text = uiStringText(subtitle))
 
-            Spacer(modifier = Modifier.weight(0.5f))
-            Image(
-                painter = painterResource(deleteWpIcon),
-                contentDescription = stringResource(R.string.jp_migration_remove_wp_app_icon_content_description),
-                modifier = Modifier
-                    .padding(top = 10.dp, bottom = 10.dp)
-                    .size(70.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-            Text(
-                text = htmlToAnnotatedString(uiStringText(message)),
-                textAlign = TextAlign.Center,
-                fontSize = 14.sp,
-                lineHeight = 18.sp,
-                color = colorResource(R.color.gray_50),
-                modifier = Modifier
-                    .fillMaxWidth(0.75f)
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 10.dp)
-            )
-            Spacer(modifier = Modifier.weight(0.5f))
+            if (showDeleteWPApp) {
+                Spacer(modifier = Modifier.weight(0.5f))
+                Image(
+                    painter = painterResource(deleteWpIcon),
+                    contentDescription = stringResource(R.string.jp_migration_remove_wp_app_icon_content_description),
+                    modifier = Modifier
+                        .padding(top = 10.dp, bottom = 10.dp)
+                        .size(70.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+                Text(
+                    text = htmlToAnnotatedString(uiStringText(message)),
+                    textAlign = TextAlign.Center,
+                    fontSize = 14.sp,
+                    lineHeight = 18.sp,
+                    color = colorResource(R.color.gray_50),
+                    modifier = Modifier
+                        .fillMaxWidth(0.75f)
+                        .align(Alignment.CenterHorizontally)
+                        .padding(bottom = 10.dp)
+                )
+                Spacer(modifier = Modifier.weight(0.5f))
+            } else {
+                Subtitle(text = uiStringText(noSitesMessage))
+            }
         }
         ButtonsColumn {
             PrimaryButton(
@@ -87,6 +92,15 @@ fun DoneStep(uiState: UiState.Content.Done): Unit = with(uiState) {
 private fun PreviewDoneStep() {
     AppTheme {
         val uiState = UiState.Content.Done(DonePrimaryButton {})
+        DoneStep(uiState)
+    }
+}
+@Preview(showBackground = true, device = Devices.PIXEL_4_XL)
+@Composable
+private fun PreviewDoneStepNoSites() {
+    AppTheme {
+        val uiState = UiState.Content.Done(
+            JetpackMigrationViewModel.ActionButton.DoneNoSitesFlowPrimaryButton {}, false)
         DoneStep(uiState)
     }
 }

@@ -1,11 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-18 10:54:07+0000
+Translation-Revision-Date: 2023-11-29 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Aus diesem Grund empfehlen wir, den Block in deinem Webbrowser zu bearbeiten.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Aus diesem Grund empfehlen wir, den Block im Webeditor zu bearbeiten.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternativ kannst du die Tiefe des Inhalts reduzieren, indem du die Gruppierung des Blocks aufhebst.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Zu den Einstellungen</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">Abbrechen</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Gewähren</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Du hast die Berechtigung zum Zugriff auf deine Kamera dauerhaft abgelehnt. Sie ist erforderlich, um den Barcode zu scannen. Bitte aktiviere die Option in den App-Einstellungen</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">Zum Scannen des Barcodes ist die Berechtigung für den Zugriff auf deine Kamera erforderlich</string>
+    <string name="barcode_scanning_alert_dialog_title">Berechtigung zum Zugriff auf deine Kamera gewähren</string>
+    <string name="barcode_scanning_camera_permission_denied">Zum Scannen des Barcodes ist die Berechtigung zum Zugriff auf deine Kamera erforderlich.</string>
+    <string name="barcode_scanning_title">Barcode scannen</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blöcke, die tiefer als %d Ebenen verschachtelt sind, werden im mobilen Editor möglicherweise nicht richtig dargestellt.</string>
+    <string name="jp_migration_lets_go_button">Los geht\'s</string>
+    <string name="jp_migration_done_no_sites_message">Es ist an der Zeit, deine WordPress-Reise in der Jetpack-App fortzusetzen.</string>
+    <string name="domain_management_clear_search">Suche löschen</string>
+    <string name="media_encoder_quality_very_high">Sehr hoch</string>
+    <string name="notification_security_key_needed">Bitte gib deinen Sicherheitsschlüssel an, um fortzufahren.</string>
+    <string name="login_error_security_key">Es gab einige Probleme mit der Anmeldung per Sicherheitsschlüssel</string>
+    <string name="login_text_security_key">Sicherheitsschlüssel verwenden</string>
+    <string name="new_domain_search_screen_error_title">Domains konnten nicht abgerufen werden</string>
+    <string name="new_domain_search_screen_list_item_sale_price">%s für das erste Jahr</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s/Jahr</string>
+    <string name="new_domain_search_screen_transfer_domain_button">Domain übertragen</string>
+    <string name="new_domain_search_screen_transfer_domain_description">Du möchtest eine Domain übertragen, die du bereits besitzt?</string>
+    <string name="new_domain_search_screen_input_placeholder">Tippe, um weitere Vorschläge zu erhalten</string>
+    <string name="new_domain_search_screen_title">Nach einer Domain suchen</string>
+    <string name="purchase_domain_screen_error_button_title">OK</string>
+    <string name="purchase_domain_screen_error_subtitle">Beim Hinzufügen der Domain zum Warenkorb ist ein Fehler aufgetreten. Stelle sicher, dass du online bist und versuche es erneut.</string>
+    <string name="purchase_domain_screen_error_title">Fehler</string>
+    <string name="domain_management_site_domains_button">Alle</string>
+    <string name="domain_management_error_title">Dein Domains konnten nicht abgerufen werden</string>
+    <string name="site_domain_title">Website-Domain</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">Von &lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">Bearbeitet</string>
+    <string name="post_list_toggle_author_filter">Nach Autor filtern</string>
+    <string name="gutenberg_native_s_block_converted_to_blocks">Block „%s“ in Blöcke umgewandelt</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Alternativ kannst du den Inhalt in Blöcke umwandeln.</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Tastaturkürzel hinzufügen oder entfernen</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Inaktive Tastaturkürzel</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">Aktive Tastaturkürzel</string>
+    <string name="personalization_screen_shortcuts_tab_title">Tastaturkürzel</string>
+    <string name="personalization_screen_cards_tab_title">Karten</string>
+    <string name="purchase_domain_screen_discount_notice">* Bei allen kostenpflichtigen Jahrestarifen ist ein Jahr lang eine kostenlose Domain enthalten.</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">Website auswählen</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">Mit einer Website verwenden, mit der du bereits begonnen hast.</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">Vorhandene WordPress.com-Website</string>
+    <string name="purchase_domain_screen_new_domain_card_button">Domain erhalten</string>
+    <string name="purchase_domain_screen_new_domain_card_description">Füge später eine Website hinzu.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">Nur eine Domain kaufen</string>
+    <string name="purchase_domain_screen_description">Keine Sorge, du kannst später ganz einfach eine Website hinzufügen.</string>
+    <string name="purchase_domain_screen_header_double_line">Entscheide, wie du\ndeine Domain nutzen möchtest</string>
+    <string name="purchase_domain_screen_header_single_line">Entscheidung über die Nutzung deiner Domain treffen</string>
+    <string name="purchase_domain_screen_title">Domain kaufen</string>
+    <string name="domain_management_empty_find_domain">Eine Domain finden</string>
+    <string name="domain_management_empty_subtitle">Tippe unten, um die perfekte Domain zu finden.</string>
+    <string name="domain_management_empty_title">Du hast keine Domains</string>
+    <string name="domain_management_error_subtitle">Prüfe, ob du online bist, und ziehe zum Aktualisieren.</string>
+    <string name="domain_management_open_domain_details">Details zur Domain öffnen</string>
+    <string name="domain_management_search_your_domains">Deine Domains durchsuchen</string>
+    <string name="domain_management_purchase_a_domain">Eine Domain kaufen</string>
+    <string name="domain_management_my_domains_title">Alle Domains</string>
+    <string name="domain_management_expires">Läuft am %1$s ab</string>
     <string name="account_and_settings">Konto und Einstellungen</string>
     <string name="site_creation_plans_selection_title">Tarif auswählen</string>
     <string name="site_creation_domain_free_with_annual_plan">Bei kostenpflichtigen Jahrestarifen im ersten Jahr kostenlos</string>
@@ -18,7 +80,6 @@ Language: de
     <string name="gutenberg_native_synced_patterns">Synchronisierte Vorlagen</string>
     <string name="gutenberg_native_deeply_nested_block">Tief verschachtelter Block</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Blöcke, die tiefer als %d Ebenen verschachtelt sind, werden im mobilen Editor möglicherweise nicht richtig dargestellt. Aus diesem Grund empfehlen wir, die Tiefe des Inhalts zu reduzieren, indem du die Gruppierung des Blocks aufhebst oder den Block mit dem Webeditor bearbeitest.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blöcke, die tiefer als %d Ebenen verschachtelt sind, werden im mobilen Editor möglicherweise nicht richtig dargestellt. Aus diesem Grund empfehlen wir, die Tiefe des Inhalts zu reduzieren, indem du die Gruppierung des Blocks aufhebst oder den Block mit deinem Webbrowser bearbeitest.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Der Block kann nicht gerendert werden, weil er tief verschachtelt ist. Tippe hier für weitere Details.</string>
     <string name="pages_no_site_something_went_wrong">Huch, etwas ist schiefgelaufen. Bitte versuche es später erneut.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Internet öffnen</string>
@@ -35,9 +96,9 @@ Language: de
     <string name="personalization_screen_draft_posts_card_description">Deine letzten Beitragsentwürfe.</string>
     <string name="personalization_screen_draft_posts_card_title">Beitragsentwürfe</string>
     <string name="personalization_screen_stats_card_description">Besucher, Aufrufe und Likes</string>
-    <string name="personalization_screen_footer_cards">Je nachdem, was auf deiner Website los ist, zeigen Karten möglicherweise unterschiedliche Inhalte an</string>
-    <string name="personalization_screen_description">Karten hinzufügen oder ausblenden</string>
-    <string name="personalization_screen_title">Startseiten-Tab personalisieren</string>
+    <string name="personalization_screen_tab_cards_footer_cards">Je nachdem, was auf deiner Website los ist, zeigen Karten möglicherweise unterschiedliche Inhalte an</string>
+    <string name="personalization_screen_tab_cards_description">Karten hinzufügen oder ausblenden</string>
+    <string name="personalization_screen_title"> Startseiten-Tab personalisieren</string>
     <string name="personalize_card_content_description">Tippe, um deinen Startseiten-Tab zu personalisieren</string>
     <string name="personalize_card_text">Deinen Startseiten-Tab personalisieren</string>
     <string name="partial_media_access_prompt_change_settings">Einstellungen ändern</string>
@@ -348,7 +409,7 @@ Language: de
     <string name="blogging_prompts_list_answered_prompt">✓ Geantwortet</string>
     <string name="blogging_prompts_list_title">Schreibanregungen</string>
     <string name="close_desc">Tag schließen</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativ kannst du diese Blöcke loslösen und separat bearbeiten, indem du auf „Vorlage loslösen“ tippst.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativ kannst du diesen Block trennen und separat bearbeiten, indem du auf „Loslösen“ tippst.</string>
     <string name="dlg_confirm_delete_category">Kategorie „%s“ dauerhaft löschen?</string>
     <string name="deleting_cat_success">Kategorie erfolgreich gelöscht</string>
     <string name="deleting_cat_failed">Löschen der Kategorie fehlgeschlagen</string>
@@ -1596,6 +1657,7 @@ Language: de
     <string name="ccpa_privacy_notice_header">Datenschutzhinweis für Benutzer in Kalifornien</string>
     <string name="status_and_visibility">Status und Sichtbarkeit</string>
     <string name="update_now">Jetzt aktualisieren</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">Öffne das Menü mit den Blockaktionen</string>
     <string name="gutenberg_native_move_to_top">Nach oben verschieben</string>
     <string name="gutenberg_native_insert_mention">Erwähnung einfügen</string>
@@ -2834,14 +2896,10 @@ Language: de
     <string name="password_incorrect">Dieses Passwort ist anscheinend falsch. Prüfe bitte deine Angaben und versuche es erneut.</string>
     <string name="requesting_otp">Verifizierungscode wird per SMS angefordert.</string>
     <string name="login_text_otp">Code per SMS senden</string>
-    <string name="enter_verification_code">Fast geschafft! Gib bitte den Verifizierungscode aus deiner Authenticator-App ein.</string>
+    <string name="enter_verification_code">Fast geschafft! Gib bitte den Verifizierungscode für WordPress.com aus deiner Authenticator-App ein.</string>
     <string name="open_mail">E-Mail öffnen</string>
     <string name="next">Weiter</string>
     <string name="enter_email_wordpress_com">Melde dich auf WordPress.com mit einer E-Mail-Adresse an, um alle deine WordPress-Websites zu verwalten.</string>
-    <string name="image_optimization_promo_desc">Bildoptimierung schrumpft Bilder für schnelleres Hochladen.\n\nDies kannst du in den Website-Einstellungen jederzeit ändern.</string>
-    <string name="image_optimization_promo_title">Bildoptimierung einschalten?</string>
-    <string name="leave_off">Weiterhin ausschalten</string>
-    <string name="turn_on">Einschalten</string>
     <string name="me_profile_photo">Profilfoto</string>
     <string name="error_media_parse_error">Unerwartete Serverantwort</string>
     <string name="upload_finished_toast">Das Hochladen kann nicht unterbrochen werden, weil es bereits beendet wurde</string>
@@ -2978,11 +3036,6 @@ Language: de
     <string name="editor_post_saved_online">Der Beitrag wurde online gespeichert</string>
     <string name="site_settings_image_quality_hint">Qualität der Bilder. Höhere Werte bedeuten bessere Bilder.</string>
     <string name="site_settings_optimize_images_summary">Aktivieren, um die Größe von Bildern zu ändern und sie zu komprimieren</string>
-    <string name="media_encoder_quality_100">Maximal</string>
-    <string name="media_encoder_quality_95">Sehr hoch</string>
-    <string name="media_encoder_quality_90">Hoch</string>
-    <string name="media_encoder_quality_85">Mittel</string>
-    <string name="media_encoder_quality_80">Niedrig</string>
     <string name="media_upload_state_uploaded">Hochgeladen</string>
     <string name="media_upload_state_failed">Hochladen fehlgeschlagen</string>
     <string name="media_upload_state_deleted">Gelöscht</string>

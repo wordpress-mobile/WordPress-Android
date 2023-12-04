@@ -31,6 +31,7 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity
+import org.wordpress.android.ui.bloganuary.learnmore.BloganuaryNudgeLearnMoreOverlayFragment
 import org.wordpress.android.ui.domains.DomainRegistrationActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -378,13 +379,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         noSitesView.actionableEmptyView.button.setOnClickListener { viewModel.onAddSitePressed() }
     }
 
-    @Suppress("DEPRECATION", "LongMethod")
+    @Suppress("LongMethod")
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner) { uiModel ->
             hideRefreshIndicatorIfNeeded()
-            when (val state = uiModel) {
-                is State.SiteSelected -> loadData(state)
-                is State.NoSites -> loadEmptyView(state)
+            when (uiModel) {
+                is State.SiteSelected -> loadData(uiModel)
+                is State.NoSites -> loadEmptyView(uiModel)
             }
         }
         viewModel.onBasicDialogShown.observeEvent(viewLifecycleOwner) { model ->
@@ -407,8 +408,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 model.isInputEnabled,
                 model.callbackId
             )
-            inputDialog.setTargetFragment(this@MySiteFragment, 0)
-            inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
+            inputDialog.show(childFragmentManager, TextInputDialogFragment.TAG)
         }
         viewModel.onNavigation.observeEvent(viewLifecycleOwner) { handleNavigationAction(it) }
         viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner) { showSnackbar(it) }
@@ -450,8 +450,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             if (quickStartScrollPosition > 0) recyclerView.scrollToPosition(quickStartScrollPosition)
             else appbarMain.setExpanded(true)
         }
-    }
 
+        wpMainActivityViewModel.mySiteDashboardRefreshRequested.observeEvent(viewLifecycleOwner) {
+            viewModel.refresh()
+        }
+    }
 
     private fun MySiteFragmentBinding.hideRefreshIndicatorIfNeeded() {
         swipeRefreshLayout.postDelayed({
@@ -523,6 +526,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
         appbarMain.visibility = View.VISIBLE
         siteInfo.loadMySiteDetails(state.siteInfoHeader)
+        appbarMain.setExpanded(true, true)
 
         recyclerView.setVisible(true)
         (recyclerView.adapter as? MySiteAdapter)?.submitList(state.dashboardData)
@@ -560,10 +564,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         siteInfoContainer.subtitle.text = siteInfoHeader.url
         siteInfoContainer.subtitle.setOnClickListener { siteInfoHeader.onUrlClick.click() }
         switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
+        siteInfoCard.visibility = View.VISIBLE
     }
 
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
+        recyclerView.setVisible(false)
+        siteInfo.siteInfoCard.setVisible(false)
+
         if (!noSitesView.actionableEmptyView.isVisible) {
             noSitesView.actionableEmptyView.setVisible(true)
             noSitesView.actionableEmptyView.image.setVisible(state.shouldShowImage)
@@ -715,7 +723,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             action.activityId,
             action.isRewindable
         )
-        is SiteNavigationAction.TriggerCreatePageFlow -> Unit // no-op
+        is SiteNavigationAction.TriggerCreatePageFlow -> wpMainActivityViewModel.triggerCreatePageFlow()
         is SiteNavigationAction.OpenPagesDraftsTab -> ActivityLauncher.viewCurrentBlogPagesOfType(
             requireActivity(),
             action.site,
@@ -747,6 +755,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenDashboardPersonalization -> activityNavigator.openDashboardPersonalization(
             requireActivity()
         )
+
+        is SiteNavigationAction.OpenBloganuaryNudgeOverlay -> {
+            BloganuaryNudgeLearnMoreOverlayFragment
+                .newInstance(action.isPromptsEnabled)
+                .show(requireActivity().supportFragmentManager, BloganuaryNudgeLearnMoreOverlayFragment.TAG)
+        }
     }
 
     private fun handleNavigation(action: BloggingPromptCardNavigationAction) {

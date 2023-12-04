@@ -1,0 +1,3 @@
+23.7:
+- Het scherm Berichten en pagina's heeft nu strakke, eenvoudige weergaveopties. Via het contextmenu heb je toegang tot opmerkingen, instellingen en andere acties voor een bericht of pagina.
+- We hebben problemen met de blokeditor opgelost door werden veroorzaak door het plakken van diepgeneste content of het gebruiken van tekstkleuren in oudere sitethema's.

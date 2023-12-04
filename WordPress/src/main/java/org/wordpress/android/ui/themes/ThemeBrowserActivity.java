@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.ThemeStore;
+import org.wordpress.android.fluxc.store.ThemeStore.FetchWPComThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.OnCurrentThemeFetched;
 import org.wordpress.android.fluxc.store.ThemeStore.OnSiteThemesChanged;
 import org.wordpress.android.fluxc.store.ThemeStore.OnThemeActivated;
@@ -398,7 +399,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     private void fetchWpComThemesIfSyncTimedOut(boolean force) {
         long currentTime = System.currentTimeMillis();
         if (force || currentTime - AppPrefs.getLastWpComThemeSync() > WP_COM_THEMES_SYNC_TIMEOUT) {
-            mDispatcher.dispatch(ThemeActionBuilder.newFetchWpComThemesAction());
+            mDispatcher.dispatch(ThemeActionBuilder.newFetchWpComThemesAction(new FetchWPComThemesPayload()));
         }
     }
 

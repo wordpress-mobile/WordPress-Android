@@ -1,11 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-20 22:19:28+0000
+Translation-Revision-Date: 2023-11-15 11:51:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: sq_AL
 -->
 <resources>
+    <string name="notification_security_key_needed">Ju lutemi, që të vazhdohet, jepni kyçin tuaj të sigurisë.</string>
+    <string name="login_error_security_key">Pati ca problem me hyrjen me kyç sigurie</string>
+    <string name="login_text_security_key">Përdorni një kyç sigurie</string>
+    <string name="new_domain_search_screen_error_title">S’u morën dot përkatësi</string>
+    <string name="new_domain_search_screen_list_item_sale_price">%s për vitin e parë</string>
+    <string name="new_domain_search_screen_list_item_regular_price">$%s / vit</string>
+    <string name="new_domain_search_screen_transfer_domain_button">Shpërngule përkatësinë</string>
+    <string name="new_domain_search_screen_transfer_domain_description">Po shihni si të shpërngulni një përkatësi që e zotëroni tashmë?</string>
+    <string name="new_domain_search_screen_input_placeholder">Shtypni që të merrni më tepër sugjerime</string>
+    <string name="new_domain_search_screen_title">Kërkoni për një përkatësi</string>
+    <string name="purchase_domain_screen_error_button_title">OK</string>
+    <string name="purchase_domain_screen_error_subtitle">Diç shkoi ters, teksa shtohej përkatësia te shporta. Sigurohuni se jeni në linjë dhe riprovoni.</string>
+    <string name="purchase_domain_screen_error_title">Gabim</string>
+    <string name="domain_management_site_domains_button">Krejt</string>
+    <string name="domain_management_error_title">S’u morën dot përkatësitë tuaja</string>
+    <string name="site_domain_title">Përkatësi Sajti</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">Nga &lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">I përpunuar</string>
+    <string name="post_list_toggle_author_filter">Filtroji sipas autorësh</string>
+    <string name="gutenberg_native_s_block_converted_to_blocks">Blloku “%s ” u shndërrua në blloqe</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Ndryshe, mund ta shndërroni lëndën në blloqe.</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Shtoni ose Hiqni shkurtore</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Shkurtore Joaktive</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">Shkurtore Aktive</string>
+    <string name="personalization_screen_shortcuts_tab_title">Shkurtore</string>
+    <string name="personalization_screen_cards_tab_title">Skeda</string>
+    <string name="purchase_domain_screen_discount_notice">*Një përkatësi falas për një vit përfshihet me krejt planet vjetorë me pagesë</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">Zgjidhni Sajt</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">Përdoreni me një sajt që keni filluar tashmë.</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">Sajt WordPress.com ekzistues</string>
+    <string name="purchase_domain_screen_new_domain_card_button">Merrni Përkatësi</string>
+    <string name="purchase_domain_screen_new_domain_card_description">Shtoni një sajt më vonë.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">Thjesht blini një përkatësi</string>
+    <string name="purchase_domain_screen_description">Mos u merakosni, mund të shtoni lehtë një sajt më vonë.</string>
+    <string name="purchase_domain_screen_header_double_line">Zgjidhni si të përdoret\npërkatësia juaj</string>
+    <string name="purchase_domain_screen_header_single_line">Zgjidhni si të përdoret përkatësia juaj</string>
+    <string name="purchase_domain_screen_title">Blini Përkatësi</string>
+    <string name="domain_management_empty_find_domain">Gjeni një përkatësi</string>
+    <string name="domain_management_empty_subtitle">Prekni më poshtë që të gjeni përkatësinë tuaj të përsosur.</string>
+    <string name="domain_management_empty_title">S’keni ndonjë përkatësi</string>
+    <string name="domain_management_error_subtitle">Kontrolloni nëse jeni në linjë dhe tërhiqeni që të rifreskohet.</string>
+    <string name="domain_management_open_domain_details">Hapni hollësi përkatësie</string>
+    <string name="domain_management_search_your_domains">Kërkoni te përkatësitë tuaja</string>
+    <string name="domain_management_purchase_a_domain">Blini një përkatësi</string>
+    <string name="domain_management_my_domains_title">Krejt Përkatësitë</string>
+    <string name="domain_management_expires">Skadon më %1$s</string>
     <string name="account_and_settings">Rregullime dhe Llogari</string>
     <string name="site_creation_plans_selection_title">Përzgjidhni një plan</string>
     <string name="site_creation_domain_free_with_annual_plan">Falas për vitin e parë, me plane vjetore të paguar</string>
@@ -17,6 +63,8 @@ Language: sq_AL
     <string name="gutenberg_native_tap_here_to_show_more_details">Prekeni këtu, që të shihni më tepër hollësi.</string>
     <string name="gutenberg_native_synced_patterns">Modele të njëkohësuar</string>
     <string name="gutenberg_native_deeply_nested_block">Bllok i futur thellë brenda të tjerësh</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Blloqe brenda të tjerësh më thellë se %d shkallë mund të mos vizatohen si duhet në përpunuesin për celular. Për këtë arsye, rekomandojmë sheshimin e lëndë duke hequr grupin e bllokut, ose përpunimin e bllokut duke përdorur përpunuesin web.</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Blloku s’vizatohet dot, ngaqë është i futur thellë të tjerësh. Për më tepër hollësi, prekni këtu.</string>
     <string name="pages_no_site_something_went_wrong">Hëm, diç shkoi ters. Ju lutemi, riprovoni më vonë.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Kaloni në web</string>
     <string name="my_site_dashboard_no_cards_message_description">Që të shfaqen më tepër karta, prekni butonin e personalizimit.</string>
@@ -32,9 +80,9 @@ Language: sq_AL
     <string name="personalization_screen_draft_posts_card_description">Postimet tuaja skicë së fundi.</string>
     <string name="personalization_screen_draft_posts_card_title">Skica postimesh</string>
     <string name="personalization_screen_stats_card_description">Parje, Vizitorë dhe pëlqime</string>
-    <string name="personalization_screen_footer_cards">Skedat mund të shfaqin lëndë të ndryshme, në varësi të asaj që po ndodh me sajtin tuaj.</string>
-    <string name="personalization_screen_description">Shtoni ose fshihni Karta</string>
-    <string name="personalization_screen_title">Personalizoni skedën krye</string>
+    <string name="personalization_screen_tab_cards_footer_cards">Skedat mund të shfaqin lëndë të ndryshme, në varësi të asaj që po ndodh me sajtin tuaj.</string>
+    <string name="personalization_screen_tab_cards_description">Shtoni ose fshihni Karta</string>
+    <string name="personalization_screen_title"> Personalizoni skedën krye</string>
     <string name="personalize_card_content_description">Prekeni, që të personalizoni skedën tuaj krye</string>
     <string name="personalize_card_text">Personalizoni skedën tuaj krye</string>
     <string name="partial_media_access_prompt_change_settings">Ndryshoni Rregullimet</string>
@@ -51,8 +99,10 @@ Language: sq_AL
     <string name="my_site_dashboard_card_more_menu_hide_card">Fshihe këtë</string>
     <string name="contact_support_first_message_hint">Nëse s’i përgjigjem dot pyetjes tuaj, do t’ju ndihmoj të hapni një çështje asistence për ekipin tonë!</string>
     <string name="contact_support_first_message_hi">Njatjeta, jam Asistenti IA i Jetpack-ut.</string>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin">Për rregullime të mëtejshme, hapeni këtë bllok Paywall në shfletuesin tuaj.</string>
     <string name="contact_support_bot_ticket_comment_answer">Përgjigje:</string>
     <string name="contact_support_bot_ticket_comment_question">Pyetje:</string>
+    <string name="contact_support_bot_ticket_comment_start">Transkriptim Nga Roboti Jetpack Mobile:</string>
     <string name="contact_support_bot_ticket_error">Gabim gjatë parashtrimit të kërkesës për asistencë</string>
     <string name="contact_support_bot_ticket_message">Çështja u krijua</string>
     <string name="contact_support_bot_ticket_loading">Po krijohet kërkesë për asistencë…</string>
@@ -110,6 +160,7 @@ Language: sq_AL
     <string name="campaign_status_active">AKTIVE</string>
     <string name="blaze_campaigns_card_footer_label">Krijoni Fushatë</string>
     <string name="blaze_campaigns_card_title">Fushatë Blaze</string>
+    <string name="promote_blaze_flow_error">S’u ngarkua dot rrjedhë promocioni Blaze</string>
     <string name="prepublishing_nudges_social_new_connection_text">Shtoni trafikun tuaj, duke ndarë automatikisht postimet tuaja me shokët në tuaja në media shoqërore.</string>
     <string name="menu_close_editor">Mbylle përpunuesin</string>
     <string name="menu_redo_context">Ribëj ndryshimin e fundit</string>
@@ -118,6 +169,7 @@ Language: sq_AL
     <string name="post_settings_jetpack_social_subscribe_share_more">Pajtohuni, që të ndani më tepër me të tjerët</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Shtoni trafikun tuaj, duke ndarë automatikisht postimet tuaja me shokët në tuaja në media shoqërore.</string>
     <string name="post_settings_jetpack_social_header">Ndarje Me të Tjerë Në Rrjete Shoqërorë</string>
+    <string name="gutenberg_native_s_detached">%s u shkëput</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios">Përpunimi i blloqeve të njëkohësuar nuk mbulohet ende në %s për iOS</string>
     <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android">Përpunimi i blloqeve të njëkohësuar nuk mbulohet ende në %s për Android</string>
     <string name="gutenberg_native_reusable">I ripërdorshëm</string>
@@ -127,6 +179,7 @@ Language: sq_AL
     <string name="privacy_banner_analytics_description">Lejonani ta bëjmë funksionimin optimal, duke mbledhur hollësi mbi se si ndërveprojnë përdoruesit me aplikacionet tona celulare.</string>
     <string name="privacy_banner_analytics">Statistika</string>
     <string name="privacy_banner_title">Administroni privatësi</string>
+    <string name="privacy_banner_description">Privatësia juaj është në mënyrë kritike e rëndësishme për ne dhe ka qenë përherë. Ne përdorim, depozitojmë dhe përpunojmë të dhënat tuaja personale për të bërë sa më optimal aplikacionin tonë (dhe punimin tuaj) në rrugë të ndryshme. Disa përdorime të të dhënave tuaja na duhen absolutisht, që të mund t’i bëjmë gjërat të funksionojnë, të tjerat mund t’i përshtatni që nga Rregullimet tuaja.</string>
     <string name="tabbar_accessibility_label_me">Unë. Administroni hollësitë e profilit tuaj.</string>
     <string name="social_item_message_title">Mesazh</string>
     <string name="gutenberg_native_block_ungrouped">Blloku u hoq nga grupi</string>
@@ -339,7 +392,6 @@ Language: sq_AL
     <string name="blogging_prompts_list_answered_prompt">✓ Me Përgjigje</string>
     <string name="blogging_prompts_list_title">Cytje</string>
     <string name="close_desc">mbylle</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Ndryshe, mund ta shkëputni dhe përpunoni ndarazi këtë bllok, duke prekur “Shkëpute modelin”.</string>
     <string name="dlg_confirm_delete_category">Të fshihet përgjithmonë Kategoria \'%s\'?</string>
     <string name="deleting_cat_success">Kategoria u fshi me sukses</string>
     <string name="deleting_cat_failed">Fshirja e kategorisëdështoi</string>
@@ -1580,6 +1632,7 @@ Language: sq_AL
     <string name="ccpa_privacy_notice_header">Shënim mbi privatësinë për përdorues në Kaliforni</string>
     <string name="status_and_visibility">Gjendje &amp; Dukshmëri</string>
     <string name="update_now">Përditësojeni Tani</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">Hap Menu Veprimesh Blloqesh</string>
     <string name="gutenberg_native_move_to_top">Ngjite në krye</string>
     <string name="gutenberg_native_insert_mention">Futni përmendje</string>
@@ -2818,14 +2871,10 @@ Language: sq_AL
     <string name="password_incorrect">Duket sikur ky fjalëkalim është i pasaktë. Ju lutemi, kontrollojeni edhe një herë informacionin tuaj dhe riprovoni.</string>
     <string name="requesting_otp">Po kërkohet një kod verifikimi përmes SMS-je.</string>
     <string name="login_text_otp">Më mirë më dërgoni kod me tekst</string>
-    <string name="enter_verification_code">Thuajse arritëm! Ju lutemi, jepni kodin e verifikimit prej aplikacionit tuaj Authenticator.</string>
+    <string name="enter_verification_code">Thuajse arritëm! Ju lutemi, jepni kodin e verifikimit për WordPress.com prej aplikacionit tuaj të mirëfilltësimeve.</string>
     <string name="open_mail">Hap Postën</string>
     <string name="next">Pasuesi</string>
     <string name="enter_email_wordpress_com">Që të administroni krejt sajtet tuaj WordPress, bëni hyrjen te WordPress.com.</string>
-    <string name="image_optimization_promo_desc">Optimizimi i figurave i mpak figurat, për ngarkim më të shpejtë.\n\nKëtë mund ta ndryshoni kurdo, te rregullimet e sajtit.</string>
-    <string name="image_optimization_promo_title">Të aktivizohet optimizimi i figurave?</string>
-    <string name="leave_off">Lëre joaktive</string>
-    <string name="turn_on">Aktivizoje</string>
     <string name="me_profile_photo">Foto Profili</string>
     <string name="error_media_parse_error">Përgjigje e papritur nga shërbyesi</string>
     <string name="upload_finished_toast">Ngarkimi s’mund të ndalet, ngaqë ka mbaruar tashmë</string>
@@ -2962,11 +3011,6 @@ Language: sq_AL
     <string name="editor_post_saved_online">Postimi u ruajt në internet</string>
     <string name="site_settings_image_quality_hint">Cilësi fotosh. Vlera më të mëdha do të thotë cilësi më e lartë fotosh.</string>
     <string name="site_settings_optimize_images_summary">Aktivizojeni që të ripërmasoni dhe ngjeshni foto</string>
-    <string name="media_encoder_quality_100">Maksimum</string>
-    <string name="media_encoder_quality_95">Shumë e Lartë</string>
-    <string name="media_encoder_quality_90">E lartë</string>
-    <string name="media_encoder_quality_85">E mesme</string>
-    <string name="media_encoder_quality_80">E ulët</string>
     <string name="media_upload_state_uploaded">U ngarkua</string>
     <string name="media_upload_state_failed">Ngarkimi Dështoi</string>
     <string name="media_upload_state_deleted">U fshi</string>
@@ -3479,6 +3523,7 @@ Language: sq_AL
     <string name="reader_toast_err_already_follow_blog">E ndiqni tashmë këtë sajt</string>
     <string name="reader_toast_err_get_blog_info">S’arrihet të shfaqet ky sajt</string>
     <string name="reader_label_followed_blog">Sajti u ndoq</string>
+    <string name="reader_label_followers_count">%s ndjekës</string>
     <string name="reader_hint_add_tag_or_url">Jepni një URL ose temë që të ndiqet</string>
     <string name="reader_page_followed_blogs">Sajte te ndjekur</string>
     <string name="reader_page_followed_tags">Tema të ndjekura</string>

@@ -4,14 +4,18 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 
 class DomainManagementDetailsActivity : WPWebViewActivity(),
     DomainManagementDetailsWebViewClient.DomainManagementWebViewClientListener {
+    private val domainArg: String get() = intent.getStringExtra(PICKED_DOMAIN_KEY) ?: error("Domain cannot be null.")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toggleNavbarVisibility(false)
+        AnalyticsTracker.track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAIN_DETAILS_WEB_VIEW_SHOWN)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -19,18 +23,23 @@ class DomainManagementDetailsActivity : WPWebViewActivity(),
         return true
     }
 
-    override fun createWebViewClient(allowedURL: List<String>?) = DomainManagementDetailsWebViewClient(this)
+    override fun createWebViewClient(allowedURL: List<String>?) =
+        DomainManagementDetailsWebViewClient(DomainManagementDetailsWebViewNavigationDelegate(domainArg), this)
 
     override fun onRedirectToExternalBrowser(url: String) {
         ActivityLauncher.openUrlExternal(this, url)
+        onBackPressedDispatcher.onBackPressed()
     }
 
     companion object {
-        fun createIntent(context: Context, domainDetailUrl: String): Intent =
+        const val PICKED_DOMAIN_KEY: String = "picked_domain_key"
+
+        fun createIntent(context: Context, domain: String, domainDetailUrl: String): Intent =
             Intent(context, DomainManagementDetailsActivity::class.java).apply {
                 putExtra(USE_GLOBAL_WPCOM_USER, true)
                 putExtra(AUTHENTICATION_URL, WPCOM_LOGIN_URL)
                 putExtra(URL_TO_LOAD, domainDetailUrl)
+                putExtra(PICKED_DOMAIN_KEY, domain)
             }
     }
 }

@@ -1,0 +1,3 @@
+23.7:
+- Der Bildschirm „Beiträge & Seiten“ enthält nun schlichte, einfache Anzeigeoptionen. Im Kontextmenü kannst du auch auf Kommentare, Einstellungen und andere Aktionen für einen Beitrag oder eine Seite zugreifen.
+- Wir haben Probleme mit dem Block-Editor behoben, die durch das Einfügen tief verschachtelter Inhalte oder dem Verwenden von Textfarben in älteren Website-Themes entstanden sind.

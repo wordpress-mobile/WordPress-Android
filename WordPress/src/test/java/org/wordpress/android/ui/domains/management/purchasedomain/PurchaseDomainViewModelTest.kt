@@ -13,15 +13,17 @@ import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SITE_SELECTED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_CHOOSE_SITE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_GET_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_SHOWN
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_COMPLETED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse.Extra
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse.Product
 import org.wordpress.android.fluxc.store.TransactionsStore
+import org.wordpress.android.ui.domains.DomainRegistrationCompletedEvent
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoBack
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.ActionEvent.GoToDomainPurchasing
@@ -30,6 +32,7 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.SubmittingJustDomainCart
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.SubmittingSiteDomainCart
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.ErrorSubmittingCart
+import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.ErrorInCheckout
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -70,9 +73,9 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN new domain selected THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED event`() {
+    fun `WHEN new domain selected THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_GET_DOMAIN_TAPPED event`() {
         viewModel.onNewDomainSelected()
-        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED)
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_GET_DOMAIN_TAPPED)
     }
 
     @Test
@@ -91,9 +94,9 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN a site is chosen THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN event`() {
+    fun `WHEN a site is chosen THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SITE_SELECTED event`() {
         viewModel.onSiteChosen(testSite)
-        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN)
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SITE_SELECTED)
     }
 
     @Test
@@ -119,6 +122,44 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
         assertThat(viewModel.uiStateFlow.value).isEqualTo(ErrorSubmittingCart)
     }
 
+    @Test
+    fun `WHEN check out fails THEN the ui is set to the ErrorInCheckout state`() = test {
+        viewModel.onDomainRegistrationComplete(null)
+        assertThat(viewModel.uiStateFlow.value).isEqualTo(ErrorInCheckout)
+    }
+
+    @Test
+    fun `WHEN check out is successful THEN go to the all domains screen`() = testWithActionEvents { events ->
+        viewModel.onDomainRegistrationComplete(
+            DomainRegistrationCompletedEvent("example.com", "joe@schmo.co")
+        )
+        advanceUntilIdle()
+
+        // Then
+        assertThat(events.last()).isEqualTo(ActionEvent.OpenDomainManagement)
+    }
+
+    @Test
+    fun `WHEN check out is complete THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_COMPLETED event`() = test {
+        viewModel.onDomainRegistrationComplete(
+            DomainRegistrationCompletedEvent("example.com", "joe@schmo.co")
+        )
+        advanceUntilIdle()
+
+        // Then
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_COMPLETED)
+    }
+
+    @Test
+    fun `WHEN check out is cancelled THEN go to the all domains screen`() = testWithActionEvents { events ->
+        viewModel.onDomainRegistrationComplete(
+            DomainRegistrationCompletedEvent("example.com", "joe@schmo.co", true)
+        )
+        advanceUntilIdle()
+
+        // Then
+        assertThat(events.last()).isEqualTo(ActionEvent.OpenDomainManagement)
+    }
 
     @Test
     fun `WHEN the error button is tapped THEN the ui is set to the Initial state`() = test {
@@ -154,10 +195,9 @@ class PurchaseDomainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("MaxLineLength")
-    fun `WHEN existing domain selected THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED event`() {
+    fun `WHEN existing domain selected THEN track DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_CHOOSE_SITE_TAPPED event`() {
         viewModel.onExistingSiteSelected()
-        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED)
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_CHOOSE_SITE_TAPPED)
     }
 
     @Test

@@ -47,7 +47,7 @@ class DomainManagementViewModel @Inject constructor(
     private val searchQuery = MutableStateFlow("")
 
     init {
-        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN)
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_DOMAINS_LIST_SHOWN)
         launch {
             fetchAllDomains()
         }
@@ -83,15 +83,14 @@ class DomainManagementViewModel @Inject constructor(
         }
     }
 
-    fun onDomainTapped(detailUrl: String) {
-        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED)
+    fun onDomainTapped(domain: String, detailUrl: String) {
         launch {
-            _actionEvents.emit(ActionEvent.DomainTapped(detailUrl))
+            _actionEvents.emit(ActionEvent.DomainTapped(domain, detailUrl))
         }
     }
 
     fun onAddDomainClicked() {
-        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_ADD_DOMAIN_TAPPED)
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_ADD_DOMAIN_TAPPED)
         launch {
             _actionEvents.emit(ActionEvent.AddDomainTapped)
         }
@@ -117,7 +116,7 @@ class DomainManagementViewModel @Inject constructor(
     }
 
     sealed class ActionEvent {
-        data class DomainTapped(val detailUrl: String): ActionEvent()
+        data class DomainTapped(val domain: String, val detailUrl: String): ActionEvent()
         object AddDomainTapped: ActionEvent()
         object NavigateBackTapped: ActionEvent()
     }

@@ -14,8 +14,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAINS_LIST_SHOWN
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.AllDomainsError
@@ -50,23 +49,16 @@ class DomainManagementViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN ViewModel initialized THEN track DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN event`() = test {
+    fun `WHEN ViewModel initialized THEN track DOMAIN_MANAGEMENT_DOMAINS_LIST_SHOWN event`() = test {
         initializeViewModel()
-        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_SHOWN)
-    }
-
-    @Test
-    fun `WHEN a domain is tapped THEN track DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED event`() = test {
-        initializeViewModel()
-        viewModel.onDomainTapped(testDomain)
-        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_MY_DOMAINS_SCREEN_DOMAIN_TAPPED)
+        verify(analyticsTracker).track(DOMAIN_MANAGEMENT_DOMAINS_LIST_SHOWN)
     }
 
     @Test
     fun `WHEN a domain is tapped THEN send DomainTapped action event`() = testWithActionEvents { events ->
-        viewModel.onDomainTapped(testDomain)
+        viewModel.onDomainTapped(testDomain, testDomainDetailUrl)
         advanceUntilIdle()
-        assertThat(events.last()).isEqualTo(ActionEvent.DomainTapped(testDomain))
+        assertThat(events.last()).isEqualTo(ActionEvent.DomainTapped(testDomain, testDomainDetailUrl))
     }
 
     @Test
@@ -175,5 +167,6 @@ class DomainManagementViewModelTest : BaseUnitTest() {
 
     companion object {
         private const val testDomain = "domain"
+        private const val testDomainDetailUrl = "domainDetailUrl"
     }
 }

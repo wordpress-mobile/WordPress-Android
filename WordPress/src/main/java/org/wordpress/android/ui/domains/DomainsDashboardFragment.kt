@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.DomainsDashboardFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
@@ -65,7 +66,10 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment), 
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
         R.id.all_domains_item -> {
-            context?.let { ActivityLauncher.openDomainManagement(it) }
+            context?.let {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAINS_DASHBOARD_ALL_DOMAINS_TAPPED)
+                ActivityLauncher.openDomainManagement(it)
+            }
             true
         }
         else -> true

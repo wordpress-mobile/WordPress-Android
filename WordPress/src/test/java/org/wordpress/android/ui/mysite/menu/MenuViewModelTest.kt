@@ -165,6 +165,20 @@ class MenuViewModelTest : BaseUnitTest() {
         }
     }
 
+    @Test
+    fun `given vm start, when selected site is null, then site is missing event is raised`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+
+        val observer = mutableListOf<Unit>()
+        viewModel.onSelectedSiteMissing.observeForever { event ->
+            observer.add(event)
+        }
+
+        viewModel.start()
+
+        assert(observer.isNotEmpty())
+    }
+
     private fun findBackupListItem(items: List<MenuItemState>) =
         items.filterIsInstance(MenuItemState.MenuListItem::class.java)
             .firstOrNull { it.listItemAction == ListItemAction.BACKUP }

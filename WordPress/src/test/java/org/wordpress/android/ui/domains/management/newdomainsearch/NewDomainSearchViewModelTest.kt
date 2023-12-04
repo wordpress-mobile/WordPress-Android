@@ -10,9 +10,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.doSuspendableAnswer
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -48,8 +46,8 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN ViewModel initialized THEN track DOMAIN_MANAGEMENT_SEARCH_FOR_A_DOMAIN_SCREEN_SHOWN event`() {
-        verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_SEARCH_FOR_A_DOMAIN_SCREEN_SHOWN)
+    fun `WHEN ViewModel initialized THEN track DOMAIN_MANAGEMENT_DOMAINS_SEARCH_SHOWN event`() {
+        verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAINS_SEARCH_SHOWN)
     }
 
     @Test
@@ -68,15 +66,7 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
         viewModel.onDomainTapped(domain)
         advanceUntilIdle()
 
-        verify(analyticsTracker)
-            .track(
-                eq(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_SEARCH_DOMAIN_TAPPED),
-                argWhere<Map<String, Any?>> {
-                    assertThat(it).hasSize(1)
-                    assertThat(it).containsEntry("domain_name", "test.com")
-                    true
-                }
-            )
+        verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_SEARCH_DOMAIN_TAPPED)
     }
 
     @Test
@@ -88,12 +78,13 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
         assertThat(events.last()).isEqualTo(ActionEvent.TransferDomain(expectedTransferUrl))
     }
 
+    @Suppress("MaxLineLength")
     @Test
-    fun `WHEN transfer domain button pressed THEN track DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED event`() = test {
+    fun `WHEN transfer domain button pressed THEN track DOMAIN_MANAGEMENT_DOMAINS_SEARCH_TRANSFER_DOMAIN_TAPPED event`() = test {
         viewModel.onTransferDomainClicked()
         advanceUntilIdle()
 
-        verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_TRANSFER_DOMAIN_TAPPED)
+        verify(analyticsTracker).track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAINS_SEARCH_TRANSFER_DOMAIN_TAPPED)
     }
 
     @Test
@@ -218,6 +209,29 @@ class NewDomainSearchViewModelTest : BaseUnitTest() {
 
         verifyNoInteractions(repository)
     }
+
+    @Test
+    fun `GIVEN empty saved query WHEN onRefresh THEN do not fetch domains`() =
+        test {
+            viewModel.onRefresh()
+            advanceUntilIdle()
+
+            verifyNoInteractions(repository)
+        }
+
+    @Test
+    fun `GIVEN recent search call returns error WHEN onRefresh THEN fetch domains with the saved query`() =
+        testWithUiStates { states ->
+            whenever(repository.searchForDomains("query")).thenReturn(DomainsResult.Error)
+            viewModel.onSearchQueryChanged("query")
+            val domains = listOf(ProposedDomain(0, "", "", "", true))
+            whenever(repository.searchForDomains("query")).thenReturn(DomainsResult.Success(domains))
+
+            viewModel.onRefresh()
+            advanceUntilIdle()
+
+            assertThat(states.last()).isEqualTo(UiState.PopulatedDomains(domains = domains))
+        }
 
     @Suppress("MaxLineLength")
     @Test

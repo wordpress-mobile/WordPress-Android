@@ -4,6 +4,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.bloganuary.BloganuaryNudgeCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class CardsBuilder @Inject constructor(
     private val todaysStatsCardBuilder: TodaysStatsCardBuilder,
     private val postCardBuilder: PostCardBuilder,
+    private val bloganuaryNudgeCardBuilder: BloganuaryNudgeCardBuilder,
     private val bloggingPromptCardBuilder: BloggingPromptCardBuilder,
     private val domainTransferCardBuilder: DomainTransferCardBuilder,
     private val blazeCardBuilder: BlazeCardBuilder,
@@ -29,11 +31,10 @@ class CardsBuilder @Inject constructor(
         if (dashboardCardsBuilderParams.showErrorCard) {
             add(createErrorCard(dashboardCardsBuilderParams.onErrorRetryClick))
         } else {
-            bloggingPromptCardBuilder.build(dashboardCardsBuilderParams.bloggingPromptCardBuilderParams)
+            bloganuaryNudgeCardBuilder.build(dashboardCardsBuilderParams.bloganuaryNudgeCardBuilderParams)
                 ?.let { add(it) }
 
-            domainTransferCardBuilder
-                .build(dashboardCardsBuilderParams.domainTransferCardBuilderParams)
+            bloggingPromptCardBuilder.build(dashboardCardsBuilderParams.bloggingPromptCardBuilderParams)
                 ?.let { add(it) }
 
             if (dashboardCardsBuilderParams.blazeCardBuilderParams != null) {
@@ -52,6 +53,10 @@ class CardsBuilder @Inject constructor(
             pagesCardBuilder.build(dashboardCardsBuilderParams.pagesCardBuilderParams)?.let { add(it) }
 
             activityCardBuilder.build(dashboardCardsBuilderParams.activityCardBuilderParams)?.let { add(it) }
+
+            domainTransferCardBuilder
+                .build(dashboardCardsBuilderParams.domainTransferCardBuilderParams)
+                ?.let { add(it) }
         }
     }.toList()
 

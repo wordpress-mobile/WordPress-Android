@@ -120,11 +120,8 @@ Language: bg
     <string name="enter_wpcom_password">Въведете вашата WordPress.com парола.</string>
     <string name="login_continue">Напред</string>
     <string name="password_incorrect">Изглежда вашата парола е грешна. Моля проверете информацията повторно и пробвайте отново.</string>
-    <string name="enter_verification_code">Моля, въведете кода за потвърждение от вашето приложение Authenticator.</string>
     <string name="next">Следващ</string>
-    <string name="image_optimization_promo_title">Да се включи ли оптимизацията на изображения?</string>
     <string name="me_profile_photo">Снимка на профила</string>
-    <string name="turn_on">Включване</string>
     <string name="error_media_parse_error">Неочакван отговор от сървъра</string>
     <string name="post_title">Заглавие</string>
     <string name="menu_redo">Стъпка напред</string>
@@ -221,11 +218,6 @@ Language: bg
     <string name="photo_picker_title">Избор на изображение</string>
     <string name="editor_post_saved_online">Публикацията е запазена онлайн.</string>
     <string name="site_settings_image_quality_hint">Качество на изображенията. Високите стойности означават снимки с по-високо качество.</string>
-    <string name="media_encoder_quality_100">Максимум</string>
-    <string name="media_encoder_quality_95">Много високо</string>
-    <string name="media_encoder_quality_90">Високо</string>
-    <string name="media_encoder_quality_85">Средно</string>
-    <string name="media_encoder_quality_80">Ниско</string>
     <string name="media_upload_state_uploaded">Качено</string>
     <string name="media_upload_state_deleted">Изтрито</string>
     <string name="media_upload_state_deleting">Изтрива се</string>

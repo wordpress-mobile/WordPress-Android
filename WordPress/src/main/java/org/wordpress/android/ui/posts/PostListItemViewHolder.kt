@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.text.Layout
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -22,7 +24,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuCompat
-import androidx.appcompat.widget.PopupMenu as AppCompatPopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -40,6 +41,7 @@ import org.wordpress.android.viewmodel.posts.PostListItemUiStateData
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.concurrent.atomic.AtomicBoolean
 import android.R as AndroidR
+import androidx.appcompat.widget.PopupMenu as AppCompatPopupMenu
 import com.google.android.material.R as MaterialR
 
 const val MAX_TITLE_EXCERPT_LINES = 2
@@ -58,7 +60,7 @@ sealed class PostListItemViewHolder(
     private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
     private val container: ConstraintLayout = itemView.findViewById(R.id.container)
     private val excerptTextView: TextView = itemView.findViewById(R.id.excerpt)
-    private val moreButton: ImageView = itemView.findViewById(R.id.more)
+    private val moreButton: ImageButton = itemView.findViewById(R.id.more)
 
     private val selectableBackground: Drawable? = parent.context.getDrawableFromAttribute(
         AndroidR.attr.selectableItemBackground
@@ -129,10 +131,10 @@ sealed class PostListItemViewHolder(
                     titleTextView.viewTreeObserver.removeOnPreDrawListener(this)
 
                     // Get the layout of the title text
-                    val titleLayout = titleTextView.layout
+                    val titleLayout: Layout? = titleTextView.layout
 
                     // Check if the title occupies more than 2 lines
-                    when (titleLayout.lineCount) {
+                    when (titleLayout?.lineCount) {
                         1 -> {
                             excerptTextView.maxLines = 2
                         }

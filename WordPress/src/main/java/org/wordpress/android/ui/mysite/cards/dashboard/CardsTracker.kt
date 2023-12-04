@@ -23,6 +23,7 @@ class CardsTracker @Inject constructor(
         STATS("stats"),
         POST("post"),
         BLOGGING_PROMPT("blogging_prompt"),
+        BLOGANUARY_NUDGE("bloganuary_nudge"),
         PROMOTE_WITH_BLAZE("promote_with_blaze"),
         BLAZE_CAMPAIGNS("blaze_campaigns"),
         PAGES("pages"),
@@ -133,6 +134,7 @@ fun MySiteCardAndItem.Type.toTypeValue(): Type {
         MySiteCardAndItem.Type.TODAYS_STATS_CARD -> Type.STATS
         MySiteCardAndItem.Type.POST_CARD_ERROR -> Type.ERROR
         MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS -> Type.POST
+        MySiteCardAndItem.Type.BLOGANUARY_NUDGE_CARD -> Type.BLOGANUARY_NUDGE
         MySiteCardAndItem.Type.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
         MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE_CARD -> Type.PROMOTE_WITH_BLAZE
         MySiteCardAndItem.Type.DASHBOARD_DOMAIN_TRANSFER_CARD -> Type.DASHBOARD_CARD_DOMAIN_TRANSFER

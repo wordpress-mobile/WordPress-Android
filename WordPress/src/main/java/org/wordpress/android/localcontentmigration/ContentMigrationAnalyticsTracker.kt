@@ -2,6 +2,7 @@ package org.wordpress.android.localcontentmigration
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker.ErrorType.Companion.ERROR_TYPE
+import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker.ErrorType.Companion.NO_SITES
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker.ErrorType.EmailError
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -39,8 +40,14 @@ class ContentMigrationAnalyticsTracker @Inject constructor(
     fun trackThanksScreenShown() =
         analyticsTracker.track(Stat.JPMIGRATION_THANKS_SCREEN_SHOWN)
 
+    fun trackNoSitesFlowThanksScreenShown() =
+        analyticsTracker.track(Stat.JPMIGRATION_THANKS_SCREEN_SHOWN, mapOf(NO_SITES to true))
+
     fun trackThanksScreenFinishButtonTapped() =
         analyticsTracker.track(Stat.JPMIGRATION_THANKS_SCREEN_FINISH_BUTTON_TAPPED)
+
+    fun trackNoSitesFlowThanksScreenFinishButtonTapped() =
+        analyticsTracker.track(Stat.JPMIGRATION_THANKS_SCREEN_FINISH_BUTTON_TAPPED, mapOf(NO_SITES to true))
 
     fun trackPleaseDeleteWordPressCardTapped() =
         analyticsTracker.track(Stat.JPMIGRATION_PLEASE_DELETE_WORDPRESS_CARD_TAPPED)
@@ -75,6 +82,7 @@ class ContentMigrationAnalyticsTracker @Inject constructor(
 
         companion object {
             const val ERROR_TYPE = "error_type"
+            const val NO_SITES = "no_sites"
         }
     }
 

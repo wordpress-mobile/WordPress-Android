@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-18 12:33:23+0000
+Translation-Revision-Date: 2023-11-14 08:48:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: gl_ES
 -->
 <resources>
+    <string name="gutenberg_native_s_block_converted_to_blocks">Bloque \'%s\' convertido a bloques</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Alternativamente, podes converter o contido a bloques.</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Engadir ou eliminar atallos</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Atallos inactivos</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">Atallos activos</string>
+    <string name="personalization_screen_shortcuts_tab_title">Atallos</string>
+    <string name="personalization_screen_cards_tab_title">Tarxetas</string>
+    <string name="purchase_domain_screen_discount_notice">*Con todos os plans anuais de pago inclúese un dominio gratuíto durante un ano.</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">Escolle sitio</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">Usao cun sitio que xa iniciaches.</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">Sitio existente de WordPress.com</string>
+    <string name="purchase_domain_screen_new_domain_card_button">Obter dominio</string>
+    <string name="purchase_domain_screen_new_domain_card_description">Engade un sitio máis tarde.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">Só tes que mercar un dominio</string>
+    <string name="purchase_domain_screen_description">Non te preocupes, podes engadir un sitio máis tarde.</string>
+    <string name="purchase_domain_screen_header_double_line">Escolle como\nusar o teu dominio</string>
+    <string name="purchase_domain_screen_header_single_line">Escolle como usar o teu dominio</string>
+    <string name="purchase_domain_screen_title">Comprar dominio</string>
+    <string name="domain_management_empty_find_domain">Busca un dominio</string>
+    <string name="domain_management_empty_subtitle">Toca a continuación para atopar o teu dominio perfecto.</string>
+    <string name="domain_management_empty_title">Non tes ningún dominio</string>
+    <string name="domain_management_open_domain_details">Abre os detalles do dominio</string>
+    <string name="domain_management_search_your_domains">Busca nos teus dominios</string>
+    <string name="domain_management_purchase_a_domain">Comprar un dominio</string>
+    <string name="domain_management_expires">Caduca o %1$s</string>
+    <string name="domain_management_error_subtitle">Comproba que estás en liña e tira para actualizar.</string>
+    <string name="domain_management_my_domains_title">Todos os dominios</string>
     <string name="account_and_settings">Conta e axustes</string>
     <string name="site_creation_plans_selection_title">Selecciona un plan</string>
     <string name="site_creation_domain_free_with_annual_plan">Gratis durante o primeiro ano cos plans de pago anuais</string>
@@ -20,7 +47,6 @@ Language: gl_ES
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">É posible que os bloques aniñados a máis de %d niveis non se amosen correctamente no editor móbil. Por este motivo, recomendamos aplanar o contido desagrupando o bloque ou editando o bloque mediante o editor web.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">O bloque non se pode renderizar porque está profundamente aniñado. Toca aquí para obter máis detalles.</string>
     <string name="pages_no_site_something_went_wrong">Algo saíu mal. Por favor inténtao de novo máis tarde.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">É posible que os bloques aniñados a máis de %d niveis non se amosen correctamente no editor móbil. Por este motivo, recomendamos aplanar o contido desagrupando o bloque ou editando o bloque co teu navegador web.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Ir á web</string>
     <string name="my_site_dashboard_no_cards_message_description">Toca o botón personalizar para amosar máis tarxetas.</string>
     <string name="my_site_dashboard_no_cards_message_title">Todas as tarxetas están ocultas</string>
@@ -35,14 +61,14 @@ Language: gl_ES
     <string name="personalization_screen_draft_posts_card_description">Os teus borradores de publicacións máis recentes.</string>
     <string name="personalization_screen_draft_posts_card_title">Borradores de publicacións</string>
     <string name="personalization_screen_stats_card_description">Vistas, visitantes e gústame</string>
-    <string name="personalization_screen_footer_cards">As tarxetas poden amosar contido diferente dependendo do que estea a suceder co teu sitio</string>
-    <string name="personalization_screen_description">Engadir ou ocultar tarxetas</string>
-    <string name="personalization_screen_title">Personaliza a pestana de inicio</string>
+    <string name="personalization_screen_tab_cards_footer_cards">As tarxetas poden amosar contido diferente dependendo do que este a suceder co teu sitio</string>
     <string name="personalize_card_content_description">Toca para personalizar a túa pestana de inicio</string>
     <string name="personalize_card_text">Personaliza a túa pestana de inicio</string>
     <string name="partial_media_access_prompt_change_settings">Cambiar os axustes</string>
     <string name="partial_media_access_prompt_select_more">Selecciona Máis</string>
     <string name="partial_media_access_prompt_text">Só están dispoñibles as fotos e os vídeos seleccionados aos que deches acceso.</string>
+    <string name="personalization_screen_tab_cards_description">Engadir ou ocultar tarxetas</string>
+    <string name="personalization_screen_title"> Personaliza a pestana de inicio</string>
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Ver todas as campañas</string>
     <string name="dashboard_activity_card_menu_all_activity">Toda a actividade</string>
     <string name="dashboard_pages_card_more_menu_all_pages">Todas as páxinas</string>
@@ -348,7 +374,6 @@ Language: gl_ES
     <string name="blogging_prompts_list_title">Peticións</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Respondido</string>
     <string name="close_desc">pechar</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativamente, podes separar e editar este bloque por separado tocando en «Separar padrón».</string>
     <string name="deleting_cat_failed">Borrando a categoría que fallou</string>
     <string name="deleting_cat_success">Categoría borrada correctamente</string>
     <string name="dlg_confirm_delete_category">Borrar permanentemente a categoría «%s»?</string>
@@ -1596,6 +1621,7 @@ Language: gl_ES
     <string name="update_now">Actualizar agora</string>
     <string name="status_and_visibility">Estado e visibilidade</string>
     <string name="ccpa_privacy_notice_header">Aviso de privacidade para usuarios de California</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir o menú de accións de bloques</string>
     <string name="gutenberg_native_move_to_top">Mover arriba</string>
     <string name="gutenberg_native_insert_mention">Insertar unha mención</string>
@@ -2282,7 +2308,6 @@ Language: gl_ES
     <string name="pages_pending">Pendente de revisión</string>
     <string name="pages_open_page_error">A páxina seleccionada non está dispoñible</string>
     <string name="pages_search_suggestion">Buscar páxinas</string>
-    <string name="pages_move_to_trash">Mover ao lixo</string>
     <string name="pages_move_to_draft">Mover a borradores</string>
     <string name="pages_delete_permanently">Borrar permanentemente</string>
     <string name="pages_empty_search_result">Ningunha páxina coincide coa túa busca</string>
@@ -2290,6 +2315,7 @@ Language: gl_ES
     <string name="pages_empty_trashed">Non tes ningunha páxina na papeleira</string>
     <string name="pages_empty_scheduled">Non tes ningunha páxina programada</string>
     <string name="pages_empty_published">Todavía non publicaches ningunha páxina</string>
+    <string name="pages_move_to_trash">Mover á papeleira</string>
     <string name="pages_view">Ver</string>
     <string name="pages_published">Publicadas</string>
     <string name="pages_drafts">Borradores</string>
@@ -2301,8 +2327,6 @@ Language: gl_ES
     <string name="reader_empty_followed_blogs_search_title">Ningún sitio coincide coa túa busca</string>
     <string name="site_picker_remove_site_empty">Ningún sitio coincide coa túa busca</string>
     <string name="login_error_email_not_found_v2">Non hai ningunha conta de WordPress.com que coincida con esta conta de Google.</string>
-    <string name="page_moved_to_scheduled">Programouse a páxina</string>
-    <string name="page_moved_to_published">Publicouse a páxina</string>
     <string name="top_level">Nivel superior</string>
     <string name="set_parent">Facer superior</string>
     <string name="page_moved_to_trash">A páxina enviouse á papeleira</string>
@@ -2313,6 +2337,8 @@ Language: gl_ES
     <string name="page_parent_change_error">Houbo un problema ao cambiar a páxina superior</string>
     <string name="page_status_change_error">Houbo un problema ao cambiar o estado da páxina</string>
     <string name="dismiss">Descartar</string>
+    <string name="page_moved_to_scheduled">A páxina foi programada</string>
+    <string name="page_moved_to_published">A páxina foi publicada</string>
     <string name="quick_start_focus_point_description">toca aquí</string>
     <string name="quick_start_list_create_site_title">Crea o teu sitio</string>
     <string name="quick_start_list_create_site_subtitle">Pon o teu sitio en marcha.</string>
@@ -2834,14 +2860,10 @@ Language: gl_ES
     <string name="password_incorrect">Parece que este contrasinal é incorrecto. Por favor, volve a comprobar a túa información e inténtao de novo.</string>
     <string name="requesting_otp">Solicitando un código de verificación por SMS.</string>
     <string name="login_text_otp">Envíame un código en texto no seu lugar</string>
-    <string name="enter_verification_code">Case o temos! Por favor, introduce un código de verificación desde a túa aplicación Authenticator.</string>
+    <string name="enter_verification_code">Case o temos! Por favor, introduce o código de verificación para WordPress.com desde a túa aplicación Authenticator.</string>
     <string name="next">Seguinte</string>
     <string name="open_mail">Abrir correo electrónico</string>
     <string name="enter_email_wordpress_com">Accede a WordPress.com usando un enderezo de correo electrónico para xestionar todos os teus sitios WordPress.</string>
-    <string name="image_optimization_promo_desc">A optimización da imaxe reduce as imaxes para que suban máis rápido.\n\nPodes cambiar isto en calquera momento nos axustes do sitio.</string>
-    <string name="image_optimization_promo_title">Activar optimización da imaxe?</string>
-    <string name="turn_on">Activar</string>
-    <string name="leave_off">Deter</string>
     <string name="me_profile_photo">Foto de perfil</string>
     <string name="error_media_parse_error">Resposta inesperada do servidor</string>
     <string name="upload_finished_toast">Non se pode detener a subida porque xa finalizou</string>
@@ -2978,11 +3000,6 @@ Language: gl_ES
     <string name="editor_post_saved_online">A entrada gardouse en liña</string>
     <string name="site_settings_image_quality_hint">Calidade das imaxes: canto máis alto é o valor, máis calidade teñen as imaxes.</string>
     <string name="site_settings_optimize_images_summary">Activa a opción para cambiar o tamaño das imaxes e comprimilas</string>
-    <string name="media_encoder_quality_100">Máxima</string>
-    <string name="media_encoder_quality_95">Moi alta</string>
-    <string name="media_encoder_quality_90">Alta</string>
-    <string name="media_encoder_quality_85">Media</string>
-    <string name="media_encoder_quality_80">Baixa</string>
     <string name="media_upload_state_uploaded">Subida</string>
     <string name="media_upload_state_failed">Fallou a subida.</string>
     <string name="media_upload_state_deleted">Borrado</string>

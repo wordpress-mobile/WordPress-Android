@@ -1,0 +1,3 @@
+23.7:
+- La pantalla de entradas y páginas tiene ahora opciones de visualización limpias y sencillas. El menú contextual también te permite acceder a comentarios, ajustes y otras acciones para una entrada o página.
+- Hemos solucionado problemas del editor de bloques causados por pegar contenido anidado profundamente, o por utilizar colores de texto en temas de sitios antiguos.

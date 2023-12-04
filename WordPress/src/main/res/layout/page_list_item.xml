@@ -15,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:minHeight="@dimen/page_list_row_min_height"
+        android:paddingVertical="@dimen/page_list_row_vertical_padding"
         android:background="?selectableItemBackground">
 
         <com.google.android.material.textview.MaterialTextView
@@ -25,7 +26,7 @@
             style="@style/Pages.Item.Title"
             android:layout_marginEnd="@dimen/margin_medium"
             android:layout_marginStart="@dimen/page_item_horizontal_padding"
-            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_small"
             android:ellipsize="end"
             android:fontFamily="serif"
             android:maxLines="3"

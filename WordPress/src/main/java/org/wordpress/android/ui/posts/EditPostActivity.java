@@ -71,7 +71,6 @@ import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.ExceptionLogger;
-import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.gutenberg.DialogVisibility;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
@@ -1487,17 +1486,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private boolean handleBackPressed() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(
-                ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
-        if (fragment != null && fragment.isVisible()) {
-            if (fragment instanceof ImageSettingsDialogFragment) {
-                ImageSettingsDialogFragment imFragment = (ImageSettingsDialogFragment) fragment;
-                imFragment.dismissFragment();
-            }
-
-            return false;
-        }
-
         if (mViewPager.getCurrentItem() == PAGE_PUBLISH_SETTINGS) {
             mViewPager.setCurrentItem(PAGE_SETTINGS);
             invalidateOptionsMenu();
@@ -2832,58 +2820,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     // handleMediaPickerResult -> addExistingMediaToEditorAndSave
                     break;
                 case RequestCodes.PHOTO_PICKER:
-                case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
-                    // user chose a featured image
-                    if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
-                        long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
-                        setFeaturedImageId(mediaId, true, false);
-                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS)) {
-                        List<Uri> uris = convertStringArrayIntoUrisList(
-                                data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS));
-                        int postId = getImmutablePost().getId();
-                        mFeaturedImageHelper.trackFeaturedImageEvent(
-                                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_POST_SETTINGS,
-                                postId
-                        );
-                        for (Uri mediaUri : uris) {
-                            String mimeType = getContentResolver().getType(mediaUri);
-                            EnqueueFeaturedImageResult queueImageResult = mFeaturedImageHelper
-                                    .queueFeaturedImageForUpload(
-                                            postId, getSite(), mediaUri,
-                                            mimeType
-                                    );
-                            if (queueImageResult == EnqueueFeaturedImageResult.FILE_NOT_FOUND) {
-                                Toast.makeText(
-                                        this,
-                                        R.string.file_not_found, Toast.LENGTH_SHORT
-                                ).show();
-                            } else if (queueImageResult == EnqueueFeaturedImageResult.INVALID_POST_ID) {
-                                Toast.makeText(
-                                        this,
-                                        R.string.error_generic, Toast.LENGTH_SHORT
-                                ).show();
-                            }
-                        }
-                        if (mEditPostSettingsFragment != null) {
-                            mEditPostSettingsFragment.refreshViews();
-                        }
-                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
-                        List<Uri> uris = convertStringArrayIntoUrisList(
-                                data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
-                        mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
-                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
-                        int[] localIds = data.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS);
-                        int postId = getImmutablePost().getId();
-                        for (int localId : localIds) {
-                            MediaModel media = mMediaStore.getMediaWithLocalId(localId);
-                            if (media != null) {
-                                mFeaturedImageHelper.queueFeaturedImageForUpload(postId, media);
-                            }
-                        }
-                        if (mEditPostSettingsFragment != null) {
-                            mEditPostSettingsFragment.refreshViews();
-                        }
+                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
+                        WPMediaUtils.advertiseImageOptimization(this, () -> handlePhotoPickerResult(data));
+                    } else {
+                        handlePhotoPickerResult(data);
                     }
+                    break;
+                case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
+                    handlePhotoPickerResult(data);
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK:
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
@@ -2997,6 +2941,60 @@ public class EditPostActivity extends LocaleAwareActivity implements
             AppLog.e(T.EDITOR, e);
         } finally {
             mMediaCapturePath = null;
+        }
+    }
+
+    private void handlePhotoPickerResult(Intent data) {
+        // user chose a featured image
+        if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
+            long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
+            setFeaturedImageId(mediaId, true, false);
+        } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS)) {
+            List<Uri> uris = convertStringArrayIntoUrisList(
+                    data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS));
+            int postId = getImmutablePost().getId();
+            mFeaturedImageHelper.trackFeaturedImageEvent(
+                    FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_POST_SETTINGS,
+                    postId
+            );
+            for (Uri mediaUri : uris) {
+                String mimeType = getContentResolver().getType(mediaUri);
+                EnqueueFeaturedImageResult queueImageResult = mFeaturedImageHelper
+                        .queueFeaturedImageForUpload(
+                                postId, getSite(), mediaUri,
+                                mimeType
+                        );
+                if (queueImageResult == EnqueueFeaturedImageResult.FILE_NOT_FOUND) {
+                    Toast.makeText(
+                            this,
+                            R.string.file_not_found, Toast.LENGTH_SHORT
+                    ).show();
+                } else if (queueImageResult == EnqueueFeaturedImageResult.INVALID_POST_ID) {
+                    Toast.makeText(
+                            this,
+                            R.string.error_generic, Toast.LENGTH_SHORT
+                    ).show();
+                }
+            }
+            if (mEditPostSettingsFragment != null) {
+                mEditPostSettingsFragment.refreshViews();
+            }
+        } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
+            List<Uri> uris = convertStringArrayIntoUrisList(
+                    data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
+            mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
+        } else if (data.hasExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+            int[] localIds = data.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS);
+            int postId = getImmutablePost().getId();
+            for (int localId : localIds) {
+                MediaModel media = mMediaStore.getMediaWithLocalId(localId);
+                if (media != null) {
+                    mFeaturedImageHelper.queueFeaturedImageForUpload(postId, media);
+                }
+            }
+            if (mEditPostSettingsFragment != null) {
+                mEditPostSettingsFragment.refreshViews();
+            }
         }
     }
 

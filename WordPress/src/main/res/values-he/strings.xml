@@ -1,11 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-19 16:54:08+0000
+Translation-Revision-Date: 2023-11-23 14:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: he_IL
 -->
 <resources>
+    <string name="notification_security_key_needed">כדי להמשיך עליך לספק מפתח אבטחה.</string>
+    <string name="login_error_security_key">בעיה בהתחברות בעזרת מפתח האבטחה</string>
+    <string name="login_text_security_key">להשתמש במפתח אבטחה</string>
+    <string name="new_domain_search_screen_error_title">לא ניתן לאחזר דומיינים</string>
+    <string name="new_domain_search_screen_list_item_sale_price">%s בשנה הראשונה</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s לשנה</string>
+    <string name="new_domain_search_screen_transfer_domain_button">להעביר דומיין</string>
+    <string name="new_domain_search_screen_transfer_domain_description">מעניין אותך להעביר דומיין שכבר בבעלותך?</string>
+    <string name="new_domain_search_screen_input_placeholder">יש להקליד כדי לקבל הצעות נוספות</string>
+    <string name="new_domain_search_screen_title">לחפש דומיין</string>
+    <string name="purchase_domain_screen_error_button_title">אישור</string>
+    <string name="purchase_domain_screen_error_subtitle">אופס, משהו השתבש בעת הוספת הדומיין לעגלת הקניות. יש לוודא חיבור פעיל לאינטרנט ולנסות שוב.</string>
+    <string name="purchase_domain_screen_error_title">שגיאה</string>
+    <string name="domain_management_site_domains_button">הכל</string>
+    <string name="domain_management_error_title">לא ניתן לאחזר את הדומיינים שלך</string>
+    <string name="site_domain_title">דומיין האתר</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">מ-&lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">ערוך</string>
+    <string name="post_list_toggle_author_filter">לסנן לפי מחבר</string>
+    <string name="gutenberg_native_s_block_converted_to_blocks">הבלוק \'%s\' בהמרה לבלוקים</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">לחלופין, אפשר להמיר את התוכן לבלוקים.</string>
+    <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">להוסיף או להסיר קיצורים</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">קיצורים לא פעילים</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">קיצורים פעילים</string>
+    <string name="personalization_screen_shortcuts_tab_title">קיצורים</string>
+    <string name="personalization_screen_cards_tab_title">כרטיסים</string>
+    <string name="purchase_domain_screen_discount_notice">*כל התוכניות השנתיות בתשלום כוללות דומיין בחינם לשנה.</string>
+    <string name="purchase_domain_screen_existing_domain_card_button">לבחור אתר</string>
+    <string name="purchase_domain_screen_existing_domain_card_description">להשתמש בפריט באתר שכבר הקמת.</string>
+    <string name="purchase_domain_screen_existing_domain_card_title">אתר WordPress.com קיים</string>
+    <string name="purchase_domain_screen_new_domain_card_button">לקבל דומיין</string>
+    <string name="purchase_domain_screen_new_domain_card_description">ניתן להוסיף אתר בהמשך.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">עליך רק לרכוש דומיין</string>
+    <string name="purchase_domain_screen_description">אל דאגה, ניתן בקלות להוסיף אתר בהמשך.</string>
+    <string name="purchase_domain_screen_header_double_line">לבחור את\nאופן השימוש בדומיין שלך</string>
+    <string name="purchase_domain_screen_header_single_line">לבחור את אופן השימוש בדומיין שלך</string>
+    <string name="purchase_domain_screen_title">לרכוש דומיין</string>
+    <string name="domain_management_empty_find_domain">למצוא דומיין</string>
+    <string name="domain_management_empty_subtitle">לאיתור הדומיין המושלם יש להקיש למטה.</string>
+    <string name="domain_management_empty_title">עדיין אין לך דומיינים</string>
+    <string name="domain_management_error_subtitle">יש לוודא חיבור פעיל אינטרנט ולרענן את העמוד.</string>
+    <string name="domain_management_open_domain_details">להציג פרטי דומיין</string>
+    <string name="domain_management_search_your_domains">לחפש בדומיינים שלך</string>
+    <string name="domain_management_purchase_a_domain">לרכוש דומיין</string>
+    <string name="domain_management_my_domains_title">כל הדומיינים</string>
+    <string name="domain_management_expires">בתוקף עד ⁦%1$s⁩</string>
     <string name="account_and_settings">חשבון והגדרות</string>
     <string name="site_creation_plans_selection_title">לבחור תוכנית</string>
     <string name="site_creation_domain_free_with_annual_plan">בחינם לשנה הראשונה ברכישת תוכנית שנתית בתשלום</string>
@@ -18,7 +64,6 @@ Language: he_IL
     <string name="gutenberg_native_synced_patterns">מקבצים מסונכרנים</string>
     <string name="gutenberg_native_deeply_nested_block">בלוק בקינון עמוק</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">בעורך לנייד ייתכן עיבוד לא תקין של בלוקים בקינון עמוק מ-%d רמות. מסיבה זו מומלץ \'לשטח\' את התוכן על ידי ביטול הקבצת הבלוק או לערוך את הבלוק בעזרת עורך האינטרנט.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">בעורך לנייד ייתכן עיבוד לא תקין של בלוקים בקינון עמוק מ-%d רמות. מסיבה זו מומלץ \'לשטח\' את התוכן על ידי ביטול הקבצת הבלוק או לערוך את הבלוק בעזרת דפדפן האינטרנט.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">לא ניתן לעבד את הבלוק בגלל קינון עמוק. לקבלת פרטים נוספים יש להקיש כאן.</string>
     <string name="pages_no_site_something_went_wrong">אופס, משהו השתבש. נא לנסות שוב מאוחר יותר.</string>
     <string name="sharing_connect_via_web_warning_positive_button">מעבר לאתר בדפדפן</string>
@@ -35,9 +80,7 @@ Language: he_IL
     <string name="personalization_screen_draft_posts_card_description">טיוטות אחרונות של פוסטים.</string>
     <string name="personalization_screen_draft_posts_card_title">טיוטות פוסטים</string>
     <string name="personalization_screen_stats_card_description">צפיות, מבקרים ולייקים</string>
-    <string name="personalization_screen_footer_cards">הכרטיסים עשויים להציג תוכן שונה בהתאם לפעילות באתר שלך</string>
-    <string name="personalization_screen_description">להוסיף או להסתיר כרטיסים</string>
-    <string name="personalization_screen_title">להתאים אישית את הלשונית \'בית\'</string>
+    <string name="personalization_screen_tab_cards_footer_cards">התוכן שיוצג בכרטיסים תלוי במה שיקרה באתר שלך</string>
     <string name="personalize_card_content_description">יש להקיש כדי להתאים אישית את הלשונית \'בית\' באתר שלך</string>
     <string name="personalize_card_text">להתאים אישית את הלשונית \'בית\' באתר שלך</string>
     <string name="partial_media_access_prompt_change_settings">לשנות ההגדרות</string>
@@ -346,7 +389,6 @@ Language: he_IL
     <string name="blogging_prompts_list_answered_prompt">✓ תשובה התקבלה</string>
     <string name="blogging_prompts_list_title">הצעות</string>
     <string name="close_desc">לסגור</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">לחלופין, ניתן לנתק ולערוך את הבלוק הזה בנפרד על ידי הקשה על \'להפריד מקבץ\'.</string>
     <string name="dlg_confirm_delete_category">למחוק לצמיתות את הקטגוריה \'%s\'?</string>
     <string name="deleting_cat_success">מחקת את הקטגוריה בהצלחה</string>
     <string name="deleting_cat_failed">מחיקת הקטגוריה נכשלה</string>
@@ -1591,6 +1633,7 @@ Language: he_IL
     <string name="ccpa_privacy_notice_header">הצהרת פרטיות למשתמשים מקליפורניה</string>
     <string name="status_and_visibility">מצב וניראות</string>
     <string name="update_now">לעדכן עכשיו</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">לפתוח את התפריט של פעולות הבלוק</string>
     <string name="gutenberg_native_move_to_top">להעביר לחלק העליון</string>
     <string name="gutenberg_native_insert_mention">להוסיף אזכור</string>
@@ -2827,14 +2870,10 @@ Language: he_IL
     <string name="password_incorrect">נראה שהסיסמה הזו שגויה. יש לבדוק את המידע שהזנת ולנסות שוב.</string>
     <string name="requesting_otp">שולח קוד אימות באמצעות SMS.</string>
     <string name="login_text_otp">שליחת קוד במקום</string>
-    <string name="enter_verification_code">כמעט סיימת! יש להזין את קוד האימות מאפליקציית האימות.</string>
+    <string name="enter_verification_code">כמעט סיימת! יש להזין את קוד האימות עבור WordPress.com מאפליקציית האימות.</string>
     <string name="open_mail">לפתוח את הדואר</string>
     <string name="next">הבא</string>
     <string name="enter_email_wordpress_com">התחברות ל-WordPress.com באמצעות כתובת אימייל כדי לנהל את האתרים שלך ב-WordPress.</string>
-    <string name="image_optimization_promo_desc">מיטוב התמונות מכווץ כעת תמונות להעלאה מהירה יותר.\n\nאפשר לשנות את האפשרות הזו בכל עת דרך הגדרות האתר.</string>
-    <string name="image_optimization_promo_title">להפעיל את מיטוב התמונות?</string>
-    <string name="leave_off">להשאיר מכובה</string>
-    <string name="turn_on">הפעלה</string>
     <string name="me_profile_photo">תמונת פרופיל</string>
     <string name="error_media_parse_error">תגובה לא צפויה מהשרת</string>
     <string name="upload_finished_toast">לא ניתן להפסיק את ההעלאה כיוון שכבר הסתיימה</string>
@@ -2971,11 +3010,6 @@ Language: he_IL
     <string name="editor_post_saved_online">הפוסט נשמר ברשת</string>
     <string name="site_settings_image_quality_hint">איכות תמונות. ערכים גבוהים יותר מאפשרים איכות טובה יותר של התמונות.</string>
     <string name="site_settings_optimize_images_summary">הפעלת עריכה של גודל תמונות ודחיסתן</string>
-    <string name="media_encoder_quality_100">מקסימום</string>
-    <string name="media_encoder_quality_95">גבוהה מאוד</string>
-    <string name="media_encoder_quality_90">גבוהה</string>
-    <string name="media_encoder_quality_85">בינונית</string>
-    <string name="media_encoder_quality_80">נמוכה</string>
     <string name="media_upload_state_uploaded">הועלה</string>
     <string name="media_upload_state_failed">העלאה נכשלה</string>
     <string name="media_upload_state_deleted">נמחק</string>

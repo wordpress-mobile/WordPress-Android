@@ -72,6 +72,12 @@ class CardsShownTracker @Inject constructor(
                 Type.BLOGGING_PROMPT.label
             )
         )
+        is Card.BloganuaryNudgeCardModel -> trackCardShown(
+            Pair(
+                card.type.toTypeValue().label,
+                Type.BLOGANUARY_NUDGE.label
+            )
+        )
         is Card.BlazeCard.PromoteWithBlazeCard -> trackCardShown(
             Pair(
                 card.type.toTypeValue().label,

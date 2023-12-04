@@ -355,7 +355,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         if (mInviteRoles.size() > 1) {
             mRoleContainer.setEndIconMode(END_ICON_DROPDOWN_MENU);
-            mRoleTextView.setOnClickListener(v -> RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, mSite));
+            mRoleTextView.setOnClickListener(v -> RoleSelectDialogFragment.show(PeopleInviteFragment.this, mSite));
             mRoleTextView.setFocusable(true);
             mRoleTextView.setFocusableInTouchMode(true);
         } else {
