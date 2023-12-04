@@ -1369,12 +1369,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                             post,
                             site,
                             mUploadActionUseCase.getUploadAction(post),
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    UploadUtils.publishPost(WPMainActivity.this, post, site, mDispatcher);
-                                }
-                            },
+                            v -> UploadUtils.publishPost(WPMainActivity.this, post, site, mDispatcher),
                             isFirstTimePublishing -> {
                                 mBloggingRemindersViewModel.onPublishingPost(site.getId(), isFirstTimePublishing);
                                 mReviewViewModel.onPublishingPost(isFirstTimePublishing);
