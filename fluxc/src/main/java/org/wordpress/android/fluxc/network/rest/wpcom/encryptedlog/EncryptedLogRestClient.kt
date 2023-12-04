@@ -2,15 +2,17 @@ package org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog
 
 import com.android.volley.NoConnectionError
 import com.android.volley.RequestQueue
-import com.android.volley.Response
 import com.android.volley.VolleyError
 import kotlinx.coroutines.suspendCancellableCoroutine
+import org.json.JSONException
 import org.json.JSONObject
 import org.wordpress.android.fluxc.network.EncryptedLogUploadRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.UploadEncryptedLogResult.LogUploadFailed
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.UploadEncryptedLogResult.LogUploaded
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.API
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -26,9 +28,9 @@ class EncryptedLogRestClient @Inject constructor(
 ) {
     suspend fun uploadLog(logUuid: String, contents: String): UploadEncryptedLogResult {
         return suspendCancellableCoroutine { cont ->
-            val request = EncryptedLogUploadRequest(logUuid, contents, appSecrets.appSecret, Response.Listener {
+            val request = EncryptedLogUploadRequest(logUuid, contents, appSecrets.appSecret, {
                 cont.resume(LogUploaded)
-            }, Response.ErrorListener { error ->
+            }, { error ->
                 cont.resume(LogUploadFailed(mapError(error)))
             })
             cont.invokeOnCancellation { request.cancel() }
@@ -53,7 +55,13 @@ class EncryptedLogRestClient @Inject constructor(
         }
         error.networkResponse?.let { networkResponse ->
             val statusCode = networkResponse.statusCode
-            val json = JSONObject(String(networkResponse.data))
+            val dataString = String(networkResponse.data)
+            val json = try {
+                JSONObject(dataString)
+            } catch (jsonException: JSONException) {
+                AppLog.e(API, "Received response not in JSON format: " + jsonException.message)
+                return UploadEncryptedLogError.Unknown(message = dataString)
+            }
             val errorMessage = json.getString("message")
             json.getString("error").let { errorType ->
                 if (errorType == INVALID_REQUEST) {

@@ -43,11 +43,8 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ThemeRestClient extends BaseWPComRestClient {
-    /**
-     * Used by {@link #fetchWpComThemes()} request all themes in a single fetch.
-     */
-    private static final String WP_THEME_FETCH_NUMBER_PARAM = "number=500";
     private static final String WPCOM_MOBILE_FRIENDLY_TAXONOMY_SLUG = "mobile-friendly";
+    private static final String THEME_TYPE_EXTERNAL = "managed-external";
 
     @Inject public ThemeRestClient(
             Context appContext,
@@ -82,7 +79,10 @@ public class ThemeRestClient extends BaseWPComRestClient {
      * [Undocumented!] Endpoint: v1.1/sites/$siteId/themes/$themeId/install
      */
     public void installTheme(@NonNull final SiteModel site, @NonNull final ThemeModel theme) {
-        String themeId = getThemeIdWithWpComSuffix(theme);
+        String themeId = theme.getThemeId();
+        if (!site.isWPComAtomic()) {
+            themeId = getThemeIdWithWpComSuffix(theme);
+        }
         String url = WPCOMREST.sites.site(site.getSiteId()).themes.theme(themeId).install.getUrlV1_1();
         add(WPComGsonRequest.buildPostRequest(url, null, JetpackThemeResponse.class,
                 response -> {
@@ -127,9 +127,14 @@ public class ThemeRestClient extends BaseWPComRestClient {
      *
      * @see <a href="https://developer.wordpress.com/docs/api/1.1/get/themes/">Previous version</a>
      */
-    public void fetchWpComThemes() {
-        String url = WPCOMREST.themes.getUrlV1_2() + "?" + WP_THEME_FETCH_NUMBER_PARAM;
-        add(WPComGsonRequest.buildGetRequest(url, null, WPComThemeListResponse.class,
+    public void fetchWpComThemes(@Nullable String filter, int resultsLimit) {
+        String url = WPCOMREST.themes.getUrlV1_2();
+        Map<String, String> params = new HashMap<>();
+        params.put("number", String.valueOf(resultsLimit));
+        if (filter != null) {
+            params.put("filter", filter);
+        }
+        add(WPComGsonRequest.buildGetRequest(url, params, WPComThemeListResponse.class,
                 response -> {
                     AppLog.d(AppLog.T.API, "Received response to WP.com themes fetch request.");
                     List<ThemeModel> themes = createThemeListFromArrayResponse(response);
@@ -229,7 +234,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
         if (!free) {
             priceText = response.price;
         }
-        return new ThemeModel(
+        ThemeModel theme = new ThemeModel(
                 response.id,
                 response.name,
                 response.description,
@@ -246,6 +251,11 @@ public class ThemeRestClient extends BaseWPComRestClient {
                 free,
                 getMobileFriendlyCategorySlug(response.taxonomies)
         );
+        theme.setThemeType(response.theme_type);
+        if (response.theme_type != null) {
+            theme.setIsExternalTheme(response.theme_type.equals(THEME_TYPE_EXTERNAL));
+        }
+        return theme;
     }
 
     @Nullable
