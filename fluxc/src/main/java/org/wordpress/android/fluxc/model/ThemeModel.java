@@ -56,6 +56,7 @@ public class ThemeModel implements Identifiable, Serializable {
         this.mAuthorName = null;
         this.mAuthorUrl = null;
         this.mThemeUrl = null;
+        this.mThemeType = null;
         this.mScreenshotUrl = "";
         this.mDemoUrl = null;
         this.mDownloadUrl = null;
@@ -66,6 +67,7 @@ public class ThemeModel implements Identifiable, Serializable {
         this.mActive = false;
         this.mAutoUpdate = false;
         this.mAutoUpdateTranslation = false;
+        this.mIsExternalTheme = false;
         this.mIsWpComTheme = false;
     }
 
@@ -81,11 +83,13 @@ public class ThemeModel implements Identifiable, Serializable {
             @Nullable String authorName,
             @Nullable String authorUrl,
             @Nullable String themeUrl,
+            @Nullable String themeType,
             @NonNull String screenshotUrl,
             @Nullable String demoUrl,
             @Nullable String downloadUrl,
             @Nullable String stylesheet,
             @Nullable String priceText,
+            boolean isExternalTheme,
             boolean free,
             @Nullable String mobileFriendlyCategorySlug) {
         this.mThemeId = themeId;
@@ -96,11 +100,13 @@ public class ThemeModel implements Identifiable, Serializable {
         this.mAuthorName = authorName;
         this.mAuthorUrl = authorUrl;
         this.mThemeUrl = themeUrl;
+        this.mThemeType = themeType;
         this.mScreenshotUrl = screenshotUrl;
         this.mDemoUrl = demoUrl;
         this.mDownloadUrl = downloadUrl;
         this.mStylesheet = stylesheet;
         this.mPriceText = priceText;
+        this.mIsExternalTheme = isExternalTheme;
         this.mFree = free;
         this.mMobileFriendlyCategorySlug = mobileFriendlyCategorySlug;
     }
