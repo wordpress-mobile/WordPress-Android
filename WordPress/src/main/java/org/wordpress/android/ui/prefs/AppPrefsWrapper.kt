@@ -183,6 +183,14 @@ class AppPrefsWrapper @Inject constructor() {
         return AppPrefs.getManualFeatureConfig(featureKey)
     }
 
+    fun incrementPublishedPostCount() {
+        AppPrefs.incrementPublishedPostCount()
+    }
+
+    fun getPublishedPostCount(): Int {
+        return AppPrefs.getPublishedPostCount()
+    }
+
     fun setBloggingRemindersShown(siteId: Int) {
         AppPrefs.setBloggingRemindersShown(siteId)
     }

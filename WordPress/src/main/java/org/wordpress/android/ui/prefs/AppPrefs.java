@@ -171,6 +171,8 @@ public class AppPrefs {
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
         PINNED_DYNAMIC_CARD,
+        // PUBLISHED_POST_COUNT will increase until it reaches ReviewViewModel.TARGET_COUNT_POST_PUBLISHED
+        PUBLISHED_POST_COUNT,
         BLOGGING_REMINDERS_SHOWN,
         SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
         SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
@@ -1362,6 +1364,14 @@ public class AppPrefs {
 
     @NonNull private static String getManualFeatureConfigKey(String featureKey) {
         return DeletablePrefKey.MANUAL_FEATURE_CONFIG.name() + featureKey;
+    }
+
+    public static void incrementPublishedPostCount() {
+        putInt(DeletablePrefKey.PUBLISHED_POST_COUNT, getPublishedPostCount() + 1);
+    }
+
+    public static int getPublishedPostCount() {
+        return prefs().getInt(DeletablePrefKey.PUBLISHED_POST_COUNT.name(), 0);
     }
 
     public static void setBloggingRemindersShown(int siteId) {
