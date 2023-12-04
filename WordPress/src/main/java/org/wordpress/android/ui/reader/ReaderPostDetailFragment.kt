@@ -106,6 +106,8 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryActi
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL
+import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL_TOOLBAR
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
@@ -1069,7 +1071,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             true
         }
         R.id.menu_share -> {
-            readerTracker.track(AnalyticsTracker.Stat.SHARED_ITEM)
+            viewModel.post?.let {
+                readerTracker.trackBlog(
+                    AnalyticsTracker.Stat.SHARED_ITEM_READER,
+                    it.blogId,
+                    it.feedId,
+                    it.isFollowedByCurrentUser,
+                    SOURCE_POST_DETAIL_TOOLBAR,
+                )
+            }
             ReaderActivityLauncher.sharePost(context, viewModel.post)
             true
         }
