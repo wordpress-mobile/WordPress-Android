@@ -234,7 +234,11 @@ public class ThemeRestClient extends BaseWPComRestClient {
         if (!free) {
             priceText = response.price;
         }
-        ThemeModel theme = new ThemeModel(
+        boolean isExternalTheme = false;
+        if (response.theme_type != null) {
+            isExternalTheme = response.theme_type.equals(THEME_TYPE_EXTERNAL);
+        }
+        return new ThemeModel(
                 response.id,
                 response.name,
                 response.description,
@@ -243,19 +247,16 @@ public class ThemeRestClient extends BaseWPComRestClient {
                 response.author,
                 response.author_uri,
                 response.theme_uri,
+                response.theme_type,
                 response.screenshot,
                 response.demo_uri,
                 response.download_uri,
                 response.stylesheet,
                 priceText,
+                isExternalTheme,
                 free,
                 getMobileFriendlyCategorySlug(response.taxonomies)
         );
-        theme.setThemeType(response.theme_type);
-        if (response.theme_type != null) {
-            theme.setIsExternalTheme(response.theme_type.equals(THEME_TYPE_EXTERNAL));
-        }
-        return theme;
     }
 
     @Nullable
