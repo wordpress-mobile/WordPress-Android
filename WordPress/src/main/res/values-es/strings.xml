@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-01 10:32:19+0000
+Translation-Revision-Date: 2023-12-04 13:08:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: es
 -->
 <resources>
+    <string name="turn_off">No, apágala</string>
+    <string name="leave_on">Sí, déjala encendida</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Por esta razón, te recomendamos que edites el bloque utilizando tu navegador web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Por este motivo, te recomendamos que edites el bloque utilizando el editor web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">También puedes aplanar el contenido desagrupando el bloque.</string>
