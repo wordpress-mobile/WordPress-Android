@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.review
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,6 +29,7 @@ class ReviewViewModel @Inject constructor(
     }
 
     companion object {
-        private const val TARGET_COUNT_POST_PUBLISHED = 2
+        @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+        const val TARGET_COUNT_POST_PUBLISHED = 2
     }
 }
