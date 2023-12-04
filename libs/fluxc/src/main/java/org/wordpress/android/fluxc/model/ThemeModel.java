@@ -27,6 +27,7 @@ public class ThemeModel implements Identifiable, Serializable {
     @Nullable @Column private String mAuthorName;
     @Nullable @Column private String mAuthorUrl;
     @Nullable @Column private String mThemeUrl;
+    @Nullable @Column private String mThemeType;
     @NonNull @Column private String mScreenshotUrl;
     @Nullable @Column private String mDemoUrl;
     @Nullable @Column private String mDownloadUrl;
@@ -39,6 +40,7 @@ public class ThemeModel implements Identifiable, Serializable {
     @Column private boolean mAutoUpdateTranslation;
 
     // local use only
+    @Column private boolean mIsExternalTheme;
     @Column private boolean mIsWpComTheme;
 
     @Deprecated
@@ -261,6 +263,15 @@ public class ThemeModel implements Identifiable, Serializable {
     }
 
     @Nullable
+    public String getThemeType() {
+        return mThemeType;
+    }
+
+    public void setThemeType(@Nullable String themeType) {
+        mThemeType = themeType;
+    }
+
+    @Nullable
     public String getDemoUrl() {
         return mDemoUrl;
     }
@@ -339,6 +350,14 @@ public class ThemeModel implements Identifiable, Serializable {
 
     public void setAutoUpdateTranslation(boolean autoUpdateTranslation) {
         mAutoUpdateTranslation = autoUpdateTranslation;
+    }
+
+    public boolean isExternalTheme() {
+        return mIsExternalTheme;
+    }
+
+    public void setIsExternalTheme(boolean isExternalTheme) {
+        mIsExternalTheme = isExternalTheme;
     }
 
     public boolean isWpComTheme() {
