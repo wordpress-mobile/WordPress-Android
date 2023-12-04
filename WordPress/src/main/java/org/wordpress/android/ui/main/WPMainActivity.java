@@ -27,7 +27,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.play.core.review.ReviewException;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.review.model.ReviewErrorCode;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -95,11 +101,11 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
+import org.wordpress.android.ui.mysite.BloggingPromptsOnboardingListener;
 import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
-import org.wordpress.android.ui.mysite.BloggingPromptsOnboardingListener;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
@@ -125,6 +131,7 @@ import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
+import org.wordpress.android.ui.review.ReviewViewModel;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
@@ -237,6 +244,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private WPMainActivityViewModel mViewModel;
     private ModalLayoutPickerViewModel mMLPViewModel;
+    @NonNull private ReviewViewModel mReviewViewModel;
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
     private FloatingActionButton mFloatingActionButton;
     private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
@@ -654,6 +662,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(WPMainActivityViewModel.class);
         mMLPViewModel = new ViewModelProvider(this, mViewModelFactory).get(ModalLayoutPickerViewModel.class);
+        mReviewViewModel = new ViewModelProvider(this, mViewModelFactory).get(ReviewViewModel.class);
         mBloggingRemindersViewModel =
                 new ViewModelProvider(this, mViewModelFactory).get(BloggingRemindersViewModel.class);
 
@@ -752,6 +761,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
+        mReviewViewModel.getLaunchReview().observe(this, event -> event.applyIfNotHandled(unit -> {
+            launchInAppReviews();
+            return null;
+        }));
+
         BloggingReminderUtils.observeBottomSheet(
                 mBloggingRemindersViewModel.isBottomSheetShowing(),
                 this,
@@ -825,6 +839,25 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
             }
         }
+    }
+
+    private void launchInAppReviews() {
+        ReviewManager manager = ReviewManagerFactory.create(this);
+        Task<ReviewInfo> request = manager.requestReviewFlow();
+        request.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ReviewInfo reviewInfo = task.getResult();
+                Task<Void> flow = manager.launchReviewFlow(this, reviewInfo);
+                flow.addOnFailureListener(e -> AppLog.e(T.MAIN, "Error launching google review API flow.", e));
+            } else {
+                @ReviewErrorCode int reviewErrorCode = ((ReviewException) task.getException()).getErrorCode();
+                AppLog.e(
+                        T.MAIN,
+                        "Error fetching ReviewInfo object from Review API to start in-app review process",
+                        reviewErrorCode
+                );
+            }
+        });
     }
 
     private CreatePageDashboardSource getCreatePageDashboardSourceFromActionType(ActionType actionType) {
@@ -1342,8 +1375,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                     UploadUtils.publishPost(WPMainActivity.this, post, site, mDispatcher);
                                 }
                             },
-                            isFirstTimePublishing -> mBloggingRemindersViewModel
-                                    .onPublishingPost(site.getId(), isFirstTimePublishing)
+                            isFirstTimePublishing -> {
+                                mBloggingRemindersViewModel.onPublishingPost(site.getId(), isFirstTimePublishing);
+                                mReviewViewModel.onPublishingPost(isFirstTimePublishing);
+                            }
                     );
                 }
                 break;
@@ -1355,6 +1390,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                             selectedSite.getId(),
                             isNewStory
                     );
+                    mReviewViewModel.onPublishingPost(isNewStory);
                 }
                 break;
             case RequestCodes.CREATE_SITE:
@@ -1741,8 +1777,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         event.post,
                         null,
                         targetSite,
-                        isFirstTimePublishing -> mBloggingRemindersViewModel
-                                .onPublishingPost(targetSite.getId(), isFirstTimePublishing)
+                        isFirstTimePublishing -> {
+                            mBloggingRemindersViewModel.onPublishingPost(targetSite.getId(), isFirstTimePublishing);
+                            mReviewViewModel.onPublishingPost(isFirstTimePublishing);
+                        }
                 );
             }
         }
