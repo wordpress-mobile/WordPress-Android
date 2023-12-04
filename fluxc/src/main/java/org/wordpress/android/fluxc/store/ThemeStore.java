@@ -151,12 +151,11 @@ public class ThemeStore extends Store {
         UNKNOWN_THEME,
         MISSING_THEME;
 
-        public static ThemeErrorType fromString(String type) {
-            if (type != null) {
-                for (ThemeErrorType v : ThemeErrorType.values()) {
-                    if (type.equalsIgnoreCase(v.name())) {
-                        return v;
-                    }
+        @NonNull
+        public static ThemeErrorType fromString(@NonNull String type) {
+            for (ThemeErrorType v : ThemeErrorType.values()) {
+                if (type.equalsIgnoreCase(v.name())) {
+                    return v;
                 }
             }
             return GENERIC_ERROR;
@@ -165,15 +164,15 @@ public class ThemeStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class ThemesError implements OnChangedError {
-        public ThemeErrorType type;
-        public String message;
+        @NonNull public ThemeErrorType type;
+        @Nullable public String message;
 
-        public ThemesError(String type, String message) {
+        public ThemesError(@NonNull String type, @Nullable String message) {
             this.type = ThemeErrorType.fromString(type);
             this.message = message;
         }
 
-        public ThemesError(ThemeErrorType type) {
+        public ThemesError(@NonNull ThemeErrorType type) {
             this.type = type;
         }
     }
@@ -206,10 +205,10 @@ public class ThemeStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class OnThemeActivated extends OnChanged<ThemesError> {
-        public SiteModel site;
-        public ThemeModel theme;
+        @NonNull public SiteModel site;
+        @NonNull public ThemeModel theme;
 
-        public OnThemeActivated(SiteModel site, ThemeModel theme) {
+        public OnThemeActivated(@NonNull SiteModel site, @NonNull ThemeModel theme) {
             this.site = site;
             this.theme = theme;
         }
@@ -217,8 +216,8 @@ public class ThemeStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class OnThemeRemoved extends OnChanged<ThemesError> {
-        public SiteModel site;
-        public ThemeModel theme;
+        @NonNull public SiteModel site;
+        @NonNull public ThemeModel theme;
 
         public OnThemeRemoved(@NonNull SiteModel site, @NonNull ThemeModel theme) {
             this.site = site;
@@ -228,10 +227,10 @@ public class ThemeStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class OnThemeDeleted extends OnChanged<ThemesError> {
-        public SiteModel site;
-        public ThemeModel theme;
+        @NonNull public SiteModel site;
+        @NonNull public ThemeModel theme;
 
-        public OnThemeDeleted(SiteModel site, ThemeModel theme) {
+        public OnThemeDeleted(@NonNull SiteModel site, @NonNull ThemeModel theme) {
             this.site = site;
             this.theme = theme;
         }
@@ -239,10 +238,10 @@ public class ThemeStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class OnThemeInstalled extends OnChanged<ThemesError> {
-        public SiteModel site;
-        public ThemeModel theme;
+        @NonNull public SiteModel site;
+        @NonNull public ThemeModel theme;
 
-        public OnThemeInstalled(SiteModel site, ThemeModel theme) {
+        public OnThemeInstalled(@NonNull SiteModel site, @NonNull ThemeModel theme) {
             this.site = site;
             this.theme = theme;
         }
@@ -331,37 +330,44 @@ public class ThemeStore extends Store {
         AppLog.d(AppLog.T.API, "ThemeStore onRegister");
     }
 
+    @NonNull
     public List<ThemeModel> getWpComThemes() {
         return ThemeSqlUtils.getWpComThemes();
     }
 
+    @NonNull
     public List<ThemeModel> getWpComThemes(@NonNull List<String> themeIds) {
         return ThemeSqlUtils.getWpComThemes(themeIds);
     }
 
-    public List<ThemeModel> getWpComMobileFriendlyThemes(String categorySlug) {
+    @NonNull
+    public List<ThemeModel> getWpComMobileFriendlyThemes(@NonNull String categorySlug) {
         return ThemeSqlUtils.getWpComMobileFriendlyThemes(categorySlug);
     }
 
+    @NonNull
     public List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
         return ThemeSqlUtils.getThemesForSite(site);
     }
 
-    public ThemeModel getInstalledThemeByThemeId(SiteModel siteModel, String themeId) {
-        if (themeId == null || themeId.isEmpty()) {
+    @Nullable
+    public ThemeModel getInstalledThemeByThemeId(@NonNull SiteModel siteModel, @NonNull String themeId) {
+        if (TextUtils.isEmpty(themeId)) {
             return null;
         }
         return ThemeSqlUtils.getSiteThemeByThemeId(siteModel, themeId);
     }
 
+    @Nullable
     @SuppressWarnings("WeakerAccess")
-    public ThemeModel getWpComThemeByThemeId(String themeId) {
+    public ThemeModel getWpComThemeByThemeId(@NonNull String themeId) {
         if (TextUtils.isEmpty(themeId)) {
             return null;
         }
         return ThemeSqlUtils.getWpComThemeByThemeId(themeId);
     }
 
+    @Nullable
     public ThemeModel getActiveThemeForSite(@NonNull SiteModel site) {
         List<ThemeModel> activeTheme = ThemeSqlUtils.getActiveThemeForSite(site);
         return activeTheme.isEmpty() ? null : activeTheme.get(0);

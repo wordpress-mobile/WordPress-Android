@@ -187,7 +187,7 @@ private fun BaseNetworkError.toWPAPINetworkError(): WPAPINetworkError {
         is WPAPINetworkError -> this
         is WPComGsonNetworkError -> WPAPINetworkError(
             baseError = this,
-            errorCode = this.apiError.orEmpty()
+            errorCode = this.apiError
         )
         else -> WPAPINetworkError(this)
     }

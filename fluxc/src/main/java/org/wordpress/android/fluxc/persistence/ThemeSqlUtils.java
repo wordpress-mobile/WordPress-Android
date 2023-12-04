@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.persistence;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.wellsql.generated.ThemeModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -78,6 +79,7 @@ public class ThemeSqlUtils {
         insertOrUpdateSiteTheme(site, theme);
     }
 
+    @NonNull
     public static List<ThemeModel> getActiveThemeForSite(@NonNull SiteModel site) {
         return WellSql.select(ThemeModel.class)
                 .where().beginGroup()
@@ -86,6 +88,7 @@ public class ThemeSqlUtils {
                 .endGroup().endWhere().getAsModel();
     }
 
+    @NonNull
     public static List<ThemeModel> getWpComThemes() {
         return WellSql.select(ThemeModel.class)
                 .where()
@@ -93,6 +96,7 @@ public class ThemeSqlUtils {
                 .endWhere().getAsModel();
     }
 
+    @NonNull
     public static List<ThemeModel> getWpComThemes(@NonNull List<String> themeIds) {
         return WellSql.select(ThemeModel.class)
                 .where()
@@ -101,7 +105,8 @@ public class ThemeSqlUtils {
                 .endWhere().getAsModel();
     }
 
-    public static List<ThemeModel> getWpComMobileFriendlyThemes(String categorySlug) {
+    @NonNull
+    public static List<ThemeModel> getWpComMobileFriendlyThemes(@NonNull String categorySlug) {
         return WellSql.select(ThemeModel.class)
                 .where()
                 .equals(ThemeModelTable.MOBILE_FRIENDLY_CATEGORY_SLUG, categorySlug)
@@ -109,6 +114,7 @@ public class ThemeSqlUtils {
                 .endWhere().getAsModel();
     }
 
+    @NonNull
     public static List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
         return WellSql.select(ThemeModel.class)
                 .where()
@@ -116,7 +122,8 @@ public class ThemeSqlUtils {
                 .endWhere().getAsModel();
     }
 
-    public static ThemeModel getWpComThemeByThemeId(String themeId) {
+    @Nullable
+    public static ThemeModel getWpComThemeByThemeId(@NonNull String themeId) {
         if (TextUtils.isEmpty(themeId)) {
             return null;
         }
@@ -134,8 +141,9 @@ public class ThemeSqlUtils {
         return matches.get(0);
     }
 
-    public static ThemeModel getSiteThemeByThemeId(SiteModel siteModel, String themeId) {
-        if (siteModel == null || TextUtils.isEmpty(themeId)) {
+    @Nullable
+    public static ThemeModel getSiteThemeByThemeId(@NonNull SiteModel siteModel, @NonNull String themeId) {
+        if (TextUtils.isEmpty(themeId)) {
             return null;
         }
         List<ThemeModel> matches = WellSql.select(ThemeModel.class)

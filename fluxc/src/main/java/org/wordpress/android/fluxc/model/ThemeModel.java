@@ -1,5 +1,8 @@
 package org.wordpress.android.fluxc.model;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
@@ -16,22 +19,22 @@ public class ThemeModel implements Identifiable, Serializable {
     @PrimaryKey @Column private int mId;
 
     @Column private int mLocalSiteId;
-    @Column private String mThemeId;
-    @Column private String mName;
-    @Column private String mDescription;
-    @Column private String mSlug;
-    @Column private String mVersion;
-    @Column private String mAuthorName;
-    @Column private String mAuthorUrl;
-    @Column private String mThemeUrl;
-    @Column private String mScreenshotUrl;
-    @Column private String mThemeType;
-    @Column private String mDemoUrl;
-    @Column private String mDownloadUrl;
-    @Column private String mStylesheet;
-    @Column private String mPriceText;
-    @Column private boolean mFree = true;
-    @Column private String mMobileFriendlyCategorySlug;
+    @NonNull @Column private String mThemeId;
+    @NonNull @Column private String mName;
+    @NonNull @Column private String mDescription;
+    @Nullable @Column private String mSlug;
+    @Nullable @Column private String mVersion;
+    @Nullable @Column private String mAuthorName;
+    @Nullable @Column private String mAuthorUrl;
+    @Nullable @Column private String mThemeUrl;
+    @Nullable @Column private String mThemeType;
+    @NonNull @Column private String mScreenshotUrl;
+    @Nullable @Column private String mDemoUrl;
+    @Nullable @Column private String mDownloadUrl;
+    @Nullable @Column private String mStylesheet;
+    @Nullable @Column private String mPriceText;
+    @Column private boolean mFree;
+    @Nullable @Column private String mMobileFriendlyCategorySlug;
     @Column private boolean mActive;
     @Column private boolean mAutoUpdate;
     @Column private boolean mAutoUpdateTranslation;
@@ -39,6 +42,102 @@ public class ThemeModel implements Identifiable, Serializable {
     // local use only
     @Column private boolean mIsExternalTheme;
     @Column private boolean mIsWpComTheme;
+
+    @Deprecated
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    public ThemeModel() {
+        this.mId = 0;
+        this.mLocalSiteId = 0;
+        this.mThemeId = "";
+        this.mName = "";
+        this.mDescription = "";
+        this.mSlug = null;
+        this.mVersion = null;
+        this.mAuthorName = null;
+        this.mAuthorUrl = null;
+        this.mThemeUrl = null;
+        this.mThemeType = null;
+        this.mScreenshotUrl = "";
+        this.mDemoUrl = null;
+        this.mDownloadUrl = null;
+        this.mStylesheet = null;
+        this.mPriceText = null;
+        this.mFree = true;
+        this.mMobileFriendlyCategorySlug = null;
+        this.mActive = false;
+        this.mAutoUpdate = false;
+        this.mAutoUpdateTranslation = false;
+        this.mIsExternalTheme = false;
+        this.mIsWpComTheme = false;
+    }
+
+    /**
+     * Use when creating a WP.com theme.
+     */
+    public ThemeModel(
+            @NonNull String themeId,
+            @NonNull String name,
+            @NonNull String description,
+            @Nullable String slug,
+            @Nullable String version,
+            @Nullable String authorName,
+            @Nullable String authorUrl,
+            @Nullable String themeUrl,
+            @Nullable String themeType,
+            @NonNull String screenshotUrl,
+            @Nullable String demoUrl,
+            @Nullable String downloadUrl,
+            @Nullable String stylesheet,
+            @Nullable String priceText,
+            boolean isExternalTheme,
+            boolean free,
+            @Nullable String mobileFriendlyCategorySlug) {
+        this.mThemeId = themeId;
+        this.mName = name;
+        this.mDescription = description;
+        this.mSlug = slug;
+        this.mVersion = version;
+        this.mAuthorName = authorName;
+        this.mAuthorUrl = authorUrl;
+        this.mThemeUrl = themeUrl;
+        this.mThemeType = themeType;
+        this.mScreenshotUrl = screenshotUrl;
+        this.mDemoUrl = demoUrl;
+        this.mDownloadUrl = downloadUrl;
+        this.mStylesheet = stylesheet;
+        this.mPriceText = priceText;
+        this.mIsExternalTheme = isExternalTheme;
+        this.mFree = free;
+        this.mMobileFriendlyCategorySlug = mobileFriendlyCategorySlug;
+    }
+
+    /**
+     * Use when creating a Jetpack theme.
+     */
+    public ThemeModel(
+            @NonNull String themeId,
+            @NonNull String name,
+            @NonNull String description,
+            @Nullable String version,
+            @Nullable String authorName,
+            @Nullable String authorUrl,
+            @Nullable String themeUrl,
+            @NonNull String screenshotUrl,
+            boolean active,
+            boolean autoUpdate,
+            boolean autoUpdateTranslation) {
+        this.mThemeId = themeId;
+        this.mName = name;
+        this.mDescription = description;
+        this.mVersion = version;
+        this.mAuthorName = authorName;
+        this.mAuthorUrl = authorUrl;
+        this.mThemeUrl = themeUrl;
+        this.mScreenshotUrl = screenshotUrl;
+        this.mActive = active;
+        this.mAutoUpdate = autoUpdate;
+        this.mAutoUpdateTranslation = autoUpdateTranslation;
+    }
 
     @Override
     public int getId() {
@@ -51,7 +150,8 @@ public class ThemeModel implements Identifiable, Serializable {
     }
 
     @Override
-    public boolean equals(Object other) {
+    @SuppressWarnings("ConditionCoveredByFurtherCondition")
+    public boolean equals(@Nullable Object other) {
         if (other == null || !(other instanceof ThemeModel)) {
             return false;
         }
@@ -87,115 +187,129 @@ public class ThemeModel implements Identifiable, Serializable {
         this.mLocalSiteId = localSiteId;
     }
 
+    @NonNull
     public String getThemeId() {
         return mThemeId;
     }
 
-    public void setThemeId(String themeId) {
+    public void setThemeId(@NonNull String themeId) {
         mThemeId = themeId;
     }
 
+    @NonNull
     public String getName() {
         return mName;
     }
 
-    public void setName(String name) {
+    public void setName(@NonNull String name) {
         mName = name;
     }
 
+    @NonNull
     public String getDescription() {
         return mDescription;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(@NonNull String description) {
         mDescription = description;
     }
 
+    @Nullable
     public String getSlug() {
         return mSlug;
     }
 
-    public void setSlug(String slug) {
+    public void setSlug(@Nullable String slug) {
         mSlug = slug;
     }
 
+    @Nullable
     public String getVersion() {
         return mVersion;
     }
 
-    public void setVersion(String version) {
+    public void setVersion(@Nullable String version) {
         mVersion = version;
     }
 
+    @Nullable
     public String getAuthorName() {
         return mAuthorName;
     }
 
-    public void setAuthorName(String authorName) {
+    public void setAuthorName(@Nullable String authorName) {
         mAuthorName = authorName;
     }
 
+    @Nullable
     public String getAuthorUrl() {
         return mAuthorUrl;
     }
 
-    public void setAuthorUrl(String authorUrl) {
+    public void setAuthorUrl(@Nullable String authorUrl) {
         mAuthorUrl = authorUrl;
     }
 
+    @Nullable
     public String getThemeUrl() {
         return mThemeUrl;
     }
 
-    public void setThemeUrl(String themeUrl) {
+    public void setThemeUrl(@Nullable String themeUrl) {
         mThemeUrl = themeUrl;
     }
 
+    @NonNull
     public String getScreenshotUrl() {
         return mScreenshotUrl;
     }
 
-    public void setScreenshotUrl(String screenshotUrl) {
+    public void setScreenshotUrl(@NonNull String screenshotUrl) {
         mScreenshotUrl = screenshotUrl;
     }
 
+    @Nullable
     public String getThemeType() {
         return mThemeType;
     }
 
-    public void setThemeType(String themeType) {
+    public void setThemeType(@Nullable String themeType) {
         mThemeType = themeType;
     }
 
+    @Nullable
     public String getDemoUrl() {
         return mDemoUrl;
     }
 
-    public void setDemoUrl(String demoUrl) {
+    public void setDemoUrl(@Nullable String demoUrl) {
         mDemoUrl = demoUrl;
     }
 
+    @Nullable
     public String getDownloadUrl() {
         return mDownloadUrl;
     }
 
-    public void setDownloadUrl(String downloadUrl) {
+    public void setDownloadUrl(@Nullable String downloadUrl) {
         mDownloadUrl = downloadUrl;
     }
 
+    @Nullable
     public String getStylesheet() {
         return mStylesheet;
     }
 
-    public void setStylesheet(String stylesheet) {
+    public void setStylesheet(@Nullable String stylesheet) {
         mStylesheet = stylesheet;
     }
 
+    @Nullable
     public String getPriceText() {
         return mPriceText;
     }
 
-    public void setPriceText(String priceText) {
+    public void setPriceText(@Nullable String priceText) {
         mPriceText = priceText;
     }
 
@@ -203,11 +317,12 @@ public class ThemeModel implements Identifiable, Serializable {
         return mFree;
     }
 
+    @Nullable
     public String getMobileFriendlyCategorySlug() {
         return mMobileFriendlyCategorySlug;
     }
 
-    public void setMobileFriendlyCategorySlug(String mobileFriendlyCategorySlug) {
+    public void setMobileFriendlyCategorySlug(@Nullable String mobileFriendlyCategorySlug) {
         mMobileFriendlyCategorySlug = mobileFriendlyCategorySlug;
     }
 
