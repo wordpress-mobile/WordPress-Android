@@ -4,15 +4,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.config.InAppReviewsFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
-class ReviewViewModel @Inject constructor(private val appPrefsWrapper: AppPrefsWrapper) : ViewModel() {
+class ReviewViewModel @Inject constructor(
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val inAppReviewsFeatureConfig: InAppReviewsFeatureConfig
+) : ViewModel() {
     private val _launchReview = MutableLiveData<Event<Unit>>()
     val launchReview = _launchReview as LiveData<Event<Unit>>
 
     fun onPublishingPost(isFirstTimePublishing: Boolean) {
-        if (!appPrefsWrapper.isInAppReviewsShown() && isFirstTimePublishing) {
+        if (inAppReviewsFeatureConfig.isEnabled() && !appPrefsWrapper.isInAppReviewsShown() && isFirstTimePublishing) {
             if (appPrefsWrapper.getPublishedPostCount() < TARGET_COUNT_POST_PUBLISHED) {
                 appPrefsWrapper.incrementPublishedPostCount()
             }
