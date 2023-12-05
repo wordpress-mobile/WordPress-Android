@@ -1031,8 +1031,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "close_account_failed";
             case CLOSED_ACCOUNT:
                 return "closed_account";
-            case SHARED_ITEM:
-                return "item_shared";
             case SHARED_ITEM_READER:
                 return "item_shared_reader";
             case ADDED_SELF_HOSTED_SITE:

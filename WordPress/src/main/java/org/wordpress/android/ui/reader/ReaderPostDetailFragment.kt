@@ -106,6 +106,8 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryActi
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL
+import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL_TOOLBAR
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
@@ -1046,21 +1048,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onPrepareMenu(menu: Menu) {
-        val isReaderImprovementsEnabled = readerImprovementsFeatureConfig.isEnabled()
-
         val postHasUrl = viewModel.post?.hasUrl() == true
         val menuBrowse = menu.findItem(R.id.menu_browse)
-        menuBrowse?.isVisible = if (!isReaderImprovementsEnabled) {
-            // browse require the post to have a URL (some feed-based posts don't have one) or an intercepted URI
-            postHasUrl || viewModel.interceptedUri != null
-        } else {
-            // in the Reader improvements we are only showing this as a fallback for posts with intercepted URI only
-            !postHasUrl && viewModel.interceptedUri != null
-        }
-
+        // browse require the post to have a URL (some feed-based posts don't have one) or an intercepted URI
+        menuBrowse?.isVisible = postHasUrl || viewModel.interceptedUri != null
+        // share require the post to have a URL
         val menuShare = menu.findItem(R.id.menu_share)
-        // share should not be shown as a TopBar item after Reader improvements (only in the "more" menu)
-        menuShare?.isVisible = postHasUrl && !isReaderImprovementsEnabled
+        menuShare?.isVisible = postHasUrl
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
@@ -1074,6 +1068,19 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 ReaderActivityLauncher.openUrl(activity, interceptedUri, OpenUrlType.EXTERNAL)
                 requireActivity().finish()
             }
+            true
+        }
+        R.id.menu_share -> {
+            viewModel.post?.let {
+                readerTracker.trackBlog(
+                    AnalyticsTracker.Stat.SHARED_ITEM_READER,
+                    it.blogId,
+                    it.feedId,
+                    it.isFollowedByCurrentUser,
+                    SOURCE_POST_DETAIL_TOOLBAR,
+                )
+            }
+            ReaderActivityLauncher.sharePost(context, viewModel.post)
             true
         }
         R.id.menu_more -> {
