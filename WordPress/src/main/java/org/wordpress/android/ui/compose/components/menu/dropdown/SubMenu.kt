@@ -15,7 +15,7 @@ fun CascadeColumnScope.SubMenu(
     element: MenuElementData.SubMenu,
     onMenuItemClick: (MenuElementData) -> Unit,
 ) {
-    val enabledContentColor = MaterialTheme.colorScheme.onSurface
+    val enabledContentColor = itemContentColor()
     val disabledContentColor = if (androidx.compose.material.MaterialTheme.colors.isLight) {
         AppColor.Gray10
     } else {
@@ -23,7 +23,7 @@ fun CascadeColumnScope.SubMenu(
     }
     DropdownMenuItem(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.background),
+            .background(itemBackgroundColor()),
         colors = MenuDefaults.itemColors(
             textColor = enabledContentColor,
             leadingIconColor = enabledContentColor,
@@ -34,8 +34,9 @@ fun CascadeColumnScope.SubMenu(
         ),
         text = {
             Text(
-                style = MaterialTheme.typography.bodyLarge,
                 text = element.text,
+                color = enabledContentColor,
+                style = MaterialTheme.typography.bodyLarge,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )

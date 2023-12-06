@@ -32,7 +32,7 @@ fun JetpackDropdownMenu(menuItems: List<MenuElementData>, defaultItem: MenuEleme
             }
         )
         CascadeDropdownMenu(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background),
+            modifier = Modifier.background(itemBackgroundColor()),
             expanded = isMenuVisible,
             onDismissRequest = { isMenuVisible = false },
         ) {

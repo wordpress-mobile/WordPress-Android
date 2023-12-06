@@ -29,7 +29,7 @@ fun CascadeColumnScope.JetpackDropdownSubMenuHeader(
 ) {
     Row(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.background)
+            .background(itemBackgroundColor())
             .fillMaxWidth()
             .clickable(enabled = hasParentMenu, role = Role.Button) {
                 if (!isNavigationRunning) {
@@ -40,13 +40,13 @@ fun CascadeColumnScope.JetpackDropdownSubMenuHeader(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.labelLarge
+            LocalTextStyle provides MaterialTheme.typography.bodyLarge
         ) {
             if (this@JetpackDropdownSubMenuHeader.hasParentMenu) {
                 Image(
                     painter = painterResource(R.drawable.ic_arrow_left_white_24dp),
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
+                    colorFilter = ColorFilter.tint(itemContentColor()),
                 )
             }
             Box(Modifier.weight(1f)) {

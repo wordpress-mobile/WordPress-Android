@@ -10,7 +10,7 @@ sealed class MenuElementData(
     // Item element that closes the menu when clicked
     data class Item(
         override val text: String,
-        val onClick: (Item) -> Unit,
+        val onClick: () -> Unit,
         @DrawableRes override val leadingIcon: Int = NO_ICON,
         override val hasDivider: Boolean = false,
     ) : MenuElementData(text, leadingIcon, hasDivider)

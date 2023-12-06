@@ -23,7 +23,7 @@ fun Item(
     element: MenuElementData.Item,
     onMenuItemClick: (MenuElementData) -> Unit,
 ) {
-    val enabledContentColor = MaterialTheme.colorScheme.onSurface
+    val enabledContentColor = itemContentColor()
     val disabledContentColor = if (androidx.compose.material.MaterialTheme.colors.isLight) {
         AppColor.Gray10
     } else {
@@ -31,8 +31,11 @@ fun Item(
     }
     androidx.compose.material3.DropdownMenuItem(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.background),
-        onClick = { onMenuItemClick(element) },
+            .background(itemBackgroundColor()),
+        onClick = {
+            onMenuItemClick(element)
+            element.onClick()
+        },
         colors = MenuDefaults.itemColors(
             textColor = enabledContentColor,
             leadingIconColor = enabledContentColor,
@@ -43,8 +46,9 @@ fun Item(
         ),
         text = {
             Text(
-                style = MaterialTheme.typography.bodyLarge,
                 text = element.text,
+                color = enabledContentColor,
+                style = MaterialTheme.typography.bodyLarge,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
