@@ -71,6 +71,7 @@ import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.ExceptionLogger;
+import org.wordpress.android.editor.SavedInstanceDatabase;
 import org.wordpress.android.editor.gutenberg.DialogVisibility;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
@@ -710,7 +711,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
             updatePostLoadingAndDialogState(PostLoadingState.fromInt(
                     savedInstanceState.getInt(STATE_KEY_POST_LOADING_STATE, 0)));
-            mRevision = savedInstanceState.getParcelable(STATE_KEY_REVISION);
+
+            SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(WordPress.getContext());
+            if (db != null) {
+                mRevision = db.getParcel(STATE_KEY_REVISION, Revision.CREATOR);
+            }
+
             mPostEditorAnalyticsSession = PostEditorAnalyticsSession
                     .fromBundle(savedInstanceState, STATE_KEY_EDITOR_SESSION_DATA, mAnalyticsTrackerWrapper);
 
@@ -1166,7 +1172,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         outState.putBoolean(STATE_KEY_UNDO, mMenuHasUndo);
         outState.putBoolean(STATE_KEY_REDO, mMenuHasRedo);
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putParcelable(STATE_KEY_REVISION, mRevision);
+
+        SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(WordPress.getContext());
+        if (db != null) {
+            db.addParcel(STATE_KEY_REVISION, mRevision);
+        }
 
         outState.putSerializable(STATE_KEY_EDITOR_SESSION_DATA, mPostEditorAnalyticsSession);
         mIsConfigChange = true; // don't call sessionData.end() in onDestroy() if this is an Android config change
@@ -2373,6 +2383,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                         mIsJetpackSsoEnabled);
 
                         return GutenbergEditorFragment.newInstance(
+                                WordPress.getContext(),
                                 "",
                                 "",
                                 mIsNewPost,
