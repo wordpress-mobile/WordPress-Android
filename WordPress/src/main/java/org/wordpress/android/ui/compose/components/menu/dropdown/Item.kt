@@ -49,14 +49,14 @@ fun Item(
                 maxLines = 1,
             )
         },
-        leadingIcon = {
-            if (element.leadingIcon != NO_ICON) {
+        leadingIcon = if (element.leadingIcon != NO_ICON) {
+            {
                 Icon(
                     painter = painterResource(id = element.leadingIcon),
                     contentDescription = null,
                 )
             }
-        },
+        } else null,
     )
 }
 

@@ -72,7 +72,7 @@ fun JetpackDropdownMenuPreview() {
                     onClick = {}
                 ),
                 MenuElementData.Item(
-                    text = "Text and left icon",
+                    text = "Text and leading icon",
                     onClick = {},
                     leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
                     hasDivider = true,
