@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.compose.components.menu
+package org.wordpress.android.ui.compose.components.menu.dropdown
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -21,13 +21,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.menu.JetpackDropdownMenuElementData.Item
+import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData.Item
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
 fun DropdownMenuButton(
-    selectedItem: JetpackDropdownMenuElementData,
+    selectedItem: MenuElementData,
     onClick: () -> Unit,
 ) {
     Button(
@@ -78,7 +78,7 @@ fun DropdownMenuButton(
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun DropdownMenuButtonPreview() {
+private fun JetpackDropdownMenuButtonPreview() {
     AppTheme {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.compose.components.menu
+package org.wordpress.android.ui.compose.components.menu.dropdown
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,7 +22,7 @@ import me.saket.cascade.CascadeColumnScope
 import org.wordpress.android.R
 
 @Composable
-fun CascadeColumnScope.JetpackDropdownMenuHeader(
+fun CascadeColumnScope.JetpackDropdownSubMenuHeader(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(10.5.dp),
     text: @Composable (() -> Unit)? = null,
@@ -42,7 +42,7 @@ fun CascadeColumnScope.JetpackDropdownMenuHeader(
         CompositionLocalProvider(
             LocalTextStyle provides MaterialTheme.typography.labelLarge
         ) {
-            if (this@JetpackDropdownMenuHeader.hasParentMenu) {
+            if (this@JetpackDropdownSubMenuHeader.hasParentMenu) {
                 Image(
                     painter = painterResource(R.drawable.ic_arrow_left_white_24dp),
                     contentDescription = null,

@@ -1,8 +1,8 @@
-package org.wordpress.android.ui.compose.components.menu
+package org.wordpress.android.ui.compose.components.menu.dropdown
 
 import androidx.annotation.DrawableRes
 
-sealed class JetpackDropdownMenuElementData(
+sealed class MenuElementData(
     open val text: String,
     @DrawableRes open val leadingIcon: Int,
     open val hasDivider: Boolean,
@@ -13,13 +13,13 @@ sealed class JetpackDropdownMenuElementData(
         val onClick: (Item) -> Unit,
         @DrawableRes override val leadingIcon: Int = NO_ICON,
         override val hasDivider: Boolean = false,
-    ) : JetpackDropdownMenuElementData(text, leadingIcon, hasDivider)
+    ) : MenuElementData(text, leadingIcon, hasDivider)
 
     // Sub-menu element that opens a sub-menu when clicked
     data class SubMenu(
         override val text: String,
-        val children: List<JetpackDropdownMenuElementData>,
+        val children: List<MenuElementData>,
         @DrawableRes override val leadingIcon: Int = NO_ICON,
         override val hasDivider: Boolean = false,
-    ) : JetpackDropdownMenuElementData(text, leadingIcon, hasDivider)
+    ) : MenuElementData(text, leadingIcon, hasDivider)
 }
