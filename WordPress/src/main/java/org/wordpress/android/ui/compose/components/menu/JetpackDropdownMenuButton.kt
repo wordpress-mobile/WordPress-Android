@@ -21,13 +21,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.components.menu.DropdownMenuElementData.Item
+import org.wordpress.android.ui.compose.components.menu.JetpackDropdownMenuElementData.Item
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
 fun DropdownMenuButton(
-    selectedItem: DropdownMenuElementData,
+    selectedItem: JetpackDropdownMenuElementData,
     onClick: () -> Unit,
 ) {
     Button(
