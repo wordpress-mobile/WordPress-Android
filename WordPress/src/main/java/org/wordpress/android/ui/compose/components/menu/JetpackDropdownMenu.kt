@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.compose.components.menu
 
 import android.content.res.Configuration
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +21,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
-fun JetpackDropdownMenu(menuItems: List<DropdownMenuElementData>, defaultItem: DropdownMenuElementData) {
+fun JetpackDropdownMenu(menuItems: List<JetpackDropdownMenuElementData>, defaultItem: JetpackDropdownMenuElementData) {
     Column {
         var isMenuVisible by remember { mutableStateOf(false) }
         var selectedItem by remember { mutableStateOf(defaultItem) }
@@ -53,29 +52,6 @@ fun JetpackDropdownMenu(menuItems: List<DropdownMenuElementData>, defaultItem: D
     }
 }
 
-@Suppress("LongParameterList")
-sealed class DropdownMenuElementData(
-    open val text: String,
-    @DrawableRes open val leadingIcon: Int,
-    open val hasDivider: Boolean,
-) {
-    // Item element that closes the menu when clicked
-    data class Item(
-        override val text: String,
-        @DrawableRes override val leadingIcon: Int = NO_ICON,
-        override val hasDivider: Boolean = false,
-        val onClick: (Item) -> Unit,
-    ) : DropdownMenuElementData(text, leadingIcon, hasDivider)
-
-    // Sub-menu element that opens a sub-menu when clicked
-    data class SubMenu(
-        override val text: String,
-        @DrawableRes override val leadingIcon: Int = NO_ICON,
-        override val hasDivider: Boolean = false,
-        val children: List<DropdownMenuElementData> = emptyList(),
-    ) : DropdownMenuElementData(text, leadingIcon, hasDivider)
-}
-
 internal const val NO_ICON = -1
 
 @Preview
@@ -90,24 +66,24 @@ fun JetpackDropdownMenuPreview() {
                 .fillMaxHeight()
         ) {
             val menuItems = listOf(
-                DropdownMenuElementData.Item(
+                JetpackDropdownMenuElementData.Item(
                     text = "Text only",
                     onClick = {}
                 ),
-                DropdownMenuElementData.Item(
+                JetpackDropdownMenuElementData.Item(
                     text = "Text and left icon",
                     onClick = {},
                     leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
                     hasDivider = true,
                 ),
-                DropdownMenuElementData.SubMenu(
+                JetpackDropdownMenuElementData.SubMenu(
                     text = "Text and sub-menu",
                     children = listOf(
-                        DropdownMenuElementData.Item(
+                        JetpackDropdownMenuElementData.Item(
                             text = "Text sub-menu 1",
                             onClick = {}
                         ),
-                        DropdownMenuElementData.Item(
+                        JetpackDropdownMenuElementData.Item(
                             text = "Text sub-menu 2",
                             onClick = {}
                         )
