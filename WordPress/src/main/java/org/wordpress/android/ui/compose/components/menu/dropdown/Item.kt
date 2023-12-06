@@ -78,11 +78,13 @@ private fun JetpackDropdownMenuItemPreview() {
                 onClick = {}
             ), {})
             Item(MenuElementData.Item(
-                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut" +
+                        "labore et dolore magna aliqua.",
                 onClick = {}
             ), {})
             Item(MenuElementData.Item(
-                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut" +
+                        "labore et dolore magna aliqua.",
                 leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
                 onClick = {}
             ), {})
