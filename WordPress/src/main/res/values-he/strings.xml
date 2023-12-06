@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-03 19:57:06+0000
+Translation-Revision-Date: 2023-12-05 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: he_IL
 -->
 <resources>
+    <string name="turn_off">לא, נא לכבות</string>
+    <string name="leave_on">כן, להמשיך</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">מסיבה זו מומלץ \'לשטח\' את התוכן על ידי ביטול הקבצת הבלוק או לערוך את הבלוק בעזרת דפדפן האינטרנט.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">מסיבה זו מומלץ \'לשטח\' את התוכן על ידי ביטול הקבצת הבלוק או לערוך את הבלוק בעזרת עורך האינטרנט.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternatively, you can flatten the content by ungrouping the block.</string>
@@ -20,6 +22,8 @@ Language: he_IL
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">בעורך לנייד ייתכן עיבוד לא תקין של בלוקים בקינון עמוק מ-%d רמות.</string>
     <string name="jp_migration_lets_go_button">קדימה</string>
     <string name="jp_migration_done_no_sites_message">It\'s time to continue your WordPress journey on the Jetpack app.</string>
+    <string name="image_optimization_popup_desc">מיטוב התמונות מכווץ תמונות להעלאה מואצת.\n\nאפשרות זאת מופעלת כברירת מחדל, אך ניתן לשנות אותה בכל עת דרך הגדרות האפליקציה.</string>
+    <string name="image_optimization_popup_title">האם להמשיך במיטוב תמונות?</string>
     <string name="domain_management_clear_search">לנקות את החיפוש</string>
     <string name="media_encoder_quality_very_high">גבוהה מאוד</string>
     <string name="notification_security_key_needed">כדי להמשיך עליך לספק מפתח אבטחה.</string>

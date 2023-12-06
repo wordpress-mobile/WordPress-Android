@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-15 11:51:12+0000
+Translation-Revision-Date: 2023-12-06 17:10:21+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: sq_AL
 -->
 <resources>
+    <string name="turn_off">Jo, çaktivizoje</string>
+    <string name="leave_on">Po, lëre të aktivizuar</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Për këtë arsye, rekomandojmë përpunimin e bllokut duke përdorur shfletuesin tuaj.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Për këtë arsye, rekomandojmë përpunimin e bllokut duke përdorur përpunuesin web.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Ndryshe, mund ta sheshoni lëndën duke hequr bllokun nga grupi.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Kaloni te rregullimet</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">Anuloje</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Akordoje</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Keni mohuar përgjithmonë leje Kamerës. Është e domosdoshme për të skanuar kodin me vija. Ju lutemi, aktivizojeni që prej rregullimeve të aplikacionit.</string>
     <string name="notification_security_key_needed">Ju lutemi, që të vazhdohet, jepni kyçin tuaj të sigurisë.</string>
     <string name="login_error_security_key">Pati ca problem me hyrjen me kyç sigurie</string>
     <string name="login_text_security_key">Përdorni një kyç sigurie</string>
@@ -392,6 +401,7 @@ Language: sq_AL
     <string name="blogging_prompts_list_answered_prompt">✓ Me Përgjigje</string>
     <string name="blogging_prompts_list_title">Cytje</string>
     <string name="close_desc">mbylle</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Ndryshe, mund ta shkëputni dhe përpunoni ndarazi këtë bllok, duke prekur “Shkëpute”.</string>
     <string name="dlg_confirm_delete_category">Të fshihet përgjithmonë Kategoria \'%s\'?</string>
     <string name="deleting_cat_success">Kategoria u fshi me sukses</string>
     <string name="deleting_cat_failed">Fshirja e kategorisëdështoi</string>
@@ -3011,6 +3021,10 @@ Language: sq_AL
     <string name="editor_post_saved_online">Postimi u ruajt në internet</string>
     <string name="site_settings_image_quality_hint">Cilësi fotosh. Vlera më të mëdha do të thotë cilësi më e lartë fotosh.</string>
     <string name="site_settings_optimize_images_summary">Aktivizojeni që të ripërmasoni dhe ngjeshni foto</string>
+    <string name="media_encoder_quality_maximum">Maksimum</string>
+    <string name="media_encoder_quality_high">E lartë</string>
+    <string name="media_encoder_quality_medium">Mesatare</string>
+    <string name="media_encoder_quality_low">E ulët</string>
     <string name="media_upload_state_uploaded">U ngarkua</string>
     <string name="media_upload_state_failed">Ngarkimi Dështoi</string>
     <string name="media_upload_state_deleted">U fshi</string>

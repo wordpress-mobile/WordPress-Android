@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-29 17:54:08+0000
+Translation-Revision-Date: 2023-12-06 19:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.11
 Language: ar
 -->
 <resources>
+    <string name="turn_off">لا، توقف عن الاستخدام</string>
+    <string name="leave_on">نعم، واصل الاستخدام</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">لهذا السبب، نوصي بتحرير المكوّن باستخدام متصفح الويب لديك.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">لهذا السبب، نوصي بتحرير المكوّن باستخدام محرر الويب.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">بدلاً من ذلك، يمكنك تمهيد المحتوى عن طريق فك تجميع المكوّن.</string>
@@ -101,6 +103,7 @@ Language: ar
     <string name="partial_media_access_prompt_change_settings">تغيير الإعدادات</string>
     <string name="partial_media_access_prompt_select_more">تحديد مزيد</string>
     <string name="partial_media_access_prompt_text">لا تتوافر سوى الصور والفيديوهات المُحدَّدة التي منحت حق الوصول إليها.</string>
+    <string name="personalization_screen_title"> علامة تبويب تخصيص الصفحة الرئيسية</string>
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">عرض كل الحملات</string>
     <string name="dashboard_activity_card_menu_all_activity">كل النشاط</string>
     <string name="dashboard_pages_card_more_menu_all_pages">كل الصفحات</string>
