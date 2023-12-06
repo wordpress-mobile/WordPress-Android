@@ -47,7 +47,7 @@ import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.LiveTextWatcher;
 import org.wordpress.android.editor.R;
-import org.wordpress.android.editor.SavedInstanceDatabase;
+import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.android.editor.WPGutenbergWebViewActivity;
 import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogNegativeClickInterface;
 import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface;

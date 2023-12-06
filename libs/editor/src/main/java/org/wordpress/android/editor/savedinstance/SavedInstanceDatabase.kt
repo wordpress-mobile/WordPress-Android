@@ -1,11 +1,11 @@
-package org.wordpress.android.editor
+package org.wordpress.android.editor.savedinstance
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Parcelable
-import org.wordpress.android.editor.SavedParcelTable.createTable
-import org.wordpress.android.editor.SavedParcelTable.dropTable
+import org.wordpress.android.editor.savedinstance.SavedParcelTable.createTable
+import org.wordpress.android.editor.savedinstance.SavedParcelTable.dropTable
 
 /**
  * Database for the saved instance state data

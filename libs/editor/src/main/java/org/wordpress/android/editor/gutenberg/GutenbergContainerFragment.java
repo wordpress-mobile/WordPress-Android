@@ -15,7 +15,7 @@ import com.facebook.react.bridge.WritableNativeMap;
 import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.R;
-import org.wordpress.android.editor.SavedInstanceDatabase;
+import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.GutenbergProps;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
