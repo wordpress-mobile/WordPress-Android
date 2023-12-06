@@ -46,6 +46,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.image.ImageType.VIDEO
 import java.io.File
 import java.util.Locale
+import java.util.concurrent.ExecutionException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -308,11 +309,16 @@ class ImageManager @Inject constructor(
      */
     fun preload(context: Context, design: MShot) {
         if (!context.isAvailable()) return
-        GlideApp.with(context)
-            .downloadOnly()
-            .load(design)
-            .submit()
-            .get() // This makes each call blocking, so subsequent calls can be cancelled if needed.
+        try {
+            GlideApp.with(context)
+                .downloadOnly()
+                .load(design)
+                .submit()
+                .get() // This makes each call blocking, so subsequent calls can be cancelled if needed.
+        } catch (e: ExecutionException) {
+            // This is a best effort preload, so we don't want to crash the app if an `ExecutionException` is thrown.
+            AppLog.e(AppLog.T.UTILS, "Error preloading MShot: $e")
+        }
     }
 
     /**
