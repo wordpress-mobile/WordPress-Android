@@ -23,6 +23,9 @@ class PersonalizationViewModel @Inject constructor(
     val uiState = dashboardCardPersonalizationViewModelSlice.uiState
     val shortcutsState = shortcutsPersonalizationViewModelSlice.uiState
 
+    private val _onSelectedSiteMissing = MutableLiveData<Unit>()
+    val onSelectedSiteMissing = _onSelectedSiteMissing as LiveData<Unit>
+
     init {
         shortcutsPersonalizationViewModelSlice.initialize(viewModelScope)
         dashboardCardPersonalizationViewModelSlice.initialize(viewModelScope)
@@ -31,7 +34,7 @@ class PersonalizationViewModel @Inject constructor(
     fun start() {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null) {
-            //todo pass a state to the ui
+            _onSelectedSiteMissing.value = Unit
             return
         }
 
