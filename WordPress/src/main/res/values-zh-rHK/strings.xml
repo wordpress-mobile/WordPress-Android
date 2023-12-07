@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-29 09:54:09+0000
+Translation-Revision-Date: 2023-12-06 08:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: zh_TW
 -->
 <resources>
+    <string name="turn_off">否，關閉</string>
+    <string name="leave_on">是，保持開啟</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">因此，我們建議使用網頁瀏覽器來編輯區塊。</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">因此，我們建議使用網頁編輯器來編輯區塊。</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">或者，你可以取消區塊群組來簡化內容。</string>
@@ -20,6 +22,8 @@ Language: zh_TW
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">行動編輯器可能無法正確顯示內嵌超過 %d 層的區塊。</string>
     <string name="jp_migration_lets_go_button">我們開始吧</string>
     <string name="jp_migration_done_no_sites_message">現在就在 Jetpack 應用程式上繼續你的 WordPress 旅程。</string>
+    <string name="image_optimization_popup_desc">為加快上傳速度，圖片最佳化功能會壓縮圖片。\n\n系統預設啟用此選項，但你可以隨時在應用程式設定中變更。</string>
+    <string name="image_optimization_popup_title">是否要繼續將圖片最佳化？</string>
     <string name="domain_management_clear_search">清除搜尋</string>
     <string name="media_encoder_quality_very_high">超高</string>
     <string name="notification_security_key_needed">請提供安全性金鑰以繼續使用。</string>
@@ -97,6 +101,7 @@ Language: zh_TW
     <string name="personalization_screen_draft_posts_card_title">草稿文章</string>
     <string name="personalization_screen_stats_card_description">點閱數、訪客數與按讚數</string>
     <string name="personalization_screen_tab_cards_footer_cards">卡片可根據您的網站活動顯示不同內容</string>
+    <string name="personalization_screen_title"> 打造個人版首頁分頁</string>
     <string name="personalize_card_content_description">點選以打造個人化「首頁」分頁</string>
     <string name="personalize_card_text">打造你的個人化「首頁」分頁</string>
     <string name="partial_media_access_prompt_change_settings">變更設定</string>
