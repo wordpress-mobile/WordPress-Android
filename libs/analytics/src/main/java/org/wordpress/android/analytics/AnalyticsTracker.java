@@ -379,7 +379,6 @@ public final class AnalyticsTracker {
         CLOSE_ACCOUNT_FAILED,
         CLOSED_ACCOUNT,
         ACCOUNT_LOGOUT,
-        SHARED_ITEM,
         SHARED_ITEM_READER,
         ADDED_SELF_HOSTED_SITE,
         SIGNED_IN,

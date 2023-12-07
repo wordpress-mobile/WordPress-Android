@@ -66,7 +66,7 @@ import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.push.GCMMessageService;
-import org.wordpress.android.push.GCMRegistrationIntentService;
+import org.wordpress.android.push.GCMRegistrationScheduler;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
@@ -276,6 +276,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
+    @Inject GCMRegistrationScheduler mGCMRegistrationScheduler;
+
     /*
      * fragments implement this if their contents can be scrolled, called when user
      * requests to scroll to the top
@@ -471,8 +473,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         if (isGooglePlayServicesAvailable(this)) {
             // Register for Cloud messaging
-            GCMRegistrationIntentService.enqueueWork(this,
-                    new Intent(this, GCMRegistrationIntentService.class));
+            mGCMRegistrationScheduler.scheduleRegistration();
         }
 
         if (canShowAppRatingPrompt) {
@@ -1386,8 +1387,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case RequestCodes.REAUTHENTICATE:
                 if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
-                    GCMRegistrationIntentService.enqueueWork(this,
-                            new Intent(this, GCMRegistrationIntentService.class));
+                    mGCMRegistrationScheduler.scheduleRegistration();
                 }
                 break;
             case RequestCodes.LOGIN_EPILOGUE:
@@ -1448,8 +1448,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void startWithNewAccount() {
-        GCMRegistrationIntentService.enqueueWork(this,
-                new Intent(this, GCMRegistrationIntentService.class));
+        mGCMRegistrationScheduler.scheduleRegistration();
         ReaderUpdateServiceStarter.startService(this, EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
     }
 

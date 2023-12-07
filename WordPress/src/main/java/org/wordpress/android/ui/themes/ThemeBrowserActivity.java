@@ -410,7 +410,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
         }
     }
 
-    private void activateTheme(String themeId) {
+    private void activateTheme(@NonNull String themeId) {
         if (!mSite.isUsingWpComRestApi()) {
             AppLog.i(T.THEMES, "Theme activation requires a site using WP.com REST API. Aborting request.");
             return;
