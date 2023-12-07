@@ -572,7 +572,7 @@ class PagesViewModel
 
     private fun copyPageLink(page: Page, context: Context) {
         // Get the link to the page
-        val pageLink = postStore.getPostByLocalPostId(page.localId).link
+        val pageLink = postStore.getPostByLocalPostId(page.localId)?.link ?: return
         ActivityLauncher.openShareIntent(
             context,
             pageLink,
