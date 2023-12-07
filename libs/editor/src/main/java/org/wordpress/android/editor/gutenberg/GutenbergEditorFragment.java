@@ -163,8 +163,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private ProgressDialog mSavingContentProgressDialog;
 
     public static GutenbergEditorFragment newInstance(Context context,
-                                                      String title,
-                                                      String content,
                                                       boolean isNewPost,
                                                       GutenbergWebViewAuthorizationData webViewAuthorizationData,
                                                       GutenbergPropsBuilder gutenbergPropsBuilder,
@@ -172,8 +170,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       boolean jetpackFeaturesEnabled) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM_TITLE, title);
-        args.putString(ARG_PARAM_CONTENT, content);
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
         args.putInt(ARG_STORY_EDITOR_REQUEST_CODE, storyBlockEditRequestCode);
         args.putBoolean(ARG_JETPACK_FEATURES_ENABLED, jetpackFeaturesEnabled);

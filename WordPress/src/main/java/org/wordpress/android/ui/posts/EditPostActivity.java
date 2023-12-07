@@ -2384,8 +2384,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
                         return GutenbergEditorFragment.newInstance(
                                 WordPress.getContext(),
-                                "",
-                                "",
                                 mIsNewPost,
                                 gutenbergWebViewAuthorizationData,
                                 gutenbergPropsBuilder,
