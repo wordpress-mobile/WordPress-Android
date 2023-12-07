@@ -525,9 +525,23 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
-        appbarMain.visibility = View.VISIBLE
-        siteInfo.loadMySiteDetails(state.siteInfoHeader)
-        appbarMain.setExpanded(true, true)
+        val gradientDrawable = GradientDrawable(
+            GradientDrawable.Orientation.TOP_BOTTOM,
+            intArrayOf(
+                Color.parseColor("#A7E8D3"),
+                R.attr.wpColorOnSurfaceHigh
+            )
+        )
+        gradientDrawable.gradientType = GradientDrawable.RADIAL_GRADIENT
+        gradientDrawable.useLevel
+        gradientDrawable.cornerRadius = 0f;
+
+        // Set Gradient
+        coordinatorLayout.background = gradientDrawable;
+
+        val window = activity?.getWindow()
+        window?.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window?.setStatusBarColor(Color.parseColor("#A7E8D3"))
 
         recyclerView.setVisible(true)
         (recyclerView.adapter as? MySiteAdapter)?.submitList(state.dashboardData)
