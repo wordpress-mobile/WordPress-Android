@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-29 15:54:10+0000
+Translation-Revision-Date: 2023-12-05 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: tr
 -->
 <resources>
+    <string name="turn_off">Hayır, kapat</string>
+    <string name="leave_on">Evet, açık kalsın</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Bu nedenle, bloku web tarayıcınızı kullanarak düzenlemenizi öneririz.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Bu nedenle, bloku web düzenleyicinizi kullanarak düzenlemenizi öneririz.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternatif olarak bloku gruplamadan çıkararak içeriği düzleştirebilirsiniz.</string>

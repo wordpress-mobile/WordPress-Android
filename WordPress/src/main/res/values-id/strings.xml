@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-29 09:54:09+0000
+Translation-Revision-Date: 2023-12-05 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: id
 -->
 <resources>
+    <string name="turn_off">Tidak, matikan</string>
+    <string name="leave_on">Ya, biarkan</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Karenanya, kami menyarankan Anda untuk mengedit blok melalui browser web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Karenanya, kami menyarankan Anda untuk mengedit blok melalui editor web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Atau, Anda dapat meratakan konten dengan membatalkan pengelompokan blok.</string>
@@ -20,6 +22,7 @@ Language: id
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blok bertingkat yang kedalamannya melebihi %d level mungkin tidak dapat ditampilkan dengan benar di editor seluler.</string>
     <string name="jp_migration_lets_go_button">Ayo</string>
     <string name="jp_migration_done_no_sites_message">Waktunya untuk melanjutkan perjalanan WordPress Anda di aplikasi Jetpack!</string>
+    <string name="image_optimization_popup_desc">Pengoptimalan gambar mengecilkan gambar agar bisa diunggah lebih cepat.\n\nPilihan ini diaktifkan secara default, tetapi Anda dapat mengubahnya di pengaturan aplikasi kapan saja.</string>
     <string name="domain_management_clear_search">Hapus pencarian</string>
     <string name="media_encoder_quality_very_high">Sangat Tinggi</string>
     <string name="notification_security_key_needed">Silakan berikan kunci keamanan Anda untuk melanjutkan.</string>

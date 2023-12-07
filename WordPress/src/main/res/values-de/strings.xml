@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-29 13:54:09+0000
+Translation-Revision-Date: 2023-12-05 12:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: de
 -->
 <resources>
+    <string name="turn_off">Nein, deaktivieren</string>
+    <string name="leave_on">Ja, aktiviert lassen</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Aus diesem Grund empfehlen wir, den Block in deinem Webbrowser zu bearbeiten.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Aus diesem Grund empfehlen wir, den Block im Webeditor zu bearbeiten.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternativ kannst du die Tiefe des Inhalts reduzieren, indem du die Gruppierung des Blocks aufhebst.</string>

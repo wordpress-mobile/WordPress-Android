@@ -51,6 +51,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.WpSotw2023NudgeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
@@ -97,6 +98,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
+import org.wordpress.android.ui.mysite.cards.sotw2023.WpSotw2023NudgeCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
@@ -281,6 +283,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var bloganuaryNudgeViewModelSlice: BloganuaryNudgeCardViewModelSlice
 
+    @Mock
+    lateinit var wpSotw2023NudgeCardViewModelSlice: WpSotw2023NudgeCardViewModelSlice
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<MySiteViewModel.State>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -420,6 +425,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptCardViewModelSlice.getBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(quickLinksItemViewModelSlice.uiState).thenReturn(mock())
         whenever(quickStartRepository.quickStartMenuStep).thenReturn(mock())
+        whenever(wpSotw2023NudgeCardViewModelSlice.buildCard()).thenReturn(null)
 
         viewModel = MySiteViewModel(
             testDispatcher(),
@@ -474,6 +480,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             siteInfoHeaderCardViewModelSlice,
             quickLinksItemViewModelSlice,
             bloganuaryNudgeViewModelSlice,
+            wpSotw2023NudgeCardViewModelSlice,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1429,6 +1436,24 @@ class MySiteViewModelTest : BaseUnitTest() {
 
             assertThat(viewModel.onShowJetpackIndividualPluginOverlay.value?.peekContent()).isNull()
         }
+
+    @Test
+    fun `when sotw card is not null then it is shown in the site menu`() {
+        whenever(wpSotw2023NudgeCardViewModelSlice.buildCard()).thenReturn(mock())
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems().filterIsInstance(WpSotw2023NudgeCardModel::class.java)).isNotEmpty
+    }
+
+    @Test
+    fun `when sotw card is null then it is not shown in the site menu`() {
+        whenever(wpSotw2023NudgeCardViewModelSlice.buildCard()).thenReturn(null)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems().filterIsInstance(WpSotw2023NudgeCardModel::class.java)).isEmpty()
+    }
 
     private fun findDomainRegistrationCard() =
         getLastItems().find { it is DomainRegistrationCard } as DomainRegistrationCard?

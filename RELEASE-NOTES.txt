@@ -11,6 +11,7 @@
 * [*] Block Editor: In the deeply nested block warning, only display the ungroup option for blocks that support it [https://github.com/WordPress/gutenberg/pull/56445]
 * [**] Enable Optimize Image setting (via Me → App Settings) by default, and change default compression and resolution values. [https://github.com/wordpress-mobile/WordPress-Android/pull/19581]
 * [*] Fixed an issue that prevented theme installation on atomic sites [https://github.com/wordpress-mobile/WordPress-Android/pull/19668]
+* [*] Fixed an issue with the pagination of the Blogging Prompts response list [https://github.com/wordpress-mobile/WordPress-Android/pull/19730]
 
 23.7
 -----
