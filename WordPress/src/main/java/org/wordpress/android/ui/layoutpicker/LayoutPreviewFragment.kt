@@ -127,7 +127,7 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
         binding?.webView?.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                if (view == null) return
+                if (!isAdded || view == null) return
                 val width = viewModel.selectedPreviewMode().previewWidth
                 setWebViewWidth(view, width)
                 val widthScript = context?.getString(R.string.web_preview_width_script, width)
