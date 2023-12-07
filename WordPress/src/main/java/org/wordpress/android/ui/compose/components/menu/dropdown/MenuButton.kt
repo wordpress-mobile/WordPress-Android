@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.compose.components.menu.dropdown
 
 import android.content.res.Configuration
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -43,13 +45,17 @@ fun DropdownMenuButton(
         ),
         shape = RoundedCornerShape(50),
     ) {
-        Row {
+        Row(
+            modifier = Modifier.animateContentSize(),
+        ) {
             if (selectedItem is Item && selectedItem.leadingIcon != NO_ICON) {
                 Icon(
                     modifier = Modifier.align(Alignment.CenterVertically),
                     painter = painterResource(id = selectedItem.leadingIcon),
                     contentDescription = null,
                 )
+                // Needed in order to make the content size animation works properly (without clipping).
+                // This assumes all menu item icons will have a maximum height of 24dp.
                 Spacer(Modifier.width(Margin.Small.value))
             }
             Text(
@@ -58,7 +64,8 @@ fun DropdownMenuButton(
                     .weight(
                         weight = 1f,
                         fill = false,
-                    ),
+                    )
+                    .padding(vertical = Margin.Small.value),
                 style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
                 text = selectedItem.text,
                 overflow = TextOverflow.Ellipsis,
