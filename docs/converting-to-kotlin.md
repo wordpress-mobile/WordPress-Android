@@ -16,6 +16,12 @@ When converting a file from Java to Kotlin, ensure you enable this option in And
 
 **Reason**: Enabling this option helps the reviewer perform a diff on the second commit, showing precisely what changes occurred between the Java and Kotlin files. Otherwise, the PR will display a file deletion (`.java` file) and a file addition (`.kt` file), making it challenging for the reviewer to diff effectively.
 
+### Consider adding nullability annotations before initiating automatic conversion:
+
+Address the warnings of "Missing null annotation" before starting automatic conversion.
+
+**Reason:** This makes automatic conversion to handle nullability instead of setting everything to nullable.
+
 ### Depend on automatic conversion and commit immediately:
 
 When performing the conversion, rely on the automatic conversion tools and commit the changes promptly, even if the resulting Kotlin code doesn't compile. Subsequently, on another commit, you can refine the Kotlin code, making it more idiomatic or addressing any compilation issues, such as adding nullable checks (`!!` or `let`).
