@@ -529,11 +529,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             GradientDrawable.Orientation.TOP_BOTTOM,
             intArrayOf(
                 Color.parseColor("#A7E8D3"),
-                R.attr.wpColorOnSurfaceHigh
+                Color.WHITE,
+                Color.WHITE
             )
         )
-        gradientDrawable.gradientType = GradientDrawable.RADIAL_GRADIENT
-        gradientDrawable.useLevel
         gradientDrawable.cornerRadius = 0f;
 
         // Set Gradient
