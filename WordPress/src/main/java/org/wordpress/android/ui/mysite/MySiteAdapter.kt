@@ -24,6 +24,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.WpSotw2023NudgeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
@@ -51,6 +52,7 @@ import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewHolder
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewHolder
 import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinkRibbonViewHolder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
+import org.wordpress.android.ui.mysite.cards.sotw2023.WpSotw2023NudgeCardViewHolder
 import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemEmptyViewHolder
 import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemViewHolder
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemViewHolder
@@ -123,6 +125,7 @@ class MySiteAdapter(
             )
             MySiteCardAndItem.Type.NO_CARDS_MESSAGE.ordinal -> NoCardsMessageViewHolder(parent)
             MySiteCardAndItem.Type.PERSONALIZE_CARD.ordinal -> PersonalizeCardViewHolder(parent)
+            MySiteCardAndItem.Type.WP_SOTW_2023_NUDGE_CARD.ordinal -> WpSotw2023NudgeCardViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -156,6 +159,7 @@ class MySiteAdapter(
             is JetpackInstallFullPluginCardViewHolder -> holder.bind(getItem(position) as JetpackInstallFullPluginCard)
             is NoCardsMessageViewHolder -> holder.bind(getItem(position) as MySiteCardAndItem.Card.NoCardsMessage)
             is PersonalizeCardViewHolder -> holder.bind(getItem(position) as PersonalizeCardModel)
+            is WpSotw2023NudgeCardViewHolder -> holder.bind(getItem(position) as WpSotw2023NudgeCardModel)
         }
     }
 

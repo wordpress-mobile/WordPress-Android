@@ -5,12 +5,12 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito.mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.ui.reader.services.post.ReaderPostLogic
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import kotlin.test.assertEquals
 
@@ -23,9 +23,6 @@ class BloggingPromptsPostTagProviderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        whenever(readerUtilsWrapper.getTagFromTagName(BLOGGING_PROMPT_ID_TAG, ReaderTagType.FOLLOWED))
-            .thenReturn(BLOGGING_PROMPT_ID_READER_TAG)
-
         tagProvider = BloggingPromptsPostTagProvider(readerUtilsWrapper)
     }
 
@@ -50,14 +47,18 @@ class BloggingPromptsPostTagProviderTest : BaseUnitTest() {
     @Test
     fun `Should return the expected ReaderTag when promptIdSearchReaderTag is called`() {
         whenever(readerUtilsWrapper.getTagFromTagUrl(any())).thenReturn(BLOGGING_PROMPT_ID_TAG)
-
+        val expected = ReaderTag(
+            BLOGGING_PROMPT_ID_TAG,
+            BLOGGING_PROMPT_ID_TAG,
+            BLOGGING_PROMPT_ID_TAG,
+            ReaderPostLogic.formatFullEndpointForTag(BLOGGING_PROMPT_ID_TAG),
+            ReaderTagType.FOLLOWED,
+        )
         val actual = tagProvider.promptIdSearchReaderTag("valid-url")
-
-        assertEquals(BLOGGING_PROMPT_ID_READER_TAG, actual)
+        assertEquals(expected, actual)
     }
 
     companion object {
         private const val BLOGGING_PROMPT_ID_TAG = "dailyprompt-1234"
-        private val BLOGGING_PROMPT_ID_READER_TAG = mock<ReaderTag>()
     }
 }

@@ -10,6 +10,7 @@ import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 import android.text.format.DateUtils
+import java.time.Instant
 
 class DateTimeUtilsWrapper @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
@@ -58,4 +59,6 @@ class DateTimeUtilsWrapper @Inject constructor(
     fun getCalendarInstance(): Calendar {
         return Calendar.getInstance()
     }
+
+    fun getInstantNow(): Instant = Instant.now()
 }

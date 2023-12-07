@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-29 09:54:09+0000
+Translation-Revision-Date: 2023-12-06 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: zh_CN
 -->
 <resources>
+    <string name="turn_off">不，停止优化</string>
+    <string name="leave_on">是，继续优化</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">因此，我们建议使用 Web 浏览器编辑该区块。</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">因此，我们建议使用 Web 编辑器编辑该区块。</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">或者，您也可以取消区块分组，以使内容扁平化。</string>
@@ -96,6 +98,7 @@ Language: zh_CN
     <string name="personalization_screen_draft_posts_card_title">文章草稿</string>
     <string name="personalization_screen_stats_card_description">浏览次数、访客人数和点赞数</string>
     <string name="personalization_screen_tab_cards_footer_cards">卡片可能会显示不同的内容，具体取决于您站点的情况</string>
+    <string name="personalization_screen_title"> 个性化“首页”选项卡</string>
     <string name="personalize_card_content_description">轻点以对您的“首页”选项卡进行个性化</string>
     <string name="personalize_card_text">对您的“首页”选项卡进行个性化</string>
     <string name="partial_media_access_prompt_change_settings">更改设置</string>

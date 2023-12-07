@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-23 16:54:10+0000
+Translation-Revision-Date: 2023-12-05 16:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: nl
 -->
 <resources>
+    <string name="turn_off">Nee, uitschakelen</string>
+    <string name="leave_on">Ja, ingeschakeld laten</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Hierom raden we aan de content platter te maken door het blok niet te groeperen of het blok te bewerken in je webbrowser.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Hierom raden we aan de content platter te maken door het blok niet te groeperen of het blok te bewerken in je webbrowser.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternatively, you can flatten the content by ungrouping the block.</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Toekennen</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Je hebt de cameramachtiging permanent geweigerd. Deze is nodig om de streepjescode te scannen. Schakel deze in de appinstellingen in</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">De cameramachtiging is vereist om de streepjescode te scannen.</string>
+    <string name="barcode_scanning_alert_dialog_title">Cameramachtiging toekennen</string>
+    <string name="barcode_scanning_camera_permission_denied">De cameramachtiging is vereist om de streepjescode te scannen.</string>
+    <string name="barcode_scanning_title">Streepjescode scannen</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blokken die dieper dan %d niveaus genesteld zijn worden mogelijk niet goed weergegeven in de mobiele editor.</string>
+    <string name="jp_migration_lets_go_button">Aan de slag</string>
+    <string name="jp_migration_done_no_sites_message">It\'s time to continue your WordPress journey on the Jetpack app.</string>
+    <string name="image_optimization_popup_desc">Afbeeldingoptimalisatie maakt afbeeldingen kleiner, zodat ze sneller geüpload kunnen worden.\n\nDeze optie staat standaard ingeschakeld, maar je kan dit altijd veranderen in de app-instellingen.</string>
+    <string name="image_optimization_popup_title">Afbeeldingen blijven optimaliseren?</string>
+    <string name="media_encoder_quality_very_high">Zeer hoog</string>
     <string name="notification_security_key_needed">Voer je beveiligingssleutel in om door te gaan.</string>
     <string name="login_error_security_key">Er heeft zich een probleem met de aanmelding via de beveiligingssleutel voorgedaan.</string>
     <string name="login_text_security_key">Een beveiligingssleutel gebruiken</string>
@@ -55,6 +72,7 @@ Language: nl
     <string name="personalization_screen_scheduled_posts_card_title">Ingeplande berichten</string>
     <string name="personalization_screen_draft_posts_card_title">Conceptberichten</string>
     <string name="personalization_screen_stats_card_description">Weergaven, bezoekers en likes</string>
+    <string name="personalization_screen_title"> Startpagina personaliseren</string>
     <string name="personalize_card_content_description">Tik om je startpagina te personaliseren</string>
     <string name="personalize_card_text">Personaliseer je startpagina</string>
     <string name="partial_media_access_prompt_change_settings">Wijzig instellingen</string>

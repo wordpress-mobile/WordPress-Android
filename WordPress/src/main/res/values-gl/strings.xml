@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-14 08:48:20+0000
+Translation-Revision-Date: 2023-12-04 10:46:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: gl_ES
@@ -374,6 +374,7 @@ Language: gl_ES
     <string name="blogging_prompts_list_title">Peticións</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Respondido</string>
     <string name="close_desc">pechar</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativamente, podes separar e editar este bloque por separado tocando en «Separar padrón».</string>
     <string name="deleting_cat_failed">Borrando a categoría que fallou</string>
     <string name="deleting_cat_success">Categoría borrada correctamente</string>
     <string name="dlg_confirm_delete_category">Borrar permanentemente a categoría «%s»?</string>
@@ -3000,6 +3001,10 @@ Language: gl_ES
     <string name="editor_post_saved_online">A entrada gardouse en liña</string>
     <string name="site_settings_image_quality_hint">Calidade das imaxes: canto máis alto é o valor, máis calidade teñen as imaxes.</string>
     <string name="site_settings_optimize_images_summary">Activa a opción para cambiar o tamaño das imaxes e comprimilas</string>
+    <string name="media_encoder_quality_maximum">Máxima</string>
+    <string name="media_encoder_quality_high">Alta</string>
+    <string name="media_encoder_quality_medium">Media</string>
+    <string name="media_encoder_quality_low">Baixa</string>
     <string name="media_upload_state_uploaded">Subida</string>
     <string name="media_upload_state_failed">Fallou a subida.</string>
     <string name="media_upload_state_deleted">Borrado</string>
