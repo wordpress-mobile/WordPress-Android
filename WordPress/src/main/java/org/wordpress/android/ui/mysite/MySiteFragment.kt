@@ -2,6 +2,8 @@ package org.wordpress.android.ui.mysite
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -41,8 +43,8 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
@@ -448,7 +450,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 quickStartScrollPosition = 0
             }
             if (quickStartScrollPosition > 0) recyclerView.scrollToPosition(quickStartScrollPosition)
-            else appbarMain.setExpanded(true)
         }
 
         wpMainActivityViewModel.mySiteDashboardRefreshRequested.observeEvent(viewLifecycleOwner) {
@@ -570,7 +571,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
         recyclerView.setVisible(false)
-        siteInfo.siteInfoCard.setVisible(false)
 
         if (!noSitesView.actionableEmptyView.isVisible) {
             noSitesView.actionableEmptyView.setVisible(true)
@@ -579,7 +579,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             showAvatarSettingsView(state)
         }
         siteTitle = getString(R.string.my_site_section_screen_title)
-        appbarMain.setExpanded(false, true)
     }
 
     private fun MySiteFragmentBinding.showAvatarSettingsView(state: State.NoSites) {
