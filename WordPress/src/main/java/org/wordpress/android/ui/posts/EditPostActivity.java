@@ -71,6 +71,7 @@ import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.ExceptionLogger;
+import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.android.editor.gutenberg.DialogVisibility;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
@@ -710,7 +711,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
             updatePostLoadingAndDialogState(PostLoadingState.fromInt(
                     savedInstanceState.getInt(STATE_KEY_POST_LOADING_STATE, 0)));
-            mRevision = savedInstanceState.getParcelable(STATE_KEY_REVISION);
+
+            if (getDB() != null) {
+                mRevision = getDB().getParcel(STATE_KEY_REVISION, Revision.CREATOR);
+            }
+
             mPostEditorAnalyticsSession = PostEditorAnalyticsSession
                     .fromBundle(savedInstanceState, STATE_KEY_EDITOR_SESSION_DATA, mAnalyticsTrackerWrapper);
 
@@ -1166,7 +1171,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         outState.putBoolean(STATE_KEY_UNDO, mMenuHasUndo);
         outState.putBoolean(STATE_KEY_REDO, mMenuHasRedo);
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putParcelable(STATE_KEY_REVISION, mRevision);
+
+        if (getDB() != null) {
+            getDB().addParcel(STATE_KEY_REVISION, mRevision);
+        }
 
         outState.putSerializable(STATE_KEY_EDITOR_SESSION_DATA, mPostEditorAnalyticsSession);
         mIsConfigChange = true; // don't call sessionData.end() in onDestroy() if this is an Android config change
@@ -2373,8 +2381,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                         mIsJetpackSsoEnabled);
 
                         return GutenbergEditorFragment.newInstance(
-                                "",
-                                "",
+                                WordPress.getContext(),
                                 mIsNewPost,
                                 gutenbergWebViewAuthorizationData,
                                 gutenbergPropsBuilder,
@@ -2877,10 +2884,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.HISTORY_DETAIL:
-                    if (data.hasExtra(KEY_REVISION)) {
+                    if (getDB() != null && getDB().hasParcel(KEY_REVISION)) {
                         mViewPager.setCurrentItem(PAGE_CONTENT);
 
-                        mRevision = data.getParcelableExtra(KEY_REVISION);
+                        mRevision = getDB().getParcel(KEY_REVISION, Revision.CREATOR);
                         new Handler().postDelayed(this::loadRevision,
                                 getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
                     }
@@ -3948,5 +3955,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public LiveData<DialogVisibility> getSavingInProgressDialogVisibility() {
         return mViewModel.getSavingInProgressDialogVisibility();
+    }
+
+    @Nullable private SavedInstanceDatabase getDB() {
+        return SavedInstanceDatabase.Companion.getDatabase(WordPress.getContext());
     }
 }
