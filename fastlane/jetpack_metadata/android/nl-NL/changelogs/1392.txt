@@ -1,0 +1,4 @@
+23.8:
+- Blokeditor toont alleen de optie 'Groepering opheffen' voor genestelde blokken die dat ondersteunen.
+- De instelling voor Afbeeldingen optimaliseren gebruikt standaard de optimale afmetingen en kwaliteit.
+- Thema's worden correct geïnstalleerd voor sites met Business- en Commerce-abonnementen.

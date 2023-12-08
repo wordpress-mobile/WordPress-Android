@@ -1,4 +1,0 @@
-23.7:
-- La schermata Tutti i domini consente di gestire tutti i domini nell'app.
-- Articoli e pagine offre opzioni di visualizzazione ottimizzate e un menu contestuale espanso.
-- Sono stati corretti alcuni problemi correlati all'editor a blocchi che si verificavano quando venivano incollati contenuti con molti livelli di nidificazione o venivano usati colori del testo nei temi del sito precedenti.
