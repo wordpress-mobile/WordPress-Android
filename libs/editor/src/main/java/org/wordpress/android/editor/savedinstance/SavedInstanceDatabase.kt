@@ -35,7 +35,7 @@ class SavedInstanceDatabase(context: Context?) : SQLiteOpenHelper(context, DB_NA
         dropTable(db)
     }
 
-    private fun reset(db: SQLiteDatabase) {
+    fun reset(db: SQLiteDatabase) {
         db.beginTransaction()
         try {
             dropAllTables(db)
@@ -54,6 +54,10 @@ class SavedInstanceDatabase(context: Context?) : SQLiteOpenHelper(context, DB_NA
 
     fun <T> getParcel(parcelId: String, creator: Parcelable.Creator<T>): T? {
         return SavedParcelTable.getParcel(readableDatabase, parcelId, creator)
+    }
+
+    fun hasParcel(parcelId: String): Boolean {
+        return SavedParcelTable.hasParcel(readableDatabase, parcelId)
     }
 
     companion object {

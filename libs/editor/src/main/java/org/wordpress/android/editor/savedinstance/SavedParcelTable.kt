@@ -53,4 +53,10 @@ object SavedParcelTable {
             SqlUtils.closeCursor(c)
         }
     }
+
+    fun hasParcel(readableDb: SQLiteDatabase?, parcelId: String): Boolean {
+        val db = readableDb ?: return false
+        val c = SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM $SAVED_PARCEL_TABLE WHERE $PARCEL_ID ='$parcelId'", null)
+        return c > 0
+    }
 }
