@@ -1,3 +1,0 @@
-23.7:
-- La schermata Articoli e pagine ora offre opzioni di visualizzazione semplici e intuitive. Il menu contestuale consente anche di accedere a commenti, impostazioni e altre azioni da un articolo o una pagina.
-- Sono stati corretti alcuni problemi correlati all'editor a blocchi che si verificavano quando venivano incollati contenuti con molti livelli di nidificazione o venivano usati colori del testo nei temi del sito precedenti.
