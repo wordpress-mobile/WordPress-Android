@@ -19,8 +19,8 @@ class UploadServiceFacade @Inject constructor(private val appContext: Context) {
         context.startService(intent)
     }
 
-    fun uploadPost(context: Context, postId: Int, isFirstTimePublish: Boolean) =
-        UploadService.uploadPost(context, postId, isFirstTimePublish)
+    fun uploadPost(context: Context, postId: Int, isFirstTimePublish: Boolean, sourceForLogging: String = "") =
+        UploadService.uploadPost(context, postId, isFirstTimePublish, sourceForLogging)
 
     fun isPostUploadingOrQueued(post: PostImmutableModel) =
         UploadService.isPostUploadingOrQueued(post)

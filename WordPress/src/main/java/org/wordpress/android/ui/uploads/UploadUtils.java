@@ -456,7 +456,7 @@ public class UploadUtils {
         dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
 
         if (NetworkUtils.isNetworkAvailable(activity)) {
-            UploadService.uploadPost(activity, post.getId(), isFirstTimePublish);
+            UploadService.uploadPost(activity, post.getId(), isFirstTimePublish, "UploadUtils#publishPost");
             if (onPublishingCallback != null) {
                 onPublishingCallback.onPublishing(isFirstTimePublish);
             }

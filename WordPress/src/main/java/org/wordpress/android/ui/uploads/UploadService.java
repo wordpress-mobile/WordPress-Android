@@ -384,11 +384,13 @@ public class UploadService extends Service {
      * Adds a post to the queue.
      * @param postId
      * @param isFirstTimePublish true when its status changes from local draft or remote draft to published.
+     * @param sourceForLogging the source of the request for logging purposes.
      */
-    public static void uploadPost(Context context, int postId, boolean isFirstTimePublish) {
+    public static void uploadPost(Context context, int postId, boolean isFirstTimePublish, String sourceForLogging) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(KEY_LOCAL_POST_ID, postId);
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, isFirstTimePublish);
+        intent.putExtra(KEY_SOURCE_FOR_LOGGING, sourceForLogging);
         context.startService(intent);
     }
 
