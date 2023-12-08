@@ -364,6 +364,19 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         verify(tracker, times(1)).trackSiteCreationAccessed(SiteCreationSource.UNSPECIFIED)
     }
 
+    @Test
+    fun `given instance state returns an invalid step, when start, then site creation is reset`() {
+        val expectedState = SiteCreationState(segmentId = SEGMENT_ID)
+        whenever(savedInstanceState.getParcelableCompat<SiteCreationState>(KEY_SITE_CREATION_STATE))
+            .thenReturn(expectedState)
+        whenever(savedInstanceState.getInt(KEY_CURRENT_STEP)).thenReturn(-1) // Invalid step
+
+        val newViewModel = getNewViewModel()
+        newViewModel.start(savedInstanceState, SiteCreationSource.UNSPECIFIED)
+
+        verify(wizardManager).setCurrentStepIndex(0)
+    }
+
     private fun currentWizardState(vm: SiteCreationMainVM) = vm.navigationTargetObservable.lastEvent!!.wizardState
 
     private fun getNewViewModel() = SiteCreationMainVM(
