@@ -174,6 +174,7 @@ class SiteCreationMainVM @Inject constructor(
             } catch (e: IllegalStateException) {
                 // If the current step index is invalid, we reset the wizard
                 wizardManager.setCurrentStepIndex(0)
+                AppLog.e(T.THEMES, "Resetting site creation wizard: ${e.message}")
             }
         }
         isStarted = true
