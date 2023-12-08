@@ -420,6 +420,7 @@ public class UploadService extends Service {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(UploadService.KEY_MEDIA_LIST, mediaList);
         intent.putExtra(UploadService.KEY_UPLOAD_MEDIA_FROM_EDITOR, true);
+        intent.putExtra(KEY_SOURCE_FOR_LOGGING, "UploadService#uploadMediaFromEditor");
         context.startService(intent);
     }
 
