@@ -374,7 +374,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         val newViewModel = getNewViewModel()
         newViewModel.start(savedInstanceState, SiteCreationSource.UNSPECIFIED)
 
-        verify(wizardManager).setCurrentStepIndex(0)
+        assertEquals(0, wizardManager.currentStep)
     }
 
     private fun currentWizardState(vm: SiteCreationMainVM) = vm.navigationTargetObservable.lastEvent!!.wizardState
