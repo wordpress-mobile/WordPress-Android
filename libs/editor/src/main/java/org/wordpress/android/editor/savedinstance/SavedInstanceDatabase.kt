@@ -64,21 +64,21 @@ class SavedInstanceDatabase(context: Context?) : SQLiteOpenHelper(context, DB_NA
         private const val DB_NAME = "wpsavedinstance.db"
         private const val DB_VERSION = 1
 
-        private var mSavedInstanceDb: SavedInstanceDatabase? = null
+        private var savedInstanceDb: SavedInstanceDatabase? = null
         private val DB_LOCK = Any()
 
         fun getDatabase(context: Context): SavedInstanceDatabase? {
-            if (mSavedInstanceDb == null) {
+            if (savedInstanceDb == null) {
                 synchronized(DB_LOCK) {
-                    if (mSavedInstanceDb == null) {
-                        mSavedInstanceDb = SavedInstanceDatabase(context.applicationContext)
+                    if (savedInstanceDb == null) {
+                        savedInstanceDb = SavedInstanceDatabase(context.applicationContext)
                         // this ensures that onOpen() is called with a writable database
                         // (open will fail if app calls getReadableDb() first)
-                        mSavedInstanceDb?.writableDatabase
+                        savedInstanceDb?.writableDatabase
                     }
                 }
             }
-            return mSavedInstanceDb
+            return savedInstanceDb
         }
     }
 }
