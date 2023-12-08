@@ -1,4 +1,0 @@
-23.7:
-- På skärmen Alla domäner kan du hantera alla dina domäner i appen.
-- Inlägg och sidor har förbättrade visningsalternativ och en utökad kontextmeny.
-- Vi har åtgärdat problem med blockredigeraren som orsakats av att man klistrat in djupt inbäddat innehåll eller använt textfärger från äldre webbplatsteman.
