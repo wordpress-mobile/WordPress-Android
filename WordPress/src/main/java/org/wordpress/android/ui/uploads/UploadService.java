@@ -66,6 +66,7 @@ public class UploadService extends Service {
     private static final String KEY_UPLOAD_MEDIA_FROM_EDITOR = "mediaFromEditor";
     private static final String KEY_LOCAL_POST_ID = "localPostId";
     private static final String KEY_SHOULD_TRACK_ANALYTICS = "shouldTrackPostAnalytics";
+    private static final String KEY_SOURCE_FOR_LOGGING = "sourceForLogging";
 
     private static @Nullable UploadService sInstance;
 
@@ -148,6 +149,13 @@ public class UploadService extends Service {
             AppLog.e(T.MAIN, "UploadService > Killed and restarted with an empty intent");
             stopServiceIfUploadsComplete();
             return START_NOT_STICKY;
+        }
+
+        if (intent.hasExtra(KEY_SOURCE_FOR_LOGGING)) {
+            String sourceForLogging = intent.getStringExtra(KEY_SOURCE_FOR_LOGGING);
+            if (sourceForLogging != null && !sourceForLogging.isEmpty()) {
+                AppLog.i(T.MAIN, "UploadService > Started from " + sourceForLogging);
+            }
         }
 
         if (intent.hasExtra(KEY_MEDIA_LIST)) {
