@@ -169,7 +169,12 @@ class SiteCreationMainVM @Inject constructor(
         } else {
             siteCreationState = requireNotNull(savedInstanceState.getParcelableCompat(KEY_SITE_CREATION_STATE))
             val currentStepIndex = savedInstanceState.getInt(KEY_CURRENT_STEP)
-            wizardManager.setCurrentStepIndex(currentStepIndex)
+            try {
+                wizardManager.setCurrentStepIndex(currentStepIndex)
+            } catch (e: IllegalStateException) {
+                // If the current step index is invalid, we reset the wizard
+                wizardManager.setCurrentStepIndex(0)
+            }
         }
         isStarted = true
     }
