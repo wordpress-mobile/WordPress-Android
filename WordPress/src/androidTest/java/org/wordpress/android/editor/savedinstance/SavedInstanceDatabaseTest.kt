@@ -3,6 +3,7 @@ package org.wordpress.android.editor.savedinstance
 import android.content.Context
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.parcelize.parcelableCreator
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -33,7 +34,7 @@ class SavedInstanceDatabaseTest {
         val parcelId = "testParcelId"
         val parcelData = TestParcelable("testData")
         db.addParcel(parcelId, parcelData)
-        val result = db.getParcel(parcelId, TestParcelable.CREATOR)
+        val result = db.getParcel(parcelId, parcelableCreator<TestParcelable>())
         assertEquals(parcelData, result)
     }
 
