@@ -372,10 +372,11 @@ public class UploadService extends Service {
     }
 
     public static Intent getUploadMediaServiceIntent(Context context, @NonNull ArrayList<MediaModel> mediaList,
-                                                     boolean isRetry) {
+                                                     boolean isRetry, String sourceForLogging) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(UploadService.KEY_MEDIA_LIST, mediaList);
         intent.putExtra(KEY_SHOULD_RETRY, isRetry);
+        intent.putExtra(KEY_SOURCE_FOR_LOGGING, sourceForLogging);
         return intent;
     }
 

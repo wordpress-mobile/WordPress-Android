@@ -532,7 +532,7 @@ class PostUploadNotifier {
         // Add RETRY action - only available on Aztec
         if (AppPrefs.isAztecEditorEnabled()) {
             Intent publishIntent = UploadService.getRetryUploadServiceIntent(mContext, post,
-                    PostUtils.isFirstTimePublish(post), "error notification retry action");
+                    PostUtils.isFirstTimePublish(post), "post error notification retry action");
             PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),
@@ -625,7 +625,8 @@ class PostUploadNotifier {
         if (mediaList != null && !mediaList.isEmpty()) {
             ArrayList<MediaModel> mediaListToRetry = new ArrayList<>();
             mediaListToRetry.addAll(mediaList);
-            Intent publishIntent = UploadService.getUploadMediaServiceIntent(mContext, mediaListToRetry, true);
+            Intent publishIntent = UploadService.getUploadMediaServiceIntent(mContext, mediaListToRetry,
+                    true, "media error notification retry action");
             PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 1, publishIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),
