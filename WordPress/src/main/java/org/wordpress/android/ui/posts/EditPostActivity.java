@@ -712,9 +712,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             updatePostLoadingAndDialogState(PostLoadingState.fromInt(
                     savedInstanceState.getInt(STATE_KEY_POST_LOADING_STATE, 0)));
 
-            SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(WordPress.getContext());
-            if (db != null) {
-                mRevision = db.getParcel(STATE_KEY_REVISION, Revision.CREATOR);
+            if (getDB() != null) {
+                mRevision = getDB().getParcel(STATE_KEY_REVISION, Revision.CREATOR);
             }
 
             mPostEditorAnalyticsSession = PostEditorAnalyticsSession
@@ -1158,6 +1157,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        outState.remove("android:viewHierarchyState");
+        outState.remove("androidx.lifecycle.BundlableSavedStateRegistry.key");
         super.onSaveInstanceState(outState);
         // Saves both post objects so we can restore them in onCreate()
         updateAndSavePostAsync();
@@ -1173,9 +1174,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         outState.putBoolean(STATE_KEY_REDO, mMenuHasRedo);
         outState.putSerializable(WordPress.SITE, mSite);
 
-        SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(WordPress.getContext());
-        if (db != null) {
-            db.addParcel(STATE_KEY_REVISION, mRevision);
+        if (getDB() != null) {
+            getDB().addParcel(STATE_KEY_REVISION, mRevision);
         }
 
         outState.putSerializable(STATE_KEY_EDITOR_SESSION_DATA, mPostEditorAnalyticsSession);
@@ -2886,10 +2886,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.HISTORY_DETAIL:
-                    if (data.hasExtra(KEY_REVISION)) {
+                    if (getDB() != null && getDB().hasParcel(KEY_REVISION)) {
                         mViewPager.setCurrentItem(PAGE_CONTENT);
 
-                        mRevision = data.getParcelableExtra(KEY_REVISION);
+                        mRevision = getDB().getParcel(KEY_REVISION, Revision.CREATOR);
                         new Handler().postDelayed(this::loadRevision,
                                 getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
                     }
@@ -3957,5 +3957,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public LiveData<DialogVisibility> getSavingInProgressDialogVisibility() {
         return mViewModel.getSavingInProgressDialogVisibility();
+    }
+
+    @Nullable private SavedInstanceDatabase getDB() {
+        return SavedInstanceDatabase.Companion.getDatabase(WordPress.getContext());
     }
 }
