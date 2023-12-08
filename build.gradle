@@ -111,6 +111,7 @@ ext {
 measureBuilds {
     enable = findProperty('measureBuildsEnabled')?.toBoolean() ?: false
     automatticProject = MeasureBuildsExtension.AutomatticProject.WordPress
+    authToken = findProperty('appsMetricsToken')
     attachGradleScanId = System.getenv('CI')?.toBoolean() ?: false
 }
 
