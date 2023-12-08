@@ -370,7 +370,8 @@ class PostUploadNotifier {
 
         // add draft Publish action for drafts
         if (PostStatus.fromPost(post) == PostStatus.DRAFT || PostStatus.fromPost(post) == PostStatus.PENDING) {
-            Intent publishIntent = UploadService.getPublishPostServiceIntent(mContext, post, isFirstTimePublish);
+            Intent publishIntent = UploadService.getPublishPostServiceIntent(mContext, post,
+                    isFirstTimePublish, "draft success notification publish action");
             PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             notificationBuilder.addAction(R.drawable.ic_posts_white_24dp, mContext.getString(R.string.button_publish),

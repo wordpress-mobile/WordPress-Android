@@ -362,11 +362,12 @@ public class UploadService extends Service {
      * UploadUtils.publishPost(..) instead.
      */
     public static Intent getPublishPostServiceIntent(Context context, @NonNull PostImmutableModel post,
-                                                     boolean trackAnalytics) {
+                                                     boolean trackAnalytics, String sourceForLogging) {
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(KEY_LOCAL_POST_ID, post.getId());
         intent.putExtra(KEY_SHOULD_TRACK_ANALYTICS, trackAnalytics);
         intent.putExtra(KEY_CHANGE_STATUS_TO_PUBLISH, true);
+        intent.putExtra(KEY_SOURCE_FOR_LOGGING, sourceForLogging);
         return intent;
     }
 
