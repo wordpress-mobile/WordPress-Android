@@ -7,6 +7,7 @@ pluginManagement {
     gradle.ext.daggerVersion = "2.46.1"
     gradle.ext.detektVersion = '1.23.0'
     gradle.ext.violationCommentsVersion = '1.67'
+    gradle.ext.measureBuildsVersion = '2.0.2'
 
     plugins {
         id "org.jetbrains.kotlin.android" version gradle.ext.kotlinVersion
@@ -22,12 +23,14 @@ pluginManagement {
         id "io.sentry.android.gradle" version gradle.ext.sentryVersion
         id "io.gitlab.arturbosch.detekt" version gradle.ext.detektVersion
         id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" version gradle.ext.violationCommentsVersion
+        id 'com.automattic.android.measure-builds' version gradle.ext.measureBuildsVersion
     }
     repositories {
         maven {
             url 'https://a8c-libs.s3.amazonaws.com/android'
             content {
                 includeGroup "com.automattic.android"
+                includeGroup "com.automattic.android.measure-builds"
             }
         }
         gradlePluginPortal()
