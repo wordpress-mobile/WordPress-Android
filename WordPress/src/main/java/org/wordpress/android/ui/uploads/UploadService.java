@@ -394,20 +394,21 @@ public class UploadService extends Service {
         context.startService(intent);
     }
 
-    public static void uploadMedia(Context context, @NonNull MediaModel media) {
+    public static void uploadMedia(Context context, @NonNull MediaModel media, String sourceForLogging) {
         ArrayList<MediaModel> list = new ArrayList<>();
         list.add(media);
 
-        uploadMedia(context, list);
+        uploadMedia(context, list, sourceForLogging);
     }
 
-    public static void uploadMedia(Context context, @NonNull ArrayList<MediaModel> mediaList) {
+    public static void uploadMedia(Context context, @NonNull ArrayList<MediaModel> mediaList, String sourceForLogging) {
         if (context == null) {
             return;
         }
 
         Intent intent = new Intent(context, UploadService.class);
         intent.putExtra(UploadService.KEY_MEDIA_LIST, mediaList);
+        intent.putExtra(KEY_SOURCE_FOR_LOGGING, sourceForLogging);
         context.startService(intent);
     }
 

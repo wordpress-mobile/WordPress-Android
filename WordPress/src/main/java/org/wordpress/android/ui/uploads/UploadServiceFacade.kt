@@ -31,8 +31,8 @@ class UploadServiceFacade @Inject constructor(private val appContext: Context) {
     fun cancelFinalNotificationForMedia(site: SiteModel) =
         UploadService.cancelFinalNotificationForMedia(appContext, site)
 
-    fun uploadMedia(mediaList: ArrayList<MediaModel>) =
-        UploadService.uploadMedia(appContext, mediaList)
+    fun uploadMedia(mediaList: ArrayList<MediaModel>, sourceForLogging: String = "") =
+        UploadService.uploadMedia(appContext, mediaList, sourceForLogging)
 
     fun getPendingOrInProgressFeaturedImageUploadForPost(post: PostImmutableModel): MediaModel? =
         UploadService.getPendingOrInProgressFeaturedImageUploadForPost(post)
