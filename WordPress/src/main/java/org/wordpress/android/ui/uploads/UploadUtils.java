@@ -490,7 +490,8 @@ public class UploadUtils {
                                                       @Override
                                                       public void onClick(View view) {
                                                           Intent intent = UploadService.getRetryUploadServiceIntent(
-                                                                  activity, post, false);
+                                                                  activity, post, false,
+                                                                  "error snack bar retry action");
                                                           activity.startService(intent);
                                                       }
                                                   }, sequencer);
