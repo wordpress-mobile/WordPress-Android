@@ -1157,8 +1157,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.remove("android:viewHierarchyState");
-        outState.remove("androidx.lifecycle.BundlableSavedStateRegistry.key");
         super.onSaveInstanceState(outState);
         // Saves both post objects so we can restore them in onCreate()
         updateAndSavePostAsync();
