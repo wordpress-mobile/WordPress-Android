@@ -74,7 +74,7 @@ fun DropdownMenuButton(
             Spacer(Modifier.width(Margin.Small.value))
             Icon(
                 modifier = Modifier.align(Alignment.CenterVertically),
-                painter = painterResource(id = R.drawable.ic_chevron_down_white_16dp),
+                painter = painterResource(id = R.drawable.ic_small_chevron_down_white_16dp),
                 contentDescription = null,
                 tint = MaterialTheme.colors.onPrimary,
             )
