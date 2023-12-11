@@ -31,6 +31,7 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity
+import org.wordpress.android.ui.bloganuary.learnmore.BloganuaryNudgeLearnMoreOverlayFragment
 import org.wordpress.android.ui.domains.DomainRegistrationActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -378,7 +379,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         noSitesView.actionableEmptyView.button.setOnClickListener { viewModel.onAddSitePressed() }
     }
 
-    @Suppress("DEPRECATION", "LongMethod")
+    @Suppress("LongMethod")
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner) { uiModel ->
             hideRefreshIndicatorIfNeeded()
@@ -407,8 +408,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 model.isInputEnabled,
                 model.callbackId
             )
-            inputDialog.setTargetFragment(this@MySiteFragment, 0)
-            inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
+            inputDialog.show(childFragmentManager, TextInputDialogFragment.TAG)
         }
         viewModel.onNavigation.observeEvent(viewLifecycleOwner) { handleNavigationAction(it) }
         viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner) { showSnackbar(it) }
@@ -450,8 +450,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             if (quickStartScrollPosition > 0) recyclerView.scrollToPosition(quickStartScrollPosition)
             else appbarMain.setExpanded(true)
         }
-    }
 
+        wpMainActivityViewModel.mySiteDashboardRefreshRequested.observeEvent(viewLifecycleOwner) {
+            viewModel.refresh()
+        }
+    }
 
     private fun MySiteFragmentBinding.hideRefreshIndicatorIfNeeded() {
         swipeRefreshLayout.postDelayed({
@@ -701,7 +704,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
         is SiteNavigationAction.OpenStatsInsights ->
             ActivityLauncher.viewBlogStatsForTimeframe(requireActivity(), action.site, StatsTimeframe.INSIGHTS)
-        is SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl ->
+        is SiteNavigationAction.OpenExternalUrl ->
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
         is SiteNavigationAction.OpenJetpackPoweredBottomSheet -> showJetpackPoweredBottomSheet()
         is SiteNavigationAction.OpenJetpackMigrationDeleteWP -> showJetpackMigrationDeleteWP()
@@ -752,6 +755,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenDashboardPersonalization -> activityNavigator.openDashboardPersonalization(
             requireActivity()
         )
+
+        is SiteNavigationAction.OpenBloganuaryNudgeOverlay -> {
+            BloganuaryNudgeLearnMoreOverlayFragment
+                .newInstance(action.isPromptsEnabled)
+                .show(requireActivity().supportFragmentManager, BloganuaryNudgeLearnMoreOverlayFragment.TAG)
+        }
     }
 
     private fun handleNavigation(action: BloggingPromptCardNavigationAction) {

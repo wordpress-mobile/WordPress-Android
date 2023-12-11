@@ -39,12 +39,12 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     }
 
     fun onNewDomainSelected() {
-        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_NEW_DOMAIN_TAPPED)
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_GET_DOMAIN_TAPPED)
         createCart(null, productId, domain, privacy)
     }
 
     fun onExistingSiteSelected() {
-        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_TAPPED)
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_CHOOSE_SITE_TAPPED)
         launch {
             _actionEvents.emit(ActionEvent.GoToSitePicker(domain = domain))
         }
@@ -57,7 +57,7 @@ class PurchaseDomainViewModel @AssistedInject constructor(
     }
 
     fun onSiteChosen(site: SiteModel?) {
-        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_EXISTING_SITE_CHOSEN)
+        analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SITE_SELECTED)
         createCart(site, productId, domain, privacy)
     }
 
@@ -69,6 +69,7 @@ class PurchaseDomainViewModel @AssistedInject constructor(
 
     fun onDomainRegistrationComplete(event: DomainRegistrationCompletedEvent?) = event?.also {
         launch {
+            analyticsTracker.track(Stat.DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_COMPLETED)
             _actionEvents.emit(ActionEvent.OpenDomainManagement)
         }
     } ?: run {

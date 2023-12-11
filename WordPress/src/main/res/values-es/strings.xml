@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-31 14:06:51+0000
+Translation-Revision-Date: 2023-12-07 11:46:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: es
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">¡Vamos allá!</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Activa las sugerencias de publicación</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary utilizará las sugerencias de publicación diarias para enviarte temas durante el mes de enero.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Bloganuary usará las sugerencias diarias de publicación para enviarte temas para el mes de enero. Actualmente tienes desactivadas las sugerencias de publicación.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">Lee las respuestas de otros blogueros para conseguir inspiración y hacer nuevas conexiones.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">Publica tu respuesta.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">Recibe una sugerencia nueva para inspirarte cada día.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">Únete a nuestro reto de escritura de un mes</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
+    <string name="bloganuary_dashboard_nudge_text">Durante el mes de enero, recibirás sugerencias de publicación de Bloganuary, nuestro reto de la comunidad para que crees un hábito de publicación sólido para el nuevo año.</string>
+    <string name="bloganuary_dashboard_nudge_title">¡Bloganuary está a la vuelta de la esquina!</string>
+    <string name="turn_off">No, apágala</string>
+    <string name="leave_on">Sí, déjala encendida</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Por esta razón, te recomendamos que edites el bloque utilizando tu navegador web.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Por este motivo, te recomendamos que edites el bloque utilizando el editor web.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">También puedes aplanar el contenido desagrupando el bloque.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Ir a los ajustes</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">Cancelar</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Conceder</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Has denegado de forma permanente el permiso de la cámara. Es necesario para escanear el código de barras. Actívalo en los ajustes de la aplicación</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">Se necesita el permiso de la cámara para escanear el código de barras</string>
+    <string name="barcode_scanning_alert_dialog_title">Conceder permiso de la cámara</string>
+    <string name="barcode_scanning_camera_permission_denied">Se necesita el permiso de la cámara para escanear el código de barras.</string>
+    <string name="barcode_scanning_title">Escanear código de barras</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Es posible que los bloques anidados a más de %d niveles no se muestren correctamente en el editor móvil.</string>
+    <string name="jp_migration_lets_go_button">Vamos</string>
+    <string name="jp_migration_done_no_sites_message">Es hora de continuar tu viaje por WordPress en la aplicación Jetpack.</string>
+    <string name="image_optimization_popup_desc">La optimización de imágenes las reduce para subirlas más rápido.\n\nEsta opción está activada por defecto, pero puedes cambiarla en los ajustes de la aplicación en cualquier momento.</string>
+    <string name="image_optimization_popup_title">¿Seguir optimizando las imágenes?</string>
+    <string name="domain_management_clear_search">Vaciar la búsqueda</string>
+    <string name="media_encoder_quality_very_high">Muy alta</string>
+    <string name="notification_security_key_needed">Introduce tu clave de seguridad para continuar.</string>
+    <string name="login_error_security_key">Hubo algunos problemas con el inicio de sesión de la clave de seguridad</string>
+    <string name="login_text_security_key">Usa una clave de seguridad</string>
+    <string name="new_domain_search_screen_error_title">No se han podido recuperar los dominios</string>
+    <string name="new_domain_search_screen_list_item_sale_price">%s durante el primer año</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s / año</string>
+    <string name="new_domain_search_screen_transfer_domain_button">Transferir dominio</string>
+    <string name="new_domain_search_screen_transfer_domain_description">¿Quieres transferir un dominio que ya tienes?</string>
+    <string name="new_domain_search_screen_input_placeholder">Teclea para obtener más sugerencias</string>
+    <string name="new_domain_search_screen_title">Buscar un dominio</string>
+    <string name="purchase_domain_screen_error_button_title">OK</string>
+    <string name="purchase_domain_screen_error_subtitle">Algo ha ido mal al añadir el dominio al carrito. Asegúrate de que estás conectado y vuelve a intentarlo.</string>
+    <string name="purchase_domain_screen_error_title">Error</string>
+    <string name="domain_management_site_domains_button">Todos</string>
+    <string name="domain_management_error_title">No se han podido recuperar tus dominios</string>
+    <string name="site_domain_title">Dominio del sitio</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">De &lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">Editado</string>
+    <string name="post_list_toggle_author_filter">Filtrar por autor</string>
     <string name="gutenberg_native_s_block_converted_to_blocks">Bloque \'%s\' convertido a bloques</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Alternativamente, puedes convertir el contenido en bloques.</string>
     <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Añadir o eliminar atajos</string>
@@ -27,12 +77,11 @@ Language: es
     <string name="domain_management_empty_find_domain">Buscar un dominio</string>
     <string name="domain_management_empty_subtitle">Pulsa abajo para encontrar tu dominio perfecto.</string>
     <string name="domain_management_empty_title">No tienes dominios</string>
-    <string name="domain_management_error_subtitle">Comprueba que estás conectado y actualiza.</string>
-    <string name="domain_management_error_title">No se pudo actualizar</string>
+    <string name="domain_management_error_subtitle">Comprueba que estás conectado y tira para actualizar.</string>
     <string name="domain_management_open_domain_details">Abrir detalles del dominio</string>
     <string name="domain_management_search_your_domains">Busca en tus dominios</string>
     <string name="domain_management_purchase_a_domain">Comprar un dominio</string>
-    <string name="domain_management_my_domains_title">Mis dominios</string>
+    <string name="domain_management_my_domains_title">Todos los dominios</string>
     <string name="domain_management_expires">Caduca el %1$s</string>
     <string name="account_and_settings">Cuenta y ajustes</string>
     <string name="site_creation_plans_selection_title">Elige un plan</string>
@@ -46,7 +95,6 @@ Language: es
     <string name="gutenberg_native_synced_patterns">Patrones sincronizados</string>
     <string name="gutenberg_native_deeply_nested_block">Bloque profundamente anidado</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Los bloques anidados a más profundidad de %d niveles puede que no se procesen correctamente en el editor móvil. Por este motivo, recomendamos allanar el contenido desagrupando el bloque o editando el bloque usando el editor web.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Los bloques anidados a más profundidad de %d niveles puede que no se procesen correctamente en el editor móvil. Por este motivo, recomendamos allanar el contenido desagrupando el bloque o editando el bloque usando tu navegador web.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">El bloque no se puede procesar debido a que está profundamente anidado. Toca aquí para más detalles.</string>
     <string name="pages_no_site_something_went_wrong">Uy, vaya, algo ha salido mal. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Ir a la web</string>
@@ -376,7 +424,7 @@ Language: es
     <string name="blogging_prompts_list_answered_prompt">✓ Respondido</string>
     <string name="blogging_prompts_list_title">Peticiones</string>
     <string name="close_desc">cerrar</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativamente, puedes separar y editar este bloque por separado tocando en «Separar patrón».</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Alternativamente, puedes separar y editar este bloque por separado tocando en «Separar».</string>
     <string name="dlg_confirm_delete_category">¿Borrar permanentemente la categoría \'%s\'?</string>
     <string name="deleting_cat_success">Categoría borrada correctamente</string>
     <string name="deleting_cat_failed">Borrando la categoría que ha fallado</string>
@@ -1624,6 +1672,7 @@ Language: es
     <string name="ccpa_privacy_notice_header">Aviso de privacidad para usuarios de California</string>
     <string name="status_and_visibility">Estado y visibilidad</string>
     <string name="update_now">Actualizar ahora</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir el menú de acciones de bloques</string>
     <string name="gutenberg_native_move_to_top">Mover arriba</string>
     <string name="gutenberg_native_insert_mention">Insertar una mención</string>
@@ -2242,7 +2291,7 @@ Language: es
     <string name="stats_clicks_link_label">Enlace</string>
     <string name="stats_clicks">Clics</string>
     <string name="stats_referrer_views_label">Vistas</string>
-    <string name="stats_referrer_label">Referente</string>
+    <string name="stats_referrer_label">Remitente</string>
     <string name="stats_referrers">Referentes</string>
     <string name="stats_posts_and_pages">Entradas y páginas</string>
     <string name="stats_insights_path">Ruta</string>
@@ -2862,14 +2911,10 @@ Language: es
     <string name="password_incorrect">Parece que esta contraseña es incorrecta. Por favor, vuelve a comprobar tu información e inténtalo de nuevo.</string>
     <string name="requesting_otp">Solicitando un código de verificación por SMS.</string>
     <string name="login_text_otp">Envíame un mensaje con un código en su lugar</string>
-    <string name="enter_verification_code">¡Casi lo tenemos! Por favor, introduce un código de verificación desde tu aplicación Authenticator.</string>
+    <string name="enter_verification_code">¡Casi lo tenemos! Por favor, introduce el código de verificación de tu aplicación Authenticator.</string>
     <string name="open_mail">Abrir correo electrónico</string>
     <string name="next">Siguiente</string>
     <string name="enter_email_wordpress_com">Accede a WordPress.com usando una dirección de correo electrónico para gestionar todos tus sitios WordPress.</string>
-    <string name="image_optimization_promo_desc">La optimización de imagen reduce las imágenes para que suban más rápido.\n\nPuedes cambiar esto en cualquier momento en los ajustes del sitio.</string>
-    <string name="image_optimization_promo_title">¿Activar optimización de la imagen?</string>
-    <string name="leave_off">Detener</string>
-    <string name="turn_on">Activar</string>
     <string name="me_profile_photo">Foto de perfil</string>
     <string name="error_media_parse_error">Respuesta inesperada del servidor</string>
     <string name="upload_finished_toast">No se puede detener la subida porque ya ha finalizado</string>
@@ -3006,11 +3051,10 @@ Language: es
     <string name="editor_post_saved_online">La entrada se ha guardado online</string>
     <string name="site_settings_image_quality_hint">Calidad de las imágenes: cuanto más alto es el valor, más calidad tienen las imágenes.</string>
     <string name="site_settings_optimize_images_summary">Activa la opción para cambiar el tamaño de las imágenes y comprimirlas</string>
-    <string name="media_encoder_quality_100">Máxima</string>
-    <string name="media_encoder_quality_95">Muy alta</string>
-    <string name="media_encoder_quality_90">Alta</string>
-    <string name="media_encoder_quality_85">Media</string>
-    <string name="media_encoder_quality_80">Baja</string>
+    <string name="media_encoder_quality_maximum">Máxima</string>
+    <string name="media_encoder_quality_high">Alta</string>
+    <string name="media_encoder_quality_medium">Media</string>
+    <string name="media_encoder_quality_low">Baja</string>
     <string name="media_upload_state_uploaded">Subido</string>
     <string name="media_upload_state_failed">Fallo al subir</string>
     <string name="media_upload_state_deleted">Se ha eliminado</string>

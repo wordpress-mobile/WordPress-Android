@@ -26,11 +26,6 @@ Language: is
     <string name="photo_picker_title">Veldu mynd</string>
     <string name="site_settings_image_quality_hint">Gæði mynda. Hærra gildi þýðir betri gæði mynda.</string>
     <string name="site_settings_optimize_images_summary">Virkjaðu til þess að minnka og þjappa myndum</string>
-    <string name="media_encoder_quality_100">Hámark</string>
-    <string name="media_encoder_quality_80">Lítil</string>
-    <string name="media_encoder_quality_85">Miðlungi gott</string>
-    <string name="media_encoder_quality_90">Hár</string>
-    <string name="media_encoder_quality_95">Mjög hátt</string>
     <string name="media_upload_state_uploaded">Efni upphlaðið</string>
     <string name="media_upload_state_deleted">Eytt</string>
     <string name="media_upload_state_deleting">Eyði</string>

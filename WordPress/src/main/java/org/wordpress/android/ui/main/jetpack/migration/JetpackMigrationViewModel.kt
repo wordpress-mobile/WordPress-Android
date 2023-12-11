@@ -123,10 +123,12 @@ class JetpackMigrationViewModel @Inject constructor(
             }
 
             migrationState is Initial -> emit(Loading)
-            migrationState is Migrating
-                    || migrationState is Successful && !continueClicked -> emit(
-                initWelcomeScreenUi(migrationState.data, continueClicked)
-            )
+
+            (migrationState is Migrating || migrationState is Successful) && migrationState.data.sites.isEmpty() ->
+                emit(initSuccessScreenUiForNoSites())
+
+            migrationState is Migrating || (migrationState is Successful && !continueClicked) ->
+                emit(initWelcomeScreenUi(migrationState.data, continueClicked))
 
             migrationState is Successful -> when {
                 !notificationContinueClicked -> emit(initNotificationsScreenUi())
@@ -150,6 +152,7 @@ class JetpackMigrationViewModel @Inject constructor(
         if (showDeleteState) return
 
         this.deepLinkData = deepLinkData
+
         tryMigration(application)
     }
 
@@ -219,6 +222,16 @@ class JetpackMigrationViewModel @Inject constructor(
 
         return Done(
             primaryActionButton = DonePrimaryButton(::onFinishClicked)
+        )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun initSuccessScreenUiForNoSites(): Done {
+        migrationAnalyticsTracker.trackNoSitesFlowThanksScreenShown()
+
+        return Done(
+            showDeleteWPApp = false,
+            primaryActionButton = ActionButton.DoneNoSitesFlowPrimaryButton(::onFinishClicked)
         )
     }
 
@@ -337,8 +350,13 @@ class JetpackMigrationViewModel @Inject constructor(
 
     private fun onFinishClicked() {
         _refreshAppTheme.value = Unit
-        migrationAnalyticsTracker.trackThanksScreenFinishButtonTapped()
-        migrationEmailHelper.notifyMigrationComplete()
+
+         if (siteStore.sites.isNotEmpty()) {
+            migrationAnalyticsTracker.trackThanksScreenFinishButtonTapped()
+            migrationEmailHelper.notifyMigrationComplete()
+        } else {
+             migrationAnalyticsTracker.trackNoSitesFlowThanksScreenFinishButtonTapped()
+         }
         appPrefsWrapper.setJetpackMigrationCompleted(true)
         appPrefsWrapper.setJetpackMigrationInProgress(false)
         dispatchFetchAccountActionIfNeeded()
@@ -400,10 +418,9 @@ class JetpackMigrationViewModel @Inject constructor(
                 title = UiStringRes(R.string.jp_migration_welcome_title),
                 subtitle = UiStringRes(R.string.jp_migration_welcome_subtitle),
                 message = UiStringRes(
-                    if (sites.size > 1) {
-                        R.string.jp_migration_welcome_sites_found_message
-                    } else {
-                        R.string.jp_migration_welcome_site_found_message
+                    when (sites.size) {
+                        1 -> R.string.jp_migration_welcome_site_found_message
+                        else -> R.string.jp_migration_welcome_sites_found_message
                     }
                 ),
             )
@@ -420,6 +437,7 @@ class JetpackMigrationViewModel @Inject constructor(
 
             data class Done(
                 override val primaryActionButton: ActionButton,
+                val showDeleteWPApp: Boolean = true
             ) : Content(
                 primaryActionButton = primaryActionButton,
                 screenIconRes = R.drawable.ic_jetpack_migration_success,
@@ -428,6 +446,7 @@ class JetpackMigrationViewModel @Inject constructor(
                 message = UiStringRes(R.string.jp_migration_done_delete_wp_message),
             ) {
                 val deleteWpIcon = R.drawable.ic_jetpack_migration_delete_wp
+                val noSitesMessage = UiStringRes(R.string.jp_migration_done_no_sites_message)
             }
 
             data class Delete(
@@ -506,10 +525,17 @@ class JetpackMigrationViewModel @Inject constructor(
         )
 
         data class DonePrimaryButton(
-            override val onClick: () -> Unit,
+            override val onClick: () -> Unit
         ) : ActionButton(
             onClick = onClick,
             text = UiStringRes(R.string.jp_migration_finish_button),
+        )
+
+        data class DoneNoSitesFlowPrimaryButton(
+            override val onClick: () -> Unit,
+        ) : ActionButton(
+            onClick = onClick,
+            text = UiStringRes(R.string.jp_migration_lets_go_button),
         )
 
         data class ErrorPrimaryButton(

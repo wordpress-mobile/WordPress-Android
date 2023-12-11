@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-31 16:40:30+0000
+Translation-Revision-Date: 2023-12-01 06:22:55+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: ru
 -->
 <resources>
+    <string name="turn_off">Нет, отключить</string>
+    <string name="leave_on">Да, оставить</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">По этой причине мы рекомендуем редактировать блок с помощью веб-браузера.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">По этой причине мы рекомендуем редактировать блок с помощью веб-редактора.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Альтернативно вы можете сгладить содержимое, разгруппировав блок.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Перейти к настройкам</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">Отменить</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Предоставить</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Вы бессрочно запретили разрешение для камеры. Оно является обязательным для сканирования штрихкода. Предоставьте его в настройках приложения</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">Разрешите доступ к камере, чтобы сканировать штрихкод</string>
+    <string name="barcode_scanning_alert_dialog_title">Разрешить доступ к камере</string>
+    <string name="barcode_scanning_camera_permission_denied">Разрешите доступ к камере, чтобы сканировать штрихкод.</string>
+    <string name="barcode_scanning_title">Сканировать штрихкод</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Блоки, вложенные глубже, чем %d уровней, могут отображаться неправильно в мобильном редакторе.</string>
+    <string name="jp_migration_lets_go_button">Поехали!</string>
+    <string name="jp_migration_done_no_sites_message">Пришло время продолжить путешествие по WordPress в приложении Jetpack!</string>
+    <string name="image_optimization_popup_desc">Оптимизация изображений сжимает изображения для более быстрой загрузки.\n\nЭта опция включена по умолчанию, но вы можете изменить ее в настройках приложения в любой момент.</string>
+    <string name="image_optimization_popup_title">Продолжать оптимизировать изображения?</string>
+    <string name="domain_management_clear_search">Очистить поиск</string>
+    <string name="media_encoder_quality_very_high">Очень высокое</string>
+    <string name="notification_security_key_needed">Пожалуйста предоставьте ключ безопасности для продолжения.</string>
+    <string name="login_error_security_key">Возникла проблема со входом в систему с помощью ключа безопасности</string>
+    <string name="login_text_security_key">Использовать ключ безопасности</string>
+    <string name="new_domain_search_screen_error_title">Не удалось получить список доменов</string>
+    <string name="new_domain_search_screen_list_item_sale_price">%s за первый год</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s в год</string>
+    <string name="new_domain_search_screen_transfer_domain_button">Перенести домен</string>
+    <string name="new_domain_search_screen_transfer_domain_description">Хотите перенести уже принадлежащий вам домен?</string>
+    <string name="new_domain_search_screen_input_placeholder">Введите что-нибудь для получения еще предложений</string>
+    <string name="new_domain_search_screen_title">Поиск домена</string>
+    <string name="purchase_domain_screen_error_button_title">Хорошо</string>
+    <string name="purchase_domain_screen_error_subtitle">Что-то пошло не так при добавлении домена в корзину. Убедитесь, что вы онлайн, и повторите попытку.</string>
+    <string name="purchase_domain_screen_error_title">Ошибка</string>
+    <string name="domain_management_site_domains_button">Все</string>
+    <string name="domain_management_error_title">Не удалось получить список ваших доменов</string>
+    <string name="site_domain_title">Домен сайта</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">Из &lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">Отредактировано</string>
+    <string name="post_list_toggle_author_filter">Фильтр по автору</string>
     <string name="gutenberg_native_s_block_converted_to_blocks">Блок \'%s\' сконвертирован в блоки</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Альтернативно вы можете конвертировать содержимое в блоки.</string>
     <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Добавить или удалить ярлыки</string>
@@ -27,12 +66,11 @@ Language: ru
     <string name="domain_management_empty_find_domain">Найти домен</string>
     <string name="domain_management_empty_subtitle">Нажмите ниже, чтобы найти ваш идеальный домен.</string>
     <string name="domain_management_empty_title">У вас еще нет доменов</string>
-    <string name="domain_management_error_subtitle">Убедитесь, что вы онлайн, и обновите.</string>
-    <string name="domain_management_error_title">Не удалось обновить</string>
+    <string name="domain_management_error_subtitle">Убедитесь, что вы онлайн, и потяните для обновления.</string>
     <string name="domain_management_open_domain_details">Открыть подробности по домену</string>
     <string name="domain_management_search_your_domains">Поиск среди ваших доменов</string>
     <string name="domain_management_purchase_a_domain">Купить домен</string>
-    <string name="domain_management_my_domains_title">Мои домены</string>
+    <string name="domain_management_my_domains_title">Все домены</string>
     <string name="domain_management_expires">Истекает %1$s</string>
     <string name="account_and_settings">Учетная запись и настройки</string>
     <string name="site_creation_plans_selection_title">Выберите тарифный план</string>
@@ -46,7 +84,6 @@ Language: ru
     <string name="gutenberg_native_synced_patterns">Синхронизированные паттерны</string>
     <string name="gutenberg_native_deeply_nested_block">Глубоко вложенный блок</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Блоки, вложенные глубже, чем %d уровней, могут отображаться неправильно в мобильном редакторе. По этой причине мы рекомендуем сгладить содержимое, разгруппировав блок или отредактировать блок с помощью веб-редактора.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Блоки, вложенные глубже, чем %d уровней, могут отображаться неправильно в мобильном редакторе. По этой причине мы рекомендуем сгладить содержимое, разгруппировав блок или отредактировать его с помощью веб-браузера.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Блок невозможно отобразить, поскольку он глубоко вложен. Нажмите здесь, чтобы получить более подробную информацию.</string>
     <string name="pages_no_site_something_went_wrong">Что-то пошло не так. Попробуйте еще раз.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Переход на веб-сайт</string>
@@ -376,7 +413,7 @@ Language: ru
     <string name="blogging_prompts_list_answered_prompt">✓ Ответ дан</string>
     <string name="blogging_prompts_list_title">Подсказки</string>
     <string name="close_desc">закрыть</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Кроме того, вы можете отсоединить и отредактировать этот блок отдельно, нажав «Отсоединить паттерн».</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Кроме того, вы можете отсоединить и отредактировать этот блок отдельно, нажав «Отсоединить».</string>
     <string name="dlg_confirm_delete_category">Навсегда удалить рубрику \'%s\'?</string>
     <string name="deleting_cat_success">Рубрика удалена</string>
     <string name="deleting_cat_failed">Не удалось удалить рубрику</string>
@@ -1624,6 +1661,7 @@ Language: ru
     <string name="ccpa_privacy_notice_header">Уведомление о конфиденциальности для жителей Калифорнии</string>
     <string name="status_and_visibility">Статус и видимость</string>
     <string name="update_now">Обновить сейчас</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">Открыть меню действий с блоком</string>
     <string name="gutenberg_native_move_to_top">Сдвинуть наверх</string>
     <string name="gutenberg_native_insert_mention">Вставить упоминание</string>
@@ -2862,14 +2900,10 @@ Language: ru
     <string name="password_incorrect">Похоже, пароль введён неправильно. Проверьте правильность введенных данных и повторите попытку.</string>
     <string name="requesting_otp">Выполняется запрос на получение проверочного кода в SMS-сообщении.</string>
     <string name="login_text_otp">Пришлите мне сообщение с кодом.</string>
-    <string name="enter_verification_code">Почти готово! Введите проверочный код из приложения Authenticator.</string>
+    <string name="enter_verification_code">Почти готово! Введите проверочный код для WordPress.com из приложения Authenticator.</string>
     <string name="open_mail">Открыть почту</string>
     <string name="next">Вперед</string>
     <string name="enter_email_wordpress_com">Для управления всеми своими сайтами WordPress войдите в систему WordPress.com с помощью адреса электронной почты.</string>
-    <string name="image_optimization_promo_desc">Средство оптимизации изображений сжимает их для ускорения загрузки.\n\nВы в любой момент можете изменить это в настройках сайта.</string>
-    <string name="image_optimization_promo_title">Включить оптимизацию изображений?</string>
-    <string name="leave_off">Не включать</string>
-    <string name="turn_on">Включить</string>
     <string name="me_profile_photo">Фотография профиля</string>
     <string name="error_media_parse_error">Непредвиденный ответ сервера.</string>
     <string name="upload_finished_toast">Загрузку нельзя остановить, так как она уже завершена.</string>
@@ -3006,11 +3040,10 @@ Language: ru
     <string name="editor_post_saved_online">Запись сохранена в Интернете.</string>
     <string name="site_settings_image_quality_hint">Качество фотографий. Чем выше значение, тем выше качество изображений.</string>
     <string name="site_settings_optimize_images_summary">Включить функцию изменения размера и сжатия изображений</string>
-    <string name="media_encoder_quality_100">Максимальное</string>
-    <string name="media_encoder_quality_95">Очень высокое</string>
-    <string name="media_encoder_quality_90">Высокое</string>
-    <string name="media_encoder_quality_85">Среднее</string>
-    <string name="media_encoder_quality_80">Низкое</string>
+    <string name="media_encoder_quality_maximum">Максимальное</string>
+    <string name="media_encoder_quality_high">Высокое</string>
+    <string name="media_encoder_quality_medium">Среднее</string>
+    <string name="media_encoder_quality_low">Низкое</string>
     <string name="media_upload_state_uploaded">Загружено</string>
     <string name="media_upload_state_failed">Загрузка не удалась</string>
     <string name="media_upload_state_deleted">Удалено</string>

@@ -29,17 +29,13 @@
     <dimen name="sourceview_top_margin">15dp</dimen>
     <dimen name="sourceview_title_bottom_margin">15dp</dimen>
 
-    <dimen name="image_settings_dialog_padding">16dp</dimen>
     <dimen name="image_settings_dialog_extra_margin">0dp</dimen>
     <dimen name="image_settings_dialog_extra_margin_tablet">84dp</dimen>
     <dimen name="image_settings_dialog_label_indent">4dp</dimen>
     <dimen name="image_settings_dialog_label_margin_bottom">4dp</dimen>
     <dimen name="image_settings_dialog_input_margin_bottom">16dp</dimen>
-    <dimen name="image_settings_dialog_input_field_start_margin">-4dp</dimen>
     <dimen name="image_settings_dialog_top_separator_margin_top">16dp</dimen>
-    <dimen name="image_settings_dialog_thumbnail_container_margin_bottom">8dp</dimen>
     <dimen name="image_settings_dialog_thumbnail_size">100dp</dimen>
-    <dimen name="image_settings_dialog_thumbnail_progress_size">50dp</dimen>
     <dimen name="image_settings_dialog_thumbnail_left_margin">4dp</dimen>
     <dimen name="image_settings_dialog_thumbnail_right_margin">8dp</dimen>
     <dimen name="image_settings_dialog_filename_margin_left">16dp</dimen>

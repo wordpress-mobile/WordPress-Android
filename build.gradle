@@ -20,10 +20,10 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '2.4.0'
     automatticTracksVersion = '3.3.0'
-    gutenbergMobileVersion = 'v1.108.0'
-    wordPressAztecVersion = 'v1.8.0'
-    wordPressFluxCVersion = '2.55.0'
-    wordPressLoginVersion = '1.8.0'
+    gutenbergMobileVersion = 'v1.109.2'
+    wordPressAztecVersion = 'v1.9.0'
+    wordPressFluxCVersion = 'trunk-b4e51008f7200eba1dfdd22ca370fce450ce93b0'
+    wordPressLoginVersion = '1.10.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.10.0'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
@@ -44,7 +44,7 @@ ext {
     androidxConstraintlayoutComposeVersion = '1.0.1'
     androidxCoreVersion = '1.10.0'
     androidxActivityVersion = '1.8.0'
-    androidxFragmentVersion = '1.5.7'
+    androidxFragmentVersion = '1.6.2'
     androidxGridlayoutVersion = '1.0.0'
     androidxLifecycleVersion = '2.6.2'
     androidxPercentlayoutVersion = '1.0.0'
@@ -103,7 +103,7 @@ ext {
     wiremockHttpClientVersion = '4.3.5.1'
 
     // other
-    androidDesugarVersion = '1.1.8'
+    androidDesugarVersion = '2.0.4'
     wordPressLintVersion = '2.0.0'
 }
 

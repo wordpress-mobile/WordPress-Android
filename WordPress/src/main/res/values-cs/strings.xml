@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-19 08:38:48+0000
+Translation-Revision-Date: 2023-11-14 11:17:15+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: cs_CZ
@@ -150,7 +150,6 @@ Language: cs_CZ
     <string name="blogging_prompts_list_answered_prompt">✓ Odpovězeno</string>
     <string name="blogging_prompts_list_title">Výzvy</string>
     <string name="close_desc">zavřít</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Případně můžete tento blok odpojit a upravit samostatně klepnutím na „Převést na běžný blok“.</string>
     <string name="dlg_confirm_delete_category">Trvale smazat rubriku \'%s\'?</string>
     <string name="deleting_cat_success">Rubrika byla úspěšně odstraněna</string>
     <string name="deleting_cat_failed">Mazání rubriky se nepodařilo.</string>
@@ -1024,8 +1023,8 @@ Language: cs_CZ
     <string name="suggestion_none">Nejsou k dispozici žádné návrhy %s.</string>
     <string name="suggestion_problem">Při načítání návrhů došlo k problému.</string>
     <string name="suggestion_no_matching">Bez shody %s.</string>
-    <string name="threat_fix_fixable_replace">Jetpack Scan nahradí ovlivněný soubor nebo adresář.</string>
     <string name="threat_fix_current_not_fixable_description">Jetpack Scan nemůže tuto hrozbu automaticky opravit.\n         Doporučujeme hrozbu vyřešit ručně: ujistěte se, že WordPress, vaše téma a všechny vaše doplňky jsou aktuální, a odstraňte z webu nevhodný kód, téma nebo plugin.\n \n\n         Pokud potřebujete další pomoc při řešení této hrozby, doporučujeme &lt;b&gt;Codeable+&lt;/b&gt;, důvěryhodné tržiště nezávislých odborníků s vysoce prověřenými odborníky na WordPress.\n         Identifikovali vybranou skupinu bezpečnostních odborníků, kteří s těmito projekty pomohli. Ceny se pohybují od 70–120 USD / hodinu a můžete získat bezplatný odhad bez povinnosti najmout.</string>
+    <string name="threat_fix_fixable_replace">Jetpack Scan nahradí ovlivněný soubor nebo adresář.</string>
     <string name="threat_problem_header">Jaký byl problém?</string>
     <string name="threat_technical_details_header">Technické podrobnosti</string>
     <string name="threat_file_description">V souboru nalezena hrozba:</string>
@@ -2632,15 +2631,11 @@ Language: cs_CZ
     <string name="password_incorrect">Zdá se, že zadané heslo je nesprávné. Zkontrolujte prosím své údaje a zkuste to znovu.</string>
     <string name="requesting_otp">Vyžádání ověřovacího kódu pomocí SMS.</string>
     <string name="login_text_otp">Pošlete mi raději kód.</string>
-    <string name="enter_verification_code">Téměř hotovo! Zadejte ověřovací kód z aplikace Authenticator.</string>
+    <string name="enter_verification_code">Už to skoro je! Zadejte ověřovací kód pro WordPress.com z aplikace autentizátoru.</string>
     <string name="next">Další</string>
     <string name="open_mail">Otevřít e-mail</string>
     <string name="enter_email_wordpress_com">Přihlaste se na stránku WordPress.com pomocí e-mailové adresy pro správu všech vašich stránek na WordPress.</string>
-    <string name="image_optimization_promo_desc">Optimalizace obrazu mírně sníží kvalitu obrázků pro rychlejší nahrávání\n\nToto nastavení můžete kdykoli změnit v nastavení webu.</string>
-    <string name="image_optimization_promo_title">Zapnout optimalizaci obrázků?</string>
     <string name="me_profile_photo">Profilová fotka</string>
-    <string name="leave_off">Vypnout</string>
-    <string name="turn_on">Zapnout</string>
     <string name="error_media_parse_error">Neočekávaná odpověď ze serveru</string>
     <string name="upload_finished_toast">Nahrávání nelze zastavit, protože je již dokončeno</string>
     <string name="menu_redo">Znovu</string>
@@ -2776,11 +2771,6 @@ Language: cs_CZ
     <string name="editor_post_saved_online">Příspěvek je uložený online</string>
     <string name="site_settings_image_quality_hint">Kvalita obrázků. Vyšší hodnoty znamenají lepší kvalitu obrázků.</string>
     <string name="site_settings_optimize_images_summary">Povolit změnu velikosti a kompresi obrázků</string>
-    <string name="media_encoder_quality_100">Maximální</string>
-    <string name="media_encoder_quality_95">Hodně vysoká</string>
-    <string name="media_encoder_quality_90">Vysoká</string>
-    <string name="media_encoder_quality_85">Střední</string>
-    <string name="media_encoder_quality_80">Nízká</string>
     <string name="media_upload_state_uploaded">Nahráno</string>
     <string name="media_upload_state_deleted">Smazáno</string>
     <string name="media_upload_state_deleting">Mazání</string>

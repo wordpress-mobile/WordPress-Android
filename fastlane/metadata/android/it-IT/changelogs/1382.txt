@@ -1,3 +1,0 @@
-23.6:
-- Le icone social non attive e i titoli di pattern sincronizzati non sono più invisibili nei temi basati su blocchi che utilizzano la dark mode. Bel tentativo, ma non sei così abile come pensi.
-- Nell'editor classico, ora puoi convertire i contenuti in blocchi con un semplice clic.

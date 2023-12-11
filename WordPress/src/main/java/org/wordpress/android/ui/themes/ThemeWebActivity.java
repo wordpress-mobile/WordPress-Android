@@ -54,8 +54,12 @@ public class ThemeWebActivity extends WPWebViewActivity {
         return WPWebViewActivity.getSiteLoginUrl(site);
     }
 
-    public static void openTheme(Activity activity, @NonNull SiteModel site, @NonNull ThemeModel theme,
-                                 @NonNull ThemeWebActivityType type) {
+    public static void openTheme(
+            Activity activity,
+            @NonNull SiteModel site,
+            @NonNull ThemeModel theme,
+            @NonNull ThemeWebActivityType type
+    ) {
         String url = getUrl(site, theme, type, !theme.isFree());
         if (TextUtils.isEmpty(url)) {
             ToastUtils.showToast(activity, R.string.could_not_load_theme);
@@ -72,7 +76,12 @@ public class ThemeWebActivity extends WPWebViewActivity {
         }
     }
 
-    private static void openWPCOMURL(Activity activity, String url, ThemeModel theme, SiteModel site) {
+    private static void openWPCOMURL(
+            Activity activity,
+            String url,
+            @NonNull ThemeModel theme,
+            SiteModel site
+    ) {
         if (activity == null) {
             AppLog.e(AppLog.T.UTILS, "ThemeWebActivity requires a non-null activity");
             return;
@@ -95,6 +104,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
         activity.startActivityForResult(intent, ThemeBrowserActivity.ACTIVATE_THEME);
     }
 
+    @Nullable
     public static String getIdentifierForCustomizer(@NonNull SiteModel site, @NonNull ThemeModel theme) {
         if (site.isJetpackConnected()) {
             return theme.getThemeId();
@@ -103,8 +113,13 @@ public class ThemeWebActivity extends WPWebViewActivity {
         }
     }
 
-    public static String getUrl(@NonNull SiteModel site, @NonNull ThemeModel theme, @NonNull ThemeWebActivityType type,
-                                boolean isPremium) {
+    @Nullable
+    public static String getUrl(
+            @NonNull SiteModel site,
+            @NonNull ThemeModel theme,
+            @NonNull ThemeWebActivityType type,
+            boolean isPremium
+    ) {
         if (theme.isWpComTheme()) {
             switch (type) {
                 case PREVIEW:
@@ -113,10 +128,14 @@ public class ThemeWebActivity extends WPWebViewActivity {
                             .format(THEME_URL_PREVIEW, UrlUtils.getHost(site.getUrl()), domain, theme.getThemeId());
                 case DEMO:
                     String url = theme.getDemoUrl();
-                    if (url.contains("?")) {
-                        return url + "&" + THEME_URL_DEMO_PARAMETER;
+                    if (url != null) {
+                        if (url.contains("?")) {
+                            return url + "&" + THEME_URL_DEMO_PARAMETER;
+                        } else {
+                            return url + "?" + THEME_URL_DEMO_PARAMETER;
+                        }
                     } else {
-                        return url + "?" + THEME_URL_DEMO_PARAMETER;
+                        return null;
                     }
                 case DETAILS:
                     return String.format(THEME_URL_DETAILS, theme.getThemeId());
@@ -126,7 +145,12 @@ public class ThemeWebActivity extends WPWebViewActivity {
         } else {
             switch (type) {
                 case PREVIEW:
-                    return site.getAdminUrl() + "customize.php?theme=" + getIdentifierForCustomizer(site, theme);
+                    String identifier = getIdentifierForCustomizer(site, theme);
+                    if (identifier != null) {
+                        return site.getAdminUrl() + "customize.php?theme=" + identifier;
+                    } else {
+                        return null;
+                    }
                 case DEMO:
                     return site.getAdminUrl() + "themes.php?theme=" + theme.getThemeId();
                 case DETAILS:

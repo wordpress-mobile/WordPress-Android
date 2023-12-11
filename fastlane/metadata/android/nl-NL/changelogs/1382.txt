@@ -1,3 +1,0 @@
-23.6:
-- Inactieve social media-pictogrammen en gesynchroniseerde patroontitels zijn niet langer zichtbaar in thema's die gebruikmaken van de donkere modus. Goed geprobeerd, jongens, maar jullie zijn niet zo onzichtbaar als jullie denken.
-- In de klassieke editor kan je nu je content omzetten naar blokken met één druk op de knop.

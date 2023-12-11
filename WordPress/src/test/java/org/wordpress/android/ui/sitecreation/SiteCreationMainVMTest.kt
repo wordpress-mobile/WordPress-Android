@@ -200,7 +200,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun `on site created for free domain shows next step`() {
         viewModel.onDomainsScreenFinished(FREE_DOMAIN).run { clearInvocations(wizardManager) }
-        viewModel.onFreeSiteCreated(SITE_MODEL)
+        viewModel.onFreeSiteCreated(SITE_MODEL).run { clearInvocations(wizardManager) }
         viewModel.onPlanSelection(FREE_PLAN, domainName = SITE_SLUG)
         verify(wizardManager).showNextStep()
     }
@@ -208,7 +208,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun `on site created for paid domain does not show next step`() {
         viewModel.onDomainsScreenFinished(PAID_DOMAIN).run { clearInvocations(wizardManager) }
-        viewModel.onFreeSiteCreated(SITE_MODEL)
+        viewModel.onFreeSiteCreated(SITE_MODEL).run { clearInvocations(wizardManager) }
         verifyNoMoreInteractions(wizardManager)
     }
 
@@ -362,6 +362,19 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
         // Because setup is run before every test, we expect this to be tracked on that first instance only
         verify(tracker, times(1)).trackSiteCreationAccessed(SiteCreationSource.UNSPECIFIED)
+    }
+
+    @Test
+    fun `given instance state returns an invalid step, when start, then site creation is reset`() {
+        val expectedState = SiteCreationState(segmentId = SEGMENT_ID)
+        whenever(savedInstanceState.getParcelableCompat<SiteCreationState>(KEY_SITE_CREATION_STATE))
+            .thenReturn(expectedState)
+        whenever(savedInstanceState.getInt(KEY_CURRENT_STEP)).thenReturn(-1) // Invalid step
+
+        val newViewModel = getNewViewModel()
+        newViewModel.start(savedInstanceState, SiteCreationSource.UNSPECIFIED)
+
+        assertEquals(0, wizardManager.currentStep)
     }
 
     private fun currentWizardState(vm: SiteCreationMainVM) = vm.navigationTargetObservable.lastEvent!!.wizardState

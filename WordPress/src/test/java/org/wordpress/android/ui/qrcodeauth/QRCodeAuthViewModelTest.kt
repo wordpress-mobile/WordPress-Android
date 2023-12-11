@@ -79,6 +79,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     private val uiStateMapper = QRCodeAuthUiStateMapper()
 
     private val validQueryParams = mapOf(DATA_KEY to DATA, TOKEN_KEY to TOKEN)

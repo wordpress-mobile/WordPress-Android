@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-02 13:54:07+0000
+Translation-Revision-Date: 2023-12-06 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: zh_CN
 -->
 <resources>
+    <string name="turn_off">不，停止优化</string>
+    <string name="leave_on">是，继续优化</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">因此，我们建议使用 Web 浏览器编辑该区块。</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">因此，我们建议使用 Web 编辑器编辑该区块。</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">或者，您也可以取消区块分组，以使内容扁平化。</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">转至设置</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">取消</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">授予</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">您已经永久拒绝了相机权限。 需要该权限才能扫描条形码。 请通过应用程序设置启用该权限</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">需要相机权限才能扫描条形码</string>
+    <string name="barcode_scanning_alert_dialog_title">授予相机权限</string>
+    <string name="barcode_scanning_camera_permission_denied">需要相机权限才能扫描条形码。</string>
+    <string name="barcode_scanning_title">扫描条形码</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">嵌套深度超过 %d 层级的区块在移动端编辑器中可能无法正常渲染。</string>
+    <string name="jp_migration_lets_go_button">开始使用</string>
+    <string name="jp_migration_done_no_sites_message">是时候在 Jetpack 应用程序上继续您的 WordPress 之旅了。</string>
+    <string name="domain_management_clear_search">清除搜索</string>
+    <string name="media_encoder_quality_very_high">非常高</string>
+    <string name="notification_security_key_needed">请提供您的安全密钥以继续。</string>
+    <string name="login_error_security_key">安全密钥登录出现问题</string>
+    <string name="login_text_security_key">使用安全密钥</string>
+    <string name="new_domain_search_screen_error_title">无法检索域名</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s/年</string>
+    <string name="new_domain_search_screen_transfer_domain_button">转移域名</string>
+    <string name="new_domain_search_screen_transfer_domain_description">想要转移已有的域名？</string>
+    <string name="new_domain_search_screen_input_placeholder">输入以获取更多建议</string>
+    <string name="new_domain_search_screen_title">搜索域名</string>
+    <string name="purchase_domain_screen_error_button_title">确定</string>
+    <string name="purchase_domain_screen_error_subtitle">添加域名至购物车时出错。 请检查您的网络，然后重试。</string>
+    <string name="purchase_domain_screen_error_title">错误</string>
+    <string name="domain_management_site_domains_button">所有</string>
+    <string name="domain_management_error_title">无法检索您的域名</string>
+    <string name="site_domain_title">站点域名</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">来自 &lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">已编辑</string>
+    <string name="post_list_toggle_author_filter">按作者筛选</string>
     <string name="gutenberg_native_s_block_converted_to_blocks">‘%s’区块已转换为多个区块</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">或者，您可以将内容转换为多个区块。</string>
     <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">添加或删除快捷键</string>
@@ -27,12 +63,11 @@ Language: zh_CN
     <string name="domain_management_empty_find_domain">查找域名</string>
     <string name="domain_management_empty_subtitle">轻点下方，查找最适合的域名。</string>
     <string name="domain_management_empty_title">您没有任何域名。</string>
-    <string name="domain_management_error_subtitle">检查您是否在线并刷新。</string>
-    <string name="domain_management_error_title">无法更新</string>
+    <string name="domain_management_error_subtitle">请检查您的网络，然后下拉刷新页面。</string>
     <string name="domain_management_open_domain_details">打开域名详细信息</string>
     <string name="domain_management_search_your_domains">搜索您的域名</string>
     <string name="domain_management_purchase_a_domain">购买域名</string>
-    <string name="domain_management_my_domains_title">我的域名</string>
+    <string name="domain_management_my_domains_title">所有域名</string>
     <string name="domain_management_expires">到期日期：%1$s</string>
     <string name="account_and_settings">账户和设置</string>
     <string name="site_creation_plans_selection_title">选择套餐</string>
@@ -46,7 +81,6 @@ Language: zh_CN
     <string name="gutenberg_native_synced_patterns">已同步的样板</string>
     <string name="gutenberg_native_deeply_nested_block">深度嵌套区块</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">嵌套深度超过 %d 层级的区块在移动端编辑器中可能无法正常渲染。  因此，我们建议取消区块分组或使用 Web 编辑器编辑区块，以使内容扁平化。</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">嵌套深度超过 %d 层级的区块在移动端编辑器中可能无法正常渲染。  因此，我们建议取消区块分组或使用 Web 浏览器编辑区块，以使内容扁平化。</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">区块深度嵌套，因此无法渲染。 轻点此处以了解更多详细信息。</string>
     <string name="pages_no_site_something_went_wrong">糟糕，出错了。 请稍后重试。</string>
     <string name="sharing_connect_via_web_warning_positive_button">转到网页</string>
@@ -64,6 +98,7 @@ Language: zh_CN
     <string name="personalization_screen_draft_posts_card_title">文章草稿</string>
     <string name="personalization_screen_stats_card_description">浏览次数、访客人数和点赞数</string>
     <string name="personalization_screen_tab_cards_footer_cards">卡片可能会显示不同的内容，具体取决于您站点的情况</string>
+    <string name="personalization_screen_title"> 个性化“首页”选项卡</string>
     <string name="personalize_card_content_description">轻点以对您的“首页”选项卡进行个性化</string>
     <string name="personalize_card_text">对您的“首页”选项卡进行个性化</string>
     <string name="partial_media_access_prompt_change_settings">更改设置</string>
@@ -372,7 +407,7 @@ Language: zh_CN
     <string name="blogging_prompts_list_answered_prompt">✓ 已回复</string>
     <string name="blogging_prompts_list_title">提示</string>
     <string name="close_desc">关闭</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">或者，您可以轻点“分离样板”来单独分离和编辑此区块。</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">或者，您也可以轻点“分离”来分离并单独编辑此区块。</string>
     <string name="dlg_confirm_delete_category">是否永久删除“%s”分类？</string>
     <string name="deleting_cat_success">已成功删除分类</string>
     <string name="deleting_cat_failed">删除分类失败</string>
@@ -1617,6 +1652,7 @@ Language: zh_CN
     <string name="ccpa_privacy_notice_header">面向加州用户的隐私声明</string>
     <string name="status_and_visibility">状态和可见性</string>
     <string name="update_now">现在更新</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">打开区块操作菜单</string>
     <string name="gutenberg_native_move_to_top">移到顶部</string>
     <string name="gutenberg_native_insert_mention">插入提及</string>
@@ -2852,14 +2888,10 @@ Language: zh_CN
     <string name="password_incorrect">密码似乎不对。请仔细检查您的信息，然后再试一次。</string>
     <string name="requesting_otp">正在请求短信验证码。</string>
     <string name="login_text_otp">通过短信向我发送代码</string>
-    <string name="enter_verification_code">马上就好！请输入验证器应用中的验证码。</string>
+    <string name="enter_verification_code">马上就好！ 请输入身份验证器应用程序中的 WordPress.com 验证码。</string>
     <string name="open_mail">打开邮件</string>
     <string name="next">下一步</string>
     <string name="enter_email_wordpress_com">使用电子邮件地址登录 WordPress.com 以便管理您的所有 WordPress 站点。</string>
-    <string name="image_optimization_promo_desc">图片优化可缩小图片以便更快地上传。\n\n您可以随时在站点设置中更改此选项。</string>
-    <string name="image_optimization_promo_title">打开图片优化？</string>
-    <string name="leave_off">停止</string>
-    <string name="turn_on">打开</string>
     <string name="me_profile_photo">个人资料照片</string>
     <string name="error_media_parse_error">服务器响应异常</string>
     <string name="upload_finished_toast">无法停止上传，因为上传已经结束</string>
@@ -2996,11 +3028,7 @@ Language: zh_CN
     <string name="editor_post_saved_online">文章已在线保存</string>
     <string name="site_settings_image_quality_hint">图片质量。值越高，表示图片质量越好。</string>
     <string name="site_settings_optimize_images_summary">启用以调整图片大小和压缩图片</string>
-    <string name="media_encoder_quality_100">最大值</string>
-    <string name="media_encoder_quality_95">非常高</string>
-    <string name="media_encoder_quality_90">高</string>
-    <string name="media_encoder_quality_85">中</string>
-    <string name="media_encoder_quality_80">低</string>
+    <string name="media_encoder_quality_maximum">最高</string>
     <string name="media_upload_state_uploaded">已上传</string>
     <string name="media_upload_state_failed">上传失败</string>
     <string name="media_upload_state_deleted">已删除</string>

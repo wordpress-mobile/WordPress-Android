@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-02 09:54:07+0000
+Translation-Revision-Date: 2023-12-05 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: id
 -->
 <resources>
+    <string name="turn_off">Tidak, matikan</string>
+    <string name="leave_on">Ya, biarkan</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Karenanya, kami menyarankan Anda untuk mengedit blok melalui browser web.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Karenanya, kami menyarankan Anda untuk mengedit blok melalui editor web.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Atau, Anda dapat meratakan konten dengan membatalkan pengelompokan blok.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Buka pengaturan</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">Batal</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Izinkan</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Anda telah menolak izin Kamera secara permanen. Izin diperlukan untuk memindai barcode. Harap izinkan di pengaturan aplikasi</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">Izin kamera diperlukan untuk memindai barcode</string>
+    <string name="barcode_scanning_alert_dialog_title">Izinkan Akses Kamera</string>
+    <string name="barcode_scanning_camera_permission_denied">Izin kamera diperlukan untuk memindai barcode.</string>
+    <string name="barcode_scanning_title">Pindai Barcode</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blok bertingkat yang kedalamannya melebihi %d level mungkin tidak dapat ditampilkan dengan benar di editor seluler.</string>
+    <string name="jp_migration_lets_go_button">Ayo</string>
+    <string name="jp_migration_done_no_sites_message">Waktunya untuk melanjutkan perjalanan WordPress Anda di aplikasi Jetpack!</string>
+    <string name="image_optimization_popup_desc">Pengoptimalan gambar mengecilkan gambar agar bisa diunggah lebih cepat.\n\nPilihan ini diaktifkan secara default, tetapi Anda dapat mengubahnya di pengaturan aplikasi kapan saja.</string>
+    <string name="domain_management_clear_search">Hapus pencarian</string>
+    <string name="media_encoder_quality_very_high">Sangat Tinggi</string>
+    <string name="notification_security_key_needed">Silakan berikan kunci keamanan Anda untuk melanjutkan.</string>
+    <string name="login_error_security_key">Terjadi masalah dengan login kunci Keamanan.</string>
+    <string name="login_text_security_key">Gunakan kunci keamanan.</string>
+    <string name="new_domain_search_screen_error_title">Tidak dapat mengambil domain</string>
+    <string name="new_domain_search_screen_list_item_sale_price">%s untuk tahun pertama</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s / tahun</string>
+    <string name="new_domain_search_screen_transfer_domain_button">Transfer domain</string>
+    <string name="new_domain_search_screen_transfer_domain_description">Ingin mentransfer domain Anda?</string>
+    <string name="new_domain_search_screen_input_placeholder">Ketik untuk mendapatkan lebih banyak saran.</string>
+    <string name="new_domain_search_screen_title">Cari domain.</string>
+    <string name="purchase_domain_screen_error_button_title">OK</string>
+    <string name="purchase_domain_screen_error_subtitle">Terjadi kesalahan ketika menambahkan domain ke keranjang. Pastikan Anda online dan coba lagi.</string>
+    <string name="purchase_domain_screen_error_title">Error</string>
+    <string name="domain_management_site_domains_button">Semua</string>
+    <string name="domain_management_error_title">Tidak dapat mengambil domain Anda</string>
+    <string name="site_domain_title">Domain Situs</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">Dari &lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">Diedit</string>
+    <string name="post_list_toggle_author_filter">Saring berdasarkan penulis</string>
     <string name="gutenberg_native_s_block_converted_to_blocks">Blok \'%s\' dikonversi menjadi blok</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Anda dapat mengonversi konten menjadi blok.</string>
     <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Tambah atau Hapus pintasan</string>
@@ -27,12 +65,11 @@ Language: id
     <string name="domain_management_empty_find_domain">Cari domain</string>
     <string name="domain_management_empty_subtitle">Ketuk di bawah untuk mencari domain ideal.</string>
     <string name="domain_management_empty_title">Anda belum memiliki domain</string>
-    <string name="domain_management_error_subtitle">Periksa apakah Anda online dan segarkan.</string>
-    <string name="domain_management_error_title">Tidak Dapat Memperbarui</string>
+    <string name="domain_management_error_subtitle">Periksa apakah Anda online dan tarik untuk menyegarkan.</string>
     <string name="domain_management_open_domain_details">Buka detail domain</string>
     <string name="domain_management_search_your_domains">Cari domain</string>
     <string name="domain_management_purchase_a_domain">Beli domain</string>
-    <string name="domain_management_my_domains_title">Domain Saya</string>
+    <string name="domain_management_my_domains_title">Semua Domain</string>
     <string name="domain_management_expires">Kedaluwarsa %1$s</string>
     <string name="account_and_settings">Akun dan Pengaturan</string>
     <string name="site_creation_plans_selection_title">Pilih paket</string>
@@ -46,7 +83,6 @@ Language: id
     <string name="gutenberg_native_synced_patterns">Pola tersinkron</string>
     <string name="gutenberg_native_deeply_nested_block">Blok bertingkat terlalu dalam</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Blok bertingkat yang kedalamannya melebihi %d level mungkin tidak dapat ditampilkan dengan benar di editor seluler. Karenanya, kami menyarankan Anda untuk meratakan konten dengan membatalkan pengelompokan blok atau mengedit blok melalui editor web.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blok bertingkat yang kedalamannya melebihi %d level mungkin tidak dapat ditampilkan dengan benar di editor seluler. Karenanya, kami menyarankan Anda untuk meratakan konten dengan membatalkan pengelompokan blok atau mengedit blok melalui browser web.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Blok tidak dapat ditampilkan karena bertingkat terlalu dalam. Ketuk di sini untuk detail selengkapnya.</string>
     <string name="pages_no_site_something_went_wrong">Ups, ada yang salah. Silakan coba lagi nanti.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Kunjungi situs</string>
@@ -373,7 +409,7 @@ Language: id
     <string name="blogging_prompts_list_answered_prompt">✓ Terjawab</string>
     <string name="blogging_prompts_list_title">Prompt</string>
     <string name="close_desc">tutup</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Atau, blok ini bisa dipisahkan lalu disunting secara tersendiri dengan mengetuk \"Pisahkan pola\".</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Atau, blok ini bisa dipisahkan lalu disunting secara tersendiri dengan mengetuk \"Pisahkan\".</string>
     <string name="dlg_confirm_delete_category">Hapus Kategori \'%s\' secara permanen?</string>
     <string name="deleting_cat_success">Kategori berhasil dihapus</string>
     <string name="deleting_cat_failed">Gagal menghapus kategori</string>
@@ -1621,6 +1657,7 @@ Language: id
     <string name="ccpa_privacy_notice_header">Pemberitahuan privasi untuk pengguna di California</string>
     <string name="status_and_visibility">Status &amp; Keterlihatan</string>
     <string name="update_now">Perbarui Sekarang</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">Buka Menu Tindakan Blokir</string>
     <string name="gutenberg_native_move_to_top">Pindah ke atas</string>
     <string name="gutenberg_native_insert_mention">Sertakan penyebutan</string>
@@ -2859,14 +2896,10 @@ Language: id
     <string name="password_incorrect">Sepertinya kata sandi ini salah. Periksa lagi informasi Anda dan coba lagi.</string>
     <string name="requesting_otp">Meminta kode verifikasi melalui SMS.</string>
     <string name="login_text_otp">Kirimi saya kode saja</string>
-    <string name="enter_verification_code">Hampir selesai! Masukkan kode verifikasi dari aplikasi Pengautentikasi.</string>
+    <string name="enter_verification_code">Hampir selesai! Masukkan kode verifikasi untuk WordPress.com dari aplikasi pengautentikasi.</string>
     <string name="open_mail">Buka Email</string>
     <string name="next">Selanjutnya</string>
     <string name="enter_email_wordpress_com">Login ke WordPress.com dengan alamat email untuk mengelola semua situs WordPress Anda.</string>
-    <string name="image_optimization_promo_desc">Pengoptimalan gambar mengecilkan gambar agar pengunggahan lebih cepat.\n\nAnda dapat mengubahnya kapan saja di pengaturan situs.</string>
-    <string name="image_optimization_promo_title">Aktifkan pengoptimalan gambar?</string>
-    <string name="leave_off">Nonaktifkan</string>
-    <string name="turn_on">Aktifkan</string>
     <string name="me_profile_photo">Foto Profil</string>
     <string name="error_media_parse_error">Respons tidak terduga dari server</string>
     <string name="upload_finished_toast">Tidak dapat menghentikan pengunggahan karena prosesnya sudah selesai</string>
@@ -3003,11 +3036,6 @@ Language: id
     <string name="editor_post_saved_online">Pos disimpan secara online</string>
     <string name="site_settings_image_quality_hint">Kualitas gambar. Semakin tinggi nilainya, semakin bagus kualitas gambarnya.</string>
     <string name="site_settings_optimize_images_summary">Memungkinkan pengubahan ukuran dan kompresi gambar</string>
-    <string name="media_encoder_quality_100">Maksimum</string>
-    <string name="media_encoder_quality_95">Sangat Tinggi</string>
-    <string name="media_encoder_quality_90">Tinggi</string>
-    <string name="media_encoder_quality_85">Sedang</string>
-    <string name="media_encoder_quality_80">Rendah</string>
     <string name="media_upload_state_uploaded">Diunggah</string>
     <string name="media_upload_state_failed">Unggahan Gagal</string>
     <string name="media_upload_state_deleted">Dihapus</string>

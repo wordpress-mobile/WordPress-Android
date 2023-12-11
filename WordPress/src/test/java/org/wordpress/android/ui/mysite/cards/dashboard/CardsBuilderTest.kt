@@ -21,6 +21,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard.PagesCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.PromoteWithBlazeCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloganuaryNudgeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
@@ -29,9 +30,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardC
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloganuaryNudgeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainTransferCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.bloganuary.BloganuaryNudgeCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
@@ -68,6 +71,9 @@ class CardsBuilderTest : BaseUnitTest() {
     @Mock
     lateinit var mDomainTransferCardBuilder: DomainTransferCardBuilder
 
+    @Mock
+    lateinit var bloganuaryCardBuilder: BloganuaryNudgeCardBuilder
+
     private lateinit var cardsBuilder: CardsBuilder
 
     @Before
@@ -75,6 +81,7 @@ class CardsBuilderTest : BaseUnitTest() {
         cardsBuilder = CardsBuilder(
             todaysStatsCardBuilder,
             postCardBuilder,
+            bloganuaryCardBuilder,
             bloggingPromptCardsBuilder,
             mDomainTransferCardBuilder,
             blazeCardBuilder,
@@ -229,6 +236,21 @@ class CardsBuilderTest : BaseUnitTest() {
         assertThat(cards.findActivityCard()).isNotNull
     }
 
+    /* BLOGANUARY CARD */
+    @Test
+    fun `when is eligible for bloganuary nudge card, then bloganuary nudge card is built`() {
+        val cards = buildDashboardCards(isEligibleForBloganuaryNudge = true)
+
+        assertThat(cards.findBloganuaryNudgeCard()).isNotNull
+    }
+
+    @Test
+    fun `when is not eligible for bloganuary nudge card, then bloganuary nudge card is not built`() {
+        val cards = buildDashboardCards(isEligibleForBloganuaryNudge = false)
+
+        assertThat(cards.findBloganuaryNudgeCard()).isNull()
+    }
+
     private fun List<Card>.findTodaysStatsCard() =
         this.find { it is TodaysStatsCardWithData } as? TodaysStatsCardWithData
 
@@ -250,6 +272,9 @@ class CardsBuilderTest : BaseUnitTest() {
     private fun List<Card>.findActivityCard() =
         this.find { it is ActivityCardWithItems } as? ActivityCardWithItems
 
+    private fun List<Card>.findBloganuaryNudgeCard() =
+        this.find { it is BloganuaryNudgeCardModel } as? BloganuaryNudgeCardModel
+
     private fun List<Card>.findErrorCard() = this.find { it is ErrorCard } as? ErrorCard
 
     private val todaysStatsCard = mock<TodaysStatsCardWithData>()
@@ -263,6 +288,8 @@ class CardsBuilderTest : BaseUnitTest() {
     private val pagesCard = mock<PagesCardWithData>()
 
     private val activityCard = mock<ActivityCardWithItems>()
+
+    private val bloganuaryNudgeCard = mock<BloganuaryNudgeCardModel>()
 
     private fun createPostCards() = listOf(
         PostCardWithPostItems(
@@ -282,8 +309,9 @@ class CardsBuilderTest : BaseUnitTest() {
         isEligibleForDomainTransferCard: Boolean = false,
         isEligibleForBlaze: Boolean = false,
         isEligibleForPlansCard: Boolean = false,
+        isEligibleForBloganuaryNudge: Boolean = false,
         hasPagesCard: Boolean = false,
-        hasActivityCard: Boolean = false
+        hasActivityCard: Boolean = false,
     ): List<Card> {
         doAnswer { if (hasTodaysStats) todaysStatsCard else null }.whenever(todaysStatsCardBuilder).build(any())
         doAnswer { if (hasPostsForPostCard) createPostCards() else emptyList() }.whenever(postCardBuilder)
@@ -293,6 +321,8 @@ class CardsBuilderTest : BaseUnitTest() {
             .build(any())
         doAnswer { if (isEligibleForPlansCard) dashboardPlansCard else null }.whenever(dashboardPlansCardBuilder)
             .build(any())
+        doAnswer { if (isEligibleForBloganuaryNudge) bloganuaryNudgeCard else null }.whenever(bloganuaryCardBuilder)
+            .build(any())
         doAnswer { if (hasPagesCard) pagesCard else null }.whenever(pagesCardBuilder).build(any())
         doAnswer { if (hasActivityCard) activityCard else null }.whenever(activityCardBuilder).build(any())
         return cardsBuilder.build(
@@ -301,11 +331,14 @@ class CardsBuilderTest : BaseUnitTest() {
                 onErrorRetryClick = { },
                 todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
                 postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
+                bloganuaryNudgeCardBuilderParams = BloganuaryNudgeCardBuilderParams(
+                    isEligibleForBloganuaryNudge,
+                    mock(),
+                    mock(),
+                    mock(),
+                ),
                 bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                     mock(), mock(), mock(), mock(), mock(), mock(), mock()
-                ),
-                domainTransferCardBuilderParams = DomainTransferCardBuilderParams(
-                    isEligibleForDomainTransferCard, mock(), mock(), mock()
                 ),
                 blazeCardBuilderParams = PromoteWithBlazeCardBuilderParams(
                     mock(),
@@ -326,6 +359,9 @@ class CardsBuilderTest : BaseUnitTest() {
                     mock(),
                     mock(),
                     mock()
+                ),
+                domainTransferCardBuilderParams = DomainTransferCardBuilderParams(
+                    isEligibleForDomainTransferCard, mock(), mock(), mock()
                 )
             )
         )

@@ -2373,13 +2373,8 @@ Language: es_CO
     <string name="password_incorrect">Parece que esta contraseña es incorrecta. Por favor, vuelve a comprobar tu información e inténtalo de nuevo.</string>
     <string name="requesting_otp">Solicitando un código de verificación por SMS.</string>
     <string name="login_text_otp">Envíame un mensaje con un código en su lugar</string>
-    <string name="enter_verification_code">¡Casi lo tenemos! Por favor, introduce un código de verificación desde tu aplicación Authenticator.</string>
     <string name="next">Siguiente</string>
     <string name="enter_email_wordpress_com">Accede a WordPress.com usando una dirección de correo electrónico para gestionar todos tus sitios WordPress.</string>
-    <string name="image_optimization_promo_desc">La optimización de imagen reduce las imágenes para que suban más rápido.\n\nPuedes cambiar esto en cualquier momento en los ajustes del sitio.</string>
-    <string name="image_optimization_promo_title">¿Activar optimización de la imagen?</string>
-    <string name="leave_off">Detener</string>
-    <string name="turn_on">Activar</string>
     <string name="me_profile_photo">Foto de perfil</string>
     <string name="error_media_parse_error">Respuesta inesperada del servidor</string>
     <string name="upload_finished_toast">No se puede detener la subida porque ya ha finalizado</string>
@@ -2514,11 +2509,6 @@ Language: es_CO
     <string name="editor_post_saved_online">La entrada se ha guardado online</string>
     <string name="site_settings_image_quality_hint">Calidad de las imágenes: cuanto más alto es el valor, más calidad tienen las imágenes.</string>
     <string name="site_settings_optimize_images_summary">Activa la opción para cambiar el tamaño de las imágenes y comprimirlas</string>
-    <string name="media_encoder_quality_100">Máxima</string>
-    <string name="media_encoder_quality_95">Muy alta</string>
-    <string name="media_encoder_quality_90">Alta</string>
-    <string name="media_encoder_quality_85">Media</string>
-    <string name="media_encoder_quality_80">Baja</string>
     <string name="media_upload_state_uploaded">Subido</string>
     <string name="media_upload_state_failed">Fallo al subir</string>
     <string name="media_upload_state_deleted">Se ha eliminado</string>

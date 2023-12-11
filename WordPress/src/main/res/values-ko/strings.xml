@@ -1,11 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-02 09:54:07+0000
+Translation-Revision-Date: 2023-12-05 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: ko_KR
 -->
 <resources>
+    <string name="turn_off">아니요. 끄기</string>
+    <string name="leave_on">예. 그대로 두기</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">따라서 웹 브라우저를 사용하여 블록을 편집하는 것이 좋습니다.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">따라서 웹 편집기를 사용하여 블록을 편집하는 것이 좋습니다.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">그 대신에 블록 그룹 해제를 통해 콘텐츠를 평평하게 하실 수 있습니다.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">설정으로 이동</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">취소</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">권한 부여</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">카메라 권한을 영구적으로 거부하셨습니다. 바코드를 스캔하려면 이 권한이 필요합니다. 앱 설정에서 활성화해 주세요.</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">바코드를 스캔하려면 카메라 권한이 필요합니다.</string>
+    <string name="barcode_scanning_alert_dialog_title">카메라 권한 부여</string>
+    <string name="barcode_scanning_camera_permission_denied">바코드를 스캔하려면 카메라 권한이 필요합니다.</string>
+    <string name="barcode_scanning_title">바코드 스캔</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%d 레벨보다 깊숙이 중첩된 블록은 모바일 편집기에서 올바르게 렌더링되지 않을 수 있습니다.</string>
+    <string name="jp_migration_lets_go_button">지금 시작</string>
+    <string name="jp_migration_done_no_sites_message">젯팩 앱에서 워드프레스 여정을 계속하실 때가 되었습니다.</string>
+    <string name="domain_management_clear_search">검색 지우기</string>
+    <string name="media_encoder_quality_very_high">매우 높음</string>
+    <string name="notification_security_key_needed">계속하려면 보안 키를 입력하세요.</string>
+    <string name="login_error_security_key">보안 키 로그인 문제 발생</string>
+    <string name="login_text_security_key">보안 키 사용</string>
+    <string name="new_domain_search_screen_error_title">도메인을 검색할 수 없음</string>
+    <string name="new_domain_search_screen_list_item_sale_price">첫 1년 동안 %s</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s/년</string>
+    <string name="new_domain_search_screen_transfer_domain_button">도메인 이전</string>
+    <string name="new_domain_search_screen_transfer_domain_description">이미 소유한 도메인을 이전하시겠습니까?</string>
+    <string name="new_domain_search_screen_input_placeholder">입력하여 더 많은 제안 받기</string>
+    <string name="new_domain_search_screen_title">도메인 검색</string>
+    <string name="purchase_domain_screen_error_button_title">확인</string>
+    <string name="purchase_domain_screen_error_subtitle">장바구니에 도메인을 추가하는 도중 문제가 발생했습니다. 온라인 상태인지 확인하고 다시 시도하세요.</string>
+    <string name="purchase_domain_screen_error_title">오류</string>
+    <string name="domain_management_site_domains_button">모두</string>
+    <string name="domain_management_error_title">도메인을 검색할 수 없음</string>
+    <string name="site_domain_title">사이트 도메인</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">&lt;b&gt;Bloganuary&lt;/b&gt;에서</string>
+    <string name="post_status_post_edited">편집됨</string>
+    <string name="post_list_toggle_author_filter">글쓴이 기준 필터</string>
     <string name="gutenberg_native_s_block_converted_to_blocks">블록으로 \'%s\' 블록 변환됨</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">콘텐츠를 블록으로 변환할 수도 있습니다.</string>
     <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">단축키 추가 또는 제거</string>
@@ -27,12 +64,11 @@ Language: ko_KR
     <string name="domain_management_empty_find_domain">도메인 찾기</string>
     <string name="domain_management_empty_subtitle">아래를 눌러서 알맞은 도메인을 찾아보세요.</string>
     <string name="domain_management_empty_title">도메인이 없습니다.</string>
-    <string name="domain_management_error_subtitle">온라인 상태인지 확인하고 새로 고치세요.</string>
-    <string name="domain_management_error_title">업데이트할 수 없음</string>
+    <string name="domain_management_error_subtitle">온라인 상태인지 확인하고 당겨서 새로 고치세요.</string>
     <string name="domain_management_open_domain_details">도메인 상세 정보 열기</string>
     <string name="domain_management_search_your_domains">도메인 검색</string>
     <string name="domain_management_purchase_a_domain">도메인 구매</string>
-    <string name="domain_management_my_domains_title">내 도메인</string>
+    <string name="domain_management_my_domains_title">모든 도메인</string>
     <string name="domain_management_expires">%1$s 만료</string>
     <string name="account_and_settings">계정 및 설정</string>
     <string name="site_creation_plans_selection_title">요금제 선택</string>
@@ -46,7 +82,6 @@ Language: ko_KR
     <string name="gutenberg_native_synced_patterns">동기화된 패턴</string>
     <string name="gutenberg_native_deeply_nested_block">깊숙이 중첩된 블록</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">%d 레벨보다 깊숙이 중첩된 블록은 모바일 편집기에서 올바르게 렌더링되지 않을 수 있습니다. 따라서 블록 그룹 해제를 통해 콘텐츠를 평평하게 하거나 웹 편집기를 사용하여 블록을 편집하는 것이 좋습니다.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%d 레벨보다 깊숙이 중첩된 블록은 모바일 편집기에서 올바르게 렌더링되지 않을 수 있습니다. 따라서 블록 그룹 해제를 통해 콘텐츠를 평평하게 하거나 웹 브라우저를 사용하여 블록을 편집하는 것이 좋습니다.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">깊숙이 중첩되어서 블록을 렌더링할 수 없습니다. 자세히 알아보려면 여기를 누르세요.</string>
     <string name="pages_no_site_something_went_wrong">죄송합니다. 문제가 발생했습니다. 나중에 다시 시도하세요.</string>
     <string name="sharing_connect_via_web_warning_positive_button">웹으로 이동</string>
@@ -373,7 +408,7 @@ Language: ko_KR
     <string name="blogging_prompts_list_answered_prompt">✓ 답변됨</string>
     <string name="blogging_prompts_list_title">프롬프트</string>
     <string name="close_desc">닫기</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">또는 \"일반 블록으로 변환\"을 눌러 이 블록을 분리하고 따로 편집할 수 있습니다.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">그 대신에 \"분리\"를 눌러 이 블록을 분리하고 따로 편집하실 수 있습니다.</string>
     <string name="dlg_confirm_delete_category">\'%s\'을(를) 영구적으로 삭제하시겠어요?</string>
     <string name="deleting_cat_success">카테고리 삭제 성공</string>
     <string name="deleting_cat_failed">카테고리 삭제 실패</string>
@@ -1620,6 +1655,7 @@ Language: ko_KR
     <string name="ccpa_privacy_notice_header">캘리포니아 사용자를 위한 개인정보보호 고지</string>
     <string name="status_and_visibility">상태 &amp; 가시성</string>
     <string name="update_now">지금 업데이트하기</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">블록 동작 메뉴 열기</string>
     <string name="gutenberg_native_move_to_top">위로 이동하기</string>
     <string name="gutenberg_native_insert_mention">언급 넣기</string>
@@ -2856,14 +2892,10 @@ Language: ko_KR
     <string name="password_incorrect">이 비밀번호가 올바르지 않은 것 같습니다. 정보를 확인하고 다시 시도하세요.</string>
     <string name="requesting_otp">SMS를 통해 확인 코드를 요청 중입니다.</string>
     <string name="login_text_otp">대신 코드를 문자로 받기</string>
-    <string name="enter_verification_code">마지막 부분입니다! 인증 앱의 확인 코드를 입력하세요.</string>
+    <string name="enter_verification_code">마무리 단계입니다! 인증 앱의 워드프레스닷컴 확인 코드를 입력하세요.</string>
     <string name="open_mail">메일 열기</string>
     <string name="next">다음</string>
     <string name="enter_email_wordpress_com">이메일 주소를 입력하여 워드프레스닷컴에 로그인하고 회원님의 모든 WordPress 사이트를 관리하세요.</string>
-    <string name="image_optimization_promo_desc">이미지 최적화는 빠른 업로드를 위해 이미지를 줄입니다.\n\n사이트 설정에서 언제든지 변경할 수 있습니다.</string>
-    <string name="image_optimization_promo_title">이미지 최적화를 켜시겠어요?</string>
-    <string name="leave_off">중단</string>
-    <string name="turn_on">켜기</string>
     <string name="me_profile_photo">프로필 사진</string>
     <string name="error_media_parse_error">서버에서 예기치 않은 응답을 받았습니다</string>
     <string name="upload_finished_toast">업로드가 이미 완료되었기 때문에 업로드를 중지할 수 있습니다</string>
@@ -3000,11 +3032,7 @@ Language: ko_KR
     <string name="editor_post_saved_online">글이 온라인으로 저장되었습니다.</string>
     <string name="site_settings_image_quality_hint">사진 품질. 값이 클수록 고품질의 사진을 의미합니다.</string>
     <string name="site_settings_optimize_images_summary">사진 크기를 조정하고 압축할 수 있습니다.</string>
-    <string name="media_encoder_quality_100">최대</string>
-    <string name="media_encoder_quality_95">매우 높음</string>
-    <string name="media_encoder_quality_90">높음</string>
-    <string name="media_encoder_quality_85">보통</string>
-    <string name="media_encoder_quality_80">낮음</string>
+    <string name="media_encoder_quality_medium">중간</string>
     <string name="media_upload_state_uploaded">업로드됨</string>
     <string name="media_upload_state_failed">실패</string>
     <string name="media_upload_state_deleted">삭제됨</string>

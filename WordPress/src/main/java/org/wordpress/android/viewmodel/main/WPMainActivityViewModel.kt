@@ -137,6 +137,9 @@ class WPMainActivityViewModel @Inject constructor(
     private val _showPrivacySettingsWithError = SingleLiveEvent<Boolean?>()
     val showPrivacySettingsWithError: LiveData<Boolean?> = _showPrivacySettingsWithError
 
+    private val _mySiteDashboardRefreshRequested = MutableLiveData<Event<Unit>>()
+    val mySiteDashboardRefreshRequested: LiveData<Event<Unit>> = _mySiteDashboardRefreshRequested
+
     val onFocusPointVisibilityChange = quickStartRepository.activeTask
         .mapNullable { getExternalFocusPointInfo(it) }
         .distinctUntilChanged()
@@ -185,7 +188,7 @@ class WPMainActivityViewModel @Inject constructor(
                         promptTitle = UiStringText(it.text),
                         isAnswered = prompt.isAnswered,
                         promptId = prompt.id,
-                        attribution = BloggingPromptAttribution.fromString(prompt.attribution),
+                        attribution = BloggingPromptAttribution.fromPrompt(prompt),
                         onClickAction = ::onAnswerPromptActionClicked,
                         onHelpAction = ::onHelpPrompActionClicked
                     )
@@ -408,6 +411,10 @@ class WPMainActivityViewModel @Inject constructor(
 
     fun onSettingsPrivacyPreferenceUpdateFailed(requestedAnalyticsPreference: Boolean?) {
         _showPrivacySettingsWithError.value = requestedAnalyticsPreference
+    }
+
+    fun requestMySiteDashboardRefresh() {
+        this._mySiteDashboardRefreshRequested.value = Event(Unit)
     }
 
     data class FocusPointInfo(

@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-02 13:54:08+0000
+Translation-Revision-Date: 2023-12-05 16:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: nl
 -->
 <resources>
+    <string name="turn_off">Nee, uitschakelen</string>
+    <string name="leave_on">Ja, ingeschakeld laten</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Hierom raden we aan de content platter te maken door het blok niet te groeperen of het blok te bewerken in je webbrowser.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Hierom raden we aan de content platter te maken door het blok niet te groeperen of het blok te bewerken in je webbrowser.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternatively, you can flatten the content by ungrouping the block.</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Toekennen</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Je hebt de cameramachtiging permanent geweigerd. Deze is nodig om de streepjescode te scannen. Schakel deze in de appinstellingen in</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">De cameramachtiging is vereist om de streepjescode te scannen.</string>
+    <string name="barcode_scanning_alert_dialog_title">Cameramachtiging toekennen</string>
+    <string name="barcode_scanning_camera_permission_denied">De cameramachtiging is vereist om de streepjescode te scannen.</string>
+    <string name="barcode_scanning_title">Streepjescode scannen</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blokken die dieper dan %d niveaus genesteld zijn worden mogelijk niet goed weergegeven in de mobiele editor.</string>
+    <string name="jp_migration_lets_go_button">Aan de slag</string>
+    <string name="jp_migration_done_no_sites_message">It\'s time to continue your WordPress journey on the Jetpack app.</string>
+    <string name="image_optimization_popup_desc">Afbeeldingoptimalisatie maakt afbeeldingen kleiner, zodat ze sneller geüpload kunnen worden.\n\nDeze optie staat standaard ingeschakeld, maar je kan dit altijd veranderen in de app-instellingen.</string>
+    <string name="image_optimization_popup_title">Afbeeldingen blijven optimaliseren?</string>
+    <string name="media_encoder_quality_very_high">Zeer hoog</string>
+    <string name="notification_security_key_needed">Voer je beveiligingssleutel in om door te gaan.</string>
+    <string name="login_error_security_key">Er heeft zich een probleem met de aanmelding via de beveiligingssleutel voorgedaan.</string>
+    <string name="login_text_security_key">Een beveiligingssleutel gebruiken</string>
+    <string name="new_domain_search_screen_error_title">De domeinen konden niet worden opgehaald</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s per jaar</string>
+    <string name="new_domain_search_screen_transfer_domain_description">Wil je een domein overdragen dat je al bezit?</string>
+    <string name="new_domain_search_screen_title">Een domein zoeken</string>
+    <string name="purchase_domain_screen_error_subtitle">Er is iets misgegaan toen we het domein aan je winkelwagen wilden toevoegen. Zorg ervoor dat je online bent en probeer het opnieuw.</string>
+    <string name="domain_management_error_title">Je domeinen konden niet worden opgehaald</string>
+    <string name="site_domain_title">Sitedomein</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">Van &lt;b&gt;BIoganuary&lt;/b&gt;</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Je kan ook de inhoud naar blokken omzetten.</string>
     <string name="purchase_domain_screen_discount_notice">*Bij alle betaalde jaarabonnementen is een gratis domein voor een jaar inbegrepen.</string>
     <string name="purchase_domain_screen_existing_domain_card_button">Site kiezen</string>
@@ -20,17 +48,17 @@ Language: nl
     <string name="domain_management_empty_find_domain">Een domein vinden</string>
     <string name="domain_management_empty_subtitle">Tik hieronder om jouw ideale domein te vinden.</string>
     <string name="domain_management_empty_title">Je hebt nog geen domeinen</string>
-    <string name="domain_management_error_title">Update mislukt</string>
+    <string name="domain_management_error_subtitle">Controleer of je online bent en vernieuw de pagina.</string>
     <string name="domain_management_open_domain_details">Domeingegevens openen</string>
     <string name="domain_management_search_your_domains">Je domeinen zoeken</string>
     <string name="domain_management_purchase_a_domain">Een domein kopen</string>
+    <string name="domain_management_my_domains_title">Alle domeinen</string>
     <string name="domain_management_expires">Verloopt op %1$s</string>
     <string name="site_creation_domain_free_with_annual_plan">Het eerste jaar gratis bij elk betaald abonnement</string>
     <string name="gutenberg_native_ungroup_block">Groeperen blok ongedaan maken</string>
     <string name="gutenberg_native_tap_here_to_show_more_details">Tik hier voor meer informatie.</string>
     <string name="gutenberg_native_deeply_nested_block">Diep genesteld blok</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Blokken die dieper dan %d niveaus genesteld zijn worden mogelijk niet goed weergegeven in de mobiele editor. Hierom raden we aan de content platter te maken door het blok niet te groeperen of het blok te bewerken in je webbrowser.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blokken die dieper dan %d niveaus genesteld zijn worden mogelijk niet goed weergegeven in de mobiele editor. Hierom raden we aan de content platter te maken door het blok niet te groeperen of het blok te bewerken in je webbrowser.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for">Blok kan niet worden gerenderd omdat het diep is genesteld. Tik voor meer detail.</string>
     <string name="pages_no_site_something_went_wrong">Oeps, er is iets fout gegaan… Probeer het later opnieuw.</string>
     <string name="my_site_dashboard_no_cards_message_description">Tik op de knop Personaliseren om meer kaarten weer te geven.</string>
@@ -44,6 +72,7 @@ Language: nl
     <string name="personalization_screen_scheduled_posts_card_title">Ingeplande berichten</string>
     <string name="personalization_screen_draft_posts_card_title">Conceptberichten</string>
     <string name="personalization_screen_stats_card_description">Weergaven, bezoekers en likes</string>
+    <string name="personalization_screen_title"> Startpagina personaliseren</string>
     <string name="personalize_card_content_description">Tik om je startpagina te personaliseren</string>
     <string name="personalize_card_text">Personaliseer je startpagina</string>
     <string name="partial_media_access_prompt_change_settings">Wijzig instellingen</string>
@@ -326,7 +355,6 @@ Language: nl
     <string name="blogging_prompts_list_answered_prompt">✓ Beantwoord</string>
     <string name="blogging_prompts_list_title">Prompts</string>
     <string name="close_desc">sluiten</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Als alternatief, kan je dit blok ook losmaken en afzonderlijk bewerken door op \'Patroon losmaken\' te tikken.</string>
     <string name="dlg_confirm_delete_category">Categorie \'%s\' permanent verwijderen?</string>
     <string name="deleting_cat_success">Categorie is verwijderd</string>
     <string name="deleting_cat_failed">Verwijderen van categorie mislukt</string>
@@ -1574,6 +1602,7 @@ Language: nl
     <string name="ccpa_privacy_notice_header">Privacybericht voor gebruikers in Californie</string>
     <string name="status_and_visibility">Status &amp; zichtbaarheid</string>
     <string name="update_now">Update nu</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">Open menu met blokacties</string>
     <string name="gutenberg_native_move_to_top">Verplaats naar boven</string>
     <string name="gutenberg_native_insert_mention">Voeg vermelding in</string>
@@ -2811,14 +2840,10 @@ Language: nl
     <string name="password_incorrect">Het lijkt erop alsof dit wachtwoord onjuist is. Controleer je gegevens en probeer het nogmaals.</string>
     <string name="requesting_otp">Verificatiecode via sms aanvragen.</string>
     <string name="login_text_otp">Sms  mij een code in plaats daarvan</string>
-    <string name="enter_verification_code">Bijna klaar! Voer de verificatiecode uit je Authenticator-app in.</string>
+    <string name="enter_verification_code">Bijna klaar! Voer de verificatiecode voor WordPress.com uit je Authenticator-app in.</string>
     <string name="open_mail">Open e-mail</string>
     <string name="next">Volgende</string>
     <string name="enter_email_wordpress_com">Log in op WordPress.com met behulp van een e-mailadres om al je WordPress-sites te beheren.</string>
-    <string name="image_optimization_promo_desc">Afbeeldingoptimalisatie maakt afbeeldingen kleiner, zodat ze sneller geüpload kunnen worden.\n\nJe kunt deze optie op elk moment wijzigen in de site-instellingen.</string>
-    <string name="image_optimization_promo_title">Afbeeldingoptimalisatie aanzetten?</string>
-    <string name="leave_off">Uit laten staan</string>
-    <string name="turn_on">Inschakelen</string>
     <string name="me_profile_photo">Profielfoto</string>
     <string name="error_media_parse_error">Onverwachte reactie van server</string>
     <string name="upload_finished_toast">Kan de upload niet stoppen, omdat deze al voltooid is</string>
@@ -2955,11 +2980,6 @@ Language: nl
     <string name="editor_post_saved_online">Het bericht is online opgeslagen</string>
     <string name="site_settings_image_quality_hint">Kwaliteit van afbeeldingen. Hoe hoger de waarde, hoe beter de kwaliteit van je afbeeldingen.</string>
     <string name="site_settings_optimize_images_summary">Het aanpassen van de grootte en het comprimeren van afbeeldingen inschakelen</string>
-    <string name="media_encoder_quality_100">Maximaal</string>
-    <string name="media_encoder_quality_95">Zeer hoog</string>
-    <string name="media_encoder_quality_90">Hoog</string>
-    <string name="media_encoder_quality_85">Gemiddeld</string>
-    <string name="media_encoder_quality_80">Laag</string>
     <string name="media_upload_state_uploaded">Geüpload</string>
     <string name="media_upload_state_failed">Upload mislukt</string>
     <string name="media_upload_state_deleted">Verwijderd</string>

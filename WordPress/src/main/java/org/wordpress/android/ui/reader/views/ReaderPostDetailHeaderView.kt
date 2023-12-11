@@ -6,11 +6,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ReaderPostDetailHeaderViewBinding
 import org.wordpress.android.databinding.ReaderPostDetailHeaderViewNewBinding
+import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
+import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiHelpers
@@ -72,6 +75,8 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
         updateAvatars(uiState.blogSectionUiState)
         updateBlogSectionClick(uiState.blogSectionUiState)
+
+        updateInteractionSection(uiState.interactionSectionUiState)
     }
 
     private fun ReaderPostDetailHeaderBinding.updateBlogSectionClick(
@@ -80,7 +85,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         blogSectionRoot.apply {
             setBackgroundResource(context.getDrawableResIdFromAttribute(state.blogSectionClickData?.background ?: 0))
             state.blogSectionClickData?.onBlogSectionClicked?.let { onClick ->
-                setOnClickListener { onClick.invoke(state.postId, state.blogId) }
+                setOnClickListener { onClick.invoke() }
             } ?: run {
                 setOnClickListener(null)
                 isClickable = false
@@ -124,6 +129,8 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
         fun setAuthorAndDate(authorName: String?, dateLine: String)
 
+        fun updateInteractionSection(state: InteractionSectionUiState)
+
         class ImprovementsDisabled(
             private val binding: ReaderPostDetailHeaderViewBinding,
             private val uiHelpers: UiHelpers,
@@ -151,6 +158,10 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
                 textBy.setVisible(authorName != null)
                 postDetailDotSeparator.setVisible(authorName != null)
+            }
+
+            override fun updateInteractionSection(state: InteractionSectionUiState) {
+                // do nothing
             }
         }
 
@@ -180,6 +191,25 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
                 uiHelpers.setTextOrHide(blogSectionTextDateline, dateLine)
 
                 blogSectionDotSeparator.setVisible(authorName != null)
+            }
+
+            override fun updateInteractionSection(state: InteractionSectionUiState) = with(binding) {
+                val viewContext = root.context
+
+                val likeCount = state.likeCount
+                val commentCount = state.commentCount
+
+                val likeLabel = ReaderUtils.getShortLikeLabelText(viewContext, likeCount)
+                    .takeIf { likeCount > 0 }
+                val commentLabel = ReaderUtils.getShortCommentLabelText(viewContext, commentCount)
+                    .takeIf { commentCount > 0 }
+
+                uiHelpers.setTextOrHide(headerLikeCount, likeLabel)
+                uiHelpers.setTextOrHide(headerCommentCount, commentLabel)
+                headerDotSeparator.isVisible = likeLabel != null && commentLabel != null
+
+                headerLikeCount.setOnClickListener { state.onLikesClicked() }
+                headerCommentCount.setOnClickListener { state.onCommentsClicked() }
             }
         }
     }

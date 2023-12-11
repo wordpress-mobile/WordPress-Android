@@ -169,7 +169,13 @@ class SiteCreationMainVM @Inject constructor(
         } else {
             siteCreationState = requireNotNull(savedInstanceState.getParcelableCompat(KEY_SITE_CREATION_STATE))
             val currentStepIndex = savedInstanceState.getInt(KEY_CURRENT_STEP)
-            wizardManager.setCurrentStepIndex(currentStepIndex)
+            try {
+                wizardManager.setCurrentStepIndex(currentStepIndex)
+            } catch (e: IllegalStateException) {
+                // If the current step index is invalid, we reset the wizard
+                wizardManager.setCurrentStepIndex(0)
+                AppLog.e(T.THEMES, "Resetting site creation wizard: ${e.message}")
+            }
         }
         isStarted = true
     }
@@ -274,7 +280,7 @@ class SiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
-    fun onPlanSelection(plan: PlanModel, domainName: String?) {
+    fun onPlanSelection(plan: PlanModel?, domainName: String?) {
         siteCreationState = siteCreationState.copy(plan = plan)
         domainName?.let {
             siteCreationState = siteCreationState.copy(domain = siteCreationState.domain?.copy(domainName = it))
@@ -332,7 +338,7 @@ class SiteCreationMainVM @Inject constructor(
 
     fun onFreeSiteCreated(site: SiteModel) {
         siteCreationState = siteCreationState.copy(result = CreatedButNotFetched.NotInLocalDb(site))
-        if (siteCreationState.plan?.productSlug == "free_plan") {
+        if (siteCreationState.plan == null || siteCreationState.plan?.productSlug == "free_plan") {
             wizardManager.showNextStep()
         }
     }

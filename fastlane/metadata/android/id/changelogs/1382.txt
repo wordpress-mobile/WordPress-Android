@@ -1,3 +1,0 @@
-23.6:
-- Ikon media sosial dan judul Pola Tersinkron yang nonaktif kini tetap terlihat di tema berbasis blok yang menggunakan mode gelap. Usahamu boleh juga, kawan, tetapi kamuflasemu tak sehebat itu.
-- Di editor Klasik, Anda kini dapat mengonversi konten menjadi blok hanya dengan sekali mengeklik tombol.

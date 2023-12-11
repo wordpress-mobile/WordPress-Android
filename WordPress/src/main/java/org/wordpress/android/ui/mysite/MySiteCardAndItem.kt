@@ -44,6 +44,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         POST_CARD_ERROR,
         POST_CARD_WITH_POST_ITEMS,
         BLOGGING_PROMPT_CARD,
+        BLOGANUARY_NUDGE_CARD,
         PROMOTE_WITH_BLAZE_CARD,
         DASHBOARD_DOMAIN_TRANSFER_CARD,
         BLAZE_CAMPAIGNS_CARD,
@@ -58,6 +59,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         JETPACK_INSTALL_FULL_PLUGIN_CARD,
         NO_CARDS_MESSAGE,
         PERSONALIZE_CARD,
+        WP_SOTW_2023_NUDGE_CARD,
     }
 
     data class SiteInfoHeaderCard(
@@ -302,6 +304,14 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             ) : BloggingPromptCard(type = Type.BLOGGING_PROMPT_CARD)
         }
 
+        data class BloganuaryNudgeCardModel(
+            val title: UiString,
+            val text: UiString,
+            val onLearnMoreClick: ListItemInteraction,
+            val onMoreMenuClick: ListItemInteraction,
+            val onHideMenuItemClick: ListItemInteraction,
+        ) : Card(Type.BLOGANUARY_NUDGE_CARD)
+
         data class DomainTransferCardModel(
             @StringRes val title: Int,
             @StringRes val subtitle: Int,
@@ -370,6 +380,14 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onHideMenuItemClick: ListItemInteraction,
             val onMoreMenuClick: ListItemInteraction,
         ) : Card(type = Type.DASHBOARD_PLANS_CARD)
+
+        data class WpSotw2023NudgeCardModel(
+            val title: UiString,
+            val text: UiString,
+            val ctaText: UiString,
+            val onHideMenuItemClick: ListItemInteraction,
+            val onCtaClick: ListItemInteraction,
+        ) : Card(type = Type.WP_SOTW_2023_NUDGE_CARD)
 
         data class NoCardsMessage(val title: UiString, val message: UiString)  : Card(Type.NO_CARDS_MESSAGE)
         data class PersonalizeCardModel(val onClick: () -> Unit) : Card(Type.PERSONALIZE_CARD)

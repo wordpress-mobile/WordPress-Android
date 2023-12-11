@@ -1,5 +1,0 @@
-23.6:
-- Nuove opzioni di dominio/piani e schermate di pagamento nel processo di creazione del sito
-- La navigazione Il mio sito contiene link a sezioni comuni
-- Le icone social non attive e i titoli di pattern sincronizzati sono visibili in dark mode per i temi basati su blocchi
-- I contenuti possono essere convertiti in blocchi nell'editor classico

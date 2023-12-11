@@ -2352,13 +2352,8 @@ Language: vi_VN
     <string name="password_incorrect">Mật khẩu không hợp lệ. Kiểm tra kỹ thông tin và thử lại.</string>
     <string name="requesting_otp">Đang yêu cầu mã xác minh qua SMS.</string>
     <string name="login_text_otp">Nhắn mã cho tôi</string>
-    <string name="enter_verification_code">Sắp xong rồi! Hãy nhập mã xác minh từ ứng dụng xác minh của bạn.</string>
     <string name="next">Kế</string>
     <string name="enter_email_wordpress_com">Đăng nhập WordPress.com sử dụng một địa chỉ email để quản lý toàn bộ trang WordPress khác.</string>
-    <string name="image_optimization_promo_desc">Tối ưu hóa ảnh sẽ giúp tải lên nhanh hơn.\n\nBạn có thể thay đổi điều này trong thiết lập blog.</string>
-    <string name="image_optimization_promo_title">Bật tối ưu hóa ảnh?</string>
-    <string name="leave_off">Từ chối</string>
-    <string name="turn_on">Bật</string>
     <string name="me_profile_photo">Ảnh hồ sơ</string>
     <string name="error_media_parse_error">Phản hồi không mong muốn từ máy chủ</string>
     <string name="upload_finished_toast">Không thể dừng tải lên bởi vì đã tải lên xong</string>
@@ -2493,11 +2488,6 @@ Language: vi_VN
     <string name="editor_post_saved_online">Đã lưu bài viết online</string>
     <string name="site_settings_image_quality_hint">Chất lượng ảnh. Thông số càng cao thì chất lượng ảnh càng cao.</string>
     <string name="site_settings_optimize_images_summary">Thay đổi kích thước và nén hình</string>
-    <string name="media_encoder_quality_100">Tối đa</string>
-    <string name="media_encoder_quality_95">Rất cao</string>
-    <string name="media_encoder_quality_90">Cao</string>
-    <string name="media_encoder_quality_85">Trung bình</string>
-    <string name="media_encoder_quality_80">Thấp</string>
     <string name="media_upload_state_uploaded">Đã tải lên</string>
     <string name="media_upload_state_failed">Tải lên thất bại</string>
     <string name="media_upload_state_deleted">Đã xóa</string>
