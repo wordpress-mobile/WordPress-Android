@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-29 09:54:09+0000
+Translation-Revision-Date: 2023-12-05 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: ko_KR
 -->
 <resources>
+    <string name="turn_off">아니요. 끄기</string>
+    <string name="leave_on">예. 그대로 두기</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">따라서 웹 브라우저를 사용하여 블록을 편집하는 것이 좋습니다.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">따라서 웹 편집기를 사용하여 블록을 편집하는 것이 좋습니다.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">그 대신에 블록 그룹 해제를 통해 콘텐츠를 평평하게 하실 수 있습니다.</string>
@@ -20,10 +22,6 @@ Language: ko_KR
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%d 레벨보다 깊숙이 중첩된 블록은 모바일 편집기에서 올바르게 렌더링되지 않을 수 있습니다.</string>
     <string name="jp_migration_lets_go_button">지금 시작</string>
     <string name="jp_migration_done_no_sites_message">젯팩 앱에서 워드프레스 여정을 계속하실 때가 되었습니다.</string>
-    <string name="image_optimization_promo_desc">이미지 최적화에서는 더 빠른 업로드를 위해 이미지가 축소됩니다.\n\n이 옵션은 기본적으로 활성화되어 있지만, 언제든지 앱 설정에서 변경하실 수 있습니다.</string>
-    <string name="image_optimization_promo_title">이미지를 계속 최적화하시겠어요?</string>
-    <string name="leave_off">아니요. 끄기</string>
-    <string name="turn_on">예. 그대로 두기</string>
     <string name="domain_management_clear_search">검색 지우기</string>
     <string name="media_encoder_quality_very_high">매우 높음</string>
     <string name="notification_security_key_needed">계속하려면 보안 키를 입력하세요.</string>

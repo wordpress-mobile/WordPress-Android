@@ -85,7 +85,7 @@ sealed class SiteNavigationAction {
     data class EditDraftPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
     data class EditScheduledPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
     data class OpenStatsInsights(val site: SiteModel) : SiteNavigationAction()
-    data class OpenTodaysStatsGetMoreViewsExternalUrl(val url: String) : SiteNavigationAction()
+    data class OpenExternalUrl(val url: String) : SiteNavigationAction()
     object OpenJetpackPoweredBottomSheet : SiteNavigationAction()
     object OpenJetpackMigrationDeleteWP : SiteNavigationAction()
     data class OpenJetpackFeatureOverlay(val source: JetpackFeatureCollectionOverlaySource) : SiteNavigationAction()
@@ -107,6 +107,8 @@ sealed class SiteNavigationAction {
 
     data class OpenDomainTransferPage(val url: String) : SiteNavigationAction()
     object OpenDashboardPersonalization : SiteNavigationAction()
+
+    data class OpenBloganuaryNudgeOverlay(val isPromptsEnabled: Boolean): SiteNavigationAction()
 }
 
 sealed class BloggingPromptCardNavigationAction: SiteNavigationAction() {

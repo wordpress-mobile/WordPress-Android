@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-29 13:54:09+0000
+Translation-Revision-Date: 2023-12-05 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: it
 -->
 <resources>
+    <string name="turn_off">No, disattiva</string>
+    <string name="leave_on">Si, continua</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Per questo motivo consigliamo di modificare il blocco tramite il browser web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Per questo motivo consigliamo di modificare il blocco tramite l\'editor web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">In alternativa, puoi uniformare i contenuti separando il blocco.</string>
@@ -20,10 +22,6 @@ Language: it
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">I blocchi con più di %d livelli di nidificazione potrebbero non essere visualizzati correttamente nell\'editor per dispositivi mobili.</string>
     <string name="jp_migration_lets_go_button">Iniziamo</string>
     <string name="jp_migration_done_no_sites_message">È ora di continuare il tuo viaggio con WordPress sull\'app Jetpack.</string>
-    <string name="image_optimization_promo_desc">L\'ottimizzazione delle immagini restringe l\'immagine per un caricamento più veloce.\n\nQuesta opzione viene attivata per impostazione predefinita, ma puoi modificarla nelle impostazioni dell\'app in qualsiasi momento.</string>
-    <string name="image_optimization_promo_title">Vuoi continuare a ottimizzare le immagini?</string>
-    <string name="leave_off">No, disattiva</string>
-    <string name="turn_on">Si, continua</string>
     <string name="domain_management_clear_search">Cancella ricerca</string>
     <string name="media_encoder_quality_very_high">Molto alta</string>
     <string name="notification_security_key_needed">Fornisci una chiave di sicurezza per continuare.</string>

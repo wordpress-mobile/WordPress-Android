@@ -23,9 +23,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthError
 import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore
 import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore.QRCodeAuthResult
 import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore.QRCodeAuthValidateResult
-import org.wordpress.android.ui.barcodescanner.BarcodeScanningTracker
-import org.wordpress.android.ui.barcodescanner.CodeScannerStatus
-import org.wordpress.android.ui.barcodescanner.ScanningSource
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
@@ -55,15 +52,12 @@ class QRCodeAuthViewModel @Inject constructor(
     private val uiStateMapper: QRCodeAuthUiStateMapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val validator: QRCodeAuthValidator,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val barcodeScanningTracker: BarcodeScanningTracker
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ViewModel() {
     private val _actionEvents = Channel<QRCodeAuthActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
-
     private val _uiState = MutableStateFlow<QRCodeAuthUiState>(Loading)
     val uiState: StateFlow<QRCodeAuthUiState> = _uiState
-
     private var trackingOrigin: String? = null
     private var data: String? = null
     private var token: String? = null
@@ -71,13 +65,10 @@ class QRCodeAuthViewModel @Inject constructor(
     private var browser: String? = null
     private var lastState: QRCodeAuthUiStateType? = null
     private var isStarted = false
-
     fun start(uri: String? = null, isDeepLink: Boolean = false, savedInstanceState: Bundle? = null) {
         if (isStarted) return
         isStarted = true
-
         extractSavedInstanceStateIfNeeded(savedInstanceState)
-
         if (isDeepLink && savedInstanceState == null) {
             trackingOrigin = ORIGIN_DEEPLINK
             process(uri)
@@ -95,7 +86,7 @@ class QRCodeAuthViewModel @Inject constructor(
             location = savedInstanceState.getString(LOCATION_KEY, null)
             trackingOrigin = savedInstanceState.getString(TRACKING_ORIGIN_KEY, ORIGIN_MENU)
             lastState = QRCodeAuthUiStateType.fromString(savedInstanceState.getString(LAST_STATE_KEY, null))
-         }
+        }
     }
 
     private fun startOrRestoreUiState() {
@@ -109,6 +100,7 @@ class QRCodeAuthViewModel @Inject constructor(
                     this::onAuthenticateCancelClicked
                 )
             )
+
             AUTHENTICATING -> postUiState(uiStateMapper.mapToAuthenticating(location = location, browser = browser))
             DONE -> postUiState(uiStateMapper.mapToDone(this::onDismissClicked))
             // errors
@@ -119,37 +111,25 @@ class QRCodeAuthViewModel @Inject constructor(
                     this::onCancelClicked
                 )
             )
+
             EXPIRED_TOKEN -> postUiState(uiStateMapper.mapToExpired(this::onScanAgainClicked, this::onCancelClicked))
             NO_INTERNET -> {
                 postUiState(uiStateMapper.mapToNoInternet(this::onScanAgainClicked, this::onCancelClicked))
             }
-            else -> updateUiStateAndLaunchScanner()
-        }
-    }
 
-    fun handleScanningResult(status: CodeScannerStatus) {
-        when (status) {
-            is CodeScannerStatus.Success -> onScanSuccess(status.code)
-            is CodeScannerStatus.Failure -> onScanFailure(status)
-            is CodeScannerStatus.Exit -> onExit()
-            is CodeScannerStatus.NavigateUp -> onBackPressed()
+            else -> updateUiStateAndLaunchScanner()
         }
     }
 
     //  https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=asdfadsfa&data=asdfasdf
     fun onScanSuccess(scannedValue: String?) {
-        barcodeScanningTracker.trackSuccess(ScanningSource.QRCODE_LOGIN)
         track(Stat.QRLOGIN_SCANNER_SCANNED_CODE)
         process(scannedValue)
     }
 
-    fun onScanFailure(status: CodeScannerStatus.Failure) {
-        barcodeScanningTracker.trackScanFailure(ScanningSource.QRCODE_LOGIN, status.type)
-        postActionEvent(FinishActivity)
-    }
-
-    private fun onExit() {
-        track(Stat.QRLOGIN_SCANNER_DISMISSED_CAMERA_PERMISSION_DENIED)
+    fun onScanFailure() {
+        // Note: This is a result of the tap on "X" within the scanner view
+        track(Stat.QRLOGIN_SCANNER_DISMISSED)
         postActionEvent(FinishActivity)
     }
 
@@ -191,9 +171,7 @@ class QRCodeAuthViewModel @Inject constructor(
     private fun process(input: String?) {
         clearProperties()
         extractQueryParamsIfValid(input)
-
         track(Stat.QRLOGIN_VERIFY_DISPLAYED)
-
         if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
             track(QRLOGIN_VERIFY_FAILED, TRACK_INVALID_DATA)
             postUiState(uiStateMapper.mapToInvalidData(this::onScanAgainClicked, this::onCancelClicked))
@@ -209,7 +187,6 @@ class QRCodeAuthViewModel @Inject constructor(
             postUiState(uiStateMapper.mapToNoInternet(this::onScanAgainClicked, this::onCancelClicked))
             return
         }
-
         viewModelScope.launch {
             val result = authStore.validate(data = data, token = token)
             if (result.isError) {
@@ -242,6 +219,7 @@ class QRCodeAuthViewModel @Inject constructor(
                 uiStateMapper.mapToAuthFailed(this::onScanAgainClicked, this::onCancelClicked)
             }
         }
+
         GENERIC_ERROR,
         INVALID_RESPONSE,
         REST_INVALID_PARAM,
@@ -252,7 +230,6 @@ class QRCodeAuthViewModel @Inject constructor(
 
     private fun extractQueryParamsIfValid(scannedValue: String?) {
         if (!validator.isValidUri(scannedValue)) return
-
         val queryParams = validator.extractQueryParams(scannedValue)
         if (queryParams.containsKey(DATA_KEY) && queryParams.containsKey(TOKEN_KEY)) {
             this.data = queryParams[DATA_KEY].toString()
@@ -266,7 +243,6 @@ class QRCodeAuthViewModel @Inject constructor(
             postUiState(uiStateMapper.mapToNoInternet(this::onScanAgainClicked, this::onCancelClicked))
             return
         }
-
         viewModelScope.launch {
             val result = authStore.authenticate(data = data, token = token)
             if (result.isError) {
@@ -287,7 +263,6 @@ class QRCodeAuthViewModel @Inject constructor(
     }
 
     private fun mapAuthenticateSuccessToDoneState() = uiStateMapper.mapToDone(this::onDismissClicked)
-
     private fun updateUiStateAndLaunchScanner() {
         postUiState(uiStateMapper.mapToScanning())
         postActionEvent(LaunchScanner)
@@ -307,11 +282,8 @@ class QRCodeAuthViewModel @Inject constructor(
 
     fun onDialogInteraction(interaction: DialogInteraction) {
         when (interaction) {
-            is Positive -> {
-                track(Stat.QRLOGIN_SCANNER_DISMISSED)
-                postActionEvent(FinishActivity)
-            }
-            is Negative -> onScanAgainClicked()
+            is Positive -> postActionEvent(FinishActivity)
+            is Negative -> Unit
             is Dismissed -> Unit
         }
     }

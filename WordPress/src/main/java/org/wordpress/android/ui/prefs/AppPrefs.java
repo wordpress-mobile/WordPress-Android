@@ -206,6 +206,8 @@ public class AppPrefs {
 
         SHOULD_SHOW_SITE_ITEM_AS_QUICK_LINK_IN_DASHBOARD,
         SHOULD_SHOW_DEFAULT_QUICK_LINK_IN_DASHBOARD,
+        SHOULD_HIDE_BLOGANUARY_NUDGE_CARD,
+        SHOULD_HIDE_SOTW2023_NUDGE_CARD,
     }
 
     /**
@@ -1806,5 +1808,26 @@ public class AppPrefs {
 
     public static Boolean getShouldShowDefaultQuickLink(String siteItem, final long siteId) {
         return prefs().getBoolean(getShouldShowDefaultQuickLinkKey(siteItem, siteId), true);
+    }
+
+    @NonNull
+    private static String getSiteIdHideBloganuaryNudgeCardKey(long siteId) {
+        return DeletablePrefKey.SHOULD_HIDE_BLOGANUARY_NUDGE_CARD.name() + siteId;
+    }
+
+    public static void setShouldHideBloganuaryNudgeCard(final long siteId, final boolean isHidden) {
+        prefs().edit().putBoolean(getSiteIdHideBloganuaryNudgeCardKey(siteId), isHidden).apply();
+    }
+
+    public static boolean getShouldHideBloganuaryNudgeCard(final long siteId) {
+        return prefs().getBoolean(getSiteIdHideBloganuaryNudgeCardKey(siteId), false);
+    }
+
+    public static void setShouldHideSotw2023NudgeCard(boolean isHidden) {
+        prefs().edit().putBoolean(DeletablePrefKey.SHOULD_HIDE_SOTW2023_NUDGE_CARD.name(), isHidden).apply();
+    }
+
+    public static boolean getShouldHideSotw2023NudgeCard() {
+        return prefs().getBoolean(DeletablePrefKey.SHOULD_HIDE_SOTW2023_NUDGE_CARD.name(), false);
     }
 }

@@ -18,6 +18,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloganuaryNudgeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
@@ -131,6 +132,12 @@ class CardsBuilderTest {
                 onErrorRetryClick = mock(),
                 todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
                 postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
+                bloganuaryNudgeCardBuilderParams = BloganuaryNudgeCardBuilderParams(
+                    false,
+                    mock(),
+                    mock(),
+                    mock(),
+                ),
                 bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                     mock(),
                     mock(),

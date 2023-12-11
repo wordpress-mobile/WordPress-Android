@@ -1031,8 +1031,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "close_account_failed";
             case CLOSED_ACCOUNT:
                 return "closed_account";
-            case SHARED_ITEM:
-                return "item_shared";
             case SHARED_ITEM_READER:
                 return "item_shared_reader";
             case ADDED_SELF_HOSTED_SITE:
@@ -2677,6 +2675,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "barcode_scanning_failure";
             case QRLOGIN_SCANNER_DISMISSED_CAMERA_PERMISSION_DENIED:
                 return "qrlogin_scanner_dismissed_camera_permission_denied";
+            case BLOGANUARY_NUDGE_MY_SITE_CARD_LEARN_MORE_TAPPED:
+                return "bloganuary_nudge_my_site_card_learn_more_tapped";
+            case BLOGANUARY_NUDGE_LEARN_MORE_MODAL_SHOWN:
+                return "bloganuary_nudge_learn_more_modal_shown";
+            case BLOGANUARY_NUDGE_LEARN_MORE_MODAL_DISMISSED:
+                return "bloganuary_nudge_learn_more_modal_dismissed";
+            case BLOGANUARY_NUDGE_LEARN_MORE_MODAL_ACTION_TAPPED:
+                return "bloganuary_nudge_learn_more_modal_action_tapped";
+            case SOTW_2023_NUDGE_POST_EVENT_CARD_SHOWN:
+                return "sotw_2023_nudge_post_event_card_shown";
+            case SOTW_2023_NUDGE_POST_EVENT_CARD_HIDE_TAPPED:
+                return "sotw_2023_nudge_post_event_card_hide_tapped";
+            case SOTW_2023_NUDGE_POST_EVENT_CARD_CTA_TAPPED:
+                return "sotw_2023_nudge_post_event_card_cta_tapped";
         }
         return null;
     }

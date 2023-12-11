@@ -412,6 +412,18 @@ class AppPrefsWrapper @Inject constructor() {
     fun getShouldShowDefaultQuickLink(siteItem: String, siteId: Long): Boolean =
         AppPrefs.getShouldShowDefaultQuickLink(siteItem, siteId)
 
+    fun setShouldHideBloganuaryNudgeCard(siteId: Long, isHidden: Boolean) =
+        AppPrefs.setShouldHideBloganuaryNudgeCard(siteId, isHidden)
+
+    fun getShouldHideBloganuaryNudgeCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideBloganuaryNudgeCard(siteId)
+
+    fun setShouldHideSotw2023NudgeCard(isHidden: Boolean): Unit =
+        AppPrefs.setShouldHideSotw2023NudgeCard(isHidden)
+
+    fun getShouldHideSotw2023NudgeCard(): Boolean =
+        AppPrefs.getShouldHideSotw2023NudgeCard()
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {

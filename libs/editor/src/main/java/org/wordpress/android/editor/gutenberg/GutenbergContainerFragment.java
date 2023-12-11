@@ -1,6 +1,7 @@
 package org.wordpress.android.editor.gutenberg;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
@@ -14,6 +15,7 @@ import com.facebook.react.bridge.WritableNativeMap;
 import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.R;
+import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.GutenbergProps;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
@@ -53,11 +55,12 @@ public class GutenbergContainerFragment extends Fragment {
     private boolean mHasReceivedAnyContent;
 
     private WPAndroidGlueCode mWPAndroidGlueCode;
-    public static GutenbergContainerFragment newInstance(GutenbergPropsBuilder gutenbergPropsBuilder) {
+    public static GutenbergContainerFragment newInstance(Context context, GutenbergPropsBuilder gutenbergPropsBuilder) {
         GutenbergContainerFragment fragment = new GutenbergContainerFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_GUTENBERG_PROPS_BUILDER, gutenbergPropsBuilder);
-        fragment.setArguments(args);
+        SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(context);
+        if (db != null) {
+            db.addParcel(ARG_GUTENBERG_PROPS_BUILDER, gutenbergPropsBuilder);
+        }
         return fragment;
     }
 
@@ -124,7 +127,11 @@ public class GutenbergContainerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        GutenbergPropsBuilder gutenbergPropsBuilder = getArguments().getParcelable(ARG_GUTENBERG_PROPS_BUILDER);
+        GutenbergPropsBuilder gutenbergPropsBuilder = null;
+        SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(getContext());
+        if (db != null) {
+            gutenbergPropsBuilder = db.getParcel(ARG_GUTENBERG_PROPS_BUILDER, GutenbergPropsBuilder.CREATOR);
+        }
 
         Consumer<Exception> exceptionLogger = null;
         Consumer<String> breadcrumbLogger = null;

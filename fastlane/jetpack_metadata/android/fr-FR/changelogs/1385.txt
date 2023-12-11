@@ -1,4 +1,0 @@
-23.7 :
-- L’écran Tous les domaines vous permet de gérer tous vos domaines dans l’application.
-- La section Articles et Pages bénéficie de meilleures options d’affichage et d’un menu contextuel étendu.
-- Nous avons corrigé des erreurs dans l’éditeur de blocs engendrées par le coller de contenu profondément imbriqué ou l’utilisation de couleurs de texte dans des anciens thèmes de site.

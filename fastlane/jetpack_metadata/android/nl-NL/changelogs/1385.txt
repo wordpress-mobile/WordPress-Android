@@ -1,4 +1,0 @@
-23.7:
-- In het scherm Alle domeinen kan je al je domeinen in de app beheren.
-- Berichten en Pagina's heeft verbeterde weergaveopties en een uitgebreid contextmenu.
-- We hebben problemen met de blokeditor opgelost door werden veroorzaak door het plakken van diepgeneste content of het gebruiken van tekstkleuren in oudere sitethema's.

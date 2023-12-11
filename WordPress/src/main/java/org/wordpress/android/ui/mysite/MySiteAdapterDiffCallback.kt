@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.DiffUtil
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.BlazeCampaignsCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BlazeCard.PromoteWithBlazeCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloganuaryNudgeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardW
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.WpSotw2023NudgeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
@@ -44,6 +46,7 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
             oldItem is TodaysStatsCardWithData && updatedItem is TodaysStatsCardWithData -> true
             oldItem is PostCardWithPostItems && updatedItem is PostCardWithPostItems -> true
             oldItem is BloggingPromptCardWithData && updatedItem is BloggingPromptCardWithData -> true
+            oldItem is BloganuaryNudgeCardModel && updatedItem is BloganuaryNudgeCardModel -> true
             oldItem is PromoteWithBlazeCard && updatedItem is PromoteWithBlazeCard -> true
             oldItem is BlazeCampaignsCardModel && updatedItem is BlazeCampaignsCardModel -> true
             oldItem is DomainTransferCardModel && updatedItem is DomainTransferCardModel -> true
@@ -62,6 +65,7 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
             oldItem is MySiteCardAndItem.Card.NoCardsMessage && updatedItem is
                     MySiteCardAndItem.Card.NoCardsMessage -> true
             oldItem is PersonalizeCardModel && updatedItem is PersonalizeCardModel -> true
+            oldItem is WpSotw2023NudgeCardModel && updatedItem is WpSotw2023NudgeCardModel -> true
             else -> throw UnsupportedOperationException("Diff not implemented yet")
         }
     }

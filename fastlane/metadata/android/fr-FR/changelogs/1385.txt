@@ -1,3 +1,0 @@
-23.7 :
-- L’écran Articles et Pages a bénéficié d’un lifting et dispose désormais d’options d’affichage épurées et simples. Le menu contextuel vous permet aussi d’accéder aux commentaires, aux réglages et à d’autres actions relatives à un article ou une page.
-- Nous avons corrigé des erreurs dans l’éditeur de blocs engendrées par le coller de contenu profondément imbriqué ou l’utilisation de couleurs de texte dans des anciens thèmes de site.

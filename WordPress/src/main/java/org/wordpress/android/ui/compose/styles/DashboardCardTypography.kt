@@ -28,9 +28,7 @@ object DashboardCardTypography {
 
     val detailText: TextStyle
         @Composable
-        get() = MaterialTheme.typography.bodyLarge.copy(
-            fontWeight = FontWeight.Normal,
-            fontSize = 14.sp,
+        get() = MaterialTheme.typography.bodyMedium.copy(
             color = colors.onSurface.copy(alpha = ContentAlpha.medium)
         )
 

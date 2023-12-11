@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-29 07:58:29+0000
+Translation-Revision-Date: 2023-12-07 11:46:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: es
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">¡Vamos allá!</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Activa las sugerencias de publicación</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary utilizará las sugerencias de publicación diarias para enviarte temas durante el mes de enero.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Bloganuary usará las sugerencias diarias de publicación para enviarte temas para el mes de enero. Actualmente tienes desactivadas las sugerencias de publicación.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">Lee las respuestas de otros blogueros para conseguir inspiración y hacer nuevas conexiones.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">Publica tu respuesta.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">Recibe una sugerencia nueva para inspirarte cada día.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">Únete a nuestro reto de escritura de un mes</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
+    <string name="bloganuary_dashboard_nudge_text">Durante el mes de enero, recibirás sugerencias de publicación de Bloganuary, nuestro reto de la comunidad para que crees un hábito de publicación sólido para el nuevo año.</string>
+    <string name="bloganuary_dashboard_nudge_title">¡Bloganuary está a la vuelta de la esquina!</string>
+    <string name="turn_off">No, apágala</string>
+    <string name="leave_on">Sí, déjala encendida</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Por esta razón, te recomendamos que edites el bloque utilizando tu navegador web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Por este motivo, te recomendamos que edites el bloque utilizando el editor web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">También puedes aplanar el contenido desagrupando el bloque.</string>
@@ -20,10 +33,8 @@ Language: es
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Es posible que los bloques anidados a más de %d niveles no se muestren correctamente en el editor móvil.</string>
     <string name="jp_migration_lets_go_button">Vamos</string>
     <string name="jp_migration_done_no_sites_message">Es hora de continuar tu viaje por WordPress en la aplicación Jetpack.</string>
-    <string name="image_optimization_promo_desc">La optimización de imágenes las reduce para subirlas más rápido.\n\nEsta opción está activada por defecto, pero puedes cambiarla en los ajustes de la aplicación en cualquier momento.</string>
-    <string name="image_optimization_promo_title">¿Seguir optimizando las imágenes?</string>
-    <string name="leave_off">No, apágala</string>
-    <string name="turn_on">Sí, déjala encendida</string>
+    <string name="image_optimization_popup_desc">La optimización de imágenes las reduce para subirlas más rápido.\n\nEsta opción está activada por defecto, pero puedes cambiarla en los ajustes de la aplicación en cualquier momento.</string>
+    <string name="image_optimization_popup_title">¿Seguir optimizando las imágenes?</string>
     <string name="domain_management_clear_search">Vaciar la búsqueda</string>
     <string name="media_encoder_quality_very_high">Muy alta</string>
     <string name="notification_security_key_needed">Introduce tu clave de seguridad para continuar.</string>
@@ -2280,7 +2291,7 @@ Language: es
     <string name="stats_clicks_link_label">Enlace</string>
     <string name="stats_clicks">Clics</string>
     <string name="stats_referrer_views_label">Vistas</string>
-    <string name="stats_referrer_label">Referente</string>
+    <string name="stats_referrer_label">Remitente</string>
     <string name="stats_referrers">Referentes</string>
     <string name="stats_posts_and_pages">Entradas y páginas</string>
     <string name="stats_insights_path">Ruta</string>

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-29 15:54:10+0000
+Translation-Revision-Date: 2023-12-05 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: tr
 -->
 <resources>
+    <string name="turn_off">Hayır, kapat</string>
+    <string name="leave_on">Evet, açık kalsın</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Bu nedenle, bloku web tarayıcınızı kullanarak düzenlemenizi öneririz.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Bu nedenle, bloku web düzenleyicinizi kullanarak düzenlemenizi öneririz.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternatif olarak bloku gruplamadan çıkararak içeriği düzleştirebilirsiniz.</string>
@@ -20,10 +22,6 @@ Language: tr
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%d seviyelerinden daha derin bir şekilde iç içe geçmiş bloklar, mobil düzenleyicide düzgün şekilde oluşmayabilir.</string>
     <string name="jp_migration_lets_go_button">Haydi başlayalım</string>
     <string name="jp_migration_done_no_sites_message">Jetpack uygulamasındaki WordPress yolculuğunuza devam etme vakti.</string>
-    <string name="image_optimization_promo_desc">Görsel iyileştirme özelliği, daha hızlı yüklenmeleri için görselleri küçültür.\n\nBu seçenek varsayılan olarak etkindir, ancak dilediğiniz zaman uygulama ayarlarından değiştirebilirsiniz.</string>
-    <string name="image_optimization_promo_title">Görseller iyileştirilmeye devam edilsin mi?</string>
-    <string name="leave_off">Hayır, kapat</string>
-    <string name="turn_on">Evet, açık kalsın</string>
     <string name="domain_management_clear_search">Aramayı temizle</string>
     <string name="media_encoder_quality_very_high">Çok Yüksek</string>
     <string name="notification_security_key_needed">Lütfen devam etmek için güvenlik anahtarınızı girin.</string>
