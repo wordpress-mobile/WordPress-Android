@@ -1,7 +1,9 @@
+import com.automattic.android.measure.MeasureBuildsExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id "io.gitlab.arturbosch.detekt"
+    id 'com.automattic.android.measure-builds'
     id "androidx.navigation.safeargs.kotlin" apply false
     id "com.android.library" apply false
     id 'com.google.gms.google-services' apply false
@@ -104,6 +106,13 @@ ext {
     // other
     androidDesugarVersion = '2.0.4'
     wordPressLintVersion = '2.0.0'
+}
+
+measureBuilds {
+    enable = findProperty('measureBuildsEnabled')?.toBoolean() ?: false
+    automatticProject = MeasureBuildsExtension.AutomatticProject.WordPress
+    authToken = findProperty('appsMetricsToken')
+    attachGradleScanId = System.getenv('CI')?.toBoolean() ?: false
 }
 
 allprojects {
