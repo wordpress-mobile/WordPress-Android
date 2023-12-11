@@ -25,7 +25,7 @@ fun Item(
     onMenuItemClick: (MenuElementData) -> Unit,
 ) {
     val enabledContentColor = itemContentColor()
-    val disabledContentColor = if (androidx.compose.material.MaterialTheme.colors.isLight) {
+    val disabledContentColor = if (isLightTheme()) {
         AppColor.Gray10
     } else {
         AppColor.Gray50
