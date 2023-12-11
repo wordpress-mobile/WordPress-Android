@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
-import androidx.compose.material3.DividerDefaults
+import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,13 +47,7 @@ fun JetpackDropdownMenu(menuItems: List<MenuElementData>, defaultItem: MenuEleme
                     is MenuElementData.Item -> Item(element, onMenuItemClick)
                 }
                 if (element.hasDivider) {
-                    Divider(
-                        color = if (isLightTheme()) {
-                            DividerDefaults.color
-                        } else {
-                            DividerDefaults.color.copy(alpha = 0.5f)
-                        }
-                    )
+                    Divider()
                 }
             }
         }
