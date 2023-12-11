@@ -4818,4 +4818,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can flatten the content by ungrouping the block.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">For this reason, we recommend editing the block using the web editor.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">For this reason, we recommend editing the block using your web browser.</string>
+
+    <string name="media_cannot_be_started">We cannot open media at the moment. Please try again later</string>
 </resources>

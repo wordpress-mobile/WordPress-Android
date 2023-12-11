@@ -695,9 +695,9 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site);
     }
 
-    public static void openMediaInNewStack( @NonNull Context context, SiteModel site) {
+    public static void openMediaInNewStack(@NonNull Context context, SiteModel site) {
         if (site == null) {
-            ToastUtils.showToast(context, R.string.pages_cannot_be_started, ToastUtils.Duration.SHORT);
+            ToastUtils.showToast(context, R.string.media_cannot_be_started, ToastUtils.Duration.SHORT);
             return;
         }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site);
@@ -713,7 +713,7 @@ public class ActivityLauncher {
     public static void openMediaInNewStack(@NonNull Context context) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
         Intent intent = getMainActivityInNewStack(context);
-        intent.putExtra(WPMainActivity.ARG_MEDIA, WPMainActivity.ARG_MEDIA);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_MEDIA);
         context.startActivity(intent);
     }
 
