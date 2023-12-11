@@ -23,7 +23,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.MySiteFragmentBinding
-import org.wordpress.android.databinding.MySiteInfoHeaderCardBinding
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.ui.ActivityLauncher
@@ -43,8 +42,6 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
@@ -81,7 +78,6 @@ import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
-import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel
@@ -553,34 +549,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             noSitesView.avatarAccountSettings.setVisible(false)
         }
     }
-
-    private fun MySiteInfoHeaderCardBinding.loadMySiteDetails(siteInfoHeader: SiteInfoHeaderCard) {
-        siteTitle = siteInfoHeader.title
-        if (siteInfoHeader.iconState is IconState.Visible) {
-            mySiteBlavatar.visibility = View.VISIBLE
-            imageManager.load(mySiteBlavatar, BLAVATAR, siteInfoHeader.iconState.url ?: "")
-            mySiteIconProgress.visibility = View.GONE
-            mySiteBlavatar.setOnClickListener { siteInfoHeader.onIconClick.click() }
-        } else if (siteInfoHeader.iconState is IconState.Progress) {
-            mySiteBlavatar.setOnClickListener(null)
-            mySiteIconProgress.visibility = View.VISIBLE
-            mySiteBlavatar.visibility = View.GONE
-        }
-        quickStartIconFocusPoint.setVisibleOrGone(siteInfoHeader.showIconFocusPoint)
-        if (siteInfoHeader.onTitleClick != null) {
-            siteInfoContainer.title.setOnClickListener { siteInfoHeader.onTitleClick.click() }
-        } else {
-            siteInfoContainer.title.setOnClickListener(null)
-        }
-        siteInfoContainer.title.text = siteInfoHeader.title
-        quickStartTitleFocusPoint.setVisibleOrGone(siteInfoHeader.showTitleFocusPoint)
-        quickStartSubTitleFocusPoint.setVisibleOrGone(siteInfoHeader.showSubtitleFocusPoint)
-        siteInfoContainer.subtitle.text = siteInfoHeader.url
-        siteInfoContainer.subtitle.setOnClickListener { siteInfoHeader.onUrlClick.click() }
-        switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
-        siteInfoCard.visibility = View.VISIBLE
-    }
-
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
         recyclerView.setVisible(false)
