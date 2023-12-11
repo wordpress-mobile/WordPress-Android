@@ -5,6 +5,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenMediaForSite
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenMedia
 import org.wordpress.android.ui.deeplinks.DeepLinkUriUtils
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.HOST_WORDPRESS_COM
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.SITE_DOMAIN
 import org.wordpress.android.util.UriWrapper
@@ -16,8 +17,8 @@ class MediaLinkHandler
      * Returns true if the URI looks like `wordpress.com/media`
      */
     override fun shouldHandleUrl(uri: UriWrapper): Boolean {
-        return uri.host == HOST_WORDPRESS_COM &&
-                uri.pathSegments.firstOrNull() == NEDIA_PATH
+        return  (uri.host == HOST_WORDPRESS_COM &&
+                uri.pathSegments.firstOrNull() == NEDIA_PATH) || uri.host == NEDIA_PATH
     }
 
     override fun buildNavigateAction(uri: UriWrapper): NavigateAction {
@@ -33,8 +34,18 @@ class MediaLinkHandler
 
     override fun stripUrl(uri: UriWrapper): String {
         return buildString {
-            append("$HOST_WORDPRESS_COM/$NEDIA_PATH")
-            if (uri.pathSegments.size > 1) {
+            val offset = if (uri.host == NEDIA_PATH) {
+                append(DeepLinkingIntentReceiverViewModel.APPLINK_SCHEME)
+                0
+            } else {
+                append("$HOST_WORDPRESS_COM/")
+                1
+            }
+            append(NEDIA_PATH)
+            val pathSegments = uri.pathSegments
+            val size = pathSegments.size
+            val hasSiteUrl = if (size > offset + 1) pathSegments.getOrNull(offset + 1) != null else false
+            if (hasSiteUrl) {
                 append("/$SITE_DOMAIN")
             }
         }
