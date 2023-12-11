@@ -85,7 +85,10 @@ class StorePostViewModel
                 editPostRepository.getPost(),
                 requireNotNull(siteStore.getSiteByLocalId(editPostRepository.localSiteId))
             )
-            uploadService.uploadPost(context, editPostRepository.id, isFirstTimePublish)
+            uploadService.uploadPost(
+                context, editPostRepository.id, isFirstTimePublish,
+                "StorePostViewModel#savePostOnline"
+            )
             SAVED_ONLINE
         } else {
             SAVED_LOCALLY
