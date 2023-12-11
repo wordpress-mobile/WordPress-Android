@@ -49,9 +49,9 @@ fun Item(
             Text(
                 text = element.text,
                 color = enabledContentColor,
-                style = MaterialTheme.typography.labelLarge,
+                style = MaterialTheme.typography.bodyLarge,
                 overflow = TextOverflow.Ellipsis,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.Normal,
                 maxLines = 1,
             )
         },
