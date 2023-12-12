@@ -19,6 +19,10 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.Post
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel.PageCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.CardOrder
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardRowModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
@@ -29,6 +33,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.DashboardActivityLogCardFeatureUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.config.DynamicDashboardCardsFeatureConfig
 
 /* SITE */
 
@@ -56,6 +61,18 @@ const val PAGE_CONTENT = "content"
 const val PAGE_MODIFIED_ON = "2023-03-02 10:26:53"
 const val PAGE_STATUS = "publish"
 const val PAGE_DATE = "2023-03-02 10:30:53"
+
+/* DYNAMIC CARDS */
+const val DYNAMIC_CARD_ID = "year_in_review_2023"
+const val DYNAMIC_CARD_TITLE = "News"
+const val DYNAMIC_CARD_REMOTE_FEATURE_FLAG = "dynamic_dashboard_cards"
+const val DYNAMIC_CARD_FEATURED_IMAGE = "https://path/to/image"
+const val DYNAMIC_CARD_URL = "https://wordpress.com"
+const val DYNAMIC_CARD_ACTION = "Call to action"
+const val DYNAMIC_CARD_ORDER = "top"
+const val DYNAMIC_CARD_ROW_ICON = "https://path/to/image"
+const val DYNAMIC_CARD_ROW_TITLE = "Row title"
+const val DYNAMIC_CARD_ROW_DESCRIPTION = "Row description"
 
 /* ACTIVITY */
 const val ACTIVITY_ID = "activity123"
@@ -110,6 +127,27 @@ private val PAGES_MODEL = PagesCardModel(
     pages = listOf(PAGE_MODEL)
 )
 
+private val DYNAMIC_CARD_ROW_MODEL = DynamicCardRowModel(
+    icon = DYNAMIC_CARD_ROW_ICON,
+    title = DYNAMIC_CARD_ROW_TITLE,
+    description = DYNAMIC_CARD_ROW_DESCRIPTION
+)
+
+private val DYNAMIC_CARD_MODEL = DynamicCardModel(
+    id = DYNAMIC_CARD_ID,
+    title = DYNAMIC_CARD_TITLE,
+    remoteFeatureFlag = DYNAMIC_CARD_REMOTE_FEATURE_FLAG,
+    featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
+    url = DYNAMIC_CARD_URL,
+    action = DYNAMIC_CARD_ACTION,
+    order = CardOrder.fromString(DYNAMIC_CARD_ORDER),
+    rows = listOf(DYNAMIC_CARD_ROW_MODEL)
+)
+
+private val DYNAMIC_CARDS_MODEL = DynamicCardsModel(
+    pages = listOf(DYNAMIC_CARD_MODEL)
+)
+
 private val ACTIVITY_LOG_MODEL = ActivityLogModel(
     summary = ACTIVITY_SUMMARY,
     content = FormattableContent(text = ACTIVITY_CONTENT),
@@ -138,7 +176,8 @@ private val CARDS_MODEL: List<CardModel> = listOf(
     TODAYS_STATS_CARDS_MODEL,
     POSTS_MODEL,
     PAGES_MODEL,
-    ACTIVITY_CARD_MODEL
+    ACTIVITY_CARD_MODEL,
+    DYNAMIC_CARDS_MODEL,
 )
 
 private val DEFAULT_CARD_TYPE = listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.POSTS)
@@ -146,6 +185,8 @@ private val PAGES_FEATURED_ENABLED_CARD_TYPE =
     listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.PAGES, CardModel.Type.POSTS)
 private val ACTIVITY_FEATURED_ENABLED_CARD_TYPE =
     listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.ACTIVITY, CardModel.Type.POSTS)
+private val DYNAMIC_CARDS_ENABLED_CARD_TYPE =
+    listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.POSTS, CardModel.Type.DYNAMIC)
 
 @ExperimentalCoroutinesApi
 class CardsSourceTest : BaseUnitTest() {
@@ -164,6 +205,9 @@ class CardsSourceTest : BaseUnitTest() {
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
 
+    @Mock
+    private lateinit var dynamicDashboardCardsFeatureConfig: DynamicDashboardCardsFeatureConfig
+
     private lateinit var cardSource: CardsSource
 
     private val data = CardsResult(
@@ -181,7 +225,8 @@ class CardsSourceTest : BaseUnitTest() {
             cardsStore,
             dashboardActivityLogCardFeatureUtils,
             testDispatcher(),
-            appPrefsWrapper
+            appPrefsWrapper,
+            dynamicDashboardCardsFeatureConfig
         )
     }
 
@@ -189,7 +234,8 @@ class CardsSourceTest : BaseUnitTest() {
         isDashboardCardActivityLogEnabled: Boolean = false,
         isRequestPages: Boolean = false,
         isPagesCardHidden: Boolean = false,
-        isTodaysStatsCardHidden: Boolean = false
+        isTodaysStatsCardHidden: Boolean = false,
+        isDynamicCardsEnabled: Boolean = false,
     ) {
         whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
@@ -200,6 +246,8 @@ class CardsSourceTest : BaseUnitTest() {
             .thenReturn(isPagesCardHidden)
         whenever(appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(any()))
             .thenReturn(isTodaysStatsCardHidden)
+        whenever(dynamicDashboardCardsFeatureConfig.isEnabled())
+            .thenReturn(isDynamicCardsEnabled)
     }
 
     /* GET DATA */
@@ -232,7 +280,8 @@ class CardsSourceTest : BaseUnitTest() {
     fun `given build is invoked, when cards are collected, then data is loaded (database)`() = test {
         setUpMocks(
             isDashboardCardActivityLogEnabled = true,
-            isRequestPages = true
+            isRequestPages = true,
+            isDynamicCardsEnabled = true
         )
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
@@ -264,7 +313,8 @@ class CardsSourceTest : BaseUnitTest() {
     fun `given no error, when build is invoked, then data is only loaded from get cards (database)`() = test {
         setUpMocks(
             isDashboardCardActivityLogEnabled = true,
-            isRequestPages = true
+            isRequestPages = true,
+            isDynamicCardsEnabled = true
         )
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
@@ -529,6 +579,23 @@ class CardsSourceTest : BaseUnitTest() {
             advanceUntilIdle()
 
             verify(cardsStore).fetchCards(siteModel, ACTIVITY_FEATURED_ENABLED_CARD_TYPE)
+        }
+
+    @Test
+    fun `given dynamic cards are enabled, when refresh is invoked, then dynamic cards are requested from network`() =
+        test {
+            setUpMocks(isDynamicCardsEnabled = true)
+            val result = mutableListOf<CardsUpdate>()
+            whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
+            whenever(cardsStore.fetchCards(siteModel, DYNAMIC_CARDS_ENABLED_CARD_TYPE)).thenReturn(success)
+            cardSource.refresh.observeForever { }
+
+            cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
+                it?.let { result.add(it) }
+            }
+            advanceUntilIdle()
+
+            verify(cardsStore).fetchCards(siteModel, DYNAMIC_CARDS_ENABLED_CARD_TYPE)
         }
 
     @Test
