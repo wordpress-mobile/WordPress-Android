@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.utils.isLightTheme
 import org.wordpress.android.widgets.WPSwitchCompat
 import com.google.android.material.R as MaterialR
 
@@ -79,14 +80,14 @@ object WPSwitchDefaults {
     fun colors(): SwitchColors {
         // thumb colors
         val thumbDisabledColor = colorResource(
-            if (MaterialTheme.colors.isLight) {
+            if (isLightTheme()) {
                 MaterialR.color.switch_thumb_disabled_material_light
             } else {
                 MaterialR.color.switch_thumb_disabled_material_dark
             }
         )
         val thumbEnabledUncheckedColor = colorResource(
-            if (MaterialTheme.colors.isLight) {
+            if (isLightTheme()) {
                 MaterialR.color.switch_thumb_normal_material_light
             } else {
                 MaterialR.color.switch_thumb_normal_material_dark

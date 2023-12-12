@@ -4,11 +4,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import org.wordpress.android.ui.compose.theme.AppColor
+import org.wordpress.android.ui.compose.utils.isLightTheme
 
 object MenuColors {
-    @Composable
-    fun isLightTheme(): Boolean = MaterialTheme.colors.isLight
-
     @Composable
     fun itemContentColor(): Color = if (isLightTheme()) {
         AppColor.Black

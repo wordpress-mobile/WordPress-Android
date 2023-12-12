@@ -55,6 +55,7 @@ import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.utils.isLightTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
 import org.wordpress.android.ui.utils.UiString
@@ -276,7 +277,7 @@ fun CampaignListingErrorPreview() {
 
 @Composable
 private fun CreateCampaignFloatingActionButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    val isInDarkMode = !MaterialTheme.colors.isLight
+    val isInDarkMode = !isLightTheme()
     FloatingActionButton(
         modifier = modifier,
         onClick = onClick,
