@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.compose.components.menu.dropdown
 
 import androidx.compose.foundation.background
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
@@ -18,11 +19,7 @@ fun CascadeColumnScope.SubMenu(
     onMenuItemClick: (MenuElementData) -> Unit,
 ) {
     val enabledContentColor = MenuColors.itemContentColor()
-    val disabledContentColor = if (isLightTheme()) {
-        AppColor.Gray10
-    } else {
-        AppColor.Gray50
-    }
+    val disabledContentColor = enabledContentColor.copy(alpha = ContentAlpha.disabled)
     DropdownMenuItem(
         modifier = Modifier
             .background(MenuColors.itemBackgroundColor()),

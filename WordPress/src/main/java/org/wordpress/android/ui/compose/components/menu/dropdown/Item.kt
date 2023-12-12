@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
@@ -27,11 +28,7 @@ fun Item(
     onMenuItemClick: (MenuElementData) -> Unit,
 ) {
     val enabledContentColor = MenuColors.itemContentColor()
-    val disabledContentColor = if (isLightTheme()) {
-        AppColor.Gray10
-    } else {
-        AppColor.Gray50
-    }
+    val disabledContentColor = enabledContentColor.copy(alpha = ContentAlpha.disabled)
     DropdownMenuItem(
         modifier = Modifier
             .background(MenuColors.itemBackgroundColor()),
