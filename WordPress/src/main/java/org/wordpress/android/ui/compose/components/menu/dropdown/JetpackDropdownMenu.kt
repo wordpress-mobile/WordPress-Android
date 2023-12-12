@@ -14,7 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.saket.cascade.CascadeDropdownMenu
@@ -47,7 +46,9 @@ fun JetpackDropdownMenu(menuItems: List<MenuElementData>, defaultItem: MenuEleme
                     is MenuElementData.Item -> Item(element, onMenuItemClick)
                 }
                 if (element.hasDivider) {
-                    Divider()
+                    Divider(
+                        color = itemDividerColor(),
+                    )
                 }
             }
         }
