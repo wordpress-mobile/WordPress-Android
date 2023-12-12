@@ -2,8 +2,6 @@ package org.wordpress.android.ui.mysite
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -523,23 +521,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
-        val gradientDrawable = GradientDrawable(
-            GradientDrawable.Orientation.TOP_BOTTOM,
-            intArrayOf(
-                Color.parseColor("#A7E8D3"),
-                Color.WHITE,
-                Color.WHITE
-            )
-        )
-        gradientDrawable.cornerRadius = 0f;
-
-        // Set Gradient
-        coordinatorLayout.background = gradientDrawable;
-
-        val window = activity?.getWindow()
-        window?.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window?.setStatusBarColor(Color.parseColor("#A7E8D3"))
-
         recyclerView.setVisible(true)
         (recyclerView.adapter as? MySiteAdapter)?.submitList(state.dashboardData)
 
