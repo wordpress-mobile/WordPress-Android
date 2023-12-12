@@ -485,7 +485,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private void newPostFromShareAction() {
         Intent intent = getIntent();
-        if (isMediaTypeIntent(intent)) {
+        if (isMediaTypeIntent(intent, null)) {
             newPostSetup();
             setPostMediaFromShareAction();
         } else {
@@ -2695,30 +2695,44 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // Check for shared media
         if (intent.hasExtra(Intent.EXTRA_STREAM)) {
             String action = intent.getAction();
-            ArrayList<Uri> sharedUris;
+            ArrayList<Uri> sharedUris = new ArrayList<>();
 
             if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-                sharedUris = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
+                ArrayList<Uri> potentialUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+                if (potentialUris != null) {
+                    for (Uri uri : potentialUris) {
+                        if (isMediaTypeIntent(intent, uri)) {
+                            sharedUris.add(uri);
+                        }
+                    }
+                }
             } else {
                 // For a single media share, we only allow images and video types
-                if (isMediaTypeIntent(intent)) {
-                    sharedUris = new ArrayList<>();
+                if (isMediaTypeIntent(intent, null)) {
                     sharedUris.add(intent.getParcelableExtra(Intent.EXTRA_STREAM));
-                } else {
-                    sharedUris = null;
                 }
             }
 
-            if (sharedUris != null) {
+            if (!sharedUris.isEmpty()) {
                 // removing this from the intent so it doesn't insert the media items again on each Activity re-creation
                 getIntent().removeExtra(Intent.EXTRA_STREAM);
+
                 mEditorMedia.addNewMediaItemsToEditorAsync(sharedUris, false);
             }
         }
     }
 
-    private boolean isMediaTypeIntent(Intent intent) {
-        String type = intent.getType();
+    private boolean isMediaTypeIntent(@NonNull Intent intent, @Nullable Uri uri) {
+        String type = null;
+
+        if (uri != null) {
+            String extension = MimeTypeMap.getFileExtensionFromUrl(String.valueOf(uri));
+            if (extension != null) {
+                type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+            }
+        } else {
+            type = intent.getType();
+        }
         return type != null && (type.startsWith("image") || type.startsWith("video"));
     }
 
