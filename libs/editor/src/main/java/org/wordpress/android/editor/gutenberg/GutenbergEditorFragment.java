@@ -54,6 +54,7 @@ import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergD
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
@@ -68,6 +69,7 @@ import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.UnsupportedBlock;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBlockTypeImpressionsEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnConnectionStatusEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOptionsListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
@@ -99,7 +101,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorThemeUpdateListener,
         StorySaveMediaListener,
         GutenbergDialogPositiveClickInterface,
-        GutenbergDialogNegativeClickInterface {
+        GutenbergDialogNegativeClickInterface,
+        GutenbergNetworkConnectionListener {
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
@@ -424,6 +427,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                   Consumer<Bundle> onError) {
                         mEditorFragmentListener.onPerformFetch(path, enableCaching, onSuccess, onError);
                     }
+
                     @Override
                     public void performPostRequest(
                             String path,
@@ -585,6 +589,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 mEditorFragmentListener::onToggleUndo,
 
                 mEditorFragmentListener::onToggleRedo,
+
+                new OnConnectionStatusEventListener() {
+                    @Override public boolean onRequestConnectionStatus() {
+                        return NetworkUtils.isNetworkAvailable(getActivity());
+                    }
+                },
 
                 GutenbergUtils.isDarkMode(getActivity()));
 
@@ -1568,5 +1578,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 // Dismiss dialog with no action.
                 break;
         }
+    }
+
+    @Override
+    public void onConnectionStatusChange(boolean isConnected) {
+        getGutenbergContainerFragment().onConnectionStatusChange(isConnected);
     }
 }
