@@ -10,8 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import me.saket.cascade.CascadeColumnScope
-import org.wordpress.android.ui.compose.theme.AppColor
-import org.wordpress.android.ui.compose.utils.isLightTheme
 
 @Composable
 fun CascadeColumnScope.SubMenu(
@@ -34,7 +32,6 @@ fun CascadeColumnScope.SubMenu(
         text = {
             Text(
                 text = element.text,
-                color = enabledContentColor,
                 style = MaterialTheme.typography.bodyLarge,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Normal,

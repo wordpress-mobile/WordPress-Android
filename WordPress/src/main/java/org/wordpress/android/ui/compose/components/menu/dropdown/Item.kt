@@ -18,12 +18,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.ui.compose.utils.isLightTheme
 
 @Composable
-fun Item(
+internal fun Item(
     element: MenuElementData.Item,
     onMenuItemClick: (MenuElementData) -> Unit,
 ) {
@@ -47,7 +45,6 @@ fun Item(
         text = {
             Text(
                 text = element.text,
-                color = enabledContentColor,
                 style = MaterialTheme.typography.bodyLarge,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Normal,
