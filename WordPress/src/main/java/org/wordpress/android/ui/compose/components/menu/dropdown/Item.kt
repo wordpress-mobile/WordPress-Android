@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.utils.isLightTheme
 
 @Composable
 fun Item(
@@ -25,7 +26,7 @@ fun Item(
     onMenuItemClick: (MenuElementData) -> Unit,
 ) {
     val enabledContentColor = MenuColors.itemContentColor()
-    val disabledContentColor = if (MenuColors.isLightTheme()) {
+    val disabledContentColor = if (isLightTheme()) {
         AppColor.Gray10
     } else {
         AppColor.Gray50

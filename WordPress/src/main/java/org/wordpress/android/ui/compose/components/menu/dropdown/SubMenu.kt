@@ -10,6 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import me.saket.cascade.CascadeColumnScope
 import org.wordpress.android.ui.compose.theme.AppColor
+import org.wordpress.android.ui.compose.utils.isLightTheme
 
 @Composable
 fun CascadeColumnScope.SubMenu(
@@ -17,7 +18,7 @@ fun CascadeColumnScope.SubMenu(
     onMenuItemClick: (MenuElementData) -> Unit,
 ) {
     val enabledContentColor = MenuColors.itemContentColor()
-    val disabledContentColor = if (MenuColors.isLightTheme()) {
+    val disabledContentColor = if (isLightTheme()) {
         AppColor.Gray10
     } else {
         AppColor.Gray50
