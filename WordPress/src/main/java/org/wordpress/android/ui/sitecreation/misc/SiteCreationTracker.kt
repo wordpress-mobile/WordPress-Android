@@ -47,6 +47,7 @@ class SiteCreationTracker @Inject constructor(
         SITE_NAME("site_name"),
         RECOMMENDED("recommended"),
         DOMAIN_COST("domain_cost"),
+        IS_FREE("is_free"),
     }
 
     private var designSelectionSkipped: Boolean = false
@@ -62,7 +63,7 @@ class SiteCreationTracker @Inject constructor(
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_ACCESSED)
     }
 
-    fun trackDomainSelected(chosenDomain: String, searchTerm: String, domainCost: String = "free") {
+    fun trackDomainSelected(chosenDomain: String, searchTerm: String, domainCost: String = "free", isFree: Boolean) {
         if(plansInSiteCreationFeatureConfig.isEnabled()) {
             tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_SELECTED,
@@ -70,6 +71,7 @@ class SiteCreationTracker @Inject constructor(
                     CHOSEN_DOMAIN.key to chosenDomain,
                     SEARCH_TERM.key to searchTerm,
                     PROPERTY.DOMAIN_COST.key to domainCost.lowercase(), // Homogenize data (e.g. "Free" becomes "free")
+                    PROPERTY.IS_FREE.key to isFree,
                 )
             )
         } else {

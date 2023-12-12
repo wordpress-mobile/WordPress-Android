@@ -1,4 +1,0 @@
-23.7:
-- Tüm Alan Adları ekranı, tüm alan adlarınızı uygulamada yönetmenizi sağlar.
-- Gönderiler ve Sayfalarda iyileştirilmiş görüntüleme seçenekleri ve genişletilmiş bir bağlam menüsü bulunur.
-- Derin şekilde iç içe geçmiş içerik yapıştırmaktan veya daha eski site temalarında metin renkleri kullanmaktan kaynaklanan blok düzenleyici sorunlarını düzelttik.

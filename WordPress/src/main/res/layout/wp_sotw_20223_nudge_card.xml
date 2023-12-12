@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/wp_sotw_2023_nudge_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:composableName="org.wordpress.android.ui.mysite.cards.sotw2023.WpSotw2023NudgeCardKt.WpSotw2023NudgeCardPreview"
+        tools:ignore="RtlSymmetry" />
+
+</LinearLayout>

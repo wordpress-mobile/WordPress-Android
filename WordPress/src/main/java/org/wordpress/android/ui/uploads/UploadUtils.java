@@ -456,7 +456,7 @@ public class UploadUtils {
         dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
 
         if (NetworkUtils.isNetworkAvailable(activity)) {
-            UploadService.uploadPost(activity, post.getId(), isFirstTimePublish);
+            UploadService.uploadPost(activity, post.getId(), isFirstTimePublish, "UploadUtils#publishPost");
             if (onPublishingCallback != null) {
                 onPublishingCallback.onPublishing(isFirstTimePublish);
             }
@@ -486,14 +486,15 @@ public class UploadUtils {
                 // RETRY only available for Aztec
                 if (AppPrefs.isAztecEditorEnabled()) {
                     UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry,
-                                                  new View.OnClickListener() {
-                                                      @Override
-                                                      public void onClick(View view) {
-                                                          Intent intent = UploadService.getRetryUploadServiceIntent(
-                                                                  activity, post, false);
-                                                          activity.startService(intent);
-                                                      }
-                                                  }, sequencer);
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = UploadService.getRetryUploadServiceIntent(
+                                            activity, post, false,
+                                            "post error snack bar retry action");
+                                    activity.startService(intent);
+                                }
+                            }, sequencer);
                 } else {
                     UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, sequencer);
                 }
@@ -567,17 +568,18 @@ public class UploadUtils {
                 // RETRY only available for Aztec
                 if (mediaList != null && !mediaList.isEmpty()) {
                     UploadUtils.showSnackbarError(snackbarAttachView, messageForUser, R.string.retry,
-                                                  new View.OnClickListener() {
-                                                      @Override
-                                                      public void onClick(View view) {
-                                                          ArrayList<MediaModel> mediaListToRetry = new ArrayList<>();
-                                                          mediaListToRetry.addAll(mediaList);
-                                                          Intent retryIntent = UploadService
-                                                                  .getUploadMediaServiceIntent(activity,
-                                                                                               mediaListToRetry, true);
-                                                          activity.startService(retryIntent);
-                                                      }
-                                                  }, sequencer);
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    ArrayList<MediaModel> mediaListToRetry = new ArrayList<>();
+                                    mediaListToRetry.addAll(mediaList);
+                                    Intent retryIntent = UploadService
+                                            .getUploadMediaServiceIntent(activity,
+                                                    mediaListToRetry, true,
+                                                    "media error snack bar retry action");
+                                    activity.startService(retryIntent);
+                                }
+                            }, sequencer);
                 } else {
                     UploadUtils.showSnackbarError(snackbarAttachView, messageForUser, sequencer);
                 }

@@ -83,6 +83,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
+import org.wordpress.android.ui.mysite.cards.sotw2023.WpSotw2023NudgeCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
@@ -168,6 +169,7 @@ class MySiteViewModel @Inject constructor(
     private val siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice,
     private val quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice,
     private val bloganuaryNudgeCardViewModelSlice: BloganuaryNudgeCardViewModelSlice,
+    private val sotw2023NudgeCardViewModelSlice: WpSotw2023NudgeCardViewModelSlice,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -230,7 +232,8 @@ class MySiteViewModel @Inject constructor(
         bloganuaryNudgeCardViewModelSlice.onNavigation,
         personalizeCardViewModelSlice.onNavigation,
         siteInfoHeaderCardViewModelSlice.onNavigation,
-        quickLinksItemViewModelSlice.navigation
+        quickLinksItemViewModelSlice.navigation,
+        sotw2023NudgeCardViewModelSlice.onNavigation,
     )
 
     val onMediaUpload = siteInfoHeaderCardViewModelSlice.onMediaUpload
@@ -246,6 +249,7 @@ class MySiteViewModel @Inject constructor(
             postsCardViewModelSlice.refresh,
             activityLogCardViewModelSlice.refresh,
             bloganuaryNudgeCardViewModelSlice.refresh,
+            sotw2023NudgeCardViewModelSlice.refresh,
         )
     val domainTransferCardRefresh = domainTransferCardViewModel.refresh
 
@@ -321,6 +325,7 @@ class MySiteViewModel @Inject constructor(
         siteInfoHeaderCardViewModelSlice.initialize(viewModelScope)
         quickLinksItemViewModelSlice.initialization(viewModelScope)
         quickLinksItemViewModelSlice.start()
+        sotw2023NudgeCardViewModelSlice.initialize(viewModelScope)
     }
 
     @Suppress("LongParameterList")
@@ -421,8 +426,11 @@ class MySiteViewModel @Inject constructor(
 
         val siteItems = getSiteItems(site, activeTask, backupAvailable, scanAvailable)
 
+        val sotw2023Card = sotw2023NudgeCardViewModelSlice.buildCard()
+
         return mutableListOf<MySiteCardAndItem>().apply {
             infoItem?.let { add(infoItem) }
+            sotw2023Card?.let { add(it) }
             addAll(siteItems)
             jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
             if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
@@ -986,6 +994,8 @@ class MySiteViewModel @Inject constructor(
             .forEach { personalizeCardViewModelSlice.trackShown(it.type) }
         siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>()
             .forEach { noCardsMessageViewModelSlice.trackShown(it.type) }
+        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.WpSotw2023NudgeCardModel>()
+            .forEach { _ -> sotw2023NudgeCardViewModelSlice.trackShown() }
     }
 
     private fun resetShownTrackers() {
@@ -995,6 +1005,7 @@ class MySiteViewModel @Inject constructor(
         jetpackFeatureCardShownTracker.resetShown()
         jetpackInstallFullPluginShownTracker.resetShown()
         personalizeCardViewModelSlice.resetShown()
+        sotw2023NudgeCardViewModelSlice.resetShown()
     }
 
     // FluxC events

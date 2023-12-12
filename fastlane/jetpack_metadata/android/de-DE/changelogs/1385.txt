@@ -1,4 +1,0 @@
-23.7:
-- Im Bildschirm „Alle Domains“ kannst du alle deine Domains in der App verwalten.
-- „Beiträge & Seiten“ verfügt jetzt über verbesserte Anzeigeoptionen und ein erweitertes Kontextmenü.
-- Wir haben Probleme mit dem Block-Editor behoben, die durch das Einfügen tief verschachtelter Inhalte oder dem Verwenden von Textfarben in älteren Website-Themes entstanden sind.

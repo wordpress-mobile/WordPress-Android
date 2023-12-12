@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-29 13:54:09+0000
+Translation-Revision-Date: 2023-12-05 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: ja_JP
 -->
 <resources>
+    <string name="turn_off">オフにする</string>
+    <string name="leave_on">そのままにする</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">このため、Web ブラウザーでブロックを編集することをお勧めします。</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">このため、Web エディターでブロックを編集することをお勧めします。</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">あるいは、ブロックのグループ化を解除してコンテンツをフラットにすることもできます。</string>

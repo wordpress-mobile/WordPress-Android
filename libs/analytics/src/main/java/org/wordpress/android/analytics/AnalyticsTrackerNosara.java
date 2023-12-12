@@ -2683,6 +2683,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "bloganuary_nudge_learn_more_modal_dismissed";
             case BLOGANUARY_NUDGE_LEARN_MORE_MODAL_ACTION_TAPPED:
                 return "bloganuary_nudge_learn_more_modal_action_tapped";
+            case SOTW_2023_NUDGE_POST_EVENT_CARD_SHOWN:
+                return "sotw_2023_nudge_post_event_card_shown";
+            case SOTW_2023_NUDGE_POST_EVENT_CARD_HIDE_TAPPED:
+                return "sotw_2023_nudge_post_event_card_hide_tapped";
+            case SOTW_2023_NUDGE_POST_EVENT_CARD_CTA_TAPPED:
+                return "sotw_2023_nudge_post_event_card_cta_tapped";
         }
         return null;
     }

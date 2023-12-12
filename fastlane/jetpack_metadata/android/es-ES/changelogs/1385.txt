@@ -1,4 +1,0 @@
-23,7:
-- La pantalla Todos los dominios te permite gestionar todos tus dominios en la aplicación.
-- En Entradas y páginas se han mejorado las opciones de visualización y se ha ampliado el menú contextual.
-- Se han solucionado los problemas del editor de bloques causados por el pegado de contenido muy anidado o por el uso de colores de texto en temas de sitios antiguos.

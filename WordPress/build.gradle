@@ -144,6 +144,7 @@ android {
         buildConfigField "boolean", "READER_IMPROVEMENTS", "false"
         buildConfigField "boolean", "BLOGANUARY_DASHBOARD_NUDGE", "false"
         buildConfigField "boolean", "IN_APP_REVIEWS", "false"
+        buildConfigField "boolean", "DYNAMIC_DASHBOARD_CARDS", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
