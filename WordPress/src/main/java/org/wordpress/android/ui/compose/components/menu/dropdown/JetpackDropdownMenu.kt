@@ -55,8 +55,6 @@ fun JetpackDropdownMenu(menuItems: List<MenuElementData>, defaultItem: MenuEleme
     }
 }
 
-internal const val NO_ICON = -1
-
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable

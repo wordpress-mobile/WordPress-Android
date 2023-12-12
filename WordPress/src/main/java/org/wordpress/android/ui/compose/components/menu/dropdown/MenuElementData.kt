@@ -23,3 +23,5 @@ sealed class MenuElementData(
         override val hasDivider: Boolean = false,
     ) : MenuElementData(text, leadingIcon, hasDivider)
 }
+
+internal const val NO_ICON = -1
