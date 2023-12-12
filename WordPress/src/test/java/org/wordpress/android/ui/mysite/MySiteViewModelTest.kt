@@ -51,9 +51,9 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.WpSotw2023NudgeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard.IconState
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.WpSotw2023NudgeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
@@ -1185,7 +1185,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite(isJetpackApp = true)
 
-        assertThat(getDashboardTabLastItems()[0]).isInstanceOf(SingleActionCard::class.java)
+        assertThat(getDashboardTabLastItems()[1]).isInstanceOf(SingleActionCard::class.java)
     }
 
     @Test
@@ -1197,7 +1197,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(isJetpackApp = true)
 
         val expected = R.string.jp_migration_success_card_message
-        assertThat((getDashboardTabLastItems()[0] as SingleActionCard).textResource).isEqualTo(expected)
+        assertThat((getDashboardTabLastItems()[1] as SingleActionCard).textResource).isEqualTo(expected)
     }
 
     @Test
@@ -1209,7 +1209,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(isJetpackApp = true)
 
         val expected = R.drawable.ic_wordpress_jetpack_appicon
-        assertThat((getDashboardTabLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
+        assertThat((getDashboardTabLastItems()[1] as SingleActionCard).imageResource).isEqualTo(expected)
     }
 
     @Test
@@ -1220,7 +1220,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
         initSelectedSite(isJetpackApp = true)
 
-        (getDashboardTabLastItems()[0] as SingleActionCard).onActionClick.invoke()
+        (getDashboardTabLastItems()[1] as SingleActionCard).onActionClick.invoke()
 
         verify(contentMigrationAnalyticsTracker).trackPleaseDeleteWordPressCardTapped()
     }
@@ -1341,8 +1341,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        assertThat(getSiteMenuTabLastItems()[0]).isInstanceOf(JetpackFeatureCard::class.java)
-        assertThat(getMenuItems()[0]).isInstanceOf(JetpackFeatureCard::class.java)
+        assertThat(getSiteMenuTabLastItems()[1]).isInstanceOf(JetpackFeatureCard::class.java)
+        assertThat(getMenuItems()[1]).isInstanceOf(JetpackFeatureCard::class.java)
     }
 
     @Test
