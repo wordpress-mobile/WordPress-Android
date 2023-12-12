@@ -29,7 +29,7 @@ fun CascadeColumnScope.JetpackDropdownSubMenuHeader(
 ) {
     Row(
         modifier = modifier
-            .background(itemBackgroundColor())
+            .background(MenuColors.itemBackgroundColor())
             .fillMaxWidth()
             .clickable(enabled = hasParentMenu, role = Role.Button) {
                 if (!isNavigationRunning) {
@@ -46,7 +46,7 @@ fun CascadeColumnScope.JetpackDropdownSubMenuHeader(
                 Image(
                     painter = painterResource(R.drawable.ic_arrow_left_white_24dp),
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(itemContentColor()),
+                    colorFilter = ColorFilter.tint(MenuColors.itemContentColor()),
                 )
             }
             Box(Modifier.weight(1f)) {

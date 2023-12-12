@@ -16,15 +16,15 @@ fun CascadeColumnScope.SubMenu(
     element: MenuElementData.SubMenu,
     onMenuItemClick: (MenuElementData) -> Unit,
 ) {
-    val enabledContentColor = itemContentColor()
-    val disabledContentColor = if (isLightTheme()) {
+    val enabledContentColor = MenuColors.itemContentColor()
+    val disabledContentColor = if (MenuColors.isLightTheme()) {
         AppColor.Gray10
     } else {
         AppColor.Gray50
     }
     DropdownMenuItem(
         modifier = Modifier
-            .background(itemBackgroundColor()),
+            .background(MenuColors.itemBackgroundColor()),
         colors = MenuDefaults.itemColors(
             textColor = enabledContentColor,
             leadingIconColor = enabledContentColor,

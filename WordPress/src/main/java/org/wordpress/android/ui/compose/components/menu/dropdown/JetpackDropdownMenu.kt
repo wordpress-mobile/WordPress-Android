@@ -32,7 +32,7 @@ fun JetpackDropdownMenu(menuItems: List<MenuElementData>, defaultItem: MenuEleme
             }
         )
         CascadeDropdownMenu(
-            modifier = Modifier.background(itemBackgroundColor()),
+            modifier = Modifier.background(MenuColors.itemBackgroundColor()),
             expanded = isMenuVisible,
             onDismissRequest = { isMenuVisible = false },
         ) {
@@ -47,7 +47,7 @@ fun JetpackDropdownMenu(menuItems: List<MenuElementData>, defaultItem: MenuEleme
                 }
                 if (element.hasDivider) {
                     Divider(
-                        color = itemDividerColor(),
+                        color = MenuColors.itemDividerColor(),
                     )
                 }
             }

@@ -24,15 +24,15 @@ fun Item(
     element: MenuElementData.Item,
     onMenuItemClick: (MenuElementData) -> Unit,
 ) {
-    val enabledContentColor = itemContentColor()
-    val disabledContentColor = if (isLightTheme()) {
+    val enabledContentColor = MenuColors.itemContentColor()
+    val disabledContentColor = if (MenuColors.isLightTheme()) {
         AppColor.Gray10
     } else {
         AppColor.Gray50
     }
     androidx.compose.material3.DropdownMenuItem(
         modifier = Modifier
-            .background(itemBackgroundColor()),
+            .background(MenuColors.itemBackgroundColor()),
         onClick = {
             onMenuItemClick(element)
             element.onClick()
