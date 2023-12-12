@@ -25,6 +25,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData.Item
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
+import androidx.compose.material3.MaterialTheme as Material3Theme
 
 @Composable
 fun DropdownMenuButton(
@@ -61,7 +62,7 @@ fun DropdownMenuButton(
                         weight = 1f,
                         fill = false,
                     ),
-                style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
+                style = Material3Theme.typography.titleMedium,
                 fontWeight = FontWeight.Medium,
                 text = selectedItem.text,
                 overflow = TextOverflow.Ellipsis,
