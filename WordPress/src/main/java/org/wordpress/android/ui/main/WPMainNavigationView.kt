@@ -256,7 +256,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         setImageViewSelected(position, true)
 
-        if(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures())
+        if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures())
             AppPrefs.setMainPageIndex(0)
         else AppPrefs.setMainPageIndex(position)
 
@@ -396,9 +396,11 @@ class WPMainNavigationView @JvmOverloads constructor(
                 READER -> if (shouldUseStaticPostersFragment)
                     JetpackStaticPosterFragment.newInstance(UiData.READER)
                 else ReaderFragment()
+
                 NOTIFS -> if (shouldUseStaticPostersFragment)
                     JetpackStaticPosterFragment.newInstance(UiData.NOTIFICATIONS)
                 else NotificationsListFragment.newInstance()
+
                 ME -> MeFragment.newInstance()
             }
             fragmentManager?.beginTransaction()
