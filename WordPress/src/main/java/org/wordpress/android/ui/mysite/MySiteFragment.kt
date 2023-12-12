@@ -420,7 +420,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             )
             showSnackbar(SnackbarMessageHolder(UiString.UiStringText(message)))
         }
-        viewModel.onMediaUpload.observeEvent(viewLifecycleOwner) { UploadService.uploadMedia(requireActivity(), it) }
+        viewModel.onMediaUpload.observeEvent(viewLifecycleOwner) {
+            UploadService.uploadMedia(requireActivity(), it, "MySiteFragment onMediaUpload")
+        }
         dialogViewModel.onInteraction.observeEvent(viewLifecycleOwner) { viewModel.onDialogInteraction(it) }
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner) { handleUploadedItem(it) }
         viewModel.onOpenJetpackInstallFullPluginOnboarding.observeEvent(viewLifecycleOwner) {

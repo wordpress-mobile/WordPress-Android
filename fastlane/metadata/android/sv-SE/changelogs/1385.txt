@@ -1,3 +1,0 @@
-23.7:
-- Skärmen Inlägg och sidor har nu rena och enkla visningsalternativ. I kontextmenyn kan du även komma åt kommentarer, inställningar och andra åtgärder för ett inlägg eller en sida.
-- Vi har åtgärdat problem med blockredigeraren som orsakats av att man klistrat in djupt inbäddat innehåll eller använt textfärger från äldre webbplatsteman.

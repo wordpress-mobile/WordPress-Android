@@ -216,7 +216,10 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                         editPostRepository.getPost(),
                         site
                     )
-                    uploadService.uploadPost(appContext, editPostRepository.id, true)
+                    uploadService.uploadPost(
+                        appContext, editPostRepository.id, true,
+                        "StoryMediaSaveUploadBridge#addNewMediaItemsInStoryFramesToPostAsync"
+                    )
                     // SAVED_ONLINE
                     storiesTrackerHelper.trackStoryPostSavedEvent(uriList.size, site, false)
                 } else {
