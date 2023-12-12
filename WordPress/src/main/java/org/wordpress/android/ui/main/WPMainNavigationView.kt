@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -126,7 +127,6 @@ class WPMainNavigationView @JvmOverloads constructor(
             if (i == getPosition(ME)) {
                 loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
             }
-
             itemView.addView(customView)
         }
 
@@ -201,8 +201,18 @@ class WPMainNavigationView @JvmOverloads constructor(
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val position = getPositionForItemId(item.itemId)
         currentPosition = position
+        performHapticFeedback()
         pageListener.onPageChanged(position)
         return true
+    }
+
+    private fun performHapticFeedback() {
+        val position = currentPosition
+        getItemView(position)?.run {
+            performHapticFeedback(
+                HapticFeedbackConstants.VIRTUAL_KEY
+            )
+        }
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
