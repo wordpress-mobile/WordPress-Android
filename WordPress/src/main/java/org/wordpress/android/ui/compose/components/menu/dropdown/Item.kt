@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Icon
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
@@ -31,7 +32,7 @@ fun Item(
     } else {
         AppColor.Gray50
     }
-    androidx.compose.material3.DropdownMenuItem(
+    DropdownMenuItem(
         modifier = Modifier
             .background(MenuColors.itemBackgroundColor()),
         onClick = {
