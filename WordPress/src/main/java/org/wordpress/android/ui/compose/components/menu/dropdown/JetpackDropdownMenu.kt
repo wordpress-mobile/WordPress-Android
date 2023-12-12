@@ -21,7 +21,10 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
-fun JetpackDropdownMenu(menuItems: List<MenuElementData>, defaultItem: MenuElementData) {
+fun JetpackDropdownMenu(
+    menuItems: List<MenuElementData>,
+    defaultItem: MenuElementData = menuItems.first(),
+) {
     Column {
         var isMenuVisible by remember { mutableStateOf(false) }
         var selectedItem by remember { mutableStateOf(defaultItem) }
