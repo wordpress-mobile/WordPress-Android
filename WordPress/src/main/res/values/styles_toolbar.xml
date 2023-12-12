@@ -17,19 +17,6 @@
         <item name="colorControlNormal">?attr/colorOnSurface</item>
     </style>
 
-    <style name="WordPress.CollapsedToolbarLayout">
-        <item name="layout_scrollFlags">scroll|exitUntilCollapsed</item>
-        <item name="collapsedTitleTextAppearance">
-            @style/TextAppearance.App.CollapsingToolbar.Collapsed
-        </item>
-        <item name="expandedTitleTextAppearance">
-            @style/TextAppearance.App.CollapsingToolbar.Expanded
-        </item>
-        <item name="expandedTitleMarginBottom">@dimen/collapsible_toolbar_expanded_bottom_margin
-        </item>
-        <item name="expandedTitleMarginStart">16dp</item>
-    </style>
-
     <!-- Zendesk -->
     <style name="WordPress.ZenDesk.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
         <item name="titleTextAppearance">@style/TextAppearance.App.Toolbar.Title</item>
