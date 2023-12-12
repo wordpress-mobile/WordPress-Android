@@ -1304,7 +1304,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mBloggingRemindersPref == null || !isAdded()) {
             return;
         }
-        mBloggingRemindersViewModel.onBlogSettingsItemClicked(mSite.getId());
+        if (mBloggingRemindersViewModel != null) {
+            mBloggingRemindersViewModel.onBlogSettingsItemClicked(mSite.getId());
+        } else {
+            AppLog.d(AppLog.T.SETTINGS, "BloggingRemindersViewModel is null, creating new instance");
+            mBloggingRemindersViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
+                    .get(BloggingRemindersViewModel.class);
+            mBloggingRemindersViewModel.onBlogSettingsItemClicked(mSite.getId());
+        }
     }
 
     private void initBloggingPrompts() {
