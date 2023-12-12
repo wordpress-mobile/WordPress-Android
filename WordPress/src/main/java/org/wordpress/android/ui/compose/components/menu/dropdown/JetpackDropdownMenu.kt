@@ -63,7 +63,6 @@ fun JetpackDropdownMenuPreview() {
     AppTheme {
         Box(
             modifier = Modifier
-                .background(Color.Gray)
                 .padding(start = 8.dp, top = 8.dp)
                 .fillMaxWidth()
                 .fillMaxHeight()

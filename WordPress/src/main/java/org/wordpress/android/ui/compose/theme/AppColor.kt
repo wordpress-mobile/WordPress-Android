@@ -21,6 +21,9 @@ object AppColor {
     val DarkGray = Color(0xFF121212)
 
     @Stable
+    val DarkGray90 = Color(0xE6121212)
+
+    @Stable
     val Gray10 = Color(0xFFC3C4C7)
 
     @Stable

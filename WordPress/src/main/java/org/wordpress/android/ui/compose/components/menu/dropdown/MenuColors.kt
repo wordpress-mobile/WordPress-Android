@@ -18,5 +18,5 @@ fun itemContentColor(): Color = if (isLightTheme()) {
 fun itemBackgroundColor(): Color = if (isLightTheme()) {
     AppColor.White
 } else {
-    AppColor.Black
+    AppColor.DarkGray90
 }
