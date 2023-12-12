@@ -36,11 +36,11 @@ fun JetpackDropdownMenu(menuItems: List<MenuElementData>, defaultItem: MenuEleme
             expanded = isMenuVisible,
             onDismissRequest = { isMenuVisible = false },
         ) {
+            val onMenuItemClick: (MenuElementData) -> Unit = { clickedItem ->
+                selectedItem = clickedItem
+                isMenuVisible = false
+            }
             menuItems.forEach { element ->
-                val onMenuItemClick: (MenuElementData) -> Unit = { clickedItem ->
-                    selectedItem = clickedItem
-                    isMenuVisible = false
-                }
                 when (element) {
                     is MenuElementData.SubMenu -> SubMenu(element, onMenuItemClick)
                     is MenuElementData.Item -> Item(element, onMenuItemClick)
