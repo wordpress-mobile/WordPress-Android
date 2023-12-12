@@ -1,40 +1,13 @@
 package org.wordpress.android.ui.mysite.cards.dynamiccard
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.ColorPainter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.card.UnelevatedCard
-import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.domains.management.M3Theme
-import org.wordpress.android.ui.domains.management.success
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.utils.ListItemInteraction
 
@@ -49,127 +22,22 @@ fun DynamicDashboardCard(
             Column(
                 Modifier.padding(top = 8.dp, bottom = 8.dp)
             ) {
-                CardHeader(
+                DynamicCardHeader(
                     title = card.title,
                     onHideMenuClicked = { card.onHideMenuItemClick.click() }
                 )
-                card.image?.let { imageUrl -> CardFeatureImage(imageUrl) }
-                if (card.rows.isNotEmpty()) CardRow(card.rows)
+                card.image?.let { imageUrl ->
+                    DynamicCardFeatureImage(imageUrl)
+                }
+                if (card.rows.isNotEmpty()) {
+                    DynamicCardRows(card.rows)
+                }
                 card.action?.let { action ->
-                    TextButton(
-                        modifier = Modifier.padding(start = 4.dp),
-                        onClick = { card.onCtaClick.click() },
-                    ) {
-                        Text(
-                            text = action,
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                color = MaterialTheme.colorScheme.success
-                            ),
-                        )
-                    }
+                    DynamicCardCallToActionButton(text = action, onClicked = { card.onCtaClick.click() })
                 }
             }
         }
     )
-}
-
-@Composable
-private fun CardHeader(
-    title: String?,
-    onHideMenuClicked: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = 16.dp),
-            content = {
-                title?.let { title ->
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        ),
-                    )
-                }
-            }
-        )
-        IconButton(
-            modifier = Modifier.size(32.dp), // to match the icon in my_site_card_toolbar.xml
-            onClick = onHideMenuClicked
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.MoreVert,
-                contentDescription = stringResource(id = R.string.more),
-                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.medium),
-            )
-        }
-    }
-}
-
-@Composable
-private fun CardFeatureImage(imageUrl: String) {
-    AsyncImage(
-        model = imageUrl,
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        placeholder = ColorPainter(AppColor.Gray30),
-        modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp)
-            .clip(RoundedCornerShape(6.dp))
-            .fillMaxWidth()
-            .aspectRatio(2f)
-    )
-}
-
-@Composable
-private fun CardRow(rows: List<MySiteCardAndItem.Card.Dynamic.Row>) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
-    ) {
-        items(items = rows) { row -> CardRow(row) }
-    }
-}
-
-@Composable
-private fun CardRow(row: MySiteCardAndItem.Card.Dynamic.Row) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        row.iconUrl?.let { iconUrl ->
-            AsyncImage(
-                model = iconUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                placeholder = ColorPainter(AppColor.Gray30),
-                modifier = Modifier.size(48.dp),
-            )
-        }
-        Column(modifier = Modifier.padding(start = row.iconUrl?.run { 12.dp } ?: 0.dp)) {
-            row.title?.let { title ->
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                )
-            }
-            row.description?.let { description ->
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontWeight = FontWeight.Light,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.medium)
-                    )
-                )
-            }
-        }
-    }
 }
 
 @Preview
