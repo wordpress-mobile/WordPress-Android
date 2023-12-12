@@ -266,7 +266,7 @@ private val DYNAMIC_CARD_MODEL = DynamicCardModel(
     featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
     url = DYNAMIC_CARD_URL,
     action = DYNAMIC_CARD_ACTION,
-    order = CardModel.DynamicCardsModel.CardOrder.fromString(DYNAMIC_CARD_ORDER),
+    order = CardOrder.fromString(DYNAMIC_CARD_ORDER),
     rows = listOf(DYNAMIC_CARD_ROW_MODEL)
 )
 
