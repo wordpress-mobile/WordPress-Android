@@ -2,7 +2,7 @@
 
 24.0
 -----
-
+* [*] Filter media types when sharing files to the editor [https://github.com/wordpress-mobile/WordPress-Android/pull/19754]
 
 23.9
 -----
