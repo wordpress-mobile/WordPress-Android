@@ -47,7 +47,7 @@ fun CascadeColumnScope.SubMenu(
             }
         },
         childrenHeader = {
-            JetpackDropdownSubMenuHeader()
+            SubMenuHeader()
         }
     )
 }

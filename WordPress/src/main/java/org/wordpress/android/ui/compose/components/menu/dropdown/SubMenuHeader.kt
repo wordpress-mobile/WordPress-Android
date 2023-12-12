@@ -22,7 +22,7 @@ import me.saket.cascade.CascadeColumnScope
 import org.wordpress.android.R
 
 @Composable
-fun CascadeColumnScope.JetpackDropdownSubMenuHeader(
+fun CascadeColumnScope.SubMenuHeader(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(10.5.dp),
     text: @Composable (() -> Unit)? = null,
@@ -42,7 +42,7 @@ fun CascadeColumnScope.JetpackDropdownSubMenuHeader(
         CompositionLocalProvider(
             LocalTextStyle provides MaterialTheme.typography.bodyLarge
         ) {
-            if (this@JetpackDropdownSubMenuHeader.hasParentMenu) {
+            if (this@SubMenuHeader.hasParentMenu) {
                 Image(
                     painter = painterResource(R.drawable.ic_arrow_left_white_24dp),
                     contentDescription = null,
