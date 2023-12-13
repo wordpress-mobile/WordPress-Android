@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-05 12:54:09+0000
+Translation-Revision-Date: 2023-12-12 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: de
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Los geht\'s</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Blog-Schreibanregungen aktivieren</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Im Rahmen des Bloganuary werden dir über die täglichen Blog-Schreibanregungen Themen für den Januar geschickt.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Im Rahmen des Bloganuary werden dir über die täglichen Blog-Schreibanregungen Themen für den Januar geschickt. Blog-Schreibanregungen sind in deinen Einstellungen derzeit deaktiviert.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">Lies die Antworten anderer Blogger, um dich inspirieren zu lassen und neue Kontakte zu knüpfen.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">Veröffentliche deine Antwort.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">Lasse dich jeden Tag von einer neuen Schreibanregung inspirieren.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">Unsere Schreib-Challenge dauert einen Monat – sei dabei</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
+    <string name="bloganuary_dashboard_nudge_text">Im Januar erhältst du Blog-Schreibanregungen vom Bloganuary, unserer Community-Challenge. Diese soll dir helfen, Bloggen im neuen Jahr zur Gewohnheit zu machen.</string>
+    <string name="bloganuary_dashboard_nudge_title">Bloganuary steht vor der Tür!</string>
     <string name="turn_off">Nein, deaktivieren</string>
     <string name="leave_on">Ja, aktiviert lassen</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Aus diesem Grund empfehlen wir, den Block in deinem Webbrowser zu bearbeiten.</string>

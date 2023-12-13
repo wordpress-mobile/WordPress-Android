@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-25 15:33:48+0000
+Translation-Revision-Date: 2023-12-12 17:55:56+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: pt_BR
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Vamos lá!</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Ativar sugestões de publicação</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">O Bloganuary usará sugestões de publicação diárias para enviar tópicos do mês de janeiro para você.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">O Bloganuary usará sugestões de publicação diárias para enviar tópicos do mês de janeiro para você. No momento, suas sugestões de publicação estão desativadas.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">Leia as respostas de outros blogueiros para obter inspiração e criar novos laços.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">Publique sua resposta.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">Receba uma nova sugestão por dia para se inspirar.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">Participe do nosso desafio de escrita do mês</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
+    <string name="bloganuary_dashboard_nudge_text">Durante o mês de janeiro, as sugestões de publicação virão do Bloganuary, nosso desafio para a comunidade criar um hábito de publicação no ano que se inicia.</string>
+    <string name="bloganuary_dashboard_nudge_title">O Bloganuary está chegando!</string>
+    <string name="turn_off">Não, desativar</string>
+    <string name="leave_on">Sim, manter ativa</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Por isso, recomendamos editar o bloco usando seu navegador.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Por isso, recomendamos editar o bloco usando seu editor da web.</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">Do &lt;b&gt;Bloganuary&lt;/b&gt;</string>
     <string name="sharing_twitter_deprecation_notice_find_out_more">Saiba mais</string>
     <string name="sharing_twitter_deprecation_notice_description">O autocompartilhamento do Twitter não está mais disponível devido a uma mudança nos termos e preços do Twitter.</string>
     <string name="sharing_twitter_deprecation_notice_title">O autocompartilhamento no Twitter não está mais disponível</string>

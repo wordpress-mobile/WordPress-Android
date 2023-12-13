@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-10-15 10:29:52+0000
+Translation-Revision-Date: 2023-12-11 09:55:05+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: sr_RS
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Идемо!</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Укључи предлоге за блоговање</string>
     <string name="gutenberg_native_ungroup_block">Разгрупиши блок</string>
     <string name="gutenberg_native_synced_patterns">Синхронизоване мустре</string>
     <string name="gutenberg_native_deeply_nested_block">Дубоко угњежден блок</string>
@@ -17,8 +19,10 @@ Language: sr_RS
     <string name="personalization_screen_draft_posts_card_title">Нацрти чланака</string>
     <string name="my_site_dashboard_no_cards_message_title">Све кртице су скривене</string>
     <string name="personalization_screen_stats_card_description">Прегледи, посетиоци и свиђања</string>
+    <string name="personalization_screen_tab_cards_description">Додај или сакриј картице</string>
     <string name="partial_media_access_prompt_select_more">Означи више</string>
     <string name="partial_media_access_prompt_change_settings">Измени подешавања</string>
+    <string name="personalization_screen_title"> Персонализуј почетни језичак</string>
     <string name="gutenberg_native_choose_a_file">Одабери датотеку</string>
     <string name="my_site_post_card_menu_view_all_drafts">Види све нацрте</string>
     <string name="my_site_post_card_menu_view_all_scheduled_posts">Види све заказане чланке</string>
@@ -409,6 +413,7 @@ Language: sr_RS
     <string name="ccpa_privacy_notice_header">Објава везана за приватност за кориснике из Калифорније</string>
     <string name="status_and_visibility">Статус &amp; Видљивост</string>
     <string name="update_now">Ажурирај сада</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_move_to_top">Помери на горе</string>
     <string name="gutenberg_native_insert_mention">Уметни спомињање</string>
     <string name="pages_set_as_posts_page">Постави страницу чланака</string>
@@ -922,6 +927,7 @@ Language: sr_RS
     <string name="quick_start_list_create_site_title">Креирај свој сајт</string>
     <string name="quick_start_dialog_view_site_title">Види свој сајт</string>
     <string name="quick_start_dialog_share_site_title">Подели свој сајт</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Додирните %1$s Друштвене мреже %2$s да бисте наставили.</string>
     <string name="quick_start_dialog_publish_post_title">Објави чланак</string>
     <string name="quick_start_dialog_need_help_button_negative">Не, хвала</string>
     <string name="quick_start_dialog_follow_sites_title">Повежи са другим веб местима</string>
@@ -1116,6 +1122,7 @@ Language: sr_RS
     <string name="version_with_name_param">Издање %s</string>
     <string name="permissions_denied_title">Допуштења</string>
     <string name="plugin_caption_featured">Издвојено</string>
+    <string name="sharing_disabled">Друштвени модул онемогућен</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">Преостало %1$d страница / чланака</string>
     <string name="uploading_subtitle_pages_only_one">Преостала 1 страница</string>
@@ -1354,6 +1361,7 @@ Language: sr_RS
     <string name="enter_wpcom_password">Унесите своју WordPress.com лозинку.</string>
     <string name="login_continue">Настави</string>
     <string name="connect_more">Повежи други сајт</string>
+    <string name="enter_verification_code">Скоро сте ту! Унесите верификациони код за WordPress.com из ваше аутентификационе апликације.</string>
     <string name="next">Следећи</string>
     <string name="open_mail">Отвори пошту</string>
     <string name="me_profile_photo">Профилна слика</string>
@@ -1451,6 +1459,10 @@ Language: sr_RS
     <string name="photo_picker_title">Одабери фотографију</string>
     <string name="editor_post_saved_online">Чланак сачуван онлајн</string>
     <string name="site_settings_image_quality_hint">Квалитет слика. Више вредности представљају слике бољег квалитета.</string>
+    <string name="media_encoder_quality_maximum">Максималан</string>
+    <string name="media_encoder_quality_high">Висок</string>
+    <string name="media_encoder_quality_medium">Средњи</string>
+    <string name="media_encoder_quality_low">Низак</string>
     <string name="media_upload_state_uploaded">Отпремљено</string>
     <string name="media_upload_state_failed">Неуспело отпремање</string>
     <string name="media_upload_state_deleted">Обрисано</string>
@@ -1902,6 +1914,7 @@ Language: sr_RS
     <string name="reader_toast_blog_blocked">Чланци са овог сајта више неће бити приказивани</string>
     <string name="schedule_verb">Заказати</string>
     <string name="update_verb">Ажурирај</string>
+    <string name="reader_label_followers_count">%s пратилаца</string>
     <string name="reader_page_followed_blogs">Веб места која пратите</string>
     <string name="reader_hint_add_tag_or_url">Унесите URL или ознаку за праћење</string>
     <string name="reader_label_followed_blog">Сајт запраћен</string>

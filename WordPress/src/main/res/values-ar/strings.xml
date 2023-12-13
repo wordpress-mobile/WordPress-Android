@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-06 19:54:08+0000
+Translation-Revision-Date: 2023-12-11 14:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.11
 Language: ar
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">هيا بنا!</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">تشغيل موجّهات التدوين</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">ستستخدم Bloganuary موجّهات التدوين اليومية لإرسال الموضوعات الخاصة بشهر يناير إليك.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">اقرأ ردود المدونين الأخرى للحصول على الإلهام وإقامة اتصالات جديدة.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">انشر ردك.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">استقبل موجّهًا جديدًا لإلهامك في كل يوم.</string>
+    <string name="bloganuary_dashboard_nudge_text">بالنسبة إلى شهر يناير، ستأتي موجّهات التدوين من Bloganuary - تحدٍّ مجتمعي لدينا لإنشاء عادة التدوين الخاصة بالعام الجديد.</string>
+    <string name="bloganuary_dashboard_nudge_title">Bloganuary قادمة!</string>
     <string name="turn_off">لا، توقف عن الاستخدام</string>
     <string name="leave_on">نعم، واصل الاستخدام</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">لهذا السبب، نوصي بتحرير المكوّن باستخدام متصفح الويب لديك.</string>

@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-05 10:54:08+0000
+Translation-Revision-Date: 2023-12-13 13:56:48+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: tr
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Başlayalım!</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Blog istemlerini aç</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary Ocak ayı boyunca size konular göndermek için Günlük Blog İstemlerini kullanacak.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Bloganuary Ocak ayı boyunca size konular göndermek için Günlük Blog İstemlerini kullanacak. Blog İstemleri şu anda devre dışı.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">İlham almak ve yeni bağlantılar kurmak için diğer blog yazarlarının yanıtlarını okuyun.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">Yanıtınızı yayımlayın.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">Her gün size ilham verecek yeni istemler alın.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">Bir ay sürecek yazma etkinliğimize katılın</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Blog yılı</string>
+    <string name="bloganuary_dashboard_nudge_text">Yeni yılda blog yazma alışkanlığı oluşturmayı hedefleyen topluluk etkinliğimiz Bloganuary\'den Ocak ayı boyunca blog istemleri alacaksınız.</string>
+    <string name="bloganuary_dashboard_nudge_title">Bloganuary yaklaşıyor!</string>
     <string name="turn_off">Hayır, kapat</string>
     <string name="leave_on">Evet, açık kalsın</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Bu nedenle, bloku web tarayıcınızı kullanarak düzenlemenizi öneririz.</string>
@@ -22,6 +33,8 @@ Language: tr
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%d seviyelerinden daha derin bir şekilde iç içe geçmiş bloklar, mobil düzenleyicide düzgün şekilde oluşmayabilir.</string>
     <string name="jp_migration_lets_go_button">Haydi başlayalım</string>
     <string name="jp_migration_done_no_sites_message">Jetpack uygulamasındaki WordPress yolculuğunuza devam etme vakti.</string>
+    <string name="image_optimization_popup_desc">Görsel iyileştirme özelliği, daha hızlı yüklenmeleri için görselleri küçültür.\n\nBu seçenek varsayılan olarak etkindir, ancak dilediğiniz zaman uygulama ayarlarından değiştirebilirsiniz.</string>
+    <string name="image_optimization_popup_title">Görseller iyileştirilmeye devam edilsin mi?</string>
     <string name="domain_management_clear_search">Aramayı temizle</string>
     <string name="media_encoder_quality_very_high">Çok Yüksek</string>
     <string name="notification_security_key_needed">Lütfen devam etmek için güvenlik anahtarınızı girin.</string>
@@ -1659,6 +1672,7 @@ Language: tr
     <string name="ccpa_privacy_notice_header">Californiya kullanıcıları için gizlilik notu</string>
     <string name="status_and_visibility">Durum ve görünürlük</string>
     <string name="update_now">Şimdi güncelle</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">Blok eylemleri menüsünü aç</string>
     <string name="gutenberg_native_move_to_top">Üste taşı</string>
     <string name="gutenberg_native_insert_mention">Bahsetme ekle</string>
@@ -3038,6 +3052,9 @@ Language: tr
     <string name="site_settings_image_quality_hint">Görüntülerin kalitesi. Daha yüksek değerler daha kaliteli görüntü anlamına gelir.</string>
     <string name="site_settings_optimize_images_summary">Görüntülerin boyutlandırılıp sıkıştırılabilmelerini etkinleştir</string>
     <string name="media_encoder_quality_maximum">Maksimum</string>
+    <string name="media_encoder_quality_high">Yüksek</string>
+    <string name="media_encoder_quality_medium">Orta</string>
+    <string name="media_encoder_quality_low">Düşük</string>
     <string name="media_upload_state_uploaded">Yüklendi</string>
     <string name="media_upload_state_failed">Yükleme başarısız oldu</string>
     <string name="media_upload_state_deleted">Silindi</string>
