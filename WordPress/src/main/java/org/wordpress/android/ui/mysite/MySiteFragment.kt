@@ -436,10 +436,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             viewModel.refresh()
         }
 
-        viewModel.domainTransferCardRefresh.observe(viewLifecycleOwner) {
-            viewModel.refresh()
-        }
-
         viewModel.onShowJetpackIndividualPluginOverlay.observeEvent(viewLifecycleOwner) {
             WPJetpackIndividualPluginFragment.show(requireActivity().supportFragmentManager)
         }
@@ -746,10 +742,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             requireActivity(),
             action.campaignId,
             action.campaignDetailPageSource
-        )
-
-        is SiteNavigationAction.OpenDomainTransferPage -> activityNavigator.openDomainTransfer(
-            requireActivity(), action.url
         )
 
         is BloggingPromptCardNavigationAction -> handleNavigation(action)
