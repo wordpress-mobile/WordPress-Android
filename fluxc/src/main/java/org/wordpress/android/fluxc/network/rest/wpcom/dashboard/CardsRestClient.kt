@@ -191,7 +191,7 @@ class CardsRestClient @Inject constructor(
             url = url,
             action = action,
             order = CardOrder.fromString(order),
-            rows = rows?.map { it.toDynamicCardRow() }
+            rows = rows?.map { it.toDynamicCardRow() } ?: emptyList()
         )
     }
 
