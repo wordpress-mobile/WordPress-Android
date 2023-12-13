@@ -3,7 +3,7 @@ package org.wordpress.android.fluxc.network.rest.wpapi
 sealed interface Nonce {
     val value: String?
         get() = null
-    val username: String
+    val username: String?
 
     data class Available(override val value: String, override val username: String) : Nonce
     data class FailedRequest(
@@ -14,7 +14,7 @@ sealed interface Nonce {
         val errorMessage: String? = null,
     ) : Nonce
 
-    data class Unknown(override val username: String) : Nonce
+    data class Unknown(override val username: String?) : Nonce
 
     enum class CookieNonceErrorType {
         NOT_AUTHENTICATED,
