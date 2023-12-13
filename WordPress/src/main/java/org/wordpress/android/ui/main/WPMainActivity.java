@@ -72,6 +72,7 @@ import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.ActivityNavigator;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -95,11 +96,11 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
+import org.wordpress.android.ui.mysite.BloggingPromptsOnboardingListener;
 import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
-import org.wordpress.android.ui.mysite.BloggingPromptsOnboardingListener;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
@@ -224,6 +225,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_EDITOR_ORIGIN = "editor_origin";
     public static final String ARG_CURRENT_FOCUS = "CURRENT_FOCUS";
     public static final String ARG_BYPASS_MIGRATION = "bypass_migration";
+    public static final String ARG_MEDIA = "show_media";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -277,6 +279,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     @Inject GCMRegistrationScheduler mGCMRegistrationScheduler;
+
+    @Inject ActivityNavigator mActivityNavigator;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -925,6 +929,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     break;
                 case ARG_BLOGGING_PROMPTS_ONBOARDING:
                     showBloggingPromptsOnboarding();
+                    break;
+                case ARG_MEDIA:
+                    if (!mSelectedSiteRepository.hasSelectedSite()) {
+                        initSelectedSite();
+                    }
+                    mActivityNavigator.viewCurrentBlogMedia(this, getSelectedSite());
                     break;
             }
         } else {
