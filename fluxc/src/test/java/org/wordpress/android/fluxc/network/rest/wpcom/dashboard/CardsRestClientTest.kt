@@ -38,6 +38,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.TodaysStatsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.DynamicCardResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.DynamicCardRowResponse
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
@@ -58,7 +60,8 @@ private val CARD_TYPES = listOf(
     CardModel.Type.TODAYS_STATS,
     CardModel.Type.POSTS,
     CardModel.Type.PAGES,
-    CardModel.Type.ACTIVITY
+    CardModel.Type.ACTIVITY,
+    CardModel.Type.DYNAMIC
 )
 
 /* ERRORS */
@@ -118,6 +121,25 @@ private val PAGE_RESPONSE_TWO = PageResponse(
 
 private val PAGES_RESPONSE = listOf(PAGE_RESPONSE_ONE, PAGE_RESPONSE_TWO)
 
+private val DYNAMIC_CARD_ROW_RESPONSE = DynamicCardRowResponse(
+    icon = "https://path/to/image",
+    title = "Row title",
+    description = "Row description"
+)
+
+private val DYNAMIC_CARD_RESPONSE = DynamicCardResponse(
+    id = "year_in_review_2023",
+    title = "News",
+    remoteFeatureFlag = "dynamic_dashboard_cards",
+    featuredImage = "https://path/to/image",
+    url = "https://wordpress.com",
+    action = "Call to action",
+    order = "top",
+    rows = listOf(DYNAMIC_CARD_ROW_RESPONSE),
+)
+
+private val DYNAMIC_CARDS_RESPONSE = listOf(DYNAMIC_CARD_RESPONSE)
+
 private val POSTS_RESPONSE = PostsResponse(
         hasPublished = true,
         draft = listOf(
@@ -166,7 +188,8 @@ private val CARDS_RESPONSE = CardsResponse(
         todaysStats = TODAYS_STATS_RESPONSE,
         posts = POSTS_RESPONSE,
         pages = PAGES_RESPONSE,
-        activity = ACTIVITY_RESPONSE
+        activity = ACTIVITY_RESPONSE,
+        dynamic = DYNAMIC_CARDS_RESPONSE
 )
 
 @RunWith(MockitoJUnitRunner::class)

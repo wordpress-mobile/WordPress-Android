@@ -14,6 +14,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.CardOrder
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardRowModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel.PageCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
@@ -72,6 +76,18 @@ const val PAGE_MODIFIED_ON = "2023-03-02 10:26:53"
 const val PAGE_STATUS = "publish"
 const val PAGE_DATE = "2023-03-02 10:30:53"
 
+/* DYNAMIC CARDS */
+const val DYNAMIC_CARD_ID = "year_in_review_2023"
+const val DYNAMIC_CARD_TITLE = "News"
+const val DYNAMIC_CARD_REMOTE_FEATURE_FLAG = "dynamic_dashboard_cards"
+const val DYNAMIC_CARD_FEATURED_IMAGE = "https://path/to/image"
+const val DYNAMIC_CARD_URL = "https://wordpress.com"
+const val DYNAMIC_CARD_ACTION = "Call to action"
+const val DYNAMIC_CARD_ORDER = "top"
+const val DYNAMIC_CARD_ROW_ICON = "https://path/to/image"
+const val DYNAMIC_CARD_ROW_TITLE = "Row title"
+const val DYNAMIC_CARD_ROW_DESCRIPTION = "Row description"
+
 /* ACTIVITY */
 const val ACTIVITY_ID = "activity123"
 const val ACTIVITY_SUMMARY = "activity"
@@ -95,7 +111,8 @@ const val ACTIVITY_CONTENT = "content"
 private val CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS,
     CardModel.Type.POSTS,
     CardModel.Type.PAGES,
-    CardModel.Type.ACTIVITY
+    CardModel.Type.ACTIVITY,
+    CardModel.Type.DYNAMIC,
 )
 
 /* RESPONSE */
@@ -131,6 +148,27 @@ private val PAGE_RESPONSE = PageResponse(
 )
 
 private val PAGES_RESPONSE = listOf(PAGE_RESPONSE)
+
+private val DYNAMIC_CARD_ROW_RESPONSE = CardsRestClient.DynamicCardRowResponse(
+    icon = DYNAMIC_CARD_ROW_ICON,
+    title = DYNAMIC_CARD_ROW_TITLE,
+    description = DYNAMIC_CARD_ROW_DESCRIPTION
+)
+
+private val DYNAMIC_CARD_ROWS_RESPONSE = listOf(DYNAMIC_CARD_ROW_RESPONSE)
+
+private val DYNAMIC_CARD_RESPONSE = CardsRestClient.DynamicCardResponse(
+    id = DYNAMIC_CARD_ID,
+    title = DYNAMIC_CARD_TITLE,
+    remoteFeatureFlag = DYNAMIC_CARD_REMOTE_FEATURE_FLAG,
+    featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
+    url = DYNAMIC_CARD_URL,
+    action = DYNAMIC_CARD_ACTION,
+    order = DYNAMIC_CARD_ORDER,
+    rows = DYNAMIC_CARD_ROWS_RESPONSE,
+)
+
+private val DYNAMIC_CARDS_RESPONSE = listOf(DYNAMIC_CARD_RESPONSE)
 
 private val ACTIVITY_RESPONSE_ICON = ActivitiesResponse.Icon("jpg", ACTIVITY_ACTOR_ICON_URL, 100, 100)
 private val ACTIVITY_RESPONSE_ACTOR = ActivitiesResponse.Actor(
@@ -168,7 +206,8 @@ private val CARDS_RESPONSE = CardsResponse(
         todaysStats = TODAYS_STATS_RESPONSE,
         posts = POSTS_RESPONSE,
         pages = PAGES_RESPONSE,
-        activity = ACTIVITY_RESPONSE
+        activity = ACTIVITY_RESPONSE,
+        dynamic = DYNAMIC_CARDS_RESPONSE,
 )
 
 /* MODEL */
@@ -214,6 +253,27 @@ private val PAGES_MODEL = PagesCardModel(
         pages = listOf(PAGE_MODEL)
 )
 
+private val DYNAMIC_CARD_ROW_MODEL = DynamicCardRowModel(
+    icon = DYNAMIC_CARD_ROW_ICON,
+    title = DYNAMIC_CARD_ROW_TITLE,
+    description = DYNAMIC_CARD_ROW_DESCRIPTION
+)
+
+private val DYNAMIC_CARD_MODEL = DynamicCardModel(
+    id = DYNAMIC_CARD_ID,
+    title = DYNAMIC_CARD_TITLE,
+    remoteFeatureFlag = DYNAMIC_CARD_REMOTE_FEATURE_FLAG,
+    featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
+    url = DYNAMIC_CARD_URL,
+    action = DYNAMIC_CARD_ACTION,
+    order = CardOrder.fromString(DYNAMIC_CARD_ORDER),
+    rows = listOf(DYNAMIC_CARD_ROW_MODEL)
+)
+
+private val DYNAMIC_CARDS_MODEL = DynamicCardsModel(
+    pages = listOf(DYNAMIC_CARD_MODEL)
+)
+
 private val ACTIVITY_LOG_MODEL = ActivityLogModel(
     summary = ACTIVITY_SUMMARY,
     content = FormattableContent(text = ACTIVITY_CONTENT),
@@ -246,7 +306,8 @@ private val CARDS_MODEL = listOf(
         TODAYS_STATS_MODEL,
         POSTS_MODEL,
         PAGES_MODEL,
-        ACTIVITY_CARD_MODEL
+        ACTIVITY_CARD_MODEL,
+        DYNAMIC_CARDS_MODEL,
 )
 
 /* ENTITY */
@@ -285,6 +346,13 @@ private val PAGES_ENTITY = CardEntity(
         json = CardsUtils.GSON.toJson(PAGES_MODEL)
 )
 
+private val DYNAMIC_CARDS_ENTITY = CardEntity(
+    siteLocalId = SITE_LOCAL_ID,
+    type = CardModel.Type.DYNAMIC.name,
+    date = CardsUtils.getInsertDate(),
+    json = CardsUtils.GSON.toJson(DYNAMIC_CARDS_MODEL)
+)
+
 private val ACTIVITY_ENTITY = CardEntity(
         siteLocalId = SITE_LOCAL_ID,
         type = CardModel.Type.ACTIVITY.name,
@@ -303,7 +371,8 @@ private val CARDS_ENTITY = listOf(
         TODAYS_STATS_ENTITY,
         POSTS_ENTITY,
         PAGES_ENTITY,
-        ACTIVITY_ENTITY
+        ACTIVITY_ENTITY,
+        DYNAMIC_CARDS_ENTITY,
 )
 
 @RunWith(MockitoJUnitRunner::class)
@@ -367,6 +436,16 @@ class CardsStoreTest {
         cardsStore.fetchCards(siteModel, listOf(CardModel.Type.PAGES))
 
         verify(dao).insertWithDate(siteModel.id, listOf(PAGES_MODEL))
+    }
+
+    @Test
+    fun `given dynamic cards type, when fetch cards triggered, then dynamic cards model inserted into db`() = test {
+        val payload = CardsPayload(CardsResponse(dynamic = DYNAMIC_CARDS_RESPONSE))
+        whenever(restClient.fetchCards(siteModel, listOf(CardModel.Type.DYNAMIC))).thenReturn(payload)
+
+        cardsStore.fetchCards(siteModel, listOf(CardModel.Type.DYNAMIC))
+
+        verify(dao).insertWithDate(siteModel.id, listOf(DYNAMIC_CARDS_MODEL))
     }
 
     @Test
