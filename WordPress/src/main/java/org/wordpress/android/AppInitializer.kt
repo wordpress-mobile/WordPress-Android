@@ -11,7 +11,6 @@ import android.app.NotificationManager
 import android.app.SyncNotedAppOp
 import android.content.ComponentCallbacks2
 import android.content.Context
-import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
 import android.database.SQLException
@@ -76,7 +75,7 @@ import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.networking.ConnectionChangeReceiver
 import org.wordpress.android.networking.OAuthAuthenticator
 import org.wordpress.android.networking.RestClientUtils
-import org.wordpress.android.push.GCMRegistrationIntentService
+import org.wordpress.android.push.GCMRegistrationScheduler
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
@@ -192,6 +191,9 @@ class AppInitializer @Inject constructor(
 
     @Inject
     lateinit var wordPressWorkerFactory: WordPressWorkersFactory
+
+    @Inject
+    lateinit var gcmRegistrationScheduler: GCMRegistrationScheduler
 
     @Inject
     lateinit var debugCookieManager: DebugCookieManager
@@ -646,10 +648,7 @@ class AppInitializer @Inject constructor(
 
         if (accountStore.hasAccessToken()) {
             // Make sure the Push Notification token is sent to our servers after a successful login
-            GCMRegistrationIntentService.enqueueWork(
-                application,
-                Intent(application, GCMRegistrationIntentService::class.java)
-            )
+            gcmRegistrationScheduler.scheduleRegistration()
 
             // Force a refresh if user has logged in. This can be removed once we start using an anonymous ID.
             exPlat.forceRefresh()
@@ -815,10 +814,7 @@ class AppInitializer @Inject constructor(
             // Sync Push Notifications settings
             if (isPushNotificationPingNeeded && accountStore.hasAccessToken()) {
                 // Register for Cloud messaging
-                GCMRegistrationIntentService.enqueueWork(
-                    context,
-                    Intent(context, GCMRegistrationIntentService::class.java)
-                )
+                gcmRegistrationScheduler.scheduleRegistration()
             }
         }
 

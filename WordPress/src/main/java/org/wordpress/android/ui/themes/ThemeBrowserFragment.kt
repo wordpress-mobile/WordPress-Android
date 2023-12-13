@@ -242,7 +242,7 @@ class ThemeBrowserFragment : Fragment(), AbsListView.RecyclerListener,
         }
     }
 
-    fun setCurrentThemeId(currentThemeId: String?) {
+    fun setCurrentThemeId(currentThemeId: String) {
         this.currentThemeId = currentThemeId
         refreshView()
     }

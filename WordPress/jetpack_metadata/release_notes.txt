@@ -1,3 +1,4 @@
-- Block editor only shows the “ungroup” option for nested blocks that support it.
-- Optimize Images setting uses optimal size and quality by default.
-- Themes install properly for sites on Business and Commerce plans.
+No updates this week! Enjoy these reindeer facts:
+- Male reindeer shed their antlers in fall and females in spring, so Santa’s reindeer are female.
+- Reindeer don’t actually have red noses.
+- Santa hasn’t eaten milk and cookies since 2003 because Blitzen always gets there first.

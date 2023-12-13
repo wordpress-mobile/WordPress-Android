@@ -10,19 +10,21 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
+msgctxt "release_note_239"
+msgid ""
+"23.9:\n"
+"No updates this week! Enjoy these reindeer facts:\n"
+"- Male reindeer shed their antlers in fall and females in spring, so Santa’s reindeer are female.\n"
+"- Reindeer don’t actually have red noses.\n"
+"- Santa hasn’t eaten milk and cookies since 2003 because Blitzen always gets there first.\n"
+msgstr ""
+
 msgctxt "release_note_238"
 msgid ""
 "23.8:\n"
 "- Block editor only shows the “ungroup” option for nested blocks that support it.\n"
 "- Optimize Images setting uses optimal size and quality by default.\n"
 "- Themes install properly for sites on Business and Commerce plans.\n"
-msgstr ""
-
-msgctxt "release_note_237"
-msgid ""
-"23.7:\n"
-"- The Posts & Pages screen now has clean, simple display options. The context menu also lets you access comments, settings, and other actions for a post or page.\n"
-"- We fixed block editor issues caused by pasting deeply nested content, or using text colors in older site themes.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
