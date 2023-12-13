@@ -196,9 +196,9 @@ class CardsRestClient @Inject constructor(
     }
 
     data class DynamicCardRowResponse(
-        @SerializedName("icon") val icon: String,
-        @SerializedName("title") val title: String,
-        @SerializedName("description") val description: String
+        @SerializedName("icon") val icon: String?,
+        @SerializedName("title") val title: String?,
+        @SerializedName("description") val description: String?
     ) {
         fun toDynamicCardRow() = DynamicCardRowModel(
             icon = icon,
