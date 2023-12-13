@@ -175,11 +175,11 @@ class CardsRestClient @Inject constructor(
 
     data class DynamicCardResponse(
         @SerializedName("id") val id: String,
-        @SerializedName("title") val title: String,
-        @SerializedName("remote_feature_flag") val remoteFeatureFlag: String,
-        @SerializedName("featured_image") val featuredImage: String,
-        @SerializedName("url") val url: String,
-        @SerializedName("action") val action: String,
+        @SerializedName("title") val title: String?,
+        @SerializedName("remote_feature_flag") val remoteFeatureFlag: String?,
+        @SerializedName("featured_image") val featuredImage: String?,
+        @SerializedName("url") val url: String?,
+        @SerializedName("action") val action: String?,
         @SerializedName("order") val order: String,
         @SerializedName("rows") val rows: List<DynamicCardRowResponse>
     ) {
