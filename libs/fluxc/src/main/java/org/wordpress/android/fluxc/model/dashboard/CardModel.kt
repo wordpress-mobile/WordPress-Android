@@ -71,8 +71,8 @@ sealed class CardModel(
             val featuredImage: String?,
             val url: String?,
             val action: String?,
-            val order: CardOrder?,
-            val rows: List<DynamicCardRowModel>?,
+            val order: CardOrder,
+            val rows: List<DynamicCardRowModel>,
         )
 
         data class DynamicCardRowModel(
