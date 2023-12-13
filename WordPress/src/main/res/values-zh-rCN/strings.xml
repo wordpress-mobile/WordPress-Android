@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-06 10:54:08+0000
+Translation-Revision-Date: 2023-12-12 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: zh_CN
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">开始吧！</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">打开博客提示</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary 将通过“每日博客提示”向您发送一月份的主题。</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Bloganuary 将通过“每日博客提示”向您发送一月份的主题。 您目前已禁用“博客提示”。</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">阅读其他博主的回复，获得灵感并建立新的联系。</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">发表您的回复。</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">每天接收新的提示，以获取灵感。</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">加入我们为期一个月的写作挑战</string>
+    <string name="bloganuary_dashboard_nudge_text">在一月份，Bloganuary 将向您发送博客提示，这是我们发起的一项社区挑战，旨在帮助广大用户在新的一年养成写博客的习惯。</string>
+    <string name="bloganuary_dashboard_nudge_title">Bloganuary 即将上线！</string>
     <string name="turn_off">不，停止优化</string>
     <string name="leave_on">是，继续优化</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">因此，我们建议使用 Web 浏览器编辑该区块。</string>
