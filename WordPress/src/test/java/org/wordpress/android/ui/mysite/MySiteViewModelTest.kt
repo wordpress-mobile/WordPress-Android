@@ -79,7 +79,6 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloganuary.BloganuaryNudgeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice
@@ -243,9 +242,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper
-
-    @Mock
-    lateinit var domainTransferCardViewModel: DomainTransferCardViewModel
 
     @Mock
     lateinit var todaysStatsViewModelSlice: TodaysStatsViewModelSlice
@@ -414,7 +410,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
         whenever(jetpackBrandingUtils.getBrandingTextForScreen(any())).thenReturn(mock())
         whenever(blazeCardViewModelSlice.refresh).thenReturn(refresh)
-        whenever(domainTransferCardViewModel.refresh).thenReturn(refresh)
         whenever(pagesCardViewModelSlice.getPagesCardBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(todaysStatsViewModelSlice.getTodaysStatsBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(postsCardViewModelSlice.getPostsCardBuilderParams(anyOrNull())).thenReturn(mock())
@@ -466,7 +461,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             jetpackFeatureRemovalPhaseHelper,
             wpJetpackIndividualPluginHelper,
             blazeCardViewModelSlice,
-            domainTransferCardViewModel,
             pagesCardViewModelSlice,
             todaysStatsViewModelSlice,
             postsCardViewModelSlice,
