@@ -8,7 +8,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloganuaryNudgeCar
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainTransferCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorWithinCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
@@ -49,7 +48,6 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
             oldItem is BloganuaryNudgeCardModel && updatedItem is BloganuaryNudgeCardModel -> true
             oldItem is PromoteWithBlazeCard && updatedItem is PromoteWithBlazeCard -> true
             oldItem is BlazeCampaignsCardModel && updatedItem is BlazeCampaignsCardModel -> true
-            oldItem is DomainTransferCardModel && updatedItem is DomainTransferCardModel -> true
             oldItem is DashboardPlansCard && updatedItem is DashboardPlansCard -> true
             oldItem is PagesCard && updatedItem is PagesCard -> true
             oldItem is ActivityCard && updatedItem is ActivityCard -> true
