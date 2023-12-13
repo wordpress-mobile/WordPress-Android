@@ -66,19 +66,19 @@ sealed class CardModel(
     ) : CardModel(Type.DYNAMIC) {
         data class DynamicCardModel(
             val id: String,
-            val title: String,
-            val remoteFeatureFlag: String,
-            val featuredImage: String,
-            val url: String,
-            val action: String,
-            val order: CardOrder,
-            val rows: List<DynamicCardRowModel>
+            val title: String?,
+            val remoteFeatureFlag: String?,
+            val featuredImage: String?,
+            val url: String?,
+            val action: String?,
+            val order: CardOrder?,
+            val rows: List<DynamicCardRowModel>?,
         )
 
         data class DynamicCardRowModel(
-            val icon: String,
-            val title: String,
-            val description: String
+            val icon: String?,
+            val title: String?,
+            val description: String?,
         )
 
         enum class CardOrder(val order: String) {
@@ -86,8 +86,8 @@ sealed class CardModel(
             BOTTOM("bottom");
 
             companion object {
-                fun fromString(order: String): CardOrder {
-                    return values().firstOrNull { it.order.equals(order, ignoreCase = true) } ?: BOTTOM
+                fun fromString(order: String?): CardOrder {
+                    return values().firstOrNull { it.order.equals(order, ignoreCase = true) } ?: BOTTOM // default
                 }
             }
         }
