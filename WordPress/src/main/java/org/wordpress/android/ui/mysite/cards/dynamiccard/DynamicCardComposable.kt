@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.dynamiccard
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -10,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.ui.compose.components.card.UnelevatedCard
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.Dynamic.ActionSource
 import org.wordpress.android.ui.utils.ListItemInteraction
 
 @Composable
@@ -18,23 +20,35 @@ fun DynamicDashboardCard(
     modifier: Modifier = Modifier,
 ) {
     UnelevatedCard(
-        modifier = modifier,
+        modifier = modifier
+            .run {
+                if (card.action is ActionSource.Card) clickable { card.action.onCtaClick.click() } else this
+            },
         content = {
             Column(
                 Modifier.padding(top = 8.dp, bottom = 8.dp)
             ) {
+                val isCtaInvisible = card.action !is ActionSource.Button
                 DynamicCardHeader(
                     title = card.title,
                     onHideMenuClicked = { card.onHideMenuItemClick.click() }
                 )
                 card.image?.let { imageUrl ->
-                    DynamicCardFeatureImage(imageUrl)
+                    DynamicCardFeatureImage(
+                        imageUrl,
+                        modifier = Modifier.run {
+                            if (isCtaInvisible && card.rows.isEmpty()) padding(bottom = 8.dp) else this
+                        }
+                    )
                 }
                 if (card.rows.isNotEmpty()) {
-                    DynamicCardRows(card.rows)
+                    DynamicCardRows(
+                        rows = card.rows,
+                        modifier = Modifier.run { if (isCtaInvisible) padding(bottom = 8.dp) else this }
+                    )
                 }
-                card.action?.let { action ->
-                    DynamicCardCallToActionButton(text = action, onClicked = { card.onCtaClick.click() })
+                (card.action as? ActionSource.Button)?.title?.let { title ->
+                    DynamicCardCallToActionButton(text = title, onClicked = { card.action.onCtaClick.click() })
                 }
             }
         }
@@ -52,7 +66,10 @@ fun DynamicDashboardCardPreview() {
                 order = MySiteCardAndItem.Card.Dynamic.Order.TOP,
                 title = "Card Title",
                 image = "https://picsum.photos/200/300",
-                action = "Call to Action",
+                action = ActionSource.Button(
+                    title = "Call to Action", url = "",
+                    onCtaClick = ListItemInteraction.create {},
+                ),
                 rows = listOf(
                     MySiteCardAndItem.Card.Dynamic.Row(
                         iconUrl = "",
@@ -66,7 +83,6 @@ fun DynamicDashboardCardPreview() {
                     ),
                 ),
                 onHideMenuItemClick = ListItemInteraction.create {},
-                onCtaClick = ListItemInteraction.create {},
             )
         )
     }
@@ -82,7 +98,11 @@ fun DynamicDashboardCardWithFeatureAndDescriptionPreview() {
                 order = MySiteCardAndItem.Card.Dynamic.Order.TOP,
                 title = null,
                 image = "https://picsum.photos/200/300",
-                action = "See yours now",
+                action = ActionSource.Button(
+                    title = "See yours now",
+                    url = "",
+                    onCtaClick = ListItemInteraction.create {},
+                ),
                 rows = listOf(
                     MySiteCardAndItem.Card.Dynamic.Row(
                         iconUrl = null,
@@ -92,7 +112,6 @@ fun DynamicDashboardCardWithFeatureAndDescriptionPreview() {
                     )
                 ),
                 onHideMenuItemClick = ListItemInteraction.create {},
-                onCtaClick = ListItemInteraction.create {},
             )
         )
     }
@@ -108,7 +127,11 @@ fun DynamicDashboardCardWithFeatureAndSubtitleAndDescriptionPreview() {
                 order = MySiteCardAndItem.Card.Dynamic.Order.TOP,
                 title = null,
                 image = "https://picsum.photos/200/300",
-                action = "Find out more",
+                action = ActionSource.Button(
+                    title = "Find out more",
+                    url = "",
+                    onCtaClick = ListItemInteraction.create {},
+                ),
                 rows = listOf(
                     MySiteCardAndItem.Card.Dynamic.Row(
                         iconUrl = null,
@@ -118,7 +141,55 @@ fun DynamicDashboardCardWithFeatureAndSubtitleAndDescriptionPreview() {
                     )
                 ),
                 onHideMenuItemClick = ListItemInteraction.create {},
-                onCtaClick = ListItemInteraction.create {},
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+fun DynamicDashboardCardWithNoCta() {
+    AppTheme {
+        DynamicDashboardCard(
+            card = MySiteCardAndItem.Card.Dynamic(
+                id = "id",
+                order = MySiteCardAndItem.Card.Dynamic.Order.TOP,
+                title = null,
+                image = "https://picsum.photos/200/300",
+                action = ActionSource.Card(
+                    url = "",
+                    onCtaClick = ListItemInteraction.create {},
+                ),
+                rows = listOf(
+                    MySiteCardAndItem.Card.Dynamic.Row(
+                        iconUrl = null,
+                        title = "New and Improved\nJetpack Mobile Editor",
+                        description = "Updated colours and icons, streamlined typing" +
+                                ", unified block controls, drag and drop."
+                    )
+                ),
+                onHideMenuItemClick = ListItemInteraction.create {},
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+fun DynamicDashboardWithFeatureImageOnly() {
+    AppTheme {
+        DynamicDashboardCard(
+            card = MySiteCardAndItem.Card.Dynamic(
+                id = "id",
+                order = MySiteCardAndItem.Card.Dynamic.Order.TOP,
+                title = null,
+                image = "https://picsum.photos/200/300",
+                action = ActionSource.Card(
+                    url = "",
+                    onCtaClick = ListItemInteraction.create {},
+                ),
+                rows = listOf(),
+                onHideMenuItemClick = ListItemInteraction.create {},
             )
         )
     }
@@ -134,7 +205,10 @@ fun DynamicDashboardCardWithTitleAndCompleteRowsPreview() {
                 order = MySiteCardAndItem.Card.Dynamic.Order.TOP,
                 title = "What's New in Jetpack",
                 image = null,
-                action = "Find out more",
+                action = ActionSource.Button(
+                    title = "Find out more", url = "",
+                    onCtaClick = ListItemInteraction.create {},
+                ),
                 rows = listOf(
                     MySiteCardAndItem.Card.Dynamic.Row(
                         iconUrl = "url",
@@ -153,7 +227,6 @@ fun DynamicDashboardCardWithTitleAndCompleteRowsPreview() {
                     ),
                 ),
                 onHideMenuItemClick = ListItemInteraction.create {},
-                onCtaClick = ListItemInteraction.create {},
             )
         )
     }

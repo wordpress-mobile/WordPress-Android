@@ -20,18 +20,18 @@ import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 
 @Composable
-fun DynamicCardRows(rows: List<MySiteCardAndItem.Card.Dynamic.Row>) {
+fun DynamicCardRows(rows: List<MySiteCardAndItem.Card.Dynamic.Row>, modifier: Modifier = Modifier) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
+        modifier = modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
     ) {
         items(items = rows) { row -> Item(row) }
     }
 }
 
 @Composable
-private fun Item(row: MySiteCardAndItem.Card.Dynamic.Row) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+private fun Item(row: MySiteCardAndItem.Card.Dynamic.Row, modifier: Modifier = Modifier) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
         row.iconUrl?.let { iconUrl ->
             Icon(iconUrl)
         }
@@ -47,12 +47,12 @@ private fun Item(row: MySiteCardAndItem.Card.Dynamic.Row) {
 }
 
 @Composable
-private fun Icon(iconUrl: String) {
+private fun Icon(iconUrl: String, modifier: Modifier = Modifier) {
     AsyncImage(
         model = iconUrl,
         contentDescription = null,
         contentScale = ContentScale.Fit,
         placeholder = ColorPainter(AppColor.Gray30),
-        modifier = Modifier.size(48.dp),
+        modifier = modifier.size(48.dp),
     )
 }

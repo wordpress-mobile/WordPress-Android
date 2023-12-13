@@ -11,10 +11,11 @@ import org.wordpress.android.ui.compose.styles.DashboardCardTypography
 @Composable
 fun DynamicCardCallToActionButton(
     text: String,
-    onClicked: () -> Unit
+    onClicked: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     TextButton(
-        modifier = Modifier.padding(start = 8.dp),
+        modifier = modifier.padding(start = 8.dp),
         onClick = onClicked,
     ) {
         Text(

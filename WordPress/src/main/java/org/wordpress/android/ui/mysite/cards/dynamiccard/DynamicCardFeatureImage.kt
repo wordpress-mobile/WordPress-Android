@@ -14,13 +14,13 @@ import coil.compose.AsyncImage
 import org.wordpress.android.ui.compose.theme.AppColor
 
 @Composable
-fun DynamicCardFeatureImage(imageUrl: String) {
+fun DynamicCardFeatureImage(imageUrl: String, modifier: Modifier = Modifier) {
     AsyncImage(
         model = imageUrl,
         contentDescription = null,
         contentScale = ContentScale.Crop,
         placeholder = ColorPainter(AppColor.Gray30),
-        modifier = Modifier
+        modifier = modifier
             .padding(start = 16.dp, end = 16.dp)
             .clip(RoundedCornerShape(6.dp))
             .fillMaxWidth()

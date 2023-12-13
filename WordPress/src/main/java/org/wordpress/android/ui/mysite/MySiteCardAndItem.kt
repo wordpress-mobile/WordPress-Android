@@ -400,15 +400,30 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val rows: List<Row>,
             val title: String?,
             val image: String?,
-            val action: String?,
+            val action: ActionSource?,
             val onHideMenuItemClick: ListItemInteraction,
-            val onCtaClick: ListItemInteraction,
         ) : Card(type = DYNAMIC_DASHBOARD_CARD) {
             data class Row(
                 val iconUrl: String?,
                 val title: String?,
                 val description: String?,
             )
+
+            sealed class ActionSource {
+                abstract val url: String
+                abstract val onCtaClick: ListItemInteraction
+
+                data class Card(
+                    override val url: String,
+                    override val onCtaClick: ListItemInteraction
+                ) : ActionSource()
+
+                data class Button(
+                    override val url: String,
+                    override val onCtaClick: ListItemInteraction,
+                    val title: String
+                ) : ActionSource()
+            }
 
             enum class Order { TOP, BOTTOM }
         }
