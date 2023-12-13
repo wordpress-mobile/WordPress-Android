@@ -105,7 +105,6 @@ sealed class SiteNavigationAction {
     data class OpenCampaignDetailPage(val campaignId: Int, val campaignDetailPageSource: CampaignDetailPageSource) :
         SiteNavigationAction()
 
-    data class OpenDomainTransferPage(val url: String) : SiteNavigationAction()
     object OpenDashboardPersonalization : SiteNavigationAction()
 
     data class OpenBloganuaryNudgeOverlay(val isPromptsEnabled: Boolean): SiteNavigationAction()
