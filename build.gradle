@@ -107,6 +107,9 @@ ext {
     // other
     androidDesugarVersion = '2.0.4'
     wordPressLintVersion = '2.0.0'
+
+    // Clarity
+    microsoftClarityVersion = '2.0.0'
 }
 
 measureBuilds {
