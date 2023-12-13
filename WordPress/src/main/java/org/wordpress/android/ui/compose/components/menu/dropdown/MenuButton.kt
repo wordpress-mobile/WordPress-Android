@@ -29,7 +29,7 @@ import androidx.compose.material3.MaterialTheme as Material3Theme
 
 @Composable
 fun DropdownMenuButton(
-    selectedItem: MenuElementData,
+    selectedItem: MenuElementData.Item,
     onClick: () -> Unit,
 ) {
     Button(
@@ -47,7 +47,7 @@ fun DropdownMenuButton(
         Row(
             modifier = Modifier.animateContentSize(),
         ) {
-            if (selectedItem is Item && selectedItem.leadingIcon != NO_ICON) {
+            if (selectedItem is Item.Single && selectedItem.leadingIcon != NO_ICON) {
                 Icon(
                     modifier = Modifier.align(Alignment.CenterVertically),
                     painter = painterResource(id = selectedItem.leadingIcon),
@@ -88,14 +88,14 @@ private fun JetpackDropdownMenuButtonPreview() {
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             DropdownMenuButton(
-                selectedItem = Item(
+                selectedItem = Item.Single(
                     text = "Text only",
                     onClick = {},
                 ),
                 onClick = {}
             )
             DropdownMenuButton(
-                selectedItem = Item(
+                selectedItem = Item.Single(
                     text = "Text and Icon",
                     onClick = {},
                     leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
@@ -103,14 +103,14 @@ private fun JetpackDropdownMenuButtonPreview() {
                 onClick = {},
             )
             DropdownMenuButton(
-                selectedItem = Item(
+                selectedItem = Item.Single(
                     text = "Text type with a really long text as the button label",
                     onClick = {},
                 ),
                 onClick = {},
             )
             DropdownMenuButton(
-                selectedItem = Item(
+                selectedItem = Item.Single(
                     text = "Text type with a really long text as the button label",
                     onClick = {},
                     leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
