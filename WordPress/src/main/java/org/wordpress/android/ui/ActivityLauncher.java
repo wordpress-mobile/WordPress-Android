@@ -695,28 +695,6 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site);
     }
 
-    public static void openMediaInNewStack(@NonNull Context context, SiteModel site) {
-        if (site == null) {
-            ToastUtils.showToast(context, R.string.media_cannot_be_started, ToastUtils.Duration.SHORT);
-            return;
-        }
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site);
-        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
-        Intent mainActivityIntent = getMainActivityInNewStack(context);
-        Intent intent = new Intent(context, MediaBrowserActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        taskStackBuilder.addNextIntent(mainActivityIntent);
-        taskStackBuilder.addNextIntent(intent);
-        taskStackBuilder.startActivities();
-    }
-
-    public static void openMediaInNewStack(@NonNull Context context) {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
-        Intent intent = getMainActivityInNewStack(context);
-        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_MEDIA);
-        context.startActivity(intent);
-    }
-
     public static void viewCurrentBlogPages(@NonNull Context context, @NonNull SiteModel site) {
         Intent intent = new Intent(context, PagesActivity.class);
         intent.putExtra(WordPress.SITE, site);
