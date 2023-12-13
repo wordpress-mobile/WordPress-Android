@@ -180,8 +180,8 @@ class CardsRestClient @Inject constructor(
         @SerializedName("featured_image") val featuredImage: String?,
         @SerializedName("url") val url: String?,
         @SerializedName("action") val action: String?,
-        @SerializedName("order") val order: String,
-        @SerializedName("rows") val rows: List<DynamicCardRowResponse>
+        @SerializedName("order") val order: String?,
+        @SerializedName("rows") val rows: List<DynamicCardRowResponse>?,
     ) {
         fun toDynamicCard() = DynamicCardModel(
             id = id,
@@ -191,14 +191,14 @@ class CardsRestClient @Inject constructor(
             url = url,
             action = action,
             order = CardOrder.fromString(order),
-            rows = rows.map { it.toDynamicCardRow() }
+            rows = rows?.map { it.toDynamicCardRow() }
         )
     }
 
     data class DynamicCardRowResponse(
         @SerializedName("icon") val icon: String?,
         @SerializedName("title") val title: String?,
-        @SerializedName("description") val description: String?
+        @SerializedName("description") val description: String?,
     ) {
         fun toDynamicCardRow() = DynamicCardRowModel(
             icon = icon,
