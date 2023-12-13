@@ -2,6 +2,9 @@ package org.wordpress.android.ui
 
 import android.content.Context
 import android.content.Intent
+import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.ARG_EXTRA_BLAZE_CAMPAIGN_PAGE
 import org.wordpress.android.ui.blaze.blazecampaigns.BlazeCampaignPage
@@ -15,10 +18,13 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainActivity.Companion.PICKED_DOMAIN_KEY
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainActivity.Companion.PICKED_DOMAIN_PRIVACY
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainActivity.Companion.PICKED_PRODUCT_ID
+import org.wordpress.android.ui.media.MediaBrowserActivity
+import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.mysite.menu.KEY_QUICK_START_EVENT
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.quickstart.QuickStartEvent
+import org.wordpress.android.util.analytics.AnalyticsUtils
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -92,4 +98,13 @@ class ActivityNavigator @Inject constructor() {
                 .putExtra(PICKED_DOMAIN_PRIVACY, domainSupportsPrivacy)
         )
     }
+
+    fun viewCurrentBlogMedia(context: Context, site: SiteModel?) {
+        val intent = Intent(context, MediaBrowserActivity::class.java)
+        intent.putExtra(WordPress.SITE, site)
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.BROWSER)
+        context.startActivity(intent)
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site)
+    }
 }
+

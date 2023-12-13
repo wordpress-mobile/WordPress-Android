@@ -72,6 +72,7 @@ import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.ActivityNavigator;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -95,11 +96,11 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
+import org.wordpress.android.ui.mysite.BloggingPromptsOnboardingListener;
 import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
-import org.wordpress.android.ui.mysite.BloggingPromptsOnboardingListener;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
@@ -278,6 +279,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     @Inject GCMRegistrationScheduler mGCMRegistrationScheduler;
+
+    @Inject ActivityNavigator mActivityNavigator;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -931,7 +934,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
                         initSelectedSite();
                     }
-                    ActivityLauncher.viewCurrentBlogMedia(this, getSelectedSite());
+                    mActivityNavigator.viewCurrentBlogMedia(this, getSelectedSite());
                     break;
             }
         } else {
