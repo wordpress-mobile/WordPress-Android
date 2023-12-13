@@ -16,7 +16,8 @@ sealed class CardModel(
         TODAYS_STATS(TodaysStatsCardModel::class.java, "todays_stats"),
         POSTS(PostsCardModel::class.java, "posts"),
         PAGES(PagesCardModel::class.java, "pages"),
-        ACTIVITY(ActivityCardModel::class.java, "activity")
+        ACTIVITY(ActivityCardModel::class.java, "activity"),
+        DYNAMIC(DynamicCardsModel::class.java, "dynamic"),
     }
 
     data class ActivityCardModel(
@@ -58,5 +59,37 @@ sealed class CardModel(
             val featuredImage: String?,
             val date: Date
         )
+    }
+
+    data class DynamicCardsModel(
+        val pages: List<DynamicCardModel> = emptyList(),
+    ) : CardModel(Type.DYNAMIC) {
+        data class DynamicCardModel(
+            val id: String,
+            val title: String?,
+            val remoteFeatureFlag: String?,
+            val featuredImage: String?,
+            val url: String?,
+            val action: String?,
+            val order: CardOrder,
+            val rows: List<DynamicCardRowModel>,
+        )
+
+        data class DynamicCardRowModel(
+            val icon: String?,
+            val title: String?,
+            val description: String?,
+        )
+
+        enum class CardOrder(val order: String) {
+            TOP("top"),
+            BOTTOM("bottom");
+
+            companion object {
+                fun fromString(order: String?): CardOrder {
+                    return values().firstOrNull { it.order.equals(order, ignoreCase = true) } ?: BOTTOM // default
+                }
+            }
+        }
     }
 }
