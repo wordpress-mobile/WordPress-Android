@@ -7,17 +7,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.styles.DashboardCardTypography
 
 @Composable
 fun DynamicCardHeader(
@@ -40,13 +40,7 @@ private fun Title(title: String?, modifier: Modifier = Modifier) {
         modifier = modifier.padding(end = 16.dp),
         content = {
             title?.let { title ->
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    ),
-                )
+                Text(text = title, style = DashboardCardTypography.subTitle)
             }
         }
     )
@@ -55,13 +49,13 @@ private fun Title(title: String?, modifier: Modifier = Modifier) {
 @Composable
 private fun Menu(onHideMenuClicked: () -> Unit) {
     IconButton(
-        modifier = Modifier.size(32.dp), // to match the icon in my_site_card_toolbar.xml
+        modifier = Modifier.size(32.dp),
         onClick = onHideMenuClicked
     ) {
         Icon(
             imageVector = Icons.Rounded.MoreVert,
             contentDescription = stringResource(id = R.string.more),
-            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.medium),
+            tint = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
         )
     }
 }

@@ -1,13 +1,12 @@
 package org.wordpress.android.ui.mysite.cards.dynamiccard
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.wordpress.android.ui.domains.management.success
+import org.wordpress.android.ui.compose.styles.DashboardCardTypography
 
 @Composable
 fun DynamicCardCallToActionButton(
@@ -15,14 +14,12 @@ fun DynamicCardCallToActionButton(
     onClicked: () -> Unit
 ) {
     TextButton(
-        modifier = Modifier.padding(start = 4.dp),
+        modifier = Modifier.padding(start = 8.dp),
         onClick = onClicked,
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                color = MaterialTheme.colorScheme.success
-            ),
+            style = DashboardCardTypography.footerCTA,
         )
     }
 }
