@@ -396,7 +396,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
         data class Dynamic(
             val id: String,
-            val order: Order,
             val rows: List<Row>,
             val title: String?,
             val image: String?,
@@ -424,8 +423,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     val title: String
                 ) : ActionSource()
             }
-
-            enum class Order { TOP, BOTTOM }
         }
     }
 

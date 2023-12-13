@@ -63,7 +63,6 @@ fun DynamicDashboardCardPreview() {
         DynamicDashboardCard(
             card = MySiteCardAndItem.Card.Dynamic(
                 id = "id",
-                order = MySiteCardAndItem.Card.Dynamic.Order.TOP,
                 title = "Card Title",
                 image = "https://picsum.photos/200/300",
                 action = ActionSource.Button(
@@ -95,7 +94,6 @@ fun DynamicDashboardCardWithFeatureAndDescriptionPreview() {
         DynamicDashboardCard(
             card = MySiteCardAndItem.Card.Dynamic(
                 id = "id",
-                order = MySiteCardAndItem.Card.Dynamic.Order.TOP,
                 title = null,
                 image = "https://picsum.photos/200/300",
                 action = ActionSource.Button(
@@ -124,7 +122,6 @@ fun DynamicDashboardCardWithFeatureAndSubtitleAndDescriptionPreview() {
         DynamicDashboardCard(
             card = MySiteCardAndItem.Card.Dynamic(
                 id = "id",
-                order = MySiteCardAndItem.Card.Dynamic.Order.TOP,
                 title = null,
                 image = "https://picsum.photos/200/300",
                 action = ActionSource.Button(
@@ -153,7 +150,6 @@ fun DynamicDashboardCardWithNoCta() {
         DynamicDashboardCard(
             card = MySiteCardAndItem.Card.Dynamic(
                 id = "id",
-                order = MySiteCardAndItem.Card.Dynamic.Order.TOP,
                 title = null,
                 image = "https://picsum.photos/200/300",
                 action = ActionSource.Card(
@@ -181,7 +177,6 @@ fun DynamicDashboardWithFeatureImageOnly() {
         DynamicDashboardCard(
             card = MySiteCardAndItem.Card.Dynamic(
                 id = "id",
-                order = MySiteCardAndItem.Card.Dynamic.Order.TOP,
                 title = null,
                 image = "https://picsum.photos/200/300",
                 action = ActionSource.Card(
@@ -202,7 +197,6 @@ fun DynamicDashboardCardWithTitleAndCompleteRowsPreview() {
         DynamicDashboardCard(
             card = MySiteCardAndItem.Card.Dynamic(
                 id = "id",
-                order = MySiteCardAndItem.Card.Dynamic.Order.TOP,
                 title = "What's New in Jetpack",
                 image = null,
                 action = ActionSource.Button(
