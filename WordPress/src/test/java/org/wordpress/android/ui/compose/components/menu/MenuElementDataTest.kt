@@ -7,29 +7,15 @@ import org.wordpress.android.ui.compose.components.menu.dropdown.NO_ICON
 
 class MenuElementDataTest {
     @Test
-    fun `DropdownMenuItemData Item should have the correct hasDivider default value`() {
-        val actual = MenuElementData.Item("", {}).hasDivider
-        val expected = false
-        assertThat(actual).isEqualTo(expected)
-    }
-
-    @Test
-    fun `Item should have the correct leadingIcon default value`() {
-        val actual = MenuElementData.Item("", {}).leadingIcon
+    fun `Single should have the correct leadingIcon default value`() {
+        val actual = MenuElementData.Item.Single("", {}).leadingIcon
         val expected = NO_ICON
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
-    fun `SubMenu should have the correct hasDivider default value`() {
-        val actual = MenuElementData.SubMenu("", emptyList()).hasDivider
-        val expected = false
-        assertThat(actual).isEqualTo(expected)
-    }
-
-    @Test
-    fun `DropdownMenuItemData SubMenu should have the correct leadingIcon value`() {
-        val actual = MenuElementData.SubMenu("", emptyList()).leadingIcon
+    fun `SubMenu should have the correct leadingIcon value`() {
+        val actual = MenuElementData.Item.SubMenu("", emptyList()).leadingIcon
         val expected = NO_ICON
         assertThat(actual).isEqualTo(expected)
     }
