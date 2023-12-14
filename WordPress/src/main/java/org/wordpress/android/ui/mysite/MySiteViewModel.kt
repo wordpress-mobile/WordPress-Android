@@ -20,6 +20,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
@@ -69,6 +70,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelS
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsViewModelSlice
+import org.wordpress.android.ui.mysite.cards.dynamiccard.DynamicCardsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
@@ -157,6 +159,7 @@ class MySiteViewModel @Inject constructor(
     private val blazeCardViewModelSlice: BlazeCardViewModelSlice,
     private val domainTransferCardViewModel: DomainTransferCardViewModel,
     private val pagesCardViewModelSlice: PagesCardViewModelSlice,
+    private val dynamicCardsViewModelSlice: DynamicCardsViewModelSlice,
     private val todaysStatsViewModelSlice: TodaysStatsViewModelSlice,
     private val postsCardViewModelSlice: PostsCardViewModelSlice,
     private val activityLogCardViewModelSlice: ActivityLogCardViewModelSlice,
@@ -507,6 +510,9 @@ class MySiteViewModel @Inject constructor(
                 activityCardBuilderParams = activityLogCardViewModelSlice.getActivityLogCardBuilderParams(
                     cardsUpdate?.cards?.firstOrNull { it is ActivityCardModel } as? ActivityCardModel
                 ),
+                dynamicCardsBuilderParams = dynamicCardsViewModelSlice.getBuilderParams(
+                    cardsUpdate?.cards?.firstOrNull { it is DynamicCardsModel } as? DynamicCardsModel
+                )
             ),
             jetpackInstallFullPluginCardParams
         )
