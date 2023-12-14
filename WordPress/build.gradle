@@ -557,6 +557,8 @@ dependencies {
     // - Jetpack Compose - UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test-junit4"
     implementation "androidx.compose.material3:material3:$androidxComposeMaterial3Version"
+    // Cascade - Compose nested menu
+    implementation "me.saket.cascade:cascade-compose:2.3.0"
 }
 
 configurations.all {

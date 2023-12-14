@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Build
 import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
@@ -70,3 +71,10 @@ fun LocaleAwareComposable(
         content()
     }
 }
+
+/**
+ * Indicates whether the currently selected theme is light.
+ * @return true if the current theme is light
+ */
+@Composable
+fun isLightTheme(): Boolean = MaterialTheme.colors.isLight
