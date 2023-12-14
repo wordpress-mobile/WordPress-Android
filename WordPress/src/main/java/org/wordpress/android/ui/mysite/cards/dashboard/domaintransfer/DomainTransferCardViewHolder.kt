@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool
 import org.wordpress.android.databinding.DomainTransferCardBinding
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainTransferCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.util.extensions.viewBinding
@@ -18,10 +18,12 @@ class DomainTransferCardViewHolder(parent: ViewGroup) :
         this.domainTransferCard.apply {
             setViewCompositionStrategy(DisposeOnDetachedFromWindowOrReleasedFromPool)
             setContent {
-                AppTheme {
+                AppThemeWithoutBackground {
                     DomainTransferCard(
                         domainTransferCardModel = cardModel,
-                        modifier = Modifier.fillMaxWidth().wrapContentHeight()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
                     )
                 }
             }
