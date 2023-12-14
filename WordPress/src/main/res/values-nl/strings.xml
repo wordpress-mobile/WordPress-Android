@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-05 16:54:08+0000
+Translation-Revision-Date: 2023-12-12 13:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: nl
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Aan de slag.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Blogmeldingen inschakelen</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary gebruikt Dagelijkse blogmeldingen om je in de maand januari onderwerpen toe te sturen.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Bloganuary gebruikt Dagelijkse blogmeldingen om je in de maand januari onderwerpen toe te sturen. Je hebt blogmeldingen momenteel uitgeschakeld.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">Lees de antwoorden van andere bloggers ter inspiratie en om nieuwe contacten te leggen.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">Je antwoord publiceren.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">Krijg elke dag een nieuwe melding als bron van inspiratie.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">Doe mee aan onze schrijfchallenge van een maand.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Van BIoganuary</string>
+    <string name="bloganuary_dashboard_nudge_text">Alle blogmeldingen komen in de maand januari van Bloganuary: onze community-challenge om in het nieuwe jaar betere bloggewoonten op te bouwen.</string>
     <string name="turn_off">Nee, uitschakelen</string>
     <string name="leave_on">Ja, ingeschakeld laten</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Hierom raden we aan de content platter te maken door het blok niet te groeperen of het blok te bewerken in je webbrowser.</string>
@@ -34,6 +44,7 @@ Language: nl
     <string name="domain_management_error_title">Je domeinen konden niet worden opgehaald</string>
     <string name="site_domain_title">Sitedomein</string>
     <string name="my_site_blogging_prompt_card_attribution_bloganuary">Van &lt;b&gt;BIoganuary&lt;/b&gt;</string>
+    <string name="gutenberg_native_s_block_converted_to_blocks">Het blok \'%s\' is omgezet naar blokken</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Je kan ook de inhoud naar blokken omzetten.</string>
     <string name="purchase_domain_screen_discount_notice">*Bij alle betaalde jaarabonnementen is een gratis domein voor een jaar inbegrepen.</string>
     <string name="purchase_domain_screen_existing_domain_card_button">Site kiezen</string>
@@ -41,6 +52,7 @@ Language: nl
     <string name="purchase_domain_screen_existing_domain_card_title">Bestaande WordPress.com-site</string>
     <string name="purchase_domain_screen_new_domain_card_button">Neem een domein</string>
     <string name="purchase_domain_screen_new_domain_card_description">Later een site toevoegen.</string>
+    <string name="purchase_domain_screen_new_domain_card_title">Alleen een domein aanschaffen</string>
     <string name="purchase_domain_screen_description">Geen zorgen, je kan later nog heel eenvoudig een site toevoegen</string>
     <string name="purchase_domain_screen_header_double_line">Kies hoe je\njouw domein gebruikt</string>
     <string name="purchase_domain_screen_header_single_line">Kies hoe je jouw domein gebruikt</string>

@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-30 21:33:07+0000
+Translation-Revision-Date: 2023-12-12 17:47:16+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: sv_SE
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Nu kör vi!</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Aktivera bloggningsförslag</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary använder dagliga bloggningsförslag för att skicka dig ämnena för januari månad.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Bloganuary använder dagliga bloggningsförslag för att skicka dig ämnena för januari månad. Du har för närvarande bloggningsförslag inaktiverade.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">Läs andra bloggares svar för att få inspiration och skapa nya kontakter.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">Publicera ditt svar.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">Få ett nytt förslag som inspirerar dig varje dag.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">Gå med i vår månadslånga skrivutmaning</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
+    <string name="bloganuary_dashboard_nudge_text">För månaden januari kommer bloggningsförslagen att komma från Bloganuary – vår communityutmaning avsedd att bygga upp en bloggvana för det nya året.</string>
+    <string name="bloganuary_dashboard_nudge_title">Bloganuary är på väg!</string>
     <string name="turn_off">Nej, stäng av</string>
     <string name="leave_on">Ja, lämna på</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Av den här anledningen rekommenderar vi att du redigerar blocket i din webbläsare.</string>

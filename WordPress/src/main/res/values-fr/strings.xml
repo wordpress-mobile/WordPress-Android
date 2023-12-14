@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-05 11:54:08+0000
+Translation-Revision-Date: 2023-12-12 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: fr
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">C’est parti !</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Activer les invites à bloguer</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary utilisera des invites quotidiennes à bloguer pour vous envoyer des thèmes de publications tout au long du mois de janvier.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Bloganuary utilisera des invites quotidiennes à bloguer pour vous envoyer des thèmes de publications tout au long du mois de janvier. Les invites à bloguer sont actuellement désactivées pour vous.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">Lisez les réponses d’autres blogueurs pour trouver de l’inspiration et faire de nouvelles rencontres.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">Publiez votre réponse.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">Recevez chaque jour une invite pour vous inspirer.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">Participer à notre défi d’écriture d’un mois</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">De Bloganuary</string>
+    <string name="bloganuary_dashboard_nudge_text">Pendant le mois de janvier, vous recevrez des invites à bloguer de Bloganuary, notre défi commun pour ancrer l’habitude de bloguer à l’occasion de la nouvelle année.</string>
+    <string name="bloganuary_dashboard_nudge_title">C’est bientôt Bloganuary !</string>
     <string name="turn_off">Non, désactiver</string>
     <string name="leave_on">Oui, laisser activé</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Pour cette raison, nous vous recommandons de modifier le bloc à l’aide de votre navigateur web.</string>
