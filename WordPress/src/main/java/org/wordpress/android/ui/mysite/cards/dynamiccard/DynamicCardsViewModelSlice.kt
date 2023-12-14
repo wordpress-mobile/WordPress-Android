@@ -5,15 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams
 import org.wordpress.android.ui.mysite.SiteNavigationAction
-import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
-class DynamicCardsViewModelSlice @Inject constructor(
-    private val cardsTracker: CardsTracker,
-    private val appPrefsWrapper: AppPrefsWrapper
-) {
+class DynamicCardsViewModelSlice @Inject constructor() {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
 
@@ -28,15 +24,18 @@ class DynamicCardsViewModelSlice @Inject constructor(
         )
     }
 
-    private fun onActionClick(cardId: String, actionUrl: String) {
+    private fun onActionClick(actionUrl: String) {
+        AppLog.d(AppLog.T.MY_SITE_DASHBOARD, "Dynamic dashboard card action clicked: $actionUrl")
         // TODO
     }
 
     private fun onMoreMenuClick(cardId: String) {
+        AppLog.d(AppLog.T.MY_SITE_DASHBOARD, "Dynamic dashboard card action more menu click: $cardId")
         // TODO
     }
 
     private fun onHideMenuItemClick(cardId: String) {
+        AppLog.d(AppLog.T.MY_SITE_DASHBOARD, "Dynamic dashboard card action hide menu click: $cardId")
         // TODO
     }
 }
