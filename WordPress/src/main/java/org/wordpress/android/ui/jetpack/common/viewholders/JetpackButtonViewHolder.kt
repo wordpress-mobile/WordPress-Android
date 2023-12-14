@@ -13,7 +13,6 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.setVisible
-import org.wordpress.android.widgets.FlowLayout.LayoutParams
 
 sealed class JetpackButtonViewHolder<T : ViewBinding>(
     parent: ViewGroup,
@@ -61,7 +60,7 @@ sealed class JetpackButtonViewHolder<T : ViewBinding>(
         with(root) {
             setVisible(isVisible)
             layoutParams = if (isVisible) {
-                ConstraintLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT)
             } else {
                 ConstraintLayout.LayoutParams(0, 0)
             }
