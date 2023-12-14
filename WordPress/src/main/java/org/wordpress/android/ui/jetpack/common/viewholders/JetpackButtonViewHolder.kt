@@ -3,7 +3,7 @@ package org.wordpress.android.ui.jetpack.common.viewholders
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
@@ -60,9 +60,9 @@ sealed class JetpackButtonViewHolder<T : ViewBinding>(
         with(root) {
             setVisible(isVisible)
             layoutParams = if (isVisible) {
-                ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             } else {
-                ConstraintLayout.LayoutParams(0, 0)
+                LayoutParams(0, 0)
             }
         }
     }
