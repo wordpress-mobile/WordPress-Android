@@ -91,7 +91,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        requireActivity().addMenuProvider(this, viewLifecycleOwner)
+        // TODO
+//        requireActivity().addMenuProvider(this, viewLifecycleOwner)
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
             initToolbar()
             initViewPager()
@@ -146,8 +147,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     }
 
     private fun ReaderFragmentLayoutBinding.initToolbar() {
-        toolbar.title = getString(R.string.reader_screen_title)
-        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+        // TODO
+//        toolbar.title = getString(R.string.reader_screen_title)
+//        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
     }
 
     private fun ReaderFragmentLayoutBinding.initViewPager() {
@@ -164,10 +166,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
             uiState?.let {
                 when (it) {
                     is ContentUiState -> {
-                        updateTabs(it)
+                        // TODO instantiate ReaderScreen
+//                        updateTabs(it)
                     }
                 }
-                uiHelpers.updateVisibility(tabLayout, uiState.tabLayoutVisible)
+                // TODO
+//                uiHelpers.updateVisibility(tabLayout, uiState.tabLayoutVisible)
                 searchMenuItem?.isVisible = uiState.searchMenuItemUiState.isVisible
                 settingsMenuItem?.isVisible = uiState.settingsMenuItemUiState.isVisible
                 settingsMenuItemFocusPoint?.isVisible =
@@ -258,43 +262,48 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         )
     }
 
-    private fun ReaderFragmentLayoutBinding.updateTabs(uiState: ContentUiState) {
-        if (viewPager.adapter == null || uiState.shouldUpdateViewPager) {
-            updateViewPagerAdapterAndMediator(uiState)
-        }
-        uiState.tabUiStates.forEachIndexed { index, tabUiState ->
-            val tab = tabLayout.getTabAt(index) as TabLayout.Tab
-            updateTab(tab, tabUiState)
-        }
-    }
+    // TODO
+//    private fun ReaderFragmentLayoutBinding.updateTabs(uiState: ContentUiState) {
+//        if (viewPager.adapter == null || uiState.shouldUpdateViewPager) {
+//            updateViewPagerAdapterAndMediator(uiState)
+//        }
+//        uiState.tabUiStates.forEachIndexed { index, tabUiState ->
+//            val tab = tabLayout.getTabAt(index) as TabLayout.Tab
+//            updateTab(tab, tabUiState)
+//        }
+//    }
 
-    private fun ReaderFragmentLayoutBinding.updateTab(tab: TabLayout.Tab, tabUiState: TabUiState) {
-        val customView = tab.customView ?: createTabCustomView(tab)
-        with(customView) {
-            val title = findViewById<TextView>(R.id.tab_label)
-            title.text = uiHelpers.getTextOfUiString(requireContext(), tabUiState.label)
-        }
-    }
+    // TODO
+//    private fun ReaderFragmentLayoutBinding.updateTab(tab: TabLayout.Tab, tabUiState: TabUiState) {
+//        val customView = tab.customView ?: createTabCustomView(tab)
+//        with(customView) {
+//            val title = findViewById<TextView>(R.id.tab_label)
+//            title.text = uiHelpers.getTextOfUiString(requireContext(), tabUiState.label)
+//        }
+//    }
 
-    private fun ReaderFragmentLayoutBinding.updateViewPagerAdapterAndMediator(uiState: ContentUiState) {
-        viewPager.adapter = TabsAdapter(this@ReaderFragment, uiState.readerTagList)
-        TabLayoutMediator(tabLayout, viewPager, ReaderTabConfigurationStrategy(uiState)).attach()
-    }
+    // TODO
+//    private fun ReaderFragmentLayoutBinding.updateViewPagerAdapterAndMediator(uiState: ContentUiState) {
+//        viewPager.adapter = TabsAdapter(this@ReaderFragment, uiState.readerTagList)
+//        TabLayoutMediator(tabLayout, viewPager, ReaderTabConfigurationStrategy(uiState)).attach()
+//    }
 
-    private inner class ReaderTabConfigurationStrategy(
-        private val uiState: ContentUiState
-    ) : TabLayoutMediator.TabConfigurationStrategy {
-        override fun onConfigureTab(tab: TabLayout.Tab, position: Int) {
-            binding?.updateTab(tab, uiState.tabUiStates[position])
-        }
-    }
+    // TODO
+//    private inner class ReaderTabConfigurationStrategy(
+//        private val uiState: ContentUiState
+//    ) : TabLayoutMediator.TabConfigurationStrategy {
+//        override fun onConfigureTab(tab: TabLayout.Tab, position: Int) {
+//            binding?.updateTab(tab, uiState.tabUiStates[position])
+//        }
+//    }
 
-    private fun ReaderFragmentLayoutBinding.createTabCustomView(tab: TabLayout.Tab): View {
-        val customView = LayoutInflater.from(context)
-            .inflate(R.layout.tab_custom_view, tabLayout, false)
-        tab.customView = customView
-        return customView
-    }
+    // TODO
+//    private fun ReaderFragmentLayoutBinding.createTabCustomView(tab: TabLayout.Tab): View {
+//        val customView = LayoutInflater.from(context)
+//            .inflate(R.layout.tab_custom_view, tabLayout, false)
+//        tab.customView = customView
+//        return customView
+//    }
 
     fun requestBookmarkTab() {
         viewModel.bookmarkTabRequested()
@@ -339,7 +348,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        binding?.appBar?.liftOnScrollTargetViewId = containerId
+        // TODO
+//        binding?.appBar?.liftOnScrollTargetViewId = containerId
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             val screen = JetpackPoweredScreen.WithDynamicText.READER
             binding?.root?.post {

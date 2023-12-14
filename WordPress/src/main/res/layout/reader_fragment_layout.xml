@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/compose_view"
+        android:id="@+id/top_app_bar_compose_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
