@@ -23,7 +23,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPr
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainTransferCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
@@ -116,7 +115,6 @@ class CardsBuilderTest {
         isDomainCreditAvailable: Boolean = false,
         isEligibleForPlansCard: Boolean = false,
         isQuickStartInProgress: Boolean = false,
-        isEligibleForDomainTransferCard: Boolean = false,
     ): List<MySiteCardAndItem> {
         return cardsBuilder.build(
             domainRegistrationCardBuilderParams = DomainRegistrationCardBuilderParams(
@@ -158,13 +156,7 @@ class CardsBuilderTest {
                     mock()
                 ),
                 pagesCardBuilderParams = PagesCardBuilderParams(mock(), mock(), mock(), mock()),
-                activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock(), mock(), mock()),
-                domainTransferCardBuilderParams = DomainTransferCardBuilderParams(
-                    isEligible = isEligibleForDomainTransferCard,
-                    mock(),
-                    mock(),
-                    mock()
-                )
+                activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock(), mock(), mock())
             ),
             jetpackInstallFullPluginCardBuilderParams = JetpackInstallFullPluginCardBuilderParams(
                 site = site,

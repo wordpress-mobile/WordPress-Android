@@ -184,7 +184,6 @@ public class AppPrefs {
         SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD,
         SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD,
         SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING,
-        SHOULD_HIDE_DASHBOARD_DOMAIN_TRANSFER_CARD,
         SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD,
         SHOULD_HIDE_DASHBOARD_PLANS_CARD,
 
@@ -1623,18 +1622,6 @@ public class AppPrefs {
 
     @NonNull private static String getShouldShowJetpackFullPluginInstallOnboardingPref(int siteId) {
         return DeletablePrefKey.SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING.name() + siteId;
-    }
-
-    public static Boolean getShouldHideDashboardDomainTransferCard(long siteId) {
-        return prefs().getBoolean(getSiteIdHideDashboardDomainTransferCardKey(siteId), false);
-    }
-
-    public static void setShouldHideDashboardDomainTransferCard(long siteId, final boolean isHidden) {
-        prefs().edit().putBoolean(getSiteIdHideDashboardDomainTransferCardKey(siteId), isHidden).apply();
-    }
-
-    @NonNull private static String getSiteIdHideDashboardDomainTransferCardKey(long siteId) {
-        return DeletablePrefKey.SHOULD_HIDE_DASHBOARD_DOMAIN_TRANSFER_CARD.name() + siteId;
     }
 
     public static Boolean getShouldHidePromoteWithBlazeCard(long siteId) {

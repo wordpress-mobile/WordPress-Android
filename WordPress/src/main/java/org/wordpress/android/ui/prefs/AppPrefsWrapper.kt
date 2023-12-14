@@ -322,12 +322,6 @@ class AppPrefsWrapper @Inject constructor() {
         isShown: Boolean
     ) = AppPrefs.setShouldShowJetpackFullPluginInstallOnboarding(siteId, isShown)
 
-    fun getShouldHideDashboardDomainTransferCard(siteId: Long): Boolean =
-        AppPrefs.getShouldHideDashboardDomainTransferCard(siteId)
-
-    fun setShouldHideDashboardDomainTransferCard(siteId: Long, isHidden: Boolean) =
-        AppPrefs.setShouldHideDashboardDomainTransferCard(siteId, isHidden)
-
     fun hideBlazeCard(siteId: Long): Boolean =
         AppPrefs.getShouldHidePromoteWithBlazeCard(siteId)
 

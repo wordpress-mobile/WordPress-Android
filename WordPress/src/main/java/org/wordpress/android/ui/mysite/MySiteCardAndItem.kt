@@ -47,7 +47,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         BLOGGING_PROMPT_CARD,
         BLOGANUARY_NUDGE_CARD,
         PROMOTE_WITH_BLAZE_CARD,
-        DASHBOARD_DOMAIN_TRANSFER_CARD,
         BLAZE_CAMPAIGNS_CARD,
         DASHBOARD_PLANS_CARD,
         PAGES_CARD_ERROR,
@@ -314,16 +313,6 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onMoreMenuClick: ListItemInteraction,
             val onHideMenuItemClick: ListItemInteraction,
         ) : Card(Type.BLOGANUARY_NUDGE_CARD)
-
-        data class DomainTransferCardModel(
-            @StringRes val title: Int,
-            @StringRes val subtitle: Int,
-            @StringRes val caption: Int,
-            @StringRes val cta: Int,
-            val onClick: ListItemInteraction,
-            val onHideMenuItemClick: ListItemInteraction,
-            val onMoreMenuClick: ListItemInteraction,
-        ) : Card(type = Type.DASHBOARD_DOMAIN_TRANSFER_CARD)
 
         sealed class BlazeCard(
             override val type: Type,
