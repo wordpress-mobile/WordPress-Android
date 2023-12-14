@@ -11,7 +11,7 @@
     android:paddingTop="@dimen/margin_medium"
     android:paddingBottom="@dimen/margin_medium">
 
-    <com.google.android.material.checkbox.MaterialCheckBox
+    <CheckBox
         android:id="@+id/checkbox"
         style="@style/Jetpack.ListItem.Checkbox"
         android:clickable="false"

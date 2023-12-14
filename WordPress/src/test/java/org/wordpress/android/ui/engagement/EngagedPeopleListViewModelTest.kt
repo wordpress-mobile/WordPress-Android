@@ -3,6 +3,7 @@ package org.wordpress.android.ui.engagement
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyLong
@@ -206,7 +207,7 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
                 val pageLoader = this.filterIsInstance<NextLikesPageLoader>()
 
                 assertThat(likedItem.size).isEqualTo(1)
-                assertThat(listScenario.generatesEquivalentLikedItem(likedItem.first()))
+                assertTrue(listScenario.generatesEquivalentLikedItem(likedItem.first()))
                 assertThat((likesState as LikesData).likes.isEqualTo(likerItems)).isTrue
                 assertThat(pageLoader).isEmpty()
             }
@@ -229,7 +230,7 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
                 val pageLoader = this.filterIsInstance<NextLikesPageLoader>()
 
                 assertThat(likedItem.size).isEqualTo(1)
-                assertThat(listScenario.generatesEquivalentLikedItem(likedItem.first()))
+                assertTrue(listScenario.generatesEquivalentLikedItem(likedItem.first()))
                 assertThat((likesState as LikesData).likes.isEqualTo(likerItems)).isTrue
                 assertThat(pageLoader.size).isEqualTo(1)
             }
@@ -254,7 +255,7 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
                 val pageLoader = this.filterIsInstance<NextLikesPageLoader>()
 
                 assertThat(likedItem.size).isEqualTo(1)
-                assertThat(listScenario.generatesEquivalentLikedItem(likedItem.first()))
+                assertTrue(listScenario.generatesEquivalentLikedItem(likedItem.first()))
                 assertThat((likesState as LikesData).likes.isEqualTo(likerItems)).isTrue
                 assertThat(pageLoader).isEmpty()
             }
@@ -279,7 +280,7 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
                 val pageLoader = this.filterIsInstance<NextLikesPageLoader>()
 
                 assertThat(likedItem.size).isEqualTo(1)
-                assertThat(listScenario.generatesEquivalentLikedItem(likedItem.first()))
+                assertTrue(listScenario.generatesEquivalentLikedItem(likedItem.first()))
                 assertThat((likesState as LikesData).likes.isEqualTo(likerItems)).isTrue
                 assertThat(pageLoader.size).isEqualTo(1)
             }
@@ -302,7 +303,7 @@ class EngagedPeopleListViewModelTest : BaseUnitTest() {
                 val pageLoader = this.filterIsInstance<NextLikesPageLoader>()
 
                 assertThat(likedItem.size).isEqualTo(1)
-                assertThat(listScenario.generatesEquivalentLikedItem(likedItem.first()))
+                assertTrue(listScenario.generatesEquivalentLikedItem(likedItem.first()))
                 assertThat((likesState as Failure).cachedLikes.isEqualTo(likerItems)).isTrue
                 assertThat(pageLoader.size).isEqualTo(0)
             }

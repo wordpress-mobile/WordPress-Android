@@ -105,6 +105,7 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
         }
         viewModel.selectDomainButtonEnabledState.observe(viewLifecycleOwner) { selectDomainButton.isEnabled = it }
         viewModel.onDomainSelected.observeEvent(viewLifecycleOwner, mainViewModel::selectDomain)
+        viewModel.onFreeDomainSelected.observeEvent(viewLifecycleOwner, mainViewModel::selectDomain)
     }
 
     override fun onResume() {

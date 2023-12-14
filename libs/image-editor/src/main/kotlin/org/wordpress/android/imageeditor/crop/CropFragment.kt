@@ -29,6 +29,7 @@ import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadi
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.ARG_EDIT_IMAGE_DATA
 import org.wordpress.android.imageeditor.utils.ToastUtils
 import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
+import android.R as AndroidR
 
 /**
  * Container fragment for displaying third party crop fragment and done menu item.
@@ -115,7 +116,7 @@ class CropFragment : Fragment(), MenuProvider, UCropFragmentCallback {
             viewModel.onDoneMenuClicked()
             true
         }
-        android.R.id.home -> {
+        AndroidR.id.home -> {
             if (navArgs.shouldReturnToPreviewScreen) {
                 findNavController().popBackStack()
                 true

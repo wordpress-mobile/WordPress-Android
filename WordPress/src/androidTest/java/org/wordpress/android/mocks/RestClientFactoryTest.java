@@ -2,6 +2,9 @@ package org.wordpress.android.mocks;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.android.volley.RequestQueue;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestClient.REST_CLIENT_VERSIONS;
@@ -15,7 +18,7 @@ import java.util.Set;
 
 public class RestClientFactoryTest implements RestClientFactoryAbstract {
     public static String sPrefix = "default";
-    public static RestClient.REST_CLIENT_VERSIONS sVersion = REST_CLIENT_VERSIONS.V1;
+    @NonNull public static RestClient.REST_CLIENT_VERSIONS sVersion = REST_CLIENT_VERSIONS.V1;
     public static Context sContext;
     // keep a reference to each instances so we can update contexts and prefixes after instantiation
     public static Set<RestClientCustomizableMock> sInstances = new HashSet<RestClientCustomizableMock>();
@@ -42,7 +45,9 @@ public class RestClientFactoryTest implements RestClientFactoryAbstract {
 
     public static Mode sMode = Mode.EMPTY;
 
-    public RestClient make(RequestQueue queue) {
+    @NonNull
+    @Override
+    public RestClient make(@Nullable RequestQueue queue) {
         switch (sMode) {
             case CUSTOMIZABLE:
                 RestClientCustomizableMock client = new RestClientCustomizableMock(queue);
@@ -62,7 +67,12 @@ public class RestClientFactoryTest implements RestClientFactoryAbstract {
         }
     }
 
-    public RestClient make(RequestQueue queue, RestClient.REST_CLIENT_VERSIONS version) {
+    @NonNull
+    @Override
+    public RestClient make(
+            @Nullable RequestQueue queue,
+            @NonNull RestClient.REST_CLIENT_VERSIONS version
+    ) {
         sVersion = version;
         return make(queue);
     }

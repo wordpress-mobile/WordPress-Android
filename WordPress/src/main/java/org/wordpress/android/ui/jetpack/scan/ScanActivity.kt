@@ -11,14 +11,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ScanActivityBinding
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class ScanActivity : AppCompatActivity(), ScrollableViewInitializedListener {
@@ -30,11 +31,9 @@ class ScanActivity : AppCompatActivity(), ScrollableViewInitializedListener {
 
     private var binding: ScanActivityBinding? = null
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        (supportFragmentManager.findFragmentById(R.id.fragment_container_view) as? ScanFragment)?.let {
-            it.onNewIntent(intent)
-        }
+        (supportFragmentManager.findFragmentById(R.id.fragment_container_view) as? ScanFragment)?.onNewIntent(intent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,7 +81,7 @@ class ScanActivity : AppCompatActivity(), ScrollableViewInitializedListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == AndroidR.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
         } else if (item.itemId == R.id.menu_scan_history) {

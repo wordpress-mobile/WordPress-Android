@@ -25,25 +25,26 @@ import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel;
 import org.wordpress.android.ui.people.PeopleInviteViewModel;
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.BasicDialogViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel;
+import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
-import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel;
-import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel;
-import org.wordpress.android.ui.posts.PrepublishingHomeViewModel;
-import org.wordpress.android.ui.posts.PrepublishingTagsViewModel;
-import org.wordpress.android.ui.posts.PrepublishingViewModel;
+import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryViewModel;
+import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesViewModel;
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewModel;
+import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsViewModel;
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
+import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsViewModel;
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
 import org.wordpress.android.ui.prefs.language.LocalePickerViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
+import org.wordpress.android.ui.publicize.PublicizeListViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
@@ -87,7 +88,6 @@ import org.wordpress.android.viewmodel.pages.PageParentViewModel;
 import org.wordpress.android.viewmodel.pages.PagesViewModel;
 import org.wordpress.android.viewmodel.pages.SearchListViewModel;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
-import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel;
 import org.wordpress.android.viewmodel.posts.PostListViewModel;
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
 import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel;
@@ -354,11 +354,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(PostListCreateMenuViewModel.class)
-    abstract ViewModel postListCreateMenuViewModel(PostListCreateMenuViewModel postListCreateMenuViewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(StoryComposerViewModel.class)
     abstract ViewModel storyComposerViewModel(StoryComposerViewModel viewModel);
 
@@ -426,11 +421,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(RestoreViewModel.class)
     abstract ViewModel restoreViewModel(RestoreViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(DynamicCardMenuViewModel.class)
-    abstract ViewModel dynamicCardMenuViewModel(DynamicCardMenuViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -539,4 +529,14 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AccountSettingsViewModel.class)
     abstract ViewModel accountSettingsViewModel(AccountSettingsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PublicizeListViewModel.class)
+    abstract ViewModel publicizeListViewModel(PublicizeListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EditorJetpackSocialViewModel.class)
+    abstract ViewModel editorJetpackSocialViewModel(EditorJetpackSocialViewModel viewModel);
 }

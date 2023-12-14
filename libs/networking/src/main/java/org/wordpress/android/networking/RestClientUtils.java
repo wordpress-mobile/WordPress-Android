@@ -4,6 +4,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Request.Method;
@@ -33,9 +36,9 @@ public class RestClientUtils {
     public static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
     private static String sUserAgent = "WordPress Networking Android";
 
-    private RestClient mRestClient;
-    private Authenticator mAuthenticator;
-    private Context mContext;
+    @NonNull private final RestClient mRestClient;
+    @Nullable private final Authenticator mAuthenticator;
+    private final Context mContext;
 
     /**
      * Socket timeout in milliseconds for rest requests
@@ -61,14 +64,28 @@ public class RestClientUtils {
         sUserAgent = userAgent;
     }
 
-    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator,
-                           RestRequest.OnAuthFailedListener onAuthFailedListener) {
-        this(context, queue, authenticator, onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1);
+    public RestClientUtils(
+            Context context,
+            @Nullable RequestQueue queue,
+            @Nullable Authenticator authenticator,
+            RestRequest.OnAuthFailedListener onAuthFailedListener
+    ) {
+        this(
+                context,
+                queue,
+                authenticator,
+                onAuthFailedListener,
+                RestClient.REST_CLIENT_VERSIONS.V1
+        );
     }
 
-    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator,
-                           RestRequest.OnAuthFailedListener onAuthFailedListener,
-                           RestClient.REST_CLIENT_VERSIONS version) {
+    public RestClientUtils(
+            Context context,
+            @Nullable RequestQueue queue,
+            @Nullable Authenticator authenticator,
+            RestRequest.OnAuthFailedListener onAuthFailedListener,
+            @NonNull RestClient.REST_CLIENT_VERSIONS version
+    ) {
         // load an existing access token from prefs if we have one
         mContext = context;
         mAuthenticator = authenticator;
@@ -79,10 +96,7 @@ public class RestClientUtils {
         mRestClient.setUserAgent(sUserAgent);
     }
 
-    public Authenticator getAuthenticator() {
-        return mAuthenticator;
-    }
-
+    @NonNull
     public RestClient getRestClient() {
         return mRestClient;
     }
@@ -95,7 +109,7 @@ public class RestClientUtils {
     /**
      * Get notifications with the provided params.
      * <p/>
-     * https://developer.wordpress.com/docs/api/1/get/notifications/
+     * <a href="https://developer.wordpress.com/docs/api/1/get/notifications/">api/1/get/notifications</a>
      */
     public void getNotifications(Map<String, String> params, Listener listener, ErrorListener errorListener) {
         get("notifications", params, null, listener, errorListener);
@@ -115,7 +129,7 @@ public class RestClientUtils {
     /**
      * Get the notification identified by ID with default params.
      * <p/>
-     * https://developer.wordpress.com/docs/api/1/get/notifications/%s
+     * <a href="https://developer.wordpress.com/docs/api/1/get/notifications/%s">api/1/get/notifications/%s</a>
      */
     public void getNotification(String noteId, Listener listener, ErrorListener errorListener) {
         HashMap<String, String> params = new HashMap<>();
@@ -127,7 +141,7 @@ public class RestClientUtils {
     /**
      * Update the seen timestamp.
      * <p/>
-     * https://developer.wordpress.com/docs/api/1/post/notifications/seen
+     * <a href="https://developer.wordpress.com/docs/api/1/post/notifications/seen">api/1/post/notifications/seen</a>
      */
     public void markNotificationsSeen(String timestamp, Listener listener, ErrorListener errorListener) {
         Map<String, String> params = new HashMap<>();
@@ -140,7 +154,7 @@ public class RestClientUtils {
      * Decrement the unread count for a notification. Key=note_ID, Value=decrement amount.
      *
      * <p/>
-     * https://developer.wordpress.com/docs/api/1/post/notifications/read/
+     * <a href="https://developer.wordpress.com/docs/api/1/post/notifications/read/">api/1/post/notifications/read</a>
      */
     public void decrementUnreadCount(String noteId, String decrementAmount,
                                      Listener listener, ErrorListener errorListener) {
@@ -232,10 +246,6 @@ public class RestClientUtils {
         post(path, params, null, listener, errorListener);
     }
 
-    public void sendLoginEmail(Map<String, String> params, Listener listener, ErrorListener errorListener) {
-        post("auth/send-login-email", params, null, listener, errorListener);
-    }
-
     /**
      * Make GET request
      */
@@ -267,7 +277,7 @@ public class RestClientUtils {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
         }
         request.setRetryPolicy(retryPolicy);
-        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
+        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, mRestClient, mAuthenticator);
         authCheck.send();
         return request;
     }
@@ -291,7 +301,7 @@ public class RestClientUtils {
                     REST_BACKOFF_MULT); // Do not retry on failure
         }
         request.setRetryPolicy(retryPolicy);
-        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
+        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, mRestClient, mAuthenticator);
         authCheck.send();
     }
 
@@ -308,7 +318,7 @@ public class RestClientUtils {
                     REST_BACKOFF_MULT); // Do not retry on failure
         }
         request.setRetryPolicy(retryPolicy);
-        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
+        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, mRestClient, mAuthenticator);
         authCheck.send();
     }
 
@@ -354,6 +364,7 @@ public class RestClientUtils {
     /**
      * Returns locale parameter used in REST calls which require the response to be localized
      */
+    @SuppressWarnings("deprecation")
     public static HashMap<String, String> getRestLocaleParams(Context context) {
         HashMap<String, String> params = new HashMap<>();
         String deviceLanguageCode = LanguageUtils.getCurrentDeviceLanguageCode(context);

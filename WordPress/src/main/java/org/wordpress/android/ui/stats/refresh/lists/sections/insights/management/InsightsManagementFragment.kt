@@ -18,6 +18,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.InsightsManagementFragmentBinding
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem
 import javax.inject.Inject
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class InsightsManagementFragment : Fragment(R.layout.insights_management_fragment), MenuProvider {
@@ -35,7 +36,9 @@ class InsightsManagementFragment : Fragment(R.layout.insights_management_fragmen
             initializeViews()
             initializeViewModels(requireActivity(), siteId)
         }
-        requireActivity().onBackPressedDispatcher.addCallback(this) { viewModel.onBackPressed() }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            viewModel.onBackPressed()
+        }
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -44,7 +47,7 @@ class InsightsManagementFragment : Fragment(R.layout.insights_management_fragmen
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
-        android.R.id.home -> {
+        AndroidR.id.home -> {
             viewModel.onBackPressed()
             true
         }

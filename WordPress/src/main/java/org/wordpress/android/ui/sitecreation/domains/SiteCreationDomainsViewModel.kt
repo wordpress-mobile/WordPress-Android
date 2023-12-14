@@ -47,8 +47,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
-import org.wordpress.android.util.extensions.isOnSale
+import org.wordpress.android.util.config.PlansInSiteCreationFeatureConfig
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -65,7 +64,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val domainSanitizer: SiteCreationDomainSanitizer,
     private val fetchDomainsUseCase: FetchDomainsUseCase,
     private val productsStore: ProductsStore,
-    private val purchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig,
+    private val plansInSiteCreationFeatureConfig: PlansInSiteCreationFeatureConfig,
     private val tracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
@@ -91,11 +90,11 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val _createSiteBtnClicked = SingleLiveEvent<DomainModel>()
     val createSiteBtnClicked: LiveData<DomainModel> = _createSiteBtnClicked
 
-    private val _clearBtnClicked = SingleLiveEvent<Unit>()
+    private val _clearBtnClicked = SingleLiveEvent<Unit?>()
     val clearBtnClicked = _clearBtnClicked
 
-    private val _onHelpClicked = SingleLiveEvent<Unit>()
-    val onHelpClicked: LiveData<Unit> = _onHelpClicked
+    private val _onHelpClicked = SingleLiveEvent<Unit?>()
+    val onHelpClicked: LiveData<Unit?> = _onHelpClicked
 
     init {
         dispatcher.register(fetchDomainsUseCase)
@@ -111,7 +110,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         isStarted = true
         tracker.trackDomainsAccessed()
         resetUiState()
-        if (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) fetchAndCacheProducts()
+        if (plansInSiteCreationFeatureConfig.isEnabled()) fetchAndCacheProducts()
     }
 
     private fun fetchAndCacheProducts() {
@@ -134,7 +133,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         val domain = requireNotNull(selectedDomain) {
             "Create site button should not be visible if a domain is not selected"
         }
-        tracker.trackDomainSelected(domain.domainName, currentQuery?.value.orEmpty(), domain.cost)
+        tracker.trackDomainSelected(domain.domainName, currentQuery?.value.orEmpty(), domain.cost, domain.isFree)
         _createSiteBtnClicked.value = domain
     }
 
@@ -178,7 +177,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     private suspend fun fetchDomainsByPurchasingFeatureConfig(query: String): OnSuggestedDomains {
-        val onlyWordpressCom = !purchasingFeatureConfig.isEnabledOrManuallyOverridden()
+        val onlyWordpressCom = !plansInSiteCreationFeatureConfig.isEnabled()
         val vendor = if (onlyWordpressCom) FETCH_DOMAINS_VENDOR_DOT else FETCH_DOMAINS_VENDOR_MOBILE
 
         return fetchDomainsUseCase.fetchDomains(query, vendor, onlyWordpressCom)
@@ -252,7 +251,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     private fun getCreateSiteButtonState() = selectedDomain?.run {
-        when (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
+        when (plansInSiteCreationFeatureConfig.isEnabled()) {
             true -> if (isFree) CreateSiteButtonState.Free else CreateSiteButtonState.Paid
             else -> CreateSiteButtonState.Old
         }
@@ -276,7 +275,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         return if (items.isEmpty()) {
             if (isNonEmptyUserQuery(query) && (state is Success || state is Ready)) {
                 DomainsUiContentState.Empty(emptyListMessage)
-            } else DomainsUiContentState.Initial(purchasingFeatureConfig.isEnabledOrManuallyOverridden())
+            } else DomainsUiContentState.Initial(plansInSiteCreationFeatureConfig.isEnabled())
         } else {
             DomainsUiContentState.VisibleItems(items)
         }
@@ -304,7 +303,9 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 }
             }
 
-            data.forEachIndexed { index, domain ->
+            val sortedDomains = sortDomains(data)
+
+            sortedDomains.forEachIndexed { index, domain ->
                 val itemUiState = createAvailableItemUiState(domain, index)
                 items.add(itemUiState)
             }
@@ -312,15 +313,24 @@ class SiteCreationDomainsViewModel @Inject constructor(
         return items
     }
 
+    /**
+     *  First two paid domains, become Recommended, and Best Alternative
+     *  First Free domain listed after two paid domains
+     *  Then remaining paid domains
+     */
+    private fun sortDomains(domains: List<DomainModel>): List<DomainModel> {
+        return domains.partition { !it.isFree }.let { (paidDomains, freeDomains) ->
+            paidDomains.take(2) + freeDomains + paidDomains.drop(2)
+        }
+    }
+
     private fun createAvailableItemUiState(domain: DomainModel, index: Int): ListItemUiState {
-        return when (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
+        return when (plansInSiteCreationFeatureConfig.isEnabled()) {
             true -> {
-                val product = products[domain.productId]
                 New.DomainUiState(
                     domain.domainName,
                     cost = when {
                         domain.isFree -> Cost.Free
-                        product.isOnSale() -> Cost.OnSale(product?.combinedSaleCostDisplay.orEmpty(), domain.cost)
                         else -> Cost.Paid(domain.cost)
                     },
                     isSelected = domain.domainName == selectedDomain?.domainName,
@@ -331,7 +341,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
                             1 -> Tag.BestAlternative
                             else -> null
                         },
-                        if (product.isOnSale()) Tag.Sale else null,
                     ),
                 )
             }
@@ -353,7 +362,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         domains: List<DomainModel>
     ): ListItemUiState? {
         if (domains.isEmpty()) return null
-        if (purchasingFeatureConfig.isEnabledOrManuallyOverridden()) return null // TODO: Add FQDN availability check
+        if (plansInSiteCreationFeatureConfig.isEnabled()) return null // TODO: Add FQDN availability check
         val sanitizedQuery = domainSanitizer.sanitizeDomainQuery(query)
         val isDomainUnavailable = domains.none { it.domainName.startsWith("$sanitizedQuery.") }
         return if (isDomainUnavailable) {
@@ -366,15 +375,13 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     private fun createHeaderUiState(isVisible: Boolean) = if (!isVisible) null else
-        purchasingFeatureConfig.isEnabledOrManuallyOverridden().let { isPurchasingEnabled ->
-            SiteCreationHeaderUiState(
-                title = UiStringRes(R.string.new_site_creation_domain_header_title),
-                subtitle = UiStringRes(
-                    if (isPurchasingEnabled) R.string.site_creation_domain_header_subtitle
-                    else R.string.new_site_creation_domain_header_subtitle,
-                ),
-            )
-        }
+        SiteCreationHeaderUiState(
+            title = UiStringRes(R.string.new_site_creation_domain_header_title),
+            subtitle = UiStringRes(
+                if (plansInSiteCreationFeatureConfig.isEnabled()) R.string.site_creation_domain_header_subtitle
+                else R.string.new_site_creation_domain_header_subtitle,
+            ),
+        )
 
 private fun createSearchInputUiState(
         showProgress: Boolean,
@@ -382,7 +389,7 @@ private fun createSearchInputUiState(
         showDivider: Boolean,
     ): SiteCreationSearchInputUiState {
         val hint = UiStringRes(
-            if (purchasingFeatureConfig.isEnabledOrManuallyOverridden())
+            if (plansInSiteCreationFeatureConfig.isEnabled())
                 R.string.site_creation_domain_search_input_hint
             else
                 R.string.new_site_creation_search_domain_input_hint
@@ -519,8 +526,11 @@ private fun createSearchInputUiState(
                 sealed class Cost(val title: UiString) {
                     object Free : Cost(UiStringRes(R.string.free))
 
-                    data class Paid(private val titleCost: String) : Cost(UiStringText(titleCost)) {
-                        val subtitle = UiStringRes(R.string.site_creation_domain_cost)
+                    data class Paid(private val titleCost: String) : Cost(
+                        UiStringText(titleCost)
+                    ) {
+                        val strikeoutTitle = UiStringText(titleCost)
+                        val subtitle = UiStringRes(R.string.site_creation_domain_free_with_annual_plan)
                     }
 
                     data class OnSale(private val titleCost: String, private val strikeoutTitleCost: String) : Cost(

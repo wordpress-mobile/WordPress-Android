@@ -136,7 +136,7 @@ class UploadStarter @Inject constructor(
         }
 
         sites.forEach {
-            launch(ioDispatcher) {
+            launch {
                 upload(site = it)
             }
         }
@@ -148,8 +148,8 @@ class UploadStarter @Inject constructor(
     private suspend fun upload(site: SiteModel) = coroutineScope {
         try {
             mutex.withLock {
-                val posts = async { postStore.getPostsWithLocalChanges(site) }
-                val pages = async { pageStore.getPagesWithLocalChanges(site) }
+                val posts = async(ioDispatcher) { postStore.getPostsWithLocalChanges(site) }
+                val pages = async(ioDispatcher) { pageStore.getPagesWithLocalChanges(site) }
                 val list = posts.await() + pages.await()
 
                 list.asSequence()
@@ -175,15 +175,14 @@ class UploadStarter @Inject constructor(
                         uploadServiceFacade.uploadPost(
                             context = context,
                             post = post,
-                            trackAnalytics = false
+                            trackAnalytics = false,
+                            sourceForLogging = "UploadStarter#upload"
                         )
                     }
             }
         } catch (e: CancellationException) {
             AppLog.e(T.MEDIA, e)
-            // Do any needed actions while we are still holding the mutex lock, then release it and rethrow the
-            // exception so it can be handled upstream
-            mutex.unlock()
+            // rethrow the exception so it can be handled upstream
             throw e
         }
     }

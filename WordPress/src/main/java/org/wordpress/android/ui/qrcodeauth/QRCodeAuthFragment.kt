@@ -46,7 +46,6 @@ import javax.inject.Inject
 class QRCodeAuthFragment : Fragment() {
     @Inject
     lateinit var uiHelpers: UiHelpers
-
     private val qrCodeAuthViewModel: QRCodeAuthViewModel by viewModels()
     private val dialogViewModel: BasicDialogViewModel by activityViewModels()
 
@@ -61,7 +60,6 @@ class QRCodeAuthFragment : Fragment() {
             }
         }
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initBackPressHandler()
@@ -73,14 +71,12 @@ class QRCodeAuthFragment : Fragment() {
         qrCodeAuthViewModel.actionEvents.onEach(this::handleActionEvents).launchIn(viewLifecycleOwner.lifecycleScope)
         dialogViewModel.onInteraction.observeEvent(viewLifecycleOwner, qrCodeAuthViewModel::onDialogInteraction)
     }
-
     private fun initViewModel(savedInstanceState: Bundle?) {
         val (uri, isDeepLink) = requireActivity().intent?.extras?.let {
             val uri = it.getString(DEEP_LINK_URI_KEY, null)
             val isDeepLink = it.getBoolean(IS_DEEP_LINK_KEY, false)
             uri to isDeepLink
         } ?: (null to false)
-
         qrCodeAuthViewModel.start(uri, isDeepLink, savedInstanceState)
     }
 
@@ -91,7 +87,6 @@ class QRCodeAuthFragment : Fragment() {
             is FinishActivity -> requireActivity().finish()
         }
     }
-
     private fun launchDismissDialog(model: QRCodeAuthDialogModel) {
         dialogViewModel.showDialog(
             requireActivity().supportFragmentManager,
@@ -115,17 +110,15 @@ class QRCodeAuthFragment : Fragment() {
     }
 
     private fun initBackPressHandler() {
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             qrCodeAuthViewModel.onBackPressed()
         }
     }
-
     override fun onSaveInstanceState(outState: Bundle) {
         qrCodeAuthViewModel.writeToBundle(outState)
         super.onSaveInstanceState(outState)
     }
 }
-
 @Composable
 private fun QRCodeAuthScreen(viewModel: QRCodeAuthViewModel = viewModel()) {
     VerticalScrollBox(
@@ -133,7 +126,6 @@ private fun QRCodeAuthScreen(viewModel: QRCodeAuthViewModel = viewModel()) {
         modifier = Modifier.fillMaxSize()
     ) {
         val uiState by viewModel.uiState.collectAsState()
-
         @Suppress("UnnecessaryVariable") // See: https://stackoverflow.com/a/69558316/4129245
         when (val state = uiState) {
             is Content -> ContentState(state)

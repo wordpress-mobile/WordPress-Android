@@ -215,7 +215,7 @@ public class FullScreenDialogFragment extends DialogFragment {
             showActivityBar();
         }
 
-        getFragmentManager().popBackStackImmediate();
+        getParentFragmentManager().popBackStackImmediate();
     }
 
     @Override
@@ -301,8 +301,14 @@ public class FullScreenDialogFragment extends DialogFragment {
 
         mToolbar.setTitle(mTitle);
         mToolbar.setSubtitle(mSubtitle);
-        mToolbar.setNavigationIcon(ColorUtils.applyTintToDrawable(context, R.drawable.ic_close_white_24dp,
-                ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorControlNormal)));
+        mToolbar.setNavigationIcon(ColorUtils.applyTintToDrawable(
+                context,
+                R.drawable.ic_close_white_24dp,
+                ContextExtensionsKt.getColorResIdFromAttribute(
+                        context,
+                        com.google.android.material.R.attr.colorControlNormal
+                )
+        ));
         mToolbar.setNavigationContentDescription(R.string.close_dialog_button_desc);
         mToolbar.setNavigationOnClickListener(v -> onDismissClicked());
 

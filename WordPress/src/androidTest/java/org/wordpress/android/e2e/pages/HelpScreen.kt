@@ -5,17 +5,25 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.Matchers
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.support.WPSupportUtils
+import android.R as AndroidR
 
 class HelpScreen {
     fun assertHelpScreenLoaded(): HelpScreen {
-        contactUsButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+        // WordPress and Jetpack apps display different items on the Support Screen
+        if (BuildConfig.IS_JETPACK_APP) {
+            contactUsButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+            ticketsButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+            emailAddressText.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+        } else {
+            communityForumsButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+        }
+
         faqButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
-        ticketsButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
         logsButton.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
         applicationVersionText.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
-        emailAddressText.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
         return this
     }
 
@@ -37,8 +45,8 @@ class HelpScreen {
         WPSupportUtils.populateTextField(nameInput, userName)
         Espresso.onView(
             Matchers.anyOf(
-                ViewMatchers.withText(android.R.string.ok),
-                ViewMatchers.withId(android.R.id.button1)
+                ViewMatchers.withText(AndroidR.string.ok),
+                ViewMatchers.withId(AndroidR.id.button1)
             )
         )
             .perform(ViewActions.click())
@@ -51,5 +59,6 @@ class HelpScreen {
         var logsButton = Espresso.onView(ViewMatchers.withId(R.id.logs_button))
         var applicationVersionText = Espresso.onView(ViewMatchers.withId(R.id.applicationVersion))
         var emailAddressText = Espresso.onView(ViewMatchers.withId(R.id.contactEmailAddress))
+        var communityForumsButton = Espresso.onView(ViewMatchers.withId(R.id.support_forums_button))
     }
 }

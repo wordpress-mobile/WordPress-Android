@@ -109,7 +109,6 @@ public class BaseTest {
         MePage mePage = new MePage();
         boolean isSelfHosted = mePage.go().isSelfHosted();
         if (isSelfHosted) { // Logged in from self hosted connected
-            mePage.goBack();
             new MySitesPage().go().removeSite(E2E_SELF_HOSTED_USER_SITE_ADDRESS);
         } else {
             wpLogout();
@@ -127,7 +126,7 @@ public class BaseTest {
         new LoginFlow().chooseContinueWithWpCom(mComposeTestRule)
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .enterPassword(E2E_WP_COM_USER_PASSWORD)
-                       .confirmLogin(false);
+                       .confirmLogin();
     }
 
     private void wpLogout() {

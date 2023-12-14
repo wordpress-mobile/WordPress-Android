@@ -18,7 +18,7 @@
         android:paddingEnd="@dimen/related_posts_dialog_padding_right"
         android:paddingBottom="@dimen/related_posts_dialog_padding_bottom">
 
-        <androidx.appcompat.widget.SwitchCompat
+        <org.wordpress.android.widgets.WPSwitchCompat
             android:id="@+id/notification_new_posts_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             android:layout_marginBottom="@dimen/margin_large"
             android:background="?android:attr/listDivider" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <org.wordpress.android.widgets.WPSwitchCompat
             android:id="@+id/email_new_posts_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -116,7 +116,7 @@
             android:layout_marginBottom="@dimen/margin_large"
             android:background="?android:attr/listDivider" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <org.wordpress.android.widgets.WPSwitchCompat
             android:id="@+id/email_new_comments_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

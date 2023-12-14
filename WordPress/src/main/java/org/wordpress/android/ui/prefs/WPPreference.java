@@ -41,19 +41,34 @@ public class WPPreference extends Preference implements PreferenceHint {
         TextView titleView = view.findViewById(android.R.id.title);
         TextView summaryView = view.findViewById(android.R.id.summary);
         if (titleView != null) {
-            TextViewCompat.setTextAppearance(titleView, R.style.TextAppearance_MaterialComponents_Subtitle1);
+            TextViewCompat.setTextAppearance(
+                    titleView,
+                    com.google.android.material.R.style.TextAppearance_MaterialComponents_Subtitle1
+            );
             if (!isEnabled()) {
-                titleView.setAlpha(ResourcesCompat.getFloat(res, R.dimen.material_emphasis_disabled));
+                titleView.setAlpha(ResourcesCompat.getFloat(
+                        res,
+                        com.google.android.material.R.dimen.material_emphasis_disabled)
+                );
             } else {
                 titleView.setAlpha(1f);
             }
         }
         if (summaryView != null) {
-            TextViewCompat.setTextAppearance(summaryView, R.style.TextAppearance_MaterialComponents_Body2);
+            TextViewCompat.setTextAppearance(
+                    summaryView,
+                    com.google.android.material.R.style.TextAppearance_MaterialComponents_Body2
+            );
             if (!isEnabled()) {
-                summaryView.setAlpha(ResourcesCompat.getFloat(res, R.dimen.material_emphasis_disabled));
+                summaryView.setAlpha(ResourcesCompat.getFloat(
+                        res,
+                        com.google.android.material.R.dimen.material_emphasis_disabled)
+                );
             } else {
-                summaryView.setAlpha(ResourcesCompat.getFloat(res, R.dimen.material_emphasis_medium));
+                summaryView.setAlpha(ResourcesCompat.getFloat(
+                        res,
+                        com.google.android.material.R.dimen.material_emphasis_medium)
+                );
             }
         }
     }

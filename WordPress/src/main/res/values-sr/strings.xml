@@ -1,11 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-05-09 22:19:47+0000
+Translation-Revision-Date: 2023-12-11 09:55:05+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.11
 Language: sr_RS
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Идемо!</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Укључи предлоге за блоговање</string>
+    <string name="gutenberg_native_ungroup_block">Разгрупиши блок</string>
+    <string name="gutenberg_native_synced_patterns">Синхронизоване мустре</string>
+    <string name="gutenberg_native_deeply_nested_block">Дубоко угњежден блок</string>
+    <string name="pages_no_site_something_went_wrong">Охо, нешто је пошло по злу. Молимо покушајте поново касније.</string>
+    <string name="sharing_connect_via_web_warning_positive_button">Иди на веб</string>
+    <string name="personalization_screen_scheduled_posts_card_title">Заказани чланци</string>
+    <string name="personalization_screen_scheduled_posts_card_description">Ваши предстојећи заказани чланци.</string>
+    <string name="personalization_screen_draft_posts_card_description">Ваши недавни нацрти чланака.</string>
+    <string name="personalization_screen_draft_posts_card_title">Нацрти чланака</string>
+    <string name="my_site_dashboard_no_cards_message_title">Све кртице су скривене</string>
+    <string name="personalization_screen_stats_card_description">Прегледи, посетиоци и свиђања</string>
+    <string name="personalization_screen_tab_cards_description">Додај или сакриј картице</string>
+    <string name="partial_media_access_prompt_select_more">Означи више</string>
+    <string name="partial_media_access_prompt_change_settings">Измени подешавања</string>
+    <string name="personalization_screen_title"> Персонализуј почетни језичак</string>
+    <string name="gutenberg_native_choose_a_file">Одабери датотеку</string>
+    <string name="my_site_post_card_menu_view_all_drafts">Види све нацрте</string>
+    <string name="my_site_post_card_menu_view_all_scheduled_posts">Види све заказане чланке</string>
+    <string name="gutenberg_native_add_image_or_video">Додај слику или видео запис</string>
+    <string name="dashboard_pages_card_more_menu_all_pages">Све странице</string>
+    <string name="dashboard_activity_card_menu_all_activity">Сва активност</string>
+    <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Види све кампање</string>
+    <string name="my_site_todays_stats_menu_view_stats">Види статистику</string>
+    <string name="my_site_dashboard_card_more_menu_hide_card">Сакриј ово</string>
+    <string name="contact_support_bot_ticket_comment_answer">Одговор:</string>
+    <string name="contact_support_bot_ticket_comment_question">Питање:</string>
+    <string name="contact_support_question_five">Заборавио сам своје информације за логовање</string>
+    <string name="contact_support_question_four">Зашто не могу да се улогујем?</string>
+    <string name="contact_support_question_three">Не могу да отпремим фотографије/видео записе</string>
+    <string name="contact_support_question_two">Упомоћ, сајт ми је пао!</string>
+    <string name="contact_support_question_one">Која је адреса мог сајта?</string>
+    <string name="contact_support_suggestions">Нисте сигурни шта да питате?</string>
+    <string name="contact_support_get_support">Контактирајте подршку</string>
+    <string name="contact_support_input_placeholder">Пошаљи поруку…</string>
+    <string name="contact_support_first_message">Око чега Вам могу помоћи?</string>
+    <string name="post_settings_jetpack_social_share_message_clear">Очисти</string>
+    <string name="jetpack_social_social_shares_remaining">%1$d преосталих друштвених дељења</string>
+    <string name="missing_splits_dialog_button">ЗАТВОРИ</string>
+    <string name="missing_splits_dialog_title">Неуспела инсталација</string>
+    <string name="campaign_detail_error_title">Нешто је пошло по злу</string>
+    <string name="campaign_listing_page_error_title">Нешто је пошло по злу</string>
+    <string name="domain_transfer_card_cta">Пренеси своје домене</string>
+    <string name="domain_transfer_card_title">Новости</string>
+    <string name="prepublishing_nudges_social_new_connection_cta">Повежи налоге</string>
+    <string name="prepublishing_nudges_toolbar_title_social">Дељења на друштвеним мрежама</string>
+    <string name="prepublishing_nudges_social_action">Дељења на друштвеним мрежама</string>
+    <string name="sharing">Друштвене мреже</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Дељење на %1$d налога</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Дељење на %1$d од %2$d налога</string>
+    <string name="jetpack_social_social_shares_title_single_account">Дељње на %1$s</string>
+    <string name="campaign_listing_page_no_campaigns_button_text">Направи</string>
+    <string name="budget_campaign_stats">Буџет</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Искључи обавештења</string>
     <string name="support_forum_title">Форуми заједнице</string>
     <string name="site_settings_blogging_prompts_title">Прикажи обавештења</string>
@@ -15,7 +69,6 @@ Language: sr_RS
     <string name="stats_timeframe_previous_seven_days">Претходних 7 дана</string>
     <string name="weeks_quantity_other">%d седмица</string>
     <string name="weeks_quantity_one">1 седмица</string>
-    <string name="jetpack_feature_card_menu_item_hide_this">Сакриј ово</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Подсети ме касније</string>
     <string name="blogging_prompts_list_error_fetch_title">Упс</string>
     <string name="post_settings_parent">Надређена страна</string>
@@ -55,8 +108,6 @@ Language: sr_RS
     <string name="gutenberg_native_contact_support">Контактирајте подршку</string>
     <string name="gutenberg_native_featured_image">Издвојена слика</string>
     <string name="me_btn_about">О Вордпресу</string>
-    <string name="my_site_post_card_link_go_to_scheduled_posts">Иди на заказане чланке</string>
-    <string name="my_site_post_card_link_go_to_drafts">Иди на нацрте</string>
     <string name="my_site_post_card_link_create_post">Направи чланак</string>
     <string name="my_site_create_next_post_title">Направи свој следећи чланак</string>
     <string name="menu_visual_mode_switched_notice">Пребачено на визуални режим</string>
@@ -67,6 +118,20 @@ Language: sr_RS
     <string name="my_site_untitled_post">Без наслова</string>
     <string name="my_site_post_card_scheduled_title">Предстојећи заказани чланци</string>
     <string name="gutenberg_native_create_link">Направи везу</string>
+    <string name="comment_edit_comment">Коментар</string>
+    <string name="comment_edit_user_name">Име</string>
+    <string name="comment_edit_menu_done">Готово</string>
+    <string name="gutenberg_native_embed_options">Могућности угнежђавања</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 блогеру&lt;/a&gt; се ово свиђа.</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s блогера&lt;/a&gt; се ово свиђа.</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Вама и %1$s блогера&lt;/a&gt; се ово свиђа.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Вама и 1 блогеру&lt;/a&gt; се ово свиђа.</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Вама&lt;/a&gt; се ово свиђа.</string>
+    <string name="domains_primary_site_address">%s</string>
+    <string name="my_site_btn_domains">Домени</string>
+    <string name="blogging_reminders_site_settings_label">%1$s недељно у %2$s</string>
+    <string name="gutenberg_native_selected_s">Одабрано: %s</string>
+    <string name="gutenberg_native_move_blocks">Помери блокове</string>
     <string name="gutenberg_native_use_icon_button">Користите дугме иконице</string>
     <string name="gutenberg_native_search_input_field">Поље за унос претраге</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Дугме за претрагу. Тренутни текст на дугмету је</string>
@@ -81,7 +146,6 @@ Language: sr_RS
     <string name="threat_fix_all_status_success_message_plural">Претње су успешно исправљене.</string>
     <string name="threat_fix_all_confirmation_message_plural">Молимо потврдите да желите да исправите свих %s активних претњи.</string>
     <string name="scan_idle_threats_description_plural">Скенирањем је пронађено %1$s потенцијалних претњи са %2$s. Молимо прегледајте их и примените радњу или притисните дугме за поправку свих. Ми смо %3$s ако смо Вам потребни.</string>
-    <string name="quick_start_card_menu_hide">Сакриј за сада</string>
     <string name="quick_start_list_follow_site_subtitle">Откријте и пратите веб места која Вас инспиришу.</string>
     <string name="quick_start_list_enable_sharing_title">Дељење на друштвеним мрежама</string>
     <string name="quick_start_list_view_site_title">Видите своје веб место</string>
@@ -94,9 +158,9 @@ Language: sr_RS
     <string name="gutenberg_native_lock_icon">Иконица за закључавање</string>
     <string name="gutenberg_native_choose_audio">Одабери звучни запис</string>
     <string name="gutenberg_native_audio_file">Датотека звучног записа</string>
-    <string name="gutenberg_native_add_audio">ДОДАЈ ЗВУЧНИ ЗАПИС</string>
     <string name="photo_picker_use_audio">Употреби овај звучни запис</string>
     <string name="photo_picker_choose_audio">Одабери звучни запис са уређаја</string>
+    <string name="gutenberg_native_add_audio">Додај звучни запис</string>
     <string name="threat_status_fixed">Поправљено</string>
     <string name="threat_found_header">Пронађено</string>
     <string name="pick_audio">Одабери звучни запис</string>
@@ -118,7 +182,6 @@ Language: sr_RS
     <string name="backup_download_complete_failed_title">Неуспело преузимање</string>
     <string name="web_preview_tablet">Таблет</string>
     <string name="web_preview_mobile">Мобилни</string>
-    <string name="quick_start_card_menu_remove">Не приказуј поново</string>
     <string name="reader_menu_mark_as_unseen">Означи као непрегледано</string>
     <string name="reader_menu_mark_as_seen">Означи као прегледано</string>
     <string name="scan_history_all_threats_tab">Све</string>
@@ -139,10 +202,8 @@ Language: sr_RS
     <string name="gutenberg_native_file_name">Назив датотеке</string>
     <string name="gutenberg_native_edit_file">Уреди датотеку</string>
     <string name="gutenberg_native_copy_file_url">Ископирај URL датотеке</string>
-    <string name="gutenberg_native_choose_a_file">ОДАБЕРИ ДАТОТЕКУ</string>
     <string name="new_site_creation_domain_header_title">Одабери домен</string>
     <string name="my_site_header_jetpack">Jetpack</string>
-    <string name="my_site_btn_jetpack_settings">Подешавања Jetpack-а</string>
     <string name="activity_log_activity_type_filter_clear">Очисти</string>
     <string name="activity_log_activity_type_filter_apply">Примени</string>
     <string name="dialog_edit_story_unsupported_format_title">GIF датотеке нису подржане</string>
@@ -352,7 +413,9 @@ Language: sr_RS
     <string name="ccpa_privacy_notice_header">Објава везана за приватност за кориснике из Калифорније</string>
     <string name="status_and_visibility">Статус &amp; Видљивост</string>
     <string name="update_now">Ажурирај сада</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_move_to_top">Помери на горе</string>
+    <string name="gutenberg_native_insert_mention">Уметни спомињање</string>
     <string name="pages_set_as_posts_page">Постави страницу чланака</string>
     <string name="pages_set_as_homepage">Постави почетну страницу</string>
     <string name="site_settings_select_page">Одабери страницу</string>
@@ -407,19 +470,29 @@ Language: sr_RS
     <string name="weekday_tuesday">уторак</string>
     <string name="weekday_monday">понедељак</string>
     <string name="weekday_sunday">недеља</string>
+    <string name="photo_picker_gif">Одабери из Tenor-а</string>
     <string name="preview_image_description">Приказ слике</string>
     <string name="error_unknown_page_type">Непознат облик странице</string>
+    <string name="page_queued">Страница на чекању</string>
+    <string name="page_uploading">Отпремање странице</string>
+    <string name="error_publish_page_no_network">Уређај је офлајн. Страница је сачувана локално.</string>
     <string name="app_theme_dark">Тамна</string>
     <string name="app_theme_light">Светла</string>
     <string name="app_theme">Изглед</string>
+    <string name="editor_uploading_page">Ваша страница се отпрема</string>
+    <string name="editor_page_saved_locally">Страница сачувана на уређају</string>
+    <string name="editor_page_saved_online">Страница сачувана онлајн</string>
+    <string name="gutenberg_native_warning_message">Порука упозорења</string>
     <string name="gutenberg_native_show_post_content">Прикажи садржај чланка</string>
     <string name="gutenberg_native_only_show_excerpt">Прикажи само одломак </string>
     <string name="gutenberg_native_link_to">Повежи са</string>
     <string name="gutenberg_native_link_settings">Подешавања веза</string>
+    <string name="gutenberg_native_customize">ПРИЛАГОДИ</string>
     <string name="post_list_tab_scheduled_posts">Заказано</string>
     <string name="post_list_tab_published_posts">Објављено</string>
     <string name="create_post_page_fab_tooltip_contributors">Направите чланак</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Није повезано</string>
+    <string name="post_list_tab_trashed_posts">Пребачено у отпад</string>
     <string name="notifications_tab_title_comments">Коментари</string>
     <string name="notifications_tab_title_follows">Праћења</string>
     <string name="notifications_tab_title_likes">Свиђања</string>
@@ -504,14 +577,12 @@ Language: sr_RS
     <string name="gutenberg_native_current_value_is_s">Тренутна вредност је %s</string>
     <string name="gutenberg_native_choose_from_device">Одабери свој уређај</string>
     <string name="gutenberg_native_alt_text">Алтернативни текст</string>
-    <string name="gutenberg_native_add_video">ДОДАЈ ВИДЕО ЗАПИС</string>
     <string name="gutenberg_native_add_url">Додај URL</string>
-    <string name="gutenberg_native_add_image_or_video">ДОДАЈ СЛИКУ ИЛИ ВИДЕО ЗАПИС</string>
-    <string name="gutenberg_native_add_image">ДОДАЈ СЛИКУ</string>
     <string name="gutenberg_native_add_block_here">ДОДАЈ БЛОК ОВДЕ</string>
     <string name="gutenberg_native_add_description">Додај опис</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Јавила се непозната грешка. Молимо вас да покушате поново касније.</string>
     <string name="gutenberg_native_add_alt_text">Додај алтернативни текст</string>
+    <string name="gutenberg_native_add_video">Додај видео запис</string>
     <string name="notifications_tab_dialog_switch_desc">Обавештења</string>
     <string name="main_switch_default_title_off">Искључи</string>
     <string name="main_switch_default_title_on">Укључи</string>
@@ -705,8 +776,6 @@ Language: sr_RS
     <string name="quick_start_dialog_upload_icon_title">Одаберите јединствену иконицу сајта</string>
     <string name="quick_start_dialog_publish_post_message">Направи нацрт и објави чланак</string>
     <string name="quick_start_dialog_enable_sharing_title">Омогући дељење чланака</string>
-    <string name="quick_start_dialog_remove_next_steps_title">Уклони наредне кораке</string>
-    <string name="quick_start_remove_next_steps_menu_title">Уклони ово</string>
     <string name="quick_start_dialog_check_stats_title">Провери статистику свог сајта</string>
     <string name="quick_start_dialog_check_stats_message">Прати редовно перформансе свог веб места.</string>
     <string name="quick_start_task_skip_menu_title">Прескочи задатак</string>
@@ -858,7 +927,7 @@ Language: sr_RS
     <string name="quick_start_list_create_site_title">Креирај свој сајт</string>
     <string name="quick_start_dialog_view_site_title">Види свој сајт</string>
     <string name="quick_start_dialog_share_site_title">Подели свој сајт</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Додирни %1$s Дељење %2$s за наставак</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Додирните %1$s Друштвене мреже %2$s да бисте наставили.</string>
     <string name="quick_start_dialog_publish_post_title">Објави чланак</string>
     <string name="quick_start_dialog_need_help_button_negative">Не, хвала</string>
     <string name="quick_start_dialog_follow_sites_title">Повежи са другим веб местима</string>
@@ -1053,7 +1122,7 @@ Language: sr_RS
     <string name="version_with_name_param">Издање %s</string>
     <string name="permissions_denied_title">Допуштења</string>
     <string name="plugin_caption_featured">Издвојено</string>
-    <string name="sharing_disabled">Модул дељења је онемогућен</string>
+    <string name="sharing_disabled">Друштвени модул онемогућен</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">Преостало %1$d страница / чланака</string>
     <string name="uploading_subtitle_pages_only_one">Преостала 1 страница</string>
@@ -1292,13 +1361,10 @@ Language: sr_RS
     <string name="enter_wpcom_password">Унесите своју WordPress.com лозинку.</string>
     <string name="login_continue">Настави</string>
     <string name="connect_more">Повежи други сајт</string>
-    <string name="enter_verification_code">Скоро смо тамо! Унесите верификациони код из апликације Authenticator.</string>
+    <string name="enter_verification_code">Скоро сте ту! Унесите верификациони код за WordPress.com из ваше аутентификационе апликације.</string>
     <string name="next">Следећи</string>
     <string name="open_mail">Отвори пошту</string>
-    <string name="image_optimization_promo_title">Укључи оптимизацију слика</string>
     <string name="me_profile_photo">Профилна слика</string>
-    <string name="leave_off">Остави искључено</string>
-    <string name="turn_on">Укључи</string>
     <string name="error_media_parse_error">Неочекивани одговор од сервера</string>
     <string name="post_title">Наслов</string>
     <string name="menu_redo">Понови</string>
@@ -1367,11 +1433,10 @@ Language: sr_RS
     <string name="share_btn_disconnect">Прекини повезаност</string>
     <string name="share_btn_connect">Повежи</string>
     <string name="connected_accounts_label">Повезани налози</string>
-    <string name="sharing">Дељење</string>
     <string name="tabbar_accessibility_label_notifications">Обавештења. Управљајте обавештењима.</string>
     <string name="tabbar_accessibility_label_reader">Читач. Прати садржај са других веб места.</string>
-    <string name="my_site_btn_sharing">Дељење</string>
     <string name="button_not_now">Не сада</string>
+    <string name="my_site_btn_sharing">Друштвене мреже</string>
     <string name="editor_draft_saved_locally">Нацрт сачуван на уређају</string>
     <string name="editor_draft_saved_online">Нацрт сачуван онлајн</string>
     <string name="editor_post_saved_locally">Чланак сачуван на уређају</string>
@@ -1394,11 +1459,10 @@ Language: sr_RS
     <string name="photo_picker_title">Одабери фотографију</string>
     <string name="editor_post_saved_online">Чланак сачуван онлајн</string>
     <string name="site_settings_image_quality_hint">Квалитет слика. Више вредности представљају слике бољег квалитета.</string>
-    <string name="media_encoder_quality_100">Максималан</string>
-    <string name="media_encoder_quality_95">Врло висок</string>
-    <string name="media_encoder_quality_90">Висок</string>
-    <string name="media_encoder_quality_85">Средњи</string>
-    <string name="media_encoder_quality_80">Низак</string>
+    <string name="media_encoder_quality_maximum">Максималан</string>
+    <string name="media_encoder_quality_high">Висок</string>
+    <string name="media_encoder_quality_medium">Средњи</string>
+    <string name="media_encoder_quality_low">Низак</string>
     <string name="media_upload_state_uploaded">Отпремљено</string>
     <string name="media_upload_state_failed">Неуспело отпремање</string>
     <string name="media_upload_state_deleted">Обрисано</string>
@@ -1850,6 +1914,7 @@ Language: sr_RS
     <string name="reader_toast_blog_blocked">Чланци са овог сајта више неће бити приказивани</string>
     <string name="schedule_verb">Заказати</string>
     <string name="update_verb">Ажурирај</string>
+    <string name="reader_label_followers_count">%s пратилаца</string>
     <string name="reader_page_followed_blogs">Веб места која пратите</string>
     <string name="reader_hint_add_tag_or_url">Унесите URL или ознаку за праћење</string>
     <string name="reader_label_followed_blog">Сајт запраћен</string>
@@ -1888,7 +1953,6 @@ Language: sr_RS
     <string name="select_categories">Одаберите категорије</string>
     <string name="page_settings">Подешавања стране</string>
     <string name="connection_error">Грешка у успостављању везе</string>
-    <string name="cancel_edit">Одустани од уређивања</string>
     <string name="learn_more">Сазнајте више</string>
     <string name="media_gallery_type_thumbnail_grid">Мрежа умањених слика</string>
     <string name="comment_status_approved">Одобрено</string>
@@ -1902,9 +1966,6 @@ Language: sr_RS
     <string name="media_error_no_permission">Немате дозволу да прегледате библиотеку медија</string>
     <string name="trash">Отпад</string>
     <string name="saving_changes">Чувам измене</string>
-    <string name="sure_to_cancel_edit_comment">Одустајете од уређивања овог коментара?</string>
-    <string name="content_required">Коментар је неопходан</string>
-    <string name="toast_comment_unedited">Коментар није промењен</string>
     <string name="http_authorization_required">Неопходно овлашћење</string>
     <string name="new_post">Нови чланак</string>
     <string name="new_media">Нови медиј</string>

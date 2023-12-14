@@ -3,9 +3,9 @@ package org.wordpress.android.ui.mysite.cards.dashboard.activity
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard.ActivityCardWithItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard.ActivityCardWithItems.ActivityItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard.ActivityCardWithItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard.ActivityCardWithItems.ActivityItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams.ActivityCardItemClickParams
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -30,10 +30,9 @@ class ActivityCardBuilder @Inject constructor(
         return ActivityCardWithItems(
             title = UiStringRes(R.string.dashboard_activity_card_title),
             activityItems = content,
-            footerLink = ActivityCard.FooterLink(
-                label = UiStringRes(R.string.dashboard_activity_card_footer_link),
-                onClick = params.onFooterLinkClick
-            )
+            onHideMenuItemClick = ListItemInteraction.create(params.onHideMenuItemClick),
+            onAllActivityMenuItemClick = ListItemInteraction.create(params.onAllActivityMenuItemClick),
+            onMoreMenuClick = ListItemInteraction.create(params.onMoreMenuClick)
         )
     }
 

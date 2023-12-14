@@ -54,6 +54,7 @@ import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import java.io.File
 import javax.inject.Inject
+import android.R as AndroidR
 
 class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     private var mediaCapturePath: String? = null
@@ -172,7 +173,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == AndroidR.id.home) {
             setResult(Activity.RESULT_CANCELED)
             finish()
             return true

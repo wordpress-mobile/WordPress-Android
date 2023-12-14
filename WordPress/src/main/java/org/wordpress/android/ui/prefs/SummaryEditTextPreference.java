@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.preference.EditTextPreference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -42,6 +44,7 @@ import java.util.Locale;
  */
 
 public class SummaryEditTextPreference extends EditTextPreference implements PreferenceHint {
+    private static final String STATE_TEXT = "SummaryEditTextPreference_STATE_TEXT";
     private int mLines;
     private int mMaxLines;
     private String mHint;
@@ -134,6 +137,12 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
 
         if (state != null) {
             mDialog.onRestoreInstanceState(state);
+
+            EditText editText = getEditText();
+            if (editText != null && state.containsKey(STATE_TEXT)) {
+                editText.setText(state.getString(STATE_TEXT));
+                editText.setSelection(editText.getText().length());
+            }
         }
         mDialog.setOnDismissListener(this);
         mDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -206,4 +215,86 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     public void setHint(String hint) {
         mHint = hint;
     }
+
+    // region adapted from DialogPreference and EditTextPreference to make sure dialog state behaves correctly,
+    // specially in system initiated death/recreation scenarios, such as changing system dark mode.
+    private void dismissDialog() {
+        if (mDialog == null || !mDialog.isShowing()) {
+            return;
+        }
+
+        mDialog.dismiss();
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        final Parcelable superState = super.onSaveInstanceState();
+        if (mDialog == null || !mDialog.isShowing()) {
+            return superState;
+        }
+
+        final SavedState myState = new SavedState(superState);
+        myState.isDialogShowing = true;
+        myState.dialogBundle = mDialog.onSaveInstanceState();
+
+        // Save the text from the EditText
+        CharSequence text = getEditText().getText();
+        String stateText = text == null ? "" : text.toString();
+        myState.dialogBundle.putString(STATE_TEXT, stateText);
+
+        // Since dialog is showing, let's dismiss it so it doesn't leak. This is not the best place to do it, but
+        // since the android.preference is deprecated we are not able to register the proper lifecycle listeners, and
+        // we should migrate to androidx.preference or something similar in the future.
+        dismissDialog();
+
+        return myState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state == null || !state.getClass().equals(SavedState.class)) {
+            // Didn't save state for us in onSaveInstanceState
+            super.onRestoreInstanceState(state);
+            return;
+        }
+
+        SavedState myState = (SavedState) state;
+        super.onRestoreInstanceState(myState.getSuperState());
+        if (myState.isDialogShowing) {
+            showDialog(myState.dialogBundle);
+        }
+    }
+
+    private static class SavedState extends BaseSavedState {
+        public static final @NonNull Parcelable.Creator<SavedState> CREATOR =
+                new Parcelable.Creator<SavedState>() {
+                    public SavedState createFromParcel(Parcel in) {
+                        return new SavedState(in);
+                    }
+
+                    public SavedState[] newArray(int size) {
+                        return new SavedState[size];
+                    }
+                };
+        public boolean isDialogShowing;
+        public Bundle dialogBundle;
+
+        SavedState(Parcel source) {
+            super(source);
+            isDialogShowing = source.readInt() == 1;
+            dialogBundle = source.readBundle(getClass().getClassLoader());
+        }
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            super.writeToParcel(dest, flags);
+            dest.writeInt(isDialogShowing ? 1 : 0);
+            dest.writeBundle(dialogBundle);
+        }
+    }
+    // endregion
 }

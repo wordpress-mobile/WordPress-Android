@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import com.daasuu.mp4compose.composer.ComposerInterface;
 import com.daasuu.mp4compose.composer.Listener;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -50,7 +49,7 @@ public class Mp4ComposerVideoOptimizer extends VideoOptimizerBase implements Lis
     }
 
     @Override
-    public void onFailed(@NotNull Exception exception) {
+    public void onFailed(@NonNull Exception exception) {
         AppLog.e(AppLog.T.MEDIA, "VideoOptimizer > Can't optimize the video", exception);
         trackVideoProcessingEvents(true, exception);
         mListener.onVideoOptimizationCompleted(mMedia);

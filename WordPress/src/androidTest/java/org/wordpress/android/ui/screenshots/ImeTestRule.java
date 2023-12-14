@@ -5,10 +5,10 @@ import android.content.Context;
 import android.provider.Settings;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.annotation.NonNull;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -33,13 +33,13 @@ public class ImeTestRule implements TestRule {
         this(LATIN_IME);
     }
 
-    public ImeTestRule(@NotNull String allowedIme) {
+    public ImeTestRule(@NonNull String allowedIme) {
         Objects.requireNonNull(allowedIme);
         this.mAllowedIme = allowedIme;
     }
 
     @Override
-    public Statement apply(@NotNull final Statement base, @NotNull Description description) {
+    public Statement apply(@NonNull final Statement base, @NonNull Description description) {
         Statement statement = new Statement() {
             @Override
             public void evaluate() throws Throwable {

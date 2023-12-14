@@ -19,6 +19,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.action.SiteAction
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
@@ -73,6 +74,8 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(any(), any())).thenReturn("")
         whenever(localeManagerWrapper.getLanguage()).thenReturn("")
         classToTest = JetpackMigrationViewModel(
+            mainDispatcher = testDispatcher(),
+            dispatcher = dispatcher,
             siteUtilsWrapper = siteUtilsWrapper,
             gravatarUtilsWrapper = gravatarUtilsWrapper,
             contextProvider = contextProvider,
@@ -85,7 +88,6 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
             siteStore = siteStore,
             localeManagerWrapper = localeManagerWrapper,
             jetpackMigrationLanguageUtil = jetpackMigrationLanguageUtil,
-            dispatcher = dispatcher,
         )
         classToTest.refreshAppTheme.observeForever(refreshAppThemeObserver)
         classToTest.refreshAppLanguage.observeForever(refreshAppLanguageObserver)
@@ -176,6 +178,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         verifyNoInteractions(dispatcher)
     }
 
+    @Test
     fun `Should dispatch fetch account action when finish button is tapped on success screen if needed`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.account).thenReturn(mock())
@@ -249,19 +252,36 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should track when success screen is shown`() {
+    fun `when sites flow, Should track when success screen is shown`() {
         classToTest.initSuccessScreenUi()
 
         verify(contentMigrationAnalyticsTracker).trackThanksScreenShown()
     }
 
     @Test
-    fun `Should track when finish button is tapped on success screen`() {
+    fun `when no sites flow, Should track when success screen is shown`() {
+        classToTest.initSuccessScreenUiForNoSites()
+
+        verify(contentMigrationAnalyticsTracker).trackNoSitesFlowThanksScreenShown()
+    }
+
+    @Test
+    fun `when sites flow, then should track when finish button is tapped on success screen`() {
+        whenever(siteStore.sites).thenReturn(listOf(SiteModel()))
         val successScreen = classToTest.initSuccessScreenUi()
 
         successScreen.primaryActionButton.onClick.invoke()
 
         verify(contentMigrationAnalyticsTracker).trackThanksScreenFinishButtonTapped()
+    }
+
+    @Test
+    fun `when no sites flow, then should track when finish button is tapped on success screen`() {
+        val successScreen = classToTest.initSuccessScreenUiForNoSites()
+
+        successScreen.primaryActionButton.onClick.invoke()
+
+        verify(contentMigrationAnalyticsTracker).trackNoSitesFlowThanksScreenShown()
     }
 
     @Test

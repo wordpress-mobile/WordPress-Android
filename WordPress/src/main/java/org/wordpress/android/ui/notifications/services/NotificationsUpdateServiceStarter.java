@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.PersistableBundle;
 
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.AppLog;
 
@@ -16,14 +18,14 @@ import static org.wordpress.android.JobServiceId.JOB_NOTIFICATIONS_UPDATE_SERVIC
 public class NotificationsUpdateServiceStarter {
     public static final String IS_TAPPED_ON_NOTIFICATION = "is-tapped-on-notification";
 
-    public static void startService(Context context) {
+    public static void startService(@Nullable Context context) {
         if (context == null) {
             return;
         }
         startService(context, null);
     }
 
-    public static void startService(Context context, String noteId) {
+    public static void startService(@Nullable Context context, @Nullable String noteId) {
         if (context == null) {
             return;
         }

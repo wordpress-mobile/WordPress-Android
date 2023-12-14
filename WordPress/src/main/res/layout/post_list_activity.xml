@@ -27,35 +27,19 @@
             android:paddingBottom="@dimen/bottom_tabs_divider_size"
             android:duplicateParentState="true">
 
-            <!--Padding start and end is set programmatically based on if the fading edge is visible-->
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
-                android:background="@null"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignStart="@+id/post_list_tab_layout_fading_edge"
                 android:layout_gravity="start"
+                android:layout_marginBottom="0dp"
+                android:background="@null"
                 android:clipToPadding="false"
+                android:importantForAccessibility="no"
                 app:tabGravity="fill"
                 app:tabMode="scrollable"
                 tools:paddingEnd="0dp"
-                android:layout_marginBottom="0dp"
-                tools:paddingStart="@dimen/posts_list_tab_layout_fading_edge_width" />
-
-            <org.wordpress.android.widgets.AppBarFadingEdgeView
-                android:id="@+id/post_list_tab_layout_fading_edge"
-                android:layout_width="@dimen/posts_list_tab_layout_fading_edge_width"
-                android:layout_height="match_parent"
-                android:layout_alignEnd="@+id/post_list_author_selection" />
-
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/post_list_author_selection"
-                android:layout_width="@dimen/author_spinner_width"
-                android:contentDescription="@string/post_list_author"
-                android:layout_height="match_parent"
-                android:background="?attr/selectableItemBackground"
-                android:paddingStart="0dp"
-                android:paddingEnd="@dimen/margin_small" />
+                tools:paddingStart="0dp" />
         </RelativeLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -64,6 +48,7 @@
         android:id="@+id/postPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:importantForAccessibility="no"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <FrameLayout
@@ -81,22 +66,8 @@
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
         android:contentDescription="@string/fab_create_desc"
-        android:src="@drawable/ic_create_white_24dp"
+        android:src="@drawable/ic_plus_white_24dp"
         android:layout_gravity="end|bottom"
-        app:borderWidth="0dp"
-        app:layout_behavior="org.wordpress.android.ui.FloatingActionButtonBehavior" />
+        app:borderWidth="0dp" />
 
-    <org.wordpress.android.ui.WPTooltipView
-        android:id="@+id/fab_tooltip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_medium"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:importantForAccessibility="noHideDescendants"
-        android:visibility="gone"
-        app:layout_behavior="org.wordpress.android.ui.WPTooltipViewBehavior"
-        app:wpArrowHorizontalOffsetFromEnd="@dimen/main_fab_tooltip_offset_end"
-        app:wpTooltipMessage="@string/create_post_story_fab_tooltip"
-        app:wpTooltipPosition="above"
-        tools:visibility="visible" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

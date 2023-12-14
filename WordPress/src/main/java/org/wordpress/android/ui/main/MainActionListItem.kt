@@ -31,7 +31,7 @@ sealed class MainActionListItem {
         val isAnswered: Boolean,
         val promptId: Int,
         val attribution: BloggingPromptAttribution,
-        val onClickAction: ((promptId: Int) -> Unit)?,
+        val onClickAction: ((promptId: Int, attribution: BloggingPromptAttribution) -> Unit)?,
         val onHelpAction: (() -> Unit)?
     ) : MainActionListItem()
 }

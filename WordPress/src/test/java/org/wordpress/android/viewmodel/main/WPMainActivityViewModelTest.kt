@@ -19,7 +19,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -36,10 +35,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.U
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
-import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
@@ -51,8 +48,10 @@ import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptActi
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.privacy.banner.domain.ShouldAskPrivacyConsent
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
@@ -81,7 +80,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
 
     @Mock
-    lateinit var onFeatureAnnouncementRequestedObserver: Observer<Unit>
+    lateinit var onFeatureAnnouncementRequestedObserver: Observer<Unit?>
 
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
@@ -111,19 +110,16 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     lateinit var quickStartType: QuickStartType
 
     @Mock
-    private lateinit var openBloggingPromptsOnboardingObserver: Observer<Unit>
+    private lateinit var openBloggingPromptsOnboardingObserver: Observer<Unit?>
 
     @Mock
     private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Mock
-    private lateinit var blazeFeatureUtils: BlazeFeatureUtils
-
-    @Mock
-    private lateinit var blazeStore: BlazeStore
-
-    @Mock
     private lateinit var siteUtilsWrapper: SiteUtilsWrapper
+
+    @Mock
+    private lateinit var shouldAskPrivacyConsent: ShouldAskPrivacyConsent
 
     private val featureAnnouncement = FeatureAnnouncement(
         "14.7",
@@ -147,13 +143,12 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         model = BloggingPromptModel(
             id = 123,
             text = "title",
-            title = "",
-            content = "content",
             date = Date(),
             isAnswered = false,
             attribution = "",
             respondentsCount = 5,
-            respondentsAvatarUrls = listOf()
+            respondentsAvatarUrls = listOf(),
+            answeredLink = "https://wordpress.com/tag/dailyprompt-123",
         )
     )
     private lateinit var activeTask: MutableLiveData<QuickStartTask?>
@@ -162,7 +157,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() = runBlocking {
-        whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(false)
         whenever(buildConfigWrapper.getAppVersionCode()).thenReturn(850)
         whenever(buildConfigWrapper.getAppVersionName()).thenReturn("14.7")
         whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
@@ -174,6 +168,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(false)
         whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(bloggingPrompt))
         whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(true)
+        whenever(shouldAskPrivacyConsent()).thenReturn(false)
         viewModel = WPMainActivityViewModel(
             featureAnnouncementProvider,
             buildConfigWrapper,
@@ -187,9 +182,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             bloggingPromptsStore,
             NoDelayCoroutineDispatcher(),
             jetpackFeatureRemovalPhaseHelper,
-            blazeFeatureUtils,
-            blazeStore,
-            siteUtilsWrapper
+            siteUtilsWrapper,
+            shouldAskPrivacyConsent,
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
             onFeatureAnnouncementRequestedObserver
@@ -282,116 +276,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         assertThat(fabUiState?.isFabVisible).isFalse
     }
 
-    /* FAB TOOLTIP VISIBILITY */
-
-    @Test
-    fun `given fab enabled, when page changed to my site, then fab tooltip is visible`() {
-        startViewModelWithDefaultParameters()
-
-        viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
-
-        assertThat(fabUiState?.isFabTooltipVisible).isTrue
-    }
-
-    @Test
-    fun `given fab enabled, when page changed away from my site, then fab tooltip is hidden`() {
-        startViewModelWithDefaultParameters()
-
-        viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
-
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse
-    }
-
-    @Test
-    fun `given fab enabled, when my site page is resumed, then fab tooltip is visible`() {
-        startViewModelWithDefaultParameters()
-
-        viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
-
-        assertThat(fabUiState?.isFabTooltipVisible).isTrue
-    }
-
-    @Test
-    fun `given fab enabled, when non my site page is resumed, then fab tooltip is hidden`() {
-        startViewModelWithDefaultParameters()
-
-        viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
-
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse
-    }
-
-    @Test
-    fun `given fab disabled, when page changed to my site, then fab tooltip is hidden`() {
-        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
-
-        viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
-
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse
-    }
-
-    @Test
-    fun `given fab disabled, when page changed away from my site, then fab tooltip is hidden`() {
-        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
-
-        viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
-
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse
-    }
-
-    @Test
-    fun `given fab disabled, when my site page is resumed, then fab tooltip is hidden`() {
-        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
-
-        viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
-
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse
-    }
-
-    @Test
-    fun `given fab disabled, when non my site page is resumed, then fab tooltip is hidden`() {
-        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
-
-        viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
-
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse
-    }
-
-    /* FAB TOOLTIP DISABLED */
-
-    @Test
-    fun `fab tooltip disabled when tapped`() {
-        startViewModelWithDefaultParameters()
-        viewModel.onTooltipTapped(initSite(hasFullAccessToContent = true))
-        verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse
-    }
-
-    @Test
-    fun `fab tooltip disabled when user without full access to content uses the fab`() {
-        startViewModelWithDefaultParameters()
-        whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
-        viewModel.onFabClicked(initSite(hasFullAccessToContent = false))
-        verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse
-    }
-
-    @Test
-    fun `fab tooltip disabled when bottom sheet opened`() {
-        startViewModelWithDefaultParameters()
-        whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
-        viewModel.onFabClicked(initSite(hasFullAccessToContent = true))
-        verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse
-    }
-
-    @Test
-    fun `fab tooltip disabled when fab long pressed`() {
-        startViewModelWithDefaultParameters()
-        viewModel.onFabLongPressed(initSite(hasFullAccessToContent = true))
-        verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse
-    }
-
     @Test
     fun `fab focus point visible when active task is PUBLISH_POST`() {
         startViewModelWithDefaultParameters()
@@ -473,7 +357,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
         val promptId = 123
 
-        action!!.onClickAction?.invoke(promptId)
+        action!!.onClickAction?.invoke(promptId, BloggingPromptAttribution.BLOGANUARY)
         assertThat(viewModel.createPostWithBloggingPrompt.value).isEqualTo(promptId)
     }
 
@@ -873,24 +757,46 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given blaze enabled, when my site page is resumed, then blaze status is fetched`() = test {
-        val site = initSite()
-        whenever(blazeFeatureUtils.isBlazeEligibleForUser(site)).thenReturn(true)
+    fun `it asks for privacy consent at the start when it should`() = test {
+        // Given
+        whenever(shouldAskPrivacyConsent()).thenReturn(true)
+        val observer: Observer<Unit> = mock()
+        viewModel.askForPrivacyConsent.observeForever(observer)
 
-        viewModel.onResume(isOnMySitePageWithValidSite = true, site = site)
+        // When
+        startViewModelWithDefaultParameters()
 
-        verify(blazeStore).fetchBlazeStatus(site)
+        // Then
+        verify(observer).onChanged(anyOrNull())
     }
 
     @Test
-    fun `given blaze not enabled, when my site page is resumed, then blaze status is not fetched`() = test {
-        val site = initSite()
-        whenever(blazeFeatureUtils.isBlazeEligibleForUser(site)).thenReturn(false)
+    fun `it asks for privacy consent only once, even when viewmodel is started more than once`() = test {
+        // Given
+        whenever(shouldAskPrivacyConsent()).thenReturn(true)
+        val observer: Observer<Unit> = mock()
+        viewModel.askForPrivacyConsent.observeForever(observer)
+
+        // When
+        startViewModelWithDefaultParameters()
         startViewModelWithDefaultParameters()
 
-        viewModel.onResume(isOnMySitePageWithValidSite = true, site = site)
+        // Then
+        verify(observer, times(1)).onChanged(anyOrNull())
+    }
 
-        verifyNoInteractions(blazeStore)
+    @Test
+    fun `requests my site dashboard refresh when requestMySiteDashboardRefresh is called`() {
+        startViewModelWithDefaultParameters()
+
+        var observerCalledCount = 0
+        viewModel.mySiteDashboardRefreshRequested.observeForever {
+            observerCalledCount++
+        }
+
+        viewModel.requestMySiteDashboardRefresh()
+
+        assertThat(observerCalledCount).isEqualTo(1)
     }
 
     private fun startViewModelWithDefaultParameters(

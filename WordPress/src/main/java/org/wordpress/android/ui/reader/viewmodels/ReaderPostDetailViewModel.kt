@@ -59,6 +59,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSiteP
 import org.wordpress.android.ui.reader.discover.ReaderPostActions
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
@@ -77,6 +78,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiSt
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiDimen
@@ -90,7 +92,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
-import org.wordpress.android.util.map
+import org.wordpress.android.util.mapSafe
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -142,12 +144,12 @@ class ReaderPostDetailViewModel @Inject constructor(
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _updateLikesState = MediatorLiveData<GetLikesState>()
-    val likesUiState: LiveData<TrainOfFacesUiState> = _updateLikesState.map { state ->
+    val likesUiState: LiveData<TrainOfFacesUiState> = _updateLikesState.mapSafe { state ->
         buildLikersUiState(state)
     }
 
     private val _commentSnippetState = MutableLiveData<CommentSnippetState>()
-    val commentSnippetState: LiveData<CommentSnippetUiState> = _commentSnippetState.map { state ->
+    val commentSnippetState: LiveData<CommentSnippetUiState> = _commentSnippetState.mapSafe { state ->
         postDetailUiStateBuilder.buildCommentSnippetUiState(state, post, ::onCommentSnippetClicked)
     }
 
@@ -248,7 +250,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                     post.isFollowedByCurrentUser = data.following
                     updateFollowButtonUiState(
                         currentUiState = currentUiState,
-                        isFollowed = post.isFollowedByCurrentUser
+                        isFollowed = post.isFollowedByCurrentUser,
+                        isFollowEnabled = data.isChangeFinal
                     )
                 }
             }
@@ -442,7 +445,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             findPost(it.postId, it.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
                     readerPostMoreButtonUiStateBuilder.buildMoreMenuItemsBlocking(
-                        post, this@ReaderPostDetailViewModel::onButtonClicked
+                        post, false, this@ReaderPostDetailViewModel::onButtonClicked
                     )
                 } else {
                     null
@@ -466,9 +469,22 @@ class ReaderPostDetailViewModel @Inject constructor(
         onActionClicked(
             postId,
             blogId,
-            ReaderPostCardActionType.COMMENTS,
+            COMMENTS,
             ReaderTracker.SOURCE_POST_DETAIL_COMMENT_SNIPPET
         )
+    }
+
+    private fun onCommentsClicked() {
+        post?.let {
+            launch {
+                readerPostCardActionsHandler.onAction(
+                    post = it,
+                    type = COMMENTS,
+                    isBookmarkList = false,
+                    source = ReaderTracker.SOURCE_POST_DETAIL,
+                )
+            }
+        }
     }
 
     fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
@@ -509,6 +525,16 @@ class ReaderPostDetailViewModel @Inject constructor(
         launch(ioDispatcher) {
             val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, FOLLOWED)
             _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
+        }
+    }
+
+    private fun onHeaderAction(post: ReaderPost, action: ReaderPostDetailsHeaderAction) {
+        when (action) {
+            is ReaderPostDetailsHeaderAction.BlogSectionClicked -> onBlogSectionClicked(post.postId, post.blogId)
+            is ReaderPostDetailsHeaderAction.FollowClicked -> onButtonClicked(post.postId, post.blogId, FOLLOW)
+            is ReaderPostDetailsHeaderAction.LikesClicked -> onLikesClicked()
+            is ReaderPostDetailsHeaderAction.CommentsClicked -> onCommentsClicked()
+            is ReaderPostDetailsHeaderAction.TagItemClicked -> onTagItemClicked(action.tagSlug)
         }
     }
 
@@ -574,9 +600,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         return postDetailUiStateBuilder.mapPostToUiState(
             post = post,
             onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked,
-            onBlogSectionClicked = this@ReaderPostDetailViewModel::onBlogSectionClicked,
-            onFollowClicked = { onButtonClicked(post.postId, post.blogId, FOLLOW) },
-            onTagItemClicked = this@ReaderPostDetailViewModel::onTagItemClicked
+            onHeaderAction = { action -> onHeaderAction(post, action) },
         )
     }
 
@@ -601,12 +625,13 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun updateFollowButtonUiState(
         currentUiState: ReaderPostDetailsUiState,
-        isFollowed: Boolean
+        isFollowed: Boolean,
+        isFollowEnabled: Boolean,
     ) {
         val updatedFollowButtonUiState = currentUiState
             .headerUiState
             .followButtonUiState
-            .copy(isFollowed = isFollowed)
+            .copy(isFollowed = isFollowed, isEnabled = isFollowEnabled)
 
         val updatedHeaderUiState = currentUiState
             .headerUiState
@@ -830,7 +855,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         return iLiked ?: post?.isLikedByCurrentUser ?: false
     }
 
-    fun onLikeFacesClicked() {
+    fun onLikesClicked() {
         post?.let { readerPost ->
             _navigationEvents.value = Event(
                 ShowEngagedPeopleList(

@@ -420,17 +420,6 @@
     </issue>
 
     <issue
-        id="SpecifyJobSchedulerIdRange"
-        message="Specify a valid range of job id&apos;s for `WorkManager` to use."
-        errorLine1="public class NotificationsUpdateJobService extends JobService"
-        errorLine2="^">
-        <location
-            file="src/main/java/org/wordpress/android/ui/notifications/services/NotificationsUpdateJobService.java"
-            line="13"
-            column="1"/>
-    </issue>
-
-    <issue
         id="UseSwitchCompatOrMaterialCode"
         message="Use `SwitchCompat` from AppCompat or `SwitchMaterial` from Material library"
         errorLine1="        Switch switchControl = getSwitch((ViewGroup) view);"
@@ -460,17 +449,6 @@
         <location
             file="src/main/res/drawable/drake_empty_results_400dp.xml"
             line="4"
-            column="20"/>
-    </issue>
-
-    <issue
-        id="VectorRaster"
-        message="Limit vector icons sizes to 200×200 to keep icon drawing fast; see https://developer.android.com/studio/write/vector-asset-studio#when for more"
-        errorLine1="    android:width=&quot;218dp&quot;"
-        errorLine2="                   ~~~~~">
-        <location
-            file="src/main/res/drawable/img_illustration_domain_registration_success_218dp.xml"
-            line="2"
             column="20"/>
     </issue>
 
@@ -629,17 +607,6 @@
     </issue>
 
     <issue
-        id="UnsafeOptInUsageWarning"
-        message="This declaration is opt-in and its usage should be marked with&#xA;&apos;@kotlinx.coroutines.DelicateCoroutinesApi&apos; or &apos;@OptIn(markerClass = kotlinx.coroutines.DelicateCoroutinesApi.class)&apos;"
-        errorLine1="        BuildersKt.launch(GlobalScope.INSTANCE,"
-        errorLine2="                                      ~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/comments/CommentDetailFragment.java"
-            line="1430"
-            column="39"/>
-    </issue>
-
-    <issue
         id="ComposableNaming"
         message="Composable functions with a return type should start with a lowercase letter"
         errorLine1="fun JpColorPalette(isDarkTheme: Boolean = isSystemInDarkTheme()) = when (isDarkTheme) {"
@@ -659,28 +626,6 @@
             file="src/main/java/org/wordpress/android/ui/compose/theme/WordPressColors.kt"
             line="42"
             column="5"/>
-    </issue>
-
-    <issue
-        id="InvalidColorHexValue"
-        message="Invalid Color hex value"
-        errorLine1="private val lightModePostThumbnailBackground = Color(0xD000000)"
-        errorLine2="                                                     ~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/blaze/ui/blazeoverlay/BlazeOverlayFragment.kt"
-            line="73"
-            column="54"/>
-    </issue>
-
-    <issue
-        id="InvalidColorHexValue"
-        message="Invalid Color hex value"
-        errorLine1="private val darkModePostThumbnailBackground = Color(0xDFFFFFF)"
-        errorLine2="                                                    ~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/blaze/ui/blazeoverlay/BlazeOverlayFragment.kt"
-            line="76"
-            column="53"/>
     </issue>
 
     <issue
@@ -758,39 +703,6 @@
             file="src/main/java/org/wordpress/android/editor/gutenberg/GutenbergEditorFragment.java"
             line="709"
             column="32"/>
-    </issue>
-
-    <issue
-        id="DiscouragedApi"
-        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
-        errorLine1="        int resourceId = getResources().getIdentifier(&quot;status_bar_height&quot;, &quot;dimen&quot;, &quot;android&quot;);"
-        errorLine2="                                        ~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/media/MediaSettingsActivity.java"
-            line="503"
-            column="41"/>
-    </issue>
-
-    <issue
-        id="UseAppTint"
-        message="Must use `app:tint` instead of `android:tint`"
-        errorLine1="                android:tint=&quot;?attr/colorOnSurface&quot; />"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/blogging_prompt_card_compact.xml"
-            line="33"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="UseAppTint"
-        message="Must use `app:tint` instead of `android:tint`"
-        errorLine1="                    android:tint=&quot;?attr/wpColorOnSurfaceMedium&quot; />"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/blogging_prompt_card_compact.xml"
-            line="60"
-            column="21"/>
     </issue>
 
     <issue
@@ -3560,6 +3472,17 @@
         errorLine1="&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2="^">
         <location
+            file="src/main/res/layout/activity_blaze_campaign.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="MergeRootFrame"
+        message="This `&lt;FrameLayout>` can be replaced with a `&lt;merge>` tag"
+        errorLine1="&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
             file="src/main/res/layout/me_activity.xml"
             line="2"
             column="1"/>
@@ -3661,17 +3584,6 @@
         <location
             file="src/main/res/layout/dialog_image_options.xml"
             line="6"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/colorPrimarySurface` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/colorPrimarySurface&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/domain_registration_result_fragment.xml"
-            line="7"
             column="5"/>
     </issue>
 
@@ -4247,85 +4159,6 @@
         message="Missing the following drawables in `drawable-xxhdpi`: list_focused_wordpress.9.png (found in drawable-hdpi, drawable-xhdpi)">
         <location
             file="src/main/res/drawable-xxhdpi"/>
-    </issue>
-
-    <issue
-        id="AlwaysShowAction"
-        message="Prefer &quot;`ifRoom`&quot; instead of &quot;`always`&quot;"
-        errorLine1="        app:showAsAction=&quot;always|collapseActionView&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/menu/page_parent_menu.xml"
-            line="8"
-            column="9"/>
-        <location
-            file="src/main/res/menu/page_parent_menu.xml"
-            line="15"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="AlwaysShowAction"
-        message="Prefer &quot;`ifRoom`&quot; instead of &quot;`always`&quot;"
-        errorLine1="        app:showAsAction=&quot;always|collapseActionView&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/menu/posts_list_toggle_view_layout.xml"
-            line="8"
-            column="9"/>
-        <location
-            file="src/main/res/menu/posts_list_toggle_view_layout.xml"
-            line="16"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="AlwaysShowAction"
-        message="Prefer &quot;`ifRoom`&quot; instead of &quot;`always`&quot;"
-        errorLine1="        app:showAsAction=&quot;always&quot; />"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/menu/reader_detail.xml"
-            line="9"
-            column="9"/>
-        <location
-            file="src/main/res/menu/reader_detail.xml"
-            line="15"
-            column="9"/>
-        <location
-            file="src/main/res/menu/reader_detail.xml"
-            line="21"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="AlwaysShowAction"
-        message="Prefer &quot;`ifRoom`&quot; instead of &quot;`always`&quot;"
-        errorLine1="        app:showAsAction=&quot;always&quot; />"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/menu/reader_home.xml"
-            line="9"
-            column="9"/>
-        <location
-            file="src/main/res/menu/reader_home.xml"
-            line="16"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="AlwaysShowAction"
-        message="Prefer &quot;`ifRoom`&quot; instead of &quot;`always`&quot;"
-        errorLine1="        app:showAsAction=&quot;always&quot; />"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/menu/threaded_comments_menu.xml"
-            line="8"
-            column="9"/>
-        <location
-            file="src/main/res/menu/threaded_comments_menu.xml"
-            line="13"
-            column="9"/>
     </issue>
 
     <issue

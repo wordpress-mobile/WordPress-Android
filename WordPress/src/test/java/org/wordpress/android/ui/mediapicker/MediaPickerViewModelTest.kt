@@ -345,7 +345,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         setupViewModel(
             listOf(),
             singleSelectMediaPickerSetup,
-            hasPhotosVideosPermission = false
+            hasPhotosVideosPermission = false,
         )
         whenever(resourceProvider.getString(R.string.app_name)).thenReturn("WordPress")
         whenever(resourceProvider.getString(R.string.photo_picker_soft_ask_photos_label))
@@ -354,10 +354,11 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         viewModel.checkMediaPermissions(
             isPhotosVideosAlwaysDenied = isAlwaysDenied,
-            isMusicAudioAlwaysDenied = isAlwaysDenied
+            isMusicAudioAlwaysDenied = isAlwaysDenied,
+            didJustRequestPermissions = false,
         )
 
-        assertThat(uiStates).hasSize(3)
+        assertThat(uiStates).hasSize(4)
 
         assertSoftAskUiModelVisible(isAlwaysDenied, singleSelectMediaPickerSetup)
     }
@@ -711,9 +712,13 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     fun `empty state is emitted when no items in picker`() = test {
         setupViewModel(null, singleSelectMediaPickerSetup, numberOfStates = 1)
 
-        viewModel.checkMediaPermissions(isPhotosVideosAlwaysDenied = false, isMusicAudioAlwaysDenied = false)
+        viewModel.checkMediaPermissions(
+            isPhotosVideosAlwaysDenied = false,
+            isMusicAudioAlwaysDenied = false,
+            didJustRequestPermissions = false,
+        )
 
-        assertThat(uiStates).hasSize(2)
+        assertThat(uiStates).hasSize(3)
         assertPhotoListUiStateEmpty()
     }
 
@@ -727,9 +732,13 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         whenever(resourceProvider.getString(R.string.app_name)).thenReturn("WordPress")
         whenever(resourceProvider.getString(R.string.photo_picker_soft_ask_photos_label)).thenReturn("Soft ask label")
 
-        viewModel.checkMediaPermissions(isPhotosVideosAlwaysDenied = false, isMusicAudioAlwaysDenied = false)
+        viewModel.checkMediaPermissions(
+            isPhotosVideosAlwaysDenied = false,
+            isMusicAudioAlwaysDenied = false,
+            didJustRequestPermissions = false,
+        )
 
-        assertThat(uiStates).hasSize(3)
+        assertThat(uiStates).hasSize(4)
         assertPhotoListUiStateHidden()
     }
 
@@ -745,6 +754,27 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         assertThat(uiStates).hasSize(2)
         assertPhotoListUiStateData()
+        assertPartialMediaAccessUi(isVisible = false)
+    }
+
+    @Test
+    fun `show partial access UI when partial media access is granted`() = test {
+        setupViewModel(
+            listOf(firstItem),
+            singleSelectMediaPickerSetup,
+            hasPhotosVideosPermission = true,
+            hasPartialMediaAccess = true,
+        )
+
+        viewModel.checkMediaPermissions(
+            isPhotosVideosAlwaysDenied = false,
+            isMusicAudioAlwaysDenied = false,
+            didJustRequestPermissions = true,
+        )
+
+        assertThat(uiStates).hasSize(4)
+        assertDataList(singleSelectMediaPickerSetup, selectedItems = listOf(), domainItems = listOf(firstItem))
+        assertPartialMediaAccessUi(isVisible = true)
     }
 
     @Test
@@ -874,11 +904,13 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         domainModel: List<MediaItem>?,
         mediaPickerSetup: MediaPickerSetup,
         hasPhotosVideosPermission: Boolean = true,
+        hasPartialMediaAccess: Boolean = false,
         filter: String? = null,
         numberOfStates: Int = 2,
         hasMore: Boolean = false
     ) {
         whenever(permissionsHandler.hasPhotosVideosPermission()).thenReturn(hasPhotosVideosPermission)
+        whenever(permissionsHandler.hasOnlyPartialAccessPhotosVideosPermission()).thenReturn(hasPartialMediaAccess)
         whenever(mediaLoaderFactory.build(mediaPickerSetup, site)).thenReturn(mediaLoader)
         doAnswer {
             actions = it.getArgument(0)
@@ -997,6 +1029,12 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private fun assertStoriesFabIsHidden() {
         uiStates.last().fabUiModel.let { model ->
             assertThat(model.show).isEqualTo(false)
+        }
+    }
+
+    private fun assertPartialMediaAccessUi(isVisible: Boolean = false) {
+        uiStates.last().isPartialMediaAccessPromptVisible.let {
+            assertThat(it).isEqualTo(isVisible)
         }
     }
 }

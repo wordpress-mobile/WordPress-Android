@@ -22,10 +22,22 @@
         <ignore path="**/generated/source/kapt/**/org/wordpress/android/push/Hilt_GCMMessageService.java" />
     </issue>
     <issue id="GradleDependency" severity="ignore" /> <!-- Dependabot will take care of this -->
+    <issue id="MissingNullAnnotationOnField">
+        <ignore path="**/generated/**" />
+    </issue>
+    <issue id="MissingNullAnnotationOnConstructorParameter">
+        <ignore path="**/generated/**" />
+    </issue>
+    <issue id="MissingNullAnnotationOnMethodParameter">
+        <ignore path="**/generated/**" />
+    </issue>
+    <issue id="MissingNullAnnotationOnMethodReturnType">
+        <ignore path="**/generated/**" />
+    </issue>
     <!-- SECURITY -->
     <issue id="TrustAllX509TrustManager">
         <!-- EDITOR -->
-        <ignore path="**/libs/editor/org/jsoup/helper/HttpConnection$Response$2.class" /> <!-- jsoup -->
+        <ignore path="**/org.jsoup/**" /> <!-- jsoup -->
     </issue>
     <!-- PERFORMANCE -->
     <issue id="UnusedResources">
@@ -49,5 +61,12 @@
         <ignore path="**/libs/editor/src/main/res" /> <!-- drawable-mdpi -->
         <!-- WORDPRESS -->
         <ignore path="**/src/wordpress/res" /> <!-- drawable-hdpi, drawable-xxhdpi -->
+    </issue>
+    <issue id="ObsoleteSdkInt">
+        <ignore path="**/generated/source/kapt/**/org/wordpress/android/ui/main/Hilt_WPMainNavigationView.java" />
+    </issue>
+    <!-- INTEROPERABILITY -->
+    <issue id="UnknownNullness" severity="informational">
+        <ignore path="**/generated/**" />
     </issue>
 </lint>

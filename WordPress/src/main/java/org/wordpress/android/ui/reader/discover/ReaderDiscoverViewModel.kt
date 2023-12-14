@@ -12,16 +12,14 @@ import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
-import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
@@ -41,6 +39,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -57,10 +56,10 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val readerDiscoverDataProvider: ReaderDiscoverDataProvider,
     private val reblogUseCase: ReblogUseCase,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper,
     private val readerTracker: ReaderTracker,
     displayUtilsWrapper: DisplayUtilsWrapper,
     private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
+    private val readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -118,7 +117,31 @@ class ReaderDiscoverViewModel @Inject constructor(
         // Get the correct repository
         readerDiscoverDataProvider.start()
 
-        // Listen to changes to the discover feed
+        observeDiscoverFeed()
+        observeFollowStatus()
+
+        // TODO reader improvements: Consider using Channel/Flow
+        readerDiscoverDataProvider.communicationChannel.observeForever(communicationChannelObserver)
+
+        _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
+            val target = event.peekContent()
+            if (target is ShowSitePickerForResult) {
+                pendingReblogPost = target.post
+            }
+            _navigationEvents.value = event
+        }
+
+        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
+            _snackbarEvents.value = event
+        }
+
+        _preloadPostEvents.addSource(readerPostCardActionsHandler.preloadPostEvents) { event ->
+            _preloadPostEvents.value = event
+        }
+    }
+
+    private fun observeDiscoverFeed() {
+        // listen to changes to the discover feed
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             launch {
                 val userTags = getFollowedTagsUseCase.get()
@@ -143,50 +166,78 @@ class ReaderDiscoverViewModel @Inject constructor(
                 }
             }
         }
+    }
 
-        // TODO reader improvements: Consider using Channel/Flow
-        readerDiscoverDataProvider.communicationChannel.observeForever(communicationChannelObserver)
+    private fun observeFollowStatus() {
+        // listen to changes on follow status for updating the reader recommended blogs state immediately
+        _uiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { data ->
+            val currentUiState: DiscoverUiState.ContentUiState = _uiState.value as? DiscoverUiState.ContentUiState
+                ?: return@addSource
+            val mutableCards = currentUiState.cards.toMutableList()
+            var hasChangedCards = false
 
-        _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
-            val target = event.peekContent()
-            if (target is ShowSitePickerForResult) {
-                pendingReblogPost = target.post
+            for (i in mutableCards.indices) {
+                val card = mutableCards[i] as? ReaderCardUiState.ReaderRecommendedBlogsCardUiState ?: continue
+                val mutableBlogs = card.blogs.toMutableList()
+                var hasChangedBlogs = false
+
+                for (j in mutableBlogs.indices) {
+                    val blog = mutableBlogs[j]
+                    if (blog.blogId == data.blogId && blog.feedId == data.feedId) {
+                        mutableBlogs[j] = blog.copy(isFollowed = data.following, isFollowEnabled = data.isChangeFinal)
+                        hasChangedBlogs = true
+                    }
+                }
+
+                if (hasChangedBlogs) {
+                    mutableCards[i] = card.copy(blogs = mutableBlogs)
+                    hasChangedCards = true
+                }
             }
-            _navigationEvents.value = event
-        }
 
-        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
-            _snackbarEvents.value = event
-        }
-
-        _preloadPostEvents.addSource(readerPostCardActionsHandler.preloadPostEvents) { event ->
-            _preloadPostEvents.value = event
+            if (hasChangedCards) {
+                _uiState.value = currentUiState.copy(cards = mutableCards)
+            }
         }
     }
 
     private suspend fun convertCardsToUiStates(posts: ReaderDiscoverCards): List<ReaderCardUiState> {
         return posts.cards.map { card ->
             when (card) {
-                is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(
-                    titleRes = R.string.reader_welcome_banner
-                )
-                is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
-                    source = ReaderTracker.SOURCE_DISCOVER,
-                    post = card.post,
-                    isDiscover = true,
-                    photonWidth = photonWidth,
-                    photonHeight = photonHeight,
-                    onButtonClicked = this@ReaderDiscoverViewModel::onButtonClicked,
-                    onItemClicked = this@ReaderDiscoverViewModel::onPostItemClicked,
-                    onItemRendered = this@ReaderDiscoverViewModel::onItemRendered,
-                    onDiscoverSectionClicked = this@ReaderDiscoverViewModel::onDiscoverClicked,
-                    onMoreButtonClicked = this@ReaderDiscoverViewModel::onMoreButtonClicked,
-                    onMoreDismissed = this@ReaderDiscoverViewModel::onMoreMenuDismissed,
-                    onVideoOverlayClicked = this@ReaderDiscoverViewModel::onVideoOverlayClicked,
-                    onPostHeaderViewClicked = this@ReaderDiscoverViewModel::onPostHeaderClicked,
-                    onTagItemClicked = this@ReaderDiscoverViewModel::onTagItemClicked,
-                    postListType = TAG_FOLLOWED
-                )
+                is ReaderPostCard -> if (readerImprovementsFeatureConfig.isEnabled()) {
+                    postUiStateBuilder.mapPostToNewUiState(
+                        source = ReaderTracker.SOURCE_DISCOVER,
+                        post = card.post,
+                        photonWidth = photonWidth,
+                        photonHeight = photonHeight,
+                        postListType = TAG_FOLLOWED,
+                        onButtonClicked = this@ReaderDiscoverViewModel::onButtonClicked,
+                        onItemClicked = this@ReaderDiscoverViewModel::onPostItemClicked,
+                        onItemRendered = this@ReaderDiscoverViewModel::onItemRendered,
+                        onMoreButtonClicked = this@ReaderDiscoverViewModel::onMoreButtonClickedNew,
+                        onMoreDismissed = this@ReaderDiscoverViewModel::onMoreMenuDismissedNew,
+                        onVideoOverlayClicked = this@ReaderDiscoverViewModel::onVideoOverlayClicked,
+                        onPostHeaderViewClicked = this@ReaderDiscoverViewModel::onPostHeaderClicked,
+                    )
+                } else {
+                    postUiStateBuilder.mapPostToUiState(
+                        source = ReaderTracker.SOURCE_DISCOVER,
+                        post = card.post,
+                        isDiscover = true,
+                        photonWidth = photonWidth,
+                        photonHeight = photonHeight,
+                        onButtonClicked = this@ReaderDiscoverViewModel::onButtonClicked,
+                        onItemClicked = this@ReaderDiscoverViewModel::onPostItemClicked,
+                        onItemRendered = this@ReaderDiscoverViewModel::onItemRendered,
+                        onDiscoverSectionClicked = this@ReaderDiscoverViewModel::onDiscoverClicked,
+                        onMoreButtonClicked = this@ReaderDiscoverViewModel::onMoreButtonClicked,
+                        onMoreDismissed = this@ReaderDiscoverViewModel::onMoreMenuDismissed,
+                        onVideoOverlayClicked = this@ReaderDiscoverViewModel::onVideoOverlayClicked,
+                        onPostHeaderViewClicked = { onPostHeaderClicked(card.post.postId, card.post.blogId) },
+                        onTagItemClicked = this@ReaderDiscoverViewModel::onTagItemClicked,
+                        postListType = TAG_FOLLOWED
+                    )
+                }
                 is InterestsYouMayLikeCard -> {
                     postUiStateBuilder.mapTagListToReaderInterestUiState(
                         card.interests,
@@ -387,7 +438,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
                     readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
-                        post, this@ReaderDiscoverViewModel::onButtonClicked
+                        post, false, this@ReaderDiscoverViewModel::onButtonClicked
                     )
                 } else {
                     null
@@ -398,7 +449,31 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    private fun replaceUiStateItem(before: ReaderPostUiState, after: ReaderPostUiState) {
+    private fun onMoreButtonClickedNew(postUiState: ReaderPostNewUiState) {
+        changeMoreMenuVisibilityNew(postUiState, true)
+    }
+
+    private fun onMoreMenuDismissedNew(postUiState: ReaderPostNewUiState) {
+        changeMoreMenuVisibilityNew(postUiState, false)
+    }
+
+    private fun changeMoreMenuVisibilityNew(currentUiState: ReaderPostNewUiState, show: Boolean) {
+        launch {
+            findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
+                val moreMenuItems = if (show) {
+                    readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
+                        post, true, this@ReaderDiscoverViewModel::onButtonClicked
+                    )
+                } else {
+                    null
+                }
+
+                replaceUiStateItem(currentUiState, currentUiState.copy(moreMenuItems = moreMenuItems))
+            }
+        }
+    }
+
+    private fun replaceUiStateItem(before: ReaderCardUiState, after: ReaderCardUiState) {
         (_uiState.value as? DiscoverUiState.ContentUiState)?.let {
             val updatedList = it.cards.toMutableList()
             val index = it.cards.indexOf(before)
@@ -427,8 +502,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         readerDiscoverDataProvider.stop()
         readerPostCardActionsHandler.onCleared()
         readerDiscoverDataProvider.communicationChannel.removeObserver(communicationChannelObserver)
-
-        appPrefsWrapper.readerDiscoverWelcomeBannerShown = true
     }
 
     fun swipeToRefresh() {
@@ -437,8 +510,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         launch {
             readerDiscoverDataProvider.refreshCards()
         }
-
-        appPrefsWrapper.readerDiscoverWelcomeBannerShown = true
     }
 
     fun onRetryButtonClick() {

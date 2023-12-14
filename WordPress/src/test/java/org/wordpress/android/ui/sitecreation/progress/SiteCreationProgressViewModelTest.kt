@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.nullable
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argThat
@@ -37,6 +38,7 @@ import org.wordpress.android.ui.sitecreation.RESULT_IN_CART
 import org.wordpress.android.ui.sitecreation.SERVICE_ERROR
 import org.wordpress.android.ui.sitecreation.SERVICE_SUCCESS
 import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE
+import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE_FREE
 import org.wordpress.android.ui.sitecreation.SITE_REMOTE_ID
 import org.wordpress.android.ui.sitecreation.SITE_SLUG
 import org.wordpress.android.ui.sitecreation.SiteCreationState
@@ -63,8 +65,8 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
 
     private val uiStateObserver = mock<Observer<SiteProgressUiState>>()
     private val startServiceObserver = mock<Observer<StartServiceData>>()
-    private val onHelpClickedObserver = mock<Observer<Unit>>()
-    private val onCancelWizardClickedObserver = mock<Observer<Unit>>()
+    private val onHelpClickedObserver = mock<Observer<Unit?>>()
+    private val onCancelWizardClickedObserver = mock<Observer<Unit?>>()
     private val onRemoteSiteCreatedObserver = mock<Observer<SiteModel>>()
     private val onCartCreatedObserver = mock<Observer<CheckoutDetails>>()
 
@@ -102,7 +104,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
 
     @Test
     fun `on start emits service event for free domains with isFree true`() = test {
-        startViewModel(SITE_CREATION_STATE)
+        startViewModel(SITE_CREATION_STATE_FREE)
         val request = assertNotNull(viewModel.startCreateSiteService.value).serviceData
         assertTrue(request.isFree)
     }
@@ -130,7 +132,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
 
     @Test
     fun `on start changes the loading text with animation after delay`() = test {
-        startViewModel()
+        startViewModelFree()
         advanceTimeBy(LOADING_STATE_TEXT_ANIMATION_DELAY)
         verify(uiStateObserver).onChanged(check<Loading> { it.animate })
     }
@@ -168,7 +170,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
         startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
         viewModel.retry()
-        verify(createCartUseCase, times(2)).execute(any(), any(), any(), any(), eq(false))
+        verify(createCartUseCase, times(2)).execute(any(), any(), any(), any(), eq(false), nullable(Int::class.java))
     }
 
     @Test
@@ -187,7 +189,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
 
     @Test
     fun `on service success propagates site`() {
-        startViewModel()
+        startViewModelFree()
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
         verify(onRemoteSiteCreatedObserver).onChanged(argThat {
             assertEquals(SITE_REMOTE_ID, siteId)
@@ -196,7 +198,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on service success for paid domain creates cart`() = test {
+    fun `on service success for paid domain creates cart`() = testWith(CART_SUCCESS)  {
         startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
         verify(createCartUseCase).execute(
@@ -205,6 +207,7 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
             eq(PAID_DOMAIN.domainName),
             eq(PAID_DOMAIN.supportsPrivacy),
             any(),
+            nullable(Int::class.java)
         )
     }
 
@@ -213,8 +216,8 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
         startViewModel(SITE_CREATION_STATE.copy(domain = PAID_DOMAIN))
         viewModel.onSiteCreationServiceStateUpdated(SERVICE_SUCCESS)
         verify(onCartCreatedObserver).onChanged(argThat {
-            assertEquals(SITE_REMOTE_ID, site.siteId)
-            assertEquals(SITE_SLUG, site.url)
+            assertEquals(SITE_REMOTE_ID, site?.siteId)
+            assertEquals(SITE_SLUG, site?.url)
             domainName == PAID_DOMAIN.domainName
         })
     }
@@ -248,7 +251,8 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
             eq(PAID_DOMAIN.productId),
             eq(PAID_DOMAIN.domainName),
             eq(PAID_DOMAIN.supportsPrivacy),
-            any()
+            any(),
+            nullable(Int::class.java)
         )
     }
 
@@ -288,11 +292,24 @@ class SiteCreationProgressViewModelTest : BaseUnitTest() {
 
     // region Helpers
     private fun testWith(response: OnShoppingCartCreated, block: suspend CoroutineScope.() -> Unit) = test {
-        whenever(createCartUseCase.execute(any(), any(), any(), any(), any())).thenReturn(response)
+        whenever(
+            createCartUseCase.execute(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                nullable(Int::class.java)
+            )
+        ).thenReturn(response)
         block()
     }
 
     private fun startViewModel(state: SiteCreationState = SITE_CREATION_STATE) {
+        viewModel.start(state)
+    }
+
+    private fun startViewModelFree(state: SiteCreationState = SITE_CREATION_STATE_FREE) {
         viewModel.start(state)
     }
 

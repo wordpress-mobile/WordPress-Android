@@ -6,6 +6,8 @@ plugins {
 }
 
 android {
+    namespace "org.wordpress.android.imageeditor"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
@@ -27,6 +29,10 @@ android {
         }
     }
 
+    lint {
+        enable += 'UnknownNullness'
+    }
+
     buildFeatures {
         viewBinding true
     }
@@ -39,6 +45,7 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation "androidx.core:core:$androidxCoreVersion"
     implementation "androidx.activity:activity:$androidxActivityVersion"
     implementation "androidx.activity:activity-ktx:$androidxActivityVersion"
     implementation "androidx.fragment:fragment:$androidxFragmentVersion"
@@ -47,8 +54,8 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
     implementation "androidx.viewpager2:viewpager2:$androidxViewpager2Version"
     implementation "com.google.android.material:material:$googleMaterialVersion"
-    implementation "androidx.navigation:navigation-fragment:$gradle.ext.navComponentVersion"
-    implementation "androidx.navigation:navigation-ui:$gradle.ext.navComponentVersion"
+    implementation "androidx.navigation:navigation-fragment:$gradle.ext.navigationVersion"
+    implementation "androidx.navigation:navigation-ui:$gradle.ext.navigationVersion"
     implementation "androidx.lifecycle:lifecycle-common:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$androidxLifecycleVersion"
@@ -71,5 +78,9 @@ dependencies {
     })
 
     androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspressoVersion"
+    androidTestImplementation("androidx.test.espresso:espresso-core:$androidxTestEspressoVersion") {
+        version {
+            strictly androidxTestEspressoVersion
+        }
+    }
 }

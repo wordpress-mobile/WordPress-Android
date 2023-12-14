@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
-import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -18,7 +18,7 @@ class EditorBloggingPromptsViewModel
 @Inject constructor(
     private val bloggingPromptsStore: BloggingPromptsStore,
     private val bloggingPromptsEditorBlockMapper: BloggingPromptsEditorBlockMapper,
-    private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig,
+    private val bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private val _onBloggingPromptLoaded = MutableLiveData<Event<EditorLoadedPrompt>>()
@@ -40,27 +40,25 @@ class EditorBloggingPromptsViewModel
     private fun loadPrompt(site: SiteModel, promptId: Int) = launch {
         val prompt = bloggingPromptsStore.getPromptById(site, promptId).first().model
         prompt?.let {
-            val content = if (bloggingPromptsEnhancementsFeatureConfig.isEnabled()) {
-                bloggingPromptsEditorBlockMapper.map(it)
-            } else {
-                it.content
-            }
+            val content = bloggingPromptsEditorBlockMapper.map(it)
             _onBloggingPromptLoaded.postValue(
                 Event(
                     EditorLoadedPrompt(
                         promptId,
                         content,
-                        createPromptTags(promptId)
+                        createPromptTags(prompt)
                     )
                 )
             )
         }
     }
 
-    private fun createPromptTags(promptId: Int): List<String> = mutableListOf<String>().apply {
+    private fun createPromptTags(prompt: BloggingPromptModel): List<String> = mutableListOf<String>().apply {
         add(BloggingPromptsPostTagProvider.BLOGGING_PROMPT_TAG)
-        if (bloggingPromptsEnhancementsFeatureConfig.isEnabled()) {
-            add(BloggingPromptsPostTagProvider.promptIdTag(promptId))
+        add(bloggingPromptsPostTagProvider.promptIdTag(prompt.answeredLink))
+        prompt.bloganuaryId?.let { bloganuaryIdTag ->
+            add(BloggingPromptsPostTagProvider.BLOGANUARY_TAG)
+            add(bloganuaryIdTag)
         }
     }
 

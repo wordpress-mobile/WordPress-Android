@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.sitecreation.misc
 
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.experiments.Variation
 import org.wordpress.android.ui.layoutpicker.LayoutPickerTracker
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
@@ -15,10 +14,9 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.S
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SITE_NAME
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.TEMPLATE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.THUMBNAIL_MODE
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VARIATION
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VERTICAL_SLUG
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
+import org.wordpress.android.util.config.PlansInSiteCreationFeatureConfig
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,7 +32,7 @@ private const val SITE_CREATION_SOURCE = "source"
 @Singleton
 class SiteCreationTracker @Inject constructor(
     val tracker: AnalyticsTrackerWrapper,
-    private val purchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig,
+    private val plansInSiteCreationFeatureConfig: PlansInSiteCreationFeatureConfig
 ) : LayoutPickerTracker {
     private enum class PROPERTY(val key: String) {
         TEMPLATE("template"),
@@ -48,8 +46,8 @@ class SiteCreationTracker @Inject constructor(
         VERTICAL_SLUG("vertical_slug"),
         SITE_NAME("site_name"),
         RECOMMENDED("recommended"),
-        VARIATION("variation"),
         DOMAIN_COST("domain_cost"),
+        IS_FREE("is_free"),
     }
 
     private var designSelectionSkipped: Boolean = false
@@ -65,14 +63,15 @@ class SiteCreationTracker @Inject constructor(
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_ACCESSED)
     }
 
-    fun trackDomainSelected(chosenDomain: String, searchTerm: String, domainCost: String = "free") {
-        if(purchasingFeatureConfig.isEnabledOrManuallyOverridden()) {
+    fun trackDomainSelected(chosenDomain: String, searchTerm: String, domainCost: String = "free", isFree: Boolean) {
+        if(plansInSiteCreationFeatureConfig.isEnabled()) {
             tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_SELECTED,
                 mapOf(
                     CHOSEN_DOMAIN.key to chosenDomain,
                     SEARCH_TERM.key to searchTerm,
                     PROPERTY.DOMAIN_COST.key to domainCost.lowercase(), // Homogenize data (e.g. "Free" becomes "free")
+                    PROPERTY.IS_FREE.key to isFree,
                 )
             )
         } else {
@@ -287,17 +286,6 @@ class SiteCreationTracker @Inject constructor(
 
     fun trackSiteNameEntered(siteName: String?) {
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_NAME_ENTERED, mapOf(SITE_NAME.key to siteName))
-    }
-
-    // endregion
-
-    // region Domain Purchasing
-
-    fun trackSiteCreationDomainPurchasingExperimentVariation(variation: Variation) {
-        tracker.track(
-            AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAIN_PURCHASING_EXPERIMENT,
-            mapOf(VARIATION.key to variation.name)
-        )
     }
 
     // endregion

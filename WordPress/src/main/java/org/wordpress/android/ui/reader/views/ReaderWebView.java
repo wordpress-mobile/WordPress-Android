@@ -15,7 +15,8 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.wordpress.android.R;
+import androidx.annotation.NonNull;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.WPWebView;
@@ -104,7 +105,6 @@ public class ReaderWebView extends WPWebView {
             this.setWebChromeClient(mReaderChromeClient);
             this.setWebViewClient(new ReaderWebViewClient(this));
             this.getSettings().setUserAgentString(WordPress.getUserAgent());
-            this.getSettings().setMediaPlaybackRequiresUserGesture(false);
 
             // Enable third-party cookies since they are disabled by default;
             // we need third-party cookies to support authenticated images
@@ -222,6 +222,10 @@ public class ReaderWebView extends WPWebView {
         }
     }
 
+    private boolean isVideoPressPreview(@NonNull String url) {
+        return url.startsWith("https://videos.files.wordpress.com");
+    }
+
     /*
      * detect when a link is tapped
      */
@@ -230,26 +234,25 @@ public class ReaderWebView extends WPWebView {
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP && mUrlClickListener != null) {
             HitTestResult hr = getHitTestResult();
-            if (hr != null) {
-                if (isValidClickedUrl(hr.getExtra())) {
-                    if (UrlUtils.isImageUrl(hr.getExtra())) {
-                        if (isValidEmbeddedImageClick(hr)) {
-                            return super.onTouchEvent(event);
-                        } else {
-                            return mUrlClickListener.onImageUrlClick(
-                                    hr.getExtra(),
-                                    this,
-                                    (int) event.getX(),
-                                    (int) event.getY());
-                        }
+            String url = hr.getExtra();
+            if (isValidClickedUrl(url)) {
+                if (UrlUtils.isImageUrl(url)) {
+                    if (isValidEmbeddedImageClick(hr) || isVideoPressPreview(url)) {
+                        return super.onTouchEvent(event);
                     } else {
-                        return mUrlClickListener.onUrlClick(hr.getExtra());
+                        return mUrlClickListener.onImageUrlClick(
+                            url,
+                            this,
+                            (int) event.getX(),
+                            (int) event.getY());
                     }
                 } else {
-                    String pageJump = UrlUtils.getPageJumpOrNull(hr.getExtra());
-                    if (null != pageJump) {
-                        return mUrlClickListener.onPageJumpClick(pageJump);
-                    }
+                    return mUrlClickListener.onUrlClick(url);
+                }
+            } else {
+                String pageJump = UrlUtils.getPageJumpOrNull(url);
+                if (null != pageJump) {
+                    return mUrlClickListener.onPageJumpClick(pageJump);
                 }
             }
         }
@@ -326,7 +329,7 @@ public class ReaderWebView extends WPWebView {
         private CustomViewCallback mCustomViewCallback;
 
         ReaderWebChromeClient(ReaderWebView readerWebView) {
-            super(readerWebView, R.drawable.media_movieclip);
+            super(readerWebView, org.wordpress.android.editor.R.drawable.media_movieclip);
             if (readerWebView == null) {
                 throw new IllegalArgumentException("ReaderWebChromeClient requires readerWebView");
             }

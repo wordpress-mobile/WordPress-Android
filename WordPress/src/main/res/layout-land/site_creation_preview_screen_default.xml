@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/content_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,12 +24,28 @@
             android:id="@+id/site_creation_preview_header_item"
             layout="@layout/site_creation_preview_header_item" />
 
-        <TextView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/sitePreviewCaption"
-            style="@style/SiteCreationHeaderV2Subtitle"
-            android:lineSpacingExtra="@null"
-            android:paddingBottom="@null"
-            android:text="@string/new_site_creation_preview_caption_paid" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            app:cardBackgroundColor="@color/dashboard_card_plans_info_background"
+            app:cardCornerRadius="8dp">
+
+            <TextView
+                android:id="@+id/sitePreviewCaptionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/margin_extra_large"
+                android:padding="@dimen/margin_extra_large"
+                android:text="@string/new_site_creation_preview_caption_paid"
+                android:textAlignment="viewStart"
+                android:textColor="@color/dashboard_card_plans_info_text_color"
+                android:textSize="@dimen/text_sz_small"
+                app:drawableStartCompat="@drawable/ic_info_outline_grey_dark_24dp"
+                app:drawableTint="@color/gray_20" />
+
+        </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/okButton"

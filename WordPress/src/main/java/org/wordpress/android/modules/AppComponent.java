@@ -16,7 +16,6 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderBottomSheetFragment;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderTimePicker;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
-import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.comments.unified.EditCancelDialogFragment;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsFragment;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListAdapter;
@@ -46,6 +45,7 @@ import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.main.WPMainNavigationView;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaGridAdapter;
 import org.wordpress.android.ui.media.MediaGridFragment;
@@ -56,8 +56,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.MySiteFragment;
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment;
-import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment;
 import org.wordpress.android.ui.notifications.DismissNotificationReceiver;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
@@ -91,24 +89,24 @@ import org.wordpress.android.ui.posts.EditPostPublishSettingsFragment;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
 import org.wordpress.android.ui.posts.HistoryListFragment;
 import org.wordpress.android.ui.posts.PostDatePickerDialogFragment;
-import org.wordpress.android.ui.posts.PostListCreateMenuFragment;
 import org.wordpress.android.ui.posts.PostListFragment;
 import org.wordpress.android.ui.posts.PostNotificationScheduleTimeDialogFragment;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment;
 import org.wordpress.android.ui.posts.PostSettingsTagsFragment;
 import org.wordpress.android.ui.posts.PostTimePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostsListActivity;
-import org.wordpress.android.ui.posts.PrepublishingAddCategoryFragment;
-import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment;
-import org.wordpress.android.ui.posts.PrepublishingCategoriesFragment;
-import org.wordpress.android.ui.posts.PrepublishingHomeAdapter;
-import org.wordpress.android.ui.posts.PrepublishingHomeFragment;
-import org.wordpress.android.ui.posts.PrepublishingTagsFragment;
+import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryFragment;
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment;
+import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesFragment;
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeAdapter;
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeFragment;
+import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFragment;
+import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment;
 import org.wordpress.android.ui.posts.PublishNotificationReceiver;
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter;
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment;
+import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsFragment;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
@@ -213,8 +211,6 @@ public interface AppComponent {
     void inject(AddQuickPressShortcutActivity object);
 
     void inject(CommentDetailFragment object);
-
-    void inject(EditCommentActivity object);
 
     void inject(MeFragment object);
 
@@ -482,8 +478,6 @@ public interface AppComponent {
 
     void inject(ReaderDiscoverLogic object);
 
-    void inject(PostListCreateMenuFragment object);
-
     void inject(SuggestionActivity object);
 
     void inject(MediaPickerActivity object);
@@ -496,17 +490,15 @@ public interface AppComponent {
 
     void inject(PrepublishingAddCategoryFragment object);
 
+    void inject(PrepublishingSocialFragment object);
+
     void inject(ActivityLogTypeFilterFragment object);
 
     void inject(MySiteFragment object);
 
-    void inject(MySiteTabFragment object);
-
     void inject(BackupDownloadActivity object);
 
     void inject(RestoreActivity object);
-
-    void inject(DynamicCardMenuFragment object);
 
     void inject(BackupDownloadFragment object);
 
@@ -565,4 +557,6 @@ public interface AppComponent {
     void inject(WeekViewsWidgetListProvider object);
 
     void inject(WeekWidgetBlockListProviderFactory object);
+
+    void inject(WPMainNavigationView object);
 }

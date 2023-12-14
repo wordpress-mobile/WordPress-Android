@@ -25,7 +25,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/dashboard_card_plans_title"
-                style="@style/dashboard_card_title"
+                style="@style/DashboardCardSubtitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/dashboard_card_plans_title"
@@ -40,6 +40,7 @@
                 android:paddingTop="@dimen/margin_extra_small_large"
                 android:importantForAccessibility="no"
                 android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
                 android:src="@drawable/browser_address_bar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +48,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/dashboard_card_plans_sub_title"
-                style="@style/dashboard_card_sub_title"
+                style="@style/DashboardCardDetail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_114dp"

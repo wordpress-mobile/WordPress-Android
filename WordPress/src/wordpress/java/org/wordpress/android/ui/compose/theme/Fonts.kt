@@ -3,7 +3,7 @@ package org.wordpress.android.ui.compose.theme
 import android.os.Build
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import org.wordpress.android.R.font
+import org.wordpress.android.R
 
 /**
  * On Huawei devices with Android 7 loading custom fonts fails; so we fallback to the standard Serif font.
@@ -11,6 +11,6 @@ import org.wordpress.android.R.font
  */
 val FontFamily.Companion.EBGaramond
     get() = when (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
-        true -> FontFamily(Font(font.eb_garamond))
+        true -> FontFamily(Font(R.font.eb_garamond))
         false -> Serif
     }

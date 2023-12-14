@@ -156,7 +156,9 @@ class JetpackMigrationFragment : Fragment() {
 
     private fun initBackPressHandler(showDeleteWpState: Boolean) {
         if (showDeleteWpState) return
-        requireActivity().onBackPressedDispatcher.addCallback(this) { viewModel.logoutAndFallbackToLogin() }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            viewModel.logoutAndFallbackToLogin()
+        }
     }
 
     companion object {

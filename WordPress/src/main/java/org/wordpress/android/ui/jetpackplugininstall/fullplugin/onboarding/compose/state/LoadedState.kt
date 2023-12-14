@@ -39,7 +39,7 @@ fun LoadedState(
     onInstallFullPluginClick: () -> Unit,
     onContactSupportClick: () -> Unit,
     onDismissScreenClick: () -> Unit,
-) = Box(
+): Unit = Box(
     Modifier
         .fillMaxWidth()
         .fillMaxWidth()

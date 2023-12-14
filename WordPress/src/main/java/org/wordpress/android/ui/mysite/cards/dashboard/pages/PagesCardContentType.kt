@@ -9,7 +9,7 @@ enum class PagesCardContentType(val status: String) {
     companion object {
         fun getList(): List<String> {
             return values().map {
-                it.toString()
+                it.status
             }
         }
 

@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderSearchTable;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionRecyclerAdapter.SearchSuggestionHolder;
@@ -33,7 +33,7 @@ public class ReaderSearchSuggestionRecyclerAdapter extends RecyclerView.Adapter<
     }
 
     @Override
-    @NotNull
+    @NonNull
     public SearchSuggestionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final Context context = parent.getContext();
         final View view =
@@ -42,7 +42,7 @@ public class ReaderSearchSuggestionRecyclerAdapter extends RecyclerView.Adapter<
     }
 
     @Override
-    public void onBindViewHolder(@NotNull SearchSuggestionHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SearchSuggestionHolder holder, int position) {
         if (isLast(position)) {
             onBindClearAllViewHolder(holder);
         } else if (!mCursor.moveToPosition(position)) {

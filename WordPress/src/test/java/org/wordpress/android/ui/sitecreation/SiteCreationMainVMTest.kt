@@ -16,9 +16,6 @@ import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.isA
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
@@ -26,8 +23,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.experiments.Variation.Control
-import org.wordpress.android.fluxc.model.experiments.Variation.Treatment
 import org.wordpress.android.ui.domains.DomainsRegistrationTracker
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
@@ -38,8 +33,6 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.config.SiteCreationDomainPurchasingFeatureConfig
-import org.wordpress.android.util.experiments.SiteCreationDomainPurchasingExperiment
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
@@ -67,13 +60,13 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     lateinit var onCompletedObserver: Observer<SiteCreationCompletionEvent>
 
     @Mock
-    lateinit var wizardExitedObserver: Observer<Unit>
+    lateinit var wizardExitedObserver: Observer<Unit?>
 
     @Mock
     lateinit var dialogActionsObserver: Observer<DialogHolder>
 
     @Mock
-    lateinit var onBackPressedObserver: Observer<Unit>
+    lateinit var onBackPressedObserver: Observer<Unit?>
 
     @Mock
     lateinit var savedInstanceState: Bundle
@@ -98,12 +91,6 @@ class SiteCreationMainVMTest : BaseUnitTest() {
 
     @Mock
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
-
-    @Mock
-    lateinit var domainPurchasingExperiment: SiteCreationDomainPurchasingExperiment
-
-    @Mock
-    lateinit var domainPurchasingFeatureConfig: SiteCreationDomainPurchasingFeatureConfig
 
     @Mock
     lateinit var domainsRegistrationTracker: DomainsRegistrationTracker
@@ -173,14 +160,6 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on checkout result when null shows previous step`() {
-        viewModel.onCheckoutResult(null)
-
-        verify(wizardManager).onBackPressed()
-        verify(onBackPressedObserver).onChanged(anyOrNull())
-    }
-
-    @Test
     fun `on checkout result when not null shows next step`() {
         viewModel.onCartCreated(CHECKOUT_DETAILS)
 
@@ -213,6 +192,7 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun `on site created updates result`() = test {
         viewModel.onDomainsScreenFinished(FREE_DOMAIN)
+        viewModel.onPlanSelection(FREE_PLAN, domainName = SITE_SLUG )
         viewModel.onFreeSiteCreated(SITE_MODEL)
         assertThat(currentWizardState(viewModel).result).isEqualTo(RESULT_NOT_IN_LOCAL_DB)
     }
@@ -220,14 +200,15 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     @Test
     fun `on site created for free domain shows next step`() {
         viewModel.onDomainsScreenFinished(FREE_DOMAIN).run { clearInvocations(wizardManager) }
-        viewModel.onFreeSiteCreated(SITE_MODEL)
+        viewModel.onFreeSiteCreated(SITE_MODEL).run { clearInvocations(wizardManager) }
+        viewModel.onPlanSelection(FREE_PLAN, domainName = SITE_SLUG)
         verify(wizardManager).showNextStep()
     }
 
     @Test
     fun `on site created for paid domain does not show next step`() {
         viewModel.onDomainsScreenFinished(PAID_DOMAIN).run { clearInvocations(wizardManager) }
-        viewModel.onFreeSiteCreated(SITE_MODEL)
+        viewModel.onFreeSiteCreated(SITE_MODEL).run { clearInvocations(wizardManager) }
         verifyNoMoreInteractions(wizardManager)
     }
 
@@ -384,33 +365,16 @@ class SiteCreationMainVMTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given domain purchasing experiment off, when start, then experiment is not tracked`() {
-        whenever(domainPurchasingFeatureConfig.isEnabledState()).thenReturn(false)
-        whenever(domainPurchasingExperiment.getVariation()).thenReturn(mock())
+    fun `given instance state returns an invalid step, when start, then site creation is reset`() {
+        val expectedState = SiteCreationState(segmentId = SEGMENT_ID)
+        whenever(savedInstanceState.getParcelableCompat<SiteCreationState>(KEY_SITE_CREATION_STATE))
+            .thenReturn(expectedState)
+        whenever(savedInstanceState.getInt(KEY_CURRENT_STEP)).thenReturn(-1) // Invalid step
 
-        getNewViewModel().start(null, SiteCreationSource.UNSPECIFIED)
+        val newViewModel = getNewViewModel()
+        newViewModel.start(savedInstanceState, SiteCreationSource.UNSPECIFIED)
 
-        verify(tracker, never()).trackSiteCreationDomainPurchasingExperimentVariation(any())
-    }
-
-    @Test
-    fun `given domain purchasing experiment on, when start in control variation, then experiment is tracked`() {
-        whenever(domainPurchasingFeatureConfig.isEnabledState()).thenReturn(true)
-        whenever(domainPurchasingExperiment.getVariation()).thenReturn(Control)
-
-        getNewViewModel().start(null, SiteCreationSource.UNSPECIFIED)
-
-        verify(tracker).trackSiteCreationDomainPurchasingExperimentVariation(Control)
-    }
-
-    @Test
-    fun `given domain purchasing experiment on, when start in treatment variation, then experiment is tracked`() {
-        whenever(domainPurchasingFeatureConfig.isEnabledState()).thenReturn(true)
-        whenever(domainPurchasingExperiment.getVariation()).thenReturn(mock<Treatment>())
-
-        getNewViewModel().start(null, SiteCreationSource.UNSPECIFIED)
-
-        verify(tracker).trackSiteCreationDomainPurchasingExperimentVariation(isA<Treatment>())
+        assertEquals(0, wizardManager.currentStep)
     }
 
     private fun currentWizardState(vm: SiteCreationMainVM) = vm.navigationTargetObservable.lastEvent!!.wizardState
@@ -423,8 +387,6 @@ class SiteCreationMainVMTest : BaseUnitTest() {
         fetchHomePageLayoutsUseCase,
         imageManager,
         jetpackFeatureRemovalOverlayUtil,
-        domainPurchasingExperiment,
-        domainPurchasingFeatureConfig,
         domainsRegistrationTracker,
     )
 }

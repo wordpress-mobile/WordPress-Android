@@ -3,7 +3,6 @@ package org.wordpress.android.ui.blaze
 import android.graphics.Bitmap
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import org.wordpress.android.util.UriWrapper
@@ -37,16 +36,6 @@ class BlazeWebViewClient(
             errorReceived = true
             blazeWebViewClientListener.onWebViewReceivedError(request.url.toString())
         }
-    }
-
-    override fun onReceivedHttpError(
-        view: WebView?,
-        request: WebResourceRequest?,
-        errorResponse: WebResourceResponse?
-    ) {
-        super.onReceivedHttpError(view, request, errorResponse)
-        errorReceived = true
-        blazeWebViewClientListener.onWebViewReceivedError(request?.url.toString())
     }
 
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {

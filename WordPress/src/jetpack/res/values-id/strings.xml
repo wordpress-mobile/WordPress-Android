@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-06 13:54:03+0000
+Translation-Revision-Date: 2023-08-09 16:54:03+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="missing_splits_dialog_message">Beberapa komponen penting aplikasi Jetpack tidak tersedia. Aplikasi perlu diinstal ulang dari Google Play Store.</string>
     <string name="me_btn_share">Rekomendasikan Jetpack kepada teman</string>
     <string name="login_prologue_revamped_jetpack_feature_text_12">Tambahkan penulis</string>
     <string name="login_prologue_revamped_jetpack_feature_text_11">Kirim foto</string>

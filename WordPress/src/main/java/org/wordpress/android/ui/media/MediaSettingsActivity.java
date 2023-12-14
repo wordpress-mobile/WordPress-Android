@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.media;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
@@ -56,7 +57,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.editor.EditorImageMetaData;
@@ -277,9 +277,13 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         // only show title when toolbar is collapsed
         final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
-        collapsingToolbar.setCollapsedTitleTextColor(
-                AppCompatResources.getColorStateList(this,
-                        ContextExtensionsKt.getColorResIdFromAttribute(this, R.attr.colorOnSurface)));
+        collapsingToolbar.setCollapsedTitleTextColor(AppCompatResources.getColorStateList(
+                        this,
+                        ContextExtensionsKt.getColorResIdFromAttribute(
+                                this,
+                                com.google.android.material.R.attr.colorOnSurface
+                        )
+        ));
 
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
 
@@ -405,21 +409,23 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         return true;
     }
 
+    @NonNull
     private MediaModel getMediaModelFromEditorImageMetaData() {
-        MediaModel mediaModel = new MediaModel();
-        mediaModel.setUrl(mEditorImageMetaData.getSrc());
-        mediaModel.setTitle(mEditorImageMetaData.getTitle());
-        mediaModel.setCaption(mEditorImageMetaData.getCaption());
-        mediaModel.setAlt(mEditorImageMetaData.getAlt());
-        if (!TextUtils.isEmpty(mEditorImageMetaData.getSrc())) {
-            mediaModel.setFileName(
-                    mEditorImageMetaData.getSrc().substring(mEditorImageMetaData.getSrc().lastIndexOf("/") + 1));
+        String source = mEditorImageMetaData.getSrc();
+        String filename = null;
+        if (!TextUtils.isEmpty(source)) {
+            filename = source.substring(source.lastIndexOf("/") + 1);
         }
-        mediaModel.setFileExtension(
-                org.wordpress.android.fluxc.utils.MediaUtils.getExtension(mEditorImageMetaData.getSrc()));
-        mediaModel.setWidth(mEditorImageMetaData.getWidthInt());
-        mediaModel.setHeight(mEditorImageMetaData.getHeightInt());
-        return mediaModel;
+        return new MediaModel(
+                source,
+                filename,
+                org.wordpress.android.fluxc.utils.MediaUtils.getExtension(source),
+                mEditorImageMetaData.getTitle(),
+                mEditorImageMetaData.getCaption(),
+                mEditorImageMetaData.getAlt(),
+                mEditorImageMetaData.getWidthInt(),
+                mEditorImageMetaData.getHeightInt()
+        );
     }
 
     @Override
@@ -440,7 +446,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
-    protected void onSaveInstanceState(@NotNull Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(ARG_MEDIA_LOCAL_ID, mMedia.getId());
         outState.putParcelable(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
@@ -458,6 +464,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     public void onStart() {
         super.onStart();
         registerReceiver(mDownloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
@@ -500,6 +507,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     /*
      * adjust the toolbar so it doesn't overlap the status bar
      */
+    @SuppressLint({"InternalInsetResource", "DiscouragedApi"})
     private void adjustToolbar() {
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
@@ -520,13 +528,13 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.media_settings, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         boolean showSaveMenu = mSite != null && !mSite.isPrivate() && !isMediaFromEditor();
         boolean showShareMenu = mSite != null && !mSite.isPrivate() && !isMediaFromEditor();
         boolean showTrashMenu = mSite != null && !isMediaFromEditor();
@@ -549,7 +557,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();
             return true;
@@ -761,7 +769,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, imageUrl, ScaleType.CENTER, null,
                 new RequestListener<Drawable>() {
                     @Override
-                    public void onResourceReady(@NotNull Drawable resource, @Nullable Object model) {
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
                         if (!isFinishing()) {
                             showProgress(false);
 

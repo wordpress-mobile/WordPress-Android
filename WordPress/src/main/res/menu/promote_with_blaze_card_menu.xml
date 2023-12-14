@@ -2,7 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/promote_with_blaze_card_menu_item_learn_more"
+        android:title="@string/promote_blaze_card_more_menu_learn_more"
+        android:icon="@drawable/ic_info_outline_grey_dark_24dp"/>
+
+    <item
         android:id="@+id/promote_with_blaze_card_menu_item_hide_this"
-        android:title="@string/promote_blaze_card_menu_hide_this"
+        android:title="@string/promote_blaze_card_more_menu_hide_this"
         android:icon="@drawable/ic_not_visible_white_24dp"/>
+
 </menu>

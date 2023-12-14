@@ -3,10 +3,10 @@ package org.wordpress.android.ui.prefs.language
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.distinctUntilChanged
-import org.wordpress.android.R.array
+import androidx.lifecycle.switchMap
+import org.wordpress.android.R
 import org.wordpress.android.ui.prefs.language.LocalePickerListItem.ClickAction
 import org.wordpress.android.ui.prefs.language.LocalePickerListItem.LocaleRow
 import org.wordpress.android.util.LocaleProvider
@@ -21,17 +21,17 @@ class LocalePickerViewModel @Inject constructor(
 ) : ViewModel() {
     private val cachedLocales = mutableListOf<LocalePickerListItem>()
 
-    private val _expandBottomSheet = SingleLiveEvent<Unit>()
-    val expandBottomSheet: LiveData<Unit> = _expandBottomSheet
+    private val _expandBottomSheet = SingleLiveEvent<Unit?>()
+    val expandBottomSheet: LiveData<Unit?> = _expandBottomSheet
 
-    private val _hideKeyboard = SingleLiveEvent<Unit>()
-    val hideKeyboard: LiveData<Unit> = _hideKeyboard
+    private val _hideKeyboard = SingleLiveEvent<Unit?>()
+    val hideKeyboard: LiveData<Unit?> = _hideKeyboard
 
-    private val _clearSearchField = SingleLiveEvent<Unit>()
-    val clearSearchField: LiveData<Unit> = _clearSearchField
+    private val _clearSearchField = SingleLiveEvent<Unit?>()
+    val clearSearchField: LiveData<Unit?> = _clearSearchField
 
-    private val _dismissBottomSheet = SingleLiveEvent<Unit>()
-    val dismissBottomSheet: LiveData<Unit> = _dismissBottomSheet
+    private val _dismissBottomSheet = SingleLiveEvent<Unit?>()
+    val dismissBottomSheet: LiveData<Unit?> = _dismissBottomSheet
 
     private val _isEmptyViewVisible = SingleLiveEvent<Boolean>()
     private val _suggestedLocale = MutableLiveData<CurrentLocale>()
@@ -43,7 +43,7 @@ class LocalePickerViewModel @Inject constructor(
 
     private val searchInput = MutableLiveData<String>()
     private val _filteredLocales: LiveData<List<LocalePickerListItem>> =
-        Transformations.switchMap(searchInput) { term ->
+        searchInput.switchMap { term ->
             filterLocales(term)
         }
 
@@ -144,7 +144,7 @@ class LocalePickerViewModel @Inject constructor(
         val displayLabel = localeProvider.getAppLanguageDisplayString()
         _suggestedLocale.postValue(CurrentLocale(displayLabel, appLocale.toString()))
 
-        val availableLocales = resourceProvider.getStringArray(array.available_languages).distinct()
+        val availableLocales = resourceProvider.getStringArray(R.array.available_languages).distinct()
 
         val availableLocalesData = localeProvider.createSortedLocalizedLanguageDisplayStrings(
             availableLocales.toTypedArray(),

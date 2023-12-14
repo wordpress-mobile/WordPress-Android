@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardErrorType
 import org.wordpress.android.fluxc.tools.FormattableContent
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ActivityCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ActivityCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
 import org.wordpress.android.util.DateTimeUtilsWrapper
 
@@ -49,7 +49,10 @@ class ActivityCardBuilderTest : BaseUnitTest() {
 
     private val activityCardModel = ActivityCardModel(activities = listOf(activityLogModel))
 
-    private val onActivityCardFooterLinkClick: () -> Unit = {}
+    private val onAllActivityMenuItemClick: () -> Unit = {}
+    private val onHideMenuItemClick: () -> Unit = {}
+    private val onMoreMenuItemClick: () -> Unit = {}
+
     private val onActivityItemClick: (ActivityCardBuilderParams.ActivityCardItemClickParams) -> Unit = {}
 
     @Before
@@ -97,7 +100,9 @@ class ActivityCardBuilderTest : BaseUnitTest() {
     private fun buildActivityCard(model: ActivityCardModel) = builder.build(
         ActivityCardBuilderParams(
             activityCardModel = model,
-            onFooterLinkClick = onActivityCardFooterLinkClick,
+            onAllActivityMenuItemClick = onAllActivityMenuItemClick,
+            onHideMenuItemClick = onHideMenuItemClick,
+            onMoreMenuClick = onMoreMenuItemClick,
             onActivityItemClick = onActivityItemClick
         )
     )

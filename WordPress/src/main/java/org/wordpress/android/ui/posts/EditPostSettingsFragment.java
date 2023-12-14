@@ -19,6 +19,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
@@ -66,6 +67,7 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePo
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
 import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.usecase.social.JetpackSocialFlow;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -135,11 +137,15 @@ public class EditPostSettingsFragment extends Fragment {
     private SwitchCompat mStickySwitch;
     private ViewGroup mFeaturedImageRetryOverlay;
     private ViewGroup mFeaturedImageProgressOverlay;
+    private ViewGroup mJetpackSocialContainer;
+    private EditPostSettingsJetpackSocialContainerView mJetpackSocialContainerView;
 
     private ArrayList<String> mDefaultPostFormatKeys;
     private ArrayList<String> mDefaultPostFormatNames;
     private ArrayList<String> mPostFormatKeys;
     private ArrayList<String> mPostFormatNames;
+
+    private ActivityResultLauncher<Intent> mEditShareMessageActivityResultLauncher;
 
     @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
@@ -157,6 +163,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
+    private EditorJetpackSocialViewModel mJetpackSocialViewModel;
 
     private final OnCheckedChangeListener mOnStickySwitchChangeListener =
             (buttonView, isChecked) -> onStickySwitchChanged(isChecked);
@@ -173,9 +180,9 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+        ((WordPress) requireActivity().getApplicationContext()).component().inject(this);
         mDispatcher.register(this);
 
         // Early load the default lists for post format keys and names.
@@ -184,7 +191,7 @@ public class EditPostSettingsFragment extends Fragment {
                 new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
         mDefaultPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
                 .getStringArray(R.array.post_format_display_names)));
-        mPublishedViewModel = new ViewModelProvider(getActivity(), mViewModelFactory)
+        mPublishedViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
                 .get(EditPostPublishSettingsViewModel.class);
     }
 
@@ -249,6 +256,11 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
+    @Override public void onResume() {
+        super.onResume();
+        mJetpackSocialViewModel.onResume(JetpackSocialFlow.POST_SETTINGS);
+    }
+
     @Override
     public void onDestroy() {
         if (mSiteSettings != null) {
@@ -286,6 +298,8 @@ public class EditPostSettingsFragment extends Fragment {
         mPublishHeaderTextView = rootView.findViewById(R.id.post_settings_publish);
         mPublishDateContainer = rootView.findViewById(R.id.publish_date_container);
         mStickySwitch = rootView.findViewById(R.id.post_settings_sticky_switch);
+        mJetpackSocialContainer = rootView.findViewById(R.id.post_settings_jetpack_social_container);
+        mJetpackSocialContainerView = rootView.findViewById(R.id.edit_post_settings_jetpack_social_container_view);
 
         mFeaturedImageView = rootView.findViewById(R.id.post_featured_image);
         mLocalFeaturedImageView = rootView.findViewById(R.id.post_featured_image_local);
@@ -424,8 +438,43 @@ public class EditPostSettingsFragment extends Fragment {
         return rootView;
     }
 
+    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupJetpackSocialViewModel();
+    }
+
+    private void setupJetpackSocialViewModel() {
+        mJetpackSocialViewModel = new ViewModelProvider(
+                requireActivity(),
+                mViewModelFactory
+        ).get(EditorJetpackSocialViewModel.class);
+
+        observeJetpackSocialContainerVisibility();
+        observeJetpackSocialUiState();
+    }
+
+    private void observeJetpackSocialContainerVisibility() {
+        mJetpackSocialViewModel.getJetpackSocialContainerVisibility().observe(getViewLifecycleOwner(), visibility -> {
+            if (visibility.getShowInPostSettings()) {
+                mJetpackSocialContainer.setVisibility(View.VISIBLE);
+            } else {
+                mJetpackSocialContainer.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void observeJetpackSocialUiState() {
+        mJetpackSocialViewModel.getJetpackSocialUiState().observe(getViewLifecycleOwner(), uiState -> {
+            mJetpackSocialContainerView.setJetpackSocialUiState(uiState);
+        });
+    }
+
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(
+            @NonNull ContextMenu menu,
+            @NonNull View v,
+            @Nullable ContextMenu.ContextMenuInfo menuInfo
+    ) {
         if (mFeaturedImageRetryOverlay.getVisibility() == View.VISIBLE) {
             menu.add(0, RETRY_FEATURED_IMAGE_UPLOAD_MENU_ID, 0,
                     getString(R.string.post_settings_retry_featured_image));
@@ -438,7 +487,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
         SiteModel site = getSite();
         PostImmutableModel post = getEditPostRepository().getPost();
         if (site == null || post == null) {
@@ -516,8 +565,7 @@ public class EditPostSettingsFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO
-                              || requestCode == RequestCodes.TAKE_VIDEO))) {
+        if (data != null) {
             Bundle extras;
 
             switch (requestCode) {
@@ -602,14 +650,14 @@ public class EditPostSettingsFragment extends Fragment {
                         updateSlug(input);
                     }
                 });
-        dialog.show(getFragmentManager(), null);
+        dialog.show(getChildFragmentManager(), null);
     }
 
     private void showCategoriesActivity() {
         if (!isAdded()) {
             return;
         }
-        Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
+        Intent categoriesIntent = new Intent(requireActivity(), SelectCategoriesActivity.class);
         categoriesIntent.putExtra(WordPress.SITE, getSite());
         categoriesIntent.putExtra(EXTRA_POST_LOCAL_ID, getEditPostRepository().getId());
         startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
@@ -623,7 +671,7 @@ public class EditPostSettingsFragment extends Fragment {
         SiteModel siteModel = getSite();
         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(siteModel));
 
-        Intent tagsIntent = new Intent(getActivity(), PostSettingsTagsActivity.class);
+        Intent tagsIntent = new Intent(requireActivity(), PostSettingsTagsActivity.class);
         tagsIntent.putExtra(WordPress.SITE, siteModel);
         String tags = TextUtils.join(",", getEditPostRepository().getTagNameList());
         tagsIntent.putExtra(PostSettingsTagsActivity.KEY_TAGS, tags);
@@ -684,7 +732,7 @@ public class EditPostSettingsFragment extends Fragment {
 
         boolean isSiteHomepage = isSiteHomepage();
         int index = isSiteHomepage ? getCurrentHomepageStatusIndex() : getCurrentPostStatusIndex();
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = getChildFragmentManager();
 
         DialogType statusType = isSiteHomepage ? DialogType.HOMEPAGE_STATUS : DialogType.POST_STATUS;
         PostSettingsListDialogFragment fragment =
@@ -702,7 +750,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
 
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = getChildFragmentManager();
 
         PostSettingsListDialogFragment fragment = PostSettingsListDialogFragment.newAuthorListInstance(getAuthorId());
         fragment.show(fm, PostSettingsListDialogFragment.TAG);
@@ -733,7 +781,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         }
 
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = getChildFragmentManager();
         PostSettingsListDialogFragment fragment =
                 PostSettingsListDialogFragment.newInstance(DialogType.POST_FORMAT, checkedIndex);
         fragment.show(fm, PostSettingsListDialogFragment.TAG);
@@ -755,7 +803,7 @@ public class EditPostSettingsFragment extends Fragment {
                         updatePassword(input);
                     }
                 });
-        dialog.show(getFragmentManager(), null);
+        dialog.show(getChildFragmentManager(), null);
     }
 
     // Helpers
@@ -893,6 +941,7 @@ public class EditPostSettingsFragment extends Fragment {
                     postImmutableModel -> {
                         updatePostStatusRelatedViews(postImmutableModel);
                         updateSaveButton();
+                        mJetpackSocialViewModel.onPostStatusChanged();
                         return null;
                     });
         }
@@ -1295,7 +1344,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
-        if (event.media.getMarkedLocallyAsFeatured()) {
+        if (event.media != null && event.media.getMarkedLocallyAsFeatured()) {
             refreshViews();
         }
     }

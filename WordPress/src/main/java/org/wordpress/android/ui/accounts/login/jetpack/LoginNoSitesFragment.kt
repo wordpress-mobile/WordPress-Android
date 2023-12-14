@@ -42,7 +42,9 @@ class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(this) { viewModel.onBackPressed() }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            viewModel.onBackPressed()
+        }
         with(JetpackLoginEmptyViewBinding.bind(view)) {
             initContentViews()
             initClickListeners()

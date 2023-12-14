@@ -6,17 +6,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.DomainModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.DashboardPlansCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.DashboardCardFreeToPaidPlansFeatureConfig
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -24,7 +20,6 @@ import javax.inject.Named
 
 class PlansCardUtils @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val plansFreeToPaidFeatureConfig: DashboardCardFreeToPaidPlansFeatureConfig,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -37,17 +32,13 @@ class PlansCardUtils @Inject constructor(
 
     fun shouldShowCard(
         siteModel: SiteModel,
-        isDomainCreditAvailable: Boolean,
-        hasSiteCustomDomains: Boolean?
     ): Boolean {
-        return isCardEnabled() &&
+        return buildConfigWrapper.isJetpackApp &&
                 !isCardHiddenByUser(siteModel.siteId) &&
-                siteModel.hasFreePlan &&
                 (siteModel.isWPCom || siteModel.isWPComAtomic) &&
+                siteModel.hasFreePlan &&
                 siteModel.isAdmin &&
-                !siteModel.isWpForTeamsSite &&
-                hasSiteCustomDomains == false &&
-                !isDomainCreditAvailable
+                !siteModel.isWpForTeamsSite
     }
 
     fun hideCard(siteId: Long) {
@@ -60,12 +51,9 @@ class PlansCardUtils @Inject constructor(
 
         dashboardUpdateDebounceJob = scope.launch(bgDispatcher) {
             val isVisible = siteSelected
-                ?.dashboardCardsAndItems
-                ?.filterIsInstance<DashboardCards>()
-                ?.firstOrNull()
-                ?.cards
-                ?.any {
-                        card -> card is DashboardPlansCard
+                ?.dashboardData
+                ?.any { card ->
+                    card is DashboardPlansCard
                 } ?: false
 
             // add a delay (debouncing mechanism)
@@ -83,13 +71,8 @@ class PlansCardUtils @Inject constructor(
         }
     }
 
-    fun onResume(currentTab: MySiteTabType, siteSelected: SiteSelected?) {
-        if (currentTab == MySiteTabType.DASHBOARD) {
-            onDashboardRefreshed(siteSelected)
-        } else {
-            // moved away from dashboard, no longer waiting to track
-            waitingToTrack.set(false)
-        }
+    fun onResume(siteSelected: SiteSelected?) {
+        onDashboardRefreshed(siteSelected)
     }
 
     fun onSiteChanged(siteId: Int?, siteSelected: SiteSelected?) {
@@ -112,6 +95,7 @@ class PlansCardUtils @Inject constructor(
             mapOf(POSITION_INDEX to positionIndex(siteSelected))
         )
     }
+
     fun trackCardHiddenByUser(siteSelected: SiteSelected?) {
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_HIDDEN,
@@ -122,7 +106,7 @@ class PlansCardUtils @Inject constructor(
     private fun trackCardShown(positionIndex: Int) {
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_SHOWN,
-            mapOf(POSITION_INDEX to  positionIndex)
+            mapOf(POSITION_INDEX to positionIndex)
         )
     }
 
@@ -130,17 +114,9 @@ class PlansCardUtils @Inject constructor(
         return appPrefsWrapper.getShouldHideDashboardPlansCard(siteId)
     }
 
-    private fun isCardEnabled(): Boolean {
-        return buildConfigWrapper.isJetpackApp &&
-                plansFreeToPaidFeatureConfig.isEnabled()
-    }
-
     private fun positionIndex(siteSelected: SiteSelected?): Int {
         return siteSelected
-            ?.dashboardCardsAndItems
-            ?.filterIsInstance<DashboardCards>()
-            ?.firstOrNull()
-            ?.cards
+            ?.dashboardData
             ?.indexOfFirst {
                 it is DashboardPlansCard
             } ?: -1
@@ -154,8 +130,6 @@ class PlansCardUtils @Inject constructor(
             waitingToTrack.set(true)
         }
     }
-
-    fun hasCustomDomain(domains: List<DomainModel>?) = domains?.any { !it.wpcomDomain } == true
 
     companion object {
         const val POSITION_INDEX = "position_index"

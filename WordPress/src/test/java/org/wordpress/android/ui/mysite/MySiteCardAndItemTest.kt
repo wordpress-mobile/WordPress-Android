@@ -2,16 +2,13 @@ package org.wordpress.android.ui.mysite
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.wordpress.android.R.color
-import org.wordpress.android.R.drawable
-import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
+import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard.IconState.Visible
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState.Visible
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
@@ -65,39 +62,12 @@ class MySiteCardAndItemTest {
         )
     }
 
-    @Test
-    fun `quick actions card is never active`() {
-        val quickActionsCard = QuickActionsCard(
-            title = UiStringText("test"),
-            onStatsClick = interaction,
-            onPagesClick = interaction,
-            onPostsClick = interaction,
-            onMediaClick = interaction,
-            showPages = true
-        )
-
-        assertThat(quickActionsCard.activeQuickStartItem).isFalse
-    }
 
     @Test
     fun `domain registration card is never active`() {
         val domainRegistrationCard = DomainRegistrationCard(interaction)
 
         assertThat(domainRegistrationCard.activeQuickStartItem).isFalse()
-    }
-
-    @Test
-    fun `quick start card is never active`() {
-        val quickStartCard = QuickStartDynamicCard(
-            GROW_QUICK_START,
-            UiStringText("title"),
-            listOf(),
-            color.pink_40,
-            0,
-            interaction
-        )
-
-        assertThat(quickStartCard.activeQuickStartItem).isFalse()
     }
 
     @Test
@@ -122,11 +92,12 @@ class MySiteCardAndItemTest {
     }
 
     private fun initListItem(showFocusPoint: Boolean) = ListItem(
-        primaryIcon = drawable.ic_dropdown_primary_30_24dp,
+        primaryIcon = R.drawable.ic_dropdown_primary_30_24dp,
         primaryText = UiStringText("title"),
         secondaryIcon = null,
         secondaryText = null,
         showFocusPoint = showFocusPoint,
-        onClick = interaction
+        onClick = interaction,
+        listItemAction = ListItemAction.PAGES
     )
 }

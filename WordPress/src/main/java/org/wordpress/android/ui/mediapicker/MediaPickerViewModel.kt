@@ -96,6 +96,7 @@ class MediaPickerViewModel @Inject constructor(
     private val _showProgressDialog = MutableLiveData<ProgressDialogUiModel>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigate = MutableLiveData<Event<MediaNavigationEvent>>()
+    private val _showPartialMediaAccessPrompt = MutableLiveData<Boolean>()
 
     val onSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = _onSnackbarMessage
     val onNavigate = _onNavigate as LiveData<Event<MediaNavigationEvent>>
@@ -107,8 +108,9 @@ class MediaPickerViewModel @Inject constructor(
         _selectedIds.distinct(),
         _softAskRequest,
         _searchExpanded,
-        _showProgressDialog.distinct()
-    ) { domainModel, selectedIds, softAskRequest, searchExpanded, progressDialogUiModel ->
+        _showProgressDialog.distinct(),
+        _showPartialMediaAccessPrompt,
+    ) { domainModel, selectedIds, softAskRequest, searchExpanded, progressDialogUiModel, showPartialAccessPrompt ->
         MediaPickerUiState(
             buildUiModel(domainModel, selectedIds, softAskRequest, searchExpanded),
             buildSoftAskView(softAskRequest),
@@ -117,7 +119,8 @@ class MediaPickerViewModel @Inject constructor(
             buildSearchUiModel(softAskRequest?.let { !it.show } ?: true, domainModel?.filter, searchExpanded),
             !domainModel?.domainItems.isNullOrEmpty() && domainModel?.isLoading == true,
             buildBrowseMenuUiModel(softAskRequest, searchExpanded),
-            progressDialogUiModel ?: Hidden
+            progressDialogUiModel ?: Hidden,
+            showPartialAccessPrompt ?: false,
         )
     }
 
@@ -417,8 +420,8 @@ class MediaPickerViewModel @Inject constructor(
             is Identifier.RemoteId -> {
                 site?.let {
                     launch {
-                        val media: MediaModel = mediaStore.getSiteMediaWithId(it, identifier.value)
-                        _onNavigate.postValue(Event(PreviewMedia(media)))
+                        val media: MediaModel? = mediaStore.getSiteMediaWithId(it, identifier.value)
+                        media?.let { _onNavigate.postValue(Event(PreviewMedia(it))) }
                     }
                 }
             }
@@ -562,19 +565,30 @@ class MediaPickerViewModel @Inject constructor(
         return IconClickEvent(action)
     }
 
-    fun checkMediaPermissions(isPhotosVideosAlwaysDenied: Boolean, isMusicAudioAlwaysDenied: Boolean) {
+    fun checkMediaPermissions(
+        isPhotosVideosAlwaysDenied: Boolean,
+        isMusicAudioAlwaysDenied: Boolean,
+        didJustRequestPermissions: Boolean,
+    ) {
         if (!mediaPickerSetup.requiresPhotosVideosPermissions && !mediaPickerSetup.requiresMusicAudioPermissions) {
             // No permission is required, so there is no need to check permissions.
             return
         }
-        val isAlwaysDenied = (mediaPickerSetup.requiresPhotosVideosPermissions && isPhotosVideosAlwaysDenied) ||
+        val isPartialAccessGranted = permissionsHandler.hasOnlyPartialAccessPhotosVideosPermission()
+        val isAlwaysDenied = (
+                mediaPickerSetup.requiresPhotosVideosPermissions &&
+                        isPhotosVideosAlwaysDenied &&
+                        !isPartialAccessGranted
+                ) ||
                 (mediaPickerSetup.requiresMusicAudioPermissions && isMusicAudioAlwaysDenied)
         if (!needPhotosVideoPermission() && !needMusicAudioPermission()) {
+            _showPartialMediaAccessPrompt.value = isPartialAccessGranted
             _softAskRequest.value = SoftAskRequest(show = false, isAlwaysDenied = isAlwaysDenied)
-            if (_domainModel.value?.domainItems.isNullOrEmpty()) {
-                refreshData(false)
+            if (didJustRequestPermissions || _domainModel.value?.domainItems.isNullOrEmpty()) {
+                refreshData(didJustRequestPermissions)
             }
         } else {
+            _showPartialMediaAccessPrompt.value = false
             _softAskRequest.value = SoftAskRequest(show = true, isAlwaysDenied = isAlwaysDenied)
         }
     }
@@ -697,7 +711,8 @@ class MediaPickerViewModel @Inject constructor(
         val searchUiModel: SearchUiModel,
         val isRefreshing: Boolean,
         val browseMenuUiModel: BrowseMenuUiModel,
-        val progressDialogUiModel: ProgressDialogUiModel
+        val progressDialogUiModel: ProgressDialogUiModel,
+        val isPartialMediaAccessPromptVisible: Boolean,
     )
 
     sealed class PhotoListUiModel {

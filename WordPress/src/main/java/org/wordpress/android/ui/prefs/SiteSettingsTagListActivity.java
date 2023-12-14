@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +23,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,7 +32,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -94,7 +93,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
@@ -103,7 +102,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (getFragmentManager().getBackStackEntryCount() > 0) {
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                     SiteSettingsTagDetailFragment fragment = getDetailFragment();
                     if (fragment != null && fragment.hasChanges()) {
                         saveTag(fragment.getTerm(), fragment.isNewTerm());
@@ -200,7 +199,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
     }
 
     @Override
-    protected void onSaveInstanceState(@NotNull Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putBoolean(KEY_IS_SEARCHING, mIsSearching);
@@ -215,7 +214,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.tag_list, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
@@ -235,7 +234,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();
             return true;
@@ -303,8 +302,9 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
         mRecycler.setAdapter(mAdapter);
     }
 
+    @Nullable
     private SiteSettingsTagDetailFragment getDetailFragment() {
-        return (SiteSettingsTagDetailFragment) getFragmentManager()
+        return (SiteSettingsTagDetailFragment) getSupportFragmentManager()
                 .findFragmentByTag(SiteSettingsTagDetailFragment.TAG);
     }
 
@@ -315,7 +315,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
         SiteSettingsTagDetailFragment fragment = SiteSettingsTagDetailFragment.newInstance(term);
         fragment.setOnTagDetailListener(this);
 
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                             .add(R.id.container, fragment, SiteSettingsTagDetailFragment.TAG)
                             .addToBackStack(null)
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -332,7 +332,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
     private void hideDetailFragment() {
         SiteSettingsTagDetailFragment fragment = getDetailFragment();
         if (fragment != null) {
-            getFragmentManager().popBackStack();
+            getSupportFragmentManager().popBackStack();
             ActivityUtils.hideKeyboard(this);
             showFabWithConditions();
             setTitle(R.string.site_settings_tags_title);
@@ -369,7 +369,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onMenuItemActionExpand(MenuItem item) {
+    public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
         mIsSearching = true;
         showActionableEmptyViewForSearch(true);
         hideFabIfShowing();
@@ -377,7 +377,7 @@ public class SiteSettingsTagListActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onMenuItemActionCollapse(MenuItem item) {
+    public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
         mIsSearching = false;
         showActionableEmptyViewForSearch(false);
         showFabWithConditions();

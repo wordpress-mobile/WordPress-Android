@@ -170,21 +170,29 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     }
 
     @SuppressWarnings("deprecation")
-    private void configureCardView(ThemeViewHolder themeViewHolder, boolean isCurrent) {
+    private void configureCardView(
+            @NonNull ThemeViewHolder themeViewHolder,
+            boolean isCurrent
+    ) {
         if (isCurrent) {
-            ColorStateList color =
-                    ContextExtensionsKt.getColorStateListFromAttribute(mContext, R.attr.colorOnPrimarySurface);
-            themeViewHolder.mDetailsView
-                    .setBackgroundColor(
-                            ContextExtensionsKt.getColorFromAttribute(mContext, R.attr.colorPrimary));
+            ColorStateList color = ContextExtensionsKt.getColorStateListFromAttribute(
+                    mContext,
+                    com.google.android.material.R.attr.colorOnPrimarySurface
+            );
+            themeViewHolder.mDetailsView.setBackgroundColor(
+                    ContextExtensionsKt.getColorFromAttribute(mContext, com.google.android.material.R.attr.colorPrimary)
+            );
             themeViewHolder.mNameView.setTextColor(color);
             themeViewHolder.mActiveView.setVisibility(View.VISIBLE);
-            themeViewHolder.mCardView
-                    .setCardBackgroundColor(
-                            ContextExtensionsKt.getColorFromAttribute(mContext, R.attr.colorPrimary));
+            themeViewHolder.mCardView.setCardBackgroundColor(
+                    ContextExtensionsKt.getColorFromAttribute(mContext, com.google.android.material.R.attr.colorPrimary)
+            );
             ImageViewCompat.setImageTintList(themeViewHolder.mImageButton, color);
         } else {
-            ColorStateList color = ContextExtensionsKt.getColorStateListFromAttribute(mContext, R.attr.colorOnSurface);
+            ColorStateList color = ContextExtensionsKt.getColorStateListFromAttribute(
+                    mContext,
+                    com.google.android.material.R.attr.colorOnSurface
+            );
             themeViewHolder.mDetailsView
                     .setBackgroundColor(mElevatedSurfaceColor);
             themeViewHolder.mNameView.setTextColor(color);
@@ -195,10 +203,18 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         }
     }
 
-    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId,
-                                    final boolean isCurrent) {
-        mImageManager.load(themeViewHolder.mImageView, ImageType.THEME, getUrlWithWidth(screenshotURL),
-                ScaleType.FIT_CENTER);
+    private void configureImageView(
+            @NonNull ThemeViewHolder themeViewHolder,
+            @NonNull String screenshotURL,
+            @NonNull final String themeId,
+            final boolean isCurrent
+    ) {
+        mImageManager.load(
+                themeViewHolder.mImageView,
+                ImageType.THEME,
+                getUrlWithWidth(screenshotURL),
+                ScaleType.FIT_CENTER
+        );
 
         themeViewHolder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,7 +228,8 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         });
     }
 
-    private String getUrlWithWidth(String screenshotURL) {
+    @NonNull
+    private String getUrlWithWidth(@NonNull String screenshotURL) {
         if (screenshotURL.contains("?")) {
             return screenshotURL + "&" + THEME_IMAGE_PARAMETER + mViewWidth;
         } else {
@@ -220,8 +237,12 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         }
     }
 
-    private void configureImageButton(ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium,
-                                      boolean isCurrent) {
+    private void configureImageButton(
+            @NonNull ThemeViewHolder themeViewHolder,
+            @NonNull final String themeId,
+            final boolean isPremium,
+            boolean isCurrent
+    ) {
         final PopupMenu popupMenu = new PopupMenu(mContext, themeViewHolder.mImageButton);
         popupMenu.getMenuInflater().inflate(R.menu.theme_more, popupMenu.getMenu());
 

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.bloggingreminders
 
-import org.wordpress.android.R.drawable
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
@@ -30,15 +29,15 @@ class EpilogueBuilder @Inject constructor(
         val enabledDays = bloggingRemindersModel?.enabledDays ?: setOf()
 
         val title = when {
-            enabledDays.isEmpty() -> UiStringRes(string.blogging_reminders_epilogue_not_set_title)
-            else -> UiStringRes(string.blogging_reminders_epilogue_title)
+            enabledDays.isEmpty() -> UiStringRes(R.string.blogging_reminders_epilogue_not_set_title)
+            else -> UiStringRes(R.string.blogging_reminders_epilogue_title)
         }
 
         val body = when (enabledDays.size) {
-            ZERO -> UiStringRes(string.blogging_reminders_epilogue_body_no_reminders)
+            ZERO -> UiStringRes(R.string.blogging_reminders_epilogue_body_no_reminders)
             SEVEN_DAYS -> UiStringText(
                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                    string.blogging_reminders_epilogue_body_everyday_with_time,
+                    R.string.blogging_reminders_epilogue_body_everyday_with_time,
                     bloggingRemindersModel?.getNotificationTime()
                 )
             )
@@ -49,7 +48,7 @@ class EpilogueBuilder @Inject constructor(
 
                 UiStringText(
                     htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                        string.blogging_reminders_epilogue_body_days_with_time,
+                        R.string.blogging_reminders_epilogue_body_days_with_time,
                         numberOfTimes,
                         selectedDays,
                         bloggingRemindersModel?.getNotificationTime().toString().toBold()
@@ -59,10 +58,10 @@ class EpilogueBuilder @Inject constructor(
         }
 
         return listOf(
-            Illustration(drawable.img_illustration_bell_yellow_96dp),
+            Illustration(R.drawable.img_illustration_bell_yellow_96dp),
             Title(title),
             HighEmphasisText(EmphasizedText(body, false)),
-            Caption(UiStringRes(string.blogging_reminders_epilogue_caption))
+            Caption(UiStringRes(R.string.blogging_reminders_epilogue_caption))
         )
     }
 
@@ -70,7 +69,7 @@ class EpilogueBuilder @Inject constructor(
         onDone: () -> Unit
     ): PrimaryButton {
         return PrimaryButton(
-            UiStringRes(string.blogging_reminders_done),
+            UiStringRes(R.string.blogging_reminders_done),
             enabled = true,
             ListItemInteraction.create(onDone)
         )

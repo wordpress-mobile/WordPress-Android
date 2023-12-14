@@ -56,7 +56,7 @@
             android:textAlignment="viewStart"
             android:textFontWeight="700"
             app:autoSizeMaxTextSize="@dimen/text_sz_extra_extra_large"
-            app:autoSizeMinTextSize="@dimen/m3_sys_typescale_headline_medium_text_size"
+            app:autoSizeMinTextSize="@dimen/text_sz_double_extra_large"
             app:autoSizeStepGranularity="2sp"
             app:autoSizeTextType="uniform"
             app:layout_constraintEnd_toEndOf="parent"

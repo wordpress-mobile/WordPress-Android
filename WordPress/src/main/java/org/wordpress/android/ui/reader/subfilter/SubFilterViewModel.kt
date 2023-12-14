@@ -341,12 +341,7 @@ class SubFilterViewModel @Inject constructor(
         }
 
         if (userIdChanged || accessTokenStatusChanged) {
-            _updateTagsAndSites.value = Event(
-                EnumSet.of(
-                    UpdateTask.TAGS,
-                    UpdateTask.FOLLOWED_BLOGS
-                )
-            )
+            _updateTagsAndSites.value = Event(EnumSet.of(UpdateTask.TAGS))
 
             setDefaultSubfilter()
         }

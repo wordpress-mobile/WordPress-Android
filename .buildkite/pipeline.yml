@@ -1,8 +1,16 @@
 # Nodes with values to reuse in the pipeline.
 common_params:
   # Common plugin settings to use with the `plugins` key.
-  - &common_plugins
-    - automattic/a8c-ci-toolkit#2.15.1
+  - &ci_toolkit
+    automattic/a8c-ci-toolkit#2.18.2
+  - &test_collector
+    test-collector#v1.8.0
+  - &test_collector_common_params
+      files: "buildkite-test-analytics/*.xml"
+      format: "junit"
+
+agents:
+  queue: "android"
 
 steps:
   #################
@@ -11,7 +19,7 @@ steps:
   - label: "Gradle Wrapper Validation"
     command: |
       validate_gradle_wrapper
-    plugins: *common_plugins
+    plugins: [*ci_toolkit]
 
   # Wait for Gradle Wrapper to be validated before running any other jobs
   - wait
@@ -21,11 +29,24 @@ steps:
   #################
   - group: "🕵️‍♂️ Linters"
     steps:
+      - label: "☢️ Danger - PR Check"
+        command: .buildkite/commands/danger-pr-check.sh
+        plugins:
+          - docker#v5.8.0:
+              image: "public.ecr.aws/docker/library/ruby:3.2.2"
+              propagate-environment: true
+              environment:
+                - "DANGER_GITHUB_API_TOKEN"
+        if: "build.pull_request.id != null"
+        retry:
+          manual:
+            permit_on_passed: true
+
       - label: "🕵️ checkstyle"
         command: |
           cp gradle.properties-example gradle.properties
           ./gradlew checkstyle
-        plugins: *common_plugins
+        plugins: [*ci_toolkit]
         artifact_paths:
           - "**/build/reports/checkstyle/checkstyle.*"
 
@@ -33,7 +54,7 @@ steps:
         command: |
           cp gradle.properties-example gradle.properties
           ./gradlew detekt
-        plugins: *common_plugins
+        plugins: [*ci_toolkit]
         artifact_paths:
           - "**/build/reports/detekt/detekt.html"
 
@@ -52,30 +73,42 @@ steps:
       cp gradle.properties-example gradle.properties
       .buildkite/commands/dependency-tree-diff.sh
     if: build.pull_request.id != null
-    plugins: *common_plugins
+    plugins: [*ci_toolkit]
 
   #################
   # Unit Tests
   #################
   - group: "🔬 Unit Tests"
     steps:
-      - label: "🔬 Test WordPress"
-        command: |
-          cp gradle.properties-example gradle.properties
-          ./gradlew testWordpressVanillaRelease
-        plugins: *common_plugins
+      - label: "🔬 Unit Test WordPress"
+        command: ".buildkite/commands/run-unit-tests.sh wordpress"
+        plugins:
+          - *ci_toolkit
+          - *test_collector :
+              <<: *test_collector_common_params
+              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_WORDPRESS"
+        artifact_paths:
+          - "**/build/test-results/*/*.xml"
 
-      - label: "🔬 Test Processors"
-        command: |
-          cp gradle.properties-example gradle.properties
-          ./gradlew :libs:processors:test
-        plugins: *common_plugins
+      - label: "🔬 Unit Test Processors"
+        command: ".buildkite/commands/run-unit-tests.sh processors"
+        plugins:
+          - *ci_toolkit
+          - *test_collector :
+              <<: *test_collector_common_params
+              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_PROCESSORS"
+        artifact_paths:
+          - "**/build/test-results/*/*.xml"
 
-      - label: "🔬 Test Image Editor"
-        command: |
-          cp gradle.properties-example gradle.properties
-          ./gradlew :libs:image-editor:test
-        plugins: *common_plugins
+      - label: "🔬 Unit Test Image Editor"
+        command: ".buildkite/commands/run-unit-tests.sh image-editor"
+        plugins:
+          - *ci_toolkit
+          - *test_collector :
+              <<: *test_collector_common_params
+              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_IMAGE_EDITOR"
+        artifact_paths:
+          - "**/build/test-results/*/*.xml"
 
   #################
   # Instrumented (aka UI) Tests
@@ -83,14 +116,22 @@ steps:
   - group: "🔬 Instrumented tests"
     steps:
       - label: ":wordpress: 🔬 Instrumented tests"
-        command: ".buildkite/commands/instrumented-tests.sh wordpress"
-        plugins: *common_plugins
+        command: ".buildkite/commands/run-instrumented-tests.sh wordpress"
+        plugins:
+          - *ci_toolkit
+          - *test_collector :
+              <<: *test_collector_common_params
+              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_WORDPRESS"
         artifact_paths:
           - "**/build/instrumented-tests/**/*"
 
       - label: ":jetpack: 🔬 Instrumented tests"
-        command: ".buildkite/commands/instrumented-tests.sh jetpack"
-        plugins: *common_plugins
+        command: ".buildkite/commands/run-instrumented-tests.sh jetpack"
+        plugins:
+          - *ci_toolkit
+          - *test_collector :
+              <<: *test_collector_common_params
+              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_JETPACK"
         artifact_paths:
           - "**/build/instrumented-tests/**/*"
 
@@ -102,9 +143,9 @@ steps:
       - label: ":wordpress: :android: Prototype Build"
         command: ".buildkite/commands/prototype-build.sh wordpress"
         if: build.pull_request.id != null
-        plugins: *common_plugins
+        plugins: [*ci_toolkit]
 
       - label: ":jetpack: :android: Prototype Build"
         command: ".buildkite/commands/prototype-build.sh jetpack"
         if: build.pull_request.id != null
-        plugins: *common_plugins
+        plugins: [*ci_toolkit]

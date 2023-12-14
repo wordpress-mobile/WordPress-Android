@@ -76,6 +76,11 @@ class PostListViewModel @Inject constructor(
     private val isStatsSupported: Boolean by lazy {
         SiteUtils.isAccessedViaWPComRest(connector.site) && connector.site.hasCapabilityViewStats
     }
+    private val isFilteringByAuthorSupported: Boolean by lazy {
+        connector.site.isUsingWpComRestApi &&
+                connector.site.hasCapabilityEditOthersPosts &&
+                (connector.site.isSingleUserSite != null && !connector.site.isSingleUserSite)
+    }
     private var isStarted: Boolean = false
     private lateinit var connector: PostListViewModelConnector
 
@@ -92,8 +97,7 @@ class PostListViewModel @Inject constructor(
             dispatcher = dispatcher,
             postStore = postStore,
             postFetcher = connector.postFetcher,
-            transform = this::transformPostModelToPostListItemUiState,
-            postListType = connector.postListType
+            transform = this::transformPostModelToPostListItemUiState
         )
     }
 
@@ -123,7 +127,7 @@ class PostListViewModel @Inject constructor(
 
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
-        override fun getLifecycle(): Lifecycle = lifecycleRegistry
+        override val lifecycle: Lifecycle = lifecycleRegistry
     }
 
     fun start(
@@ -366,6 +370,7 @@ class PostListViewModel @Inject constructor(
         val hasAutoSave = connector.hasAutoSave(post)
         return listItemUiStateHelper.createPostListItemUiState(
             authorFilterSelection,
+            isFilteringByAuthorSupported,
             post = post,
             site = connector.site,
             unhandledConflicts = connector.doesPostHaveUnhandledConflict(post),
@@ -381,8 +386,7 @@ class PostListViewModel @Inject constructor(
                 connector.postActionHandler.handlePostButton(buttonType, postModel, hasAutoSave)
             },
             uploadStatusTracker = connector.uploadStatusTracker,
-            isSearch = connector.postListType == SEARCH,
-            isSiteBlazeEligible = connector.isSiteBlazeEligible
+            isSearch = connector.postListType == SEARCH
         )
     }
 

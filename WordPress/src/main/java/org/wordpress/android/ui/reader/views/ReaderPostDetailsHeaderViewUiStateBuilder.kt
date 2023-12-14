@@ -1,17 +1,20 @@
 package org.wordpress.android.ui.reader.views
 
 import dagger.Reusable
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.discover.ReaderPostTagsUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
+import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import javax.inject.Inject
 
 @Reusable
@@ -19,44 +22,60 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     private val accountStore: AccountStore,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
     private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig,
 ) {
     fun mapPostToUiState(
         post: ReaderPost,
-        onBlogSectionClicked: (Long, Long) -> Unit,
-        onFollowClicked: () -> Unit,
-        onTagItemClicked: (String) -> Unit
+        onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
     ): ReaderPostDetailsHeaderUiState {
         val hasAccessToken = accountStore.hasAccessToken()
         val textTitle = post
             .takeIf { post.hasTitle() }
-            ?.title?.let { UiStringText(it) } ?: UiStringRes(string.reader_untitled_post)
+            ?.title?.let { UiStringText(it) }
+            ?: UiStringRes(R.string.reader_untitled_post).takeIf { !readerImprovementsFeatureConfig.isEnabled() }
 
         return ReaderPostDetailsHeaderUiState(
             title = textTitle,
             authorName = post.authorName,
-            tagItems = buildTagItems(post, onTagItemClicked),
+            tagItems = buildTagItems(
+                post,
+                onClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.TagItemClicked(it)) }
+            ),
             tagItemsVisibility = buildTagItemsVisibility(post),
-            blogSectionUiState = buildBlogSectionUiState(post, onBlogSectionClicked),
-            followButtonUiState = buildFollowButtonUiState(onFollowClicked, post, hasAccessToken),
-            dateLine = buildDateLine(post)
+            blogSectionUiState = buildBlogSectionUiState(
+                post,
+                onBlogSectionClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.BlogSectionClicked) }
+            ),
+            followButtonUiState = buildFollowButtonUiState(
+                post,
+                hasAccessToken,
+                onFollowClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.FollowClicked) }
+            ),
+            dateLine = buildDateLine(post),
+            interactionSectionUiState = buildInteractionSection(
+                post,
+                onLikesClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.LikesClicked) },
+                onCommentsClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.CommentsClicked) }
+            )
         )
     }
 
     private fun buildBlogSectionUiState(
         post: ReaderPost,
-        onBlogSectionClicked: (Long, Long) -> Unit
+        onBlogSectionClicked: () -> Unit
     ): ReaderBlogSectionUiState {
         return postUiStateBuilder.mapPostToBlogSectionUiState(
             post,
+            readerImprovementsFeatureConfig.isEnabled(),
             onBlogSectionClicked
         )
     }
 
     private fun buildFollowButtonUiState(
-        onFollowClicked: () -> Unit,
         post: ReaderPost,
-        hasAccessToken: Boolean
+        hasAccessToken: Boolean,
+        onFollowClicked: () -> Unit
     ): FollowButtonUiState {
         return FollowButtonUiState(
             onFollowButtonClicked = onFollowClicked,
@@ -73,4 +92,15 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
 
     private fun buildDateLine(post: ReaderPost) =
         dateTimeUtilsWrapper.javaDateToTimeSpan(post.getDisplayDate(dateTimeUtilsWrapper))
+
+    private fun buildInteractionSection(
+        post: ReaderPost,
+        onLikesClicked: () -> Unit,
+        onCommentsClicked: () -> Unit,
+    ) = InteractionSectionUiState(
+        likeCount = post.numLikes,
+        commentCount = post.numReplies,
+        onLikesClicked = onLikesClicked,
+        onCommentsClicked = onCommentsClicked,
+    )
 }

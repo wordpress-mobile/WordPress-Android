@@ -22,8 +22,6 @@ import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
-import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
 
 @ExperimentalCoroutinesApi
@@ -39,7 +37,6 @@ class GetDiscoverCardsUseCaseTest : BaseUnitTest() {
     private val readerPostTableWrapper: ReaderPostTableWrapper = mock()
     private val readerBlogTableWrapper: ReaderBlogTableWrapper = mock()
     private val appLogWrapper: AppLogWrapper = mock()
-    private val appPrefsWrapper: AppPrefsWrapper = mock()
 
     @Before
     fun setUp() {
@@ -49,7 +46,6 @@ class GetDiscoverCardsUseCaseTest : BaseUnitTest() {
             readerPostTableWrapper,
             readerBlogTableWrapper,
             appLogWrapper,
-            appPrefsWrapper,
             testDispatcher()
         )
         whenever(parseDiscoverCardsJsonUseCase.convertListOfJsonArraysIntoSingleJsonArray(anyOrNull()))
@@ -70,40 +66,6 @@ class GetDiscoverCardsUseCaseTest : BaseUnitTest() {
             .thenReturn(ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE)
         whenever(mockedRecommendedBlogsCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
             .thenReturn(ReaderConstants.JSON_CARD_RECOMMENDED_BLOGS)
-        whenever(appPrefsWrapper.readerDiscoverWelcomeBannerShown)
-            .thenReturn(true)
-    }
-
-    @Test
-    fun `welcome card is added as first card if it has not been shown yet`() = test {
-        // Arrange
-        whenever(appPrefsWrapper.readerDiscoverWelcomeBannerShown)
-            .thenReturn(false)
-        // Act
-        val result = useCase.get()
-        // Assert
-        assertThat(result.cards[0]).isInstanceOf(WelcomeBannerCard::class.java)
-    }
-
-    @Test
-    fun `welcome card is not added to list of cards if was already shown once`() = test {
-        // Arrange
-        whenever(appPrefsWrapper.readerDiscoverWelcomeBannerShown)
-            .thenReturn(true)
-        // Act
-        val result = useCase.get()
-        // Assert
-        assertThat(result.cards.filterIsInstance<WelcomeBannerCard>()).size().isEqualTo(0)
-    }
-
-    @Test
-    fun `welcome card is not added to the list of cards when there are no other cards`() = test {
-        // Arrange
-        whenever(mockedJsonArray.length()).thenReturn(0)
-        // Act
-        val result = useCase.get()
-        // Assert
-        assertThat(result.cards.filterIsInstance<WelcomeBannerCard>()).size().isEqualTo(0)
     }
 
     @Test

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
@@ -19,11 +21,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.PublicizeConnection;
@@ -33,7 +33,6 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
-import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -55,16 +54,14 @@ public class PublicizeListActivity extends LocaleAwareActivity
         PublicizeServiceAdapter.OnServiceClickListener,
         PublicizeListFragment.PublicizeButtonPrefsListener, ScrollableViewInitializedListener {
     private static final String WPCOM_CONNECTIONS_URL = "https://wordpress.com/marketing/connections/";
-
+    @Inject SiteStore mSiteStore;
+    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     private SiteModel mSite;
     private ProgressDialog mProgressDialog;
     private AppBarLayout mAppBarLayout;
 
-    @Inject SiteStore mSiteStore;
-    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.publicize_list_activity);
@@ -94,21 +91,19 @@ public class PublicizeListActivity extends LocaleAwareActivity
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            PublicizeTable.createTables(WordPress.wpDB.getDatabase());
             showListFragment();
             if (mSite == null) {
                 ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
                 finish();
                 return;
             }
-            PublicizeUpdateService.updateConnectionsForSite(this, mSite);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
     }
 
     @Override
-    protected void onSaveInstanceState(@NotNull Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
     }
@@ -220,7 +215,7 @@ public class PublicizeListActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();
@@ -242,8 +237,8 @@ public class PublicizeListActivity extends LocaleAwareActivity
      */
     @Override
     public void onRequestConnect(PublicizeService service) {
-        if (isFacebook(service)) {
-            showFacebookWarning();
+        if (shouldConnectViaWeb(service)) {
+            showConnectViaWebWarning(service.getLabel());
         } else {
             showWebViewFragment(service, null);
         }
@@ -254,8 +249,8 @@ public class PublicizeListActivity extends LocaleAwareActivity
      */
     @Override
     public void onRequestReconnect(PublicizeService service, PublicizeConnection publicizeConnection) {
-        if (isFacebook(service)) {
-            showFacebookWarning();
+        if (shouldConnectViaWeb(service)) {
+            showConnectViaWebWarning(service.getLabel());
         } else {
             PublicizeActions.reconnect(publicizeConnection);
             showWebViewFragment(service, null);
@@ -270,8 +265,14 @@ public class PublicizeListActivity extends LocaleAwareActivity
         confirmDisconnect(publicizeConnection);
     }
 
-    private boolean isFacebook(PublicizeService service) {
-        return service.getId().equals(PublicizeConstants.FACEBOOK_ID);
+    /*
+     * As of Oct 5, 2021 Facebook has deprecated support for authentication on embedded browsers, so Publicize
+     * connections can't be established through web views anymore (ref: pbArwn-3uU-p2).
+     */
+    private boolean shouldConnectViaWeb(PublicizeService service) {
+        String serviceId = service.getId();
+        boolean showForFacebook = serviceId.equals(PublicizeConstants.FACEBOOK_ID);
+        return showForFacebook;
     }
 
     private String getConnectionsUrl(SiteModel site) {
@@ -279,14 +280,13 @@ public class PublicizeListActivity extends LocaleAwareActivity
     }
 
     /*
-     * As of Oct 5, 2021 Facebook has deprecated support for authentication on embedded browsers, so Publicize
-     * connections can't be established through web views anymore (ref: pbArwn-3uU-p2).
-     * This method shows a temporary warning message to the user instead.
+     * This method shows a temporary warning message to the user and sends them to the web connections page.
      */
-    private void showFacebookWarning() {
+    private void showConnectViaWebWarning(String serviceName) {
+        String message = getResources().getString(R.string.sharing_connect_via_web_warning_message, serviceName);
         new MaterialAlertDialogBuilder(this)
-                .setMessage(R.string.sharing_facebook_warning_message)
-                .setPositiveButton(R.string.sharing_facebook_warning_positive_button,
+                .setMessage(message)
+                .setPositiveButton(R.string.sharing_connect_via_web_warning_positive_button,
                         (dialog, id) -> ActivityLauncher.openUrlExternal(this, getConnectionsUrl(mSite)))
                 .setNegativeButton(R.string.cancel, null)
                 .setCancelable(true)
@@ -345,7 +345,6 @@ public class PublicizeListActivity extends LocaleAwareActivity
         if (event.didSucceed()) {
             Map<String, Object> analyticsProperties = new HashMap<>();
             analyticsProperties.put("service", event.getService());
-
 
             if (event.getAction() == ConnectAction.CONNECT) {
                 AnalyticsUtils.trackWithSiteDetails(Stat.PUBLICIZE_SERVICE_CONNECTED, mSite, analyticsProperties);

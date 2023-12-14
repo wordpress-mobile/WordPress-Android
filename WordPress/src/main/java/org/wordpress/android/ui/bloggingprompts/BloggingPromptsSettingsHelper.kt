@@ -11,8 +11,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.DateUtils.isSameDay
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.BloggingPromptsEnhancementsFeatureConfig
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsFeature
 import java.util.Date
 import javax.inject.Inject
 
@@ -20,8 +19,7 @@ class BloggingPromptsSettingsHelper @Inject constructor(
     private val bloggingRemindersStore: BloggingRemindersStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
-    private val bloggingPromptsEnhancementsFeatureConfig: BloggingPromptsEnhancementsFeatureConfig,
+    private val bloggingPromptsFeature: BloggingPromptsFeature,
     private val analyticsTracker: AnalyticsTrackerWrapper,
 ) {
     fun getPromptsCardEnabledLiveData(
@@ -46,23 +44,24 @@ class BloggingPromptsSettingsHelper @Inject constructor(
         bloggingRemindersStore.updateBloggingReminders(current.copy(isPromptsCardEnabled = isEnabled))
     }
 
+    suspend fun updatePromptsCardEnabledForCurrentSite(isEnabled: Boolean) {
+        val siteId = selectedSiteRepository.getSelectedSite()?.localId()?.value ?: return
+        val current = bloggingRemindersStore.bloggingRemindersModel(siteId).firstOrNull() ?: return
+        bloggingRemindersStore.updateBloggingReminders(current.copy(isPromptsCardEnabled = isEnabled))
+    }
+
+
     fun isPromptsFeatureAvailable(): Boolean {
         val selectedSite = selectedSiteRepository.getSelectedSite() ?: return false
-        return bloggingPromptsFeatureConfig.isEnabled() && selectedSite.isUsingWpComRestApi
+        return bloggingPromptsFeature.isEnabled() && selectedSite.isUsingWpComRestApi
     }
 
     suspend fun shouldShowPromptsFeature(): Boolean {
-        val siteId = selectedSiteRepository.getSelectedSite()?.localId()?.value ?: return false
-
-        // if the enhancements is turned off, consider the prompts user-enabled, otherwise check the user setting
-        val isPromptsSettingUserEnabled = !bloggingPromptsEnhancementsFeatureConfig.isEnabled() ||
-                isPromptsSettingEnabled(siteId)
-
-        return isPromptsFeatureAvailable() && isPromptsSettingUserEnabled && !isPromptSkippedForToday()
+        return isPromptsFeatureAvailable() && isPromptsSettingEnabled() && !isPromptSkippedForToday()
     }
 
     fun shouldShowPromptsSetting(): Boolean {
-        return isPromptsFeatureAvailable() && bloggingPromptsEnhancementsFeatureConfig.isEnabled()
+        return isPromptsFeatureAvailable()
     }
 
     private fun isPromptSkippedForToday(): Boolean {
@@ -72,12 +71,13 @@ class BloggingPromptsSettingsHelper @Inject constructor(
         return promptSkippedDate != null && isSameDay(promptSkippedDate, Date())
     }
 
-    private suspend fun isPromptsSettingEnabled(
-        siteId: Int
-    ): Boolean = bloggingRemindersStore
-        .bloggingRemindersModel(siteId)
-        .firstOrNull()
-        ?.isPromptsCardEnabled == true
+    suspend fun isPromptsSettingEnabled(): Boolean {
+        val siteId = selectedSiteRepository.getSelectedSite()?.localId()?.value ?: return false
+        return bloggingRemindersStore
+            .bloggingRemindersModel(siteId)
+            .firstOrNull()
+            ?.isPromptsCardEnabled == true
+    }
 
     companion object {
         private const val TRACK_PROPERTY_ENABLED = "enabled"

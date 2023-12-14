@@ -419,18 +419,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST:
                 predefinedEventProperties.put("source", "opening_reader_post");
                 break;
-            case QUICK_ACTION_STATS_TAPPED:
-                predefinedEventProperties.put("button", "stats");
-                break;
-            case QUICK_ACTION_PAGES_TAPPED:
-                predefinedEventProperties.put("button", "pages");
-                break;
-            case QUICK_ACTION_POSTS_TAPPED:
-                predefinedEventProperties.put("button", "posts");
-                break;
-            case QUICK_ACTION_MEDIA_TAPPED:
-                predefinedEventProperties.put("button", "media");
-                break;
             case QUICK_LINK_RIBBON_PAGES_TAPPED:
                 predefinedEventProperties.put("button", "pages");
                 break;
@@ -995,6 +983,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_menu_opened";
             case OPENED_MEDIA_LIBRARY:
                 return "site_menu_opened";
+            case OPENED_QUICK_LINK_RIBBON_MORE:
+                return "site_menu_opened";
             case OPENED_BLOG_SETTINGS:
                 return "site_menu_opened";
             case OPENED_ACCOUNT_SETTINGS:
@@ -1037,8 +1027,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 // This stat is part of a funnel that provides critical information.  Before
                 // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 return "account_created";
-            case SHARED_ITEM:
-                return "item_shared";
+            case CLOSE_ACCOUNT_FAILED:
+                return "close_account_failed";
+            case CLOSED_ACCOUNT:
+                return "closed_account";
             case SHARED_ITEM_READER:
                 return "item_shared_reader";
             case ADDED_SELF_HOSTED_SITE:
@@ -1315,6 +1307,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_pages_options_pressed";
             case PAGES_SEARCH_ACCESSED:
                 return "site_pages_search_accessed";
+            case PAGES_EDIT_HOMEPAGE_INFO_PRESSED:
+                return "site_pages_edit_homepage_info_pressed";
+            case PAGES_EDIT_HOMEPAGE_ITEM_PRESSED:
+                return "site_pages_edit_homepage_item_pressed";
             case SIGNUP_BUTTON_TAPPED:
                 // This stat is part of a funnel that provides critical information.  Before
                 // making ANY modification to this stat please refer to: p4qSXL-35X-p2
@@ -1389,8 +1385,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_accessed";
             case ENHANCED_SITE_CREATION_DOMAINS_ACCESSED:
                 return "enhanced_site_creation_domains_accessed";
-            case ENHANCED_SITE_CREATION_DOMAIN_PURCHASING_EXPERIMENT:
-                return "enhanced_site_creation_domain_purchasing_experiment";
             case ENHANCED_SITE_CREATION_DOMAINS_SELECTED:
                 return "enhanced_site_creation_domains_selected";
             case ENHANCED_SITE_CREATION_SUCCESS_LOADING:
@@ -1799,6 +1793,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "support_identity_set";
             case SUPPORT_OPEN_MOBILE_FORUM_TAPPED:
                 return "support_open_mobile_forum_tapped";
+            case SUPPORT_CHATBOT_STARTED:
+                return "support_chatbot_started";
+            case SUPPORT_CHATBOT_USER_SUBMITS_MESSAGE:
+                return "support_chatbot_user_submits_message";
+            case SUPPORT_CHATBOT_TOPIC:
+                return "support_chatbot_topic";
+            case SUPPORT_CHATBOT_WEBVIEW_ERROR:
+                return "support_chatbot_webview_error";
+            case SUPPORT_CHATBOT_TICKET_SUCCESS:
+                return "support_chatbot_ticket_success";
+            case SUPPORT_CHATBOT_TICKET_FAILURE:
+                return "support_chatbot_ticket_failure";
+            case SUPPORT_CHATBOT_ENDED:
+                return "support_chatbot_ended";
             case QUICK_START_TASK_DIALOG_VIEWED:
                 return "quick_start_task_dialog_viewed";
             case QUICK_START_STARTED:
@@ -1933,14 +1941,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domains_purchase_webview_viewed";
             case DOMAINS_PURCHASE_DOMAIN_SUCCESS:
                 return "domains_purchase_domain_success";
-            case QUICK_ACTION_STATS_TAPPED:
-            case QUICK_ACTION_PAGES_TAPPED:
-            case QUICK_ACTION_POSTS_TAPPED:
-            case QUICK_ACTION_MEDIA_TAPPED:
-                return "quick_action_tapped";
             case QUICK_LINK_RIBBON_PAGES_TAPPED:
             case QUICK_LINK_RIBBON_POSTS_TAPPED:
             case QUICK_LINK_RIBBON_MEDIA_TAPPED:
+            case QUICK_LINK_RIBBON_MORE_TAPPED:
             case QUICK_LINK_RIBBON_STATS_TAPPED:
                 return "quick_action_ribbon_tapped";
             case AUTO_UPLOAD_POST_INVOKED:
@@ -2263,6 +2267,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_settings_privacy_settings_tapped";
             case APP_SETTINGS_OPEN_DEVICE_SETTINGS_TAPPED:
                 return "app_settings_open_device_settings_tapped";
+            case APP_SETTINGS_OPTIMIZE_IMAGES_POPUP_TAPPED:
+                return "app_settings_optimize_images_popup_tapped";
             case APP_SETTINGS_MAX_IMAGE_SIZE_CHANGED:
                 return "app_settings_max_image_size_changed";
             case APP_SETTINGS_IMAGE_QUALITY_CHANGED:
@@ -2275,6 +2281,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_settings_max_video_size_changed";
             case APP_SETTINGS_VIDEO_QUALITY_CHANGED:
                 return "app_settings_video_quality_changed";
+            case PRIVACY_CHOICES_BANNER_PRESENTED:
+                return "privacy_choices_banner_presented";
+            case PRIVACY_CHOICES_BANNER_SETTINGS_BUTTON_TAPPED:
+                return "privacy_choices_banner_settings_button_tapped";
+            case PRIVACY_CHOICES_BANNER_SAVE_BUTTON_TAPPED:
+                return "privacy_choices_banner_save_button_tapped";
             case PRIVACY_SETTINGS_OPENED:
                 return "privacy_settings_opened";
             case PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED:
@@ -2547,6 +2559,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blaze_entry_point_tapped";
             case BLAZE_ENTRY_POINT_MENU_ACCESSED:
                 return "blaze_entry_point_menu_accessed";
+            case BLAZE_ENTRY_POINT_LEARN_MORE_TAPPED:
+                return "blaze_entry_point_learn_more_tapped";
             case BLAZE_ENTRY_POINT_HIDE_TAPPED:
                 return "blaze_entry_point_hide_tapped";
             case BLAZE_FEATURE_OVERLAY_DISPLAYED:
@@ -2563,20 +2577,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blaze_flow_canceled";
             case BLAZE_FLOW_ERROR:
                 return "blaze_flow_error";
+            case BLAZE_CAMPAIGN_LISTING_PAGE_SHOWN:
+                return "blaze_campaign_list_opened";
+            case BLAZE_CAMPAIGN_DETAIL_PAGE_OPENED:
+                return "blaze_campaign_details_opened";
             case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_SHOWN:
                 return "wp_individual_site_overlay_viewed";
             case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_DISMISSED:
                 return "wp_individual_site_overlay_dismissed";
             case WP_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY_PRIMARY_TAPPED:
                 return "wp_individual_site_overlay_primary_tapped";
-            case DASHBOARD_CARD_DOMAIN_SHOWN:
-                return "direct_domains_purchase_dashboard_card_shown";
-            case DASHBOARD_CARD_DOMAIN_TAPPED:
-                return "direct_domains_purchase_dashboard_card_tapped";
-            case DASHBOARD_CARD_DOMAIN_MORE_MENU_TAPPED:
-                return "direct_domains_purchase_dashboard_card_menu_tapped";
-            case DASHBOARD_CARD_DOMAIN_HIDDEN:
-                return "direct_domains_purchase_dashboard_card_hidden";
             case DASHBOARD_CARD_PLANS_SHOWN:
                 return "free_to_paid_plan_dashboard_card_shown";
             case DASHBOARD_CARD_PLANS_TAPPED:
@@ -2585,6 +2595,100 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "free_to_paid_plan_dashboard_card_menu_tapped";
             case DASHBOARD_CARD_PLANS_HIDDEN:
                 return "free_to_paid_plan_dashboard_card_hidden";
+            case TWITTER_NOTICE_LINK_TAPPED:
+                return "twitter_notice_link_tapped";
+            case DASHBOARD_CARD_DOMAIN_TRANSFER_SHOWN:
+                return "dashboard_card_domain_transfer_shown";
+            case DASHBOARD_CARD_DOMAIN_TRANSFER_TAPPED:
+                return "dashboard_card_domain_transfer_tapped";
+            case DASHBOARD_CARD_DOMAIN_TRANSFER_MORE_MENU_TAPPED:
+                return "dashboard_card_domain_transfer_more_menu_tapped";
+            case DASHBOARD_CARD_DOMAIN_TRANSFER_HIDDEN:
+                return "dashboard_card_domain_transfer_hidden";
+            case JETPACK_SOCIAL_AUTO_SHARING_CONNECTION_TOGGLED:
+                return "jetpack_social_auto_sharing_connection_toggled";
+            case JETPACK_SOCIAL_SHARE_LIMIT_DISPLAYED:
+                return "jetpack_social_share_limit_displayed";
+            case JETPACK_SOCIAL_UPGRADE_LINK_TAPPED:
+                return "jetpack_social_upgrade_link_tapped";
+            case JETPACK_SOCIAL_ADD_CONNECTION_CTA_DISPLAYED:
+                return "jetpack_social_add_connection_cta_displayed";
+            case JETPACK_SOCIAL_ADD_CONNECTION_TAPPED:
+                return "jetpack_social_add_connection_tapped";
+            case JETPACK_SOCIAL_ADD_CONNECTION_DISMISSED:
+                return "jetpack_social_add_connection_dismissed";
+            case MY_SITE_DASHBOARD_CARD_MENU_ITEM_TAPPED:
+                return "my_site_dashboard_card_menu_item_tapped";
+            case MY_SITE_DASHBOARD_CONTEXTUAL_MENU_ACCESSED:
+                return "my_site_dashboard_contextual_menu_accessed";
+            case PERSONALIZATION_SCREEN_CARD_HIDE_TAPPED:
+                return "personalization_screen_card_hide_tapped";
+            case PERSONALIZATION_SCREEN_CARD_SHOW_TAPPED:
+                return "personalization_screen_card_show_tapped";
+            case PERSONALIZATION_SCREEN_SHORTCUT_HIDE_QUICK_LINK_TAPPED:
+                return "personalization_screen_shortcut_hide_quick_link_tapped";
+            case PERSONALIZATION_SCREEN_SHORTCUT_SHOW_QUICK_LINK_TAPPED:
+                return "personalization_screen_shortcut_show_quick_link_tapped";
+            case MORE_MENU_ITEM_TAPPED:
+                return "more_menu_item_tapped";
+            case QUICK_LINK_ITEM_TAPPED:
+                return "quick_link_item_tapped";
+            case POST_LIST_CREATE_POST_TAPPED:
+                return "post_list_create_post_tapped";
+            case DOMAIN_MANAGEMENT_ME_DOMAINS_TAPPED:
+                return "domain_management_me_domains_tapped";
+            case DOMAIN_MANAGEMENT_DOMAINS_DASHBOARD_ALL_DOMAINS_TAPPED:
+                return "domain_management_domains_dashboard_all_domains_tapped";
+            case DOMAIN_MANAGEMENT_DOMAINS_LIST_SHOWN:
+                return "domain_management_domains_list_shown";
+            case DOMAIN_MANAGEMENT_DOMAIN_DETAILS_WEB_VIEW_SHOWN:
+                return "domain_management_domain_details_web_view_shown";
+            case DOMAIN_MANAGEMENT_ADD_DOMAIN_TAPPED:
+                return "domain_management_add_domain_tapped";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SCREEN_SHOWN:
+                return "domain_management_purchase_domain_screen_shown";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_GET_DOMAIN_TAPPED:
+                return "domain_management_purchase_domain_get_domain_tapped";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_CHOOSE_SITE_TAPPED:
+                return "domain_management_purchase_domain_choose_site_tapped";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_SITE_SELECTED:
+                return "domain_management_purchase_domain_site_selected";
+            case DOMAIN_MANAGEMENT_DOMAINS_SEARCH_SHOWN:
+                return "domain_management_domains_search_shown";
+            case DOMAIN_MANAGEMENT_SEARCH_DOMAIN_TAPPED:
+                return "domain_management_search_domain_tapped";
+            case DOMAIN_MANAGEMENT_DOMAINS_SEARCH_TRANSFER_DOMAIN_TAPPED:
+                return "domain_management_domains_search_transfer_domain_tapped";
+            case DOMAIN_MANAGEMENT_PURCHASE_DOMAIN_COMPLETED:
+                return "domain_management_purchase_domain_completed";
+            case LOGIN_SECURITY_KEY_FAILURE:
+                return "login_security_key_failure";
+            case LOGIN_2FA_NEEDED:
+                return "login_2fa_needed";
+            case LOGIN_SECURITY_KEY_SUCCESS:
+                return "login_security_key_success";
+            case LOGIN_SECURITY_KEY_CLICKED:
+                return "login_security_key_clicked";
+            case BARCODE_SCANNING_SUCCESS:
+                return "barcode_scanning_success";
+            case BARCODE_SCANNING_FAILURE:
+                return "barcode_scanning_failure";
+            case QRLOGIN_SCANNER_DISMISSED_CAMERA_PERMISSION_DENIED:
+                return "qrlogin_scanner_dismissed_camera_permission_denied";
+            case BLOGANUARY_NUDGE_MY_SITE_CARD_LEARN_MORE_TAPPED:
+                return "bloganuary_nudge_my_site_card_learn_more_tapped";
+            case BLOGANUARY_NUDGE_LEARN_MORE_MODAL_SHOWN:
+                return "bloganuary_nudge_learn_more_modal_shown";
+            case BLOGANUARY_NUDGE_LEARN_MORE_MODAL_DISMISSED:
+                return "bloganuary_nudge_learn_more_modal_dismissed";
+            case BLOGANUARY_NUDGE_LEARN_MORE_MODAL_ACTION_TAPPED:
+                return "bloganuary_nudge_learn_more_modal_action_tapped";
+            case SOTW_2023_NUDGE_POST_EVENT_CARD_SHOWN:
+                return "sotw_2023_nudge_post_event_card_shown";
+            case SOTW_2023_NUDGE_POST_EVENT_CARD_HIDE_TAPPED:
+                return "sotw_2023_nudge_post_event_card_hide_tapped";
+            case SOTW_2023_NUDGE_POST_EVENT_CARD_CTA_TAPPED:
+                return "sotw_2023_nudge_post_event_card_cta_tapped";
         }
         return null;
     }

@@ -6,10 +6,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -32,9 +30,14 @@ class BloggingPromptsCardTrackHelper @Inject constructor(
     private val waitingToTrack = AtomicBoolean(false)
     private val currentSite = AtomicReference<Int?>(null)
 
-    private fun onDashboardRefreshed() {
+    private fun onDashboardRefreshed(state: MySiteViewModel.State.SiteSelected?) {
+        val bloggingPromptCards = state?.dashboardData
+            ?.filterIsInstance<BloggingPromptCard>()
+            ?: listOf()
+
         latestPromptCardVisible.get()?.let { isPromptCardVisible ->
-            if (isPromptCardVisible) tracker.trackMySiteCardViewed()
+            val attribution = bloggingPromptCards.firstOrNull()?.attribution
+            if (isPromptCardVisible) tracker.trackMySiteCardViewed(attribution)
             waitingToTrack.set(false)
         } ?: run {
             waitingToTrack.set(true)
@@ -42,19 +45,24 @@ class BloggingPromptsCardTrackHelper @Inject constructor(
     }
 
 
-    fun onDashboardCardsUpdated(scope: CoroutineScope, dashboard: DashboardCards?) {
+    fun onDashboardCardsUpdated(scope: CoroutineScope, state: MySiteViewModel.State.SiteSelected?) {
+        val bloggingPromptCards = state?.dashboardData
+            ?.filterIsInstance<BloggingPromptCard>()
+            ?: listOf()
+
         // cancel any existing job (debouncing mechanism)
         dashboardUpdateDebounceJob?.cancel()
 
         dashboardUpdateDebounceJob = scope.launch(bgDispatcher) {
-            val isVisible = dashboard?.cards?.any { card -> card is BloggingPromptCard } ?: false
+            val isVisible = bloggingPromptCards.isNotEmpty()
 
             // add a delay (debouncing mechanism)
             delay(PROMPT_CARD_VISIBLE_DEBOUNCE)
 
             latestPromptCardVisible.set(isVisible)
             if (isVisible && waitingToTrack.getAndSet(false)) {
-                tracker.trackMySiteCardViewed()
+                val attribution = bloggingPromptCards.firstOrNull()?.attribution
+                tracker.trackMySiteCardViewed(attribution)
             }
         }.also {
             it.invokeOnCompletion { cause ->
@@ -64,21 +72,21 @@ class BloggingPromptsCardTrackHelper @Inject constructor(
         }
     }
 
-    fun onResume(currentTab: MySiteTabType) {
-        if (currentTab == MySiteTabType.DASHBOARD) {
-            onDashboardRefreshed()
-        } else {
-            // moved away from dashboard, no longer waiting to track
-            waitingToTrack.set(false)
+    fun onResume(state: MySiteViewModel.State.SiteSelected?) {
+        onDashboardRefreshed(state)
+    }
+
+    fun onSiteChanged(siteId: Int?, state: MySiteViewModel.State.SiteSelected?) {
+        if (currentSite.getAndSet(siteId) != siteId) {
+            latestPromptCardVisible.set(null)
+            onDashboardRefreshed(state)
         }
     }
 
-    fun onSiteChanged(siteId: Int?) {
-        if (currentSite.getAndSet(siteId) != siteId) {
-            latestPromptCardVisible.set(null)
-            onDashboardRefreshed()
+    private val BloggingPromptCard.attribution: String?
+        get() {
+            return (this as? BloggingPromptCard.BloggingPromptCardWithData)?.attribution?.value
         }
-    }
 
     companion object {
         private const val PROMPT_CARD_VISIBLE_DEBOUNCE = 500L

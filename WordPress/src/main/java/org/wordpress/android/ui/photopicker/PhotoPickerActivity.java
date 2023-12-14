@@ -165,7 +165,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             setResult(RESULT_CANCELED);
             finish();
@@ -231,10 +231,6 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     private void launchCameraForImage() {
         WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
                 mediaCapturePath -> mMediaCapturePath = mediaCapturePath);
-    }
-
-    private void launchCameraForVideo() {
-        WPMediaUtils.launchVideoCamera(this);
     }
 
     private void launchPictureLibrary(boolean multiSelect) {
@@ -361,9 +357,6 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 break;
             case ANDROID_CHOOSE_PHOTO:
                 launchPictureLibrary(multiple);
-                break;
-            case ANDROID_CAPTURE_VIDEO:
-                launchCameraForVideo();
                 break;
             case ANDROID_CHOOSE_VIDEO:
                 launchVideoLibrary(multiple);

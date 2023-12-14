@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpackoverlay.individualplugin.compose
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
@@ -63,6 +64,7 @@ private val ContentTextStyle
 private val ContentMargin = 20.dp
 
 @Composable
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 fun WPJetpackIndividualPluginOverlayScreen(
     sites: List<SiteWithIndividualJetpackPlugins>,
     onCloseClick: () -> Unit,

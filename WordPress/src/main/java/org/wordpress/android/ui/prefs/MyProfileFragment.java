@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -49,9 +50,9 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        ((WordPress) requireActivity().getApplication()).component().inject(this);
     }
 
     @Override
@@ -139,7 +140,6 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
     }
 
     // helper method to create onClickListener to avoid code duplication
-    @SuppressWarnings("deprecation")
     private View.OnClickListener createOnClickListener(final String dialogTitle,
                                                        final String hint,
                                                        final WPTextView textView,
@@ -150,8 +150,7 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
                             .toString(),
                     hint, isMultiline, true,
                     textView.getId());
-            inputDialog.setTargetFragment(MyProfileFragment.this, 0);
-            inputDialog.show(getFragmentManager(), TextInputDialogFragment.TAG);
+            inputDialog.show(getChildFragmentManager(), TextInputDialogFragment.TAG);
         };
     }
 
@@ -192,7 +191,9 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
         }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            ToastUtils.showToast(getActivity(), R.string.error_post_my_profile_no_connection);
+            if (getActivity() != null) {
+                ToastUtils.showToast(getActivity(), R.string.error_post_my_profile_no_connection);
+            }
             return;
         }
 

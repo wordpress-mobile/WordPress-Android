@@ -17,6 +17,7 @@ class LargeValueFormatter : ValueFormatter() {
     private var mMaxLength = 5
     private val mFormat: DecimalFormat = DecimalFormat("###E00", DecimalFormatSymbols(Locale.US))
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun getFormattedValue(
         value: Float,
         entry: Entry,

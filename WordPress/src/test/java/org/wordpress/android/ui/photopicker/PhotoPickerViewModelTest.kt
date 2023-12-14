@@ -3,6 +3,7 @@ package org.wordpress.android.ui.photopicker
 import android.content.Context
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -96,7 +97,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `loads data on refresh`() = test {
+    fun `loads data on refresh with permissions granted`() = test {
         setupViewModel(listOf(firstItem), singleSelectBrowserType)
 
         viewModel.refreshData(false)
@@ -105,6 +106,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         assertDataList(singleSelectBrowserType, selectedItems = listOf(), domainItems = listOf(firstItem))
         assertSingleIconMediaBottomBarVisible()
         assertActionModeHidden()
+        assertPartialMediaAccessUi(isVisible = false)
     }
 
     @Test
@@ -246,16 +248,45 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `shows soft ask screen when photos videos permissions are turned off`() = test {
-        setupViewModel(listOf(), singleSelectBrowserType, hasPhotosVideosPermissions = false)
+        setupViewModel(
+            listOf(),
+            singleSelectBrowserType,
+            hasPhotosVideosPermissions = false,
+            hasPartialMediaAccess = false
+        )
         whenever(resourceProvider.getString(R.string.app_name)).thenReturn("WordPress")
         whenever(resourceProvider.getString(R.string.photo_picker_soft_ask_photos_label)).thenReturn("Soft ask label")
 
-        viewModel.checkMediaPermissions(isPhotosVideosAlwaysDenied = false, isMusicAudioAlwaysDenied = false)
+        viewModel.checkMediaPermissions(
+            isPhotosVideosAlwaysDenied = false,
+            isMusicAudioAlwaysDenied = false,
+            didJustRequestPermissions = false,
+        )
 
-        assertThat(uiStates).hasSize(2)
+        assertThat(uiStates).hasSize(3)
 
         assertSoftAskUiModelVisible()
         assertBottomBarHidden()
+    }
+
+    @Test
+    fun `show partial access UI when partial media access is granted`() = test {
+        setupViewModel(
+            listOf(firstItem),
+            singleSelectBrowserType,
+            hasPhotosVideosPermissions = true,
+            hasPartialMediaAccess = true,
+        )
+
+        viewModel.checkMediaPermissions(
+            isPhotosVideosAlwaysDenied = false,
+            isMusicAudioAlwaysDenied = false,
+            didJustRequestPermissions = true,
+        )
+
+        assertThat(uiStates).hasSize(4)
+        assertDataList(singleSelectBrowserType, selectedItems = listOf(), domainItems = listOf(firstItem))
+        assertPartialMediaAccessUi(isVisible = true)
     }
 
     @Test
@@ -380,9 +411,11 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     private suspend fun setupViewModel(
         domainModel: List<PhotoPickerItem>,
         browserType: MediaBrowserType,
-        hasPhotosVideosPermissions: Boolean = true
+        hasPhotosVideosPermissions: Boolean = true,
+        hasPartialMediaAccess: Boolean = false,
     ) {
         whenever(permissionsHandler.hasPhotosVideosPermission()).thenReturn(hasPhotosVideosPermissions)
+        whenever(permissionsHandler.hasOnlyPartialAccessPhotosVideosPermission()).thenReturn(hasPartialMediaAccess)
         viewModel.start(listOf(), browserType, null, site)
         whenever(deviceMediaListBuilder.buildDeviceMedia(browserType)).thenReturn(domainModel)
         viewModel.uiState.observeForever {
@@ -422,9 +455,9 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     private fun PhotoPickerUiItem.assertEqualToDomainItem(domainItem: PhotoPickerItem) {
         assertThat(this.id).isEqualTo(domainItem.id)
         if (domainItem.isVideo) {
-            assertThat(this is PhotoPickerUiItem.VideoItem)
+            assertTrue(this is PhotoPickerUiItem.VideoItem)
         } else {
-            assertThat(this is PhotoPickerUiItem.PhotoItem)
+            assertTrue(this is PhotoPickerUiItem.PhotoItem)
         }
 
         assertThat(this.uri).isEqualTo(domainItem.uri)
@@ -472,6 +505,12 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
             val model = it as PhotoPickerViewModel.ActionModeUiModel.Visible
             assertThat(model.actionModeTitle).isEqualTo(title)
             assertThat(model.showConfirmAction).isEqualTo(showConfirmationAction)
+        }
+    }
+
+    private fun assertPartialMediaAccessUi(isVisible: Boolean = false) {
+        uiStates.last().isPartialMediaAccessPromptVisible.let {
+            assertThat(it).isEqualTo(isVisible)
         }
     }
 }

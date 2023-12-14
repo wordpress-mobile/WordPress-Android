@@ -23,10 +23,16 @@ dependencies {
 }
 
 android {
+    namespace "org.wordpress.android.analytics"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
+    }
+
+    lint {
+        enable += 'UnknownNullness'
     }
 }

@@ -5,8 +5,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
 import org.wordpress.android.ui.posts.AuthorFilterSelection
-import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.prefs.AppPrefs.PrefKey
+import org.wordpress.android.ui.prefs.AppPrefs.getBoolean
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
@@ -17,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDa
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.LIKES
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.VISITORS
+import org.wordpress.android.usecase.social.JetpackSocialFlow
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -50,10 +51,6 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getAuthorFilterSelection()
         set(value) = AppPrefs.setAuthorFilterSelection(value)
 
-    var postListViewLayoutType: PostListViewLayoutType
-        get() = AppPrefs.getPostsListViewLayoutType()
-        set(value) = AppPrefs.setPostsListViewLayoutType(value)
-
     var systemNotificationsEnabled: Boolean
         get() = AppPrefs.getSystemNotificationsEnabled()
         set(value) = AppPrefs.setSystemNotificationsEnabled(value)
@@ -73,10 +70,6 @@ class AppPrefsWrapper @Inject constructor() {
     var readerCardsPageHandle: String?
         get() = AppPrefs.getReaderCardsPageHandle()
         set(pageHandle) = AppPrefs.setReaderCardsPageHandle(pageHandle)
-
-    var readerDiscoverWelcomeBannerShown: Boolean
-        get() = AppPrefs.getReaderDiscoverWelcomeBannerShown()
-        set(showBanner) = AppPrefs.setReaderDiscoverWelcomeBannerShown(showBanner)
 
     var shouldShowStoriesIntro: Boolean
         get() = AppPrefs.shouldShowStoriesIntro()
@@ -156,9 +149,6 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun isMainFabTooltipDisabled() = AppPrefs.isMainFabTooltipDisabled()
     fun setMainFabTooltipDisabled(disable: Boolean) = AppPrefs.setMainFabTooltipDisabled(disable)
-
-    fun getReaderSubfilter() = AppPrefs.getReaderSubfilter()
-    fun setReaderSubfilter(json: String) = AppPrefs.setReaderSubfilter(json)
 
     fun getLastReaderKnownAccessTokenStatus() = AppPrefs.getLastReaderKnownAccessTokenStatus()
     fun setLastReaderKnownAccessTokenStatus(lastKnownAccessTokenStatus: Boolean) =
@@ -332,17 +322,17 @@ class AppPrefsWrapper @Inject constructor() {
         isShown: Boolean
     ) = AppPrefs.setShouldShowJetpackFullPluginInstallOnboarding(siteId, isShown)
 
-    fun getShouldHidePromoteWithBlazeCard(siteId: Long): Boolean =
+    fun getShouldHideDashboardDomainTransferCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideDashboardDomainTransferCard(siteId)
+
+    fun setShouldHideDashboardDomainTransferCard(siteId: Long, isHidden: Boolean) =
+        AppPrefs.setShouldHideDashboardDomainTransferCard(siteId, isHidden)
+
+    fun hideBlazeCard(siteId: Long): Boolean =
         AppPrefs.getShouldHidePromoteWithBlazeCard(siteId)
 
-    fun setShouldHidePromoteWithBlazeCard(siteId: Long, isHidden: Boolean) =
+    fun setShouldHideBlazeCard(siteId: Long, isHidden: Boolean) =
         AppPrefs.setShouldHidePromoteWithBlazeCard(siteId, isHidden)
-
-    fun getShouldHideDashboardDomainCard(siteId: Long): Boolean =
-        AppPrefs.getShouldHideDashboardDomainCard(siteId)
-
-    fun setShouldHideDashboardDomainCard(siteId: Long, isHidden: Boolean) =
-        AppPrefs.setShouldHideDashboardDomainCard(siteId, isHidden)
 
     fun getShouldHideDashboardPlansCard(siteId: Long): Boolean =
         AppPrefs.getShouldHideDashboardPlansCard(siteId)
@@ -352,6 +342,87 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun incrementWPJetpackIndividualPluginOverlayShownCount() =
         AppPrefs.incrementWPJetpackIndividualPluginOverlayShownCount()
+
+    fun getShouldHideBlazeOverlay(): Boolean =
+        AppPrefs.getShouldHideBlazeOverlay()
+
+    fun setShouldHideBlazeOverlay(isHidden: Boolean) =
+        AppPrefs.setShouldHideBlazeOverlay(isHidden)
+
+    fun getShouldShowJetpackSocialNoConnections(remoteSiteId: Long, flow: JetpackSocialFlow): Boolean =
+        AppPrefs.getShouldShowJetpackSocialNoConnections(remoteSiteId, flow)
+
+    fun setShouldShowJetpackSocialNoConnections(show: Boolean, remoteSiteId: Long, flow: JetpackSocialFlow) =
+        AppPrefs.setShouldShowJetpackSocialNoConnections(show, remoteSiteId, flow)
+
+    fun setShouldHideActivityDashboardCard(
+        siteId: Long,
+        isHidden: Boolean
+    ) = AppPrefs.setShouldHideActivityDashboardCard(siteId, isHidden)
+
+    fun getShouldHideActivityDashboardCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideActivityDashboardCard(siteId)
+
+    fun setShouldHidePagesDashboardCard(
+        siteId: Long,
+        isHidden: Boolean
+    ) = AppPrefs.setShouldHidePagesDashboardCard(siteId, isHidden)
+
+    fun getShouldHidePagesDashboardCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHidePagesDashboardCard(siteId)
+
+    fun setShouldHideTodaysStatsDashboardCard(
+        siteId: Long,
+        isHidden: Boolean
+    ) = AppPrefs.setShouldHideTodaysStatsDashboardCard(siteId, isHidden)
+
+    fun getShouldHideTodaysStatsDashboardCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideTodaysStatsDashboardCard(siteId)
+
+    fun setShouldHidePostDashboardCard(
+        siteId: Long,
+        postCardType: String,
+        isHidden: Boolean
+    ) = AppPrefs.setShouldHidePostDashboardCard(siteId, postCardType, isHidden)
+
+    fun getShouldHidePostDashboardCard(siteId: Long, postCardType: String,): Boolean =
+        AppPrefs.getShouldHidePostDashboardCard(siteId, postCardType)
+
+    fun setShouldHideNextStepsDashboardCard(siteId: Long, isHidden: Boolean) =
+        AppPrefs.setShouldHideNextStepsDashboardCard(siteId, isHidden)
+
+    fun getShouldHideNextStepsDashboardCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideNextStepsDashboardCard(siteId)
+
+    fun setShouldHideGetToKnowTheAppDashboardCard(siteId: Long, isHidden: Boolean) =
+        AppPrefs.setShouldHideGetToKnowTheAppDashboardCard(siteId, isHidden)
+
+    fun getShouldHideGetToKnowTheAppDashboardCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideGetToKnowTheAppDashboardCard(siteId)
+
+    fun setShouldShowSiteItemAsQuickLink(siteItem: String, siteId: Long, shouldShow: Boolean) =
+        AppPrefs.setShouldShowSiteItemAsQuickLink(siteItem, siteId, shouldShow)
+
+    fun getShouldShowSiteItemAsQuickLink(siteItem: String, siteId: Long): Boolean =
+        AppPrefs.getShouldShowSiteItemAsQuickLink(siteItem, siteId)
+
+    fun setShouldShowDefaultQuickLink(siteItem: String, siteId: Long, shouldShow: Boolean) =
+        AppPrefs.setShouldShowDefaultQuickLink(siteItem, siteId, shouldShow)
+
+    fun getShouldShowDefaultQuickLink(siteItem: String, siteId: Long): Boolean =
+        AppPrefs.getShouldShowDefaultQuickLink(siteItem, siteId)
+
+    fun setShouldHideBloganuaryNudgeCard(siteId: Long, isHidden: Boolean) =
+        AppPrefs.setShouldHideBloganuaryNudgeCard(siteId, isHidden)
+
+    fun getShouldHideBloganuaryNudgeCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideBloganuaryNudgeCard(siteId)
+
+    fun setShouldHideSotw2023NudgeCard(isHidden: Boolean): Unit =
+        AppPrefs.setShouldHideSotw2023NudgeCard(isHidden)
+
+    fun getShouldHideSotw2023NudgeCard(): Boolean =
+        AppPrefs.getShouldHideSotw2023NudgeCard()
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
@@ -367,13 +438,17 @@ class AppPrefsWrapper @Inject constructor() {
         AppPrefs.putInt(prefKey, value)
     }
 
-    fun setBoolean(prefKey: PrefKey, value: Boolean) {
+    fun putBoolean(prefKey: PrefKey, value: Boolean) {
         AppPrefs.putBoolean(prefKey, value)
     }
 
     fun setStringSet(prefKey: PrefKey, set: Set<String>?) {
         AppPrefs.putStringSet(prefKey, set)
     }
+
+    var savedPrivacyBannerSettings: Boolean
+        get() = getBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, false)
+        set(value) = AppPrefs.setBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, value)
 
     companion object {
         private const val LIGHT_MODE_ID = 0

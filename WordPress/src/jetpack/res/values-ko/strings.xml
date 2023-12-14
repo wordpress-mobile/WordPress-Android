@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-06 23:54:20+0000
+Translation-Revision-Date: 2023-08-09 12:54:03+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="missing_splits_dialog_message">필수 구성 요소가 젯팩 앱에 없습니다. Google Play 스토어에서 다시 설치해야 합니다.</string>
     <string name="me_btn_share">친구와 젯팩 공유</string>
     <string name="login_prologue_revamped_jetpack_feature_text_12">글쓴이 추가</string>
     <string name="login_prologue_revamped_jetpack_feature_text_11">사진 게시</string>

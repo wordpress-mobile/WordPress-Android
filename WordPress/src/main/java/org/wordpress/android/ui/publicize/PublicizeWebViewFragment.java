@@ -12,6 +12,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
@@ -26,6 +27,8 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.util.WebViewUtils;
 import org.wordpress.android.util.helpers.WebChromeClientWithVideoPoster;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -71,7 +74,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -103,6 +106,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
+        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
 
         return rootView;
     }
@@ -171,9 +175,9 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
             // does this url denotes that we made it past the auth stage?
             if (isAdded() && url != null) {
                 Uri uri = Uri.parse(url);
-                if (uri.getHost().equals("public-api.wordpress.com")
-                    && uri.getPath().equals("/connect/")
-                    && uri.getQueryParameter("action").equals("verify")) {
+                if (Objects.equals(uri.getHost(), "public-api.wordpress.com")
+                    && Objects.equals(uri.getPath(), "/connect/")
+                    && Objects.equals(uri.getQueryParameter("action"), "verify")) {
                     // "denied" param will appear on failure or cancellation
                     String denied = uri.getQueryParameter("denied");
                     if (!TextUtils.isEmpty(denied)) {
@@ -193,7 +197,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
 
     private class PublicizeWebChromeClient extends WebChromeClientWithVideoPoster {
         PublicizeWebChromeClient() {
-            super(mWebView, R.drawable.media_movieclip);
+            super(mWebView, org.wordpress.android.editor.R.drawable.media_movieclip);
         }
 
         @Override

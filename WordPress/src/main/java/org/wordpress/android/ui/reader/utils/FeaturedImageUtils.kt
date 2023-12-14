@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.utils
 
-import androidx.annotation.NonNull
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -44,7 +43,7 @@ class FeaturedImageUtils
     /*
      * returns true if the post has a featured image and the featured image is not found in the post body
      */
-    fun shouldAddFeaturedImage(@NonNull readerPost: ReaderPost): Boolean {
+    fun shouldAddFeaturedImage(readerPost: ReaderPost): Boolean {
         return (readerPost.hasFeaturedImage() &&
                 !photonUtilsWrapper.isMshotsUrl(readerPost.featuredImage) &&
                 showFeaturedImage(readerPost.featuredImage, readerPost.text))

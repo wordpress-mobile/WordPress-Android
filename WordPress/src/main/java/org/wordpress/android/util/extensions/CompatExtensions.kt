@@ -11,7 +11,12 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
+import androidx.core.content.IntentCompat
+import androidx.core.os.BundleCompat
+import androidx.core.os.ParcelCompat
 import java.io.Serializable
+
+/* ON BACK PRESSED */
 
 /**
  * This is a temporary workaround for the issue described here: https://issuetracker.google.com/issues/247982487
@@ -29,17 +34,14 @@ fun OnBackPressedDispatcher.onBackPressedCompat(onBackPressedCallback: OnBackPre
     onBackPressedCallback.isEnabled = true
 }
 
-/**
- * TODO: Remove this when stable androidx.core 1.10 is released. Use IntentCompat instead.
- */
-@Suppress("ForbiddenComment")
+/* INTENT */
+
 inline fun <reified T : Parcelable> Intent.getParcelableExtraCompat(key: String): T? =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        getParcelableExtra(key, T::class.java)
-    } else {
-        @Suppress("DEPRECATION")
-        getParcelableExtra(key) as T?
-    }
+    IntentCompat.getParcelableExtra(
+        this,
+        key,
+        T::class.java
+    )
 
 /**
  * This is an Android 13 compatibility function that is not included in IntentCompat.
@@ -52,29 +54,21 @@ inline fun <reified T : Serializable> Intent.getSerializableExtraCompat(key: Str
         getSerializableExtra(key) as T?
     }
 
-/**
- * TODO: Remove this when stable androidx.core 1.10 is released. Use BundleCompat instead.
- */
-@Suppress("ForbiddenComment")
-inline fun <reified T : Parcelable> Bundle.getParcelableCompat(key: String): T? =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        getParcelable(key, T::class.java)
-    } else {
-        @Suppress("DEPRECATION")
-        getParcelable(key)
-    }
+/* BUNDLE */
 
-/**
- * TODO: Remove this when stable androidx.core 1.10 is released. Use BundleCompat instead.
- */
-@Suppress("ForbiddenComment")
+inline fun <reified T : Parcelable> Bundle.getParcelableCompat(key: String): T? =
+    BundleCompat.getParcelable(
+        this,
+        key,
+        T::class.java
+    )
+
 inline fun <reified T : Parcelable> Bundle.getParcelableArrayListCompat(key: String): ArrayList<T>? =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        getParcelableArrayList(key, T::class.java)
-    } else {
-        @Suppress("DEPRECATION")
-        getParcelableArrayList(key)
-    }
+    BundleCompat.getParcelableArrayList(
+        this,
+        key,
+        T::class.java
+    )
 
 /**
  * This is an Android 13 compatibility function that is not included in BundleCompat.
@@ -87,31 +81,25 @@ inline fun <reified T : Serializable?> Bundle.getSerializableCompat(key: String)
         getSerializable(key) as T?
     }
 
-/**
- * TODO: Remove this when upgrading to androidx.core 1.9.0. Use ParcelCompat instead.
- */
-@Suppress("ForbiddenComment")
-inline fun <reified T : Parcelable> Parcel.readParcelableCompat(loader: ClassLoader?): T? {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        readParcelable(loader, T::class.java)
-    } else {
-        @Suppress("DEPRECATION")
-        readParcelable(loader)
-    }
+/* PARCEL */
+
+inline fun <reified T : Parcelable> Parcel.readParcelableCompat(loader: ClassLoader?): T? =
+    ParcelCompat.readParcelable(
+        this,
+        loader,
+        T::class.java
+    )
+
+inline fun <reified T> Parcel.readListCompat(outVal: MutableList<T?>, loader: ClassLoader?) {
+    ParcelCompat.readList(
+        this,
+        outVal,
+        loader,
+        T::class.java
+    )
 }
 
-/**
- * TODO: Remove this when upgrading to androidx.core 1.9.0. Use ParcelCompat instead.
- */
-@Suppress("ForbiddenComment")
-inline fun <reified T> Parcel.readListCompat(outVal: MutableList<T?>, loader: ClassLoader?) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        readList(outVal, loader, T::class.java)
-    } else {
-        @Suppress("DEPRECATION")
-        readList(outVal, loader)
-    }
-}
+/* PACKAGE MANAGER */
 
 fun PackageManager.getActivityInfoCompat(componentName: ComponentName, flags: Int): ActivityInfo =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

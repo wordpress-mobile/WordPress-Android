@@ -11,17 +11,18 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard.PagesCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams.PagesItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.config.DashboardCardPagesConfig
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 const val PAGE_STATUS_PUBLISH = "publish"
 const val PAGE_STATUS_DRAFT = "draft"
 const val PAGE_STATUS_SCHEDULED = "future"
+const val PAGE_STATUS_DELETED = "deleted"
 
 const val PAGE_ID = 1
 const val PAGE_TITLE = "title"
@@ -43,6 +44,8 @@ private val PAGE_MODEL_DRAFT = PAGE_MODEL_PUBLISHED.copy(id = 2, status = PAGE_S
 
 private val PAGE_MODEL_SCHEDULED = PAGE_MODEL_PUBLISHED.copy(id = 3, status = PAGE_STATUS_SCHEDULED)
 
+private val PAGE_MODEL_DELETED = PAGE_MODEL_PUBLISHED.copy(id = 3, status = PAGE_STATUS_DELETED)
+
 // pages with one item
 private val PAGES_MODEL = PagesCardModel(
     pages = listOf(PAGE_MODEL_PUBLISHED)
@@ -61,36 +64,25 @@ private val PAGES_MODEL_3 = PagesCardModel(
 @ExperimentalCoroutinesApi
 class PagesCardBuilderTest : BaseUnitTest() {
     @Mock
-    private lateinit var dashboardCardPagesConfig: DashboardCardPagesConfig
-
-    @Mock
     private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
 
     private lateinit var builder: PagesCardBuilder
 
     private val onPagesCardFooterClick: () -> Unit = { }
     private val onPagesItemClick: (params: PagesItemClickParams) -> Unit = {}
+    private val onPagesCardMoreClick: () -> Unit = {}
+    private val onMoreMenuAllPagesClick: () -> Unit = {}
+    private val onMoreMenuHideCardClick: () -> Unit = {}
 
     @Before
     fun build() {
-        builder = PagesCardBuilder(dashboardCardPagesConfig, dateTimeUtilsWrapper)
+        builder = PagesCardBuilder(dateTimeUtilsWrapper)
         setupMocks()
     }
 
     private fun setupMocks() {
-        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(true)
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("")
         whenever(dateTimeUtilsWrapper.getRelativeTimeSpanString(any())).thenReturn("")
-    }
-
-    @Test
-    fun `given config is false, when card is built, then return null`() {
-        whenever(dashboardCardPagesConfig.isEnabled()).thenReturn(false)
-        val params = getPagesBuildParams(PAGES_MODEL)
-
-        val result = builder.build(params)
-
-        assert(result == null)
     }
 
     @Test
@@ -100,6 +92,15 @@ class PagesCardBuilderTest : BaseUnitTest() {
         val result = builder.build(params) as PagesCardWithData
 
         assert(result.pages.isEmpty())
+    }
+
+    @Test
+    fun `given a page with unknown status, when card is built, then no pages item is present`() {
+        val params = getPagesBuildParams(PagesCardModel(pages = listOf(PAGE_MODEL_DELETED)))
+
+        val result = builder.build(params) as PagesCardWithData
+
+        assertTrue(result.pages.isEmpty())
     }
 
     @Test
@@ -192,7 +193,12 @@ class PagesCardBuilderTest : BaseUnitTest() {
         return PagesCardBuilderParams(
             pageCard = pagesCardModel,
             onFooterLinkClick = onPagesCardFooterClick,
-            onPagesItemClick = onPagesItemClick
+            onPagesItemClick = onPagesItemClick,
+            moreMenuClickParams = PagesCardBuilderParams.MoreMenuParams(
+                onMoreMenuClick = onPagesCardMoreClick,
+                onHideThisCardItemClick = onMoreMenuHideCardClick,
+                onAllPagesItemClick = onMoreMenuAllPagesClick
+            )
         )
     }
 

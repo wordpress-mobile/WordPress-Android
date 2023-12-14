@@ -2,20 +2,19 @@ package org.wordpress.android.viewmodel.pages
 
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.blaze.BlazeFeatureUtils
-import org.wordpress.android.ui.pages.PageItem.Action
-import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
-import org.wordpress.android.ui.pages.PageItem.Action.COPY
-import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
-import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
-import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
-import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
-import org.wordpress.android.ui.pages.PageItem.Action.PROMOTE_WITH_BLAZE
-import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
-import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
-import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
-import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
-import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
+import org.wordpress.android.ui.pages.PagesListAction
+import org.wordpress.android.ui.pages.PagesListAction.CANCEL_AUTO_UPLOAD
+import org.wordpress.android.ui.pages.PagesListAction.COPY
+import org.wordpress.android.ui.pages.PagesListAction.COPY_LINK
+import org.wordpress.android.ui.pages.PagesListAction.DELETE_PERMANENTLY
+import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_DRAFT
+import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_TRASH
+import org.wordpress.android.ui.pages.PagesListAction.PROMOTE_WITH_BLAZE
+import org.wordpress.android.ui.pages.PagesListAction.PUBLISH_NOW
+import org.wordpress.android.ui.pages.PagesListAction.SET_AS_HOMEPAGE
+import org.wordpress.android.ui.pages.PagesListAction.SET_AS_POSTS_PAGE
+import org.wordpress.android.ui.pages.PagesListAction.SET_PARENT
+import org.wordpress.android.ui.pages.PagesListAction.VIEW_PAGE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
@@ -26,7 +25,7 @@ import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostU
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadWaitingForConnection
 import javax.inject.Inject
 
-class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeatureUtils: BlazeFeatureUtils) {
+class CreatePageListItemActionsUseCase @Inject constructor() {
     @SuppressWarnings("ReturnCount")
     fun setupPageActions(
         listType: PageListType,
@@ -34,7 +33,7 @@ class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeat
         siteModel: SiteModel,
         remoteId: Long,
         isPageEligibleForBlaze: Boolean = false
-    ): Set<Action> {
+    ): List<PagesListAction> {
         return when (listType) {
             SCHEDULED -> return getScheduledPageActions(uploadUiState)
             PUBLISHED -> return getPublishedPageActions(
@@ -44,13 +43,18 @@ class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeat
                 uploadUiState,
                 isPageEligibleForBlaze
             )
+
             DRAFTS -> getDraftsPageActions(uploadUiState)
-            TRASHED -> setOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY)
+            TRASHED -> mutableListOf(MOVE_TO_DRAFT, DELETE_PERMANENTLY).sortedWith(
+                compareBy(
+                    { it.actionGroup },
+                    { it.positionInGroup })
+            ).toList()
         }
     }
 
-    private fun getScheduledPageActions(uploadUiState: PostUploadUiState): MutableSet<Action> {
-        return mutableSetOf(
+    private fun getScheduledPageActions(uploadUiState: PostUploadUiState): List<PagesListAction> {
+        return mutableListOf(
             VIEW_PAGE,
             SET_PARENT,
             COPY_LINK,
@@ -60,7 +64,7 @@ class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeat
             if (canCancelPendingAutoUpload(uploadUiState)) {
                 add(CANCEL_AUTO_UPLOAD)
             }
-        }
+        }.sortedWith(compareBy({ it.actionGroup }, { it.positionInGroup })).toList()
     }
 
     private fun canCancelPendingAutoUpload(uploadUiState: PostUploadUiState) =
@@ -73,8 +77,8 @@ class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeat
         listType: PageListType,
         uploadUiState: PostUploadUiState,
         isPageEligibleForBlaze: Boolean
-    ): MutableSet<Action> {
-        return mutableSetOf(
+    ): List<PagesListAction> {
+        return mutableListOf(
             VIEW_PAGE,
             COPY,
             COPY_LINK,
@@ -101,17 +105,17 @@ class CreatePageListItemActionsUseCase @Inject constructor(private val blazeFeat
                 add(CANCEL_AUTO_UPLOAD)
             }
 
-            if (isPageEligibleForBlaze && blazeFeatureUtils.isBlazeEnabled()) {
+            if (isPageEligibleForBlaze) {
                 add(PROMOTE_WITH_BLAZE)
             }
-        }
+        }.sortedWith(compareBy({ it.actionGroup }, { it.positionInGroup })).toList()
     }
 
-    private fun getDraftsPageActions(uploadUiState: PostUploadUiState): MutableSet<Action> {
-        return mutableSetOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, COPY_LINK).apply {
+    private fun getDraftsPageActions(uploadUiState: PostUploadUiState): List<PagesListAction> {
+        return mutableListOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, COPY_LINK).apply {
             if (canCancelPendingAutoUpload(uploadUiState)) {
                 add(CANCEL_AUTO_UPLOAD)
             }
-        }
+        }.sortedWith(compareBy({ it.actionGroup }, { it.positionInGroup })).toList()
     }
 }

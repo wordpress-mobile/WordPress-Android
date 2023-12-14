@@ -12,7 +12,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_ERROR
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
@@ -122,7 +122,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
             .thenReturn(listOf(lineChartItem))
         whenever(viewsAndVisitorsMapper.buildInformation(any(), any(), any())).thenReturn(Text(text = ""))
         whenever(viewsAndVisitorsMapper.buildChips(any(), any())).thenReturn(chips)
-        whenever(resourceProvider.getString(string.stats_loading_card)).thenReturn("Loading")
+        whenever(resourceProvider.getString(R.string.stats_loading_card)).thenReturn("Loading")
     }
 
     @Test

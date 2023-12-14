@@ -1,18 +1,18 @@
 package org.wordpress.android.ui.reader.views
 
-import android.R.integer
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
-import org.wordpress.android.ui.reader.views.ReaderFollowButtonType.FOLLOW_SITE
+import android.R as AndroidR
 
 /**
  * Follow button used in reader detail
@@ -24,7 +24,6 @@ class ReaderFollowButton @JvmOverloads constructor(
 ) : MaterialButton(context, attrs, defStyleAttr) {
     private var isFollowed = false
     private var showCaption = false
-    private var followButtonType = FOLLOW_SITE
 
     init {
         initView(context, attrs)
@@ -36,41 +35,19 @@ class ReaderFollowButton @JvmOverloads constructor(
         attrs?.let {
             val array = context.theme.obtainStyledAttributes(attrs, R.styleable.ReaderFollowButton, 0, 0)
             showCaption = array.getBoolean(R.styleable.ReaderFollowButton_wpShowFollowButtonCaption, true)
-
-            try {
-                val buttonTypeValue = array.getInteger(R.styleable.ReaderFollowButton_wpReaderFollowButtonType, -1)
-                if (buttonTypeValue != -1) {
-                    followButtonType = ReaderFollowButtonType.fromInt(buttonTypeValue)
-                }
-            } finally {
-                array.recycle()
-            }
         }
         if (!showCaption) {
-            hideCaptionAndEnlargeIcon(context)
+            text = null
         }
 
-        updateFollowTextAndIcon()
+        updateFollowText()
     }
 
-    private fun hideCaptionAndEnlargeIcon(context: Context) {
-        text = null
-        iconSize = context.resources.getDimensionPixelSize(R.dimen.reader_follow_icon_no_caption)
-        iconPadding = context.resources.getDimensionPixelSize(R.dimen.reader_follow_icon_padding_no_caption)
-        iconGravity = ICON_GRAVITY_TEXT_START
-    }
-
-    private fun updateFollowTextAndIcon() {
+    private fun updateFollowText() {
         if (showCaption) {
-            setText(if (isFollowed) followButtonType.captionFollowing else followButtonType.captionFollow)
+            setText(if (isFollowed) R.string.reader_btn_unfollow else R.string.reader_btn_follow)
         }
         isSelected = isFollowed
-        val drawableId = if (isFollowed) {
-            followButtonType.iconFollowing
-        } else {
-            followButtonType.iconFollow
-        }
-        icon = context.resources.getDrawable(drawableId, context.theme)
     }
 
     fun setIsFollowed(isFollowed: Boolean) {
@@ -81,6 +58,7 @@ class ReaderFollowButton @JvmOverloads constructor(
         setIsFollowed(isFollowed, true)
     }
 
+    @SuppressLint("Recycle")
     private fun setIsFollowed(isFollowed: Boolean, animateChanges: Boolean) {
         if (isFollowed == this.isFollowed && isSelected == isFollowed) {
             return
@@ -98,17 +76,17 @@ class ReaderFollowButton @JvmOverloads constructor(
                 repeatCount = 1
                 addListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationRepeat(animation: Animator) {
-                        updateFollowTextAndIcon()
+                        updateFollowText()
                     }
                 })
             }
             AnimatorSet().apply {
                 play(anim)
-                duration = context.resources.getInteger(integer.config_shortAnimTime).toLong()
+                duration = context.resources.getInteger(AndroidR.integer.config_shortAnimTime).toLong()
                 interpolator = AccelerateDecelerateInterpolator()
             }.start()
         } else {
-            updateFollowTextAndIcon()
+            updateFollowText()
         }
     }
 }

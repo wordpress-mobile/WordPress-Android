@@ -52,7 +52,7 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
         super.onViewCreated(view, savedInstanceState)
         with(JetpackBackupRestoreFragmentBinding.bind(view)) {
             initDagger()
-            requireActivity().onBackPressedDispatcher.addCallback(this@BackupDownloadFragment) {
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
                 viewModel.onBackPressed()
             }
             initAdapter()

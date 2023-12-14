@@ -28,11 +28,13 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.fluxc.store.MediaStore
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PagesAuthorFilterUIState
+import org.wordpress.android.ui.pages.PagesListAction
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
@@ -86,8 +88,15 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var editorThemeStore: EditorThemeStore
 
+    @Mock
+    lateinit var blazeFeatureUtils: BlazeFeatureUtils
+
     private lateinit var viewModel: PageListViewModel
-    private val site = SiteModel()
+
+    private val site = SiteModel().apply {
+        hasCapabilityEditOthersPages = true
+    }
+
     private val pageListState = MutableLiveData<PageListState>()
     private lateinit var actions: MutableList<Action<*>>
 
@@ -105,7 +114,8 @@ class PageListViewModelTest : BaseUnitTest() {
             globalStyleSupportFeatureConfig,
             editorThemeStore,
             siteEditorMVPFeatureConfig,
-            testDispatcher(),
+            blazeFeatureUtils,
+            testDispatcher()
         )
 
         whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(
@@ -117,6 +127,7 @@ class PageListViewModelTest : BaseUnitTest() {
         val invalidateUploadStatus = MutableLiveData<List<LocalId>>()
 
         whenever(pagesViewModel.arePageActionsEnabled).thenReturn(false)
+        site.setIsSingleUserSite(false)
         whenever(pagesViewModel.site).thenReturn(site)
         whenever(pagesViewModel.invalidateUploadStatus).thenReturn(invalidateUploadStatus)
         whenever(pagesViewModel.uploadStatusTracker).thenReturn(mock())
@@ -134,9 +145,6 @@ class PageListViewModelTest : BaseUnitTest() {
         whenever(pagesViewModel.authorUIState).thenReturn(authorFilterState)
         val accountModel = AccountModel()
         accountModel.userId = 4
-
-        val blazeSiteEligibility = MutableLiveData<Boolean>()
-        whenever(pagesViewModel.blazeSiteEligibility).thenReturn(blazeSiteEligibility)
 
         doAnswer {
             actions.add(it.getArgument(0))
@@ -402,7 +410,7 @@ class PageListViewModelTest : BaseUnitTest() {
     @Test
     fun `verify PageListItemActionsUseCase passes the Menu Actions to PublishedPage`() {
         // Arrange
-        val actions = setOf(mock<PageItem.Action>())
+        val actions = mutableListOf(mock<PagesListAction>())
 
         whenever(
             pageListItemActionsUseCase.setupPageActions(
@@ -587,7 +595,7 @@ class PageListViewModelTest : BaseUnitTest() {
 
         viewModel.start(PUBLISHED, pagesViewModel)
 
-        val action = PageItem.VirtualHomepage.Action.OPEN_SITE_EDITOR
+        val action = PageItem.VirtualHomepage.Action.OpenSiteEditor
         viewModel.onVirtualHomepageAction(action)
 
         verify(pagesViewModel).onVirtualHomepageAction(action)

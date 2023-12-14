@@ -20,8 +20,6 @@ import com.airbnb.lottie.LottieAnimationView
 import org.json.JSONArray
 import org.json.JSONException
 import org.wordpress.android.R
-import org.wordpress.android.R.layout
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.datasets.ReaderCommentTable
@@ -101,12 +99,12 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(layout.notifications_fragment_detail_list, container, false)
+        val view = inflater.inflate(R.layout.notifications_fragment_detail_list, container, false)
         rootLayout = view.findViewById(R.id.notifications_list_root) as LinearLayout
         return view
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityCreated(bundle: Bundle?) {
         super.onActivityCreated(bundle)
         val listView = listView
@@ -173,7 +171,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private fun showErrorToastAndFinish() {
         AppLog.e(NOTIFS, "Note could not be found.")
         activity?.let {
-            ToastUtils.showToast(activity, string.error_notification_open)
+            ToastUtils.showToast(activity, R.string.error_notification_open)
             it.finish()
         }
     }
@@ -455,6 +453,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             return pingbackUrl
         }
 
+        @Suppress("OVERRIDE_DEPRECATION")
         override fun doInBackground(vararg params: Void): List<NoteBlock>? {
             if (notification == null) {
                 return null
@@ -478,7 +477,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                     // Remove this when we start receiving "Read the source post block" from the backend
                     val generatedBlock = buildGeneratedLinkBlock(
                         mOnNoteBlockTextClickListener, pingbackUrl,
-                        activity!!.getString(string.comment_read_source_post)
+                        activity!!.getString(R.string.comment_read_source_post)
                     )
                     generatedBlock.setIsPingback()
                     noteList.add(generatedBlock)
@@ -519,6 +518,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             )
         }
 
+        @Suppress("OVERRIDE_DEPRECATION")
         override fun onPostExecute(noteList: List<NoteBlock>?) {
             if (!isAdded || noteList == null) {
                 return

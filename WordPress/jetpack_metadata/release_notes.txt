@@ -1,8 +1,4 @@
-* [**] [Jetpack-only] Adds a dashboard card for viewing activity log [https://github.com/wordpress-mobile/WordPress-Android/pull/18306]
-* [**] [Jetpack-only] Adds a dashboard card for viewing pages [https://github.com/wordpress-mobile/WordPress-Android/pull/18337]
-* [**] [internal] Block editor: Add fullscreen embed preview to Android [https://github.com/wordpress-mobile/gutenberg-mobile/pull/5743]
-* [*] [Jetpack-only] Block editor: Fix crash when trying to convert to regular blocks an undefined/deleted reusable block [https://github.com/WordPress/gutenberg/pull/50475]
-* [**] Block editor: Tapping on a nested block now gets focus directly instead of having to tap multiple times depending on the nesting levels. [https://github.com/WordPress/gutenberg/pull/50108]
-* [*] [Jetpack-only] Block editor: Use host app namespace in reusable block message [https://github.com/WordPress/gutenberg/pull/50478]
-* [*] [internal] [Jetpack-only] Enables domain purchases in site creation A/B experiment. [https://github.com/wordpress-mobile/WordPress-Android/pull/18414]
-
+No updates this week! Enjoy these reindeer facts:
+- Male reindeer shed their antlers in fall and females in spring, so Santa’s reindeer are female.
+- Reindeer don’t actually have red noses.
+- Santa hasn’t eaten milk and cookies since 2003 because Blitzen always gets there first.

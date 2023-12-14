@@ -2,9 +2,10 @@ package org.wordpress.android.ui.mysite.cards.dashboard.pages
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.CreateNewPageItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PagesCard.PagesCardWithData.PageContentItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard.PagesCardWithData.CreateNewPageItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard.PagesCardWithData.PageContentItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard.PagesCardWithData.MoreMenuOptions
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams.PagesItemClickParams
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardContentType.DRAFT
@@ -14,13 +15,11 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.config.DashboardCardPagesConfig
 import javax.inject.Inject
 
 private const val REQUIRED_PAGES_IN_CARD: Int = 3
 
 class PagesCardBuilder @Inject constructor(
-    private val dashboardCardPagesConfig: DashboardCardPagesConfig,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
     fun build(params: PagesCardBuilderParams): PagesCard? {
@@ -31,9 +30,7 @@ class PagesCardBuilder @Inject constructor(
     }
 
     private fun shouldBuildCard(params: PagesCardBuilderParams): Boolean {
-        if (!dashboardCardPagesConfig.isEnabled() ||
-            params.pageCard == null
-        ) return false
+        if (params.pageCard == null) return false
 
         return true
     }
@@ -41,18 +38,23 @@ class PagesCardBuilder @Inject constructor(
     private fun convertToPagesItems(params: PagesCardBuilderParams): PagesCard.PagesCardWithData {
         val pages = params.pageCard?.pages
         val content =
-            pages?.filterByPagesCardSupportedStatus()?.let { getPagesContentItems(pages, params.onPagesItemClick) }
+            pages?.filterByPagesCardSupportedStatus()?.let { getPagesContentItems(it, params.onPagesItemClick) }
                 ?: emptyList()
         val createPageCard = getCreatePageCard(content, params.onFooterLinkClick)
         return PagesCard.PagesCardWithData(
             title = UiStringRes(R.string.dashboard_pages_card_title),
             pages = content,
-            footerLink = createPageCard
+            footerLink = createPageCard,
+            moreMenuOptionsLink = MoreMenuOptions(
+                onMoreClick = params.moreMenuClickParams.onMoreMenuClick,
+                allPagesMenuItemClick = params.moreMenuClickParams.onAllPagesItemClick,
+                hideThisMenuItemClick = params.moreMenuClickParams.onHideThisCardItemClick
+            )
         )
     }
 
     private fun List<PagesCardModel.PageCardModel>.filterByPagesCardSupportedStatus() =
-        this.filter { it.status in PagesCardContentType.getList() }
+        this.filter { it.status.lowercase() in PagesCardContentType.getList() }
 
     private fun getPagesContentItems(
         pages: List<PagesCardModel.PageCardModel>,

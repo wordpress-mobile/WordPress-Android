@@ -24,4 +24,5 @@
     <color name="primary_light">@color/blue_30</color>
 
     <color name="nav_bar">@color/colorPrimary</color>
+    <color name="tab_indicator">@color/colorPrimary</color>
 </resources>

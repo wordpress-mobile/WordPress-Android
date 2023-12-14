@@ -26,6 +26,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateFormatWrapper
 import java.util.Date
 import javax.inject.Inject
+import com.google.android.material.R as MaterialR
 
 @Reusable
 class ThreatDetailsListItemsBuilder @Inject constructor(
@@ -226,7 +227,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
 
         val lineNumberBackgroundColorRes = if (isHighlighted) {
             R.color.context_line_highlighted_row_background
-        } else R.color.material_on_surface_disabled
+        } else MaterialR.color.material_on_surface_disabled
 
         val contentBackgroundColorRes = if (isHighlighted) {
             R.color.context_line_highlighted_row_background

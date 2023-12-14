@@ -10,9 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityLauncherWrapper
+import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.CAMPAIGN_SITE_CREATION
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
@@ -33,6 +35,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.CreatedButNotFetched
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.INTENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.PLANS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.PROGRESS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_DESIGNS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_NAME
@@ -42,6 +45,9 @@ import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
+import org.wordpress.android.ui.sitecreation.plans.PlanModel
+import org.wordpress.android.ui.sitecreation.plans.PlansScreenListener
+import org.wordpress.android.ui.sitecreation.plans.SiteCreationPlansFragment
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel
 import org.wordpress.android.ui.sitecreation.progress.SiteCreationProgressFragment
@@ -62,12 +68,14 @@ import org.wordpress.android.util.extensions.onBackPressedCompat
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
+import android.R as AndroidR
 
 @AndroidEntryPoint
 class SiteCreationActivity : LocaleAwareActivity(),
     IntentsScreenListener,
     SiteNameScreenListener,
     DomainsScreenListener,
+    PlansScreenListener,
     OnHelpClickedListener,
     BasicDialogPositiveClickInterface,
     BasicDialogNegativeClickInterface {
@@ -110,6 +118,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.preloadThumbnails(this)
 
         observeVMState()
+        observeOverlayEvents(savedInstanceState)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -119,7 +128,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     @Suppress("LongMethod")
     private fun observeVMState() {
-        mainViewModel.navigationTargetObservable.observe(this) { it?.let(::showStep) }
+        mainViewModel.navigationTargetObservable.observe(this, ::showStep)
         mainViewModel.onCompleted.observe(this) { (result, isTitleTaskComplete) ->
             val intent = Intent().apply {
                 putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, (result as? Created)?.site?.id)
@@ -158,22 +167,29 @@ class SiteCreationActivity : LocaleAwareActivity(),
         progressViewModel.onFreeSiteCreated.observe(this, mainViewModel::onFreeSiteCreated)
         progressViewModel.onCartCreated.observe(this, mainViewModel::onCartCreated)
         previewViewModel.onOkButtonClicked.observe(this, mainViewModel::onWizardFinished)
-        observeOverlayEvents()
     }
 
-    private fun observeOverlayEvents() {
-        val fragment = JetpackFeatureFullScreenOverlayFragment
-            .newInstance(
-                isSiteCreationOverlay = true,
-                siteCreationSource = getSiteCreationSource()
-            )
+    private fun observeOverlayEvents(savedInstanceState: Bundle?) {
+        if(BuildConfig.IS_JETPACK_APP)
+            return
+
+        val fragment =  if (savedInstanceState == null) {
+            JetpackFeatureFullScreenOverlayFragment
+                .newInstance(
+                    isSiteCreationOverlay = true,
+                    siteCreationSource = getSiteCreationSource()
+                )
+        }else {
+            supportFragmentManager.findFragmentByTag(JetpackFeatureFullScreenOverlayFragment.TAG)
+                    as JetpackFeatureFullScreenOverlayFragment
+        }
 
         jetpackFullScreenViewModel.action.observe(this) { action ->
             if (mainViewModel.siteCreationDisabled) finish()
             when (action) {
                 is OpenPlayStore -> {
                     fragment.dismiss()
-                    activityLauncherWrapper.openPlayStoreLink(this, JETPACK_PACKAGE_NAME)
+                    activityLauncherWrapper.openPlayStoreLink(this, JETPACK_PACKAGE_NAME, CAMPAIGN_SITE_CREATION)
                 }
                 is DismissDialog -> {
                     fragment.dismiss()
@@ -210,6 +226,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.onDomainsScreenFinished(domain)
     }
 
+    override fun onPlanSelected(plan: PlanModel?, domainName: String?) {
+        mainViewModel.onPlanSelection(plan, domainName)
+    }
+
     override fun onHelpClicked(origin: Origin) {
         ActivityLauncher.viewHelp(this, origin, null, null)
     }
@@ -225,6 +245,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
                 HomePagePickerFragment.newInstance(target.wizardState.siteIntent)
             }
             DOMAINS -> SiteCreationDomainsFragment.newInstance(screenTitle)
+            PLANS -> SiteCreationPlansFragment.newInstance(target.wizardState)
             PROGRESS -> SiteCreationProgressFragment.newInstance(target.wizardState)
             SITE_PREVIEW -> SiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState)
         }
@@ -270,7 +291,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == AndroidR.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
         }

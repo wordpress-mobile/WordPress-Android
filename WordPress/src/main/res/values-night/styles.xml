@@ -62,7 +62,7 @@
         <!-- we can remove it after moving away from Bridge version of theme -->
         <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
 
-        <item name="followButtonStyle">@style/Reader.Follow.Button</item>
+        <item name="followButtonStyle">@style/Reader.Follow.Button.New</item>
 
         <item name="android:statusBarColor">?attr/colorSurface</item>
 
@@ -101,7 +101,8 @@
     </style>
 
     <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="android:backgroundTint">?attr/colorSecondaryVariant</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Material3.FloatingActionButton</item>
+        <item name="android:backgroundTint">?attr/colorBackgroundFloating</item>
         <item name="tint">?attr/colorOnSurface</item>
     </style>
 
@@ -136,8 +137,6 @@
     </style>
 
     <!-- Domains -->
-    <style name="Domains.Button.Primary.Unelevated.OnPrimarySurface" parent="WordPress.Button.Primary.Unelevated" />
-
     <style name="Wordpress.BottomBar" parent="WordPress.NoActionBar">
         <item name="android:navigationBarColor">@color/background_dark_elevated</item>
     </style>

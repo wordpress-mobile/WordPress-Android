@@ -79,6 +79,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     private val uiStateMapper = QRCodeAuthUiStateMapper()
 
     private val validQueryParams = mapOf(DATA_KEY to DATA, TOKEN_KEY to TOKEN)
@@ -136,12 +137,17 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     fun `given validate state, when primary action is clicked, then state is authenticating`() {
         val uiStates = mutableListOf<QRCodeAuthUiState>()
         testWithData(uiStates) {
+            initAuthenticate()
             initAndStartVMForState(VALIDATED)
 
             (uiStates.last() as Validated).primaryActionButton.clickAction()
 
-            assertThat(uiStates.last().type).isEqualTo(AUTHENTICATING)
+            assertThat(getTheSecondLastItem(uiStates).type).isEqualTo(AUTHENTICATING)
         }
+    }
+
+    private fun getTheSecondLastItem(uiStates: MutableList<QRCodeAuthUiState>): QRCodeAuthUiState {
+        return uiStates[uiStates.size - 2]
     }
 
     @Test

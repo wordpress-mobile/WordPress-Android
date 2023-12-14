@@ -15,4 +15,6 @@ class GetSitesUseCase @Inject constructor(
     suspend fun get(): List<SiteModel> = withContext(ioDispatcher) {
         siteStore.sitesAccessedViaWPComRest
     }
+
+    suspend fun getAtomic() = get().filter { it.isWPComAtomic }
 }

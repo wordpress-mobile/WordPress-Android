@@ -17,10 +17,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteT
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.blaze.BlazeStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem
@@ -38,6 +36,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.privacy.banner.domain.ShouldAskPrivacyConsent
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
@@ -45,7 +44,7 @@ import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.map
+import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -73,9 +72,8 @@ class WPMainActivityViewModel @Inject constructor(
     private val bloggingPromptsStore: BloggingPromptsStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val blazeStore: BlazeStore,
-    private val siteUtilsWrapper: SiteUtilsWrapper
+    private val siteUtilsWrapper: SiteUtilsWrapper,
+    private val shouldAskPrivacyConsent: ShouldAskPrivacyConsent,
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -121,19 +119,31 @@ class WPMainActivityViewModel @Inject constructor(
     private val _switchToMySite = MutableLiveData<Event<Unit>>()
     val switchToMySite: LiveData<Event<Unit>> = _switchToMySite
 
-    private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
-    val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
+    private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit?>()
+    val onFeatureAnnouncementRequested: LiveData<Unit?> = _onFeatureAnnouncementRequested
 
     private val _createPostWithBloggingPrompt = SingleLiveEvent<Int>()
     val createPostWithBloggingPrompt: LiveData<Int> = _createPostWithBloggingPrompt
 
-    private val _openBloggingPromptsOnboarding = SingleLiveEvent<Unit>()
-    val openBloggingPromptsOnboarding: LiveData<Unit> = _openBloggingPromptsOnboarding
+    private val _openBloggingPromptsOnboarding = SingleLiveEvent<Unit?>()
+    val openBloggingPromptsOnboarding: LiveData<Unit?> = _openBloggingPromptsOnboarding
+
+    private val _askForPrivacyConsent = SingleLiveEvent<Unit>()
+    val askForPrivacyConsent: LiveData<Unit> = _askForPrivacyConsent
+
+    private val _showPrivacySettings = SingleLiveEvent<Unit>()
+    val showPrivacySettings: LiveData<Unit> = _showPrivacySettings
+
+    private val _showPrivacySettingsWithError = SingleLiveEvent<Boolean?>()
+    val showPrivacySettingsWithError: LiveData<Boolean?> = _showPrivacySettingsWithError
+
+    private val _mySiteDashboardRefreshRequested = MutableLiveData<Event<Unit>>()
+    val mySiteDashboardRefreshRequested: LiveData<Event<Unit>> = _mySiteDashboardRefreshRequested
 
     val onFocusPointVisibilityChange = quickStartRepository.activeTask
         .mapNullable { getExternalFocusPointInfo(it) }
         .distinctUntilChanged()
-        .map { Event(it) } as LiveData<Event<List<FocusPointInfo>>>
+        .mapSafe { Event(it) } as LiveData<Event<List<FocusPointInfo>>>
 
     val hasMultipleSites: Boolean
         get() = siteStore.sitesCount > ONE_SITE
@@ -149,6 +159,12 @@ class WPMainActivityViewModel @Inject constructor(
     fun start(site: SiteModel?) {
         if (isStarted) return
         isStarted = true
+
+        launch {
+            if (shouldAskPrivacyConsent()) {
+                _askForPrivacyConsent.call()
+            }
+        }
 
         setMainFabUiState(false, site)
 
@@ -172,7 +188,7 @@ class WPMainActivityViewModel @Inject constructor(
                         promptTitle = UiStringText(it.text),
                         isAnswered = prompt.isAnswered,
                         promptId = prompt.id,
-                        attribution = BloggingPromptAttribution.fromString(prompt.attribution),
+                        attribution = BloggingPromptAttribution.fromPrompt(prompt),
                         onClickAction = ::onAnswerPromptActionClicked,
                         onHelpAction = ::onHelpPrompActionClicked
                     )
@@ -235,8 +251,11 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    private fun onAnswerPromptActionClicked(promptId: Int) {
-        analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_ANSWER_PROMPT_TAPPED)
+    private fun onAnswerPromptActionClicked(promptId: Int, attribution: BloggingPromptAttribution) {
+        analyticsTracker.track(
+            Stat.MY_SITE_CREATE_SHEET_ANSWER_PROMPT_TAPPED,
+            mapOf("attribution" to attribution.value).filterValues { !it.isNullOrBlank() }
+        )
         _isBottomSheetShowing.postValue(Event(false))
         _createPostWithBloggingPrompt.postValue(promptId)
     }
@@ -244,19 +263,6 @@ class WPMainActivityViewModel @Inject constructor(
     private fun onHelpPrompActionClicked() {
         analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_PROMPT_HELP_TAPPED)
         _openBloggingPromptsOnboarding.call()
-    }
-
-    private fun disableTooltip(site: SiteModel?) {
-        appPrefsWrapper.setMainFabTooltipDisabled(true)
-
-        val oldState = _fabUiState.value
-        oldState?.let {
-            _fabUiState.value = MainFabUiState(
-                isFabVisible = it.isFabVisible,
-                isFabTooltipVisible = false,
-                CreateContentMessageId = getCreateContentMessageId(site)
-            )
-        }
     }
 
     private fun trackCreateActionsSheetCard(actions: List<MainActionListItem>) {
@@ -299,14 +305,6 @@ class WPMainActivityViewModel @Inject constructor(
         setMainFabUiState(showFab, site)
     }
 
-    fun onTooltipTapped(site: SiteModel?) {
-        disableTooltip(site)
-    }
-
-    fun onFabLongPressed(site: SiteModel?) {
-        disableTooltip(site)
-    }
-
     fun onOpenLoginPage(mySitePosition: Int) = launch {
         _startLoginFlow.value = Event(Unit)
         appPrefsWrapper.setMainPageIndex(mySitePosition)
@@ -319,8 +317,6 @@ class WPMainActivityViewModel @Inject constructor(
         setMainFabUiState(showFab, site)
 
         checkAndShowFeatureAnnouncement()
-
-        fetchBlazeStatusIfNeeded(site)
     }
 
     private fun checkAndShowFeatureAnnouncement() {
@@ -338,14 +334,6 @@ class WPMainActivityViewModel @Inject constructor(
                 } else {
                     appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
                 }
-            }
-        }
-    }
-
-    private fun fetchBlazeStatusIfNeeded(site: SiteModel?) {
-        if (site != null && blazeFeatureUtils.isBlazeEligibleForUser(site)) {
-            launch {
-               blazeStore.fetchBlazeStatus(site)
             }
         }
     }
@@ -393,7 +381,6 @@ class WPMainActivityViewModel @Inject constructor(
 
     private suspend fun canShowFeatureAnnouncement(): Boolean {
         val cachedAnnouncement = featureAnnouncementProvider.getLatestFeatureAnnouncement(true)
-
         return cachedAnnouncement != null &&
                 cachedAnnouncement.canBeDisplayedOnAppUpgrade(buildConfigWrapper.getAppVersionName()) &&
                 appPrefsWrapper.featureAnnouncementShownVersion < cachedAnnouncement.announcementVersion
@@ -418,12 +405,24 @@ class WPMainActivityViewModel @Inject constructor(
         _createAction.postValue(CREATE_NEW_PAGE_FROM_PAGES_CARD)
     }
 
+    fun onPrivacySettingsTapped() = launch {
+        _showPrivacySettings.call()
+    }
+
+    fun onSettingsPrivacyPreferenceUpdateFailed(requestedAnalyticsPreference: Boolean?) {
+        _showPrivacySettingsWithError.value = requestedAnalyticsPreference
+    }
+
+    fun requestMySiteDashboardRefresh() {
+        this._mySiteDashboardRefreshRequested.value = Event(Unit)
+    }
+
     data class FocusPointInfo(
         val task: QuickStartTask,
         val isVisible: Boolean
     ) : Serializable {
         companion object {
-            const val serialVersionUID = 1L
+            private const val serialVersionUID: Long = 1L
         }
     }
 }

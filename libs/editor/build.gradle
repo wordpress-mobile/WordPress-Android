@@ -27,11 +27,17 @@ repositories {
 }
 
 android {
+    namespace "org.wordpress.android.editor"
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
+    }
+
+    lint {
+        enable += 'UnknownNullness'
     }
 
     // Avoid 'duplicate files during packaging of APK' errors
@@ -41,6 +47,10 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 }
 
@@ -68,25 +78,18 @@ dependencies {
         }
     }
 
-    // Forcing version due to https://github.com/facebook/SoLoader/issues/94
-    // To be removed with React Native 0.70+
-    implementation("com.facebook.soloader:soloader") {
-        version {
-            strictly '0.10.4'
-        }
-    }
-
-    implementation 'com.facebook.fresco:fresco:2.5.0'
-    implementation 'com.facebook.fresco:imagepipeline-okhttp3:2.5.0'
-    implementation 'com.facebook.fbjni:fbjni:0.2.2'
-    implementation 'com.facebook.react:hermes-engine:0.69.4:release@aar'
-    implementation 'com.facebook.react:react-native:0.69.4:release@aar'
+    implementation "com.facebook.react:hermes-android:$facebookReactVersion"
+    implementation "com.facebook.react:react-android:$facebookReactVersion"
 
     // This dependency will be substituted if the `local-builds.gradle` file contains
     // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.
     implementation ("$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion") {
+        // We exclude React Native modules from older and newer versions.
+        // This is needed to avoid Duplicate class errors when building using local Gutenberg Mobile path.
         exclude module: 'hermes-engine'
         exclude module: 'react-native'
+        exclude module: 'hermes-android'
+        exclude module: 'react-android'
     }
 
     implementation "org.wordpress:utils:$wordPressUtilsVersion"

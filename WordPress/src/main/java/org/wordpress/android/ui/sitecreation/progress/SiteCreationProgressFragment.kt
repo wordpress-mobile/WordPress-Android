@@ -3,6 +3,7 @@ package org.wordpress.android.ui.sitecreation.progress
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -131,6 +132,7 @@ class SiteCreationProgressFragment : Fragment(R.layout.site_creation_progress_sc
         }
     }
 
+    @SuppressLint("Recycle")
     private fun SiteCreationProgressCreatingSiteBinding.updateLoadingTextWithFadeAnimation(newText: CharSequence) {
         val animationDuration = AniUtils.Duration.SHORT
         val fadeOut = AniUtils.getFadeOutAnim(

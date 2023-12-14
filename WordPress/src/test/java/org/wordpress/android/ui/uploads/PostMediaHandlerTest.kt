@@ -38,8 +38,8 @@ class PostMediaHandlerTest {
     fun setUp() {
         postMediaHandler = PostMediaHandler(mediaStore, dispatcher)
         post = PostModel()
-        firstMediaItem = MediaModel()
-        secondMediaItem = MediaModel()
+        firstMediaItem = MediaModel(0, 0)
+        secondMediaItem = MediaModel(0, 0)
         actions.clear()
         doAnswer {
             actions.add(it.getArgument(0))
@@ -61,7 +61,7 @@ class PostMediaHandlerTest {
         verify(dispatcher).dispatch(any())
         assertThat(actions).hasSize(1)
         val emittedAction = actions.last()
-        assertThat(emittedAction.payload.media.postId).isEqualTo(updatedPostId)
+        assertThat(emittedAction.payload.media?.postId).isEqualTo(updatedPostId)
         assertThat(emittedAction.payload.site).isEqualTo(site)
     }
 
@@ -83,12 +83,12 @@ class PostMediaHandlerTest {
         verify(dispatcher, times(2)).dispatch(any())
         assertThat(actions).hasSize(2)
         val firstAction = actions[0]
-        assertThat(firstAction.payload.media.mediaId).isEqualTo(firstMediaItem.mediaId)
-        assertThat(firstAction.payload.media.postId).isEqualTo(updatedPostId)
+        assertThat(firstAction.payload.media?.mediaId).isEqualTo(firstMediaItem.mediaId)
+        assertThat(firstAction.payload.media?.postId).isEqualTo(updatedPostId)
         assertThat(firstAction.payload.site).isEqualTo(site)
         val secondAction = actions[1]
-        assertThat(secondAction.payload.media.mediaId).isEqualTo(secondMediaItem.mediaId)
-        assertThat(secondAction.payload.media.postId).isEqualTo(updatedPostId)
+        assertThat(secondAction.payload.media?.mediaId).isEqualTo(secondMediaItem.mediaId)
+        assertThat(secondAction.payload.media?.postId).isEqualTo(updatedPostId)
         assertThat(secondAction.payload.site).isEqualTo(site)
     }
 

@@ -36,8 +36,8 @@ class InsightsManagementViewModel @Inject constructor(
     private val _addedInsights = MutableLiveData<List<InsightListItem>>()
     val addedInsights: LiveData<List<InsightListItem>> = _addedInsights
 
-    private val _closeInsightsManagement = SingleLiveEvent<Unit>()
-    val closeInsightsManagement: LiveData<Unit> = _closeInsightsManagement
+    private val _closeInsightsManagement = SingleLiveEvent<Unit?>()
+    val closeInsightsManagement: LiveData<Unit?> = _closeInsightsManagement
 
     private val _isMenuVisible = MutableLiveData<Boolean>()
     val isMenuVisible: LiveData<Boolean> = _isMenuVisible

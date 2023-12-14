@@ -30,7 +30,7 @@
                 android:layout_marginEnd="@dimen/margin_small_medium"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_outline_lightbulb_white_24dp"
-                android:tint="?attr/colorOnSurface" />
+                app:tint="?attr/wpColorOnSurfaceHigh" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/card_title"
@@ -38,9 +38,10 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:textAppearance="@style/DashboardCardSmallTitle"
                 android:text="@string/my_site_blogging_prompt_card_title"
                 android:textAlignment="viewStart"
-                android:textAppearance="?attr/textAppearanceSubtitle1" />
+                />
 
             <LinearLayout
                 android:id="@+id/prompt_help_button_container"
@@ -57,7 +58,7 @@
                     android:layout_gravity="center_vertical"
                     android:contentDescription="@string/blogging_reminders_prompt_help_button_desc"
                     android:src="@drawable/ic_help_outline_white_24dp"
-                    android:tint="?attr/wpColorOnSurfaceMedium" />
+                    app:tint="?attr/wpColorOnSurfaceMedium" />
 
             </LinearLayout>
 
@@ -75,10 +76,11 @@
             tools:visibility="visible">
 
             <ImageView
+                android:id="@+id/attribution_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="16dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/ic_dayone_24dp" />
+                tools:src="@drawable/ic_dayone_24dp" />
 
             <TextView
                 android:id="@+id/attribution_content"

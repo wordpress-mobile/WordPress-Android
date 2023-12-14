@@ -12,7 +12,7 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig
-import org.wordpress.android.util.map
+import org.wordpress.android.util.mapSafe
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,7 +27,7 @@ class SelectedSiteRepository @Inject constructor(
     private val _selectedSiteChange = MutableLiveData<SiteModel?>(null)
     private val _showSiteIconProgressBar = MutableLiveData<Boolean>()
     val selectedSiteChange = _selectedSiteChange as LiveData<SiteModel?>
-    val siteSelected = _selectedSiteChange.map { it?.id }.distinctUntilChanged()
+    val siteSelected = _selectedSiteChange.mapSafe { it?.id }.distinctUntilChanged()
     val showSiteIconProgressBar = _showSiteIconProgressBar as LiveData<Boolean>
 
     fun updateSite(selectedSite: SiteModel) {

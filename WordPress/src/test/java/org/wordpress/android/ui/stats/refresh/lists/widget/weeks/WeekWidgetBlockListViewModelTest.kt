@@ -13,7 +13,6 @@ import org.mockito.kotlin.isNull
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
@@ -83,10 +82,10 @@ class WeekWidgetBlockListViewModelTest {
         val likes = 50L
         val comments = 300L
         val periodData = PeriodData("2019-10-10", views, visitors, likes, 0, comments, 0)
-        whenever(resourceProvider.getString(string.stats_views)).thenReturn(viewsKey)
-        whenever(resourceProvider.getString(string.stats_visitors)).thenReturn(visitorsKey)
-        whenever(resourceProvider.getString(string.likes)).thenReturn(likesKey)
-        whenever(resourceProvider.getString(string.stats_comments)).thenReturn(commentsKey)
+        whenever(resourceProvider.getString(R.string.stats_views)).thenReturn(viewsKey)
+        whenever(resourceProvider.getString(R.string.stats_visitors)).thenReturn(visitorsKey)
+        whenever(resourceProvider.getString(R.string.likes)).thenReturn(likesKey)
+        whenever(resourceProvider.getString(R.string.stats_comments)).thenReturn(commentsKey)
         whenever(store.getVisits(site, WEEKS, LimitMode.All)).thenReturn(
             VisitsAndViewsModel("2019-10-10", listOf(periodData))
         )

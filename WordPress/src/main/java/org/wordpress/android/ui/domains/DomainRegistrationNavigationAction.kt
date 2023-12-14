@@ -5,6 +5,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 sealed class DomainRegistrationNavigationAction {
     object OpenDomainSuggestions : DomainRegistrationNavigationAction()
 
+    data class OpenFreeDomainWithAnnualPlan(val site: SiteModel, val details: DomainProductDetails) :
+        DomainRegistrationNavigationAction()
     data class OpenDomainRegistrationCheckout(val site: SiteModel, val details: DomainProductDetails) :
         DomainRegistrationNavigationAction()
 

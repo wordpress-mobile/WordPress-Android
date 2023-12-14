@@ -5,7 +5,7 @@ import androidx.annotation.ColorRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.greenrobot.eventbus.Subscribe
@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.AccountStore
@@ -26,8 +27,8 @@ import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.pages.PageItem
-import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
@@ -36,6 +37,7 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.ui.pages.PageItem.VirtualHomepage
+import org.wordpress.android.ui.pages.PagesListAction
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.utils.UiString
@@ -71,10 +73,11 @@ class PageListViewModel @Inject constructor(
     private val globalStyleSupportFeatureConfig: GlobalStyleSupportFeatureConfig,
     private val editorThemeStore: EditorThemeStore,
     private val siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig,
-    @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
+    private val blazeFeatureUtils: BlazeFeatureUtils,
+    @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = Transformations.map(_pages) {
+    val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = _pages.map {
         Triple(it, isSitePhotonCapable, isSitePrivateAt)
     }
     private val _scrollToPosition = SingleLiveEvent<Int>()
@@ -91,6 +94,12 @@ class PageListViewModel @Inject constructor(
 
     private val PageModel.isPostsPage: Boolean
         get() = remoteId == pagesViewModel.site.pageForPosts
+
+    private val showAuthorName: Boolean by lazy {
+        // show if the site is a single user site and the users in the site has the capability to edit/add pages
+        (pagesViewModel.site.isSingleUserSite != null && !pagesViewModel.site.isSingleUserSite)
+        && pagesViewModel.site.hasCapabilityEditOthersPages
+    }
 
     private val featuredImageMap = mutableMapOf<Long, String>()
 
@@ -145,7 +154,6 @@ class PageListViewModel @Inject constructor(
             pagesViewModel.pages.observeForever(pagesObserver)
             pagesViewModel.invalidateUploadStatus.observeForever(uploadStatusObserver)
             pagesViewModel.authorSelectionUpdated.observeForever(authorSelectionChangedObserver)
-            pagesViewModel.blazeSiteEligibility.observeForever(blazeSiteEligibilityObserver)
 
             dispatcher.register(this)
 
@@ -176,12 +184,11 @@ class PageListViewModel @Inject constructor(
         pagesViewModel.pages.removeObserver(pagesObserver)
         pagesViewModel.invalidateUploadStatus.removeObserver(uploadStatusObserver)
         pagesViewModel.authorSelectionUpdated.removeObserver(authorSelectionChangedObserver)
-        pagesViewModel.blazeSiteEligibility.removeObserver(blazeSiteEligibilityObserver)
 
         dispatcher.unregister(this)
     }
 
-    fun onMenuAction(action: Action, pageItem: Page, context: Context): Boolean {
+    fun onMenuAction(action: PagesListAction, pageItem: Page, context: Context): Boolean {
         return pagesViewModel.onMenuAction(action, pageItem, context)
     }
 
@@ -211,23 +218,15 @@ class PageListViewModel @Inject constructor(
     }
 
     private val pagesObserver = Observer<List<PageModel>> { pages ->
-        pages?.let {
-            loadPagesAsync(pages)
-            pagesViewModel.checkIfNewPageButtonShouldBeVisible()
-        }
+        loadPagesAsync(pages)
+        pagesViewModel.checkIfNewPageButtonShouldBeVisible()
     }
 
     private val uploadStatusObserver = Observer<List<LocalId>> { ids ->
         pagesViewModel.uploadStatusTracker.invalidateUploadStatus(ids.map { localId -> localId.value })
     }
 
-    private val authorSelectionChangedObserver = Observer<AuthorFilterSelection> { authorSelection ->
-        authorSelection?.let {
-            pagesViewModel.pages.value?.let { loadPagesAsync(it) }
-        }
-    }
-
-    private val blazeSiteEligibilityObserver = Observer<Boolean> { _ ->
+    private val authorSelectionChangedObserver = Observer<AuthorFilterSelection> {
         pagesViewModel.pages.value?.let { loadPagesAsync(it) }
     }
 
@@ -235,6 +234,7 @@ class PageListViewModel @Inject constructor(
         val pageItems = pages
             .sortedBy { it.title.lowercase(localeManagerWrapper.getLocale()) }
             .filter { listType.pageStatuses.contains(it.status) }
+            .filter { filterByAuthor(it) }
             .let {
                 when (listType) {
                     PUBLISHED -> preparePublishedPages(it, pagesViewModel.arePageActionsEnabled)
@@ -245,6 +245,15 @@ class PageListViewModel @Inject constructor(
             }
 
         displayListItems(pageItems)
+    }
+
+    private fun filterByAuthor(page: PageModel): Boolean {
+        return if (pagesViewModel.shouldFilterByAuthor()) {
+            page.post.authorId == accountStore.account.userId
+        } else {
+            // there is no filter logic needed if we want to show all authors
+            true
+        }
     }
 
     private fun displayListItems(newPages: List<PageItem>) {
@@ -264,7 +273,7 @@ class PageListViewModel @Inject constructor(
                     PUBLISHED -> _pages.postValue(listOf(Empty(R.string.pages_empty_published)))
                     SCHEDULED -> _pages.postValue(listOf(Empty(R.string.pages_empty_scheduled)))
                     DRAFTS -> _pages.postValue(listOf(Empty(R.string.pages_empty_drafts)))
-                    TRASHED -> _pages.postValue(listOf(Empty(R.string.pages_empty_trashed, isButtonVisible = false)))
+                    TRASHED -> _pages.postValue(listOf(Empty(R.string.pages_empty_trashed)))
                 }
             }
         } else {
@@ -287,17 +296,17 @@ class PageListViewModel @Inject constructor(
 
         mediaStore.getSiteMediaWithId(pagesViewModel.site, featuredImageId)?.let { media ->
             // This should be a pretty rare case, but some media seems to be missing url
-            return if (media.url != null) {
+            return if (media.url.isNotBlank()) {
                 featuredImageMap[featuredImageId] = media.url
                 media.url
             } else null
         }
 
         // Media is not in the Store, we need to download it
-        val mediaToDownload = MediaModel()
-        mediaToDownload.mediaId = featuredImageId
-        mediaToDownload.localSiteId = pagesViewModel.site.id
-
+        val mediaToDownload = MediaModel(
+            pagesViewModel.site.id,
+            featuredImageId
+        )
         val payload = MediaPayload(pagesViewModel.site, mediaToDownload)
         dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
 
@@ -305,17 +314,11 @@ class PageListViewModel @Inject constructor(
     }
 
     private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        val filteredPages = if (pagesViewModel.shouldFilterByAuthor()) {
-            pages.filter { it.post.authorId == accountStore.account.userId }
-        } else {
-            pages
-        }
-
-        val shouldSortTopologically = filteredPages.size < MAX_TOPOLOGICAL_PAGE_COUNT
+        val shouldSortTopologically = pages.size < MAX_TOPOLOGICAL_PAGE_COUNT
         val sortedPages = (if (shouldSortTopologically) {
-            topologicalSort(filteredPages.sortedBy { !(it.isHomepage && it.parent == null) }, listType = PUBLISHED)
+            topologicalSort(pages.sortedBy { !(it.isHomepage && it.parent == null) }, listType = PUBLISHED)
         } else {
-            filteredPages.sortedByDescending { it.date }.sortedBy { !it.isHomepage }
+            pages.sortedByDescending { it.date }.sortedBy { !it.isHomepage }
         })
 
         val showVirtualHomepage = siteEditorMVPFeatureConfig.isEnabled() && isBlockBasedTheme.value
@@ -329,11 +332,7 @@ class PageListViewModel @Inject constructor(
                     DEFAULT_INDENT
                 }
                 val itemUiStateData = createItemUiStateData(it)
-                val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                    null
-                } else {
-                    it.post.authorDisplayName
-                }
+                val author = getAuthorName(it.post)
                 PublishedPage(
                     remoteId = it.remoteId,
                     localId = it.pageId,
@@ -366,23 +365,12 @@ class PageListViewModel @Inject constructor(
         pages: List<PageModel>,
         actionsEnabled: Boolean
     ): List<PageItem> {
-        val filteredPages = if (pagesViewModel.shouldFilterByAuthor()) {
-            pages.filter { it.post.authorId == accountStore.account.userId }
-        } else {
-            pages
-        }
-
-        return filteredPages.groupBy { it.date.toFormattedDateString() }
+        return pages.groupBy { it.date.toFormattedDateString() }
             .map { (date, results) ->
                 listOf(Divider(date)) +
                         results.map {
                             val itemUiStateData = createItemUiStateData(it)
-
-                            val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                                null
-                            } else {
-                                it.post.authorDisplayName
-                            }
+                            val author = getAuthorName(it.post)
                             ScheduledPage(
                                 remoteId = it.remoteId,
                                 localId = it.pageId,
@@ -407,13 +395,7 @@ class PageListViewModel @Inject constructor(
     }
 
     private fun prepareDraftPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        val filteredPages = if (pagesViewModel.shouldFilterByAuthor()) {
-            pages.filter { it.post.authorId == accountStore.account.userId }
-        } else {
-            pages
-        }
-
-        return filteredPages
+        return pages
             .map {
                 val itemUiStateData = createItemUiStateData(it)
                 DraftPage(
@@ -428,11 +410,7 @@ class PageListViewModel @Inject constructor(
                     actionsEnabled = actionsEnabled,
                     progressBarUiState = itemUiStateData.progressBarUiState,
                     showOverlay = itemUiStateData.showOverlay,
-                    author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                        null
-                    } else {
-                        it.post.authorDisplayName
-                    },
+                    author = getAuthorName(it.post),
                     showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                 )
             }
@@ -442,20 +420,10 @@ class PageListViewModel @Inject constructor(
         pages: List<PageModel>,
         actionsEnabled: Boolean
     ): List<PageItem> {
-        val filteredPages = if (pagesViewModel.shouldFilterByAuthor()) {
-            pages.filter { it.post.authorId == accountStore.account.userId }
-        } else {
-            pages
-        }
-
-        return filteredPages
+        return pages
             .map {
                 val itemUiStateData = createItemUiStateData(it)
-                val author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) {
-                    null
-                } else {
-                    it.post.authorDisplayName
-                }
+                val author = getAuthorName(it.post)
                 TrashedPage(
                     remoteId = it.remoteId,
                     localId = it.pageId,
@@ -472,6 +440,17 @@ class PageListViewModel @Inject constructor(
                     showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                 )
             }
+    }
+
+    private fun getAuthorName(postModel: PostModel): String? {
+        if (!showAuthorName) return null
+        return pagesViewModel.authorUIState.value?.authorFilterSelection?.let {
+            if (it == ME) {
+                null
+            } else {
+                postModel.authorDisplayName
+            }
+        }
     }
 
     private fun topologicalSort(
@@ -503,10 +482,10 @@ class PageListViewModel @Inject constructor(
         pagesViewModel.onImagesChanged()
     }
 
-    @Suppress("unused")
+    @Suppress("unused", "SpreadOperator")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
-        if (!event.isError && event.mediaList != null) {
+        if (!event.isError) {
             invalidateFeaturedMedia(*event.mediaList.map { it.mediaId }.toLongArray())
         }
     }
@@ -533,8 +512,8 @@ class PageListViewModel @Inject constructor(
             else -> null
         }
         val icon = when {
-            pageModel.isHomepage -> R.drawable.ic_homepage_16dp
-            pageModel.isPostsPage -> R.drawable.ic_posts_16dp
+            pageModel.isHomepage -> R.drawable.gb_ic_home_page_24dp
+            pageModel.isPostsPage -> R.drawable.ic_posts_white_24dp
             else -> null
         }
         return ItemUiStateData(
@@ -551,8 +530,9 @@ class PageListViewModel @Inject constructor(
     private fun isPageBlazeEligible(pageModel: PageModel): Boolean {
         val pageStatus = PageStatus.fromPost(pageModel.post)
 
-        return listType == PUBLISHED && pageStatus != PageStatus.PRIVATE
-                && pagesViewModel.blazeSiteEligibility.value ?: false && pageModel.post.password.isEmpty()
+        if (listType != PUBLISHED) return false
+
+        return blazeFeatureUtils.isPageBlazeEligible(pagesViewModel.site, pageStatus, pageModel)
     }
 
     private data class ItemUiStateData(
@@ -560,7 +540,7 @@ class PageListViewModel @Inject constructor(
         @ColorRes val labelsColor: Int?,
         val progressBarUiState: ProgressBarUiState,
         val showOverlay: Boolean,
-        val actions: Set<Action>,
+        val actions: List<PagesListAction>,
         val subtitle: Int? = null,
         val icon: Int? = null,
         val showQuickStartFocusPoint: Boolean = false

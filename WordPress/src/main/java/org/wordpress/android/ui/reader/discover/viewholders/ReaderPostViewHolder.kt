@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.discover.viewholders
 
-import android.content.Context
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -34,8 +33,6 @@ class ReaderPostViewHolder(
     private val readerTracker: ReaderTracker,
     parentView: ViewGroup
 ) : ReaderViewHolder<ReaderCardviewPostBinding>(parentView.viewBinding(ReaderCardviewPostBinding::inflate)) {
-    val viewContext: Context = binding.postContainer.context
-
     init {
         with(binding) {
             layoutDiscover.expandTouchTargetArea(R.dimen.reader_discover_layout_extra_padding, true)
@@ -112,7 +109,7 @@ class ReaderPostViewHolder(
         )
         state.blogSection.blogSectionClickData?.onBlogSectionClicked?.let {
             root.setOnClickListener {
-                state.blogSection.blogSectionClickData.onBlogSectionClicked.invoke(state.postId, state.blogId)
+                state.blogSection.blogSectionClickData.onBlogSectionClicked.invoke()
             }
         } ?: run {
             root.setOnClickListener(null)

@@ -17,15 +17,16 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -44,11 +45,9 @@ import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
 import org.wordpress.android.models.JetpackPoweredScreen;
-import org.wordpress.android.ui.debug.DebugSettingsActivity;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet.LocalePickerCallback;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
@@ -67,7 +66,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig;
 import org.wordpress.android.viewmodel.ContextProvider;
 
 import java.util.Collections;
@@ -77,6 +75,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.ui.prefs.AppSettingsActivity.EXTRA_SHOW_PRIVACY_SETTINGS;
 
 public class AppSettingsFragment extends PreferenceFragment
         implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener, LocalePickerCallback {
@@ -106,7 +106,6 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject ContextProvider mContextProvider;
     @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
-    @Inject MySiteDashboardTabsFeatureConfig mMySiteDashboardTabsFeatureConfig;
     @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject LocaleProvider mLocaleProvider;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mOpenWebLinksWithJetpackHelper;
@@ -117,12 +116,10 @@ public class AppSettingsFragment extends PreferenceFragment
     private static final String TRACK_ENABLED = "enabled";
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
         mDispatcher.register(this);
-
-        setRetainInstance(true);
 
         addPreferencesFromResource(R.xml.app_settings);
 
@@ -155,14 +152,9 @@ public class AppSettingsFragment extends PreferenceFragment
         mAppThemePreference = (ListPreference) findPreference(getString(R.string.pref_key_app_theme));
         mAppThemePreference.setOnPreferenceChangeListener(this);
 
-        mInitialScreenPreference = (ListPreference) findPreference(getString(R.string.pref_key_initial_screen));
-        mInitialScreenPreference.setOnPreferenceChangeListener(this);
-
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_device_settings))
-                .setOnPreferenceClickListener(this);
-        findPreference(getString(R.string.pref_key_debug_settings))
                 .setOnPreferenceClickListener(this);
 
         mOptimizedImage =
@@ -226,21 +218,30 @@ public class AppSettingsFragment extends PreferenceFragment
             removeExperimentalCategory();
         }
 
-        if (!BuildConfig.ENABLE_DEBUG_SETTINGS) {
-            removeDebugSettingsCategory();
-        }
-
-        if (!mMySiteDashboardTabsFeatureConfig.isEnabled()) {
-            removeInitialScreen();
-        }
-
         if (!mOpenWebLinksWithJetpackHelper.shouldShowAppSetting()) {
             removeOpenWebLinksWithJetpack();
         }
 
-        if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
-            removeInitialScreen();
+        final boolean showPrivacySettings = getActivity()
+                .getIntent()
+                .getBooleanExtra(EXTRA_SHOW_PRIVACY_SETTINGS, false);
+        if (showPrivacySettings) {
+            openPreference(getString(R.string.pref_key_privacy_settings), Stat.PRIVACY_SETTINGS_OPENED);
         }
+    }
+
+    private void openPreference(@NonNull String key, @NonNull Stat event) {
+        final PreferenceScreen preferenceScreen = getPreferenceScreen();
+        final ListAdapter listAdapter = preferenceScreen.getRootAdapter();
+
+        int itemNumber;
+        for (itemNumber = 0; itemNumber < listAdapter.getCount(); ++itemNumber) {
+            if (listAdapter.getItem(itemNumber).equals(findPreference(key))) {
+                preferenceScreen.onItemClick(null, null, itemNumber, 0);
+                break;
+            }
+        }
+        AnalyticsTracker.track(event);
     }
 
     @Override
@@ -254,6 +255,11 @@ public class AppSettingsFragment extends PreferenceFragment
             addJetpackBadgeAsFooterIfEnabled(inflater, listOfPreferences);
         }
         return view;
+    }
+
+    @Override public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        addPrivacyToolbar();
     }
 
     private void addJetpackBadgeAsFooterIfEnabled(LayoutInflater inflater, ListView listView) {
@@ -287,14 +293,6 @@ public class AppSettingsFragment extends PreferenceFragment
         preferenceScreen.removePreference(experimentalPreferenceCategory);
     }
 
-    private void removeDebugSettingsCategory() {
-        Preference experimentalPreference =
-                findPreference(getString(R.string.pref_key_debug_settings));
-        PreferenceScreen preferenceScreen =
-                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
-        preferenceScreen.removePreference(experimentalPreference);
-    }
-
     private void removeWhatsNewPreference() {
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
@@ -307,13 +305,6 @@ public class AppSettingsFragment extends PreferenceFragment
         preferenceScreen.addPreference(mWhatsNew);
     }
 
-    private void removeInitialScreen() {
-        Preference initialScreenPreference =
-                findPreference(getString(R.string.pref_key_initial_screen));
-        PreferenceScreen preferenceScreen =
-                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
-        preferenceScreen.removePreference(initialScreenPreference);
-    }
 
     private void removeOpenWebLinksWithJetpack() {
         Preference openWebLinksWithJetpackPreference =
@@ -329,11 +320,6 @@ public class AppSettingsFragment extends PreferenceFragment
         if (mAccountStore.hasAccessToken() && NetworkUtils.isNetworkAvailable(getActivity())) {
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     @Override
@@ -417,8 +403,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         if (preferenceKey.equals(getString(R.string.pref_key_device_settings))) {
             return handleDevicePreferenceClick();
-        } else if (preferenceKey.equals(getString(R.string.pref_key_debug_settings))) {
-            return handleDebugSettingsPreferenceClick();
         } else if (preference == mPrivacySettings) {
             return handlePrivacyClick();
         } else if (preference == mWhatsNew) {
@@ -486,13 +470,6 @@ public class AppSettingsFragment extends PreferenceFragment
                     .singletonMap(TRACK_STYLE, (String) newValue));
             // restart activity to make sure changes are applied to PreferenceScreen
             getActivity().recreate();
-        } else if (preference == mInitialScreenPreference) {
-            String trackValue = newValue.equals(MySiteTabType.SITE_MENU.getLabel())
-                    ? MySiteTabType.SITE_MENU.getTrackingLabel()
-                    : MySiteTabType.DASHBOARD.getTrackingLabel();
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("selected", trackValue);
-            AnalyticsTracker.track(Stat.APP_SETTINGS_INITIAL_SCREEN_CHANGED, properties);
         } else if (preference == mReportCrashPref) {
             AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED, Collections
                     .singletonMap(TRACK_ENABLED, newValue));
@@ -502,7 +479,7 @@ public class AppSettingsFragment extends PreferenceFragment
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 getActivity().finish();
@@ -541,11 +518,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         // update Reader tags as they need be localized
         ReaderUpdateServiceStarter.startService(WordPress.getContext(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
-    }
-
-    private boolean handleDebugSettingsPreferenceClick() {
-        startActivity(new Intent(getActivity(), DebugSettingsActivity.class));
-        return true;
     }
 
     private boolean handleDevicePreferenceClick() {
@@ -622,6 +594,17 @@ public class AppSettingsFragment extends PreferenceFragment
     private boolean handlePrivacyClick() {
         AnalyticsTracker.track(Stat.APP_SETTINGS_PRIVACY_SETTINGS_TAPPED);
 
+        boolean isToolbarAdded = addPrivacyToolbar();
+
+        if (!isToolbarAdded) {
+            return false;
+        }
+
+        AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_OPENED);
+        return true;
+    }
+
+    private boolean addPrivacyToolbar() {
         if (mPrivacySettings == null || !isAdded()) {
             return false;
         }
@@ -631,8 +614,6 @@ public class AppSettingsFragment extends PreferenceFragment
         if (dialog != null) {
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
         }
-
-        AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_OPENED);
         return true;
     }
 
@@ -675,7 +656,7 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onLocaleSelected(@NotNull String languageCode) {
+    public void onLocaleSelected(@NonNull String languageCode) {
         onPreferenceChange(mLanguagePreference, languageCode);
     }
 

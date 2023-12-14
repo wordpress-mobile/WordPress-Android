@@ -7,21 +7,28 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeService;
+import org.wordpress.android.models.PublicizeService.Status;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
+import org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeAnalyticsTracker.Source.Detail;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeConstantsKt.TWITTER_DEPRECATION_FIND_OUT_MORE_URL;
+
+import kotlin.Unit;
 
 public class PublicizeDetailFragment extends PublicizeBaseFragment
         implements PublicizeConnectionAdapter.OnAdapterLoadedListener {
@@ -35,8 +42,11 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
     private View mConnectionsContainer;
     private ViewGroup mServiceContainer;
     private View mNestedScrollView;
+    private PublicizeTwitterDeprecationNoticeWarningView mTwitterDeprecationNoticeWarningContainer;
+    private TextView mConnectedAccounts;
 
     @Inject AccountStore mAccountStore;
+    @Inject PublicizeTwitterDeprecationNoticeAnalyticsTracker mPublicizeTwitterDeprecationNoticeAnalyticsTracker;
 
     public static PublicizeDetailFragment newInstance(@NonNull SiteModel site, @NonNull PublicizeService service) {
         Bundle args = new Bundle();
@@ -60,7 +70,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
@@ -71,7 +81,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
     }
 
     @Override
-    public void onSaveInstanceState(@NotNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putString(PublicizeConstants.ARG_SERVICE_ID, mServiceId);
@@ -86,6 +96,9 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
         mConnectBtn = mServiceContainer.findViewById(R.id.button_connect);
         mRecycler = rootView.findViewById(R.id.recycler_view);
         mNestedScrollView = rootView.findViewById(R.id.publicize_details_nested_scroll_View);
+        mTwitterDeprecationNoticeWarningContainer =
+                rootView.findViewById(R.id.publicize_twitter_deprecation_notice_detail_warning);
+        mConnectedAccounts = rootView.findViewById(R.id.connected_accounts);
 
         return rootView;
     }
@@ -113,10 +126,18 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
 
         setTitle(mService.getLabel());
 
-        // disable the ability to add another G+ connection
-        if (isGooglePlus()) {
+        // disable the ability to add another G+ or Twitter connection
+        if (isGooglePlus() || isTwitterUnsupported()) {
             mServiceContainer.setVisibility(View.GONE);
+            if (isTwitterUnsupported()) {
+                showTwitterDeprecationContainer();
+            } else {
+                mTwitterDeprecationNoticeWarningContainer.setVisibility(View.GONE);
+            }
         } else {
+            mTwitterDeprecationNoticeWarningContainer.setVisibility(View.GONE);
+            mConnectedAccounts.setVisibility(View.VISIBLE);
+            mServiceContainer.setVisibility(View.VISIBLE);
             String serviceLabel = String.format(getString(R.string.connection_service_label), mService.getLabel());
             TextView txtService = mServiceContainer.findViewById(R.id.text_service);
             txtService.setText(serviceLabel);
@@ -136,8 +157,27 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
         adapter.refresh();
     }
 
+    private void showTwitterDeprecationContainer() {
+        mConnectedAccounts.setVisibility(View.GONE);
+        mTwitterDeprecationNoticeWarningContainer.setVisibility(View.VISIBLE);
+        mTwitterDeprecationNoticeWarningContainer.setTitle(getString(R.string.connected_accounts_label));
+        mTwitterDeprecationNoticeWarningContainer.setDescription(
+                getString(R.string.sharing_twitter_deprecation_notice_description),
+                getString(R.string.sharing_twitter_deprecation_notice_find_out_more),
+                () -> {
+                    mPublicizeTwitterDeprecationNoticeAnalyticsTracker.trackTwitterNoticeLinkTapped(Detail.INSTANCE);
+                    WPWebViewActivity.openURL(getActivity(), TWITTER_DEPRECATION_FIND_OUT_MORE_URL);
+                    return Unit.INSTANCE;
+                });
+    }
+
     private boolean isGooglePlus() {
         return mService.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID);
+    }
+
+    private boolean isTwitterUnsupported() {
+        return mService.getId().equals(PublicizeService.TWITTER_SERVICE_ID)
+               && mService.getStatus() == Status.UNSUPPORTED;
     }
 
     private boolean hasOnPublicizeActionListener() {

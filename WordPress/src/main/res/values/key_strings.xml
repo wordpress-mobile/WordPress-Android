@@ -13,7 +13,6 @@
     <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
     <string name="pref_key_send_crash" translatable="false">wp_pref_send_crash_stats</string>
     <string name="pref_key_device_settings" translatable="false">wp_pref_device_settings</string>
-    <string name="pref_key_debug_settings" translatable="false">wp_pref_debug_settings</string>
     <string name="pref_key_experimental_section" translatable="false">wp_pref_app_experimental_section</string>
     <string name="pref_key_language" translatable="false">wp_pref_language</string>
     <string name="pref_key_app_theme" translatable="false">wp_pref_app_theme</string>
@@ -357,16 +356,16 @@
     </string-array>
 
     <string-array name="site_settings_image_quality_entries" translatable="false">
-        <item>@string/media_encoder_quality_80</item>
-        <item>@string/media_encoder_quality_85</item>
-        <item>@string/media_encoder_quality_90</item>
-        <item>@string/media_encoder_quality_95</item>
-        <item>@string/media_encoder_quality_100</item>
+        <item>@string/media_encoder_quality_low</item>
+        <item>@string/media_encoder_quality_medium</item>
+        <item>@string/media_encoder_quality_high</item>
+        <item>@string/media_encoder_quality_very_high</item>
+        <item>@string/media_encoder_quality_maximum</item>
     </string-array>
 
     <string-array name="site_settings_image_quality_values" translatable="false">
+        <item>70</item>
         <item>80</item>
-        <item>85</item>
         <item>90</item>
         <item>95</item>
         <item>100</item>
@@ -387,11 +386,11 @@
     </string-array>
 
     <string-array name="site_settings_video_bitrate_entries" translatable="false">
-        <item>@string/media_encoder_quality_80</item>
-        <item>@string/media_encoder_quality_85</item>
-        <item>@string/media_encoder_quality_90</item>
-        <item>@string/media_encoder_quality_95</item>
-        <item>@string/media_encoder_quality_100</item>
+        <item>@string/media_encoder_quality_low</item>
+        <item>@string/media_encoder_quality_medium</item>
+        <item>@string/media_encoder_quality_high</item>
+        <item>@string/media_encoder_quality_very_high</item>
+        <item>@string/media_encoder_quality_maximum</item>
     </string-array>
 
     <string-array name="site_settings_video_bitrate_values" translatable="false">

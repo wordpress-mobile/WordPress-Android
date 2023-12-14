@@ -22,9 +22,7 @@
             android:maxLines="1"
             android:text="@string/my_site_blogging_prompt_card_title"
             android:textAlignment="viewStart"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            android:textSize="@dimen/text_sz_medium"
-            android:textStyle="bold"
+            android:textAppearance="@style/DashboardCardSmallTitle"
             app:layout_constraintEnd_toStartOf="@+id/blogging_prompt_card_menu"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -65,10 +63,11 @@
             tools:visibility="visible">
 
             <ImageView
+                android:id="@+id/attribution_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="16dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/ic_dayone_24dp" />
+                tools:src="@drawable/ic_dayone_24dp" />
 
             <TextView
                 android:id="@+id/attribution_content"
@@ -80,28 +79,36 @@
 
         </LinearLayout>
 
-        <org.wordpress.android.ui.InterceptingFrameLayout
-            android:id="@+id/answered_users_container"
+        <org.wordpress.android.ui.compose.views.TrainOfAvatarsView
+            android:id="@+id/answered_users_avatars"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
-            android:focusable="true"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:iconSize="@dimen/avatar_sz_extra_small"
+            app:placeholder="@drawable/bg_oval_placeholder_user_32dp"
+            app:chainUseRtl="true"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintEnd_toStartOf="@id/answered_users_label"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/attribution_container" >
+            app:layout_constraintTop_toBottomOf="@+id/attribution_container"
+            tools:layout_width="80dp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/answered_users_recycler"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:importantForAccessibility="no"
-                app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
-                tools:itemCount="3"
-                tools:listitem="@layout/avatar_item" />
-
-        </org.wordpress.android.ui.InterceptingFrameLayout>
-
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/answered_users_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_large"
+            android:ellipsize="end"
+            android:maxLines="4"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingTop="@dimen/margin_medium"
+            android:textAppearance="?attr/textAppearanceCaption"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintTop_toTopOf="@+id/answered_users_avatars"
+            app:layout_constraintBottom_toBottomOf="@+id/answered_users_avatars"
+            app:layout_constraintStart_toEndOf="@+id/answered_users_avatars"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="@string/my_site_blogging_prompt_card_view_answers" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/answer_button"
@@ -111,7 +118,7 @@
             android:text="@string/my_site_blogging_prompt_card_answer_prompt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/answered_users_container" />
+            app:layout_constraintTop_toBottomOf="@+id/answered_users_avatars" />
 
         <LinearLayout
             android:id="@+id/answered_prompt_controls"
@@ -121,7 +128,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/answered_users_container">
+            app:layout_constraintTop_toBottomOf="@+id/answered_users_avatars">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/answered_button"

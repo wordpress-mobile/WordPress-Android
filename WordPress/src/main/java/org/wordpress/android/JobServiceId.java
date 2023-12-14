@@ -13,14 +13,21 @@ import java.util.List;
 import java.util.Set;
 
 public class JobServiceId {
-    public static final int JOB_INSTALL_REFERRER_SERVICE_ID = 9000;
-    public static final int JOB_STATS_SERVICE_ID = 8000;
-    public static final int JOB_NOTIFICATIONS_UPDATE_SERVICE_ID = 7000;
-    public static final int JOB_READER_SEARCH_SERVICE_ID = 5000;
-    public static final int JOB_PUBLICIZE_UPDATE_SERVICE_ID = 3000;
-    public static final int JOB_READER_UPDATE_SERVICE_ID = 2000;
-    public static final int JOB_READER_DISCOVER_SERVICE_ID = 10000;
     public static final int JOB_GCM_REG_SERVICE_ID = 1000;
+    public static final int JOB_READER_UPDATE_SERVICE_ID = 2000;
+    public static final int JOB_PUBLICIZE_UPDATE_SERVICE_ID = 3000;
+    public static final int JOB_READER_POST_SERVICE_ID_TAG = 4001;
+    public static final int JOB_READER_POST_SERVICE_ID_BLOG = 4002;
+    public static final int JOB_READER_POST_SERVICE_ID_FEED = 4003;
+    public static final int JOB_READER_SEARCH_SERVICE_ID = 5000;
+    public static final int JOB_NOTIFICATIONS_UPDATE_SERVICE_ID = 7000;
+    public static final int JOB_STATS_SERVICE_ID = 8000;
+    public static final int JOB_INSTALL_REFERRER_SERVICE_ID = 9000;
+    public static final int JOB_READER_DISCOVER_SERVICE_ID = 10000;
+
+    // Note: Until these JobServices are refactored as WorkManager requests, we should avoid using id values for these
+    // services that may collide w/ the WorkManager id range (currently 10000 ids with range ending in
+    // Integer.MAX_VALUE)
 
     /*
      * This method checks that a bundle for a given JobService matches perfectly (all extras and all of its

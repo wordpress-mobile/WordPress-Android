@@ -31,7 +31,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -134,13 +133,13 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.people_invite, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.getItem(0).setEnabled(!mInviteOperationInProgress); // here pass the index of send menu item
         super.onPrepareOptionsMenu(menu);
     }
@@ -155,7 +154,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         updateSiteOrFinishActivity();
@@ -330,11 +329,11 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         }
 
         mUsernamesEmails.setItemsManager(new ItemsManagerInterface() {
-            @Override public void onRemoveItem(@NotNull String item) {
+            @Override public void onRemoveItem(@NonNull String item) {
                 removeUsername(item);
             }
 
-            @Override public void onAddItem(@NotNull String item) {
+            @Override public void onAddItem(@NonNull String item) {
                 addUsername(item, null);
             }
         });
@@ -356,7 +355,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         if (mInviteRoles.size() > 1) {
             mRoleContainer.setEndIconMode(END_ICON_DROPDOWN_MENU);
-            mRoleTextView.setOnClickListener(v -> RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, mSite));
+            mRoleTextView.setOnClickListener(v -> RoleSelectDialogFragment.show(PeopleInviteFragment.this, mSite));
             mRoleTextView.setFocusable(true);
             mRoleTextView.setFocusableInTouchMode(true);
         } else {
@@ -412,7 +411,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         }
     }
 
-    private void addUsername(@NotNull String username, ValidationEndListener validationEndListener) {
+    private void addUsername(@NonNull String username, ValidationEndListener validationEndListener) {
         if (username.isEmpty() || mUsernamesEmails.containsChip(username)) {
             if (validationEndListener != null) {
                 validationEndListener.onValidationEnd();

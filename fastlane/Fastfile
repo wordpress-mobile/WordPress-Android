@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 UI.user_error!('Please run fastlane via `bundle exec`') unless FastlaneCore::Helper.bundler?
 
 APP_SPECIFIC_VALUES = {
@@ -25,12 +27,22 @@ APP_SPECIFIC_VALUES = {
 
 UPLOAD_TO_PLAY_STORE_JSON_KEY = File.join(Dir.home, '.configure', 'wordpress-android', 'secrets', 'google-upload-credentials.json')
 
-PROTOTYPE_BUILD_FLAVOR = 'Jalapeno'.freeze
-PROTOTYPE_BUILD_TYPE = 'Debug'.freeze
+PROTOTYPE_BUILD_FLAVOR = 'Jalapeno'
+PROTOTYPE_BUILD_TYPE = 'Debug'
 PROTOTYPE_BUILD_DOMAIN = 'https://d2twmm2nzpx3bg.cloudfront.net'
 
 PROJECT_ROOT_FOLDER = File.dirname(File.expand_path(__dir__))
 FASTLANE_FOLDER = File.join(PROJECT_ROOT_FOLDER, 'fastlane')
+RELEASE_NOTES_SOURCE_PATH = File.join(PROJECT_ROOT_FOLDER, 'RELEASE-NOTES.txt')
+
+VERSION_PROPERTIES_PATH = File.join(PROJECT_ROOT_FOLDER, 'version.properties')
+
+# Instanstiate versioning classes
+VERSION_CALCULATOR = Fastlane::Wpmreleasetoolkit::Versioning::MarketingVersionCalculator.new
+VERSION_FORMATTER = Fastlane::Wpmreleasetoolkit::Versioning::RCNotationVersionFormatter.new
+BUILD_CODE_CALCULATOR = Fastlane::Wpmreleasetoolkit::Versioning::SimpleBuildCodeCalculator.new
+BUILD_CODE_FORMATTER = Fastlane::Wpmreleasetoolkit::Versioning::SimpleBuildCodeFormatter.new
+VERSION_FILE = Fastlane::Wpmreleasetoolkit::Versioning::AndroidVersionFile.new(version_properties_path: VERSION_PROPERTIES_PATH)
 
 ########################################################################
 # Environment
@@ -39,11 +51,107 @@ fastlane_require 'dotenv'
 USER_ENV_FILE_PATH = File.join(Dir.home, '.wpandroid-env.default')
 Dotenv.load(USER_ENV_FILE_PATH)
 
-ENV[GHHELPER_REPO = 'wordpress-mobile/WordPress-Android']
-ENV['PROJECT_ROOT_FOLDER'] = File.dirname(File.expand_path(__dir__)) + '/'
-ENV['FL_RELEASE_TOOLKIT_DEFAULT_BRANCH'] = 'trunk'
+GHHELPER_REPO = 'wordpress-mobile/WordPress-Android'
+DEFAULT_BRANCH = 'trunk'
 REPOSITORY_NAME = 'WordPress-Android'
 
+# Used by Fastlane to work around the Google API random failures
+ENV['SUPPLY_UPLOAD_MAX_RETRIES'] = '5'
+
+# Fastlane's `git_branch` action and its relevant helpers use environment variables to modify
+# the output. That means if we change the branch as part of an action, it'll return the incorrect
+# branch. This environment variable disables this behavior: https://github.com/fastlane/fastlane/pull/21597
+ENV['FL_GIT_BRANCH_DONT_USE_ENV_VARS'] = 'true'
+
+#####################################################################################
+# Version Methods
+#####################################################################################
+
+def commit_version_bump
+  Fastlane::Helper::GitHelper.commit(
+    message: 'Bump version number',
+    files: VERSION_PROPERTIES_PATH
+  )
+end
+
+# Returns the current version name from `version.properties` without needing formatting or calculations
+def current_version_name
+  VERSION_FILE.read_version_name
+end
+
+# Returns the release version of the app in the format `1.2` or `1.2.3` if it is a hotfix
+#
+def current_release_version
+  # Read the current release version from the .xcconfig file and parse it into an AppVersion object
+  current_version = VERSION_FORMATTER.parse(VERSION_FILE.read_version_name)
+  # Return the formatted release version
+  VERSION_FORMATTER.release_version(current_version)
+end
+
+#  Returns the next release version of the app in the format `1.2` or `1.2.3` if it is a hotfix
+#
+def next_release_version
+  # Read the current release version from the .xcconfig file and parse it into an AppVersion object
+  current_version = VERSION_FORMATTER.parse(VERSION_FILE.read_version_name)
+  # Calculate the next release version
+  next_release_version = VERSION_CALCULATOR.next_release_version(version: current_version)
+  # Return the formatted release version
+  VERSION_FORMATTER.release_version(next_release_version)
+end
+
+# Returns the beta version of the app in the format `1.2-rc-1`
+#
+def current_beta_version
+  # Read the current release version from the .xcconfig file and parse it into an AppVersion object
+  current_version = VERSION_FORMATTER.parse(VERSION_FILE.read_version_name)
+  # Return the formatted release version
+  VERSION_FORMATTER.beta_version(current_version)
+end
+
+# Returns the beta version that is used by the code freeze
+# It first increments the minor number, which also resets the build number to 0
+# It then bumps the build number so the -rc-1 can be appended to the code freeze version
+def code_freeze_beta_version
+  # Read the current release version from the .xcconfig file and parse it into an AppVersion object
+  current_version = VERSION_FORMATTER.parse(VERSION_FILE.read_version_name)
+  # Calculate the next major version number
+  next_minor_version = VERSION_CALCULATOR.next_minor_version(version: current_version)
+  # Calculate the next build number
+  code_freeze_beta_version = VERSION_CALCULATOR.next_build_number(version: next_minor_version)
+  # Return the formatted release version
+  VERSION_FORMATTER.beta_version(code_freeze_beta_version)
+end
+
+# Returns the beta version of the app in the format `1.2-rc-1`
+#
+def next_beta_version
+  # Read the current release version from the .xcconfig file and parse it into an AppVersion object
+  current_version = VERSION_FORMATTER.parse(VERSION_FILE.read_version_name)
+  # Calculate the next beta version
+  next_beta_version = VERSION_CALCULATOR.next_build_number(version: current_version)
+  # Return the formatted release version
+  VERSION_FORMATTER.beta_version(next_beta_version)
+end
+
+# Returns the current build code of the app
+#
+def current_build_code
+  # Read the current build code from the version.properties file into to a BuildCode object
+  current_build_code = VERSION_FILE.read_version_code
+  # Return the formatted build code
+  BUILD_CODE_FORMATTER.build_code(build_code: current_build_code)
+end
+
+# Returns the next build code of the app
+#
+def next_build_code
+  # Read the current build code from the version.properties file into to a BuildCode object
+  current_build_code = VERSION_FILE.read_version_code
+  # Calculate the next build code
+  next_build_code = BUILD_CODE_CALCULATOR.next_build_code(build_code: current_build_code)
+  # Return the formatted build code
+  BUILD_CODE_FORMATTER.build_code(build_code: next_build_code)
+end
 
 ########################################################################
 # Import domain-specific lanes
@@ -58,7 +166,7 @@ import 'lanes/release_management_in_ci.rb'
 
 default_platform(:android)
 
-before_all do |lane|
+before_all do
   # Check that the env file exists
   unless is_ci || File.file?(USER_ENV_FILE_PATH)
     UI.user_error!("#{USER_ENV_FILE_PATH} not found: Please copy fastlane/env/user.env-example to #{USER_ENV_FILE_PATH} and fill in the values")

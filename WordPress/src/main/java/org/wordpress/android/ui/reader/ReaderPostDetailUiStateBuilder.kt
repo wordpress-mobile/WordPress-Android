@@ -2,8 +2,6 @@ package org.wordpress.android.ui.reader
 
 import dagger.Reusable
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
-import org.wordpress.android.R.string
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
@@ -30,6 +28,7 @@ import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState.Bu
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState.CommentState
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState.LoadingState
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState.TextMessage
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.HtmlUtilsWrapper
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
@@ -73,18 +72,14 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         post: ReaderPost,
         moreMenuItems: List<SecondaryAction>? = null,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
-        onBlogSectionClicked: (Long, Long) -> Unit,
-        onFollowClicked: () -> Unit,
-        onTagItemClicked: (String) -> Unit
+        onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
     ) = ReaderPostDetailsUiState(
         postId = post.postId,
         blogId = post.blogId,
         featuredImageUiState = buildReaderPostFeaturedImageUiState(post),
         headerUiState = buildPostDetailsHeaderUiState(
             post,
-            onBlogSectionClicked,
-            onFollowClicked,
-            onTagItemClicked
+            onHeaderAction,
         ),
         excerptFooterUiState = buildExcerptFooterUiState(post),
         moreMenuItems = moreMenuItems,
@@ -149,7 +144,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                     avatarUrl = gravatarUtilsWrapper.fixGravatarUrl(
                         readerComment.authorAvatar,
                         contextProvider.getContext().resources.getDimensionPixelSize(
-                            dimen.avatar_sz_extra_small
+                            R.dimen.avatar_sz_extra_small
                         )
                     ),
                     showAuthorBadge = readerComment.authorId == readerPost.authorId,
@@ -160,7 +155,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                     commentId = readerComment.commentId
                 )
             } + ButtonState(
-                buttonText = UiStringRes(string.reader_comments_view_all),
+                buttonText = UiStringRes(R.string.reader_comments_view_all),
                 postId = readerPost.postId,
                 blogId = readerPost.blogId,
                 onCommentSnippetClicked = onCommentSnippetClicked
@@ -171,7 +166,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                 ) + if (readerPost.isCommentsOpen) {
                     listOf<CommentSnippetItemState>(
                         ButtonState(
-                            buttonText = UiStringRes(string.reader_comments_be_first_to_comment),
+                            buttonText = UiStringRes(R.string.reader_comments_be_first_to_comment),
                             postId = readerPost.postId,
                             blogId = readerPost.blogId,
                             onCommentSnippetClicked = onCommentSnippetClicked
@@ -184,7 +179,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             is Failure -> listOf(
                 TextMessage(commentSnippetState.message),
                 ButtonState(
-                    buttonText = UiStringRes(string.reader_comments_view_all),
+                    buttonText = UiStringRes(R.string.reader_comments_view_all),
                     postId = readerPost.postId,
                     blogId = readerPost.blogId,
                     onCommentSnippetClicked = onCommentSnippetClicked
@@ -234,14 +229,10 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
 
     private fun buildPostDetailsHeaderUiState(
         post: ReaderPost,
-        onBlogSectionClicked: (Long, Long) -> Unit,
-        onFollowClicked: () -> Unit,
-        onTagItemClicked: (String) -> Unit
+        onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
     ) = postDetailsHeaderViewUiStateBuilder.mapPostToUiState(
         post,
-        onBlogSectionClicked,
-        onFollowClicked,
-        onTagItemClicked
+        onHeaderAction,
     )
 
     private fun buildExcerptFooterUiState(post: ReaderPost): ExcerptFooterUiState? =

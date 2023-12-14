@@ -62,6 +62,9 @@ public class RequestCodes {
     // Domain Registration
     public static final int DOMAIN_REGISTRATION = 5000;
 
+    // Plan Purchase with free domain
+    public static final int PLAN_PURCHASE_WITH_FREE_DOMAIN = 5001;
+
     // ImageEditor
     public static final int IMAGE_EDITOR_EDIT_IMAGE = 6000;
 
@@ -77,4 +80,7 @@ public class RequestCodes {
 
     // Comments related
     public static final int READER_FOLLOW_CONVERSATION = 10000;
+
+    // Image settings
+    public static final int IMAGE_SETTINGS_DIALOG_REQUEST_CODE = 5;
 }

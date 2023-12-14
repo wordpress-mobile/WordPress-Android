@@ -19,10 +19,9 @@
         <item name="cardCornerRadius">0dp</item>
     </style>
 
-    <style name="ReaderWelcomeCardView" parent="Widget.MaterialComponents.CardView">
-        <item name="cardElevation">@dimen/reader_card_elevation</item>
+    <style name="ReaderCardViewNew" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">@dimen/reader_card_elevation_new</item>
         <item name="cardCornerRadius">0dp</item>
-        <item name="cardBackgroundColor">@color/reader_welcome_card_background</item>
     </style>
 
     <!-- TextViews -->
@@ -163,17 +162,6 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <style name="ReaderTextView.Post.Welcome.Title" parent="ReaderTextView">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/reader_welcome_card_text</item>
-        <item name="android:fontFamily">serif</item>
-        <item name="android:paddingStart">@dimen/margin_extra_extra_large</item>
-        <item name="android:paddingEnd">@dimen/margin_extra_extra_large</item>
-    </style>
-
     <style name="ReaderTextView.RelatedPost.Title" parent="ReaderTextView">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
@@ -199,6 +187,17 @@
         <item name="textColor">?attr/colorOnSurface</item>
         <item name="android:gravity">start</item>
         <item name="android:fontFamily">serif</item>
+    </style>
+
+    <style name="ReaderTextView.Site.Header.NewTitle" parent="ReaderTextView">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.HeadlineMedium</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:gravity">start</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">5</item>
+        <item name="android:textStyle">bold</item>
+        <item name="autoSizeMaxTextSize">@dimen/text_sz_double_extra_large</item>
+        <item name="autoSizeMinTextSize">@dimen/text_sz_larger</item>
     </style>
 
     <style name="ReaderTextView.Site.Header.Caption" parent="ReaderTextView">
@@ -228,6 +227,8 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
+
+    <style name="ReaderTextView.Tag.Header.NewTitle" parent="ReaderTextView.Site.Header.NewTitle"/>
 
     <style name="Reader.TextView.Error" parent="Widget.MaterialComponents.TextView">
         <item name="android:layout_width">0dp</item>
@@ -263,25 +264,26 @@
         <item name="android:minWidth">0dp</item>
     </style>
 
-    <style name="Reader.Follow.Button.New" parent="Reader.Follow.Button">
-        <item name="android:textColor">@color/on_secondary_on_background_selector</item>
-        <item name="backgroundTint">@color/secondary_surface_selector</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
-        <item name="strokeColor">@color/transparent_on_background_selector</item>
-        <item name="iconTint">@color/on_secondary_on_background_selector</item>
-        <item name="android:paddingStart">@dimen/margin_extra_large</item>
-        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
-        <item name="android:minHeight">@dimen/min_touch_target_sz</item>
-        <item name="android:minWidth">@dimen/min_touch_target_sz</item>
+    <style name="Reader.Follow.Button.New" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/reader_follow_button_text_color_selector</item>
+        <item name="android:background">@drawable/reader_follow_button_effect</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:paddingStart">@dimen/margin_extra_medium_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_medium_large</item>
+        <item name="android:paddingTop">@dimen/margin_medium</item>
+        <item name="android:paddingBottom">@dimen/margin_medium</item>
+        <item name="android:minHeight">@dimen/reader_follow_button_min_height</item>
     </style>
-
-    <style name="Reader.Follow.Button.PostDetail" parent="Reader.Follow.Button.Icon"/>
 
     <style name="Reader.Follow.Button.Icon" parent="Reader.Follow.Button">
         <item name="iconTint">@color/secondary_on_surface_medium_selector</item>
         <item name="android:minHeight">@dimen/min_touch_target_sz</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="wpShowFollowButtonCaption">false</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
     </style>
 
     <style name="Reader.Button.Error" parent="WordPress.Button.Primary">
@@ -315,6 +317,14 @@
         <item name="android:layout_height">@dimen/avatar_sz_medium</item>
     </style>
 
+    <style name="ReaderImageView.Avatar.OvalSurfaceBackground" parent="ReaderImageView">
+        <item name="android:layout_width">@dimen/avatar_sz_medium</item>
+        <item name="android:layout_height">@dimen/avatar_sz_medium</item>
+        <item name="android:padding">@dimen/avatar_background_padding</item>
+        <item name="android:background">@drawable/bg_oval_surface</item>
+        <item name="android:foreground">@drawable/post_detail_avatar_internal_border</item>
+    </style>
+
     <style name="ReaderImageView.Avatar.Small" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/avatar_sz_small</item>
         <item name="android:layout_height">@dimen/avatar_sz_small</item>
@@ -325,6 +335,22 @@
         <item name="android:layout_height">@dimen/avatar_sz_extra_small</item>
     </style>
 
+    <style name="ReaderImageView.Avatar.ExtraSmall.OvalSurfaceBackground" parent="ReaderImageView">
+        <item name="android:layout_width">@dimen/avatar_sz_extra_small_with_padding</item>
+        <item name="android:layout_height">@dimen/avatar_sz_extra_small_with_padding</item>
+        <item name="android:padding">@dimen/avatar_background_padding</item>
+        <item name="android:background">@drawable/bg_oval_surface</item>
+        <item name="android:foreground">@drawable/post_detail_avatar_internal_border</item>
+    </style>
+
+    <style name="ReaderImageView.Avatar.ExtraExtraSmall.OvalSurfaceBackground" parent="ReaderImageView">
+        <item name="android:layout_width">@dimen/avatar_sz_extra_extra_small_with_padding</item>
+        <item name="android:layout_height">@dimen/avatar_sz_extra_extra_small_with_padding</item>
+        <item name="android:padding">@dimen/avatar_background_padding</item>
+        <item name="android:background">@drawable/bg_oval_surface</item>
+        <item name="android:foreground">@drawable/post_detail_avatar_internal_border</item>
+    </style>
+
     <style name="ReaderImageView.Avatar.ExtraLarge" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/blavatar_sz_extra_large</item>
         <item name="android:layout_height">@dimen/blavatar_sz_extra_large</item>
@@ -333,11 +359,29 @@
     <!-- progress bars -->
     <style name="ReaderProgressBar" parent="Widget.AppCompat.ProgressBar" />
 
+    <style name="ReaderFooterProgressBar" parent="Widget.AppCompat.ProgressBar" >
+        <item name="android:layout_width">@dimen/reader_footer_progress_bar_size</item>
+        <item name="android:layout_height">@dimen/reader_footer_progress_bar_size</item>
+        <item name="android:background">@drawable/bg_oval_surface</item>
+        <item name="android:backgroundTint">@color/reader_footer_progress_background</item>
+        <item name="android:elevation">@dimen/card_elevation</item>
+        <item name="android:padding">@dimen/margin_medium</item>
+        <item name="android:layout_margin">@dimen/margin_large</item>
+    </style>
+
     <!-- chips -->
     <style name="ReaderChip" parent="@style/Widget.MaterialComponents.Chip.Filter">
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
         <item name="android:lineSpacingMultiplier">1.5</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipCornerRadius">@dimen/reader_chip_radius</item>
+    </style>
+
+    <style name="ReaderChipNew" parent="@style/Widget.MaterialComponents.Chip.Filter">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
         <item name="checkedIconVisible">false</item>
@@ -364,6 +408,143 @@
         <item name="ensureMinTouchTargetSize">false</item>
         <item name="chipCornerRadius">@dimen/reader_expandable_tags_view_chip_radius</item>
         <item name="chipBackgroundColor">@color/on_surface_chip</item>
+    </style>
+
+    <style name="ReaderExpandableTagsViewChipNew" parent="@style/ReaderChipNew">
+        <item name="android:checkable">false</item>
+        <item name="chipMinHeight">@dimen/reader_expandable_tags_view_chip_new_height</item>
+        <item name="chipStartPadding">@dimen/margin_extra_large</item>
+        <item name="chipEndPadding">@dimen/margin_extra_large</item>
+        <item name="textStartPadding">0dp</item>
+        <item name="textEndPadding">0dp</item>
+        <item name="android:textColor">@color/material_on_surface_emphasis_medium</item>
+        <item name="ensureMinTouchTargetSize">false</item>
+        <item name="chipCornerRadius">@dimen/reader_expandable_tags_view_chip_new_radius</item>
+        <item name="chipBackgroundColor">@color/transparent</item>
+        <item name="chipStrokeColor">@color/reader_chip_stroke_color</item>
+        <item name="chipStrokeWidth">@dimen/reader_expandable_tags_view_chip_new_border</item>
+    </style>
+
+    <style name="ReaderExpandableTagsViewChipInterestNew" parent="@style/ReaderExpandableTagsViewChipNew">
+        <item name="android:textColor">@color/material_on_background_emphasis_high_type</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="chipBackgroundColor">@color/reader_you_might_like_background</item>
+    </style>
+
+    <!-- Post Details -->
+    <style name="ReaderTextView.PostDetail" />
+
+    <style name="ReaderTextView.PostDetail.Header" />
+    <style name="ReaderTextView.PostDetail.Header.Title">
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:maxLines">5</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ReaderTextView.PostDetail.BlogSection">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
+    <style name="ReaderTextView.PostDetail.BlogSection.Title">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.LabelLarge</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+    </style>
+    <style name="ReaderTextView.PostDetail.BlogSection.Subtitle">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>
+    </style>
+    <style name="ReaderTextView.PostDetail.BlogSection.Subtitle.Primary">
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+    <style name="ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis">
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+    </style>
+
+   <style name="ReaderTextView.PostDetail.FooterActionItem">
+       <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>
+       <item name="android:textAlignment">center</item>
+       <item name="android:textColor">@color/on_surface_primary_selector</item>
+       <item name="android:lines">1</item>
+       <item name="android:ellipsize">end</item>
+       <item name="android:background">?attr/selectableItemBackground</item>
+       <item name="drawableTint">@color/on_surface_primary_selector</item>
+       <item name="android:minHeight">@dimen/reader_button_minimum_height</item>
+   </style>
+
+    <!-- New Post Card -->
+    <style name="ReaderTextView.Post.New" parent="ReaderTextView" />
+
+    <style name="ReaderTextView.Post.New.BlogSection" />
+
+    <style name="ReaderTextView.Post.New.BlogSection.Compact">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.BlogSection.Compact.Dateline">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.Title">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleLarge</item>
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.Excerpt" parent="ReaderTextView">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
+        <item name="android:lineSpacingMultiplier">1.333333</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.FooterActionItem">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/on_surface_primary_selector</item>
+        <item name="android:lines">1</item>
+        <item name="android:paddingBottom">@dimen/margin_medium</item>
+        <item name="android:paddingTop">@dimen/margin_medium</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="drawableTint">@color/on_surface_primary_selector</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.Interactions">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodyMedium</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.Removed.Title" parent="ReaderTextView">
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleMedium</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="ReaderTextView.Post.New.XPost.Subtitle" parent="ReaderTextView.Post.New">
+        <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
     </style>
 
 </resources>

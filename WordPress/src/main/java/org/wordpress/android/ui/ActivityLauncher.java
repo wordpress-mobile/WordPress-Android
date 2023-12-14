@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import com.wordpress.stories.compose.frame.FrameSaveNotifier;
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -46,9 +47,9 @@ import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.blaze.BlazeFlowSource;
-import org.wordpress.android.ui.blaze.BlazeParentActivity;
 import org.wordpress.android.ui.blaze.PageUIModel;
 import org.wordpress.android.ui.blaze.PostUIModel;
+import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity;
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
@@ -56,6 +57,8 @@ import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.domains.DomainsDashboardActivity;
+import org.wordpress.android.ui.domains.management.DomainManagementActivity;
+import org.wordpress.android.ui.domains.management.newdomainsearch.NewDomainSearchActivity;
 import org.wordpress.android.ui.engagement.EngagedPeopleListActivity;
 import org.wordpress.android.ui.engagement.EngagementNavigationSource;
 import org.wordpress.android.ui.engagement.HeaderData;
@@ -152,8 +155,8 @@ import static org.wordpress.android.login.LoginMode.JETPACK_LOGIN_ONLY;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
-import static org.wordpress.android.ui.blaze.BlazeParentActivityKt.ARG_BLAZE_FLOW_SOURCE;
-import static org.wordpress.android.ui.blaze.BlazeParentActivityKt.ARG_EXTRA_BLAZE_UI_MODEL;
+import static org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivityKt.ARG_BLAZE_FLOW_SOURCE;
+import static org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivityKt.ARG_EXTRA_BLAZE_UI_MODEL;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
@@ -343,6 +346,12 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void viewMySite(Context context) {
+        Intent intent = new Intent(context, WPMainActivity.class);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_MY_SITE);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+    }
     public static void viewReader(Context context) {
         Intent intent = new Intent(context, WPMainActivity.class);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
@@ -406,13 +415,15 @@ public class ActivityLauncher {
     public static Intent openEditorWithPromptAndDismissNotificationIntent(
         @NonNull final Context context,
         final int notificationId,
-        final BloggingPromptModel bloggingPrompt,
+        @Nullable final BloggingPromptModel bloggingPrompt,
         @Nullable final Stat stat,
         final EntryPoint entryPoint
     ) {
+        int promptId = bloggingPrompt != null ? bloggingPrompt.getId() : -1;
+
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
-        intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, bloggingPrompt.getId());
+        intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, promptId);
         intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
         intent.putExtra(WPMainActivity.ARG_EDITOR_ORIGIN, entryPoint);
         intent.putExtra(WPMainActivity.ARG_STAT_TO_TRACK, stat);
@@ -780,6 +791,15 @@ public class ActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.DOMAIN_REGISTRATION);
     }
 
+    public static void viewPlanWithFreeDomainRegistrationActivityForResult(
+            Fragment fragment,
+            @NonNull SiteModel site,
+            @NonNull DomainRegistrationPurpose purpose
+    ) {
+        Intent intent = createDomainRegistrationActivityIntent(fragment.getContext(), site, purpose);
+        fragment.startActivityForResult(intent, RequestCodes.PLAN_PURCHASE_WITH_FREE_DOMAIN);
+    }
+
     private static Intent createDomainRegistrationActivityIntent(Context context, @NonNull SiteModel site,
                                                                    @NonNull DomainRegistrationPurpose purpose) {
         Intent intent = new Intent(context, DomainRegistrationActivity.class);
@@ -952,6 +972,20 @@ public class ActivityLauncher {
                 // connected through REST API.
                 WPWebViewActivity.openURL(context, siteUrl, true, site.isPrivateWPComAtomic() ? site.getSiteId() : 0);
             }
+        }
+    }
+
+    public static void openUrlForSite(@NonNull final Context context, @NonNull final String url,
+                                      @NonNull final SiteModel site) {
+        if (!TextUtils.isEmpty(site.getUsername()) && !TextUtils.isEmpty(site.getPassword())) {
+            // Show self-hosted sites as authenticated since we should have the username & password
+            WPWebViewActivity
+                    .openUrlByUsingBlogCredentials(context, site, null, url, new String[]{}, false, true,
+                            false);
+        } else {
+            // Show non-wp.com sites without a password unauthenticated. These would be Jetpack sites that are
+            // connected through REST API.
+            WPWebViewActivity.openURL(context, url, true, site.isPrivateWPComAtomic() ? site.getSiteId() : 0);
         }
     }
 
@@ -1368,13 +1402,6 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
-    public static void viewJetpackSecuritySettings(Activity activity, SiteModel site) {
-        AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED);
-        Intent intent = new Intent(activity, JetpackSecuritySettingsActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        activity.startActivity(intent);
-    }
-
     public static void viewStories(Activity activity, SiteModel site, StorySaveResult event) {
         Intent intent = new Intent(activity, StoryComposerActivity.class);
         intent.putExtra(KEY_STORY_SAVE_RESULT, event);
@@ -1641,7 +1668,8 @@ public class ActivityLauncher {
     public static void addSelfHostedSiteForResult(Activity activity) {
         Intent intent;
         intent = new Intent(activity, LoginActivity.class);
-        LoginMode.SELFHOSTED_ONLY.putInto(intent);
+        LoginMode mode = BuildConfig.IS_JETPACK_APP ? LoginMode.JETPACK_SELFHOSTED : LoginMode.SELFHOSTED_ONLY;
+        mode.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
@@ -1863,7 +1891,7 @@ public class ActivityLauncher {
     public static void openPromoteWithBlaze(@NonNull Context context,
                                             @Nullable PostModel postModel,
                                             @NonNull BlazeFlowSource source) {
-        Intent intent = new Intent(context, BlazeParentActivity.class);
+        Intent intent = new Intent(context, BlazePromoteParentActivity.class);
         if (postModel != null) {
             PostUIModel postUIModel = new PostUIModel(
                     postModel.getRemotePostId(),
@@ -1880,7 +1908,7 @@ public class ActivityLauncher {
     public static void openPromoteWithBlaze(@NonNull Context context,
                                             @NonNull PageModel page,
                                             @NonNull BlazeFlowSource source) {
-        Intent intent = new Intent(context, BlazeParentActivity.class);
+        Intent intent = new Intent(context, BlazePromoteParentActivity.class);
         PageUIModel pageUIModel = new PageUIModel(
                 page.getPost().getRemotePostId(),
                 page.getPost().getTitle(),
@@ -1895,5 +1923,24 @@ public class ActivityLauncher {
     public static void showJetpackStaticPoster(@NonNull Context context) {
         Intent intent = new Intent(context, JetpackStaticPosterActivity.class);
         context.startActivity(intent);
+    }
+
+    public static void openDomainManagement(@NonNull Context context) {
+        Intent intent = new Intent(context, DomainManagementActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+    }
+
+    public static void openNewDomainSearch(@NonNull Context context) {
+        Intent intent = new Intent(context, NewDomainSearchActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void openShareIntent(@NonNull Context context, @NonNull String link, @Nullable String title) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, link);
+        intent.putExtra(Intent.EXTRA_TITLE, title);
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_link)));
     }
 }

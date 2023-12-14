@@ -1,0 +1,4 @@
+23.8:
+-El Editor de bloques solo muestra la opción "desagrupar" para los bloques anidados que le dan soporte.
+- El ajuste Optimizar imágenes usa el tamaño y la calidad óptimos por defecto.
+- Los temas se instalan correctamente en los sitios con planes Business y Commerce.

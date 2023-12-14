@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-12-20 12:00:16+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.4
+Generator: GlotPress/4.0.0-alpha.11
 Language: ms
 -->
 <resources>
@@ -58,7 +58,6 @@ Language: ms
     <string name="jetpack_site_settings_category_title">Tetapan Jetpack</string>
     <string name="share_intent_pick_site">Petik laman</string>
     <string name="share_action_post">Tambah ke kiriman baharu</string>
-    <string name="share_media_permission_required">Kebenaran diperlukan untuk berkongsi imej atau video</string>
     <string name="invalid_ip_or_range">IP atau julat IP tidak sah</string>
     <string name="confirm_delete_media_video">Hapuskan video ini?</string>
     <string name="deleting_media_dlg">Menghapuskan</string>
@@ -129,14 +128,9 @@ Language: ms
     <string name="login_magic_link_email_requesting">Memohon emel log masuk</string>
     <string name="password_incorrect">Nampaknya seperti kata laluan ini tidak betul. Sila periksa semula maklumat anda dan cuba lagi.</string>
     <string name="requesting_otp">Memohon ko pengesahan melalui SMS.</string>
-    <string name="enter_verification_code">Hampir di sana! Sila masukkan kod pengesahan daripada aplikasi Authenticator anda.</string>
     <string name="enter_email_wordpress_com">Log masuk ke WordPress.com menggunakan alamat emel untuk mengurus semua laman WordPress anda.</string>
     <string name="next">Seterusnya</string>
-    <string name="image_optimization_promo_desc">Pengoptimuman imej menecutkan imej untuk muat naik yang lebih laju.\n\nAnda boleh mengubahnya bila-bila masa dalam tetapan laman.</string>
-    <string name="image_optimization_promo_title">Hidupkan pengoptimuman imej?</string>
-    <string name="leave_off">Biarkan mati</string>
     <string name="me_profile_photo">Gambar Profail</string>
-    <string name="turn_on">Hidupkan</string>
     <string name="error_media_parse_error">Respons tidak disangka dari pelayan</string>
     <string name="upload_finished_toast">Tidak boleh memuat naik kerana ianya telahpun selesai</string>
     <string name="media_insert_unimplemented">Maaf! Ciri belum lagi dilaksanakan :(</string>
@@ -228,11 +222,9 @@ Language: ms
     <string name="connections_description">Sambung perkhidmatan media sosial kegemaran anda untuk berkongsi kiriman dengan rakan-rakan secara automatik.</string>
     <string name="connected_accounts_label">Akaun yang telah disambung</string>
     <string name="tabbar_accessibility_label_notifications">Pemberitahuan. Urus pemberitahuan anda.</string>
-    <string name="sharing">Berkongsi</string>
     <string name="tabbar_accessibility_label_reader">Pembaca. Ikut kandungan dari laman lain.</string>
     <string name="tabbar_accessibility_label_my_site">Laman Saya. Lihat laman anda dan uruskannya, termasuk statistik.</string>
     <string name="button_not_now">Bikan sekarang</string>
-    <string name="my_site_btn_sharing">Berkongsi</string>
     <string name="media_error_internal_server_error">Ralat muat naik. Cuba ubah Optimumkan Imej dalam tetapan aplikasi anda</string>
     <string name="media_downloading">Menyimpan media ke peranti ini</string>
     <string name="error_media_save">Tidak dapat menyimpan media</string>
@@ -271,12 +263,7 @@ Language: ms
     <string name="editor_post_saved_online">Kiriman disimpan atas talian</string>
     <string name="site_settings_image_quality_hint">Kualiti gambar. Nilai lebih tinggi bermakna kualiti gambar yang lebih baik.</string>
     <string name="site_settings_optimize_images_summary">Bolehkan untuk saiz semula dan mampatkan gambar</string>
-    <string name="media_encoder_quality_90">Tinggi</string>
-    <string name="media_encoder_quality_80">Rendah</string>
-    <string name="media_encoder_quality_100">Maksimum</string>
-    <string name="media_encoder_quality_85">Medium</string>
     <string name="media_upload_state_uploaded">Dimuat naik</string>
-    <string name="media_encoder_quality_95">Sangat Tinggi</string>
     <string name="media_upload_state_deleted">Dihapuskan</string>
     <string name="media_upload_state_deleting">Menghapuskan</string>
     <string name="media_upload_state_queued">Digilir</string>
@@ -773,7 +760,6 @@ Language: ms
     <string name="create_a_link">Cipta pautan</string>
     <string name="local_draft">Draf setempat</string>
     <string name="select_categories">Pilih kategori</string>
-    <string name="cancel_edit">Batal edit</string>
     <string name="post_not_found">Ralat berlaku apabila kiriman dimuatkan. Segar semula kiriman anda dan cuba lagi.</string>
     <string name="mnu_comment_trash">Sampah</string>
     <string name="dlg_confirm_trash_comments">Hantar ke sampah?</string>
@@ -803,9 +789,6 @@ Language: ms
     <string name="page_settings">Tetapan laman</string>
     <string name="post_settings">Tetapan kiriman</string>
     <string name="remove_account">Buang laman</string>
-    <string name="sure_to_cancel_edit_comment">Batal menyunting komen ini?</string>
-    <string name="toast_comment_unedited">Ulasan tidak berubah</string>
-    <string name="content_required">Ulasan diwajibkan</string>
     <string name="edit_comment">Sunting ulasan</string>
     <string name="learn_more">Pelajari selanjutnya</string>
     <string name="invalid_site_url_message">Periksa bahawa URL laman yang dimasukkan adalah sah</string>

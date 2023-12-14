@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import java.io.Serializable
+import android.R as AndroidR
 
 const val POST_ID = "POST_ID"
 const val POST_TYPE = "POST_TYPE"
@@ -52,7 +53,7 @@ class StatsDetailActivity : LocaleAwareActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
+        if (item.itemId == AndroidR.id.home) {
             onBackPressedDispatcher.onBackPressed()
             return true
         }

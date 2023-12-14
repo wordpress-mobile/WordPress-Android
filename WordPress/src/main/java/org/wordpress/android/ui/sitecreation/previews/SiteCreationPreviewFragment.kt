@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitecreation.previews
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.view.View.OnLayoutChangeListener
 import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
@@ -84,7 +86,8 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         viewModel.uiState.observe(this@SiteCreationPreviewFragment) {
             it?.let { ui ->
                 uiHelpers.setTextOrHide(siteCreationPreviewHeaderItem.sitePreviewSubtitle, ui.subtitle)
-                uiHelpers.setTextOrHide(sitePreviewCaption, ui.caption)
+                uiHelpers.setTextOrHide(sitePreviewCaptionText, ui.caption)
+                sitePreviewCaption.isVisible = ui.caption != null
                 updateContentLayout(ui.urlData, isFirstContent = ui is SitePreviewLoadingShimmerState)
                 siteCreationPreviewWebViewContainer.apply {
                     uiHelpers.updateVisibility(sitePreviewWebView, ui.webViewVisibility)
@@ -164,6 +167,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private fun SiteCreationPreviewScreenDefaultBinding.animateContentTransition() {
         contentLayout.addOnLayoutChangeListener(
             object : OnLayoutChangeListener {
+                @SuppressLint("Recycle")
                 override fun onLayoutChange(
                     v: View?,
                     left: Int,

@@ -9,8 +9,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.argThat
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.PreviewMode
 import org.wordpress.android.ui.PreviewMode.DESKTOP
 import org.wordpress.android.ui.PreviewMode.MOBILE
@@ -20,6 +24,7 @@ import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewSource
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewModeSelectorStatus
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState
@@ -315,5 +320,24 @@ class WPWebViewViewModelTest : BaseUnitTest() {
     fun `network not available actionable shown when asked`() = test {
         viewModel.start(WPWebViewUsageCategory.REMOTE_PREVIEW_NO_NETWORK)
         assertThat(viewModel.uiState.value).isInstanceOf(WebPreviewFullscreenErrorUiState::class.java)
+    }
+
+    // test when track is called with just one parameter and calls the correct method from analyticsTrackerWrapper
+    @Test
+    fun `track called with one parameter calls correct method from tracker wrapper`() {
+        viewModel.track(AnalyticsTracker.Stat.WEBVIEW_DISPLAYED)
+        verify(analyticsTrackerWrapper).track(AnalyticsTracker.Stat.WEBVIEW_DISPLAYED)
+    }
+
+    // test track called with source calls the correct method from analyticsTrackerWrapper
+    @Test
+    fun `track called with source calls correct method from tracker wrapper`() {
+        viewModel.track(AnalyticsTracker.Stat.WEBVIEW_DISPLAYED, WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE)
+        verify(analyticsTrackerWrapper).track(
+            eq(AnalyticsTracker.Stat.WEBVIEW_DISPLAYED),
+            argThat<Map<String, Any?>> {
+                this["source"] == WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE.value
+            }
+        )
     }
 }

@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -62,9 +62,9 @@ class ViewsAndVisitorsDetailUseCase constructor(
         listOf(
             ValueItem(
                 value = "0",
-                unit = string.stats_views,
+                unit = R.string.stats_views,
                 isFirst = true,
-                contentDescription = resourceProvider.getString(string.stats_loading_card)
+                contentDescription = resourceProvider.getString(R.string.stats_loading_card)
             )
         )
 
@@ -186,7 +186,7 @@ class ViewsAndVisitorsDetailUseCase constructor(
     }
 
     private fun buildTitle() = TitleWithMore(
-        string.stats_insights_views_and_visitors
+        R.string.stats_insights_views_and_visitors
     )
 
     private fun onLineSelected(period: String?) {

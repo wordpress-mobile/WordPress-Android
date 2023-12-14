@@ -1,16 +1,16 @@
 package org.wordpress.android.ui.debug
 
 import androidx.recyclerview.widget.DiffUtil
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Feature
-import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem.Header
+import org.wordpress.android.ui.debug.UiItem.FeatureFlag.RemoteFeatureFlag
+import org.wordpress.android.ui.debug.UiItem.FeatureFlag.LocalFeatureFlag
 
 class DebugSettingsDiffCallback : DiffUtil.ItemCallback<UiItem>() {
     override fun areItemsTheSame(oldItem: UiItem, newItem: UiItem): Boolean {
         return oldItem.type == newItem.type && when {
-            oldItem is Header && newItem is Header -> oldItem.header == newItem.header
-            oldItem is Feature && newItem is Feature -> oldItem.title == newItem.title
-            else -> true
+            oldItem is RemoteFeatureFlag && newItem is RemoteFeatureFlag -> oldItem == newItem
+            oldItem is LocalFeatureFlag && newItem is LocalFeatureFlag -> oldItem == newItem
+            oldItem is UiItem.Field && newItem is UiItem.Field -> oldItem == newItem
+            else -> false
         }
     }
 
