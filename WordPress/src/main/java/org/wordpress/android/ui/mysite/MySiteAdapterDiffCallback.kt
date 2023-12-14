@@ -18,6 +18,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PersonalizeCardMod
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.WpSotw2023NudgeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
@@ -31,6 +32,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
     override fun areItemsTheSame(oldItem: MySiteCardAndItem, updatedItem: MySiteCardAndItem): Boolean {
         return oldItem.type == updatedItem.type && when {
+            oldItem is SiteInfoHeaderCard && updatedItem is SiteInfoHeaderCard -> true
             oldItem is QuickLinksItem && updatedItem is QuickLinksItem -> true
             oldItem is DomainRegistrationCard && updatedItem is DomainRegistrationCard -> true
             oldItem is QuickStartCard && updatedItem is QuickStartCard -> true

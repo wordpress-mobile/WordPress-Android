@@ -46,7 +46,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFull
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
@@ -366,8 +365,7 @@ class MySiteViewModel @Inject constructor(
         }
 
         return SiteSelected(
-            siteInfoHeader = siteInfo,
-            dashboardData = siteItems
+            dashboardData = listOf(siteInfo) + siteItems
         )
     }
 
@@ -1014,7 +1012,6 @@ class MySiteViewModel @Inject constructor(
 
     sealed class State {
         data class SiteSelected(
-            val siteInfoHeader: SiteInfoHeaderCard,
             val dashboardData: List<MySiteCardAndItem>,
         ) : State()
 

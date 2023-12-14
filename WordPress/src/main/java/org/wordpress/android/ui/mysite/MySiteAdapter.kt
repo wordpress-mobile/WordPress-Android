@@ -22,6 +22,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PersonalizeCardMod
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.WpSotw2023NudgeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
@@ -51,6 +52,7 @@ import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewHold
 import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinkRibbonViewHolder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
 import org.wordpress.android.ui.mysite.cards.sotw2023.WpSotw2023NudgeCardViewHolder
+import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewholder
 import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemEmptyViewHolder
 import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemViewHolder
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemViewHolder
@@ -76,6 +78,7 @@ class MySiteAdapter(
     @Suppress("ComplexMethod")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MySiteCardAndItemViewHolder<*> {
         return when (viewType) {
+            MySiteCardAndItem.Type.SITE_INFO_CARD.ordinal -> SiteInfoHeaderCardViewholder(parent, imageManager)
             MySiteCardAndItem.Type.QUICK_LINK_RIBBON.ordinal -> QuickLinkRibbonViewHolder(parent)
             MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD.ordinal -> DomainRegistrationViewHolder(parent)
             MySiteCardAndItem.Type.QUICK_START_CARD.ordinal -> QuickStartCardViewHolder(parent, uiHelpers)
@@ -130,6 +133,7 @@ class MySiteAdapter(
     @Suppress("ComplexMethod")
     override fun onBindViewHolder(holder: MySiteCardAndItemViewHolder<*>, position: Int) {
         when (holder) {
+            is SiteInfoHeaderCardViewholder -> holder.bind(getItem(position) as SiteInfoHeaderCard)
             is QuickLinkRibbonViewHolder -> holder.bind(getItem(position) as QuickLinksItem)
             is DomainRegistrationViewHolder -> holder.bind(getItem(position) as DomainRegistrationCard)
             is QuickStartCardViewHolder -> holder.bind(getItem(position) as QuickStartCard)

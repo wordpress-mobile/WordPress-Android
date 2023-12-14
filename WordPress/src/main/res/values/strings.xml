@@ -4813,9 +4813,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">For this reason, we recommend editing the block using the web editor.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">For this reason, we recommend editing the block using your web browser.</string>
 
+    <string name="media_cannot_be_started">We cannot open media at the moment. Please try again later</string>
+
     <!-- Bloganuary -->
     <string name="bloganuary_dashboard_nudge_title">Bloganuary is coming!</string>
-    <string name="bloganuary_dashboard_nudge_text">For the month of January, blogging prompts will come from Bloganuary - our community challenge to build a blogging habit for the new year.</string>
+    <string name="bloganuary_dashboard_nudge_text">For the month of January, blogging prompts will come from Bloganuary — our community challenge to build a blogging habit for the new year.</string>
     <string name="bloganuary_dashboard_nudge_learn_more" translatable="false">@string/learn_more</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Join our month-long writing challenge</string>
@@ -4827,9 +4829,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Turn on blogging prompts</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Let’s go!</string>
 
-
     <!-- State of the Word 2023 -->
     <string name="wp_sotw_2023_dashboard_nudge_title" translatable="false">State of the Word 2023</string>
     <string name="wp_sotw_2023_dashboard_nudge_text" translatable="false">Check out WordPress co-founder Matt Mullenweg’s annual keynote to stay on top of what’s coming in 2024 and beyond.</string>
     <string name="wp_sotw_2023_dashboard_nudge_cta" translatable="false">Watch now</string>
+
 </resources>

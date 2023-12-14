@@ -9,6 +9,7 @@ import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_EMPTY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DYNAMIC_DASHBOARD_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_BADGE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_FEATURE_CARD
@@ -59,36 +60,38 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         NO_CARDS_MESSAGE,
         PERSONALIZE_CARD,
         WP_SOTW_2023_NUDGE_CARD,
-    }
-
-    data class SiteInfoHeaderCard(
-        val title: String,
-        val url: String,
-        val iconState: IconState,
-        val showTitleFocusPoint: Boolean,
-        val showSubtitleFocusPoint: Boolean,
-        val showIconFocusPoint: Boolean,
-        val onTitleClick: ListItemInteraction? = null,
-        val onIconClick: ListItemInteraction,
-        val onUrlClick: ListItemInteraction,
-        val onSwitchSiteClick: ListItemInteraction
-    ) : MySiteCardAndItem(
-        SITE_INFO_CARD,
-        activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint || showSubtitleFocusPoint
-    ) {
-        sealed class IconState {
-            object Progress : IconState()
-            data class Visible(val url: String? = null) : IconState()
-        }
+        DYNAMIC_DASHBOARD_CARD,
     }
 
     sealed class Card(
         override val type: Type,
         override val activeQuickStartItem: Boolean = false
     ) : MySiteCardAndItem(type, activeQuickStartItem) {
+        data class SiteInfoHeaderCard(
+            val title: String,
+            val url: String,
+            val iconState: IconState,
+            val showTitleFocusPoint: Boolean,
+            val showSubtitleFocusPoint: Boolean,
+            val showIconFocusPoint: Boolean,
+            val onTitleClick: ListItemInteraction? = null,
+            val onIconClick: ListItemInteraction,
+            val onUrlClick: ListItemInteraction,
+            val onSwitchSiteClick: ListItemInteraction
+        ) : Card(
+            SITE_INFO_CARD,
+            activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint || showSubtitleFocusPoint
+        ) {
+            sealed class IconState {
+                object Progress : IconState()
+                data class Visible(val url: String? = null) : IconState()
+            }
+        }
+
+
         data class QuickLinksItem(
             val quickLinkItems: List<QuickLinkItem>,
-            val showMoreFocusPoint : Boolean = false
+            val showMoreFocusPoint: Boolean = false
         ) : Card(
             QUICK_LINK_RIBBON,
             activeQuickStartItem = showMoreFocusPoint
@@ -162,7 +165,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         }
 
         sealed class TodaysStatsCard(
-             override val type: Type
+            override val type: Type
         ) : Card(type) {
             data class Error(
                 override val title: UiString
@@ -193,7 +196,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         }
 
         sealed class PagesCard(
-             override val type: Type,
+            override val type: Type,
         ) : Card(type) {
             data class Error(
                 override val title: UiString
@@ -378,8 +381,39 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onCtaClick: ListItemInteraction,
         ) : Card(type = Type.WP_SOTW_2023_NUDGE_CARD)
 
-        data class NoCardsMessage(val title: UiString, val message: UiString)  : Card(Type.NO_CARDS_MESSAGE)
+        data class NoCardsMessage(val title: UiString, val message: UiString) : Card(Type.NO_CARDS_MESSAGE)
         data class PersonalizeCardModel(val onClick: () -> Unit) : Card(Type.PERSONALIZE_CARD)
+
+        data class Dynamic(
+            val id: String,
+            val rows: List<Row>,
+            val title: String?,
+            val image: String?,
+            val action: ActionSource?,
+            val onHideMenuItemClick: ListItemInteraction,
+        ) : Card(type = DYNAMIC_DASHBOARD_CARD) {
+            data class Row(
+                val iconUrl: String?,
+                val title: String?,
+                val description: String?,
+            )
+
+            sealed class ActionSource {
+                abstract val url: String
+                abstract val onCtaClick: ListItemInteraction
+
+                data class Card(
+                    override val url: String,
+                    override val onCtaClick: ListItemInteraction
+                ) : ActionSource()
+
+                data class Button(
+                    override val url: String,
+                    override val onCtaClick: ListItemInteraction,
+                    val title: String
+                ) : ActionSource()
+            }
+        }
     }
 
     sealed class Item(
