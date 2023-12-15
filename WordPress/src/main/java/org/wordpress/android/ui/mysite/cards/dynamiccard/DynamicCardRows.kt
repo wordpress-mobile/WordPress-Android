@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,11 +19,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 
 @Composable
 fun DynamicCardRows(rows: List<MySiteCardAndItem.Card.Dynamic.Row>, modifier: Modifier = Modifier) {
-    LazyColumn(
+    Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
     ) {
-        items(items = rows) { row -> Item(row) }
+        rows.forEach{ row -> Item(row) }
     }
 }
 
