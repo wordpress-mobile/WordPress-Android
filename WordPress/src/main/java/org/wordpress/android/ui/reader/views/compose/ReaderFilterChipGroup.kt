@@ -1,13 +1,23 @@
 package org.wordpress.android.ui.reader.views.compose
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.AnimationConstants
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,10 +29,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,37 +45,62 @@ import androidx.compose.material3.MaterialTheme as Material3Theme
 @Composable
 fun ReaderFilterChipGroup(
     modifier: Modifier = Modifier,
-    filterCategories: List<ReaderFilterChipType.FilterCategory>,
-    selectedFilterChoice: ReaderFilterChipType.SelectedFilterChoice? = null,
+    filterChips: List<ReaderFilterChipType>,
 ) {
-    var currentSelectedFilterChoice by remember { mutableStateOf(selectedFilterChoice) }
-    val showSelectedFilter = selectedFilterChoice != null
-
-    if (selectedFilterChoice != null) {
-        currentSelectedFilterChoice = selectedFilterChoice
-    }
-
-    Row(
+    AnimatedContent(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        filterCategories.forEach { filterCategory ->
-            AnimatedVisibility(visible = !showSelectedFilter) {
-                ReaderFilterChip(
-                    text = filterCategory.text,
-                    onClick = filterCategory.onClick,
+        label = "ReaderFilterChipGroup",
+        targetState = filterChips,
+        transitionSpec = {
+            val selectedItem = targetState.filterIsInstance<ReaderFilterChipType.SelectedItem>().firstOrNull()
+            if (selectedItem != null) {
+                // item is being selected
+                ContentTransform(
+                    slideInVertically(tween()) { height -> height } + fadeIn(tween()),
+                    slideOutVertically(tween()) { height -> -height } + fadeOut(tween()),
                 )
-            }
+            } else {
+                // going back to the list of filters
+                ContentTransform(
+                    slideInVertically(tween()) { height -> -height } + fadeIn(tween()),
+                    slideOutVertically(tween()) { height -> height } + fadeOut(tween()),
+                )
+            }.using(
+                SizeTransform(
+                    clip = false,
+                    sizeAnimationSpec = { initialSize, targetSize ->
+                        if (targetSize.width > initialSize.width) {
+                            snap()
+                        } else {
+                            tween(delayMillis = AnimationConstants.DefaultDurationMillis)
+                        }
+                    }
+                )
+            )
         }
+    ) { targetFilterChips ->
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            targetFilterChips.forEach { item ->
+                when (item) {
+                    is ReaderFilterChipType.Filter -> {
+                        ReaderFilterChip(
+                            text = item.text,
+                            onClick = item.onClick,
+                        )
+                    }
 
-        AnimatedVisibility(visible = showSelectedFilter) {
-            currentSelectedFilterChoice?.let { selectedFilterChoice ->
-                ReaderFilterChip(
-                    text = selectedFilterChoice.text,
-                    onClick = selectedFilterChoice.onClick,
-                    onDismissClick = selectedFilterChoice.onDismissClick,
-                    invertColors = true,
-                )
+                    is ReaderFilterChipType.SelectedItem -> {
+                        ReaderFilterChip(
+                            text = item.text,
+                            onClick = item.onClick,
+                            onDismissClick = item.onDismissClick,
+                            invertColors = true,
+                        )
+                    }
+                }
             }
         }
     }
@@ -115,6 +149,7 @@ fun ReaderFilterChip(
                 Text(
                     uiStringText(text),
                     style = Material3Theme.typography.titleSmall,
+                    modifier = Modifier.height(20.dp),
                 )
 
                 if (onDismissClick != null) {
@@ -122,8 +157,8 @@ fun ReaderFilterChip(
                         Icons.Default.Close,
                         contentDescription = null, // TODO thomashorta clear or dismiss?
                         modifier = Modifier
-                            .size(24.dp)
-                            .padding(4.dp)
+                            .size(20.dp)
+                            .padding(2.dp)
                             .clickable(onClick = onDismissClick),
                     )
                 }
@@ -136,12 +171,12 @@ sealed class ReaderFilterChipType(
     open val text: UiString,
     open val onClick: () -> Unit,
 ) {
-    data class FilterCategory(
+    data class Filter(
         override val text: UiString,
         override val onClick: () -> Unit,
     ) : ReaderFilterChipType(text, onClick)
 
-    data class SelectedFilterChoice(
+    data class SelectedItem(
         override val text: UiString,
         override val onClick: () -> Unit,
         val onDismissClick: () -> Unit,
@@ -152,35 +187,39 @@ sealed class ReaderFilterChipType(
 @Preview(name = "Dark Mode", showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun ReaderFilterChipGroupPreview() {
-    var selectedTag: ReaderFilterChipType.SelectedFilterChoice? by remember { mutableStateOf(null) }
-    val clearSelection = { selectedTag = null }
+    lateinit var allChips: MutableState<List<ReaderFilterChipType>>
+    lateinit var clearSelection: () -> Unit
+    val createSelectedItem: (String) -> ReaderFilterChipType.SelectedItem = {
+        ReaderFilterChipType.SelectedItem(
+            text = UiString.UiStringText(it),
+            onClick = clearSelection,
+            onDismissClick = clearSelection,
+        )
+    }
+    val filterChips = listOf(
+        ReaderFilterChipType.Filter(
+            text = UiString.UiStringText("23 Blogs"),
+            onClick = {
+                allChips.value = listOf(createSelectedItem("Amazing Blog"))
+            },
+        ),
+        ReaderFilterChipType.Filter(
+            text = UiString.UiStringText("41 Tags"),
+            onClick = {
+                allChips.value = listOf(createSelectedItem("Amazing Tag"))
+            },
+        ),
+    )
+
+    clearSelection = { allChips.value = filterChips }
+
+    allChips = remember { mutableStateOf(filterChips) }
 
     AppThemeWithoutBackground {
         ReaderFilterChipGroup(
-            modifier = Modifier.padding(8.dp),
-            filterCategories = listOf(
-                ReaderFilterChipType.FilterCategory(
-                    text = UiString.UiStringText("23 Blogs"),
-                    onClick = {
-                        selectedTag = ReaderFilterChipType.SelectedFilterChoice(
-                            text = UiString.UiStringText("Amazing Blog"),
-                            onClick = clearSelection,
-                            onDismissClick = clearSelection,
-                        )
-                    },
-                ),
-                ReaderFilterChipType.FilterCategory(
-                    text = UiString.UiStringText("41 Tags"),
-                    onClick = {
-                        selectedTag = ReaderFilterChipType.SelectedFilterChoice(
-                            text = UiString.UiStringText("Amazing Tag"),
-                            onClick = clearSelection,
-                            onDismissClick = clearSelection,
-                        )
-                    },
-                ),
-            ),
-            selectedFilterChoice = selectedTag,
+            modifier = Modifier
+                .padding(8.dp),
+            filterChips = allChips.value,
         )
     }
 }
