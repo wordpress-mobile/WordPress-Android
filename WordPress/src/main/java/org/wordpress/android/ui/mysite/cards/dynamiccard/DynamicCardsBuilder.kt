@@ -22,12 +22,12 @@ class DynamicCardsBuilder @Inject constructor(
     }
 
     private fun shouldBuildCard(params: DynamicCardsBuilderParams, order: CardOrder): Boolean {
-        if (params.dynamicCards == null || params.dynamicCards.pages.none { it.order == order }) return false
+        if (params.dynamicCards == null || params.dynamicCards.dynamicCards.none { it.order == order }) return false
         return true
     }
 
     private fun convertToDynamicCards(params: DynamicCardsBuilderParams, order: CardOrder): List<Dynamic> {
-        val cards = params.dynamicCards?.pages?.filter { it.order == order } ?: emptyList()
+        val cards = params.dynamicCards?.dynamicCards?.filter { it.order == order } ?: emptyList()
         return cards.map { card ->
             Dynamic(
                 id = card.id,

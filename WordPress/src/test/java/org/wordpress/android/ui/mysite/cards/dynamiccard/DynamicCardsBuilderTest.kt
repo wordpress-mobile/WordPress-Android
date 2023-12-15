@@ -117,7 +117,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
         )
         val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
             dynamicCards = CardModel.DynamicCardsModel(
-                pages = listOf(DYNAMIC_CARD_MODEL)
+                dynamicCards = listOf(DYNAMIC_CARD_MODEL)
             ),
             onActionClick = mock(),
             onMoreMenuClick = mock(),
@@ -141,7 +141,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     fun testBuildWithInvalidActionTitle() {
         val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
             dynamicCards = CardModel.DynamicCardsModel(
-                pages = listOf(DYNAMIC_CARD_MODEL_INVALID_ACTION_TITLE)
+                dynamicCards = listOf(DYNAMIC_CARD_MODEL_INVALID_ACTION_TITLE)
             ),
             onActionClick = mock(),
             onMoreMenuClick = mock(),
@@ -158,7 +158,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     fun testBuildWithInvalidActionTitleAndUrl() {
         val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
             dynamicCards = CardModel.DynamicCardsModel(
-                pages = listOf(DYNAMIC_CARD_MODEL_INVALID_ACTION_TITLE_AND_URL)
+                dynamicCards = listOf(DYNAMIC_CARD_MODEL_INVALID_ACTION_TITLE_AND_URL)
             ),
             onActionClick = mock(),
             onMoreMenuClick = mock(),
@@ -173,7 +173,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     fun testBuildWithInvalidUrl() {
         val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
             dynamicCards = CardModel.DynamicCardsModel(
-                pages = listOf(DYNAMIC_CARD_MODEL_INVALID_URL)
+                dynamicCards = listOf(DYNAMIC_CARD_MODEL_INVALID_URL)
             ),
             onActionClick = mock(),
             onMoreMenuClick = mock(),
@@ -188,7 +188,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     fun testBuildWithEmptyPosition() {
         val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
             dynamicCards = CardModel.DynamicCardsModel(
-                pages = listOf(DYNAMIC_CARD_MODEL_INVALID_ACTION_TITLE_AND_URL)
+                dynamicCards = listOf(DYNAMIC_CARD_MODEL_INVALID_ACTION_TITLE_AND_URL)
             ),
             onActionClick = mock(),
             onMoreMenuClick = mock(),
