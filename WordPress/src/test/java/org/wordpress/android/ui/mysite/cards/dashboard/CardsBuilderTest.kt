@@ -40,6 +40,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.DRAFT
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardBuilder
+import org.wordpress.android.ui.mysite.cards.dynamiccard.DynamicCardsBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @ExperimentalCoroutinesApi
@@ -69,6 +70,9 @@ class CardsBuilderTest : BaseUnitTest() {
     @Mock
     lateinit var bloganuaryCardBuilder: BloganuaryNudgeCardBuilder
 
+    @Mock
+    lateinit var dynamicCardsBuilder: DynamicCardsBuilder
+
     private lateinit var cardsBuilder: CardsBuilder
 
     @Before
@@ -81,7 +85,8 @@ class CardsBuilderTest : BaseUnitTest() {
             blazeCardBuilder,
             dashboardPlansCardBuilder,
             pagesCardBuilder,
-            activityCardBuilder
+            activityCardBuilder,
+            dynamicCardsBuilder
         )
     }
 
@@ -348,6 +353,12 @@ class CardsBuilderTest : BaseUnitTest() {
                 ),
                 activityCardBuilderParams = MySiteCardAndItemBuilderParams.ActivityCardBuilderParams(
                     mock(),
+                    mock(),
+                    mock(),
+                    mock(),
+                    mock()
+                ),
+                dynamicCardsBuilderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
                     mock(),
                     mock(),
                     mock(),

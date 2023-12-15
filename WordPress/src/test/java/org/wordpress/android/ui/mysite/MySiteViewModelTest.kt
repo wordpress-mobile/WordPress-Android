@@ -83,6 +83,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelS
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsViewModelSlice
+import org.wordpress.android.ui.mysite.cards.dynamiccard.DynamicCardsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
@@ -282,6 +283,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var wpSotw2023NudgeCardViewModelSlice: WpSotw2023NudgeCardViewModelSlice
 
+    @Mock
+    lateinit var dynamicCardsViewModelSlice: DynamicCardsViewModelSlice
+
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<MySiteViewModel.State>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -462,6 +467,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             wpJetpackIndividualPluginHelper,
             blazeCardViewModelSlice,
             pagesCardViewModelSlice,
+            dynamicCardsViewModelSlice,
             todaysStatsViewModelSlice,
             postsCardViewModelSlice,
             activityLogCardViewModelSlice,
