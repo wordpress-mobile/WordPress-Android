@@ -32,7 +32,7 @@ class DynamicCardsBuilder @Inject constructor() {
                         description = row.description,
                     )
                 },
-                title = card.id,
+                title = card.title,
                 image = card.featuredImage,
                 action = getActionSource(params, card),
                 onHideMenuItemClick = create(card.id, params.onHideMenuItemClick),
