@@ -44,17 +44,16 @@ class DynamicCardsBuilder @Inject constructor() {
         params: DynamicCardsBuilderParams,
         card: CardModel.DynamicCardsModel.DynamicCardModel
     ): Dynamic.ActionSource? = when {
-        isValidUrlOrDeeplink(card.url) -> null
-        isValidActionTitle(card.action) -> Dynamic.ActionSource.Button(
+        isValidUrlOrDeeplink(card.url) && isValidActionTitle(card.action) -> Dynamic.ActionSource.Button(
             requireNotNull(card.url),
             create(requireNotNull(card.url), params.onActionClick),
             requireNotNull(card.action)
         )
-
-        else -> Dynamic.ActionSource.Card(
+        isValidUrlOrDeeplink(card.url) -> Dynamic.ActionSource.Card(
             requireNotNull(card.url),
             create(requireNotNull(card.url), params.onActionClick)
         )
+        else -> null
     }
 
     private fun isValidUrlOrDeeplink(url: String?): Boolean {
