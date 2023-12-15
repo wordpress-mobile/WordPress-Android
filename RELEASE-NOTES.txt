@@ -3,6 +3,7 @@
 24.0
 -----
 * [*] Filter media types when sharing files to the editor [https://github.com/wordpress-mobile/WordPress-Android/pull/19754]
+* [**] The block editor now automatically retries failed media uploads when network connectivity is re-established. [https://github.com/wordpress-mobile/WordPress-Android/pull/19803]
 
 23.9
 -----
