@@ -8,6 +8,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloganuaryNudgeCar
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.Dynamic
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorWithinCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
@@ -66,6 +67,9 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
                     MySiteCardAndItem.Card.NoCardsMessage -> true
             oldItem is PersonalizeCardModel && updatedItem is PersonalizeCardModel -> true
             oldItem is WpSotw2023NudgeCardModel && updatedItem is WpSotw2023NudgeCardModel -> true
+            oldItem is Dynamic && updatedItem is Dynamic -> {
+                oldItem.id == updatedItem.id
+            }
             else -> throw UnsupportedOperationException("Diff not implemented yet")
         }
     }

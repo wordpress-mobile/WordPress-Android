@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
@@ -68,8 +69,9 @@ sealed class MySiteCardAndItemBuilderParams {
         val blazeCardBuilderParams: BlazeCardBuilderParams? = null,
         val dashboardCardPlansBuilderParams: DashboardCardPlansBuilderParams,
         val pagesCardBuilderParams: PagesCardBuilderParams,
-        val activityCardBuilderParams: ActivityCardBuilderParams
-    ) : MySiteCardAndItemBuilderParams()
+        val activityCardBuilderParams: ActivityCardBuilderParams,
+        val dynamicCardsBuilderParams: DynamicCardsBuilderParams,
+        ) : MySiteCardAndItemBuilderParams()
 
     data class TodaysStatsCardBuilderParams(
         val todaysStatsCard: TodaysStatsCardModel?,
@@ -156,6 +158,13 @@ sealed class MySiteCardAndItemBuilderParams {
         val onLearnMoreClick: () -> Unit,
         val onMoreMenuClick: () -> Unit,
         val onHideMenuItemClick: () -> Unit
+    ) : MySiteCardAndItemBuilderParams()
+
+    data class DynamicCardsBuilderParams(
+        val dynamicCards: DynamicCardsModel?,
+        val onActionClick: (actionUrl: String) -> Unit,
+        val onMoreMenuClick: (cardId: String) -> Unit,
+        val onHideMenuItemClick: (cardId: String) -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
     sealed class BlazeCardBuilderParams : MySiteCardAndItemBuilderParams() {
