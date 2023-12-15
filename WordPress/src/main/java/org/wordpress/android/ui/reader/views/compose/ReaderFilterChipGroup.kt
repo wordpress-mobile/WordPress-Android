@@ -1,25 +1,19 @@
 package org.wordpress.android.ui.reader.views.compose
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ContentTransform
-import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.core.AnimationConstants
-import androidx.compose.animation.core.snap
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
@@ -29,12 +23,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
@@ -42,66 +39,73 @@ import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.utils.UiString
 import androidx.compose.material3.MaterialTheme as Material3Theme
 
+private val roundedShape = RoundedCornerShape(100)
+
 @Composable
 fun ReaderFilterChipGroup(
+    followedBlogsCount: Int,
+    followedTagsCount: Int,
+    onFilterClick: (ReaderFilterType) -> Unit,
+    onSelectedItemClick: () -> Unit,
+    onSelectedItemDismissClick: () -> Unit,
     modifier: Modifier = Modifier,
-    filterChips: List<ReaderFilterChipType>,
+    selectedItem: ReaderFilterSelectedItem? = null,
 ) {
-    AnimatedContent(
+    Row(
         modifier = modifier,
-        label = "ReaderFilterChipGroup",
-        targetState = filterChips,
-        transitionSpec = {
-            val selectedItem = targetState.filterIsInstance<ReaderFilterChipType.SelectedItem>().firstOrNull()
-            if (selectedItem != null) {
-                // item is being selected
-                ContentTransform(
-                    slideInVertically(tween()) { height -> height } + fadeIn(tween()),
-                    slideOutVertically(tween()) { height -> -height } + fadeOut(tween()),
-                )
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        val blogSelected = selectedItem?.type == ReaderFilterType.BLOG
+        val tagSelected = selectedItem?.type == ReaderFilterType.TAG
+        val blogChipVisible = selectedItem == null || blogSelected
+        val tagChipVisible = selectedItem == null || tagSelected
+
+        val blogChipText: UiString = remember(selectedItem) {
+            if (blogSelected) {
+                selectedItem?.text ?: UiString.UiStringText("")
             } else {
-                // going back to the list of filters
-                ContentTransform(
-                    slideInVertically(tween()) { height -> -height } + fadeIn(tween()),
-                    slideOutVertically(tween()) { height -> height } + fadeOut(tween()),
-                )
-            }.using(
-                SizeTransform(
-                    clip = false,
-                    sizeAnimationSpec = { initialSize, targetSize ->
-                        if (targetSize.width > initialSize.width) {
-                            snap()
-                        } else {
-                            tween(delayMillis = AnimationConstants.DefaultDurationMillis)
-                        }
-                    }
-                )
+                // TODO thomashortadev move this to string resources and use pluralization
+                UiString.UiStringText("$followedBlogsCount Blogs")
+            }
+        }
+
+        val tagChipText: UiString = remember(selectedItem) {
+            if (tagSelected) {
+                selectedItem?.text ?: UiString.UiStringText("")
+            } else {
+                // TODO thomashortadev move this to string resources and use pluralization
+                UiString.UiStringText("$followedTagsCount Tags")
+            }
+        }
+
+        // blogs filter chip
+        AnimatedVisibility(
+            modifier = Modifier.clip(roundedShape),
+            visible = blogChipVisible,
+        ) {
+            ReaderFilterChip(
+                text = blogChipText,
+                onClick = if (blogSelected) onSelectedItemClick else ({ onFilterClick(ReaderFilterType.BLOG) }),
+                onDismissClick = if (blogSelected) onSelectedItemDismissClick else null,
+                isSelectedItem = blogSelected,
             )
         }
-    ) { targetFilterChips ->
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            targetFilterChips.forEach { item ->
-                when (item) {
-                    is ReaderFilterChipType.Filter -> {
-                        ReaderFilterChip(
-                            text = item.text,
-                            onClick = item.onClick,
-                        )
-                    }
 
-                    is ReaderFilterChipType.SelectedItem -> {
-                        ReaderFilterChip(
-                            text = item.text,
-                            onClick = item.onClick,
-                            onDismissClick = item.onDismissClick,
-                            invertColors = true,
-                        )
-                    }
-                }
-            }
+        AnimatedVisibility(visible = blogChipVisible && tagChipVisible) {
+            Spacer(Modifier.width(8.dp))
+        }
+
+        // tags filter chip
+        AnimatedVisibility(
+            modifier = Modifier.clip(roundedShape),
+            visible = tagChipVisible,
+        ) {
+            ReaderFilterChip(
+                text = tagChipText,
+                onClick = if (tagSelected) onSelectedItemClick else ({ onFilterClick(ReaderFilterType.TAG) }),
+                onDismissClick = if (tagSelected) onSelectedItemDismissClick else null,
+                isSelectedItem = tagSelected,
+            )
         }
     }
 }
@@ -111,115 +115,112 @@ fun ReaderFilterChip(
     text: UiString,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    invertColors: Boolean = false,
+    isSelectedItem: Boolean = false,
     onDismissClick: (() -> Unit)? = null,
 ) {
-    val padding = PaddingValues(
-        top = 8.dp,
-        bottom = 8.dp,
-        start = 24.dp,
-        end = if (onDismissClick != null) 12.dp else 24.dp,
+    val backgroundColor by animateColorAsState(
+        label = "ReaderFilterChip backgroundColor",
+        targetValue = if (isSelectedItem) {
+            MaterialTheme.colors.onSurface
+        } else {
+            MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
+        }
     )
 
-    CompositionLocalProvider(
-        LocalContentColor provides if (invertColors) {
+    val contentColor by animateColorAsState(
+        label = "ReaderFilterChip contentColor",
+        targetValue = if (isSelectedItem) {
             MaterialTheme.colors.surface
         } else {
             MaterialTheme.colors.onSurface
-        },
+        }
+    )
+
+    val endPadding by animateDpAsState(
+        label = "ReaderFilterChip endPadding",
+        targetValue = if (onDismissClick != null) 12.dp else 24.dp
+    )
+
+    CompositionLocalProvider(
+        LocalContentColor provides contentColor,
     ) {
-        Box(
+        Row(
             modifier = modifier
                 .background(
-                    color = if (invertColors) {
-                        MaterialTheme.colors.onSurface
-                    } else {
-                        MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
-                    },
-                    shape = RoundedCornerShape(50),
+                    color = backgroundColor,
+                    shape = roundedShape,
                 )
-                .clip(RoundedCornerShape(50))
-                .clickable(onClick = onClick),
+                .clip(roundedShape)
+                .clickable(onClick = onClick)
+                .padding(
+                    top = 8.dp,
+                    bottom = 8.dp,
+                    start = 24.dp,
+                    end = endPadding,
+                )
+                .animateContentSize(),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                modifier = Modifier.padding(padding),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    uiStringText(text),
-                    style = Material3Theme.typography.titleSmall,
-                    modifier = Modifier.height(20.dp),
-                )
+            Text(
+                uiStringText(text),
+                style = Material3Theme.typography.titleSmall,
+                modifier = Modifier
+                    .height(20.dp)
+                    .align(Alignment.CenterVertically),
+            )
 
-                if (onDismissClick != null) {
-                    Icon(
-                        Icons.Default.Close,
-                        contentDescription = null, // TODO thomashorta clear or dismiss?
-                        modifier = Modifier
-                            .size(20.dp)
-                            .padding(2.dp)
-                            .clickable(onClick = onDismissClick),
-                    )
-                }
+            if (onDismissClick != null) {
+                Icon(
+                    Icons.Default.Close,
+                    contentDescription = null, // TODO thomashorta clear or dismiss?
+                    modifier = Modifier
+                        .size(20.dp)
+                        .padding(2.dp)
+                        .clickable(
+                            onClick = onDismissClick,
+                            role = Role.Button,
+                        ),
+                )
             }
         }
     }
 }
 
-sealed class ReaderFilterChipType(
-    open val text: UiString,
-    open val onClick: () -> Unit,
-) {
-    data class Filter(
-        override val text: UiString,
-        override val onClick: () -> Unit,
-    ) : ReaderFilterChipType(text, onClick)
-
-    data class SelectedItem(
-        override val text: UiString,
-        override val onClick: () -> Unit,
-        val onDismissClick: () -> Unit,
-    ) : ReaderFilterChipType(text, onClick)
+enum class ReaderFilterType {
+    BLOG,
+    TAG,
 }
+
+data class ReaderFilterSelectedItem(
+    val text: UiString,
+    val type: ReaderFilterType,
+)
 
 @Preview(name = "Light Mode", showBackground = true)
 @Preview(name = "Dark Mode", showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun ReaderFilterChipGroupPreview() {
-    lateinit var allChips: MutableState<List<ReaderFilterChipType>>
-    lateinit var clearSelection: () -> Unit
-    val createSelectedItem: (String) -> ReaderFilterChipType.SelectedItem = {
-        ReaderFilterChipType.SelectedItem(
-            text = UiString.UiStringText(it),
-            onClick = clearSelection,
-            onDismissClick = clearSelection,
-        )
-    }
-    val filterChips = listOf(
-        ReaderFilterChipType.Filter(
-            text = UiString.UiStringText("23 Blogs"),
-            onClick = {
-                allChips.value = listOf(createSelectedItem("Amazing Blog"))
-            },
-        ),
-        ReaderFilterChipType.Filter(
-            text = UiString.UiStringText("41 Tags"),
-            onClick = {
-                allChips.value = listOf(createSelectedItem("Amazing Tag"))
-            },
-        ),
-    )
-
-    clearSelection = { allChips.value = filterChips }
-
-    allChips = remember { mutableStateOf(filterChips) }
+    var selectedItem: ReaderFilterSelectedItem? by rememberSaveable { mutableStateOf(null) }
 
     AppThemeWithoutBackground {
         ReaderFilterChipGroup(
-            modifier = Modifier
-                .padding(8.dp),
-            filterChips = allChips.value,
+            modifier = Modifier.padding(8.dp),
+            selectedItem = selectedItem,
+            followedBlogsCount = 23,
+            followedTagsCount = 41,
+            onFilterClick = { type ->
+                selectedItem = ReaderFilterSelectedItem(
+                    text = UiString.UiStringText("Amazing ${type.name.lowercase()}"),
+                    type = type,
+                )
+            },
+            onSelectedItemClick = {
+                selectedItem = null
+            },
+            onSelectedItemDismissClick = {
+                selectedItem = null
+            },
         )
     }
 }
