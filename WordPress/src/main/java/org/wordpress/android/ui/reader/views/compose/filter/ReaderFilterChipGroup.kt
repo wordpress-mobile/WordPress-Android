@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.views.compose
+package org.wordpress.android.ui.reader.views.compose.filter
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.AnimatedVisibility
@@ -31,9 +31,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.utils.UiString
@@ -64,8 +66,12 @@ fun ReaderFilterChipGroup(
             if (blogSelected) {
                 selectedItem?.text ?: UiString.UiStringText("")
             } else {
-                // TODO thomashortadev move this to string resources and use pluralization
-                UiString.UiStringText("$followedBlogsCount Blogs")
+                UiString.UiStringPluralRes(
+                    zeroRes = R.string.reader_filter_chip_blog_zero,
+                    oneRes = R.string.reader_filter_chip_blog_one,
+                    otherRes = R.string.reader_filter_chip_blog_other,
+                    count = followedBlogsCount,
+                )
             }
         }
 
@@ -73,8 +79,12 @@ fun ReaderFilterChipGroup(
             if (tagSelected) {
                 selectedItem?.text ?: UiString.UiStringText("")
             } else {
-                // TODO thomashortadev move this to string resources and use pluralization
-                UiString.UiStringText("$followedTagsCount Tags")
+                UiString.UiStringPluralRes(
+                    zeroRes = R.string.reader_filter_chip_tag_zero,
+                    oneRes = R.string.reader_filter_chip_tag_one,
+                    otherRes = R.string.reader_filter_chip_tag_other,
+                    count = followedTagsCount,
+                )
             }
         }
 
@@ -173,7 +183,7 @@ fun ReaderFilterChip(
             if (onDismissClick != null) {
                 Icon(
                     Icons.Default.Close,
-                    contentDescription = null, // TODO thomashorta clear or dismiss?
+                    contentDescription = stringResource(R.string.dismiss),
                     modifier = Modifier
                         .size(20.dp)
                         .padding(2.dp)

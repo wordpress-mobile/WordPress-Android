@@ -1673,6 +1673,12 @@
     <string name="reader_dropdown_menu_subscriptions">Subscriptions</string>
     <string name="reader_dropdown_menu_saved">Saved</string>
     <string name="reader_dropdown_menu_liked">Liked</string>
+    <string name="reader_filter_chip_blog_zero">0 Blogs</string>
+    <string name="reader_filter_chip_blog_one">1 Blog</string>
+    <string name="reader_filter_chip_blog_other">%d Blogs</string>
+    <string name="reader_filter_chip_tag_zero">0 Tags</string>
+    <string name="reader_filter_chip_tag_one">1 Tag</string>
+    <string name="reader_filter_chip_tag_other">%d Tags</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
