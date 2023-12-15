@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/domain_transfer_card"
+        android:id="@+id/dynamic_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:composableName="org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardKt.DomainTransferCardPreview"
         tools:ignore="RtlSymmetry" />
-
-</LinearLayout>
+</FrameLayout>

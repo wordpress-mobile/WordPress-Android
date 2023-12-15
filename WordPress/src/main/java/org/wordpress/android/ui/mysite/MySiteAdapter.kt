@@ -12,7 +12,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloganuaryNudgeCar
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainTransferCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.Dynamic
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorWithinCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
@@ -38,7 +38,6 @@ import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityCardView
 import org.wordpress.android.ui.mysite.cards.dashboard.bloganuary.BloganuaryNudgeCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
-import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.error.ErrorCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.error.ErrorWithinCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewHolder
@@ -46,6 +45,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardViewHolder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationViewHolder
+import org.wordpress.android.ui.mysite.cards.dynamiccard.DynamicDashboardCardViewHolder
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardViewHolder
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.SwitchToJetpackMenuCardViewHolder
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardViewHolder
@@ -53,8 +53,8 @@ import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewHolder
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewHolder
 import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinkRibbonViewHolder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
-import org.wordpress.android.ui.mysite.cards.sotw2023.WpSotw2023NudgeCardViewHolder
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewholder
+import org.wordpress.android.ui.mysite.cards.sotw2023.WpSotw2023NudgeCardViewHolder
 import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemEmptyViewHolder
 import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemViewHolder
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemViewHolder
@@ -112,7 +112,6 @@ class MySiteAdapter(
             )
 
             MySiteCardAndItem.Type.BLOGANUARY_NUDGE_CARD.ordinal -> BloganuaryNudgeCardViewHolder(parent)
-            MySiteCardAndItem.Type.DASHBOARD_DOMAIN_TRANSFER_CARD.ordinal -> DomainTransferCardViewHolder(parent)
             MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE_CARD.ordinal -> PromoteWithBlazeCardViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.BLAZE_CAMPAIGNS_CARD.ordinal -> BlazeCampaignsCardViewHolder(parent)
             MySiteCardAndItem.Type.DASHBOARD_PLANS_CARD.ordinal -> PlansCardViewHolder(parent, uiHelpers)
@@ -129,6 +128,7 @@ class MySiteAdapter(
             MySiteCardAndItem.Type.NO_CARDS_MESSAGE.ordinal -> NoCardsMessageViewHolder(parent)
             MySiteCardAndItem.Type.PERSONALIZE_CARD.ordinal -> PersonalizeCardViewHolder(parent)
             MySiteCardAndItem.Type.WP_SOTW_2023_NUDGE_CARD.ordinal -> WpSotw2023NudgeCardViewHolder(parent)
+            MySiteCardAndItem.Type.DYNAMIC_DASHBOARD_CARD.ordinal -> DynamicDashboardCardViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -151,7 +151,6 @@ class MySiteAdapter(
             is PostCardViewHolder<*> -> holder.bind(getItem(position)  as PostCard)
             is BloggingPromptCardViewHolder -> holder.bind(getItem(position)  as BloggingPromptCardWithData)
             is BloganuaryNudgeCardViewHolder -> holder.bind(getItem(position)  as BloganuaryNudgeCardModel)
-            is DomainTransferCardViewHolder -> holder.bind(getItem(position)  as DomainTransferCardModel)
             is PromoteWithBlazeCardViewHolder -> holder.bind(getItem(position)  as PromoteWithBlazeCard)
             is BlazeCampaignsCardViewHolder -> holder.bind(getItem(position)  as BlazeCampaignsCardModel)
             is PlansCardViewHolder -> holder.bind(getItem(position)  as DashboardPlansCard)
@@ -164,6 +163,7 @@ class MySiteAdapter(
             is NoCardsMessageViewHolder -> holder.bind(getItem(position) as MySiteCardAndItem.Card.NoCardsMessage)
             is PersonalizeCardViewHolder -> holder.bind(getItem(position) as PersonalizeCardModel)
             is WpSotw2023NudgeCardViewHolder -> holder.bind(getItem(position) as WpSotw2023NudgeCardModel)
+            is DynamicDashboardCardViewHolder -> holder.bind(getItem(position) as Dynamic)
         }
     }
 
