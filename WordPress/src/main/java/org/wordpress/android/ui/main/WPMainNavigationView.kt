@@ -124,9 +124,9 @@ class WPMainNavigationView @JvmOverloads constructor(
                 customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
             }
 
-            if (i == getPosition(ME)) {
-                loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
-            }
+//            if (i == getPosition(ME)) {
+//                loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
+//            }
             itemView.addView(customView)
         }
 
@@ -298,10 +298,10 @@ class WPMainNavigationView @JvmOverloads constructor(
     @DrawableRes
     private fun getDrawableResForPosition(position: Int): Int {
         return when (getPageTypeOrNull(position)) {
-            MY_SITE -> R.drawable.ic_my_sites_white_24dp
-            READER -> R.drawable.ic_reader_white_24dp
-            NOTIFS -> R.drawable.ic_bell_white_24dp
-            else -> R.drawable.ic_user_primary_white_24
+            MY_SITE -> R.drawable.ic_home_selected
+            READER -> R.drawable.ic_reader_selected
+            NOTIFS -> R.drawable.ic_notifications_selected
+            else -> R.drawable.ic_me_bottom_nav
         }
     }
 
