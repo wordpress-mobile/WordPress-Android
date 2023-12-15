@@ -421,6 +421,14 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(activityLogCardViewModelSlice.getActivityLogCardBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(personalizeCardViewModelSlice.getBuilderParams()).thenReturn(mock())
         whenever(personalizeCardBuilder.build(any())).thenReturn(mock())
+        whenever(dynamicCardsViewModelSlice.getBuilderParams(anyOrNull())).thenReturn(
+            MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
+                mock(),
+                mock(),
+                mock(),
+                mock()
+            )
+        )
         whenever(bloganuaryNudgeViewModelSlice.getBuilderParams()).thenReturn(mock())
         whenever(bloggingPromptCardViewModelSlice.getBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(quickLinksItemViewModelSlice.uiState).thenReturn(mock())
