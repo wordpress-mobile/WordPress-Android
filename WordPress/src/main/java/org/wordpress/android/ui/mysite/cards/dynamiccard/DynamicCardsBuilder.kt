@@ -2,12 +2,18 @@ package org.wordpress.android.ui.mysite.cards.dynamiccard
 
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.CardOrder
+import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.Dynamic
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams
 import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
+import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.UrlUtilsWrapper
 import javax.inject.Inject
 
-class DynamicCardsBuilder @Inject constructor() {
+class DynamicCardsBuilder @Inject constructor(
+    private val urlUtils: UrlUtilsWrapper,
+    private val deepLinkHandlers: DeepLinkHandlers
+) {
     fun build(params: DynamicCardsBuilderParams, order: CardOrder): List<Dynamic>? {
         if (!shouldBuildCard(params, order)) {
             return null
@@ -16,7 +22,7 @@ class DynamicCardsBuilder @Inject constructor() {
     }
 
     private fun shouldBuildCard(params: DynamicCardsBuilderParams, order: CardOrder): Boolean {
-        if (params.dynamicCards != null && params.dynamicCards.pages.none { it.order == order }) return false
+        if (params.dynamicCards == null || params.dynamicCards.pages.none { it.order == order }) return false
         return true
     }
 
@@ -57,10 +63,11 @@ class DynamicCardsBuilder @Inject constructor() {
     }
 
     private fun isValidUrlOrDeeplink(url: String?): Boolean {
-        return url != null // TODO enhance validation logic
+        return !url.isNullOrEmpty() && (urlUtils.isValidUrlAndHostNotNull(url)
+                || deepLinkHandlers.buildNavigateAction(UriWrapper(url)) != null)
     }
 
     private fun isValidActionTitle(title: String?): Boolean {
-        return !title.isNullOrEmpty() // TODO enhance validation logic
+        return !title.isNullOrEmpty()
     }
 }
