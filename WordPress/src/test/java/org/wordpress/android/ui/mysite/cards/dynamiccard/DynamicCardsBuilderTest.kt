@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -13,6 +14,9 @@ import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.util.UrlUtilsWrapper
+import org.wordpress.android.util.config.AppConfig
+import org.wordpress.android.util.config.DynamicDashboardCardsFeatureConfig
+import org.wordpress.android.util.config.FeatureFlagConfig
 import kotlin.test.assertEquals
 
 /* DYNAMIC CARDS */
@@ -87,10 +91,23 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     @Mock
     private lateinit var deepLinkHandlers: DeepLinkHandlers
 
+    @Mock
+    private lateinit var dynamicDashboardCardsFeatureConfig: DynamicDashboardCardsFeatureConfig
+
+    @Mock
+    private lateinit var featureFlagConfig: FeatureFlagConfig
+
+    @Mock
+    private lateinit var featureState: AppConfig.FeatureState
+
     @Before
     fun setUp() {
-        dynamicCardsBuilder = DynamicCardsBuilder(urlUtils, deepLinkHandlers)
+        dynamicCardsBuilder =
+            DynamicCardsBuilder(urlUtils, deepLinkHandlers, dynamicDashboardCardsFeatureConfig, featureFlagConfig)
         whenever(urlUtils.isValidUrlAndHostNotNull(DYNAMIC_CARD_URL)).thenReturn(true)
+        whenever(dynamicDashboardCardsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(featureState.isEnabled).thenReturn(true)
+        whenever(featureFlagConfig.getFeatureState(any(), any())).thenReturn(featureState)
     }
 
     @Test

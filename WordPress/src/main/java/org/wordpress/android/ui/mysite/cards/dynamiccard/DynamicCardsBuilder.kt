@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.dynamiccard
 
 import org.wordpress.android.fluxc.model.dashboard.CardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.CardOrder
 import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.Dynamic
@@ -8,14 +9,18 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DynamicCar
 import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
+import org.wordpress.android.util.config.DynamicDashboardCardsFeatureConfig
+import org.wordpress.android.util.config.FeatureFlagConfig
 import javax.inject.Inject
 
 class DynamicCardsBuilder @Inject constructor(
     private val urlUtils: UrlUtilsWrapper,
-    private val deepLinkHandlers: DeepLinkHandlers
+    private val deepLinkHandlers: DeepLinkHandlers,
+    private val dynamicDashboardCardsFeatureConfig: DynamicDashboardCardsFeatureConfig,
+    private val featureFlagConfig: FeatureFlagConfig,
 ) {
     fun build(params: DynamicCardsBuilderParams, order: CardOrder): List<Dynamic>? {
-        if (!shouldBuildCard(params, order)) {
+        if (!dynamicDashboardCardsFeatureConfig.isEnabled() || !shouldBuildCard(params, order)) {
             return null
         }
         return convertToDynamicCards(params, order)
@@ -27,7 +32,7 @@ class DynamicCardsBuilder @Inject constructor(
     }
 
     private fun convertToDynamicCards(params: DynamicCardsBuilderParams, order: CardOrder): List<Dynamic> {
-        val cards = params.dynamicCards?.dynamicCards?.filter { it.order == order } ?: emptyList()
+        val cards = params.dynamicCards?.dynamicCards?.filter { it.order == order && it.isEnabled()} ?: emptyList()
         return cards.map { card ->
             Dynamic(
                 id = card.id,
@@ -44,6 +49,11 @@ class DynamicCardsBuilder @Inject constructor(
                 onHideMenuItemClick = create(card.id, params.onHideMenuItemClick),
             )
         }
+    }
+
+    fun DynamicCardModel.isEnabled(): Boolean {
+        if (remoteFeatureFlag.isNullOrEmpty()) return true // If there is no feature flag, then the card is enabled
+        return featureFlagConfig.getFeatureState(requireNotNull(remoteFeatureFlag), false).isEnabled
     }
 
     private fun getActionSource(
