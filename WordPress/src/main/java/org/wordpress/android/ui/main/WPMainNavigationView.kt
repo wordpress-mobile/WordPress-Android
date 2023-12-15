@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
@@ -44,7 +43,6 @@ import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.extensions.getColorStateListFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
@@ -112,9 +110,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             val itemView = menuView.getChildAt(i) as BottomNavigationItemView
             val customView: View = inflater.inflate(R.layout.navbar_item, menuView, false)
 
-            val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
             val imgIcon = customView.findViewById<ImageView>(R.id.nav_icon)
-            txtLabel.text = getTitleForPosition(i)
             customView.contentDescription = getContentDescriptionForPosition(i)
             imgIcon.setImageResource(getDrawableResForPosition(i))
             if (i == getPosition(READER)) {
@@ -247,12 +243,8 @@ class WPMainNavigationView @JvmOverloads constructor(
     private fun updateCurrentPosition(position: Int) {
         // remove the title and selected state from the previously selected item
         if (prevPosition > -1) {
-            setTitleViewSelected(prevPosition, false)
             setImageViewSelected(prevPosition, false)
         }
-
-        // set the title and selected state from the newly selected item
-        setTitleViewSelected(position, true)
 
         setImageViewSelected(position, true)
 
@@ -285,14 +277,6 @@ class WPMainNavigationView @JvmOverloads constructor(
             it.isSelected = isSelected
             it.alpha = if (isSelected) 1f else unselectedButtonAlpha
         }
-    }
-
-    private fun setTitleViewSelected(position: Int, isSelected: Boolean) {
-        getTitleViewForPosition(position)?.setTextColor(
-            context.getColorStateListFromAttribute(
-                if (isSelected) R.attr.wpColorNavBar else R.attr.wpColorOnSurfaceMedium
-            )
-        )
     }
 
     @DrawableRes
@@ -336,10 +320,6 @@ class WPMainNavigationView @JvmOverloads constructor(
             NOTIFS -> TAG_NOTIFS
             ME -> TAG_ME
         }
-    }
-
-    private fun getTitleViewForPosition(position: Int): TextView? {
-        return getItemView(position)?.findViewById(R.id.nav_label)
     }
 
     private fun getImageViewForPosition(position: Int): ImageView? {

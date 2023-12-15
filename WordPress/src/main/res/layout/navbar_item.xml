@@ -8,39 +8,23 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/nav_icon"
+        android:alpha="@dimen/material_emphasis_disabled"
+        android:layout_width="@dimen/bottom_nav_bar_icon_size"
+        android:layout_height="@dimen/bottom_nav_bar_icon_size"
+        android:layout_gravity="center"
+        android:importantForAccessibility="no"
+        app:tint="@drawable/nav_bar_button_selector"
+        tools:src="@drawable/ic_create_white_24dp" />
 
-        <ImageView
-            android:id="@+id/nav_icon"
-            android:alpha="@dimen/material_emphasis_disabled"
-            android:layout_width="@dimen/bottom_nav_bar_icon_size"
-            android:layout_height="@dimen/bottom_nav_bar_icon_size"
-            android:layout_gravity="center"
-            android:importantForAccessibility="no"
-            app:tint="@drawable/nav_bar_button_selector"
-            tools:src="@drawable/ic_create_white_24dp" />
+    <View
+        android:id="@+id/nav_badge"
+        android:layout_width="@dimen/bottom_nav_bar_badge_size"
+        android:layout_height="@dimen/bottom_nav_bar_badge_size"
+        android:layout_gravity="top"
+        android:background="@drawable/bg_nav_badge"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
-        <View
-            android:id="@+id/nav_badge"
-            android:layout_width="@dimen/bottom_nav_bar_badge_size"
-            android:layout_height="@dimen/bottom_nav_bar_badge_size"
-            android:layout_gravity="top"
-            android:background="@drawable/bg_nav_badge"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-    </FrameLayout>
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/nav_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:duplicateParentState="true"
-        android:singleLine="true"
-        android:textAppearance="?attr/textAppearanceCaption"
-        android:visibility="visible"
-        tools:text="label" />
 </LinearLayout>
