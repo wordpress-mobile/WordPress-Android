@@ -1669,6 +1669,10 @@
     <string name="reader_marked_post_as_unseen">Marked post as unseen</string>
     <string name="reader_error_changing_seen_status_of_unsupported_post">Can\'t toggle seen status of this post</string>
     <string name="reader_search_content_description">Search</string>
+    <string name="reader_dropdown_menu_discover">Discover</string>
+    <string name="reader_dropdown_menu_subscriptions">Subscriptions</string>
+    <string name="reader_dropdown_menu_saved">Saved</string>
+    <string name="reader_dropdown_menu_liked">Liked</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
