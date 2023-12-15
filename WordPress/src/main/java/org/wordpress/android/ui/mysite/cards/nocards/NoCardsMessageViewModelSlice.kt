@@ -67,7 +67,6 @@ class NoCardsMessageViewModelSlice @Inject constructor(
             MySiteCardAndItem.Type.POST_CARD_WITH_POST_ITEMS,
             MySiteCardAndItem.Type.BLOGGING_PROMPT_CARD,
             MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE_CARD,
-            MySiteCardAndItem.Type.DASHBOARD_DOMAIN_TRANSFER_CARD,
             MySiteCardAndItem.Type.BLAZE_CAMPAIGNS_CARD,
             MySiteCardAndItem.Type.DASHBOARD_PLANS_CARD,
             MySiteCardAndItem.Type.PAGES_CARD_ERROR,

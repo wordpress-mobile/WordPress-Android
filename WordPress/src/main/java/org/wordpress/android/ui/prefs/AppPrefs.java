@@ -171,6 +171,9 @@ public class AppPrefs {
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
         PINNED_DYNAMIC_CARD,
+        // PUBLISHED_POST_COUNT will increase until it reaches ReviewViewModel.TARGET_COUNT_POST_PUBLISHED
+        PUBLISHED_POST_COUNT,
+        IN_APP_REVIEW_SHOWN,
         BLOGGING_REMINDERS_SHOWN,
         SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
         SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
@@ -184,7 +187,6 @@ public class AppPrefs {
         SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD,
         SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD,
         SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING,
-        SHOULD_HIDE_DASHBOARD_DOMAIN_TRANSFER_CARD,
         SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD,
         SHOULD_HIDE_DASHBOARD_PLANS_CARD,
 
@@ -1365,6 +1367,22 @@ public class AppPrefs {
         return DeletablePrefKey.MANUAL_FEATURE_CONFIG.name() + featureKey;
     }
 
+    public static void incrementPublishedPostCount() {
+        putInt(DeletablePrefKey.PUBLISHED_POST_COUNT, getPublishedPostCount() + 1);
+    }
+
+    public static int getPublishedPostCount() {
+        return prefs().getInt(DeletablePrefKey.PUBLISHED_POST_COUNT.name(), 0);
+    }
+
+    public static void setInAppReviewsShown() {
+        putBoolean(DeletablePrefKey.IN_APP_REVIEW_SHOWN, true);
+    }
+
+    public static boolean isInAppReviewsShown() {
+        return prefs().getBoolean(DeletablePrefKey.IN_APP_REVIEW_SHOWN.name(), false);
+    }
+
     public static void setBloggingRemindersShown(int siteId) {
         prefs().edit().putBoolean(getBloggingRemindersConfigKey(siteId), true).apply();
     }
@@ -1623,18 +1641,6 @@ public class AppPrefs {
 
     @NonNull private static String getShouldShowJetpackFullPluginInstallOnboardingPref(int siteId) {
         return DeletablePrefKey.SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING.name() + siteId;
-    }
-
-    public static Boolean getShouldHideDashboardDomainTransferCard(long siteId) {
-        return prefs().getBoolean(getSiteIdHideDashboardDomainTransferCardKey(siteId), false);
-    }
-
-    public static void setShouldHideDashboardDomainTransferCard(long siteId, final boolean isHidden) {
-        prefs().edit().putBoolean(getSiteIdHideDashboardDomainTransferCardKey(siteId), isHidden).apply();
-    }
-
-    @NonNull private static String getSiteIdHideDashboardDomainTransferCardKey(long siteId) {
-        return DeletablePrefKey.SHOULD_HIDE_DASHBOARD_DOMAIN_TRANSFER_CARD.name() + siteId;
     }
 
     public static Boolean getShouldHidePromoteWithBlazeCard(long siteId) {
