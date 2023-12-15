@@ -29,7 +29,6 @@ class CardsTracker @Inject constructor(
         PAGES("pages"),
         ACTIVITY("activity_log"),
         DASHBOARD_CARD_PLANS("dashboard_card_plans"),
-        DASHBOARD_CARD_DOMAIN_TRANSFER("dashboard_card_domain_transfer"),
         PERSONALIZE_CARD("personalize"),
         NO_CARDS("no_cards")
     }
@@ -137,7 +136,6 @@ fun MySiteCardAndItem.Type.toTypeValue(): Type {
         MySiteCardAndItem.Type.BLOGANUARY_NUDGE_CARD -> Type.BLOGANUARY_NUDGE
         MySiteCardAndItem.Type.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
         MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE_CARD -> Type.PROMOTE_WITH_BLAZE
-        MySiteCardAndItem.Type.DASHBOARD_DOMAIN_TRANSFER_CARD -> Type.DASHBOARD_CARD_DOMAIN_TRANSFER
         MySiteCardAndItem.Type.BLAZE_CAMPAIGNS_CARD -> Type.BLAZE_CAMPAIGNS
         MySiteCardAndItem.Type.DASHBOARD_PLANS_CARD -> Type.DASHBOARD_CARD_PLANS
         MySiteCardAndItem.Type.PAGES_CARD -> Type.PAGES

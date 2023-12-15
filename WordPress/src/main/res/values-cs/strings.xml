@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-14 11:17:15+0000
+Translation-Revision-Date: 2023-12-13 09:55:25+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: cs_CZ
@@ -150,6 +150,7 @@ Language: cs_CZ
     <string name="blogging_prompts_list_answered_prompt">✓ Odpovězeno</string>
     <string name="blogging_prompts_list_title">Výzvy</string>
     <string name="close_desc">zavřít</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">Případně můžete tento blok odpojit a upravit samostatně klepnutím na „Převést na běžný blok“.</string>
     <string name="dlg_confirm_delete_category">Trvale smazat rubriku \'%s\'?</string>
     <string name="deleting_cat_success">Rubrika byla úspěšně odstraněna</string>
     <string name="deleting_cat_failed">Mazání rubriky se nepodařilo.</string>
@@ -2771,6 +2772,10 @@ Language: cs_CZ
     <string name="editor_post_saved_online">Příspěvek je uložený online</string>
     <string name="site_settings_image_quality_hint">Kvalita obrázků. Vyšší hodnoty znamenají lepší kvalitu obrázků.</string>
     <string name="site_settings_optimize_images_summary">Povolit změnu velikosti a kompresi obrázků</string>
+    <string name="media_encoder_quality_maximum">Maximální</string>
+    <string name="media_encoder_quality_high">Vysoká</string>
+    <string name="media_encoder_quality_medium">Střední</string>
+    <string name="media_encoder_quality_low">Nízká</string>
     <string name="media_upload_state_uploaded">Nahráno</string>
     <string name="media_upload_state_deleted">Smazáno</string>
     <string name="media_upload_state_deleting">Mazání</string>

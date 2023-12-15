@@ -8,7 +8,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloganuaryNudgeCar
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainTransferCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorWithinCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
@@ -19,6 +18,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PersonalizeCardMod
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.WpSotw2023NudgeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryEmptyHeaderItem
@@ -32,6 +32,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
     override fun areItemsTheSame(oldItem: MySiteCardAndItem, updatedItem: MySiteCardAndItem): Boolean {
         return oldItem.type == updatedItem.type && when {
+            oldItem is SiteInfoHeaderCard && updatedItem is SiteInfoHeaderCard -> true
             oldItem is QuickLinksItem && updatedItem is QuickLinksItem -> true
             oldItem is DomainRegistrationCard && updatedItem is DomainRegistrationCard -> true
             oldItem is QuickStartCard && updatedItem is QuickStartCard -> true
@@ -49,7 +50,6 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
             oldItem is BloganuaryNudgeCardModel && updatedItem is BloganuaryNudgeCardModel -> true
             oldItem is PromoteWithBlazeCard && updatedItem is PromoteWithBlazeCard -> true
             oldItem is BlazeCampaignsCardModel && updatedItem is BlazeCampaignsCardModel -> true
-            oldItem is DomainTransferCardModel && updatedItem is DomainTransferCardModel -> true
             oldItem is DashboardPlansCard && updatedItem is DashboardPlansCard -> true
             oldItem is PagesCard && updatedItem is PagesCard -> true
             oldItem is ActivityCard && updatedItem is ActivityCard -> true

@@ -183,6 +183,22 @@ class AppPrefsWrapper @Inject constructor() {
         return AppPrefs.getManualFeatureConfig(featureKey)
     }
 
+    fun incrementPublishedPostCount() {
+        AppPrefs.incrementPublishedPostCount()
+    }
+
+    fun getPublishedPostCount(): Int {
+        return AppPrefs.getPublishedPostCount()
+    }
+
+    fun setInAppReviewsShown() {
+        AppPrefs.setInAppReviewsShown()
+    }
+
+    fun isInAppReviewsShown(): Boolean {
+        return AppPrefs.isInAppReviewsShown()
+    }
+
     fun setBloggingRemindersShown(siteId: Int) {
         AppPrefs.setBloggingRemindersShown(siteId)
     }
@@ -321,12 +337,6 @@ class AppPrefsWrapper @Inject constructor() {
         siteId: Int,
         isShown: Boolean
     ) = AppPrefs.setShouldShowJetpackFullPluginInstallOnboarding(siteId, isShown)
-
-    fun getShouldHideDashboardDomainTransferCard(siteId: Long): Boolean =
-        AppPrefs.getShouldHideDashboardDomainTransferCard(siteId)
-
-    fun setShouldHideDashboardDomainTransferCard(siteId: Long, isHidden: Boolean) =
-        AppPrefs.setShouldHideDashboardDomainTransferCard(siteId, isHidden)
 
     fun hideBlazeCard(siteId: Long): Boolean =
         AppPrefs.getShouldHidePromoteWithBlazeCard(siteId)

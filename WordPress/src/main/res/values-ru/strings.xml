@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-01 06:22:55+0000
+Translation-Revision-Date: 2023-12-11 22:54:07+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: ru
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Поехали!</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Включить подсказки по ведению блога</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">С помощью опции ежедневных подсказок по ведению блога Bloganuary будет рассылать темы январских публикаций.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">С помощью опции ежедневных подсказок по ведению блога Bloganuary будет рассылать темы январских публикаций. Опция подсказок по ведению блога на данный момент отключена.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">Читайте ответы других блогеров, вдохновляйтесь и заводите новые знакомства.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">Публикуйте свои ответы.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">Ежедневно вы будете получать подсказку с идеей для публикации.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">Присоединяйтесь к нашему писательскому челленджу, который продлится месяц</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
+    <string name="bloganuary_dashboard_nudge_text">В январе подсказки по ведению блога будут рассылаться через Bloganuary — челлендж сообщества, призванный выработать привычку ежедневно вести блог в новом году.</string>
+    <string name="bloganuary_dashboard_nudge_title">Bloganuary уже на пороге!</string>
     <string name="turn_off">Нет, отключить</string>
     <string name="leave_on">Да, оставить</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">По этой причине мы рекомендуем редактировать блок с помощью веб-браузера.</string>

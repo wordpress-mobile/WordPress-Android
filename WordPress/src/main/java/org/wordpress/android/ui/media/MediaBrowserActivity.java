@@ -1094,7 +1094,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             return;
         }
 
-        UploadService.uploadMedia(this, mediaModels);
+        UploadService.uploadMedia(this, mediaModels, "MediaBrowserActivity#addMediaToUploadService");
         AppRatingDialog.INSTANCE.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA);
     }
 

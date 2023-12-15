@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-06 17:10:21+0000
+Translation-Revision-Date: 2023-12-09 19:06:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: sq_AL
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Shkojmë!</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Aktivizoni cytje blogimi</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Bloganuary do të përdorë Cytje të Përditshme Blogimi për t’ju dërguar subjekte për muajin janar. Cytjet Për Blogim i keni aktualisht të çaktivizuara.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">Lexoni përgjigje të bloguesve të tjerë, për t’u frymëzuar dhe bërë lidhje të reja.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">Botoni përgjigjen tuaj.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">Merrni një cytje të re, për t’ju frymëzuar çdo ditë.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">Merrni pjesë te sfida jonë, e gjatë një muaj, për shkrim</string>
+    <string name="bloganuary_dashboard_nudge_text">Për muajin janar, cytjet për blogim do të vijnë nga Bloganuary - sfida e bashkësisë tonë për të krijuar një zakon blogimi për vitin e ri.</string>
+    <string name="bloganuary_dashboard_nudge_title">Bloganuary po vjen!</string>
     <string name="turn_off">Jo, çaktivizoje</string>
     <string name="leave_on">Po, lëre të aktivizuar</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Për këtë arsye, rekomandojmë përpunimin e bllokut duke përdorur shfletuesin tuaj.</string>
@@ -15,6 +24,17 @@ Language: sq_AL
     <string name="barcode_scanning_alert_dialog_dismiss_label">Anuloje</string>
     <string name="barcode_scanning_alert_dialog_rationale_cta_label">Akordoje</string>
     <string name="barcode_scanning_alert_dialog_permanently_denied_message">Keni mohuar përgjithmonë leje Kamerës. Është e domosdoshme për të skanuar kodin me vija. Ju lutemi, aktivizojeni që prej rregullimeve të aplikacionit.</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">Që të skanohet kodi me vija, lypsen leje mbi kamerën</string>
+    <string name="barcode_scanning_alert_dialog_title">Akordoni Leje Mbi Kameran</string>
+    <string name="barcode_scanning_camera_permission_denied">Që të skanohet kodi me vija, lypsen leje mbi kamerën.</string>
+    <string name="barcode_scanning_title">Skanoni Kod Me Vija</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blloqe brenda njëri-tjetri më thellë se %d nivele mund të mos funksionojnë si duhet te përpunuesi për celular.</string>
+    <string name="jp_migration_lets_go_button">Shkojmë</string>
+    <string name="jp_migration_done_no_sites_message">Ka ardhur koha a vazhdoni udhëtimin tuaj WordPress te aplikacioni Jetpack.</string>
+    <string name="image_optimization_popup_desc">Optimizimi i figurave i tkurr këto, për ngarkim më të shpejtë.\n\nKjo mundësi, si parazgjedhje, është e aktivizuar, por mund ta ndryshoni që nga rregullimet e aplikacioni kurdo.</string>
+    <string name="image_optimization_popup_title">Të vazhdohet të optimizohen figura?</string>
+    <string name="domain_management_clear_search">Spastroje kërkimin</string>
+    <string name="media_encoder_quality_very_high">Shumë e Lartë</string>
     <string name="notification_security_key_needed">Ju lutemi, që të vazhdohet, jepni kyçin tuaj të sigurisë.</string>
     <string name="login_error_security_key">Pati ca problem me hyrjen me kyç sigurie</string>
     <string name="login_text_security_key">Përdorni një kyç sigurie</string>

@@ -144,6 +144,7 @@ android {
         buildConfigField "boolean", "READER_IMPROVEMENTS", "false"
         buildConfigField "boolean", "BLOGANUARY_DASHBOARD_NUDGE", "false"
         buildConfigField "boolean", "IN_APP_REVIEWS", "false"
+        buildConfigField "boolean", "DYNAMIC_DASHBOARD_CARDS", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -424,6 +425,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-process:$androidxLifecycleVersion"
     implementation "com.android.volley:volley:$androidVolleyVersion"
+    implementation "com.google.android.play:review:$googlePlayReviewVersion"
+    implementation "com.google.android.play:review-ktx:$googlePlayReviewVersion"
     implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
     implementation "com.google.android.gms:play-services-code-scanner:$googlePlayServicesCodeScannerVersion"
     implementation "com.google.mlkit:barcode-scanning-common:$googleMLKitBarcodeScanningVersion"

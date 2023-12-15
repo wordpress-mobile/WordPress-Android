@@ -33,13 +33,13 @@ import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel;
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
-import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryViewModel;
-import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesViewModel;
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewModel;
-import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsViewModel;
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel;
+import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesViewModel;
+import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryViewModel;
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewModel;
 import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsViewModel;
+import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsViewModel;
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
 import org.wordpress.android.ui.prefs.language.LocalePickerViewModel;
@@ -53,6 +53,7 @@ import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewM
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
+import org.wordpress.android.ui.review.ReviewViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
@@ -464,6 +465,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(UnifiedCommentListViewModel.class)
     abstract ViewModel unifiedCommentListViewModel(UnifiedCommentListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ReviewViewModel.class)
+    abstract ViewModel reviewViewModel(ReviewViewModel viewModel);
 
     @Binds
     @IntoMap

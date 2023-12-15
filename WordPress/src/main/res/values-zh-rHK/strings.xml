@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-06 08:54:08+0000
+Translation-Revision-Date: 2023-12-13 17:03:14+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: zh_TW
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">開始行動！</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">開啟網誌提示</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary 會透過「每日網誌提示」傳送 1 月的主題。</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Bloganuary 會透過「每日網誌提示」傳送 1 月的主題。 您目前已停用「網誌提示」功能。</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">閱讀其他部落客的回覆，汲取靈感並建立新人脈。</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">張貼回覆。</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">每天接收新提示，激發靈感。</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">參加為期一個月的寫作挑戰</string>
+    <string name="bloganuary_dashboard_nudge_text">Bloganuary 會在 1 月送上網誌提示。這個社群挑戰的目的，是為了協助你在新的一年養成寫網誌的習慣。</string>
+    <string name="bloganuary_dashboard_nudge_title">Bloganuary 挑戰即將來臨！</string>
     <string name="turn_off">否，關閉</string>
     <string name="leave_on">是，保持開啟</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">因此，我們建議使用網頁瀏覽器來編輯區塊。</string>
@@ -2788,7 +2798,7 @@ Language: zh_TW
     <string name="login_error_button">關閉</string>
     <string name="enter_wpcom_password_google">若要繼續使用此 Google 帳號，請提供相符的 WordPress.com 密碼。只會詢問一次。</string>
     <string name="error_generic_network">網路發生錯誤。請檢查你的連線並再試一次。</string>
-    <string name="post_settings_remove_featured_image">移除特色圖片</string>
+    <string name="post_settings_remove_featured_image">移除精選圖片</string>
     <string name="post_settings_choose_featured_image">選擇特色圖片</string>
     <string name="login_log_in_for_share_intent">登入 WordPress.com 以便分享內容。</string>
     <string name="enter_site_address_share_intent">請輸入你要分享內容的 WordPress 網站位址。</string>
@@ -3236,7 +3246,7 @@ Language: zh_TW
     <string name="site_settings_list_editor_summary_one">1 個項目</string>
     <string name="approve_auto">所有使用者</string>
     <string name="approve_auto_if_previously_approved">已知使用者的留言</string>
-    <string name="approve_manual">無留言</string>
+    <string name="approve_manual">尚無留言</string>
     <string name="site_settings_paging_summary_other">每頁 %d 則留言</string>
     <string name="site_settings_paging_summary_one">每頁 1 則留言</string>
     <string name="site_settings_multiple_links_summary_other">需要審核超過 %d 個連結</string>
@@ -3411,7 +3421,7 @@ Language: zh_TW
     <string name="notifications_empty_comments">尚未有留言</string>
     <string name="notifications_empty_unread">全部都是最新版本！</string>
     <string name="reader_short_comment_count_multi">%s評論</string>
-    <string name="reader_short_comment_count_one">1評論</string>
+    <string name="reader_short_comment_count_one">1 則留言</string>
     <string name="reader_hint_comment_on_post">回复文章…</string>
     <string name="reader_discover_visit_blog">造訪 %s</string>
     <string name="reader_discover_attribution_blog">原始發表位置：%s</string>
@@ -3692,7 +3702,7 @@ Language: zh_TW
     <string name="password">密碼</string>
     <string name="reader">閱讀器</string>
     <string name="featured_in_post">文章內容包含圖片</string>
-    <string name="featured">選為精選圖片</string>
+    <string name="featured">設定為精選圖片</string>
     <string name="width">寬度</string>
     <string name="caption">說明（可選）</string>
     <string name="pages">頁面</string>

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-05 09:54:08+0000
+Translation-Revision-Date: 2023-12-13 14:52:27+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: ja_JP
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">スタート</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">ブログ作成のプロンプトをオンにする</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary は毎日のブログ作成のプロンプトから1月のトピックを送信します。</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Bloganuary は毎日のブログ作成のプロンプトから1月のトピックを送信します。 現在ブログ作成のプロンプトが無効になっています。</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">他のブロガーの回答を読んでインスピレーションを得て、新しいつながりを作りましょう。</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">回答を公開します。</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">毎日インスピレーションを与える新しいプロンプトを受け取ることができます。</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">1か月間のライティングチャレンジにご参加ください</string>
+    <string name="bloganuary_dashboard_nudge_text">1月のブログ作成のプロンプトは Bloganuary より、新年にブログ投稿を習慣付けるためのコミュニティの課題が提示されます。</string>
+    <string name="bloganuary_dashboard_nudge_title">まもなく Bloganuary です !</string>
     <string name="turn_off">オフにする</string>
     <string name="leave_on">そのままにする</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">このため、Web ブラウザーでブロックを編集することをお勧めします。</string>
@@ -22,6 +32,7 @@ Language: ja_JP
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%dレベルよりも深くネストされたブロックは、モバイルエディターで適切にレンダリングされない場合があります。</string>
     <string name="jp_migration_lets_go_button">スタート</string>
     <string name="jp_migration_done_no_sites_message">Jetpack アプリで WordPress のジャーニーを続ける時が来ました。</string>
+    <string name="image_optimization_popup_title">画像の最適化を続けますか ?</string>
     <string name="domain_management_clear_search">検索をクリア</string>
     <string name="media_encoder_quality_very_high">非常に高い</string>
     <string name="notification_security_key_needed">続行するにはセキュリティキーを入力してください。</string>
@@ -98,6 +109,7 @@ Language: ja_JP
     <string name="personalization_screen_draft_posts_card_description">最新の投稿の下書き。</string>
     <string name="personalization_screen_draft_posts_card_title">投稿を下書きする</string>
     <string name="personalization_screen_stats_card_description">表示数、訪問者数、いいねの数</string>
+    <string name="personalization_screen_title">ホームタブをパーソナライズする</string>
     <string name="personalize_card_content_description">タップしてホームタブをパーソナライズします</string>
     <string name="personalize_card_text">ホームタブをパーソナライズ</string>
     <string name="partial_media_access_prompt_change_settings">設定を変更</string>
@@ -1015,6 +1027,7 @@ Language: ja_JP
     <string name="likes_list_screen_title">いいねリスト%s</string>
     <string name="gutenberg_native_two">2</string>
     <string name="gutenberg_native_three">3</string>
+    <string name="gutenberg_native_no_title">タイトルなし</string>
     <string name="gutenberg_native_s_social_icon">%sソーシャルアイコン</string>
     <string name="gutenberg_native_mention">\@ 返信</string>
     <string name="gutenberg_native_new">新規</string>
@@ -1771,6 +1784,7 @@ Language: ja_JP
     <string name="app_theme_light">ライト</string>
     <string name="app_theme">外観</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">このページに最近変更が加えられましたが、保存されませんでした。読み込むバージョンを選択します。\n\n</string>
+    <string name="gutenberg_native_warning_message">警告メッセージ</string>
     <string name="gutenberg_native_show_post_content">投稿の内容を表示</string>
     <string name="gutenberg_native_only_show_excerpt">抜粋のみを表示</string>
     <string name="gutenberg_native_link_to">リンク先</string>
@@ -1919,6 +1933,7 @@ Language: ja_JP
     <string name="gutenberg_native_choose_from_device">端末から選択</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">不明なエラーが発生しました。もう一度お試しください。</string>
     <string name="gutenberg_native_alt_text">代替テキスト</string>
+    <string name="gutenberg_native_add_video">動画を追加</string>
     <string name="gutenberg_native_add_url">URL を追加</string>
     <string name="gutenberg_native_add_alt_text">代替テキストを追加</string>
     <string name="gutenberg_native_add_block_here">ここにブロックを追加</string>
@@ -3030,6 +3045,10 @@ Language: ja_JP
     <string name="editor_post_saved_online">投稿をオンラインで保存しました</string>
     <string name="site_settings_image_quality_hint">写真の画質。値が高いほど、画質が良いことを意味します。</string>
     <string name="site_settings_optimize_images_summary">写真をリサイズして圧縮できます</string>
+    <string name="media_encoder_quality_maximum">最高</string>
+    <string name="media_encoder_quality_high">高い</string>
+    <string name="media_encoder_quality_medium">普通</string>
+    <string name="media_encoder_quality_low">低い</string>
     <string name="media_upload_state_uploaded">アップロード済み</string>
     <string name="media_upload_state_failed">アップロード失敗</string>
     <string name="media_upload_state_deleted">削除済み</string>
@@ -3542,6 +3561,7 @@ Language: ja_JP
     <string name="reader_toast_err_already_follow_blog">このサイトをすでにフォローしています</string>
     <string name="reader_toast_err_get_blog_info">このサイトを表示できません</string>
     <string name="reader_label_followed_blog">サイトをフォローしました</string>
+    <string name="reader_label_followers_count">%s人のフォロワー</string>
     <string name="reader_hint_add_tag_or_url">フォローする URL またはトピックを入力</string>
     <string name="reader_page_followed_blogs">フォロー中のサイト</string>
     <string name="reader_page_followed_tags">フォローしているトピック</string>

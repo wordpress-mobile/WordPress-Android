@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-05 11:54:08+0000
+Translation-Revision-Date: 2023-12-11 18:54:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: it
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Iniziamo!</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Attiva le richieste di blogging</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary utilizzerà le richieste di blogging giornaliere per inviarti argomenti per il mese di gennaio.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Bloganuary utilizzerà le richieste di blogging giornaliere per inviarti argomenti per il mese di gennaio. Le richieste di blogging al momento sono disabilitate.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">Leggi le risposte degli altri blogger per trovare l\'ispirazione e creare nuove connessioni.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">Pubblica la tua risposta.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">Ricevi un nuovo suggerimento per ottenere ispirazione ogni giorno.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">Prendi parte alla nostra sfida di scrittura: dura un mese.</string>
+    <string name="bloganuary_dashboard_nudge_text">Per il mese di gennaio, le richieste di blogging arriveranno da Bloganuary: la sfida della nostra community per creare delle abitudini di blogging per il nuovo anno.</string>
+    <string name="bloganuary_dashboard_nudge_title">Bloganuary è in arrivo.</string>
     <string name="turn_off">No, disattiva</string>
     <string name="leave_on">Si, continua</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Per questo motivo consigliamo di modificare il blocco tramite il browser web.</string>

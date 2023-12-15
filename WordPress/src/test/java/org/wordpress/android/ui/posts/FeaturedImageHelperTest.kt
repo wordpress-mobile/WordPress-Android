@@ -120,7 +120,7 @@ class FeaturedImageHelperTest {
         // Act
         val mediaModel = featuredImageHelper.retryFeaturedImageUpload(mock(), mock())
         // Assert
-        verify(uploadServiceFacade).uploadMedia(argThat { this[0] == mediaModel })
+        verify(uploadServiceFacade).uploadMedia(argThat { this[0] == mediaModel }, any())
     }
 
     @Test
@@ -189,7 +189,7 @@ class FeaturedImageHelperTest {
         // Act
         featuredImageHelper.queueFeaturedImageForUpload(0, createSiteModel(), mock(), "")
         // Assert
-        verify(uploadServiceFacade).uploadMedia(argThat { this[0] == mediaModel })
+        verify(uploadServiceFacade).uploadMedia(argThat { this[0] == mediaModel }, any())
     }
 
     @Test

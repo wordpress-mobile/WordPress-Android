@@ -19,9 +19,9 @@ class HistoryDetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         mRevision = if (getDatabase(WordPress.getContext())?.hasParcel(KEY_REVISION) == true) {
-            getDatabase(WordPress.getContext())?.getParcel(KEY_REVISION, parcelableCreator<Revision>())
+            getDatabase(WordPress.getContext())?.getParcel(KEY_REVISION, parcelableCreator())
         } else {
-            getDatabase(WordPress.getContext())?.getParcel(EXTRA_REVISION, parcelableCreator<Revision>())
+            getDatabase(WordPress.getContext())?.getParcel(EXTRA_REVISION, parcelableCreator())
         }
     }
 

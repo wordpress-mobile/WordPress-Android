@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-05 09:54:08+0000
+Translation-Revision-Date: 2023-12-12 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: he_IL
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">קדימה!</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">להפעיל הצעות כתיבה בבלוג</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">במסגרת Bloganuary נזכיר לך בעזרת \'הצעות כתיבה יומיות בבלוג\' לשלוח לנו את הנושאים שלך לחודש ינואר.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">במסגרת Bloganuary נזכיר לך בעזרת \'הצעות כתיבה יומיות בבלוג\' לשלוח לנו את הנושאים שלך לחודש ינואר. האפשרות \'הצעות כתיבה בבלוג\' מושבתת אצלך כרגע.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">אפשר לקרוא תשובות של בלוגרים אחרים כדי לקבל השראה וליצור חיבורים חדשים.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">מזמינים אותם לפרסם את תשובתך.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">כך תגיע אליך מדי יום הצעת כתיבה חדשה שתיתן לך השראה.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">אנו מזמינים אותך להצטרף לאתגר הכתיבה שלנו שיימשך חודש שלם</string>
+    <string name="bloganuary_dashboard_nudge_text">לאורך כל חודש ינואר, יתקבלו מ-Bloganuary הצעות כתיבה יומיות בבלוג. זהו האתגר הקהילתי שלנו לביסוס הרגלי פרסום בבלוג לשנה החדשה.</string>
+    <string name="bloganuary_dashboard_nudge_title">Bloganuary מתקרב!</string>
     <string name="turn_off">לא, נא לכבות</string>
     <string name="leave_on">כן, להמשיך</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">מסיבה זו מומלץ \'לשטח\' את התוכן על ידי ביטול הקבצת הבלוק או לערוך את הבלוק בעזרת דפדפן האינטרנט.</string>

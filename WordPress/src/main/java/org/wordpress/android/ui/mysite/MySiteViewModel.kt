@@ -46,7 +46,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFull
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
@@ -65,7 +64,6 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloganuary.BloganuaryNudgeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice
@@ -156,7 +154,6 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
     private val blazeCardViewModelSlice: BlazeCardViewModelSlice,
-    private val domainTransferCardViewModel: DomainTransferCardViewModel,
     private val pagesCardViewModelSlice: PagesCardViewModelSlice,
     private val todaysStatsViewModelSlice: TodaysStatsViewModelSlice,
     private val postsCardViewModelSlice: PostsCardViewModelSlice,
@@ -224,7 +221,6 @@ class MySiteViewModel @Inject constructor(
         siteStoriesHandler.onNavigation,
         blazeCardViewModelSlice.onNavigation,
         pagesCardViewModelSlice.onNavigation,
-        domainTransferCardViewModel.onNavigation,
         todaysStatsViewModelSlice.onNavigation,
         postsCardViewModelSlice.onNavigation,
         activityLogCardViewModelSlice.onNavigation,
@@ -252,7 +248,6 @@ class MySiteViewModel @Inject constructor(
             bloganuaryNudgeCardViewModelSlice.refresh,
             sotw2023NudgeCardViewModelSlice.refresh,
         )
-    val domainTransferCardRefresh = domainTransferCardViewModel.refresh
 
     private var shouldMarkUpdateSiteTitleTaskComplete = false
 
@@ -305,8 +300,6 @@ class MySiteViewModel @Inject constructor(
             bloggingPromptCardViewModelSlice.onSiteChanged(site?.id, state as? SiteSelected)
 
             dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
-
-            domainTransferCardViewModel.onSiteChanged(site?.id, state as? SiteSelected)
 
             state
         }
@@ -372,8 +365,7 @@ class MySiteViewModel @Inject constructor(
         }
 
         return SiteSelected(
-            siteInfoHeader = siteInfo,
-            dashboardData = siteItems
+            dashboardData = listOf(siteInfo) + siteItems
         )
     }
 
@@ -491,10 +483,6 @@ class MySiteViewModel @Inject constructor(
                 bloganuaryNudgeCardBuilderParams = bloganuaryNudgeCardViewModelSlice.getBuilderParams(),
                 bloggingPromptCardBuilderParams = bloggingPromptCardViewModelSlice.getBuilderParams(
                     bloggingPromptUpdate
-                ),
-                domainTransferCardBuilderParams = domainTransferCardViewModel.buildDomainTransferCardParams(
-                    site,
-                    uiModel.value as? SiteSelected
                 ),
                 blazeCardBuilderParams = blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate),
                 dashboardCardPlansBuilderParams = DashboardCardPlansBuilderParams(
@@ -1024,7 +1012,6 @@ class MySiteViewModel @Inject constructor(
 
     sealed class State {
         data class SiteSelected(
-            val siteInfoHeader: SiteInfoHeaderCard,
             val dashboardData: List<MySiteCardAndItem>,
         ) : State()
 
