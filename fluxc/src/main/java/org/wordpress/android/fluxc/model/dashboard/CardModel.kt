@@ -62,7 +62,7 @@ sealed class CardModel(
     }
 
     data class DynamicCardsModel(
-        val pages: List<DynamicCardModel> = emptyList(),
+        val dynamicCards: List<DynamicCardModel> = emptyList(),
     ) : CardModel(Type.DYNAMIC) {
         data class DynamicCardModel(
             val id: String,
