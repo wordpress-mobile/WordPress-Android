@@ -39,7 +39,7 @@ private val DYNAMIC_CARD_MODEL = DynamicCardModel(
 )
 
 private val DYNAMIC_CARDS_MODEL = CardModel.DynamicCardsModel(
-    pages = listOf(DYNAMIC_CARD_MODEL)
+    dynamicCards = listOf(DYNAMIC_CARD_MODEL)
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)
