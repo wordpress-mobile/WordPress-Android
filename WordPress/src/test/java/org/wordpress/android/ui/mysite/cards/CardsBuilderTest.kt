@@ -16,6 +16,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloganuaryNudgeCardBuilderParams
@@ -156,7 +157,8 @@ class CardsBuilderTest {
                     mock()
                 ),
                 pagesCardBuilderParams = PagesCardBuilderParams(mock(), mock(), mock(), mock()),
-                activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock(), mock(), mock())
+                activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock(), mock(), mock()),
+                dynamicCardsBuilderParams = DynamicCardsBuilderParams(mock(), mock(), mock(), mock()),
             ),
             jetpackInstallFullPluginCardBuilderParams = JetpackInstallFullPluginCardBuilderParams(
                 site = site,
