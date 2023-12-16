@@ -1585,7 +1585,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         getGutenbergContainerFragment().onConnectionStatusChange(isConnected);
         if (BuildConfig.DEBUG && hasFailedMediaUploads()) {
             mEditorFragmentListener.onMediaRetryAll(mFailedMediaIds);
-            mFailedMediaIds.clear();
         }
     }
 }
