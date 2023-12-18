@@ -178,6 +178,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
                         updateTabs(it)
                     }
                 }
+                // TODO As part of Reader IA changes this view is going to be replaced
 //                uiHelpers.updateVisibility(tabLayout, uiState.tabLayoutVisible)
                 searchMenuItem?.isVisible = uiState.searchMenuItemUiState.isVisible
                 settingsMenuItem?.isVisible = uiState.settingsMenuItemUiState.isVisible
