@@ -29,6 +29,7 @@ import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity
 import org.wordpress.android.ui.bloganuary.learnmore.BloganuaryNudgeLearnMoreOverlayFragment
 import org.wordpress.android.ui.domains.DomainRegistrationActivity
@@ -665,6 +666,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             ActivityLauncher.viewBlogStatsForTimeframe(requireActivity(), action.site, StatsTimeframe.INSIGHTS)
         is SiteNavigationAction.OpenExternalUrl ->
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
+        is SiteNavigationAction.OpenUrlInWebView ->
+            WPWebViewActivity.openURL(requireActivity(), action.url)
         is SiteNavigationAction.OpenJetpackPoweredBottomSheet -> showJetpackPoweredBottomSheet()
         is SiteNavigationAction.OpenJetpackMigrationDeleteWP -> showJetpackMigrationDeleteWP()
         is SiteNavigationAction.OpenJetpackFeatureOverlay -> showJetpackFeatureOverlay(action.source)

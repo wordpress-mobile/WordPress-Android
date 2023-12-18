@@ -6,7 +6,6 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
@@ -27,8 +26,7 @@ class DynamicCardsViewModelSlice @Inject constructor(
     }
 
     private fun onActionClick(actionUrl: String) {
-        AppLog.d(AppLog.T.MY_SITE_DASHBOARD, "Dynamic dashboard card action clicked: $actionUrl")
-        // TODO
+        _onNavigation.value = Event(SiteNavigationAction.OpenUrlInWebView(actionUrl))
     }
 
     private fun onHideMenuItemClick(cardId: String) {

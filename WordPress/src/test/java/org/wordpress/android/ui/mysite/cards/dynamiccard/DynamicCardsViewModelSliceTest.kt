@@ -12,6 +12,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardRowModel
+import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 /* DYNAMIC CARDS */
@@ -94,5 +95,14 @@ class DynamicCardsViewModelSliceTest : BaseUnitTest() {
 
         verify(appPrefsWrapper).setShouldHideDynamicCard(DYNAMIC_CARD_ID_FIRST, true)
         assertThat(viewModelSlice.refresh.value?.peekContent()).isTrue
+    }
+
+    @Test
+    fun `WHEN the card action is triggered THEN open the URL in a webview`() {
+        val builderParams = viewModelSlice.getBuilderParams(dynamicCardsModel)
+        builderParams.onActionClick.invoke(DYNAMIC_CARD_URL)
+        assertThat(viewModelSlice.onNavigation.value?.peekContent()).isEqualTo(
+            SiteNavigationAction.OpenUrlInWebView(DYNAMIC_CARD_URL)
+        )
     }
 }
