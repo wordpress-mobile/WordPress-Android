@@ -163,7 +163,6 @@ sealed class MySiteCardAndItemBuilderParams {
     data class DynamicCardsBuilderParams(
         val dynamicCards: DynamicCardsModel?,
         val onActionClick: (actionUrl: String) -> Unit,
-        val onMoreMenuClick: (cardId: String) -> Unit,
         val onHideMenuItemClick: (cardId: String) -> Unit
     ) : MySiteCardAndItemBuilderParams()
 

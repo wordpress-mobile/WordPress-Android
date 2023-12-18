@@ -426,7 +426,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 mock(),
                 mock(),
                 mock(),
-                mock()
             )
         )
         whenever(bloganuaryNudgeViewModelSlice.getBuilderParams()).thenReturn(mock())

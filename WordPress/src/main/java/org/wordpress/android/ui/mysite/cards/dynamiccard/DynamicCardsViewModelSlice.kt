@@ -22,18 +22,12 @@ class DynamicCardsViewModelSlice @Inject constructor(
         return DynamicCardsBuilderParams(
             dynamicCards = dynamicCards?.filterVisible(),
             onActionClick = this::onActionClick,
-            onMoreMenuClick = this::onMoreMenuClick,
             onHideMenuItemClick = this::onHideMenuItemClick
         )
     }
 
     private fun onActionClick(actionUrl: String) {
         AppLog.d(AppLog.T.MY_SITE_DASHBOARD, "Dynamic dashboard card action clicked: $actionUrl")
-        // TODO
-    }
-
-    private fun onMoreMenuClick(cardId: String) {
-        AppLog.d(AppLog.T.MY_SITE_DASHBOARD, "Dynamic dashboard card action more menu click: $cardId")
         // TODO
     }
 
