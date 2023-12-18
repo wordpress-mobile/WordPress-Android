@@ -5,11 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams
 import org.wordpress.android.ui.mysite.SiteNavigationAction
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
-class DynamicCardsViewModelSlice @Inject constructor() {
+class DynamicCardsViewModelSlice @Inject constructor(
+    private val appPrefsWrapper: AppPrefsWrapper
+) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
 
@@ -17,7 +20,7 @@ class DynamicCardsViewModelSlice @Inject constructor() {
     val refresh = _refresh as LiveData<Event<Boolean>>
     fun getBuilderParams(dynamicCards: CardModel.DynamicCardsModel?): DynamicCardsBuilderParams {
         return DynamicCardsBuilderParams(
-            dynamicCards = dynamicCards,
+            dynamicCards = dynamicCards?.filterVisible(),
             onActionClick = this::onActionClick,
             onMoreMenuClick = this::onMoreMenuClick,
             onHideMenuItemClick = this::onHideMenuItemClick
@@ -35,7 +38,10 @@ class DynamicCardsViewModelSlice @Inject constructor() {
     }
 
     private fun onHideMenuItemClick(cardId: String) {
-        AppLog.d(AppLog.T.MY_SITE_DASHBOARD, "Dynamic dashboard card action hide menu click: $cardId")
-        // TODO
+        appPrefsWrapper.setShouldHideDynamicCard(cardId, true)
+        _refresh.value = Event(true)
     }
+
+    private fun CardModel.DynamicCardsModel.filterVisible(): CardModel.DynamicCardsModel =
+        copy(dynamicCards = dynamicCards.filterNot { appPrefsWrapper.getShouldHideDynamicCard(it.id) })
 }
