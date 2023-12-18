@@ -210,6 +210,7 @@ public class AppPrefs {
         SHOULD_SHOW_DEFAULT_QUICK_LINK_IN_DASHBOARD,
         SHOULD_HIDE_BLOGANUARY_NUDGE_CARD,
         SHOULD_HIDE_SOTW2023_NUDGE_CARD,
+        SHOULD_HIDE_DYNAMIC_CARD,
     }
 
     /**
@@ -1835,5 +1836,13 @@ public class AppPrefs {
 
     public static boolean getShouldHideSotw2023NudgeCard() {
         return prefs().getBoolean(DeletablePrefKey.SHOULD_HIDE_SOTW2023_NUDGE_CARD.name(), false);
+    }
+
+    public static void setShouldHideDynamicCard(@NonNull final String id, final boolean isHidden) {
+        prefs().edit().putBoolean(DeletablePrefKey.SHOULD_HIDE_DYNAMIC_CARD.name() + id, isHidden).apply();
+    }
+
+    public static boolean getShouldHideDynamicCard(@NonNull final String id) {
+        return prefs().getBoolean(DeletablePrefKey.SHOULD_HIDE_DYNAMIC_CARD.name() + id, false);
     }
 }
