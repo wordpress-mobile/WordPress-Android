@@ -24,7 +24,8 @@ import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
 fun ReaderScreen(
-    readerLists: List<MenuElementData.Item.SubMenu> = emptyList()
+    onSearchClick: () -> Unit,
+    readerLists: List<MenuElementData.Item.SubMenu> = emptyList(),
 ) {
     Row(
         modifier = Modifier
@@ -70,7 +71,9 @@ fun ReaderScreen(
             )
         }
         Spacer(Modifier.width(Margin.ExtraLarge.value))
-        IconButton(onClick = { /*TODO open search*/ }) {
+        IconButton(
+            onClick = { onSearchClick() }
+        ) {
             Icon(
                 painter = painterResource(R.drawable.ic_magnifying_glass_16dp),
                 contentDescription = stringResource(
