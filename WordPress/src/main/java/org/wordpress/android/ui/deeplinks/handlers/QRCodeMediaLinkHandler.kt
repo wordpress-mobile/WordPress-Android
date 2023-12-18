@@ -15,7 +15,7 @@ class QRCodeMediaLinkHandler @Inject constructor(
         // https://apps.wordpress.com/get/?campaign=qr-code-media&data=post_id:6,site_id:227148183
         return uri.host == HOST_APPS_WORDPRESS_COM &&
                 uri.pathSegments.firstOrNull() == GET_PATH &&
-                uri.getQueryParameter("campaign") == CAMPAIGN_TYPE
+                uri.getQueryParameter(CAMPAIGN) == CAMPAIGN_TYPE
     }
 
     override fun buildNavigateAction(uri: UriWrapper): NavigateAction {
@@ -47,6 +47,7 @@ class QRCodeMediaLinkHandler @Inject constructor(
     companion object {
         private const val GET_PATH = "get"
         private const val HOST_APPS_WORDPRESS_COM = "apps.wordpress.com"
+        private const val CAMPAIGN = "campaign"
         private const val CAMPAIGN_TYPE = "qr-code-media"
     }
 }
