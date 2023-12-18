@@ -43,7 +43,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarte
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
-import org.wordpress.android.ui.reader.views.compose.ReaderScreen
+import org.wordpress.android.ui.reader.views.compose.ReaderTopAppBar
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.JetpackBrandingUtils
@@ -171,7 +171,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
                             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                             setContent {
                                 AppTheme {
-                                    ReaderScreen(onSearchClick = {})
+                                    ReaderTopAppBar(onSearchClick = {})
                                 }
                             }
                         }

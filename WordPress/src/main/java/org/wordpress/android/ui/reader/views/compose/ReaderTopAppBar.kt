@@ -23,7 +23,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
-fun ReaderScreen(
+fun ReaderTopAppBar(
     onSearchClick: () -> Unit,
     readerLists: List<MenuElementData.Item.SubMenu> = emptyList(),
 ) {
@@ -95,7 +95,7 @@ fun ReaderScreenPreview() {
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-            ReaderScreen(
+            ReaderTopAppBar(
                 {},
                 readerLists = listOf(
                     MenuElementData.Item.SubMenu(
