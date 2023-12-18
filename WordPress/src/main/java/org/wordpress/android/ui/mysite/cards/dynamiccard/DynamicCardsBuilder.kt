@@ -51,8 +51,11 @@ class DynamicCardsBuilder @Inject constructor(
     }
 
     fun DynamicCardModel.isEnabled(): Boolean {
-        if (remoteFeatureFlag.isNullOrEmpty()) return true // If there is no feature flag, then the card is enabled
-        return featureFlagConfig.getFeatureState(requireNotNull(remoteFeatureFlag), false).isEnabled
+        // If there is no feature flag or there is no such remote feature flag, then the card is enabled
+        if (remoteFeatureFlag.isNullOrEmpty() ||
+            featureFlagConfig.getString(requireNotNull(remoteFeatureFlag)).isEmpty()
+        ) return true
+        return featureFlagConfig.isEnabled(requireNotNull(remoteFeatureFlag))
     }
 
     private fun getActionSource(

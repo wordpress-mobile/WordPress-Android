@@ -13,7 +13,6 @@ import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.util.UrlUtilsWrapper
-import org.wordpress.android.util.config.AppConfig
 import org.wordpress.android.util.config.DynamicDashboardCardsFeatureConfig
 import org.wordpress.android.util.config.FeatureFlagConfig
 import kotlin.test.assertEquals
@@ -31,6 +30,7 @@ private const val DYNAMIC_CARD_ROW_DESCRIPTION = "Row description"
 
 private const val ENABLED_REMOTE_FEATURE_FLAG = "enabled_remote_feature_flag"
 private const val DISABLED_REMOTE_FEATURE_FLAG = "disabled_remote_feature_flag"
+private const val UNKNOWN_REMOTE_FEATURE_FLAG = "unknown_remote_feature_flag"
 
 private val DYNAMIC_CARD_ROW_MODEL = CardModel.DynamicCardsModel.DynamicCardRowModel(
     icon = DYNAMIC_CARD_ROW_ICON,
@@ -104,6 +104,17 @@ private val DYNAMIC_CARD_MODEL_WITH_EMPTY_REMOTE_FLAG = CardModel.DynamicCardsMo
     rows = listOf(DYNAMIC_CARD_ROW_MODEL)
 )
 
+private val DYNAMIC_CARD_MODEL_WITH_UNKNOWN_REMOTE_FLAG = CardModel.DynamicCardsModel.DynamicCardModel(
+    id = DYNAMIC_CARD_ID,
+    title = DYNAMIC_CARD_TITLE,
+    remoteFeatureFlag = UNKNOWN_REMOTE_FEATURE_FLAG,
+    featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
+    url = DYNAMIC_CARD_URL,
+    action = DYNAMIC_CARD_ACTION,
+    order = CardModel.DynamicCardsModel.CardOrder.fromString(DYNAMIC_CARD_ORDER),
+    rows = listOf(DYNAMIC_CARD_ROW_MODEL)
+)
+
 @ExperimentalCoroutinesApi
 class DynamicCardsBuilderTest : BaseUnitTest() {
     private lateinit var dynamicCardsBuilder: DynamicCardsBuilder
@@ -120,23 +131,17 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     @Mock
     private lateinit var featureFlagConfig: FeatureFlagConfig
 
-    @Mock
-    private lateinit var enabledFeatureState: AppConfig.FeatureState
-    @Mock
-    private lateinit var disabledFeatureState: AppConfig.FeatureState
-
     @Before
     fun setUp() {
         dynamicCardsBuilder =
             DynamicCardsBuilder(urlUtils, deepLinkHandlers, dynamicDashboardCardsFeatureConfig, featureFlagConfig)
         whenever(urlUtils.isValidUrlAndHostNotNull(DYNAMIC_CARD_URL)).thenReturn(true)
         whenever(dynamicDashboardCardsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(enabledFeatureState.isEnabled).thenReturn(true)
-        whenever(disabledFeatureState.isEnabled).thenReturn(false)
-        whenever(featureFlagConfig.getFeatureState(ENABLED_REMOTE_FEATURE_FLAG, false)).thenReturn(enabledFeatureState)
-        whenever(
-            featureFlagConfig.getFeatureState(DISABLED_REMOTE_FEATURE_FLAG, false)
-        ).thenReturn(disabledFeatureState)
+        whenever(featureFlagConfig.isEnabled(ENABLED_REMOTE_FEATURE_FLAG)).thenReturn(true)
+        whenever(featureFlagConfig.getString(ENABLED_REMOTE_FEATURE_FLAG)).thenReturn(ENABLED_REMOTE_FEATURE_FLAG)
+        whenever(featureFlagConfig.isEnabled(DISABLED_REMOTE_FEATURE_FLAG)).thenReturn(false)
+        whenever(featureFlagConfig.getString(DISABLED_REMOTE_FEATURE_FLAG)).thenReturn(DISABLED_REMOTE_FEATURE_FLAG)
+        whenever(featureFlagConfig.getString(UNKNOWN_REMOTE_FEATURE_FLAG)).thenReturn("")
     }
 
     @Test
@@ -275,6 +280,20 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
         val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
             dynamicCards = CardModel.DynamicCardsModel(
                 dynamicCards = listOf(DYNAMIC_CARD_MODEL_WITH_EMPTY_REMOTE_FLAG)
+            ),
+            onActionClick = mock(),
+            onMoreMenuClick = mock(),
+            onHideMenuItemClick = mock(),
+        )
+        val dynamicCards = dynamicCardsBuilder.build(builderParams, CardModel.DynamicCardsModel.CardOrder.TOP)
+        assertEquals(requireNotNull(dynamicCards).size, 1)
+    }
+
+    @Test
+    fun `WHEN the card remote feature flag does not exist THEN the card is visible`() {
+        val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
+            dynamicCards = CardModel.DynamicCardsModel(
+                dynamicCards = listOf(DYNAMIC_CARD_MODEL_WITH_UNKNOWN_REMOTE_FLAG)
             ),
             onActionClick = mock(),
             onMoreMenuClick = mock(),
