@@ -140,7 +140,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun testBuild() {
+    fun `WHEN the parameters contain an eligible card THEN all the card fields are copied to the card ui`() {
         val expectedCards = listOf(
             MySiteCardAndItem.Card.Dynamic(
                 id = DYNAMIC_CARD_ID,
@@ -184,7 +184,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun testBuildWithInvalidActionTitle() {
+    fun `WHEN the card has invalid action title THEN the card has no action button but is actionable`() {
         val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
             dynamicCards = CardModel.DynamicCardsModel(
                 dynamicCards = listOf(DYNAMIC_CARD_MODEL_INVALID_ACTION_TITLE)
@@ -201,7 +201,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun testBuildWithInvalidActionTitleAndUrl() {
+    fun `WHEN the card has invalid action title and url THEN the card is not actionable`() {
         val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
             dynamicCards = CardModel.DynamicCardsModel(
                 dynamicCards = listOf(DYNAMIC_CARD_MODEL_INVALID_ACTION_TITLE_AND_URL)
@@ -216,7 +216,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun testBuildWithInvalidUrl() {
+    fun `WHEN the card has invalid url THEN the card is not actionable`() {
         val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
             dynamicCards = CardModel.DynamicCardsModel(
                 dynamicCards = listOf(DYNAMIC_CARD_MODEL_INVALID_URL)
@@ -231,10 +231,10 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun testBuildWithEmptyPosition() {
+    fun `WHEN there are no cards for the requested order position THEN no cards are shown`() {
         val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
             dynamicCards = CardModel.DynamicCardsModel(
-                dynamicCards = listOf(DYNAMIC_CARD_MODEL_INVALID_ACTION_TITLE_AND_URL)
+                dynamicCards = listOf(DYNAMIC_CARD_MODEL)
             ),
             onActionClick = mock(),
             onMoreMenuClick = mock(),
@@ -245,7 +245,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun testBuildWithInvalidParams() {
+    fun `WHEN the dynamic cards are null THEN then no dynamic cards are shown`() {
         val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
             dynamicCards = null,
             onActionClick = mock(),
@@ -257,7 +257,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun testBuildWithDisabledRemoteFlag() {
+    fun `WHEN the card remote feature flag is disabled THEN the card is not visible`() {
         val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
             dynamicCards = CardModel.DynamicCardsModel(
                 dynamicCards = listOf(DYNAMIC_CARD_MODEL_DISABLED_REMOTELY)
@@ -271,7 +271,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun testBuildWithEmptyRemoteFlag() {
+    fun `WHEN the card remote feature flag is empty THEN the card is visible`() {
         val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
             dynamicCards = CardModel.DynamicCardsModel(
                 dynamicCards = listOf(DYNAMIC_CARD_MODEL_WITH_EMPTY_REMOTE_FLAG)
