@@ -5,10 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/top_app_bar_compose_view"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            app:layout_scrollFlags="scroll|enterAlways"
+            android:layout_height="@dimen/toolbar_height"
+            app:theme="@style/WordPress.ActionBar" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="bottom"
+            android:visibility="gone"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:tabMode="scrollable" />
+
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/reader_top_bar_compose_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlways" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"

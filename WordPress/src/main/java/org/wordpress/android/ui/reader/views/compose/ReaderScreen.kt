@@ -95,7 +95,24 @@ fun ReaderScreenPreview() {
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-            ReaderScreen()
+            ReaderScreen(
+                {},
+                readerLists = listOf(
+                    MenuElementData.Item.SubMenu(
+                        text = "Funny Blogs",
+                        children = listOf(
+                            MenuElementData.Item.Single(
+                                text = "Funny Blog 1",
+                                onClick = {},
+                            ),
+                            MenuElementData.Item.Single(
+                                text = "Funny Blog 2",
+                                onClick = {},
+                            ),
+                        ),
+                    )
+                )
+                )
         }
     }
 }
