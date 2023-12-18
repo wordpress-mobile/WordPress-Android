@@ -32,6 +32,7 @@ import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity
 import org.wordpress.android.ui.bloganuary.learnmore.BloganuaryNudgeLearnMoreOverlayFragment
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity
 import org.wordpress.android.ui.domains.DomainRegistrationActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -66,6 +67,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
@@ -130,6 +132,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     @Inject
     lateinit var activityNavigator: ActivityNavigator
+
+    @Inject
+    lateinit var packageManagerWrapper: PackageManagerWrapper
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
@@ -668,6 +673,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
         is SiteNavigationAction.OpenUrlInWebView ->
             WPWebViewActivity.openURL(requireActivity(), action.url)
+        is SiteNavigationAction.OpenDeepLink ->
+            DeepLinkingIntentReceiverActivity.openDeepLinkUrl(requireActivity(), action.url)
         is SiteNavigationAction.OpenJetpackPoweredBottomSheet -> showJetpackPoweredBottomSheet()
         is SiteNavigationAction.OpenJetpackMigrationDeleteWP -> showJetpackMigrationDeleteWP()
         is SiteNavigationAction.OpenJetpackFeatureOverlay -> showJetpackFeatureOverlay(action.source)

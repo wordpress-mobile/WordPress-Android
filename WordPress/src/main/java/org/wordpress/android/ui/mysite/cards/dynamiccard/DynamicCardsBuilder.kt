@@ -6,7 +6,6 @@ import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.Dynamic
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams
 import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
-import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
 import javax.inject.Inject
 
@@ -64,7 +63,7 @@ class DynamicCardsBuilder @Inject constructor(
 
     private fun isValidUrlOrDeeplink(url: String?): Boolean {
         return !url.isNullOrEmpty() && (urlUtils.isValidUrlAndHostNotNull(url)
-                || deepLinkHandlers.buildNavigateAction(UriWrapper(url)) != null)
+                || deepLinkHandlers.isDeepLink(url))
     }
 
     private fun isValidActionTitle(title: String?): Boolean {

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite.cards.dynamiccard
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.dashboard.CardModel
+import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -10,7 +11,8 @@ import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class DynamicCardsViewModelSlice @Inject constructor(
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val deepLinkHandlers: DeepLinkHandlers,
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
@@ -26,7 +28,11 @@ class DynamicCardsViewModelSlice @Inject constructor(
     }
 
     private fun onActionClick(actionUrl: String) {
-        _onNavigation.value = Event(SiteNavigationAction.OpenUrlInWebView(actionUrl))
+        if (deepLinkHandlers.isDeepLink(actionUrl)) {
+            _onNavigation.value = Event(SiteNavigationAction.OpenDeepLink(actionUrl))
+        } else {
+            _onNavigation.value = Event(SiteNavigationAction.OpenUrlInWebView(actionUrl))
+        }
     }
 
     private fun onHideMenuItemClick(cardId: String) {
