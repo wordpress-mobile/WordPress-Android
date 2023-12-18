@@ -32,7 +32,7 @@ class DynamicCardsBuilder @Inject constructor(
     }
 
     private fun convertToDynamicCards(params: DynamicCardsBuilderParams, order: CardOrder): List<Dynamic> {
-        val cards = params.dynamicCards?.dynamicCards?.filter { it.order == order && it.isEnabled()} ?: emptyList()
+        val cards = params.dynamicCards?.dynamicCards?.filter { it.order == order && it.isEnabled()}.orEmpty()
         return cards.map { card ->
             Dynamic(
                 id = card.id,
