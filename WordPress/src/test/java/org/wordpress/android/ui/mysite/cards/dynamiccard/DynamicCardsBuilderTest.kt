@@ -141,11 +141,11 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
             onHideMenuItemClick = mock(),
         )
         val dynamicCards = dynamicCardsBuilder.build(builderParams, CardModel.DynamicCardsModel.CardOrder.TOP)
-        assertThat(requireNotNull(dynamicCards).size).isEqualTo(1)
+        assertEquals(requireNotNull(dynamicCards).size, 1)
         assertEquals(expectedCards[0].id, dynamicCards[0].id)
         assertEquals(expectedCards[0].title, dynamicCards[0].title)
         assertEquals(expectedCards[0].image, dynamicCards[0].image)
-        assertThat(expectedCards[0].rows.size).isEqualTo(1)
+        assertEquals(expectedCards[0].rows.size, 1)
         assertEquals(expectedCards[0].rows, dynamicCards[0].rows)
         assertThat(dynamicCards[0].action).isInstanceOf(MySiteCardAndItem.Card.Dynamic.ActionSource.Button::class.java)
         val expected = expectedCards[0].action as? MySiteCardAndItem.Card.Dynamic.ActionSource.Button
