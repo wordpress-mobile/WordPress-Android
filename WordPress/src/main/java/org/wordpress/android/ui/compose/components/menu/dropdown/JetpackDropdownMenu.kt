@@ -46,6 +46,8 @@ fun JetpackDropdownMenu(
 ) {
     Column {
         var isMenuVisible by remember { mutableStateOf(false) }
+        // TODO selected item logic will be moved to VM in another PR. This will make sure the selected item stays the
+        // same on orientation change.
         var selectedItem by remember { mutableStateOf(defaultItem) }
         DropdownMenuButton(
             selectedItem = selectedItem,
