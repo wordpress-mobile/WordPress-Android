@@ -27,8 +27,7 @@ class DynamicCardsBuilder @Inject constructor(
     }
 
     private fun shouldBuildCard(params: DynamicCardsBuilderParams, order: CardOrder): Boolean {
-        if (params.dynamicCards == null || params.dynamicCards.dynamicCards.none { it.order == order }) return false
-        return true
+        return !(params.dynamicCards == null || params.dynamicCards.dynamicCards.none { it.order == order })
     }
 
     private fun convertToDynamicCards(params: DynamicCardsBuilderParams, order: CardOrder): List<Dynamic> {
