@@ -32,7 +32,7 @@ class QRCodeMediaLinkHandlerTest {
         val mediaUri = buildUri(
             host = "apps.wordpress.com",
             queryParams = mapOf("campaign" to "qr-code-media", "data" to "post_id:6,site_id:227148183"),
-            "get",
+            path = arrayOf("get")
         )
 
         val isMediaQrCodeUri = qrCodeMediaLinkHandler.shouldHandleUrl(mediaUri)
@@ -53,7 +53,7 @@ class QRCodeMediaLinkHandlerTest {
     fun `given improper media query params, when deep linked, then handles URI`() {
         val mediaUri = buildUri(host = "apps.wordpress.com",
             queryParams = mapOf("campaign" to "qr-code-no-good", "data" to "post_id:6,site_id:227148183"),
-            "get", )
+            path = arrayOf("get"), )
 
         val isMediaQrCodeUri = qrCodeMediaLinkHandler.shouldHandleUrl(mediaUri)
 
@@ -73,7 +73,7 @@ class QRCodeMediaLinkHandlerTest {
     fun `given unrecognized siteId, when deep linked, then opens my site view`() {
         val mediaUri = buildUri(host = "apps.wordpress.com",
             queryParams = mapOf("campaign" to "qr-code-media", "data" to "post_id:6,site_id:227148183"),
-            "get", )
+            path = arrayOf("get"), )
 
         whenever(mediaUri.getQueryParameter("data")).thenReturn(null)
 
@@ -88,7 +88,7 @@ class QRCodeMediaLinkHandlerTest {
         val data = "post_id:6,site_id:227148183"
         val mediaUri = buildUri(host = "apps.wordpress.com",
             queryParams = mapOf("campaign" to "qr-code-media", "data" to "post_id:6,site_id:227148183"),
-            "get", )
+            path = arrayOf("get"), )
 
         whenever(mediaUri.getQueryParameter("data")).thenReturn(data)
         whenever(deepLinkUriUtils.blogIdToSite(siteId)).thenReturn(site)
