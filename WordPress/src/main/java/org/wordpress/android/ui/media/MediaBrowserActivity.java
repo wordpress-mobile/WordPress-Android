@@ -113,6 +113,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         WPMediaUtils.LaunchCameraCallback {
     public static final String ARG_BROWSER_TYPE = "media_browser_type";
     public static final String ARG_FILTER = "filter";
+    public static final String ARG_LAUNCH_PHOTO_PICKER = "launch_photo_picker";
     public static final String RESULT_IDS = "result_ids";
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
@@ -152,6 +153,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
     private boolean mShowAudioTab;
 
+    private boolean mLaunchPhotoPicker = false;
+
     private enum AddMenuItem {
         ITEM_CAPTURE_PHOTO,
         ITEM_CAPTURE_VIDEO,
@@ -163,19 +166,20 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         ((WordPress) getApplication()).component().inject(this);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mBrowserType = (MediaBrowserType) getIntent().getSerializableExtra(ARG_BROWSER_TYPE);
             mShowAudioTab = mMediaStore.getSiteAudio(mSite).size() > 0;
+            mLaunchPhotoPicker = getIntent().getBooleanExtra(ARG_LAUNCH_PHOTO_PICKER, false);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
             mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
             mQuery = savedInstanceState.getString(SAVED_QUERY);
             mShowAudioTab = savedInstanceState.getBoolean(SHOW_AUDIO_TAB);
+            mLaunchPhotoPicker = savedInstanceState.getBoolean(ARG_LAUNCH_PHOTO_PICKER);
         }
 
         if (mSite == null) {
@@ -240,6 +244,11 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         mQuotaText = findViewById(R.id.quota_text);
 
         showQuota(true);
+
+        if (mLaunchPhotoPicker) {
+            doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_FILE);
+            mLaunchPhotoPicker = false;
+        }
     }
 
     @Override
@@ -417,7 +426,6 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Override
     protected void onPause() {
         super.onPause();
-
         if (mSearchMenuItem != null) {
             String tempQuery = mQuery;
             MenuItemCompat.collapseActionView(mSearchMenuItem);
@@ -449,7 +457,6 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-
         outState.putString(SAVED_QUERY, mQuery);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(ARG_BROWSER_TYPE, mBrowserType);
@@ -460,6 +467,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
         }
+        outState.putBoolean(ARG_LAUNCH_PHOTO_PICKER, mLaunchPhotoPicker);
     }
 
     private void getMediaFromDeviceAndTrack(Uri videoUri, int requestCode) {
