@@ -43,7 +43,6 @@ import org.wordpress.android.ui.pages.PagesAuthorFilterUIState
 import org.wordpress.android.ui.pages.PagesListAction
 import org.wordpress.android.ui.pages.PagesListAction.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PagesListAction.COPY
-import org.wordpress.android.ui.pages.PagesListAction.COPY_LINK
 import org.wordpress.android.ui.pages.PagesListAction.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_TRASH
@@ -52,6 +51,7 @@ import org.wordpress.android.ui.pages.PagesListAction.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PagesListAction.SET_AS_HOMEPAGE
 import org.wordpress.android.ui.pages.PagesListAction.SET_AS_POSTS_PAGE
 import org.wordpress.android.ui.pages.PagesListAction.SET_PARENT
+import org.wordpress.android.ui.pages.PagesListAction.SHARE
 import org.wordpress.android.ui.pages.PagesListAction.VIEW_PAGE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AuthorFilterListItemUIState
@@ -473,7 +473,7 @@ class PagesViewModel
             SET_AS_HOMEPAGE -> setHomepage(page.remoteId)
             SET_AS_POSTS_PAGE -> setPostsPage(page.remoteId)
             COPY -> onCopyPage(page)
-            COPY_LINK -> context?.let { copyPageLink(page, it) }
+            SHARE -> context?.let { copyPageLink(page, it) }
             PROMOTE_WITH_BLAZE -> navigateToBlazeOverlay(page.remoteId)
         }
         return true
@@ -572,7 +572,7 @@ class PagesViewModel
 
     private fun copyPageLink(page: Page, context: Context) {
         // Get the link to the page
-        trackMenuSelectionEvent(COPY_LINK)
+        trackMenuSelectionEvent(SHARE)
         val pageLink = postStore.getPostByLocalPostId(page.localId)?.link ?: return
         ActivityLauncher.openShareIntent(
             context,
@@ -659,7 +659,7 @@ class PagesViewModel
             MOVE_TO_DRAFT -> "move_to_draft"
             DELETE_PERMANENTLY -> "delete_permanently"
             MOVE_TO_TRASH -> "move_to_bin"
-            COPY_LINK -> "share"
+            SHARE -> "share"
             PROMOTE_WITH_BLAZE -> "promote_with_blaze"
         }
         val properties = mutableMapOf("option_name" to menu as Any)

@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SiteModel.ORIGIN_WPCOM_REST
 import org.wordpress.android.ui.pages.PagesListAction.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PagesListAction.COPY
-import org.wordpress.android.ui.pages.PagesListAction.COPY_LINK
 import org.wordpress.android.ui.pages.PagesListAction.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_TRASH
@@ -20,6 +19,7 @@ import org.wordpress.android.ui.pages.PagesListAction.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PagesListAction.SET_AS_HOMEPAGE
 import org.wordpress.android.ui.pages.PagesListAction.SET_AS_POSTS_PAGE
 import org.wordpress.android.ui.pages.PagesListAction.SET_PARENT
+import org.wordpress.android.ui.pages.PagesListAction.SHARE
 import org.wordpress.android.ui.pages.PagesListAction.VIEW_PAGE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
@@ -48,7 +48,7 @@ class CreatePageListItemActionsUseCaseTest {
             SET_PARENT,
             PUBLISH_NOW,
             COPY,
-            COPY_LINK,
+            SHARE,
             MOVE_TO_TRASH
         )
 
@@ -79,7 +79,7 @@ class CreatePageListItemActionsUseCaseTest {
             SET_PARENT,
             MOVE_TO_DRAFT,
             COPY,
-            COPY_LINK,
+            SHARE,
             MOVE_TO_TRASH,
         )
 
@@ -100,7 +100,7 @@ class CreatePageListItemActionsUseCaseTest {
             SET_AS_POSTS_PAGE,
             MOVE_TO_DRAFT,
             COPY,
-            COPY_LINK,
+            SHARE,
             MOVE_TO_TRASH
         )
         site.showOnFront = ShowOnFront.PAGE.value
@@ -123,7 +123,7 @@ class CreatePageListItemActionsUseCaseTest {
             SET_AS_POSTS_PAGE,
             MOVE_TO_DRAFT,
             COPY,
-            COPY_LINK,
+            SHARE,
             MOVE_TO_TRASH,
         )
         site.showOnFront = ShowOnFront.PAGE.value
@@ -145,7 +145,7 @@ class CreatePageListItemActionsUseCaseTest {
             SET_PARENT,
             SET_AS_POSTS_PAGE,
             COPY,
-            COPY_LINK
+            SHARE
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.pageOnFront = defaultRemoteId
@@ -167,7 +167,7 @@ class CreatePageListItemActionsUseCaseTest {
             SET_AS_HOMEPAGE,
             MOVE_TO_DRAFT,
             COPY,
-            COPY_LINK,
+            SHARE,
             MOVE_TO_TRASH
         )
         site.showOnFront = ShowOnFront.PAGE.value
@@ -188,7 +188,7 @@ class CreatePageListItemActionsUseCaseTest {
             VIEW_PAGE,
             SET_PARENT,
             COPY,
-            COPY_LINK
+            SHARE
         )
         site.showOnFront = ShowOnFront.PAGE.value
         val remoteId = -1L
@@ -208,7 +208,7 @@ class CreatePageListItemActionsUseCaseTest {
             SET_PARENT,
             MOVE_TO_DRAFT,
             COPY,
-            COPY_LINK,
+            SHARE,
             MOVE_TO_TRASH
         )
         site.showOnFront = ShowOnFront.PAGE.value
@@ -229,7 +229,7 @@ class CreatePageListItemActionsUseCaseTest {
             VIEW_PAGE,
             SET_PARENT,
             MOVE_TO_DRAFT,
-            COPY_LINK,
+            SHARE,
             MOVE_TO_TRASH
         )
 
@@ -274,7 +274,7 @@ class CreatePageListItemActionsUseCaseTest {
             SET_AS_POSTS_PAGE,
             MOVE_TO_DRAFT,
             COPY,
-            COPY_LINK,
+            SHARE,
             PROMOTE_WITH_BLAZE,
             MOVE_TO_TRASH
         )
