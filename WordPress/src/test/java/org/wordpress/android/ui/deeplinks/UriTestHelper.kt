@@ -32,3 +32,23 @@ fun buildUri(
     }
     return uri
 }
+
+fun buildUri(
+    host: String? = null,
+    queryParams: Map<String, String>? = null,
+    vararg path: String
+): UriWrapper {
+    val uri = mock<UriWrapper>()
+    if (host != null) {
+        whenever(uri.host).thenReturn(host)
+    }
+    if (path.isNotEmpty()) {
+        whenever(uri.pathSegments).thenReturn(path.toList())
+    }
+    if (queryParams != null) {
+        for ((key, value) in queryParams) {
+            whenever(uri.getQueryParameter(key)).thenReturn(value)
+        }
+    }
+    return uri
+}
