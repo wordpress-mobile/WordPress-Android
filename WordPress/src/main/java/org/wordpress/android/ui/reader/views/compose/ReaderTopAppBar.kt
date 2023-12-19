@@ -28,7 +28,7 @@ import org.wordpress.android.ui.compose.unit.Margin
 @Composable
 fun ReaderTopAppBar(
     onSearchClick: () -> Unit,
-    readerLists: List<MenuElementData.Item.SubMenu> = emptyList(),
+    readerLists: List<MenuElementData.Item> = emptyList(),
 ) {
     Row(
         modifier = Modifier
@@ -69,7 +69,10 @@ fun ReaderTopAppBar(
                 ).apply {
                     if (readerLists.isNotEmpty()) {
                         add(MenuElementData.Divider)
-                        addAll(readerLists)
+                        MenuElementData.Item.SubMenu(
+                            text = stringResource(id = R.string.reader_dropdown_menu_lists),
+                            children = readerLists,
+                        )
                     }
                 }
             )
@@ -103,19 +106,14 @@ fun ReaderScreenPreview() {
             ReaderTopAppBar(
                 {},
                 readerLists = listOf(
-                    MenuElementData.Item.SubMenu(
-                        text = "Funny Blogs",
-                        children = listOf(
-                            MenuElementData.Item.Single(
-                                text = "Funny Blog 1",
-                                onClick = {},
-                            ),
-                            MenuElementData.Item.Single(
-                                text = "Funny Blog 2",
-                                onClick = {},
-                            ),
-                        ),
-                    )
+                    MenuElementData.Item.Single(
+                        text = "Funny Blog 1",
+                        onClick = {},
+                    ),
+                    MenuElementData.Item.Single(
+                        text = "Funny Blog 2",
+                        onClick = {},
+                    ),
                 )
             )
         }
