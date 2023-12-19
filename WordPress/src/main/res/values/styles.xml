@@ -1636,6 +1636,36 @@
         <item name="android:textAlignment">viewStart</item>
     </style>
 
+    <style name="DomainsPlanPurchaseCardTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="DomainsPlanPurchaseCardSubTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+    </style>
+
+    <style name="DomainsPlanPurchaseCardPrimaryButton" parent="WordPress.Button.Primary.Unelevated">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.WordPress.Domains.Button.Primary.Unelevated</item>
+    </style>
+
+    <style name="ThemeOverlay.WordPress.Domains.Button.Primary.Unelevated" parent="">
+        <item name="colorPrimary">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="DomainsPlanPurchaseCardSecondaryButton" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
     <!-- Blogging prompts onboarding dialog styles -->
     <style name="BloggingPromptsOnboardingTitle">
         <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
