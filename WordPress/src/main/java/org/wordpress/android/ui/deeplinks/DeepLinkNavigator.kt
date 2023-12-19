@@ -86,6 +86,10 @@ class DeepLinkNavigator
                 ActivityLauncher.showJetpackStaticPoster(activity)
             is NavigateAction.OpenMediaForSite -> activityNavigator.openMediaInNewStack(activity, navigateAction.site)
             NavigateAction.OpenMedia -> activityNavigator.openMediaInNewStack(activity)
+            is NavigateAction.OpenMediaPickerForSite -> activityNavigator.openMediaPickerInNewStack(
+                activity,
+                navigateAction.site
+            )
         }
         if (navigateAction != LoginForResult) {
             activity.finish()
@@ -119,5 +123,6 @@ class DeepLinkNavigator
         object OpenJetpackStaticPosterView : NavigateAction()
         data class OpenMediaForSite(val site: SiteModel) : NavigateAction()
         object OpenMedia : NavigateAction()
+        data class OpenMediaPickerForSite(val site: SiteModel) : NavigateAction()
     }
 }
