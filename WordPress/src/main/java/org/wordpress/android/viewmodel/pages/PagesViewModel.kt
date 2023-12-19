@@ -572,6 +572,7 @@ class PagesViewModel
 
     private fun copyPageLink(page: Page, context: Context) {
         // Get the link to the page
+        trackMenuSelectionEvent(COPY_LINK)
         val pageLink = postStore.getPostByLocalPostId(page.localId)?.link ?: return
         ActivityLauncher.openShareIntent(
             context,
