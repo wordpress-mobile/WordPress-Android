@@ -36,7 +36,6 @@ fun buildUri(
 fun buildUri(
     host: String? = null,
     queryParams: Map<String, String>? = null,
-    fragment: String? = null,
     vararg path: String
 ): UriWrapper {
     val uri = mock<UriWrapper>()
@@ -45,9 +44,6 @@ fun buildUri(
     }
     if (path.isNotEmpty()) {
         whenever(uri.pathSegments).thenReturn(path.toList())
-    }
-    if (fragment != null) {
-        whenever(uri.fragment).thenReturn(fragment)
     }
     if (queryParams != null) {
         for ((key, value) in queryParams) {

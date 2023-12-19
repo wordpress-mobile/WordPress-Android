@@ -27,8 +27,7 @@ class QRCodeAuthLinkHandlerTest {
         val authUri = buildUri(
             host = "apps.wordpress.com",
             queryParams = mapOf("campaign" to "login-qr-code", "token" to "XXX", "data" to "XXX"),
-            fragment = "qr-code-login",
-            "get",
+            path = arrayOf("get"),
         )
 
         val isAuthUri = qrCodeAuthLinkHandler.shouldHandleUrl(authUri)
@@ -69,7 +68,6 @@ class QRCodeAuthLinkHandlerTest {
     fun `given proper auth url, when deep linked, then opens qr code auth flow`() {
         val authUri = buildUri(host = "apps.wordpress.com",
             queryParams = mapOf("campaign" to "login-qr-no-good", "token" to "token", "data" to "data"),
-            fragment = "qr-code-login",
             "get", )
 
         val navigateAction = qrCodeAuthLinkHandler.buildNavigateAction(authUri)
