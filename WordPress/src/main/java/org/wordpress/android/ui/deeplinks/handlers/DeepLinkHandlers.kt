@@ -17,7 +17,8 @@ class DeepLinkHandlers
     notificationsLinkHandler: NotificationsLinkHandler,
     qrCodeAuthLinkHandler: QRCodeAuthLinkHandler,
     homeLinkHandler: HomeLinkHandler,
-    mediaLinkHandler: MediaLinkHandler
+    mediaLinkHandler: MediaLinkHandler,
+    domainManagementLinkHandler: DomainManagementLinkHandler,
 ) {
     private val handlers = listOf(
         editorLinkHandler,
@@ -28,7 +29,8 @@ class DeepLinkHandlers
         notificationsLinkHandler,
         qrCodeAuthLinkHandler,
         homeLinkHandler,
-        mediaLinkHandler
+        mediaLinkHandler,
+        domainManagementLinkHandler,
     )
 
     private val _toast by lazy {
