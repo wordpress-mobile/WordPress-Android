@@ -6,16 +6,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.menu.dropdown.JetpackDropdownMenu
 import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData
@@ -30,15 +33,16 @@ fun ReaderTopAppBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .height(56.dp)
             .padding(
                 start = Margin.ExtraLarge.value,
-                top = Margin.ExtraLarge.value,
-                bottom = Margin.ExtraLarge.value,
             )
     ) {
         Row(
             modifier = Modifier
+                .fillMaxHeight()
                 .weight(1f),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             JetpackDropdownMenu(
                 menuItems = mutableListOf<MenuElementData>(
@@ -72,6 +76,7 @@ fun ReaderTopAppBar(
         }
         Spacer(Modifier.width(Margin.ExtraLarge.value))
         IconButton(
+            modifier = Modifier.align(Alignment.CenterVertically),
             onClick = { onSearchClick() }
         ) {
             Icon(
@@ -112,7 +117,7 @@ fun ReaderScreenPreview() {
                         ),
                     )
                 )
-                )
+            )
         }
     }
 }
