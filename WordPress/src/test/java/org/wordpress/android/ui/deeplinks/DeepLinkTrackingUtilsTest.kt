@@ -11,6 +11,8 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenInBrowser
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenReader
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenQRCodeAuthFlow
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenMediaPickerForSite
 import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils.DeepLinkSource
 import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.util.UriWrapper
@@ -91,6 +93,38 @@ class DeepLinkTrackingUtilsTest {
         deepLinkTrackingUtils.track(action, OpenReader, uri)
 
         assertTrackingData(host, DeepLinkSource.EMAIL, strippedUrl)
+    }
+
+    @Test
+    fun `builds tracking data from a qr code media scan URL`() {
+        val mediaUri = buildUri(
+            host = "apps.wordpress.com",
+            queryParams = mapOf("campaign" to "qr-code-media", "data" to "post_id:6,site_id:227148183")
+        )
+        val expectedUrl = "https://apps.wordpress.com/get/?campaign=qr-code-media&data=post_id:6,site_id:227148183"
+        whenever(deepLinkHandlers.stripUrl(mediaUri)).thenReturn(expectedUrl)
+
+        deepLinkTrackingUtils.track(action, OpenMediaPickerForSite(mock()), mediaUri)
+
+        assertTrackingData("apps.wordpress.com", DeepLinkSource.QRCODE_MEDIA, expectedUrl)
+    }
+
+    @Test
+    fun `builds tracking data from a qr code auth scan URL`() {
+        val authUri = buildUri(
+            host = "apps.wordpress.com",
+            queryParams = mapOf("campaign" to "login-qr-code")
+        )
+        val expectedUrl = "https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=XXXX&data=XXXXX"
+        whenever(deepLinkHandlers.stripUrl(authUri)).thenReturn(expectedUrl)
+
+        deepLinkTrackingUtils.track(
+            action,
+            OpenQRCodeAuthFlow(authUri.toString()),
+            authUri
+        )
+
+        assertTrackingData("apps.wordpress.com", DeepLinkSource.QRCODE_AUTH, expectedUrl)
     }
 
     private fun assertTrackingData(
