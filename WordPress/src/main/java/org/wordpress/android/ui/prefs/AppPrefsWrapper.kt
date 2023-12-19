@@ -434,6 +434,12 @@ class AppPrefsWrapper @Inject constructor() {
     fun getShouldHideSotw2023NudgeCard(): Boolean =
         AppPrefs.getShouldHideSotw2023NudgeCard()
 
+    fun setShouldHideDynamicCard(id: String, isHidden: Boolean): Unit =
+        AppPrefs.setShouldHideDynamicCard(id, isHidden)
+
+    fun getShouldHideDynamicCard(id: String, ): Boolean =
+        AppPrefs.getShouldHideDynamicCard(id)
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {

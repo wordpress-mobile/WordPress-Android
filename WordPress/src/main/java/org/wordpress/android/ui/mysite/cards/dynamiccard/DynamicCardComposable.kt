@@ -26,7 +26,7 @@ fun DynamicDashboardCard(
             },
         content = {
             Column(
-                Modifier.padding(top = 8.dp, bottom = 8.dp)
+                Modifier.padding(bottom = 8.dp)
             ) {
                 val isCtaInvisible = card.action !is ActionSource.Button
                 DynamicCardHeader(

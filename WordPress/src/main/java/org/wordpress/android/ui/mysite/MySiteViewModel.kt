@@ -250,6 +250,7 @@ class MySiteViewModel @Inject constructor(
             activityLogCardViewModelSlice.refresh,
             bloganuaryNudgeCardViewModelSlice.refresh,
             sotw2023NudgeCardViewModelSlice.refresh,
+            dynamicCardsViewModelSlice.refresh,
         )
 
     private var shouldMarkUpdateSiteTitleTaskComplete = false
