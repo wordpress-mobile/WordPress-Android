@@ -118,7 +118,7 @@ class CardsSource @Inject constructor(
     }
 
     private fun shouldRequestDynamicCards(): Boolean {
-        return dynamicDashboardCardsFeatureConfig.isEnabled() // TODO We should also add check for hidden cards here
+        return dynamicDashboardCardsFeatureConfig.isEnabled()
     }
 
     private fun MediatorLiveData<CardsUpdate>.postErrorState() {
