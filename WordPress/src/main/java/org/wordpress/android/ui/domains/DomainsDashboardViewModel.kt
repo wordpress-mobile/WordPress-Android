@@ -22,8 +22,10 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.FreeDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
+import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
+import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetPlan
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -156,15 +158,11 @@ class DomainsDashboardViewModel @Inject constructor(
                     ListItemInteraction.create(this::onGetDomainClick)
                 )
             } else {
-                PurchaseDomain(
-                    R.drawable.img_illustration_domains_card_header,
+                PurchasePlan(
+                    R.drawable.browser_address_bar,
                     UiStringRes(R.string.domains_free_plan_get_your_domain_title),
-                    UiStringText(
-                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            R.string.domains_free_plan_get_your_domain_caption,
-                            freeDomainUrl
-                        )
-                    ),
+                    UiStringRes(R.string.domains_upgrade_to_plan_caption),
+                    ListItemInteraction.create(this::onGetPlanClick),
                     ListItemInteraction.create(this::onGetDomainClick)
                 )
             }
@@ -205,6 +203,10 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun onGetDomainClick() {
         analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED, site)
         _onNavigation.value = Event(GetDomain(site))
+    }
+
+    private fun onGetPlanClick() {
+        _onNavigation.value = Event(GetPlan(site))
     }
 
     private fun onClaimDomainClick() {
