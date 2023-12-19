@@ -51,7 +51,7 @@ sealed class MySiteCardAndItemBuilderParams {
     data class QuickStartCardBuilderParams(
         val quickStartCategories: List<QuickStartCategory>,
         val onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit,
-        val moreMenuClickParams : MoreMenuParams
+        val moreMenuClickParams: MoreMenuParams
     ) : MySiteCardAndItemBuilderParams() {
         data class MoreMenuParams(
             val onMoreMenuClick: (type: QuickStartCardType) -> Unit,
@@ -71,13 +71,13 @@ sealed class MySiteCardAndItemBuilderParams {
         val pagesCardBuilderParams: PagesCardBuilderParams,
         val activityCardBuilderParams: ActivityCardBuilderParams,
         val dynamicCardsBuilderParams: DynamicCardsBuilderParams,
-        ) : MySiteCardAndItemBuilderParams()
+    ) : MySiteCardAndItemBuilderParams()
 
     data class TodaysStatsCardBuilderParams(
         val todaysStatsCard: TodaysStatsCardModel?,
         val onTodaysStatsCardClick: () -> Unit,
         val onGetMoreViewsClick: () -> Unit,
-        val moreMenuClickParams : MoreMenuParams
+        val moreMenuClickParams: MoreMenuParams
     ) : MySiteCardAndItemBuilderParams() {
         data class MoreMenuParams(
             val onMoreMenuClick: () -> Unit,
@@ -89,12 +89,13 @@ sealed class MySiteCardAndItemBuilderParams {
     data class PostCardBuilderParams(
         val posts: PostsCardModel?,
         val onPostItemClick: (params: PostItemClickParams) -> Unit,
-        val moreMenuClickParams : MoreMenuParams
+        val moreMenuClickParams: MoreMenuParams
     ) : MySiteCardAndItemBuilderParams() {
         data class PostItemClickParams(
             val postCardType: PostCardType,
             val postId: Int
         )
+
         data class MoreMenuParams(
             val onMoreMenuClick: (postCardType: PostCardType) -> Unit,
             val onHideThisMenuItemClick: (postCardType: PostCardType) -> Unit,
@@ -106,7 +107,7 @@ sealed class MySiteCardAndItemBuilderParams {
         val pageCard: PagesCardModel?,
         val onPagesItemClick: (params: PagesItemClickParams) -> Unit,
         val onFooterLinkClick: () -> Unit,
-        val moreMenuClickParams : MoreMenuParams
+        val moreMenuClickParams: MoreMenuParams
     ) : MySiteCardAndItemBuilderParams() {
         data class PagesItemClickParams(
             val pagesCardType: PagesCardContentType,
@@ -162,14 +163,17 @@ sealed class MySiteCardAndItemBuilderParams {
 
     data class DynamicCardsBuilderParams(
         val dynamicCards: DynamicCardsModel?,
-        val onActionClick: (actionUrl: String) -> Unit,
+        val onCtaClick: (params: ClickParams) -> Unit,
+        val onCardClick: (params: ClickParams) -> Unit,
         val onHideMenuItemClick: (cardId: String) -> Unit
-    ) : MySiteCardAndItemBuilderParams()
+    ) : MySiteCardAndItemBuilderParams() {
+        data class ClickParams(val id: String, val actionUrl: String)
+    }
 
     sealed class BlazeCardBuilderParams : MySiteCardAndItemBuilderParams() {
         data class PromoteWithBlazeCardBuilderParams(
             val onClick: () -> Unit,
-            val moreMenuParams : MoreMenuParams
+            val moreMenuParams: MoreMenuParams
         ) : BlazeCardBuilderParams() {
             data class MoreMenuParams(
                 val onMoreMenuClick: () -> Unit,

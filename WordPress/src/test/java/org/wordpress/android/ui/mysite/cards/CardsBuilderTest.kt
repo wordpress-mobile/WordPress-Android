@@ -158,7 +158,7 @@ class CardsBuilderTest {
                 ),
                 pagesCardBuilderParams = PagesCardBuilderParams(mock(), mock(), mock(), mock()),
                 activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock(), mock(), mock()),
-                dynamicCardsBuilderParams = DynamicCardsBuilderParams(mock(), mock(), mock()),
+                dynamicCardsBuilderParams = DynamicCardsBuilderParams(mock(), mock(), mock(), mock()),
             ),
             jetpackInstallFullPluginCardBuilderParams = JetpackInstallFullPluginCardBuilderParams(
                 site = site,

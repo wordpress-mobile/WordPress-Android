@@ -160,7 +160,7 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
                 image = DYNAMIC_CARD_FEATURED_IMAGE,
                 action = MySiteCardAndItem.Card.Dynamic.ActionSource.Button(
                     url = DYNAMIC_CARD_URL,
-                    onCtaClick = mock(),
+                    onClick = mock(),
                     title = DYNAMIC_CARD_ACTION
                 ),
                 onHideMenuItemClick = mock(),
@@ -170,7 +170,8 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
             dynamicCards = CardModel.DynamicCardsModel(
                 dynamicCards = listOf(DYNAMIC_CARD_MODEL)
             ),
-            onActionClick = mock(),
+            onCardClick = mock(),
+            onCtaClick = mock(),
             onHideMenuItemClick = mock(),
         )
         val dynamicCards = dynamicCardsBuilder.build(builderParams, CardModel.DynamicCardsModel.CardOrder.TOP)
@@ -193,7 +194,8 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
             dynamicCards = CardModel.DynamicCardsModel(
                 dynamicCards = listOf(DYNAMIC_CARD_MODEL_INVALID_ACTION_TITLE)
             ),
-            onActionClick = mock(),
+            onCardClick = mock(),
+            onCtaClick = mock(),
             onHideMenuItemClick = mock(),
         )
         val dynamicCards = dynamicCardsBuilder.build(builderParams, CardModel.DynamicCardsModel.CardOrder.TOP)
@@ -209,7 +211,8 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
             dynamicCards = CardModel.DynamicCardsModel(
                 dynamicCards = listOf(DYNAMIC_CARD_MODEL_INVALID_ACTION_TITLE_AND_URL)
             ),
-            onActionClick = mock(),
+            onCardClick = mock(),
+            onCtaClick = mock(),
             onHideMenuItemClick = mock(),
         )
         val dynamicCards = dynamicCardsBuilder.build(builderParams, CardModel.DynamicCardsModel.CardOrder.TOP)
@@ -223,7 +226,8 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
             dynamicCards = CardModel.DynamicCardsModel(
                 dynamicCards = listOf(DYNAMIC_CARD_MODEL_INVALID_URL)
             ),
-            onActionClick = mock(),
+            onCardClick = mock(),
+            onCtaClick = mock(),
             onHideMenuItemClick = mock(),
         )
         val dynamicCards = dynamicCardsBuilder.build(builderParams, CardModel.DynamicCardsModel.CardOrder.TOP)
@@ -237,7 +241,8 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
             dynamicCards = CardModel.DynamicCardsModel(
                 dynamicCards = listOf(DYNAMIC_CARD_MODEL)
             ),
-            onActionClick = mock(),
+            onCardClick = mock(),
+            onCtaClick = mock(),
             onHideMenuItemClick = mock(),
         )
         val dynamicCards = dynamicCardsBuilder.build(builderParams, CardModel.DynamicCardsModel.CardOrder.BOTTOM)
@@ -248,7 +253,8 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     fun `WHEN the dynamic cards are null THEN then no dynamic cards are shown`() {
         val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
             dynamicCards = null,
-            onActionClick = mock(),
+            onCardClick = mock(),
+            onCtaClick = mock(),
             onHideMenuItemClick = mock(),
         )
         val dynamicCards = dynamicCardsBuilder.build(builderParams, CardModel.DynamicCardsModel.CardOrder.TOP)
@@ -261,7 +267,8 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
             dynamicCards = CardModel.DynamicCardsModel(
                 dynamicCards = listOf(DYNAMIC_CARD_MODEL_DISABLED_REMOTELY)
             ),
-            onActionClick = mock(),
+            onCardClick = mock(),
+            onCtaClick = mock(),
             onHideMenuItemClick = mock(),
         )
         val dynamicCards = dynamicCardsBuilder.build(builderParams, CardModel.DynamicCardsModel.CardOrder.TOP)
@@ -274,7 +281,8 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
             dynamicCards = CardModel.DynamicCardsModel(
                 dynamicCards = listOf(DYNAMIC_CARD_MODEL_WITH_EMPTY_REMOTE_FLAG)
             ),
-            onActionClick = mock(),
+            onCardClick = mock(),
+            onCtaClick = mock(),
             onHideMenuItemClick = mock(),
         )
         val dynamicCards = dynamicCardsBuilder.build(builderParams, CardModel.DynamicCardsModel.CardOrder.TOP)
@@ -287,7 +295,8 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
             dynamicCards = CardModel.DynamicCardsModel(
                 dynamicCards = listOf(DYNAMIC_CARD_MODEL_WITH_UNKNOWN_REMOTE_FLAG)
             ),
-            onActionClick = mock(),
+            onCardClick = mock(),
+            onCtaClick = mock(),
             onHideMenuItemClick = mock(),
         )
         val dynamicCards = dynamicCardsBuilder.build(builderParams, CardModel.DynamicCardsModel.CardOrder.TOP)
