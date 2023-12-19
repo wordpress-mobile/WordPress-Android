@@ -12,6 +12,8 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardRowModel
+import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
+import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 /* DYNAMIC CARDS */
@@ -21,6 +23,7 @@ private const val DYNAMIC_CARD_TITLE = "News"
 private const val DYNAMIC_CARD_REMOTE_FEATURE_FLAG = "dynamic_dashboard_cards"
 private const val DYNAMIC_CARD_FEATURED_IMAGE = "https://path/to/image"
 private const val DYNAMIC_CARD_URL = "https://wordpress.com"
+private const val SOME_DEEP_LINK = "some_deep_link"
 private const val DYNAMIC_CARD_ACTION = "Call to action"
 private const val DYNAMIC_CARD_ORDER = "top"
 private const val DYNAMIC_CARD_ROW_ICON = "https://path/to/image"
@@ -67,12 +70,16 @@ private val filteredDynamicCardsModel = CardModel.DynamicCardsModel(
 class DynamicCardsViewModelSliceTest : BaseUnitTest() {
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    private lateinit var deepLinkHandlers: DeepLinkHandlers
+
     private lateinit var viewModelSlice: DynamicCardsViewModelSlice
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        viewModelSlice = DynamicCardsViewModelSlice(appPrefsWrapper)
+        viewModelSlice = DynamicCardsViewModelSlice(appPrefsWrapper, deepLinkHandlers)
     }
 
     @Test
@@ -94,5 +101,25 @@ class DynamicCardsViewModelSliceTest : BaseUnitTest() {
 
         verify(appPrefsWrapper).setShouldHideDynamicCard(DYNAMIC_CARD_ID_FIRST, true)
         assertThat(viewModelSlice.refresh.value?.peekContent()).isTrue
+    }
+
+    @Test
+    fun `WHEN the card action is triggered with a url THEN open the URL in a webview`() {
+        whenever(deepLinkHandlers.isDeepLink(DYNAMIC_CARD_URL)).thenReturn(false)
+        val builderParams = viewModelSlice.getBuilderParams(dynamicCardsModel)
+        builderParams.onActionClick.invoke(DYNAMIC_CARD_URL)
+        assertThat(viewModelSlice.onNavigation.value?.peekContent()).isEqualTo(
+            SiteNavigationAction.OpenUrlInWebView(DYNAMIC_CARD_URL)
+        )
+    }
+
+    @Test
+    fun `WHEN the card action is triggered for a deep link THEN the deep link is handled`() {
+        whenever(deepLinkHandlers.isDeepLink(SOME_DEEP_LINK)).thenReturn(true)
+        val builderParams = viewModelSlice.getBuilderParams(dynamicCardsModel)
+        builderParams.onActionClick.invoke(SOME_DEEP_LINK)
+        assertThat(viewModelSlice.onNavigation.value?.peekContent()).isEqualTo(
+            SiteNavigationAction.OpenDeepLink(SOME_DEEP_LINK)
+        )
     }
 }

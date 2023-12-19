@@ -52,6 +52,10 @@ class DeepLinkHandlers
         return handlers.firstOrNull { it.shouldHandleUrl(uri) }?.buildNavigateAction(uri)
     }
 
+    fun isDeepLink(url: String): Boolean {
+        return handlers.any { it.shouldHandleUrl(UriWrapper(url)) }
+    }
+
     fun stripUrl(uri: UriWrapper): String? {
         return handlers.firstOrNull { it.shouldHandleUrl(uri) }?.stripUrl(uri)
     }

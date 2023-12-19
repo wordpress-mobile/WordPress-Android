@@ -234,6 +234,7 @@ class MySiteViewModel @Inject constructor(
         siteInfoHeaderCardViewModelSlice.onNavigation,
         quickLinksItemViewModelSlice.navigation,
         sotw2023NudgeCardViewModelSlice.onNavigation,
+        dynamicCardsViewModelSlice.onNavigation,
     )
 
     val onMediaUpload = siteInfoHeaderCardViewModelSlice.onMediaUpload
