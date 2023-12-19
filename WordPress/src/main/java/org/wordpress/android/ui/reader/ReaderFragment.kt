@@ -163,8 +163,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     }
 
     private fun ReaderFragmentLayoutBinding.startObserving(savedInstanceState: Bundle?) {
-        viewModel.uiState.observe(viewLifecycleOwner) {
-            updateUiState(it)
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+            uiState?.let { updateUiState(it) }
         }
 
         viewModel.updateTags.observeEvent(viewLifecycleOwner) {
@@ -221,28 +221,26 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         viewModel.start()
     }
 
-    private fun ReaderFragmentLayoutBinding.updateUiState(uiState: ReaderViewModel.ReaderUiState?) {
-        uiState?.let {
-            when (it) {
-                is ContentUiState -> {
-                    binding?.readerTopBarComposeView?.apply {
-                        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                        setContent {
-                            AppTheme {
-                                ReaderTopAppBar(onSearchClick = {})
-                            }
+    private fun ReaderFragmentLayoutBinding.updateUiState(uiState: ReaderViewModel.ReaderUiState) {
+        when (uiState) {
+            is ContentUiState -> {
+                binding?.readerTopBarComposeView?.apply {
+                    setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                    setContent {
+                        AppTheme {
+                            ReaderTopAppBar(onSearchClick = {})
                         }
                     }
-                    updateTabs(it)
                 }
+                updateTabs(uiState)
             }
-            // TODO As part of Reader IA changes this view is going to be replaced
-    //                uiHelpers.updateVisibility(tabLayout, uiState.tabLayoutVisible)
-            searchMenuItem?.isVisible = uiState.searchMenuItemUiState.isVisible
-            settingsMenuItem?.isVisible = uiState.settingsMenuItemUiState.isVisible
-            settingsMenuItemFocusPoint?.isVisible =
-                viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
         }
+        // TODO As part of Reader IA changes this view is going to be replaced
+        //                uiHelpers.updateVisibility(tabLayout, uiState.tabLayoutVisible)
+        searchMenuItem?.isVisible = uiState.searchMenuItemUiState.isVisible
+        settingsMenuItem?.isVisible = uiState.settingsMenuItemUiState.isVisible
+        settingsMenuItemFocusPoint?.isVisible =
+            viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
     }
 
     private fun observeJetpackOverlayEvent(savedInstanceState: Bundle?) {
