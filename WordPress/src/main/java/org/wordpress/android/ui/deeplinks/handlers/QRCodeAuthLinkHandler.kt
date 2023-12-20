@@ -12,7 +12,8 @@ class QRCodeAuthLinkHandler @Inject constructor() : DeepLinkHandler {
     override fun shouldHandleUrl(uri: UriWrapper): Boolean {
         // https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=XXXX&data=XXXXX
         return uri.host == HOST_APPS_WORDPRESS_COM &&
-                uri.pathSegments.firstOrNull() == GET_PATH
+                uri.pathSegments.firstOrNull() == GET_PATH &&
+                uri.getQueryParameter(CAMPAIGN) == CAMPAIGN_TYPE
     }
 
     override fun buildNavigateAction(uri: UriWrapper): NavigateAction {
@@ -28,5 +29,7 @@ class QRCodeAuthLinkHandler @Inject constructor() : DeepLinkHandler {
     companion object {
         private const val GET_PATH = "get"
         private const val HOST_APPS_WORDPRESS_COM = "apps.wordpress.com"
+        private const val CAMPAIGN = "campaign"
+        private const val CAMPAIGN_TYPE = "login-qr-code"
     }
 }
