@@ -994,6 +994,8 @@ class MySiteViewModel @Inject constructor(
             .forEach { noCardsMessageViewModelSlice.trackShown(it.type) }
         siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.WpSotw2023NudgeCardModel>()
             .forEach { _ -> sotw2023NudgeCardViewModelSlice.trackShown() }
+        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.Dynamic>()
+            .forEach { dynamicCardsViewModelSlice.trackShown(it.id) }
     }
 
     private fun resetShownTrackers() {
@@ -1004,6 +1006,7 @@ class MySiteViewModel @Inject constructor(
         jetpackInstallFullPluginShownTracker.resetShown()
         personalizeCardViewModelSlice.resetShown()
         sotw2023NudgeCardViewModelSlice.resetShown()
+        dynamicCardsViewModelSlice.resetShown()
     }
 
     // FluxC events

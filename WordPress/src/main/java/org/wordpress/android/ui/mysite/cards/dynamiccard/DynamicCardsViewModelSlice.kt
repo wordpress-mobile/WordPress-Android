@@ -13,18 +13,31 @@ import javax.inject.Inject
 class DynamicCardsViewModelSlice @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val deepLinkHandlers: DeepLinkHandlers,
+    private val tracker: DynamicCardsAnalyticsTracker,
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
 
     private val _refresh = MutableLiveData<Event<Boolean>>()
     val refresh = _refresh as LiveData<Event<Boolean>>
+
     fun getBuilderParams(dynamicCards: CardModel.DynamicCardsModel?): DynamicCardsBuilderParams {
         return DynamicCardsBuilderParams(
             dynamicCards = dynamicCards?.filterVisible(),
-            onActionClick = this::onActionClick,
+            onCardClick = { onCardClick(id = it.id, actionUrl = it.actionUrl) },
+            onCtaClick = { onCtaClick(id = it.id, actionUrl = it.actionUrl) },
             onHideMenuItemClick = this::onHideMenuItemClick
         )
+    }
+
+    private fun onCardClick(id: String, actionUrl: String) {
+        tracker.trackCardTapped(id = id, url = actionUrl)
+        onActionClick(actionUrl)
+    }
+
+    private fun onCtaClick(id: String, actionUrl: String) {
+        tracker.trackCtaTapped(id = id, url = actionUrl)
+        onActionClick(actionUrl)
     }
 
     private fun onActionClick(actionUrl: String) {
@@ -36,10 +49,19 @@ class DynamicCardsViewModelSlice @Inject constructor(
     }
 
     private fun onHideMenuItemClick(cardId: String) {
+        tracker.trackHideTapped(cardId)
         appPrefsWrapper.setShouldHideDynamicCard(cardId, true)
         _refresh.value = Event(true)
     }
 
     private fun CardModel.DynamicCardsModel.filterVisible(): CardModel.DynamicCardsModel =
         copy(dynamicCards = dynamicCards.filterNot { appPrefsWrapper.getShouldHideDynamicCard(it.id) })
+
+    fun trackShown(id: String) {
+        tracker.trackShown(id)
+    }
+
+    fun resetShown() {
+        tracker.resetShown()
+    }
 }
