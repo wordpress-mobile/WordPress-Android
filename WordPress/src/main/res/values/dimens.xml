@@ -571,6 +571,8 @@
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
     <dimen name="domain_suggestions_progress_indicator_size">24dp</dimen>
 
+    <dimen name="domain_plan_card_title_top_margin">78dp</dimen>
+
     <dimen name="keyline_second">72dp</dimen>
 
     <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>
