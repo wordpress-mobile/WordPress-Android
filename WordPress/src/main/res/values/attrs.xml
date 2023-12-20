@@ -64,15 +64,6 @@
         <attr name="useCustomJsFormatting" format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="FlowLayout">
-        <attr name="horizontalSpacing" format="dimension" />
-        <attr name="verticalSpacing" format="dimension" />
-    </declare-styleable>
-    <declare-styleable name="FlowLayout_Layout">
-        <attr name="layout_horizontalSpacing" format="dimension" />
-        <attr name="layout_verticalSpacing" format="dimension" />
-    </declare-styleable>
-
     <!--
         WPTextView attributes
     -->
