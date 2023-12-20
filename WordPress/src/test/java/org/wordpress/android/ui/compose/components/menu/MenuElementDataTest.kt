@@ -8,14 +8,14 @@ import org.wordpress.android.ui.compose.components.menu.dropdown.NO_ICON
 class MenuElementDataTest {
     @Test
     fun `Single should have the correct leadingIcon default value`() {
-        val actual = MenuElementData.Item.Single("", {}).leadingIcon
+        val actual = MenuElementData.Item.Single("id", "").leadingIcon
         val expected = NO_ICON
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `SubMenu should have the correct leadingIcon value`() {
-        val actual = MenuElementData.Item.SubMenu("", emptyList()).leadingIcon
+        val actual = MenuElementData.Item.SubMenu("id", "", emptyList()).leadingIcon
         val expected = NO_ICON
         assertThat(actual).isEqualTo(expected)
     }

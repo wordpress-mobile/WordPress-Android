@@ -98,30 +98,30 @@ private fun JetpackDropdownMenuButtonPreview() {
         ) {
             DropdownMenuButton(
                 selectedItem = Item.Single(
+                    id = "text-only",
                     text = "Text only",
-                    onClick = {},
                 ),
                 onClick = {}
             )
             DropdownMenuButton(
                 selectedItem = Item.Single(
+                    id = "text-and-icon",
                     text = "Text and Icon",
-                    onClick = {},
                     leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
                 ),
                 onClick = {},
             )
             DropdownMenuButton(
                 selectedItem = Item.Single(
+                    id = "text-with-a-really-long-text-as-the-button-label",
                     text = "Text type with a really long text as the button label",
-                    onClick = {},
                 ),
                 onClick = {},
             )
             DropdownMenuButton(
                 selectedItem = Item.Single(
+                    id = "text-with-a-really-long-text-as-the-button-label-and-icon",
                     text = "Text type with a really long text as the button label",
-                    onClick = {},
                     leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
                 ),
                 onClick = {},

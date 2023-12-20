@@ -42,13 +42,11 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 @Composable
 fun JetpackDropdownMenu(
     menuItems: List<MenuElementData>,
-    defaultItem: MenuElementData.Item.Single = menuItems.first() as MenuElementData.Item.Single,
+    selectedItem: MenuElementData.Item.Single,
+    onSingleItemClick: (MenuElementData.Item.Single) -> Unit,
 ) {
     Column {
         var isMenuVisible by remember { mutableStateOf(false) }
-        // TODO selected item logic will be moved to VM in another PR. This will make sure the selected item stays the
-        // same on orientation change.
-        var selectedItem by remember { mutableStateOf(defaultItem) }
         DropdownMenuButton(
             selectedItem = selectedItem,
             onClick = {
@@ -61,8 +59,8 @@ fun JetpackDropdownMenu(
             onDismissRequest = { isMenuVisible = false },
         ) {
             val onMenuItemSingleClick: (MenuElementData.Item.Single) -> Unit = { clickedItem ->
-                selectedItem = clickedItem
                 isMenuVisible = false
+                onSingleItemClick(clickedItem)
             }
             menuItems.forEach { element ->
                 MenuElementComposable(element = element, onMenuItemSingleClick = onMenuItemSingleClick)
@@ -102,7 +100,6 @@ private fun Single(
             .background(MenuColors.itemBackgroundColor()),
         onClick = {
             onMenuItemSingleClick(element)
-            element.onClick()
         },
         colors = MenuDefaults.itemColors(
             textColor = enabledContentColor,
@@ -209,6 +206,34 @@ private fun CascadeColumnScope.SubMenu(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun JetpackDropdownMenuPreview() {
+    val menuItems = listOf(
+        MenuElementData.Item.Single(
+            id = "text-only",
+            text = "Text only",
+        ),
+        MenuElementData.Item.Single(
+            id = "text-and-icon",
+            text = "Text and leading icon",
+            leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
+        ),
+        MenuElementData.Divider,
+        MenuElementData.Item.SubMenu(
+            id = "text-and-sub-menu",
+            text = "Text and sub-menu",
+            children = listOf(
+                MenuElementData.Item.Single(
+                    id = "text-sub-menu-1",
+                    text = "Text sub-menu 1",
+                ),
+                MenuElementData.Item.Single(
+                    id = "text-sub-menu-2",
+                    text = "Text sub-menu 2",
+                )
+            )
+        ),
+    )
+    var selectedItem by remember { mutableStateOf(menuItems.first() as MenuElementData.Item.Single) }
+
     AppTheme {
         Box(
             modifier = Modifier
@@ -216,34 +241,10 @@ fun JetpackDropdownMenuPreview() {
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-            val menuItems = listOf(
-                MenuElementData.Item.Single(
-                    text = "Text only",
-                    onClick = {}
-                ),
-                MenuElementData.Item.Single(
-                    text = "Text and leading icon",
-                    onClick = {},
-                    leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
-                ),
-                MenuElementData.Divider,
-                MenuElementData.Item.SubMenu(
-                    text = "Text and sub-menu",
-                    children = listOf(
-                        MenuElementData.Item.Single(
-                            text = "Text sub-menu 1",
-                            onClick = {}
-                        ),
-                        MenuElementData.Item.Single(
-                            text = "Text sub-menu 2",
-                            onClick = {}
-                        )
-                    )
-                ),
-            )
             JetpackDropdownMenu(
-                defaultItem = menuItems.first() as MenuElementData.Item.Single,
-                menuItems = menuItems
+                selectedItem = selectedItem,
+                menuItems = menuItems,
+                onSingleItemClick = { selectedItem = it }
             )
         }
     }

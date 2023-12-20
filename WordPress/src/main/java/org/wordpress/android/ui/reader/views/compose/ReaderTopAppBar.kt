@@ -14,6 +14,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,6 +34,41 @@ fun ReaderTopAppBar(
     onSearchClick: () -> Unit,
     readerLists: List<MenuElementData.Item> = emptyList(),
 ) {
+    val menuItems = mutableListOf<MenuElementData>(
+        MenuElementData.Item.Single(
+            id = "discover",
+            text = stringResource(id = R.string.reader_dropdown_menu_discover),
+            leadingIcon = R.drawable.ic_reader_discover_24dp,
+        ),
+        MenuElementData.Item.Single(
+            id = "subscriptions",
+            text = stringResource(id = R.string.reader_dropdown_menu_subscriptions),
+            leadingIcon = R.drawable.ic_reader_subscriptions_24dp,
+        ),
+        MenuElementData.Item.Single(
+            id = "notifications",
+            text = stringResource(id = R.string.reader_dropdown_menu_saved),
+            leadingIcon = R.drawable.ic_reader_saved_24dp,
+        ),
+        MenuElementData.Item.Single(
+            id = "notifications",
+            text = stringResource(id = R.string.reader_dropdown_menu_liked),
+            leadingIcon = R.drawable.ic_reader_liked_24dp,
+        ),
+    ).apply {
+        if (readerLists.isNotEmpty()) {
+            add(MenuElementData.Divider)
+            MenuElementData.Item.SubMenu(
+                id = "lists",
+                text = stringResource(id = R.string.reader_dropdown_menu_lists),
+                children = readerLists,
+            )
+        }
+    }
+    var selectedItem by remember {
+        mutableStateOf(menuItems.filterIsInstance<MenuElementData.Item.Single>().first())
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -45,36 +84,9 @@ fun ReaderTopAppBar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             JetpackDropdownMenu(
-                menuItems = mutableListOf<MenuElementData>(
-                    MenuElementData.Item.Single(
-                        text = stringResource(id = R.string.reader_dropdown_menu_discover),
-                        onClick = {},
-                        leadingIcon = R.drawable.ic_reader_discover_24dp,
-                    ),
-                    MenuElementData.Item.Single(
-                        text = stringResource(id = R.string.reader_dropdown_menu_subscriptions),
-                        onClick = {},
-                        leadingIcon = R.drawable.ic_reader_subscriptions_24dp,
-                    ),
-                    MenuElementData.Item.Single(
-                        text = stringResource(id = R.string.reader_dropdown_menu_saved),
-                        onClick = {},
-                        leadingIcon = R.drawable.ic_reader_saved_24dp,
-                    ),
-                    MenuElementData.Item.Single(
-                        text = stringResource(id = R.string.reader_dropdown_menu_liked),
-                        onClick = {},
-                        leadingIcon = R.drawable.ic_reader_liked_24dp,
-                    ),
-                ).apply {
-                    if (readerLists.isNotEmpty()) {
-                        add(MenuElementData.Divider)
-                        MenuElementData.Item.SubMenu(
-                            text = stringResource(id = R.string.reader_dropdown_menu_lists),
-                            children = readerLists,
-                        )
-                    }
-                }
+                selectedItem = selectedItem,
+                menuItems = menuItems,
+                onSingleItemClick = { selectedItem = it },
             )
         }
         Spacer(Modifier.width(Margin.ExtraLarge.value))
@@ -107,12 +119,12 @@ fun ReaderScreenPreview() {
                 {},
                 readerLists = listOf(
                     MenuElementData.Item.Single(
+                        id = "funny-blog-1",
                         text = "Funny Blog 1",
-                        onClick = {},
                     ),
                     MenuElementData.Item.Single(
+                        id = "funny-blog-2",
                         text = "Funny Blog 2",
-                        onClick = {},
                     ),
                 )
             )
