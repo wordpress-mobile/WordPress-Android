@@ -33,7 +33,7 @@ fun ReaderTopAppBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)
+            .height(48.dp)
             .padding(
                 start = Margin.ExtraLarge.value,
             )
