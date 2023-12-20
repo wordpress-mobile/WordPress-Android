@@ -20,6 +20,36 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_extra_large">
 
+        <ImageView
+            android:id="@+id/purchase_plan_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/browser_address_bar" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/purchase_plan_title"
+            style="@style/DomainsPlanPurchaseCardTitle"
+            android:text="@string/domains_free_plan_get_your_domain_title"
+            android:layout_marginTop="@dimen/domain_plan_card_title_top_margin"
+            app:layout_constraintTop_toTopOf="@id/purchase_plan_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/purchase_plan_caption" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/purchase_plan_caption"
+            style="@style/DomainsPlanPurchaseCardSubTitle"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:text="@string/domains_upgrade_to_plan_caption"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/purchase_plan_title" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/upgrade_plan_button"
             style="@style/DomainsPlanPurchaseCardPrimaryButton"
@@ -42,35 +72,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/upgrade_plan_button" />
-
-        <ImageView
-            android:id="@+id/purchase_plan_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:contentDescription="@null"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/browser_address_bar" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/purchase_plan_caption"
-            style="@style/DomainsPlanPurchaseCardSubTitle"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:text="@string/domains_upgrade_to_plan_caption"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/purchase_plan_title" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/purchase_plan_title"
-            style="@style/DomainsPlanPurchaseCardTitle"
-            android:layout_marginTop="@dimen/margin_80dp"
-            android:text="@string/domains_free_plan_get_your_domain_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/purchase_plan_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

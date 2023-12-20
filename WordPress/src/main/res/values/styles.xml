@@ -1641,7 +1641,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
