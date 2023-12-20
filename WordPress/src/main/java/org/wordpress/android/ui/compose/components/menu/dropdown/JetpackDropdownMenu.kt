@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.compose.components.menu.dropdown
 
 import android.content.res.Configuration
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +35,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import me.saket.cascade.CascadeColumnScope
 import me.saket.cascade.CascadeDropdownMenu
@@ -46,10 +49,12 @@ fun JetpackDropdownMenu(
     menuItems: List<MenuElementData>,
     selectedItem: MenuElementData.Item.Single,
     onSingleItemClick: (MenuElementData.Item.Single) -> Unit,
+    contentSizeAnimation: FiniteAnimationSpec<IntSize> = spring(),
 ) {
     Column {
         var isMenuVisible by remember { mutableStateOf(false) }
         DropdownMenuButton(
+            contentSizeAnimation = contentSizeAnimation,
             selectedItem = selectedItem,
             onClick = {
                 isMenuVisible = !isMenuVisible

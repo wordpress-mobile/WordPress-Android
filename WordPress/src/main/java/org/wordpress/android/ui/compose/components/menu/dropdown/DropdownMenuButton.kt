@@ -2,6 +2,8 @@ package org.wordpress.android.ui.compose.components.menu.dropdown
 
 import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData.Item
@@ -36,6 +39,7 @@ import androidx.compose.material3.MaterialTheme as Material3Theme
 fun DropdownMenuButton(
     selectedItem: Item,
     onClick: () -> Unit,
+    contentSizeAnimation: FiniteAnimationSpec<IntSize> = spring(),
 ) {
     Button(
         onClick = onClick,
@@ -57,7 +61,7 @@ fun DropdownMenuButton(
         )
     ) {
         Row(
-            modifier = Modifier.animateContentSize(),
+            modifier = Modifier.animateContentSize(contentSizeAnimation),
         ) {
             if (selectedItem is Item.Single && selectedItem.leadingIcon != NO_ICON) {
                 Icon(

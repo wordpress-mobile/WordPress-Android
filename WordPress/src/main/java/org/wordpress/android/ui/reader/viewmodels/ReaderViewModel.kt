@@ -20,6 +20,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -35,6 +36,8 @@ import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.MenuItemUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
+import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterSelectedItem
+import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.JetpackBrandingUtils
@@ -71,6 +74,9 @@ class ReaderViewModel @Inject constructor(
 
     private val _uiState = MutableLiveData<ReaderUiState>()
     val uiState: LiveData<ReaderUiState> = _uiState.distinct()
+
+    private val _topBarUiState = MutableLiveData<TopBarUiState>()
+    val topBarUiState: LiveData<TopBarUiState> = _topBarUiState.distinct()
 
     private val _updateTags = MutableLiveData<Event<Unit>>()
     val updateTags: LiveData<Event<Unit>> = _updateTags
@@ -133,6 +139,7 @@ class ReaderViewModel @Inject constructor(
                 if (!initialized) {
                     initialized = true
                     initializeTabSelection(tagList)
+                    initializeTopBarUiState()
                 }
             }
         }
@@ -168,35 +175,6 @@ class ReaderViewModel @Inject constructor(
 
     fun onShowReaderInterests() {
         _showReaderInterests.value = Event(Unit)
-    }
-
-    sealed class ReaderUiState(
-        open val searchMenuItemUiState: MenuItemUiState,
-        open val settingsMenuItemUiState: MenuItemUiState,
-        val appBarExpanded: Boolean = false,
-        val tabLayoutVisible: Boolean = false
-    ) {
-        data class ContentUiState(
-            val tabUiStates: List<TabUiState>,
-            val readerTagList: ReaderTagList,
-            val shouldUpdateViewPager: Boolean,
-            override val searchMenuItemUiState: MenuItemUiState,
-            override val settingsMenuItemUiState: MenuItemUiState
-        ) : ReaderUiState(
-            searchMenuItemUiState = searchMenuItemUiState,
-            settingsMenuItemUiState = settingsMenuItemUiState,
-            appBarExpanded = true,
-            tabLayoutVisible = true
-        ) {
-            data class TabUiState(
-                val label: UiString
-            )
-
-            data class MenuItemUiState(
-                val isVisible: Boolean,
-                val showQuickStartFocusPoint: Boolean = false
-            )
-        }
     }
 
     override fun onCleared() {
@@ -373,6 +351,138 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    @Suppress("KotlinConstantConditions")
+    private fun initializeTopBarUiState() {
+        // TODO the actual logic to build the TopBar UI State needs to be created
+        //  The current logic is for initial implementation and UI review only.
+        val readerLists = mutableListOf<MenuElementData.Item>(
+            MenuElementData.Item.Single(
+                id = "my-custom-list",
+                text = UiStringText("My Custom List"),
+            ),
+        )
+
+        val menuItems = mutableListOf<MenuElementData>(
+            MenuElementData.Item.Single(
+                id = ITEM_ID_DISCOVER,
+                text = UiString.UiStringRes(R.string.reader_dropdown_menu_discover),
+                leadingIcon = R.drawable.ic_reader_discover_24dp,
+            ),
+            MenuElementData.Item.Single(
+                id = ITEM_ID_SUBSCRIPTIONS,
+                text = UiString.UiStringRes(R.string.reader_dropdown_menu_subscriptions),
+                leadingIcon = R.drawable.ic_reader_subscriptions_24dp,
+            ),
+            MenuElementData.Item.Single(
+                id = ITEM_ID_SAVED,
+                text = UiString.UiStringRes(R.string.reader_dropdown_menu_saved),
+                leadingIcon = R.drawable.ic_reader_saved_24dp,
+            ),
+            MenuElementData.Item.Single(
+                id = ITEM_ID_LIKED,
+                text = UiString.UiStringRes(R.string.reader_dropdown_menu_liked),
+                leadingIcon = R.drawable.ic_reader_liked_24dp,
+            ),
+        ).apply {
+            if (readerLists.isNotEmpty()) {
+                add(MenuElementData.Divider)
+                MenuElementData.Item.SubMenu(
+                    id = ITEM_ID_LISTS,
+                    text = UiString.UiStringRes(R.string.reader_dropdown_menu_lists),
+                    children = readerLists,
+                )
+            }
+        }
+
+        val selectedItem = menuItems
+            .filterIsInstance<MenuElementData.Item.Single>()
+            .find { it.id == ITEM_ID_DISCOVER }!!
+
+        _topBarUiState.value = TopBarUiState(
+            menuItems = menuItems,
+            selectedItem = selectedItem,
+            filterUiState = null,
+        )
+    }
+
+    fun onTopBarMenuItemClick(item: MenuElementData.Item.Single) {
+        // TODO actual logic needs to be created
+        //  The current logic is for initial implementation and UI review only.
+        val filterUiState = TopBarUiState.FilterUiState(
+            followedBlogsCount = 23,
+            followedTagsCount = 41,
+        ).takeIf { item.id == ITEM_ID_SUBSCRIPTIONS }
+
+        _topBarUiState.value = _topBarUiState.value
+            ?.copy(selectedItem = item, filterUiState = filterUiState)
+    }
+
+    fun onTopBarFilterClick(type: ReaderFilterType) {
+        // TODO actual logic needs to be created (opening filter bottom sheet).
+        //  The current logic is for initial implementation and UI review only.
+        val itemText = when (type) {
+            ReaderFilterType.BLOG -> UiStringText("Selected Blog")
+            ReaderFilterType.TAG -> UiStringText("Selected Site")
+        }
+
+        val filterUiState = _topBarUiState.value?.filterUiState
+            ?.copy(selectedItem = ReaderFilterSelectedItem(itemText, type))
+
+        _topBarUiState.value = _topBarUiState.value
+            ?.copy(filterUiState = filterUiState)
+    }
+
+    fun onTopBarClearFilterClick() {
+        // TODO actual logic needs to be created (clearing filter).
+        //  The current logic is for initial implementation and UI review only.
+        val filterUiState = _topBarUiState.value?.filterUiState
+            ?.copy(selectedItem = null)
+
+        _topBarUiState.value = _topBarUiState.value
+            ?.copy(filterUiState = filterUiState)
+    }
+
+    data class TopBarUiState(
+        val menuItems: List<MenuElementData>,
+        val selectedItem: MenuElementData.Item.Single,
+        val filterUiState: FilterUiState? = null,
+    ) {
+        data class FilterUiState(
+            val followedBlogsCount: Int,
+            val followedTagsCount: Int,
+            val selectedItem: ReaderFilterSelectedItem? = null,
+        )
+    }
+
+    sealed class ReaderUiState(
+        open val searchMenuItemUiState: MenuItemUiState,
+        open val settingsMenuItemUiState: MenuItemUiState,
+        val appBarExpanded: Boolean = false,
+        val tabLayoutVisible: Boolean = false
+    ) {
+        data class ContentUiState(
+            val tabUiStates: List<TabUiState>,
+            val readerTagList: ReaderTagList,
+            val shouldUpdateViewPager: Boolean,
+            override val searchMenuItemUiState: MenuItemUiState,
+            override val settingsMenuItemUiState: MenuItemUiState,
+        ) : ReaderUiState(
+            searchMenuItemUiState = searchMenuItemUiState,
+            settingsMenuItemUiState = settingsMenuItemUiState,
+            appBarExpanded = true,
+            tabLayoutVisible = true
+        ) {
+            data class TabUiState(
+                val label: UiString
+            )
+
+            data class MenuItemUiState(
+                val isVisible: Boolean,
+                val showQuickStartFocusPoint: Boolean = false
+            )
+        }
+    }
+
     data class QuickStartReaderPrompt(
         val task: QuickStartTask,
         @StringRes val shortMessagePrompt: Int,
@@ -383,6 +493,12 @@ class ReaderViewModel @Inject constructor(
     companion object {
         private const val QUICK_START_DISCOVER_TAB_STEP_DELAY = 2000L
         private const val QUICK_START_PROMPT_DURATION = 5000
+
+        private const val ITEM_ID_DISCOVER = "discover"
+        private const val ITEM_ID_SUBSCRIPTIONS = "subscriptions"
+        private const val ITEM_ID_SAVED = "saved"
+        private const val ITEM_ID_LIKED = "liked"
+        private const val ITEM_ID_LISTS = "lists"
     }
 }
 
