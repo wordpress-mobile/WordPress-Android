@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/margin_extra_large"
-    app:cardCornerRadius="@dimen/margin_extra_large"
+    app:cardCornerRadius="@dimen/margin_medium_large"
     app:cardElevation="0dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
@@ -34,17 +34,17 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/purchase_plan_title"
             style="@style/DomainsPlanPurchaseCardTitle"
-            android:text="@string/domains_free_plan_get_your_domain_title"
             android:layout_marginTop="@dimen/domain_plan_card_title_top_margin"
-            app:layout_constraintTop_toTopOf="@id/purchase_plan_image"
+            android:text="@string/domains_free_plan_get_your_domain_title"
+            app:layout_constraintBottom_toTopOf="@id/purchase_plan_caption"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/purchase_plan_caption" />
+            app:layout_constraintTop_toTopOf="@id/purchase_plan_image" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/purchase_plan_caption"
             style="@style/DomainsPlanPurchaseCardSubTitle"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small"
             android:text="@string/domains_upgrade_to_plan_caption"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,7 +55,7 @@
             style="@style/DomainsPlanPurchaseCardPrimaryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_medium_large"
             android:text="@string/domains_upgrade_to_a_plan_button"
             app:layout_constraintBottom_toTopOf="@id/just_search_domain_button"
             app:layout_constraintEnd_toEndOf="parent"

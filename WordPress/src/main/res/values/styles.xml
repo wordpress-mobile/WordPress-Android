@@ -1656,6 +1656,7 @@
 
     <style name="DomainsPlanPurchaseCardPrimaryButton" parent="WordPress.Button.Primary.Unelevated">
         <item name="materialThemeOverlay">@style/ThemeOverlay.WordPress.Domains.Button.Primary.Unelevated</item>
+        <item name="cornerRadius">5dp</item>
     </style>
 
     <style name="ThemeOverlay.WordPress.Domains.Button.Primary.Unelevated" parent="">
@@ -1664,6 +1665,7 @@
 
     <style name="DomainsPlanPurchaseCardSecondaryButton" parent="Widget.Material3.Button.TextButton">
         <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="cornerRadius">5dp</item>
     </style>
 
     <!-- Blogging prompts onboarding dialog styles -->
