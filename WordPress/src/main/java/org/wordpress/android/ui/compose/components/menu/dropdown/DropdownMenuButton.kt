@@ -27,6 +27,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData.Item
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import androidx.compose.material3.MaterialTheme as Material3Theme
 
 @Composable
@@ -73,7 +75,7 @@ fun DropdownMenuButton(
                     ),
                 style = Material3Theme.typography.titleMedium,
                 fontWeight = FontWeight.Medium,
-                text = selectedItem.text,
+                text = uiStringText(selectedItem.text),
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
@@ -99,14 +101,14 @@ private fun JetpackDropdownMenuButtonPreview() {
             DropdownMenuButton(
                 selectedItem = Item.Single(
                     id = "text-only",
-                    text = "Text only",
+                    text = UiStringText("Text only"),
                 ),
                 onClick = {}
             )
             DropdownMenuButton(
                 selectedItem = Item.Single(
                     id = "text-and-icon",
-                    text = "Text and Icon",
+                    text = UiStringText("Text and Icon"),
                     leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
                 ),
                 onClick = {},
@@ -114,14 +116,14 @@ private fun JetpackDropdownMenuButtonPreview() {
             DropdownMenuButton(
                 selectedItem = Item.Single(
                     id = "text-with-a-really-long-text-as-the-button-label",
-                    text = "Text type with a really long text as the button label",
+                    text = UiStringText("Text type with a really long text as the button label"),
                 ),
                 onClick = {},
             )
             DropdownMenuButton(
                 selectedItem = Item.Single(
                     id = "text-with-a-really-long-text-as-the-button-label-and-icon",
-                    text = "Text type with a really long text as the button label",
+                    text = UiStringText("Text type with a really long text as the button label"),
                     leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
                 ),
                 onClick = {},

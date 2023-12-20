@@ -28,6 +28,8 @@ import org.wordpress.android.ui.compose.components.menu.dropdown.JetpackDropdown
 import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @Composable
 fun ReaderTopAppBar(
@@ -37,22 +39,22 @@ fun ReaderTopAppBar(
     val menuItems = mutableListOf<MenuElementData>(
         MenuElementData.Item.Single(
             id = "discover",
-            text = stringResource(id = R.string.reader_dropdown_menu_discover),
+            text = UiStringRes(R.string.reader_dropdown_menu_discover),
             leadingIcon = R.drawable.ic_reader_discover_24dp,
         ),
         MenuElementData.Item.Single(
             id = "subscriptions",
-            text = stringResource(id = R.string.reader_dropdown_menu_subscriptions),
+            text = UiStringRes(R.string.reader_dropdown_menu_subscriptions),
             leadingIcon = R.drawable.ic_reader_subscriptions_24dp,
         ),
         MenuElementData.Item.Single(
             id = "notifications",
-            text = stringResource(id = R.string.reader_dropdown_menu_saved),
+            text = UiStringRes(R.string.reader_dropdown_menu_saved),
             leadingIcon = R.drawable.ic_reader_saved_24dp,
         ),
         MenuElementData.Item.Single(
             id = "notifications",
-            text = stringResource(id = R.string.reader_dropdown_menu_liked),
+            text = UiStringRes(R.string.reader_dropdown_menu_liked),
             leadingIcon = R.drawable.ic_reader_liked_24dp,
         ),
     ).apply {
@@ -60,7 +62,7 @@ fun ReaderTopAppBar(
             add(MenuElementData.Divider)
             MenuElementData.Item.SubMenu(
                 id = "lists",
-                text = stringResource(id = R.string.reader_dropdown_menu_lists),
+                text = UiStringRes(R.string.reader_dropdown_menu_lists),
                 children = readerLists,
             )
         }
@@ -120,11 +122,11 @@ fun ReaderScreenPreview() {
                 readerLists = listOf(
                     MenuElementData.Item.Single(
                         id = "funny-blog-1",
-                        text = "Funny Blog 1",
+                        text = UiStringText("Funny Blog 1"),
                     ),
                     MenuElementData.Item.Single(
                         id = "funny-blog-2",
-                        text = "Funny Blog 2",
+                        text = UiStringText("Funny Blog 2"),
                     ),
                 )
             )

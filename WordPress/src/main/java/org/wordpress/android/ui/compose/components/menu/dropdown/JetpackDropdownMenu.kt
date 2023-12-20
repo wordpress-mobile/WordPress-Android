@@ -38,6 +38,8 @@ import me.saket.cascade.CascadeColumnScope
 import me.saket.cascade.CascadeDropdownMenu
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @Composable
 fun JetpackDropdownMenu(
@@ -111,7 +113,7 @@ private fun Single(
         ),
         text = {
             Text(
-                text = element.text,
+                text = uiStringText(element.text),
                 style = MaterialTheme.typography.bodyLarge,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Normal,
@@ -184,7 +186,7 @@ private fun CascadeColumnScope.SubMenu(
         ),
         text = {
             Text(
-                text = element.text,
+                text = uiStringText(element.text),
                 style = MaterialTheme.typography.bodyLarge,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Normal,
@@ -209,25 +211,25 @@ fun JetpackDropdownMenuPreview() {
     val menuItems = listOf(
         MenuElementData.Item.Single(
             id = "text-only",
-            text = "Text only",
+            text = UiStringText("Text only"),
         ),
         MenuElementData.Item.Single(
             id = "text-and-icon",
-            text = "Text and leading icon",
+            text = UiStringText("Text and leading icon"),
             leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
         ),
         MenuElementData.Divider,
         MenuElementData.Item.SubMenu(
             id = "text-and-sub-menu",
-            text = "Text and sub-menu",
+            text = UiStringText("Text and sub-menu"),
             children = listOf(
                 MenuElementData.Item.Single(
                     id = "text-sub-menu-1",
-                    text = "Text sub-menu 1",
+                    text = UiStringText("Text sub-menu 1"),
                 ),
                 MenuElementData.Item.Single(
                     id = "text-sub-menu-2",
-                    text = "Text sub-menu 2",
+                    text = UiStringText("Text sub-menu 2"),
                 )
             )
         ),
