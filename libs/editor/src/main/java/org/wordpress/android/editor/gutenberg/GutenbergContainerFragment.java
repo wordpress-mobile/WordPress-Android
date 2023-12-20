@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
@@ -23,6 +24,7 @@ import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBlockTypeImpressionsEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBackHandlerEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnConnectionStatusEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOptionsListener;
@@ -97,6 +99,7 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnToggleUndoButtonListener onToggleUndoButtonListener,
                                   OnToggleRedoButtonListener onToggleRedoButtonListener,
                                   OnConnectionStatusEventListener onConnectionStatusEventListener,
+                                  OnBackHandlerEventListener onBackHandlerEventListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
@@ -123,6 +126,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onToggleUndoButtonListener,
                     onToggleRedoButtonListener,
                     onConnectionStatusEventListener,
+                    onBackHandlerEventListener,
                     isDarkMode);
     }
 
@@ -170,6 +174,14 @@ public class GutenbergContainerFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                mWPAndroidGlueCode.onBackPressed();
+            }
+        };
+
+        getActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         mWPAndroidGlueCode.onResume(this, getActivity());
     }
 

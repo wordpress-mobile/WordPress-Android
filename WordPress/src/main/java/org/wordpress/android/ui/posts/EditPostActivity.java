@@ -1518,6 +1518,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         return true;
     }
 
+    public void onEditorBackPressed() {
+        getOnBackPressedDispatcher().onBackPressed();
+    }
+
     interface DoWhenNoStoriesBeingSavedCallback {
         void doWhenNoStoriesBeingSaved();
     }
@@ -3667,6 +3671,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         mMenuHasRedo = !isDisabled;
         new Handler(Looper.getMainLooper()).post(this::invalidateOptionsMenu);
+    }
+
+    @Override public void onBackHandlerButton() {
+        handleBackPressed();
     }
 
     // FluxC events
