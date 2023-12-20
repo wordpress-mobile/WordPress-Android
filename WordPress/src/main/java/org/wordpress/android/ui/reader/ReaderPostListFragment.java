@@ -695,7 +695,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mReaderTracker.track(Stat.READER_FILTER_SHEET_CLEARED);
             mSubFilterViewModel.setDefaultSubfilter();
         });
-        mSubFilterComponent.setVisibility(isFilterableScreen() ? View.VISIBLE : View.GONE);
+        // TODO As part of Reader IA changes this view is going to be replaced
+//        mSubFilterComponent.setVisibility(isFilterableScreen() ? View.VISIBLE : View.GONE);
+        mSubFilterComponent.setVisibility(View.GONE);
 
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(mRecyclerView.getContext());
         float cardElevation = getResources().getDimension(R.dimen.card_elevation);

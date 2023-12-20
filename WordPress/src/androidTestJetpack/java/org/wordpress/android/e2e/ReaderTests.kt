@@ -2,6 +2,7 @@ package org.wordpress.android.e2e
 
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.wordpress.android.e2e.pages.ReaderPage
 import org.wordpress.android.support.BaseTest
@@ -18,6 +19,7 @@ class ReaderTests : BaseTest() {
     }
 
     @Test
+    @Ignore("Ignored for now considering the context of Reader IA feature that completely changes the Reader design")
     fun e2eNavigateThroughPosts() {
         ReaderPage()
             .tapFollowingTab()
@@ -31,6 +33,7 @@ class ReaderTests : BaseTest() {
     }
 
     @Test
+    @Ignore("Ignored for now considering the context of Reader IA feature that completely changes the Reader design")
     fun e2eLikePost() {
         ReaderPage()
             .tapFollowingTab()
@@ -43,6 +46,7 @@ class ReaderTests : BaseTest() {
     }
 
     @Test
+    @Ignore("Ignored for now considering the context of Reader IA feature that completely changes the Reader design")
     fun e2eBookmarkPost() {
         ReaderPage()
             .tapFollowingTab()

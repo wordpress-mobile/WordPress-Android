@@ -4,8 +4,10 @@ import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -29,11 +31,12 @@ import androidx.compose.material3.MaterialTheme as Material3Theme
 
 @Composable
 fun DropdownMenuButton(
-    selectedItem: MenuElementData.Item,
+    selectedItem: Item,
     onClick: () -> Unit,
 ) {
     Button(
         onClick = onClick,
+        modifier = Modifier.height(32.dp),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
@@ -43,6 +46,12 @@ fun DropdownMenuButton(
             backgroundColor = MaterialTheme.colors.onSurface,
         ),
         shape = RoundedCornerShape(50),
+        contentPadding = PaddingValues(
+            start = Margin.MediumLarge.value,
+            end = Margin.MediumLarge.value,
+            top = 0.dp,
+            bottom = 0.dp
+        )
     ) {
         Row(
             modifier = Modifier.animateContentSize(),

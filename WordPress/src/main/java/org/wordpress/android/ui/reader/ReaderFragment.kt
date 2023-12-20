@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -26,6 +27,7 @@ import org.wordpress.android.databinding.ReaderFragmentLayoutBinding
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
@@ -41,6 +43,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarte
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
+import org.wordpress.android.ui.reader.views.compose.ReaderTopAppBar
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.JetpackBrandingUtils
@@ -161,18 +164,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
 
     private fun ReaderFragmentLayoutBinding.startObserving(savedInstanceState: Bundle?) {
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            uiState?.let {
-                when (it) {
-                    is ContentUiState -> {
-                        updateTabs(it)
-                    }
-                }
-                uiHelpers.updateVisibility(tabLayout, uiState.tabLayoutVisible)
-                searchMenuItem?.isVisible = uiState.searchMenuItemUiState.isVisible
-                settingsMenuItem?.isVisible = uiState.settingsMenuItemUiState.isVisible
-                settingsMenuItemFocusPoint?.isVisible =
-                    viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
-            }
+            uiState?.let { updateUiState(it) }
         }
 
         viewModel.updateTags.observeEvent(viewLifecycleOwner) {
@@ -227,6 +219,28 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         observeJetpackOverlayEvent(savedInstanceState)
 
         viewModel.start()
+    }
+
+    private fun ReaderFragmentLayoutBinding.updateUiState(uiState: ReaderViewModel.ReaderUiState) {
+        when (uiState) {
+            is ContentUiState -> {
+                binding?.readerTopBarComposeView?.apply {
+                    setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                    setContent {
+                        AppTheme {
+                            ReaderTopAppBar(onSearchClick = {})
+                        }
+                    }
+                }
+                updateTabs(uiState)
+            }
+        }
+        // TODO As part of Reader IA changes this view is going to be replaced
+        //                uiHelpers.updateVisibility(tabLayout, uiState.tabLayoutVisible)
+        searchMenuItem?.isVisible = uiState.searchMenuItemUiState.isVisible
+        settingsMenuItem?.isVisible = uiState.settingsMenuItemUiState.isVisible
+        settingsMenuItemFocusPoint?.isVisible =
+            viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
     }
 
     private fun observeJetpackOverlayEvent(savedInstanceState: Bundle?) {
