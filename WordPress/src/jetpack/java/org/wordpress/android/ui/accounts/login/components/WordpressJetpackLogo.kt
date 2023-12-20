@@ -8,9 +8,9 @@ import androidx.compose.ui.res.stringResource
 import org.wordpress.android.R
 
 @Composable
-fun JetpackLogo(modifier: Modifier = Modifier) {
+fun WordpressJetpackLogo(modifier: Modifier = Modifier) {
     Image(
-        painter = painterResource(R.drawable.ic_jetpack_logo_green_24dp),
+        painter = painterResource(R.drawable.ic_wordpress_jetpack_welcome),
         contentDescription = stringResource(
             R.string.login_prologue_revamped_content_description_jetpack_logo
         ),
