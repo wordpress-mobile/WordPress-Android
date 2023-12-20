@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -69,10 +70,7 @@ fun DropdownMenuButton(
             Text(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
-                    .weight(
-                        weight = 1f,
-                        fill = false,
-                    ),
+                    .widthIn(max = 280.dp),
                 style = Material3Theme.typography.titleMedium,
                 fontWeight = FontWeight.Medium,
                 text = uiStringText(selectedItem.text),
