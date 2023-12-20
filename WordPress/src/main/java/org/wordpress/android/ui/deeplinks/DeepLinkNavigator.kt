@@ -90,6 +90,7 @@ class DeepLinkNavigator
                 activity,
                 navigateAction.site
             )
+            NavigateAction.DomainManagement -> ActivityLauncher.openDomainManagement(activity)
         }
         if (navigateAction != LoginForResult) {
             activity.finish()
@@ -123,6 +124,10 @@ class DeepLinkNavigator
         object OpenJetpackStaticPosterView : NavigateAction()
         data class OpenMediaForSite(val site: SiteModel) : NavigateAction()
         object OpenMedia : NavigateAction()
+<<<<<<< HEAD
         data class OpenMediaPickerForSite(val site: SiteModel) : NavigateAction()
+=======
+        object DomainManagement : NavigateAction()
+>>>>>>> trunk
     }
 }
