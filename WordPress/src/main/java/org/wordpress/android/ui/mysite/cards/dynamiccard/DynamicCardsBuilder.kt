@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.mysite.cards.dynamiccard
 
-import org.wordpress.android.fluxc.model.dashboard.CardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.CardOrder
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardModel
 import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.Dynamic
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams
-import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
-import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.config.DynamicDashboardCardsFeatureConfig
 import org.wordpress.android.util.config.FeatureFlagConfig
@@ -31,7 +29,7 @@ class DynamicCardsBuilder @Inject constructor(
     }
 
     private fun convertToDynamicCards(params: DynamicCardsBuilderParams, order: CardOrder): List<Dynamic> {
-        val cards = params.dynamicCards?.dynamicCards?.filter { it.order == order && it.isEnabled()}.orEmpty()
+        val cards = params.dynamicCards?.dynamicCards?.filter { it.order == order && it.isEnabled() }.orEmpty()
         return cards.map { card ->
             Dynamic(
                 id = card.id,
@@ -45,7 +43,7 @@ class DynamicCardsBuilder @Inject constructor(
                 title = card.title,
                 image = card.featuredImage,
                 action = getActionSource(params, card),
-                onHideMenuItemClick = create(card.id, params.onHideMenuItemClick),
+                onHideMenuItemClick = ListItemInteraction.create(card.id, params.onHideMenuItemClick),
             )
         }
     }
@@ -60,23 +58,29 @@ class DynamicCardsBuilder @Inject constructor(
 
     private fun getActionSource(
         params: DynamicCardsBuilderParams,
-        card: CardModel.DynamicCardsModel.DynamicCardModel
+        card: DynamicCardModel
     ): Dynamic.ActionSource? = when {
         isValidUrlOrDeeplink(card.url) && isValidActionTitle(card.action) -> Dynamic.ActionSource.Button(
-            requireNotNull(card.url),
-            create(requireNotNull(card.url), params.onActionClick),
-            requireNotNull(card.action)
+            url = requireNotNull(card.url),
+            title = requireNotNull(card.action),
+            onClick = ListItemInteraction.create(
+                data = DynamicCardsBuilderParams.ClickParams(id = card.id, actionUrl = requireNotNull(card.url)),
+                action = params.onCtaClick
+            )
         )
         isValidUrlOrDeeplink(card.url) -> Dynamic.ActionSource.Card(
-            requireNotNull(card.url),
-            create(requireNotNull(card.url), params.onActionClick)
+            url = requireNotNull(card.url),
+            onClick = ListItemInteraction.create(
+                data = DynamicCardsBuilderParams.ClickParams(id = card.id, actionUrl = requireNotNull(card.url)),
+                action = params.onCardClick
+            )
         )
         else -> null
     }
 
     private fun isValidUrlOrDeeplink(url: String?): Boolean {
         return !url.isNullOrEmpty() && (urlUtils.isValidUrlAndHostNotNull(url)
-                || deepLinkHandlers.buildNavigateAction(UriWrapper(url)) != null)
+                || deepLinkHandlers.isDeepLink(url))
     }
 
     private fun isValidActionTitle(title: String?): Boolean {
