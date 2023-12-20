@@ -478,7 +478,10 @@
                     android:pathPattern="/media/.*"
                     android:scheme="http" />
 
-
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/domains/manage"
+                    android:scheme="https" />
 
             </intent-filter>
         </activity-alias>
