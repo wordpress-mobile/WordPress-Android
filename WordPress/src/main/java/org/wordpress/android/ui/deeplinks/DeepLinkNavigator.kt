@@ -86,6 +86,7 @@ class DeepLinkNavigator
                 ActivityLauncher.showJetpackStaticPoster(activity)
             is NavigateAction.OpenMediaForSite -> activityNavigator.openMediaInNewStack(activity, navigateAction.site)
             NavigateAction.OpenMedia -> activityNavigator.openMediaInNewStack(activity)
+            NavigateAction.DomainManagement -> ActivityLauncher.openDomainManagement(activity)
         }
         if (navigateAction != LoginForResult) {
             activity.finish()
@@ -119,5 +120,6 @@ class DeepLinkNavigator
         object OpenJetpackStaticPosterView : NavigateAction()
         data class OpenMediaForSite(val site: SiteModel) : NavigateAction()
         object OpenMedia : NavigateAction()
+        object DomainManagement : NavigateAction()
     }
 }
