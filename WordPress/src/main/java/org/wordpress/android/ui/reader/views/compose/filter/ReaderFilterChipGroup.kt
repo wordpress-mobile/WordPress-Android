@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -33,10 +34,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
+import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.utils.UiString
 import androidx.compose.material3.MaterialTheme as Material3Theme
@@ -102,7 +106,7 @@ fun ReaderFilterChipGroup(
         }
 
         AnimatedVisibility(visible = blogChipVisible && tagChipVisible) {
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(Margin.Medium.value))
         }
 
         // tags filter chip
@@ -148,11 +152,12 @@ fun ReaderFilterChip(
 
     val endPadding by animateDpAsState(
         label = "ReaderFilterChip endPadding",
-        targetValue = if (onDismissClick != null) 12.dp else 24.dp
+        targetValue = if (onDismissClick != null) Margin.Large.value else Margin.ExtraLarge.value,
     )
 
     CompositionLocalProvider(
         LocalContentColor provides contentColor,
+        LocalContentAlpha provides 1f,
     ) {
         Row(
             modifier = modifier
@@ -161,22 +166,20 @@ fun ReaderFilterChip(
                     shape = roundedShape,
                 )
                 .clip(roundedShape)
+                .height(32.dp)
                 .clickable(onClick = onClick)
                 .padding(
-                    top = 8.dp,
-                    bottom = 8.dp,
-                    start = 24.dp,
+                    start = Margin.ExtraLarge.value,
                     end = endPadding,
                 )
                 .animateContentSize(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(Margin.Small.value),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 uiStringText(text),
-                style = Material3Theme.typography.titleSmall,
+                style = Material3Theme.typography.titleMedium,
                 modifier = Modifier
-                    .height(20.dp)
                     .align(Alignment.CenterVertically),
             )
 
@@ -186,7 +189,7 @@ fun ReaderFilterChip(
                     contentDescription = stringResource(R.string.dismiss),
                     modifier = Modifier
                         .size(20.dp)
-                        .padding(2.dp)
+                        .padding(Margin.ExtraSmall.value)
                         .clickable(
                             onClick = onDismissClick,
                             role = Role.Button,
@@ -215,7 +218,7 @@ fun ReaderFilterChipGroupPreview() {
 
     AppThemeWithoutBackground {
         ReaderFilterChipGroup(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(Margin.Medium.value),
             selectedItem = selectedItem,
             followedBlogsCount = 23,
             followedTagsCount = 41,
