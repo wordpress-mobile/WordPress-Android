@@ -53,13 +53,13 @@ sealed class PostListItemViewHolder(
     private val uiHelpers: UiHelpers
 ) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     private val featuredImageView: ImageView = itemView.findViewById(R.id.image_featured)
-    private val titleTextView: TextView = itemView.findViewById(R.id.title)
+    private val titleTextView: PostListTitleExcerptTextView = itemView.findViewById(R.id.title)
     private val postInfoTextView: TextView = itemView.findViewById(R.id.post_info)
     private val statusesTextView: TextView = itemView.findViewById(R.id.statuses_label)
     private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
     private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
     private val container: ConstraintLayout = itemView.findViewById(R.id.container)
-    private val excerptTextView: TextView = itemView.findViewById(R.id.excerpt)
+    private val excerptTextView: PostListTitleExcerptTextView = itemView.findViewById(R.id.excerpt)
     private val moreButton: ImageButton = itemView.findViewById(R.id.more)
 
     private val selectableBackground: Drawable? = parent.context.getDrawableFromAttribute(
@@ -125,27 +125,8 @@ sealed class PostListItemViewHolder(
         if ((data.title != null && data.title != noTitle) && data.excerpt != null) {
             titleTextView.maxLines = MAX_TITLE_EXCERPT_LINES
             excerptTextView.maxLines = MAX_TITLE_EXCERPT_LINES
-            titleTextView.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-                override fun onPreDraw(): Boolean {
-                    // Remove the listener to avoid multiple callbacks
-                    titleTextView.viewTreeObserver.removeOnPreDrawListener(this)
-
-                    // Get the layout of the title text
-                    val titleLayout: Layout? = titleTextView.layout
-
-                    // Check if the title occupies more than 2 lines
-                    when (titleLayout?.lineCount) {
-                        1 -> {
-                            excerptTextView.maxLines = 2
-                        }
-                        else -> {
-                            excerptTextView.maxLines = 1
-                            titleTextView.maxLines = 2
-                        }
-                    }
-                    return true
-                }
-            })
+            titleTextView.setTargetTextView(titleTextView, PostListTitleExcerptTextView.CallingTextView.TITLE)
+            excerptTextView.setTargetTextView(titleTextView, PostListTitleExcerptTextView.CallingTextView.EXCERPT)
         }
     }
 
