@@ -33,7 +33,7 @@ import javax.inject.Inject
 
 class DeepLinkNavigator
 @Inject constructor(private val activityNavigator: ActivityNavigator) {
-    @Suppress("ComplexMethod")
+    @Suppress("ComplexMethod", "LongMethod")
     fun handleNavigationAction(navigateAction: NavigateAction, activity: AppCompatActivity) {
         when (navigateAction) {
             LoginForResult -> ActivityLauncher.loginForDeeplink(activity)
