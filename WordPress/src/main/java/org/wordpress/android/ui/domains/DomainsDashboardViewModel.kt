@@ -7,6 +7,7 @@ import kotlinx.coroutines.async
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_GET_PLAN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_VIEWED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.fluxc.model.PlanModel
@@ -206,6 +207,7 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun onGetPlanClick() {
+        analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_GET_PLAN_TAPPED, site)
         _onNavigation.value = Event(GetPlan(site))
     }
 

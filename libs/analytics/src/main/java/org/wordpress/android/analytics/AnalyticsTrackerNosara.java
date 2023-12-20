@@ -1929,6 +1929,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domains_dashboard_viewed";
             case DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED:
                 return "domains_dashboard_get_domain_tapped";
+            case DOMAINS_DASHBOARD_GET_PLAN_TAPPED:
+                return "domains_dashboard_get_plan_tapped";
             case DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED:
                 return "domains_dashboard_add_domain_tapped";
             case DOMAINS_SEARCH_SELECT_DOMAIN_TAPPED:
