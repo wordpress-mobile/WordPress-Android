@@ -8,17 +8,17 @@
     <!-- Login Prologue Revamped  -->
     <color name="bg_jetpack_login_splash">@color/wordpress_blue_100</color>
 
-    <color name="bg_jetpack_login_splash_primary_button">@color/jetpack_green_0</color>
-    <color name="text_color_jetpack_login_splash_primary_button">@color/wordpress_blue_90</color>
+    <color name="bg_jetpack_login_splash_primary_button">#3858E9</color>
+    <color name="text_color_jetpack_login_splash_primary_button">@color/white</color>
     <color name="text_color_jetpack_login_splash_secondary_button">@color/white</color>
 
-    <color name="bg_jetpack_login_splash_bottom_panel">@color/wordpress_blue_80</color>
+    <color name="bg_jetpack_login_splash_bottom_panel">#CC050A21</color>
     <color name="border_top_jetpack_login_splash_bottom_panel">#08FFFFFF</color>
 
-    <color name="bg_jetpack_login_splash_top_gradient_1">@color/wordpress_blue_100</color>
-    <color name="bg_jetpack_login_splash_top_gradient_2">@color/wordpress_blue_80</color>
-    <color name="bg_jetpack_login_splash_top_gradient_3">@color/wordpress_blue_80</color>
-    <color name="bg_jetpack_login_splash_top_gradient_4">#00001C09</color>
+    <color name="bg_jetpack_login_splash_top_gradient_1">#050A21</color>
+    <color name="bg_jetpack_login_splash_top_gradient_2">#E6050A21</color>
+    <color name="bg_jetpack_login_splash_top_gradient_3">#E6050A21</color>
+    <color name="bg_jetpack_login_splash_top_gradient_4">#00050A21</color>
 
     <color name="text_color_jetpack_login_label_primary">@color/jetpack_green_20</color>
     <color name="text_color_jetpack_login_label_secondary">#3858E9</color>
