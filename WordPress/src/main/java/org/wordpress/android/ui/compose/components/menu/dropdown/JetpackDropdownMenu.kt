@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -30,12 +31,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import me.saket.cascade.CascadeColumnScope
 import me.saket.cascade.CascadeDropdownMenu
@@ -60,10 +64,17 @@ fun JetpackDropdownMenu(
                 isMenuVisible = !isMenuVisible
             }
         )
+        val cascadeMenuWidth = 200.dp
         CascadeDropdownMenu(
-            modifier = Modifier.background(MenuColors.itemBackgroundColor()),
+            modifier = Modifier
+                .background(MenuColors.itemBackgroundColor())
+                .width(cascadeMenuWidth),
             expanded = isMenuVisible,
             onDismissRequest = { isMenuVisible = false },
+            offset = if (LocalLayoutDirection.current == LayoutDirection.Rtl) DpOffset(
+                cascadeMenuWidth,
+                0.dp
+            ) else DpOffset.Zero,
         ) {
             val onMenuItemSingleClick: (MenuElementData.Item.Single) -> Unit = { clickedItem ->
                 isMenuVisible = false
