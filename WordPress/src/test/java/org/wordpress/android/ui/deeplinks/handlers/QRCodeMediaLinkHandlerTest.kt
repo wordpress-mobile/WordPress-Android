@@ -83,7 +83,7 @@ class QRCodeMediaLinkHandlerTest {
     }
 
     @Test
-    fun `given recognized siteId, when deep linked, then opens media view`() {
+    fun `given recognized siteId, when deep linked, then opens media launcher view`() {
         val siteId = "227148183"
         val data = "post_id:6,site_id:227148183"
         val mediaUri = buildUri(host = "apps.wordpress.com",
@@ -95,6 +95,6 @@ class QRCodeMediaLinkHandlerTest {
 
         val navigateAction = qrCodeMediaLinkHandler.buildNavigateAction(mediaUri)
 
-        assertThat(navigateAction).isEqualTo(NavigateAction.OpenMediaForSite(site))
+        assertThat(navigateAction).isEqualTo(NavigateAction.OpenMediaPickerForSite(site))
     }
 }

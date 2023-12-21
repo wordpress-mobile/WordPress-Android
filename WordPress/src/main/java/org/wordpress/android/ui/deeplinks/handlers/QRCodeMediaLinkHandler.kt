@@ -25,7 +25,7 @@ class QRCodeMediaLinkHandler @Inject constructor(
                 NavigateAction.OpenMySite
             }
             else -> {
-                NavigateAction.OpenMediaForSite(siteModel)
+                NavigateAction.OpenMediaPickerForSite(siteModel)
             }
         }
     }
@@ -48,6 +48,6 @@ class QRCodeMediaLinkHandler @Inject constructor(
         private const val GET_PATH = "get"
         private const val HOST_APPS_WORDPRESS_COM = "apps.wordpress.com"
         private const val CAMPAIGN = "campaign"
-        private const val CAMPAIGN_TYPE = "qr-code-media"
+        const val CAMPAIGN_TYPE = "qr-code-media"
     }
 }
