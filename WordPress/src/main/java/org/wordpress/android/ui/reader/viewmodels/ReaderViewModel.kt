@@ -128,7 +128,6 @@ class ReaderViewModel @Inject constructor(
                 _uiState.value = ContentUiState(
                     tagList.map { TabUiState(label = UiStringText(it.label)) },
                     tagList,
-                    shouldUpdateViewPager = currentContentUiState?.readerTagList?.equals(tagList) == false,
                     searchMenuItemUiState = MenuItemUiState(isVisible = isSearchSupported()),
                     settingsMenuItemUiState = MenuItemUiState(
                         isVisible = isSettingsSupported(),
@@ -346,7 +345,6 @@ class ReaderViewModel @Inject constructor(
                     isVisible = isSettingsSupported(),
                     showQuickStartFocusPoint = showQuickStartFocusPoint
                 ),
-                shouldUpdateViewPager = false
             )
         }
     }
@@ -463,7 +461,6 @@ class ReaderViewModel @Inject constructor(
         data class ContentUiState(
             val tabUiStates: List<TabUiState>,
             val readerTagList: ReaderTagList,
-            val shouldUpdateViewPager: Boolean,
             override val searchMenuItemUiState: MenuItemUiState,
             override val settingsMenuItemUiState: MenuItemUiState,
         ) : ReaderUiState(

@@ -86,6 +86,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
+            // TODO move code to selected menu item
             viewModel.uiState.value?.let {
                 if (it is ContentUiState) {
                     val selectedTag = it.readerTagList[position]
@@ -100,7 +101,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
             initTopAppBar()
             initToolbar()
-            initViewPager()
             initViewModel(savedInstanceState)
         }
     }
@@ -176,10 +176,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
     }
 
-    private fun ReaderFragmentLayoutBinding.initViewPager() {
-        viewPager.registerOnPageChangeCallback(viewPagerCallback)
-    }
-
     private fun ReaderFragmentLayoutBinding.initViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this@ReaderFragment, viewModelFactory).get(ReaderViewModel::class.java)
         startObserving(savedInstanceState)
@@ -194,8 +190,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
             ReaderUpdateServiceStarter.startService(context, EnumSet.of(TAGS, FOLLOWED_BLOGS))
         }
 
-        viewModel.selectTab.observeEvent(viewLifecycleOwner) { navTarget ->
-            viewPager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
+        viewModel.selectTab.observeEvent(viewLifecycleOwner) { _ ->
+            // TODO change menu item and update fragment container
+//            viewPager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
         }
 
         viewModel.showSearch.observeEvent(viewLifecycleOwner) {
@@ -289,9 +286,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     }
 
     private fun ReaderFragmentLayoutBinding.updateTabs(uiState: ContentUiState) {
-        if (viewPager.adapter == null || uiState.shouldUpdateViewPager) {
-            updateViewPagerAdapterAndMediator(uiState)
-        }
         uiState.tabUiStates.forEachIndexed { index, tabUiState ->
             val tab = tabLayout.getTabAt(index) as TabLayout.Tab
             updateTab(tab, tabUiState)
@@ -304,11 +298,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
             val title = findViewById<TextView>(R.id.tab_label)
             title.text = uiHelpers.getTextOfUiString(requireContext(), tabUiState.label)
         }
-    }
-
-    private fun ReaderFragmentLayoutBinding.updateViewPagerAdapterAndMediator(uiState: ContentUiState) {
-        viewPager.adapter = TabsAdapter(this@ReaderFragment, uiState.readerTagList)
-        TabLayoutMediator(tabLayout, viewPager, ReaderTabConfigurationStrategy(uiState)).attach()
     }
 
     private inner class ReaderTabConfigurationStrategy(
