@@ -182,7 +182,8 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
         assertEquals(expectedCards[0].image, dynamicCards[0].image)
         assertEquals(expectedCards[0].rows.size, 1)
         assertEquals(expectedCards[0].rows, dynamicCards[0].rows)
-        assertThat(dynamicCards[0].action).isInstanceOf(MySiteCardAndItem.Card.Dynamic.ActionSource.CardOrButton::class.java)
+        assertThat(dynamicCards[0].action)
+            .isInstanceOf(MySiteCardAndItem.Card.Dynamic.ActionSource.CardOrButton::class.java)
         val expected = expectedCards[0].action as? MySiteCardAndItem.Card.Dynamic.ActionSource.CardOrButton
         val actual = dynamicCards[0].action as? MySiteCardAndItem.Card.Dynamic.ActionSource.CardOrButton
         assertEquals(expected?.title, actual?.title)
