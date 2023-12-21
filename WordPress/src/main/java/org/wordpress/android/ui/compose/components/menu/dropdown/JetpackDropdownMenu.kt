@@ -169,8 +169,13 @@ private fun CascadeColumnScope.SubMenuHeader(
             LocalTextStyle provides MaterialTheme.typography.bodyLarge
         ) {
             if (this@SubMenuHeader.hasParentMenu) {
+                val backIconResource = if(LocalLayoutDirection.current == LayoutDirection.Rtl) {
+                    R.drawable.ic_arrow_right_white_24dp
+                } else {
+                    R.drawable.ic_arrow_left_white_24dp
+                }
                 Image(
-                    painter = painterResource(R.drawable.ic_arrow_left_white_24dp),
+                    painter = painterResource(backIconResource),
                     contentDescription = null,
                     colorFilter = ColorFilter.tint(MenuColors.itemContentColor()),
                 )
