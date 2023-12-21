@@ -157,7 +157,7 @@ private fun Filter(
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ReaderScreenPreview() {
+fun ReaderTopAppBarPreview() {
     val menuItems = mutableListOf<MenuElementData>(
         MenuElementData.Item.Single(
             id = "discover",
@@ -179,6 +179,20 @@ fun ReaderScreenPreview() {
             text = UiString.UiStringRes(R.string.reader_dropdown_menu_liked),
             leadingIcon = R.drawable.ic_reader_liked_24dp,
         ),
+        MenuElementData.Item.SubMenu(
+            id = "subMenu1",
+            text = UiString.UiStringText("Funny Blogs"),
+            children = listOf(
+                MenuElementData.Item.Single(
+                    id = "funnyBlog1",
+                    text = UiString.UiStringText("Funny Blog 1"),
+                ),
+                MenuElementData.Item.Single(
+                    id = "funnyBlog2",
+                    text = UiString.UiStringText("Funny Blog 2"),
+                ),
+            ),
+        )
     )
 
     var topBarUiState by remember {
