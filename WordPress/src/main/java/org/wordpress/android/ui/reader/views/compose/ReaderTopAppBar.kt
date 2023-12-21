@@ -39,6 +39,7 @@ import org.wordpress.android.ui.compose.components.menu.dropdown.JetpackDropdown
 import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.compose.utils.horizontalFadingEdges
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterChipGroup
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
@@ -87,10 +88,12 @@ fun ReaderTopAppBar(
                 .fillMaxHeight()
                 .weight(1f)
         ) {
+            val scrollState = rememberScrollState()
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .horizontalScroll(rememberScrollState()),
+                    .horizontalScroll(scrollState)
+                    .horizontalFadingEdges(scrollState),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 JetpackDropdownMenu(
