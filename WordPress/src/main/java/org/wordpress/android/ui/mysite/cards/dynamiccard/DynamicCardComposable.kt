@@ -22,7 +22,7 @@ fun DynamicDashboardCard(
     UnelevatedCard(
         modifier = modifier
             .run {
-                if (card.action is ActionSource.Card) clickable { card.action.onClick.click() } else this
+                if (card.action != null) clickable { card.action.onClick.click() } else this
             },
         content = {
             Column(
