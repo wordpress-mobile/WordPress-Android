@@ -40,9 +40,7 @@ fun SecondaryButton(
         Text(
             text = stringResource(R.string.enter_your_site_address),
             style = TextStyle(fontWeight = FontWeight.Normal, fontSize = 16.sp),
-            modifier = Modifier.padding(
-                vertical = dimensionResource(R.dimen.login_prologue_revamped_buttons_text_padding)
-            ),
+            modifier = Modifier.padding(vertical = 8.dp),
         )
     }
 }
