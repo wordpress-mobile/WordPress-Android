@@ -246,7 +246,7 @@ class ReaderViewModelTest : BaseUnitTest() {
 
         // Act
         triggerReaderTabContentDisplay()
-        viewModel.selectedTabChange(readerTag)
+        viewModel.selectedMenuItemChange(readerTag)
 
         // Assert
         assertThat(tabNavigation!!.position).isEqualTo(2)

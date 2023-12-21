@@ -84,9 +84,6 @@ class ReaderViewModel @Inject constructor(
     private val _updateTags = MutableLiveData<Event<Unit>>()
     val updateTags: LiveData<Event<Unit>> = _updateTags
 
-    private val _selectTab = MutableLiveData<Event<TabNavigation>>()
-    val selectTab: LiveData<Event<TabNavigation>> = _selectTab
-
     private val _showSearch = MutableLiveData<Event<Unit>>()
     val showSearch: LiveData<Event<Unit>> = _showSearch
 
@@ -152,7 +149,7 @@ class ReaderViewModel @Inject constructor(
             val selectTab = { readerTag: ReaderTag ->
                 val index = tagList.indexOf(readerTag)
                 if (index != -1) {
-                    _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
+                    selectedMenuItemChange(readerTag)
                 }
             }
             appPrefsWrapper.getReaderTag()?.let {
@@ -190,17 +187,21 @@ class ReaderViewModel @Inject constructor(
         return now - lastUpdated > UPDATE_TAGS_THRESHOLD
     }
 
-    fun selectedTabChange(tag: ReaderTag) {
-        uiState.value?.let {
-            val currentUiState = it as ContentUiState
-            val position = currentUiState.readerTagList.indexOfTagName(tag.tagSlug)
-            _selectTab.postValue(Event(TabNavigation(position, smoothAnimation = true)))
+    fun selectedMenuItemChange(tag: ReaderTag) {
+        // Get ContentStream from the ReaderTag instance
+        contentStreamFromReaderTag(tag)?.let { newSelectedContentStream ->
+            _topBarUiState.value?.menuItems?.filterIsInstance<MenuElementData.Item.Single>()?.find {
+                // Find all Single items from the current menu
+                it.id == newSelectedContentStream.menuItemId
+            }?.let { newSelectedMenuItem ->
+                _selectedMenuItem.value = newSelectedMenuItem
+            }
         }
     }
 
     fun bookmarkTabRequested() {
         (_uiState.value as? ContentUiState)?.readerTagList?.find { it.isBookmarked }?.let {
-            selectedTabChange(it)
+            selectedMenuItemChange(it)
         }
     }
 
@@ -291,7 +292,7 @@ class ReaderViewModel @Inject constructor(
         launch {
             if (!initialized) delay(QUICK_START_DISCOVER_TAB_STEP_DELAY)
             (_uiState.value as? ContentUiState)?.readerTagList?.find { it.isDiscover }?.let {
-                selectedTabChange(it)
+                selectedMenuItemChange(it)
             }
             startQuickStartFollowSiteTaskDiscoverTabStep()
         }
@@ -352,6 +353,14 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    private fun contentStreamFromReaderTag(readerTag: ReaderTag): ContentStream? {
+        return (uiState.value as? ContentUiState)
+            ?.readerTagList
+            ?.indexOfTagName(readerTag.tagSlug)?.let { readerTagIndex ->
+                ContentStream.entries.find { readerTagIndex == it.position }
+            }
+    }
+
     @Suppress("KotlinConstantConditions")
     private fun initializeTopBarUiState() {
         // TODO the actual logic to build the TopBar UI State needs to be created
@@ -365,22 +374,22 @@ class ReaderViewModel @Inject constructor(
 
         val menuItems = mutableListOf<MenuElementData>(
             MenuElementData.Item.Single(
-                id = ITEM_ID_DISCOVER,
+                id = ContentStream.DISCOVER.menuItemId,
                 text = UiString.UiStringRes(R.string.reader_dropdown_menu_discover),
                 leadingIcon = R.drawable.ic_reader_discover_24dp,
             ),
             MenuElementData.Item.Single(
-                id = ITEM_ID_SUBSCRIPTIONS,
+                id = ContentStream.SUBSCRIPTIONS.menuItemId,
                 text = UiString.UiStringRes(R.string.reader_dropdown_menu_subscriptions),
                 leadingIcon = R.drawable.ic_reader_subscriptions_24dp,
             ),
             MenuElementData.Item.Single(
-                id = ITEM_ID_SAVED,
+                id = ContentStream.SAVED.menuItemId,
                 text = UiString.UiStringRes(R.string.reader_dropdown_menu_saved),
                 leadingIcon = R.drawable.ic_reader_saved_24dp,
             ),
             MenuElementData.Item.Single(
-                id = ITEM_ID_LIKED,
+                id = ContentStream.LIKED.menuItemId,
                 text = UiString.UiStringRes(R.string.reader_dropdown_menu_liked),
                 leadingIcon = R.drawable.ic_reader_liked_24dp,
             ),
@@ -388,7 +397,7 @@ class ReaderViewModel @Inject constructor(
             if (readerLists.isNotEmpty()) {
                 add(MenuElementData.Divider)
                 MenuElementData.Item.SubMenu(
-                    id = ITEM_ID_LISTS,
+                    id = ContentStream.CUSTOM_LIST.menuItemId,
                     text = UiString.UiStringRes(R.string.reader_dropdown_menu_lists),
                     children = readerLists,
                 )
@@ -397,7 +406,7 @@ class ReaderViewModel @Inject constructor(
 
         val defaultSelectedMenuItem = menuItems
             .filterIsInstance<MenuElementData.Item.Single>()
-            .find { it.id == ITEM_ID_DISCOVER }!!
+            .find { it.id == ContentStream.DISCOVER.menuItemId }!!
 
         _selectedMenuItem.value = defaultSelectedMenuItem
 
@@ -419,7 +428,7 @@ class ReaderViewModel @Inject constructor(
         val filterUiState = TopBarUiState.FilterUiState(
             followedBlogsCount = 23,
             followedTagsCount = 41,
-        ).takeIf { item.id == ITEM_ID_SUBSCRIPTIONS }
+        ).takeIf { item.id == ContentStream.SUBSCRIPTIONS.menuItemId }
 
         _topBarUiState.value = _topBarUiState.value
             ?.copy(selectedItem = item, filterUiState = filterUiState)
@@ -500,12 +509,15 @@ class ReaderViewModel @Inject constructor(
     companion object {
         private const val QUICK_START_DISCOVER_TAB_STEP_DELAY = 2000L
         private const val QUICK_START_PROMPT_DURATION = 5000
+    }
 
-        internal const val ITEM_ID_DISCOVER = "discover"
-        internal const val ITEM_ID_SUBSCRIPTIONS = "subscriptions"
-        internal const val ITEM_ID_SAVED = "saved"
-        internal const val ITEM_ID_LIKED = "liked"
-        internal const val ITEM_ID_LISTS = "lists"
+    enum class ContentStream(val menuItemId: String, val position: Int) {
+        // Subscriptions was previously called Followed
+        SUBSCRIPTIONS("subscriptions", 0),
+        DISCOVER("discover", 1),
+        LIKED("liked", 2),
+        SAVED("saved", 3),
+        CUSTOM_LIST("customList", 4);
     }
 }
 

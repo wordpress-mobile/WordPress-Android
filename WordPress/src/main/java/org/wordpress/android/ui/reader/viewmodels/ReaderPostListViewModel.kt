@@ -295,7 +295,7 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     fun onEmptyStateButtonTapped(tag: ReaderTag) {
-        readerViewModel?.selectedTabChange(tag)
+        readerViewModel?.selectedMenuItemChange(tag)
     }
 
     // TODO this is related to tracking time spent in reader -

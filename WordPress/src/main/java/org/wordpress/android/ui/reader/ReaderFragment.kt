@@ -35,6 +35,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateT
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.TAGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ContentStream
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.views.compose.ReaderTopAppBar
 import org.wordpress.android.ui.utils.UiHelpers
@@ -175,11 +176,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
             ReaderUpdateServiceStarter.startService(context, EnumSet.of(TAGS, FOLLOWED_BLOGS))
         }
 
-        viewModel.selectTab.observeEvent(viewLifecycleOwner) { _ ->
-            // TODO change menu item and update fragment container
-//            viewPager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
-        }
-
         viewModel.showSearch.observeEvent(viewLifecycleOwner) {
             ReaderActivityLauncher.showReaderSearch(context)
         }
@@ -246,25 +242,25 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         viewModel.selectedMenuItem.observe(viewLifecycleOwner) { selectedMenuItem ->
             childFragmentManager.beginTransaction().apply {
                 val fragment = when (selectedMenuItem.id) {
-                    ReaderViewModel.ITEM_ID_SUBSCRIPTIONS -> ReaderPostListFragment.newInstanceForTag(
+                    ContentStream.SUBSCRIPTIONS.menuItemId -> ReaderPostListFragment.newInstanceForTag(
                         uiState.readerTagList[0],
                         ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
                         true,
                     )
 
-                    ReaderViewModel.ITEM_ID_DISCOVER -> ReaderPostListFragment.newInstanceForTag(
+                    ContentStream.DISCOVER.menuItemId -> ReaderPostListFragment.newInstanceForTag(
                         uiState.readerTagList[1],
                         ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
                         true,
                     )
 
-                    ReaderViewModel.ITEM_ID_LIKED -> ReaderPostListFragment.newInstanceForTag(
+                    ContentStream.LIKED.menuItemId -> ReaderPostListFragment.newInstanceForTag(
                         uiState.readerTagList[2],
                         ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
                         true,
                     )
 
-                    ReaderViewModel.ITEM_ID_SAVED -> ReaderPostListFragment.newInstanceForTag(
+                    ContentStream.SAVED.menuItemId -> ReaderPostListFragment.newInstanceForTag(
                         uiState.readerTagList[3],
                         ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
                         true,
