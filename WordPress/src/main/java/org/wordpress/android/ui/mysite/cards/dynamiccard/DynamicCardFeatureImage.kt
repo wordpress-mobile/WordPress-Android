@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.ui.compose.theme.AppColor
+
 
 @Composable
 fun DynamicCardFeatureImage(imageUrl: String, modifier: Modifier = Modifier) {
@@ -24,6 +27,10 @@ fun DynamicCardFeatureImage(imageUrl: String, modifier: Modifier = Modifier) {
             .padding(start = 16.dp, end = 16.dp)
             .clip(RoundedCornerShape(6.dp))
             .fillMaxWidth()
-            .aspectRatio(2f)
+            .previewAspectRatio(2f)
     )
+}
+
+private fun Modifier.previewAspectRatio(ratio: Float): Modifier = composed {
+    if (LocalInspectionMode.current) aspectRatio(ratio) else this
 }
