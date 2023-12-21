@@ -400,16 +400,17 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
             sealed class ActionSource {
                 abstract val url: String
-                abstract val onClick: ListItemInteraction
+                abstract val onCardClick: ListItemInteraction
 
                 data class Card(
                     override val url: String,
-                    override val onClick: ListItemInteraction
+                    override val onCardClick: ListItemInteraction
                 ) : ActionSource()
 
-                data class Button(
+                data class CardOrButton(
                     override val url: String,
-                    override val onClick: ListItemInteraction,
+                    override val onCardClick: ListItemInteraction,
+                    val onButtonClick: ListItemInteraction,
                     val title: String
                 ) : ActionSource()
             }
