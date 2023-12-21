@@ -143,7 +143,6 @@ private fun LoginScreenRevamped(
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL)
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = UI_MODE_NIGHT_YES)
 @Preview(showBackground = true, device = Devices.TABLET)
-@Preview(showBackground = true, device = Devices.TABLET)
 @Composable
 fun PreviewLoginScreenRevamped() {
     AppTheme {
