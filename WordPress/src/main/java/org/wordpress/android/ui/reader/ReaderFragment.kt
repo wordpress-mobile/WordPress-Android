@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -30,6 +29,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.quickstart.QuickStartEvent
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.FOLLOWED_BLOGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.TAGS
@@ -226,10 +226,11 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         viewModel.start()
     }
 
-    private fun ReaderFragmentLayoutBinding.updateUiState(uiState: ReaderViewModel.ReaderUiState) {
+    private fun updateUiState(uiState: ReaderViewModel.ReaderUiState) {
         when (uiState) {
             is ContentUiState -> {
                 binding?.readerTopBarComposeView?.isVisible = true
+                initContentContainer(uiState)
             }
         }
         // TODO As part of Reader IA changes this view is going to be replaced
@@ -238,6 +239,46 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         settingsMenuItem?.isVisible = uiState.settingsMenuItemUiState.isVisible
         settingsMenuItemFocusPoint?.isVisible =
             viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
+    }
+
+    private fun initContentContainer(uiState: ContentUiState) {
+        uiState.readerTagList
+        viewModel.selectedMenuItem.observe(viewLifecycleOwner) { selectedMenuItem ->
+            childFragmentManager.beginTransaction().apply {
+                val fragment = when (selectedMenuItem.id) {
+                    ReaderViewModel.ITEM_ID_SUBSCRIPTIONS -> ReaderPostListFragment.newInstanceForTag(
+                        uiState.readerTagList[0],
+                        ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
+                        true,
+                    )
+
+                    ReaderViewModel.ITEM_ID_DISCOVER -> ReaderPostListFragment.newInstanceForTag(
+                        uiState.readerTagList[1],
+                        ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
+                        true,
+                    )
+
+                    ReaderViewModel.ITEM_ID_LIKED -> ReaderPostListFragment.newInstanceForTag(
+                        uiState.readerTagList[2],
+                        ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
+                        true,
+                    )
+
+                    ReaderViewModel.ITEM_ID_SAVED -> ReaderPostListFragment.newInstanceForTag(
+                        uiState.readerTagList[3],
+                        ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
+                        true,
+                    )
+
+                    else -> {
+                        // TODO Reader custom lists
+                        ReaderDiscoverFragment()
+                    }
+                }
+                add(R.id.container, fragment)
+                commit()
+            }
+        }
     }
 
     private fun observeJetpackOverlayEvent(savedInstanceState: Bundle?) {

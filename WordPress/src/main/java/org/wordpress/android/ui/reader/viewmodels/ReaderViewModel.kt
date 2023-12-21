@@ -78,6 +78,9 @@ class ReaderViewModel @Inject constructor(
     private val _topBarUiState = MutableLiveData<TopBarUiState>()
     val topBarUiState: LiveData<TopBarUiState> = _topBarUiState.distinct()
 
+    private val _selectedMenuItem = MutableLiveData<MenuElementData.Item.Single>()
+    val selectedMenuItem: LiveData<MenuElementData.Item.Single> = _selectedMenuItem
+
     private val _updateTags = MutableLiveData<Event<Unit>>()
     val updateTags: LiveData<Event<Unit>> = _updateTags
 
@@ -126,8 +129,8 @@ class ReaderViewModel @Inject constructor(
             val tagList = loadReaderTabsUseCase.loadTabs()
             if (tagList.isNotEmpty()) {
                 _uiState.value = ContentUiState(
-                    tagList.map { TabUiState(label = UiStringText(it.label)) },
-                    tagList,
+                    tabUiStates = tagList.map { TabUiState(label = UiStringText(it.label)) },
+                    readerTagList = tagList,
                     searchMenuItemUiState = MenuItemUiState(isVisible = isSearchSupported()),
                     settingsMenuItemUiState = MenuItemUiState(
                         isVisible = isSettingsSupported(),
@@ -392,18 +395,25 @@ class ReaderViewModel @Inject constructor(
             }
         }
 
-        val selectedItem = menuItems
+        val defaultSelectedMenuItem = menuItems
             .filterIsInstance<MenuElementData.Item.Single>()
             .find { it.id == ITEM_ID_DISCOVER }!!
 
+        _selectedMenuItem.value = defaultSelectedMenuItem
+
         _topBarUiState.value = TopBarUiState(
             menuItems = menuItems,
-            selectedItem = selectedItem,
+            selectedItem = defaultSelectedMenuItem,
             filterUiState = null,
         )
     }
 
     fun onTopBarMenuItemClick(item: MenuElementData.Item.Single) {
+        if (item.id != _selectedMenuItem.value?.id) {
+            _selectedMenuItem.value = item
+            loadTabs()
+        }
+
         // TODO actual logic needs to be created
         //  The current logic is for initial implementation and UI review only.
         val filterUiState = TopBarUiState.FilterUiState(
@@ -491,11 +501,11 @@ class ReaderViewModel @Inject constructor(
         private const val QUICK_START_DISCOVER_TAB_STEP_DELAY = 2000L
         private const val QUICK_START_PROMPT_DURATION = 5000
 
-        private const val ITEM_ID_DISCOVER = "discover"
-        private const val ITEM_ID_SUBSCRIPTIONS = "subscriptions"
-        private const val ITEM_ID_SAVED = "saved"
-        private const val ITEM_ID_LIKED = "liked"
-        private const val ITEM_ID_LISTS = "lists"
+        internal const val ITEM_ID_DISCOVER = "discover"
+        internal const val ITEM_ID_SUBSCRIPTIONS = "subscriptions"
+        internal const val ITEM_ID_SAVED = "saved"
+        internal const val ITEM_ID_LIKED = "liked"
+        internal const val ITEM_ID_LISTS = "lists"
     }
 }
 
