@@ -91,7 +91,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         requireActivity().addMenuProvider(this, viewLifecycleOwner)
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
             initTopAppBar()
-            initToolbar()
             initViewModel(savedInstanceState)
         }
     }
@@ -160,11 +159,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
                 }
             }
         }
-    }
-
-    private fun ReaderFragmentLayoutBinding.initToolbar() {
-        toolbar.title = getString(R.string.reader_screen_title)
-        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
     }
 
     private fun ReaderFragmentLayoutBinding.initViewModel(savedInstanceState: Bundle?) {
