@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.isActive
 import org.wordpress.android.R
@@ -42,6 +42,7 @@ val LocalPosition = compositionLocalOf { 0f }
 @AndroidEntryPoint
 class LoginPrologueRevampedFragment : Fragment() {
     private lateinit var loginPrologueListener: LoginPrologueListener
+    private val viewModel by viewModels<LoginPrologueRevampedViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,10 +51,16 @@ class LoginPrologueRevampedFragment : Fragment() {
     ) = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
-                PositionProvider {
+                PositionProvider(viewModel) {
                     LoginScreenRevamped(
-                        onWpComLoginClicked = loginPrologueListener::showEmailLoginScreen,
-                        onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
+                        onWpComLoginClicked = {
+                            viewModel.onWpComLoginClicked()
+                            loginPrologueListener.showEmailLoginScreen()
+                        },
+                        onSiteAddressLoginClicked = {
+                            viewModel.onSiteAddressLoginClicked()
+                            loginPrologueListener.loginViaSiteAddress()
+                        },
                     )
                 }
             }
@@ -88,7 +95,7 @@ class LoginPrologueRevampedFragment : Fragment() {
  */
 @Composable
 private fun PositionProvider(
-    viewModel: LoginPrologueRevampedViewModel = viewModel(),
+    viewModel: LoginPrologueRevampedViewModel,
     content: @Composable () -> Unit
 ) {
     val position = viewModel.positionData.observeAsState(0f)
