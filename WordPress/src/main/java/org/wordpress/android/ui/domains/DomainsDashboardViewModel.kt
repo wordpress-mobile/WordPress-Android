@@ -135,7 +135,7 @@ class DomainsDashboardViewModel @Inject constructor(
         val listItems = mutableListOf<DomainsDashboardItem>()
         if (hasDomainCredit) {
             listItems += PurchaseDomain(
-                null,
+                R.drawable.browser_address_bar,
                 UiStringRes(R.string.domains_paid_plan_claim_your_domain_title),
                 UiStringRes(R.string.domains_paid_plan_claim_your_domain_caption),
                 ListItemInteraction.create(this::onClaimDomainClick)
@@ -153,7 +153,7 @@ class DomainsDashboardViewModel @Inject constructor(
         } else {
             listItems += if (hasPaidPlan) {
                 PurchaseDomain(
-                    R.drawable.img_illustration_domains_card_header,
+                    R.drawable.browser_address_bar,
                     UiStringRes(R.string.domains_paid_plan_add_your_domain_title),
                     UiStringRes(R.string.domains_paid_plan_add_your_domain_caption),
                     ListItemInteraction.create(this::onGetDomainClick)
