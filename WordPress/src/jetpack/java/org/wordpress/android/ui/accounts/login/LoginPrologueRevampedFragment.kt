@@ -120,7 +120,7 @@ private fun LoginScreenRevamped(
         TopLinearGradient()
         WordpressJetpackLogo(
             modifier = Modifier
-                .padding(top = 60.dp)
+                .padding(top = 135.dp)
                 .height(60.dp)
                 .align(Alignment.TopCenter)
         )
