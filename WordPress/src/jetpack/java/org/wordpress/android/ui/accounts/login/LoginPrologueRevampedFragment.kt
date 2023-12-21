@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -121,7 +122,7 @@ private fun LoginScreenRevamped(
         WordpressJetpackLogo(
             modifier = Modifier
                 .padding(top = 135.dp)
-                .height(60.dp)
+                .width(132.dp)
                 .align(Alignment.TopCenter)
         )
         ColumnWithFrostedGlassBackground(
