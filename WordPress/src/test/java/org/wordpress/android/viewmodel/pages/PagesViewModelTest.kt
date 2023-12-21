@@ -46,10 +46,10 @@ import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PagesAuthorFilterUIState
 import org.wordpress.android.ui.pages.PagesListAction.COPY
-import org.wordpress.android.ui.pages.PagesListAction.COPY_LINK
 import org.wordpress.android.ui.pages.PagesListAction.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PagesListAction.SET_AS_HOMEPAGE
 import org.wordpress.android.ui.pages.PagesListAction.SET_AS_POSTS_PAGE
+import org.wordpress.android.ui.pages.PagesListAction.SHARE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
@@ -310,7 +310,7 @@ class PagesViewModelTest : BaseUnitTest() {
         whenever(pageStore.getPagesFromDb(anyOrNull())).thenReturn(listOf(pageModel))
         viewModel.start(site)
 
-        val returnVal = viewModel.onMenuAction(COPY_LINK, page)
+        val returnVal = viewModel.onMenuAction(SHARE, page)
         assertThat(returnVal).isEqualTo(true)
     }
 

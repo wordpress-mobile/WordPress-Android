@@ -56,7 +56,7 @@ enum class PagesListAction(
         actionGroup = ActionGroup.TAKE_AN_ACTION,
         positionInGroup = 7,
     ),
-    COPY_LINK(
+    SHARE(
         R.string.button_share,
         R.drawable.gb_ic_share,
         actionGroup = ActionGroup.SHARE_AND_PROMOTE,
