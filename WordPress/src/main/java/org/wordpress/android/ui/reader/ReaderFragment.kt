@@ -239,9 +239,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
 
     private fun initContentContainer(uiState: ContentUiState) {
         uiState.readerTagList
-        viewModel.selectedMenuItem.observe(viewLifecycleOwner) { selectedMenuItem ->
+        viewModel.topBarUiState.observe(viewLifecycleOwner) { topBarUiState ->
             childFragmentManager.beginTransaction().apply {
-                val fragment = when (selectedMenuItem.id) {
+                val fragment = when (topBarUiState.selectedItem.id) {
                     ContentStream.SUBSCRIPTIONS.menuItemId -> ReaderPostListFragment.newInstanceForTag(
                         uiState.readerTagList[0],
                         ReaderTypes.ReaderPostListType.TAG_FOLLOWED,

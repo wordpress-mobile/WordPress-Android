@@ -78,9 +78,6 @@ class ReaderViewModel @Inject constructor(
     private val _topBarUiState = MutableLiveData<TopBarUiState>()
     val topBarUiState: LiveData<TopBarUiState> = _topBarUiState.distinct()
 
-    private val _selectedMenuItem = MutableLiveData<MenuElementData.Item.Single>()
-    val selectedMenuItem: LiveData<MenuElementData.Item.Single> = _selectedMenuItem
-
     private val _updateTags = MutableLiveData<Event<Unit>>()
     val updateTags: LiveData<Event<Unit>> = _updateTags
 
@@ -194,7 +191,7 @@ class ReaderViewModel @Inject constructor(
                 // Find all Single items from the current menu
                 it.id == newSelectedContentStream.menuItemId
             }?.let { newSelectedMenuItem ->
-                _selectedMenuItem.value = newSelectedMenuItem
+                updateSelectedMenuItem(newSelectedMenuItem)
             }
         }
     }
@@ -408,8 +405,6 @@ class ReaderViewModel @Inject constructor(
             .filterIsInstance<MenuElementData.Item.Single>()
             .find { it.id == ContentStream.DISCOVER.menuItemId }!!
 
-        _selectedMenuItem.value = defaultSelectedMenuItem
-
         _topBarUiState.value = TopBarUiState(
             menuItems = menuItems,
             selectedItem = defaultSelectedMenuItem,
@@ -417,9 +412,17 @@ class ReaderViewModel @Inject constructor(
         )
     }
 
+    private fun updateSelectedMenuItem(newSelectedMenuItem: MenuElementData.Item.Single) {
+        _topBarUiState.value?.let {
+            _topBarUiState.value = it.copy(
+                selectedItem = newSelectedMenuItem,
+            )
+        }
+    }
+
     fun onTopBarMenuItemClick(item: MenuElementData.Item.Single) {
-        if (item.id != _selectedMenuItem.value?.id) {
-            _selectedMenuItem.value = item
+        if (item.id != _topBarUiState.value?.selectedItem?.id) {
+            updateSelectedMenuItem(item)
             loadTabs()
         }
 
