@@ -22,13 +22,13 @@ fun DynamicDashboardCard(
     UnelevatedCard(
         modifier = modifier
             .run {
-                if (card.action != null) clickable { card.action.onClick.click() } else this
+                if (card.action != null) clickable { card.action.onCardClick.click() } else this
             },
         content = {
             Column(
                 Modifier.padding(bottom = 8.dp)
             ) {
-                val isCtaInvisible = card.action !is ActionSource.Button
+                val isCtaInvisible = card.action !is ActionSource.CardOrButton
                 DynamicCardHeader(
                     title = card.title,
                     onHideMenuClicked = { card.onHideMenuItemClick.click() }
@@ -47,8 +47,8 @@ fun DynamicDashboardCard(
                         modifier = Modifier.run { if (isCtaInvisible) padding(bottom = 8.dp) else this }
                     )
                 }
-                (card.action as? ActionSource.Button)?.title?.let { title ->
-                    DynamicCardCallToActionButton(text = title, onClicked = { card.action.onClick.click() })
+                (card.action as? ActionSource.CardOrButton)?.title?.let { title ->
+                    DynamicCardCallToActionButton(text = title, onClicked = { card.action.onButtonClick.click() })
                 }
             }
         }
@@ -65,9 +65,10 @@ fun DynamicDashboardCardPreview() {
                 id = "id",
                 title = "Card Title",
                 image = "https://picsum.photos/200/300",
-                action = ActionSource.Button(
+                action = ActionSource.CardOrButton(
                     title = "Call to Action", url = "",
-                    onClick = ListItemInteraction.create {},
+                    onCardClick = ListItemInteraction.create {},
+                    onButtonClick = ListItemInteraction.create {},
                 ),
                 rows = listOf(
                     MySiteCardAndItem.Card.Dynamic.Row(
@@ -96,10 +97,11 @@ fun DynamicDashboardCardWithFeatureAndDescriptionPreview() {
                 id = "id",
                 title = null,
                 image = "https://picsum.photos/200/300",
-                action = ActionSource.Button(
+                action = ActionSource.CardOrButton(
                     title = "See yours now",
                     url = "",
-                    onClick = ListItemInteraction.create {},
+                    onCardClick = ListItemInteraction.create {},
+                    onButtonClick = ListItemInteraction.create {},
                 ),
                 rows = listOf(
                     MySiteCardAndItem.Card.Dynamic.Row(
@@ -124,10 +126,11 @@ fun DynamicDashboardCardWithFeatureAndSubtitleAndDescriptionPreview() {
                 id = "id",
                 title = null,
                 image = "https://picsum.photos/200/300",
-                action = ActionSource.Button(
+                action = ActionSource.CardOrButton(
                     title = "Find out more",
                     url = "",
-                    onClick = ListItemInteraction.create {},
+                    onCardClick = ListItemInteraction.create {},
+                    onButtonClick = ListItemInteraction.create {},
                 ),
                 rows = listOf(
                     MySiteCardAndItem.Card.Dynamic.Row(
@@ -154,7 +157,7 @@ fun DynamicDashboardCardWithNoCta() {
                 image = "https://picsum.photos/200/300",
                 action = ActionSource.Card(
                     url = "",
-                    onClick = ListItemInteraction.create {},
+                    onCardClick = ListItemInteraction.create {},
                 ),
                 rows = listOf(
                     MySiteCardAndItem.Card.Dynamic.Row(
@@ -181,7 +184,7 @@ fun DynamicDashboardWithFeatureImageOnly() {
                 image = "https://picsum.photos/200/300",
                 action = ActionSource.Card(
                     url = "",
-                    onClick = ListItemInteraction.create {},
+                    onCardClick = ListItemInteraction.create {},
                 ),
                 rows = listOf(),
                 onHideMenuItemClick = ListItemInteraction.create {},
@@ -199,9 +202,10 @@ fun DynamicDashboardCardWithTitleAndCompleteRowsPreview() {
                 id = "id",
                 title = "What's New in Jetpack",
                 image = null,
-                action = ActionSource.Button(
+                action = ActionSource.CardOrButton(
                     title = "Find out more", url = "",
-                    onClick = ListItemInteraction.create {},
+                    onCardClick = ListItemInteraction.create {},
+                    onButtonClick = ListItemInteraction.create {},
                 ),
                 rows = listOf(
                     MySiteCardAndItem.Card.Dynamic.Row(

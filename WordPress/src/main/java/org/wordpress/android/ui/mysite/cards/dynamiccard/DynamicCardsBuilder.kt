@@ -60,17 +60,21 @@ class DynamicCardsBuilder @Inject constructor(
         params: DynamicCardsBuilderParams,
         card: DynamicCardModel
     ): Dynamic.ActionSource? = when {
-        isValidUrlOrDeeplink(card.url) && isValidActionTitle(card.action) -> Dynamic.ActionSource.Button(
+        isValidUrlOrDeeplink(card.url) && isValidActionTitle(card.action) -> Dynamic.ActionSource.CardOrButton(
             url = requireNotNull(card.url),
             title = requireNotNull(card.action),
-            onClick = ListItemInteraction.create(
+            onCardClick = ListItemInteraction.create(
+                data = DynamicCardsBuilderParams.ClickParams(id = card.id, actionUrl = requireNotNull(card.url)),
+                action = params.onCardClick
+            ),
+            onButtonClick = ListItemInteraction.create(
                 data = DynamicCardsBuilderParams.ClickParams(id = card.id, actionUrl = requireNotNull(card.url)),
                 action = params.onCtaClick
             )
         )
         isValidUrlOrDeeplink(card.url) -> Dynamic.ActionSource.Card(
             url = requireNotNull(card.url),
-            onClick = ListItemInteraction.create(
+            onCardClick = ListItemInteraction.create(
                 data = DynamicCardsBuilderParams.ClickParams(id = card.id, actionUrl = requireNotNull(card.url)),
                 action = params.onCardClick
             )
