@@ -39,7 +39,7 @@ fun PrimaryButton(
     ) {
         Text(
             text = stringResource(R.string.continue_with_wpcom_no_signup),
-            style = TextStyle(fontWeight = FontWeight.Normal, fontSize = 16.sp),
+            style = TextStyle(fontWeight = FontWeight.Medium, fontSize = 16.sp),
             modifier = Modifier.padding(
                 vertical = dimensionResource(R.dimen.login_prologue_revamped_buttons_text_padding)
             ),
