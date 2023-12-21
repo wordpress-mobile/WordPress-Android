@@ -18,8 +18,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -245,7 +243,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         when (uiState) {
             is ContentUiState -> {
                 binding?.readerTopBarComposeView?.isVisible = true
-                updateTabs(uiState)
             }
         }
         // TODO As part of Reader IA changes this view is going to be replaced
@@ -285,54 +282,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         )
     }
 
-    private fun ReaderFragmentLayoutBinding.updateTabs(uiState: ContentUiState) {
-        uiState.tabUiStates.forEachIndexed { index, tabUiState ->
-            val tab = tabLayout.getTabAt(index) as TabLayout.Tab
-            updateTab(tab, tabUiState)
-        }
-    }
-
-    private fun ReaderFragmentLayoutBinding.updateTab(tab: TabLayout.Tab, tabUiState: TabUiState) {
-        val customView = tab.customView ?: createTabCustomView(tab)
-        with(customView) {
-            val title = findViewById<TextView>(R.id.tab_label)
-            title.text = uiHelpers.getTextOfUiString(requireContext(), tabUiState.label)
-        }
-    }
-
-    private inner class ReaderTabConfigurationStrategy(
-        private val uiState: ContentUiState
-    ) : TabLayoutMediator.TabConfigurationStrategy {
-        override fun onConfigureTab(tab: TabLayout.Tab, position: Int) {
-            binding?.updateTab(tab, uiState.tabUiStates[position])
-        }
-    }
-
-    private fun ReaderFragmentLayoutBinding.createTabCustomView(tab: TabLayout.Tab): View {
-        val customView = LayoutInflater.from(context)
-            .inflate(R.layout.tab_custom_view, tabLayout, false)
-        tab.customView = customView
-        return customView
-    }
-
     fun requestBookmarkTab() {
         viewModel.bookmarkTabRequested()
-    }
-
-    private class TabsAdapter(parent: Fragment, private val tags: ReaderTagList) : FragmentStateAdapter(parent) {
-        override fun getItemCount(): Int = tags.size
-
-        override fun createFragment(position: Int): Fragment {
-            return if (tags[position].isDiscover) {
-                ReaderDiscoverFragment()
-            } else {
-                ReaderPostListFragment.newInstanceForTag(
-                    tags[position],
-                    ReaderPostListType.TAG_FOLLOWED,
-                    true
-                )
-            }
-        }
     }
 
     private fun showReaderInterests() {
