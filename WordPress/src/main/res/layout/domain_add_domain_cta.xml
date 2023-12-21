@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_size"
         android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         android:background="@color/gray_5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,7 +18,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/add_domain_button"
-        style="@style/WordPress.Button.Primary.Unelevated"
+        style="@style/DomainsPlanPurchaseCardPrimaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_extra_large"
