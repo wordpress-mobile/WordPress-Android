@@ -1801,7 +1801,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mActionableEmptyView.subtitle
                 .setContentDescription(getString(R.string.reader_empty_saved_posts_content_description));
         mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
-        mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_followed);
+        mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_subscriptions);
         mActionableEmptyView.button.setVisibility(View.VISIBLE);
         mActionableEmptyView.button.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
@@ -1866,7 +1866,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_discover);
                     break;
                 case FOLLOWED:
-                    mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_followed);
+                    mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_subscriptions);
                     break;
             }
 
