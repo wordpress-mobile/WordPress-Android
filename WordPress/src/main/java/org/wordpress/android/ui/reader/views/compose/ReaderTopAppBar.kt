@@ -46,6 +46,7 @@ import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiString
 
 private const val ANIM_DURATION = 200
+private val chipHeight = 36.dp
 
 @Composable
 fun ReaderTopAppBar(
@@ -78,10 +79,7 @@ fun ReaderTopAppBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp)
-            .padding(
-                start = Margin.ExtraLarge.value,
-            )
+            .height(52.dp)
     ) {
         Box(
             modifier = Modifier
@@ -93,13 +91,15 @@ fun ReaderTopAppBar(
                 modifier = Modifier
                     .fillMaxSize()
                     .horizontalScroll(scrollState)
-                    .horizontalFadingEdges(scrollState),
+                    .horizontalFadingEdges(scrollState, startEdgeSize = 0.dp)
+                    .padding(start = Margin.ExtraLarge.value),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 JetpackDropdownMenu(
                     selectedItem = selectedItem,
                     menuItems = topBarUiState.menuItems,
                     onSingleItemClick = onMenuItemClick,
+                    menuButtonHeight = chipHeight,
                     contentSizeAnimation = tween(ANIM_DURATION),
                 )
 
@@ -116,14 +116,14 @@ fun ReaderTopAppBar(
                             onFilterClick = onFilterClick,
                             onClearFilterClick = onClearFilterClick,
                             modifier = Modifier
-                                // use padding instead of Spacer for nicer animation
+                                // use padding instead of Spacer for a nicer animation
                                 .padding(start = Margin.Medium.value),
                         )
                     }
                 }
             }
         }
-        Spacer(Modifier.width(Margin.ExtraLarge.value))
+        Spacer(Modifier.width(Margin.ExtraSmall.value))
         IconButton(
             modifier = Modifier.align(Alignment.CenterVertically),
             onClick = { onSearchClick() }
@@ -154,6 +154,7 @@ private fun Filter(
         onFilterClick = onFilterClick,
         onSelectedItemClick = onClearFilterClick,
         onSelectedItemDismissClick = onClearFilterClick,
+        chipHeight = chipHeight,
     )
 }
 
