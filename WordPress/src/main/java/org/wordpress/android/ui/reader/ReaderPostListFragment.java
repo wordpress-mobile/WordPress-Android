@@ -2353,10 +2353,16 @@ public class ReaderPostListFragment extends ViewPagerFragment
             @Override
             public void run() {
                 if (ReaderTagTable.shouldAutoUpdateTag(getCurrentTag()) && isAdded()) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateCurrentTag();
+                    requireActivity().runOnUiThread(() -> updateCurrentTag());
+                } else {
+                    requireActivity().runOnUiThread(() -> {
+                        if (isBookmarksList() && isPostAdapterEmpty() && isAdded()) {
+                            setEmptyTitleAndDescriptionForBookmarksList();
+                            mActionableEmptyView.image.setImageResource(
+                                    R.drawable.img_illustration_empty_results_216dp);
+                            showEmptyView();
+                        } else {
+                            hideEmptyView();
                         }
                     });
                 }
