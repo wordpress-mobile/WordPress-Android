@@ -393,10 +393,12 @@ class ReaderViewModel @Inject constructor(
         ).apply {
             if (readerLists.isNotEmpty()) {
                 add(MenuElementData.Divider)
-                MenuElementData.Item.SubMenu(
-                    id = ContentStream.CUSTOM_LIST.menuItemId,
-                    text = UiString.UiStringRes(R.string.reader_dropdown_menu_lists),
-                    children = readerLists,
+                add(
+                    MenuElementData.Item.SubMenu(
+                        id = ContentStream.CUSTOM_LIST.menuItemId,
+                        text = UiString.UiStringRes(R.string.reader_dropdown_menu_lists),
+                        children = readerLists,
+                    )
                 )
             }
         }
