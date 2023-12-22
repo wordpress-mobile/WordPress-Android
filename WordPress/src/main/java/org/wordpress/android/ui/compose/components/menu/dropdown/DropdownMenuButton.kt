@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -39,11 +40,12 @@ import androidx.compose.material3.MaterialTheme as Material3Theme
 fun DropdownMenuButton(
     selectedItem: Item,
     onClick: () -> Unit,
+    height: Dp = 36.dp,
     contentSizeAnimation: FiniteAnimationSpec<IntSize> = spring(),
 ) {
     Button(
         onClick = onClick,
-        modifier = Modifier.height(32.dp),
+        modifier = Modifier.height(height),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,

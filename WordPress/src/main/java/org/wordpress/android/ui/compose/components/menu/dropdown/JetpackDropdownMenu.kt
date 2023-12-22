@@ -35,6 +35,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import me.saket.cascade.CascadeColumnScope
@@ -49,11 +50,13 @@ fun JetpackDropdownMenu(
     menuItems: List<MenuElementData>,
     selectedItem: MenuElementData.Item.Single,
     onSingleItemClick: (MenuElementData.Item.Single) -> Unit,
+    menuButtonHeight: Dp = 36.dp,
     contentSizeAnimation: FiniteAnimationSpec<IntSize> = spring(),
 ) {
     Column {
         var isMenuVisible by remember { mutableStateOf(false) }
         DropdownMenuButton(
+            height = menuButtonHeight,
             contentSizeAnimation = contentSizeAnimation,
             selectedItem = selectedItem,
             onClick = {

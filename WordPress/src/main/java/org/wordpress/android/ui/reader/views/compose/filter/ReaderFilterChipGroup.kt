@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
@@ -54,6 +55,7 @@ fun ReaderFilterChipGroup(
     onSelectedItemDismissClick: () -> Unit,
     modifier: Modifier = Modifier,
     selectedItem: ReaderFilterSelectedItem? = null,
+    chipHeight: Dp = 36.dp,
 ) {
     Row(
         modifier = modifier,
@@ -100,6 +102,7 @@ fun ReaderFilterChipGroup(
                 onClick = if (blogSelected) onSelectedItemClick else ({ onFilterClick(ReaderFilterType.BLOG) }),
                 onDismissClick = if (blogSelected) onSelectedItemDismissClick else null,
                 isSelectedItem = blogSelected,
+                height = chipHeight,
             )
         }
 
@@ -117,6 +120,7 @@ fun ReaderFilterChipGroup(
                 onClick = if (tagSelected) onSelectedItemClick else ({ onFilterClick(ReaderFilterType.TAG) }),
                 onDismissClick = if (tagSelected) onSelectedItemDismissClick else null,
                 isSelectedItem = tagSelected,
+                height = chipHeight,
             )
         }
     }
@@ -126,6 +130,7 @@ fun ReaderFilterChipGroup(
 fun ReaderFilterChip(
     text: UiString,
     onClick: () -> Unit,
+    height: Dp,
     modifier: Modifier = Modifier,
     isSelectedItem: Boolean = false,
     onDismissClick: (() -> Unit)? = null,
@@ -164,7 +169,7 @@ fun ReaderFilterChip(
                     shape = roundedShape,
                 )
                 .clip(roundedShape)
-                .height(32.dp)
+                .height(height)
                 .clickable(onClick = onClick)
                 .padding(
                     start = Margin.ExtraLarge.value,
