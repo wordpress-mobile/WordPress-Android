@@ -25,16 +25,18 @@ import kotlin.math.min
  * Adds vertical fading edges to a scrollable container, usually a [Column].
  * It needs to be used right after the scrollable modifier [verticalScroll].
  *
- * The [edgeSize] defines the maximum size of the fading edge effect, which is used when that same amount of the
+ * The [topEdgeSize] defines the maximum size of the fading edge effect, which is used when that same amount of the
  * content is outside the scrollable area.
  *
  * @param scrollState the scroll state of the scrollable container (same used in [Modifier.verticalScroll])
- * @param edgeSize the size of the fading edge
+ * @param topEdgeSize the size of the fading edge on the top
+ * @param bottomEdgeSize the size of the fading edge on the bottom
  */
 @Suppress("MagicNumber", "Unused")
 fun Modifier.verticalFadingEdges(
     scrollState: ScrollState,
-    edgeSize: Dp = 72.dp,
+    topEdgeSize: Dp = 72.dp,
+    bottomEdgeSize: Dp = 72.dp,
 ): Modifier = this
     // adding layer fixes issue with blending gradient and content
     .graphicsLayer { alpha = 0.999F }
@@ -46,21 +48,23 @@ fun Modifier.verticalFadingEdges(
         val scrollAreaBottomY = scrollAreaTopY + scrollAreaHeight
 
         // gradient size is equivalent to how much content is outside of the area in each side limited by edgeSize
-        val topGradientHeight = min(edgeSize.toPx(), scrollState.value.toFloat())
-        val bottomGradientHeight = min(edgeSize.toPx(), scrollState.maxValue.toFloat() - scrollState.value)
+        val topGradientHeight = min(topEdgeSize.toPx(), scrollState.value.toFloat())
+        val bottomGradientHeight = min(bottomEdgeSize.toPx(), scrollState.maxValue.toFloat() - scrollState.value)
 
         // wherever the rectangle is drawn (green), the content will be transparent, creating the fading effect
         val topColors = listOf(Color.Green, Color.Transparent)
         val bottomColors = listOf(Color.Transparent, Color.Green)
 
-        drawRect(
-            brush = Brush.verticalGradient(
-                colors = topColors,
-                startY = scrollAreaTopY,
-                endY = scrollAreaTopY + topGradientHeight
-            ),
-            blendMode = BlendMode.DstOut
-        )
+        if (topGradientHeight != 0f) {
+            drawRect(
+                brush = Brush.verticalGradient(
+                    colors = topColors,
+                    startY = scrollAreaTopY,
+                    endY = scrollAreaTopY + topGradientHeight
+                ),
+                blendMode = BlendMode.DstOut
+            )
+        }
 
         if (bottomGradientHeight != 0f) {
             drawRect(
@@ -82,12 +86,14 @@ fun Modifier.verticalFadingEdges(
  * content is outside the scrollable area.
  *
  * @param scrollState the scroll state of the scrollable container (same used in [Modifier.horizontalScroll])
- * @param edgeSize the size of the fading edge
+ * @param startEdgeSize the size of the fading edge on the start
+ * @param endEdgeSize the size of the fading edge on the end
  */
 @Suppress("MagicNumber", "Unused")
 fun Modifier.horizontalFadingEdges(
     scrollState: ScrollState,
-    edgeSize: Dp = 24.dp,
+    startEdgeSize: Dp = 24.dp,
+    endEdgeSize: Dp = 24.dp,
 ): Modifier = this
     // adding layer fixes issue with blending gradient and content
     .graphicsLayer { alpha = 0.99F }
@@ -106,13 +112,13 @@ fun Modifier.horizontalFadingEdges(
             if (!isRtl) {
                 scrollAreaLeftX = scrollState.value.toFloat()
                 scrollAreaRightX = scrollAreaLeftX + scrollAreaWidth
-                leftGradientWidth = min(edgeSize.toPx(), scrollState.value.toFloat())
-                rightGradientWidth = min(edgeSize.toPx(), scrollState.maxValue.toFloat() - scrollState.value)
+                leftGradientWidth = min(startEdgeSize.toPx(), scrollState.value.toFloat())
+                rightGradientWidth = min(endEdgeSize.toPx(), scrollState.maxValue.toFloat() - scrollState.value)
             } else {
                 scrollAreaRightX = size.width - scrollState.value.toFloat()
                 scrollAreaLeftX = scrollAreaRightX - scrollAreaWidth
-                leftGradientWidth = min(edgeSize.toPx(), scrollState.maxValue.toFloat() - scrollState.value)
-                rightGradientWidth = min(edgeSize.toPx(), scrollState.value.toFloat())
+                leftGradientWidth = min(endEdgeSize.toPx(), scrollState.maxValue.toFloat() - scrollState.value)
+                rightGradientWidth = min(startEdgeSize.toPx(), scrollState.value.toFloat())
             }
 
             val leftColors = listOf(Color.Green, Color.Transparent)
