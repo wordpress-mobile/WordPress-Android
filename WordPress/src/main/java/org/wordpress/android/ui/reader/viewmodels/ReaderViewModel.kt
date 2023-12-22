@@ -520,7 +520,8 @@ class ReaderViewModel @Inject constructor(
         DISCOVER("discover", 1),
         LIKED("liked", 2),
         SAVED("saved", 3),
-        CUSTOM_LIST("customList", 4);
+        // TODO RenanLukas Reader custom lists will be handled in my next PR
+        CUSTOM_LIST("custom_list", 4);
     }
 }
 
