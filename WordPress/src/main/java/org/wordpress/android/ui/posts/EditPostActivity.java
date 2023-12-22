@@ -1518,10 +1518,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         return true;
     }
 
-    public void onEditorBackPressed() {
-        getOnBackPressedDispatcher().onBackPressed();
-    }
-
     interface DoWhenNoStoriesBeingSavedCallback {
         void doWhenNoStoriesBeingSaved();
     }
