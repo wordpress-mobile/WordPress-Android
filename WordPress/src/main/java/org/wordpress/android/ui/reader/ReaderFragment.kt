@@ -270,7 +270,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
                         ReaderDiscoverFragment()
                     }
                 }
-                add(R.id.container, fragment)
+                replace(R.id.container, fragment)
                 commit()
             }
         }
