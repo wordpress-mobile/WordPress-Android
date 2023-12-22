@@ -13,7 +13,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -74,20 +73,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     private var settingsMenuItemFocusPoint: QuickStartFocusPoint? = null
 
     private var binding: ReaderFragmentLayoutBinding? = null
-
-    private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
-        override fun onPageSelected(position: Int) {
-            super.onPageSelected(position)
-            // TODO move code to selected menu item
-            viewModel.uiState.value?.let {
-                if (it is ContentUiState) {
-                    val selectedTag = it.readerTagList[position]
-                    viewModel.onTagChanged(selectedTag)
-                }
-            }
-        }
-    }
-
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         requireActivity().addMenuProvider(this, viewLifecycleOwner)
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
@@ -240,38 +226,30 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     private fun initContentContainer(uiState: ContentUiState) {
         viewModel.topBarUiState.observe(viewLifecycleOwner) { topBarUiState ->
             childFragmentManager.beginTransaction().apply {
-                val fragment = when (topBarUiState.selectedItem.id) {
-                    ContentStream.SUBSCRIPTIONS.menuItemId -> ReaderPostListFragment.newInstanceForTag(
-                        uiState.readerTagList[0],
-                        ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
-                        true,
-                    )
-
-                    ContentStream.DISCOVER.menuItemId -> ReaderPostListFragment.newInstanceForTag(
-                        uiState.readerTagList[1],
-                        ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
-                        true,
-                    )
-
-                    ContentStream.LIKED.menuItemId -> ReaderPostListFragment.newInstanceForTag(
-                        uiState.readerTagList[2],
-                        ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
-                        true,
-                    )
-
-                    ContentStream.SAVED.menuItemId -> ReaderPostListFragment.newInstanceForTag(
-                        uiState.readerTagList[3],
-                        ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
-                        true,
-                    )
-
+                val contentStream = when (topBarUiState.selectedItem.id) {
+                    ContentStream.SUBSCRIPTIONS.menuItemId -> ContentStream.SUBSCRIPTIONS
+                    ContentStream.DISCOVER.menuItemId -> ContentStream.DISCOVER
+                    ContentStream.LIKED.menuItemId -> ContentStream.LIKED
+                    ContentStream.SAVED.menuItemId -> ContentStream.SAVED
                     else -> {
                         // TODO Reader custom lists
-                        ReaderDiscoverFragment()
+                        ContentStream.CUSTOM_LIST
                     }
                 }
+                val fragment = ReaderPostListFragment.newInstanceForTag(
+                    uiState.readerTagList[contentStream.position],
+                    ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
+                    true,
+                )
                 replace(R.id.container, fragment)
                 commit()
+
+                viewModel.uiState.value?.let {
+                    if (it is ContentUiState) {
+                        val selectedTag = it.readerTagList[contentStream.position]
+                        viewModel.onTagChanged(selectedTag)
+                    }
+                }
             }
         }
     }
