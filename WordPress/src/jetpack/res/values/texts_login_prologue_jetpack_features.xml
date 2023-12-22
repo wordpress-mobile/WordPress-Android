@@ -16,5 +16,6 @@
         <item>@string/login_prologue_revamped_jetpack_feature_text_13</item>
         <item>@string/login_prologue_revamped_jetpack_feature_text_14</item>
         <item>@string/login_prologue_revamped_jetpack_feature_text_15</item>
+        <item>@string/login_prologue_revamped_jetpack_feature_text_16</item>
     </string-array>
 </resources>

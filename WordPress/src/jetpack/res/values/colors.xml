@@ -15,10 +15,10 @@
     <color name="bg_jetpack_login_splash_bottom_panel">#CCF1F3EC</color>
     <color name="border_top_jetpack_login_splash_bottom_panel">#0D000000</color>
 
-    <color name="bg_jetpack_login_splash_top_gradient_1">#FCF1F3EC</color>
-    <color name="bg_jetpack_login_splash_top_gradient_2">#FAF1F3EC</color>
-    <color name="bg_jetpack_login_splash_top_gradient_3">#D9F1F3EC</color>
-    <color name="bg_jetpack_login_splash_top_gradient_4">#00F1F3EC</color>
+    <color name="bg_jetpack_login_splash_top_gradient_1">#FCFFFFFF</color>
+    <color name="bg_jetpack_login_splash_top_gradient_2">#FAFFFFFF</color>
+    <color name="bg_jetpack_login_splash_top_gradient_3">#D9FFFFFF</color>
+    <color name="bg_jetpack_login_splash_top_gradient_4">#00FFFFFF</color>
 
     <color name="text_color_jetpack_login_label_primary">#3858E9</color>
     <color name="text_color_jetpack_login_label_secondary">@color/jetpack_green_40</color>
