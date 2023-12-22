@@ -21,10 +21,13 @@
     <string name="login_prologue_revamped_jetpack_feature_text_6">Respond to comments</string>
     <string name="login_prologue_revamped_jetpack_feature_text_7">Restore a backup</string>
     <string name="login_prologue_revamped_jetpack_feature_text_8">Search for plugins</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_9">Share on Facebook</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">Share on social</string>
     <string name="login_prologue_revamped_jetpack_feature_text_10">Fix a security issue</string>
     <string name="login_prologue_revamped_jetpack_feature_text_11">Post a photo</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_12">Add an author</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">Read other blogs</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_13">Build an audience</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_14">Post a photo</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_15">Write from anywhere</string>
 
     <!-- Login Magic Link -->
     <string name="login_magic_links_sent_label">Check your email on this device and tap the link in the email you received from Jetpack.com.</string>
