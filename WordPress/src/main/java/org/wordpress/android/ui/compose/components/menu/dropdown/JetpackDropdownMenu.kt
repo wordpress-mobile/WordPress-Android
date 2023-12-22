@@ -70,10 +70,10 @@ fun JetpackDropdownMenu(
             expanded = isMenuVisible,
             fixedWidth = cascadeMenuWidth,
             onDismissRequest = { isMenuVisible = false },
-            offset = if (LocalLayoutDirection.current == LayoutDirection.Rtl) DpOffset(
-                cascadeMenuWidth,
-                0.dp
-            ) else DpOffset.Zero,
+            offset = DpOffset(
+                x = if (LocalLayoutDirection.current == LayoutDirection.Rtl) cascadeMenuWidth else 0.dp,
+                y = 0.dp
+            )
         ) {
             val onMenuItemSingleClick: (MenuElementData.Item.Single) -> Unit = { clickedItem ->
                 isMenuVisible = false
