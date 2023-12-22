@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:backgroundTint="@color/gray_5"
+        android:background="@color/white_translucent_20"
         android:checkable="false"
         android:text="@string/domains_primary_site_domain_chip"
         app:chipCornerRadius="4dp"
