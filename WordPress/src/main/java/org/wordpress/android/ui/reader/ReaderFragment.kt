@@ -33,7 +33,6 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateT
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.TAGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
-import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ContentStream
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.views.compose.ReaderTopAppBar
 import org.wordpress.android.ui.utils.UiHelpers
@@ -223,32 +222,21 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     }
 
     private fun initContentContainer(uiState: ContentUiState) {
-        viewModel.topBarUiState.observe(viewLifecycleOwner) { topBarUiState ->
-            childFragmentManager.beginTransaction().apply {
-                val contentStream = when (topBarUiState.selectedItem.id) {
-                    ContentStream.SUBSCRIPTIONS.menuItemId -> ContentStream.SUBSCRIPTIONS
-                    ContentStream.DISCOVER.menuItemId -> ContentStream.DISCOVER
-                    ContentStream.LIKED.menuItemId -> ContentStream.LIKED
-                    ContentStream.SAVED.menuItemId -> ContentStream.SAVED
-                    else -> {
-                        // TODO Reader custom lists
-                        ContentStream.CUSTOM_LIST
-                    }
-                }
-                val fragment = ReaderPostListFragment.newInstanceForTag(
-                    uiState.readerTagList[contentStream.position],
-                    ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
-                    true,
-                )
-                replace(R.id.container, fragment)
-                commit()
-
-                viewModel.uiState.value?.let {
-                    if (it is ContentUiState) {
-                        val selectedTag = it.readerTagList[contentStream.position]
-                        viewModel.onTagChanged(selectedTag)
-                    }
-                }
+        if (uiState.selectedReaderTag == null) {
+            return
+        }
+        childFragmentManager.beginTransaction().apply {
+            val fragment = ReaderPostListFragment.newInstanceForTag(
+                uiState.selectedReaderTag,
+                ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
+                true,
+            )
+            replace(R.id.container, fragment)
+            commit()
+        }
+        viewModel.uiState.value?.let {
+            if (it is ContentUiState) {
+                viewModel.onTagChanged(uiState.selectedReaderTag)
             }
         }
     }

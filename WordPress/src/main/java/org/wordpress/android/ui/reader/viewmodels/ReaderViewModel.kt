@@ -102,6 +102,8 @@ class ReaderViewModel @Inject constructor(
     private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
     val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
 
+    private var readerTagsList = ReaderTagList()
+
     init {
         EventBus.getDefault().register(this)
     }
@@ -122,9 +124,10 @@ class ReaderViewModel @Inject constructor(
             val currentContentUiState = _uiState.value as? ContentUiState
             val tagList = loadReaderTabsUseCase.loadTabs()
             if (tagList.isNotEmpty()) {
+                updateReaderTagsList(loadReaderTabsUseCase.loadTabs())
                 _uiState.value = ContentUiState(
                     tabUiStates = tagList.map { TabUiState(label = UiStringText(it.label)) },
-                    readerTagList = tagList,
+                    selectedReaderTag = selectedReaderTag(),
                     searchMenuItemUiState = MenuItemUiState(isVisible = isSearchSupported()),
                     settingsMenuItemUiState = MenuItemUiState(
                         isVisible = isSettingsSupported(),
@@ -187,17 +190,16 @@ class ReaderViewModel @Inject constructor(
     fun selectedMenuItemChange(tag: ReaderTag) {
         // Get ContentStream from the ReaderTag instance
         contentStreamFromReaderTag(tag)?.let { newSelectedContentStream ->
-            _topBarUiState.value?.menuItems?.filterIsInstance<MenuElementData.Item.Single>()?.find {
-                // Find all Single items from the current menu
-                it.id == newSelectedContentStream.menuItemId
-            }?.let { newSelectedMenuItem ->
-                updateSelectedMenuItem(newSelectedMenuItem)
-            }
+            // Find all Single items from the current menu
+            _topBarUiState.value?.menuItems
+                ?.filterIsInstance<MenuElementData.Item.Single>()
+                ?.find { it.id == newSelectedContentStream.menuItemId }
+                ?.let { newSelectedMenuItem -> updateSelectedMenuItem(newSelectedMenuItem) }
         }
     }
 
     fun bookmarkTabRequested() {
-        (_uiState.value as? ContentUiState)?.readerTagList?.find { it.isBookmarked }?.let {
+        readerTagsList.find { it.isBookmarked }?.let {
             selectedMenuItemChange(it)
         }
     }
@@ -288,7 +290,7 @@ class ReaderViewModel @Inject constructor(
     private fun autoSwitchToDiscoverTab() {
         launch {
             if (!initialized) delay(QUICK_START_DISCOVER_TAB_STEP_DELAY)
-            (_uiState.value as? ContentUiState)?.readerTagList?.find { it.isDiscover }?.let {
+            readerTagsList.find { it.isDiscover }?.let {
                 selectedMenuItemChange(it)
             }
             startQuickStartFollowSiteTaskDiscoverTabStep()
@@ -351,12 +353,22 @@ class ReaderViewModel @Inject constructor(
     }
 
     private fun contentStreamFromReaderTag(readerTag: ReaderTag): ContentStream? {
-        return (uiState.value as? ContentUiState)
-            ?.readerTagList
-            ?.indexOfTagName(readerTag.tagSlug)?.let { readerTagIndex ->
-                ContentStream.entries.find { readerTagIndex == it.position }
-            }
+        return readerTagsList.indexOfTagName(readerTag.tagSlug).let { readerTagIndex ->
+            ContentStream.entries.find { readerTagIndex == it.position }
+        }
     }
+
+    private fun selectedContentStream(): ContentStream? =
+        topBarUiState.value?.selectedItem?.let { selectedItem ->
+            ContentStream.entries.find {
+                selectedItem.id == it.menuItemId
+            }
+        }
+
+    private fun selectedReaderTag(): ReaderTag? =
+        selectedContentStream()?.let {
+            readerTagsList[it.position]
+        }
 
     @Suppress("KotlinConstantConditions")
     private fun initializeTopBarUiState() {
@@ -422,6 +434,11 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    private fun updateReaderTagsList(readerTags: List<ReaderTag>) {
+        readerTagsList.clear()
+        readerTagsList.addAll(readerTags)
+    }
+
     fun onTopBarMenuItemClick(item: MenuElementData.Item.Single) {
         if (item.id != _topBarUiState.value?.selectedItem?.id) {
             updateSelectedMenuItem(item)
@@ -484,7 +501,7 @@ class ReaderViewModel @Inject constructor(
     ) {
         data class ContentUiState(
             val tabUiStates: List<TabUiState>,
-            val readerTagList: ReaderTagList,
+            val selectedReaderTag: ReaderTag?,
             override val searchMenuItemUiState: MenuItemUiState,
             override val settingsMenuItemUiState: MenuItemUiState,
         ) : ReaderUiState(
