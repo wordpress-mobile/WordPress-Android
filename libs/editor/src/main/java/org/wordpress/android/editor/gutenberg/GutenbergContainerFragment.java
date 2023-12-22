@@ -177,7 +177,15 @@ public class GutenbergContainerFragment extends Fragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                mWPAndroidGlueCode.onBackPressed();
+                if (mWPAndroidGlueCode.shouldHandleBackPress()) {
+                    mWPAndroidGlueCode.onBackPressed();
+                } else {
+                    if (isEnabled()) {
+                        setEnabled(false); // Disable this callback
+                        requireActivity().onBackPressed(); // Bubble up the onBackPressed event
+                        setEnabled(true); // Re-enable this callback
+                    }
+                }
             }
         };
 
