@@ -28,6 +28,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.quickstart.QuickStartEvent
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.FOLLOWED_BLOGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.TAGS
@@ -226,11 +227,15 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
             return
         }
         childFragmentManager.beginTransaction().apply {
-            val fragment = ReaderPostListFragment.newInstanceForTag(
-                uiState.selectedReaderTag,
-                ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
-                true,
-            )
+            val fragment = if (uiState.selectedReaderTag.isDiscover()) {
+                ReaderDiscoverFragment()
+            } else {
+                ReaderPostListFragment.newInstanceForTag(
+                    uiState.selectedReaderTag,
+                    ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
+                    true,
+                )
+            }
             replace(R.id.container, fragment)
             commit()
         }
