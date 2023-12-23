@@ -2356,10 +2356,17 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     requireActivity().runOnUiThread(() -> updateCurrentTag());
                 } else {
                     requireActivity().runOnUiThread(() -> {
-                        if (isBookmarksList() && isPostAdapterEmpty() && isAdded()) {
+                        if ((isBookmarksList()) && isPostAdapterEmpty() && isAdded()) {
                             setEmptyTitleAndDescriptionForBookmarksList();
                             mActionableEmptyView.image.setImageResource(
                                     R.drawable.img_illustration_empty_results_216dp);
+                            showEmptyView();
+                        } else if (getCurrentTag().isListTopic() && isPostAdapterEmpty() && isAdded()) {
+                            mActionableEmptyView.image.setImageResource(
+                                    R.drawable.img_illustration_empty_results_216dp);
+                            mActionableEmptyView.title.setText(getString(R.string.reader_empty_posts_in_custom_list));
+                            mActionableEmptyView.button.setVisibility(View.GONE);
+                            mActionableEmptyView.subtitle.setVisibility(View.GONE);
                             showEmptyView();
                         } else {
                             hideEmptyView();
