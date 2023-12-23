@@ -126,7 +126,8 @@ class ReaderViewModel @Inject constructor(
             val currentContentUiState = _uiState.value as? ContentUiState
             val tagList = loadReaderTabsUseCase.loadTabs()
             if (tagList.isNotEmpty()) {
-                updateReaderTagsList(loadReaderTabsUseCase.loadTabs())
+                updateReaderTagsList(tagList)
+                initializeTopBarUiState()
                 _uiState.value = ContentUiState(
                     tabUiStates = tagList.map { TabUiState(label = UiStringText(it.label)) },
                     selectedReaderTag = selectedReaderTag(),
@@ -139,25 +140,7 @@ class ReaderViewModel @Inject constructor(
                 )
                 if (!initialized) {
                     initialized = true
-                    initializeMenuSelection(tagList)
-                    initializeTopBarUiState()
                 }
-            }
-        }
-    }
-
-    private suspend fun initializeMenuSelection(tagList: ReaderTagList) {
-        withContext(bgDispatcher) {
-            val selectTab = { readerTag: ReaderTag ->
-                val index = tagList.indexOf(readerTag)
-                if (index != -1) {
-                    updateSelectedContent(readerTag)
-                }
-            }
-            appPrefsWrapper.getReaderTag()?.let {
-                selectTab.invoke(it)
-            } ?: tagList.find { it.isDefaultSelectedTab() }?.let {
-                selectTab.invoke(it)
             }
         }
     }
@@ -371,80 +354,97 @@ class ReaderViewModel @Inject constructor(
             readerTagsList[getReaderTagIndexFromMenuItem(it.selectedItem)]
         }
 
-    private fun initializeTopBarUiState() {
-        val menuItems = mutableListOf<MenuElementData>().apply {
-            readerTagsList.indexOrNull { it.isDiscover }?.let { discoverIndex ->
-                add(
-                    MenuElementData.Item.Single(
-                        id = createMenuItemIdFromReaderTagIndex(discoverIndex),
-                        text = UiString.UiStringRes(R.string.reader_dropdown_menu_discover),
-                        leadingIcon = R.drawable.ic_reader_discover_24dp,
+    private suspend fun initializeTopBarUiState(/*tagList: ReaderTagList*/) {
+        withContext(bgDispatcher) {
+            // TODO verify side effects of removing this logic
+//            val selectTab = { readerTag: ReaderTag ->
+//                val index = tagList.indexOf(readerTag)
+//                if (index != -1) {
+//                    updateSelectedContent(readerTag)
+//                }
+//            }
+//            appPrefsWrapper.getReaderTag()?.let {
+//                selectTab.invoke(it)
+//            } ?: tagList.find { it.isDefaultSelectedTab() }?.let {
+//                selectTab.invoke(it)
+//            }
+            // TODO RenanLukas extract menu items creation to separate class
+            val menuItems = mutableListOf<MenuElementData>().apply {
+                readerTagsList.indexOrNull { it.isDiscover }?.let { discoverIndex ->
+                    add(
+                        MenuElementData.Item.Single(
+                            id = createMenuItemIdFromReaderTagIndex(discoverIndex),
+                            text = UiString.UiStringRes(R.string.reader_dropdown_menu_discover),
+                            leadingIcon = R.drawable.ic_reader_discover_24dp,
+                        )
                     )
-                )
-            }
-            readerTagsList.indexOrNull { it.isFollowedSites }?.let { followingIndex ->
-                add(
-                    MenuElementData.Item.Single(
-                        id = createMenuItemIdFromReaderTagIndex(followingIndex),
-                        text = UiString.UiStringRes(R.string.reader_dropdown_menu_subscriptions),
-                        leadingIcon = R.drawable.ic_reader_subscriptions_24dp,
+                }
+                readerTagsList.indexOrNull { it.isFollowedSites }?.let { followingIndex ->
+                    add(
+                        MenuElementData.Item.Single(
+                            id = createMenuItemIdFromReaderTagIndex(followingIndex),
+                            text = UiString.UiStringRes(R.string.reader_dropdown_menu_subscriptions),
+                            leadingIcon = R.drawable.ic_reader_subscriptions_24dp,
+                        )
                     )
-                )
-            }
-            readerTagsList.indexOrNull { it.isBookmarked }?.let { savedIndex ->
-                add(
-                    MenuElementData.Item.Single(
-                        id = createMenuItemIdFromReaderTagIndex(savedIndex),
-                        text = UiString.UiStringRes(R.string.reader_dropdown_menu_saved),
-                        leadingIcon = R.drawable.ic_reader_saved_24dp,
+                }
+                readerTagsList.indexOrNull { it.isBookmarked }?.let { savedIndex ->
+                    add(
+                        MenuElementData.Item.Single(
+                            id = createMenuItemIdFromReaderTagIndex(savedIndex),
+                            text = UiString.UiStringRes(R.string.reader_dropdown_menu_saved),
+                            leadingIcon = R.drawable.ic_reader_saved_24dp,
+                        )
                     )
-                )
-            }
-            readerTagsList.indexOrNull { it.isPostsILike }?.let { likedIndex ->
-                add(
-                    MenuElementData.Item.Single(
-                        id = createMenuItemIdFromReaderTagIndex(likedIndex),
-                        text = UiString.UiStringRes(R.string.reader_dropdown_menu_liked),
-                        leadingIcon = R.drawable.ic_reader_liked_24dp,
+                }
+                readerTagsList.indexOrNull { it.isPostsILike }?.let { likedIndex ->
+                    add(
+                        MenuElementData.Item.Single(
+                            id = createMenuItemIdFromReaderTagIndex(likedIndex),
+                            text = UiString.UiStringRes(R.string.reader_dropdown_menu_liked),
+                            leadingIcon = R.drawable.ic_reader_liked_24dp,
+                        )
                     )
-                )
-            }
-            readerTagsList.indexOrNull { it.isA8C }?.let { a8cIndex ->
-                add(
-                    MenuElementData.Item.Single(
-                        id = createMenuItemIdFromReaderTagIndex(a8cIndex),
-                        text = UiString.UiStringRes(R.string.reader_dropdown_menu_automattic),
+                }
+                readerTagsList.indexOrNull { it.isA8C }?.let { a8cIndex ->
+                    add(
+                        MenuElementData.Item.Single(
+                            id = createMenuItemIdFromReaderTagIndex(a8cIndex),
+                            text = UiString.UiStringRes(R.string.reader_dropdown_menu_automattic),
+                        )
                     )
-                )
-            }
-            readerTagsList
-                .mapIndexed { index, readerTag -> Pair(index, readerTag) }
-                .filter { (_, readerTag) -> readerTag.tagType == ReaderTagType.CUSTOM_LIST }.let {
-                    if (it.isNotEmpty()) {
-                        add(MenuElementData.Divider)
-                        val customLists = it.map { (index, readerTag) ->
-                            MenuElementData.Item.Single(
-                                id = createMenuItemIdFromReaderTagIndex(index),
-                                text = UiStringText(readerTag.tagTitle),
+                }
+                readerTagsList
+                    .mapIndexed { index, readerTag -> Pair(index, readerTag) }
+                    .filter { (_, readerTag) -> readerTag.tagType == ReaderTagType.CUSTOM_LIST }.let {
+                        if (it.isNotEmpty()) {
+                            add(MenuElementData.Divider)
+                            val customLists = it.map { (index, readerTag) ->
+                                MenuElementData.Item.Single(
+                                    id = createMenuItemIdFromReaderTagIndex(index),
+                                    text = UiStringText(readerTag.tagTitle),
+                                )
+                            }
+                            add(
+                                MenuElementData.Item.SubMenu(
+                                    // We don't need this ID since this menu item just opens the sub-menu. It doesn't
+                                    // change the content that is currently being displayed.
+                                    id = "custom-lists",
+                                    text = UiString.UiStringRes(R.string.reader_dropdown_menu_lists),
+                                    children = customLists,
+                                )
                             )
                         }
-                        add(
-                            MenuElementData.Item.SubMenu(
-                                // We don't need this ID since this menu item just opens the sub-menu. It doesn't
-                                // change the content that is currently being displayed.
-                                id = "custom-lists",
-                                text = UiString.UiStringRes(R.string.reader_dropdown_menu_lists),
-                                children = customLists,
-                            )
-                        )
                     }
-                }
+            }
+            _topBarUiState.postValue(
+                TopBarUiState(
+                    menuItems = menuItems,
+                    selectedItem = menuItems.first { it is MenuElementData.Item.Single } as MenuElementData.Item.Single,
+                    filterUiState = null,
+                )
+            )
         }
-        _topBarUiState.value = TopBarUiState(
-            menuItems = menuItems,
-            selectedItem = menuItems.first { it is MenuElementData.Item.Single } as MenuElementData.Item.Single,
-            filterUiState = null,
-        )
     }
 
     private fun createMenuItemIdFromReaderTagIndex(readerTagIndex: Int): String = "$readerTagIndex"
