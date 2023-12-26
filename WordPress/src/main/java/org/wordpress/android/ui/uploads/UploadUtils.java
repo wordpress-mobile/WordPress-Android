@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
-import org.wordpress.android.fluxc.store.UploadStore.UploadError;
 import org.wordpress.android.fluxc.utils.MimeTypes;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -183,10 +182,6 @@ public class UploadUtils {
         }
 
         return getErrorMessageFromMediaError(context, media, error);
-    }
-
-    public static boolean isMediaError(UploadError uploadError) {
-        return uploadError != null && uploadError.mediaError != null;
     }
 
     public static void handleEditPostModelResultSnackbars(@NonNull final Activity activity,
