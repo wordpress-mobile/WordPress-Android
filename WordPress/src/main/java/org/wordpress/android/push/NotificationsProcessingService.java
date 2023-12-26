@@ -99,6 +99,26 @@ public class NotificationsProcessingService extends Service {
     @Inject QuickStartTracker mQuickStartTracker;
 
     /*
+    * Use this if you want the service to handle a background note Like.
+    * */
+    public static void startServiceForLike(Context context, String noteId) {
+        Intent intent = new Intent(context, NotificationsProcessingService.class);
+        intent.putExtra(ARG_ACTION_TYPE, ARG_ACTION_LIKE);
+        intent.putExtra(ARG_NOTE_ID, noteId);
+        context.startService(intent);
+    }
+
+    /*
+    * Use this if you want the service to handle a background note Approve.
+    * */
+    public static void startServiceForApprove(Context context, String noteId) {
+        Intent intent = new Intent(context, NotificationsProcessingService.class);
+        intent.putExtra(ARG_ACTION_TYPE, ARG_ACTION_APPROVE);
+        intent.putExtra(ARG_NOTE_ID, noteId);
+        context.startService(intent);
+    }
+
+    /*
     * Use this if you want the service to handle a background note reply.
     * */
     public static void startServiceForReply(Context context, String noteId, String replyToComment) {
@@ -167,6 +187,7 @@ public class NotificationsProcessingService extends Service {
         private String mReplyText;
         private String mActionType;
         private NotificationType mNotificationType;
+        private int mPushId;
         private Note mNote;
         private final int mTaskId;
         private final Context mContext;
@@ -300,7 +321,6 @@ public class NotificationsProcessingService extends Service {
             mActionType = mIntent.getStringExtra(ARG_ACTION_TYPE);
             // default value for push notification ID is likely GROUP_NOTIFICATION_ID for the only
             // notif in active notifs map (there is only one notif if quick actions are available)
-            mPushId = GROUP_NOTIFICATION_ID;
             if (mIntent.hasExtra(ARG_ACTION_REPLY_TEXT)) {
                 mReplyText = mIntent.getStringExtra(ARG_ACTION_REPLY_TEXT);
             }
@@ -470,6 +490,31 @@ public class NotificationsProcessingService extends Service {
                             NotificationPushIds.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
                 }
             }, 3000); // show the success message for 3 seconds, then dismiss
+
+            stopSelf(mTaskId);
+        }
+
+        private void requestFailedWithMessage(String errorMessage, boolean autoDismiss) {
+            if (errorMessage == null) {
+                // show generic error here
+                errorMessage = getString(R.string.error_generic);
+            }
+            resetOriginalNotification();
+            NativeNotificationsUtils
+                    .showFinalMessageToUser(errorMessage, NotificationPushIds.ACTIONS_RESULT_NOTIFICATION_ID, mContext,
+                            NotificationType.ACTIONS_RESULT);
+
+            if (autoDismiss) {
+                // after 3 seconds, dismiss the error message notification
+                Handler handler = new Handler(getMainLooper());
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        // remove the error notification from the system bar
+                        NativeNotificationsUtils.dismissNotification(
+                                NotificationPushIds.ACTIONS_RESULT_NOTIFICATION_ID, mContext);
+                    }
+                }, 3000); // show the success message for 3 seconds, then dismiss
+            }
 
             stopSelf(mTaskId);
         }
