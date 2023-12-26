@@ -641,6 +641,12 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT, properties);
     }
 
+    public static void trackLoginProloguePages(int page) {
+        Map<String, Integer> properties = new HashMap<>();
+        properties.put("page_number", page);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PROLOGUE_PAGED, properties);
+    }
+
     @VisibleForTesting
     protected enum AnalyticsSiteType {
         BLOG {
