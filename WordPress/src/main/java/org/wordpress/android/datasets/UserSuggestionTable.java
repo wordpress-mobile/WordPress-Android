@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.UserSuggestion;
 import org.wordpress.android.models.Tag;
+import org.wordpress.android.models.UserSuggestion;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
@@ -147,38 +147,7 @@ public class UserSuggestionTable {
         getWritableDb().insertWithOnConflict(TAXONOMY_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    public static List<Tag> getTagsForSite(long siteId) {
-        List<Tag> tags = new ArrayList<Tag>();
-
-        String[] args = {Long.toString(siteId)};
-        Cursor c =
-                getReadableDb().rawQuery("SELECT * FROM " + TAXONOMY_TABLE + " WHERE site_id=? ORDER BY tag ASC", args);
-
-        try {
-            if (c.moveToFirst()) {
-                do {
-                    Tag comment = getTagFromCursor(c);
-                    tags.add(comment);
-                } while (c.moveToNext());
-            }
-
-            return tags;
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
-    }
-
     public static int deleteTagsForSite(long siteId) {
         return getWritableDb().delete(TAXONOMY_TABLE, "site_id=?", new String[]{Long.toString(siteId)});
-    }
-
-    private static Tag getTagFromCursor(Cursor c) {
-        final String tag = c.getString(c.getColumnIndexOrThrow("tag"));
-
-        long siteId = c.getLong(c.getColumnIndexOrThrow("site_id"));
-
-        return new Tag(
-                siteId,
-                tag);
     }
 }
