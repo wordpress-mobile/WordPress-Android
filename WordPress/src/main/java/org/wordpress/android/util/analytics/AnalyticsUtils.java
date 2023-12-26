@@ -641,19 +641,6 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT, properties);
     }
 
-    private static Map<String, String> createNewsCardProperties(String origin, int version) {
-        Map<String, String> properties = new HashMap<>();
-        properties.put(NEWS_CARD_ORIGIN, origin);
-        properties.put(NEWS_CARD_VERSION, String.valueOf(version));
-        return properties;
-    }
-
-    public static void trackLoginProloguePages(int page) {
-        Map<String, Integer> properties = new HashMap<>();
-        properties.put("page_number", page);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PROLOGUE_PAGED, properties);
-    }
-
     @VisibleForTesting
     protected enum AnalyticsSiteType {
         BLOG {
