@@ -153,23 +153,6 @@ public class SmartLockHelper {
                 });
     }
 
-    public void deleteCredentialsInSmartLock(@NonNull final String username, @NonNull final String password) {
-        Activity activity = getActivityAndCheckAvailability();
-        if (activity == null || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
-            return;
-        }
-
-        Credential credential = new Credential.Builder(username).setPassword(password).build();
-        Auth.CredentialsApi.delete(mCredentialsClient, credential).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                        AppLog.i(T.NUX, status.isSuccess() ? "SmartLock: credentials deleted for username: " + username
-                                : "SmartLock: Credentials not deleted for username: " + username);
-                    }
-                });
-    }
-
     public void disableAutoSignIn() {
         Auth.CredentialsApi.disableAutoSignIn(mCredentialsClient);
     }
