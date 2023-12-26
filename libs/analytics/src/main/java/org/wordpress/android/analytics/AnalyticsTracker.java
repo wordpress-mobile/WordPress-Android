@@ -14,10 +14,6 @@ import java.util.Map;
 public final class AnalyticsTracker {
     private static boolean mHasUserOptedOut;
 
-    public static final String READER_DETAIL_TYPE_KEY = "post_detail_type";
-    public static final String READER_DETAIL_TYPE_NORMAL = "normal";
-    public static final String READER_DETAIL_TYPE_BLOG_PREVIEW = "preview-blog";
-    public static final String READER_DETAIL_TYPE_TAG_PREVIEW = "preview-tag";
     public static final String ACTIVITY_LOG_ACTIVITY_ID_KEY = "activity_id";
     public static final String NOTIFICATIONS_SELECTED_FILTER = "selected_filter";
 
