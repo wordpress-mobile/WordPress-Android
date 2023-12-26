@@ -220,8 +220,6 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
-    private fun ReaderTag.isDefaultSelectedTab(): Boolean = this.isDiscover
-
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
@@ -365,7 +363,7 @@ class ReaderViewModel @Inject constructor(
 //            }
 //            appPrefsWrapper.getReaderTag()?.let {
 //                selectTab.invoke(it)
-//            } ?: tagList.find { it.isDefaultSelectedTab() }?.let {
+//            } ?: tagList.find { it.isDiscover }?.let {
 //                selectTab.invoke(it)
 //            }
             // TODO RenanLukas extract menu items creation to separate class
