@@ -1,8 +1,9 @@
 package org.wordpress.android.ui.reader.utils
 
-import android.util.SparseArray
-import androidx.core.util.forEach
-import androidx.core.util.isNotEmpty
+import androidx.collection.SparseArrayCompat
+import androidx.collection.forEach
+import androidx.collection.isNotEmpty
+import androidx.collection.set
 import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
@@ -31,7 +32,7 @@ class ReaderTopBarMenuHelper @Inject constructor() {
                 add(createAutomatticItem(getMenuItemIdFromReaderTagIndex(a8cIndex)))
             }
             readerTagsList
-                .foldIndexed(SparseArray<ReaderTag>()) { index, sparseArray, readerTag ->
+                .foldIndexed(SparseArrayCompat<ReaderTag>()) { index, sparseArray, readerTag ->
                     if (readerTag.tagType == ReaderTagType.CUSTOM_LIST) {
                         sparseArray[index] = readerTag
                     }
@@ -84,7 +85,7 @@ class ReaderTopBarMenuHelper @Inject constructor() {
         )
     }
 
-    private fun createCustomListsItem(customLists: SparseArray<ReaderTag>): MenuElementData.Item.SubMenu {
+    private fun createCustomListsItem(customLists: SparseArrayCompat<ReaderTag>): MenuElementData.Item.SubMenu {
         val customListsMenuItems = mutableListOf<MenuElementData.Item.Single>()
         customLists.forEach { index, readerTag ->
             customListsMenuItems.add(
