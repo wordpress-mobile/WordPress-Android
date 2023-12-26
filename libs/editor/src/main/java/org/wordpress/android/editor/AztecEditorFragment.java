@@ -131,16 +131,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         IAztecToolbarClickListener,
         AztecTextChangeObserver,
         IHistoryListener {
-    public static class AztecLoggingException extends Exception {
-        public AztecLoggingException(String message) {
-            super(message);
-        }
-
-        public AztecLoggingException(Throwable originalException) {
-            super(originalException);
-        }
-    }
-
     private static final String AZTEC_EDITOR_NAME = "aztec";
     private static final String ATTR_TAPPED_MEDIA_PREDICATE = "tapped_media_predicate";
 
@@ -489,10 +479,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public boolean hasHistory() {
         return (mContent.history.getHistoryEnabled() && !mContent.history.getHistoryList().isEmpty());
-    }
-
-    public boolean canUndo() {
-        return (hasHistory() && mContent.history.undoValid());
     }
 
     public boolean isHistoryEnabled() {
@@ -1319,10 +1305,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         static MediaPredicate getLocalMediaIdPredicate(String id) {
             return new MediaPredicate(id, ATTR_ID_WP);
-        }
-
-        static MediaPredicate getTempMediaIdPredicate(String id) {
-            return new MediaPredicate(id, TEMP_IMAGE_ID);
         }
 
         static MediaPredicate getAnimatedMediaPredicate() {
