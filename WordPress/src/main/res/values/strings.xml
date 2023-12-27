@@ -2692,10 +2692,10 @@
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
 
-    <string name="domains_primary_site_caption">Your free WordPress.com address is</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Change site address</string>
+    <string name="domains_primary_domain_caption">Your free WordPress.com domain is</string>
+    <string name="domains_primary_site_more_menu_change_site_domain">Change domain</string>
     <string name="domains_primary_site_address">%s</string>
-    <string name="domains_primary_site_address_chip">Primary site address</string>
+    <string name="domains_primary_site_domain_chip">Primary domain</string>
     <string name="domains_site_domains">Your site domains</string>
     <string name="domains_site_domain_expires">Expires on %s</string>
     <string name="domains_site_domain_expires_soon">&lt;span style="color:#d63638;"&gt;Expires on %s&lt;/span&gt;</string>
