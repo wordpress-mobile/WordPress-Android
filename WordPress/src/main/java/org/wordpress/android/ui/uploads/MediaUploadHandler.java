@@ -21,6 +21,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.config.Mp4ComposerVideoOptimizationFeatureConfig;
 
@@ -395,7 +396,8 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         if (properties != null) {
             mediaProperties.putAll(properties);
         }
-        AnalyticsTracker.track(stat, mediaProperties);
+        SiteModel site = mSiteStore.getSiteByLocalId(media.getLocalSiteId());
+        AnalyticsUtils.trackWithSiteDetails(stat, site, mediaProperties);
     }
 
     private boolean mediaAlreadyQueuedOrUploading(MediaModel mediaModel) {
