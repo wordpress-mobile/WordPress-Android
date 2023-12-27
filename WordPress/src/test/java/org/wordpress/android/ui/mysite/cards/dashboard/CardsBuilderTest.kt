@@ -362,7 +362,7 @@ class CardsBuilderTest : BaseUnitTest() {
                     mock(),
                     mock(),
                     mock(),
-                    mock()
+                    mock(),
                 )
             )
         )

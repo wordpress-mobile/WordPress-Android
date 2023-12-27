@@ -145,7 +145,7 @@ private val DYNAMIC_CARD_MODEL = DynamicCardModel(
 )
 
 private val DYNAMIC_CARDS_MODEL = DynamicCardsModel(
-    pages = listOf(DYNAMIC_CARD_MODEL)
+    dynamicCards = listOf(DYNAMIC_CARD_MODEL)
 )
 
 private val ACTIVITY_LOG_MODEL = ActivityLogModel(

@@ -134,6 +134,23 @@ class ActivityNavigator @Inject constructor() {
         context.startActivity(intent)
     }
 
+    fun openMediaPickerInNewStack(context: Context, site: SiteModel?) {
+        if (site == null) {
+            ToastUtils.showToast(context, R.string.media_cannot_be_started, ToastUtils.Duration.SHORT)
+            return
+        }
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site)
+        val taskStackBuilder = TaskStackBuilder.create(context)
+        val mainActivityIntent = getMainActivityInNewStack(context)
+        val intent = Intent(context, MediaBrowserActivity::class.java)
+        intent.putExtra(WordPress.SITE, site)
+        intent.putExtra(MediaBrowserActivity.ARG_LAUNCH_PHOTO_PICKER, true)
+        taskStackBuilder
+            .addNextIntent(mainActivityIntent)
+            .addNextIntent(intent)
+            .startActivities()
+    }
+
     private fun getMainActivityInNewStack(context: Context): Intent {
         val mainActivityIntent = Intent(context, WPMainActivity::class.java)
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
