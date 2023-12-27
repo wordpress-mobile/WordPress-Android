@@ -3,6 +3,7 @@
 24.0
 -----
 * [*] Filter media types when sharing files to the editor [https://github.com/wordpress-mobile/WordPress-Android/pull/19754]
+* [***] [Jetpack-only] Plans: Upgrade to a Plan from domains dashboard in Jetpack app [https://github.com/wordpress-mobile/WordPress-Android/pull/19818]
 * [**] [internal] Removes unused resources and code [https://github.com/wordpress-mobile/WordPress-Android/pull/19788]
 
 23.9

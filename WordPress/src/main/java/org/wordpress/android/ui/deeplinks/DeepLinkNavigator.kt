@@ -33,7 +33,7 @@ import javax.inject.Inject
 
 class DeepLinkNavigator
 @Inject constructor(private val activityNavigator: ActivityNavigator) {
-    @Suppress("ComplexMethod")
+    @Suppress("ComplexMethod", "LongMethod")
     fun handleNavigationAction(navigateAction: NavigateAction, activity: AppCompatActivity) {
         when (navigateAction) {
             LoginForResult -> ActivityLauncher.loginForDeeplink(activity)
@@ -86,6 +86,10 @@ class DeepLinkNavigator
                 ActivityLauncher.showJetpackStaticPoster(activity)
             is NavigateAction.OpenMediaForSite -> activityNavigator.openMediaInNewStack(activity, navigateAction.site)
             NavigateAction.OpenMedia -> activityNavigator.openMediaInNewStack(activity)
+            is NavigateAction.OpenMediaPickerForSite -> activityNavigator.openMediaPickerInNewStack(
+                activity,
+                navigateAction.site
+            )
             NavigateAction.DomainManagement -> ActivityLauncher.openDomainManagement(activity)
         }
         if (navigateAction != LoginForResult) {
@@ -120,6 +124,7 @@ class DeepLinkNavigator
         object OpenJetpackStaticPosterView : NavigateAction()
         data class OpenMediaForSite(val site: SiteModel) : NavigateAction()
         object OpenMedia : NavigateAction()
+        data class OpenMediaPickerForSite(val site: SiteModel) : NavigateAction()
         object DomainManagement : NavigateAction()
     }
 }

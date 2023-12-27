@@ -30,6 +30,6 @@ class QRCodeAuthLinkHandler @Inject constructor() : DeepLinkHandler {
         private const val GET_PATH = "get"
         private const val HOST_APPS_WORDPRESS_COM = "apps.wordpress.com"
         private const val CAMPAIGN = "campaign"
-        private const val CAMPAIGN_TYPE = "login-qr-code"
+        const val CAMPAIGN_TYPE = "login-qr-code"
     }
 }

@@ -158,9 +158,10 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
                 ),
                 title = DYNAMIC_CARD_TITLE,
                 image = DYNAMIC_CARD_FEATURED_IMAGE,
-                action = MySiteCardAndItem.Card.Dynamic.ActionSource.Button(
+                action = MySiteCardAndItem.Card.Dynamic.ActionSource.CardOrButton(
                     url = DYNAMIC_CARD_URL,
-                    onClick = mock(),
+                    onCardClick = mock(),
+                    onButtonClick = mock(),
                     title = DYNAMIC_CARD_ACTION
                 ),
                 onHideMenuItemClick = mock(),
@@ -181,9 +182,10 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
         assertEquals(expectedCards[0].image, dynamicCards[0].image)
         assertEquals(expectedCards[0].rows.size, 1)
         assertEquals(expectedCards[0].rows, dynamicCards[0].rows)
-        assertThat(dynamicCards[0].action).isInstanceOf(MySiteCardAndItem.Card.Dynamic.ActionSource.Button::class.java)
-        val expected = expectedCards[0].action as? MySiteCardAndItem.Card.Dynamic.ActionSource.Button
-        val actual = dynamicCards[0].action as? MySiteCardAndItem.Card.Dynamic.ActionSource.Button
+        assertThat(dynamicCards[0].action)
+            .isInstanceOf(MySiteCardAndItem.Card.Dynamic.ActionSource.CardOrButton::class.java)
+        val expected = expectedCards[0].action as? MySiteCardAndItem.Card.Dynamic.ActionSource.CardOrButton
+        val actual = dynamicCards[0].action as? MySiteCardAndItem.Card.Dynamic.ActionSource.CardOrButton
         assertEquals(expected?.title, actual?.title)
         assertEquals(expected?.url, actual?.url)
     }
