@@ -12,6 +12,7 @@ import javax.inject.Inject
 private const val FAKE_DELAY = 500L
 
 class FakeBlazeTargetingRestClient @Inject constructor() {
+    @Suppress("MagicNumber")
     suspend fun fetchBlazeLocations(
         query: String
     ): BlazeTargetingPayload<List<BlazeTargetingLocation>> {
