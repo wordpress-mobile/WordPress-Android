@@ -34,6 +34,40 @@ class BlazeCampaignsStore @Inject constructor(
         site: SiteModel,
         page: Int = 1
     ): BlazeCampaignsResult<BlazeCampaignsModel> {
+        fun handlePayloadError(
+            site: SiteModel,
+            error: BlazeCampaignsError
+        ): BlazeCampaignsResult<BlazeCampaignsModel> = when (error.type) {
+            AUTHORIZATION_REQUIRED -> {
+                campaignsDao.clear(site.siteId)
+                BlazeCampaignsResult()
+            }
+
+            else -> BlazeCampaignsResult(error)
+        }
+
+        @Suppress("TooGenericExceptionCaught", "SwallowedException")
+        suspend fun handlePayloadResponse(
+            site: SiteModel,
+            response: BlazeCampaignsResponse
+        ): BlazeCampaignsResult<BlazeCampaignsModel> = try {
+            val blazeCampaignsModel = response.toCampaignsModel()
+            campaignsDao.insertCampaignsAndPageInfoForSite(site.siteId, blazeCampaignsModel)
+            BlazeCampaignsResult(blazeCampaignsModel)
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.API, "Error storing blaze campaigns", e)
+            BlazeCampaignsResult(BlazeCampaignsError(INVALID_RESPONSE))
+        }
+
+        suspend fun storeBlazeCampaigns(
+            site: SiteModel,
+            payload: BlazeCampaignsFetchedPayload<BlazeCampaignsResponse>
+        ): BlazeCampaignsResult<BlazeCampaignsModel> = when {
+            payload.isError -> handlePayloadError(site, payload.error)
+            payload.response != null -> handlePayloadResponse(site, payload.response)
+            else -> BlazeCampaignsResult(BlazeCampaignsError(INVALID_RESPONSE))
+        }
+
         return coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch blaze campaigns") {
             val payload = restClient.fetchBlazeCampaigns(site, page)
             storeBlazeCampaigns(site, payload)
@@ -128,40 +162,6 @@ class BlazeCampaignsStore @Inject constructor(
     }
 
     fun observeBlazeTargetingDevices() = targetingDao.observeDevices()
-
-    private suspend fun storeBlazeCampaigns(
-        site: SiteModel,
-        payload: BlazeCampaignsFetchedPayload<BlazeCampaignsResponse>
-    ): BlazeCampaignsResult<BlazeCampaignsModel> = when {
-        payload.isError -> handlePayloadError(site, payload.error)
-        payload.response != null -> handlePayloadResponse(site, payload.response)
-        else -> BlazeCampaignsResult(BlazeCampaignsError(INVALID_RESPONSE))
-    }
-
-    private fun handlePayloadError(
-        site: SiteModel,
-        error: BlazeCampaignsError
-    ): BlazeCampaignsResult<BlazeCampaignsModel> = when (error.type) {
-        AUTHORIZATION_REQUIRED -> {
-            campaignsDao.clear(site.siteId)
-            BlazeCampaignsResult()
-        }
-
-        else -> BlazeCampaignsResult(error)
-    }
-
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
-    private suspend fun handlePayloadResponse(
-        site: SiteModel,
-        response: BlazeCampaignsResponse
-    ): BlazeCampaignsResult<BlazeCampaignsModel> = try {
-        val blazeCampaignsModel = response.toCampaignsModel()
-        campaignsDao.insertCampaignsAndPageInfoForSite(site.siteId, blazeCampaignsModel)
-        BlazeCampaignsResult(blazeCampaignsModel)
-    } catch (e: Exception) {
-        AppLog.e(AppLog.T.API, "Error storing blaze campaigns", e)
-        BlazeCampaignsResult(BlazeCampaignsError(INVALID_RESPONSE))
-    }
 
     data class BlazeCampaignsResult<T>(
         val model: T? = null,
