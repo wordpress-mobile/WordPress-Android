@@ -202,7 +202,7 @@ class BlazeCampaignsStoreTest {
 
     @Test
     fun `when fetching targeting locations, then locations are returned`() = test {
-        whenever(targetingRestClient.fetchBlazeLocations(any())).thenReturn(
+        whenever(targetingRestClient.fetchBlazeLocations(any(), any())).thenReturn(
             BlazeTargetingPayload(
                 List(10) {
                     BlazeTargetingLocation(
@@ -224,12 +224,13 @@ class BlazeCampaignsStoreTest {
 
     @Test
     fun `when fetching targeting topics, then persist data in DB`() = test {
-        whenever(targetingRestClient.fetchBlazeTopics()).thenReturn(
+        whenever(targetingRestClient.fetchBlazeTopics(any())).thenReturn(
             BlazeTargetingPayload(
                 List(10) {
                     BlazeTargetingTopicEntity(
                         id = it.toString(),
-                        description = "Topic $it"
+                        description = "Topic $it",
+                        locale = "en"
                     )
                 }
             )
@@ -242,12 +243,13 @@ class BlazeCampaignsStoreTest {
 
     @Test
     fun `when observing targeting topics, then return data from DB`() = test {
-        whenever(blazeTargetingDao.observeTopics()).thenReturn(
+        whenever(blazeTargetingDao.observeTopics(any())).thenReturn(
             flowOf(
                 List(10) {
                     BlazeTargetingTopicEntity(
                         id = it.toString(),
-                        description = "Topic $it"
+                        description = "Topic $it",
+                        locale = "en"
                     )
                 }
             )
@@ -261,12 +263,13 @@ class BlazeCampaignsStoreTest {
 
     @Test
     fun `when fetching targeting languages, then persist data in DB`() = test {
-        whenever(targetingRestClient.fetchBlazeLanguages()).thenReturn(
+        whenever(targetingRestClient.fetchBlazeLanguages(any())).thenReturn(
             BlazeTargetingPayload(
                 List(10) {
                     BlazeTargetingLanguageEntity(
                         id = it.toString(),
-                        name = "Language $it"
+                        name = "Language $it",
+                        locale = "en"
                     )
                 }
             )
@@ -279,12 +282,13 @@ class BlazeCampaignsStoreTest {
 
     @Test
     fun `when observing targeting languages, then return data from DB`() = test {
-        whenever(blazeTargetingDao.observeLanguages()).thenReturn(
+        whenever(blazeTargetingDao.observeLanguages(any())).thenReturn(
             flowOf(
                 List(10) {
                     BlazeTargetingLanguageEntity(
                         id = it.toString(),
-                        name = "Language $it"
+                        name = "Language $it",
+                        locale = "en"
                     )
                 }
             )
@@ -298,12 +302,13 @@ class BlazeCampaignsStoreTest {
 
     @Test
     fun `when fetching targeting devices, then persist data in DB`() = test {
-        whenever(targetingRestClient.fetchBlazeDevices()).thenReturn(
+        whenever(targetingRestClient.fetchBlazeDevices(any())).thenReturn(
             BlazeTargetingPayload(
                 List(10) {
                     BlazeTargetingDeviceEntity(
                         id = it.toString(),
-                        name = "Device $it"
+                        name = "Device $it",
+                        locale = "en"
                     )
                 }
             )
@@ -316,12 +321,13 @@ class BlazeCampaignsStoreTest {
 
     @Test
     fun `when observing targeting devices, then return data from DB`() = test {
-        whenever(blazeTargetingDao.observeDevices()).thenReturn(
+        whenever(blazeTargetingDao.observeDevices(any())).thenReturn(
             flowOf(
                 List(10) {
                     BlazeTargetingDeviceEntity(
                         id = it.toString(),
-                        name = "Device $it"
+                        name = "Device $it",
+                        locale = "en"
                     )
                 }
             )

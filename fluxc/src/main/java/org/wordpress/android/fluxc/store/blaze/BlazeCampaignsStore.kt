@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.store.Store.OnChangedError
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -96,12 +97,15 @@ class BlazeCampaignsStore @Inject constructor(
         campaignsDao.observeMostRecentCampaignForSite(site.siteId)
             .map { it?.toDomainModel() }
 
-    suspend fun fetchBlazeTargetingLocations(query: String) = coroutineEngine.withDefaultContext(
+    suspend fun fetchBlazeTargetingLocations(
+        query: String,
+        locale: String = Locale.getDefault().language
+    ) = coroutineEngine.withDefaultContext(
         AppLog.T.API,
         this,
         "fetch blaze locations"
     ) {
-        fakeTargetingRestClient.fetchBlazeLocations(query).let { payload ->
+        fakeTargetingRestClient.fetchBlazeLocations(query, locale).let { payload ->
             when {
                 payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
                 else -> BlazeTargetingResult(payload.data)
@@ -109,12 +113,14 @@ class BlazeCampaignsStore @Inject constructor(
         }
     }
 
-    suspend fun fetchBlazeTargetingTopics() = coroutineEngine.withDefaultContext(
+    suspend fun fetchBlazeTargetingTopics(
+        locale: String = Locale.getDefault().language
+    ) = coroutineEngine.withDefaultContext(
         AppLog.T.API,
         this,
         "fetch blaze topics"
     ) {
-        fakeTargetingRestClient.fetchBlazeTopics().let { payload ->
+        fakeTargetingRestClient.fetchBlazeTopics(locale).let { payload ->
             when {
                 payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
                 else -> {
@@ -125,14 +131,18 @@ class BlazeCampaignsStore @Inject constructor(
         }
     }
 
-    fun observeBlazeTargetingTopics() = targetingDao.observeTopics()
+    fun observeBlazeTargetingTopics(
+        locale: String = Locale.getDefault().language
+    ) = targetingDao.observeTopics(locale)
 
-    suspend fun fetchBlazeTargetingLanguages() = coroutineEngine.withDefaultContext(
+    suspend fun fetchBlazeTargetingLanguages(
+        locale: String = Locale.getDefault().language
+    ) = coroutineEngine.withDefaultContext(
         AppLog.T.API,
         this,
         "fetch blaze languages"
     ) {
-        fakeTargetingRestClient.fetchBlazeLanguages().let { payload ->
+        fakeTargetingRestClient.fetchBlazeLanguages(locale).let { payload ->
             when {
                 payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
                 else -> {
@@ -143,14 +153,18 @@ class BlazeCampaignsStore @Inject constructor(
         }
     }
 
-    fun observeBlazeTargetingLanguages() = targetingDao.observeLanguages()
+    fun observeBlazeTargetingLanguages(
+        locale: String = Locale.getDefault().language
+    ) = targetingDao.observeLanguages(locale)
 
-    suspend fun fetchBlazeTargetingDevices() = coroutineEngine.withDefaultContext(
+    suspend fun fetchBlazeTargetingDevices(
+        locale: String = Locale.getDefault().language
+    ) = coroutineEngine.withDefaultContext(
         AppLog.T.API,
         this,
         "fetch blaze devices"
     ) {
-        fakeTargetingRestClient.fetchBlazeDevices().let { payload ->
+        fakeTargetingRestClient.fetchBlazeDevices(locale).let { payload ->
             when {
                 payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
                 else -> {
@@ -161,7 +175,9 @@ class BlazeCampaignsStore @Inject constructor(
         }
     }
 
-    fun observeBlazeTargetingDevices() = targetingDao.observeDevices()
+    fun observeBlazeTargetingDevices(
+        locale: String = Locale.getDefault().language
+    ) = targetingDao.observeDevices(locale)
 
     data class BlazeCampaignsResult<T>(
         val model: T? = null,
