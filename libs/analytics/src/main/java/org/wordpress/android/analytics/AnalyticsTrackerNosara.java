@@ -1929,6 +1929,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domains_dashboard_viewed";
             case DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED:
                 return "domains_dashboard_get_domain_tapped";
+            case DOMAINS_DASHBOARD_GET_PLAN_TAPPED:
+                return "domains_dashboard_get_plan_tapped";
             case DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED:
                 return "domains_dashboard_add_domain_tapped";
             case DOMAINS_SEARCH_SELECT_DOMAIN_TAPPED:
@@ -2681,6 +2683,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "sotw_2023_nudge_post_event_card_hide_tapped";
             case SOTW_2023_NUDGE_POST_EVENT_CARD_CTA_TAPPED:
                 return "sotw_2023_nudge_post_event_card_cta_tapped";
+            case DYNAMIC_DASHBOARD_CARD_SHOWN:
+                return "dynamic_dashboard_card_shown";
+            case DYNAMIC_DASHBOARD_CARD_TAPPED:
+                return "dynamic_dashboard_card_tapped";
+            case DYNAMIC_DASHBOARD_CARD_CTA_TAPPED:
+                return "dynamic_dashboard_card_cta_tapped";
+            case DYNAMIC_DASHBOARD_CARD_HIDE_TAPPED:
+                return "dynamic_dashboard_card_hide_tapped";
         }
         return null;
     }

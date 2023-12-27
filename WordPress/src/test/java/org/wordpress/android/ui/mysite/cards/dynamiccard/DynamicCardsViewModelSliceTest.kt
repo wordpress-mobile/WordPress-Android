@@ -12,6 +12,9 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardRowModel
+import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams.ClickParams
+import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 /* DYNAMIC CARDS */
@@ -21,6 +24,7 @@ private const val DYNAMIC_CARD_TITLE = "News"
 private const val DYNAMIC_CARD_REMOTE_FEATURE_FLAG = "dynamic_dashboard_cards"
 private const val DYNAMIC_CARD_FEATURED_IMAGE = "https://path/to/image"
 private const val DYNAMIC_CARD_URL = "https://wordpress.com"
+private const val SOME_DEEP_LINK = "some_deep_link"
 private const val DYNAMIC_CARD_ACTION = "Call to action"
 private const val DYNAMIC_CARD_ORDER = "top"
 private const val DYNAMIC_CARD_ROW_ICON = "https://path/to/image"
@@ -67,12 +71,19 @@ private val filteredDynamicCardsModel = CardModel.DynamicCardsModel(
 class DynamicCardsViewModelSliceTest : BaseUnitTest() {
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    private lateinit var deepLinkHandlers: DeepLinkHandlers
+
+    @Mock
+    private lateinit var tracker: DynamicCardsAnalyticsTracker
+
     private lateinit var viewModelSlice: DynamicCardsViewModelSlice
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        viewModelSlice = DynamicCardsViewModelSlice(appPrefsWrapper)
+        viewModelSlice = DynamicCardsViewModelSlice(appPrefsWrapper, deepLinkHandlers, tracker)
     }
 
     @Test
@@ -94,5 +105,79 @@ class DynamicCardsViewModelSliceTest : BaseUnitTest() {
 
         verify(appPrefsWrapper).setShouldHideDynamicCard(DYNAMIC_CARD_ID_FIRST, true)
         assertThat(viewModelSlice.refresh.value?.peekContent()).isTrue
+
+        verify(tracker).trackHideTapped(DYNAMIC_CARD_ID_FIRST)
+    }
+
+
+    @Test
+    fun `WHEN card hide menu item clicked THEN track a hide event`() {
+        whenever(appPrefsWrapper.getShouldHideDynamicCard(DYNAMIC_CARD_ID_FIRST)).thenReturn(false)
+
+        val builderParams = viewModelSlice.getBuilderParams(dynamicCardsModel)
+        builderParams.onHideMenuItemClick.invoke(DYNAMIC_CARD_ID_FIRST)
+
+        verify(tracker).trackHideTapped(DYNAMIC_CARD_ID_FIRST)
+    }
+
+    @Test
+    fun `WHEN the card click is triggered with an url THEN open the URL in a webview and card click event tracked`() {
+        whenever(deepLinkHandlers.isDeepLink(DYNAMIC_CARD_URL)).thenReturn(false)
+        val builderParams = viewModelSlice.getBuilderParams(dynamicCardsModel)
+        builderParams.onCardClick.invoke(ClickParams(id = DYNAMIC_CARD_ID_FIRST, actionUrl = DYNAMIC_CARD_URL))
+        assertThat(viewModelSlice.onNavigation.value?.peekContent()).isEqualTo(
+            SiteNavigationAction.OpenUrlInWebView(DYNAMIC_CARD_URL)
+        )
+        verify(tracker).trackCardTapped(id = DYNAMIC_CARD_ID_FIRST, url = DYNAMIC_CARD_URL)
+    }
+
+    @Test
+    @Suppress("MaxLineLength")
+    fun `WHEN the card click is triggered for a deep link THEN the deep link is handled and card click event tracked`() {
+        whenever(deepLinkHandlers.isDeepLink(SOME_DEEP_LINK)).thenReturn(true)
+        val builderParams = viewModelSlice.getBuilderParams(dynamicCardsModel)
+        builderParams.onCardClick.invoke(ClickParams(id = DYNAMIC_CARD_ID_FIRST, actionUrl = SOME_DEEP_LINK))
+        assertThat(viewModelSlice.onNavigation.value?.peekContent()).isEqualTo(
+            SiteNavigationAction.OpenDeepLink(SOME_DEEP_LINK)
+        )
+        verify(tracker).trackCardTapped(id = DYNAMIC_CARD_ID_FIRST, url = SOME_DEEP_LINK)
+    }
+
+    @Test
+    @Suppress("MaxLineLength")
+    fun `WHEN the card cta click is triggered with an url THEN open the URL in a webview and card cta click event tracked`() {
+        whenever(deepLinkHandlers.isDeepLink(DYNAMIC_CARD_URL)).thenReturn(false)
+        val builderParams = viewModelSlice.getBuilderParams(dynamicCardsModel)
+        builderParams.onCtaClick.invoke(ClickParams(id = DYNAMIC_CARD_ID_FIRST, actionUrl = DYNAMIC_CARD_URL))
+        assertThat(viewModelSlice.onNavigation.value?.peekContent()).isEqualTo(
+            SiteNavigationAction.OpenUrlInWebView(DYNAMIC_CARD_URL)
+        )
+        verify(tracker).trackCtaTapped(id = DYNAMIC_CARD_ID_FIRST, url = DYNAMIC_CARD_URL)
+    }
+
+    @Test
+    @Suppress("MaxLineLength")
+    fun `WHEN the card cta click is triggered for a deep link THEN the deep link is handled and card cta click event tracked`() {
+        whenever(deepLinkHandlers.isDeepLink(SOME_DEEP_LINK)).thenReturn(true)
+        val builderParams = viewModelSlice.getBuilderParams(dynamicCardsModel)
+        builderParams.onCtaClick.invoke(ClickParams(id = DYNAMIC_CARD_ID_FIRST, actionUrl = SOME_DEEP_LINK))
+        assertThat(viewModelSlice.onNavigation.value?.peekContent()).isEqualTo(
+            SiteNavigationAction.OpenDeepLink(SOME_DEEP_LINK)
+        )
+        verify(tracker).trackCtaTapped(id = DYNAMIC_CARD_ID_FIRST, url = SOME_DEEP_LINK)
+    }
+
+    @Test
+    fun `WHEN a card is shown THEN track a shown event`() {
+        viewModelSlice.trackShown(DYNAMIC_CARD_ID_FIRST)
+
+        verify(tracker).trackShown(DYNAMIC_CARD_ID_FIRST)
+    }
+
+    @Test
+    fun `WHEN a site is switched THEN reset a shown event`() {
+        viewModelSlice.resetShown()
+
+        verify(tracker).resetShown()
     }
 }
