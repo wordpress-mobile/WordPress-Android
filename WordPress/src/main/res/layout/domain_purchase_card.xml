@@ -55,7 +55,7 @@
             style="@style/DomainsPlanPurchaseCardPrimaryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_medium_large"
             android:text="@string/domains_search_for_a_domain_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
