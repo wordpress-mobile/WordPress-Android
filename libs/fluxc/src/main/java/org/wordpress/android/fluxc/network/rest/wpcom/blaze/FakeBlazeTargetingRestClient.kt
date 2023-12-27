@@ -12,9 +12,10 @@ import javax.inject.Inject
 private const val FAKE_DELAY = 500L
 
 class FakeBlazeTargetingRestClient @Inject constructor() {
-    @Suppress("MagicNumber")
+    @Suppress("MagicNumber", "UNUSED_PARAMETER")
     suspend fun fetchBlazeLocations(
-        query: String
+        query: String,
+        locale: String
     ): BlazeTargetingPayload<List<BlazeTargetingLocation>> {
         if (query.length < 3) {
             return BlazeTargetingPayload(emptyList())
@@ -28,22 +29,22 @@ class FakeBlazeTargetingRestClient @Inject constructor() {
         )
     }
 
-    suspend fun fetchBlazeTopics(): BlazeTargetingPayload<List<BlazeTargetingTopicEntity>> {
+    suspend fun fetchBlazeTopics(locale: String): BlazeTargetingPayload<List<BlazeTargetingTopicEntity>> {
         delay(FAKE_DELAY)
 
-        return BlazeTargetingPayload(fakeTopics)
+        return BlazeTargetingPayload(generateFakeTopics(locale))
     }
 
-    suspend fun fetchBlazeLanguages(): BlazeTargetingPayload<List<BlazeTargetingLanguageEntity>> {
+    suspend fun fetchBlazeLanguages(locale: String): BlazeTargetingPayload<List<BlazeTargetingLanguageEntity>> {
         delay(FAKE_DELAY)
 
-        return BlazeTargetingPayload(fakeLanguages)
+        return BlazeTargetingPayload(generateFakeLanguages(locale))
     }
 
-    suspend fun fetchBlazeDevices(): BlazeTargetingPayload<List<BlazeTargetingDeviceEntity>> {
+    suspend fun fetchBlazeDevices(locale: String): BlazeTargetingPayload<List<BlazeTargetingDeviceEntity>> {
         delay(FAKE_DELAY)
 
-        return BlazeTargetingPayload(fakeDevices)
+        return BlazeTargetingPayload(generateFakeDevices(locale))
     }
 }
 
@@ -190,90 +191,106 @@ private val fakeLocations
         )
     )
 
-private val fakeTopics
-    get() = listOf(
-        BlazeTargetingTopicEntity(
-            id = "IAB1",
-            description = "Arts & Entertainment"
-        ),
-        BlazeTargetingTopicEntity(
-            id = "IAB2",
-            description = "Automotive"
-        ),
-        BlazeTargetingTopicEntity(
-            id = "IAB3",
-            description = "Business"
-        ),
-        BlazeTargetingTopicEntity(
-            id = "IAB4",
-            description = "Careers"
-        ),
-        BlazeTargetingTopicEntity(
-            id = "IAB5",
-            description = "Education"
-        ),
-        BlazeTargetingTopicEntity(
-            id = "IAB6",
-            description = "Family & Parenting"
-        ),
-        BlazeTargetingTopicEntity(
-            id = "IAB7",
-            description = "Health & Fitness"
-        )
+private fun generateFakeTopics(locale: String) = listOf(
+    BlazeTargetingTopicEntity(
+        id = "IAB1",
+        description = "Arts & Entertainment",
+        locale = locale
+    ),
+    BlazeTargetingTopicEntity(
+        id = "IAB2",
+        description = "Automotive",
+        locale = locale
+    ),
+    BlazeTargetingTopicEntity(
+        id = "IAB3",
+        description = "Business",
+        locale = locale
+    ),
+    BlazeTargetingTopicEntity(
+        id = "IAB4",
+        description = "Careers",
+        locale = locale
+    ),
+    BlazeTargetingTopicEntity(
+        id = "IAB5",
+        description = "Education",
+        locale = locale
+    ),
+    BlazeTargetingTopicEntity(
+        id = "IAB6",
+        description = "Family & Parenting",
+        locale = locale
+    ),
+    BlazeTargetingTopicEntity(
+        id = "IAB7",
+        description = "Health & Fitness",
+        locale = locale
     )
+)
 
-private val fakeLanguages
-    get() = listOf(
-        BlazeTargetingLanguageEntity(
-            id = "en",
-            name = "English"
-        ),
-        BlazeTargetingLanguageEntity(
-            id = "es",
-            name = "Spanish"
-        ),
-        BlazeTargetingLanguageEntity(
-            id = "fr",
-            name = "French"
-        ),
-        BlazeTargetingLanguageEntity(
-            id = "de",
-            name = "German"
-        ),
-        BlazeTargetingLanguageEntity(
-            id = "it",
-            name = "Italian"
-        ),
-        BlazeTargetingLanguageEntity(
-            id = "ja",
-            name = "Japanese"
-        ),
-        BlazeTargetingLanguageEntity(
-            id = "ko",
-            name = "Korean"
-        ),
-        BlazeTargetingLanguageEntity(
-            id = "pt",
-            name = "Portuguese"
-        ),
-        BlazeTargetingLanguageEntity(
-            id = "ru",
-            name = "Russian"
-        ),
-        BlazeTargetingLanguageEntity(
-            id = "zh",
-            name = "Chinese"
-        )
+private fun generateFakeLanguages(locale: String) = listOf(
+    BlazeTargetingLanguageEntity(
+        id = "en",
+        name = "English",
+        locale = locale
+    ),
+    BlazeTargetingLanguageEntity(
+        id = "es",
+        name = "Spanish",
+        locale = locale
+    ),
+    BlazeTargetingLanguageEntity(
+        id = "fr",
+        name = "French",
+        locale = locale
+    ),
+    BlazeTargetingLanguageEntity(
+        id = "de",
+        name = "German",
+        locale = locale
+    ),
+    BlazeTargetingLanguageEntity(
+        id = "it",
+        name = "Italian",
+        locale = locale
+    ),
+    BlazeTargetingLanguageEntity(
+        id = "ja",
+        name = "Japanese",
+        locale = locale
+    ),
+    BlazeTargetingLanguageEntity(
+        id = "ko",
+        name = "Korean",
+        locale = locale
+    ),
+    BlazeTargetingLanguageEntity(
+        id = "pt",
+        name = "Portuguese",
+        locale = locale
+    ),
+    BlazeTargetingLanguageEntity(
+        id = "ru",
+        name = "Russian",
+        locale = locale
+    ),
+    BlazeTargetingLanguageEntity(
+        id = "zh",
+        name = "Chinese",
+        locale = locale
     )
+)
 
-private val fakeDevices
-    get() = listOf(
-        BlazeTargetingDeviceEntity(
-            id = "mobile",
-            name = "Mobile"
-        ),
-        BlazeTargetingDeviceEntity(
-            id = "desktop",
-            name = "Desktop"
-        )
+private fun generateFakeDevices(locale: String) = listOf(
+    BlazeTargetingDeviceEntity(
+        id = "mobile",
+        name = "Mobile",
+        locale = locale
+    ),
+    BlazeTargetingDeviceEntity(
+        id = "desktop",
+        name = "Desktop",
+        locale = locale
     )
+)
