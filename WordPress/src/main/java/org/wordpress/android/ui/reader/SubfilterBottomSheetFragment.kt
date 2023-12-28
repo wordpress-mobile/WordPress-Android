@@ -77,8 +77,8 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             viewModelFactory
         )[subfilterVmKey, SubFilterViewModel::class.java]
 
+        // TODO thomashortadev: remove the pager and support only one category
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
-        val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
         val title = view.findViewById<TextView>(R.id.title)
         title.text = bottomSheetTitle
         pager.adapter = SubfilterPagerAdapter(
@@ -87,7 +87,6 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             subfilterVmKey,
             categories.toList()
         )
-        tabLayout.setupWithViewPager(pager)
         pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 // NO OP
@@ -107,15 +106,6 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             is Tag -> TAGS.ordinal
             else -> SITES.ordinal
         }
-
-        viewModel.filtersMatchCount.observe(this, Observer {
-            for (category in it.keys) {
-                val tab = tabLayout.getTabAt(category.ordinal)
-                tab?.let { sectionTab ->
-                    sectionTab.text = "${view.context.getString(category.titleRes)} (${it[category]})"
-                }
-            }
-        })
 
         dialog?.setOnShowListener { dialogInterface ->
             val sheetDialog = dialogInterface as? BottomSheetDialog

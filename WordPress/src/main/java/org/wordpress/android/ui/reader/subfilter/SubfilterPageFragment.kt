@@ -115,7 +115,6 @@ class SubfilterPageFragment : Fragment() {
 
                 viewModel.onSubFiltersChanged(items.isEmpty())
                 adapter.update(items)
-                subFilterViewModel.onSubfilterPageUpdated(category, items.size)
             }
         }
 

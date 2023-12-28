@@ -1179,10 +1179,12 @@
         <item name="android:layout_height">@dimen/one_line_list_item_height</item>
         <item name="android:paddingStart">@dimen/content_margin_bottom_sheet_row_start</item>
         <item name="android:paddingEnd">@dimen/content_margin_bottom_sheet_row_start</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>
-        <item name="android:textAllCaps">true</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/text_sz_larger</item>
     </style>
 
     <style name="SubfilterDividerItem">
