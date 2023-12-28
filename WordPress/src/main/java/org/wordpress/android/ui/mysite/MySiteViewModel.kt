@@ -468,11 +468,14 @@ class MySiteViewModel @Inject constructor(
         )
         val jetpackInstallFullPluginCard = jetpackInstallFullPluginCardBuilder.build(jetpackInstallFullPluginCardParams)
 
-        val cardsResult = cardsBuilder.build(
+        val domainRegistrationCard = trackAndBuildDomainRegistrationCard(
             DomainRegistrationCardBuilderParams(
                 isDomainCreditAvailable = isDomainCreditAvailable,
                 domainRegistrationClick = this::domainRegistrationClick
-            ),
+            )
+        )
+
+        val cardsResult = cardsBuilder.build(
             QuickStartCardBuilderParams(
                 quickStartCategories = quickStartCategories,
                 moreMenuClickParams = QuickStartCardBuilderParams.MoreMenuParams(
@@ -510,8 +513,7 @@ class MySiteViewModel @Inject constructor(
                 dynamicCardsBuilderParams = dynamicCardsViewModelSlice.getBuilderParams(
                     cardsUpdate?.cards?.firstOrNull { it is DynamicCardsModel } as? DynamicCardsModel
                 )
-            ),
-            jetpackInstallFullPluginCardParams
+            )
         )
 
         val personalizeCard = personalizeCardBuilder.build(personalizeCardViewModelSlice.getBuilderParams())
@@ -522,11 +524,20 @@ class MySiteViewModel @Inject constructor(
             infoItem?.let { add(infoItem) }
             migrationSuccessCard?.let { add(migrationSuccessCard) }
             jetpackInstallFullPluginCard?.let { add(jetpackInstallFullPluginCard) }
+            domainRegistrationCard?.let { add(domainRegistrationCard) }
             quickLinks?.let { add(quickLinks) }
             addAll(cardsResult)
             noCardsMessage?.let { add(noCardsMessage) }
             personalizeCard?.let { add(personalizeCard) }
         }.toList()
+    }
+
+    private fun trackAndBuildDomainRegistrationCard(
+        params: DomainRegistrationCardBuilderParams
+    ): DomainRegistrationCard? {
+        return if(params.isDomainCreditAvailable)
+            DomainRegistrationCard(ListItemInteraction.create(params.domainRegistrationClick))
+        else null
     }
 
     private fun shouldShowDashboard(site: SiteModel): Boolean {
