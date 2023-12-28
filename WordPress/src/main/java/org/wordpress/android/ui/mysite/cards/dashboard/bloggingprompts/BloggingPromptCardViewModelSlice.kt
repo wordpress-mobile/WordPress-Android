@@ -11,6 +11,7 @@ import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.BloggingPromptCardNavigationAction
 import org.wordpress.android.ui.mysite.BloggingPromptsCardTrackHelper
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteSourceManager
 import org.wordpress.android.ui.mysite.MySiteUiState
@@ -33,6 +34,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider,
+    private val bloggingPromptCardBuilder: BloggingPromptCardBuilder
 ) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage as LiveData<Event<SnackbarMessageHolder>>
@@ -46,6 +48,10 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     fun initialize(scope: CoroutineScope, mySiteSourceManager: MySiteSourceManager) {
         this.scope = scope
         this.mySiteSourceManager = mySiteSourceManager
+    }
+
+    fun buildCard(bloggingPromptUpdate: MySiteUiState.PartialState.BloggingPromptUpdate?): BloggingPromptCardWithData? {
+        return bloggingPromptCardBuilder.build(getBuilderParams(bloggingPromptUpdate))
     }
 
     fun getBuilderParams(bloggingPromptUpdate: MySiteUiState.PartialState.BloggingPromptUpdate?):
