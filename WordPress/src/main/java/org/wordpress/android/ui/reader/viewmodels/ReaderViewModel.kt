@@ -125,9 +125,9 @@ class ReaderViewModel @Inject constructor(
         launch {
             val currentContentUiState = _uiState.value as? ContentUiState
             val tagList = loadReaderTabsUseCase.loadTabs()
-            if (tagList.isNotEmpty()) {
+            if (tagList.isNotEmpty() && readerTagsList != tagList) {
                 updateReaderTagsList(tagList)
-                initializeTopBarUiState()
+                updateTopBarUiState()
                 _uiState.value = ContentUiState(
                     tabUiStates = tagList.map { TabUiState(label = UiStringText(it.label)) },
                     selectedReaderTag = selectedReaderTag(),
@@ -369,14 +369,26 @@ class ReaderViewModel @Inject constructor(
             readerTagsList[readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(it.selectedItem)]
         }
 
-    private suspend fun initializeTopBarUiState(/*tagList: ReaderTagList*/) {
+    private suspend fun updateTopBarUiState() {
         withContext(bgDispatcher) {
             val menuItems = readerTopBarMenuHelper.createMenu(readerTagsList)
+
+            // if menu is exactly the same as before, don't update
+            if (_topBarUiState.value?.menuItems == menuItems) return@withContext
+
+            // if there's already a selected item, use it, otherwise use the first item
+            val selectedItem = _topBarUiState.value?.selectedItem
+                ?: menuItems.first { it is MenuElementData.Item.Single } as MenuElementData.Item.Single
+
+            // if there's a selected item and filter state, also use the filter state
+            val filterUiState = _topBarUiState.value?.filterUiState
+                ?.takeIf { _topBarUiState.value?.selectedItem != null }
+
             _topBarUiState.postValue(
                 TopBarUiState(
                     menuItems = menuItems,
-                    selectedItem = menuItems.first { it is MenuElementData.Item.Single } as MenuElementData.Item.Single,
-                    filterUiState = null,
+                    selectedItem = selectedItem,
+                    filterUiState = filterUiState,
                 )
             )
         }
