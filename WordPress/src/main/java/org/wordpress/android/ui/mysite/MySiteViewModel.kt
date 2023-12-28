@@ -496,6 +496,8 @@ class MySiteViewModel @Inject constructor(
             bloggingPromptUpdate
         )
 
+        val blazeCard = blazeCardViewModelSlice.buildBlazeCard(blazeCardUpdate)
+
         val todayStatsCard = todaysStatsViewModelSlice.buildTodaysStatsCard(
             cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel } as? TodaysStatsCardModel
         )

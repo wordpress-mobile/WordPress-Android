@@ -11,6 +11,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardB
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
+import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -20,13 +21,18 @@ import javax.inject.Singleton
 class BlazeCardViewModelSlice @Inject constructor(
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val cardsTracker: CardsTracker
+    private val cardsTracker: CardsTracker,
+    private val blazeCardBuilder: BlazeCardBuilder
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
     private val _refresh = MutableLiveData<Event<Boolean>>()
     val refresh = _refresh
+
+    fun buildBlazeCard(blazeCardUpdate: BlazeCardUpdate?): MySiteCardAndItem.Card.BlazeCard? {
+        return getBlazeCardBuilderParams(blazeCardUpdate)?.let { blazeCardBuilder.build(it) }
+    }
 
     fun getBlazeCardBuilderParams(blazeCardUpdate: BlazeCardUpdate?): BlazeCardBuilderParams? {
         return blazeCardUpdate?.let {
@@ -89,6 +95,7 @@ class BlazeCardViewModelSlice @Inject constructor(
         )
     }
 
+
     private fun getPromoteWithBlazeCardBuilderParams() =
         PromoteWithBlazeCardBuilderParams(
             onClick = this::onPromoteWithBlazeCardClick,
@@ -98,7 +105,6 @@ class BlazeCardViewModelSlice @Inject constructor(
                 onMoreMenuClick = this::onPromoteCardMoreMenuClick
             )
         )
-
 
     private fun onPromoteCardLearnMoreClick() {
         cardsTracker.trackCardMoreMenuItemClicked(
