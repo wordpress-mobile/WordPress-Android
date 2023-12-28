@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -37,6 +38,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import me.saket.cascade.CascadeColumnScope
 import me.saket.cascade.CascadeDropdownMenu
@@ -63,10 +66,17 @@ fun JetpackDropdownMenu(
                 isMenuVisible = !isMenuVisible
             }
         )
+        val cascadeMenuWidth = 200.dp
         CascadeDropdownMenu(
-            modifier = Modifier.background(MenuColors.itemBackgroundColor()),
+            modifier = Modifier
+                .background(MenuColors.itemBackgroundColor()),
             expanded = isMenuVisible,
+            fixedWidth = cascadeMenuWidth,
             onDismissRequest = { isMenuVisible = false },
+            offset = DpOffset(
+                x = if (LocalLayoutDirection.current == LayoutDirection.Rtl) cascadeMenuWidth else 0.dp,
+                y = 0.dp
+            )
         ) {
             val onMenuItemSingleClick: (MenuElementData.Item.Single) -> Unit = { clickedItem ->
                 isMenuVisible = false
@@ -161,8 +171,13 @@ private fun CascadeColumnScope.SubMenuHeader(
             LocalTextStyle provides MaterialTheme.typography.bodyLarge
         ) {
             if (this@SubMenuHeader.hasParentMenu) {
+                val backIconResource = if(LocalLayoutDirection.current == LayoutDirection.Rtl) {
+                    R.drawable.ic_arrow_right_white_24dp
+                } else {
+                    R.drawable.ic_arrow_left_white_24dp
+                }
                 Image(
-                    painter = painterResource(R.drawable.ic_arrow_left_white_24dp),
+                    painter = painterResource(backIconResource),
                     contentDescription = null,
                     colorFilter = ColorFilter.tint(MenuColors.itemContentColor()),
                 )
