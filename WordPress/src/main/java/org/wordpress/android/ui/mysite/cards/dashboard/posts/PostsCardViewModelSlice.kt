@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.dashboard.posts
 
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -14,13 +15,18 @@ import javax.inject.Inject
 class PostsCardViewModelSlice @Inject constructor(
     private val cardsTracker: CardsTracker,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val postCardBuilder: PostCardBuilder
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
     private val _refresh = MutableLiveData<Event<Boolean>>()
     val refresh = _refresh
+
+    fun buildPostCard(postsCardModel: PostsCardModel?): List<MySiteCardAndItem.Card.PostCard> {
+        return postCardBuilder.build(getPostsCardBuilderParams(postsCardModel))
+    }
 
     fun getPostsCardBuilderParams(postsCardModel: PostsCardModel?) : PostCardBuilderParams {
        return  PostCardBuilderParams(
