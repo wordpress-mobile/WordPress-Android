@@ -68,7 +68,7 @@ fun ReaderFilterChipGroup(
         val blogChipVisible = showBlogsFilter && (selectedItem == null || blogSelected)
         val tagChipVisible = showTagsFilter && (selectedItem == null || tagSelected)
 
-        val blogChipText: UiString = remember(selectedItem) {
+        val blogChipText: UiString = remember(selectedItem, blogsFilterCount) {
             if (blogSelected) {
                 selectedItem?.text ?: UiString.UiStringText("")
             } else {
@@ -81,7 +81,7 @@ fun ReaderFilterChipGroup(
             }
         }
 
-        val tagChipText: UiString = remember(selectedItem) {
+        val tagChipText: UiString = remember(selectedItem, tagsFilterCount) {
             if (tagSelected) {
                 selectedItem?.text ?: UiString.UiStringText("")
             } else {
