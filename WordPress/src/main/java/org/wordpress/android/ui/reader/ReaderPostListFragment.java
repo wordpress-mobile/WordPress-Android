@@ -31,7 +31,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
@@ -195,10 +194,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private TabLayout mSearchTabs;
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
-    private View mSubFilterComponent;
-    private View mSubFiltersListButton;
-    private TextView mSubFilterTitle;
-    private View mRemoveFilterButton;
     private View mJetpackBanner;
     private boolean mIsTopLevel = false;
     private BottomNavController mBottomNavController;
@@ -216,6 +211,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private int mSearchTabsPos = NO_POSITION;
     private boolean mIsUpdating;
     private boolean mIsFilterableScreen;
+    private boolean mIsFiltered = false;
     /*
      * called by post adapter to load older posts when user scrolls to the last post
      */
@@ -624,21 +620,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mSubFilterViewModel.getReaderModeInfo().observe(getViewLifecycleOwner(), readerModeInfo -> {
             if (readerModeInfo != null) {
                 changeReaderMode(readerModeInfo, true);
-
-                if (readerModeInfo.getLabel() != null) {
-                    mSubFilterTitle.setText(
-                            mUiHelpers.getTextOfUiString(
-                                    requireActivity(),
-                                    readerModeInfo.getLabel()
-                            )
-                    );
-                }
-
-                if (readerModeInfo.isFiltered()) {
-                    mRemoveFilterButton.setVisibility(View.VISIBLE);
-                } else {
-                    mRemoveFilterButton.setVisibility(View.GONE);
-                }
             }
         });
 
@@ -704,33 +685,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mSubFilterViewModel.start(mTagFragmentStartedWith, mCurrentTag, savedInstanceState);
     }
 
-    private void initSubFilterViews(@NonNull ViewGroup rootView, @NonNull LayoutInflater inflater) {
-        mSubFilterComponent = inflater.inflate(R.layout.subfilter_component, rootView, false);
-        ((ViewGroup) rootView.findViewById(R.id.sub_filter_component_container)).addView(mSubFilterComponent);
-
-        // TODO thomashorta remove mSubFiltersListButton and move isFilterableScreen logic to ReaderFragment/VM
-        mSubFiltersListButton = mSubFilterComponent.findViewById(R.id.filter_selection);
-//        mSubFiltersListButton.setOnClickListener(v -> {
-//            mSubFilterViewModel.onSubFiltersListButtonClicked();
-//        });
-
-        mSubFilterTitle = mSubFilterComponent.findViewById(R.id.selected_filter_name);
-
-        mRemoveFilterButton = mSubFilterComponent.findViewById(R.id.remove_filter_button);
-        mRemoveFilterButton.setOnClickListener(v -> {
-            mReaderTracker.track(Stat.READER_FILTER_SHEET_CLEARED);
-            mSubFilterViewModel.setDefaultSubfilter();
-        });
-        // TODO As part of Reader IA changes this view is going to be replaced
-//        mSubFilterComponent.setVisibility(mIsFilterableScreen ? View.VISIBLE : View.GONE);
-        mSubFilterComponent.setVisibility(View.GONE);
-
-        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(mRecyclerView.getContext());
-        float cardElevation = getResources().getDimension(R.dimen.card_elevation);
-        int elevatedCardColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(cardElevation);
-        mSubFilterComponent.setBackgroundColor(elevatedCardColor);
-    }
-
     private void changeReaderMode(ReaderModeInfo readerModeInfo, boolean onlyOnChanges) {
         boolean changesDetected = false;
 
@@ -757,6 +711,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mPostListType = readerModeInfo.getListType();
         mCurrentBlogId = readerModeInfo.getBlogId();
         mCurrentFeedId = readerModeInfo.getFeedId();
+        mIsFiltered = readerModeInfo.isFiltered();
 
         resetPostAdapter(mPostListType);
         if (readerModeInfo.getRequestNewerPosts()) {
@@ -1226,11 +1181,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (savedInstanceState != null && savedInstanceState.getBoolean(ReaderConstants.KEY_IS_REFRESHING)) {
             mIsUpdating = true;
             mRecyclerView.setRefreshing(true);
-        }
-
-
-        if (mIsFilterableScreen) {
-            initSubFilterViews(rootView, inflater);
         }
 
         return rootView;
@@ -2091,7 +2041,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                                 false,
                                 null,
                                 false,
-                                mRemoveFilterButton.getVisibility() == View.VISIBLE),
+                                mIsFiltered),
                         false
                 );
             }
