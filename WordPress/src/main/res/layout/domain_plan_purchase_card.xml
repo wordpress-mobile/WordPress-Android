@@ -5,7 +5,7 @@
     android:id="@+id/purchase_plan_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_extra_large"
+    android:layout_marginVertical="@dimen/margin_extra_large"
     app:cardCornerRadius="@dimen/margin_medium_large"
     app:cardElevation="0dp"
     app:layout_constraintBottom_toBottomOf="parent"

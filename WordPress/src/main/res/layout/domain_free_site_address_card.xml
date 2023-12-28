@@ -5,7 +5,7 @@
     android:id="@+id/primary_site_address_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_extra_large"
+    android:layout_marginVertical="@dimen/margin_extra_large"
     app:cardCornerRadius="@dimen/margin_medium_large"
     app:cardElevation="0dp"
     app:layout_constraintEnd_toEndOf="parent"
@@ -17,9 +17,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
-        android:paddingEnd="@dimen/margin_extra_large">
+        android:paddingTop="@dimen/margin_extra_large">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/primary_site_address_actions"
@@ -37,10 +37,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/domains_primary_domain_caption"
-            app:tint="?attr/wpColorOnSurfaceMedium"
             app:layout_constraintStart_toEndOf="@id/primary_site_address_actions"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/wpColorOnSurfaceMedium" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/primary_site_address"
@@ -48,11 +48,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/domains_primary_site_address"
-            app:layout_goneMarginBottom="@dimen/margin_extra_large"
             app:layout_constraintBottom_toTopOf="@id/primary_site_address_chip"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/primary_site_address_caption"
+            app:layout_goneMarginBottom="@dimen/margin_extra_large"
             tools:text="travelwithkids.wordpress.com" />
 
         <com.google.android.material.chip.Chip
