@@ -49,8 +49,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFull
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
@@ -283,7 +281,7 @@ class MySiteViewModel @Inject constructor(
 
     private val bgScope = CoroutineScope(bgDispatcher)
 
-    val uiModel: LiveData<State> =  mergeAsync(bgScope, state, quickLinks) { cards, quickLinks ->
+    val uiModel: LiveData<State> = mergeAsync(bgScope, state, quickLinks) { cards, quickLinks ->
         val nonNullCards = cards ?: return@mergeAsync buildNoSiteState(null, null)
         with(nonNullCards) {
             val state = if (site != null) {
@@ -490,7 +488,42 @@ class MySiteViewModel @Inject constructor(
             ),
         )
 
-        val dynamicCards = dynamicCardsViewModelSlice.buildDynamicCards(
+        val dashboardCards = buildCards(
+                site,
+                cardsUpdate,
+                bloggingPromptUpdate,
+                blazeCardUpdate)
+
+        val personalizeCard = personalizeCardBuilder.build(personalizeCardViewModelSlice.getBuilderParams())
+
+        val noCardsMessage = noCardsMessageViewModelSlice.buildNoCardsMessage(dashboardCards)
+
+        return mutableListOf<MySiteCardAndItem>().apply {
+            infoItem?.let { add(infoItem) }
+            migrationSuccessCard?.let { add(migrationSuccessCard) }
+            jetpackInstallFullPluginCard?.let { add(jetpackInstallFullPluginCard) }
+            quickLinks?.let { add(quickLinks) }
+            domainRegistrationCard?.let { add(domainRegistrationCard) }
+            quickStartCard?.let { add(quickStartCard) }
+            dashboardCards?.let { addAll(dashboardCards) }
+            noCardsMessage?.let { add(noCardsMessage) }
+            personalizeCard?.let { add(personalizeCard) }
+        }.toList()
+    }
+
+    private fun buildCards(
+        site: SiteModel,
+        cardsUpdate: CardsUpdate?,
+        bloggingPromptUpdate: BloggingPromptUpdate?,
+        blazeCardUpdate: BlazeCardUpdate?
+    ): List<MySiteCardAndItem> {
+        if (cardsUpdate?.showErrorCard == true) {
+            return MySiteCardAndItem.Card.ErrorCard(
+                onRetryClick = ListItemInteraction.create(this::onDashboardErrorRetry)
+            ).let { listOf(it) }
+        }
+
+        val topDynamicCards = dynamicCardsViewModelSlice.buildTopDynamicCards(
             cardsUpdate?.cards?.firstOrNull { it is DynamicCardsModel } as? DynamicCardsModel
         )
 
@@ -519,60 +552,29 @@ class MySiteViewModel @Inject constructor(
             cardsUpdate?.cards?.firstOrNull { it is ActivityCardModel } as? ActivityCardModel
         )
 
-        val cardsResult = cardsBuilder.build(
-            DashboardCardsBuilderParams(
-                showErrorCard = cardsUpdate?.showErrorCard == true,
-                onErrorRetryClick = this::onDashboardErrorRetry,
-                todaysStatsCardBuilderParams = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(
-                    cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel } as? TodaysStatsCardModel
-                ),
-                postCardBuilderParams = postsCardViewModelSlice.getPostsCardBuilderParams(
-                    cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel
-                ),
-                bloganuaryNudgeCardBuilderParams = bloganuaryNudgeCardViewModelSlice.getBuilderParams(),
-                bloggingPromptCardBuilderParams = bloggingPromptCardViewModelSlice.getBuilderParams(
-                    bloggingPromptUpdate
-                ),
-                blazeCardBuilderParams = blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate),
-                dashboardCardPlansBuilderParams = DashboardCardPlansBuilderParams(
-                    isEligible = dashboardCardPlansUtils.shouldShowCard(site),
-                    onClick = this::onDashboardCardPlansClick,
-                    onHideMenuItemClick = this::onDashboardCardPlansHideMenuItemClick,
-                    onMoreMenuClick = this::onDashboardCardPlansMoreMenuClick
-                ),
-                pagesCardBuilderParams = pagesCardViewModelSlice.getPagesCardBuilderParams(
-                    cardsUpdate?.cards?.firstOrNull { it is PagesCardModel } as? PagesCardModel,
-                ),
-                activityCardBuilderParams = activityLogCardViewModelSlice.getActivityLogCardBuilderParams(
-                    cardsUpdate?.cards?.firstOrNull { it is ActivityCardModel } as? ActivityCardModel
-                ),
-                dynamicCardsBuilderParams = dynamicCardsViewModelSlice.getBuilderParams(
-                    cardsUpdate?.cards?.firstOrNull { it is DynamicCardsModel } as? DynamicCardsModel
-                )
-            )
+        val bottomDynamicCards = dynamicCardsViewModelSlice.buildBottomDynamicCards(
+            cardsUpdate?.cards?.firstOrNull { it is DynamicCardsModel } as? DynamicCardsModel
         )
 
-        val personalizeCard = personalizeCardBuilder.build(personalizeCardViewModelSlice.getBuilderParams())
-
-        val noCardsMessage = noCardsMessageViewModelSlice.buildNoCardsMessage(cardsResult)
-
         return mutableListOf<MySiteCardAndItem>().apply {
-            infoItem?.let { add(infoItem) }
-            migrationSuccessCard?.let { add(migrationSuccessCard) }
-            jetpackInstallFullPluginCard?.let { add(jetpackInstallFullPluginCard) }
-            quickLinks?.let { add(quickLinks) }
-            domainRegistrationCard?.let { add(domainRegistrationCard) }
-            quickStartCard?.let { add(quickStartCard) }
-            addAll(cardsResult)
-            noCardsMessage?.let { add(noCardsMessage) }
-            personalizeCard?.let { add(personalizeCard) }
+            topDynamicCards?.let { addAll(it) }
+            bloganuaryCard?.let { add(it) }
+            bloggingPromptCard?.let { add(it) }
+            blazeCard?.let { add(it) }
+            plansCard?.let { add(it) }
+            todayStatsCard?.let { add(it) }
+            addAll(postCard)
+            pagesCard?.let { add(it) }
+            activityCard?.let { add(it) }
+            bottomDynamicCards?.let { addAll(it) }
         }.toList()
     }
+
 
     private fun trackAndBuildDomainRegistrationCard(
         params: DomainRegistrationCardBuilderParams
     ): DomainRegistrationCard? {
-        return if(params.isDomainCreditAvailable)
+        return if (params.isDomainCreditAvailable)
             DomainRegistrationCard(ListItemInteraction.create(params.domainRegistrationClick))
         else null
     }

@@ -23,8 +23,12 @@ class DynamicCardsViewModelSlice @Inject constructor(
     private val _refresh = MutableLiveData<Event<Boolean>>()
     val refresh = _refresh as LiveData<Event<Boolean>>
 
-    fun buildDynamicCards(dynamicCardsModel: CardModel.DynamicCardsModel?): List<MySiteCardAndItem.Card.Dynamic>? {
+    fun buildTopDynamicCards(dynamicCardsModel: CardModel.DynamicCardsModel?): List<MySiteCardAndItem.Card.Dynamic>? {
         return dynamicCardsBuilder.build(getBuilderParams(dynamicCardsModel), CardModel.DynamicCardsModel.CardOrder.TOP)
+    }
+
+    fun buildBottomDynamicCards(dynamicCardsModel: CardModel.DynamicCardsModel?): List<MySiteCardAndItem.Card.Dynamic>? {
+        return dynamicCardsBuilder.build(getBuilderParams(dynamicCardsModel), CardModel.DynamicCardsModel.CardOrder.BOTTOM)
     }
 
     fun getBuilderParams(dynamicCards: CardModel.DynamicCardsModel?): DynamicCardsBuilderParams {
