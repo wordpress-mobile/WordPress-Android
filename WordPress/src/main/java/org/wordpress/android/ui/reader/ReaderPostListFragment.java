@@ -111,7 +111,6 @@ import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvi
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage;
 import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetVisible;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
-import org.wordpress.android.ui.reader.subfilter.SubfilterCategory;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
@@ -603,10 +602,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mSubFilterViewModel.getCurrentSubFilter().observe(getViewLifecycleOwner(), subfilterListItem -> {
             if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
                 mSubFilterViewModel.onSubfilterSelected(subfilterListItem);
+
                 if (shouldShowEmptyViewForSelfHostedCta()) {
                     setEmptyTitleDescriptionAndButton(false);
                     showEmptyView();
                 }
+
+                if (mReaderViewModel != null) mReaderViewModel.onSubFilterSelected(subfilterListItem);
             }
         });
 

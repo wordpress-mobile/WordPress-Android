@@ -20,7 +20,6 @@ import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ReaderFragmentLayoutBinding
 import org.wordpress.android.models.JetpackPoweredScreen
-import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
@@ -145,7 +144,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
                         topBarUiState = state,
                         onMenuItemClick = viewModel::onTopBarMenuItemClick,
                         onFilterClick = ::tryOpenFilterList,
-                        onClearFilterClick = viewModel::onTopBarClearFilterClick,
+                        onClearFilterClick = ::clearFilter,
                         onSearchClick = {}
                     )
                 }
@@ -377,5 +376,10 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         }
 
         viewModel.onSubFiltersListButtonClicked(category)
+    }
+
+    private fun clearFilter() {
+        val viewModel = getSubFilterViewModel() ?: return
+        viewModel.setDefaultSubfilter()
     }
 }

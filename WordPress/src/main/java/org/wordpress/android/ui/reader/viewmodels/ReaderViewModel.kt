@@ -28,6 +28,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.reader.ReaderEvents
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
@@ -435,26 +436,26 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
-    fun onTopBarFilterClick(type: ReaderFilterType) {
-        // TODO actual logic needs to be created (opening filter bottom sheet).
-        //  The current logic is for initial implementation and UI review only.
-        val itemText = when (type) {
-            ReaderFilterType.BLOG -> UiStringText("Selected Blog")
-            ReaderFilterType.TAG -> UiStringText("Selected Site")
+    fun onSubFilterSelected(item: SubfilterListItem) {
+        when (item) {
+            is SubfilterListItem.SiteAll -> clearTopBarFilter()
+            is SubfilterListItem.Site -> updateTopBarFilter(item.blog.name, ReaderFilterType.BLOG)
+            is SubfilterListItem.Tag -> updateTopBarFilter(item.tag.tagDisplayName, ReaderFilterType.TAG)
+            else -> Unit // do nothing
         }
+    }
 
+    private fun clearTopBarFilter() {
         val filterUiState = _topBarUiState.value?.filterUiState
-            ?.copy(selectedItem = ReaderFilterSelectedItem(itemText, type))
+            ?.copy(selectedItem = null)
 
         _topBarUiState.value = _topBarUiState.value
             ?.copy(filterUiState = filterUiState)
     }
 
-    fun onTopBarClearFilterClick() {
-        // TODO actual logic needs to be created (clearing filter).
-        //  The current logic is for initial implementation and UI review only.
+    private fun updateTopBarFilter(itemName: String, type: ReaderFilterType) {
         val filterUiState = _topBarUiState.value?.filterUiState
-            ?.copy(selectedItem = null)
+            ?.copy(selectedItem = ReaderFilterSelectedItem(UiStringText(itemName), type))
 
         _topBarUiState.value = _topBarUiState.value
             ?.copy(filterUiState = filterUiState)
