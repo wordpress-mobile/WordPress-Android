@@ -202,6 +202,7 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun setDefaultSubfilter() {
+        readerTracker.track(Stat.READER_FILTER_SHEET_CLEARED)
         updateSubfilter(
             SiteAll(
                 onClickAction = ::onSubfilterClicked,
