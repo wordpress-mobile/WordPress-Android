@@ -422,19 +422,18 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun onTopBarMenuItemClick(item: MenuElementData.Item.Single) {
-        // TODO actual logic needs to be created
+        val selectedReaderTag = readerTagsList[readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(item)]
+
+        // TODO thomashorta actual logic needs to be created
         //  The current logic is for initial implementation and UI review only.
         val filterUiState = TopBarUiState.FilterUiState(
             followedBlogsCount = 23,
             followedTagsCount = 41,
-        ).takeIf { item.id == "0" }
+        ).takeIf { selectedReaderTag.isFilterable }
 
         // Avoid reloading a content stream that is already loaded
         if (item.id != _topBarUiState.value?.selectedItem?.id) {
-            readerTagsList[readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(item)]
-                ?.let { selectedReaderTag ->
-                    updateSelectedContent(selectedReaderTag, filterUiState)
-                }
+            selectedReaderTag?.let { updateSelectedContent(it, filterUiState) }
         }
     }
 
