@@ -2697,6 +2697,7 @@
     <string name="domains_primary_site_address">%s</string>
     <string name="domains_primary_site_domain_chip">Primary domain</string>
     <string name="domains_site_domains">Your site domains</string>
+    <string name="domains_free_domain">Your free WordPress.com domain</string>
     <string name="domains_site_domain_expires">Expires on %s</string>
     <string name="domains_site_domain_expires_soon">&lt;span style="color:#d63638;"&gt;Expires on %s&lt;/span&gt;</string>
     <string name="domains_add_a_domain">Add a domain</string>

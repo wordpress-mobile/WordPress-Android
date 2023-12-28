@@ -102,6 +102,8 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun buildDashboardItems(site: SiteModel, plans: List<PlanModel>, domains: List<Domain>) {
         val listItems = mutableListOf<DomainsDashboardItem>()
 
+        listItems += SiteDomainsHeader(UiStringRes(R.string.domains_free_domain))
+
         val freeDomain = domains.firstOrNull { it.wpcomDomain }
         val freeDomainUrl = freeDomain?.domain ?: getCleanUrl(site.unmappedUrl)
         val freeDomainIsPrimary = freeDomain?.primaryDomain ?: false
