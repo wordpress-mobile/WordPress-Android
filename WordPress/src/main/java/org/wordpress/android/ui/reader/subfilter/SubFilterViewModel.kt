@@ -388,5 +388,10 @@ class SubFilterViewModel @Inject constructor(
         const val ARG_IS_FIRST_LOAD = "is_first_load"
 
         const val TRACK_TAB = "tab"
+
+        @JvmStatic
+        fun getViewModelKeyForTag(tag: ReaderTag): String {
+            return SUBFILTER_VM_BASE_KEY + tag.keyString
+        }
     }
 }

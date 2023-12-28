@@ -20,6 +20,7 @@ import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ReaderFragmentLayoutBinding
 import org.wordpress.android.models.JetpackPoweredScreen
+import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
@@ -33,6 +34,7 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragmen
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.FOLLOWED_BLOGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.TAGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
+import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
@@ -142,14 +144,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
                     ReaderTopAppBar(
                         topBarUiState = state,
                         onMenuItemClick = viewModel::onTopBarMenuItemClick,
-                        onFilterClick = {
-                            tryOpenFilterList(
-                                when (it) {
-                                    ReaderFilterType.BLOG -> SubfilterCategory.SITES
-                                    ReaderFilterType.TAG -> SubfilterCategory.TAGS
-                                }
-                            )
-                        },
+                        onFilterClick = ::tryOpenFilterList,
                         onClearFilterClick = viewModel::onTopBarClearFilterClick,
                         onSearchClick = {}
                     )
@@ -363,10 +358,24 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         return childFragmentManager.findFragmentById(R.id.container)
     }
 
-    private fun tryOpenFilterList(category: SubfilterCategory) {
-        val currentFeedFragment = getCurrentFeedFragment()
-        if (currentFeedFragment is ReaderPostListFragment) {
-            currentFeedFragment.openFilterList(category)
+    // The view model is started by the ReaderPostListFragment for feeds that support filtering
+    private fun getSubFilterViewModel(): SubFilterViewModel? {
+        val currentFragment = getCurrentFeedFragment() ?: return null
+        val selectedTag = (viewModel.uiState.value as? ContentUiState)?.selectedReaderTag ?: return null
+        return ViewModelProvider(currentFragment, viewModelFactory).get(
+            SubFilterViewModel.getViewModelKeyForTag(selectedTag),
+            SubFilterViewModel::class.java
+        )
+    }
+
+    private fun tryOpenFilterList(type: ReaderFilterType) {
+        val viewModel = getSubFilterViewModel() ?: return
+
+        val category = when (type) {
+            ReaderFilterType.BLOG -> SubfilterCategory.SITES
+            ReaderFilterType.TAG -> SubfilterCategory.TAGS
         }
+
+        viewModel.onSubFiltersListButtonClicked(category)
     }
 }

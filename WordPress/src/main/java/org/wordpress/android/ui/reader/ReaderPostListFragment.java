@@ -594,8 +594,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private void initSubFilterViewModel(@Nullable Bundle savedInstanceState) {
         WPMainActivityViewModel wpMainActivityViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
                 .get(WPMainActivityViewModel.class);
+
         mSubFilterViewModel = new ViewModelProvider(this, mViewModelFactory).get(
-                SubFilterViewModel.SUBFILTER_VM_BASE_KEY + mTagFragmentStartedWith.getKeyString(),
+                SubFilterViewModel.getViewModelKeyForTag(mTagFragmentStartedWith),
                 SubFilterViewModel.class
         );
 
@@ -640,7 +641,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         mSubFilterViewModel.loadSubFilters();
                         BottomSheetVisible visibleState = (BottomSheetVisible) uiState;
                         bottomSheet = SubfilterBottomSheetFragment.newInstance(
-                                SubFilterViewModel.SUBFILTER_VM_BASE_KEY + mTagFragmentStartedWith.getKeyString(),
+                                SubFilterViewModel.getViewModelKeyForTag(mTagFragmentStartedWith),
                                 visibleState.getCategories(),
                                 mUiHelpers.getTextOfUiString(requireContext(), visibleState.getTitle())
                         );
@@ -681,10 +682,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         });
 
         mSubFilterViewModel.start(mTagFragmentStartedWith, mCurrentTag, savedInstanceState);
-    }
-
-    void openFilterList(@NonNull SubfilterCategory category) {
-        mSubFilterViewModel.onSubFiltersListButtonClicked(category);
     }
 
     private void initSubFilterViews(@NonNull ViewGroup rootView, @NonNull LayoutInflater inflater) {
