@@ -59,7 +59,6 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPrompt
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
-import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
@@ -135,7 +134,6 @@ class MySiteViewModel @Inject constructor(
     private val homePageDataLoader: HomePageDataLoader,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
     private val snackbarSequencer: SnackbarSequencer,
-    private val cardsBuilder: CardsBuilder,
     private val landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig,
     private val mySiteSourceManager: MySiteSourceManager,
     private val cardsTracker: CardsTracker,
