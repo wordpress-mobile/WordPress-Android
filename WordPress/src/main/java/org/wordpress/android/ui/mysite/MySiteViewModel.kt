@@ -515,6 +515,10 @@ class MySiteViewModel @Inject constructor(
             cardsUpdate?.cards?.firstOrNull { it is PagesCardModel } as? PagesCardModel
         )
 
+        val activityCard = activityLogCardViewModelSlice.buildCard(
+            cardsUpdate?.cards?.firstOrNull { it is ActivityCardModel } as? ActivityCardModel
+        )
+
         val cardsResult = cardsBuilder.build(
             DashboardCardsBuilderParams(
                 showErrorCard = cardsUpdate?.showErrorCard == true,
