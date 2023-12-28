@@ -8,6 +8,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -96,6 +98,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         requireActivity().addMenuProvider(this, viewLifecycleOwner)
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
+            initTopAppBar()
             initToolbar()
             initViewPager()
             initViewModel(savedInstanceState)
@@ -146,6 +149,26 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
             true
         }
         else -> false
+    }
+
+    private fun ReaderFragmentLayoutBinding.initTopAppBar() {
+        readerTopBarComposeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                val topAppBarState by viewModel.topBarUiState.observeAsState()
+                val state = topAppBarState ?: return@setContent
+
+                AppTheme {
+                    ReaderTopAppBar(
+                        topBarUiState = state,
+                        onMenuItemClick = viewModel::onTopBarMenuItemClick,
+                        onFilterClick = viewModel::onTopBarFilterClick,
+                        onClearFilterClick = viewModel::onTopBarClearFilterClick,
+                        onSearchClick = {}
+                    )
+                }
+            }
+        }
     }
 
     private fun ReaderFragmentLayoutBinding.initToolbar() {
@@ -224,14 +247,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     private fun ReaderFragmentLayoutBinding.updateUiState(uiState: ReaderViewModel.ReaderUiState) {
         when (uiState) {
             is ContentUiState -> {
-                binding?.readerTopBarComposeView?.apply {
-                    setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                    setContent {
-                        AppTheme {
-                            ReaderTopAppBar(onSearchClick = {})
-                        }
-                    }
-                }
+                binding?.readerTopBarComposeView?.isVisible = true
                 updateTabs(uiState)
             }
         }

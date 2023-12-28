@@ -2,6 +2,8 @@ package org.wordpress.android.ui.compose.components.menu.dropdown
 
 import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -22,21 +25,27 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData.Item
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import androidx.compose.material3.MaterialTheme as Material3Theme
 
 @Composable
 fun DropdownMenuButton(
     selectedItem: Item,
     onClick: () -> Unit,
+    height: Dp = 36.dp,
+    contentSizeAnimation: FiniteAnimationSpec<IntSize> = spring(),
 ) {
     Button(
         onClick = onClick,
-        modifier = Modifier.height(32.dp),
+        modifier = Modifier.height(height),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 0.dp,
             pressedElevation = 0.dp,
@@ -54,7 +63,7 @@ fun DropdownMenuButton(
         )
     ) {
         Row(
-            modifier = Modifier.animateContentSize(),
+            modifier = Modifier.animateContentSize(contentSizeAnimation),
         ) {
             if (selectedItem is Item.Single && selectedItem.leadingIcon != NO_ICON) {
                 Icon(
@@ -67,13 +76,10 @@ fun DropdownMenuButton(
             Text(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
-                    .weight(
-                        weight = 1f,
-                        fill = false,
-                    ),
+                    .widthIn(max = 280.dp),
                 style = Material3Theme.typography.titleMedium,
                 fontWeight = FontWeight.Medium,
-                text = selectedItem.text,
+                text = uiStringText(selectedItem.text),
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
@@ -98,30 +104,30 @@ private fun JetpackDropdownMenuButtonPreview() {
         ) {
             DropdownMenuButton(
                 selectedItem = Item.Single(
-                    text = "Text only",
-                    onClick = {},
+                    id = "text-only",
+                    text = UiStringText("Text only"),
                 ),
                 onClick = {}
             )
             DropdownMenuButton(
                 selectedItem = Item.Single(
-                    text = "Text and Icon",
-                    onClick = {},
+                    id = "text-and-icon",
+                    text = UiStringText("Text and Icon"),
                     leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
                 ),
                 onClick = {},
             )
             DropdownMenuButton(
                 selectedItem = Item.Single(
-                    text = "Text type with a really long text as the button label",
-                    onClick = {},
+                    id = "text-with-a-really-long-text-as-the-button-label",
+                    text = UiStringText("Text type with a really long text as the button label"),
                 ),
                 onClick = {},
             )
             DropdownMenuButton(
                 selectedItem = Item.Single(
-                    text = "Text type with a really long text as the button label",
-                    onClick = {},
+                    id = "text-with-a-really-long-text-as-the-button-label-and-icon",
+                    text = UiStringText("Text type with a really long text as the button label"),
                     leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
                 ),
                 onClick = {},

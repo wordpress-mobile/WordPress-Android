@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.compose.components.menu.dropdown
 
 import android.content.res.Configuration
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,23 +35,29 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import me.saket.cascade.CascadeColumnScope
 import me.saket.cascade.CascadeDropdownMenu
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.utils.uiStringText
+import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @Composable
 fun JetpackDropdownMenu(
     menuItems: List<MenuElementData>,
-    defaultItem: MenuElementData.Item.Single = menuItems.first() as MenuElementData.Item.Single,
+    selectedItem: MenuElementData.Item.Single,
+    onSingleItemClick: (MenuElementData.Item.Single) -> Unit,
+    menuButtonHeight: Dp = 36.dp,
+    contentSizeAnimation: FiniteAnimationSpec<IntSize> = spring(),
 ) {
     Column {
         var isMenuVisible by remember { mutableStateOf(false) }
-        // TODO selected item logic will be moved to VM in another PR. This will make sure the selected item stays the
-        // same on orientation change.
-        var selectedItem by remember { mutableStateOf(defaultItem) }
         DropdownMenuButton(
+            height = menuButtonHeight,
+            contentSizeAnimation = contentSizeAnimation,
             selectedItem = selectedItem,
             onClick = {
                 isMenuVisible = !isMenuVisible
@@ -61,8 +69,8 @@ fun JetpackDropdownMenu(
             onDismissRequest = { isMenuVisible = false },
         ) {
             val onMenuItemSingleClick: (MenuElementData.Item.Single) -> Unit = { clickedItem ->
-                selectedItem = clickedItem
                 isMenuVisible = false
+                onSingleItemClick(clickedItem)
             }
             menuItems.forEach { element ->
                 MenuElementComposable(element = element, onMenuItemSingleClick = onMenuItemSingleClick)
@@ -102,7 +110,6 @@ private fun Single(
             .background(MenuColors.itemBackgroundColor()),
         onClick = {
             onMenuItemSingleClick(element)
-            element.onClick()
         },
         colors = MenuDefaults.itemColors(
             textColor = enabledContentColor,
@@ -114,7 +121,7 @@ private fun Single(
         ),
         text = {
             Text(
-                text = element.text,
+                text = uiStringText(element.text),
                 style = MaterialTheme.typography.bodyLarge,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Normal,
@@ -187,7 +194,7 @@ private fun CascadeColumnScope.SubMenu(
         ),
         text = {
             Text(
-                text = element.text,
+                text = uiStringText(element.text),
                 style = MaterialTheme.typography.bodyLarge,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Normal,
@@ -209,6 +216,34 @@ private fun CascadeColumnScope.SubMenu(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun JetpackDropdownMenuPreview() {
+    val menuItems = listOf(
+        MenuElementData.Item.Single(
+            id = "text-only",
+            text = UiStringText("Text only"),
+        ),
+        MenuElementData.Item.Single(
+            id = "text-and-icon",
+            text = UiStringText("Text and leading icon"),
+            leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
+        ),
+        MenuElementData.Divider,
+        MenuElementData.Item.SubMenu(
+            id = "text-and-sub-menu",
+            text = UiStringText("Text and sub-menu"),
+            children = listOf(
+                MenuElementData.Item.Single(
+                    id = "text-sub-menu-1",
+                    text = UiStringText("Text sub-menu 1"),
+                ),
+                MenuElementData.Item.Single(
+                    id = "text-sub-menu-2",
+                    text = UiStringText("Text sub-menu 2"),
+                )
+            )
+        ),
+    )
+    var selectedItem by remember { mutableStateOf(menuItems.first() as MenuElementData.Item.Single) }
+
     AppTheme {
         Box(
             modifier = Modifier
@@ -216,34 +251,10 @@ fun JetpackDropdownMenuPreview() {
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-            val menuItems = listOf(
-                MenuElementData.Item.Single(
-                    text = "Text only",
-                    onClick = {}
-                ),
-                MenuElementData.Item.Single(
-                    text = "Text and leading icon",
-                    onClick = {},
-                    leadingIcon = R.drawable.ic_jetpack_logo_white_24dp,
-                ),
-                MenuElementData.Divider,
-                MenuElementData.Item.SubMenu(
-                    text = "Text and sub-menu",
-                    children = listOf(
-                        MenuElementData.Item.Single(
-                            text = "Text sub-menu 1",
-                            onClick = {}
-                        ),
-                        MenuElementData.Item.Single(
-                            text = "Text sub-menu 2",
-                            onClick = {}
-                        )
-                    )
-                ),
-            )
             JetpackDropdownMenu(
-                defaultItem = menuItems.first() as MenuElementData.Item.Single,
-                menuItems = menuItems
+                selectedItem = selectedItem,
+                menuItems = menuItems,
+                onSingleItemClick = { selectedItem = it }
             )
         }
     }
