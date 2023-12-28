@@ -210,7 +210,7 @@ class SubFilterViewModel @Inject constructor(
         _bottomSheetUiState.value = Event(
             BottomSheetVisible(
                 UiStringRes(category.titleRes),
-                listOf(category) // TODO thomashorta this should accept only a single category
+                listOf(category) // TODO thomashortadev this should accept only a single category
             )
         )
     }

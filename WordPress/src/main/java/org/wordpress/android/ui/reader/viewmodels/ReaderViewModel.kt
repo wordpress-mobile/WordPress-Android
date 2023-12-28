@@ -484,8 +484,6 @@ class ReaderViewModel @Inject constructor(
         val blogsFilterCount = subFilterItems.filterIsInstance<SubfilterListItem.Site>().size
         val tagsFilterCount = subFilterItems.filterIsInstance<SubfilterListItem.Tag>().size
 
-        // TODO thomashorta if filter is currently selected, check if item still exists and keep it, otherwise clear
-
         val filterState = _topBarUiState.value?.filterUiState
             ?.copy(
                 blogsFilterCount = blogsFilterCount,
