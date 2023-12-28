@@ -3300,7 +3300,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public void onMediaRetryAllClicked(Set<String> failedMediaIds) {
+    public void onMediaRetryAll(Set<String> failedMediaIds) {
         UploadService.cancelFinalNotification(this, mEditPostRepository.getPost());
         UploadService.cancelFinalNotificationForMedia(this, mSite);
         ArrayList<Integer> localMediaIds = new ArrayList<>();
