@@ -486,6 +486,10 @@ class MySiteViewModel @Inject constructor(
             ),
         )
 
+        val dynamicCards = dynamicCardsViewModelSlice.buildDynamicCards(
+            cardsUpdate?.cards?.firstOrNull { it is DynamicCardsModel } as? DynamicCardsModel
+        )
+
         val todayStatsCard = todaysStatsViewModelSlice.buildTodaysStatsCard(
             cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel } as? TodaysStatsCardModel
         )
