@@ -152,7 +152,7 @@ private fun Filter(
         followedBlogsCount = filterUiState.followedBlogsCount,
         followedTagsCount = filterUiState.followedTagsCount,
         onFilterClick = onFilterClick,
-        onSelectedItemClick = onClearFilterClick,
+        onSelectedItemClick = { filterUiState.selectedItem?.type?.let(onFilterClick) },
         onSelectedItemDismissClick = onClearFilterClick,
         chipHeight = chipHeight,
     )
