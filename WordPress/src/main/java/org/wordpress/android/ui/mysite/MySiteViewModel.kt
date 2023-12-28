@@ -12,6 +12,8 @@ import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
@@ -20,8 +22,8 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
@@ -108,6 +110,7 @@ import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.merge
+import org.wordpress.android.util.mergeAsync
 import org.wordpress.android.util.publicdata.AppStatus
 import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.Event
@@ -274,8 +277,10 @@ class MySiteViewModel @Inject constructor(
             result.filter { it.siteId == null || it.state.site != null }.mapSafe { it.state }
         }
 
-    val uiModel: LiveData<State> = merge(state, quickLinks) { cards, quickLinks ->
-        val nonNullCards = cards ?: return@merge buildNoSiteState(null, null)
+    private val bgScope = CoroutineScope(bgDispatcher)
+
+    val uiModel: LiveData<State> =  mergeAsync(bgScope, state, quickLinks) { cards, quickLinks ->
+        val nonNullCards = cards ?: return@mergeAsync buildNoSiteState(null, null)
         with(nonNullCards) {
             val state = if (site != null) {
                 cardsUpdate?.checkAndShowSnackbarError()
@@ -785,6 +790,7 @@ class MySiteViewModel @Inject constructor(
         quickStartRepository.clear()
         mySiteSourceManager.clear()
         dispatcher.unregister(this)
+        bgScope.coroutineContext.cancelChildren()
         super.onCleared()
     }
 
