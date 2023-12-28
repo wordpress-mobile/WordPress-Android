@@ -239,6 +239,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
                     uiState.selectedReaderTag,
                     ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
                     true,
+                    uiState.selectedReaderTag.isFilterable
                 )
             }
             replace(R.id.container, fragment)
