@@ -492,14 +492,13 @@ class MySiteViewModel @Inject constructor(
 
         val bloganuaryCard = bloganuaryNudgeCardViewModelSlice.buildCard()
 
-        val todayStatsCard = todaysStatsViewModelSlice.buildTodaysStatsCard(
-            cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel } as? TodaysStatsCardModel
-        )
-
         val bloggingPromptCard = bloggingPromptCardViewModelSlice.buildCard(
             bloggingPromptUpdate
         )
 
+        val todayStatsCard = todaysStatsViewModelSlice.buildTodaysStatsCard(
+            cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel } as? TodaysStatsCardModel
+        )
         val postCard = postsCardViewModelSlice.buildPostCard(
             cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel
         )
