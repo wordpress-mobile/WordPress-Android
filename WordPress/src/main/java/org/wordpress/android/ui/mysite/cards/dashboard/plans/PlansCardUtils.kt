@@ -82,24 +82,21 @@ class PlansCardUtils @Inject constructor(
         }
     }
 
-    fun trackCardTapped(siteSelected: SiteSelected?) {
+    fun trackCardTapped() {
         analyticsTrackerWrapper.track(
-            AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_TAPPED,
-            mapOf(POSITION_INDEX to positionIndex(siteSelected))
+            AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_TAPPED
         )
     }
 
-    fun trackCardMoreMenuTapped(siteSelected: SiteSelected?) {
+    fun trackCardMoreMenuTapped() {
         analyticsTrackerWrapper.track(
-            AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_MORE_MENU_TAPPED,
-            mapOf(POSITION_INDEX to positionIndex(siteSelected))
+            AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_MORE_MENU_TAPPED
         )
     }
 
-    fun trackCardHiddenByUser(siteSelected: SiteSelected?) {
+    fun trackCardHiddenByUser() {
         analyticsTrackerWrapper.track(
-            AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_HIDDEN,
-            mapOf(POSITION_INDEX to positionIndex(siteSelected))
+            AnalyticsTracker.Stat.DASHBOARD_CARD_PLANS_HIDDEN
         )
     }
 

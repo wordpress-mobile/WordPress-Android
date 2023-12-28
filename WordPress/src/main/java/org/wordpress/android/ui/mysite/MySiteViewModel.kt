@@ -79,6 +79,7 @@ import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallF
 import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlice
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
+import org.wordpress.android.ui.mysite.cards.plans.PlansCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinksItemViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
@@ -174,6 +175,7 @@ class MySiteViewModel @Inject constructor(
     private val quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice,
     private val bloganuaryNudgeCardViewModelSlice: BloganuaryNudgeCardViewModelSlice,
     private val sotw2023NudgeCardViewModelSlice: WpSotw2023NudgeCardViewModelSlice,
+    private val plansCardViewModelSlice: PlansCardViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -238,6 +240,7 @@ class MySiteViewModel @Inject constructor(
         quickLinksItemViewModelSlice.navigation,
         sotw2023NudgeCardViewModelSlice.onNavigation,
         dynamicCardsViewModelSlice.onNavigation,
+        plansCardViewModelSlice.onNavigation
     )
 
     val onMediaUpload = siteInfoHeaderCardViewModelSlice.onMediaUpload
@@ -255,6 +258,7 @@ class MySiteViewModel @Inject constructor(
             bloganuaryNudgeCardViewModelSlice.refresh,
             sotw2023NudgeCardViewModelSlice.refresh,
             dynamicCardsViewModelSlice.refresh,
+            plansCardViewModelSlice.refresh
         )
 
     private var shouldMarkUpdateSiteTitleTaskComplete = false
@@ -497,6 +501,8 @@ class MySiteViewModel @Inject constructor(
         )
 
         val blazeCard = blazeCardViewModelSlice.buildBlazeCard(blazeCardUpdate)
+
+        val plansCard = plansCardViewModelSlice.buildCard(site)
 
         val todayStatsCard = todaysStatsViewModelSlice.buildTodaysStatsCard(
             cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel } as? TodaysStatsCardModel
@@ -976,24 +982,6 @@ class MySiteViewModel @Inject constructor(
     private fun onJetpackInstallFullPluginLearnMoreClick() {
         analyticsTrackerWrapper.track(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_TAPPED)
         _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
-    }
-
-    private fun onDashboardCardPlansClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        dashboardCardPlansUtils.trackCardTapped(uiModel.value as? SiteSelected)
-        _onNavigation.value = Event(SiteNavigationAction.OpenFreeDomainSearch(selectedSite))
-    }
-
-    private fun onDashboardCardPlansMoreMenuClick() {
-        dashboardCardPlansUtils.trackCardMoreMenuTapped(uiModel.value as? SiteSelected)
-    }
-
-    private fun onDashboardCardPlansHideMenuItemClick() {
-        dashboardCardPlansUtils.trackCardHiddenByUser(uiModel.value as? SiteSelected)
-        selectedSiteRepository.getSelectedSite()?.let {
-            dashboardCardPlansUtils.hideCard(it.siteId)
-        }
-        refresh()
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
