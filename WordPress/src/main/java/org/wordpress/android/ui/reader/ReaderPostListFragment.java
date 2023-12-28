@@ -692,6 +692,15 @@ public class ReaderPostListFragment extends ViewPagerFragment
             });
         });
 
+        if (mIsFilterableScreen) {
+            mSubFilterViewModel.getSubFilters().observe(getViewLifecycleOwner(), subFilters -> {
+                mReaderViewModel.showTopBarFilterGroup(mTagFragmentStartedWith, subFilters);
+            });
+            mSubFilterViewModel.updateTagsAndSites();
+        } else {
+            mReaderViewModel.hideTopBarFilterGroup(mTagFragmentStartedWith);
+        }
+
         mSubFilterViewModel.start(mTagFragmentStartedWith, mCurrentTag, savedInstanceState);
     }
 

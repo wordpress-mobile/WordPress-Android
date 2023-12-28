@@ -214,18 +214,22 @@ class SubFilterViewModel @Inject constructor(
     fun onSubFiltersListButtonClicked(
         category: SubfilterCategory,
     ) {
-        _updateTagsAndSites.value = Event(
-            EnumSet.of(
-                UpdateTask.TAGS,
-                UpdateTask.FOLLOWED_BLOGS
-            )
-        )
+        updateTagsAndSites()
         _bottomSheetUiState.value = Event(BottomSheetVisible(
             mTagFragmentStartedWith?.let {
                 UiStringText(it.label)
             } ?: UiStringRes(R.string.reader_filter_main_title),
             listOf(category) // TODO thomashorta this should accept only a single category
         ))
+    }
+
+    fun updateTagsAndSites() {
+        _updateTagsAndSites.value = Event(
+            EnumSet.of(
+                UpdateTask.TAGS,
+                UpdateTask.FOLLOWED_BLOGS
+            )
+        )
     }
 
     fun onBottomSheetCancelled() {
