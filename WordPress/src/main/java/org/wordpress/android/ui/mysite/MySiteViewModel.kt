@@ -475,7 +475,7 @@ class MySiteViewModel @Inject constructor(
             )
         )
 
-        val cardsResult = cardsBuilder.build(
+        val quickStartCard = buildQuickStartCard(
             QuickStartCardBuilderParams(
                 quickStartCategories = quickStartCategories,
                 moreMenuClickParams = QuickStartCardBuilderParams.MoreMenuParams(
@@ -484,6 +484,9 @@ class MySiteViewModel @Inject constructor(
                 ),
                 onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
             ),
+        )
+
+        val cardsResult = cardsBuilder.build(
             DashboardCardsBuilderParams(
                 showErrorCard = cardsUpdate?.showErrorCard == true,
                 onErrorRetryClick = this::onDashboardErrorRetry,
@@ -524,8 +527,9 @@ class MySiteViewModel @Inject constructor(
             infoItem?.let { add(infoItem) }
             migrationSuccessCard?.let { add(migrationSuccessCard) }
             jetpackInstallFullPluginCard?.let { add(jetpackInstallFullPluginCard) }
-            domainRegistrationCard?.let { add(domainRegistrationCard) }
             quickLinks?.let { add(quickLinks) }
+            domainRegistrationCard?.let { add(domainRegistrationCard) }
+            quickStartCard?.let { add(quickStartCard) }
             addAll(cardsResult)
             noCardsMessage?.let { add(noCardsMessage) }
             personalizeCard?.let { add(personalizeCard) }
@@ -538,6 +542,12 @@ class MySiteViewModel @Inject constructor(
         return if(params.isDomainCreditAvailable)
             DomainRegistrationCard(ListItemInteraction.create(params.domainRegistrationClick))
         else null
+    }
+
+    private fun buildQuickStartCard(params: QuickStartCardBuilderParams): QuickStartCard? {
+        return params.quickStartCategories.takeIf { it.isNotEmpty() }?.let {
+            quickStartCardBuilder.build(params)
+        }
     }
 
     private fun shouldShowDashboard(site: SiteModel): Boolean {
