@@ -149,8 +149,10 @@ private fun Filter(
     ReaderFilterChipGroup(
         modifier = modifier,
         selectedItem = filterUiState.selectedItem,
-        followedBlogsCount = filterUiState.followedBlogsCount,
-        followedTagsCount = filterUiState.followedTagsCount,
+        blogsFilterCount = filterUiState.blogsFilterCount,
+        tagsFilterCount = filterUiState.tagsFilterCount,
+        showBlogsFilter = filterUiState.showBlogsFilter,
+        showTagsFilter = filterUiState.showTagsFilter,
         onFilterClick = onFilterClick,
         onSelectedItemClick = { filterUiState.selectedItem?.type?.let(onFilterClick) },
         onSelectedItemDismissClick = onClearFilterClick,

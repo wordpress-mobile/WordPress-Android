@@ -22,6 +22,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.Organization
 import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
@@ -427,8 +428,10 @@ class ReaderViewModel @Inject constructor(
         // TODO thomashorta actual logic needs to be created
         //  The current logic is for initial implementation and UI review only.
         val filterUiState = TopBarUiState.FilterUiState(
-            followedBlogsCount = 23,
-            followedTagsCount = 41,
+            blogsFilterCount = 23,
+            tagsFilterCount = 41,
+            showBlogsFilter = shouldShowBlogsFilter(selectedReaderTag),
+            showTagsFilter = shouldShowTagsFilter(selectedReaderTag),
         ).takeIf { selectedReaderTag.isFilterable }
 
         // Avoid reloading a content stream that is already loaded
@@ -472,15 +475,25 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    private fun shouldShowBlogsFilter(readerTag: ReaderTag): Boolean {
+        return readerTag.isFilterable
+    }
+
+    private fun shouldShowTagsFilter(readerTag: ReaderTag): Boolean {
+        return readerTag.isFilterable && readerTag.organization == Organization.NO_ORGANIZATION
+    }
+
     data class TopBarUiState(
         val menuItems: List<MenuElementData>,
         val selectedItem: MenuElementData.Item.Single,
         val filterUiState: FilterUiState? = null,
     ) {
         data class FilterUiState(
-            val followedBlogsCount: Int,
-            val followedTagsCount: Int,
+            val blogsFilterCount: Int,
+            val tagsFilterCount: Int,
             val selectedItem: ReaderFilterSelectedItem? = null,
+            val showBlogsFilter: Boolean = blogsFilterCount > 0,
+            val showTagsFilter: Boolean = tagsFilterCount > 0,
         )
     }
 

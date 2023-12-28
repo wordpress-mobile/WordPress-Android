@@ -17,15 +17,12 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.Organization.NO_ORGANIZATION
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetHidden
 import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetVisible
-import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
-import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
@@ -227,8 +224,6 @@ class SubFilterViewModel @Inject constructor(
                 UiStringText(it.label)
             } ?: UiStringRes(R.string.reader_filter_main_title),
             listOf(category) // TODO thomashorta this should accept only a single category
-            // TODO thomashorta move this to ReaderViewModel when a filter chip is selected
-//            if (mTagFragmentStartedWith?.organization == NO_ORGANIZATION) listOf(SITES, TAGS) else listOf(SITES)
         ))
     }
 

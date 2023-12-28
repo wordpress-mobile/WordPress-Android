@@ -48,13 +48,15 @@ private val roundedShape = RoundedCornerShape(100)
 
 @Composable
 fun ReaderFilterChipGroup(
-    followedBlogsCount: Int,
-    followedTagsCount: Int,
+    blogsFilterCount: Int,
+    tagsFilterCount: Int,
     onFilterClick: (ReaderFilterType) -> Unit,
     onSelectedItemClick: () -> Unit,
     onSelectedItemDismissClick: () -> Unit,
     modifier: Modifier = Modifier,
     selectedItem: ReaderFilterSelectedItem? = null,
+    showBlogsFilter: Boolean = blogsFilterCount > 0,
+    showTagsFilter: Boolean = tagsFilterCount > 0,
     chipHeight: Dp = 36.dp,
 ) {
     Row(
@@ -63,8 +65,8 @@ fun ReaderFilterChipGroup(
     ) {
         val blogSelected = selectedItem?.type == ReaderFilterType.BLOG
         val tagSelected = selectedItem?.type == ReaderFilterType.TAG
-        val blogChipVisible = selectedItem == null || blogSelected
-        val tagChipVisible = selectedItem == null || tagSelected
+        val blogChipVisible = showBlogsFilter && (selectedItem == null || blogSelected)
+        val tagChipVisible = showTagsFilter && (selectedItem == null || tagSelected)
 
         val blogChipText: UiString = remember(selectedItem) {
             if (blogSelected) {
@@ -74,7 +76,7 @@ fun ReaderFilterChipGroup(
                     zeroRes = R.string.reader_filter_chip_blog_zero,
                     oneRes = R.string.reader_filter_chip_blog_one,
                     otherRes = R.string.reader_filter_chip_blog_other,
-                    count = followedBlogsCount,
+                    count = blogsFilterCount,
                 )
             }
         }
@@ -87,7 +89,7 @@ fun ReaderFilterChipGroup(
                     zeroRes = R.string.reader_filter_chip_tag_zero,
                     oneRes = R.string.reader_filter_chip_tag_one,
                     otherRes = R.string.reader_filter_chip_tag_other,
-                    count = followedTagsCount,
+                    count = tagsFilterCount,
                 )
             }
         }
@@ -223,8 +225,8 @@ fun ReaderFilterChipGroupPreview() {
         ReaderFilterChipGroup(
             modifier = Modifier.padding(Margin.Medium.value),
             selectedItem = selectedItem,
-            followedBlogsCount = 23,
-            followedTagsCount = 41,
+            blogsFilterCount = 23,
+            tagsFilterCount = 41,
             onFilterClick = { type ->
                 selectedItem = ReaderFilterSelectedItem(
                     text = UiString.UiStringText("Amazing ${type.name.lowercase()}"),
