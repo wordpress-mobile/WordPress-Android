@@ -33,9 +33,11 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragmen
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.FOLLOWED_BLOGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.TAGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
+import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.views.compose.ReaderTopAppBar
+import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.JetpackBrandingUtils
@@ -72,7 +74,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     private var settingsMenuItemFocusPoint: QuickStartFocusPoint? = null
 
     private var binding: ReaderFragmentLayoutBinding? = null
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         requireActivity().addMenuProvider(this, viewLifecycleOwner)
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
@@ -120,10 +122,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
             viewModel.onSearchActionClicked()
             true
         }
+
         R.id.menu_settings -> {
             viewModel.onSettingsActionClicked()
             true
         }
+
         else -> false
     }
 
@@ -138,7 +142,14 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
                     ReaderTopAppBar(
                         topBarUiState = state,
                         onMenuItemClick = viewModel::onTopBarMenuItemClick,
-                        onFilterClick = viewModel::onTopBarFilterClick,
+                        onFilterClick = {
+                            tryOpenFilterList(
+                                when (it) {
+                                    ReaderFilterType.BLOG -> SubfilterCategory.SITES
+                                    ReaderFilterType.TAG -> SubfilterCategory.TAGS
+                                }
+                            )
+                        },
                         onClearFilterClick = viewModel::onTopBarClearFilterClick,
                         onSearchClick = {}
                     )
@@ -149,10 +160,10 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
 
     private fun ReaderFragmentLayoutBinding.initViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this@ReaderFragment, viewModelFactory).get(ReaderViewModel::class.java)
-        startObserving(savedInstanceState)
+        startReaderViewModel(savedInstanceState)
     }
 
-    private fun ReaderFragmentLayoutBinding.startObserving(savedInstanceState: Bundle?) {
+    private fun ReaderFragmentLayoutBinding.startReaderViewModel(savedInstanceState: Bundle?) {
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             uiState?.let { updateUiState(it) }
         }
@@ -346,5 +357,16 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         }
         viewModel.onQuickStartEventReceived(event)
         EventBus.getDefault().removeStickyEvent(event)
+    }
+
+    private fun getCurrentFeedFragment(): Fragment? {
+        return childFragmentManager.findFragmentById(R.id.container)
+    }
+
+    private fun tryOpenFilterList(category: SubfilterCategory) {
+        val currentFeedFragment = getCurrentFeedFragment()
+        if (currentFeedFragment is ReaderPostListFragment) {
+            currentFeedFragment.openFilterList(category)
+        }
     }
 }

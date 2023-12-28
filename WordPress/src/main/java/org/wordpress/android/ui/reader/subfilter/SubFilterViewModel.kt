@@ -213,7 +213,9 @@ class SubFilterViewModel @Inject constructor(
         )
     }
 
-    fun onSubFiltersListButtonClicked() {
+    fun onSubFiltersListButtonClicked(
+        category: SubfilterCategory,
+    ) {
         _updateTagsAndSites.value = Event(
             EnumSet.of(
                 UpdateTask.TAGS,
@@ -224,7 +226,9 @@ class SubFilterViewModel @Inject constructor(
             mTagFragmentStartedWith?.let {
                 UiStringText(it.label)
             } ?: UiStringRes(R.string.reader_filter_main_title),
-            if (mTagFragmentStartedWith?.organization == NO_ORGANIZATION) listOf(SITES, TAGS) else listOf(SITES)
+            listOf(category) // TODO thomashorta this should accept only a single category
+            // TODO thomashorta move this to ReaderViewModel when a filter chip is selected
+//            if (mTagFragmentStartedWith?.organization == NO_ORGANIZATION) listOf(SITES, TAGS) else listOf(SITES)
         ))
     }
 

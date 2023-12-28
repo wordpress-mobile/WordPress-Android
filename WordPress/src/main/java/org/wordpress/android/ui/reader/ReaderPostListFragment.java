@@ -62,6 +62,7 @@ import org.wordpress.android.fluxc.store.ReaderStore;
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
 import org.wordpress.android.models.FilterCriteria;
+import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
@@ -110,6 +111,7 @@ import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvi
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage;
 import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetVisible;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
+import org.wordpress.android.ui.reader.subfilter.SubfilterCategory;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
@@ -126,7 +128,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.DisplayUtilsWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SnackbarItem;
@@ -165,65 +166,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private static final int TAB_POSTS = 0;
     private static final int TAB_SITES = 1;
     private static final int NO_POSITION = -1;
-
-    private ReaderPostAdapter mPostAdapter;
-    private ReaderSiteSearchAdapter mSiteSearchAdapter;
-    private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
-    private ReaderSearchSuggestionRecyclerAdapter mSearchSuggestionRecyclerAdapter;
-
-    private FilteredRecyclerView mRecyclerView;
-    private boolean mFirstLoad = true;
-
-    private View mNewPostsBar;
-    private ActionableEmptyView mActionableEmptyView;
-    private ProgressBar mProgress;
-    private TabLayout mSearchTabs;
-
-    private SearchView mSearchView;
-    private MenuItem mSearchMenuItem;
-
-    private View mSubFilterComponent;
-    private View mSubFiltersListButton;
-    private TextView mSubFilterTitle;
-    private View mRemoveFilterButton;
-    private View mJetpackBanner;
-
-    private boolean mIsTopLevel = false;
     private static final String SUBFILTER_BOTTOM_SHEET_TAG = "SUBFILTER_BOTTOM_SHEET_TAG";
-
-    private BottomNavController mBottomNavController;
-
-    private ReaderTag mCurrentTag;
-    private ReaderTag mTagFragmentStartedWith = null;
-    private long mCurrentBlogId;
-    private long mCurrentFeedId;
-    private String mCurrentSearchQuery;
-    private ReaderPostListType mPostListType;
-    private ReaderSiteModel mLastTappedSiteSearchResult;
-
-    private int mRestorePosition;
-    private int mSiteSearchRestorePosition;
-    private int mPostSearchAdapterPos;
-    private int mSiteSearchAdapterPos;
-    private int mSearchTabsPos = NO_POSITION;
-
-    private boolean mIsUpdating;
-    private boolean mWasPaused;
-    private boolean mHasRequestedPosts;
-    private boolean mHasUpdatedPosts;
-    private boolean mIsAnimatingOutNewPostsBar;
-
     private static boolean mHasPurgedReaderDb;
-
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
-
-    private AlertDialog mBookmarksSavedLocallyDialog;
-
-    private ReaderPostListViewModel mViewModel;
-    // This VM is initialized only on the Following tab
-    private SubFilterViewModel mSubFilterViewModel;
-    private ReaderViewModel mReaderViewModel = null;
-
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject AccountStore mAccountStore;
     @Inject ReaderStore mReaderStore;
@@ -239,37 +184,96 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject SnackbarSequencer mSnackbarSequencer;
     @Inject DisplayUtilsWrapper mDisplayUtilsWrapper;
     @Inject ReaderImprovementsFeatureConfig mReaderImprovementsFeatureConfig;
+    private ReaderPostAdapter mPostAdapter;
+    private ReaderSiteSearchAdapter mSiteSearchAdapter;
+    private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
+    private ReaderSearchSuggestionRecyclerAdapter mSearchSuggestionRecyclerAdapter;
+    private FilteredRecyclerView mRecyclerView;
+    private boolean mFirstLoad = true;
+    private View mNewPostsBar;
+    private ActionableEmptyView mActionableEmptyView;
+    private ProgressBar mProgress;
+    private TabLayout mSearchTabs;
+    private SearchView mSearchView;
+    private MenuItem mSearchMenuItem;
+    private View mSubFilterComponent;
+    private View mSubFiltersListButton;
+    private TextView mSubFilterTitle;
+    private View mRemoveFilterButton;
+    private View mJetpackBanner;
+    private boolean mIsTopLevel = false;
+    private BottomNavController mBottomNavController;
+    private ReaderTag mCurrentTag;
+    private ReaderTag mTagFragmentStartedWith = null;
+    private long mCurrentBlogId;
+    private long mCurrentFeedId;
+    private String mCurrentSearchQuery;
+    private ReaderPostListType mPostListType;
+    private ReaderSiteModel mLastTappedSiteSearchResult;
+    private int mRestorePosition;
+    private int mSiteSearchRestorePosition;
+    private int mPostSearchAdapterPos;
+    private int mSiteSearchAdapterPos;
+    private int mSearchTabsPos = NO_POSITION;
+    private boolean mIsUpdating;
+    /*
+     * called by post adapter to load older posts when user scrolls to the last post
+     */
+    private final ReaderActions.DataRequestedListener mDataRequestedListener =
+            new ReaderActions.DataRequestedListener() {
+                @Override
+                public void onRequestData() {
+                    // skip if update is already in progress
+                    if (isUpdating()) {
+                        return;
+                    }
 
-    private enum ActionableEmptyViewButtonType {
-        DISCOVER,
-        FOLLOWED
-    }
+                    // request older posts unless we already have the max # to show
+                    switch (getPostListType()) {
+                        case TAG_FOLLOWED:
+                            // fall through to TAG_PREVIEW
+                        case TAG_PREVIEW:
+                            if (ReaderPostTable.getNumPostsWithTag(mCurrentTag)
+                                < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
+                                // request older posts
+                                updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_OLDER);
+                                mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                            }
+                            break;
 
-    private static class HistoryStack extends Stack<String> {
-        private final String mKeyName;
+                        case BLOG_PREVIEW:
+                            int numPosts;
+                            if (mCurrentFeedId != 0) {
+                                numPosts = ReaderPostTable.getNumPostsInFeed(mCurrentFeedId);
+                            } else {
+                                numPosts = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
+                            }
+                            if (numPosts < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
+                                updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_OLDER);
+                                mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                            }
+                            break;
 
-        HistoryStack(@SuppressWarnings("SameParameterValue") String keyName) {
-            mKeyName = keyName;
-        }
-
-        void restoreInstance(Bundle bundle) {
-            clear();
-            if (bundle.containsKey(mKeyName)) {
-                ArrayList<String> history = bundle.getStringArrayList(mKeyName);
-                if (history != null) {
-                    this.addAll(history);
+                        case SEARCH_RESULTS:
+                            ReaderTag searchTag = ReaderUtils.getTagForSearchQuery(mCurrentSearchQuery);
+                            int offset = ReaderPostTable.getNumPostsWithTag(searchTag);
+                            if (offset < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
+                                updatePostsInCurrentSearch(offset);
+                                mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                            }
+                            break;
+                    }
                 }
-            }
-        }
-
-        void saveInstance(Bundle bundle) {
-            if (!isEmpty()) {
-                ArrayList<String> history = new ArrayList<>();
-                history.addAll(this);
-                bundle.putStringArrayList(mKeyName, history);
-            }
-        }
-    }
+            };
+    private boolean mWasPaused;
+    private boolean mHasRequestedPosts;
+    private boolean mHasUpdatedPosts;
+    private boolean mIsAnimatingOutNewPostsBar;
+    private AlertDialog mBookmarksSavedLocallyDialog;
+    private ReaderPostListViewModel mViewModel;
+    // This VM is initialized only on the Following tab
+    private SubFilterViewModel mSubFilterViewModel;
+    private ReaderViewModel mReaderViewModel = null;
 
     /*
      * show posts with a specific tag (either TAG_FOLLOWED or TAG_PREVIEW)
@@ -679,14 +683,19 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mSubFilterViewModel.start(mTagFragmentStartedWith, mCurrentTag, savedInstanceState);
     }
 
-    private void initSubFilterViews(ViewGroup rootView, LayoutInflater inflater) {
+    void openFilterList(@NonNull SubfilterCategory category) {
+        mSubFilterViewModel.onSubFiltersListButtonClicked(category);
+    }
+
+    private void initSubFilterViews(@NonNull ViewGroup rootView, @NonNull LayoutInflater inflater) {
         mSubFilterComponent = inflater.inflate(R.layout.subfilter_component, rootView, false);
         ((ViewGroup) rootView.findViewById(R.id.sub_filter_component_container)).addView(mSubFilterComponent);
 
+        // TODO thomashorta remove mSubFiltersListButton and move isFilterableScreen logic to ReaderFragment/VM
         mSubFiltersListButton = mSubFilterComponent.findViewById(R.id.filter_selection);
-        mSubFiltersListButton.setOnClickListener(v -> {
-            mSubFilterViewModel.onSubFiltersListButtonClicked();
-        });
+//        mSubFiltersListButton.setOnClickListener(v -> {
+//            mSubFilterViewModel.onSubFiltersListButtonClicked();
+//        });
 
         mSubFilterTitle = mSubFilterComponent.findViewById(R.id.selected_filter_name);
 
@@ -1584,7 +1593,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mSearchSuggestionAdapter.setFilter(query);
     }
 
-
     private void createSearchSuggestionRecyclerAdapter() {
         mSearchSuggestionRecyclerAdapter = new ReaderSearchSuggestionRecyclerAdapter();
         mRecyclerView.setSearchSuggestionAdapter(mSearchSuggestionRecyclerAdapter);
@@ -1909,7 +1917,22 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mViewModel.onEmptyStateButtonTapped(tag);
     }
 
-    /*
+    private void announceListStateForAccessibility() {
+        if (getView() != null) {
+            getView().announceForAccessibility(getString(R.string.reader_acessibility_list_loaded,
+                    getPostAdapter().getItemCount()));
+        }
+    }
+
+    private void showBookmarksSavedLocallyDialog(ShowBookmarkedSavedOnlyLocallyDialog holder) {
+        mBookmarksSavedLocallyDialog = new MaterialAlertDialogBuilder(requireActivity())
+                .setTitle(getString(holder.getTitle()))
+                .setMessage(getString(holder.getMessage()))
+                .setPositiveButton(holder.getButtonLabel(), (dialog, which) -> holder.getOkButtonAction().invoke())
+                .setCancelable(false)
+                .create();
+        mBookmarksSavedLocallyDialog.show();
+    }    /*
      * called by post adapter when data has been loaded
      */
     private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
@@ -1942,77 +1965,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     };
 
-    private void announceListStateForAccessibility() {
-        if (getView() != null) {
-            getView().announceForAccessibility(getString(R.string.reader_acessibility_list_loaded,
-                    getPostAdapter().getItemCount()));
-        }
-    }
-
-    private void showBookmarksSavedLocallyDialog(ShowBookmarkedSavedOnlyLocallyDialog holder) {
-        mBookmarksSavedLocallyDialog = new MaterialAlertDialogBuilder(requireActivity())
-                .setTitle(getString(holder.getTitle()))
-                .setMessage(getString(holder.getMessage()))
-                .setPositiveButton(holder.getButtonLabel(), (dialog, which) -> holder.getOkButtonAction().invoke())
-                .setCancelable(false)
-                .create();
-        mBookmarksSavedLocallyDialog.show();
-    }
-
     private boolean isBookmarksList() {
         return getPostListType() == ReaderPostListType.TAG_FOLLOWED
                && (mCurrentTag != null && mCurrentTag.isBookmarked());
     }
-
-    /*
-     * called by post adapter to load older posts when user scrolls to the last post
-     */
-    private final ReaderActions.DataRequestedListener mDataRequestedListener =
-            new ReaderActions.DataRequestedListener() {
-                @Override
-                public void onRequestData() {
-                    // skip if update is already in progress
-                    if (isUpdating()) {
-                        return;
-                    }
-
-                    // request older posts unless we already have the max # to show
-                    switch (getPostListType()) {
-                        case TAG_FOLLOWED:
-                            // fall through to TAG_PREVIEW
-                        case TAG_PREVIEW:
-                            if (ReaderPostTable.getNumPostsWithTag(mCurrentTag)
-                                < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
-                                // request older posts
-                                updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_OLDER);
-                                mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
-                            }
-                            break;
-
-                        case BLOG_PREVIEW:
-                            int numPosts;
-                            if (mCurrentFeedId != 0) {
-                                numPosts = ReaderPostTable.getNumPostsInFeed(mCurrentFeedId);
-                            } else {
-                                numPosts = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
-                            }
-                            if (numPosts < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
-                                updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_OLDER);
-                                mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
-                            }
-                            break;
-
-                        case SEARCH_RESULTS:
-                            ReaderTag searchTag = ReaderUtils.getTagForSearchQuery(mCurrentSearchQuery);
-                            int offset = ReaderPostTable.getNumPostsWithTag(searchTag);
-                            if (offset < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
-                                updatePostsInCurrentSearch(offset);
-                                mReaderTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
-                            }
-                            break;
-                    }
-                }
-            };
 
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter == null) {
@@ -2091,14 +2047,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         return mCurrentTag;
     }
 
-    private String getCurrentTagName() {
-        return (mCurrentTag != null ? mCurrentTag.getTagSlug() : "");
-    }
-
-    private boolean hasCurrentTag() {
-        return mCurrentTag != null;
-    }
-
     private void setCurrentTag(final ReaderTag tag) {
         if (tag == null) {
             return;
@@ -2167,6 +2115,14 @@ public class ReaderPostListFragment extends ViewPagerFragment
         hideNewPostsBar();
         showLoadingProgress(false);
         updateCurrentTagIfTime();
+    }
+
+    private String getCurrentTagName() {
+        return (mCurrentTag != null ? mCurrentTag.getTagSlug() : "");
+    }
+
+    private boolean hasCurrentTag() {
+        return mCurrentTag != null;
     }
 
     @Override
@@ -2434,18 +2390,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         return (mNewPostsBar != null && mNewPostsBar.getVisibility() == View.VISIBLE);
     }
 
-    /*
-     * scroll listener assigned to the recycler when the "new posts" bar is shown to hide
-     * it upon scrolling
-     */
-    private final RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            hideNewPostsBar();
-        }
-    };
-
     private void showNewPostsBar() {
         if (!isAdded() || isNewPostsBarShowing()) {
             return;
@@ -2594,7 +2538,17 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.blogId, post.postId);
                 break;
         }
-    }
+    }    /*
+     * scroll listener assigned to the recycler when the "new posts" bar is shown to hide
+     * it upon scrolling
+     */
+    private final RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            hideNewPostsBar();
+        }
+    };
 
     /*
      * called when user selects a tag from the tag toolbar
@@ -2848,5 +2802,36 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     private boolean isFilterableTag(ReaderTag tag) {
         return tag != null && tag.isFilterable();
+    }
+
+    private enum ActionableEmptyViewButtonType {
+        DISCOVER,
+        FOLLOWED
+    }
+
+    private static class HistoryStack extends Stack<String> {
+        private final String mKeyName;
+
+        HistoryStack(@SuppressWarnings("SameParameterValue") String keyName) {
+            mKeyName = keyName;
+        }
+
+        void restoreInstance(Bundle bundle) {
+            clear();
+            if (bundle.containsKey(mKeyName)) {
+                ArrayList<String> history = bundle.getStringArrayList(mKeyName);
+                if (history != null) {
+                    this.addAll(history);
+                }
+            }
+        }
+
+        void saveInstance(Bundle bundle) {
+            if (!isEmpty()) {
+                ArrayList<String> history = new ArrayList<>();
+                history.addAll(this);
+                bundle.putStringArrayList(mKeyName, history);
+            }
+        }
     }
 }
