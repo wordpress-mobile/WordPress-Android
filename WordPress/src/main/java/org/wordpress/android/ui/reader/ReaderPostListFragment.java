@@ -617,7 +617,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     showEmptyView();
                 }
 
-                if (mReaderViewModel != null) mReaderViewModel.onSubFilterSelected(subfilterListItem);
+                if (mReaderViewModel != null) mReaderViewModel.onSubFilterItemSelected(subfilterListItem);
             }
         });
 

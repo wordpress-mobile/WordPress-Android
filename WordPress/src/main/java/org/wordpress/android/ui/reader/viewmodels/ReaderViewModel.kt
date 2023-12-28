@@ -437,7 +437,7 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
-    fun onSubFilterSelected(item: SubfilterListItem) {
+    fun onSubFilterItemSelected(item: SubfilterListItem) {
         when (item) {
             is SubfilterListItem.SiteAll -> clearTopBarFilter()
             is SubfilterListItem.Site -> updateTopBarFilter(item.blog.name, ReaderFilterType.BLOG)
