@@ -4,9 +4,11 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -449,16 +451,26 @@ class ReaderViewModel @Inject constructor(
         val filterUiState = _topBarUiState.value?.filterUiState
             ?.copy(selectedItem = null)
 
-        _topBarUiState.value = _topBarUiState.value
-            ?.copy(filterUiState = filterUiState)
+        viewModelScope.launch(mainDispatcher) {
+            delay(FILTER_UPDATE_DELAY) // small delay to achieve a fluid animation since other UI updates are happening
+            _topBarUiState.postValue(
+                _topBarUiState.value
+                    ?.copy(filterUiState = filterUiState)
+            )
+        }
     }
 
     private fun updateTopBarFilter(itemName: String, type: ReaderFilterType) {
         val filterUiState = _topBarUiState.value?.filterUiState
             ?.copy(selectedItem = ReaderFilterSelectedItem(UiStringText(itemName), type))
 
-        _topBarUiState.value = _topBarUiState.value
-            ?.copy(filterUiState = filterUiState)
+        viewModelScope.launch(mainDispatcher) {
+            delay(FILTER_UPDATE_DELAY) // small delay to achieve a fluid animation since other UI updates are happening
+            _topBarUiState.postValue(
+                _topBarUiState.value
+                    ?.copy(filterUiState = filterUiState)
+            )
+        }
     }
 
     data class TopBarUiState(
@@ -511,6 +523,7 @@ class ReaderViewModel @Inject constructor(
     companion object {
         private const val QUICK_START_DISCOVER_TAB_STEP_DELAY = 2000L
         private const val QUICK_START_PROMPT_DURATION = 5000
+        private const val FILTER_UPDATE_DELAY = 50L
     }
 }
 
