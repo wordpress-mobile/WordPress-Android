@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker
 import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker.BloganuaryNudgeCardMenuItem
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloganuaryNudgeCardBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -24,6 +25,7 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val tracker: BloganuaryNudgeAnalyticsTracker,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val bloganuaryNudgeCardBuilder: BloganuaryNudgeCardBuilder
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
@@ -35,6 +37,10 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
 
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
+    }
+
+    fun buildCard(): MySiteCardAndItem.Card.BloganuaryNudgeCardModel? {
+        return bloganuaryNudgeCardBuilder.build(getBuilderParams())
     }
 
     fun getBuilderParams(): BloganuaryNudgeCardBuilderParams {
