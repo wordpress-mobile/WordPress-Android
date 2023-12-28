@@ -360,8 +360,11 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
 
     // The view model is started by the ReaderPostListFragment for feeds that support filtering
     private fun getSubFilterViewModel(): SubFilterViewModel? {
-        val currentFragment = getCurrentFeedFragment() ?: return null
-        val selectedTag = (viewModel.uiState.value as? ContentUiState)?.selectedReaderTag ?: return null
+        val currentFragment = getCurrentFeedFragment()
+        val selectedTag = (viewModel.uiState.value as? ContentUiState)?.selectedReaderTag
+
+        if (currentFragment == null || selectedTag == null) return null
+
         return ViewModelProvider(currentFragment, viewModelFactory).get(
             SubFilterViewModel.getViewModelKeyForTag(selectedTag),
             SubFilterViewModel::class.java
