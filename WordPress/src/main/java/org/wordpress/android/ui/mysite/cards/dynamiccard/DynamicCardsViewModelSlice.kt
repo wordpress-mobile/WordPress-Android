@@ -27,8 +27,12 @@ class DynamicCardsViewModelSlice @Inject constructor(
         return dynamicCardsBuilder.build(getBuilderParams(dynamicCardsModel), CardModel.DynamicCardsModel.CardOrder.TOP)
     }
 
-    fun buildBottomDynamicCards(dynamicCardsModel: CardModel.DynamicCardsModel?): List<MySiteCardAndItem.Card.Dynamic>? {
-        return dynamicCardsBuilder.build(getBuilderParams(dynamicCardsModel), CardModel.DynamicCardsModel.CardOrder.BOTTOM)
+    fun buildBottomDynamicCards(dynamicCardsModel: CardModel.DynamicCardsModel?):
+            List<MySiteCardAndItem.Card.Dynamic>? {
+        return dynamicCardsBuilder.build(
+            getBuilderParams(dynamicCardsModel),
+            CardModel.DynamicCardsModel.CardOrder.BOTTOM
+        )
     }
 
     fun getBuilderParams(dynamicCards: CardModel.DynamicCardsModel?): DynamicCardsBuilderParams {
