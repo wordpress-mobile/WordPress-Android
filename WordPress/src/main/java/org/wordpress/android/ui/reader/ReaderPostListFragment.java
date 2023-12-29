@@ -107,6 +107,7 @@ import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarte
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider;
+import org.wordpress.android.ui.reader.subfilter.ActionType.OpenLoginPage;
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage;
 import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetVisible;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
@@ -647,14 +648,14 @@ public class ReaderPostListFragment extends ViewPagerFragment
             });
         });
 
-        mSubFilterViewModel.getBottomSheetEmptyViewAction().observe(getViewLifecycleOwner(), event -> {
+        mSubFilterViewModel.getBottomSheetAction().observe(getViewLifecycleOwner(), event -> {
             event.applyIfNotHandled(action -> {
                 if (action instanceof OpenSubsAtPage) {
                     ReaderActivityLauncher.showReaderSubs(
                             requireActivity(),
                             ((OpenSubsAtPage) action).getTabIndex()
                     );
-                } else {
+                } else if (action instanceof OpenLoginPage) {
                     wpMainActivityViewModel.onOpenLoginPage(
                             WPMainNavigationView.Companion.getPosition(PageType.MY_SITE)
                     );

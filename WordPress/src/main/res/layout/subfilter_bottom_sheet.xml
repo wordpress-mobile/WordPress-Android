@@ -25,7 +25,7 @@
             android:text="@string/reader_filter_sites_title" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/button_edit_subscriptions"
+            android:id="@+id/edit_subscriptions"
             style="@style/SiteTagBottomSheetAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

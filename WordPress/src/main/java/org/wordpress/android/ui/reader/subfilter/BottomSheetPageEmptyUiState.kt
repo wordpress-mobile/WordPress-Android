@@ -12,10 +12,10 @@ sealed class SubfilterBottomSheetEmptyUiState {
     ) : SubfilterBottomSheetEmptyUiState()
 }
 
-sealed class ActionType {
+sealed interface ActionType {
     data class OpenSubsAtPage(
         val tabIndex: Int
-    ) : ActionType()
+    ) : ActionType
 
-    object OpenLoginPage : ActionType()
+    data object OpenLoginPage : ActionType
 }

@@ -179,22 +179,22 @@ class SubFilterViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when WPCOM user taps empty bottom sheet SITES cta the subs activity is opened on followed blogs page`() {
+    fun `when WPCOM user taps bottom sheet SITES cta the subs activity is opened on followed blogs page`() {
         val action = OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
         viewModel.onBottomSheetActionClicked(action)
 
         assertThat(viewModel.bottomSheetUiState.value!!.peekContent()).isEqualTo(BottomSheetHidden)
-        assertThat(viewModel.bottomSheetEmptyViewAction.value!!.peekContent())
+        assertThat(viewModel.bottomSheetAction.value!!.peekContent())
             .isEqualTo(action)
     }
 
     @Test
-    fun `when WPCOM user taps empty bottom sheet TAGS cta the subs activity is opened on followed tags page`() {
+    fun `when WPCOM user taps bottom sheet TAGS cta the subs activity is opened on followed tags page`() {
         val action = OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
         viewModel.onBottomSheetActionClicked(action)
 
         assertThat(viewModel.bottomSheetUiState.value!!.peekContent()).isEqualTo(BottomSheetHidden)
-        assertThat(viewModel.bottomSheetEmptyViewAction.value!!.peekContent())
+        assertThat(viewModel.bottomSheetAction.value!!.peekContent())
             .isEqualTo(action)
     }
 
@@ -204,7 +204,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
         viewModel.onBottomSheetActionClicked(action)
 
         assertThat(viewModel.bottomSheetUiState.value!!.peekContent()).isEqualTo(BottomSheetHidden)
-        assertThat(viewModel.bottomSheetEmptyViewAction.value!!.peekContent())
+        assertThat(viewModel.bottomSheetAction.value!!.peekContent())
             .isEqualTo(action)
     }
 
