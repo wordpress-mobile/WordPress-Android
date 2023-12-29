@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker
 import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker.BloganuaryNudgeCardMenuItem
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
@@ -12,6 +13,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.Bloganuary
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.config.BloganuaryNudgeFeatureConfig
 import org.wordpress.android.viewmodel.Event
@@ -45,6 +47,8 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
                 !isCardHiddenByUser()
 
         return BloganuaryNudgeCardBuilderParams(
+            title = UiStringRes(R.string.bloganuary_dashboard_nudge_title),
+            text = UiStringRes(R.string.bloganuary_dashboard_nudge_text),
             isEligible = isEligible,
             onLearnMoreClick = ::onLearnMoreClick,
             onMoreMenuClick = ::onMoreMenuClick,

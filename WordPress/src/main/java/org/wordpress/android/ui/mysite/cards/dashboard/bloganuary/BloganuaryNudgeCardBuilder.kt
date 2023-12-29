@@ -11,8 +11,8 @@ class BloganuaryNudgeCardBuilder @Inject constructor() {
     fun build(params: BloganuaryNudgeCardBuilderParams): BloganuaryNudgeCardModel? {
         return if (params.isEligible) {
             BloganuaryNudgeCardModel(
-                title = UiStringRes(R.string.bloganuary_dashboard_nudge_title),
-                text = UiStringRes(R.string.bloganuary_dashboard_nudge_text),
+                title = params.title,
+                text = params.text,
                 onLearnMoreClick = ListItemInteraction.create(params.onLearnMoreClick),
                 onMoreMenuClick = ListItemInteraction.create(params.onMoreMenuClick),
                 onHideMenuItemClick = ListItemInteraction.create(params.onHideMenuItemClick),
