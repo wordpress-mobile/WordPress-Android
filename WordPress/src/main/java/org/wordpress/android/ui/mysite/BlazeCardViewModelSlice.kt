@@ -1,18 +1,25 @@
 package org.wordpress.android.ui.mysite
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import org.wordpress.android.Result
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
+import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.FetchCampaignListUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.CampaignWithBlazeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams.PromoteWithBlazeCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardBuilder
+import org.wordpress.android.ui.mysite.cards.blaze.MostRecentCampaignUseCase
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,26 +29,90 @@ class BlazeCardViewModelSlice @Inject constructor(
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val cardsTracker: CardsTracker,
-    private val blazeCardBuilder: BlazeCardBuilder
+    private val blazeCardBuilder: BlazeCardBuilder,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val fetchCampaignListUseCase: FetchCampaignListUseCase,
+    private val mostRecentCampaignUseCase: MostRecentCampaignUseCase,
 ) {
+    private lateinit var scope: CoroutineScope
+
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
     private val _refresh = MutableLiveData<Event<Boolean>>()
     val refresh = _refresh
 
-    fun buildBlazeCard(blazeCardUpdate: BlazeCardUpdate?): MySiteCardAndItem.Card.BlazeCard? {
-        return getBlazeCardBuilderParams(blazeCardUpdate)?.let { blazeCardBuilder.build(it) }
+    private val _isRefreshing = MutableLiveData<Boolean>()
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
+
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.BlazeCard>()
+    val uiModel: LiveData<MySiteCardAndItem.Card.BlazeCard> = _uiModel
+
+    fun initialize(scope: CoroutineScope) {
+        this.scope = scope
     }
 
-    fun getBlazeCardBuilderParams(blazeCardUpdate: BlazeCardUpdate?): BlazeCardBuilderParams? {
-        return blazeCardUpdate?.let {
-            if (it.blazeEligible) {
-                it.campaign?.let { campaign ->
+    fun getData(siteLocalId: Int) {
+        _isRefreshing.postValue(true)
+        scope.launch {
+            val selectedSite = selectedSiteRepository.getSelectedSite()
+            if (selectedSite != null && selectedSite.id == siteLocalId) {
+                if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(selectedSite)) {
+                    if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {
+                        fetchCampaigns(selectedSite)
+                    } else {
+                        // show blaze promo card if campaign feature is not available
+                        showPromoteWithBlazeCard()
+                    }
+                } else {
+                    postState(false)
+                }
+            } else {
+                postState(false)
+            }
+        }
+    }
+
+    private suspend fun fetchCampaigns(site: SiteModel) {
+        if (networkUtilsWrapper.isNetworkAvailable().not()) {
+            getMostRecentCampaignFromDb(site)
+        } else {
+            when (fetchCampaignListUseCase.execute(site = site, page = 1)) {
+                is Result.Success -> getMostRecentCampaignFromDb(site)
+                // there are no campaigns or if there is an error , show blaze promo card
+                is Result.Failure -> showPromoteWithBlazeCard()
+            }
+        }
+    }
+
+    private suspend fun getMostRecentCampaignFromDb(site: SiteModel) {
+        when(val result = mostRecentCampaignUseCase.execute(site)) {
+            is Result.Success -> postState(true, campaign = result.value)
+            is Result.Failure -> showPromoteWithBlazeCard()
+        }
+    }
+
+    private fun showPromoteWithBlazeCard() {
+        postState(true)
+    }
+
+    fun postState(isBlazeEligible: Boolean, campaign: BlazeCampaignModel? = null) {
+        _isRefreshing.postValue(false)
+        if(isBlazeEligible) {
+            buildBlazeCard(campaign)?.let {
+                _uiModel.value = it
+            }
+        }
+    }
+
+    fun buildBlazeCard(campaign: BlazeCampaignModel? = null): MySiteCardAndItem.Card.BlazeCard? {
+        return getBlazeCardBuilderParams(campaign).let { blazeCardBuilder.build(it) }
+    }
+
+    fun getBlazeCardBuilderParams(campaign: BlazeCampaignModel? = null): BlazeCardBuilderParams {
+        return campaign?.let {
                     getCampaignWithBlazeCardBuilderParams(campaign)
                 } ?: getPromoteWithBlazeCardBuilderParams()
-            } else null
-        }
     }
 
     private fun getCampaignWithBlazeCardBuilderParams(campaign: BlazeCampaignModel) =
