@@ -21,9 +21,9 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
 import org.wordpress.android.ui.domains.DomainsDashboardItem.FreeDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
+import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
-import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetPlan
@@ -115,7 +115,7 @@ class DomainsDashboardViewModel @Inject constructor(
         val hasDomainCredit = isDomainCreditAvailable(plans)
         val hasPaidPlan = !SiteUtils.onFreePlan(site)
 
-        listItems += buildCustomDomainItems(customDomains, hasCustomDomains)
+        listItems += buildCustomDomainItems(site, customDomains, hasCustomDomains)
 
         listItems += buildCtaItems(freeDomainUrl, hasCustomDomains, hasDomainCredit, hasPaidPlan)
 
@@ -174,11 +174,17 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun buildCustomDomainItems(
+        site: SiteModel,
         customDomains: List<Domain>,
         hasCustomDomains: Boolean
     ): List<DomainsDashboardItem> {
         val listItems = mutableListOf<DomainsDashboardItem>()
-        if (hasCustomDomains) listItems += SiteDomainsHeader(UiStringRes(R.string.domains_site_domains))
+        if (hasCustomDomains) listItems += SiteDomainsHeader(
+            UiStringResWithParams(
+                R.string.domains_site_other_domains,
+                UiStringText(site.name)
+            )
+        )
         listItems += customDomains.map {
             SiteDomains(
                 UiStringText(it.domain.orEmpty()),

@@ -2695,7 +2695,7 @@
     <string name="domains_primary_site_more_menu_change_site_domain">Change domain</string>
     <string name="domains_primary_site_address">%s</string>
     <string name="domains_primary_site_domain_chip">Primary domain</string>
-    <string name="domains_site_domains">Your site domains</string>
+    <string name="domains_site_other_domains">Other domains for %s</string>
     <string name="domains_free_domain">Your free WordPress.com domain</string>
     <string name="domains_site_domain_expires">Expires on %s</string>
     <string name="domains_site_domain_never_expires">Never expires</string>
