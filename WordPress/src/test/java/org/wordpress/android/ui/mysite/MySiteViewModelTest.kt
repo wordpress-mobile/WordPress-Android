@@ -73,7 +73,6 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconPr
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
-import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
@@ -168,9 +167,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var snackbarSequencer: SnackbarSequencer
-
-    @Mock
-    lateinit var cardsBuilder: CardsBuilder
 
     @Mock
     lateinit var landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig
@@ -451,7 +447,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             homePageDataLoader,
             quickStartUtilsWrapper,
             snackbarSequencer,
-            cardsBuilder,
             landOnTheEditorFeatureConfig,
             mySiteSourceManager,
             cardsTracker,
