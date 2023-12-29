@@ -35,6 +35,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.WPTextView
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -46,6 +47,9 @@ class SubfilterPageFragment : Fragment() {
 
     @Inject
     lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var imageManager: ImageManager
 
     @Inject
     lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
@@ -89,7 +93,8 @@ class SubfilterPageFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.content_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter = SubfilterListAdapter(uiHelpers, statsUtils, seenUnseenWithCounterFeatureConfig)
+        recyclerView.adapter =
+            SubfilterListAdapter(uiHelpers, statsUtils, imageManager, seenUnseenWithCounterFeatureConfig)
 
         emptyStateContainer = view.findViewById(R.id.empty_state_container)
         title = emptyStateContainer.findViewById(R.id.title)
