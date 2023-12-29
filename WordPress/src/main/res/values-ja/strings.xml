@@ -15,7 +15,7 @@ Language: ja_JP
     <string name="bloganuary_dashboard_nudge_overlay_text_one">毎日インスピレーションを与える新しいプロンプトを受け取ることができます。</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">1か月間のライティングチャレンジにご参加ください</string>
     <string name="bloganuary_dashboard_nudge_text">1月のブログ作成のプロンプトは Bloganuary より、新年にブログ投稿を習慣付けるためのコミュニティの課題が提示されます。</string>
-    <string name="bloganuary_dashboard_nudge_title">まもなく Bloganuary です !</string>
+    <string name="bloganuary_dashboard_nudge_title_december">まもなく Bloganuary です !</string>
     <string name="turn_off">オフにする</string>
     <string name="leave_on">そのままにする</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">このため、Web ブラウザーでブロックを編集することをお勧めします。</string>

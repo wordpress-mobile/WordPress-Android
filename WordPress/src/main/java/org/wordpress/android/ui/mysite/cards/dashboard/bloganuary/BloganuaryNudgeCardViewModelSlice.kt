@@ -40,14 +40,21 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
     }
 
     fun getBuilderParams(): BloganuaryNudgeCardBuilderParams {
-        val now = dateTimeUtilsWrapper.getCalendarInstance()
+        val currentMonth = dateTimeUtilsWrapper.getCalendarInstance().get(Calendar.MONTH)
         val isEligible = bloganuaryNudgeFeatureConfig.isEnabled() &&
-                now.get(Calendar.MONTH) == Calendar.DECEMBER &&
+                currentMonth in listOf(Calendar.DECEMBER, Calendar.JANUARY) &&
                 bloggingPromptsSettingsHelper.isPromptsFeatureAvailable() &&
                 !isCardHiddenByUser()
 
+        // title should be different for different months
+        val titleRes = if (currentMonth == Calendar.JANUARY) {
+            R.string.bloganuary_dashboard_nudge_title_january
+        } else {
+            R.string.bloganuary_dashboard_nudge_title_december
+        }
+
         return BloganuaryNudgeCardBuilderParams(
-            title = UiStringRes(R.string.bloganuary_dashboard_nudge_title),
+            title = UiStringRes(titleRes),
             text = UiStringRes(R.string.bloganuary_dashboard_nudge_text),
             isEligible = isEligible,
             onLearnMoreClick = ::onLearnMoreClick,

@@ -16,7 +16,7 @@ Language: de
     <string name="bloganuary_dashboard_nudge_overlay_title">Unsere Schreib-Challenge dauert einen Monat – sei dabei</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">Im Januar erhältst du Blog-Schreibanregungen vom Bloganuary, unserer Community-Challenge. Diese soll dir helfen, Bloggen im neuen Jahr zur Gewohnheit zu machen.</string>
-    <string name="bloganuary_dashboard_nudge_title">Bloganuary steht vor der Tür!</string>
+    <string name="bloganuary_dashboard_nudge_title_december">Bloganuary steht vor der Tür!</string>
     <string name="turn_off">Nein, deaktivieren</string>
     <string name="leave_on">Ja, aktiviert lassen</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Aus diesem Grund empfehlen wir, den Block in deinem Webbrowser zu bearbeiten.</string>

@@ -16,7 +16,7 @@ Language: tr
     <string name="bloganuary_dashboard_nudge_overlay_title">Bir ay sürecek yazma etkinliğimize katılın</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Blog yılı</string>
     <string name="bloganuary_dashboard_nudge_text">Yeni yılda blog yazma alışkanlığı oluşturmayı hedefleyen topluluk etkinliğimiz Bloganuary\'den Ocak ayı boyunca blog istemleri alacaksınız.</string>
-    <string name="bloganuary_dashboard_nudge_title">Bloganuary yaklaşıyor!</string>
+    <string name="bloganuary_dashboard_nudge_title_december">Bloganuary yaklaşıyor!</string>
     <string name="turn_off">Hayır, kapat</string>
     <string name="leave_on">Evet, açık kalsın</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Bu nedenle, bloku web tarayıcınızı kullanarak düzenlemenizi öneririz.</string>
