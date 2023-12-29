@@ -5,21 +5,17 @@
     android:id="@+id/primary_site_address_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="@dimen/margin_extra_large"
+    android:layout_marginBottom="@dimen/margin_extra_large"
+    android:layout_marginTop="@dimen/margin_medium"
     app:cardCornerRadius="@dimen/margin_medium_large"
     app:cardElevation="0dp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
     app:strokeColor="@color/on_surface_disabled_primary_selector"
     app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_extra_large">
+        android:padding="@dimen/margin_extra_large">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/primary_site_address_actions"
@@ -32,15 +28,30 @@
             app:tint="?attr/wpColorOnSurfaceMedium" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/primary_site_address_caption"
-            style="?attr/textAppearanceBody2"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/domains_primary_domain_caption"
-            app:layout_constraintStart_toEndOf="@id/primary_site_address_actions"
+            android:layout_marginTop="@dimen/margin_medium_large"
+            android:text="@string/domains_site_domain_never_expires"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/wpColorOnSurfaceMedium" />
+            app:layout_constraintTop_toBottomOf="@id/primary_site_address_chip" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/primary_site_address_chip"
+            style="@style/DomainsCardSubTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:checkable="false"
+            android:text="@string/domains_primary_site_domain_chip"
+            app:chipBackgroundColor="@color/black_translucent_8"
+            app:chipCornerRadius="5dp"
+            app:chipIcon="@drawable/gb_ic_globe"
+            app:chipIconSize="20dp"
+            app:chipIconTint="@color/black_translucent_60"
+            app:ensureMinTouchTargetSize="false"
+            app:textStartPadding="@dimen/margin_small"
+            app:iconStartPadding="3dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/primary_site_address" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/primary_site_address"
@@ -48,26 +59,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/domains_primary_site_address"
-            app:layout_constraintBottom_toTopOf="@id/primary_site_address_chip"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/primary_site_address_caption"
-            app:layout_goneMarginBottom="@dimen/margin_extra_large"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="travelwithkids.wordpress.com" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/primary_site_address_chip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:background="@color/white_translucent_20"
-            android:checkable="false"
-            android:text="@string/domains_primary_site_domain_chip"
-            app:chipCornerRadius="4dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/primary_site_address" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </com.google.android.material.card.MaterialCardView>
