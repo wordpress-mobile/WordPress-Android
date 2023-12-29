@@ -1162,12 +1162,6 @@
         <item name="android:paddingBottom">0dp</item>
     </style>
 
-    <style name="SiteTagSelectedFilter" parent="SiteTagFilteredTitle">
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:paddingTop">@dimen/margin_large</item>
-        <item name="android:paddingBottom">@dimen/margin_large</item>
-    </style>
-
     <style name="SiteTagFilteredUrl" parent="SiteTagFilteredTitle">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
