@@ -15,7 +15,7 @@ Language: zh_TW
     <string name="bloganuary_dashboard_nudge_overlay_text_one">每天接收新提示，激發靈感。</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">參加為期一個月的寫作挑戰</string>
     <string name="bloganuary_dashboard_nudge_text">Bloganuary 會在 1 月送上網誌提示。這個社群挑戰的目的，是為了協助你在新的一年養成寫網誌的習慣。</string>
-    <string name="bloganuary_dashboard_nudge_title">Bloganuary 挑戰即將來臨！</string>
+    <string name="bloganuary_dashboard_nudge_title_december">Bloganuary 挑戰即將來臨！</string>
     <string name="turn_off">否，關閉</string>
     <string name="leave_on">是，保持開啟</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">因此，我們建議使用網頁瀏覽器來編輯區塊。</string>

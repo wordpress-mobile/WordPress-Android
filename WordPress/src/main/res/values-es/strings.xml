@@ -16,7 +16,7 @@ Language: es
     <string name="bloganuary_dashboard_nudge_overlay_title">Únete a nuestro reto de escritura de un mes</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">Durante el mes de enero, recibirás sugerencias de publicación de Bloganuary, nuestro reto de la comunidad para que crees un hábito de publicación sólido para el nuevo año.</string>
-    <string name="bloganuary_dashboard_nudge_title">¡Bloganuary está a la vuelta de la esquina!</string>
+    <string name="bloganuary_dashboard_nudge_title_december">¡Bloganuary está a la vuelta de la esquina!</string>
     <string name="turn_off">No, apágala</string>
     <string name="leave_on">Sí, déjala encendida</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Por esta razón, te recomendamos que edites el bloque utilizando tu navegador web.</string>

@@ -102,7 +102,7 @@ fun BloganuaryNudgeCardPreview() {
     AppTheme {
         BloganuaryNudgeCard(
             model = BloganuaryNudgeCardModel(
-                UiString.UiStringRes(R.string.bloganuary_dashboard_nudge_title),
+                UiString.UiStringRes(R.string.bloganuary_dashboard_nudge_title_december),
                 UiString.UiStringRes(R.string.bloganuary_dashboard_nudge_text),
                 onLearnMoreClick = ListItemInteraction.create { },
                 onMoreMenuClick = ListItemInteraction.create { },

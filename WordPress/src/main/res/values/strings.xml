@@ -4819,7 +4819,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="media_cannot_be_started">We cannot open media at the moment. Please try again later</string>
 
     <!-- Bloganuary -->
-    <string name="bloganuary_dashboard_nudge_title">Bloganuary is coming!</string>
+    <string name="bloganuary_dashboard_nudge_title_december">Bloganuary is coming!</string>
+    <string name="bloganuary_dashboard_nudge_title_january">Bloganuary is here!</string>
     <string name="bloganuary_dashboard_nudge_text">For the month of January, blogging prompts will come from Bloganuary — our community challenge to build a blogging habit for the new year.</string>
     <string name="bloganuary_dashboard_nudge_learn_more" translatable="false">@string/learn_more</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
