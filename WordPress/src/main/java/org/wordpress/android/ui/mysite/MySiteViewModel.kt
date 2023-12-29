@@ -13,9 +13,11 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
@@ -333,7 +335,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     @Suppress("LongParameterList")
-    private fun buildSiteSelectedStateAndScroll(
+    private suspend fun buildSiteSelectedStateAndScroll(
         site: SiteModel,
         showSiteIconProgressBar: Boolean,
         activeTask: QuickStartTask?,
@@ -346,18 +348,16 @@ class MySiteViewModel @Inject constructor(
         blazeCardUpdate: BlazeCardUpdate?,
         quickLinks: MySiteCardAndItem.Card.QuickLinksItem? = null
     ): SiteSelected {
-        val siteItems = buildSiteSelectedState(
+        val siteItems = if (shouldShowDashboard(site)) buildDashboardCards(
             site,
-            activeTask,
             isDomainCreditAvailable,
             quickStartCategories,
-            backupAvailable,
-            scanAvailable,
             cardsUpdate,
             bloggingPromptUpdate,
             blazeCardUpdate,
             quickLinks
         )
+        else buildSiteItemsMenu(site, activeTask, backupAvailable, scanAvailable, cardsUpdate)
 
         val siteInfo = siteInfoHeaderCardBuilder.buildSiteInfoCard(
             siteInfoHeaderCardViewModelSlice.getParams(
@@ -383,31 +383,6 @@ class MySiteViewModel @Inject constructor(
         siteItems: List<MySiteCardAndItem>,
     ): Int {
         return siteItems.indexOfFirst { it.activeQuickStartItem }
-    }
-
-    @Suppress("LongParameterList", "CyclomaticComplexMethod")
-    private fun buildSiteSelectedState(
-        site: SiteModel,
-        activeTask: QuickStartTask?,
-        isDomainCreditAvailable: Boolean,
-        quickStartCategories: List<QuickStartCategory>,
-        backupAvailable: Boolean,
-        scanAvailable: Boolean,
-        cardsUpdate: CardsUpdate?,
-        bloggingPromptUpdate: BloggingPromptUpdate?,
-        blazeCardUpdate: BlazeCardUpdate?,
-        quickLinks: MySiteCardAndItem.Card.QuickLinksItem?
-    ): List<MySiteCardAndItem> {
-        return if (shouldShowDashboard(site)) buildDashboardCards(
-            site,
-            isDomainCreditAvailable,
-            quickStartCategories,
-            cardsUpdate,
-            bloggingPromptUpdate,
-            blazeCardUpdate,
-            quickLinks
-        )
-        else buildSiteItemsMenu(site, activeTask, backupAvailable, scanAvailable, cardsUpdate)
     }
 
     private fun buildSiteItemsMenu(
@@ -444,7 +419,7 @@ class MySiteViewModel @Inject constructor(
         }.toList()
     }
 
-    private fun buildDashboardCards(
+    private suspend fun buildDashboardCards(
         site: SiteModel,
         isDomainCreditAvailable: Boolean,
         quickStartCategories: List<QuickStartCategory>,
@@ -487,10 +462,11 @@ class MySiteViewModel @Inject constructor(
         )
 
         val dashboardCards = buildCards(
-                site,
-                cardsUpdate,
-                bloggingPromptUpdate,
-                blazeCardUpdate)
+            site,
+            cardsUpdate,
+            bloggingPromptUpdate,
+            blazeCardUpdate
+        )
 
         val personalizeCard = personalizeCardBuilder.build(personalizeCardViewModelSlice.getBuilderParams())
 
@@ -503,7 +479,7 @@ class MySiteViewModel @Inject constructor(
             quickLinks?.let { add(quickLinks) }
             domainRegistrationCard?.let { add(domainRegistrationCard) }
             quickStartCard?.let { add(quickStartCard) }
-            dashboardCards?.let { addAll(dashboardCards) }
+            addAll(dashboardCards)
             noCardsMessage?.let { add(noCardsMessage) }
             personalizeCard?.let { add(personalizeCard) }
         }.toList()
@@ -521,53 +497,69 @@ class MySiteViewModel @Inject constructor(
             ).let { listOf(it) }
         }
 
-        val topDynamicCards = dynamicCardsViewModelSlice.buildTopDynamicCards(
-            cardsUpdate?.cards?.firstOrNull { it is DynamicCardsModel } as? DynamicCardsModel
-        )
+        return runBlocking {
+            val cards = mutableListOf<MySiteCardAndItem>()
 
-        val bloganuaryCard = bloganuaryNudgeCardViewModelSlice.buildCard()
+            val topDynamicCards = async {
+                dynamicCardsViewModelSlice.buildTopDynamicCards(
+                    cardsUpdate?.cards?.firstOrNull { it is DynamicCardsModel } as? DynamicCardsModel
+                )
+            }
 
-        val bloggingPromptCard = bloggingPromptCardViewModelSlice.buildCard(
-            bloggingPromptUpdate
-        )
+            val bloganuaryCard = async { bloganuaryNudgeCardViewModelSlice.buildCard() }
 
-        val blazeCard = blazeCardViewModelSlice.buildBlazeCard(blazeCardUpdate)
+            val bloggingPromptCard = async { bloggingPromptCardViewModelSlice.buildCard(bloggingPromptUpdate) }
 
-        val plansCard = plansCardViewModelSlice.buildCard(site)
+            val blazeCard = async { blazeCardViewModelSlice.buildBlazeCard(blazeCardUpdate) }
 
-        val todayStatsCard = todaysStatsViewModelSlice.buildTodaysStatsCard(
-            cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel } as? TodaysStatsCardModel
-        )
-        val postCard = postsCardViewModelSlice.buildPostCard(
-            cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel
-        )
+            val plansCard = async { plansCardViewModelSlice.buildCard(site) }
 
-        val pagesCard = pagesCardViewModelSlice.buildCard(
-            cardsUpdate?.cards?.firstOrNull { it is PagesCardModel } as? PagesCardModel
-        )
+            val todayStatsCard = async {
+                todaysStatsViewModelSlice.buildTodaysStatsCard(
+                    cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel } as? TodaysStatsCardModel
+                )
+            }
 
-        val activityCard = activityLogCardViewModelSlice.buildCard(
-            cardsUpdate?.cards?.firstOrNull { it is ActivityCardModel } as? ActivityCardModel
-        )
+            val postCard = async {
+                postsCardViewModelSlice.buildPostCard(
+                    cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel
+                )
+            }
 
-        val bottomDynamicCards = dynamicCardsViewModelSlice.buildBottomDynamicCards(
-            cardsUpdate?.cards?.firstOrNull { it is DynamicCardsModel } as? DynamicCardsModel
-        )
+            val pagesCard = async {
+                pagesCardViewModelSlice.buildCard(
+                    cardsUpdate?.cards?.firstOrNull { it is PagesCardModel } as? PagesCardModel
+                )
+            }
 
-        return mutableListOf<MySiteCardAndItem>().apply {
-            topDynamicCards?.let { addAll(it) }
-            bloganuaryCard?.let { add(it) }
-            bloggingPromptCard?.let { add(it) }
-            blazeCard?.let { add(it) }
-            plansCard?.let { add(it) }
-            todayStatsCard?.let { add(it) }
-            addAll(postCard)
-            pagesCard?.let { add(it) }
-            activityCard?.let { add(it) }
-            bottomDynamicCards?.let { addAll(it) }
-        }.toList()
+            val activityCard = async {
+                activityLogCardViewModelSlice.buildCard(
+                    cardsUpdate?.cards?.firstOrNull { it is ActivityCardModel } as? ActivityCardModel
+                )
+            }
+
+            val bottomDynamicCards = async {
+                dynamicCardsViewModelSlice.buildBottomDynamicCards(
+                    cardsUpdate?.cards?.firstOrNull { it is DynamicCardsModel } as? DynamicCardsModel
+                )
+            }
+
+            cards.apply {
+                topDynamicCards.await()?.let { addAll(it) }
+                bloganuaryCard.await()?.let { add(it) }
+                bloggingPromptCard.await()?.let { add(it) }
+                blazeCard.await()?.let { add(it) }
+                plansCard.await()?.let { add(it) }
+                todayStatsCard.await()?.let { add(it) }
+                postCard.await().let { addAll(it) }
+                pagesCard.await()?.let { add(it) }
+                activityCard.await()?.let { add(it) }
+                bottomDynamicCards.await()?.let { addAll(it) }
+            }.toList()
+
+            cards
+        }
     }
-
 
     private fun trackAndBuildDomainRegistrationCard(
         params: DomainRegistrationCardBuilderParams
