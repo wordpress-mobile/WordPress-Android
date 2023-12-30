@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/primary_site_address_card"
+    android:id="@+id/site_domain_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_extra_large"
@@ -17,7 +17,7 @@
         android:padding="@dimen/margin_extra_large">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/primary_site_address_actions"
+            android:id="@+id/primary_site_domain_actions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -33,10 +33,10 @@
             android:layout_marginTop="@dimen/margin_medium_large"
             android:text="@string/domains_site_domain_never_expires"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/primary_site_address_chip" />
+            app:layout_constraintTop_toBottomOf="@id/primary_site_domain_chip" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/primary_site_address_chip"
+            android:id="@+id/primary_site_domain_chip"
             style="@style/DomainsCardSubTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
             style="?attr/textAppearanceSubtitle1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/domains_primary_site_address"
+            android:text="@string/domains_site_domain"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="travelwithkids.wordpress.com" />
 

@@ -45,8 +45,8 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
         fun onBind(item: SiteDomains) = with(binding) {
             uiHelpers.setTextOrHide(siteDomain, item.domain)
             uiHelpers.setTextOrHide(siteDomainExpiryDate, item.expiry)
-            primarySiteAddressChip.isVisible = item.isPrimary
-            primarySiteAddressActions.setOnClickListener { view -> popupMenuClick(item, view) }
+            primarySiteDomainChip.isVisible = item.isPrimary
+            primarySiteDomainActions.setOnClickListener { view -> popupMenuClick(item, view) }
         }
 
         private fun popupMenuClick(item: SiteDomains, v: View) {
