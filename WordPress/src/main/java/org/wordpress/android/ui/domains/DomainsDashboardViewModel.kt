@@ -18,7 +18,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Action
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Action.CHANGE_SITE_ADDRESS
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
-import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
@@ -121,7 +120,7 @@ class DomainsDashboardViewModel @Inject constructor(
 
         listItems += buildCustomDomainItems(site, customDomains, hasCustomDomains)
 
-        listItems += buildCtaItems(freeDomainUrl, hasCustomDomains, hasDomainCredit, hasPaidPlan)
+        listItems += buildCtaItems(hasCustomDomains, hasDomainCredit, hasPaidPlan)
 
 //        NOTE: Manage domains option is de-scoped for v1 release
 //        if (hasCustomDomains) {
@@ -133,7 +132,6 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun buildCtaItems(
-        freeDomainUrl: String,
         hasCustomDomains: Boolean,
         hasDomainCredit: Boolean,
         hasPaidPlan: Boolean
@@ -148,14 +146,6 @@ class DomainsDashboardViewModel @Inject constructor(
             )
         } else if (hasCustomDomains) {
             listItems += AddDomain(ListItemInteraction.create(hasDomainCredit, this::onAddDomainClick))
-            if (!hasPaidPlan) {
-                listItems += DomainBlurb(
-                    UiStringResWithParams(
-                        R.string.domains_redirected_domains_blurb,
-                        listOf(UiStringText(freeDomainUrl))
-                    )
-                )
-            }
         } else {
             listItems += if (hasPaidPlan) {
                 PurchaseDomain(

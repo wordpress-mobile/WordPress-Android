@@ -11,11 +11,9 @@ import org.wordpress.android.databinding.DomainAddDomainCtaBinding
 import org.wordpress.android.databinding.DomainManageDomainsCtaBinding
 import org.wordpress.android.databinding.DomainPlanPurchaseCardBinding
 import org.wordpress.android.databinding.DomainPurchaseCardBinding
-import org.wordpress.android.databinding.DomainSiteDomainsBlurbBinding
 import org.wordpress.android.databinding.DomainSiteDomainsCardBinding
 import org.wordpress.android.databinding.DomainSiteDomainsHeaderBinding
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
-import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
 import org.wordpress.android.ui.domains.DomainsDashboardItem.ManageDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
@@ -111,17 +109,6 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
             uiHelpers.setTextOrHide(purchasePlanCaption, item.body)
             upgradePlanButton.setOnClickListener { item.onUpgradeClick.click() }
             justSearchDomainButton.setOnClickListener { item.onDomainClick.click() }
-        }
-    }
-
-    class DomainBlurbViewHolder(
-        parent: ViewGroup,
-        private val uiHelpers: UiHelpers
-    ) : DomainsDashboardViewHolder<DomainSiteDomainsBlurbBinding>(
-        parent.viewBinding(DomainSiteDomainsBlurbBinding::inflate)
-    ) {
-        fun onBind(item: DomainBlurb) = with(binding) {
-            uiHelpers.setTextOrHide(primarySiteRedirectBlurb, item.blurb)
         }
     }
 }

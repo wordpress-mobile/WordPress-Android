@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.ADD_DOMAIN
-import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.DOMAIN_BLURB
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.MANAGE_DOMAINS
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PURCHASE_DOMAIN
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PURCHASE_PLAN
@@ -20,7 +19,6 @@ sealed class DomainsDashboardItem(val type: Type) {
         ADD_DOMAIN,
         MANAGE_DOMAINS,
         PURCHASE_DOMAIN,
-        DOMAIN_BLURB,
         PURCHASE_PLAN
     }
 
@@ -51,8 +49,6 @@ sealed class DomainsDashboardItem(val type: Type) {
         val onUpgradeClick: ListItemInteraction,
         val onDomainClick: ListItemInteraction
     ) : DomainsDashboardItem(PURCHASE_PLAN)
-
-    data class DomainBlurb(val blurb: UiString) : DomainsDashboardItem(DOMAIN_BLURB)
 
     enum class Action(@IdRes val itemId: Int) {
         CHANGE_SITE_ADDRESS(R.id.change_site_address);
