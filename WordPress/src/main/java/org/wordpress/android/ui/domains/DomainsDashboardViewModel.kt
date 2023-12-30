@@ -118,7 +118,7 @@ class DomainsDashboardViewModel @Inject constructor(
         val hasDomainCredit = isDomainCreditAvailable(plans)
         val hasPaidPlan = !SiteUtils.onFreePlan(site)
 
-        listItems += buildCustomDomainItems(site, customDomains, hasCustomDomains)
+        listItems += buildCustomDomainItems(site, customDomains)
 
         listItems += buildCtaItems(hasCustomDomains, hasDomainCredit, hasPaidPlan)
 
@@ -167,13 +167,9 @@ class DomainsDashboardViewModel @Inject constructor(
         return listItems
     }
 
-    private fun buildCustomDomainItems(
-        site: SiteModel,
-        customDomains: List<Domain>,
-        hasCustomDomains: Boolean
-    ): List<DomainsDashboardItem> {
+    private fun buildCustomDomainItems(site: SiteModel, customDomains: List<Domain>): List<DomainsDashboardItem> {
         val listItems = mutableListOf<DomainsDashboardItem>()
-        if (hasCustomDomains) listItems += SiteDomainsHeader(
+        listItems += SiteDomainsHeader(
             UiStringResWithParams(
                 R.string.domains_site_other_domains,
                 UiStringText(site.name)
