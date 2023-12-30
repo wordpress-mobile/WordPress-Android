@@ -13,7 +13,6 @@
         android:clipToPadding="false"
         android:descendantFocusability="beforeDescendants"
         android:paddingHorizontal="@dimen/margin_extra_large"
-        android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="parent"
