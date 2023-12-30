@@ -32,7 +32,7 @@ class DomainsDashboardAdapter @Inject constructor(
     private val uiHelpers: UiHelpers
 ) : ListAdapter<DomainsDashboardItem, DomainsDashboardViewHolder<*>>(DomainsDashboardDiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DomainsDashboardViewHolder<*> {
-        return when (Type.values()[viewType]) {
+        return when (Type.entries[viewType]) {
             SITE_DOMAINS_HEADER -> SiteDomainsHeaderViewHolder(parent, uiHelpers)
             SITE_DOMAINS -> SiteDomainsViewHolder(parent, uiHelpers)
             ADD_DOMAIN -> AddDomainViewHolder(parent)
