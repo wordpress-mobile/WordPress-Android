@@ -1,9 +1,12 @@
 @file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.mysite.cards.siteinfo
 
 import android.net.Uri
 import android.text.TextUtils
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -13,6 +16,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -30,6 +34,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import java.io.File
@@ -45,7 +50,8 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
     private val wpMediaUtilsWrapper: WPMediaUtilsWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
-    private val contextProvider: ContextProvider
+    private val contextProvider: ContextProvider,
+    private val siteInfoHeaderCardBuilder: SiteInfoHeaderCardBuilder
 ) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage
@@ -62,16 +68,48 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     val onMediaUpload = _onMediaUpload
 
+    private val _uiModel = MutableLiveData<SiteInfoHeaderCard>().distinctUntilChanged()
+    val uiModel: LiveData<SiteInfoHeaderCard> =
+        merge(
+            _uiModel, quickStartRepository.activeTask, selectedSiteRepository.showSiteIconProgressBar,
+            selectedSiteRepository.selectedSiteChange)
+        { headerCard, activeTask, showSiteIconProgressBar, site ->
+            buildCard(headerCard, activeTask, showSiteIconProgressBar, site)
+        }.distinctUntilChanged()
+
     private lateinit var scope: CoroutineScope
 
     fun initialize(viewModelScope: CoroutineScope) {
         this.scope = viewModelScope
     }
 
+    private fun buildCard(
+        siteInfoHeaderCard: SiteInfoHeaderCard?,
+        activeTask: QuickStartStore.QuickStartTask?,
+        showSiteIconProgressBar: Boolean?,
+        site: SiteModel?
+    ): SiteInfoHeaderCard? {
+        if (activeTask == null && showSiteIconProgressBar == null) {
+            if (site != null) {
+                return siteInfoHeaderCard
+            }
+        }
+
+        site?.let {
+            return siteInfoHeaderCardBuilder.buildSiteInfoCard(
+                getParams(
+                    it,
+                    activeTask,
+                    showSiteIconProgressBar
+                )
+            )
+        }?: return null
+    }
+
     fun getParams(
         site: SiteModel,
         activeTask: QuickStartStore.QuickStartTask? = null,
-        showSiteIconProgressBar: Boolean = false
+        showSiteIconProgressBar: Boolean? = false
     ): MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams {
         return MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams(
             site = site,
