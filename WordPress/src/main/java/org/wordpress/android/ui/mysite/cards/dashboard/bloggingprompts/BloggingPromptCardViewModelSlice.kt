@@ -4,8 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
+import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
@@ -14,17 +19,21 @@ import org.wordpress.android.ui.mysite.BloggingPromptsCardTrackHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteSourceManager
-import org.wordpress.android.ui.mysite.MySiteUiState
 import org.wordpress.android.ui.mysite.MySiteViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.config.BloggingPromptsFeature
 import org.wordpress.android.viewmodel.Event
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
+
+private const val NUM_PROMPTS_TO_REQUEST = 20
 
 class BloggingPromptCardViewModelSlice @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -34,7 +43,9 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider,
-    private val bloggingPromptCardBuilder: BloggingPromptCardBuilder
+    private val bloggingPromptCardBuilder: BloggingPromptCardBuilder,
+    private val promptsStore: BloggingPromptsStore,
+    private val bloggingPromptsFeature: BloggingPromptsFeature
 ) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage as LiveData<Event<SnackbarMessageHolder>>
@@ -42,24 +53,105 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
 
+    private val _isRefreshing = MutableLiveData<Boolean>()
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
+
+    private val _uiModel = MutableLiveData<BloggingPromptCardWithData>()
+    val uiModel: LiveData<BloggingPromptCardWithData> = _uiModel
+
     private lateinit var scope: CoroutineScope
     private lateinit var mySiteSourceManager: MySiteSourceManager
+
+    private fun getData(
+        siteLocalId: Int
+    ) {
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        if (selectedSite != null && selectedSite.id == siteLocalId && bloggingPromptsFeature.isEnabled()) {
+            scope.launch(bgDispatcher) {
+                if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
+                    promptsStore.getPrompts(selectedSite)
+                        .map { it.model?.filter { prompt -> isSameDay(prompt.date, Date()) } }
+                        .collect { result ->
+                            postState(result?.firstOrNull())
+                        }
+                } else {
+                    postEmptyState()
+                }
+            }
+        } else {
+            postLastState()
+        }
+    }
+
+    private fun refreshData(
+        siteLocalId: Int,
+        isRefresh: Boolean? = null,
+        isSinglePromptRefresh: Boolean = false
+    ) {
+        when (isRefresh) {
+            null, true -> refreshData(siteLocalId, isSinglePromptRefresh)
+            else -> Unit // Do nothing
+        }
+    }
+
+    private fun refreshData(
+        coroutineScope: CoroutineScope,
+        siteLocalId: Int,
+        isSinglePromptRefresh: Boolean = false
+    ) {
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        if (selectedSite != null && selectedSite.id == siteLocalId) {
+            if (bloggingPromptsFeature.isEnabled()) {
+                coroutineScope.launch(bgDispatcher) {
+                    if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
+                        fetchPromptsAndPostErrorIfAvailable(selectedSite, isSinglePromptRefresh)
+                    } else {
+                        postEmptyState()
+                    }
+                }
+            } else {
+                postEmptyState()
+            }
+        } else {
+            postLastState()
+        }
+    }
+
+    private fun fetchPromptsAndPostErrorIfAvailable(
+        selectedSite: SiteModel,
+        isSinglePromptRefresh: Boolean = false
+    ) {
+        scope.launch(bgDispatcher) {
+            delay(REFRESH_DELAY)
+            val numOfPromptsToFetch = if (isSinglePromptRefresh) 1 else NUM_PROMPTS_TO_REQUEST
+            val result = promptsStore.fetchPrompts(selectedSite, numOfPromptsToFetch, Date())
+            when {
+                result.isError -> postLastState()
+                else -> {
+                    result.model
+                        ?.firstOrNull { prompt -> isSameDay(prompt.date, Date()) }
+                        ?.let { prompt -> postState(prompt) }
+                        ?: postLastState()
+                }
+            }
+        }
+    }
 
     fun initialize(scope: CoroutineScope, mySiteSourceManager: MySiteSourceManager) {
         this.scope = scope
         this.mySiteSourceManager = mySiteSourceManager
     }
 
-    fun buildCard(bloggingPromptUpdate: MySiteUiState.PartialState.BloggingPromptUpdate?): BloggingPromptCardWithData? {
+    fun buildCard(bloggingPromptUpdate: BloggingPromptModel): BloggingPromptCardWithData? {
         return bloggingPromptCardBuilder.build(getBuilderParams(bloggingPromptUpdate))
     }
 
-    fun getBuilderParams(bloggingPromptUpdate: MySiteUiState.PartialState.BloggingPromptUpdate?):
+    fun getBuilderParams(bloggingPromptModel: BloggingPromptModel):
             MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams {
         return MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams(
-            bloggingPrompt = bloggingPromptUpdate?.promptModel,
+            bloggingPrompt = bloggingPromptModel,
             onShareClick = this::onBloggingPromptShareClick,
-            onAnswerClick = { id -> onBloggingPromptAnswerClick(id, bloggingPromptUpdate?.promptModel?.attribution) },
+            onAnswerClick = { id -> onBloggingPromptAnswerClick(id, bloggingPromptModel.attribution) },
             onSkipClick = this::onBloggingPromptSkipClick,
             onViewMoreClick = this::onBloggingPromptViewMoreClick,
             onViewAnswersClick = this::onBloggingPromptViewAnswersClick,
@@ -119,6 +211,44 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
                 )
             )
         }
+    }
+
+
+    /**
+     * This function is used to make sure the [refresh] information is propagated and processed correctly even though
+     * the previous status is still the current one. This avoids issues like the loading progress indicator being shown
+     * indefinitely.
+     *
+     * Also, for this card source, this can be used as the error state as we don't have any special error handling at
+     * this point, so we just show the last available prompt.
+     */
+    private fun postLastState() {
+        _isRefreshing.postValue(false)
+        //do nothing WIP @ajesh: remove this once this case doesnt occur on the new architecture
+    }
+
+    private fun postEmptyState() {
+        _isRefreshing.postValue(false)
+        postState(null)
+    }
+
+    private fun postState(bloggingPrompt: BloggingPromptModel?) {
+        _isRefreshing.postValue(false)
+        bloggingPrompt?.let {
+            buildCard(bloggingPrompt)?.let { card ->
+                _uiModel.postValue(card)
+            }
+        }
+    }
+
+    private fun isSameDay(date1: Date, date2: Date): Boolean {
+        val localDate1: LocalDate = date1.toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
+        val localDate2: LocalDate = date2.toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
+        return localDate1.isEqual(localDate2)
     }
 
     private fun onBloggingPromptUndoClick() {
