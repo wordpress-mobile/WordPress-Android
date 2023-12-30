@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import org.wordpress.android.R
 import org.wordpress.android.databinding.DomainAddDomainCtaBinding
-import org.wordpress.android.databinding.DomainFreeSiteAddressCardBinding
 import org.wordpress.android.databinding.DomainManageDomainsCtaBinding
 import org.wordpress.android.databinding.DomainPlanPurchaseCardBinding
 import org.wordpress.android.databinding.DomainPurchaseCardBinding
@@ -17,41 +16,17 @@ import org.wordpress.android.databinding.DomainSiteDomainsCardBinding
 import org.wordpress.android.databinding.DomainSiteDomainsHeaderBinding
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
-import org.wordpress.android.ui.domains.DomainsDashboardItem.FreeDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.ManageDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
+import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
-import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
 
 sealed class DomainsDashboardViewHolder<T : ViewBinding>(
     protected val binding: T
 ) : RecyclerView.ViewHolder(binding.root) {
-    class FreeDomainViewHolder(
-        parent: ViewGroup,
-        private val uiHelpers: UiHelpers
-    ) : DomainsDashboardViewHolder<DomainFreeSiteAddressCardBinding>(
-        parent.viewBinding(DomainFreeSiteAddressCardBinding::inflate)
-    ) {
-        fun onBind(item: FreeDomain) = with(binding) {
-            uiHelpers.setTextOrHide(primarySiteAddress, item.domain)
-            primarySiteAddressChip.isVisible = item.isPrimary
-            primarySiteAddressActions.setOnClickListener { view -> popupMenuClick(item, view) }
-        }
-
-        private fun popupMenuClick(item: FreeDomain, v: View) {
-            val popup = PopupMenu(v.context, v)
-            popup.setOnMenuItemClickListener { menuItem ->
-                val action = DomainsDashboardItem.Action.fromItemId(menuItem.itemId)
-                item.onPopupMenuClick(action)
-            }
-            popup.menuInflater.inflate(R.menu.domains_more, popup.menu)
-            popup.show()
-        }
-    }
-
     class SiteDomainsHeaderViewHolder(
         parent: ViewGroup,
         private val uiHelpers: UiHelpers
@@ -73,6 +48,19 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
             uiHelpers.setTextOrHide(siteDomain, item.domain)
             uiHelpers.setTextOrHide(siteDomainExpiryDate, item.expiry)
             primarySiteAddressChip.isVisible = item.isPrimary
+            primarySiteAddressActions.setOnClickListener { view -> popupMenuClick(item, view) }
+        }
+
+        private fun popupMenuClick(item: SiteDomains, v: View) {
+            item.onPopupMenuClick?.let { onPopupMenuClick ->
+                val popup = PopupMenu(v.context, v)
+                popup.setOnMenuItemClickListener { menuItem ->
+                    val action = DomainsDashboardItem.Action.fromItemId(menuItem.itemId)
+                    onPopupMenuClick(action)
+                }
+                popup.menuInflater.inflate(R.menu.domains_more, popup.menu)
+                popup.show()
+            }
         }
     }
 

@@ -6,7 +6,6 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.ADD_DOMAIN
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.DOMAIN_BLURB
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.MANAGE_DOMAINS
-import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PRIMARY_DOMAIN
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PURCHASE_DOMAIN
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PURCHASE_PLAN
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.SITE_DOMAINS
@@ -16,7 +15,6 @@ import org.wordpress.android.ui.utils.UiString
 
 sealed class DomainsDashboardItem(val type: Type) {
     enum class Type {
-        PRIMARY_DOMAIN,
         SITE_DOMAINS_HEADER,
         SITE_DOMAINS,
         ADD_DOMAIN,
@@ -26,18 +24,13 @@ sealed class DomainsDashboardItem(val type: Type) {
         PURCHASE_PLAN
     }
 
-    data class FreeDomain(
-        val domain: UiString,
-        val isPrimary: Boolean,
-        val onPopupMenuClick: (Action) -> Boolean
-    ) : DomainsDashboardItem(PRIMARY_DOMAIN)
-
     data class SiteDomainsHeader(val title: UiString) : DomainsDashboardItem(SITE_DOMAINS_HEADER)
 
     data class SiteDomains(
         val domain: UiString,
         val expiry: UiString,
-        val isPrimary: Boolean
+        val isPrimary: Boolean,
+        val onPopupMenuClick: ((Action) -> Boolean)? = null
     ) : DomainsDashboardItem(SITE_DOMAINS)
 
     data class AddDomain(val onClick: ListItemInteraction) : DomainsDashboardItem(ADD_DOMAIN)

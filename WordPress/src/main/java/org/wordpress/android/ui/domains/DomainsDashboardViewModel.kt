@@ -19,7 +19,6 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.Action
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Action.CHANGE_SITE_ADDRESS
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
-import org.wordpress.android.ui.domains.DomainsDashboardItem.FreeDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
@@ -108,7 +107,12 @@ class DomainsDashboardViewModel @Inject constructor(
         val freeDomainUrl = freeDomain?.domain ?: getCleanUrl(site.unmappedUrl)
         val freeDomainIsPrimary = freeDomain?.primaryDomain ?: false
 
-        listItems += FreeDomain(UiStringText(freeDomainUrl), freeDomainIsPrimary, this::onChangeSiteClick)
+        listItems += SiteDomains(
+            UiStringText(freeDomainUrl),
+            UiStringRes(R.string.domains_site_domain_never_expires),
+            freeDomainIsPrimary,
+            this::onChangeSiteClick
+        )
 
         val customDomains = domains.filter { !it.wpcomDomain }
         val hasCustomDomains = customDomains.isNotEmpty()
