@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
             android:checkable="false"
+            android:clickable="false"
             android:text="@string/domains_primary_site_domain_chip"
             app:chipBackgroundColor="@color/on_surface_chip"
             app:chipCornerRadius="5dp"
