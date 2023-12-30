@@ -43,16 +43,16 @@
             android:layout_marginTop="@dimen/margin_small"
             android:checkable="false"
             android:text="@string/domains_primary_site_domain_chip"
-            app:chipBackgroundColor="@color/black_translucent_8"
+            app:chipBackgroundColor="@color/on_surface_chip"
             app:chipCornerRadius="5dp"
             app:chipIcon="@drawable/gb_ic_globe"
             app:chipIconSize="20dp"
-            app:chipIconTint="@color/black_translucent_60"
+            app:chipIconTint="?attr/wpColorOnSurfaceMedium"
             app:ensureMinTouchTargetSize="false"
-            app:textStartPadding="@dimen/margin_small"
             app:iconStartPadding="3dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/site_domain" />
+            app:layout_constraintTop_toBottomOf="@+id/site_domain"
+            app:textStartPadding="@dimen/margin_small" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/site_domain"
