@@ -18,7 +18,6 @@ import org.wordpress.android.ui.mysite.BloggingPromptCardNavigationAction
 import org.wordpress.android.ui.mysite.BloggingPromptsCardTrackHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
-import org.wordpress.android.ui.mysite.MySiteSourceManager
 import org.wordpress.android.ui.mysite.MySiteViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -59,10 +58,12 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private val _uiModel = MutableLiveData<BloggingPromptCardWithData>()
     val uiModel: LiveData<BloggingPromptCardWithData> = _uiModel
 
-    private lateinit var scope: CoroutineScope
-    private lateinit var mySiteSourceManager: MySiteSourceManager
+    private val _refresh = MutableLiveData<Boolean>()
+    val refresh: LiveData<Boolean> = _refresh
 
-    private fun getData(
+    private lateinit var scope: CoroutineScope
+
+    fun buildCard(
         siteLocalId: Int
     ) {
         val selectedSite = selectedSiteRepository.getSelectedSite()
@@ -83,26 +84,14 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         }
     }
 
-    private fun refreshData(
-        siteLocalId: Int,
-        isRefresh: Boolean? = null,
-        isSinglePromptRefresh: Boolean = false
-    ) {
-        when (isRefresh) {
-            null, true -> refreshData(siteLocalId, isSinglePromptRefresh)
-            else -> Unit // Do nothing
-        }
-    }
-
-    private fun refreshData(
-        coroutineScope: CoroutineScope,
+    fun refreshData(
         siteLocalId: Int,
         isSinglePromptRefresh: Boolean = false
     ) {
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
             if (bloggingPromptsFeature.isEnabled()) {
-                coroutineScope.launch(bgDispatcher) {
+                scope.launch(bgDispatcher) {
                     if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
                         fetchPromptsAndPostErrorIfAvailable(selectedSite, isSinglePromptRefresh)
                     } else {
@@ -137,9 +126,8 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         }
     }
 
-    fun initialize(scope: CoroutineScope, mySiteSourceManager: MySiteSourceManager) {
+    fun initialize(scope: CoroutineScope) {
         this.scope = scope
-        this.mySiteSourceManager = mySiteSourceManager
     }
 
     fun buildCard(bloggingPromptUpdate: BloggingPromptModel): BloggingPromptCardWithData? {
@@ -174,7 +162,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
             val siteId = site.localId().value
 
             appPrefsWrapper.setSkippedPromptDay(Date(), siteId)
-            mySiteSourceManager.refreshBloggingPrompts(true)
+            _refresh.postValue(true)
 
             val snackbar = SnackbarMessageHolder(
                 message = UiString.UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar),
@@ -182,7 +170,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
                 buttonAction = {
                     bloggingPromptsCardAnalyticsTracker.trackMySiteCardSkipThisPromptUndoClicked()
                     appPrefsWrapper.setSkippedPromptDay(null, siteId)
-                    mySiteSourceManager.refreshBloggingPrompts(true)
+                    _refresh.postValue(true)
                 },
                 isImportant = true
             )
@@ -259,7 +247,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private fun updatePromptsCardEnabled(isEnabled: Boolean) = scope.launch(bgDispatcher) {
         selectedSiteRepository.getSelectedSite()?.localId()?.value?.let { siteId ->
             bloggingPromptsSettingsHelper.updatePromptsCardEnabled(siteId, isEnabled)
-            mySiteSourceManager.refreshBloggingPrompts(true)
+            _refresh.postValue(true)
         }
     }
 
