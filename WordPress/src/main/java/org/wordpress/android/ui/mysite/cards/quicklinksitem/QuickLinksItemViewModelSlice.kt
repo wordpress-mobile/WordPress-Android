@@ -26,6 +26,7 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Named
@@ -47,6 +48,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
 
     fun initialization(scope: CoroutineScope) {
         this.scope = scope
+        start()
     }
 
     fun site() = selectedSiteRepository.getSelectedSite()
@@ -58,7 +60,17 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     val onSnackbarMessage = _onSnackbarMessage
 
     private val _uiState = MutableLiveData<MySiteCardAndItem.Card.QuickLinksItem>()
-    val uiState: LiveData<MySiteCardAndItem.Card.QuickLinksItem> = _uiState
+    val uiState: LiveData<MySiteCardAndItem.Card.QuickLinksItem> = merge(
+        _uiState,
+        quickStartRepository.quickStartMenuStep
+    ) { quickLinks, quickStartMenuStep ->
+        if (quickLinks != null &&
+            quickStartMenuStep != null
+        ) {
+            return@merge updateToShowMoreFocusPointIfNeeded(quickLinks, quickStartMenuStep)
+        }
+        return@merge quickLinks
+    }
 
     fun start() {
         buildQuickLinks()
