@@ -14,15 +14,15 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel.PageCardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.CardOrder
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardRowModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel.PageCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
@@ -208,7 +208,7 @@ class CardsSourceTest : BaseUnitTest() {
     @Mock
     private lateinit var dynamicDashboardCardsFeatureConfig: DynamicDashboardCardsFeatureConfig
 
-    private lateinit var cardSource: CardsSource
+    private lateinit var cardSource: CardViewModelSlice
 
     private val data = CardsResult(
         model = CARDS_MODEL
@@ -220,7 +220,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        cardSource = CardsSource(
+        cardSource = CardViewModelSlice(
             selectedSiteRepository,
             cardsStore,
             dashboardActivityLogCardFeatureUtils,

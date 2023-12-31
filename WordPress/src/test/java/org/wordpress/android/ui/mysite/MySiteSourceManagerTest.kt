@@ -18,10 +18,10 @@ import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardSource
-import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
+import org.wordpress.android.ui.mysite.cards.dashboard.CardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
-import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
+import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationViewModelSlice
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardVewModelSlice
 
 /* SITE */
 
@@ -31,19 +31,19 @@ const val SITE_LOCAL_ID = 1
 @RunWith(MockitoJUnitRunner::class)
 class MySiteSourceManagerTest : BaseUnitTest() {
     @Mock
-    lateinit var domainRegistrationSource: DomainRegistrationSource
+    lateinit var mDomainRegistrationViewModelSlice: DomainRegistrationViewModelSlice
 
     @Mock
     lateinit var scanAndBackupSource: ScanAndBackupSource
 
     @Mock
-    lateinit var accountDataSource: AccountDataSource
+    lateinit var accountDataSource: AccountDataViewModelSlice
 
     @Mock
-    lateinit var cardsSource: CardsSource
+    lateinit var cardsSource: CardViewModelSlice
 
     @Mock
-    lateinit var quickStartCardSource: QuickStartCardSource
+    lateinit var quickStartCardSource: QuickStartCardVewModelSlice
 
     @Mock
     lateinit var siteIconProgressSource: SiteIconProgressSource
@@ -83,7 +83,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
 
         mySiteSourceManager = MySiteSourceManager(
             accountDataSource,
-            domainRegistrationSource,
+            mDomainRegistrationViewModelSlice,
             quickStartCardSource,
             scanAndBackupSource,
             selectedSiteSource,
@@ -100,7 +100,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
             siteIconProgressSource,
             quickStartCardSource,
             accountDataSource,
-            domainRegistrationSource,
+            mDomainRegistrationViewModelSlice,
             scanAndBackupSource,
             cardsSource
         )
@@ -110,7 +110,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
             siteIconProgressSource,
             quickStartCardSource,
             accountDataSource,
-            domainRegistrationSource,
+            mDomainRegistrationViewModelSlice,
             scanAndBackupSource,
         )
 
@@ -266,7 +266,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     fun `when clear is invoked, then domainRegistrationSource clear() is invoked`() {
         mySiteSourceManager.clear()
 
-        verify(domainRegistrationSource).clear()
+        verify(mDomainRegistrationViewModelSlice).clear()
     }
 
     @Test

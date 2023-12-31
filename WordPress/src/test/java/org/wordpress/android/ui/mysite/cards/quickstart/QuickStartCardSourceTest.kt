@@ -80,7 +80,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     lateinit var quickStartTracker: QuickStartTracker
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
-    private lateinit var quickStartCardSource: QuickStartCardSource
+    private lateinit var quickStartCardSource: QuickStartCardVewModelSlice
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var quickStartPrompts: MutableList<QuickStartMySitePrompts>
     private lateinit var result: MutableList<QuickStartUpdate>
@@ -110,7 +110,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
             htmlMessageUtils,
             quickStartTracker
         )
-        quickStartCardSource = QuickStartCardSource(
+        quickStartCardSource = QuickStartCardVewModelSlice(
             quickStartRepository,
             quickStartStore,
             quickStartUtilsWrapper,

@@ -25,7 +25,7 @@ import org.wordpress.android.ui.plans.PlansConstants.PREMIUM_PLAN_ID
 import org.wordpress.android.util.SiteUtilsWrapper
 
 @ExperimentalCoroutinesApi
-class DomainRegistrationSourceTest : BaseUnitTest() {
+class DomainRegistrationViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var dispatcher: Dispatcher
 
@@ -40,14 +40,14 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
     private val siteLocalId = 1
     private val site = SiteModel()
     private lateinit var result: MutableList<DomainCreditAvailable>
-    private lateinit var source: DomainRegistrationSource
+    private lateinit var source: DomainRegistrationViewModelSlice
     private lateinit var isRefreshing: MutableList<Boolean>
 
     @Before
     fun setUp() {
         site.id = siteLocalId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        source = DomainRegistrationSource(
+        source = DomainRegistrationViewModelSlice(
             testDispatcher(),
             dispatcher,
             selectedSiteRepository,

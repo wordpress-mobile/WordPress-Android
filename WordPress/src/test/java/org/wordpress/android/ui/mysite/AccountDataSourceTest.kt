@@ -18,12 +18,12 @@ class AccountDataSourceTest : BaseUnitTest() {
 
     @Mock
     lateinit var accountModel: AccountModel
-    private lateinit var accountDataSource: AccountDataSource
+    private lateinit var accountDataSource: AccountDataViewModelSlice
     private lateinit var isRefreshing: MutableList<Boolean>
 
     @Before
     fun setUp() {
-        accountDataSource = AccountDataSource(accountStore)
+        accountDataSource = AccountDataViewModelSlice(accountStore)
         isRefreshing = mutableListOf()
     }
 

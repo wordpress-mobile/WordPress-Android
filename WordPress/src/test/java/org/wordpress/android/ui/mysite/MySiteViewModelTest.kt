@@ -85,7 +85,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsVi
 import org.wordpress.android.ui.mysite.cards.dynamiccard.DynamicCardsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
-import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
+import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
 import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlice
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
@@ -220,7 +220,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
     @Mock
-    lateinit var jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder
+    lateinit var jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardViewModelSlice
 
     @Mock
     lateinit var jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker
@@ -661,7 +661,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when sources are refreshing, then refresh indicator should show`() {
         whenever(mySiteSourceManager.isRefreshing()).thenReturn(true)
 
-        val result = viewModel.isRefreshing()
+        val result = viewModel.isRefreshingOrLoading()
 
         assertThat(result).isTrue
     }
@@ -670,7 +670,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when sources are not refreshing, then refresh indicator should not show`() {
         whenever(mySiteSourceManager.isRefreshing()).thenReturn(false)
 
-        val result = viewModel.isRefreshing()
+        val result = viewModel.isRefreshingOrLoading()
 
         assertThat(result).isFalse
     }

@@ -23,7 +23,6 @@ import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.BloggingPromptCardNavigationAction
 import org.wordpress.android.ui.mysite.BloggingPromptsCardTrackHelper
-import org.wordpress.android.ui.mysite.MySiteSourceManager
 import org.wordpress.android.ui.mysite.MySiteUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
