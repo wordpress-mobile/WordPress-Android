@@ -38,6 +38,7 @@ class SiteStoriesHandler
 ) {
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
+
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = merge(_onNavigation, storiesMediaPickerResultHandler.onNavigation)
 

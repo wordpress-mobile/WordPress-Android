@@ -52,7 +52,7 @@ class BlazeCardViewModelSlice @Inject constructor(
         this.scope = scope
     }
 
-    fun getData(siteLocalId: Int) {
+    fun buildCard(siteLocalId: Int) {
         _isRefreshing.postValue(true)
         scope.launch {
             val selectedSite = selectedSiteRepository.getSelectedSite()
@@ -100,7 +100,7 @@ class BlazeCardViewModelSlice @Inject constructor(
         _isRefreshing.postValue(false)
         if(isBlazeEligible) {
             buildBlazeCard(campaign)?.let {
-                _uiModel.value = it
+                _uiModel.postValue(it)
             }
         }
     }
