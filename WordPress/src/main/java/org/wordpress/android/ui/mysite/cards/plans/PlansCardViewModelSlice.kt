@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.plans
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -24,8 +25,11 @@ class PlansCardViewModelSlice @Inject constructor(
     private val _refresh = MutableLiveData<Event<Boolean>>()
     val refresh = _refresh
 
-    fun buildCard(site:SiteModel): MySiteCardAndItem.Card.DashboardPlansCard? {
-        return plansCardBuilder.build(getParams(site))
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.DashboardPlansCard>()
+    val uiModel: LiveData<MySiteCardAndItem.Card.DashboardPlansCard> = _uiModel
+
+    fun buildCard(site:SiteModel){
+         _uiModel .postValue(plansCardBuilder.build(getParams(site)))
     }
 
     private fun getParams(site:SiteModel) = MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams(
