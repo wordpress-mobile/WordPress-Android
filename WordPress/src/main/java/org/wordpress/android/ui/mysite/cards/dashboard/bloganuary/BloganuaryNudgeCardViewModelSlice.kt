@@ -33,14 +33,17 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
     private val _refresh = MutableLiveData<Event<Boolean>>()
     val refresh = _refresh as LiveData<Event<Boolean>>
 
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.BloganuaryNudgeCardModel>()
+    val uiModel: LiveData<MySiteCardAndItem.Card.BloganuaryNudgeCardModel> = _uiModel
+
     private lateinit var scope: CoroutineScope
 
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
     }
 
-    fun buildCard(): MySiteCardAndItem.Card.BloganuaryNudgeCardModel? {
-        return bloganuaryNudgeCardBuilder.build(getBuilderParams())
+    fun buildCard() {
+        _uiModel.postValue(bloganuaryNudgeCardBuilder.build(getBuilderParams()))
     }
 
     fun getBuilderParams(): BloganuaryNudgeCardBuilderParams {
