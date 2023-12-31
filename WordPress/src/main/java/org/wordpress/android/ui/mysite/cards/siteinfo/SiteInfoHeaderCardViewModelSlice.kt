@@ -87,20 +87,27 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
         siteInfoHeaderCard: SiteInfoHeaderCard?,
         activeTask: QuickStartStore.QuickStartTask?,
         showSiteIconProgressBar: Boolean?,
-        site: SiteModel?
+        siteModel: SiteModel?
     ): SiteInfoHeaderCard? {
         if (activeTask == null && showSiteIconProgressBar == null) {
-            if (site != null) {
+            if (siteModel != null) {
                 return siteInfoHeaderCard
             }
         }
 
-        site?.let {
-            return siteInfoHeaderCardBuilder.buildSiteInfoCard(
+        siteModel?.let { site ->
+            showSiteIconProgressBar?.let {
+                return siteInfoHeaderCardBuilder.buildSiteInfoCard(
+                    getParams(
+                        site,
+                        activeTask,
+                        showSiteIconProgressBar
+                    )
+                )
+            }?: return siteInfoHeaderCardBuilder.buildSiteInfoCard(
                 getParams(
-                    it,
+                    site,
                     activeTask,
-                    showSiteIconProgressBar
                 )
             )
         }?: return null
@@ -109,7 +116,7 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
     fun getParams(
         site: SiteModel,
         activeTask: QuickStartStore.QuickStartTask? = null,
-        showSiteIconProgressBar: Boolean? = false
+        showSiteIconProgressBar: Boolean = false
     ): MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams {
         return MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams(
             site = site,
