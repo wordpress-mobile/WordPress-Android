@@ -85,7 +85,7 @@ class CardViewModelSlice @Inject constructor(
         this.scope = scope
     }
 
-    private fun getData(
+    fun buildCard(
         siteLocalId: Int
     ) {
         _isRefreshing.postValue(true)
@@ -104,7 +104,7 @@ class CardViewModelSlice @Inject constructor(
         }
     }
 
-    private fun refreshData(
+    private fun onRefresh(
         siteLocalId: Int
     ) {
         val selectedSite = selectedSiteRepository.getSelectedSite()
@@ -121,7 +121,6 @@ class CardViewModelSlice @Inject constructor(
         scope.launch(bgDispatcher) {
             delay(REFRESH_DELAY)
             val result = cardsStore.fetchCards(selectedSite, getCardTypes(selectedSite))
-            val model = result.model
             val error = result.error
             when {
                 error != null -> postErrorState()
