@@ -351,6 +351,106 @@ fun <S, T, U, V, W, X, Y> merge(
     }
 }
 
+
+/**
+ * Merges five LiveData sources using a given function. The function returns an object of a new type.
+ * @param sourceA first source
+ * @param sourceB second source
+ * @param sourceC third source
+ * @param sourceD fourth source
+ * @param sourceE fifth source
+ * @param sourceF sixth source
+ * @param sourceG seventh source
+ * @param sourceH eightth source
+ * @return new data source
+ */
+@Suppress("DestructuringDeclarationWithTooManyEntries", "LongParameterList")
+fun <R, S, T, U, V, W, X, Y, Z, A> merge(
+    sourceA: LiveData<R>,
+    sourceB: LiveData<S>,
+    sourceC: LiveData<T>,
+    sourceD: LiveData<U>,
+    sourceE: LiveData<V>,
+    sourceF: LiveData<W>,
+    sourceG: LiveData<X>,
+    sourceH: LiveData<Y>,
+    sourceI: LiveData<Z>,
+    distinct: Boolean = false,
+    merger: (R?, S?, T?, U?, V?, W?, X?, Y?, Z?) -> A?
+): LiveData<A> {
+    data class NineItemContainer(
+        val first: R? = null,
+        val second: S? = null,
+        val third: T? = null,
+        val fourth: U? = null,
+        val fifth: V? = null,
+        val sixth: W? = null,
+        val seventh: X? = null,
+        val eighth: Y? = null,
+        val ninth: Z? = null
+    )
+
+    val mediator = MediatorLiveData<NineItemContainer>()
+    mediator.value = NineItemContainer()
+    mediator.addSource(sourceA) {
+        val container = mediator.value
+        if (container?.first != it || !distinct) {
+            mediator.value = container?.copy(first = it)
+        }
+    }
+    mediator.addSource(sourceB) {
+        val container = mediator.value
+        if (container?.second != it || !distinct) {
+            mediator.value = container?.copy(second = it)
+        }
+    }
+    mediator.addSource(sourceC) {
+        val container = mediator.value
+        if (container?.third != it || !distinct) {
+            mediator.value = container?.copy(third = it)
+        }
+    }
+    mediator.addSource(sourceD) {
+        val container = mediator.value
+        if (container?.fourth != it || !distinct) {
+            mediator.value = container?.copy(fourth = it)
+        }
+    }
+    mediator.addSource(sourceE) {
+        val container = mediator.value
+        if (container?.fifth != it || !distinct) {
+            mediator.value = container?.copy(fifth = it)
+        }
+    }
+    mediator.addSource(sourceF) {
+        val container = mediator.value
+        if (container?.sixth != it || !distinct) {
+            mediator.value = container?.copy(sixth = it)
+        }
+    }
+    mediator.addSource(sourceG) {
+        val container = mediator.value
+        if (container?.seventh != it || !distinct) {
+            mediator.value = container?.copy(seventh = it)
+        }
+    }
+    mediator.addSource(sourceH) {
+        val container = mediator.value
+        if (container?.eighth != it || !distinct) {
+            mediator.value = container?.copy(eighth = it)
+        }
+    }
+    mediator.addSource(sourceI) {
+        val container = mediator.value
+        if (container?.ninth != it || !distinct) {
+            mediator.value = container?.copy(ninth = it)
+        }
+    }
+    return mediator.mapSafe { (first, second, third, fourth, fifth, sixth, seventh, eighth, ninth) ->
+        merger(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth)
+    }
+}
+
 /**
  * Combines all the LiveData values in the given Map into one LiveData with the map of values.
  * @param sources is a map of all the live data sources in a map by a given key
