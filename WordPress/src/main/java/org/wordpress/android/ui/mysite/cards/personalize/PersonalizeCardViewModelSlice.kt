@@ -22,7 +22,7 @@ class PersonalizeCardViewModelSlice @Inject constructor(
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
 
     private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.PersonalizeCardModel>()
-    val uiModel = _uiModel as LiveData<MySiteCardAndItem.Card.PersonalizeCardModel>
+    val uiModel: LiveData<MySiteCardAndItem.Card.PersonalizeCardModel> = _uiModel
 
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
