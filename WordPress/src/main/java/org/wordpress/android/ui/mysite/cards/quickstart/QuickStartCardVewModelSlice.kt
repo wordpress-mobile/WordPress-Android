@@ -57,7 +57,7 @@ class QuickStartCardVewModelSlice @Inject constructor(
             }
             val quickStartTaskTypes = quickStartRepository.getQuickStartTaskTypes()
 
-            quickStartRepository.activeTask.value.let { activeTask ->
+            quickStartRepository.activeTask.value.let { _ ->
                 val categories =
                     if(quickStartRepository.quickStartType
                             .isQuickStartInProgress(quickStartStore, siteLocalId.toLong())
