@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.map
@@ -54,11 +55,11 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    private val _uiModel = MutableLiveData<BloggingPromptCardWithData>()
-    val uiModel: LiveData<BloggingPromptCardWithData> = _uiModel
+    private val _uiModel = MutableLiveData<BloggingPromptCardWithData?>()
+    val uiModel = _uiModel.distinctUntilChanged()
 
-    private val _refresh = MutableLiveData<Boolean>()
-    val refresh: LiveData<Boolean> = _refresh
+    private val _refresh = MutableLiveData<Event<Boolean>>()
+    val refresh: LiveData<Event<Boolean>> = _refresh
 
     private lateinit var scope: CoroutineScope
 
@@ -154,7 +155,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
             val siteId = site.localId().value
 
             appPrefsWrapper.setSkippedPromptDay(Date(), siteId)
-            _refresh.postValue(true)
+            _refresh.postValue(Event(true))
 
             val snackbar = SnackbarMessageHolder(
                 message = UiString.UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar),
@@ -162,7 +163,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
                 buttonAction = {
                     bloggingPromptsCardAnalyticsTracker.trackMySiteCardSkipThisPromptUndoClicked()
                     appPrefsWrapper.setSkippedPromptDay(null, siteId)
-                    _refresh.postValue(true)
+                    _refresh.postValue(Event(true))
                 },
                 isImportant = true
             )
@@ -218,7 +219,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
             buildCard(bloggingPrompt)?.let { card ->
                 _uiModel.postValue(card)
             }
-        }
+        }?: _uiModel.postValue(null)
     }
 
     private fun isSameDay(date1: Date, date2: Date): Boolean {
@@ -239,7 +240,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private fun updatePromptsCardEnabled(isEnabled: Boolean) = scope.launch(bgDispatcher) {
         selectedSiteRepository.getSelectedSite()?.localId()?.value?.let { siteId ->
             bloggingPromptsSettingsHelper.updatePromptsCardEnabled(siteId, isEnabled)
-            _refresh.postValue(true)
+            _refresh.postValue(Event(true))
         }
     }
 
