@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
@@ -49,7 +50,7 @@ class CardViewModelSlice @Inject constructor(
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
     private val _uiModel = MutableLiveData<CardsState>()
-    val uiModel: LiveData<CardsState> = _uiModel
+    val uiModel: LiveData<CardsState> = _uiModel.distinctUntilChanged()
 
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = merge(
@@ -104,7 +105,7 @@ class CardViewModelSlice @Inject constructor(
             val error = result.error
             when {
                 error != null -> postErrorState()
-                else -> _refresh.postValue(Event(false))
+                else -> _isRefreshing.postValue(false)
             }
         }
     }
@@ -164,7 +165,11 @@ class CardViewModelSlice @Inject constructor(
 
     fun postState(cards: List<CardModel>?) {
         _isRefreshing.postValue(false)
-        if (cards.isNullOrEmpty()) return
+        if (cards.isNullOrEmpty())
+        {
+            _uiModel.postValue(CardsState.Success(emptyList()))
+            return
+        }
         scope.launch {
             val result = mutableListOf<MySiteCardAndItem.Card>()
 
