@@ -48,7 +48,6 @@ class QuickLinksItemViewModelSlice @Inject constructor(
 
     fun initialization(scope: CoroutineScope) {
         this.scope = scope
-        start()
     }
 
     fun site() = selectedSiteRepository.getSelectedSite()
@@ -72,39 +71,30 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         return@merge quickLinks
     }
 
-    fun start() {
-        buildQuickLinks()
+    fun buildCard(siteModel: SiteModel) {
+        buildQuickLinks(siteModel)
     }
 
-    fun onResume() {
-        buildQuickLinks()
-    }
-
-    fun onRefresh() {
-        buildQuickLinks()
-    }
-
-    private fun buildQuickLinks() {
+    private fun buildQuickLinks(site: SiteModel) {
         scope.launch(bgDispatcher) {
-            site()?.let { site ->
-                jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
-                    _uiState.postValue(
-                        convertToQuickLinkRibbonItem(site,
-                            siteItemsBuilder.build(
-                                MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
-                                    site = site,
-                                    enableFocusPoints = true,
-                                    activeTask = null,
-                                    onClick = this@QuickLinksItemViewModelSlice::onClick,
-                                    isBlazeEligible = isSiteBlazeEligible(site),
-                                    backupAvailable = it.backup,
-                                    scanAvailable = (it.scan && !site.isWPCom && !site.isWPComAtomic)
-                                )
-                            ),
-                        )
+            jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
+                _uiState.postValue(
+                    convertToQuickLinkRibbonItem(
+                        site,
+                        siteItemsBuilder.build(
+                            MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
+                                site = site,
+                                enableFocusPoints = true,
+                                activeTask = null,
+                                onClick = this@QuickLinksItemViewModelSlice::onClick,
+                                isBlazeEligible = isSiteBlazeEligible(site),
+                                backupAvailable = it.backup,
+                                scanAvailable = (it.scan && !site.isWPCom && !site.isWPComAtomic)
+                            )
+                        ),
                     )
-                } // end collect
-            }
+                )
+            } // end collect
         }
     }
 
@@ -188,13 +178,16 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     ): MySiteCardAndItem.Card.QuickLinksItem {
         val updatedQuickLinks = if (isActiveTaskInMoreMenu(quickStartMenuStep.task)) {
             val quickLinkItems = quickLinks.quickLinkItems.toMutableList()
-            val lastItem = quickLinkItems.last().copy(showFocusPoint = true,
-            onClick = ListItemInteraction.create(
-                MoreClickWithTask(ListItemAction.MORE,
-                    QuickStartEvent(task = quickStartMenuStep.task!!)
-                ),
-                this@QuickLinksItemViewModelSlice::onMoreClick
-            ))
+            val lastItem = quickLinkItems.last().copy(
+                showFocusPoint = true,
+                onClick = ListItemInteraction.create(
+                    MoreClickWithTask(
+                        ListItemAction.MORE,
+                        QuickStartEvent(task = quickStartMenuStep.task!!)
+                    ),
+                    this@QuickLinksItemViewModelSlice::onMoreClick
+                )
+            )
             quickLinkItems.removeLast()
             quickLinkItems.add(lastItem)
             quickLinks.copy(quickLinkItems = quickLinkItems, showMoreFocusPoint = true)
@@ -230,10 +223,6 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                 activeTask == QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING ||
                 activeTask == QuickStartStore.QuickStartExistingSiteTask.UPLOAD_MEDIA ||
                 activeTask == QuickStartStore.QuickStartExistingSiteTask.CHECK_STATS
-    }
-
-    fun onSiteChanged() {
-        buildQuickLinks()
     }
 
     data class MoreClickWithTask(
