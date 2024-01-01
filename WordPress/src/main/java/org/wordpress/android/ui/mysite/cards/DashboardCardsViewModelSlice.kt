@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.BlazeCardViewModelSlice
@@ -57,11 +58,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
     )
 
     val refresh = merge(
-        blazeCardViewModelSlice.refresh,
-        bloganuaryNudgeCardViewModelSlice.refresh,
-        plansCardViewModelSlice.refresh,
         cardViewModelSlice.refresh,
-        jetpackInstallFullPluginCardViewModelSlice.refresh
+        bloggingPromptCardViewModelSlice.refresh
     )
 
     val isRefreshing = merge(
@@ -100,7 +98,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
             personalizeCard,
             jpFullInstallFullPlugin
         )
-    }
+    }.distinctUntilChanged()
 
     @SuppressWarnings("LongParameterList")
     fun mergeUiModels(
