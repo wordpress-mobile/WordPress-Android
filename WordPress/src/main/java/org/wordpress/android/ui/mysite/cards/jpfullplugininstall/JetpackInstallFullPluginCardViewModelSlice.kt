@@ -42,16 +42,14 @@ class JetpackInstallFullPluginCardViewModelSlice @Inject constructor(
         _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
     }
 
-    fun buildCard() {
-        selectedSiteRepository.getSelectedSite()?.let { site ->
-            build(
-                JetpackInstallFullPluginCardBuilderParams(
-                    site = site,
-                    onLearnMoreClick = this::onJetpackInstallFullPluginLearnMoreClick,
-                    onHideMenuItemClick = this::onJetpackInstallFullPluginHideMenuItemClick
-                )
+    fun buildCard(site: SiteModel) {
+        build(
+            JetpackInstallFullPluginCardBuilderParams(
+                site = site,
+                onLearnMoreClick = this::onJetpackInstallFullPluginLearnMoreClick,
+                onHideMenuItemClick = this::onJetpackInstallFullPluginHideMenuItemClick
             )
-        }
+        )
     }
 
     fun build(
