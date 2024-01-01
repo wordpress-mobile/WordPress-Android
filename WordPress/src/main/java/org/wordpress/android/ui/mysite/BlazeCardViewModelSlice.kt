@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.Result
@@ -39,14 +40,11 @@ class BlazeCardViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _refresh = MutableLiveData<Event<Boolean>>()
-    val refresh = _refresh
-
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.BlazeCard>()
-    val uiModel: LiveData<MySiteCardAndItem.Card.BlazeCard> = _uiModel
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.BlazeCard?>()
+    val uiModel = _uiModel.distinctUntilChanged()
 
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
@@ -97,6 +95,8 @@ class BlazeCardViewModelSlice @Inject constructor(
             buildBlazeCard(campaign)?.let {
                 _uiModel.postValue(it)
             }
+        } else {
+            _uiModel.postValue(null)
         }
     }
 
@@ -210,7 +210,7 @@ class BlazeCardViewModelSlice @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let {
             blazeFeatureUtils.hideBlazeCard(it.siteId)
         }
-        _refresh.value = Event(true)
+        _uiModel.postValue(null)
     }
 
     private fun onPromoteCardMoreMenuClick() {
