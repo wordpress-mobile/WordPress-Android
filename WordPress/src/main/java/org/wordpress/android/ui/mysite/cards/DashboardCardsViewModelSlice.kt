@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.BlazeCardViewModelSlice
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -38,6 +39,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
     private val plansCardViewModelSlice: PlansCardViewModelSlice,
     private val selectedSiteRepository: SelectedSiteRepository
 ) {
+    private lateinit var scope: CoroutineScope
+
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = merge(
         _onSnackbar,
@@ -140,6 +143,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
     }
 
     fun initialize(scope: CoroutineScope) {
+        this.scope = scope
         blazeCardViewModelSlice.initialize(scope)
         bloggingPromptCardViewModelSlice.initialize(scope)
         bloganuaryNudgeCardViewModelSlice.initialize(scope)
@@ -163,7 +167,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
     }
 
     fun onResume() {
-        buildCards(selectedSiteRepository.getSelectedSite() ?: return)
+        buildCards(selectedSiteRepository.getSelectedSite()?:return)
     }
 
     fun onSiteChanged() {
@@ -180,6 +184,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
 
     fun onCleared() {
         quickLinksItemViewModelSlice.onCleared()
+        scope.cancel()
     }
 
     fun refreshBloggingPrompt() {
