@@ -384,7 +384,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Suppress("LongMethod")
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner) { uiModel ->
-            hideRefreshIndicatorIfNeeded()
             when (uiModel) {
                 is State.SiteSelected -> loadData(uiModel)
                 is State.NoSites -> loadEmptyView(uiModel)
@@ -453,12 +452,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         wpMainActivityViewModel.mySiteDashboardRefreshRequested.observeEvent(viewLifecycleOwner) {
             viewModel.refresh()
         }
-    }
 
-    private fun MySiteFragmentBinding.hideRefreshIndicatorIfNeeded() {
-        swipeRefreshLayout.postDelayed({
-            swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
-        }, CHECK_REFRESH_DELAY)
+        viewModel.isRefreshingOrLoading.observe(viewLifecycleOwner) {
+            swipeToRefreshHelper.isRefreshing = it
+        }
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
