@@ -71,7 +71,8 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
     private val _uiModel = MutableLiveData<SiteInfoHeaderCard>().distinctUntilChanged()
     val uiModel: LiveData<SiteInfoHeaderCard> =
         merge(
-            _uiModel, quickStartRepository.activeTask, selectedSiteRepository.showSiteIconProgressBar,
+            _uiModel, quickStartRepository.activeTask,
+            selectedSiteRepository.showSiteIconProgressBar,
             selectedSiteRepository.selectedSiteChange)
         { headerCard, activeTask, showSiteIconProgressBar, site ->
             buildCard(headerCard, activeTask, showSiteIconProgressBar, site)
@@ -94,20 +95,12 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
                 return siteInfoHeaderCard
             }
         }
-
         siteModel?.let { site ->
-            showSiteIconProgressBar?.let {
-                return siteInfoHeaderCardBuilder.buildSiteInfoCard(
-                    getParams(
-                        site,
-                        activeTask,
-                        showSiteIconProgressBar
-                    )
-                )
-            }?: return siteInfoHeaderCardBuilder.buildSiteInfoCard(
+            return siteInfoHeaderCardBuilder.buildSiteInfoCard(
                 getParams(
                     site,
                     activeTask,
+                    showSiteIconProgressBar?: false
                 )
             )
         }?: return null
