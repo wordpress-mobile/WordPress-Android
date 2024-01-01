@@ -86,15 +86,6 @@ public class AppPrefs {
         // index of the last active item in Stats activity
         STATS_ITEM_INDEX,
 
-        // Keep the associations between each widget_id/blog_id added to the app
-        STATS_WIDGET_KEYS_BLOGS,
-
-        // last data stored for the Stats Widgets
-        STATS_WIDGET_DATA,
-
-        // Store the number of times Stats are loaded without errors. It's used to show the Widget promo dialog.
-        STATS_WIDGET_PROMO_ANALYTICS,
-
         // index of the last active people list filter in People Management activity
         PEOPLE_LIST_FILTER_INDEX,
 
@@ -109,9 +100,6 @@ public class AppPrefs {
 
         // local IDs of sites recently chosen in the site picker
         RECENTLY_PICKED_SITE_IDS,
-
-        // list of last time a notification has been created for a draft
-        PENDING_DRAFTS_NOTIFICATION_LAST_NOTIFICATION_DATES,
 
         // Optimize Image and Video settings
         IMAGE_OPTIMIZE_ENABLED,
@@ -232,9 +220,6 @@ public class AppPrefs {
 
         // When we need to show the new image optimize promo dialog
         IMAGE_OPTIMIZE_PROMO_REQUIRED,
-
-        // When we need to sync IAP data with the wpcom backend
-        IAP_SYNC_REQUIRED,
 
         // When we need to show the snackbar indicating how notifications can be navigated through
         SWIPE_TO_NAVIGATE_NOTIFICATIONS,
