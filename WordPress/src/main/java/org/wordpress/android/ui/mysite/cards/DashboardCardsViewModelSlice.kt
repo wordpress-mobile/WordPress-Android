@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.cards
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +20,6 @@ import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinksItemViewMo
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 class DashboardCardsViewModelSlice @Inject constructor(
@@ -44,7 +42,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
         quickLinksItemViewModelSlice.onSnackbarMessage,
     )
 
-    private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
+    val onOpenJetpackInstallFullPluginOnboarding =
+        jetpackInstallFullPluginCardViewModelSlice.onOpenJetpackInstallFullPluginOnboarding
 
     val onNavigation = merge(
         blazeCardViewModelSlice.onNavigation,
@@ -115,16 +114,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
         personalizeCard: MySiteCardAndItem.Card.PersonalizeCardModel?,
         jpFullInstallFullPlugin: MySiteCardAndItem.Card.JetpackInstallFullPluginCard?,
     ): List<MySiteCardAndItem> {
-        Log.e("DashboardCardsViewModelSlice", "mergeUiModels")
-        Log.e("DashboardCardsViewModelSlice", "quicklinks: $quicklinks")
-        Log.e("DashboardCardsViewModelSlice", "blazeCard: $blazeCard")
-        Log.e("DashboardCardsViewModelSlice", "cardsState: $cardsState")
-        Log.e("DashboardCardsViewModelSlice", "bloggingPromptCard: $bloggingPromptCard")
-        Log.e("DashboardCardsViewModelSlice", "bloganuaryNudgeCard: $bloganuaryNudgeCard")
-        Log.e("DashboardCardsViewModelSlice", "migrationSuccessCard: $migrationSuccessCard")
-        Log.e("DashboardCardsViewModelSlice", "plansCard: $plansCard")
-        Log.e("DashboardCardsViewModelSlice", "personalizeCard: $personalizeCard")
-        Log.e("DashboardCardsViewModelSlice", "jpFullInstallFullPlugin: $jpFullInstallFullPlugin")
         val cards = mutableListOf<MySiteCardAndItem>()
         quicklinks?.let { cards.add(it) }
         bloganuaryNudgeCard?.let { cards.add(it) }
@@ -150,36 +139,34 @@ class DashboardCardsViewModelSlice @Inject constructor(
         personalizeCardViewModelSlice.initialize(scope)
         quickLinksItemViewModelSlice.initialization(scope)
         cardViewModelSlice.initialize(scope)
+    }
+
+    private fun buildCards(site: SiteModel) {
+        jpMigrationSuccessCardViewModelSlice.buildCard()
+        jetpackInstallFullPluginCardViewModelSlice.buildCard(site)
+        blazeCardViewModelSlice.buildCard(site)
+        bloggingPromptCardViewModelSlice.buildCard(site)
+        bloganuaryNudgeCardViewModelSlice.buildCard()
+        personalizeCardViewModelSlice.buildCard()
+        quickLinksItemViewModelSlice.buildCard(site)
+        plansCardViewModelSlice.buildCard(site)
+        cardViewModelSlice.buildCard(site)
+    }
+
+    fun onResume() {
+        buildCards(selectedSiteRepository.getSelectedSite() ?: return)
+    }
+
+    fun onSiteChanged() {
         selectedSiteRepository.getSelectedSite()?.let {
             buildCards(it)
         }
     }
 
-    fun buildCards(site: SiteModel) {
-        val siteLocalId = site.id
-        Log.e("DashboardCardsViewModelSlice", "buildCards siteLocal id $siteLocalId")
-        Log.e("DashboardCardsViewModelSlice", "buildCards: ${site.id}")
-        jpMigrationSuccessCardViewModelSlice.buildCard()
-        jetpackInstallFullPluginCardViewModelSlice.buildCard()
-        blazeCardViewModelSlice.buildCard(siteLocalId)
-        bloggingPromptCardViewModelSlice.buildCard(siteLocalId)
-        bloganuaryNudgeCardViewModelSlice.buildCard()
-        personalizeCardViewModelSlice.buildCard()
-        quickLinksItemViewModelSlice.start()
-        plansCardViewModelSlice.buildCard(site)
-        cardViewModelSlice.buildCard(siteLocalId)
-    }
-
-    fun onResume() {
-        quickLinksItemViewModelSlice.onResume()
-    }
-
-    fun onSiteChanged() {
-        quickLinksItemViewModelSlice.onSiteChanged()
-    }
-
     fun onRefresh() {
-        quickLinksItemViewModelSlice.onRefresh()
+        selectedSiteRepository.getSelectedSite()?.let {
+            buildCards(it)
+        }
     }
 
     fun onCleared() {
@@ -188,7 +175,15 @@ class DashboardCardsViewModelSlice @Inject constructor(
 
     fun refreshBloggingPrompt() {
         selectedSiteRepository.getSelectedSite()?.let {
-//            bloggingPromptCardViewModelSlice.refreshData(it.siteId)
+            bloggingPromptCardViewModelSlice.buildCard(it)
         }
+    }
+
+    fun resetShownTracker() {
+        personalizeCardViewModelSlice.resetShown()
+//        dynamicCardsViewModelSlice.resetShown()
+//        domainRegistrationCardShownTracker.resetShown()
+//        cardsTracker.resetShown()
+//        quickStartTracker.resetShown()
     }
 }
