@@ -4,6 +4,7 @@ package org.wordpress.android.ui.mysite
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -12,30 +13,19 @@ import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_VIEW_SITE_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -49,42 +39,20 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistration
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
+import org.wordpress.android.ui.mysite.cards.DashboardCardsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
-import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.dashboard.bloganuary.BloganuaryNudgeCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
-import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsViewModelSlice
-import org.wordpress.android.ui.mysite.cards.dynamiccard.DynamicCardsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
-import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
-import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlice
-import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
-import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.plans.PlansCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinksItemViewModelSlice
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
-import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.sotw2023.WpSotw2023NudgeCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
@@ -98,7 +66,6 @@ import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.utils.ListItemInteraction
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.JetpackBrandingUtils
@@ -110,9 +77,6 @@ import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.merge
-import org.wordpress.android.util.mergeAsync
-import org.wordpress.android.util.publicdata.AppStatus
-import org.wordpress.android.util.publicdata.WordPressPublicData
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -131,49 +95,30 @@ class MySiteViewModel @Inject constructor(
     private val siteStoriesHandler: SiteStoriesHandler,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
-    private val quickStartCardBuilder: QuickStartCardBuilder,
-    private val siteInfoHeaderCardBuilder: SiteInfoHeaderCardBuilder,
     private val homePageDataLoader: HomePageDataLoader,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
     private val snackbarSequencer: SnackbarSequencer,
     private val landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig,
-    private val mySiteSourceManager: MySiteSourceManager,
     private val cardsTracker: CardsTracker,
     private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val quickStartTracker: QuickStartTracker,
-    private val contentMigrationAnalyticsTracker: ContentMigrationAnalyticsTracker,
     private val dispatcher: Dispatcher,
-    private val appStatus: AppStatus,
-    private val wordPressPublicData: WordPressPublicData,
     private val jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker,
     private val jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil,
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
-    private val jetpackInstallFullPluginCardBuilder: JetpackInstallFullPluginCardBuilder,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
     private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker,
     private val dashboardCardPlansUtils: PlansCardUtils,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
-    private val blazeCardViewModelSlice: BlazeCardViewModelSlice,
-    private val pagesCardViewModelSlice: PagesCardViewModelSlice,
-    private val dynamicCardsViewModelSlice: DynamicCardsViewModelSlice,
-    private val todaysStatsViewModelSlice: TodaysStatsViewModelSlice,
-    private val postsCardViewModelSlice: PostsCardViewModelSlice,
-    private val activityLogCardViewModelSlice: ActivityLogCardViewModelSlice,
     private val siteItemsViewModelSlice: SiteItemsViewModelSlice,
     private val mySiteInfoItemBuilder: MySiteInfoItemBuilder,
-    private val personalizeCardViewModelSlice: PersonalizeCardViewModelSlice,
-    private val personalizeCardBuilder: PersonalizeCardBuilder,
-    private val bloggingPromptCardViewModelSlice: BloggingPromptCardViewModelSlice,
-    private val noCardsMessageViewModelSlice: NoCardsMessageViewModelSlice,
     private val siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice,
-    private val quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice,
-    private val bloganuaryNudgeCardViewModelSlice: BloganuaryNudgeCardViewModelSlice,
     private val sotw2023NudgeCardViewModelSlice: WpSotw2023NudgeCardViewModelSlice,
-    private val plansCardViewModelSlice: PlansCardViewModelSlice
+    private val dashboardCardsViewModelSlice: DashboardCardsViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -184,18 +129,6 @@ class MySiteViewModel @Inject constructor(
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
     private var isSiteSelected = false
-
-    val quickLinks: LiveData<MySiteCardAndItem.Card.QuickLinksItem> = merge(
-        quickLinksItemViewModelSlice.uiState,
-        quickStartRepository.quickStartMenuStep
-    ) { quickLinks, quickStartMenuStep ->
-        if (quickLinks != null &&
-            quickStartMenuStep != null
-        ) {
-            return@merge quickLinksItemViewModelSlice.updateToShowMoreFocusPointIfNeeded(quickLinks, quickStartMenuStep)
-        }
-        return@merge quickLinks
-    }
 
     val onScrollTo: LiveData<Event<Int>> = merge(
         _activeTaskPosition.distinctUntilChanged(),
@@ -212,9 +145,8 @@ class MySiteViewModel @Inject constructor(
         siteStoriesHandler.onSnackbar,
         quickStartRepository.onSnackbar,
         siteItemsViewModelSlice.onSnackbarMessage,
-        bloggingPromptCardViewModelSlice.onSnackbarMessage,
         siteInfoHeaderCardViewModelSlice.onSnackbarMessage,
-        quickLinksItemViewModelSlice.onSnackbarMessage
+        dashboardCardsViewModelSlice.onSnackbarMessage
     )
     val onQuickStartMySitePrompts = quickStartRepository.onQuickStartMySitePrompts
 
@@ -225,158 +157,65 @@ class MySiteViewModel @Inject constructor(
     val onNavigation = merge(
         _onNavigation,
         siteStoriesHandler.onNavigation,
-        blazeCardViewModelSlice.onNavigation,
-        pagesCardViewModelSlice.onNavigation,
-        todaysStatsViewModelSlice.onNavigation,
-        postsCardViewModelSlice.onNavigation,
-        activityLogCardViewModelSlice.onNavigation,
         siteItemsViewModelSlice.onNavigation,
-        bloggingPromptCardViewModelSlice.onNavigation,
-        bloganuaryNudgeCardViewModelSlice.onNavigation,
-        personalizeCardViewModelSlice.onNavigation,
         siteInfoHeaderCardViewModelSlice.onNavigation,
-        quickLinksItemViewModelSlice.navigation,
         sotw2023NudgeCardViewModelSlice.onNavigation,
-        dynamicCardsViewModelSlice.onNavigation,
-        plansCardViewModelSlice.onNavigation
+        dashboardCardsViewModelSlice.onNavigation
     )
 
     val onMediaUpload = siteInfoHeaderCardViewModelSlice.onMediaUpload
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
-    val onOpenJetpackInstallFullPluginOnboarding = _onOpenJetpackInstallFullPluginOnboarding as LiveData<Event<Unit>>
+
+    val onOpenJetpackInstallFullPluginOnboarding: LiveData<Event<Unit>> = merge(
+        _onOpenJetpackInstallFullPluginOnboarding,
+        dashboardCardsViewModelSlice.onOpenJetpackInstallFullPluginOnboarding
+    )
+
     val onShowJetpackIndividualPluginOverlay = _onShowJetpackIndividualPluginOverlay as LiveData<Event<Unit>>
 
     val refresh =
         merge(
-            blazeCardViewModelSlice.refresh,
-            pagesCardViewModelSlice.refresh,
-            todaysStatsViewModelSlice.refresh,
-            postsCardViewModelSlice.refresh,
-            activityLogCardViewModelSlice.refresh,
-            bloganuaryNudgeCardViewModelSlice.refresh,
             sotw2023NudgeCardViewModelSlice.refresh,
-            dynamicCardsViewModelSlice.refresh,
-            plansCardViewModelSlice.refresh
+            dashboardCardsViewModelSlice.refresh
         )
+
+    val isRefreshingOrLoading = dashboardCardsViewModelSlice.isRefreshing
 
     private var shouldMarkUpdateSiteTitleTaskComplete = false
 
     val state: LiveData<MySiteUiState> =
         selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
             isSiteSelected = true
-            quickLinksItemViewModelSlice.onSiteChanged()
+            dashboardCardsViewModelSlice.onSiteChanged()
             resetShownTrackers()
             val result = MediatorLiveData<SiteIdToState>()
-            for (newSource in mySiteSourceManager.build(viewModelScope, siteLocalId)) {
-                result.addSource(newSource) { partialState ->
-                    if (partialState != null) {
-                        result.value = (result.value ?: SiteIdToState(siteLocalId)).update(partialState)
-                    }
-                }
-            }
+
             // We want to filter out the empty state where we have a site ID but site object is missing.
             // Without this check there is an emission of a NoSites state even if we have the site
             result.filter { it.siteId == null || it.state.site != null }.mapSafe { it.state }
         }
 
-    private val bgScope = CoroutineScope(bgDispatcher)
-
-    val uiModel: LiveData<State> = mergeAsync(bgScope, state, quickLinks) { cards, quickLinks ->
-        val nonNullCards = cards ?: return@mergeAsync buildNoSiteState(null, null)
-        with(nonNullCards) {
-            val state = if (site != null) {
-                cardsUpdate?.checkAndShowSnackbarError()
-                val state = buildSiteSelectedStateAndScroll(
-                    site,
-                    showSiteIconProgressBar,
-                    activeTask,
-                    isDomainCreditAvailable,
-                    quickStartCategories,
-                    backupAvailable,
-                    scanAvailable,
-                    cardsUpdate,
-                    bloggingPromptsUpdate,
-                    blazeCardUpdate,
-                    quickLinks
-                )
-                trackCardsAndItemsShownIfNeeded(state)
-
-                bloggingPromptCardViewModelSlice.onDashboardCardsUpdated(
-                    viewModelScope,
-                    state as? SiteSelected
-                )
-                state
-            } else {
-                buildNoSiteState(currentAvatarUrl, avatarName)
-            }
-            bloggingPromptCardViewModelSlice.onSiteChanged(site?.id, state as? SiteSelected)
-
-            dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
-
-            state
-        }
-    }
-
-    private fun CardsUpdate.checkAndShowSnackbarError() {
-        if (showSnackbarError) {
-            _onSnackbarMessage
-                .postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))))
-        }
+    val uiModel: LiveData<State> = merge(
+        siteInfoHeaderCardViewModelSlice.uiModel,
+        dashboardCardsViewModelSlice.uiModel
+    ) { siteInfoHeaderCard,
+        dashboardCards ->
+        val nonNullSiteInfoHeaderCard = siteInfoHeaderCard ?: return@merge buildNoSiteState(null, null)
+        val state = dashboardCards?.let {
+            SiteSelected(
+                dashboardData = mutableListOf(nonNullSiteInfoHeaderCard) + dashboardCards
+            )
+        } ?: SiteSelected(
+            dashboardData = mutableListOf(nonNullSiteInfoHeaderCard)
+        )
+        return@merge state
     }
 
     init {
         dispatcher.register(this)
-        bloggingPromptCardViewModelSlice.initialize(viewModelScope, mySiteSourceManager)
-        bloganuaryNudgeCardViewModelSlice.initialize(viewModelScope)
         siteInfoHeaderCardViewModelSlice.initialize(viewModelScope)
-        quickLinksItemViewModelSlice.initialization(viewModelScope)
-        quickLinksItemViewModelSlice.start()
         sotw2023NudgeCardViewModelSlice.initialize(viewModelScope)
-    }
-
-    @Suppress("LongParameterList")
-    private suspend fun buildSiteSelectedStateAndScroll(
-        site: SiteModel,
-        showSiteIconProgressBar: Boolean,
-        activeTask: QuickStartTask?,
-        isDomainCreditAvailable: Boolean,
-        quickStartCategories: List<QuickStartCategory>,
-        backupAvailable: Boolean,
-        scanAvailable: Boolean,
-        cardsUpdate: CardsUpdate?,
-        bloggingPromptUpdate: BloggingPromptUpdate?,
-        blazeCardUpdate: BlazeCardUpdate?,
-        quickLinks: MySiteCardAndItem.Card.QuickLinksItem? = null
-    ): SiteSelected {
-        val siteItems = if (shouldShowDashboard(site)) buildDashboardCards(
-            site,
-            isDomainCreditAvailable,
-            quickStartCategories,
-            cardsUpdate,
-            bloggingPromptUpdate,
-            blazeCardUpdate,
-            quickLinks
-        )
-        else buildSiteItemsMenu(site, activeTask, backupAvailable, scanAvailable, cardsUpdate)
-
-        val siteInfo = siteInfoHeaderCardBuilder.buildSiteInfoCard(
-            siteInfoHeaderCardViewModelSlice.getParams(
-                site,
-                activeTask,
-                showSiteIconProgressBar
-            )
-        )
-
-        if (activeTask != null) {
-            scrollToQuickStartTaskIfNecessary(
-                activeTask,
-                getPositionOfQuickStartItem(siteItems)
-            )
-        }
-
-        return SiteSelected(
-            dashboardData = listOf(siteInfo) + siteItems
-        )
+        dashboardCardsViewModelSlice.initialize(viewModelScope)
     }
 
     private fun getPositionOfQuickStartItem(
@@ -419,162 +258,6 @@ class MySiteViewModel @Inject constructor(
         }.toList()
     }
 
-    private suspend fun buildDashboardCards(
-        site: SiteModel,
-        isDomainCreditAvailable: Boolean,
-        quickStartCategories: List<QuickStartCategory>,
-        cardsUpdate: CardsUpdate?,
-        bloggingPromptUpdate: BloggingPromptUpdate?,
-        blazeCardUpdate: BlazeCardUpdate?,
-        quickLinks: MySiteCardAndItem.Card.QuickLinksItem?
-    ): List<MySiteCardAndItem> {
-        val infoItem = mySiteInfoItemBuilder.build(
-            InfoItemBuilderParams(
-                isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
-            )
-        )
-
-        val migrationSuccessCard = getJetpackMigrationSuccessCard()
-
-        val jetpackInstallFullPluginCardParams = JetpackInstallFullPluginCardBuilderParams(
-            site = site,
-            onLearnMoreClick = ::onJetpackInstallFullPluginLearnMoreClick,
-            onHideMenuItemClick = ::onJetpackInstallFullPluginHideMenuItemClick,
-        )
-        val jetpackInstallFullPluginCard = jetpackInstallFullPluginCardBuilder.build(jetpackInstallFullPluginCardParams)
-
-        val domainRegistrationCard = trackAndBuildDomainRegistrationCard(
-            DomainRegistrationCardBuilderParams(
-                isDomainCreditAvailable = isDomainCreditAvailable,
-                domainRegistrationClick = this::domainRegistrationClick
-            )
-        )
-
-        val quickStartCard = buildQuickStartCard(
-            QuickStartCardBuilderParams(
-                quickStartCategories = quickStartCategories,
-                moreMenuClickParams = QuickStartCardBuilderParams.MoreMenuParams(
-                    onMoreMenuClick = this::onQuickStartMoreMenuClick,
-                    onHideThisMenuItemClick = this::onQuickStartHideThisMenuItemClick
-                ),
-                onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
-            ),
-        )
-
-        val dashboardCards = buildCards(
-            site,
-            cardsUpdate,
-            bloggingPromptUpdate,
-            blazeCardUpdate
-        )
-
-        val personalizeCard = personalizeCardBuilder.build(personalizeCardViewModelSlice.getBuilderParams())
-
-        val noCardsMessage = noCardsMessageViewModelSlice.buildNoCardsMessage(dashboardCards)
-
-        return mutableListOf<MySiteCardAndItem>().apply {
-            infoItem?.let { add(infoItem) }
-            migrationSuccessCard?.let { add(migrationSuccessCard) }
-            jetpackInstallFullPluginCard?.let { add(jetpackInstallFullPluginCard) }
-            quickLinks?.let { add(quickLinks) }
-            domainRegistrationCard?.let { add(domainRegistrationCard) }
-            quickStartCard?.let { add(quickStartCard) }
-            addAll(dashboardCards)
-            noCardsMessage?.let { add(noCardsMessage) }
-            personalizeCard?.let { add(personalizeCard) }
-        }.toList()
-    }
-
-    private fun buildCards(
-        site: SiteModel,
-        cardsUpdate: CardsUpdate?,
-        bloggingPromptUpdate: BloggingPromptUpdate?,
-        blazeCardUpdate: BlazeCardUpdate?
-    ): List<MySiteCardAndItem> {
-        if (cardsUpdate?.showErrorCard == true) {
-            return MySiteCardAndItem.Card.ErrorCard(
-                onRetryClick = ListItemInteraction.create(this::onDashboardErrorRetry)
-            ).let { listOf(it) }
-        }
-
-        return runBlocking {
-            val cards = mutableListOf<MySiteCardAndItem>()
-
-            val topDynamicCards = async {
-                dynamicCardsViewModelSlice.buildTopDynamicCards(
-                    cardsUpdate?.cards?.firstOrNull { it is DynamicCardsModel } as? DynamicCardsModel
-                )
-            }
-
-            val bloganuaryCard = async { bloganuaryNudgeCardViewModelSlice.buildCard() }
-
-            val bloggingPromptCard = async { bloggingPromptCardViewModelSlice.buildCard(bloggingPromptUpdate) }
-
-            val blazeCard = async { blazeCardViewModelSlice.buildBlazeCard(blazeCardUpdate) }
-
-            val plansCard = async { plansCardViewModelSlice.buildCard(site) }
-
-            val todayStatsCard = async {
-                todaysStatsViewModelSlice.buildTodaysStatsCard(
-                    cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel } as? TodaysStatsCardModel
-                )
-            }
-
-            val postCard = async {
-                postsCardViewModelSlice.buildPostCard(
-                    cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel
-                )
-            }
-
-            val pagesCard = async {
-                pagesCardViewModelSlice.buildCard(
-                    cardsUpdate?.cards?.firstOrNull { it is PagesCardModel } as? PagesCardModel
-                )
-            }
-
-            val activityCard = async {
-                activityLogCardViewModelSlice.buildCard(
-                    cardsUpdate?.cards?.firstOrNull { it is ActivityCardModel } as? ActivityCardModel
-                )
-            }
-
-            val bottomDynamicCards = async {
-                dynamicCardsViewModelSlice.buildBottomDynamicCards(
-                    cardsUpdate?.cards?.firstOrNull { it is DynamicCardsModel } as? DynamicCardsModel
-                )
-            }
-
-            cards.apply {
-                topDynamicCards.await()?.let { addAll(it) }
-                bloganuaryCard.await()?.let { add(it) }
-                bloggingPromptCard.await()?.let { add(it) }
-                blazeCard.await()?.let { add(it) }
-                plansCard.await()?.let { add(it) }
-                todayStatsCard.await()?.let { add(it) }
-                postCard.await().let { addAll(it) }
-                pagesCard.await()?.let { add(it) }
-                activityCard.await()?.let { add(it) }
-                bottomDynamicCards.await()?.let { addAll(it) }
-            }.toList()
-
-            cards
-        }
-    }
-
-    private fun trackAndBuildDomainRegistrationCard(
-        params: DomainRegistrationCardBuilderParams
-    ): DomainRegistrationCard? {
-        return if (params.isDomainCreditAvailable)
-            DomainRegistrationCard(ListItemInteraction.create(params.domainRegistrationClick))
-        else null
-    }
-
-    private fun buildQuickStartCard(params: QuickStartCardBuilderParams): QuickStartCard? {
-        return params.quickStartCategories.takeIf { it.isNotEmpty() }?.let {
-            quickStartCardBuilder.build(params)
-        }
-    }
-
     private fun shouldShowDashboard(site: SiteModel): Boolean {
         return buildConfigWrapper.isJetpackApp && site.isUsingWpComRestApi
     }
@@ -595,20 +278,6 @@ class MySiteViewModel @Inject constructor(
                 scanAvailable = scanAvailable
             )
         )
-    }
-
-    private fun getJetpackMigrationSuccessCard(): SingleActionCard? {
-        val isJetpackApp = buildConfigWrapper.isJetpackApp
-        val isMigrationCompleted = appPrefsWrapper.isJetpackMigrationCompleted()
-        val isWordPressInstalled = appStatus.isAppInstalled(wordPressPublicData.currentPackageId())
-        if (isJetpackApp && isMigrationCompleted && isWordPressInstalled) {
-            return SingleActionCard(
-                textResource = R.string.jp_migration_success_card_message,
-                imageResource = R.drawable.ic_wordpress_jetpack_appicon,
-                onActionClick = ::onPleaseDeleteWordPressAppCardClick
-            )
-        }
-        return null
     }
 
     private fun getJetpackSwitchMenu(): MySiteCardAndItem.Card.JetpackSwitchMenu? {
@@ -646,11 +315,6 @@ class MySiteViewModel @Inject constructor(
         ).takeIf {
             jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard()
         }
-    }
-
-    private fun onPleaseDeleteWordPressAppCardClick() {
-        contentMigrationAnalyticsTracker.trackPleaseDeleteWordPressCardTapped()
-        _onNavigation.value = Event(SiteNavigationAction.OpenJetpackMigrationDeleteWP)
     }
 
     private fun onJetpackBadgeClick(screen: JetpackPoweredScreen) {
@@ -703,62 +367,29 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun onQuickStartMoreMenuClick(quickStartCardType: QuickStartCardType) =
-        quickStartTracker.trackMoreMenuClicked(quickStartCardType)
-
-    private fun onQuickStartHideThisMenuItemClick(quickStartCardType: QuickStartCardType) {
-        quickStartTracker.trackMoreMenuItemClicked(quickStartCardType)
-        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
-            when (quickStartCardType) {
-                QuickStartCardType.GET_TO_KNOW_THE_APP -> {
-                    quickStartRepository.onHideShowGetToKnowTheAppCard(selectedSite.siteId)
-                }
-
-                QuickStartCardType.NEXT_STEPS -> {
-                    quickStartRepository.onHideNextStepsCard(selectedSite.siteId)
-                }
-            }
-            refresh()
-            clearActiveQuickStartTask()
-        }
-    }
-
-    private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
-        clearActiveQuickStartTask()
-        cardsTracker.trackQuickStartCardItemClicked(type)
-        _onNavigation.value = Event(
-            SiteNavigationAction.OpenQuickStartFullScreenDialog(type, quickStartCardBuilder.getTitle(type))
-        )
-    }
-
     fun onQuickStartTaskCardClick(task: QuickStartTask) {
         quickStartRepository.setActiveTask(task)
     }
 
     fun onQuickStartFullScreenDialogDismiss() {
-        mySiteSourceManager.refreshQuickStart()
-    }
-
-    private fun domainRegistrationClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
-        _onNavigation.value = Event(SiteNavigationAction.OpenDomainRegistration(selectedSite))
+//        mySiteSourceManager.refreshQuickStart()
     }
 
     fun refresh(isPullToRefresh: Boolean = false) {
+        Log.e("MySiteViewModel", "refresh")
         if (isPullToRefresh) analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH)
-        mySiteSourceManager.refresh()
-        quickLinksItemViewModelSlice.onRefresh()
+        dashboardCardsViewModelSlice.onRefresh()
     }
 
     fun onResume() {
-        mySiteSourceManager.onResume(isSiteSelected)
+//        mySiteSourceManager.onResume(isSiteSelected)
         isSiteSelected = false
         checkAndShowJetpackFullPluginInstallOnboarding()
         checkAndShowQuickStartNotice()
-        bloggingPromptCardViewModelSlice.onResume(uiModel.value as? SiteSelected)
-        dashboardCardPlansUtils.onResume(uiModel.value as? SiteSelected)
-        quickLinksItemViewModelSlice.onResume()
+//        bloggingPromptCardViewModelSlice.onResume(uiModel.value as? SiteSelected)
+//        dashboardCardPlansUtils.onResume(uiModel.value as? SiteSelected)
+        siteInfoHeaderCardViewModelSlice.onResume()
+        dashboardCardsViewModelSlice.onResume()
     }
 
     private fun checkAndShowJetpackFullPluginInstallOnboarding() {
@@ -834,9 +465,8 @@ class MySiteViewModel @Inject constructor(
         siteIconUploadHandler.clear()
         siteStoriesHandler.clear()
         quickStartRepository.clear()
-        mySiteSourceManager.clear()
         dispatcher.unregister(this)
-        bgScope.coroutineContext.cancelChildren()
+        dashboardCardsViewModelSlice.onCleared()
         super.onCleared()
     }
 
@@ -852,7 +482,6 @@ class MySiteViewModel @Inject constructor(
             val lastSelectedQuickStartType = appPrefsWrapper.getLastSelectedQuickStartTypeForSite(siteLocalId)
             quickStartRepository.checkAndSetQuickStartType(lastSelectedQuickStartType == NewSiteQuickStartType)
         }
-        mySiteSourceManager.refreshQuickStart()
     }
 
     fun performFirstStepAfterSiteCreation(
@@ -898,7 +527,7 @@ class MySiteViewModel @Inject constructor(
                     quickStartRepository.quickStartType,
                     quickStartTracker
                 )
-            mySiteSourceManager.refreshQuickStart()
+//            mySiteSourceManager.refreshQuickStart()
         }
     }
 
@@ -932,7 +561,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onDashboardErrorRetry() {
-        mySiteSourceManager.refresh()
+//        mySiteSourceManager.refresh()
     }
 
 
@@ -971,21 +600,6 @@ class MySiteViewModel @Inject constructor(
         jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_MENU_ACCESSED)
     }
 
-    private fun onJetpackInstallFullPluginHideMenuItemClick() {
-        selectedSiteRepository.getSelectedSite()?.localId()?.value?.let {
-            analyticsTrackerWrapper.track(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_DISMISSED)
-            appPrefsWrapper.setShouldHideJetpackInstallFullPluginCard(it, true)
-            refresh()
-        }
-    }
-
-    private fun onJetpackInstallFullPluginLearnMoreClick() {
-        analyticsTrackerWrapper.track(Stat.JETPACK_INSTALL_FULL_PLUGIN_CARD_TAPPED)
-        _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
-    }
-
-    fun isRefreshing() = mySiteSourceManager.isRefreshing()
-
     fun onActionableEmptyViewVisible() {
         analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
         checkJetpackIndividualPluginOverlayShouldShow()
@@ -1022,14 +636,14 @@ class MySiteViewModel @Inject constructor(
         siteSelected.dashboardData.filterIsInstance<JetpackInstallFullPluginCard>()
             .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type) }
         dashboardCardPlansUtils.trackCardShown(viewModelScope, siteSelected)
-        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>()
-            .forEach { personalizeCardViewModelSlice.trackShown(it.type) }
-        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>()
-            .forEach { noCardsMessageViewModelSlice.trackShown(it.type) }
+//        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>()
+//            .forEach { personalizeCardViewModelSlice.trackShown(it.type) }
+//        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>()
+//            .forEach { noCardsMessageViewModelSlice.trackShown(it.type) }
         siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.WpSotw2023NudgeCardModel>()
             .forEach { _ -> sotw2023NudgeCardViewModelSlice.trackShown() }
-        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.Dynamic>()
-            .forEach { dynamicCardsViewModelSlice.trackShown(it.id) }
+//        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.Dynamic>()
+//            .forEach { dynamicCardsViewModelSlice.trackShown(it.id) }
     }
 
     private fun resetShownTrackers() {
@@ -1038,9 +652,10 @@ class MySiteViewModel @Inject constructor(
         quickStartTracker.resetShown()
         jetpackFeatureCardShownTracker.resetShown()
         jetpackInstallFullPluginShownTracker.resetShown()
-        personalizeCardViewModelSlice.resetShown()
+        dashboardCardsViewModelSlice.resetShownTracker()
+//        personalizeCardViewModelSlice.resetShown()
         sotw2023NudgeCardViewModelSlice.resetShown()
-        dynamicCardsViewModelSlice.resetShown()
+//        dynamicCardsViewModelSlice.resetShown()
     }
 
     // FluxC events
@@ -1049,7 +664,7 @@ class MySiteViewModel @Inject constructor(
         if (!event.isError) {
             event.post?.let {
                 if (event.post.answeredPromptId > 0 && event.isFirstTimePublish) {
-                    mySiteSourceManager.refreshBloggingPrompts(true)
+                    dashboardCardsViewModelSlice.refreshBloggingPrompt()
                 }
             }
         }
