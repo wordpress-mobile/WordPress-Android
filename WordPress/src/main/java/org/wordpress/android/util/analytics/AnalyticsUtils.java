@@ -65,8 +65,6 @@ public class AnalyticsUtils {
     private static final String INTENT_HOST = "intent_host";
     private static final String INTENT_DATA = "intent_data";
     private static final String INTERCEPTOR_CLASSNAME = "interceptor_classname";
-    private static final String NEWS_CARD_ORIGIN = "origin";
-    private static final String NEWS_CARD_VERSION = "version";
     private static final String SITE_TYPE_KEY = "site_type";
     private static final String COMMENT_ACTION_SOURCE = "source";
     private static final String SOURCE_KEY = "source";
