@@ -68,14 +68,13 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     val onMediaUpload = _onMediaUpload
 
-    private val _uiModel = MutableLiveData<SiteInfoHeaderCard>().distinctUntilChanged()
-    val uiModel: LiveData<SiteInfoHeaderCard> =
-        merge(
-            _uiModel, quickStartRepository.activeTask,
+    val uiModel: LiveData<SiteInfoHeaderCard?> =
+        merge(quickStartRepository.activeTask,
             selectedSiteRepository.showSiteIconProgressBar,
             selectedSiteRepository.selectedSiteChange)
-        { headerCard, activeTask, showSiteIconProgressBar, site ->
-            buildCard(headerCard, activeTask, showSiteIconProgressBar, site)
+        { activeTask, showSiteIconProgressBar, site ->
+            val siteHeaderCard = buildCard(activeTask, showSiteIconProgressBar, site)
+            siteHeaderCard
         }.distinctUntilChanged()
 
     private lateinit var scope: CoroutineScope
@@ -84,17 +83,18 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
         this.scope = viewModelScope
     }
 
+    fun onResume() {
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        if (selectedSite != null) {
+            buildCard(null, null, siteModel = selectedSite)
+        }
+    }
+
     private fun buildCard(
-        siteInfoHeaderCard: SiteInfoHeaderCard?,
         activeTask: QuickStartStore.QuickStartTask?,
         showSiteIconProgressBar: Boolean?,
         siteModel: SiteModel?
     ): SiteInfoHeaderCard? {
-        if (activeTask == null && showSiteIconProgressBar == null) {
-            if (siteModel != null) {
-                return siteInfoHeaderCard
-            }
-        }
         siteModel?.let { site ->
             return siteInfoHeaderCardBuilder.buildSiteInfoCard(
                 getParams(

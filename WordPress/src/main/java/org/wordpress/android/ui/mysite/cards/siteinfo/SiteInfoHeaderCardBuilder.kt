@@ -21,7 +21,7 @@ class SiteInfoHeaderCardBuilder
     fun buildSiteInfoCard(params: SiteInfoCardBuilderParams): SiteInfoHeaderCard {
         val homeUrl = SiteUtils.getHomeURLOrHostName(params.site)
         val blogTitle = SiteUtils.getSiteNameOrHomeURL(params.site)
-        val siteIcon = if (params.showSiteIconProgressBar && !params.site.iconUrl.isNullOrEmpty()) {
+        val siteIcon = if (!params.showSiteIconProgressBar && !params.site.iconUrl.isNullOrEmpty()) {
             IconState.Visible(
                 SiteUtils.getSiteIconUrl(
                     params.site,
