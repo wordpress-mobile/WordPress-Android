@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -15,7 +14,6 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.Type
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.DashboardActivityLogCardFeatureUtils
@@ -33,10 +31,7 @@ import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Named
 
-const val REFRESH_DELAY = 500L
-
 class CardViewModelSlice @Inject constructor(
-    private val selectedSiteRepository: SelectedSiteRepository,
     private val cardsStore: CardsStore,
     private val dashboardActivityLogCardFeatureUtils: DashboardActivityLogCardFeatureUtils,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -86,40 +81,25 @@ class CardViewModelSlice @Inject constructor(
     }
 
     fun buildCard(
-        siteLocalId: Int
+        siteModel: SiteModel
     ) {
         _isRefreshing.postValue(true)
-        val selectedSite = selectedSiteRepository.getSelectedSite()
-        if (selectedSite != null && selectedSite.id == siteLocalId) {
-            scope.launch(bgDispatcher) {
-                cardsStore.getCards(selectedSite)
-                    .map { it.model }
-                    .map { cards -> cards?.filter { getCardTypes(selectedSite).contains(it.type) } }
-                    .collect { result ->
-                        postState(result)
-                    }
-            }
-        } else {
-            postErrorState()
+        // fetch data from store and then refresh the data from the server
+        scope.launch(bgDispatcher) {
+            cardsStore.getCards(siteModel)
+                .map { it.model }
+                .map { cards -> cards?.filter { getCardTypes(siteModel).contains(it.type) } }
+                .collect { result ->
+                    postState(result)
+                }
         }
-    }
-
-    private fun onRefresh(
-        siteLocalId: Int
-    ) {
-        val selectedSite = selectedSiteRepository.getSelectedSite()
-        if (selectedSite != null && selectedSite.id == siteLocalId) {
-            fetchCardsAndPostErrorIfAvailable(selectedSite)
-        } else {
-            postErrorState()
-        }
+        fetchCardsAndPostErrorIfAvailable(siteModel)
     }
 
     private fun fetchCardsAndPostErrorIfAvailable(
         selectedSite: SiteModel
     ) {
         scope.launch(bgDispatcher) {
-            delay(REFRESH_DELAY)
             val result = cardsStore.fetchCards(selectedSite, getCardTypes(selectedSite))
             val error = result.error
             when {
