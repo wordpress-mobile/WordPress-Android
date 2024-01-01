@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.plans
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
@@ -22,11 +22,8 @@ class PlansCardViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _refresh = MutableLiveData<Event<Boolean>>()
-    val refresh = _refresh
-
-    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.DashboardPlansCard>()
-    val uiModel: LiveData<MySiteCardAndItem.Card.DashboardPlansCard> = _uiModel
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.DashboardPlansCard?>()
+    val uiModel = _uiModel.distinctUntilChanged()
 
     fun buildCard(site:SiteModel){
          _uiModel .postValue(plansCardBuilder.build(getParams(site)))
@@ -54,6 +51,6 @@ class PlansCardViewModelSlice @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let {
             dashboardCardPlansUtils.hideCard(it.siteId)
         }
-        _refresh.value = Event(true)
+        _uiModel.postValue(null)
     }
 }
