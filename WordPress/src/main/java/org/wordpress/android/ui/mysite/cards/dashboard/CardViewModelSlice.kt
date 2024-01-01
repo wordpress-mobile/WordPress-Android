@@ -100,6 +100,7 @@ class CardViewModelSlice @Inject constructor(
     private fun fetchCardsAndPostErrorIfAvailable(
         selectedSite: SiteModel
     ) {
+        _isRefreshing.postValue(true)
         scope.launch(bgDispatcher) {
             val result = cardsStore.fetchCards(selectedSite, getCardTypes(selectedSite))
             val error = result.error
