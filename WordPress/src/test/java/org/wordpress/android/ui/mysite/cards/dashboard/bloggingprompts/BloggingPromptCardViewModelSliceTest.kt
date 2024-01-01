@@ -18,6 +18,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
+import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.config.BloggingPromptsFeature
 
 @Suppress("LargeClass")
 @ExperimentalCoroutinesApi
@@ -36,9 +38,6 @@ import org.wordpress.android.ui.utils.UiString
 class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
-
-    @Mock
-    lateinit var mySiteSourceManager: MySiteSourceManager
 
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
@@ -54,6 +53,15 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
 
     @Mock
     lateinit var bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider
+
+    @Mock
+    lateinit var bloggingPromptCardBuilder: BloggingPromptCardBuilder,
+
+    @Mock
+    lateinit var promptsStore: BloggingPromptsStore,
+
+    @Mock
+    lateinit var bloggingPromptsFeature: BloggingPromptsFeature
 
     private lateinit var viewModelSlice: BloggingPromptCardViewModelSlice
 
@@ -79,6 +87,9 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
             bloggingPromptsSettingsHelper,
             bloggingPromptsCardTrackHelper,
             bloggingPromptsPostTagProvider,
+            bloggingPromptCardBuilder,
+            promptsStore,
+            bloggingPromptsFeature
         )
 
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
@@ -97,7 +108,7 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
             }
         }
 
-        viewModelSlice.initialize(testScope(), mySiteSourceManager)
+        viewModelSlice.initialize(testScope())
     }
 
     @Test
@@ -194,7 +205,7 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
 
             params.onSkipClick()
 
-            clearInvocations(appPrefsWrapper, mySiteSourceManager)
+            clearInvocations(appPrefsWrapper)
 
             // click undo action
             val snackbar = snackbars.first()
