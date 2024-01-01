@@ -35,25 +35,26 @@ class QuickStartCardVewModelSlice @Inject constructor(
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.QuickStartCard>()
-    val uiModel: LiveData<MySiteCardAndItem.Card.QuickStartCard> = _uiModel
-
-    private val _refresh = MutableLiveData<Event<Boolean>>()
-    val refresh = _refresh as LiveData<Event<Boolean>>
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.QuickStartCard?>()
+    val uiModel: LiveData<MySiteCardAndItem.Card.QuickStartCard?> = _uiModel
 
     fun initialize(coroutineScope: CoroutineScope) {
         this.scope = coroutineScope
     }
 
-    fun build(siteLocalId: Int) {
+    fun build(selectedSite: SiteModel) {
+        val siteLocalId = selectedSite.id
         scope.launch {
-            val selectedSite = selectedSiteRepository.getSelectedSite()
-            if (selectedSite == null || quickStartUtilsWrapper.isQuickStartAvailableForTheSite(selectedSite))
+            _isRefreshing.postValue(true)
+            if (!quickStartUtilsWrapper.isQuickStartAvailableForTheSite(selectedSite)) {
+                _uiModel.postValue(null)
+                _isRefreshing.postValue(false)
                 return@launch
+            }
 
             quickStartRepository.resetTask()
             if (selectedSite.showOnFront == ShowOnFront.POSTS.value) {
-                _isRefreshing.value = true
+                _isRefreshing.postValue(true)
             }
             val quickStartTaskTypes = quickStartRepository.getQuickStartTaskTypes()
 
@@ -113,8 +114,8 @@ class QuickStartCardVewModelSlice @Inject constructor(
                     quickStartRepository.onHideNextStepsCard(selectedSite.siteId)
                 }
             }
-            _refresh.postValue(Event(true))
             clearActiveQuickStartTask()
+            _uiModel.postValue(null)
         }
     }
 
