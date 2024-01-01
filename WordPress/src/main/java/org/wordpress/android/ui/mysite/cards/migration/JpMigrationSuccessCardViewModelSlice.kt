@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.migration
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import org.wordpress.android.R
 import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTracker
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -23,8 +24,8 @@ class JpMigrationSuccessCardViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _uiModel = MutableLiveData<MySiteCardAndItem.Item.SingleActionCard>()
-    val uiModel: LiveData<MySiteCardAndItem.Item.SingleActionCard> = _uiModel
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Item.SingleActionCard?>()
+    val uiModel: LiveData<MySiteCardAndItem.Item.SingleActionCard?> = _uiModel.distinctUntilChanged()
 
     fun buildCard() {
         val isJetpackApp = buildConfigWrapper.isJetpackApp
@@ -38,7 +39,7 @@ class JpMigrationSuccessCardViewModelSlice @Inject constructor(
                     onActionClick = ::onPleaseDeleteWordPressAppCardClick
                 )
             )
-        }
+        } else { _uiModel.postValue(null) }
     }
 
     private fun onPleaseDeleteWordPressAppCardClick() {
