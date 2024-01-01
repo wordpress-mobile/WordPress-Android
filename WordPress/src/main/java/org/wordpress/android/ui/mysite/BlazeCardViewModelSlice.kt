@@ -52,20 +52,15 @@ class BlazeCardViewModelSlice @Inject constructor(
         this.scope = scope
     }
 
-    fun buildCard(siteLocalId: Int) {
+    fun buildCard(site: SiteModel) {
         _isRefreshing.postValue(true)
         scope.launch {
-            val selectedSite = selectedSiteRepository.getSelectedSite()
-            if (selectedSite != null && selectedSite.id == siteLocalId) {
-                if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(selectedSite)) {
-                    if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {
-                        fetchCampaigns(selectedSite)
-                    } else {
-                        // show blaze promo card if campaign feature is not available
-                        showPromoteWithBlazeCard()
-                    }
+            if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(site)) {
+                if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {
+                    fetchCampaigns(site)
                 } else {
-                    postState(false)
+                    // show blaze promo card if campaign feature is not available
+                    showPromoteWithBlazeCard()
                 }
             } else {
                 postState(false)
