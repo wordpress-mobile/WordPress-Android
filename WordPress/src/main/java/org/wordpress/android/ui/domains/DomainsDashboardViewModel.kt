@@ -15,8 +15,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.domains.DomainsDashboardItem.Action
-import org.wordpress.android.ui.domains.DomainsDashboardItem.Action.CHANGE_SITE_ADDRESS
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
@@ -109,8 +107,7 @@ class DomainsDashboardViewModel @Inject constructor(
         listItems += SiteDomains(
             UiStringText(freeDomainUrl),
             UiStringRes(R.string.domains_site_domain_never_expires),
-            freeDomainIsPrimary,
-            this::onChangeSiteClick
+            freeDomainIsPrimary
         )
 
         val customDomains = domains.filter { !it.wpcomDomain }
@@ -121,11 +118,6 @@ class DomainsDashboardViewModel @Inject constructor(
         listItems += buildCustomDomainItems(site, customDomains)
 
         listItems += buildCtaItems(hasCustomDomains, hasDomainCredit, hasPaidPlan)
-
-//        NOTE: Manage domains option is de-scoped for v1 release
-//        if (hasCustomDomains) {
-//            listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))
-//        }
 
         _showProgressSpinner.postValue(false)
         _uiModel.postValue(listItems)
@@ -217,15 +209,6 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun onAddDomainClick(hasDomainCredit: Boolean) {
         analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED, site)
         if (hasDomainCredit) onClaimDomainClick() else onGetDomainClick()
-    }
-
-    //  NOTE: Change site option is de-scoped for v1 release
-    private fun onChangeSiteClick(action: Action): Boolean {
-        when (action) {
-            CHANGE_SITE_ADDRESS -> {
-                TODO("Not yet implemented")
-            }
-        }
     }
 
     fun onSuccessfulDomainRegistration() {

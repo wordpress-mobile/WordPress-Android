@@ -2692,7 +2692,6 @@
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
 
-    <string name="domains_primary_site_more_menu_change_site_domain">Change domain</string>
     <string name="domains_site_domain">%s</string>
     <string name="domains_primary_site_domain_chip">Primary domain</string>
     <string name="domains_site_other_domains">Other domains for %s</string>
@@ -2701,7 +2700,6 @@
     <string name="domains_site_domain_never_expires">Never expires</string>
     <string name="domains_site_domain_expires_soon">&lt;span style="color:#d63638;"&gt;Expires on %s&lt;/span&gt;</string>
     <string name="domains_add_a_domain">Add a domain</string>
-    <string name="domains_manage_domains">Manage Domains</string>
     <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>
     <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your plan</string>
     <string name="domains_paid_plan_add_your_domain_title">Add your domain</string>

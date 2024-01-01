@@ -1,20 +1,15 @@
 package org.wordpress.android.ui.domains
 
-import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import org.wordpress.android.R
 import org.wordpress.android.databinding.DomainAddDomainCtaBinding
-import org.wordpress.android.databinding.DomainManageDomainsCtaBinding
 import org.wordpress.android.databinding.DomainPlanPurchaseCardBinding
 import org.wordpress.android.databinding.DomainPurchaseCardBinding
 import org.wordpress.android.databinding.DomainSiteDomainsCardBinding
 import org.wordpress.android.databinding.DomainSiteDomainsHeaderBinding
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
-import org.wordpress.android.ui.domains.DomainsDashboardItem.ManageDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
@@ -46,19 +41,6 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
             uiHelpers.setTextOrHide(siteDomain, item.domain)
             uiHelpers.setTextOrHide(siteDomainExpiryDate, item.expiry)
             primarySiteDomainChip.isVisible = item.isPrimary
-            primarySiteDomainActions.setOnClickListener { view -> popupMenuClick(item, view) }
-        }
-
-        private fun popupMenuClick(item: SiteDomains, v: View) {
-            item.onPopupMenuClick?.let { onPopupMenuClick ->
-                val popup = PopupMenu(v.context, v)
-                popup.setOnMenuItemClickListener { menuItem ->
-                    val action = DomainsDashboardItem.Action.fromItemId(menuItem.itemId)
-                    onPopupMenuClick(action)
-                }
-                popup.menuInflater.inflate(R.menu.domains_more, popup.menu)
-                popup.show()
-            }
         }
     }
 
@@ -69,17 +51,6 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
     ) {
         fun onBind(item: AddDomain) = with(binding) {
             addDomainButton.setOnClickListener { item.onClick.click() }
-        }
-    }
-
-    class ManageDomainsViewHolder(
-        parent: ViewGroup
-    ) : DomainsDashboardViewHolder<DomainManageDomainsCtaBinding>(
-        parent.viewBinding(DomainManageDomainsCtaBinding::inflate)
-    ) {
-        fun onBind(item: ManageDomains) = with(binding) {
-            manageDomainsCard.setOnClickListener { item.onClick.click() }
-            manageDomainsButton.setOnClickListener { item.onClick.click() }
         }
     }
 
