@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -64,13 +63,12 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private lateinit var scope: CoroutineScope
 
     fun buildCard(
-        siteLocalId: Int
+        siteModel: SiteModel
     ) {
-        val selectedSite = selectedSiteRepository.getSelectedSite()
-        if (selectedSite != null && selectedSite.id == siteLocalId && bloggingPromptsFeature.isEnabled()) {
+        if (bloggingPromptsFeature.isEnabled()) {
             scope.launch(bgDispatcher) {
                 if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
-                    promptsStore.getPrompts(selectedSite)
+                    promptsStore.getPrompts(siteModel)
                         .map { it.model?.filter { prompt -> isSameDay(prompt.date, Date()) } }
                         .collect { result ->
                             postState(result?.firstOrNull())
@@ -85,24 +83,19 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     }
 
     fun refreshData(
-        siteLocalId: Int,
+        siteModel: SiteModel,
         isSinglePromptRefresh: Boolean = false
     ) {
-        val selectedSite = selectedSiteRepository.getSelectedSite()
-        if (selectedSite != null && selectedSite.id == siteLocalId) {
-            if (bloggingPromptsFeature.isEnabled()) {
-                scope.launch(bgDispatcher) {
-                    if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
-                        fetchPromptsAndPostErrorIfAvailable(selectedSite, isSinglePromptRefresh)
-                    } else {
-                        postEmptyState()
-                    }
+        if (bloggingPromptsFeature.isEnabled()) {
+            scope.launch(bgDispatcher) {
+                if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
+                    fetchPromptsAndPostErrorIfAvailable(siteModel, isSinglePromptRefresh)
+                } else {
+                    postEmptyState()
                 }
-            } else {
-                postEmptyState()
             }
         } else {
-            postLastState()
+            postEmptyState()
         }
     }
 
@@ -111,7 +104,6 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         isSinglePromptRefresh: Boolean = false
     ) {
         scope.launch(bgDispatcher) {
-            delay(REFRESH_DELAY)
             val numOfPromptsToFetch = if (isSinglePromptRefresh) 1 else NUM_PROMPTS_TO_REQUEST
             val result = promptsStore.fetchPrompts(selectedSite, numOfPromptsToFetch, Date())
             when {
