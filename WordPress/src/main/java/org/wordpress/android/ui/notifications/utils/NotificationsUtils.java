@@ -27,7 +27,6 @@ import com.android.volley.VolleyError;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.wordpress.rest.RestRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
@@ -70,9 +69,6 @@ public class NotificationsUtils {
 
     public static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     public static final String PUSH_AUTH_ENDPOINT = "me/two-step/push-authentication";
-
-    private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
-    private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
 
     private static final String WPCOM_SETTINGS_ENDPOINT = "/me/notifications/settings/";
 
@@ -299,21 +295,6 @@ public class NotificationsUtils {
         }
 
         return spannableStringBuilder;
-    }
-
-    public static int[] getIndicesForRange(JSONObject rangeObject) {
-        int[] indices = new int[]{0, 0};
-        if (rangeObject == null) {
-            return indices;
-        }
-
-        JSONArray indicesArray = rangeObject.optJSONArray("indices");
-        if (indicesArray != null && indicesArray.length() >= 2) {
-            indices[0] = indicesArray.optInt(0);
-            indices[1] = indicesArray.optInt(1);
-        }
-
-        return indices;
     }
 
     /**

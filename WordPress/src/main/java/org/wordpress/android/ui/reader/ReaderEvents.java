@@ -53,9 +53,6 @@ public class ReaderEvents {
     public static class FollowedBlogsChanged {
     }
 
-    public static class RecommendedBlogsChanged {
-    }
-
     public static class InterestTagsFetchEnded {
         private final ReaderTagList mInterestTags;
         private final boolean mDidSucceed;
@@ -90,9 +87,6 @@ public class ReaderEvents {
         public DiscoverTasks getTask() {
             return mTask;
         }
-    }
-
-    public static class SinglePostDownloaded {
     }
 
     public static class UpdatePostsStarted {
@@ -286,14 +280,6 @@ public class ReaderEvents {
 
         public ReaderSimplePostList getGlobalRelatedPosts() {
             return mGlobalRelatedPosts;
-        }
-
-        public boolean hasLocalRelatedPosts() {
-            return mLocalRelatedPosts.size() > 0;
-        }
-
-        public boolean hasGlobalRelatedPosts() {
-            return mGlobalRelatedPosts.size() > 0;
         }
 
         public boolean didSucceed() {

@@ -175,26 +175,6 @@ public class PublicizeTable {
         return SqlUtils.stringForQuery(getReadableDb(), sql, args);
     }
 
-    public static long getNumServices() {
-        return SqlUtils.getRowCount(getReadableDb(), SERVICES_TABLE);
-    }
-
-    // ********************************************************************************************
-
-    public static PublicizeConnection getConnection(int connectionId) {
-        String[] args = {Integer.toString(connectionId)};
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + CONNECTIONS_TABLE + " WHERE id=?", args);
-        try {
-            if (c.moveToFirst()) {
-                return getConnectionFromCursor(c);
-            } else {
-                return null;
-            }
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
-    }
-
     public static String getRefreshUrlForConnection(int connectionId) {
         String sql = "SELECT refresh_url FROM " + CONNECTIONS_TABLE + " WHERE id=?";
         String[] args = {Integer.toString(connectionId)};
