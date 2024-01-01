@@ -18,6 +18,7 @@ import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlic
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.plans.PlansCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinksItemViewModelSlice
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardVewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -30,6 +31,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
     private val cardViewModelSlice: CardViewModelSlice,
     private val personalizeCardViewModelSlice: PersonalizeCardViewModelSlice,
     private val bloggingPromptCardViewModelSlice: BloggingPromptCardViewModelSlice,
+    private val quickStartCardVewModelSlice: QuickStartCardVewModelSlice,
     private val noCardsMessageViewModelSlice: NoCardsMessageViewModelSlice,
     private val quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice,
     private val bloganuaryNudgeCardViewModelSlice: BloganuaryNudgeCardViewModelSlice,
@@ -54,7 +56,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
         personalizeCardViewModelSlice.onNavigation,
         quickLinksItemViewModelSlice.navigation,
         plansCardViewModelSlice.onNavigation,
-        jpMigrationSuccessCardViewModelSlice.onNavigation
+        jpMigrationSuccessCardViewModelSlice.onNavigation,
+        quickStartCardVewModelSlice.onNavigation
     )
 
     val refresh = merge(
@@ -65,11 +68,13 @@ class DashboardCardsViewModelSlice @Inject constructor(
     val isRefreshing = merge(
         blazeCardViewModelSlice.isRefreshing,
         cardViewModelSlice.isRefreshing,
-        bloggingPromptCardViewModelSlice.isRefreshing
+        bloggingPromptCardViewModelSlice.isRefreshing,
+        quickStartCardVewModelSlice.isRefreshing
     )
 
     val uiModel: LiveData<List<MySiteCardAndItem>> = merge(
         quickLinksItemViewModelSlice.uiState,
+        quickStartCardVewModelSlice.uiModel,
         blazeCardViewModelSlice.uiModel,
         cardViewModelSlice.uiModel,
         bloggingPromptCardViewModelSlice.uiModel,
@@ -79,6 +84,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         personalizeCardViewModelSlice.uiModel,
         jetpackInstallFullPluginCardViewModelSlice.uiModel
     ) { quicklinks,
+        quickStart,
         blazeCard,
         cardsState,
         bloggingPromptCard,
@@ -89,6 +95,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         jpFullInstallFullPlugin ->
         return@merge mergeUiModels(
             quicklinks,
+            quickStart,
             blazeCard,
             cardsState,
             bloggingPromptCard,
@@ -103,6 +110,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
     @SuppressWarnings("LongParameterList")
     fun mergeUiModels(
         quicklinks: MySiteCardAndItem.Card.QuickLinksItem?,
+        quickStart: MySiteCardAndItem.Card.QuickStartCard?,
         blazeCard: MySiteCardAndItem.Card.BlazeCard?,
         cardsState: CardsState?,
         bloggingPromptCard: MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData?,
@@ -114,6 +122,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
         quicklinks?.let { cards.add(it) }
+        quickStart?.let { cards.add(it) }
         bloganuaryNudgeCard?.let { cards.add(it) }
         bloggingPromptCard?.let { cards.add(it) }
         blazeCard?.let { cards.add(it) }
@@ -123,10 +132,10 @@ class DashboardCardsViewModelSlice @Inject constructor(
                 is CardsState.ErrorState -> cards.add(cardsState.error)
             }
         }
-        personalizeCard?.let { cards.add(it) }
         migrationSuccessCard?.let { cards.add(it) }
         plansCard?.let { cards.add(it) }
         jpFullInstallFullPlugin?.let { cards.add(it) }
+        personalizeCard?.let { cards.add(it) }
         return cards.toList()
     }
 
@@ -137,6 +146,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         personalizeCardViewModelSlice.initialize(scope)
         quickLinksItemViewModelSlice.initialization(scope)
         cardViewModelSlice.initialize(scope)
+        quickStartCardVewModelSlice.initialize(scope)
     }
 
     private fun buildCards(site: SiteModel) {
@@ -149,6 +159,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         quickLinksItemViewModelSlice.buildCard(site)
         plansCardViewModelSlice.buildCard(site)
         cardViewModelSlice.buildCard(site)
+        quickStartCardVewModelSlice.build(site)
     }
 
     fun onResume() {

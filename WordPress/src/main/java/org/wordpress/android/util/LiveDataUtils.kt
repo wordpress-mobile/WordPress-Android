@@ -365,29 +365,31 @@ fun <S, T, U, V, W, X, Y> merge(
  * @return new data source
  */
 @Suppress("DestructuringDeclarationWithTooManyEntries", "LongParameterList")
-fun <R, S, T, U, V, W, X, Y, Z, A> merge(
-    sourceA: LiveData<R>,
-    sourceB: LiveData<S>,
-    sourceC: LiveData<T>,
-    sourceD: LiveData<U>,
-    sourceE: LiveData<V>,
-    sourceF: LiveData<W>,
-    sourceG: LiveData<X>,
-    sourceH: LiveData<Y>,
-    sourceI: LiveData<Z>,
+fun <Q, R, S, T, U, V, W, X, Y, Z, A> merge(
+    sourceA: LiveData<Q>,
+    sourceB: LiveData<R>,
+    sourceC: LiveData<S>,
+    sourceD: LiveData<T>,
+    sourceE: LiveData<U>,
+    sourceF: LiveData<V>,
+    sourceG: LiveData<W>,
+    sourceH: LiveData<X>,
+    sourceI: LiveData<Y>,
+    sourceJ: LiveData<Z>,
     distinct: Boolean = false,
-    merger: (R?, S?, T?, U?, V?, W?, X?, Y?, Z?) -> A?
+    merger: (Q?, R?, S?, T?, U?, V?, W?, X?, Y?, Z?) -> A?
 ): LiveData<A> {
     data class NineItemContainer(
-        val first: R? = null,
-        val second: S? = null,
-        val third: T? = null,
-        val fourth: U? = null,
-        val fifth: V? = null,
-        val sixth: W? = null,
-        val seventh: X? = null,
-        val eighth: Y? = null,
-        val ninth: Z? = null
+        val first: Q? = null,
+        val second: R? = null,
+        val third: S? = null,
+        val fourth: T? = null,
+        val fifth: U? = null,
+        val sixth: V? = null,
+        val seventh: W? = null,
+        val eighth: X? = null,
+        val ninth: Y? = null,
+        val tenth: Z? = null,
     )
 
     val mediator = MediatorLiveData<NineItemContainer>()
@@ -446,8 +448,15 @@ fun <R, S, T, U, V, W, X, Y, Z, A> merge(
             mediator.value = container?.copy(ninth = it)
         }
     }
-    return mediator.mapSafe { (first, second, third, fourth, fifth, sixth, seventh, eighth, ninth) ->
-        merger(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth)
+
+    mediator.addSource(sourceJ) {
+        val container = mediator.value
+        if (container?.tenth != it || !distinct) {
+            mediator.value = container?.copy(tenth = it)
+        }
+    }
+    return mediator.mapSafe { (first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) ->
+        merger(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth)
     }
 }
 
