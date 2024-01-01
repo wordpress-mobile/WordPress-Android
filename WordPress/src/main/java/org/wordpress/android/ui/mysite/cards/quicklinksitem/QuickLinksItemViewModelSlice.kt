@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.quicklinksitem
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -69,13 +70,34 @@ class QuickLinksItemViewModelSlice @Inject constructor(
             return@merge updateToShowMoreFocusPointIfNeeded(quickLinks, quickStartMenuStep)
         }
         return@merge quickLinks
-    }
+    }.distinctUntilChanged()
 
     fun buildCard(siteModel: SiteModel) {
         buildQuickLinks(siteModel)
     }
 
     private fun buildQuickLinks(site: SiteModel) {
+        scope.launch {
+            _uiState.postValue(
+                convertToQuickLinkRibbonItem(
+                    site,
+                    siteItemsBuilder.build(
+                        MySiteCardAndItemBuilderParams.SiteItemsBuilderParams(
+                            site = site,
+                            enableFocusPoints = true,
+                            activeTask = null,
+                            onClick = this@QuickLinksItemViewModelSlice::onClick,
+                            isBlazeEligible = isSiteBlazeEligible(site),
+                            backupAvailable = true,
+                            scanAvailable = (!site.isWPCom && !site.isWPComAtomic)
+                        )
+                    ),
+                )
+            )
+        }
+    }
+
+    private fun fetchCapabilities(site: SiteModel){
         scope.launch(bgDispatcher) {
             jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
                 _uiState.postValue(
@@ -89,10 +111,10 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                                 onClick = this@QuickLinksItemViewModelSlice::onClick,
                                 isBlazeEligible = isSiteBlazeEligible(site),
                                 backupAvailable = it.backup,
-                                scanAvailable = (it.scan && !site.isWPCom && !site.isWPComAtomic)
+                                scanAvailable = it.scan
                             )
                         ),
-                    )
+                        capabilitiesFetched = true),
                 )
             } // end collect
         }
@@ -101,10 +123,22 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     private fun convertToQuickLinkRibbonItem(
         site: SiteModel,
         listItems: List<MySiteCardAndItem>,
+        capabilitiesFetched: Boolean = false
     ): MySiteCardAndItem.Card.QuickLinksItem {
         val siteId = site.siteId
         val activeListItems = listItems.filterIsInstance(MySiteCardAndItem.Item.ListItem::class.java)
             .filter { isActiveQuickLink(it.listItemAction, siteId = siteId) }
+
+        // Only fetch the capabilities if the user has activity and back up quick link is active
+        if(!capabilitiesFetched) {
+            val shouldRequestScanAndBackUpCapability =
+                shouldRequestForBackupCapability(activeListItems) || shouldRequestForScanCapability(activeListItems)
+
+            if (shouldRequestScanAndBackUpCapability) {
+                fetchCapabilities(site)
+            }
+        }
+
         val activeQuickLinks = activeListItems.map { listItem ->
             MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem(
                 icon = listItem.primaryIcon,
@@ -124,6 +158,15 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         return MySiteCardAndItem.Card.QuickLinksItem(
             quickLinkItems = activeQuickLinks + moreQuickLink
         )
+    }
+
+    // if there is scan and backup capabilities in active quick links, then only request for that
+    private fun shouldRequestForBackupCapability(activeListItems: List<MySiteCardAndItem.Item.ListItem>): Boolean {
+        return activeListItems.any { it.listItemAction == ListItemAction.BACKUP }
+    }
+
+    private fun shouldRequestForScanCapability(activeListItems: List<MySiteCardAndItem.Item.ListItem>): Boolean {
+        return activeListItems.any { it.listItemAction == ListItemAction.SCAN }
     }
 
     private fun isSiteBlazeEligible(site: SiteModel) =
