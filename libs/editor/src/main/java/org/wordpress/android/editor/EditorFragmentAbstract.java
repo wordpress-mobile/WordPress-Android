@@ -236,6 +236,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onToggleUndo(boolean isDisabled);
 
         void onToggleRedo(boolean isDisabled);
+
+        void onBackHandlerButton();
     }
 
     /**
