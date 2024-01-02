@@ -736,7 +736,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                             mPreviousEmailComments);
                     dialog.setArguments(args);
                     dialog.setTargetFragment(NotificationsSettingsFragment.this, NOTIFICATION_SETTINGS);
-                    dialog.show(getFragmentManager(), NotificationSettingsFollowedDialog.TAG);
+                    dialog.show(getChildFragmentManager(), NotificationSettingsFollowedDialog.TAG);
                     return true;
                 });
             } else {
