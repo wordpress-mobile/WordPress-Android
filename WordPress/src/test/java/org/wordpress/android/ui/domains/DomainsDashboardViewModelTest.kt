@@ -79,13 +79,12 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
 
         val dashboardItems = uiModel
 
-        assertThat(dashboardItems).hasSize(4)
+        assertThat(dashboardItems).hasSize(3)
 
         assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
         assertThat(dashboardItems[1]).isInstanceOf(SiteDomains::class.java)
-        assertThat(dashboardItems[2]).isInstanceOf(SiteDomainsHeader::class.java)
-        assertThat(dashboardItems[3]).isInstanceOf(PurchasePlan::class.java)
-        assertThat((dashboardItems[3] as PurchasePlan).title)
+        assertThat(dashboardItems[2]).isInstanceOf(PurchasePlan::class.java)
+        assertThat((dashboardItems[2] as PurchasePlan).title)
             .isEqualTo(UiStringRes(R.string.domains_free_plan_get_your_domain_title))
     }
 
@@ -139,12 +138,11 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
 
         val dashboardItems = uiModel
 
-        assertThat(dashboardItems).hasSize(4)
+        assertThat(dashboardItems).hasSize(3)
 
         assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
         assertThat(dashboardItems[1]).isInstanceOf(SiteDomains::class.java)
-        assertThat(dashboardItems[2]).isInstanceOf(SiteDomainsHeader::class.java)
-        assertThat(dashboardItems[3]).isInstanceOf(PurchaseDomain::class.java)
+        assertThat(dashboardItems[2]).isInstanceOf(PurchaseDomain::class.java)
     }
 
     @Test
@@ -157,13 +155,12 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
 
         val dashboardItems = uiModel
 
-        assertThat(dashboardItems).hasSize(4)
+        assertThat(dashboardItems).hasSize(3)
 
         assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
         assertThat(dashboardItems[1]).isInstanceOf(SiteDomains::class.java)
-        assertThat(dashboardItems[2]).isInstanceOf(SiteDomainsHeader::class.java)
-        assertThat(dashboardItems[3]).isInstanceOf(PurchaseDomain::class.java)
-        assertThat((dashboardItems[3] as PurchaseDomain).title)
+        assertThat(dashboardItems[2]).isInstanceOf(PurchaseDomain::class.java)
+        assertThat((dashboardItems[2] as PurchaseDomain).title)
             .isEqualTo(UiStringRes(R.string.domains_paid_plan_add_your_domain_title))
     }
 
