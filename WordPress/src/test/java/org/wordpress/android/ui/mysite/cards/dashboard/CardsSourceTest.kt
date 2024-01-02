@@ -65,7 +65,6 @@ const val PAGE_DATE = "2023-03-02 10:30:53"
 /* DYNAMIC CARDS */
 const val DYNAMIC_CARD_ID = "year_in_review_2023"
 const val DYNAMIC_CARD_TITLE = "News"
-const val DYNAMIC_CARD_REMOTE_FEATURE_FLAG = "dynamic_dashboard_cards"
 const val DYNAMIC_CARD_FEATURED_IMAGE = "https://path/to/image"
 const val DYNAMIC_CARD_URL = "https://wordpress.com"
 const val DYNAMIC_CARD_ACTION = "Call to action"
@@ -136,7 +135,6 @@ private val DYNAMIC_CARD_ROW_MODEL = DynamicCardRowModel(
 private val DYNAMIC_CARD_MODEL = DynamicCardModel(
     id = DYNAMIC_CARD_ID,
     title = DYNAMIC_CARD_TITLE,
-    remoteFeatureFlag = DYNAMIC_CARD_REMOTE_FEATURE_FLAG,
     featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
     url = DYNAMIC_CARD_URL,
     action = DYNAMIC_CARD_ACTION,
