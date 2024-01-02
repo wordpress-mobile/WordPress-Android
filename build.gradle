@@ -84,6 +84,7 @@ ext {
     squareupRetrofitVersion = '2.9.0'
     uCropVersion = '2.2.8'
     zendeskVersion = '5.1.2'
+    googlePlayInAppUpdateVersion = '2.0.1'
 
     // react native
     facebookReactVersion = '0.71.11'

@@ -288,7 +288,6 @@ class AppInitializer @Inject constructor(
     fun init() {
         dispatcher.register(this)
         appConfig.init(appScope)
-
         // Upload any encrypted logs that were queued but not yet uploaded
         encryptedLogging.start()
 

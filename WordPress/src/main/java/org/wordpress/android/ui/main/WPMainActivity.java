@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,11 +35,15 @@ import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.review.model.ReviewErrorCode;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.InstallStatus;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.InAppUpdateManager;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -167,6 +172,7 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointIn
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.CreatePageDashboardSource;
 import org.wordpress.android.widgets.AppRatingDialog;
+import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationScheduler;
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
 
@@ -286,6 +292,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
+    @Inject InAppUpdateManager mInAppUpdateManager;
+
     @Inject GCMRegistrationScheduler mGCMRegistrationScheduler;
 
     @Inject ActivityNavigator mActivityNavigator;
@@ -383,10 +391,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     }
                 } else if (openedFromShortcut) {
                     initSelectedSite();
-                        mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
-                                ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
-                        showJetpackOverlayIfNeeded(getIntent().getStringExtra(
-                                ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
+                    mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
+                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
+                    showJetpackOverlayIfNeeded(getIntent().getStringExtra(
+                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
                 } else if (isQuickStartRequestedFromPush) {
@@ -1168,8 +1176,39 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
         );
 
+        checkForAnyPendingInAppUpdates();
+
         mFirstResume = false;
     }
+
+    private void checkForAnyPendingInAppUpdates() {
+        mInAppUpdateManager.getInAppUpdateManager().addOnSuccessListener(appUpdateInfo -> {
+            Log.e("WPMainActivity", "checkForAnyPendingInAppUpdates: " + appUpdateInfo);
+            if (mInAppUpdateManager.isImmediateUpdateInProgress(appUpdateInfo)) {
+                mInAppUpdateManager.requestImmediateUpdate(appUpdateInfo, WPMainActivity.this);
+            } else if (mInAppUpdateManager.isFlexibleUpdateInProgress(appUpdateInfo)) {
+                showSnackBarForUpdate();
+            } else {
+                mInAppUpdateManager.checkForAppUpdate(WPMainActivity.this);
+                mInAppUpdateManager.registerUpdateListener(mInstallStateUpdatedListener);
+            }
+        });
+    }
+
+    @Nullable InstallStateUpdatedListener mInstallStateUpdatedListener = state -> {
+        Log.e("WPMainActivity", "installStateUpdatedListener: " + state.installStatus());
+        if (state.installStatus() == InstallStatus.DOWNLOADED) {
+            removeInstallStateUpdateListener();
+            showSnackBarForUpdate();
+        } else if (state.installStatus() == InstallStatus.INSTALLED) {
+            removeInstallStateUpdateListener();
+            showSnackBarForUpdate();
+        } else if (state.installStatus() == InstallStatus.CANCELED || InstallStatus.FAILED == state.installStatus()) {
+            removeInstallStateUpdateListener();
+        } else if (state.installStatus() == InstallStatus.PENDING) {
+            showSnackBarForUpdate();
+        }
+    };
 
     private void checkQuickStartNotificationStatus() {
         SiteModel selectedSite = getSelectedSite();
@@ -1349,6 +1388,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override
     @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("WPMainActivity", "onActivityResult: " + requestCode + " " + resultCode);
         super.onActivityResult(requestCode, resultCode, data);
         if (!mSelectedSiteRepository.hasSelectedSite()) {
             initSelectedSite();
@@ -1473,7 +1513,20 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case RequestCodes.DOMAIN_REGISTRATION:
                 passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 break;
+            case InAppUpdateManager.APP_UPDATE_FLEXIBLE_REQUEST_CODE:
+            case InAppUpdateManager.APP_UPDATE_IMMEDIATE_REQUEST_CODE:
+                Log.e("Update request code", "onActivityResult: " + requestCode + " " + resultCode);
+                if (resultCode == RESULT_CANCELED) {
+                    removeInstallStateUpdateListener();
+                    break;
+                }
+                showSnackBarForUpdate();
+                break;
         }
+    }
+
+    private void removeInstallStateUpdateListener() {
+        mInAppUpdateManager.unregisterListener(mInstallStateUpdatedListener);
     }
 
     private void appLanguageChanged() {
@@ -1892,6 +1945,16 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Override public void onUpdateSelectedSiteResult(int resultCode, @Nullable Intent data) {
         onActivityResult(RequestCodes.SITE_PICKER, resultCode, data);
+    }
+
+    private void showSnackBarForUpdate() {
+        Log.e("WPMainActivity", "showSnackBarForUpdate()");
+        WPSnackbar.make(findViewById(R.id.coordinator), R.string.update_available, Snackbar.LENGTH_LONG)
+                  .setAction(R.string.update_now, v -> {
+                      mInAppUpdateManager.completeUpdate();
+                      // todo: AnalyticsTracker.track(Stat.IN_APP_UPDATE_COMPLETED);
+                  })
+                  .show();
     }
 
     // We dismiss the QuickStart SnackBar every time activity is paused because

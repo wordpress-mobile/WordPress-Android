@@ -389,6 +389,9 @@ dependencies {
     debugImplementation "com.facebook.stetho:stetho:$stethoVersion"
     debugImplementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
 
+    implementation "com.google.android.play:app-update:$googlePlayInAppUpdateVersion"
+    implementation "com.google.android.play:app-update-ktx:$googlePlayInAppUpdateVersion"
+
     implementation "androidx.arch.core:core-common:$androidxArchCoreVersion"
     implementation "androidx.arch.core:core-runtime:$androidxArchCoreVersion"
     implementation "com.google.code.gson:gson:$googleGsonVersion"
