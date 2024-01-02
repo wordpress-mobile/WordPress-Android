@@ -115,7 +115,9 @@ class DomainsDashboardViewModel @Inject constructor(
         val hasDomainCredit = isDomainCreditAvailable(plans)
         val hasPaidPlan = !SiteUtils.onFreePlan(site)
 
-        listItems += buildCustomDomainItems(site, customDomains)
+        if (hasCustomDomains) {
+            listItems += buildCustomDomainItems(site, customDomains)
+        }
 
         listItems += buildCtaItems(hasCustomDomains, hasDomainCredit, hasPaidPlan)
 
