@@ -21,7 +21,7 @@ class JetpackSwitchMenuViewModelSlice @Inject constructor(
     private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.JetpackSwitchMenu>()
     val uiModel = _uiModel
 
-    private fun buildJetpackSwitchMenu() {
+    suspend fun buildJetpackSwitchMenu() {
         if (!jetpackFeatureCardHelper.shouldShowSwitchToJetpackMenuCard()) _uiModel.postValue(null)
         _uiModel.postValue(
             MySiteCardAndItem.Card.JetpackSwitchMenu(
