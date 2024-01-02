@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-07 11:24:57+0000
+Translation-Revision-Date: 2023-12-14 11:30:57+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: ro
@@ -16,7 +16,7 @@ Language: ro
     <string name="bloganuary_dashboard_nudge_overlay_title">Alătură-te provocării noastre de a scrie timp de o lună</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">În luna ianuarie, îndemnurile de a scrie vor veni de la Bloganuary - provocarea comunității noastre de a crea un obicei de a scrie pe bloguri în noul an.</string>
-    <string name="bloganuary_dashboard_nudge_title_december">Bloganuary vine în curând!</string>
+    <string name="bloganuary_dashboard_nudge_title">Bloganuary vine în curând!</string>
     <string name="turn_off">Nu, oprește</string>
     <string name="leave_on">Da, lasă în continuare</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Din acest motiv, recomandăm să editezi blocul folosind navigatorul web.</string>
