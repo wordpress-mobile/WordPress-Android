@@ -933,7 +933,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
-                        mEditorFragmentListener.onMediaRetryAllClicked(mFailedMediaIds);
+                        mEditorFragmentListener.onMediaRetryAll(mFailedMediaIds);
                     }
                 });
 
@@ -1590,5 +1590,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onConnectionStatusChange(boolean isConnected) {
         getGutenbergContainerFragment().onConnectionStatusChange(isConnected);
+        if (BuildConfig.DEBUG && isConnected && hasFailedMediaUploads()) {
+            mEditorFragmentListener.onMediaRetryAll(mFailedMediaIds);
+        }
     }
 }

@@ -1,7 +1,5 @@
 package org.wordpress.android.models;
 
-import android.text.TextUtils;
-
 import org.json.JSONObject;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
@@ -133,16 +131,8 @@ public class ReaderComment {
         this.mPublished = StringUtils.notNullStr(published);
     }
 
-    public boolean hasAuthorUrl() {
-        return !TextUtils.isEmpty(mAuthorUrl);
-    }
-
     public boolean hasAuthorBlogId() {
         return (authorBlogId != 0);
-    }
-
-    public boolean hasAuthorAvatar() {
-        return !TextUtils.isEmpty(mAuthorAvatar);
     }
 
     public String getShortUrl() {
