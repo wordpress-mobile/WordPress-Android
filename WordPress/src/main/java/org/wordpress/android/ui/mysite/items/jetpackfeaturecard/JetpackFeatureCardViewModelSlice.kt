@@ -16,10 +16,10 @@ class JetpackFeatureCardViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.JetpackFeatureCard>()
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.JetpackFeatureCard?>()
     val uiModel = _uiModel
 
-    private fun buildJetpackFeatureCard() {
+    suspend fun buildJetpackFeatureCard() {
         if (!jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()) _uiModel.postValue(null)
         _uiModel.postValue(
             MySiteCardAndItem.Card.JetpackFeatureCard(
