@@ -13,7 +13,6 @@ import javax.inject.Inject
 class JetpackFeatureCardViewModelSlice @Inject constructor(
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
 ) {
-
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
