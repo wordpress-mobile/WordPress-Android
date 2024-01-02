@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
+import android.content.Context
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.single
@@ -89,6 +90,12 @@ const val ACTIVITY_ACTOR_ROLE = "admin"
 const val ACTIVITY_ACTOR_ICON_URL = "dog.jpg"
 const val ACTIVITY_PUBLISHED_DATE = "2021-12-27 11:33:55"
 const val ACTIVITY_CONTENT = "content"
+
+private const val BUILD_NUMBER_PARAM = "build_number_param"
+private const val DEVICE_ID_PARAM = "device_id_param"
+private const val IDENTIFIER_PARAM = "identifier_param"
+private const val MARKETING_VERSION_PARAM = "marketing_version_param"
+private const val PLATFORM_PARAM = "platform_param"
 
 /* MODEL */
 
@@ -206,6 +213,9 @@ class CardsSourceTest : BaseUnitTest() {
     @Mock
     private lateinit var dynamicDashboardCardsFeatureConfig: DynamicDashboardCardsFeatureConfig
 
+    @Mock
+    lateinit var context: Context
+
     private lateinit var cardSource: CardsSource
 
     private val data = CardsResult(
@@ -224,7 +234,8 @@ class CardsSourceTest : BaseUnitTest() {
             dashboardActivityLogCardFeatureUtils,
             testDispatcher(),
             appPrefsWrapper,
-            dynamicDashboardCardsFeatureConfig
+            dynamicDashboardCardsFeatureConfig,
+            context,
         )
     }
 
@@ -304,7 +315,15 @@ class CardsSourceTest : BaseUnitTest() {
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
         advanceUntilIdle()
 
-        verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
+        verify(cardsStore).fetchCards(
+            siteModel,
+            DEFAULT_CARD_TYPE,
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
     }
 
     @Test
@@ -332,7 +351,17 @@ class CardsSourceTest : BaseUnitTest() {
             setUpMocks()
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
-            whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success)
+            whenever(
+                cardsStore.fetchCards(
+                    siteModel,
+                    DEFAULT_CARD_TYPE,
+                    BUILD_NUMBER_PARAM,
+                    DEVICE_ID_PARAM,
+                    IDENTIFIER_PARAM,
+                    MARKETING_VERSION_PARAM,
+                    PLATFORM_PARAM
+                )
+            ).thenReturn(success)
             cardSource.refresh.observeForever { }
 
             cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
@@ -340,7 +369,15 @@ class CardsSourceTest : BaseUnitTest() {
             }
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
+            verify(cardsStore).fetchCards(
+                siteModel,
+                DEFAULT_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
         }
 
     @Test
@@ -349,7 +386,17 @@ class CardsSourceTest : BaseUnitTest() {
         val result = mutableListOf<CardsUpdate>()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
-        whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(apiError)
+        whenever(
+            cardsStore.fetchCards(
+                siteModel,
+                DEFAULT_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(apiError)
         cardSource.refresh.observeForever { }
 
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
@@ -380,7 +427,17 @@ class CardsSourceTest : BaseUnitTest() {
         val filteredData = CardsResult(model = data.model?.filterIsInstance<PostsCardModel>()?.toList())
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = filteredData.model)))
-        whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(success)
+        whenever(
+            cardsStore.fetchCards(
+                siteModel,
+                DEFAULT_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(success).thenReturn(success)
         cardSource.refresh.observeForever { }
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
             it?.let { result.add(it) }
@@ -398,7 +455,17 @@ class CardsSourceTest : BaseUnitTest() {
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
-        whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(apiError)
+        whenever(
+            cardsStore.fetchCards(
+                siteModel,
+                DEFAULT_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(success).thenReturn(apiError)
         cardSource.refresh.observeForever { }
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
             it?.let { result.add(it) }
@@ -439,7 +506,17 @@ class CardsSourceTest : BaseUnitTest() {
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<Boolean>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
-        whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE))
+        whenever(
+            cardsStore.fetchCards(
+                siteModel,
+                DEFAULT_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        )
             .thenReturn(success)
         cardSource.refresh.observeForever { result.add(it) }
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
@@ -461,7 +538,17 @@ class CardsSourceTest : BaseUnitTest() {
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<Boolean>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
-        whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success)
+        whenever(
+            cardsStore.fetchCards(
+                siteModel,
+                DEFAULT_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(success)
         cardSource.refresh.observeForever { result.add(it) }
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
@@ -482,7 +569,17 @@ class CardsSourceTest : BaseUnitTest() {
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<Boolean>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
-        whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(apiError)
+        whenever(
+            cardsStore.fetchCards(
+                siteModel,
+                DEFAULT_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(apiError)
         cardSource.refresh.observeForever { result.add(it) }
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
@@ -535,7 +632,17 @@ class CardsSourceTest : BaseUnitTest() {
             setUpMocks(isRequestPages = true)
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
-            whenever(cardsStore.fetchCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)).thenReturn(success)
+            whenever(
+                cardsStore.fetchCards(
+                    siteModel,
+                    PAGES_FEATURED_ENABLED_CARD_TYPE,
+                    BUILD_NUMBER_PARAM,
+                    DEVICE_ID_PARAM,
+                    IDENTIFIER_PARAM,
+                    MARKETING_VERSION_PARAM,
+                    PLATFORM_PARAM
+                )
+            ).thenReturn(success)
             cardSource.refresh.observeForever { }
 
             cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
@@ -543,7 +650,15 @@ class CardsSourceTest : BaseUnitTest() {
             }
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)
+            verify(cardsStore).fetchCards(
+                siteModel,
+                PAGES_FEATURED_ENABLED_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
         }
 
     @Test
@@ -559,7 +674,15 @@ class CardsSourceTest : BaseUnitTest() {
             }
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
+            verify(cardsStore).fetchCards(
+                siteModel,
+                DEFAULT_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
         }
 
     @Test
@@ -568,7 +691,17 @@ class CardsSourceTest : BaseUnitTest() {
             setUpMocks(isDashboardCardActivityLogEnabled = true)
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
-            whenever(cardsStore.fetchCards(siteModel, ACTIVITY_FEATURED_ENABLED_CARD_TYPE)).thenReturn(success)
+            whenever(
+                cardsStore.fetchCards(
+                    siteModel,
+                    ACTIVITY_FEATURED_ENABLED_CARD_TYPE,
+                    BUILD_NUMBER_PARAM,
+                    DEVICE_ID_PARAM,
+                    IDENTIFIER_PARAM,
+                    MARKETING_VERSION_PARAM,
+                    PLATFORM_PARAM
+                )
+            ).thenReturn(success)
             cardSource.refresh.observeForever { }
 
             cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
@@ -576,7 +709,15 @@ class CardsSourceTest : BaseUnitTest() {
             }
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, ACTIVITY_FEATURED_ENABLED_CARD_TYPE)
+            verify(cardsStore).fetchCards(
+                siteModel,
+                ACTIVITY_FEATURED_ENABLED_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
         }
 
     @Test
@@ -585,7 +726,17 @@ class CardsSourceTest : BaseUnitTest() {
             setUpMocks(isDynamicCardsEnabled = true)
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
-            whenever(cardsStore.fetchCards(siteModel, DYNAMIC_CARDS_ENABLED_CARD_TYPE)).thenReturn(success)
+            whenever(
+                cardsStore.fetchCards(
+                    siteModel,
+                    DYNAMIC_CARDS_ENABLED_CARD_TYPE,
+                    BUILD_NUMBER_PARAM,
+                    DEVICE_ID_PARAM,
+                    IDENTIFIER_PARAM,
+                    MARKETING_VERSION_PARAM,
+                    PLATFORM_PARAM
+                )
+            ).thenReturn(success)
             cardSource.refresh.observeForever { }
 
             cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
@@ -593,7 +744,15 @@ class CardsSourceTest : BaseUnitTest() {
             }
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, DYNAMIC_CARDS_ENABLED_CARD_TYPE)
+            verify(cardsStore).fetchCards(
+                siteModel,
+                DYNAMIC_CARDS_ENABLED_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
         }
 
     @Test
@@ -602,7 +761,17 @@ class CardsSourceTest : BaseUnitTest() {
             setUpMocks(isDashboardCardActivityLogEnabled = false)
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
-            whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(success)
+            whenever(
+                cardsStore.fetchCards(
+                    siteModel,
+                    DEFAULT_CARD_TYPE,
+                    BUILD_NUMBER_PARAM,
+                    DEVICE_ID_PARAM,
+                    IDENTIFIER_PARAM,
+                    MARKETING_VERSION_PARAM,
+                    PLATFORM_PARAM
+                )
+            ).thenReturn(success).thenReturn(success)
             cardSource.refresh.observeForever { }
 
             cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
@@ -610,7 +779,15 @@ class CardsSourceTest : BaseUnitTest() {
             }
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
+            verify(cardsStore).fetchCards(
+                siteModel,
+                DEFAULT_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
         }
 
     @Test
@@ -619,7 +796,17 @@ class CardsSourceTest : BaseUnitTest() {
             setUpMocks(isTodaysStatsCardHidden = false)
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
-            whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success)
+            whenever(
+                cardsStore.fetchCards(
+                    siteModel,
+                    DEFAULT_CARD_TYPE,
+                    BUILD_NUMBER_PARAM,
+                    DEVICE_ID_PARAM,
+                    IDENTIFIER_PARAM,
+                    MARKETING_VERSION_PARAM,
+                    PLATFORM_PARAM
+                )
+            ).thenReturn(success)
             cardSource.refresh.observeForever { }
 
             cardSource.build(testScope(), SITE_LOCAL_ID).observeForever {
@@ -627,7 +814,15 @@ class CardsSourceTest : BaseUnitTest() {
             }
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
+            verify(cardsStore).fetchCards(
+                siteModel,
+                DEFAULT_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
         }
 
     @Test
@@ -643,6 +838,14 @@ class CardsSourceTest : BaseUnitTest() {
             }
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, listOf(CardModel.Type.POSTS))
+            verify(cardsStore).fetchCards(
+                siteModel,
+                listOf(CardModel.Type.POSTS),
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
         }
 }
