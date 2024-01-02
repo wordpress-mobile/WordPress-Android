@@ -20,11 +20,18 @@ class CardsStore @Inject constructor(
     private val cardsDao: CardsDao,
     private val coroutineEngine: CoroutineEngine
 ) {
+    @Suppress("LongParameterList")
     suspend fun fetchCards(
         site: SiteModel,
-        cardTypes: List<CardModel.Type>
+        cardTypes: List<CardModel.Type>,
+        buildNumber: String,
+        deviceId: String,
+        identifier: String,
+        marketingVersion: String,
+        platform: String
     ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetchCards") {
-        val payload = restClient.fetchCards(site, cardTypes)
+        val payload =
+            restClient.fetchCards(site, cardTypes, buildNumber, deviceId, identifier, marketingVersion, platform)
         return@withDefaultContext storeCards(site, payload)
     }
 
