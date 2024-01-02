@@ -26,38 +26,24 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_VIEW_SITE_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.FEATURE_CARD
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFullPluginInstallOnboardingUseCase
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.cards.DashboardCardsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
-import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
-import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.sotw2023.WpSotw2023NudgeCardViewModelSlice
-import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
-import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
-import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
+import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.posts.BasicDialogViewModel
@@ -65,10 +51,8 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
-import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
-import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -88,7 +72,6 @@ class MySiteViewModel @Inject constructor(
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val siteItemsBuilder: SiteItemsBuilder,
     private val accountStore: AccountStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteIconUploadHandler: SiteIconUploadHandler,
@@ -102,23 +85,18 @@ class MySiteViewModel @Inject constructor(
     private val cardsTracker: CardsTracker,
     private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val quickStartTracker: QuickStartTracker,
     private val dispatcher: Dispatcher,
     private val jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker,
     private val jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil,
-    private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
     private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker,
-    private val dashboardCardPlansUtils: PlansCardUtils,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
-    private val siteItemsViewModelSlice: SiteItemsViewModelSlice,
-    private val mySiteInfoItemBuilder: MySiteInfoItemBuilder,
     private val siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice,
-    private val sotw2023NudgeCardViewModelSlice: WpSotw2023NudgeCardViewModelSlice,
-    private val dashboardCardsViewModelSlice: DashboardCardsViewModelSlice
+    private val dashboardCardsViewModelSlice: DashboardCardsViewModelSlice,
+    private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -144,7 +122,7 @@ class MySiteViewModel @Inject constructor(
         _onSnackbarMessage,
         siteStoriesHandler.onSnackbar,
         quickStartRepository.onSnackbar,
-        siteItemsViewModelSlice.onSnackbarMessage,
+        dashboardItemsViewModelSlice.onSnackbarMessage,
         siteInfoHeaderCardViewModelSlice.onSnackbarMessage,
         dashboardCardsViewModelSlice.onSnackbarMessage
     )
@@ -157,10 +135,9 @@ class MySiteViewModel @Inject constructor(
     val onNavigation = merge(
         _onNavigation,
         siteStoriesHandler.onNavigation,
-        siteItemsViewModelSlice.onNavigation,
         siteInfoHeaderCardViewModelSlice.onNavigation,
-        sotw2023NudgeCardViewModelSlice.onNavigation,
-        dashboardCardsViewModelSlice.onNavigation
+        dashboardCardsViewModelSlice.onNavigation,
+        dashboardItemsViewModelSlice.onNavigation
     )
 
     val onMediaUpload = siteInfoHeaderCardViewModelSlice.onMediaUpload
@@ -175,7 +152,6 @@ class MySiteViewModel @Inject constructor(
 
     val refresh =
         merge(
-            sotw2023NudgeCardViewModelSlice.refresh,
             dashboardCardsViewModelSlice.refresh
         )
 
@@ -197,25 +173,25 @@ class MySiteViewModel @Inject constructor(
 
     val uiModel: LiveData<State> = merge(
         siteInfoHeaderCardViewModelSlice.uiModel,
-        dashboardCardsViewModelSlice.uiModel
+        dashboardCardsViewModelSlice.uiModel,
+        dashboardItemsViewModelSlice.uiModel
     ) { siteInfoHeaderCard,
-        dashboardCards ->
+        dashboardCards,
+        siteItems ->
         val nonNullSiteInfoHeaderCard = siteInfoHeaderCard ?: return@merge buildNoSiteState(null, null)
-        val state = dashboardCards?.let {
-            SiteSelected(
-                dashboardData = mutableListOf(nonNullSiteInfoHeaderCard) + dashboardCards
-            )
-        } ?: SiteSelected(
-            dashboardData = mutableListOf(nonNullSiteInfoHeaderCard)
-        )
-        return@merge state
+        return@merge if (!dashboardCards.isNullOrEmpty<MySiteCardAndItem>())
+            SiteSelected(dashboardData = listOf(nonNullSiteInfoHeaderCard) + dashboardCards)
+        else if (!siteItems.isNullOrEmpty<MySiteCardAndItem>())
+            SiteSelected(dashboardData = listOf(nonNullSiteInfoHeaderCard) + siteItems)
+        else
+            SiteSelected(dashboardData = listOf(nonNullSiteInfoHeaderCard))
     }
 
     init {
         dispatcher.register(this)
         siteInfoHeaderCardViewModelSlice.initialize(viewModelScope)
-        sotw2023NudgeCardViewModelSlice.initialize(viewModelScope)
         dashboardCardsViewModelSlice.initialize(viewModelScope)
+        dashboardItemsViewModelSlice.initialize(viewModelScope)
     }
 
     private fun getPositionOfQuickStartItem(
@@ -224,102 +200,8 @@ class MySiteViewModel @Inject constructor(
         return siteItems.indexOfFirst { it.activeQuickStartItem }
     }
 
-    private fun buildSiteItemsMenu(
-        site: SiteModel,
-        activeTask: QuickStartTask?,
-        backupAvailable: Boolean,
-        scanAvailable: Boolean,
-        cardsUpdate: CardsUpdate?
-    ): List<MySiteCardAndItem> {
-        val infoItem = mySiteInfoItemBuilder.build(
-            InfoItemBuilderParams(
-                isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
-            )
-        )
-        val jetpackFeatureCard = getJetpackFeatureCard()
-
-        val jetpackSwitchMenu = getJetpackSwitchMenu()
-
-        val jetpackBadge = buildJetpackBadgeIfEnabled()
-
-        val siteItems = getSiteItems(site, activeTask, backupAvailable, scanAvailable)
-
-        val sotw2023Card = sotw2023NudgeCardViewModelSlice.buildCard()
-
-        return mutableListOf<MySiteCardAndItem>().apply {
-            infoItem?.let { add(infoItem) }
-            sotw2023Card?.let { add(it) }
-            addAll(siteItems)
-            jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
-            if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
-                jetpackFeatureCard?.let { add(0, jetpackFeatureCard) }
-            else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
-            jetpackBadge?.let { add(jetpackBadge) }
-        }.toList()
-    }
-
     private fun shouldShowDashboard(site: SiteModel): Boolean {
         return buildConfigWrapper.isJetpackApp && site.isUsingWpComRestApi
-    }
-
-    private fun getSiteItems(
-        site: SiteModel,
-        activeTask: QuickStartTask?,
-        backupAvailable: Boolean,
-        scanAvailable: Boolean
-    ): List<MySiteCardAndItem> {
-        if (shouldShowDashboard(site)) return emptyList()
-        return siteItemsBuilder.build(
-            siteItemsViewModelSlice.buildItems(
-                shouldEnableFocusPoints = false,
-                site = site,
-                activeTask = activeTask,
-                backupAvailable = backupAvailable,
-                scanAvailable = scanAvailable
-            )
-        )
-    }
-
-    private fun getJetpackSwitchMenu(): MySiteCardAndItem.Card.JetpackSwitchMenu? {
-        if (!jetpackFeatureCardHelper.shouldShowSwitchToJetpackMenuCard()) return null
-        return MySiteCardAndItem.Card.JetpackSwitchMenu(
-            onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
-            onRemindMeLaterItemClick = ListItemInteraction.create(this::onSwitchToJetpackMenuCardRemindMeLaterClick),
-            onHideMenuItemClick = ListItemInteraction.create(this::onSwitchToJetpackMenuCardHideMenuItemClick),
-            onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick)
-        )
-    }
-
-    private fun getJetpackFeatureCard(): JetpackFeatureCard? {
-        if (!jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()) return null
-        return JetpackFeatureCard(
-            content = jetpackFeatureCardHelper.getCardContent(),
-            onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
-            onHideMenuItemClick = ListItemInteraction.create(this::onJetpackFeatureCardHideMenuItemClick),
-            onLearnMoreClick = ListItemInteraction.create(this::onJetpackFeatureCardLearnMoreClick),
-            onRemindMeLaterItemClick = ListItemInteraction.create(this::onJetpackFeatureCardRemindMeLaterClick),
-            onMoreMenuClick = ListItemInteraction.create(this::onJetpackFeatureCardMoreMenuClick),
-            learnMoreUrl = jetpackFeatureCardHelper.getLearnMoreUrl()
-        )
-    }
-
-    private fun buildJetpackBadgeIfEnabled(): JetpackBadge? {
-        val screen = JetpackPoweredScreen.WithStaticText.HOME
-        return JetpackBadge(
-            text = jetpackBrandingUtils.getBrandingTextForScreen(screen),
-            onClick = if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                ListItemInteraction.create(screen, this::onJetpackBadgeClick)
-            } else {
-                null
-            }
-        ).takeIf {
-            jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard()
-        }
-    }
-
-    private fun onJetpackBadgeClick(screen: JetpackPoweredScreen) {
-        jetpackBrandingUtils.trackBadgeTapped(screen)
-        _onNavigation.value = Event(SiteNavigationAction.OpenJetpackPoweredBottomSheet)
     }
 
     private fun buildNoSiteState(accountUrl: String?, accountName: String?): NoSites {
@@ -564,42 +446,6 @@ class MySiteViewModel @Inject constructor(
 //        mySiteSourceManager.refresh()
     }
 
-
-    private fun onJetpackFeatureCardClick() {
-        jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_TAPPED)
-        _onNavigation.value = Event(SiteNavigationAction.OpenJetpackFeatureOverlay(source = FEATURE_CARD))
-    }
-
-    private fun onJetpackFeatureCardHideMenuItemClick() {
-        jetpackFeatureCardHelper.hideJetpackFeatureCard()
-        refresh()
-    }
-
-    private fun onJetpackFeatureCardLearnMoreClick() {
-        jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_LINK_TAPPED)
-        _onNavigation.value = Event(SiteNavigationAction.OpenJetpackFeatureOverlay(source = FEATURE_CARD))
-    }
-
-    private fun onJetpackFeatureCardRemindMeLaterClick() {
-        jetpackFeatureCardHelper.setJetpackFeatureCardLastShownTimeStamp(System.currentTimeMillis())
-        refresh()
-    }
-
-    private fun onSwitchToJetpackMenuCardRemindMeLaterClick() {
-        jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_REMIND_LATER_TAPPED)
-        appPrefsWrapper.setSwitchToJetpackMenuCardLastShownTimestamp(System.currentTimeMillis())
-        refresh()
-    }
-
-    private fun onSwitchToJetpackMenuCardHideMenuItemClick() {
-        jetpackFeatureCardHelper.hideSwitchToJetpackMenuCard()
-        refresh()
-    }
-
-    private fun onJetpackFeatureCardMoreMenuClick() {
-        jetpackFeatureCardHelper.track(Stat.REMOVE_FEATURE_CARD_MENU_ACCESSED)
-    }
-
     fun onActionableEmptyViewVisible() {
         analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
         checkJetpackIndividualPluginOverlayShouldShow()
@@ -623,27 +469,27 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun trackCardsAndItemsShownIfNeeded(siteSelected: SiteSelected) {
-        siteSelected.dashboardData.filterIsInstance<DomainRegistrationCard>()
-            .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
-        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card>()
-            .let { cardsTracker.trackShown(it) }
-        siteSelected.dashboardData.filterIsInstance<QuickStartCard>()
-            .firstOrNull()?.let { quickStartTracker.trackShown(it.type) }
-        siteSelected.dashboardData.filterIsInstance<QuickStartCard>()
-            .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
-        siteSelected.dashboardData.filterIsInstance<JetpackFeatureCard>()
-            .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
-        siteSelected.dashboardData.filterIsInstance<JetpackInstallFullPluginCard>()
-            .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type) }
-        dashboardCardPlansUtils.trackCardShown(viewModelScope, siteSelected)
-//        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>()
-//            .forEach { personalizeCardViewModelSlice.trackShown(it.type) }
-//        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>()
-//            .forEach { noCardsMessageViewModelSlice.trackShown(it.type) }
-        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.WpSotw2023NudgeCardModel>()
-            .forEach { _ -> sotw2023NudgeCardViewModelSlice.trackShown() }
-//        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.Dynamic>()
-//            .forEach { dynamicCardsViewModelSlice.trackShown(it.id) }
+//        siteSelected.dashboardData.filterIsInstance<DomainRegistrationCard>()
+//            .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
+//        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card>()
+//            .let { cardsTracker.trackShown(it) }
+//        siteSelected.dashboardData.filterIsInstance<QuickStartCard>()
+//            .firstOrNull()?.let { quickStartTracker.trackShown(it.type) }
+//        siteSelected.dashboardData.filterIsInstance<QuickStartCard>()
+//            .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
+//        siteSelected.dashboardData.filterIsInstance<JetpackFeatureCard>()
+//            .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
+//        siteSelected.dashboardData.filterIsInstance<JetpackInstallFullPluginCard>()
+//            .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type) }
+//        dashboardCardPlansUtils.trackCardShown(viewModelScope, siteSelected)
+////        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>()
+////            .forEach { personalizeCardViewModelSlice.trackShown(it.type) }
+////        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>()
+////            .forEach { noCardsMessageViewModelSlice.trackShown(it.type) }
+////        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.WpSotw2023NudgeCardModel>()
+////            .forEach { _ -> sotw2023NudgeCardViewModelSlice.trackShown() }
+////        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.Dynamic>()
+////            .forEach { dynamicCardsViewModelSlice.trackShown(it.id) }
     }
 
     private fun resetShownTrackers() {
@@ -654,7 +500,7 @@ class MySiteViewModel @Inject constructor(
         jetpackInstallFullPluginShownTracker.resetShown()
         dashboardCardsViewModelSlice.resetShownTracker()
 //        personalizeCardViewModelSlice.resetShown()
-        sotw2023NudgeCardViewModelSlice.resetShown()
+//        sotw2023NudgeCardViewModelSlice.resetShown()
 //        dynamicCardsViewModelSlice.resetShown()
     }
 
