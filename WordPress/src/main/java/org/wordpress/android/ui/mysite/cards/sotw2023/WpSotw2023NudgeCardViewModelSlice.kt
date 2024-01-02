@@ -27,8 +27,8 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
 
-    private val _uiModel = MutableLiveData<WpSotw2023NudgeCardModel>()
-    val uiModel = _uiModel as LiveData<WpSotw2023NudgeCardModel>
+    private val _uiModel = MutableLiveData<WpSotw2023NudgeCardModel?>()
+    val uiModel = _uiModel as LiveData<WpSotw2023NudgeCardModel?>
 
     private lateinit var scope: CoroutineScope
 
