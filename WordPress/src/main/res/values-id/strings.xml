@@ -14,7 +14,6 @@ Language: id
     <string name="bloganuary_dashboard_nudge_overlay_text_two">Poskan tanggapan Anda.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Dapatkan prompt baru untuk menginspirasi Anda setiap hari.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Ikuti tantangan menulis sebulan penuh dari kami</string>
-    <string name="bloganuary_dashboard_nudge_text">Selama bulan Januari, prompt blogging akan datang dari Bloganuary—tantangan kami untuk komunitas guna membentuk kebiasaan blogging di tahun yang baru.</string>
     <string name="bloganuary_dashboard_nudge_title">Bloganuary segera hadir!</string>
     <string name="turn_off">Tidak, matikan</string>
     <string name="leave_on">Ya, biarkan</string>

@@ -15,7 +15,6 @@ Language: nl
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Krijg elke dag een nieuwe melding als bron van inspiratie.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Doe mee aan onze schrijfchallenge van een maand.</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Van BIoganuary</string>
-    <string name="bloganuary_dashboard_nudge_text">Alle blogmeldingen komen in de maand januari van Bloganuary: onze community-challenge om in het nieuwe jaar betere bloggewoonten op te bouwen.</string>
     <string name="turn_off">Nee, uitschakelen</string>
     <string name="leave_on">Ja, ingeschakeld laten</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Hierom raden we aan de content platter te maken door het blok niet te groeperen of het blok te bewerken in je webbrowser.</string>

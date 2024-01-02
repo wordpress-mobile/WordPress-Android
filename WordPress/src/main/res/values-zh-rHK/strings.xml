@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-13 17:03:14+0000
+Translation-Revision-Date: 2023-12-21 08:24:25+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: zh_TW
@@ -14,7 +14,7 @@ Language: zh_TW
     <string name="bloganuary_dashboard_nudge_overlay_text_two">張貼回覆。</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">每天接收新提示，激發靈感。</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">參加為期一個月的寫作挑戰</string>
-    <string name="bloganuary_dashboard_nudge_text">Bloganuary 會在 1 月送上網誌提示。這個社群挑戰的目的，是為了協助你在新的一年養成寫網誌的習慣。</string>
+    <string name="bloganuary_dashboard_nudge_text">Bloganuary 會在 1 月送上網誌提示：這個社群挑戰的目的，是為了協助你在新的一年養成寫網誌的習慣。</string>
     <string name="bloganuary_dashboard_nudge_title">Bloganuary 挑戰即將來臨！</string>
     <string name="turn_off">否，關閉</string>
     <string name="leave_on">是，保持開啟</string>
@@ -3139,7 +3139,7 @@ Language: zh_TW
     <string name="image_width">寬度</string>
     <string name="image_link_to">連結至</string>
     <string name="image_alt_text">替代文字</string>
-    <string name="image_caption">說明</string>
+    <string name="image_caption">媒體說明文字</string>
     <string name="image_settings_save_toast">變更已儲存</string>
     <string name="image_settings_dismiss_dialog_title">要捨棄未儲存的變更嗎？</string>
     <string name="stop_upload_dialog_title">停止上傳？</string>
@@ -3678,7 +3678,7 @@ Language: zh_TW
     <string name="theme_activate_button">啟用</string>
     <string name="media_edit_failure">更新失敗</string>
     <string name="media_edit_description_text">說明</string>
-    <string name="media_edit_caption_text">副標題</string>
+    <string name="media_edit_caption_text">媒體說明文字</string>
     <string name="media_edit_title_text">標題</string>
     <string name="media_gallery_type_slideshow">幻燈片</string>
     <string name="media_gallery_type_circles">圓形</string>

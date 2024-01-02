@@ -17,6 +17,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.utils.UiString
 
 sealed class MySiteCardAndItemBuilderParams {
     data class SiteInfoCardBuilderParams(
@@ -155,6 +156,8 @@ sealed class MySiteCardAndItemBuilderParams {
     ) : MySiteCardAndItemBuilderParams()
 
     data class BloganuaryNudgeCardBuilderParams(
+        val title: UiString,
+        val text: UiString,
         val isEligible: Boolean,
         val onLearnMoreClick: () -> Unit,
         val onMoreMenuClick: () -> Unit,
