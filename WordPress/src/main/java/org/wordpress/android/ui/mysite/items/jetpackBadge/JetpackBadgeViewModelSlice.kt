@@ -19,7 +19,7 @@ class JetpackBadgeViewModelSlice @Inject constructor(
     val uiModel = _uiModel
 
     private fun buildJetpackBadge(){
-        if(!jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard())
+        if(jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard().not())
             _uiModel.postValue(null)
         val screen = JetpackPoweredScreen.WithStaticText.HOME
         _uiModel.postValue(MySiteCardAndItem.JetpackBadge(
