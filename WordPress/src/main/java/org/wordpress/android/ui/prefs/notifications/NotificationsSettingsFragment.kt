@@ -24,7 +24,6 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.wordpress.rest.RestRequest
@@ -121,7 +120,7 @@ class NotificationsSettingsFragment : PreferenceFragment(), OnSharedPreferenceCh
 
     @JvmField
     @Inject
-    var mViewModelFactory: Factory? = null
+    var mViewModelFactory: ViewModelProvider.Factory? = null
 
     @JvmField
     @Inject
@@ -258,7 +257,7 @@ class NotificationsSettingsFragment : PreferenceFragment(), OnSharedPreferenceCh
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.notifications_settings, menu)
         mSearchMenuItem = menu.findItem(R.id.menu_notifications_settings_search)
-        mSearchView = mSearchMenuItem.getActionView() as SearchView?
+        mSearchView = mSearchMenuItem?.getActionView() as SearchView?
         mSearchView!!.queryHint = getString(R.string.search_sites)
         mBlogsCategory = findPreference(
             getString(R.string.pref_notification_blogs)
@@ -282,7 +281,7 @@ class NotificationsSettingsFragment : PreferenceFragment(), OnSharedPreferenceCh
                 return true
             }
         })
-        mSearchMenuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+        mSearchMenuItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 mSearchMenuItemCollapsed = false
                 configureBlogsSettings(mBlogsCategory, true)
@@ -301,7 +300,7 @@ class NotificationsSettingsFragment : PreferenceFragment(), OnSharedPreferenceCh
 
         // Check for a restored search query (if device was rotated, etc)
         if (!TextUtils.isEmpty(mRestoredQuery)) {
-            mSearchMenuItem.expandActionView()
+            mSearchMenuItem?.expandActionView()
             mSearchView!!.setQuery(mRestoredQuery, true)
         }
     }
@@ -1044,7 +1043,7 @@ class NotificationsSettingsFragment : PreferenceFragment(), OnSharedPreferenceCh
         }
     private val mBloggingRemindersProvider: BloggingRemindersProvider =
         object : BloggingRemindersProvider {
-            override fun getSummary(blogId: Long): String {
+            override fun getSummary(blogId: Long): String? {
                 val uiString = mBloggingRemindersSummariesBySiteId[blogId]
                 return if (uiString != null) mUiHelpers!!.getTextOfUiString(context, uiString)
                     .toString() else null
@@ -1061,7 +1060,7 @@ class NotificationsSettingsFragment : PreferenceFragment(), OnSharedPreferenceCh
         }
         val appCompatActivity = appCompatActivity
         if (appCompatActivity != null) {
-            mBloggingRemindersViewModel = ViewModelProvider(appCompatActivity, mViewModelFactory)
+            mBloggingRemindersViewModel = ViewModelProvider(appCompatActivity, mViewModelFactory!!)
                 .get(BloggingRemindersViewModel::class.java)
             observeBottomSheet(
                 mBloggingRemindersViewModel!!.isBottomSheetShowing,
@@ -1069,11 +1068,9 @@ class NotificationsSettingsFragment : PreferenceFragment(), OnSharedPreferenceCh
                 NotificationsSettingsFragment.Companion.BLOGGING_REMINDERS_BOTTOM_SHEET_TAG
             ) { appCompatActivity.supportFragmentManager }
             mBloggingRemindersViewModel!!.notificationsSettingsUiState
-                .observe(
-                    appCompatActivity,
-                    Observer<Map<Long?, UiString?>> { m: Map<out K?, V?>? ->
-                        mBloggingRemindersSummariesBySiteId.putAll(m)
-                    })
+                .observe(appCompatActivity) { map ->
+                    mBloggingRemindersSummariesBySiteId.putAll(map)
+                }
         }
     }
 
