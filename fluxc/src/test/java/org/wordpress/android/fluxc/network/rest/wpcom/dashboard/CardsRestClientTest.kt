@@ -130,7 +130,6 @@ private val DYNAMIC_CARD_ROW_RESPONSE = DynamicCardRowResponse(
 private val DYNAMIC_CARD_RESPONSE = DynamicCardResponse(
     id = "year_in_review_2023",
     title = "News",
-    remoteFeatureFlag = "dynamic_dashboard_cards",
     featuredImage = "https://path/to/image",
     url = "https://wordpress.com",
     action = "Call to action",
