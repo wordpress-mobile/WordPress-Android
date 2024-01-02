@@ -124,9 +124,9 @@ class WPMainNavigationView @JvmOverloads constructor(
                 customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
             }
 
-//            if (i == getPosition(ME)) {
-//                loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
-//            }
+            if (i == getPosition(ME)) {
+                loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
+            }
             itemView.addView(customView)
         }
 
