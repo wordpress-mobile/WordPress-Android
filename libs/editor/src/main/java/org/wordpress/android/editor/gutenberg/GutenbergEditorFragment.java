@@ -1513,9 +1513,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         getGutenbergContainerFragment().mediaFileSaveProgress(localId, progress);
     }
 
-    @Override public void onMediaSaveFailed(String localId) {
+    @Override public void onMediaSaveFailed(String localId, float progress) {
         getGutenbergContainerFragment().mediaFileSaveFailed(localId);
         mFailedMediaIds.add(localId);
+        mUploadingMediaProgressMax.remove(localId);
+    }
+
+    @Override public void onMediaUploadPaused(String localId, float progress) {
+        getGutenbergContainerFragment().mediaFileSaveFailed(localId);
+
         mUploadingMediaProgressMax.remove(localId);
     }
 

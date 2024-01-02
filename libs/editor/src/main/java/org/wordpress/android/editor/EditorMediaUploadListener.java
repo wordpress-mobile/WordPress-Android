@@ -7,6 +7,7 @@ public interface EditorMediaUploadListener {
     void onMediaUploadReattached(String localId, float currentProgress);
     void onMediaUploadSucceeded(String localId, MediaFile mediaFile);
     void onMediaUploadProgress(String localId, float progress);
-    void onMediaUploadFailed(String localId);
+    void onMediaUploadFailed(String localId, float progress);
+    void onMediaUploadPaused(String localId, float progress);
     void onGalleryMediaUploadSucceeded(long galleryId, long remoteId, int remaining);
 }
