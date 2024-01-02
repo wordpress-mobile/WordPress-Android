@@ -1801,7 +1801,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mActionableEmptyView.subtitle
                 .setContentDescription(getString(R.string.reader_empty_saved_posts_content_description));
         mActionableEmptyView.subtitle.setVisibility(View.VISIBLE);
-        mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_followed);
+        mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_subscriptions);
         mActionableEmptyView.button.setVisibility(View.VISIBLE);
         mActionableEmptyView.button.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
@@ -1866,7 +1866,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_discover);
                     break;
                 case FOLLOWED:
-                    mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_followed);
+                    mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_subscriptions);
                     break;
             }
 
@@ -2353,10 +2353,23 @@ public class ReaderPostListFragment extends ViewPagerFragment
             @Override
             public void run() {
                 if (ReaderTagTable.shouldAutoUpdateTag(getCurrentTag()) && isAdded()) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateCurrentTag();
+                    requireActivity().runOnUiThread(() -> updateCurrentTag());
+                } else {
+                    requireActivity().runOnUiThread(() -> {
+                        if ((isBookmarksList()) && isPostAdapterEmpty() && isAdded()) {
+                            setEmptyTitleAndDescriptionForBookmarksList();
+                            mActionableEmptyView.image.setImageResource(
+                                    R.drawable.img_illustration_empty_results_216dp);
+                            showEmptyView();
+                        } else if (getCurrentTag().isListTopic() && isPostAdapterEmpty() && isAdded()) {
+                            mActionableEmptyView.image.setImageResource(
+                                    R.drawable.img_illustration_empty_results_216dp);
+                            mActionableEmptyView.title.setText(getString(R.string.reader_empty_posts_in_custom_list));
+                            mActionableEmptyView.button.setVisibility(View.GONE);
+                            mActionableEmptyView.subtitle.setVisibility(View.GONE);
+                            showEmptyView();
+                        } else {
+                            hideEmptyView();
                         }
                     });
                 }

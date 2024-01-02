@@ -33,6 +33,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
+import org.wordpress.android.ui.reader.utils.ReaderTopBarMenuHelper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.MenuItemUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
@@ -64,7 +65,8 @@ class ReaderViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val snackbarSequencer: SnackbarSequencer,
-    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
+    private val readerTopBarMenuHelper: ReaderTopBarMenuHelper,
     // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
@@ -80,9 +82,6 @@ class ReaderViewModel @Inject constructor(
 
     private val _updateTags = MutableLiveData<Event<Unit>>()
     val updateTags: LiveData<Event<Unit>> = _updateTags
-
-    private val _selectTab = MutableLiveData<Event<TabNavigation>>()
-    val selectTab: LiveData<Event<TabNavigation>> = _selectTab
 
     private val _showSearch = MutableLiveData<Event<Unit>>()
     val showSearch: LiveData<Event<Unit>> = _showSearch
@@ -105,6 +104,8 @@ class ReaderViewModel @Inject constructor(
     private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
     val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
 
+    private var readerTagsList = ReaderTagList()
+
     init {
         EventBus.getDefault().register(this)
     }
@@ -125,10 +126,11 @@ class ReaderViewModel @Inject constructor(
             val currentContentUiState = _uiState.value as? ContentUiState
             val tagList = loadReaderTabsUseCase.loadTabs()
             if (tagList.isNotEmpty()) {
+                updateReaderTagsList(tagList)
+                initializeTopBarUiState()
                 _uiState.value = ContentUiState(
-                    tagList.map { TabUiState(label = UiStringText(it.label)) },
-                    tagList,
-                    shouldUpdateViewPager = currentContentUiState?.readerTagList?.equals(tagList) == false,
+                    tabUiStates = tagList.map { TabUiState(label = UiStringText(it.label)) },
+                    selectedReaderTag = selectedReaderTag(),
                     searchMenuItemUiState = MenuItemUiState(isVisible = isSearchSupported()),
                     settingsMenuItemUiState = MenuItemUiState(
                         isVisible = isSettingsSupported(),
@@ -138,28 +140,27 @@ class ReaderViewModel @Inject constructor(
                 )
                 if (!initialized) {
                     initialized = true
-                    initializeTabSelection(tagList)
-                    initializeTopBarUiState()
                 }
             }
         }
     }
 
-    private suspend fun initializeTabSelection(tagList: ReaderTagList) {
-        withContext(bgDispatcher) {
-            val selectTab = { readerTag: ReaderTag ->
-                val index = tagList.indexOf(readerTag)
-                if (index != -1) {
-                    _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
-                }
-            }
-            appPrefsWrapper.getReaderTag()?.let {
-                selectTab.invoke(it)
-            } ?: tagList.find { it.isDefaultSelectedTab() }?.let {
-                selectTab.invoke(it)
-            }
-        }
-    }
+// TODO verify side effects of removing this logic
+//    private suspend fun initializeTabSelection(tagList: ReaderTagList) {
+//        withContext(bgDispatcher) {
+//            val selectTab = { readerTag: ReaderTag ->
+//                val index = tagList.indexOf(readerTag)
+//                if (index != -1) {
+//                    updateSelectedContent(readerTag)
+//                }
+//            }
+//            appPrefsWrapper.getReaderTag()?.let {
+//                selectTab.invoke(it)
+//            } ?: tagList.find { it.isDiscover }?.let {
+//                selectTab.invoke(it)
+//            }
+//        }
+//    }
 
     fun onTagChanged(selectedTag: ReaderTag?) {
         selectedTag?.let {
@@ -188,17 +189,32 @@ class ReaderViewModel @Inject constructor(
         return now - lastUpdated > UPDATE_TAGS_THRESHOLD
     }
 
-    fun selectedTabChange(tag: ReaderTag) {
-        uiState.value?.let {
-            val currentUiState = it as ContentUiState
-            val position = currentUiState.readerTagList.indexOfTagName(tag.tagSlug)
-            _selectTab.postValue(Event(TabNavigation(position, smoothAnimation = true)))
+    fun updateSelectedContent(
+        selectedTag: ReaderTag,
+        // TODO replace with real logic
+        filterUiState: TopBarUiState.FilterUiState? = null
+    ) {
+        getMenuItemFromReaderTag(selectedTag)?.let { newSelectedMenuItem ->
+            // Update top bar UI state so menu is updated with new selected item
+            _topBarUiState.value?.let {
+                _topBarUiState.value = it.copy(
+                    selectedItem = newSelectedMenuItem,
+                    filterUiState = filterUiState,
+                )
+            }
+            // Updated post list content
+            val currentUiState = _uiState.value as? ContentUiState
+            currentUiState?.let {
+                _uiState.value = currentUiState.copy(
+                    selectedReaderTag = selectedReaderTag()
+                )
+            }
         }
     }
 
     fun bookmarkTabRequested() {
-        (_uiState.value as? ContentUiState)?.readerTagList?.find { it.isBookmarked }?.let {
-            selectedTabChange(it)
+        readerTagsList.find { it.isBookmarked }?.let {
+            updateSelectedContent(it)
         }
     }
 
@@ -220,8 +236,6 @@ class ReaderViewModel @Inject constructor(
             throw IllegalStateException("Settings should be hidden when isSettingsSupported returns false.")
         }
     }
-
-    private fun ReaderTag.isDefaultSelectedTab(): Boolean = this.isDiscover
 
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = MAIN)
@@ -288,8 +302,8 @@ class ReaderViewModel @Inject constructor(
     private fun autoSwitchToDiscoverTab() {
         launch {
             if (!initialized) delay(QUICK_START_DISCOVER_TAB_STEP_DELAY)
-            (_uiState.value as? ContentUiState)?.readerTagList?.find { it.isDiscover }?.let {
-                selectedTabChange(it)
+            readerTagsList.find { it.isDiscover }?.let {
+                updateSelectedContent(it)
             }
             startQuickStartFollowSiteTaskDiscoverTabStep()
         }
@@ -346,63 +360,50 @@ class ReaderViewModel @Inject constructor(
                     isVisible = isSettingsSupported(),
                     showQuickStartFocusPoint = showQuickStartFocusPoint
                 ),
-                shouldUpdateViewPager = false
             )
         }
     }
 
-    @Suppress("KotlinConstantConditions")
-    private fun initializeTopBarUiState() {
-        // TODO the actual logic to build the TopBar UI State needs to be created
-        //  The current logic is for initial implementation and UI review only.
-        val readerLists = mutableListOf<MenuElementData.Item>(
-            MenuElementData.Item.Single(
-                id = "my-custom-list",
-                text = UiStringText("My Custom List"),
-            ),
-        )
-
-        val menuItems = mutableListOf<MenuElementData>(
-            MenuElementData.Item.Single(
-                id = ITEM_ID_DISCOVER,
-                text = UiString.UiStringRes(R.string.reader_dropdown_menu_discover),
-                leadingIcon = R.drawable.ic_reader_discover_24dp,
-            ),
-            MenuElementData.Item.Single(
-                id = ITEM_ID_SUBSCRIPTIONS,
-                text = UiString.UiStringRes(R.string.reader_dropdown_menu_subscriptions),
-                leadingIcon = R.drawable.ic_reader_subscriptions_24dp,
-            ),
-            MenuElementData.Item.Single(
-                id = ITEM_ID_SAVED,
-                text = UiString.UiStringRes(R.string.reader_dropdown_menu_saved),
-                leadingIcon = R.drawable.ic_reader_saved_24dp,
-            ),
-            MenuElementData.Item.Single(
-                id = ITEM_ID_LIKED,
-                text = UiString.UiStringRes(R.string.reader_dropdown_menu_liked),
-                leadingIcon = R.drawable.ic_reader_liked_24dp,
-            ),
-        ).apply {
-            if (readerLists.isNotEmpty()) {
-                add(MenuElementData.Divider)
-                MenuElementData.Item.SubMenu(
-                    id = ITEM_ID_LISTS,
-                    text = UiString.UiStringRes(R.string.reader_dropdown_menu_lists),
-                    children = readerLists,
-                )
-            }
+    private fun selectedReaderTag(): ReaderTag? =
+        _topBarUiState.value?.let {
+            readerTagsList[readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(it.selectedItem)]
         }
 
-        val selectedItem = menuItems
-            .filterIsInstance<MenuElementData.Item.Single>()
-            .find { it.id == ITEM_ID_DISCOVER }!!
+    private suspend fun initializeTopBarUiState(/*tagList: ReaderTagList*/) {
+        withContext(bgDispatcher) {
+            val menuItems = readerTopBarMenuHelper.createMenu(readerTagsList)
+            _topBarUiState.postValue(
+                TopBarUiState(
+                    menuItems = menuItems,
+                    selectedItem = menuItems.first { it is MenuElementData.Item.Single } as MenuElementData.Item.Single,
+                    filterUiState = null,
+                )
+            )
+        }
+    }
 
-        _topBarUiState.value = TopBarUiState(
-            menuItems = menuItems,
-            selectedItem = selectedItem,
-            filterUiState = null,
-        )
+    private fun getMenuItemFromReaderTag(readerTag: ReaderTag): MenuElementData.Item.Single? =
+        _topBarUiState.value?.menuItems
+            // Selected menu item must be an Item.Single
+            ?.filterSingleItems()
+            // Find menu item based onn selected ReaderTag
+            ?.find { readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(it) == readerTagsList.indexOf(readerTag) }
+
+    private fun List<MenuElementData>.filterSingleItems(): List<MenuElementData.Item.Single> {
+        val singleItems = mutableListOf<MenuElementData.Item.Single>()
+        forEach {
+            if (it is MenuElementData.Item.Single) {
+                singleItems.add(it)
+            } else if (it is MenuElementData.Item.SubMenu) {
+                singleItems.addAll(it.children.filterIsInstance<MenuElementData.Item.Single>())
+            }
+        }
+        return singleItems
+    }
+
+    private fun updateReaderTagsList(readerTags: List<ReaderTag>) {
+        readerTagsList.clear()
+        readerTagsList.addAll(readerTags)
     }
 
     fun onTopBarMenuItemClick(item: MenuElementData.Item.Single) {
@@ -411,10 +412,15 @@ class ReaderViewModel @Inject constructor(
         val filterUiState = TopBarUiState.FilterUiState(
             followedBlogsCount = 23,
             followedTagsCount = 41,
-        ).takeIf { item.id == ITEM_ID_SUBSCRIPTIONS }
+        ).takeIf { item.id == "0" }
 
-        _topBarUiState.value = _topBarUiState.value
-            ?.copy(selectedItem = item, filterUiState = filterUiState)
+        // Avoid reloading a content stream that is already loaded
+        if (item.id != _topBarUiState.value?.selectedItem?.id) {
+            readerTagsList[readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(item)]
+                ?.let { selectedReaderTag ->
+                    updateSelectedContent(selectedReaderTag, filterUiState)
+                }
+        }
     }
 
     fun onTopBarFilterClick(type: ReaderFilterType) {
@@ -462,8 +468,7 @@ class ReaderViewModel @Inject constructor(
     ) {
         data class ContentUiState(
             val tabUiStates: List<TabUiState>,
-            val readerTagList: ReaderTagList,
-            val shouldUpdateViewPager: Boolean,
+            val selectedReaderTag: ReaderTag?,
             override val searchMenuItemUiState: MenuItemUiState,
             override val settingsMenuItemUiState: MenuItemUiState,
         ) : ReaderUiState(
@@ -493,12 +498,6 @@ class ReaderViewModel @Inject constructor(
     companion object {
         private const val QUICK_START_DISCOVER_TAB_STEP_DELAY = 2000L
         private const val QUICK_START_PROMPT_DURATION = 5000
-
-        private const val ITEM_ID_DISCOVER = "discover"
-        private const val ITEM_ID_SUBSCRIPTIONS = "subscriptions"
-        private const val ITEM_ID_SAVED = "saved"
-        private const val ITEM_ID_LIKED = "liked"
-        private const val ITEM_ID_LISTS = "lists"
     }
 }
 
