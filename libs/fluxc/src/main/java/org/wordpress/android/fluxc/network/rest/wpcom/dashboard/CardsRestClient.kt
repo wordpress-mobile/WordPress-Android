@@ -49,18 +49,9 @@ class CardsRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    @Suppress("LongParameterList")
-    suspend fun fetchCards(
-        site: SiteModel,
-        cardTypes: List<CardModel.Type>,
-        buildNumber: String,
-        deviceId: String,
-        identifier: String,
-        marketingVersion: String,
-        platform: String
-    ): CardsPayload<CardsResponse> {
-        val url = WPCOMV2.sites.site(site.siteId).dashboard.cards_data.url
-        val params = buildDashboardCardsParams(cardTypes, buildNumber, deviceId, identifier, marketingVersion, platform)
+    suspend fun fetchCards(payload: FetchCardsPayload): CardsPayload<CardsResponse> {
+        val url = WPCOMV2.sites.site(payload.site.siteId).dashboard.cards_data.url
+        val params = buildDashboardCardsParams(payload)
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
@@ -73,21 +64,23 @@ class CardsRestClient @Inject constructor(
         }
     }
 
-    @Suppress("LongParameterList")
-    private fun buildDashboardCardsParams(
-        cardTypes: List<CardModel.Type>,
-        buildNumber: String,
-        deviceId: String,
-        identifier: String,
-        marketingVersion: String,
-        platform: String
-    ) = mapOf(
-        CARDS to cardTypes.joinToString(",") { it.label },
-        "build_number" to buildNumber,
-        "device_id" to deviceId,
-        "identifier" to identifier,
-        "marketing_version" to marketingVersion,
-        "platform" to platform,
+    private fun buildDashboardCardsParams(payload: FetchCardsPayload) = mapOf(
+        CARDS to payload.cardTypes.joinToString(",") { it.label },
+        "build_number" to payload.buildNumber,
+        "device_id" to payload.deviceId,
+        "identifier" to payload.identifier,
+        "marketing_version" to payload.marketingVersion,
+        "platform" to payload.platform,
+    )
+
+    data class FetchCardsPayload(
+        val site: SiteModel,
+        val cardTypes: List<CardModel.Type>,
+        val buildNumber: String,
+        val deviceId: String,
+        val identifier: String,
+        val marketingVersion: String,
+        val platform: String
     )
 
     data class CardsResponse(

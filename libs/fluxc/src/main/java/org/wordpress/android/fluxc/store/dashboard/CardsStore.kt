@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.FetchCardsPayload
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.store.Store.OnChangedError
@@ -20,19 +21,11 @@ class CardsStore @Inject constructor(
     private val cardsDao: CardsDao,
     private val coroutineEngine: CoroutineEngine
 ) {
-    @Suppress("LongParameterList")
     suspend fun fetchCards(
-        site: SiteModel,
-        cardTypes: List<CardModel.Type>,
-        buildNumber: String,
-        deviceId: String,
-        identifier: String,
-        marketingVersion: String,
-        platform: String
+        fetchCardsPayload: FetchCardsPayload
     ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetchCards") {
-        val payload =
-            restClient.fetchCards(site, cardTypes, buildNumber, deviceId, identifier, marketingVersion, platform)
-        return@withDefaultContext storeCards(site, payload)
+        val payload = restClient.fetchCards(fetchCardsPayload)
+        return@withDefaultContext storeCards(fetchCardsPayload.site, payload)
     }
 
     private suspend fun storeCards(
