@@ -7,6 +7,7 @@
 * [**] [internal] Removes unused resources and code [https://github.com/wordpress-mobile/WordPress-Android/pull/19788]
 * [*] Block Editor: Add support for unselecting blocks with the hardware back button [https://github.com/wordpress-mobile/WordPress-Android/pull/19828]
 * [**] [internal] Removes unused code using android tool [https://github.com/wordpress-mobile/WordPress-Android/pull/19850]
+* [**] [internal] [Jetpack-only] Adds support for dynamic dashboard cards driven by the backend [https://github.com/wordpress-mobile/WordPress-Android/pull/19801]
 
 23.9
 -----
