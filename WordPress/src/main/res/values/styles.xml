@@ -1622,9 +1622,10 @@
         <item name="colorPrimary">?attr/colorOnSurface</item>
     </style>
 
-    <style name="DomainsPlanPurchaseCardSecondaryButton" parent="Widget.Material3.Button.TextButton">
+    <style name="DomainsPlanPurchaseCardSecondaryButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="cornerRadius">5dp</item>
+        <item name="textAllCaps">false</item>
     </style>
 
     <!-- Blogging prompts onboarding dialog styles -->
