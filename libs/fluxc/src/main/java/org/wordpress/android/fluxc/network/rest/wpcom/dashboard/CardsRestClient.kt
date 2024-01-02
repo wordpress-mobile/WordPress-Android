@@ -49,9 +49,18 @@ class CardsRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchCards(site: SiteModel, cardTypes: List<CardModel.Type>): CardsPayload<CardsResponse> {
+    @Suppress("LongParameterList")
+    suspend fun fetchCards(
+        site: SiteModel,
+        cardTypes: List<CardModel.Type>,
+        buildNumber: String,
+        deviceId: String,
+        identifier: String,
+        marketingVersion: String,
+        platform: String
+    ): CardsPayload<CardsResponse> {
         val url = WPCOMV2.sites.site(site.siteId).dashboard.cards_data.url
-        val params = buildDashboardCardsParams(cardTypes)
+        val params = buildDashboardCardsParams(cardTypes, buildNumber, deviceId, identifier, marketingVersion, platform)
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
@@ -64,8 +73,22 @@ class CardsRestClient @Inject constructor(
         }
     }
 
-    private fun buildDashboardCardsParams(cardTypes: List<CardModel.Type>) =
-            mapOf(CARDS to cardTypes.joinToString(",") { it.label })
+    @Suppress("LongParameterList")
+    private fun buildDashboardCardsParams(
+        cardTypes: List<CardModel.Type>,
+        buildNumber: String,
+        deviceId: String,
+        identifier: String,
+        marketingVersion: String,
+        platform: String
+    ) = mapOf(
+        CARDS to cardTypes.joinToString(",") { it.label },
+        "build_number" to buildNumber,
+        "device_id" to deviceId,
+        "identifier" to identifier,
+        "marketing_version" to marketingVersion,
+        "platform" to platform,
+    )
 
     data class CardsResponse(
         @SerializedName("todays_stats") val todaysStats: TodaysStatsResponse? = null,

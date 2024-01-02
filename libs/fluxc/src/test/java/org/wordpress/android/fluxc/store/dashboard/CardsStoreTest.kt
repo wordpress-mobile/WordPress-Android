@@ -105,6 +105,12 @@ const val ACTIVITY_ACTOR_ICON_URL = "dog.jpg"
 const val ACTIVITY_PUBLISHED_DATE = "2021-12-27 11:33:55"
 const val ACTIVITY_CONTENT = "content"
 
+private const val BUILD_NUMBER_PARAM = "build_number_param"
+private const val DEVICE_ID_PARAM = "device_id_param"
+private const val IDENTIFIER_PARAM = "identifier_param"
+private const val MARKETING_VERSION_PARAM = "marketing_version_param"
+private const val PLATFORM_PARAM = "platform_param"
+
 /* CARD TYPES */
 
 private val CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS,
@@ -398,9 +404,27 @@ class CardsStoreTest {
     @Test
     fun `given all card types, when fetch cards triggered, then all cards model is inserted into db`() = test {
         val payload = CardsPayload(CARDS_RESPONSE)
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                siteModel,
+                CARD_TYPES,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(payload)
 
-        cardsStore.fetchCards(siteModel, CARD_TYPES)
+        cardsStore.fetchCards(
+            siteModel,
+            CARD_TYPES,
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
 
         verify(dao).insertWithDate(siteModel.id, CARDS_MODEL)
     }
@@ -408,9 +432,27 @@ class CardsStoreTest {
     @Test
     fun `given todays stats type, when fetch cards triggered, then today's stats card model inserted into db`() = test {
         val payload = CardsPayload(CardsResponse(todaysStats = TODAYS_STATS_RESPONSE))
-        whenever(restClient.fetchCards(siteModel, listOf(CardModel.Type.TODAYS_STATS))).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                siteModel,
+                listOf(CardModel.Type.TODAYS_STATS),
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(payload)
 
-        cardsStore.fetchCards(siteModel, listOf(CardModel.Type.TODAYS_STATS))
+        cardsStore.fetchCards(
+            siteModel,
+            listOf(CardModel.Type.TODAYS_STATS),
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
 
         verify(dao).insertWithDate(siteModel.id, listOf(TODAYS_STATS_MODEL))
     }
@@ -418,9 +460,27 @@ class CardsStoreTest {
     @Test
     fun `given posts type, when fetch cards triggered, then post card model inserted into db`() = test {
         val payload = CardsPayload(CardsResponse(posts = POSTS_RESPONSE))
-        whenever(restClient.fetchCards(siteModel, listOf(CardModel.Type.POSTS))).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                siteModel,
+                listOf(CardModel.Type.POSTS),
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(payload)
 
-        cardsStore.fetchCards(siteModel, listOf(CardModel.Type.POSTS))
+        cardsStore.fetchCards(
+            siteModel,
+            listOf(CardModel.Type.POSTS),
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
 
         verify(dao).insertWithDate(siteModel.id, listOf(POSTS_MODEL))
     }
@@ -428,9 +488,27 @@ class CardsStoreTest {
     @Test
     fun `given pages type, when fetch cards triggered, then pages card model inserted into db`() = test {
         val payload = CardsPayload(CardsResponse(pages = PAGES_RESPONSE))
-        whenever(restClient.fetchCards(siteModel, listOf(CardModel.Type.PAGES))).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                siteModel,
+                listOf(CardModel.Type.PAGES),
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(payload)
 
-        cardsStore.fetchCards(siteModel, listOf(CardModel.Type.PAGES))
+        cardsStore.fetchCards(
+            siteModel,
+            listOf(CardModel.Type.PAGES),
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
 
         verify(dao).insertWithDate(siteModel.id, listOf(PAGES_MODEL))
     }
@@ -438,9 +516,27 @@ class CardsStoreTest {
     @Test
     fun `given dynamic cards type, when fetch cards triggered, then dynamic cards model inserted into db`() = test {
         val payload = CardsPayload(CardsResponse(dynamic = DYNAMIC_CARDS_RESPONSE))
-        whenever(restClient.fetchCards(siteModel, listOf(CardModel.Type.DYNAMIC))).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                siteModel,
+                listOf(CardModel.Type.DYNAMIC),
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(payload)
 
-        cardsStore.fetchCards(siteModel, listOf(CardModel.Type.DYNAMIC))
+        cardsStore.fetchCards(
+            siteModel,
+            listOf(CardModel.Type.DYNAMIC),
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
 
         verify(dao).insertWithDate(siteModel.id, listOf(DYNAMIC_CARDS_MODEL))
     }
@@ -448,9 +544,27 @@ class CardsStoreTest {
     @Test
     fun `given activity type, when fetch cards triggered, then activity card model inserted into db`() = test {
         val payload = CardsPayload(CardsResponse(activity = ACTIVITY_RESPONSE))
-        whenever(restClient.fetchCards(siteModel, listOf(CardModel.Type.ACTIVITY))).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                siteModel,
+                listOf(CardModel.Type.ACTIVITY),
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(payload)
 
-        cardsStore.fetchCards(siteModel, listOf(CardModel.Type.ACTIVITY))
+        cardsStore.fetchCards(
+            siteModel,
+            listOf(CardModel.Type.ACTIVITY),
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
 
         verify(dao).insertWithDate(siteModel.id, listOf(ACTIVITY_CARD_MODEL))
     }
@@ -458,9 +572,27 @@ class CardsStoreTest {
     @Test
     fun `given cards response, when fetch cards gets triggered, then empty cards model is returned`() = test {
         val payload = CardsPayload(CARDS_RESPONSE)
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                siteModel,
+                CARD_TYPES,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(payload)
 
-        val result = cardsStore.fetchCards(siteModel, CARD_TYPES)
+        val result = cardsStore.fetchCards(
+            siteModel,
+            CARD_TYPES,
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
 
         assertThat(result.model).isNull()
         assertThat(result.error).isNull()
@@ -469,10 +601,28 @@ class CardsStoreTest {
     @Test
     fun `given card response with exception, when fetch cards gets triggered, then cards error is returned`() = test {
         val payload = CardsPayload(CARDS_RESPONSE)
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                siteModel,
+                CARD_TYPES,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(payload)
         whenever(dao.insertWithDate(siteModel.id, CARDS_MODEL)).thenThrow(IllegalStateException("Error"))
 
-        val result = cardsStore.fetchCards(siteModel, CARD_TYPES)
+        val result = cardsStore.fetchCards(
+            siteModel,
+            CARD_TYPES,
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
 
         assertThat(result.model).isNull()
         assertEquals(CardsErrorType.GENERIC_ERROR, result.error.type)
@@ -483,9 +633,27 @@ class CardsStoreTest {
     fun `given cards error, when fetch cards gets triggered, then cards error is returned`() = test {
         val errorType = CardsErrorType.API_ERROR
         val payload = CardsPayload<CardsResponse>(CardsError(errorType))
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                siteModel,
+                CARD_TYPES,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(payload)
 
-        val result = cardsStore.fetchCards(siteModel, CARD_TYPES)
+        val result = cardsStore.fetchCards(
+            siteModel,
+            CARD_TYPES,
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
 
         assertThat(result.model).isNull()
         assertEquals(errorType, result.error.type)
@@ -496,9 +664,27 @@ class CardsStoreTest {
     fun `given authorization required, when fetch cards gets triggered, then db is cleared of cards model`() = test {
         val errorType = CardsErrorType.AUTHORIZATION_REQUIRED
         val payload = CardsPayload<CardsResponse>(CardsError(errorType))
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                siteModel,
+                CARD_TYPES,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(payload)
 
-        cardsStore.fetchCards(siteModel, CARD_TYPES)
+        cardsStore.fetchCards(
+            siteModel,
+            CARD_TYPES,
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
 
         verify(dao).clear()
     }
@@ -507,9 +693,27 @@ class CardsStoreTest {
     fun `given authorization required, when fetch cards gets triggered, then empty cards model is returned`() = test {
         val errorType = CardsErrorType.AUTHORIZATION_REQUIRED
         val payload = CardsPayload<CardsResponse>(CardsError(errorType))
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                siteModel,
+                CARD_TYPES,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(payload)
 
-        val result = cardsStore.fetchCards(siteModel, CARD_TYPES)
+        val result = cardsStore.fetchCards(
+            siteModel,
+            CARD_TYPES,
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
 
         assertThat(result.model).isNull()
         assertThat(result.error).isNull()
@@ -518,9 +722,27 @@ class CardsStoreTest {
     @Test
     fun `given empty cards payload, when fetch cards gets triggered, then cards error is returned`() = test {
         val payload = CardsPayload<CardsResponse>()
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                siteModel,
+                CARD_TYPES,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(payload)
 
-        val result = cardsStore.fetchCards(siteModel, CARD_TYPES)
+        val result = cardsStore.fetchCards(
+            siteModel,
+            CARD_TYPES,
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
 
         assertThat(result.model).isNull()
         assertEquals(CardsErrorType.INVALID_RESPONSE, result.error.type)
@@ -541,10 +763,28 @@ class CardsStoreTest {
     @Test
     fun `given todays stats card with error, when fetch cards triggered, then card with error inserted into db`() =
             test {
-                whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(CardsPayload(cardsRespone))
+                whenever(
+                    restClient.fetchCards(
+                        siteModel,
+                        CARD_TYPES,
+                        BUILD_NUMBER_PARAM,
+                        DEVICE_ID_PARAM,
+                        IDENTIFIER_PARAM,
+                        MARKETING_VERSION_PARAM,
+                        PLATFORM_PARAM
+                    )
+                ).thenReturn(CardsPayload(cardsRespone))
                 whenever(cardsRespone.toCards()).thenReturn(listOf(TODAYS_STATS_WITH_ERROR_MODEL))
 
-                cardsStore.fetchCards(siteModel, CARD_TYPES)
+                cardsStore.fetchCards(
+                    siteModel,
+                    CARD_TYPES,
+                    BUILD_NUMBER_PARAM,
+                    DEVICE_ID_PARAM,
+                    IDENTIFIER_PARAM,
+                    MARKETING_VERSION_PARAM,
+                    PLATFORM_PARAM
+                )
 
                 verify(dao).insertWithDate(siteModel.id, listOf(TODAYS_STATS_WITH_ERROR_MODEL))
             }
@@ -584,10 +824,28 @@ class CardsStoreTest {
     /* POSTS CARD WITH ERROR */
     @Test
     fun `given posts card with error, when fetch cards triggered, then card with error inserted into db`() = test {
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(CardsPayload(cardsRespone))
+        whenever(
+            restClient.fetchCards(
+                siteModel,
+                CARD_TYPES,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        ).thenReturn(CardsPayload(cardsRespone))
         whenever(cardsRespone.toCards()).thenReturn(listOf(POSTS_WITH_ERROR_MODEL))
 
-        cardsStore.fetchCards(siteModel, CARD_TYPES)
+        cardsStore.fetchCards(
+            siteModel,
+            CARD_TYPES,
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
 
         verify(dao).insertWithDate(siteModel.id, listOf(POSTS_WITH_ERROR_MODEL))
     }
