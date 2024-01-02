@@ -176,7 +176,6 @@ class CardsRestClient @Inject constructor(
     data class DynamicCardResponse(
         @SerializedName("id") val id: String,
         @SerializedName("title") val title: String?,
-        @SerializedName("remote_feature_flag") val remoteFeatureFlag: String?,
         @SerializedName("featured_image") val featuredImage: String?,
         @SerializedName("url") val url: String?,
         @SerializedName("action") val action: String?,
@@ -186,7 +185,6 @@ class CardsRestClient @Inject constructor(
         fun toDynamicCard() = DynamicCardModel(
             id = id,
             title = title,
-            remoteFeatureFlag = remoteFeatureFlag,
             featuredImage = featuredImage,
             url = url,
             action = action,
