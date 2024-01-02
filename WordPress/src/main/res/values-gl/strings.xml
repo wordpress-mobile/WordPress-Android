@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-04 10:46:37+0000
+Translation-Revision-Date: 2023-12-18 22:26:00+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: gl_ES
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Imos aló!</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Activa as suxestións de publicación</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary utilizará as suxerencias de publicación diarias para enviarche temas durante o mes de xaneiro.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Bloganuary usará as suxerencias diarias de publicación para enviarche temas para o mes de xaneiro. Actualmente tes desactivadas as suxerencias de publicación.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">Le as respostas doutros blogueiros para conseguir inspiración e facer novas conexións.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">Publica a tú resposta.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">Recibe unha suxerencia nova para inspirarte cada día.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">Únete ao noso reto de escritura dun mes</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
+    <string name="bloganuary_dashboard_nudge_text">Durante o mes de xaneiro, as suxerencias para escribir no blog provirán de Bloganuary, o noso reto comunitario para crear un hábito de blogueo para o novo ano.</string>
+    <string name="bloganuary_dashboard_nudge_title">Bloganuary está á volta da esquina!</string>
+    <string name="turn_off">Non, apágaa</string>
+    <string name="leave_on">Si, déixaa acendida</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Por esta razón, recomendámosche que edites o bloque utilizando o teu navegador web.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Por este motivo, recomendámosche que edites o bloque utilizando o editor web.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Tamén podes aplanar o contido desagrupando o bloque.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Ir aos axustes</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label">Cancelar</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Conceder</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Denegaches de forma permanente o permiso da cámara. É necesario para escanear o código de barras. Actívao nos axustes da aplicación</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message">Necesítase o permiso da cámara para escanear o código de barras</string>
+    <string name="barcode_scanning_alert_dialog_title">Conceder permiso á cámara</string>
+    <string name="barcode_scanning_camera_permission_denied">Necesítase o permiso da cámara para escanear o código de barras.</string>
+    <string name="barcode_scanning_title">Escanear o código de barras</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">É posible que os bloques aniñados a máis de %d niveis non se mostren correctamente no editor móbil.</string>
+    <string name="jp_migration_lets_go_button">Imos</string>
+    <string name="jp_migration_done_no_sites_message">É hora de continuar a túa xornada de WordPress na aplicación Jetpack.</string>
+    <string name="image_optimization_popup_desc">A optimización de imaxes redúceas para subilas máis rápido.\n\nEsta opción está activada por defecto, pero podes cambiala nos axustes da aplicación en calquera momento.</string>
+    <string name="image_optimization_popup_title">Seguir optimizando as imaxes?</string>
+    <string name="domain_management_clear_search">Baleirar a busca</string>
+    <string name="media_encoder_quality_very_high">Moi alta</string>
+    <string name="notification_security_key_needed">Introduce a túa clave de seguridade para continuar.</string>
+    <string name="login_error_security_key">Houbo algúns problemas coa clave de seguridade de inicio de sesión</string>
+    <string name="login_text_security_key">Usa unha clave de seguridade</string>
+    <string name="new_domain_search_screen_error_title">Non se puideron recuperar os dominios</string>
+    <string name="new_domain_search_screen_list_item_sale_price">%s durante o primeiro ano</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s / ano</string>
+    <string name="new_domain_search_screen_transfer_domain_button">Transferir dominio</string>
+    <string name="new_domain_search_screen_transfer_domain_description">Queres transferir un dominio que xa tes?</string>
+    <string name="new_domain_search_screen_input_placeholder">Teclea para obter máis suxerencias</string>
+    <string name="new_domain_search_screen_title">Buscar un dominio</string>
+    <string name="purchase_domain_screen_error_button_title">OK</string>
+    <string name="purchase_domain_screen_error_subtitle">Algo saíu mal ao engadir o dominio ao carriño. Asegúrate de que estás conectado e volve a intentalo.</string>
+    <string name="purchase_domain_screen_error_title">Erro</string>
+    <string name="domain_management_site_domains_button">Todos</string>
+    <string name="domain_management_error_title">Non se puideron recuperar os teus dominios</string>
+    <string name="site_domain_title">Dominio do sitio</string>
+    <string name="my_site_blogging_prompt_card_attribution_bloganuary">De &lt;b&gt;Bloganuary&lt;/b&gt;</string>
+    <string name="post_status_post_edited">Editado</string>
+    <string name="post_list_toggle_author_filter">Filtrar por autor</string>
     <string name="gutenberg_native_s_block_converted_to_blocks">Bloque \'%s\' convertido a bloques</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks">Alternativamente, podes converter o contido a bloques.</string>
     <string name="personalization_screen_shortcuts_add_or_remove_shortcut_button">Engadir ou eliminar atallos</string>

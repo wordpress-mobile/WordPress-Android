@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-12 11:54:08+0000
+Translation-Revision-Date: 2023-12-19 16:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: he_IL
@@ -14,8 +14,8 @@ Language: he_IL
     <string name="bloganuary_dashboard_nudge_overlay_text_two">מזמינים אותם לפרסם את תשובתך.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">כך תגיע אליך מדי יום הצעת כתיבה חדשה שתיתן לך השראה.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">אנו מזמינים אותך להצטרף לאתגר הכתיבה שלנו שיימשך חודש שלם</string>
-    <string name="bloganuary_dashboard_nudge_text">לאורך כל חודש ינואר, יתקבלו מ-Bloganuary הצעות כתיבה יומיות בבלוג. זהו האתגר הקהילתי שלנו לביסוס הרגלי פרסום בבלוג לשנה החדשה.</string>
-    <string name="bloganuary_dashboard_nudge_title_december">Bloganuary מתקרב!</string>
+    <string name="bloganuary_dashboard_nudge_text">לאורך כל חודש ינואר יתקבלו מ-Bloganuary הצעות כתיבה יומיות בבלוג. זהו האתגר הקהילתי שלנו לביסוס הרגלי פרסום בבלוג לשנה החדשה.</string>
+    <string name="bloganuary_dashboard_nudge_title">Bloganuary מתקרב!</string>
     <string name="turn_off">לא, נא לכבות</string>
     <string name="leave_on">כן, להמשיך</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">מסיבה זו מומלץ \'לשטח\' את התוכן על ידי ביטול הקבצת הבלוק או לערוך את הבלוק בעזרת דפדפן האינטרנט.</string>

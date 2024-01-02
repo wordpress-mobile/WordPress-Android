@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-12 09:54:08+0000
+Translation-Revision-Date: 2023-12-19 17:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: fr
@@ -15,8 +15,7 @@ Language: fr
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Recevez chaque jour une invite pour vous inspirer.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Participer à notre défi d’écriture d’un mois</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">De Bloganuary</string>
-    <string name="bloganuary_dashboard_nudge_text">Pendant le mois de janvier, vous recevrez des invites à bloguer de Bloganuary, notre défi commun pour ancrer l’habitude de bloguer à l’occasion de la nouvelle année.</string>
-    <string name="bloganuary_dashboard_nudge_title_december">C’est bientôt Bloganuary !</string>
+    <string name="bloganuary_dashboard_nudge_title">C’est bientôt Bloganuary !</string>
     <string name="turn_off">Non, désactiver</string>
     <string name="leave_on">Oui, laisser activé</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Pour cette raison, nous vous recommandons de modifier le bloc à l’aide de votre navigateur web.</string>
@@ -108,6 +107,7 @@ Language: fr
     <string name="personalization_screen_draft_posts_card_description">Vos brouillons d’articles récents.</string>
     <string name="personalization_screen_draft_posts_card_title">Brouillons d’articles</string>
     <string name="personalization_screen_stats_card_description">Vues, visiteurs et mentions J’aime</string>
+    <string name="personalization_screen_title"> Personnaliser l’onglet Accueil</string>
     <string name="personalize_card_content_description">Appuyer pour personnaliser l’onglet Accueil</string>
     <string name="personalize_card_text">Personnaliser l’onglet Accueil</string>
     <string name="partial_media_access_prompt_change_settings">Modifier les réglages</string>
