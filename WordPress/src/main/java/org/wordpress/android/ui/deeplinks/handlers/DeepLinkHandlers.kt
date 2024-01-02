@@ -16,7 +16,10 @@ class DeepLinkHandlers
     pagesLinkHandler: PagesLinkHandler,
     notificationsLinkHandler: NotificationsLinkHandler,
     qrCodeAuthLinkHandler: QRCodeAuthLinkHandler,
-    homeLinkHandler: HomeLinkHandler
+    homeLinkHandler: HomeLinkHandler,
+    mediaLinkHandler: MediaLinkHandler,
+    domainManagementLinkHandler: DomainManagementLinkHandler,
+    qrCodeMediaLinkHandler: QRCodeMediaLinkHandler,
 ) {
     private val handlers = listOf(
         editorLinkHandler,
@@ -26,7 +29,10 @@ class DeepLinkHandlers
         pagesLinkHandler,
         notificationsLinkHandler,
         qrCodeAuthLinkHandler,
-        homeLinkHandler
+        homeLinkHandler,
+        mediaLinkHandler,
+        domainManagementLinkHandler,
+        qrCodeMediaLinkHandler,
     )
 
     private val _toast by lazy {
@@ -46,6 +52,10 @@ class DeepLinkHandlers
 
     fun buildNavigateAction(uri: UriWrapper): NavigateAction? {
         return handlers.firstOrNull { it.shouldHandleUrl(uri) }?.buildNavigateAction(uri)
+    }
+
+    fun isDeepLink(url: String): Boolean {
+        return handlers.any { it.shouldHandleUrl(UriWrapper(url)) }
     }
 
     fun stripUrl(uri: UriWrapper): String? {

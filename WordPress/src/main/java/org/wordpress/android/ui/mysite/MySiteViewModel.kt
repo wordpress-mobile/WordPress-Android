@@ -20,6 +20,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
@@ -46,7 +47,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFull
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
@@ -65,11 +65,11 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloganuary.BloganuaryNudgeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsViewModelSlice
+import org.wordpress.android.ui.mysite.cards.dynamiccard.DynamicCardsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
@@ -156,8 +156,8 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
     private val blazeCardViewModelSlice: BlazeCardViewModelSlice,
-    private val domainTransferCardViewModel: DomainTransferCardViewModel,
     private val pagesCardViewModelSlice: PagesCardViewModelSlice,
+    private val dynamicCardsViewModelSlice: DynamicCardsViewModelSlice,
     private val todaysStatsViewModelSlice: TodaysStatsViewModelSlice,
     private val postsCardViewModelSlice: PostsCardViewModelSlice,
     private val activityLogCardViewModelSlice: ActivityLogCardViewModelSlice,
@@ -224,7 +224,6 @@ class MySiteViewModel @Inject constructor(
         siteStoriesHandler.onNavigation,
         blazeCardViewModelSlice.onNavigation,
         pagesCardViewModelSlice.onNavigation,
-        domainTransferCardViewModel.onNavigation,
         todaysStatsViewModelSlice.onNavigation,
         postsCardViewModelSlice.onNavigation,
         activityLogCardViewModelSlice.onNavigation,
@@ -235,6 +234,7 @@ class MySiteViewModel @Inject constructor(
         siteInfoHeaderCardViewModelSlice.onNavigation,
         quickLinksItemViewModelSlice.navigation,
         sotw2023NudgeCardViewModelSlice.onNavigation,
+        dynamicCardsViewModelSlice.onNavigation,
     )
 
     val onMediaUpload = siteInfoHeaderCardViewModelSlice.onMediaUpload
@@ -251,8 +251,8 @@ class MySiteViewModel @Inject constructor(
             activityLogCardViewModelSlice.refresh,
             bloganuaryNudgeCardViewModelSlice.refresh,
             sotw2023NudgeCardViewModelSlice.refresh,
+            dynamicCardsViewModelSlice.refresh,
         )
-    val domainTransferCardRefresh = domainTransferCardViewModel.refresh
 
     private var shouldMarkUpdateSiteTitleTaskComplete = false
 
@@ -305,8 +305,6 @@ class MySiteViewModel @Inject constructor(
             bloggingPromptCardViewModelSlice.onSiteChanged(site?.id, state as? SiteSelected)
 
             dashboardCardPlansUtils.onSiteChanged(site?.id, state as? SiteSelected)
-
-            domainTransferCardViewModel.onSiteChanged(site?.id, state as? SiteSelected)
 
             state
         }
@@ -372,8 +370,7 @@ class MySiteViewModel @Inject constructor(
         }
 
         return SiteSelected(
-            siteInfoHeader = siteInfo,
-            dashboardData = siteItems
+            dashboardData = listOf(siteInfo) + siteItems
         )
     }
 
@@ -492,10 +489,6 @@ class MySiteViewModel @Inject constructor(
                 bloggingPromptCardBuilderParams = bloggingPromptCardViewModelSlice.getBuilderParams(
                     bloggingPromptUpdate
                 ),
-                domainTransferCardBuilderParams = domainTransferCardViewModel.buildDomainTransferCardParams(
-                    site,
-                    uiModel.value as? SiteSelected
-                ),
                 blazeCardBuilderParams = blazeCardViewModelSlice.getBlazeCardBuilderParams(blazeCardUpdate),
                 dashboardCardPlansBuilderParams = DashboardCardPlansBuilderParams(
                     isEligible = dashboardCardPlansUtils.shouldShowCard(site),
@@ -509,6 +502,9 @@ class MySiteViewModel @Inject constructor(
                 activityCardBuilderParams = activityLogCardViewModelSlice.getActivityLogCardBuilderParams(
                     cardsUpdate?.cards?.firstOrNull { it is ActivityCardModel } as? ActivityCardModel
                 ),
+                dynamicCardsBuilderParams = dynamicCardsViewModelSlice.getBuilderParams(
+                    cardsUpdate?.cards?.firstOrNull { it is DynamicCardsModel } as? DynamicCardsModel
+                )
             ),
             jetpackInstallFullPluginCardParams
         )
@@ -998,6 +994,8 @@ class MySiteViewModel @Inject constructor(
             .forEach { noCardsMessageViewModelSlice.trackShown(it.type) }
         siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.WpSotw2023NudgeCardModel>()
             .forEach { _ -> sotw2023NudgeCardViewModelSlice.trackShown() }
+        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.Dynamic>()
+            .forEach { dynamicCardsViewModelSlice.trackShown(it.id) }
     }
 
     private fun resetShownTrackers() {
@@ -1008,6 +1006,7 @@ class MySiteViewModel @Inject constructor(
         jetpackInstallFullPluginShownTracker.resetShown()
         personalizeCardViewModelSlice.resetShown()
         sotw2023NudgeCardViewModelSlice.resetShown()
+        dynamicCardsViewModelSlice.resetShown()
     }
 
     // FluxC events
@@ -1024,7 +1023,6 @@ class MySiteViewModel @Inject constructor(
 
     sealed class State {
         data class SiteSelected(
-            val siteInfoHeader: SiteInfoHeaderCard,
             val dashboardData: List<MySiteCardAndItem>,
         ) : State()
 

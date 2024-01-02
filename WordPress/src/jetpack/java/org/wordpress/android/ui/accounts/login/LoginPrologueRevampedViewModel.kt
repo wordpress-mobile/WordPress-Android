@@ -10,6 +10,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.LOGIN_PROLOGUE_VIEWED
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import kotlin.math.PI
 
@@ -33,6 +39,8 @@ private const val DEFAULT_PITCH = (-30 * PI / 180).toFloat()
 
 @HiltViewModel
 class LoginPrologueRevampedViewModel @Inject constructor(
+    private val unifiedLoginTracker: UnifiedLoginTracker,
+    analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @ApplicationContext appContext: Context,
 ) : ViewModel() {
     private val accelerometerData = FloatArray(3)
@@ -40,6 +48,11 @@ class LoginPrologueRevampedViewModel @Inject constructor(
     private val rotationMatrix = FloatArray(9)
     private val orientationAngles = floatArrayOf(0f, DEFAULT_PITCH, 0f)
     private var position = 0f
+
+    init {
+        analyticsTrackerWrapper.track(stat = LOGIN_PROLOGUE_VIEWED)
+        unifiedLoginTracker.track(flow = Flow.PROLOGUE, step = Step.PROLOGUE)
+    }
 
     /**
      * This function updates the physics model for the interactive animation by applying the elapsed time (in seconds)
@@ -60,6 +73,14 @@ class LoginPrologueRevampedViewModel @Inject constructor(
 
             _positionData.postValue(position)
         }
+    }
+
+    fun onWpComLoginClicked() {
+        unifiedLoginTracker.trackClick(Click.CONTINUE_WITH_WORDPRESS_COM)
+    }
+
+    fun onSiteAddressLoginClicked() {
+        unifiedLoginTracker.trackClick(Click.LOGIN_WITH_SITE_ADDRESS)
     }
 
     /**

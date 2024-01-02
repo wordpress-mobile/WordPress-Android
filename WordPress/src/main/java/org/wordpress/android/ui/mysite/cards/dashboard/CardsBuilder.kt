@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.CardOrder
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardBuilder
@@ -9,8 +10,8 @@ import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingP
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder
-import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardBuilder
+import org.wordpress.android.ui.mysite.cards.dynamiccard.DynamicCardsBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import javax.inject.Inject
 
@@ -19,11 +20,11 @@ class CardsBuilder @Inject constructor(
     private val postCardBuilder: PostCardBuilder,
     private val bloganuaryNudgeCardBuilder: BloganuaryNudgeCardBuilder,
     private val bloggingPromptCardBuilder: BloggingPromptCardBuilder,
-    private val domainTransferCardBuilder: DomainTransferCardBuilder,
     private val blazeCardBuilder: BlazeCardBuilder,
     private val plansCardBuilder: PlansCardBuilder,
     private val pagesCardBuilder: PagesCardBuilder,
-    private val activityCardBuilder: ActivityCardBuilder
+    private val activityCardBuilder: ActivityCardBuilder,
+    private val dynamicCardsBuilder: DynamicCardsBuilder,
 ) {
     fun build(
         dashboardCardsBuilderParams: DashboardCardsBuilderParams
@@ -31,6 +32,9 @@ class CardsBuilder @Inject constructor(
         if (dashboardCardsBuilderParams.showErrorCard) {
             add(createErrorCard(dashboardCardsBuilderParams.onErrorRetryClick))
         } else {
+            dynamicCardsBuilder.build(dashboardCardsBuilderParams.dynamicCardsBuilderParams, CardOrder.TOP)
+                ?.let { addAll(it) }
+
             bloganuaryNudgeCardBuilder.build(dashboardCardsBuilderParams.bloganuaryNudgeCardBuilderParams)
                 ?.let { add(it) }
 
@@ -54,9 +58,8 @@ class CardsBuilder @Inject constructor(
 
             activityCardBuilder.build(dashboardCardsBuilderParams.activityCardBuilderParams)?.let { add(it) }
 
-            domainTransferCardBuilder
-                .build(dashboardCardsBuilderParams.domainTransferCardBuilderParams)
-                ?.let { add(it) }
+            dynamicCardsBuilder.build(dashboardCardsBuilderParams.dynamicCardsBuilderParams, CardOrder.BOTTOM)
+                ?.let { addAll(it) }
         }
     }.toList()
 

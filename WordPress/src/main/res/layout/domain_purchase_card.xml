@@ -5,7 +5,8 @@
     android:id="@+id/purchase_domain_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_medium"
+    android:layout_margin="@dimen/margin_extra_large"
+    app:cardCornerRadius="@dimen/margin_medium_large"
     app:cardElevation="0dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
@@ -16,19 +17,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/search_domains_button"
-            style="@style/WordPress.Button.Primary.Unelevated"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_extra_large"
-            android:text="@string/domains_search_for_a_domain_button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/purchase_domain_caption" />
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_extra_large">
 
         <ImageView
             android:id="@+id/purchase_domain_image"
@@ -39,35 +29,38 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/img_illustration_domains_card_header" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/purchase_domain_caption"
-            style="?attr/textAppearanceBody2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:text="@string/domains_free_plan_get_your_domain_caption"
-            android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/purchase_domain_title" />
+            tools:src="@drawable/browser_address_bar" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/purchase_domain_title"
-            style="@style/DomainsPurchaseCardTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_extra_large"
+            style="@style/DomainsPlanPurchaseCardTitle"
+            android:layout_marginTop="@dimen/domain_plan_card_title_top_margin"
             android:text="@string/domains_free_plan_get_your_domain_title"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/purchase_domain_image" />
+            app:layout_constraintTop_toTopOf="@id/purchase_domain_image" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/purchase_domain_caption"
+            style="@style/DomainsPlanPurchaseCardSubTitle"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/domains_free_plan_get_your_domain_caption"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/purchase_domain_title" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/search_domains_button"
+            style="@style/DomainsPlanPurchaseCardPrimaryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_extra_large"
+            android:text="@string/domains_search_for_a_domain_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/purchase_domain_caption" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

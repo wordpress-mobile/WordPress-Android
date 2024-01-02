@@ -3,7 +3,6 @@ package org.wordpress.android.util;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,22 +34,6 @@ public class VolleyUtils {
     }
 
     /*
-     * Returns REST API 'message' string field from the response in the passed VolleyError
-     * for example, returns "You are already subscribed to the specified topic." from this response:
-     * {
-     * "error": "already_subscribed",
-     * "message": "You are already subscribed to the specified topic."
-     * }
-     */
-    public static String messageStringFromVolleyError(VolleyError volleyError) {
-        JSONObject json = volleyErrorToJSON(volleyError);
-        if (json == null) {
-            return "";
-        }
-        return JSONUtils.getString(json, "message");
-    }
-
-    /*
      * Attempts to return JSON from a volleyError - useful for WP REST API failures, which often
      * contain JSON in the response
      */
@@ -74,25 +57,6 @@ public class VolleyUtils {
         } catch (JSONException e) {
             return null;
         }
-    }
-
-    /*
-     * Cancel all Volley requests that aren't for images
-     */
-    public static void cancelAllNonImageRequests(RequestQueue requestQueue) {
-        if (requestQueue == null) {
-            return;
-        }
-        RequestQueue.RequestFilter filter = new RequestQueue.RequestFilter() {
-            @Override
-            public boolean apply(Request<?> request) {
-                if (request instanceof ImageRequest) {
-                    return false;
-                }
-                return true;
-            }
-        };
-        requestQueue.cancelAll(filter);
     }
 
     /*

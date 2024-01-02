@@ -10,6 +10,7 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.DomainAddDomainCtaBinding
 import org.wordpress.android.databinding.DomainFreeSiteAddressCardBinding
 import org.wordpress.android.databinding.DomainManageDomainsCtaBinding
+import org.wordpress.android.databinding.DomainPlanPurchaseCardBinding
 import org.wordpress.android.databinding.DomainPurchaseCardBinding
 import org.wordpress.android.databinding.DomainSiteDomainsBlurbBinding
 import org.wordpress.android.databinding.DomainSiteDomainsCardBinding
@@ -21,6 +22,7 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.ManageDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
+import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
 
@@ -106,6 +108,21 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
             uiHelpers.setTextOrHide(purchaseDomainTitle, item.title)
             uiHelpers.setTextOrHide(purchaseDomainCaption, item.body)
             searchDomainsButton.setOnClickListener { item.onClick.click() }
+        }
+    }
+
+    class PurchasePlanViewHolder(
+        parent: ViewGroup,
+        private val uiHelpers: UiHelpers
+    ) : DomainsDashboardViewHolder<DomainPlanPurchaseCardBinding>(
+        parent.viewBinding(DomainPlanPurchaseCardBinding::inflate)
+    ) {
+        fun onBind(item: PurchasePlan) = with(binding) {
+            uiHelpers.setImageOrHide(purchasePlanImage, item.image)
+            uiHelpers.setTextOrHide(purchasePlanTitle, item.title)
+            uiHelpers.setTextOrHide(purchasePlanCaption, item.body)
+            upgradePlanButton.setOnClickListener { item.onUpgradeClick.click() }
+            justSearchDomainButton.setOnClickListener { item.onDomainClick.click() }
         }
     }
 
