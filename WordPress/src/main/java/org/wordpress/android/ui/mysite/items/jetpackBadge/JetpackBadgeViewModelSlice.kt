@@ -15,10 +15,10 @@ class JetpackBadgeViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _uiModel = MutableLiveData<MySiteCardAndItem.JetpackBadge>()
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.JetpackBadge?>()
     val uiModel = _uiModel
 
-    private fun buildJetpackBadge(){
+    suspend fun buildJetpackBadge(){
         if(jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard().not())
             _uiModel.postValue(null)
         val screen = JetpackPoweredScreen.WithStaticText.HOME
