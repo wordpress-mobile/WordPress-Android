@@ -1,10 +1,7 @@
 package org.wordpress.android.ui.domains
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.IdRes
-import org.wordpress.android.R
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.ADD_DOMAIN
-import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.MANAGE_DOMAINS
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PURCHASE_DOMAIN
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PURCHASE_PLAN
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.SITE_DOMAINS
@@ -17,7 +14,6 @@ sealed class DomainsDashboardItem(val type: Type) {
         SITE_DOMAINS_HEADER,
         SITE_DOMAINS,
         ADD_DOMAIN,
-        MANAGE_DOMAINS,
         PURCHASE_DOMAIN,
         PURCHASE_PLAN
     }
@@ -28,12 +24,9 @@ sealed class DomainsDashboardItem(val type: Type) {
         val domain: UiString,
         val expiry: UiString,
         val isPrimary: Boolean,
-        val onPopupMenuClick: ((Action) -> Boolean)? = null
     ) : DomainsDashboardItem(SITE_DOMAINS)
 
     data class AddDomain(val onClick: ListItemInteraction) : DomainsDashboardItem(ADD_DOMAIN)
-
-    data class ManageDomains(val onClick: ListItemInteraction) : DomainsDashboardItem(MANAGE_DOMAINS)
 
     data class PurchaseDomain(
         @DrawableRes val image: Int?,
@@ -49,15 +42,4 @@ sealed class DomainsDashboardItem(val type: Type) {
         val onUpgradeClick: ListItemInteraction,
         val onDomainClick: ListItemInteraction
     ) : DomainsDashboardItem(PURCHASE_PLAN)
-
-    enum class Action(@IdRes val itemId: Int) {
-        CHANGE_SITE_ADDRESS(R.id.change_site_address);
-
-        companion object {
-            fun fromItemId(itemId: Int): Action {
-                return values().firstOrNull { it.itemId == itemId }
-                    ?: throw IllegalArgumentException("Unexpected item ID in context menu")
-            }
-        }
-    }
 }
