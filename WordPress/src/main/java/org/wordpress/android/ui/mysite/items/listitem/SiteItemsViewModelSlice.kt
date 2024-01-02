@@ -6,6 +6,8 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -25,7 +27,9 @@ class SiteItemsViewModelSlice @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val listItemActionHandler: ListItemActionHandler
+    private val listItemActionHandler: ListItemActionHandler,
+    private val siteItemsBuilder: SiteItemsBuilder,
+    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
@@ -33,7 +37,45 @@ class SiteItemsViewModelSlice @Inject constructor(
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage
 
-    fun buildItems(
+    val _uiModel = MutableLiveData<List<MySiteCardAndItem>>()
+    val uiModel = _uiModel
+
+    // Quick start is disabled in all the cases where site items are built.
+    suspend fun buildSiteItems(
+        site: SiteModel
+    ) {
+        _uiModel.postValue(
+            siteItemsBuilder.build(
+                getParams(
+                    shouldEnableFocusPoints = false,
+                    site = site,
+                    backupAvailable = false,
+                    scanAvailable = false
+                )
+            )
+        )
+        rebuildSiteItemsForJetpackCapabilities(site)
+    }
+
+    private suspend fun rebuildSiteItemsForJetpackCapabilities(site: SiteModel) {
+        jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect { purchasedProducts ->
+            // if the site has scan or backup enabled, then only rebuild the site items
+            if(purchasedProducts.scan || purchasedProducts.backup) {
+                val items = siteItemsBuilder.build(
+                    getParams(
+                        shouldEnableFocusPoints = false,
+                        site = site,
+                        activeTask = null,
+                        backupAvailable = purchasedProducts.backup,
+                        scanAvailable = purchasedProducts.scan && !site.isWPCom && !site.isWPComAtomic
+                    )
+                )
+                _uiModel.postValue(items)
+            }
+        } // end collect
+    }
+
+    fun getParams(
         shouldEnableFocusPoints: Boolean = false,
         site: SiteModel,
         activeTask: QuickStartStore.QuickStartTask? = null,
@@ -47,7 +89,7 @@ class SiteItemsViewModelSlice @Inject constructor(
             scanAvailable = scanAvailable,
             enableFocusPoints = shouldEnableFocusPoints,
             onClick = this::onItemClick,
-            isBlazeEligible = isSiteBlazeEligible()
+            isBlazeEligible = isSiteBlazeEligible(site)
         )
     }
 
@@ -59,13 +101,13 @@ class SiteItemsViewModelSlice @Inject constructor(
                 mapOf(TYPE to action.trackingLabel)
             )
             _onNavigation.postValue(Event(listItemActionHandler.handleAction(action, selectedSite)))
-        }?: run {
+        } ?: run {
             _onSnackbarMessage.postValue(
                 Event(SnackbarMessageHolder(UiString.UiStringRes(R.string.site_cannot_be_loaded)))
             )
         }
     }
 
-    private fun isSiteBlazeEligible() =
-        blazeFeatureUtils.isSiteBlazeEligible(selectedSiteRepository.getSelectedSite()!!)
+    private fun isSiteBlazeEligible(site: SiteModel) =
+        blazeFeatureUtils.isSiteBlazeEligible(site)
 }
