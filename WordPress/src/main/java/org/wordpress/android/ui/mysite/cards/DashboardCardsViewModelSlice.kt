@@ -21,6 +21,7 @@ import org.wordpress.android.ui.mysite.cards.plans.PlansCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinksItemViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardVewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -37,7 +38,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
     private val quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice,
     private val bloganuaryNudgeCardViewModelSlice: BloganuaryNudgeCardViewModelSlice,
     private val plansCardViewModelSlice: PlansCardViewModelSlice,
-    private val selectedSiteRepository: SelectedSiteRepository
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val buildConfigWrapper: BuildConfigWrapper
 ) {
     private lateinit var scope: CoroutineScope
 
@@ -75,6 +77,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         quickStartCardVewModelSlice.isRefreshing
     )
 
+    val _uiModel = MutableLiveData<List<MySiteCardAndItem>>()
     val uiModel: LiveData<List<MySiteCardAndItem>> = merge(
         quickLinksItemViewModelSlice.uiState,
         quickStartCardVewModelSlice.uiModel,
@@ -111,7 +114,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
     }.distinctUntilChanged()
 
     @SuppressWarnings("LongParameterList")
-    fun mergeUiModels(
+    private fun mergeUiModels(
         quicklinks: MySiteCardAndItem.Card.QuickLinksItem?,
         quickStart: MySiteCardAndItem.Card.QuickStartCard?,
         blazeCard: MySiteCardAndItem.Card.BlazeCard?,
@@ -167,18 +170,20 @@ class DashboardCardsViewModelSlice @Inject constructor(
     }
 
     fun onResume() {
-        buildCards(selectedSiteRepository.getSelectedSite()?:return)
+        selectedSiteRepository.getSelectedSite()?.let {
+            if(showDashboardCards(it))buildCards(it)
+        }
     }
 
     fun onSiteChanged() {
         selectedSiteRepository.getSelectedSite()?.let {
-            buildCards(it)
+            if(showDashboardCards(it))buildCards(it)
         }
     }
 
     fun onRefresh() {
         selectedSiteRepository.getSelectedSite()?.let {
-            buildCards(it)
+            if(showDashboardCards(it))buildCards(it)
         }
     }
 
@@ -200,4 +205,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
 //        cardsTracker.resetShown()
 //        quickStartTracker.resetShown()
     }
+
+    private fun showDashboardCards(site: SiteModel) =
+        site.isUsingWpComRestApi && buildConfigWrapper.isJetpackApp
 }
