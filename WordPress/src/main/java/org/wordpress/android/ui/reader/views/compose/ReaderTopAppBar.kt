@@ -5,8 +5,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -45,7 +45,7 @@ import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterChipGrou
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiString
 
-private const val ANIM_DURATION = 200
+private const val ANIM_DURATION = 300
 private val chipHeight = 36.dp
 
 @Composable
@@ -106,9 +106,9 @@ fun ReaderTopAppBar(
                 AnimatedVisibility(
                     visible = isFilterShown,
                     enter = fadeIn(tween(delayMillis = ANIM_DURATION)) +
-                            slideInVertically(tween(delayMillis = ANIM_DURATION)) { it / 2 },
+                            slideInHorizontally(tween(delayMillis = ANIM_DURATION)) { -it / 2 },
                     exit = fadeOut(tween(ANIM_DURATION)) +
-                            slideOutVertically(tween(ANIM_DURATION)) { it / 2 },
+                            slideOutHorizontally(tween(ANIM_DURATION)) { -it / 2 },
                 ) {
                     latestFilterState?.let { filterUiState ->
                         Filter(
