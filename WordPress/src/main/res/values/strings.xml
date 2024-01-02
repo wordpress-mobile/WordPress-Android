@@ -4821,7 +4821,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">For this reason, we recommend editing the block using your web browser.</string>
 
     <!-- Bloganuary -->
-    <string name="bloganuary_dashboard_nudge_title">Bloganuary is coming!</string>
+    <string name="bloganuary_dashboard_nudge_title_december">Bloganuary is coming!</string>
+    <string name="bloganuary_dashboard_nudge_title_january">Bloganuary is here!</string>
     <string name="bloganuary_dashboard_nudge_text">For the month of January, blogging prompts will come from Bloganuary — our community challenge to build a blogging habit for the new year.</string>
     <string name="bloganuary_dashboard_nudge_learn_more" translatable="false">@string/learn_more</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>

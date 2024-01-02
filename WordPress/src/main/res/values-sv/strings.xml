@@ -16,7 +16,7 @@ Language: sv_SE
     <string name="bloganuary_dashboard_nudge_overlay_title">Gå med i vår månadslånga skrivutmaning</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">För månaden januari kommer bloggningsförslagen att komma från Bloganuary – vår communityutmaning avsedd att bygga upp en bloggvana för det nya året.</string>
-    <string name="bloganuary_dashboard_nudge_title">Bloganuary är på väg!</string>
+    <string name="bloganuary_dashboard_nudge_title_december">Bloganuary är på väg!</string>
     <string name="turn_off">Nej, stäng av</string>
     <string name="leave_on">Ja, lämna på</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Av den här anledningen rekommenderar vi att du redigerar blocket i din webbläsare.</string>
