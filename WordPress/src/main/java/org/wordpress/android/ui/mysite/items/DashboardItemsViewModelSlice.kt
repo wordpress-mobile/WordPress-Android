@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.mysite.items
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
@@ -12,6 +14,7 @@ import org.wordpress.android.ui.mysite.items.jetpackBadge.JetpackBadgeViewModelS
 import org.wordpress.android.ui.mysite.items.jetpackSwitchmenu.JetpackSwitchMenuViewModelSlice
 import org.wordpress.android.ui.mysite.items.jetpackfeaturecard.JetpackFeatureCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.merge
 import javax.inject.Inject
 
@@ -22,7 +25,8 @@ class DashboardItemsViewModelSlice @Inject constructor(
     private val siteItemsViewModelSlice: SiteItemsViewModelSlice,
     private val sotw2023NudgeCardViewModelSlice: WpSotw2023NudgeCardViewModelSlice,
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
-    private val selectedSiteRepository: SelectedSiteRepository
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val buildConfigWrapper: BuildConfigWrapper
 ) {
     private lateinit var scope: CoroutineScope
 
@@ -39,6 +43,7 @@ class DashboardItemsViewModelSlice @Inject constructor(
         sotw2023NudgeCardViewModelSlice.onNavigation
     )
 
+    val _uiModel = MutableLiveData<List<MySiteCardAndItem>>()
     val uiModel: LiveData<List<MySiteCardAndItem>> = merge(
         jetpackFeatureCardViewModelSlice.uiModel,
         jetpackSwitchMenuViewModelSlice.uiModel,
@@ -55,7 +60,11 @@ class DashboardItemsViewModelSlice @Inject constructor(
         )
     }
 
-    fun mergeUiModels(
+    val onSnackbarMessage = merge(
+        siteItemsViewModelSlice.onSnackbarMessage,
+    )
+
+    private fun mergeUiModels(
         jetpackFeatureCard: MySiteCardAndItem.Card.JetpackFeatureCard?,
         jetpackSwitchMenu: MySiteCardAndItem.Card.JetpackSwitchMenu?,
         jetpackBadge: MySiteCardAndItem.JetpackBadge?,
@@ -74,16 +83,24 @@ class DashboardItemsViewModelSlice @Inject constructor(
     }
 
     fun buildCards() {
-       selectedSiteRepository.getSelectedSite()?.let { site ->
-           scope.launch {
-               jetpackFeatureCardViewModelSlice.buildJetpackFeatureCard()
-               jetpackSwitchMenuViewModelSlice.buildJetpackSwitchMenu()
-               jetpackBadgeViewModelSlice.buildJetpackBadge()
-               siteItemsViewModelSlice.buildSiteItems(site)
-               sotw2023NudgeCardViewModelSlice.buildCard()
-           }
-       }
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            if(shouldShowSiteItems(site)) buildCards(site)
+        }
     }
+
+    private fun buildCards(site: SiteModel) {
+        scope.launch {
+            jetpackFeatureCardViewModelSlice.buildJetpackFeatureCard()
+            jetpackSwitchMenuViewModelSlice.buildJetpackSwitchMenu()
+            jetpackBadgeViewModelSlice.buildJetpackBadge()
+            siteItemsViewModelSlice.buildSiteItems(site)
+            sotw2023NudgeCardViewModelSlice.buildCard()
+        }
+    }
+
+    private fun shouldShowSiteItems(site: SiteModel) =
+        (buildConfigWrapper.isJetpackApp && site.isUsingWpComRestApi).not()
+
 
     fun onCleared() {
         scope.cancel()
