@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.mysite.items.listitem
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
@@ -17,11 +19,9 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
-import javax.inject.Singleton
 
 private const val TYPE = "type"
 
-@Singleton
 @Suppress("LongParameterList")
 class SiteItemsViewModelSlice @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -37,8 +37,8 @@ class SiteItemsViewModelSlice @Inject constructor(
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage
 
-    val _uiModel = MutableLiveData<List<MySiteCardAndItem>>()
-    val uiModel = _uiModel
+    private val _uiModel = MutableLiveData<List<MySiteCardAndItem>>()
+    val uiModel: LiveData<List<MySiteCardAndItem>> = _uiModel.distinctUntilChanged()
 
     // Quick start is disabled in all the cases where site items are built.
     suspend fun buildSiteItems(
