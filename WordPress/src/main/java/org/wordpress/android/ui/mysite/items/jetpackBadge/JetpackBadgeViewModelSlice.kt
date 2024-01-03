@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.items.jetpackBadge
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -16,7 +17,7 @@ class JetpackBadgeViewModelSlice @Inject constructor(
     val onNavigation = _onNavigation
 
     private val _uiModel = MutableLiveData<MySiteCardAndItem.JetpackBadge?>()
-    val uiModel = _uiModel
+    val uiModel = _uiModel.distinctUntilChanged()
 
     suspend fun buildJetpackBadge(){
         if(jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard().not())

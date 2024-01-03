@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.items.jetpackfeaturecard
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -17,7 +18,7 @@ class JetpackFeatureCardViewModelSlice @Inject constructor(
     val onNavigation = _onNavigation
 
     private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.JetpackFeatureCard?>()
-    val uiModel = _uiModel
+    val uiModel = _uiModel.distinctUntilChanged()
 
     suspend fun buildJetpackFeatureCard() {
         if (!jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()) _uiModel.postValue(null)

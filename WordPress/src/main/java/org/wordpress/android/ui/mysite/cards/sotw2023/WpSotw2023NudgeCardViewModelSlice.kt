@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.sotw2023
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.WpSotw2023NudgeCardModel
@@ -28,8 +29,7 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
 
     private val _uiModel = MutableLiveData<WpSotw2023NudgeCardModel?>()
-    val uiModel = _uiModel as LiveData<WpSotw2023NudgeCardModel?>
-
+    val uiModel: LiveData<WpSotw2023NudgeCardModel?> = _uiModel.distinctUntilChanged()
     private lateinit var scope: CoroutineScope
 
     fun initialize(scope: CoroutineScope) {
