@@ -13,6 +13,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.setPadding
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -138,6 +139,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             AppLog.d(AppLog.T.MAIN, "Attempted to load an empty Gravatar URL!")
             return
         }
+        imgIcon.setPadding(resources.getDimensionPixelSize(R.dimen.navbar_me_icon_padding))
         AppLog.d(AppLog.T.MAIN, meGravatarLoader.constructGravatarUrl(avatarUrl))
         imgIcon.let {
             meGravatarLoader.load(
