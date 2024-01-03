@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,12 +8,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.Type
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
 import org.wordpress.android.fluxc.store.NotificationStore
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
-import org.wordpress.android.fluxc.utils.PreferenceUtils
+import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
@@ -36,10 +36,9 @@ class CardsSource @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val dynamicDashboardCardsFeatureConfig: DynamicDashboardCardsFeatureConfig,
-    private val context: Context,
+    private val preferences: PreferenceUtilsWrapper,
+    private val buildConfigWrapper: BuildConfigWrapper,
 ) : MySiteRefreshSource<CardsUpdate> {
-    private val preferences by lazy { PreferenceUtils.getFluxCPreferences(context) }
-
     override val refresh = MutableLiveData(false)
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<CardsUpdate> {
@@ -98,16 +97,17 @@ class CardsSource @Inject constructor(
     ) {
         coroutineScope.launch(bgDispatcher) {
             delay(REFRESH_DELAY)
-            val result = cardsStore.fetchCards(
+            val payload = CardsRestClient.FetchCardsPayload(
                 selectedSite,
                 getCardTypes(selectedSite),
-                buildNumber = BuildConfig.VERSION_CODE.toString(),
-                deviceId = preferences.getString(NotificationStore.WPCOM_PUSH_DEVICE_UUID, null)
+                buildNumber = buildConfigWrapper.getAppVersionCode().toString(),
+                deviceId = preferences.getFluxCPreferences().getString(NotificationStore.WPCOM_PUSH_DEVICE_UUID, null)
                     ?: generateAndStoreUUID(),
-                identifier = BuildConfig.APPLICATION_ID,
-                marketingVersion = BuildConfig.VERSION_NAME,
+                identifier = buildConfigWrapper.getApplicationId(),
+                marketingVersion = buildConfigWrapper.getAppVersionName(),
                 platform = FEATURE_FLAG_PLATFORM_PARAMETER,
             )
+            val result = cardsStore.fetchCards(payload)
             val model = result.model
             val error = result.error
             when {
@@ -120,7 +120,7 @@ class CardsSource @Inject constructor(
 
     private fun generateAndStoreUUID(): String {
         return UUID.randomUUID().toString().also {
-            preferences.edit().putString(NotificationStore.WPCOM_PUSH_DEVICE_UUID, it).apply()
+            preferences.getFluxCPreferences().edit().putString(NotificationStore.WPCOM_PUSH_DEVICE_UUID, it).apply()
         }
     }
 
