@@ -295,7 +295,7 @@ class EditorMedia @Inject constructor(
                 }
         }
         analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_FAILED, properties)
-        listener.onMediaUploadFailed(media.id.toString())
+        listener.onMediaUploadFailed(media.id.toString(), error.type.name)
     }
 
     sealed class AddMediaToPostUiState(

@@ -241,6 +241,10 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.mediaFileUploadFailed(mediaId);
     }
 
+    public void mediaFileUploadPaused(final int mediaId) {
+        mWPAndroidGlueCode.mediaFileUploadPaused(mediaId);
+    }
+
     public void mediaFileUploadSucceeded(final int mediaId, final String mediaUrl, final int serverMediaId) {
         mWPAndroidGlueCode.mediaFileUploadSucceeded(mediaId, mediaUrl, serverMediaId, new WritableNativeMap());
     }
