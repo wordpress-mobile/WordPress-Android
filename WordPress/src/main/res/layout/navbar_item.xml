@@ -28,7 +28,7 @@
             android:id="@+id/nav_badge"
             android:layout_width="@dimen/bottom_nav_bar_badge_size"
             android:layout_height="@dimen/bottom_nav_bar_badge_size"
-            android:layout_gravity="top|end"
+            android:layout_gravity="top"
             android:background="@drawable/bg_nav_badge"
             android:visibility="gone"
             tools:visibility="visible" />
