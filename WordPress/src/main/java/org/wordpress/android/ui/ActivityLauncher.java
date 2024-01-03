@@ -54,6 +54,7 @@ import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListA
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
+import org.wordpress.android.ui.debug.preferences.DebugFlagsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.domains.DomainsDashboardActivity;
@@ -1803,6 +1804,9 @@ public class ActivityLauncher {
         context.startActivity(new Intent(context, DebugCookiesActivity.class));
     }
 
+    public static void viewDebugFlags(@NonNull Context context) {
+        context.startActivity(new Intent(context, DebugFlagsActivity.class));
+    }
     public static void startQRCodeAuthFlow(@NonNull Context context) {
         QRCodeAuthActivity.start(context);
     }

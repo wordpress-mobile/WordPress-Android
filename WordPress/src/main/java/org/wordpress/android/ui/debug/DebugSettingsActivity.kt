@@ -45,6 +45,8 @@ class DebugSettingsActivity : LocaleAwareActivity() {
                 is DebugSettingsViewModel.NavigationAction.PreviewFragment -> {
                     previewFragmentInActivity(it.name)
                 }
+                is DebugSettingsViewModel.NavigationAction.DebugFlags ->
+                    ActivityLauncher.viewDebugFlags(this@DebugSettingsActivity)
             }
         }
     }
@@ -68,6 +70,7 @@ class DebugSettingsActivity : LocaleAwareActivity() {
             R.id.menu_debug_cookies -> viewModel.onDebugCookiesClick()
             R.id.menu_restart_app -> viewModel.onRestartAppClick()
             R.id.menu_show_weekly_notifications -> viewModel.onForceShowWeeklyRoundupClick()
+            R.id.menu_debug_flags -> viewModel.onDebugFlagsClick()
         }
         return true
     }
