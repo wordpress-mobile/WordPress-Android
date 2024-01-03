@@ -9,6 +9,7 @@ import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
@@ -302,6 +303,10 @@ class WPMainNavigationView @JvmOverloads constructor(
 
             it.isSelected = isSelected
             it.alpha = if (isSelected) 1f else unselectedButtonAlpha
+            if(it.isSelected) {
+                val pop = AnimationUtils.loadAnimation(it.context, R.anim.bottom_nav_icon_pop)
+                it.startAnimation(pop)
+            }
         }
     }
 
