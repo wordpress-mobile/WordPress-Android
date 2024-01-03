@@ -160,7 +160,7 @@ class MySiteViewModel @Inject constructor(
     private var shouldMarkUpdateSiteTitleTaskComplete = false
 
     val state: LiveData<MySiteUiState> =
-        selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
+        selectedSiteRepository.siteSelected.switchMap { _ ->
             isSiteSelected = true
             dashboardCardsViewModelSlice.onSiteChanged()
             resetShownTrackers()
@@ -185,7 +185,7 @@ class MySiteViewModel @Inject constructor(
             SiteSelected(dashboardData = listOf(nonNullSiteInfoHeaderCard) + siteItems)
         else
             SiteSelected(dashboardData = listOf(nonNullSiteInfoHeaderCard))
-    }
+    }.distinctUntilChanged()
 
     init {
         dispatcher.register(this)
@@ -272,6 +272,7 @@ class MySiteViewModel @Inject constructor(
 //        dashboardCardPlansUtils.onResume(uiModel.value as? SiteSelected)
         siteInfoHeaderCardViewModelSlice.onResume()
         dashboardCardsViewModelSlice.onResume()
+        dashboardItemsViewModelSlice.onResume()
     }
 
     private fun checkAndShowJetpackFullPluginInstallOnboarding() {
@@ -468,7 +469,7 @@ class MySiteViewModel @Inject constructor(
         _onNavigation.postValue(Event(BloggingPromptCardNavigationAction.LearnMore))
     }
 
-    private fun trackCardsAndItemsShownIfNeeded(siteSelected: SiteSelected) {
+    private fun trackCardsAndItemsShownIfNeeded() {
 //        siteSelected.dashboardData.filterIsInstance<DomainRegistrationCard>()
 //            .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
 //        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card>()
