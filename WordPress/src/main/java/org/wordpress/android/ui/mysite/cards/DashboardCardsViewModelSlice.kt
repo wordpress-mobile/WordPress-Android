@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.cards
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineScope
@@ -77,8 +76,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         quickStartCardVewModelSlice.isRefreshing
     )
 
-    val _uiModel = MutableLiveData<List<MySiteCardAndItem>>()
-    val uiModel: LiveData<List<MySiteCardAndItem>> = merge(
+    val uiModel: MutableLiveData<List<MySiteCardAndItem>> = merge(
         quickLinksItemViewModelSlice.uiState,
         quickStartCardVewModelSlice.uiModel,
         blazeCardViewModelSlice.uiModel,
@@ -111,7 +109,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
             personalizeCard,
             jpFullInstallFullPlugin
         )
-    }.distinctUntilChanged()
+    }.distinctUntilChanged() as MutableLiveData<List<MySiteCardAndItem>>
 
     @SuppressWarnings("LongParameterList")
     private fun mergeUiModels(
@@ -172,22 +170,26 @@ class DashboardCardsViewModelSlice @Inject constructor(
     fun onResume() {
         selectedSiteRepository.getSelectedSite()?.let {
             if(showDashboardCards(it))buildCards(it)
+            else uiModel.postValue(emptyList())
         }
     }
 
     fun onSiteChanged() {
         selectedSiteRepository.getSelectedSite()?.let {
             if(showDashboardCards(it))buildCards(it)
+            else uiModel.postValue(emptyList())
         }
     }
 
     fun onRefresh() {
         selectedSiteRepository.getSelectedSite()?.let {
             if(showDashboardCards(it))buildCards(it)
+            else uiModel.postValue(emptyList())
         }
     }
 
     fun onCleared() {
+        uiModel
         quickLinksItemViewModelSlice.onCleared()
         scope.cancel()
     }

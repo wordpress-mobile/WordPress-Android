@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite.items
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -43,14 +43,14 @@ class DashboardItemsViewModelSlice @Inject constructor(
         sotw2023NudgeCardViewModelSlice.onNavigation
     )
 
-    val _uiModel = MutableLiveData<List<MySiteCardAndItem>>()
-    val uiModel: LiveData<List<MySiteCardAndItem>> = merge(
+    val uiModel: MutableLiveData<List<MySiteCardAndItem>> = merge(
         jetpackFeatureCardViewModelSlice.uiModel,
         jetpackSwitchMenuViewModelSlice.uiModel,
         jetpackBadgeViewModelSlice.uiModel,
         siteItemsViewModelSlice.uiModel,
         sotw2023NudgeCardViewModelSlice.uiModel
-    ) { jetpackFeatureCard, jetpackSwitchMenu, jetpackBadge, siteItems, sotw2023NudgeCard ->
+    ) {
+       jetpackFeatureCard, jetpackSwitchMenu, jetpackBadge, siteItems, sotw2023NudgeCard ->
         mergeUiModels(
             jetpackFeatureCard,
             jetpackSwitchMenu,
@@ -58,7 +58,7 @@ class DashboardItemsViewModelSlice @Inject constructor(
             siteItems,
             sotw2023NudgeCard
         )
-    }
+    }.distinctUntilChanged() as MutableLiveData<List<MySiteCardAndItem>>
 
     val onSnackbarMessage = merge(
         siteItemsViewModelSlice.onSnackbarMessage,
@@ -71,20 +71,22 @@ class DashboardItemsViewModelSlice @Inject constructor(
         siteItems: List<MySiteCardAndItem>?,
         sotw2023NudgeCard: MySiteCardAndItem.Card.WpSotw2023NudgeCardModel?
     ): List<MySiteCardAndItem> {
-        return mutableListOf<MySiteCardAndItem>().apply {
+        val dasbhboardSiteItems =  mutableListOf<MySiteCardAndItem>().apply {
             sotw2023NudgeCard?.let { add(it) }
-            siteItems?.all { addAll(siteItems) }
+            siteItems?.let { addAll(siteItems) }
             jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
             if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
                 jetpackFeatureCard?.let { add(0, jetpackFeatureCard) }
             else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
             jetpackBadge?.let { add(jetpackBadge) }
         }.toList()
+        return dasbhboardSiteItems
     }
 
-    fun buildCards() {
+    fun onResume() {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             if(shouldShowSiteItems(site)) buildCards(site)
+            else uiModel.postValue(emptyList())
         }
     }
 
