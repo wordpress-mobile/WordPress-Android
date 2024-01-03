@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.main
 
 import android.content.Context
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
 import android.view.HapticFeedbackConstants
@@ -73,6 +75,9 @@ class WPMainNavigationView @JvmOverloads constructor(
         MaterialR.dimen.material_emphasis_disabled
     )
 
+    val disabledColorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(0f) })
+    val enabledColorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(1f) })
+
     @Inject
     lateinit var meGravatarLoader: MeGravatarLoader
 
@@ -129,6 +134,10 @@ class WPMainNavigationView @JvmOverloads constructor(
                 loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
             }
             itemView.addView(customView)
+        }
+
+        if(getMainPageIndex() != getPosition(ME)) {
+            setImageViewSelected(getPosition(ME), false)
         }
 
         currentPosition = getMainPageIndex()
@@ -284,6 +293,13 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     private fun setImageViewSelected(position: Int, isSelected: Boolean) {
         getImageViewForPosition(position)?.let {
+            if(position == getPosition(ME)) {
+                if(!isSelected){
+                    it.colorFilter = disabledColorFilter
+                } else
+                    it.colorFilter = enabledColorFilter
+            }
+
             it.isSelected = isSelected
             it.alpha = if (isSelected) 1f else unselectedButtonAlpha
         }
