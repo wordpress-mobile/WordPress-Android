@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DebugFlagsViewModel @Inject constructor(
-    val prefsWrapper: AppPrefsWrapper
+    private val prefsWrapper: AppPrefsWrapper
 ) : ViewModel() {
     private val _uiStateFlow = MutableStateFlow<Map<String, Boolean>>(emptyMap())
     val uiStateFlow = _uiStateFlow.asStateFlow()
