@@ -1433,7 +1433,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadPaused(final String localMediaId) {
-        mUploadingMediaProgressMax.remove(localMediaId);
+        // Aztec does not leverage the paused media state, only the Gutenberg editor
+        onMediaUploadFailed(localMediaId);
     }
 
     @Override
