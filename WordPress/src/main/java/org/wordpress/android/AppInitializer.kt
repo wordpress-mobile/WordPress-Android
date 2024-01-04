@@ -993,7 +993,7 @@ class AppInitializer @Inject constructor(
     }
 
     private fun initializeClarity() {
-        if (isPhysicalDevice() && BuildConfig.IS_JETPACK_APP) {
+        if (isPhysicalDevice() && BuildConfig.IS_JETPACK_APP && hasUserOptedInTracking()) {
             val config = ClarityConfig(
                 projectId = BuildConfig.CLARITY_ID,
                 allowMeteredNetworkUsage = false,
@@ -1011,6 +1011,11 @@ class AppInitializer @Inject constructor(
 
     private fun isPhysicalDevice(): Boolean =
         "google_sdk" != Build.PRODUCT && !Build.DEVICE.contains("emulator", ignoreCase = true)
+
+    private fun hasUserOptedInTracking(): Boolean {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
+        return prefs.getBoolean(application.getString(R.string.pref_key_send_usage), false)
+    }
 
     companion object {
         private const val SECONDS_BETWEEN_SITE_UPDATE = 60 * 60 // 1 hour
