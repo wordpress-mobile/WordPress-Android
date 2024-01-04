@@ -2,17 +2,11 @@ package org.wordpress.android.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.microsoft.clarity.Clarity
-import com.microsoft.clarity.ClarityConfig
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.main.WPMainActivity
-import org.wordpress.android.ui.prefs.AccountSettingsActivity
 import org.wordpress.android.util.MissingSplitsUtils.isMissingSplits
 import org.wordpress.android.util.ProfilingUtils
 import org.wordpress.android.util.ToastUtils
@@ -26,7 +20,6 @@ class WPLaunchActivity : LocaleAwareActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupClarity()
         if (isMissingSplits(this)) {
             // There are missing splits. Display a warning message.
             showMissingSplitsDialog()
@@ -35,25 +28,6 @@ class WPLaunchActivity : LocaleAwareActivity() {
         ProfilingUtils.split("WPLaunchActivity.onCreate")
         launchWPMainActivity()
     }
-
-    private fun setupClarity() {
-        if (isPhysicalDevice() && BuildConfig.IS_JETPACK_APP) {
-            val config = ClarityConfig(
-                projectId = BuildConfig.CLARITY_ID,
-                allowMeteredNetworkUsage = false,
-                enableWebViewCapture = false, // disabled to avoid capturing sensitive data
-                disableOnLowEndDevices = true, // disabled for performance reasons
-                disallowedActivities = listOf( // disabled to avoid capturing sensitive data
-                    LoginActivity::class.java.name,
-                    AccountSettingsActivity::class.java.name,
-                )
-            )
-            Clarity.initialize(applicationContext, config)
-        }
-    }
-
-    private fun isPhysicalDevice(): Boolean =
-        "google_sdk" != Build.PRODUCT && !Build.DEVICE.contains("emulator", ignoreCase = true)
 
     private fun showMissingSplitsDialog() {
         MaterialAlertDialogBuilder(this)

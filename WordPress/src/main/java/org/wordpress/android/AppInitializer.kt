@@ -38,6 +38,9 @@ import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.iid.FirebaseInstanceId
+import com.microsoft.clarity.Clarity
+import com.microsoft.clarity.ClarityConfig
+import com.microsoft.clarity.models.LogLevel
 import com.wordpress.rest.RestClient
 import com.wordpress.stories.compose.NotificationTrackerProvider
 import com.wordpress.stories.compose.frame.StoryNotificationType
@@ -79,6 +82,7 @@ import org.wordpress.android.push.GCMRegistrationScheduler
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
+import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
@@ -90,6 +94,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.posts.editor.ImageEditorFileUtils
 import org.wordpress.android.ui.posts.editor.ImageEditorInitializer
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker
+import org.wordpress.android.ui.prefs.AccountSettingsActivity
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
@@ -419,6 +424,7 @@ class AppInitializer @Inject constructor(
         }
         configBuilder.setJobSchedulerJobIdRange(WORK_MANAGER_ID_RANGE_MIN, WORK_MANAGER_ID_RANGE_MAX)
         WorkManager.initialize(application, configBuilder.build())
+        initializeClarity()
     }
 
     private fun enableLogRecording() {
@@ -985,6 +991,26 @@ class AppInitializer @Inject constructor(
         else
             createNotificationChannelsOnSdk26()
     }
+
+    private fun initializeClarity() {
+        if (isPhysicalDevice() && BuildConfig.IS_JETPACK_APP) {
+            val config = ClarityConfig(
+                projectId = BuildConfig.CLARITY_ID,
+                allowMeteredNetworkUsage = false,
+                enableWebViewCapture = false, // disabled to avoid capturing sensitive data
+                disableOnLowEndDevices = true, // disabled for performance reasons
+                disallowedActivities = listOf( // disabled to avoid capturing sensitive data
+                    LoginActivity::class.java.name,
+                    AccountSettingsActivity::class.java.name,
+                ),
+                logLevel = if (BuildConfig.DEBUG) LogLevel.Debug else LogLevel.None,
+            )
+            Clarity.initialize(application, config)
+        }
+    }
+
+    private fun isPhysicalDevice(): Boolean =
+        "google_sdk" != Build.PRODUCT && !Build.DEVICE.contains("emulator", ignoreCase = true)
 
     companion object {
         private const val SECONDS_BETWEEN_SITE_UPDATE = 60 * 60 // 1 hour
