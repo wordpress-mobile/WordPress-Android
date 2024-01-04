@@ -10,7 +10,9 @@ import com.microsoft.clarity.ClarityConfig
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.prefs.AccountSettingsActivity
 import org.wordpress.android.util.MissingSplitsUtils.isMissingSplits
 import org.wordpress.android.util.ProfilingUtils
 import org.wordpress.android.util.ToastUtils
@@ -36,7 +38,16 @@ class WPLaunchActivity : LocaleAwareActivity() {
 
     private fun setupClarity() {
         if ("google_sdk" != Build.PRODUCT && BuildConfig.IS_JETPACK_APP) {
-            val config = ClarityConfig(projectId = BuildConfig.CLARITY_ID)
+            val config = ClarityConfig(
+                projectId = BuildConfig.CLARITY_ID,
+                allowMeteredNetworkUsage = false,
+                enableWebViewCapture = false, // disabled to avoid capturing sensitive data
+                disableOnLowEndDevices = true, // disabled for performance reasons
+                disallowedActivities = listOf( // disabled to avoid capturing sensitive data
+                    LoginActivity::class.java.name,
+                    AccountSettingsActivity::class.java.name,
+                )
+            )
             Clarity.initialize(applicationContext, config)
         }
     }
