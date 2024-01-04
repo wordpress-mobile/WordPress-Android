@@ -90,6 +90,13 @@ class DashboardItemsViewModelSlice @Inject constructor(
         }
     }
 
+    fun onRefresh() {
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            if(shouldShowSiteItems(site)) buildCards(site)
+            else uiModel.postValue(emptyList())
+        }
+    }
+
     private fun buildCards(site: SiteModel) {
         scope.launch {
             jetpackFeatureCardViewModelSlice.buildJetpackFeatureCard()
