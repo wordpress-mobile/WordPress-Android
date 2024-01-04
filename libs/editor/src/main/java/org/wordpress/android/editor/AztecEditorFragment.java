@@ -1431,6 +1431,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mUploadingMediaProgressMax.remove(localMediaId);
     }
 
+    public void onMediaUploadPaused(final String localMediaId) {
+        mUploadingMediaProgressMax.remove(localMediaId);
+    }
+
     @Override
     public void onVideoInfoRequested(final AztecAttributes attrs) {
         // VideoPress special case here

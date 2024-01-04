@@ -3678,6 +3678,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return;
         }
 
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media);
+            return;
+        }
+
         // event for unknown media, ignoring
         if (event.media == null) {
             AppLog.w(AppLog.T.MEDIA, "Media event carries null media object, not recognized");

@@ -1488,14 +1488,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadFailed(final String localMediaId, String errorType) {
-        switch (errorType) {
-            case "CONNECTION_ERROR":
-                getGutenbergContainerFragment().mediaFileUploadPaused(Integer.valueOf(localMediaId));
-                break;
-            default:
-                getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(localMediaId));
-                break;
-        }
+        getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(localMediaId));
+        mFailedMediaIds.add(localMediaId);
+        mUploadingMediaProgressMax.remove(localMediaId);
+    }
+
+    @Override
+    public void onMediaUploadPaused(final String localMediaId) {
+        getGutenbergContainerFragment().mediaFileUploadPaused(Integer.valueOf(localMediaId));
         mFailedMediaIds.add(localMediaId);
         mUploadingMediaProgressMax.remove(localMediaId);
     }
