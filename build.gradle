@@ -109,7 +109,7 @@ ext {
     wordPressLintVersion = '2.0.0'
 
     // Clarity
-    microsoftClarityVersion = '2.0.0'
+    microsoftClarityVersion = '2.1.1'
 }
 
 measureBuilds {
