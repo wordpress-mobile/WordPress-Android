@@ -9,15 +9,11 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.AccountData
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.DisplayUtilsWrapper
 import javax.inject.Inject
-
-private const val MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE = 600
 
 class AccountDataViewModelSlice @Inject constructor(
     private val accountStore: AccountStore,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 ) {
     private lateinit var scope: CoroutineScope
@@ -60,7 +56,6 @@ class AccountDataViewModelSlice @Inject constructor(
 
     private fun shouldBuildCard(): Boolean {
         return (!buildConfigWrapper.isJetpackApp
-                && displayUtilsWrapper.getWindowPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
                 && jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures())
     }
 }
