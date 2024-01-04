@@ -3679,7 +3679,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (event.isError() && !NetworkUtils.isNetworkAvailable(this)) {
-            mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media);
+            mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media, event.error);
             return;
         }
 
