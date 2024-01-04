@@ -34,7 +34,7 @@ class AccountDataViewModelSlice @Inject constructor(
 
     fun onResume() {
         scope.launch {
-            if(!shouldBuildCard()) return@launch
+            if(!shouldBuildCard()) _uiModel.postValue(null)
             _isRefreshing.postValue(true)
             val account = accountStore.account
             account?.let {
@@ -59,10 +59,8 @@ class AccountDataViewModelSlice @Inject constructor(
     }
 
     private fun shouldBuildCard(): Boolean {
-        val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
-                displayUtilsWrapper.getWindowPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
-        val shouldShowAccountSettings = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
-
-        return shouldShowImage && shouldShowAccountSettings
+        return (!buildConfigWrapper.isJetpackApp
+                && displayUtilsWrapper.getWindowPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
+                && jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures())
     }
 }
