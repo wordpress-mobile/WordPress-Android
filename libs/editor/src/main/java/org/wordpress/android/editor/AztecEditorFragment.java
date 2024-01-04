@@ -1413,7 +1413,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onMediaUploadFailed(final String localMediaId, final String errorType) {
+    public void onMediaUploadFailed(final String localMediaId) {
         if (!isAdded() || mContent == null) {
             return;
         }
@@ -1429,6 +1429,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mContent.resetAttributedMediaSpan(localMediaIdPredicate);
         mFailedMediaIds.add(localMediaId);
         mUploadingMediaProgressMax.remove(localMediaId);
+    }
+
+    @Override
+    public void onMediaUploadPaused(final String localMediaId) {
+        // Aztec does not leverage the paused media state, only the Gutenberg editor
+        onMediaUploadFailed(localMediaId);
     }
 
     @Override
