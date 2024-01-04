@@ -37,7 +37,7 @@ class WPLaunchActivity : LocaleAwareActivity() {
     }
 
     private fun setupClarity() {
-        if ("google_sdk" != Build.PRODUCT && BuildConfig.IS_JETPACK_APP) {
+        if (isPhysicalDevice() && BuildConfig.IS_JETPACK_APP) {
             val config = ClarityConfig(
                 projectId = BuildConfig.CLARITY_ID,
                 allowMeteredNetworkUsage = false,
@@ -51,6 +51,9 @@ class WPLaunchActivity : LocaleAwareActivity() {
             Clarity.initialize(applicationContext, config)
         }
     }
+
+    private fun isPhysicalDevice(): Boolean =
+        "google_sdk" != Build.PRODUCT && !Build.DEVICE.contains("emulator", ignoreCase = true)
 
     private fun showMissingSplitsDialog() {
         MaterialAlertDialogBuilder(this)
