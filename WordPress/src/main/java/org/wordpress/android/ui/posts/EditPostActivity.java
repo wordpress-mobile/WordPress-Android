@@ -3678,7 +3678,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return;
         }
 
-        if (!NetworkUtils.isNetworkAvailable(this)) {
+        if (event.isError() && !NetworkUtils.isNetworkAvailable(this)) {
             mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media);
             return;
         }
