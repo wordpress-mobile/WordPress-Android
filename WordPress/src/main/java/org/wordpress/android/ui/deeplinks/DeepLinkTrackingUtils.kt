@@ -6,11 +6,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenI
 import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils.DeepLinkSource.BANNER
 import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils.DeepLinkSource.EMAIL
 import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils.DeepLinkSource.LINK
-import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils.DeepLinkSource.QRCODE_AUTH
-import org.wordpress.android.ui.deeplinks.DeepLinkTrackingUtils.DeepLinkSource.QRCODE_MEDIA
 import org.wordpress.android.ui.deeplinks.handlers.DeepLinkHandlers
-import org.wordpress.android.ui.deeplinks.handlers.QRCodeAuthLinkHandler
-import org.wordpress.android.ui.deeplinks.handlers.QRCodeMediaLinkHandler
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
@@ -58,9 +54,10 @@ class DeepLinkTrackingUtils
         val trackingSource = source ?: if (uri.host == DeepLinkingIntentReceiverViewModel.HOST_WORDPRESS_COM) {
             LINK
         } else {
-            applyBannerOrQrCodeSourceFromUri(uri)
+            BANNER
         }
-        return TrackingData(trackingSource, url ?: "", sourceInfo)
+        val trackingSourceInfo = sourceInfo ?: applyBannerSourceInfoIfNeeded(uri)
+        return TrackingData(trackingSource, url ?: "", trackingSourceInfo)
     }
 
     private fun extractTargetUri(uri: UriWrapper): UriWrapper {
@@ -73,12 +70,10 @@ class DeepLinkTrackingUtils
         } ?: uri
     }
 
-    private fun applyBannerOrQrCodeSourceFromUri(uri: UriWrapper): DeepLinkSource {
-        return when (uri.getQueryParameter("campaign")) {
-            null -> BANNER
-            QRCodeMediaLinkHandler.CAMPAIGN_TYPE -> QRCODE_MEDIA
-            QRCodeAuthLinkHandler.CAMPAIGN_TYPE -> QRCODE_AUTH
-            else -> LINK
+    private fun applyBannerSourceInfoIfNeeded(uri: UriWrapper): String? {
+        return when (val campaign = uri.getQueryParameter("campaign")) {
+            null -> null
+            else -> campaign
         }
     }
 
@@ -88,7 +83,5 @@ class DeepLinkTrackingUtils
         EMAIL("email"),
         BANNER("banner"),
         LINK("link"),
-        QRCODE_AUTH("qr-code-auth"),
-        QRCODE_MEDIA("qr-code-media")
     }
 }
