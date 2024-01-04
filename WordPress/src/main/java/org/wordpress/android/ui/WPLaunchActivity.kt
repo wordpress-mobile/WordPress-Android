@@ -2,6 +2,7 @@ package org.wordpress.android.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.microsoft.clarity.Clarity
@@ -34,7 +35,7 @@ class WPLaunchActivity : LocaleAwareActivity() {
     }
 
     private fun setupClarity() {
-        if (BuildConfig.IS_JETPACK_APP) {
+        if ("google_sdk" != Build.PRODUCT && BuildConfig.IS_JETPACK_APP) {
             val config = ClarityConfig(projectId = BuildConfig.CLARITY_ID)
             Clarity.initialize(applicationContext, config)
         }
