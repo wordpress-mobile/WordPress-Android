@@ -261,6 +261,7 @@ class MySiteViewModel @Inject constructor(
         Log.e("MySiteViewModel", "refresh")
         if (isPullToRefresh) analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH)
         dashboardCardsViewModelSlice.onRefresh()
+        dashboardItemsViewModelSlice.onRefresh()
     }
 
     fun onResume() {
