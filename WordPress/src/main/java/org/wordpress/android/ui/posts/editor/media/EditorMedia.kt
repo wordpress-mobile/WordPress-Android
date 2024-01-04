@@ -295,7 +295,7 @@ class EditorMedia @Inject constructor(
                 }
         }
         analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_FAILED, properties)
-        listener.onMediaUploadFailed(media.id.toString(), error.type.name)
+        listener.onMediaUploadFailed(media.id.toString())
     }
 
     fun onMediaUploadPaused(listener: EditorMediaUploadListener, media: MediaModel) = launch {
