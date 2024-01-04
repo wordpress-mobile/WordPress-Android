@@ -132,6 +132,8 @@ class CardsBuilderTest {
                 todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
                 postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
                 bloganuaryNudgeCardBuilderParams = BloganuaryNudgeCardBuilderParams(
+                    mock(),
+                    mock(),
                     false,
                     mock(),
                     mock(),
