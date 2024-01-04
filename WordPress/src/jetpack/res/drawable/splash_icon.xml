@@ -1,0 +1,8 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:bottom="64dp"
+        android:drawable="@drawable/ic_wordpress_jetpack_welcome"
+        android:left="53dp"
+        android:right="53dp"
+        android:top="64dp" />
+</layer-list>

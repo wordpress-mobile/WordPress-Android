@@ -14,7 +14,6 @@ Language: ja_JP
     <string name="bloganuary_dashboard_nudge_overlay_text_two">回答を公開します。</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">毎日インスピレーションを与える新しいプロンプトを受け取ることができます。</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">1か月間のライティングチャレンジにご参加ください</string>
-    <string name="bloganuary_dashboard_nudge_text">1月のブログ作成のプロンプトは Bloganuary より、新年にブログ投稿を習慣付けるためのコミュニティの課題が提示されます。</string>
     <string name="bloganuary_dashboard_nudge_title">まもなく Bloganuary です !</string>
     <string name="turn_off">オフにする</string>
     <string name="leave_on">そのままにする</string>

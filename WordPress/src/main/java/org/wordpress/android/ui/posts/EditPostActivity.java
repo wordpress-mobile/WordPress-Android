@@ -3669,6 +3669,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         new Handler(Looper.getMainLooper()).post(this::invalidateOptionsMenu);
     }
 
+    @Override public void onBackHandlerButton() {
+        handleBackPressed();
+    }
+
     // FluxC events
 
     @SuppressWarnings("unused")

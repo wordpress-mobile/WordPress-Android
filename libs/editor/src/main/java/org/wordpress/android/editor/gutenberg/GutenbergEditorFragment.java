@@ -69,6 +69,7 @@ import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.UnsupportedBlock;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBlockTypeImpressionsEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBackHandlerEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnConnectionStatusEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOptionsListener;
@@ -593,6 +594,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnConnectionStatusEventListener() {
                     @Override public boolean onRequestConnectionStatus() {
                         return NetworkUtils.isNetworkAvailable(getActivity());
+                    }
+                },
+
+                new OnBackHandlerEventListener() {
+                    @Override public void onBackHandler() {
+                        mEditorFragmentListener.onBackHandlerButton();
                     }
                 },
 
