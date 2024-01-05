@@ -10,15 +10,15 @@ import org.wordpress.android.ui.domains.management.M3Theme
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint
-class DebugFlagsActivity : AppCompatActivity() {
-    private val viewModel: DebugFlagsViewModel by viewModels()
+class DebugSharedPreferenceFlagsActivity : AppCompatActivity() {
+    private val viewModel: DebugSharedPreferenceFlagsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             M3Theme {
                 val uiState by viewModel.uiStateFlow.collectAsState()
-                DebugFlagsScreen(
+                DebugSharedPreferenceFlagsScreen(
                     flags = uiState,
                     onFlagChanged = viewModel::setFlag,
                     onBackTapped = { onBackPressedDispatcher.onBackPressed() },

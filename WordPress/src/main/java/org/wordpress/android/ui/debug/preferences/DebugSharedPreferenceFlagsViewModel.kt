@@ -8,7 +8,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import javax.inject.Inject
 
 @HiltViewModel
-class DebugFlagsViewModel @Inject constructor(
+class DebugSharedPreferenceFlagsViewModel @Inject constructor(
     private val prefsWrapper: AppPrefsWrapper
 ) : ViewModel() {
     private val _uiStateFlow = MutableStateFlow<Map<String, Boolean>>(emptyMap())

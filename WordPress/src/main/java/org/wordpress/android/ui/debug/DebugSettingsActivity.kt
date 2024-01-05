@@ -46,7 +46,7 @@ class DebugSettingsActivity : LocaleAwareActivity() {
                     previewFragmentInActivity(it.name)
                 }
                 is DebugSettingsViewModel.NavigationAction.DebugFlags ->
-                    ActivityLauncher.viewDebugFlags(this@DebugSettingsActivity)
+                    ActivityLauncher.viewDebugSharedPreferenceFlags(this@DebugSettingsActivity)
             }
         }
     }

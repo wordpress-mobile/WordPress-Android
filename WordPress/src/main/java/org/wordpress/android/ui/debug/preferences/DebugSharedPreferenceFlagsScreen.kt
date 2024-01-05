@@ -21,7 +21,7 @@ import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.domains.management.M3Theme
 
 @Composable
-fun DebugFlagsScreen(
+fun DebugSharedPreferenceFlagsScreen(
     flags: Map<String, Boolean>,
     onBackTapped: () -> Unit,
     onFlagChanged: (String, Boolean) -> Unit,
@@ -80,7 +80,7 @@ fun DebugFlagRow(
 @Composable
 fun DebugFlagsScreenPreview() {
     M3Theme {
-        DebugFlagsScreen(
+        DebugSharedPreferenceFlagsScreen(
             flags = mapOf(
                 "EXAMPLE_FEATURE_FLAG" to true,
                 "RANDOM_FLAG" to false,

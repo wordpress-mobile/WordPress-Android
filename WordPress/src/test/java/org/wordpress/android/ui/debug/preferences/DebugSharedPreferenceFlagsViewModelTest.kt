@@ -12,10 +12,10 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
-class DebugFlagsViewModelTest {
+class DebugSharedPreferenceFlagsViewModelTest {
     @Mock
     private lateinit var prefsWrapper: AppPrefsWrapper
-    private lateinit var viewModel: DebugFlagsViewModel
+    private lateinit var viewModel: DebugSharedPreferenceFlagsViewModel
 
     @Test
     fun `WHEN init THEN should load the flags from the prefs`() {
@@ -37,6 +37,6 @@ class DebugFlagsViewModelTest {
     }
 
     private fun initViewModel() {
-        viewModel = DebugFlagsViewModel(prefsWrapper)
+        viewModel = DebugSharedPreferenceFlagsViewModel(prefsWrapper)
     }
 }
