@@ -12,7 +12,7 @@ class QRCodeMediaLinkHandler @Inject constructor(
      * Returns true if the URI looks like `apps.wordpress.com/get`
      */
     override fun shouldHandleUrl(uri: UriWrapper): Boolean {
-        // https://apps.wordpress.com/get/?campaign=qr-code-media&data=post_id:6,site_id:227148183
+        // https://apps.wordpress.com/get/?campaign=qr-code-media#/media/{blog_id}
         return uri.host == HOST_APPS_WORDPRESS_COM &&
                 uri.pathSegments.firstOrNull() == GET_PATH &&
                 uri.getQueryParameter(CAMPAIGN) == CAMPAIGN_TYPE
@@ -37,9 +37,12 @@ class QRCodeMediaLinkHandler @Inject constructor(
     }
 
     private fun extractSiteIdFromUrl(uri: UriWrapper): String? {
-        uri.getQueryParameter("data")?.let { data ->
-            val siteIdPair = data.split(",").find { it.startsWith("site_id:") }
-            return siteIdPair?.substringAfter(":")
+        uri.fragment?.let { fragment ->
+            val pathSegments = fragment.split("/")
+
+            if (pathSegments.isNotEmpty()) {
+                return pathSegments.last()
+            }
         }
         return null
     }
