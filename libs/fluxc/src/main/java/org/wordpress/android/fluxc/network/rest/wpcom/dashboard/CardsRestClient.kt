@@ -49,9 +49,9 @@ class CardsRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchCards(site: SiteModel, cardTypes: List<CardModel.Type>): CardsPayload<CardsResponse> {
-        val url = WPCOMV2.sites.site(site.siteId).dashboard.cards_data.url
-        val params = buildDashboardCardsParams(cardTypes)
+    suspend fun fetchCards(payload: FetchCardsPayload): CardsPayload<CardsResponse> {
+        val url = WPCOMV2.sites.site(payload.site.siteId).dashboard.cards_data.url
+        val params = buildDashboardCardsParams(payload)
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
@@ -64,8 +64,24 @@ class CardsRestClient @Inject constructor(
         }
     }
 
-    private fun buildDashboardCardsParams(cardTypes: List<CardModel.Type>) =
-            mapOf(CARDS to cardTypes.joinToString(",") { it.label })
+    private fun buildDashboardCardsParams(payload: FetchCardsPayload) = mapOf(
+        CARDS to payload.cardTypes.joinToString(",") { it.label },
+        "build_number" to payload.buildNumber,
+        "device_id" to payload.deviceId,
+        "identifier" to payload.identifier,
+        "marketing_version" to payload.marketingVersion,
+        "platform" to payload.platform,
+    )
+
+    data class FetchCardsPayload(
+        val site: SiteModel,
+        val cardTypes: List<CardModel.Type>,
+        val buildNumber: String,
+        val deviceId: String,
+        val identifier: String,
+        val marketingVersion: String,
+        val platform: String
+    )
 
     data class CardsResponse(
         @SerializedName("todays_stats") val todaysStats: TodaysStatsResponse? = null,
@@ -176,7 +192,6 @@ class CardsRestClient @Inject constructor(
     data class DynamicCardResponse(
         @SerializedName("id") val id: String,
         @SerializedName("title") val title: String?,
-        @SerializedName("remote_feature_flag") val remoteFeatureFlag: String?,
         @SerializedName("featured_image") val featuredImage: String?,
         @SerializedName("url") val url: String?,
         @SerializedName("action") val action: String?,
@@ -186,7 +201,6 @@ class CardsRestClient @Inject constructor(
         fun toDynamicCard() = DynamicCardModel(
             id = id,
             title = title,
-            remoteFeatureFlag = remoteFeatureFlag,
             featuredImage = featuredImage,
             url = url,
             action = action,
