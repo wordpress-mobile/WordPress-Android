@@ -90,7 +90,6 @@
     {
       "id": "year_in_review_2023",
       "title": "News",
-      "remote_feature_flag": "dynamic_dashboard_cards",
       "featured_image": "https://path/to/image",
       "url": "https://wordpress.com",
       "action": "Call to action",

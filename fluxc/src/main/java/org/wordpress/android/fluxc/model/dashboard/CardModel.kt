@@ -67,7 +67,6 @@ sealed class CardModel(
         data class DynamicCardModel(
             val id: String,
             val title: String?,
-            val remoteFeatureFlag: String?,
             val featuredImage: String?,
             val url: String?,
             val action: String?,
