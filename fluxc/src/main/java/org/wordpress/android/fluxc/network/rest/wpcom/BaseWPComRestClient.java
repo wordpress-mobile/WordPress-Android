@@ -26,7 +26,7 @@ import org.wordpress.android.util.LanguageUtils;
 import okhttp3.HttpUrl;
 
 public abstract class BaseWPComRestClient {
-    private static final String WPCOM_V2_PREFIX = "/wpcom/v2";
+    private static final String WPCOM_V1_PREFIX = "/wpcom/v1";
     private static final String LOCALE_PARAM_NAME_FOR_V1 = "locale";
     private static final String LOCALE_PARAM_NAME_FOR_V2 = "_locale";
 
@@ -152,7 +152,7 @@ public abstract class BaseWPComRestClient {
 
 
     private @NonNull String getLocaleParamName(@NonNull String url) {
-        return url.contains(WPCOM_V2_PREFIX) ? LOCALE_PARAM_NAME_FOR_V2 : LOCALE_PARAM_NAME_FOR_V1;
+        return url.contains(WPCOM_V1_PREFIX) ? LOCALE_PARAM_NAME_FOR_V1 : LOCALE_PARAM_NAME_FOR_V2;
     }
 
     protected @Nullable HttpUrl getHttpUrlWithLocale(@NonNull String url) {
