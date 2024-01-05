@@ -997,11 +997,6 @@ class AppInitializer @Inject constructor(
     }
 
     private fun initializeClarity() {
-        if (isEmulator()) {
-            // This prevents failing tests on emulator due to a dependency conflict
-            // Ref: https://github.com/wordpress-mobile/WordPress-Android/pull/19763#issuecomment-1854189594
-            return
-        }
         if (BuildConfig.IS_JETPACK_APP &&
             hasUserOptedInTracking() &&
             clarityAnalyticsTrackingConfig.isEnabled()) {
@@ -1019,9 +1014,6 @@ class AppInitializer @Inject constructor(
             Clarity.initialize(application, config)
         }
     }
-
-    private fun isEmulator(): Boolean =
-        "google_sdk" == Build.PRODUCT || Build.DEVICE.contains("emulator", ignoreCase = true)
 
     private fun hasUserOptedInTracking(): Boolean {
         val prefs = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext())
