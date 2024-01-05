@@ -487,6 +487,7 @@ dependencies {
             strictly androidxTestEspressoVersion
         }
         exclude group: 'com.android.support', module: 'support-annotations'
+        exclude module: 'protobuf-lite'
     }
     androidTestImplementation("androidx.test.espresso:espresso-contrib:$androidxTestEspressoVersion") {
         version {
@@ -495,11 +496,13 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
+        exclude module: 'protobuf-lite'
     }
     androidTestImplementation("androidx.test.espresso:espresso-accessibility:$androidxTestEspressoVersion") {
         version {
             strictly androidxTestEspressoVersion
         }
+        exclude module: 'protobuf-lite'
     }
     androidTestImplementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
