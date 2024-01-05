@@ -119,6 +119,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.VolleyUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.AppConfig
+import org.wordpress.android.util.config.ClarityAnalyticsTrackingConfig
 import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig
 import org.wordpress.android.util.enqueuePeriodicUploadWorkRequestForAllSites
 import org.wordpress.android.util.experiments.ExPlat
@@ -236,6 +237,9 @@ class AppInitializer @Inject constructor(
 
     @Inject
     lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
+    @Inject
+    lateinit var clarityAnalyticsTrackingConfig: ClarityAnalyticsTrackingConfig
 
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
     lateinit var storyNotificationTrackerProvider: StoryNotificationTrackerProvider
@@ -998,7 +1002,9 @@ class AppInitializer @Inject constructor(
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/pull/19763#issuecomment-1854189594
             return
         }
-        if (BuildConfig.IS_JETPACK_APP && hasUserOptedInTracking()) {
+        if (BuildConfig.IS_JETPACK_APP &&
+            hasUserOptedInTracking() &&
+            clarityAnalyticsTrackingConfig.isEnabled()) {
             val config = ClarityConfig(
                 projectId = BuildConfig.CLARITY_ID,
                 allowMeteredNetworkUsage = false,
