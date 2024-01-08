@@ -56,7 +56,10 @@ class PreviewStateHelper @Inject constructor() {
                     PostInfoType.PostNoInfo
                 )
                 if (!UploadService.isPostUploadingOrQueued(post)) {
-                    UploadService.uploadPost(activity, post.id, false)
+                    UploadService.uploadPost(
+                        activity, post.id, false,
+                        "PreviewStateHelper#startUploading, isRemoteAutoSave: true"
+                    )
                 } else {
                     AppLog.d(
                         AppLog.T.POSTS,
@@ -69,7 +72,10 @@ class PreviewStateHelper @Inject constructor() {
                     PostInfoType.PostNoInfo
                 )
                 if (!UploadService.isPostUploadingOrQueued(post)) {
-                    UploadService.uploadPost(activity, post.id, false)
+                    UploadService.uploadPost(
+                        activity, post.id, false,
+                        "PreviewStateHelper#startUploading, isRemoteAutoSave: false"
+                    )
                 } else {
                     AppLog.d(
                         AppLog.T.POSTS,

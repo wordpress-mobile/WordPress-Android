@@ -433,24 +433,6 @@ public class WPMediaUtils {
         return intent;
     }
 
-    private static Intent makePickOrCaptureIntent(Context context, String applicationId,
-                                                  LaunchCameraCallback callback) {
-        Intent pickPhotoIntent = prepareGalleryIntent(context.getString(R.string.capture_or_pick_photo));
-
-        if (DeviceUtils.getInstance().hasCamera(context)) {
-            try {
-                Intent cameraIntent = getLaunchCameraIntent(context, applicationId, callback);
-                pickPhotoIntent.putExtra(
-                        Intent.EXTRA_INITIAL_INTENTS,
-                        new Intent[]{cameraIntent});
-            } catch (IOException e) {
-                // No need to write log here
-            }
-        }
-
-        return pickPhotoIntent;
-    }
-
     public static int getPlaceholder(String url) {
         if (MediaUtils.isValidImage(url)) {
             return R.drawable.ic_image_white_24dp;
@@ -467,11 +449,6 @@ public class WPMediaUtils {
         } else {
             return R.drawable.ic_image_multiple_white_24dp;
         }
-    }
-
-    public static boolean canDeleteMedia(MediaModel mediaModel) {
-        String state = mediaModel.getUploadState();
-        return state == null || (!state.equalsIgnoreCase("uploading") && !state.equalsIgnoreCase("deleted"));
     }
 
     /**
@@ -514,10 +491,6 @@ public class WPMediaUtils {
         boolean isSelfHosted = !site.isUsingWpComRestApi();
         // self-hosted sites don't have capabilities so always return true
         return isSelfHosted || site.getHasCapabilityUploadFiles();
-    }
-
-    public static boolean currentUserCanDeleteMedia(@NonNull SiteModel site) {
-        return currentUserCanUploadMedia(site);
     }
 
     /*

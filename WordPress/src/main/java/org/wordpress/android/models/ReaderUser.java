@@ -84,10 +84,6 @@ public class ReaderUser {
         return !TextUtils.isEmpty(mUrl);
     }
 
-    public boolean hasAvatarUrl() {
-        return !TextUtils.isEmpty(mAvatarUrl);
-    }
-
     public boolean hasBlogId() {
         return (blogId != 0);
     }
@@ -106,30 +102,5 @@ public class ReaderUser {
             }
         }
         return mUrlDomain;
-    }
-
-    public boolean isSameUser(ReaderUser user) {
-        if (user == null) {
-            return false;
-        }
-        if (this.userId != user.userId) {
-            return false;
-        }
-        if (!this.getAvatarUrl().equals(user.getAvatarUrl())) {
-            return false;
-        }
-        if (!this.getDisplayName().equals(user.getDisplayName())) {
-            return false;
-        }
-        if (!this.getUserName().equals(user.getUserName())) {
-            return false;
-        }
-        if (!this.getUrl().equals(user.getUrl())) {
-            return false;
-        }
-        if (!this.getProfileUrl().equals(user.getProfileUrl())) {
-            return false;
-        }
-        return true;
     }
 }

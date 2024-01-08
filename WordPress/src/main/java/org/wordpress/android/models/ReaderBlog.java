@@ -6,9 +6,6 @@ import org.json.JSONObject;
 import org.wordpress.android.ui.Organization;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.UrlUtils;
-
-import java.util.Locale;
 
 public class ReaderBlog {
     public long blogId;
@@ -173,19 +170,6 @@ public class ReaderBlog {
      */
     public boolean isP2orA8C() {
         return getOrganization() == Organization.P2 || getOrganization() == Organization.A8C;
-    }
-
-    /*
-     * returns the mshot url to use for this blog, ex:
-     * http://s.wordpress.com/mshots/v1/http%3A%2F%2Fnickbradbury.com?w=600
-     * note that while mshots support a "h=" parameter, this crops rather than
-     * scales the image to that height
-     * https://github.com/Automattic/mShots
-     */
-    public String getMshotsUrl(int width) {
-        return "http://s.wordpress.com/mshots/v1/"
-               + UrlUtils.urlEncode(getUrl())
-               + String.format(Locale.US, "?w=%d", width);
     }
 
     public boolean isSameAs(ReaderBlog blogInfo) {

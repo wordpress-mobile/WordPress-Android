@@ -74,12 +74,4 @@ public class WPScrollView extends NestedScrollView {
             }
         }
     };
-
-    public boolean canScrollUp() {
-        return canScrollVertically(-1);
-    }
-
-    public boolean canScrollDown() {
-        return canScrollVertically(1);
-    }
 }

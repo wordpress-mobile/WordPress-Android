@@ -8,6 +8,7 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.DOMAIN_BLURB
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.MANAGE_DOMAINS
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PRIMARY_DOMAIN
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PURCHASE_DOMAIN
+import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PURCHASE_PLAN
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.SITE_DOMAINS
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.SITE_DOMAINS_HEADER
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -21,7 +22,8 @@ sealed class DomainsDashboardItem(val type: Type) {
         ADD_DOMAIN,
         MANAGE_DOMAINS,
         PURCHASE_DOMAIN,
-        DOMAIN_BLURB
+        DOMAIN_BLURB,
+        PURCHASE_PLAN
     }
 
     data class FreeDomain(
@@ -48,6 +50,14 @@ sealed class DomainsDashboardItem(val type: Type) {
         val body: UiString,
         val onClick: ListItemInteraction
     ) : DomainsDashboardItem(PURCHASE_DOMAIN)
+
+    data class PurchasePlan(
+        @DrawableRes val image: Int?,
+        val title: UiString,
+        val body: UiString,
+        val onUpgradeClick: ListItemInteraction,
+        val onDomainClick: ListItemInteraction
+    ) : DomainsDashboardItem(PURCHASE_PLAN)
 
     data class DomainBlurb(val blurb: UiString) : DomainsDashboardItem(DOMAIN_BLURB)
 

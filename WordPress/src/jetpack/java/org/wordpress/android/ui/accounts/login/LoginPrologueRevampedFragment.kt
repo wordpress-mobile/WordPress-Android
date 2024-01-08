@@ -6,8 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -23,11 +24,11 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.isActive
 import org.wordpress.android.R
-import org.wordpress.android.ui.accounts.login.components.JetpackLogo
+import org.wordpress.android.ui.accounts.login.components.WordpressJetpackLogo
 import org.wordpress.android.ui.accounts.login.components.LoopingTextWithBackground
 import org.wordpress.android.ui.accounts.login.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.components.SecondaryButton
@@ -42,6 +43,7 @@ val LocalPosition = compositionLocalOf { 0f }
 @AndroidEntryPoint
 class LoginPrologueRevampedFragment : Fragment() {
     private lateinit var loginPrologueListener: LoginPrologueListener
+    private val viewModel by viewModels<LoginPrologueRevampedViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,10 +52,16 @@ class LoginPrologueRevampedFragment : Fragment() {
     ) = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
-                PositionProvider {
+                PositionProvider(viewModel) {
                     LoginScreenRevamped(
-                        onWpComLoginClicked = loginPrologueListener::showEmailLoginScreen,
-                        onSiteAddressLoginClicked = loginPrologueListener::loginViaSiteAddress,
+                        onWpComLoginClicked = {
+                            viewModel.onWpComLoginClicked()
+                            loginPrologueListener.showEmailLoginScreen()
+                        },
+                        onSiteAddressLoginClicked = {
+                            viewModel.onSiteAddressLoginClicked()
+                            loginPrologueListener.loginViaSiteAddress()
+                        },
                     )
                 }
             }
@@ -88,7 +96,7 @@ class LoginPrologueRevampedFragment : Fragment() {
  */
 @Composable
 private fun PositionProvider(
-    viewModel: LoginPrologueRevampedViewModel = viewModel(),
+    viewModel: LoginPrologueRevampedViewModel,
     content: @Composable () -> Unit
 ) {
     val position = viewModel.positionData.observeAsState(0f)
@@ -118,10 +126,10 @@ private fun LoginScreenRevamped(
     Box {
         LoopingTextWithBackground()
         TopLinearGradient()
-        JetpackLogo(
+        WordpressJetpackLogo(
             modifier = Modifier
-                .padding(top = 60.dp)
-                .size(60.dp)
+                .padding(top = 135.dp)
+                .width(132.dp)
                 .align(Alignment.TopCenter)
         )
         ColumnWithFrostedGlassBackground(
@@ -141,6 +149,7 @@ private fun LoginScreenRevamped(
 
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL)
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, device = Devices.TABLET)
 @Composable
 fun PreviewLoginScreenRevamped() {
     AppTheme {

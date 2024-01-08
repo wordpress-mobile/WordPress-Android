@@ -19,10 +19,11 @@ class GetJetpackSocialShareLimitStatusUseCaseTest : BaseUnitTest() {
     )
 
     @Test
-    fun `Should return Disabled if site is not self hosted`() = test {
+    fun `Should return Disabled if site is hosted at WPCom`() = test {
         val siteModel = SiteModel().apply {
             siteId = 1L
-            setIsJetpackInstalled(false)
+            setIsWPCom(true)
+            setIsWPComAtomic(false)
         }
         val expected = ShareLimit.Disabled
         val actual = classToTest.execute(siteModel)
@@ -30,10 +31,23 @@ class GetJetpackSocialShareLimitStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should return Disabled if site has social-shares-1000 feature active`() = test {
+    fun `Should return Disabled if site is Atomic`() = test {
         val siteModel = SiteModel().apply {
             siteId = 1L
-            setIsJetpackInstalled(true)
+            setIsWPCom(false)
+            setIsWPComAtomic(true)
+        }
+        val expected = ShareLimit.Disabled
+        val actual = classToTest.execute(siteModel)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Should return Disabled if site is self-hosted AND has social-shares-1000 feature active`() = test {
+        val siteModel = SiteModel().apply {
+            siteId = 1L
+            setIsWPCom(false)
+            setIsWPComAtomic(false)
             planActiveFeatures = "social-shares-1000"
         }
         val expected = ShareLimit.Disabled
@@ -42,7 +56,7 @@ class GetJetpackSocialShareLimitStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should return Enabled if active features list is null AND is self hosted`() = test {
+    fun `Should return Enabled if site is self-hosted AND active features list is null`() = test {
         val jetpackSocial = JetpackSocial(
             isShareLimitEnabled = true,
             toBePublicizedCount = 10,
@@ -55,7 +69,8 @@ class GetJetpackSocialShareLimitStatusUseCaseTest : BaseUnitTest() {
         )
         val siteModel = SiteModel().apply {
             siteId = 1L
-            setIsJetpackInstalled(true)
+            setIsWPCom(false)
+            setIsWPComAtomic(false)
             planActiveFeatures = null
         }
         whenever(siteStore.fetchJetpackSocial(siteModel)).thenReturn(FetchedJetpackSocialResult.Success(jetpackSocial))
@@ -83,7 +98,8 @@ class GetJetpackSocialShareLimitStatusUseCaseTest : BaseUnitTest() {
         )
         val siteModel = SiteModel().apply {
             siteId = 1L
-            setIsJetpackInstalled(true)
+            setIsWPCom(false)
+            setIsWPComAtomic(false)
             planActiveFeatures = ""
         }
         whenever(siteStore.fetchJetpackSocial(siteModel)).thenReturn(FetchedJetpackSocialResult.Success(jetpackSocial))
@@ -101,7 +117,8 @@ class GetJetpackSocialShareLimitStatusUseCaseTest : BaseUnitTest() {
     fun `Should return Disabled if fetch site fails`() = test {
         val siteModel = SiteModel().apply {
             siteId = 1L
-            setIsJetpackInstalled(true)
+            setIsWPCom(false)
+            setIsWPComAtomic(false)
             planActiveFeatures = ""
         }
         whenever(siteStore.fetchJetpackSocial(siteModel)).thenReturn(
