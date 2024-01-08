@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderBlogList;
+import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -197,6 +198,26 @@ public class ReaderBlogTable {
             db.endTransaction();
         }
     }
+
+    /*
+     * return list of URLs of followed blogs
+     */
+    public static ReaderUrlList getFollowedBlogUrls() {
+        Cursor c = ReaderDatabase.getReadableDb()
+                                 .rawQuery("SELECT DISTINCT blog_url FROM tbl_blog_info WHERE is_following!=0", null);
+        try {
+            ReaderUrlList urls = new ReaderUrlList();
+            if (c.moveToFirst()) {
+                do {
+                    urls.add(c.getString(0));
+                } while (c.moveToNext());
+            }
+            return urls;
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
     /*
      * sets the follow state for passed blog without creating a record for it if it doesn't exist
      */
@@ -263,6 +284,13 @@ public class ReaderBlogTable {
                 + SqlUtils.boolToSql(isEnabled)
                 + " WHERE blog_id=?",
                 new String[]{Long.toString(blogId)});
+    }
+
+    public static String getBlogName(long blogId) {
+        String[] args = {Long.toString(blogId)};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                                       "SELECT name FROM tbl_blog_info WHERE blog_id=?",
+                                       args);
     }
 
     public static String getBlogUrl(long blogId) {

@@ -552,6 +552,10 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         return true;
     }
 
+    private static void openWPCOMURL(Context context, String url, String shareableUrl, String shareSubject) {
+        openWPCOMURL(context, url, shareableUrl, shareSubject, false, false, null);
+    }
+
     private static void openWPCOMURL(
             Context context,
             String url,

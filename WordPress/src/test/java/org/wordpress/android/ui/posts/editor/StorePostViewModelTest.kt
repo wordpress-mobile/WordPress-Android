@@ -8,7 +8,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
@@ -250,7 +249,7 @@ class StorePostViewModelTest : BaseUnitTest() {
         verify(savePostToDbUseCase).savePostToDb(postRepository, site)
         assertThat(result).isEqualTo(SAVED_ONLINE)
         verify(postUtils).trackSavePostAnalytics(postModel, site)
-        verify(uploadService).uploadPost(eq(context), eq(postId), eq(isFirstTimePublish), any())
+        verify(uploadService).uploadPost(context, postId, isFirstTimePublish)
     }
 
     @Test

@@ -6,6 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
@@ -89,20 +90,20 @@ class HistoryViewModel @Inject constructor(
         }
         isStarted = true
         this.site = site
-        connectionStatus.observe(lifecycleOwner) {
+        connectionStatus.observe(lifecycleOwner, Observer {
             if (it == AVAILABLE) {
                 fetchRevisions()
             }
-        }
+        })
         launch {
             val post: PostModel? = withContext(bgDispatcher) {
                 postStore.getPostByLocalPostId(localPostId)
             }
 
             revisionsList.clear()
-            _revisions.postValue(emptyList())
+            _revisions.value = emptyList()
 
-            this@HistoryViewModel._post.postValue(post)
+            this@HistoryViewModel._post.value = post
 
             fetchRevisions()
 
@@ -119,7 +120,7 @@ class HistoryViewModel @Inject constructor(
         }
 
         revisionAuthorsId = ArrayList(revisionAuthorsId.distinct())
-        _revisions.postValue(getHistoryListItemsFromRevisionModels(revisions))
+        _revisions.value = getHistoryListItemsFromRevisionModels(revisions)
 
         if (revisionAuthorsId.isNotEmpty()) {
             fetchRevisionAuthorDetails(revisionAuthorsId)
@@ -242,12 +243,10 @@ class HistoryViewModel @Inject constructor(
                 _listStatus.value = HistoryListStatus.NO_NETWORK
             }
         } else {
-           launch(bgDispatcher) {
-               _listStatus.postValue(HistoryListStatus.DONE)
-               createRevisionsList(event.revisionsModel.revisions)
-               removeRevisionsFromLocalDB(event.post)
-               saveRevisionsToLocalDB(event.post, event.revisionsModel.revisions)
-           }
+            _listStatus.value = HistoryListStatus.DONE
+            createRevisionsList(event.revisionsModel.revisions)
+            removeRevisionsFromLocalDB(event.post)
+            saveRevisionsToLocalDB(event.post, event.revisionsModel.revisions)
         }
     }
 }

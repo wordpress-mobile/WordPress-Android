@@ -73,6 +73,15 @@ public class ReaderLikeTable {
         }
     }
 
+    public static int getNumLikesForPost(ReaderPost post) {
+        if (post == null) {
+            return 0;
+        }
+        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
+        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
+                                    "SELECT count(*) FROM tbl_post_likes WHERE blog_id=? AND post_id=?", args);
+    }
+
     public static void setCurrentUserLikesPost(ReaderPost post, boolean isLiked, long wpComUserId) {
         if (post == null) {
             return;
@@ -118,6 +127,44 @@ public class ReaderLikeTable {
             db.endTransaction();
             SqlUtils.closeStatement(stmt);
         }
+    }
+
+
+    /****
+     * comment likes
+     */
+
+    public static ReaderUserIdList getLikesForComment(ReaderComment comment) {
+        ReaderUserIdList userIds = new ReaderUserIdList();
+        if (comment == null) {
+            return userIds;
+        }
+
+        String[] args = {Long.toString(comment.blogId),
+                Long.toString(comment.commentId)};
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(
+                "SELECT user_id FROM tbl_comment_likes WHERE blog_id=? AND comment_id=?", args);
+        try {
+            if (c.moveToFirst()) {
+                do {
+                    userIds.add(c.getLong(0));
+                } while (c.moveToNext());
+            }
+
+            return userIds;
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
+    public static int getNumLikesForComment(ReaderComment comment) {
+        if (comment == null) {
+            return 0;
+        }
+        String[] args = {Long.toString(comment.blogId),
+                Long.toString(comment.commentId)};
+        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
+                                    "SELECT count(*) FROM tbl_comment_likes WHERE blog_id=? AND comment_id=?", args);
     }
 
     public static void setCurrentUserLikesComment(ReaderComment comment, boolean isLiked, long wpComUserId) {

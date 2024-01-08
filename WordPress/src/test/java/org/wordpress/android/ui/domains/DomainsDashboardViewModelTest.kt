@@ -4,6 +4,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -18,7 +20,6 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
 import org.wordpress.android.ui.domains.DomainsDashboardItem.FreeDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
-import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
@@ -32,7 +33,9 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 class DomainsDashboardViewModelTest : BaseUnitTest() {
     private val siteStore: SiteStore = mock()
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()
-    private val htmlMessageUtils: HtmlMessageUtils = mock()
+    private val htmlMessageUtils: HtmlMessageUtils = mock {
+        on { getHtmlMessageFromStringFormatResId(any(), any()) } doReturn ""
+    }
     private val fetchPlansUseCase: FetchPlansUseCase = mock()
 
     private lateinit var viewModel: DomainsDashboardViewModel
@@ -84,8 +87,8 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
         assertThat(dashboardItems).hasSize(2)
 
         assertThat(dashboardItems[0]).isInstanceOf(FreeDomain::class.java)
-        assertThat(dashboardItems[1]).isInstanceOf(PurchasePlan::class.java)
-        assertThat((dashboardItems[1] as PurchasePlan).title)
+        assertThat(dashboardItems[1]).isInstanceOf(PurchaseDomain::class.java)
+        assertThat((dashboardItems[1] as PurchaseDomain).title)
             .isEqualTo(UiStringRes(R.string.domains_free_plan_get_your_domain_title))
     }
 

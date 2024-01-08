@@ -89,8 +89,7 @@ fun handlePostListAction(
             val intent = UploadService.getRetryUploadServiceIntent(
                 activity,
                 action.post,
-                action.trackAnalytics,
-                "PostListAction.RetryUpload"
+                action.trackAnalytics
             )
             activity.startService(intent)
         }

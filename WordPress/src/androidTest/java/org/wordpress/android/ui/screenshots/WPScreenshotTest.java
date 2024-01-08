@@ -200,6 +200,10 @@ public class WPScreenshotTest extends BaseTest {
 
         waitForElementToBeDisplayedWithoutFailure(R.id.recycler_view);
 
+        if (isElementDisplayed(R.id.tooltip_message)) {
+            clickOn(R.id.tooltip_message);
+        }
+
         takeScreenshot("4-keep-tabs-on-your-site");
     }
 

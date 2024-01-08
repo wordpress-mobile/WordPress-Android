@@ -106,6 +106,46 @@ public class WPUrlUtilsTest {
     }
 
     @Test
+    public void testSafeToAddAuthToken15() {
+        // Not HTTPS
+        assertFalse(WPUrlUtils.safeToAddWordPressComAuthToken(buildURI(WPCOM_ADDRESS_1)));
+    }
+
+    @Test
+    public void testSafeToAddAuthToken16() {
+        // Not HTTPS
+        assertFalse(WPUrlUtils.safeToAddWordPressComAuthToken(buildURI(WPCOM_ADDRESS_2)));
+    }
+
+    @Test
+    public void testSafeToAddAuthToken17() {
+        // Not HTTPS
+        assertFalse(WPUrlUtils.safeToAddWordPressComAuthToken(buildURI(WPCOM_ADDRESS_3)));
+    }
+
+    @Test
+    public void testSafeToAddAuthToken18() {
+        assertTrue(WPUrlUtils.safeToAddWordPressComAuthToken(buildURI(WPCOM_ADDRESS_4)));
+    }
+
+    @Test
+    public void testSafeToAddAuthToken19() {
+        assertTrue(WPUrlUtils.safeToAddWordPressComAuthToken(buildURI(WPCOM_ADDRESS_5)));
+    }
+
+    @Test
+    public void testSafeToAddAuthToken20() {
+        // Not wpcom
+        assertFalse(WPUrlUtils.safeToAddWordPressComAuthToken(buildURI(NOT_WPCOM_ADDRESS_1)));
+    }
+
+    @Test
+    public void testSafeToAddAuthToken21() {
+        // Not wpcom
+        assertFalse(WPUrlUtils.safeToAddWordPressComAuthToken(buildURI(NOT_WPCOM_ADDRESS_2)));
+    }
+
+    @Test
     public void testSafeToAddAuthToken22() {
         // Not wpcom
         assertFalse(WPUrlUtils.safeToAddWordPressComAuthToken(NOT_WPCOM_ADDRESS_3));
@@ -118,6 +158,12 @@ public class WPUrlUtilsTest {
     }
 
     @Test
+    public void testSafeToAddAuthToken24() {
+        // Not wpcom
+        assertFalse(WPUrlUtils.safeToAddWordPressComAuthToken(buildURI(NOT_WPCOM_ADDRESS_3)));
+    }
+
+    @Test
     public void testSafeToAddAuthToken25() {
         assertTrue(WPUrlUtils.safeToAddWordPressComAuthToken(WPCOM_ADDRESS_6));
     }
@@ -125,6 +171,11 @@ public class WPUrlUtilsTest {
     @Test
     public void testSafeToAddAuthToken26() {
         assertTrue(WPUrlUtils.safeToAddWordPressComAuthToken(buildURL(WPCOM_ADDRESS_6)));
+    }
+
+    @Test
+    public void testSafeToAddAuthToken27() {
+        assertTrue(WPUrlUtils.safeToAddWordPressComAuthToken(buildURI(WPCOM_ADDRESS_6)));
     }
 
     @Test
@@ -207,6 +258,36 @@ public class WPUrlUtilsTest {
     }
 
     @Test
+    public void testIsWPCOMURI1() {
+        assertTrue(WPUrlUtils.isWordPressCom(buildURI(WPCOM_ADDRESS_1)));
+    }
+
+    @Test
+    public void testIsWPCOMURI2() {
+        assertTrue(WPUrlUtils.isWordPressCom(buildURI(WPCOM_ADDRESS_2)));
+    }
+
+    @Test
+    public void testIsWPCOMURI3() {
+        assertTrue(WPUrlUtils.isWordPressCom(buildURI(WPCOM_ADDRESS_3)));
+    }
+
+    @Test
+    public void testIsWPCOMURI4() {
+        assertTrue(WPUrlUtils.isWordPressCom(buildURI(WPCOM_ADDRESS_4)));
+    }
+
+    @Test
+    public void testIsWPCOMURI5() {
+        assertTrue(WPUrlUtils.isWordPressCom(buildURI(WPCOM_ADDRESS_5)));
+    }
+
+    @Test
+    public void testIsWPCOMURI6() {
+        assertTrue(WPUrlUtils.isWordPressCom(buildURI(WPCOM_ADDRESS_6)));
+    }
+
+    @Test
     public void testIsNOTWPCOM1() {
         assertFalse(WPUrlUtils.isWordPressCom(NOT_WPCOM_ADDRESS_1));
     }
@@ -227,6 +308,16 @@ public class WPUrlUtilsTest {
     }
 
     @Test
+    public void testIsNOTWPCOM5() {
+        assertFalse(WPUrlUtils.isWordPressCom(buildURI(NOT_WPCOM_ADDRESS_1)));
+    }
+
+    @Test
+    public void testIsNOTWPCOM6() {
+        assertFalse(WPUrlUtils.isWordPressCom(buildURI(NOT_WPCOM_ADDRESS_2)));
+    }
+
+    @Test
     public void testIsNOTWPCOM7() {
         assertFalse(WPUrlUtils.isWordPressCom(NOT_WPCOM_ADDRESS_3));
     }
@@ -234,5 +325,10 @@ public class WPUrlUtilsTest {
     @Test
     public void testIsNOTWPCOM8() {
         assertFalse(WPUrlUtils.isWordPressCom(buildURL(NOT_WPCOM_ADDRESS_3)));
+    }
+
+    @Test
+    public void testIsNOTWPCOM9() {
+        assertFalse(WPUrlUtils.isWordPressCom(buildURI(NOT_WPCOM_ADDRESS_3)));
     }
 }

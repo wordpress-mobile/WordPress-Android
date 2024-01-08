@@ -14,7 +14,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 
 @Composable
@@ -39,8 +38,9 @@ fun SecondaryButton(
     ) {
         Text(
             text = stringResource(R.string.enter_your_site_address),
-            style = TextStyle(fontWeight = FontWeight.Normal, fontSize = 16.sp),
-            modifier = Modifier.padding(vertical = 8.dp),
+            style = TextStyle(
+                fontWeight = FontWeight.Medium,
+            ),
         )
     }
 }

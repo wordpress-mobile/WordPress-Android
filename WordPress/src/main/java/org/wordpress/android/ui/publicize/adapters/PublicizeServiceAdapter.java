@@ -34,6 +34,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     private final PublicizeServiceList mServices = new PublicizeServiceList();
     private final PublicizeConnectionList mConnections = new PublicizeConnectionList();
     private final long mSiteId;
+    private final int mBlavatarSz;
     private final ColorFilter mGrayScaleFilter;
     private final long mCurrentUserId;
     private OnAdapterLoadedListener mAdapterLoadedListener;
@@ -51,6 +52,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
         mSiteId = siteId;
+        mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
         mCurrentUserId = currentUserId;
         mShouldHideGPlus = true;
 

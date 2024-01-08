@@ -199,7 +199,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onAddDeviceMediaClicked(boolean allowMultipleSelection);
         void onCaptureVideoClicked();
         boolean onMediaRetryClicked(String mediaId);
-        void onMediaRetryAll(Set<String> mediaIdSet);
+        void onMediaRetryAllClicked(Set<String> mediaIdSet);
         void onMediaUploadCancelClicked(String mediaId);
         void onMediaDeleted(String mediaId);
         void onUndoMediaCheck(String undoedContent);
@@ -236,8 +236,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onToggleUndo(boolean isDisabled);
 
         void onToggleRedo(boolean isDisabled);
-
-        void onBackHandlerButton();
     }
 
     /**

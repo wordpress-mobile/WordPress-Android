@@ -14,13 +14,13 @@ import javax.inject.Inject
  * contain any static methods.
  */
 class UploadServiceFacade @Inject constructor(private val appContext: Context) {
-    fun uploadPost(context: Context, post: PostModel, trackAnalytics: Boolean, sourceForLogging: String = "") {
-        val intent = UploadService.getRetryUploadServiceIntent(context, post, trackAnalytics, sourceForLogging)
+    fun uploadPost(context: Context, post: PostModel, trackAnalytics: Boolean) {
+        val intent = UploadService.getRetryUploadServiceIntent(context, post, trackAnalytics)
         context.startService(intent)
     }
 
-    fun uploadPost(context: Context, postId: Int, isFirstTimePublish: Boolean, sourceForLogging: String = "") =
-        UploadService.uploadPost(context, postId, isFirstTimePublish, sourceForLogging)
+    fun uploadPost(context: Context, postId: Int, isFirstTimePublish: Boolean) =
+        UploadService.uploadPost(context, postId, isFirstTimePublish)
 
     fun isPostUploadingOrQueued(post: PostImmutableModel) =
         UploadService.isPostUploadingOrQueued(post)
@@ -31,8 +31,8 @@ class UploadServiceFacade @Inject constructor(private val appContext: Context) {
     fun cancelFinalNotificationForMedia(site: SiteModel) =
         UploadService.cancelFinalNotificationForMedia(appContext, site)
 
-    fun uploadMedia(mediaList: ArrayList<MediaModel>, sourceForLogging: String = "") =
-        UploadService.uploadMedia(appContext, mediaList, sourceForLogging)
+    fun uploadMedia(mediaList: ArrayList<MediaModel>) =
+        UploadService.uploadMedia(appContext, mediaList)
 
     fun getPendingOrInProgressFeaturedImageUploadForPost(post: PostImmutableModel): MediaModel? =
         UploadService.getPendingOrInProgressFeaturedImageUploadForPost(post)

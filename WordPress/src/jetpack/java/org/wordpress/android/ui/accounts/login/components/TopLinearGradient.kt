@@ -21,7 +21,7 @@ fun TopLinearGradient(modifier: Modifier = Modifier) {
         contentScale = ContentScale.FillBounds,
         modifier = modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.82f)
+            .fillMaxHeight(0.62f)
     )
 }
 

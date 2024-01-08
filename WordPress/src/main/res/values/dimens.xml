@@ -8,9 +8,12 @@
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
 
     <dimen name="tab_height">48dp</dimen>
+    <dimen name="me_menu_width">64dp</dimen>
+    <dimen name="me_menu_avatar_end_offset">11dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="toolbar_content_offset">72dp</dimen>
     <dimen name="toolbar_content_offset_end">0dp</dimen>
+    <dimen name="collapsible_toolbar_expanded_bottom_margin">28dp</dimen>
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
@@ -44,6 +47,7 @@
 
     <dimen name="message_bar_elevation">2dp</dimen>
     <dimen name="tabs_elevation">4dp</dimen>
+    <dimen name="snackbar_height_minimum">48dp</dimen>
     <dimen name="snackbar_radius">4dp</dimen>
 
     <dimen name="media_grid_progress_height">24dp</dimen>
@@ -334,6 +338,7 @@
     <dimen name="my_site_post_item_image_corner_radius">2dp</dimen>
     <dimen name="my_site_post_item_image_size">48dp</dimen>
     <dimen name="my_site_post_item_time_icon_size">12dp</dimen>
+    <dimen name="my_site_create_first_image_width">75dp</dimen>
 
     <!-- my site error card -->
     <dimen name="my_site_error_card_border_radius">4dp</dimen>
@@ -347,6 +352,8 @@
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
     <dimen name="me_list_row_padding_horizontal">@dimen/content_margin</dimen>
+    <dimen name="me_avatar_padding">1dp</dimen>
+    <dimen name="me_avatar_width">1dp</dimen>
 
     <!--site picker-->
     <dimen name="menu_item_height">48dp</dimen>
@@ -571,8 +578,6 @@
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
     <dimen name="domain_suggestions_progress_indicator_size">24dp</dimen>
 
-    <dimen name="domain_plan_card_title_top_margin">78dp</dimen>
-
     <dimen name="keyline_second">72dp</dimen>
 
     <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>
@@ -593,6 +598,8 @@
     <!--Main bottom sheet icon size -->
     <dimen name="main_bottom_sheet_list_row_icon_size">32dp</dimen>
     <dimen name="main_bottom_sheet_list_row_min_height">48dp</dimen>
+    <dimen name="main_fab_tooltip_elevation">6dp</dimen>
+    <dimen name="main_fab_tooltip_arrow_size">16dp</dimen>
 
     <!-- shimmering skeleton -->
     <dimen name="skeleton_shimmer_base_alpha">0.33</dimen>
@@ -673,7 +680,7 @@
     <dimen name="login_prologue_content_area">320dp</dimen>
     <dimen name="login_prologue_background_circle_size">140dp</dimen>
     <dimen name="login_prologue_background_circle_size_large">160dp</dimen>
-    <dimen name="login_prologue_revamped_buttons_padding">20dp</dimen>
+    <dimen name="login_prologue_revamped_buttons_padding">32dp</dimen>
 
     <!-- edit text with chips view -->
     <dimen name="edit_text_with_chips_margin_top">5dp</dimen>

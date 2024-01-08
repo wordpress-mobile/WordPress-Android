@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -77,6 +78,7 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         private final TextView mActiveView;
         private final TextView mPriceView;
         private final ImageButton mImageButton;
+        private final FrameLayout mFrameLayout;
         private final RelativeLayout mDetailsView;
 
         ThemeViewHolder(View view) {
@@ -86,6 +88,7 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
             mPriceView = view.findViewById(R.id.theme_grid_item_price);
             mActiveView = view.findViewById(R.id.theme_grid_item_active);
             mImageButton = view.findViewById(R.id.theme_grid_item_image_button);
+            mFrameLayout = view.findViewById(R.id.theme_grid_item_image_layout);
             mDetailsView = view.findViewById(R.id.theme_grid_item_details);
         }
     }

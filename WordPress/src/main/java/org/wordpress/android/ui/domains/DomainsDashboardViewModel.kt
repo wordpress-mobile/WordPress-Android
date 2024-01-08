@@ -7,7 +7,6 @@ import kotlinx.coroutines.async
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_GET_PLAN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_VIEWED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.fluxc.model.PlanModel
@@ -23,10 +22,8 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.FreeDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
-import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
-import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetPlan
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -135,7 +132,7 @@ class DomainsDashboardViewModel @Inject constructor(
         val listItems = mutableListOf<DomainsDashboardItem>()
         if (hasDomainCredit) {
             listItems += PurchaseDomain(
-                R.drawable.browser_address_bar,
+                null,
                 UiStringRes(R.string.domains_paid_plan_claim_your_domain_title),
                 UiStringRes(R.string.domains_paid_plan_claim_your_domain_caption),
                 ListItemInteraction.create(this::onClaimDomainClick)
@@ -153,17 +150,21 @@ class DomainsDashboardViewModel @Inject constructor(
         } else {
             listItems += if (hasPaidPlan) {
                 PurchaseDomain(
-                    R.drawable.browser_address_bar,
+                    R.drawable.img_illustration_domains_card_header,
                     UiStringRes(R.string.domains_paid_plan_add_your_domain_title),
                     UiStringRes(R.string.domains_paid_plan_add_your_domain_caption),
                     ListItemInteraction.create(this::onGetDomainClick)
                 )
             } else {
-                PurchasePlan(
-                    R.drawable.browser_address_bar,
+                PurchaseDomain(
+                    R.drawable.img_illustration_domains_card_header,
                     UiStringRes(R.string.domains_free_plan_get_your_domain_title),
-                    UiStringRes(R.string.domains_upgrade_to_plan_caption),
-                    ListItemInteraction.create(this::onGetPlanClick),
+                    UiStringText(
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                            R.string.domains_free_plan_get_your_domain_caption,
+                            freeDomainUrl
+                        )
+                    ),
                     ListItemInteraction.create(this::onGetDomainClick)
                 )
             }
@@ -204,11 +205,6 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun onGetDomainClick() {
         analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED, site)
         _onNavigation.value = Event(GetDomain(site))
-    }
-
-    private fun onGetPlanClick() {
-        analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_GET_PLAN_TAPPED, site)
-        _onNavigation.value = Event(GetPlan(site))
     }
 
     private fun onClaimDomainClick() {

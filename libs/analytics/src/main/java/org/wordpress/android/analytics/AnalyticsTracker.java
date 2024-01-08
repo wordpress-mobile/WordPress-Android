@@ -14,6 +14,10 @@ import java.util.Map;
 public final class AnalyticsTracker {
     private static boolean mHasUserOptedOut;
 
+    public static final String READER_DETAIL_TYPE_KEY = "post_detail_type";
+    public static final String READER_DETAIL_TYPE_NORMAL = "normal";
+    public static final String READER_DETAIL_TYPE_BLOG_PREVIEW = "preview-blog";
+    public static final String READER_DETAIL_TYPE_TAG_PREVIEW = "preview-tag";
     public static final String ACTIVITY_LOG_ACTIVITY_ID_KEY = "activity_id";
     public static final String NOTIFICATIONS_SELECTED_FILTER = "selected_filter";
 
@@ -714,7 +718,6 @@ public final class AnalyticsTracker {
         DOMAIN_CREDIT_NAME_SELECTED,
         DOMAINS_DASHBOARD_VIEWED,
         DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED,
-        DOMAINS_DASHBOARD_GET_PLAN_TAPPED,
         DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED,
         DOMAINS_SEARCH_SELECT_DOMAIN_TAPPED,
         DOMAINS_REGISTRATION_FORM_VIEWED,
@@ -1053,6 +1056,10 @@ public final class AnalyticsTracker {
         PRIVACY_CHOICES_BANNER_PRESENTED,
         PRIVACY_CHOICES_BANNER_SETTINGS_BUTTON_TAPPED,
         PRIVACY_CHOICES_BANNER_SAVE_BUTTON_TAPPED,
+        DASHBOARD_CARD_DOMAIN_TRANSFER_SHOWN,
+        DASHBOARD_CARD_DOMAIN_TRANSFER_TAPPED,
+        DASHBOARD_CARD_DOMAIN_TRANSFER_MORE_MENU_TAPPED,
+        DASHBOARD_CARD_DOMAIN_TRANSFER_HIDDEN,
         JETPACK_SOCIAL_AUTO_SHARING_CONNECTION_TOGGLED,
         JETPACK_SOCIAL_SHARE_LIMIT_DISPLAYED,
         JETPACK_SOCIAL_UPGRADE_LINK_TAPPED,
@@ -1095,10 +1102,6 @@ public final class AnalyticsTracker {
         SOTW_2023_NUDGE_POST_EVENT_CARD_SHOWN,
         SOTW_2023_NUDGE_POST_EVENT_CARD_HIDE_TAPPED,
         SOTW_2023_NUDGE_POST_EVENT_CARD_CTA_TAPPED,
-        DYNAMIC_DASHBOARD_CARD_SHOWN,
-        DYNAMIC_DASHBOARD_CARD_TAPPED,
-        DYNAMIC_DASHBOARD_CARD_CTA_TAPPED,
-        DYNAMIC_DASHBOARD_CARD_HIDE_TAPPED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

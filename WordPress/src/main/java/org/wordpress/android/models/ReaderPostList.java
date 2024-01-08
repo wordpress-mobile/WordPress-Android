@@ -57,6 +57,25 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
     }
 
     /*
+     * does passed list contain the same posts as this list?
+     */
+    public boolean isSameList(ReaderPostList posts) {
+        if (posts == null || posts.size() != this.size()) {
+            return false;
+        }
+
+        for (ReaderPost post : posts) {
+            int index = indexOfPost(post);
+            if (index == -1 || !post.isSamePost(this.get(index))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    /*
      * Does passed list contain the same posts as this list?
      * Also compares the bookmark flag that is not yet implemented on server
      * We might want to use original isSameList when bookmarked flag will be implemented on server side and Post model
@@ -82,5 +101,18 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
         }
 
         return true;
+    }
+
+    /*
+     * returns posts in this list which are in the passed blog
+     */
+    public ReaderPostList getPostsInBlog(long blogId) {
+        ReaderPostList postsInBlog = new ReaderPostList();
+        for (ReaderPost post : this) {
+            if (post.blogId == blogId) {
+                postsInBlog.add(post);
+            }
+        }
+        return postsInBlog;
     }
 }

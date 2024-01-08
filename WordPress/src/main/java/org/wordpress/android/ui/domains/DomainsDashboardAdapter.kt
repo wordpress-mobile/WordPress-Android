@@ -10,14 +10,12 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.ManageDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
-import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.ADD_DOMAIN
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.DOMAIN_BLURB
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.MANAGE_DOMAINS
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PRIMARY_DOMAIN
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PURCHASE_DOMAIN
-import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PURCHASE_PLAN
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.SITE_DOMAINS
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.SITE_DOMAINS_HEADER
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.AddDomainViewHolder
@@ -27,7 +25,6 @@ import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.ManageDomains
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.PurchaseDomainViewHolder
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.SiteDomainsHeaderViewHolder
 import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.SiteDomainsViewHolder
-import org.wordpress.android.ui.domains.DomainsDashboardViewHolder.PurchasePlanViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
@@ -43,7 +40,6 @@ class DomainsDashboardAdapter @Inject constructor(
             MANAGE_DOMAINS -> ManageDomainsViewHolder(parent)
             PURCHASE_DOMAIN -> PurchaseDomainViewHolder(parent, uiHelpers)
             DOMAIN_BLURB -> DomainBlurbViewHolder(parent, uiHelpers)
-            PURCHASE_PLAN -> PurchasePlanViewHolder(parent, uiHelpers)
         }
     }
 
@@ -57,7 +53,6 @@ class DomainsDashboardAdapter @Inject constructor(
             is ManageDomainsViewHolder -> holder.onBind(item as ManageDomains)
             is PurchaseDomainViewHolder -> holder.onBind(item as PurchaseDomain)
             is DomainBlurbViewHolder -> holder.onBind(item as DomainBlurb)
-            is PurchasePlanViewHolder -> holder.onBind(item as PurchasePlan)
         }
     }
 

@@ -61,8 +61,7 @@ class UploadStarterConcurrentTest : BaseUnitTest() {
         verify(uploadServiceFacade, times(draftPosts.size)).uploadPost(
             context = any(),
             post = any(),
-            trackAnalytics = any(),
-            sourceForLogging = any()
+            trackAnalytics = any()
         )
     }
 

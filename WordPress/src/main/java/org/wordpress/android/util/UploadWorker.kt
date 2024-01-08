@@ -33,7 +33,6 @@ class UploadWorker(
     }
 
     override fun doWork(): Result {
-        AppLog.i(AppLog.T.MAIN, "UploadWorker started")
         runBlocking {
             val job = when (val localSiteId = inputData.getInt(WordPress.LOCAL_SITE_ID, UPLOAD_FROM_ALL_SITES)) {
                 UPLOAD_FROM_ALL_SITES -> uploadStarter.queueUploadFromAllSites()
@@ -41,7 +40,6 @@ class UploadWorker(
             }
             job?.join()
         }
-        AppLog.i(AppLog.T.MAIN, "UploadWorker finished")
         return Result.success()
     }
 

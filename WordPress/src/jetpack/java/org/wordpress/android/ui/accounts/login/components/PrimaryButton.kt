@@ -13,7 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.unit.Margin
 
@@ -39,8 +38,9 @@ fun PrimaryButton(
     ) {
         Text(
             text = stringResource(R.string.continue_with_wpcom_no_signup),
-            style = TextStyle(fontWeight = FontWeight.Medium, fontSize = 16.sp),
-            modifier = Modifier.padding(vertical = 8.dp),
+            style = TextStyle(
+                fontWeight = FontWeight.SemiBold,
+            ),
         )
     }
 }
