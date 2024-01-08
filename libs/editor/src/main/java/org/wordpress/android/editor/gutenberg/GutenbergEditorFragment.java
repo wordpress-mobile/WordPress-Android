@@ -1601,7 +1601,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onConnectionStatusChange(boolean isConnected) {
         getGutenbergContainerFragment().onConnectionStatusChange(isConnected);
-        if (BuildConfig.DEBUG && isConnected && hasFailedMediaUploads()) {
+        if (isConnected && hasFailedMediaUploads()) {
             mEditorFragmentListener.onMediaRetryAll(mFailedMediaIds);
         }
     }
