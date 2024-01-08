@@ -75,7 +75,7 @@ class FeaturedImageHelper @Inject constructor(
     private fun startUploadService(media: MediaModel) {
         val mediaList = ArrayList<MediaModel>()
         mediaList.add(media)
-        uploadServiceFacade.uploadMedia(mediaList, "FeaturedImageHelper#startUploadService")
+        uploadServiceFacade.uploadMedia(mediaList)
     }
 
     fun queueFeaturedImageForUpload(

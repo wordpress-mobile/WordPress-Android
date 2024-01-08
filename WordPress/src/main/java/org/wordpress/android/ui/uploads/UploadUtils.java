@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
+import org.wordpress.android.fluxc.store.UploadStore.UploadError;
 import org.wordpress.android.fluxc.utils.MimeTypes;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -182,6 +183,10 @@ public class UploadUtils {
         }
 
         return getErrorMessageFromMediaError(context, media, error);
+    }
+
+    public static boolean isMediaError(UploadError uploadError) {
+        return uploadError != null && uploadError.mediaError != null;
     }
 
     public static void handleEditPostModelResultSnackbars(@NonNull final Activity activity,
@@ -451,7 +456,7 @@ public class UploadUtils {
         dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
 
         if (NetworkUtils.isNetworkAvailable(activity)) {
-            UploadService.uploadPost(activity, post.getId(), isFirstTimePublish, "UploadUtils#publishPost");
+            UploadService.uploadPost(activity, post.getId(), isFirstTimePublish);
             if (onPublishingCallback != null) {
                 onPublishingCallback.onPublishing(isFirstTimePublish);
             }
@@ -481,15 +486,14 @@ public class UploadUtils {
                 // RETRY only available for Aztec
                 if (AppPrefs.isAztecEditorEnabled()) {
                     UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Intent intent = UploadService.getRetryUploadServiceIntent(
-                                            activity, post, false,
-                                            "post error snack bar retry action");
-                                    activity.startService(intent);
-                                }
-                            }, sequencer);
+                                                  new View.OnClickListener() {
+                                                      @Override
+                                                      public void onClick(View view) {
+                                                          Intent intent = UploadService.getRetryUploadServiceIntent(
+                                                                  activity, post, false);
+                                                          activity.startService(intent);
+                                                      }
+                                                  }, sequencer);
                 } else {
                     UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, sequencer);
                 }
@@ -563,18 +567,17 @@ public class UploadUtils {
                 // RETRY only available for Aztec
                 if (mediaList != null && !mediaList.isEmpty()) {
                     UploadUtils.showSnackbarError(snackbarAttachView, messageForUser, R.string.retry,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    ArrayList<MediaModel> mediaListToRetry = new ArrayList<>();
-                                    mediaListToRetry.addAll(mediaList);
-                                    Intent retryIntent = UploadService
-                                            .getUploadMediaServiceIntent(activity,
-                                                    mediaListToRetry, true,
-                                                    "media error snack bar retry action");
-                                    activity.startService(retryIntent);
-                                }
-                            }, sequencer);
+                                                  new View.OnClickListener() {
+                                                      @Override
+                                                      public void onClick(View view) {
+                                                          ArrayList<MediaModel> mediaListToRetry = new ArrayList<>();
+                                                          mediaListToRetry.addAll(mediaList);
+                                                          Intent retryIntent = UploadService
+                                                                  .getUploadMediaServiceIntent(activity,
+                                                                                               mediaListToRetry, true);
+                                                          activity.startService(retryIntent);
+                                                      }
+                                                  }, sequencer);
                 } else {
                     UploadUtils.showSnackbarError(snackbarAttachView, messageForUser, sequencer);
                 }

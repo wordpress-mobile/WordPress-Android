@@ -17,7 +17,6 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.DashboardActivityLogCardFeatureUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.config.DynamicDashboardCardsFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -28,8 +27,7 @@ class CardsSource @Inject constructor(
     private val cardsStore: CardsStore,
     private val dashboardActivityLogCardFeatureUtils: DashboardActivityLogCardFeatureUtils,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val appPrefsWrapper: AppPrefsWrapper,
-    private val dynamicDashboardCardsFeatureConfig: DynamicDashboardCardsFeatureConfig,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) : MySiteRefreshSource<CardsUpdate> {
     override val refresh = MutableLiveData(false)
 
@@ -105,7 +103,6 @@ class CardsSource @Inject constructor(
         if (shouldRequestPagesCard(selectedSite)) add(Type.PAGES)
         if (dashboardActivityLogCardFeatureUtils.shouldRequestActivityCard(selectedSite)) add(Type.ACTIVITY)
         add(Type.POSTS)
-        if (shouldRequestDynamicCards()) add(Type.DYNAMIC)
     }.toList()
 
     private fun shouldRequestPagesCard(selectedSite: SiteModel): Boolean {
@@ -115,10 +112,6 @@ class CardsSource @Inject constructor(
 
     private fun shouldRequestStatsCard(selectedSite: SiteModel): Boolean {
         return !appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(selectedSite.siteId)
-    }
-
-    private fun shouldRequestDynamicCards(): Boolean {
-        return dynamicDashboardCardsFeatureConfig.isEnabled()
     }
 
     private fun MediatorLiveData<CardsUpdate>.postErrorState() {

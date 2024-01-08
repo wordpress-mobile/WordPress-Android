@@ -142,6 +142,41 @@ public class HeaderGridView extends GridView {
         addHeaderView(v, null, true);
     }
 
+    public int getHeaderViewCount() {
+        return mHeaderViewInfos.size();
+    }
+
+    /**
+     * Removes a previously-added header view.
+     *
+     * @param v The view to remove
+     * @return true if the view was removed, false if the view was not a header
+     * view
+     */
+    public boolean removeHeaderView(View v) {
+        if (mHeaderViewInfos.size() > 0) {
+            boolean result = false;
+            ListAdapter adapter = getAdapter();
+            if (adapter != null && ((HeaderViewGridAdapter) adapter).removeHeader(v)) {
+                result = true;
+            }
+            removeFixedViewInfo(v, mHeaderViewInfos);
+            return result;
+        }
+        return false;
+    }
+
+    private void removeFixedViewInfo(View v, ArrayList<FixedViewInfo> where) {
+        int len = where.size();
+        for (int i = 0; i < len; ++i) {
+            FixedViewInfo info = where.get(i);
+            if (info.view == v) {
+                where.remove(i);
+                break;
+            }
+        }
+    }
+
     @Override
     public void setAdapter(ListAdapter adapter) {
         if (mHeaderViewInfos.size() > 0) {

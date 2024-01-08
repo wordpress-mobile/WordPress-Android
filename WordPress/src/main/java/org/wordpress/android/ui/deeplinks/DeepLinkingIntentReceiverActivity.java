@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.deeplinks;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -152,12 +151,5 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         } else {
             finish();
         }
-    }
-
-    public static void openDeepLinkUrl(@NonNull Context context, @NonNull String url) {
-        Intent intent = new Intent(context, DeepLinkingIntentReceiverActivity.class);
-        intent.setData(Uri.parse(url));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getContext().startActivity(intent);
     }
 }

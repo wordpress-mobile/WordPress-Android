@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/title"
+    style="@style/TextAppearance.Material3.HeadlineMedium"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textFontWeight="700"
+    android:paddingBottom="@dimen/margin_extra_large"
+    tools:text="@string/wp_jetpack_powered_better_with_jetpack"
+    tools:targetApi="p" />

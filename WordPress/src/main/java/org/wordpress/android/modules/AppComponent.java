@@ -95,18 +95,18 @@ import org.wordpress.android.ui.posts.PostSettingsListDialogFragment;
 import org.wordpress.android.ui.posts.PostSettingsTagsFragment;
 import org.wordpress.android.ui.posts.PostTimePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryFragment;
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment;
+import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesFragment;
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeAdapter;
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeFragment;
+import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFragment;
+import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment;
 import org.wordpress.android.ui.posts.PublishNotificationReceiver;
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter;
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment;
-import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesFragment;
-import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryFragment;
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeAdapter;
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeFragment;
 import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsFragment;
-import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFragment;
-import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
@@ -150,6 +150,7 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderExpandableTagsView;
+import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
@@ -324,6 +325,8 @@ public interface AppComponent {
     void inject(ReaderPostDetailHeaderView object);
 
     void inject(ReaderExpandableTagsView object);
+
+    void inject(ReaderLikingUsersView object);
 
     void inject(ReaderWebView object);
 

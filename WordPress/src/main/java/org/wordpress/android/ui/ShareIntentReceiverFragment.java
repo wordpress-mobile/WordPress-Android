@@ -44,6 +44,7 @@ public class ShareIntentReceiverFragment extends Fragment {
     private boolean mSharingMediaFile;
     private int mLastUsedBlogLocalId;
     private RecyclerView mRecyclerView;
+    private View mBottomButtonsContainer;
     private View mBottomButtonsShadow;
 
     public static ShareIntentReceiverFragment newInstance(boolean sharingMediaFile, int lastUsedBlogLocalId) {
@@ -110,6 +111,7 @@ public class ShareIntentReceiverFragment extends Fragment {
     }
 
     private void initButtonsContainer(ViewGroup layout) {
+        mBottomButtonsContainer = layout.findViewById(R.id.bottom_buttons);
         mBottomButtonsShadow = layout.findViewById(R.id.bottom_shadow);
     }
 

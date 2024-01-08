@@ -14,6 +14,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 
 @ExperimentalCoroutinesApi
@@ -213,6 +214,18 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
     }
 
     private fun siteSelected() = MySiteViewModel.State.SiteSelected(
+        siteInfoHeader = MySiteCardAndItem.SiteInfoHeaderCard(
+            title = "title",
+            url = "url",
+            iconState = MySiteCardAndItem.SiteInfoHeaderCard.IconState.Progress,
+            showTitleFocusPoint = true,
+            showSubtitleFocusPoint = true,
+            showIconFocusPoint = true,
+            onTitleClick = ListItemInteraction.create {},
+            onUrlClick = ListItemInteraction.create {},
+            onIconClick = ListItemInteraction.create {},
+            onSwitchSiteClick = ListItemInteraction.create {},
+        ),
         dashboardData = listOf(
             MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData(
                 prompt = UiString.UiStringText("prompt"),
