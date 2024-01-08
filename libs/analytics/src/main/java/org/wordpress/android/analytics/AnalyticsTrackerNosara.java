@@ -733,6 +733,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_upload_media_failed";
             case EDITOR_UPLOAD_MEDIA_RETRIED:
                 return "editor_upload_media_retried";
+            case EDITOR_UPLOAD_MEDIA_PAUSED:
+                return "editor_upload_media_paused";
             case EDITOR_CLOSED:
                 return "editor_closed";
             case EDITOR_SESSION_START:
