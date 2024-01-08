@@ -391,13 +391,6 @@ public class ReaderPostTable {
                 args);
     }
 
-    public static String getPostBlogName(long blogId, long postId) {
-        String[] args = {Long.toString(blogId), Long.toString(postId)};
-        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT blog_name FROM tbl_posts WHERE blog_id=? AND post_id=?",
-                args);
-    }
-
     public static String getPostText(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
@@ -603,23 +596,6 @@ public class ReaderPostTable {
         return rowsDeleted;
     }
 
-    public static int removeTagsFromPost(long blogId, long postId, final ReaderTagType tagType) {
-        if (tagType == null) {
-            return 0;
-        }
-
-        String[] args = {Integer.toString(tagType.toInt()), Long.toString(blogId), Long.toString(postId)};
-        int rowsDeleted = ReaderDatabase.getWritableDb().delete(
-                "tbl_posts",
-                "tag_type=? AND blog_id=? AND post_id=?",
-                args);
-
-        if (rowsDeleted > 0) {
-            EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
-        }
-        return rowsDeleted;
-    }
-
     public static int deletePostsInBlog(long blogId) {
         String[] args = {Long.toString(blogId)};
         int rowsDeleted = ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id = ?", args);
@@ -636,12 +612,6 @@ public class ReaderPostTable {
             EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
         }
         return rowsDeleted;
-    }
-
-    public static void deletePost(long blogId, long postId) {
-        String[] args = new String[]{Long.toString(blogId), Long.toString(postId)};
-        ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id=? AND post_id=?", args);
-        EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
     }
 
     /*

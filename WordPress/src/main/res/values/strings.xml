@@ -2341,7 +2341,7 @@
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="my_site_add_new_site">Add new site</string>
-    <string name="my_site_custom_domain_name">All WordPress.com plans include a custom domain name. Register your free premium domain now.</string>
+    <string name="my_site_custom_domain_name">All WordPress.com annual plans include a custom domain name. Register your free domain now.</string>
     <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
     <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
     <string name="my_site_icon_dialog_title">Site Icon</string>
@@ -2673,7 +2673,7 @@
     <string name="register_domain">Register Domain</string>
     <string name="domains_suggestions_select_domain">Select domain</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
-    <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
+    <string name="domains_suggestions_intro_title">Choose a custom domain name</string>
     <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style="color:#50575e;"&gt; /year&lt;/span&gt;</string>
@@ -2705,16 +2705,14 @@
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
 
-    <string name="domains_primary_site_caption">Your free WordPress.com address is</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Change site address</string>
-    <string name="domains_primary_site_address">%s</string>
-    <string name="domains_primary_site_address_chip">Primary site address</string>
-    <string name="domains_site_domains">Your site domains</string>
+    <string name="domains_site_domain">%s</string>
+    <string name="domains_primary_site_domain_chip">Primary domain</string>
+    <string name="domains_site_other_domains">Other domains for %s</string>
+    <string name="domains_free_domain">Your free WordPress.com domain</string>
     <string name="domains_site_domain_expires">Expires on %s</string>
+    <string name="domains_site_domain_never_expires">Never expires</string>
     <string name="domains_site_domain_expires_soon">&lt;span style="color:#d63638;"&gt;Expires on %s&lt;/span&gt;</string>
     <string name="domains_add_a_domain">Add a domain</string>
-    <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at %s</string>
-    <string name="domains_manage_domains">Manage Domains</string>
     <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>
     <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your plan</string>
     <string name="domains_paid_plan_add_your_domain_title">Add your domain</string>
@@ -2722,6 +2720,9 @@
     <string name="domains_free_plan_get_your_domain_title">Get your domain</string>
     <string name="domains_free_plan_get_your_domain_caption">Domains purchased on this site will redirect visitors to &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_search_for_a_domain_button">Search for a domain</string>
+    <string name="domains_upgrade_to_plan_caption">Get a free one-year domain registration or transfer with any annual paid plan.</string>
+    <string name="domains_upgrade_to_a_plan_button">Upgrade to a plan</string>
+    <string name="domains_just_search_for_a_domain_button">Just search for a domain</string>
 
     <!-- Domain Management -->
     <string name="domain_management_expires">Expires %1$s</string>
@@ -2988,10 +2989,10 @@
     <string name="permission_microphone">Microphone</string>
 
     <!-- Image Optimization promo -->
-    <string name="turn_on">Yes, leave on</string>
-    <string name="leave_off">No, turn off</string>
-    <string name="image_optimization_promo_title">Keep optimizing images?</string>
-    <string name="image_optimization_promo_desc">Image optimization shrinks images for faster uploading.\n\nThis option is enabled by default, but you can change it in the app settings at any time.</string>
+    <string name="leave_on">Yes, leave on</string>
+    <string name="turn_off">No, turn off</string>
+    <string name="image_optimization_popup_title">Keep optimizing images?</string>
+    <string name="image_optimization_popup_desc">Image optimization shrinks images for faster uploading.\n\nThis option is enabled by default, but you can change it in the app settings at any time.</string>
 
     <!-- Login -->
     <!-- If any of these appear unused, be sure to check the same string in the login library -
@@ -4544,7 +4545,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_deep_link_overlay_description">It looks like you have the Jetpack app installed.\n\nWould you like to open links in the Jetpack app in the future?\n\nYou can always change this in App Settings &gt; Open links in Jetpack</string>
     <string name="wp_jetpack_deep_link_open_in_jetpack" translatable="false">@string/preference_open_links_in_jetpack</string>
     <string name="wp_jetpack_deep_link_open_in_wordpress">Open links in WordPress</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit this block separately by tapping “Detach pattern”.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can detach and edit this block separately by tapping “Detach”.</string>
     <string name="gutenberg_native_s_converted_to_regular_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s converted to regular block</string>
 
     <!-- Jetpack Feature Card -->
@@ -4588,13 +4589,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="jetpack_full_plugin_install_onboarding_install_button">Install the full plugin</string>
     <string name="jetpack_full_plugin_install_onboarding_contact_support_button">Contact support</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Close</string>
-
-    <!-- Dashboard Card Domain Transfer-->
-    <string name="domain_transfer_card_title">News</string>
-    <string name="domain_transfer_card_sub_title">Reclaim Your Google Domains</string>
-    <string name="domain_transfer_card_caption">As you may know, Google Domains has been sold to Squarespace. Transfer your domains to WordPress.com now, and we\'ll pay all transfer fees plus an extra year of your domain registration.</string>
-    <string name="domain_transfer_card_cta">Transfer your domains</string>
-    <string name="domain_transfer_card_more_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
 
     <!-- Dashboard Card Plans-->
     <string name="dashboard_card_plans_title">Free domain with annual plan</string>
@@ -4803,7 +4797,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <string name="pages_no_site_something_went_wrong">Uh oh, something went wrong. Please try again later.</string>
     <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block cannot be rendered because it is deeply nested. Tap here for more details.</string>
-    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks nested deeper than %d levels may not render properly in the mobile editor. For this reason, we recommend flattening the content by ungrouping the block or editing the block using your web browser.</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks nested deeper than %d levels may not render properly in the mobile editor.</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blocks nested deeper than %d levels may not render properly in the mobile editor. For this reason, we recommend flattening the content by ungrouping the block or editing the block using the web editor.</string>
     <string name="gutenberg_native_deeply_nested_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Deeply nested block</string>
     <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Synced patterns</string>
@@ -4816,16 +4810,43 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!--
          Barcode Scanning
     -->
-    <string name="barcode_scanning_title">Scan Barcode</string>
-    <string name="barcode_scanning_camera_permission_denied">Camera permission is required to scan the barcode.</string>
-    <string name="barcode_scanning_alert_dialog_title">Grant Camera Permission</string>
-    <string name="barcode_scanning_alert_dialog_rationale_message">Camera permission is required in order to scan the barcode</string>
-    <string name="barcode_scanning_alert_dialog_permanently_denied_message">You have permanently denied Camera permission. It is required in order to scan the barcode. Please enable it from the app settings</string>
-    <string name="barcode_scanning_alert_dialog_rationale_cta_label">Grant</string>
-    <string name="barcode_scanning_alert_dialog_dismiss_label">Cancel</string>
-    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Go to settings</string>
+    <string name="barcode_scanning_title" tools:ignore="UnusedResources">Scan Barcode</string>
+    <string name="barcode_scanning_camera_permission_denied" tools:ignore="UnusedResources">Camera permission is required to scan the barcode.</string>
+    <string name="barcode_scanning_alert_dialog_title" tools:ignore="UnusedResources">Grant Camera Permission</string>
+    <string name="barcode_scanning_alert_dialog_rationale_message" tools:ignore="UnusedResources">Camera permission is required in order to scan the barcode</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message" tools:ignore="UnusedResources">You have permanently denied Camera permission. It is required in order to scan the barcode. Please enable it from the app settings</string>
+    <string name="barcode_scanning_alert_dialog_rationale_cta_label" tools:ignore="UnusedResources">Grant</string>
+    <string name="barcode_scanning_alert_dialog_dismiss_label" tools:ignore="UnusedResources">Cancel</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label" tools:ignore="UnusedResources">Go to settings</string>
 
     <string name="login_text_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">Use a security key</string>
     <string name="login_error_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">There was some trouble with the Security key login</string>
     <string name="notification_security_key_needed" tools:ignore="UnusedResources" a8c-src-lib="login">Please provide your security key to continue.</string>
+
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can flatten the content by ungrouping the block.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">For this reason, we recommend editing the block using the web editor.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">For this reason, we recommend editing the block using your web browser.</string>
+
+    <string name="media_cannot_be_started">We cannot open media at the moment. Please try again later</string>
+
+    <!-- Bloganuary -->
+    <string name="bloganuary_dashboard_nudge_title_december">Bloganuary is coming!</string>
+    <string name="bloganuary_dashboard_nudge_title_january">Bloganuary is here!</string>
+    <string name="bloganuary_dashboard_nudge_text">For the month of January, blogging prompts will come from Bloganuary — our community challenge to build a blogging habit for the new year.</string>
+    <string name="bloganuary_dashboard_nudge_learn_more" translatable="false">@string/learn_more</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">Join our month-long writing challenge</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_one">Receive a new prompt to inspire you each day.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_two">Publish your response.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_text_three">Read other bloggers’ responses to get inspiration and make new connections.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Bloganuary will use Daily Blogging Prompts to send you topics for the month of January. You have Blogging Prompts currently disabled.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary will use Daily Blogging Prompts to send you topics for the month of January.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Turn on blogging prompts</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Let’s go!</string>
+
+    <!-- State of the Word 2023 -->
+    <string name="wp_sotw_2023_dashboard_nudge_title" translatable="false">State of the Word 2023</string>
+    <string name="wp_sotw_2023_dashboard_nudge_text" translatable="false">Check out WordPress co-founder Matt Mullenweg’s annual keynote to stay on top of what’s coming in 2024 and beyond.</string>
+    <string name="wp_sotw_2023_dashboard_nudge_cta" translatable="false">Watch now</string>
+
 </resources>

@@ -68,6 +68,7 @@ class PersonalizationActivity : AppCompatActivity() {
                 PersonalizationScreen()
             }
         }
+        viewModel.onSelectedSiteMissing.observe(this) { finish() }
     }
 
     @Composable

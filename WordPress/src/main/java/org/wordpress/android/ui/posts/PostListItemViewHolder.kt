@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.text.Layout
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -130,10 +131,10 @@ sealed class PostListItemViewHolder(
                     titleTextView.viewTreeObserver.removeOnPreDrawListener(this)
 
                     // Get the layout of the title text
-                    val titleLayout = titleTextView.layout
+                    val titleLayout: Layout? = titleTextView.layout
 
                     // Check if the title occupies more than 2 lines
-                    when (titleLayout.lineCount) {
+                    when (titleLayout?.lineCount) {
                         1 -> {
                             excerptTextView.maxLines = 2
                         }

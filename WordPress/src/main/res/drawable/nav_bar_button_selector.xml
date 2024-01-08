@@ -3,6 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:color="?attr/wpColorNavBar" android:state_selected="true" />
-    <item android:color="?attr/colorOnSurface"/>
+    <item android:color="?attr/colorOnSurface" />
 
 </selector>

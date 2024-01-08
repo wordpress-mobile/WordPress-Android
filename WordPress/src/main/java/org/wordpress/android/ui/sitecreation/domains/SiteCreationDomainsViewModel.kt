@@ -133,7 +133,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         val domain = requireNotNull(selectedDomain) {
             "Create site button should not be visible if a domain is not selected"
         }
-        tracker.trackDomainSelected(domain.domainName, currentQuery?.value.orEmpty(), domain.cost)
+        tracker.trackDomainSelected(domain.domainName, currentQuery?.value.orEmpty(), domain.cost, domain.isFree)
         _createSiteBtnClicked.value = domain
     }
 

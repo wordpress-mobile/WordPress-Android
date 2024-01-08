@@ -1,6 +1,5 @@
 package org.wordpress.android.push;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -39,6 +38,8 @@ public class GCMMessageService extends FirebaseMessagingService {
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+
+    @Inject GCMRegistrationScheduler mGCMRegistrationScheduler;
 
     private void synchronizedHandleDefaultPush(@NonNull Map<String, String> data) {
         // ACTIVE_NOTIFICATIONS_MAP being static, we can't just synchronize the method
@@ -98,7 +99,6 @@ public class GCMMessageService extends FirebaseMessagingService {
 
     @Override public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
-        GCMRegistrationIntentService.enqueueWork(this,
-                new Intent(this, GCMRegistrationIntentService.class));
+        mGCMRegistrationScheduler.scheduleRegistration();
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 
@@ -14,6 +15,7 @@ class DomainManagementDetailsActivity : WPWebViewActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toggleNavbarVisibility(false)
+        AnalyticsTracker.track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAIN_DETAILS_WEB_VIEW_SHOWN)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

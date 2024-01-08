@@ -17,6 +17,7 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.JetpackPoweredBottomSheetBinding
 import org.wordpress.android.databinding.JetpackPoweredExpandedBottomSheetBinding
 import org.wordpress.android.ui.ActivityLauncherWrapper
+import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.CAMPAIGN_BOTTOM_SHEET
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.ME
@@ -130,7 +131,7 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
                 is OpenPlayStore -> {
                     dismiss()
                     activity?.let {
-                        activityLauncherWrapper.openPlayStoreLink(it, JETPACK_PACKAGE_NAME)
+                        activityLauncherWrapper.openPlayStoreLink(it, JETPACK_PACKAGE_NAME, CAMPAIGN_BOTTOM_SHEET)
                     }
                 }
                 is DismissDialog -> {

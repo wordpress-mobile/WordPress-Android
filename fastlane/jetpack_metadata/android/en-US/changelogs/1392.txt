@@ -1,0 +1,3 @@
+- Block editor only shows the “ungroup” option for nested blocks that support it.
+- Optimize Images setting uses optimal size and quality by default.
+- Themes install properly for sites on Business and Commerce plans.

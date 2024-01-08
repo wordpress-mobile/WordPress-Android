@@ -247,7 +247,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         if (shouldShowDomainButton) {
             domainManagementContainer.visibility = View.VISIBLE
             domainManagementContainer.setOnClickListener {
-                context?.let { ActivityLauncher.openDomainManagement(it) }
+                context?.let {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_ME_DOMAINS_TAPPED)
+                    ActivityLauncher.openDomainManagement(it)
+                }
             }
         } else {
             domainManagementContainer.visibility = View.GONE

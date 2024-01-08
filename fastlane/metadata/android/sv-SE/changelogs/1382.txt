@@ -1,3 +1,0 @@
-23.6:
-- Inaktiva sociala ikoner och rubriker för synkroniserade mönster är inte längre osynliga i blockbaserade teman som använder mörkt läge. Bra försök, hörrni, men ni är inte så skickliga som ni tror.
-- Du kan nu konvertera ditt innehåll till block med en knapptryckning i den klassiska redigeraren.

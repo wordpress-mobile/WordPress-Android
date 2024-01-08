@@ -113,7 +113,7 @@ class UploadStarterMutexTest : BaseUnitTest() {
             .thenReturn(UploadActionUseCase.UploadAction.UPLOAD)
 
         // throw IllegalStateException when uploading post (emulate trying to start background service)
-        whenever(uploadServiceFacade.uploadPost(any(), any<PostModel>(), any()))
+        whenever(uploadServiceFacade.uploadPost(any(), any<PostModel>(), any(), any()))
             .thenThrow(IllegalStateException("FAKE: Not allowed to start service intent"))
 
         // ACT

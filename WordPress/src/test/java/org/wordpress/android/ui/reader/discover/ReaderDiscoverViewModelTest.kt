@@ -490,7 +490,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         val uiStates = init().uiStates
         // Act
         ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
-            .blogSection.blogSectionClickData!!.onBlogSectionClicked!!.invoke(2, 200)
+            .blogSection.blogSectionClickData!!.onBlogSectionClicked!!.invoke()
         // Assert
         verify(readerPostCardActionsHandler).handleHeaderClicked(
             eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.blogId),
@@ -716,7 +716,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         onTagClicked: (String) -> Unit,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
         onVideoOverlayClicked: (Long, Long) -> Unit,
-        postHeaderClicked: (Long, Long) -> Unit,
+        postHeaderClicked: () -> Unit,
         onItemClicked: (Long, Long) -> Unit,
         onMoreMenuClicked: (ReaderPostUiState) -> Unit,
         onMoreMenuDismissed: (ReaderPostUiState) -> Unit

@@ -1,5 +1,0 @@
-23.6:
-- Nuevas opciones de dominio/plan y pantallas de pago en el proceso de creación del sitio
-- La navegación de Mi sitios tiene enlaces a secciones comunes
-- Los iconos sociales inactivos y los títulos de patrones sincronizados son visibles en modo oscuro para los temas basados en bloques
-- El contenido se puede convertir en bloques en el editor clásico

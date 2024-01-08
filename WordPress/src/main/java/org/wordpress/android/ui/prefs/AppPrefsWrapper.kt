@@ -183,6 +183,22 @@ class AppPrefsWrapper @Inject constructor() {
         return AppPrefs.getManualFeatureConfig(featureKey)
     }
 
+    fun incrementPublishedPostCount() {
+        AppPrefs.incrementPublishedPostCount()
+    }
+
+    fun getPublishedPostCount(): Int {
+        return AppPrefs.getPublishedPostCount()
+    }
+
+    fun setInAppReviewsShown() {
+        AppPrefs.setInAppReviewsShown()
+    }
+
+    fun isInAppReviewsShown(): Boolean {
+        return AppPrefs.isInAppReviewsShown()
+    }
+
     fun setBloggingRemindersShown(siteId: Int) {
         AppPrefs.setBloggingRemindersShown(siteId)
     }
@@ -322,12 +338,6 @@ class AppPrefsWrapper @Inject constructor() {
         isShown: Boolean
     ) = AppPrefs.setShouldShowJetpackFullPluginInstallOnboarding(siteId, isShown)
 
-    fun getShouldHideDashboardDomainTransferCard(siteId: Long): Boolean =
-        AppPrefs.getShouldHideDashboardDomainTransferCard(siteId)
-
-    fun setShouldHideDashboardDomainTransferCard(siteId: Long, isHidden: Boolean) =
-        AppPrefs.setShouldHideDashboardDomainTransferCard(siteId, isHidden)
-
     fun hideBlazeCard(siteId: Long): Boolean =
         AppPrefs.getShouldHidePromoteWithBlazeCard(siteId)
 
@@ -411,6 +421,24 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getShouldShowDefaultQuickLink(siteItem: String, siteId: Long): Boolean =
         AppPrefs.getShouldShowDefaultQuickLink(siteItem, siteId)
+
+    fun setShouldHideBloganuaryNudgeCard(siteId: Long, isHidden: Boolean) =
+        AppPrefs.setShouldHideBloganuaryNudgeCard(siteId, isHidden)
+
+    fun getShouldHideBloganuaryNudgeCard(siteId: Long): Boolean =
+        AppPrefs.getShouldHideBloganuaryNudgeCard(siteId)
+
+    fun setShouldHideSotw2023NudgeCard(isHidden: Boolean): Unit =
+        AppPrefs.setShouldHideSotw2023NudgeCard(isHidden)
+
+    fun getShouldHideSotw2023NudgeCard(): Boolean =
+        AppPrefs.getShouldHideSotw2023NudgeCard()
+
+    fun setShouldHideDynamicCard(id: String, isHidden: Boolean): Unit =
+        AppPrefs.setShouldHideDynamicCard(id, isHidden)
+
+    fun getShouldHideDynamicCard(id: String, ): Boolean =
+        AppPrefs.getShouldHideDynamicCard(id)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 

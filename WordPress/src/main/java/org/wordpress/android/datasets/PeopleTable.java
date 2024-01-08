@@ -154,13 +154,6 @@ public class PeopleTable {
         }
     }
 
-    public static void deletePeopleForLocalBlogId(int localTableBlogId) {
-        deletePeople(TEAM_TABLE, localTableBlogId);
-        deletePeople(FOLLOWERS_TABLE, localTableBlogId);
-        deletePeople(EMAIL_FOLLOWERS_TABLE, localTableBlogId);
-        deletePeople(VIEWERS_TABLE, localTableBlogId);
-    }
-
     private static void deletePeople(String table, int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId)};
         getWritableDb().delete(table, "local_blog_id=?1", args);

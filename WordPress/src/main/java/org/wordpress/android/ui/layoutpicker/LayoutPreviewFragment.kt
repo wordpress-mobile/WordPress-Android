@@ -75,7 +75,7 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
     private fun initViewModel() {
         this.viewModel = getViewModel()
 
-        viewModel.previewState.observe(viewLifecycleOwner, { state ->
+        viewModel.previewState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is Loading -> {
                     binding?.desktopPreviewHint?.setVisible(false)
@@ -84,6 +84,7 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
                     binding?.errorView?.setVisible(false)
                     binding?.webView?.loadUrl(state.url)
                 }
+
                 is Loaded -> {
                     binding?.progressBar?.setVisible(false)
                     binding?.webView?.setVisible(true)
@@ -97,6 +98,7 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
                     )
                     AniUtils.animateBottomBar(binding?.desktopPreviewHint, true)
                 }
+
                 is Error -> {
                     binding?.progressBar?.setVisible(false)
                     binding?.webView?.setVisible(false)
@@ -104,14 +106,14 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
                     state.toast?.let { ToastUtils.showToast(requireContext(), it) }
                 }
             }
-        })
+        }
 
         // We're skipping the first emitted value since it derives from the view model initialization (`start` method)
-        viewModel.previewMode.skip(1).observe(viewLifecycleOwner, { load() })
+        viewModel.previewMode.skip(1).observe(viewLifecycleOwner) { load() }
 
-        viewModel.onPreviewModeButtonPressed.observe(viewLifecycleOwner, {
+        viewModel.onPreviewModeButtonPressed.observe(viewLifecycleOwner) {
             previewModeSelectorPopup.show(viewModel)
-        })
+        }
 
         binding?.previewTypeSelectorButton?.let {
             previewModeSelectorPopup = PreviewModeSelectorPopup(requireActivity(), it)
@@ -127,7 +129,7 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
         binding?.webView?.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                if (view == null) return
+                if (!isAdded || view == null) return
                 val width = viewModel.selectedPreviewMode().previewWidth
                 setWebViewWidth(view, width)
                 val widthScript = context?.getString(R.string.web_preview_width_script, width)

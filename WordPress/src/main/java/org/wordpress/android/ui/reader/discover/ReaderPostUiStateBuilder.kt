@@ -88,7 +88,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onMoreButtonClicked: (ReaderPostUiState) -> Unit,
         onMoreDismissed: (ReaderPostUiState) -> Unit,
         onVideoOverlayClicked: (Long, Long) -> Unit,
-        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        onPostHeaderViewClicked: () -> Unit,
         onTagItemClicked: (String) -> Unit,
         moreMenuItems: List<SecondaryAction>? = null
     ): ReaderPostUiState {
@@ -129,7 +129,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onMoreButtonClicked: (ReaderPostUiState) -> Unit,
         onMoreDismissed: (ReaderPostUiState) -> Unit,
         onVideoOverlayClicked: (Long, Long) -> Unit,
-        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        onPostHeaderViewClicked: () -> Unit,
         onTagItemClicked: (String) -> Unit,
         moreMenuItems: List<ReaderPostCardAction>? = null
     ): ReaderPostUiState {
@@ -249,7 +249,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     fun mapPostToBlogSectionUiState(
         post: ReaderPost,
         isReaderImprovementsEnabled: Boolean,
-        onBlogSectionClicked: (Long, Long) -> Unit
+        onBlogSectionClicked: () -> Unit
     ): ReaderBlogSectionUiState {
         return buildBlogSection(post, onBlogSectionClicked, isReaderImprovementsEnabled = isReaderImprovementsEnabled)
     }
@@ -312,7 +312,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     private fun buildBlogSection(
         post: ReaderPost,
-        onBlogSectionClicked: (Long, Long) -> Unit,
+        onBlogSectionClicked: () -> Unit,
         postListType: ReaderPostListType? = null,
         isP2Post: Boolean = false,
         isReaderImprovementsEnabled: Boolean = false,
@@ -357,7 +357,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     }
 
     private fun buildOnBlogSectionClicked(
-        onBlogSectionClicked: (Long, Long) -> Unit,
+        onBlogSectionClicked: () -> Unit,
         postListType: ReaderPostListType?
     ): ReaderBlogSectionClickData? {
         return if (postListType != ReaderPostListType.BLOG_PREVIEW) {
