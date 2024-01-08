@@ -38,6 +38,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.TodaysStatsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.DynamicCardResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.DynamicCardRowResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.FetchCardsPayload
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.ActivityCardErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
@@ -58,7 +61,8 @@ private val CARD_TYPES = listOf(
     CardModel.Type.TODAYS_STATS,
     CardModel.Type.POSTS,
     CardModel.Type.PAGES,
-    CardModel.Type.ACTIVITY
+    CardModel.Type.ACTIVITY,
+    CardModel.Type.DYNAMIC
 )
 
 /* ERRORS */
@@ -118,6 +122,24 @@ private val PAGE_RESPONSE_TWO = PageResponse(
 
 private val PAGES_RESPONSE = listOf(PAGE_RESPONSE_ONE, PAGE_RESPONSE_TWO)
 
+private val DYNAMIC_CARD_ROW_RESPONSE = DynamicCardRowResponse(
+    icon = "https://path/to/image",
+    title = "Row title",
+    description = "Row description"
+)
+
+private val DYNAMIC_CARD_RESPONSE = DynamicCardResponse(
+    id = "year_in_review_2023",
+    title = "News",
+    featuredImage = "https://path/to/image",
+    url = "https://wordpress.com",
+    action = "Call to action",
+    order = "top",
+    rows = listOf(DYNAMIC_CARD_ROW_RESPONSE),
+)
+
+private val DYNAMIC_CARDS_RESPONSE = listOf(DYNAMIC_CARD_RESPONSE)
+
 private val POSTS_RESPONSE = PostsResponse(
         hasPublished = true,
         draft = listOf(
@@ -166,8 +188,15 @@ private val CARDS_RESPONSE = CardsResponse(
         todaysStats = TODAYS_STATS_RESPONSE,
         posts = POSTS_RESPONSE,
         pages = PAGES_RESPONSE,
-        activity = ACTIVITY_RESPONSE
+        activity = ACTIVITY_RESPONSE,
+        dynamic = DYNAMIC_CARDS_RESPONSE
 )
+
+private const val BUILD_NUMBER_PARAM = "build_number_param"
+private const val DEVICE_ID_PARAM = "device_id_param"
+private const val IDENTIFIER_PARAM = "identifier_param"
+private const val MARKETING_VERSION_PARAM = "marketing_version_param"
+private const val PLATFORM_PARAM = "platform_param"
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsRestClientTest {
@@ -181,6 +210,8 @@ class CardsRestClientTest {
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var restClient: CardsRestClient
+
+    private lateinit var fetchCardsPayload: FetchCardsPayload
 
     private val siteId: Long = 1
 
@@ -196,6 +227,10 @@ class CardsRestClientTest {
                 accessToken,
                 userAgent
         )
+        fetchCardsPayload = FetchCardsPayload(
+            site, CARD_TYPES, BUILD_NUMBER_PARAM, DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM, MARKETING_VERSION_PARAM, PLATFORM_PARAM
+        )
     }
 
     @Test
@@ -203,7 +238,7 @@ class CardsRestClientTest {
         val json = UnitTestUtils.getStringFromResourceFile(javaClass, DASHBOARD_CARDS_JSON)
         initFetchCards(data = getCardsResponseFromJsonString(json))
 
-        restClient.fetchCards(site, CARD_TYPES)
+        restClient.fetchCards(fetchCardsPayload)
 
         assertEquals(urlCaptor.firstValue, "$API_SITE_PATH/${site.siteId}/$API_DASHBOARD_CARDS_PATH")
     }
@@ -213,7 +248,7 @@ class CardsRestClientTest {
         val json = UnitTestUtils.getStringFromResourceFile(javaClass, DASHBOARD_CARDS_JSON)
         initFetchCards(data = getCardsResponseFromJsonString(json))
 
-        val result = restClient.fetchCards(site, CARD_TYPES)
+        val result = restClient.fetchCards(fetchCardsPayload)
 
         assertSuccess(CARDS_RESPONSE, result)
     }
@@ -222,7 +257,7 @@ class CardsRestClientTest {
     fun `given timeout, when fetch cards gets triggered, then return cards timeout error`() = test {
         initFetchCards(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.TIMEOUT)))
 
-        val result = restClient.fetchCards(site, CARD_TYPES)
+        val result = restClient.fetchCards(fetchCardsPayload)
 
         assertError(CardsErrorType.TIMEOUT, result)
     }
@@ -231,7 +266,7 @@ class CardsRestClientTest {
     fun `given network error, when fetch cards gets triggered, then return cards api error`() = test {
         initFetchCards(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NETWORK_ERROR)))
 
-        val result = restClient.fetchCards(site, CARD_TYPES)
+        val result = restClient.fetchCards(fetchCardsPayload)
 
         assertError(CardsErrorType.API_ERROR, result)
     }
@@ -240,7 +275,7 @@ class CardsRestClientTest {
     fun `given invalid response, when fetch cards gets triggered, then return cards invalid response error`() = test {
         initFetchCards(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.INVALID_RESPONSE)))
 
-        val result = restClient.fetchCards(site, CARD_TYPES)
+        val result = restClient.fetchCards(fetchCardsPayload)
 
         assertError(CardsErrorType.INVALID_RESPONSE, result)
     }
@@ -249,7 +284,7 @@ class CardsRestClientTest {
     fun `given not authenticated, when fetch cards gets triggered, then return cards auth required error`() = test {
         initFetchCards(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NOT_AUTHENTICATED)))
 
-        val result = restClient.fetchCards(site, CARD_TYPES)
+        val result = restClient.fetchCards(fetchCardsPayload)
 
         assertError(CardsErrorType.AUTHORIZATION_REQUIRED, result)
     }
@@ -258,7 +293,7 @@ class CardsRestClientTest {
     fun `given unknown error, when fetch cards gets triggered, then return cards generic error`() = test {
         initFetchCards(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.UNKNOWN)))
 
-        val result = restClient.fetchCards(site, CARD_TYPES)
+        val result = restClient.fetchCards(fetchCardsPayload)
 
         assertError(CardsErrorType.GENERIC_ERROR, result)
     }
@@ -270,7 +305,7 @@ class CardsRestClientTest {
                 val json = UnitTestUtils.getStringFromResourceFile(javaClass, DASHBOARD_CARDS_WITH_ERRORS_JSON)
                 initFetchCards(data = getCardsResponseFromJsonString(json))
 
-                val result = restClient.fetchCards(site, CARD_TYPES)
+                val result = restClient.fetchCards(fetchCardsPayload)
 
                 assertSuccessWithTodaysStatsError(TodaysStatsCardErrorType.JETPACK_DISCONNECTED, result)
             }
@@ -283,7 +318,7 @@ class CardsRestClientTest {
                         .copy(todaysStats = TodaysStatsResponse(error = JETPACK_DISABLED))
                 initFetchCards(data = data)
 
-                val result = restClient.fetchCards(site, CARD_TYPES)
+                val result = restClient.fetchCards(fetchCardsPayload)
 
                 assertSuccessWithTodaysStatsError(TodaysStatsCardErrorType.JETPACK_DISABLED, result)
             }
@@ -296,7 +331,7 @@ class CardsRestClientTest {
                         .copy(todaysStats = TodaysStatsResponse(error = UNAUTHORIZED))
                 initFetchCards(data = data)
 
-                val result = restClient.fetchCards(site, CARD_TYPES)
+                val result = restClient.fetchCards(fetchCardsPayload)
 
                 assertSuccessWithTodaysStatsError(TodaysStatsCardErrorType.UNAUTHORIZED, result)
             }
@@ -308,7 +343,7 @@ class CardsRestClientTest {
                 val json = UnitTestUtils.getStringFromResourceFile(javaClass, DASHBOARD_CARDS_WITH_ERRORS_JSON)
                 initFetchCards(data = getCardsResponseFromJsonString(json))
 
-                val result = restClient.fetchCards(site, CARD_TYPES)
+                val result = restClient.fetchCards(fetchCardsPayload)
 
                 assertSuccessWithPostCardError(result)
             }
@@ -328,7 +363,7 @@ class CardsRestClientTest {
                 )
             initFetchCards(data = data)
 
-            val result = restClient.fetchCards(site, CARD_TYPES)
+            val result = restClient.fetchCards(fetchCardsPayload)
 
             assertSuccessWithActivityError(result)
         }
