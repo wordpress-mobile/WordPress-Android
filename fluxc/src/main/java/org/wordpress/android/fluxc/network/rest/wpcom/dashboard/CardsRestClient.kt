@@ -9,6 +9,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.CardOrder
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardRowModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel.PageCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
@@ -45,9 +49,9 @@ class CardsRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchCards(site: SiteModel, cardTypes: List<CardModel.Type>): CardsPayload<CardsResponse> {
-        val url = WPCOMV2.sites.site(site.siteId).dashboard.cards_data.url
-        val params = buildDashboardCardsParams(cardTypes)
+    suspend fun fetchCards(payload: FetchCardsPayload): CardsPayload<CardsResponse> {
+        val url = WPCOMV2.sites.site(payload.site.siteId).dashboard.cards_data.url
+        val params = buildDashboardCardsParams(payload)
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
@@ -60,24 +64,46 @@ class CardsRestClient @Inject constructor(
         }
     }
 
-    private fun buildDashboardCardsParams(cardTypes: List<CardModel.Type>) =
-            mapOf(CARDS to cardTypes.joinToString(",") { it.label })
+    private fun buildDashboardCardsParams(payload: FetchCardsPayload) = mapOf(
+        CARDS to payload.cardTypes.joinToString(",") { it.label },
+        "build_number" to payload.buildNumber,
+        "device_id" to payload.deviceId,
+        "identifier" to payload.identifier,
+        "marketing_version" to payload.marketingVersion,
+        "platform" to payload.platform,
+    )
+
+    data class FetchCardsPayload(
+        val site: SiteModel,
+        val cardTypes: List<CardModel.Type>,
+        val buildNumber: String,
+        val deviceId: String,
+        val identifier: String,
+        val marketingVersion: String,
+        val platform: String
+    )
 
     data class CardsResponse(
         @SerializedName("todays_stats") val todaysStats: TodaysStatsResponse? = null,
         @SerializedName("posts") val posts: PostsResponse? = null,
         @SerializedName("pages") val pages: List<PageResponse>? = null,
         @SerializedName("activity") val activity: ActivitiesResponse? = null,
+        @SerializedName("dynamic") val dynamic: List<DynamicCardResponse>? = null,
     ) {
         fun toCards() = arrayListOf<CardModel>().apply {
             todaysStats?.let { add(it.toTodaysStatsCard()) }
             posts?.let { add(it.toPosts()) }
             pages?.let { add(getPagesCardModel(it))}
             activity?.let { add(it.toActivityCardModel()) }
+            dynamic?.let { add(getDynamicCardsModel(it)) }
         }.toList()
 
         private fun getPagesCardModel(pages: List<PageResponse>): PagesCardModel {
             return PagesCardModel(pages.map{ it.toPages() })
+        }
+
+        private fun getDynamicCardsModel(dynamicCards: List<DynamicCardResponse>): DynamicCardsModel {
+            return DynamicCardsModel(dynamicCards.map { it.toDynamicCard() })
         }
     }
 
@@ -160,6 +186,38 @@ class CardsRestClient @Inject constructor(
                 lastModifiedOrScheduledOn = CardsUtils.fromDate(modified),
                 status = status,
                 date = CardsUtils.fromDate(date)
+        )
+    }
+
+    data class DynamicCardResponse(
+        @SerializedName("id") val id: String,
+        @SerializedName("title") val title: String?,
+        @SerializedName("featured_image") val featuredImage: String?,
+        @SerializedName("url") val url: String?,
+        @SerializedName("action") val action: String?,
+        @SerializedName("order") val order: String?,
+        @SerializedName("rows") val rows: List<DynamicCardRowResponse>?,
+    ) {
+        fun toDynamicCard() = DynamicCardModel(
+            id = id,
+            title = title,
+            featuredImage = featuredImage,
+            url = url,
+            action = action,
+            order = CardOrder.fromString(order),
+            rows = rows?.map { it.toDynamicCardRow() } ?: emptyList()
+        )
+    }
+
+    data class DynamicCardRowResponse(
+        @SerializedName("icon") val icon: String?,
+        @SerializedName("title") val title: String?,
+        @SerializedName("description") val description: String?,
+    ) {
+        fun toDynamicCardRow() = DynamicCardRowModel(
+            icon = icon,
+            title = title,
+            description = description
         )
     }
 

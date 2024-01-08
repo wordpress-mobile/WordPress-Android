@@ -2,29 +2,36 @@ package org.wordpress.android.fluxc.store.blaze
 
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
+import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLocation
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsError
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetchedPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsUtils
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeTargetingPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.Campaign
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.CampaignStats
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.ContentConfig
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.FakeBlazeTargetingRestClient
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
+import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
+import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
+import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingLanguageEntity
+import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingTopicEntity
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
 
@@ -44,7 +51,6 @@ const val CLICKS = 0L
 const val PAGE = 1
 const val TOTAL_ITEMS = 1
 const val TOTAL_PAGES = 1
-
 
 private val CONTENT_CONFIG_RESPONSE = ContentConfig(
     title = TITLE,
@@ -101,11 +107,13 @@ private val NO_RESULTS_BLAZE_CAMPAIGNS_MODEL = BlazeCampaignsModel(
     totalPages = 0
 )
 
-@RunWith(MockitoJUnitRunner::class)
 class BlazeCampaignsStoreTest {
-    @Mock private lateinit var restClient: BlazeCampaignsRestClient
-    @Mock private lateinit var dao: BlazeCampaignsDao
-    @Mock private lateinit var siteModel: SiteModel
+    private val restClient: BlazeCampaignsRestClient = mock()
+    private val targetingRestClient: FakeBlazeTargetingRestClient = mock()
+    private val blazeCampaignsDao: BlazeCampaignsDao = mock()
+    private val blazeTargetingDao: BlazeTargetingDao = mock()
+    private val siteModel = SiteModel().apply { siteId = SITE_ID }
+
     private lateinit var store: BlazeCampaignsStore
 
     private val successResponse = BLAZE_CAMPAIGNS_RESPONSE
@@ -113,8 +121,13 @@ class BlazeCampaignsStoreTest {
 
     @Before
     fun setUp() {
-        store = BlazeCampaignsStore(restClient, dao, initCoroutineEngine())
-        whenever(siteModel.siteId).thenReturn(SITE_ID)
+        store = BlazeCampaignsStore(
+            restClient = restClient,
+            fakeTargetingRestClient = targetingRestClient,
+            campaignsDao = blazeCampaignsDao,
+            targetingDao = blazeTargetingDao,
+            coroutineEngine = initCoroutineEngine()
+        )
     }
 
     @Test
@@ -125,7 +138,10 @@ class BlazeCampaignsStoreTest {
 
             store.fetchBlazeCampaigns(siteModel, PAGE)
 
-            verify(dao).insertCampaignsAndPageInfoForSite(SITE_ID, BLAZE_CAMPAIGNS_MODEL)
+            verify(blazeCampaignsDao).insertCampaignsAndPageInfoForSite(
+                SITE_ID,
+                BLAZE_CAMPAIGNS_MODEL
+            )
         }
 
     @Test
@@ -136,7 +152,7 @@ class BlazeCampaignsStoreTest {
             )
             val result = store.fetchBlazeCampaigns(siteModel)
 
-            verifyNoInteractions(dao)
+            verifyNoInteractions(blazeCampaignsDao)
             assertThat(result.model).isNull()
             assertEquals(GENERIC_ERROR, result.error.type)
             assertNull(result.error.message)
@@ -144,7 +160,7 @@ class BlazeCampaignsStoreTest {
 
     @Test
     fun `given unmatched site, when get is triggered, then empty campaigns list returned`() = test {
-        whenever(dao.getCampaignsAndPaginationForSite(SITE_ID)).thenReturn(
+        whenever(blazeCampaignsDao.getCampaignsAndPaginationForSite(SITE_ID)).thenReturn(
             NO_RESULTS_BLAZE_CAMPAIGNS_MODEL
         )
 
@@ -159,7 +175,9 @@ class BlazeCampaignsStoreTest {
 
     @Test
     fun `given matched site, when get recent is triggered, then campaign is returned`() = test {
-        whenever(dao.getMostRecentCampaignForSite(SITE_ID)).thenReturn(BLAZE_CAMPAIGN_MODEL)
+        whenever(blazeCampaignsDao.getMostRecentCampaignForSite(SITE_ID)).thenReturn(
+            BLAZE_CAMPAIGN_MODEL
+        )
 
         val result = store.getMostRecentBlazeCampaign(siteModel)
 
@@ -180,5 +198,144 @@ class BlazeCampaignsStoreTest {
         val result = store.getMostRecentBlazeCampaign(siteModel)
 
         assertThat(result).isNull()
+    }
+
+    @Test
+    fun `when fetching targeting locations, then locations are returned`() = test {
+        whenever(targetingRestClient.fetchBlazeLocations(any(), any())).thenReturn(
+            BlazeTargetingPayload(
+                List(10) {
+                    BlazeTargetingLocation(
+                        id = it.toLong(),
+                        name = "location",
+                        type = "city",
+                        parent = null
+                    )
+                }
+            )
+        )
+
+        val locations = store.fetchBlazeTargetingLocations("query")
+
+        assertThat(locations.isError).isFalse()
+        assertThat(locations.model).isNotNull
+        assertThat(locations.model?.size).isEqualTo(10)
+    }
+
+    @Test
+    fun `when fetching targeting topics, then persist data in DB`() = test {
+        whenever(targetingRestClient.fetchBlazeTopics(any())).thenReturn(
+            BlazeTargetingPayload(
+                List(10) {
+                    BlazeTargetingTopicEntity(
+                        id = it.toString(),
+                        description = "Topic $it",
+                        locale = "en"
+                    )
+                }
+            )
+        )
+
+        store.fetchBlazeTargetingTopics()
+
+        verify(blazeTargetingDao).replaceTopics(any())
+    }
+
+    @Test
+    fun `when observing targeting topics, then return data from DB`() = test {
+        whenever(blazeTargetingDao.observeTopics(any())).thenReturn(
+            flowOf(
+                List(10) {
+                    BlazeTargetingTopicEntity(
+                        id = it.toString(),
+                        description = "Topic $it",
+                        locale = "en"
+                    )
+                }
+            )
+        )
+
+        val topics = store.observeBlazeTargetingTopics().first()
+
+        assertThat(topics).isNotNull
+        assertThat(topics.size).isEqualTo(10)
+    }
+
+    @Test
+    fun `when fetching targeting languages, then persist data in DB`() = test {
+        whenever(targetingRestClient.fetchBlazeLanguages(any())).thenReturn(
+            BlazeTargetingPayload(
+                List(10) {
+                    BlazeTargetingLanguageEntity(
+                        id = it.toString(),
+                        name = "Language $it",
+                        locale = "en"
+                    )
+                }
+            )
+        )
+
+        store.fetchBlazeTargetingLanguages()
+
+        verify(blazeTargetingDao).replaceLanguages(any())
+    }
+
+    @Test
+    fun `when observing targeting languages, then return data from DB`() = test {
+        whenever(blazeTargetingDao.observeLanguages(any())).thenReturn(
+            flowOf(
+                List(10) {
+                    BlazeTargetingLanguageEntity(
+                        id = it.toString(),
+                        name = "Language $it",
+                        locale = "en"
+                    )
+                }
+            )
+        )
+
+        val languages = store.observeBlazeTargetingLanguages().first()
+
+        assertThat(languages).isNotNull
+        assertThat(languages.size).isEqualTo(10)
+    }
+
+    @Test
+    fun `when fetching targeting devices, then persist data in DB`() = test {
+        whenever(targetingRestClient.fetchBlazeDevices(any())).thenReturn(
+            BlazeTargetingPayload(
+                List(10) {
+                    BlazeTargetingDeviceEntity(
+                        id = it.toString(),
+                        name = "Device $it",
+                        locale = "en"
+                    )
+                }
+            )
+        )
+
+        store.fetchBlazeTargetingDevices()
+
+        verify(blazeTargetingDao).replaceDevices(any())
+    }
+
+    @Test
+    fun `when observing targeting devices, then return data from DB`() = test {
+        whenever(blazeTargetingDao.observeDevices(any())).thenReturn(
+            flowOf(
+                List(10) {
+                    BlazeTargetingDeviceEntity(
+                        id = it.toString(),
+                        name = "Device $it",
+                        locale = "en"
+                    )
+                }
+            )
+        )
+
+        val devices = store.observeBlazeTargetingDevices().first()
+
+        assertThat(devices).isNotNull
+        assertThat(devices.size).isEqualTo(10)
     }
 }

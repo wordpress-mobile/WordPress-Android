@@ -14,6 +14,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.CardOrder
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardRowModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel.PageCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
@@ -22,6 +26,7 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardMode
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.FetchCardsPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PageResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
@@ -72,6 +77,17 @@ const val PAGE_MODIFIED_ON = "2023-03-02 10:26:53"
 const val PAGE_STATUS = "publish"
 const val PAGE_DATE = "2023-03-02 10:30:53"
 
+/* DYNAMIC CARDS */
+const val DYNAMIC_CARD_ID = "year_in_review_2023"
+const val DYNAMIC_CARD_TITLE = "News"
+const val DYNAMIC_CARD_FEATURED_IMAGE = "https://path/to/image"
+const val DYNAMIC_CARD_URL = "https://wordpress.com"
+const val DYNAMIC_CARD_ACTION = "Call to action"
+const val DYNAMIC_CARD_ORDER = "top"
+const val DYNAMIC_CARD_ROW_ICON = "https://path/to/image"
+const val DYNAMIC_CARD_ROW_TITLE = "Row title"
+const val DYNAMIC_CARD_ROW_DESCRIPTION = "Row description"
+
 /* ACTIVITY */
 const val ACTIVITY_ID = "activity123"
 const val ACTIVITY_SUMMARY = "activity"
@@ -90,12 +106,19 @@ const val ACTIVITY_ACTOR_ICON_URL = "dog.jpg"
 const val ACTIVITY_PUBLISHED_DATE = "2021-12-27 11:33:55"
 const val ACTIVITY_CONTENT = "content"
 
+private const val BUILD_NUMBER_PARAM = "build_number_param"
+private const val DEVICE_ID_PARAM = "device_id_param"
+private const val IDENTIFIER_PARAM = "identifier_param"
+private const val MARKETING_VERSION_PARAM = "marketing_version_param"
+private const val PLATFORM_PARAM = "platform_param"
+
 /* CARD TYPES */
 
 private val CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS,
     CardModel.Type.POSTS,
     CardModel.Type.PAGES,
-    CardModel.Type.ACTIVITY
+    CardModel.Type.ACTIVITY,
+    CardModel.Type.DYNAMIC,
 )
 
 /* RESPONSE */
@@ -131,6 +154,26 @@ private val PAGE_RESPONSE = PageResponse(
 )
 
 private val PAGES_RESPONSE = listOf(PAGE_RESPONSE)
+
+private val DYNAMIC_CARD_ROW_RESPONSE = CardsRestClient.DynamicCardRowResponse(
+    icon = DYNAMIC_CARD_ROW_ICON,
+    title = DYNAMIC_CARD_ROW_TITLE,
+    description = DYNAMIC_CARD_ROW_DESCRIPTION
+)
+
+private val DYNAMIC_CARD_ROWS_RESPONSE = listOf(DYNAMIC_CARD_ROW_RESPONSE)
+
+private val DYNAMIC_CARD_RESPONSE = CardsRestClient.DynamicCardResponse(
+    id = DYNAMIC_CARD_ID,
+    title = DYNAMIC_CARD_TITLE,
+    featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
+    url = DYNAMIC_CARD_URL,
+    action = DYNAMIC_CARD_ACTION,
+    order = DYNAMIC_CARD_ORDER,
+    rows = DYNAMIC_CARD_ROWS_RESPONSE,
+)
+
+private val DYNAMIC_CARDS_RESPONSE = listOf(DYNAMIC_CARD_RESPONSE)
 
 private val ACTIVITY_RESPONSE_ICON = ActivitiesResponse.Icon("jpg", ACTIVITY_ACTOR_ICON_URL, 100, 100)
 private val ACTIVITY_RESPONSE_ACTOR = ActivitiesResponse.Actor(
@@ -168,7 +211,8 @@ private val CARDS_RESPONSE = CardsResponse(
         todaysStats = TODAYS_STATS_RESPONSE,
         posts = POSTS_RESPONSE,
         pages = PAGES_RESPONSE,
-        activity = ACTIVITY_RESPONSE
+        activity = ACTIVITY_RESPONSE,
+        dynamic = DYNAMIC_CARDS_RESPONSE,
 )
 
 /* MODEL */
@@ -214,6 +258,26 @@ private val PAGES_MODEL = PagesCardModel(
         pages = listOf(PAGE_MODEL)
 )
 
+private val DYNAMIC_CARD_ROW_MODEL = DynamicCardRowModel(
+    icon = DYNAMIC_CARD_ROW_ICON,
+    title = DYNAMIC_CARD_ROW_TITLE,
+    description = DYNAMIC_CARD_ROW_DESCRIPTION
+)
+
+private val DYNAMIC_CARD_MODEL = DynamicCardModel(
+    id = DYNAMIC_CARD_ID,
+    title = DYNAMIC_CARD_TITLE,
+    featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
+    url = DYNAMIC_CARD_URL,
+    action = DYNAMIC_CARD_ACTION,
+    order = CardOrder.fromString(DYNAMIC_CARD_ORDER),
+    rows = listOf(DYNAMIC_CARD_ROW_MODEL)
+)
+
+private val DYNAMIC_CARDS_MODEL = DynamicCardsModel(
+    dynamicCards = listOf(DYNAMIC_CARD_MODEL)
+)
+
 private val ACTIVITY_LOG_MODEL = ActivityLogModel(
     summary = ACTIVITY_SUMMARY,
     content = FormattableContent(text = ACTIVITY_CONTENT),
@@ -246,7 +310,8 @@ private val CARDS_MODEL = listOf(
         TODAYS_STATS_MODEL,
         POSTS_MODEL,
         PAGES_MODEL,
-        ACTIVITY_CARD_MODEL
+        ACTIVITY_CARD_MODEL,
+        DYNAMIC_CARDS_MODEL,
 )
 
 /* ENTITY */
@@ -285,6 +350,13 @@ private val PAGES_ENTITY = CardEntity(
         json = CardsUtils.GSON.toJson(PAGES_MODEL)
 )
 
+private val DYNAMIC_CARDS_ENTITY = CardEntity(
+    siteLocalId = SITE_LOCAL_ID,
+    type = CardModel.Type.DYNAMIC.name,
+    date = CardsUtils.getInsertDate(),
+    json = CardsUtils.GSON.toJson(DYNAMIC_CARDS_MODEL)
+)
+
 private val ACTIVITY_ENTITY = CardEntity(
         siteLocalId = SITE_LOCAL_ID,
         type = CardModel.Type.ACTIVITY.name,
@@ -303,7 +375,8 @@ private val CARDS_ENTITY = listOf(
         TODAYS_STATS_ENTITY,
         POSTS_ENTITY,
         PAGES_ENTITY,
-        ACTIVITY_ENTITY
+        ACTIVITY_ENTITY,
+        DYNAMIC_CARDS_ENTITY,
 )
 
 @RunWith(MockitoJUnitRunner::class)
@@ -313,6 +386,7 @@ class CardsStoreTest {
     @Mock private lateinit var dao: CardsDao
     @Mock private lateinit var cardsRespone: CardsResponse
 
+    private lateinit var defaultFetchCardsPayload: FetchCardsPayload
     private lateinit var cardsStore: CardsStore
 
     @Before
@@ -323,6 +397,15 @@ class CardsStoreTest {
                 initCoroutineEngine()
         )
         setUpMocks()
+        defaultFetchCardsPayload = FetchCardsPayload(
+            siteModel,
+            CARD_TYPES,
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
     }
 
     private fun setUpMocks() {
@@ -332,9 +415,9 @@ class CardsStoreTest {
     @Test
     fun `given all card types, when fetch cards triggered, then all cards model is inserted into db`() = test {
         val payload = CardsPayload(CARDS_RESPONSE)
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
+        whenever(restClient.fetchCards(defaultFetchCardsPayload)).thenReturn(payload)
 
-        cardsStore.fetchCards(siteModel, CARD_TYPES)
+        cardsStore.fetchCards(defaultFetchCardsPayload)
 
         verify(dao).insertWithDate(siteModel.id, CARDS_MODEL)
     }
@@ -342,9 +425,31 @@ class CardsStoreTest {
     @Test
     fun `given todays stats type, when fetch cards triggered, then today's stats card model inserted into db`() = test {
         val payload = CardsPayload(CardsResponse(todaysStats = TODAYS_STATS_RESPONSE))
-        whenever(restClient.fetchCards(siteModel, listOf(CardModel.Type.TODAYS_STATS))).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                FetchCardsPayload(
+                    siteModel,
+                    listOf(CardModel.Type.TODAYS_STATS),
+                    BUILD_NUMBER_PARAM,
+                    DEVICE_ID_PARAM,
+                    IDENTIFIER_PARAM,
+                    MARKETING_VERSION_PARAM,
+                    PLATFORM_PARAM
+                )
+            )
+        ).thenReturn(payload)
 
-        cardsStore.fetchCards(siteModel, listOf(CardModel.Type.TODAYS_STATS))
+        cardsStore.fetchCards(
+            FetchCardsPayload(
+                siteModel,
+                listOf(CardModel.Type.TODAYS_STATS),
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        )
 
         verify(dao).insertWithDate(siteModel.id, listOf(TODAYS_STATS_MODEL))
     }
@@ -352,9 +457,31 @@ class CardsStoreTest {
     @Test
     fun `given posts type, when fetch cards triggered, then post card model inserted into db`() = test {
         val payload = CardsPayload(CardsResponse(posts = POSTS_RESPONSE))
-        whenever(restClient.fetchCards(siteModel, listOf(CardModel.Type.POSTS))).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                FetchCardsPayload(
+                    siteModel,
+                    listOf(CardModel.Type.POSTS),
+                    BUILD_NUMBER_PARAM,
+                    DEVICE_ID_PARAM,
+                    IDENTIFIER_PARAM,
+                    MARKETING_VERSION_PARAM,
+                    PLATFORM_PARAM
+                )
+            )
+        ).thenReturn(payload)
 
-        cardsStore.fetchCards(siteModel, listOf(CardModel.Type.POSTS))
+        cardsStore.fetchCards(
+            FetchCardsPayload(
+                siteModel,
+                listOf(CardModel.Type.POSTS),
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        )
 
         verify(dao).insertWithDate(siteModel.id, listOf(POSTS_MODEL))
     }
@@ -362,19 +489,95 @@ class CardsStoreTest {
     @Test
     fun `given pages type, when fetch cards triggered, then pages card model inserted into db`() = test {
         val payload = CardsPayload(CardsResponse(pages = PAGES_RESPONSE))
-        whenever(restClient.fetchCards(siteModel, listOf(CardModel.Type.PAGES))).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                FetchCardsPayload(
+                    siteModel,
+                    listOf(CardModel.Type.PAGES),
+                    BUILD_NUMBER_PARAM,
+                    DEVICE_ID_PARAM,
+                    IDENTIFIER_PARAM,
+                    MARKETING_VERSION_PARAM,
+                    PLATFORM_PARAM
+                )
+            )
+        ).thenReturn(payload)
 
-        cardsStore.fetchCards(siteModel, listOf(CardModel.Type.PAGES))
+        cardsStore.fetchCards(
+            FetchCardsPayload(
+                siteModel,
+                listOf(CardModel.Type.PAGES),
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        )
 
         verify(dao).insertWithDate(siteModel.id, listOf(PAGES_MODEL))
     }
 
     @Test
+    fun `given dynamic cards type, when fetch cards triggered, then dynamic cards model inserted into db`() = test {
+        val payload = CardsPayload(CardsResponse(dynamic = DYNAMIC_CARDS_RESPONSE))
+        whenever(
+            restClient.fetchCards(
+                FetchCardsPayload(
+                    siteModel,
+                    listOf(CardModel.Type.DYNAMIC),
+                    BUILD_NUMBER_PARAM,
+                    DEVICE_ID_PARAM,
+                    IDENTIFIER_PARAM,
+                    MARKETING_VERSION_PARAM,
+                    PLATFORM_PARAM
+                )
+            )
+        ).thenReturn(payload)
+
+        cardsStore.fetchCards(
+            FetchCardsPayload(
+                siteModel,
+                listOf(CardModel.Type.DYNAMIC),
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        )
+
+        verify(dao).insertWithDate(siteModel.id, listOf(DYNAMIC_CARDS_MODEL))
+    }
+
+    @Test
     fun `given activity type, when fetch cards triggered, then activity card model inserted into db`() = test {
         val payload = CardsPayload(CardsResponse(activity = ACTIVITY_RESPONSE))
-        whenever(restClient.fetchCards(siteModel, listOf(CardModel.Type.ACTIVITY))).thenReturn(payload)
+        whenever(
+            restClient.fetchCards(
+                FetchCardsPayload(
+                    siteModel,
+                    listOf(CardModel.Type.ACTIVITY),
+                    BUILD_NUMBER_PARAM,
+                    DEVICE_ID_PARAM,
+                    IDENTIFIER_PARAM,
+                    MARKETING_VERSION_PARAM,
+                    PLATFORM_PARAM
+                )
+            )
+        ).thenReturn(payload)
 
-        cardsStore.fetchCards(siteModel, listOf(CardModel.Type.ACTIVITY))
+        cardsStore.fetchCards(
+            FetchCardsPayload(
+                siteModel,
+                listOf(CardModel.Type.ACTIVITY),
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
+        )
 
         verify(dao).insertWithDate(siteModel.id, listOf(ACTIVITY_CARD_MODEL))
     }
@@ -382,9 +585,9 @@ class CardsStoreTest {
     @Test
     fun `given cards response, when fetch cards gets triggered, then empty cards model is returned`() = test {
         val payload = CardsPayload(CARDS_RESPONSE)
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
+        whenever(restClient.fetchCards(defaultFetchCardsPayload)).thenReturn(payload)
 
-        val result = cardsStore.fetchCards(siteModel, CARD_TYPES)
+        val result = cardsStore.fetchCards(defaultFetchCardsPayload)
 
         assertThat(result.model).isNull()
         assertThat(result.error).isNull()
@@ -393,10 +596,10 @@ class CardsStoreTest {
     @Test
     fun `given card response with exception, when fetch cards gets triggered, then cards error is returned`() = test {
         val payload = CardsPayload(CARDS_RESPONSE)
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
+        whenever(restClient.fetchCards(defaultFetchCardsPayload)).thenReturn(payload)
         whenever(dao.insertWithDate(siteModel.id, CARDS_MODEL)).thenThrow(IllegalStateException("Error"))
 
-        val result = cardsStore.fetchCards(siteModel, CARD_TYPES)
+        val result = cardsStore.fetchCards(defaultFetchCardsPayload)
 
         assertThat(result.model).isNull()
         assertEquals(CardsErrorType.GENERIC_ERROR, result.error.type)
@@ -407,9 +610,9 @@ class CardsStoreTest {
     fun `given cards error, when fetch cards gets triggered, then cards error is returned`() = test {
         val errorType = CardsErrorType.API_ERROR
         val payload = CardsPayload<CardsResponse>(CardsError(errorType))
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
+        whenever(restClient.fetchCards(defaultFetchCardsPayload)).thenReturn(payload)
 
-        val result = cardsStore.fetchCards(siteModel, CARD_TYPES)
+        val result = cardsStore.fetchCards(defaultFetchCardsPayload)
 
         assertThat(result.model).isNull()
         assertEquals(errorType, result.error.type)
@@ -420,9 +623,9 @@ class CardsStoreTest {
     fun `given authorization required, when fetch cards gets triggered, then db is cleared of cards model`() = test {
         val errorType = CardsErrorType.AUTHORIZATION_REQUIRED
         val payload = CardsPayload<CardsResponse>(CardsError(errorType))
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
+        whenever(restClient.fetchCards(defaultFetchCardsPayload)).thenReturn(payload)
 
-        cardsStore.fetchCards(siteModel, CARD_TYPES)
+        cardsStore.fetchCards(defaultFetchCardsPayload)
 
         verify(dao).clear()
     }
@@ -431,9 +634,9 @@ class CardsStoreTest {
     fun `given authorization required, when fetch cards gets triggered, then empty cards model is returned`() = test {
         val errorType = CardsErrorType.AUTHORIZATION_REQUIRED
         val payload = CardsPayload<CardsResponse>(CardsError(errorType))
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
+        whenever(restClient.fetchCards(defaultFetchCardsPayload)).thenReturn(payload)
 
-        val result = cardsStore.fetchCards(siteModel, CARD_TYPES)
+        val result = cardsStore.fetchCards(defaultFetchCardsPayload)
 
         assertThat(result.model).isNull()
         assertThat(result.error).isNull()
@@ -442,9 +645,9 @@ class CardsStoreTest {
     @Test
     fun `given empty cards payload, when fetch cards gets triggered, then cards error is returned`() = test {
         val payload = CardsPayload<CardsResponse>()
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
+        whenever(restClient.fetchCards(defaultFetchCardsPayload)).thenReturn(payload)
 
-        val result = cardsStore.fetchCards(siteModel, CARD_TYPES)
+        val result = cardsStore.fetchCards(defaultFetchCardsPayload)
 
         assertThat(result.model).isNull()
         assertEquals(CardsErrorType.INVALID_RESPONSE, result.error.type)
@@ -465,10 +668,14 @@ class CardsStoreTest {
     @Test
     fun `given todays stats card with error, when fetch cards triggered, then card with error inserted into db`() =
             test {
-                whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(CardsPayload(cardsRespone))
+                whenever(restClient.fetchCards(defaultFetchCardsPayload)).thenReturn(
+                    CardsPayload(
+                        cardsRespone
+                    )
+                )
                 whenever(cardsRespone.toCards()).thenReturn(listOf(TODAYS_STATS_WITH_ERROR_MODEL))
 
-                cardsStore.fetchCards(siteModel, CARD_TYPES)
+                cardsStore.fetchCards(defaultFetchCardsPayload)
 
                 verify(dao).insertWithDate(siteModel.id, listOf(TODAYS_STATS_WITH_ERROR_MODEL))
             }
@@ -508,10 +715,12 @@ class CardsStoreTest {
     /* POSTS CARD WITH ERROR */
     @Test
     fun `given posts card with error, when fetch cards triggered, then card with error inserted into db`() = test {
-        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(CardsPayload(cardsRespone))
+        whenever(
+            restClient.fetchCards(defaultFetchCardsPayload)
+        ).thenReturn(CardsPayload(cardsRespone))
         whenever(cardsRespone.toCards()).thenReturn(listOf(POSTS_WITH_ERROR_MODEL))
 
-        cardsStore.fetchCards(siteModel, CARD_TYPES)
+        cardsStore.fetchCards(defaultFetchCardsPayload)
 
         verify(dao).insertWithDate(siteModel.id, listOf(POSTS_WITH_ERROR_MODEL))
     }
