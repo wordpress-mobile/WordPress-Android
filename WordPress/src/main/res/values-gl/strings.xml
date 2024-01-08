@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-18 22:26:00+0000
+Translation-Revision-Date: 2024-01-03 09:49:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: gl_ES
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_title_january">Bloganuary xa está aquí!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Imos aló!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Activa as suxestións de publicación</string>
     <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary utilizará as suxerencias de publicación diarias para enviarche temas durante o mes de xaneiro.</string>
@@ -16,7 +17,7 @@ Language: gl_ES
     <string name="bloganuary_dashboard_nudge_overlay_title">Únete ao noso reto de escritura dun mes</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">Durante o mes de xaneiro, as suxerencias para escribir no blog provirán de Bloganuary, o noso reto comunitario para crear un hábito de blogueo para o novo ano.</string>
-    <string name="bloganuary_dashboard_nudge_title">Bloganuary está á volta da esquina!</string>
+    <string name="bloganuary_dashboard_nudge_title_december">Bloganuary está á volta da esquina!</string>
     <string name="turn_off">Non, apágaa</string>
     <string name="leave_on">Si, déixaa acendida</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Por esta razón, recomendámosche que edites o bloque utilizando o teu navegador web.</string>

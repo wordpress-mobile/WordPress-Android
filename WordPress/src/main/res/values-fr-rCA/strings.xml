@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-19 17:54:09+0000
+Translation-Revision-Date: 2024-01-03 18:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: fr
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_title_january">Bloganuary, c’est parti !</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">C’est parti !</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Activer les invites à bloguer</string>
     <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary utilisera des invites quotidiennes à bloguer pour vous envoyer des thèmes de publications tout au long du mois de janvier.</string>
@@ -15,7 +16,6 @@ Language: fr
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Recevez chaque jour une invite pour vous inspirer.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Participer à notre défi d’écriture d’un mois</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">De Bloganuary</string>
-    <string name="bloganuary_dashboard_nudge_title">C’est bientôt Bloganuary !</string>
     <string name="turn_off">Non, désactiver</string>
     <string name="leave_on">Oui, laisser activé</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Pour cette raison, nous vous recommandons de modifier le bloc à l’aide de votre navigateur web.</string>
