@@ -38,6 +38,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -294,7 +295,11 @@ class EditorMedia @Inject constructor(
                     it["error_type"] = error.type.name
                 }
         }
-        analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_FAILED, properties)
+        AnalyticsUtils.trackWithSiteDetails(
+            analyticsTrackerWrapper,
+            EDITOR_UPLOAD_MEDIA_FAILED,
+            site,
+            properties)
         listener.onMediaUploadFailed(media.id.toString())
     }
 
