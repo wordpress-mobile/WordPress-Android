@@ -751,7 +751,7 @@ public class ReaderPostTable {
         } else if (tag.isTagTopic() || tag.isBookmarked()) {
             return "date_tagged";
         } else {
-            return "date_published";
+            return "datetime(date_published)";
         }
     }
 
