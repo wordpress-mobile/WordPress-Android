@@ -1,0 +1,4 @@
+23.8:
+- Blok düzenleyici "grubu ayır" seçeneğini yalnızca bu seçeneği destekleyen iç içe geçmiş bloklar için gösterir.
+- Görselleri İyileştirme ayarı varsayılan olarak ideal boyut ve kaliteyi kullanır.
+- Kurumsal pakette ve Ticaret paketinde temalar sitelerde düzgün yüklenir.

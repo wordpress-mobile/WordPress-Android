@@ -123,16 +123,18 @@ class PrepublishingHomeViewModel @Inject constructor(
                 site
             )
 
-            add(HomeUiState(
-                navigationAction = PrepublishingScreenNavigation.Categories,
-                actionResult = if (categoriesString.isNotEmpty()) {
-                    UiStringText(categoriesString)
-                } else {
-                    run { UiStringRes(R.string.prepublishing_nudges_home_categories_not_set) }
-                },
-                actionClickable = true,
-                onNavigationActionClicked = ::onActionClicked
-            ))
+            if (!editPostRepository.isPage) {
+                add(HomeUiState(
+                    navigationAction = PrepublishingScreenNavigation.Categories,
+                    actionResult = if (categoriesString.isNotEmpty()) {
+                        UiStringText(categoriesString)
+                    } else {
+                        run { UiStringRes(R.string.prepublishing_nudges_home_categories_not_set) }
+                    },
+                    actionClickable = true,
+                    onNavigationActionClicked = ::onActionClicked
+                ))
+            }
 
             add(SocialUiState.Hidden)
 

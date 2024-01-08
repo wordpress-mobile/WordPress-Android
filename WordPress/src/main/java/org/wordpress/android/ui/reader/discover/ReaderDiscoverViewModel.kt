@@ -233,7 +233,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                         onMoreButtonClicked = this@ReaderDiscoverViewModel::onMoreButtonClicked,
                         onMoreDismissed = this@ReaderDiscoverViewModel::onMoreMenuDismissed,
                         onVideoOverlayClicked = this@ReaderDiscoverViewModel::onVideoOverlayClicked,
-                        onPostHeaderViewClicked = this@ReaderDiscoverViewModel::onPostHeaderClicked,
+                        onPostHeaderViewClicked = { onPostHeaderClicked(card.post.postId, card.post.blogId) },
                         onTagItemClicked = this@ReaderDiscoverViewModel::onTagItemClicked,
                         postListType = TAG_FOLLOWED
                     )

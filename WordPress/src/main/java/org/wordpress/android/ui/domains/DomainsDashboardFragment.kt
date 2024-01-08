@@ -14,14 +14,17 @@ import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.DomainsDashboardFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes.DOMAIN_REGISTRATION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.FREE_DOMAIN_WITH_ANNUAL_PLAN
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
+import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetPlan
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.config.DomainManagementFeatureConfig
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
@@ -65,7 +68,10 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment), 
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
         R.id.all_domains_item -> {
-            context?.let { ActivityLauncher.openDomainManagement(it) }
+            context?.let {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.DOMAIN_MANAGEMENT_DOMAINS_DASHBOARD_ALL_DOMAINS_TAPPED)
+                ActivityLauncher.openDomainManagement(it)
+            }
             true
         }
         else -> true
@@ -98,6 +104,11 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment), 
             this,
             action.site,
             CTA_DOMAIN_CREDIT_REDEMPTION
+        )
+        is GetPlan -> ActivityLauncher.viewDomainRegistrationActivityForResult(
+            this,
+            action.site,
+            FREE_DOMAIN_WITH_ANNUAL_PLAN
         )
     }
 

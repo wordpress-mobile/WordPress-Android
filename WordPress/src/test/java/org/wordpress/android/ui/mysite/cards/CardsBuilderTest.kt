@@ -16,13 +16,14 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BlazeCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloganuaryNudgeCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainTransferCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
@@ -115,7 +116,6 @@ class CardsBuilderTest {
         isDomainCreditAvailable: Boolean = false,
         isEligibleForPlansCard: Boolean = false,
         isQuickStartInProgress: Boolean = false,
-        isEligibleForDomainTransferCard: Boolean = false,
     ): List<MySiteCardAndItem> {
         return cardsBuilder.build(
             domainRegistrationCardBuilderParams = DomainRegistrationCardBuilderParams(
@@ -131,6 +131,14 @@ class CardsBuilderTest {
                 onErrorRetryClick = mock(),
                 todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
                 postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
+                bloganuaryNudgeCardBuilderParams = BloganuaryNudgeCardBuilderParams(
+                    mock(),
+                    mock(),
+                    false,
+                    mock(),
+                    mock(),
+                    mock(),
+                ),
                 bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                     mock(),
                     mock(),
@@ -152,12 +160,7 @@ class CardsBuilderTest {
                 ),
                 pagesCardBuilderParams = PagesCardBuilderParams(mock(), mock(), mock(), mock()),
                 activityCardBuilderParams = ActivityCardBuilderParams(mock(), mock(), mock(), mock(), mock()),
-                domainTransferCardBuilderParams = DomainTransferCardBuilderParams(
-                    isEligible = isEligibleForDomainTransferCard,
-                    mock(),
-                    mock(),
-                    mock()
-                )
+                dynamicCardsBuilderParams = DynamicCardsBuilderParams(mock(), mock(), mock(), mock()),
             ),
             jetpackInstallFullPluginCardBuilderParams = JetpackInstallFullPluginCardBuilderParams(
                 site = site,

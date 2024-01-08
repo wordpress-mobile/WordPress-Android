@@ -59,6 +59,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSiteP
 import org.wordpress.android.ui.reader.discover.ReaderPostActions
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
@@ -77,6 +78,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiSt
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiDimen
@@ -467,9 +469,22 @@ class ReaderPostDetailViewModel @Inject constructor(
         onActionClicked(
             postId,
             blogId,
-            ReaderPostCardActionType.COMMENTS,
+            COMMENTS,
             ReaderTracker.SOURCE_POST_DETAIL_COMMENT_SNIPPET
         )
+    }
+
+    private fun onCommentsClicked() {
+        post?.let {
+            launch {
+                readerPostCardActionsHandler.onAction(
+                    post = it,
+                    type = COMMENTS,
+                    isBookmarkList = false,
+                    source = ReaderTracker.SOURCE_POST_DETAIL,
+                )
+            }
+        }
     }
 
     fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
@@ -510,6 +525,16 @@ class ReaderPostDetailViewModel @Inject constructor(
         launch(ioDispatcher) {
             val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, FOLLOWED)
             _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
+        }
+    }
+
+    private fun onHeaderAction(post: ReaderPost, action: ReaderPostDetailsHeaderAction) {
+        when (action) {
+            is ReaderPostDetailsHeaderAction.BlogSectionClicked -> onBlogSectionClicked(post.postId, post.blogId)
+            is ReaderPostDetailsHeaderAction.FollowClicked -> onButtonClicked(post.postId, post.blogId, FOLLOW)
+            is ReaderPostDetailsHeaderAction.LikesClicked -> onLikesClicked()
+            is ReaderPostDetailsHeaderAction.CommentsClicked -> onCommentsClicked()
+            is ReaderPostDetailsHeaderAction.TagItemClicked -> onTagItemClicked(action.tagSlug)
         }
     }
 
@@ -575,9 +600,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         return postDetailUiStateBuilder.mapPostToUiState(
             post = post,
             onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked,
-            onBlogSectionClicked = this@ReaderPostDetailViewModel::onBlogSectionClicked,
-            onFollowClicked = { onButtonClicked(post.postId, post.blogId, FOLLOW) },
-            onTagItemClicked = this@ReaderPostDetailViewModel::onTagItemClicked
+            onHeaderAction = { action -> onHeaderAction(post, action) },
         )
     }
 
@@ -832,7 +855,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         return iLiked ?: post?.isLikedByCurrentUser ?: false
     }
 
-    fun onLikeFacesClicked() {
+    fun onLikesClicked() {
         post?.let { readerPost ->
             _navigationEvents.value = Event(
                 ShowEngagedPeopleList(

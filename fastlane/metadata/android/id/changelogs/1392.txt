@@ -1,0 +1,4 @@
+23.8:
+- Editor blok hanya menampilkan pilihan “batalkan pengelompokan” untuk blok bertingkat yang mendukung pilihan tersebut.
+- Pengaturan Optimalkan Gambar menerapkan ukuran dan kualitas optimal secara default.
+- Tema terinstal dengan benar untuk situs pada paket Bisnis dan Commerce.

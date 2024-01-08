@@ -312,7 +312,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
         viewModel.onCreateSiteBtnClicked()
 
-        verify(tracker).trackDomainSelected(selectedDomain.domainName, "", expectedCost)
+        verify(tracker).trackDomainSelected(selectedDomain.domainName, "", expectedCost, true)
     }
 
     @Test
@@ -324,7 +324,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
         viewModel.onCreateSiteBtnClicked()
 
-        verify(tracker).trackDomainSelected(selectedDomain.domainName, "", expectedCost)
+        verify(tracker).trackDomainSelected(selectedDomain.domainName, "", expectedCost, false)
     }
 
     @Test

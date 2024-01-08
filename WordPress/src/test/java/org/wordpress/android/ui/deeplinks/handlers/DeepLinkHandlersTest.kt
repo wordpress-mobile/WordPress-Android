@@ -40,6 +40,15 @@ class DeepLinkHandlersTest : BaseUnitTest() {
     lateinit var homeLinkHandler: HomeLinkHandler
 
     @Mock
+    lateinit var mediaLinkHandler: MediaLinkHandler
+
+    @Mock
+    lateinit var domainManagementLinkHandler: DomainManagementLinkHandler
+
+    @Mock
+    lateinit var qrCodeMediaLinkHandler: QRCodeMediaLinkHandler
+
+    @Mock
     lateinit var uri: UriWrapper
     private lateinit var deepLinkHandlers: DeepLinkHandlers
     private lateinit var handlers: List<DeepLinkHandler>
@@ -54,7 +63,10 @@ class DeepLinkHandlersTest : BaseUnitTest() {
             pagesLinkHandler,
             notificationsLinkHandler,
             qrCodeAuthLinkHandler,
-            homeLinkHandler
+            homeLinkHandler,
+            mediaLinkHandler,
+            domainManagementLinkHandler,
+            qrCodeMediaLinkHandler,
         )
         initDeepLinkHandlers()
     }
@@ -68,7 +80,10 @@ class DeepLinkHandlersTest : BaseUnitTest() {
             pagesLinkHandler,
             notificationsLinkHandler,
             qrCodeAuthLinkHandler,
-            homeLinkHandler
+            homeLinkHandler,
+            mediaLinkHandler,
+            domainManagementLinkHandler,
+            qrCodeMediaLinkHandler,
         )
     }
 

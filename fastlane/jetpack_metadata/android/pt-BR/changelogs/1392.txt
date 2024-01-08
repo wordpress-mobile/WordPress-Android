@@ -1,0 +1,4 @@
+23.8:
+- O editor de blocos só mostra a opção "Desagrupar" para blocos aninhados compatíveis com essa função.
+- A configuração "Otimizar imagens" usa tamanho e qualidade otimizados por padrão.
+- Os temas são instalados de forma adequada para sites nos planos Negócios e Commerce.

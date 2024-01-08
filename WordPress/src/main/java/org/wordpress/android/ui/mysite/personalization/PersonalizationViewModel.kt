@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.mysite.personalization
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,15 +23,23 @@ class PersonalizationViewModel @Inject constructor(
     val uiState = dashboardCardPersonalizationViewModelSlice.uiState
     val shortcutsState = shortcutsPersonalizationViewModelSlice.uiState
 
+    private val _onSelectedSiteMissing = MutableLiveData<Unit>()
+    val onSelectedSiteMissing = _onSelectedSiteMissing as LiveData<Unit>
+
     init {
         shortcutsPersonalizationViewModelSlice.initialize(viewModelScope)
         dashboardCardPersonalizationViewModelSlice.initialize(viewModelScope)
     }
 
     fun start() {
-        val siteId = selectedSiteRepository.getSelectedSite()!!.siteId
-        dashboardCardPersonalizationViewModelSlice.start(siteId)
-        shortcutsPersonalizationViewModelSlice.start(selectedSiteRepository.getSelectedSite()!!)
+        val site = selectedSiteRepository.getSelectedSite()
+        if (site == null) {
+            _onSelectedSiteMissing.value = Unit
+            return
+        }
+
+        dashboardCardPersonalizationViewModelSlice.start(site.siteId)
+        shortcutsPersonalizationViewModelSlice.start(site)
     }
 
     fun onCardToggled(cardType: CardType, enabled: Boolean) {

@@ -14,4 +14,6 @@
     <dimen name="dashboard_card_plans_top_margin">16dp</dimen>
     <dimen name="dashboard_card_plans_done_button_bottom_margin">12dp</dimen>
 
+    <dimen name="domain_plan_card_title_top_margin">160dp</dimen>
+
 </resources>

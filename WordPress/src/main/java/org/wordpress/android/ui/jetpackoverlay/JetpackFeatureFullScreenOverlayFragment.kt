@@ -10,6 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.JetpackFeatureRemovalOverlayBinding
 import org.wordpress.android.ui.ActivityLauncherWrapper
+import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.CAMPAIGN_JETPACK_OVERLAY
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.DismissDialog
@@ -93,7 +94,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
                 is OpenPlayStore -> {
                     dismiss()
                     activity?.let {
-                        activityLauncherWrapper.openPlayStoreLink(it, JETPACK_PACKAGE_NAME)
+                        activityLauncherWrapper.openPlayStoreLink(it, JETPACK_PACKAGE_NAME, CAMPAIGN_JETPACK_OVERLAY)
                     }
                 }
                 is DismissDialog -> {
