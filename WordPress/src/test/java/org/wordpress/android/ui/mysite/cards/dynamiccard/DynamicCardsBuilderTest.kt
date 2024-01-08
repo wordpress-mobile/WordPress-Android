@@ -14,7 +14,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.config.DynamicDashboardCardsFeatureConfig
-import org.wordpress.android.util.config.FeatureFlagConfig
 import kotlin.test.assertEquals
 
 /* DYNAMIC CARDS */
@@ -28,10 +27,6 @@ private const val DYNAMIC_CARD_ROW_ICON = "https://path/to/image"
 private const val DYNAMIC_CARD_ROW_TITLE = "Row title"
 private const val DYNAMIC_CARD_ROW_DESCRIPTION = "Row description"
 
-private const val ENABLED_REMOTE_FEATURE_FLAG = "enabled_remote_feature_flag"
-private const val DISABLED_REMOTE_FEATURE_FLAG = "disabled_remote_feature_flag"
-private const val UNKNOWN_REMOTE_FEATURE_FLAG = "unknown_remote_feature_flag"
-
 private val DYNAMIC_CARD_ROW_MODEL = CardModel.DynamicCardsModel.DynamicCardRowModel(
     icon = DYNAMIC_CARD_ROW_ICON,
     title = DYNAMIC_CARD_ROW_TITLE,
@@ -41,7 +36,6 @@ private val DYNAMIC_CARD_ROW_MODEL = CardModel.DynamicCardsModel.DynamicCardRowM
 private val DYNAMIC_CARD_MODEL = CardModel.DynamicCardsModel.DynamicCardModel(
     id = DYNAMIC_CARD_ID,
     title = DYNAMIC_CARD_TITLE,
-    remoteFeatureFlag = ENABLED_REMOTE_FEATURE_FLAG,
     featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
     url = DYNAMIC_CARD_URL,
     action = DYNAMIC_CARD_ACTION,
@@ -52,7 +46,6 @@ private val DYNAMIC_CARD_MODEL = CardModel.DynamicCardsModel.DynamicCardModel(
 private val DYNAMIC_CARD_MODEL_INVALID_ACTION_TITLE = CardModel.DynamicCardsModel.DynamicCardModel(
     id = DYNAMIC_CARD_ID,
     title = DYNAMIC_CARD_TITLE,
-    remoteFeatureFlag = ENABLED_REMOTE_FEATURE_FLAG,
     featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
     url = DYNAMIC_CARD_URL,
     action = null,
@@ -63,7 +56,6 @@ private val DYNAMIC_CARD_MODEL_INVALID_ACTION_TITLE = CardModel.DynamicCardsMode
 private val DYNAMIC_CARD_MODEL_INVALID_ACTION_TITLE_AND_URL = CardModel.DynamicCardsModel.DynamicCardModel(
     id = DYNAMIC_CARD_ID,
     title = DYNAMIC_CARD_TITLE,
-    remoteFeatureFlag = ENABLED_REMOTE_FEATURE_FLAG,
     featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
     url = "",
     action = null,
@@ -74,42 +66,8 @@ private val DYNAMIC_CARD_MODEL_INVALID_ACTION_TITLE_AND_URL = CardModel.DynamicC
 private val DYNAMIC_CARD_MODEL_INVALID_URL = CardModel.DynamicCardsModel.DynamicCardModel(
     id = DYNAMIC_CARD_ID,
     title = DYNAMIC_CARD_TITLE,
-    remoteFeatureFlag = ENABLED_REMOTE_FEATURE_FLAG,
     featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
     url = null,
-    action = DYNAMIC_CARD_ACTION,
-    order = CardModel.DynamicCardsModel.CardOrder.fromString(DYNAMIC_CARD_ORDER),
-    rows = listOf(DYNAMIC_CARD_ROW_MODEL)
-)
-
-private val DYNAMIC_CARD_MODEL_DISABLED_REMOTELY = CardModel.DynamicCardsModel.DynamicCardModel(
-    id = DYNAMIC_CARD_ID,
-    title = DYNAMIC_CARD_TITLE,
-    remoteFeatureFlag = DISABLED_REMOTE_FEATURE_FLAG,
-    featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
-    url = DYNAMIC_CARD_URL,
-    action = DYNAMIC_CARD_ACTION,
-    order = CardModel.DynamicCardsModel.CardOrder.fromString(DYNAMIC_CARD_ORDER),
-    rows = listOf(DYNAMIC_CARD_ROW_MODEL)
-)
-
-private val DYNAMIC_CARD_MODEL_WITH_EMPTY_REMOTE_FLAG = CardModel.DynamicCardsModel.DynamicCardModel(
-    id = DYNAMIC_CARD_ID,
-    title = DYNAMIC_CARD_TITLE,
-    remoteFeatureFlag = "",
-    featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
-    url = DYNAMIC_CARD_URL,
-    action = DYNAMIC_CARD_ACTION,
-    order = CardModel.DynamicCardsModel.CardOrder.fromString(DYNAMIC_CARD_ORDER),
-    rows = listOf(DYNAMIC_CARD_ROW_MODEL)
-)
-
-private val DYNAMIC_CARD_MODEL_WITH_UNKNOWN_REMOTE_FLAG = CardModel.DynamicCardsModel.DynamicCardModel(
-    id = DYNAMIC_CARD_ID,
-    title = DYNAMIC_CARD_TITLE,
-    remoteFeatureFlag = UNKNOWN_REMOTE_FEATURE_FLAG,
-    featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
-    url = DYNAMIC_CARD_URL,
     action = DYNAMIC_CARD_ACTION,
     order = CardModel.DynamicCardsModel.CardOrder.fromString(DYNAMIC_CARD_ORDER),
     rows = listOf(DYNAMIC_CARD_ROW_MODEL)
@@ -128,20 +86,12 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
     @Mock
     private lateinit var dynamicDashboardCardsFeatureConfig: DynamicDashboardCardsFeatureConfig
 
-    @Mock
-    private lateinit var featureFlagConfig: FeatureFlagConfig
-
     @Before
     fun setUp() {
         dynamicCardsBuilder =
-            DynamicCardsBuilder(urlUtils, deepLinkHandlers, dynamicDashboardCardsFeatureConfig, featureFlagConfig)
+            DynamicCardsBuilder(urlUtils, deepLinkHandlers, dynamicDashboardCardsFeatureConfig)
         whenever(urlUtils.isValidUrlAndHostNotNull(DYNAMIC_CARD_URL)).thenReturn(true)
         whenever(dynamicDashboardCardsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(featureFlagConfig.isEnabled(ENABLED_REMOTE_FEATURE_FLAG)).thenReturn(true)
-        whenever(featureFlagConfig.getString(ENABLED_REMOTE_FEATURE_FLAG)).thenReturn(ENABLED_REMOTE_FEATURE_FLAG)
-        whenever(featureFlagConfig.isEnabled(DISABLED_REMOTE_FEATURE_FLAG)).thenReturn(false)
-        whenever(featureFlagConfig.getString(DISABLED_REMOTE_FEATURE_FLAG)).thenReturn(DISABLED_REMOTE_FEATURE_FLAG)
-        whenever(featureFlagConfig.getString(UNKNOWN_REMOTE_FEATURE_FLAG)).thenReturn("")
     }
 
     @Test
@@ -261,47 +211,5 @@ class DynamicCardsBuilderTest : BaseUnitTest() {
         )
         val dynamicCards = dynamicCardsBuilder.build(builderParams, CardModel.DynamicCardsModel.CardOrder.TOP)
         assertThat(dynamicCards).isNull()
-    }
-
-    @Test
-    fun `WHEN the card remote feature flag is disabled THEN the card is not visible`() {
-        val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
-            dynamicCards = CardModel.DynamicCardsModel(
-                dynamicCards = listOf(DYNAMIC_CARD_MODEL_DISABLED_REMOTELY)
-            ),
-            onCardClick = mock(),
-            onCtaClick = mock(),
-            onHideMenuItemClick = mock(),
-        )
-        val dynamicCards = dynamicCardsBuilder.build(builderParams, CardModel.DynamicCardsModel.CardOrder.TOP)
-        assertThat(requireNotNull(dynamicCards)).isEmpty()
-    }
-
-    @Test
-    fun `WHEN the card remote feature flag is empty THEN the card is visible`() {
-        val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
-            dynamicCards = CardModel.DynamicCardsModel(
-                dynamicCards = listOf(DYNAMIC_CARD_MODEL_WITH_EMPTY_REMOTE_FLAG)
-            ),
-            onCardClick = mock(),
-            onCtaClick = mock(),
-            onHideMenuItemClick = mock(),
-        )
-        val dynamicCards = dynamicCardsBuilder.build(builderParams, CardModel.DynamicCardsModel.CardOrder.TOP)
-        assertEquals(requireNotNull(dynamicCards).size, 1)
-    }
-
-    @Test
-    fun `WHEN the card remote feature flag does not exist THEN the card is visible`() {
-        val builderParams = MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
-            dynamicCards = CardModel.DynamicCardsModel(
-                dynamicCards = listOf(DYNAMIC_CARD_MODEL_WITH_UNKNOWN_REMOTE_FLAG)
-            ),
-            onCardClick = mock(),
-            onCtaClick = mock(),
-            onHideMenuItemClick = mock(),
-        )
-        val dynamicCards = dynamicCardsBuilder.build(builderParams, CardModel.DynamicCardsModel.CardOrder.TOP)
-        assertEquals(requireNotNull(dynamicCards).size, 1)
     }
 }
