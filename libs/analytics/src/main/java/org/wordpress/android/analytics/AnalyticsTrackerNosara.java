@@ -2691,6 +2691,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "dynamic_dashboard_card_cta_tapped";
             case DYNAMIC_DASHBOARD_CARD_HIDE_TAPPED:
                 return "dynamic_dashboard_card_hide_tapped";
+            case DEEP_LINK_FAILED:
+                return "deep_link_failed";
         }
         return null;
     }

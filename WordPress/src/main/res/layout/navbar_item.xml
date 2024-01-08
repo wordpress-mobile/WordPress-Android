@@ -18,6 +18,8 @@
             android:layout_width="@dimen/bottom_nav_bar_icon_size"
             android:layout_height="@dimen/bottom_nav_bar_icon_size"
             android:layout_gravity="center"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
             android:importantForAccessibility="no"
             app:tint="@drawable/nav_bar_button_selector"
             tools:src="@drawable/ic_create_white_24dp" />
