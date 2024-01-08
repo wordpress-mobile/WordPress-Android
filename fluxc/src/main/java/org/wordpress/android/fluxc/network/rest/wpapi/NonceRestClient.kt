@@ -37,6 +37,7 @@ class NonceRestClient @Inject constructor(
      *  that became available in WordPress 5.3.
      */
     suspend fun requestNonce(site: SiteModel): Nonce {
+        if (site.username == null || site.password == null) return Unknown(site.username)
         return requestNonce(site.url, site.username, site.password)
     }
 
