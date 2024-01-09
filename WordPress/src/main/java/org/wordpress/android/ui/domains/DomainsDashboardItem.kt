@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.domains
 
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.ADD_DOMAIN
 import org.wordpress.android.ui.domains.DomainsDashboardItem.Type.PURCHASE_DOMAIN
@@ -22,8 +23,10 @@ sealed class DomainsDashboardItem(val type: Type) {
 
     data class SiteDomains(
         val domain: UiString,
-        val expiry: UiString,
         val isPrimary: Boolean,
+        val domainStatus: UiString,
+        @ColorRes val domainStatusColor: Int,
+        val expiry: UiString,
         val onDomainClick: ListItemInteraction? = null
     ) : DomainsDashboardItem(SITE_DOMAINS)
 
