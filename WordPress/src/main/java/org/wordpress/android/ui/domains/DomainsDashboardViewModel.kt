@@ -23,6 +23,8 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetPlan
+import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.OpenDomainManagement
+import org.wordpress.android.ui.domains.management.getDomainDetailsUrl
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -94,10 +96,27 @@ class DomainsDashboardViewModel @Inject constructor(
             AppLog.e(DOMAIN_REGISTRATION, "An error occurred while fetching domains: ${domainsResult.error.message}")
         }
 
-        buildDashboardItems(site, plansResult.plans.orEmpty(), domainsResult.domains.orEmpty())
+        if (allDomainsResult.isError) {
+            AppLog.e(
+                DOMAIN_REGISTRATION,
+                "An error occurred while fetching all domains: ${allDomainsResult.error.message}"
+            )
+        }
+
+        buildDashboardItems(
+            site,
+            plansResult.plans.orEmpty(),
+            domainsResult.domains.orEmpty(),
+            allDomainsResult.domains.orEmpty()
+        )
     }
 
-    private fun buildDashboardItems(site: SiteModel, plans: List<PlanModel>, domains: List<Domain>) {
+    private fun buildDashboardItems(
+        site: SiteModel,
+        plans: List<PlanModel>,
+        domains: List<Domain>,
+        allDomains: List<AllDomainsDomain>
+    ) {
         val listItems = mutableListOf<DomainsDashboardItem>()
 
         listItems += SiteDomainsHeader(UiStringRes(R.string.domains_free_domain))
@@ -118,7 +137,7 @@ class DomainsDashboardViewModel @Inject constructor(
         val hasPaidPlan = !SiteUtils.onFreePlan(site)
 
         if (hasCustomDomains) {
-            listItems += buildCustomDomainItems(site, customDomains)
+            listItems += buildCustomDomainItems(site, customDomains, allDomains)
         }
 
         listItems += buildCtaItems(hasCustomDomains, hasDomainCredit, hasPaidPlan)
@@ -163,7 +182,11 @@ class DomainsDashboardViewModel @Inject constructor(
         return listItems
     }
 
-    private fun buildCustomDomainItems(site: SiteModel, customDomains: List<Domain>): List<DomainsDashboardItem> {
+    private fun buildCustomDomainItems(
+        site: SiteModel,
+        customDomains: List<Domain>,
+        allDomains: List<AllDomainsDomain>
+    ): List<DomainsDashboardItem> {
         val listItems = mutableListOf<DomainsDashboardItem>()
         listItems += SiteDomainsHeader(
             UiStringResWithParams(
@@ -172,6 +195,8 @@ class DomainsDashboardViewModel @Inject constructor(
             )
         )
         listItems += customDomains.map {
+            val allDomainsDomain = allDomains.find { allDomainsItem -> it.domain == allDomainsItem.domain }
+
             SiteDomains(
                 UiStringText(it.domain.orEmpty()),
                 if (it.expirySoon) {
@@ -187,13 +212,17 @@ class DomainsDashboardViewModel @Inject constructor(
                         listOf(UiStringText(it.expiry.orEmpty()))
                     )
                 },
-                it.primaryDomain
+                it.primaryDomain,
+                allDomainsDomain?.let { ListItemInteraction.create(allDomainsDomain, this::onDomainClick) }
             )
         }
         return listItems
     }
 
     private fun getCleanUrl(url: String?) = StringUtils.removeTrailingSlash(UrlUtils.removeScheme(url))
+
+    private fun onDomainClick(allDomainsDomain: AllDomainsDomain) {
+    }
 
     private fun onGetDomainClick() {
         analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED, site)
