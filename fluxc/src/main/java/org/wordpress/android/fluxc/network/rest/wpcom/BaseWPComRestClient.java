@@ -28,8 +28,8 @@ import okhttp3.HttpUrl;
 public abstract class BaseWPComRestClient {
     private static final String WPCOM_V2_PREFIX = "/wpcom/v2";
     private static final String WPCOM_V3_PREFIX = "/wpcom/v3";
-    private static final String LOCALE_PARAM_NAME_FOR_V1 = "locale";
-    private static final String LOCALE_PARAM_NAME_FOR_V2 = "_locale";
+    private static final String LOCALE_PARAM = "locale";
+    private static final String UNDERSCORE_LOCALE_PARAM = "_locale";
 
     private AccessToken mAccessToken;
     private final RequestQueue mRequestQueue;
@@ -153,8 +153,8 @@ public abstract class BaseWPComRestClient {
 
 
     private @NonNull String getLocaleParamName(@NonNull String url) {
-        return url.contains(WPCOM_V2_PREFIX) || url.contains(WPCOM_V3_PREFIX) ? LOCALE_PARAM_NAME_FOR_V2
-                : LOCALE_PARAM_NAME_FOR_V1;
+        return url.contains(WPCOM_V2_PREFIX) || url.contains(WPCOM_V3_PREFIX) ? UNDERSCORE_LOCALE_PARAM
+                : LOCALE_PARAM;
     }
 
     protected @Nullable HttpUrl getHttpUrlWithLocale(@NonNull String url) {
