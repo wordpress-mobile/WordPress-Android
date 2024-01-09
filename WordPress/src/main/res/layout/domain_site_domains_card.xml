@@ -48,11 +48,26 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/site_domain"
             style="?attr/textAppearanceSubtitle1"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_extra_large"
             android:text="@string/domains_site_domain"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toStartOf="@id/chevron"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="travelwithkids.wordpress.com" />
 
+        <ImageView
+            android:id="@+id/chevron"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_chevron_right_white_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/wpColorOnSurfaceMedium" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
