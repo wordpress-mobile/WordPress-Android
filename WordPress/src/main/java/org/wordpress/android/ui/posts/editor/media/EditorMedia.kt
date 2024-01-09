@@ -300,7 +300,15 @@ class EditorMedia @Inject constructor(
     }
 
     fun onMediaUploadPaused(listener: EditorMediaUploadListener, media: MediaModel, error: MediaError) = launch {
-        analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_PAUSED)
+        val properties: Map<String, Any?> = withContext(bgDispatcher) {
+            analyticsUtilsWrapper
+                .getMediaProperties(media.isVideo, null, media.filePath)
+                .also {
+                    it["error_type"] = error.type.name
+                }
+        }
+
+        analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_PAUSED, properties)
         listener.onMediaUploadPaused(media.id.toString())
     }
 
