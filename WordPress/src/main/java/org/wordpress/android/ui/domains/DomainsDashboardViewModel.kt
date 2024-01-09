@@ -216,6 +216,12 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun getCleanUrl(url: String?) = StringUtils.removeTrailingSlash(UrlUtils.removeScheme(url))
 
     private fun onDomainClick(allDomainsDomain: AllDomainsDomain) {
+        _onNavigation.value = Event(
+            OpenDomainManagement(
+                allDomainsDomain.domain ?: return,
+                allDomainsDomain.getDomainDetailsUrl() ?: return
+            )
+        )
     }
 
     private fun onGetDomainClick() {
