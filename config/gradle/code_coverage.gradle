@@ -26,3 +26,43 @@ dependencies {
             project(":libs:processors"),
     )
 }
+
+koverReport {
+    filters {
+        excludes {
+            packages(
+                    'com.bumptech.glide',
+                    'dagger.*',
+                    '*.compose*',
+                    '*.debug*',
+                    'hilt_aggregated_deps',
+                    '*.databinding',
+                    'org.wordpress.android.widgets'
+            )
+
+            classes(
+                    '*_Factory*',
+                    '*Activity',
+                    '*Activity$*',
+                    '*Adapter',
+                    '*Adapter$*',
+                    '*BuildConfig',
+                    '*DiffCallback*',
+                    '*Dialog',
+                    '*Dialog$*',
+                    '*Fragment',
+                    '*Fragment$*',
+                    '*FragmentDirections*',
+                    '*FragmentKt*',
+                    '*View',
+                    '*View$*',
+                    '*ViewHolder',
+                    '*ViewHolder$*',
+                    '*ViewHolderKt*',
+                    '*.Hilt_*',
+                    '*HiltModules*',
+                    '*_MembersInjector'
+            )
+        }
+    }
+}
