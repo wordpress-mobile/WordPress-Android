@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.domains
 
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -41,7 +42,11 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
             uiHelpers.setTextOrHide(siteDomain, item.domain)
             uiHelpers.setTextOrHide(siteDomainExpiryDate, item.expiry)
             primarySiteDomainChip.isVisible = item.isPrimary
-            chevron.isVisible = item.onDomainClick != null
+            uiHelpers.setTextOrHide(siteDomainStatus, item.domainStatus)
+            siteDomainStatus.compoundDrawablesRelative.first().setTint(
+                siteDomainStatus.context.getColor(item.domainStatusColor)
+            )
+            chevron.isInvisible = item.onDomainClick == null
             item.onDomainClick?.let { interaction -> root.setOnClickListener { interaction.click() } }
         }
     }
