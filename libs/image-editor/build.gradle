@@ -6,12 +6,6 @@ plugins {
     id "org.jetbrains.kotlinx.kover"
 }
 
-koverReport {
-    defaults {
-        mergeWith("debug")
-    }
-}
-
 android {
     namespace "org.wordpress.android.imageeditor"
 

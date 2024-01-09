@@ -15,12 +15,6 @@ plugins {
     id "org.jetbrains.kotlinx.kover"
 }
 
-koverReport {
-    defaults {
-        mergeWith("wordpressWasabiDebug")
-    }
-}
-
 sentry {
     tracingInstrumentation {
         enabled = true

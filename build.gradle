@@ -247,13 +247,7 @@ tasks.register("configureApply") {
 
 dependencies {
     detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$gradle.ext.detektVersion"
-
-    kover(
-            project(":WordPress"),
-            project(":libs:editor"),
-            project(":libs:image-editor"),
-            project(":libs:processors"),
-    )
 }
 
+apply from: './config/gradle/code_coverage.gradle'
 apply from: './config/gradle/gradle_build_scan.gradle'

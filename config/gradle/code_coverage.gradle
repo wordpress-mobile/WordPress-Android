@@ -1,0 +1,28 @@
+static String resolveProjectVariantForCodeCoverage(Project project) {
+    if (project.name == "WordPress") {
+        return "wordpressWasabiDebug"
+    } else {
+        return "debug"
+    }
+}
+
+subprojects {
+    pluginManager.withPlugin("org.jetbrains.kotlinx.kover") {
+        if (project.plugins.hasPlugin("com.android.library") || project.plugins.hasPlugin("com.android.application")) {
+            koverReport {
+                defaults {
+                    mergeWith(resolveProjectVariantForCodeCoverage(project))
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    kover(
+            project(":WordPress"),
+            project(":libs:editor"),
+            project(":libs:image-editor"),
+            project(":libs:processors"),
+    )
+}

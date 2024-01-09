@@ -5,12 +5,6 @@ plugins {
     id "org.jetbrains.kotlinx.kover"
 }
 
-koverReport {
-    defaults {
-        mergeWith("debug")
-    }
-}
-
 repositories {
     maven {
         url "https://a8c-libs.s3.amazonaws.com/android"
