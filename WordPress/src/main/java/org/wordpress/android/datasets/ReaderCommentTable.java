@@ -253,34 +253,6 @@ public class ReaderCommentTable {
     }
 
     /*
-     * returns true if any of the passed comments don't already exist
-     * IMPORTANT: assumes passed comments are all for the same post
-     */
-    public static boolean hasNewComments(ReaderCommentList comments) {
-        if (comments == null || comments.size() == 0) {
-            return false;
-        }
-
-        StringBuilder sb = new StringBuilder(
-                "SELECT COUNT(*) FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id IN (");
-        boolean isFirst = true;
-        for (ReaderComment comment : comments) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sb.append(",");
-            }
-            sb.append(comment.commentId);
-        }
-        sb.append(")");
-
-        String[] args = {Long.toString(comments.get(0).blogId),
-                Long.toString(comments.get(0).postId)};
-        int numExisting = SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), sb.toString(), args);
-        return numExisting != comments.size();
-    }
-
-    /*
      * returns the #likes known to exist for this comment
      */
     public static int getNumLikesForComment(long blogId, long postId, long commentId) {

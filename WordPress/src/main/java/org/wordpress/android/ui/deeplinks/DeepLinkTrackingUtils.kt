@@ -56,7 +56,8 @@ class DeepLinkTrackingUtils
         } else {
             BANNER
         }
-        return TrackingData(trackingSource, url ?: "", sourceInfo)
+        val trackingSourceInfo = sourceInfo ?: applyBannerSourceInfoIfNeeded(uri)
+        return TrackingData(trackingSource, url ?: "", trackingSourceInfo)
     }
 
     private fun extractTargetUri(uri: UriWrapper): UriWrapper {
@@ -69,9 +70,18 @@ class DeepLinkTrackingUtils
         } ?: uri
     }
 
+    private fun applyBannerSourceInfoIfNeeded(uri: UriWrapper): String? {
+        return when (val campaign = uri.getQueryParameter("campaign")) {
+            null -> null
+            else -> campaign
+        }
+    }
+
     data class TrackingData(val source: DeepLinkSource, val url: String, val sourceInfo: String? = null)
 
     enum class DeepLinkSource(val value: String) {
-        EMAIL("email"), BANNER("banner"), LINK("link")
+        EMAIL("email"),
+        BANNER("banner"),
+        LINK("link"),
     }
 }

@@ -7,6 +7,7 @@ import kotlinx.coroutines.async
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_GET_PLAN_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_VIEWED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.fluxc.model.PlanModel
@@ -14,16 +15,14 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.domains.DomainsDashboardItem.Action
-import org.wordpress.android.ui.domains.DomainsDashboardItem.Action.CHANGE_SITE_ADDRESS
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
-import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
-import org.wordpress.android.ui.domains.DomainsDashboardItem.FreeDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
+import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
+import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetPlan
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -99,32 +98,34 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun buildDashboardItems(site: SiteModel, plans: List<PlanModel>, domains: List<Domain>) {
         val listItems = mutableListOf<DomainsDashboardItem>()
 
+        listItems += SiteDomainsHeader(UiStringRes(R.string.domains_free_domain))
+
         val freeDomain = domains.firstOrNull { it.wpcomDomain }
         val freeDomainUrl = freeDomain?.domain ?: getCleanUrl(site.unmappedUrl)
         val freeDomainIsPrimary = freeDomain?.primaryDomain ?: false
 
-        listItems += FreeDomain(UiStringText(freeDomainUrl), freeDomainIsPrimary, this::onChangeSiteClick)
+        listItems += SiteDomains(
+            UiStringText(freeDomainUrl),
+            UiStringRes(R.string.domains_site_domain_never_expires),
+            freeDomainIsPrimary
+        )
 
         val customDomains = domains.filter { !it.wpcomDomain }
         val hasCustomDomains = customDomains.isNotEmpty()
         val hasDomainCredit = isDomainCreditAvailable(plans)
         val hasPaidPlan = !SiteUtils.onFreePlan(site)
 
-        listItems += buildCustomDomainItems(customDomains, hasCustomDomains)
+        if (hasCustomDomains) {
+            listItems += buildCustomDomainItems(site, customDomains)
+        }
 
-        listItems += buildCtaItems(freeDomainUrl, hasCustomDomains, hasDomainCredit, hasPaidPlan)
-
-//        NOTE: Manage domains option is de-scoped for v1 release
-//        if (hasCustomDomains) {
-//            listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))
-//        }
+        listItems += buildCtaItems(hasCustomDomains, hasDomainCredit, hasPaidPlan)
 
         _showProgressSpinner.postValue(false)
         _uiModel.postValue(listItems)
     }
 
     private fun buildCtaItems(
-        freeDomainUrl: String,
         hasCustomDomains: Boolean,
         hasDomainCredit: Boolean,
         hasPaidPlan: Boolean
@@ -132,39 +133,27 @@ class DomainsDashboardViewModel @Inject constructor(
         val listItems = mutableListOf<DomainsDashboardItem>()
         if (hasDomainCredit) {
             listItems += PurchaseDomain(
-                null,
+                R.drawable.browser_address_bar,
                 UiStringRes(R.string.domains_paid_plan_claim_your_domain_title),
                 UiStringRes(R.string.domains_paid_plan_claim_your_domain_caption),
                 ListItemInteraction.create(this::onClaimDomainClick)
             )
         } else if (hasCustomDomains) {
             listItems += AddDomain(ListItemInteraction.create(hasDomainCredit, this::onAddDomainClick))
-            if (!hasPaidPlan) {
-                listItems += DomainBlurb(
-                    UiStringResWithParams(
-                        R.string.domains_redirected_domains_blurb,
-                        listOf(UiStringText(freeDomainUrl))
-                    )
-                )
-            }
         } else {
             listItems += if (hasPaidPlan) {
                 PurchaseDomain(
-                    R.drawable.img_illustration_domains_card_header,
+                    R.drawable.browser_address_bar,
                     UiStringRes(R.string.domains_paid_plan_add_your_domain_title),
                     UiStringRes(R.string.domains_paid_plan_add_your_domain_caption),
                     ListItemInteraction.create(this::onGetDomainClick)
                 )
             } else {
-                PurchaseDomain(
-                    R.drawable.img_illustration_domains_card_header,
+                PurchasePlan(
+                    R.drawable.browser_address_bar,
                     UiStringRes(R.string.domains_free_plan_get_your_domain_title),
-                    UiStringText(
-                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            R.string.domains_free_plan_get_your_domain_caption,
-                            freeDomainUrl
-                        )
-                    ),
+                    UiStringRes(R.string.domains_upgrade_to_plan_caption),
+                    ListItemInteraction.create(this::onGetPlanClick),
                     ListItemInteraction.create(this::onGetDomainClick)
                 )
             }
@@ -172,12 +161,14 @@ class DomainsDashboardViewModel @Inject constructor(
         return listItems
     }
 
-    private fun buildCustomDomainItems(
-        customDomains: List<Domain>,
-        hasCustomDomains: Boolean
-    ): List<DomainsDashboardItem> {
+    private fun buildCustomDomainItems(site: SiteModel, customDomains: List<Domain>): List<DomainsDashboardItem> {
         val listItems = mutableListOf<DomainsDashboardItem>()
-        if (hasCustomDomains) listItems += SiteDomainsHeader(UiStringRes(R.string.domains_site_domains))
+        listItems += SiteDomainsHeader(
+            UiStringResWithParams(
+                R.string.domains_site_other_domains,
+                UiStringText(site.name)
+            )
+        )
         listItems += customDomains.map {
             SiteDomains(
                 UiStringText(it.domain.orEmpty()),
@@ -207,6 +198,11 @@ class DomainsDashboardViewModel @Inject constructor(
         _onNavigation.value = Event(GetDomain(site))
     }
 
+    private fun onGetPlanClick() {
+        analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_GET_PLAN_TAPPED, site)
+        _onNavigation.value = Event(GetPlan(site))
+    }
+
     private fun onClaimDomainClick() {
         analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
         _onNavigation.value = Event(ClaimDomain(site))
@@ -215,15 +211,6 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun onAddDomainClick(hasDomainCredit: Boolean) {
         analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED, site)
         if (hasDomainCredit) onClaimDomainClick() else onGetDomainClick()
-    }
-
-    //  NOTE: Change site option is de-scoped for v1 release
-    private fun onChangeSiteClick(action: Action): Boolean {
-        when (action) {
-            CHANGE_SITE_ADDRESS -> {
-                TODO("Not yet implemented")
-            }
-        }
     }
 
     fun onSuccessfulDomainRegistration() {

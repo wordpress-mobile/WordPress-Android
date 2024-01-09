@@ -21,7 +21,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.MySiteFragmentBinding
-import org.wordpress.android.databinding.MySiteInfoHeaderCardBinding
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.ui.ActivityLauncher
@@ -30,8 +29,10 @@ import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity
 import org.wordpress.android.ui.bloganuary.learnmore.BloganuaryNudgeLearnMoreOverlayFragment
+import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity
 import org.wordpress.android.ui.domains.DomainRegistrationActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -41,8 +42,6 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
@@ -68,6 +67,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
@@ -79,7 +79,6 @@ import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
-import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel
@@ -133,6 +132,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     @Inject
     lateinit var activityNavigator: ActivityNavigator
+
+    @Inject
+    lateinit var packageManagerWrapper: PackageManagerWrapper
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
@@ -420,7 +422,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             )
             showSnackbar(SnackbarMessageHolder(UiString.UiStringText(message)))
         }
-        viewModel.onMediaUpload.observeEvent(viewLifecycleOwner) { UploadService.uploadMedia(requireActivity(), it) }
+        viewModel.onMediaUpload.observeEvent(viewLifecycleOwner) {
+            UploadService.uploadMedia(requireActivity(), it, "MySiteFragment onMediaUpload")
+        }
         dialogViewModel.onInteraction.observeEvent(viewLifecycleOwner) { viewModel.onDialogInteraction(it) }
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner) { handleUploadedItem(it) }
         viewModel.onOpenJetpackInstallFullPluginOnboarding.observeEvent(viewLifecycleOwner) {
@@ -434,10 +438,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             viewModel.refresh()
         }
 
-        viewModel.domainTransferCardRefresh.observe(viewLifecycleOwner) {
-            viewModel.refresh()
-        }
-
         viewModel.onShowJetpackIndividualPluginOverlay.observeEvent(viewLifecycleOwner) {
             WPJetpackIndividualPluginFragment.show(requireActivity().supportFragmentManager)
         }
@@ -448,7 +448,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 quickStartScrollPosition = 0
             }
             if (quickStartScrollPosition > 0) recyclerView.scrollToPosition(quickStartScrollPosition)
-            else appbarMain.setExpanded(true)
         }
 
         wpMainActivityViewModel.mySiteDashboardRefreshRequested.observeEvent(viewLifecycleOwner) {
@@ -524,10 +523,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
-        appbarMain.visibility = View.VISIBLE
-        siteInfo.loadMySiteDetails(state.siteInfoHeader)
-        appbarMain.setExpanded(true, true)
-
         recyclerView.setVisible(true)
         (recyclerView.adapter as? MySiteAdapter)?.submitList(state.dashboardData)
 
@@ -540,37 +535,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
     }
 
-    private fun MySiteInfoHeaderCardBinding.loadMySiteDetails(siteInfoHeader: SiteInfoHeaderCard) {
-        siteTitle = siteInfoHeader.title
-        if (siteInfoHeader.iconState is IconState.Visible) {
-            mySiteBlavatar.visibility = View.VISIBLE
-            imageManager.load(mySiteBlavatar, BLAVATAR, siteInfoHeader.iconState.url ?: "")
-            mySiteIconProgress.visibility = View.GONE
-            mySiteBlavatar.setOnClickListener { siteInfoHeader.onIconClick.click() }
-        } else if (siteInfoHeader.iconState is IconState.Progress) {
-            mySiteBlavatar.setOnClickListener(null)
-            mySiteIconProgress.visibility = View.VISIBLE
-            mySiteBlavatar.visibility = View.GONE
-        }
-        quickStartIconFocusPoint.setVisibleOrGone(siteInfoHeader.showIconFocusPoint)
-        if (siteInfoHeader.onTitleClick != null) {
-            siteInfoContainer.title.setOnClickListener { siteInfoHeader.onTitleClick.click() }
-        } else {
-            siteInfoContainer.title.setOnClickListener(null)
-        }
-        siteInfoContainer.title.text = siteInfoHeader.title
-        quickStartTitleFocusPoint.setVisibleOrGone(siteInfoHeader.showTitleFocusPoint)
-        quickStartSubTitleFocusPoint.setVisibleOrGone(siteInfoHeader.showSubtitleFocusPoint)
-        siteInfoContainer.subtitle.text = siteInfoHeader.url
-        siteInfoContainer.subtitle.setOnClickListener { siteInfoHeader.onUrlClick.click() }
-        switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
-        siteInfoCard.visibility = View.VISIBLE
-    }
-
-
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
         recyclerView.setVisible(false)
-        siteInfo.siteInfoCard.setVisible(false)
 
         if (!noSitesView.actionableEmptyView.isVisible) {
             noSitesView.actionableEmptyView.setVisible(true)
@@ -579,7 +545,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             showAvatarSettingsView(state)
         }
         siteTitle = getString(R.string.my_site_section_screen_title)
-        appbarMain.setExpanded(false, true)
     }
 
     private fun MySiteFragmentBinding.showAvatarSettingsView(state: State.NoSites) {
@@ -706,6 +671,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             ActivityLauncher.viewBlogStatsForTimeframe(requireActivity(), action.site, StatsTimeframe.INSIGHTS)
         is SiteNavigationAction.OpenExternalUrl ->
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
+        is SiteNavigationAction.OpenUrlInWebView ->
+            WPWebViewActivity.openURL(requireActivity(), action.url)
+        is SiteNavigationAction.OpenDeepLink ->
+            DeepLinkingIntentReceiverActivity.openDeepLinkUrl(requireActivity(), action.url)
         is SiteNavigationAction.OpenJetpackPoweredBottomSheet -> showJetpackPoweredBottomSheet()
         is SiteNavigationAction.OpenJetpackMigrationDeleteWP -> showJetpackMigrationDeleteWP()
         is SiteNavigationAction.OpenJetpackFeatureOverlay -> showJetpackFeatureOverlay(action.source)
@@ -744,10 +713,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             requireActivity(),
             action.campaignId,
             action.campaignDetailPageSource
-        )
-
-        is SiteNavigationAction.OpenDomainTransferPage -> activityNavigator.openDomainTransfer(
-            requireActivity(), action.url
         )
 
         is BloggingPromptCardNavigationAction -> handleNavigation(action)

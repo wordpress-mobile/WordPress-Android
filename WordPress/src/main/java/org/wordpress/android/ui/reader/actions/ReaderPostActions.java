@@ -61,18 +61,6 @@ public class ReaderPostActions {
     /**
      * like/unlike the passed post
      */
-    public static boolean performLikeAction(final ReaderPost post,
-                                            final boolean isAskingToLike,
-                                            final long wpComUserId) {
-        // do nothing if post's like state is same as passed
-        boolean updateLocalDb = performLikeActionLocal(post, isAskingToLike, wpComUserId);
-        if (!updateLocalDb) return false;
-
-        performLikeActionRemote(post, isAskingToLike, wpComUserId, null);
-
-        return true;
-    }
-
     public static boolean performLikeActionLocal(final ReaderPost post,
                                                  final boolean isAskingToLike,
                                                  final long wpComUserId) {

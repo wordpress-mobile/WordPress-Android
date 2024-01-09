@@ -321,7 +321,6 @@ public class NotificationsProcessingService extends Service {
             mActionType = mIntent.getStringExtra(ARG_ACTION_TYPE);
             // default value for push notification ID is likely GROUP_NOTIFICATION_ID for the only
             // notif in active notifs map (there is only one notif if quick actions are available)
-            mPushId = GROUP_NOTIFICATION_ID;
             if (mIntent.hasExtra(ARG_ACTION_REPLY_TEXT)) {
                 mReplyText = mIntent.getStringExtra(ARG_ACTION_REPLY_TEXT);
             }

@@ -31,16 +31,6 @@ public class ReaderUserTable {
         db.execSQL("DROP TABLE IF EXISTS tbl_users");
     }
 
-    public static void addOrUpdateUser(ReaderUser user) {
-        if (user == null) {
-            return;
-        }
-
-        ReaderUserList users = new ReaderUserList();
-        users.add(user);
-        addOrUpdateUsers(users);
-    }
-
     private static final String COLUMN_NAMES =
             " user_id," // 1
             + " blog_id," // 2
@@ -148,13 +138,6 @@ public class ReaderUserTable {
         } finally {
             SqlUtils.closeCursor(c);
         }
-    }
-
-    private static String getAvatarForUser(long userId) {
-        String[] args = {Long.toString(userId)};
-        return SqlUtils
-                .stringForQuery(ReaderDatabase.getReadableDb(), "SELECT avatar_url FROM tbl_users WHERE user_id=?",
-                                args);
     }
 
     public static ReaderUserList getUsersWhoLikePost(long blogId, long postId, int max) {

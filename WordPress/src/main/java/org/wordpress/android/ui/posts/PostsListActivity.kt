@@ -21,6 +21,9 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.review.ReviewException
+import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.android.play.core.review.model.ReviewErrorCode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostListActivityBinding
@@ -53,6 +56,7 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFrag
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener
+import org.wordpress.android.ui.review.ReviewViewModel
 import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
@@ -123,6 +127,9 @@ class PostsListActivity : LocaleAwareActivity(),
 
     @Inject
     internal lateinit var bloggingRemindersViewModel: BloggingRemindersViewModel
+
+    @Inject
+    internal lateinit var reviewViewModel: ReviewViewModel
 
     @Inject
     internal lateinit var blazeFeatureUtils: BlazeFeatureUtils
@@ -209,6 +216,7 @@ class PostsListActivity : LocaleAwareActivity(),
             setupContent()
             initViewModel(initPreviewState, currentBottomSheetPostId)
             initBloggingReminders()
+            initInAppReviews()
             initTabLayout(tabIndex)
             loadIntentData(intent)
         }
@@ -336,6 +344,32 @@ class PostsListActivity : LocaleAwareActivity(),
         }
     }
 
+    private fun initInAppReviews() {
+        reviewViewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)[ReviewViewModel::class.java]
+        reviewViewModel.launchReview.observeEvent(this) { launchInAppReviews() }
+    }
+
+    private fun launchInAppReviews() {
+        val manager = ReviewManagerFactory.create(this)
+        val request = manager.requestReviewFlow()
+        request.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val reviewInfo = task.result
+                val flow = manager.launchReviewFlow(this, reviewInfo)
+                flow.addOnFailureListener { e ->
+                    AppLog.e(AppLog.T.POSTS, "Error launching google review API flow.", e)
+                }
+            } else {
+                @ReviewErrorCode val reviewErrorCode = (task.exception as ReviewException).errorCode
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Error fetching ReviewInfo object from Review API to start in-app review process",
+                    reviewErrorCode
+                )
+            }
+        }
+    }
+
     private fun setupActions() {
         viewModel.dialogAction.observe(this@PostsListActivity) {
             it?.show(this@PostsListActivity, supportFragmentManager, uiHelpers)
@@ -350,6 +384,7 @@ class PostsListActivity : LocaleAwareActivity(),
                     uploadUtilsWrapper
                 ) { isFirstTimePublishing ->
                     bloggingRemindersViewModel.onPublishingPost(site.id, isFirstTimePublishing)
+                    reviewViewModel.onPublishingPost(isFirstTimePublishing)
                 }
             }
         }
@@ -458,6 +493,7 @@ class PostsListActivity : LocaleAwareActivity(),
                     site.id,
                     isNewStory
                 )
+                reviewViewModel.onPublishingPost(isNewStory)
             }
         }
     }

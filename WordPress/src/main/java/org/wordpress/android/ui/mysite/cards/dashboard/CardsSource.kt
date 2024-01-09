@@ -10,13 +10,20 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.Type
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
+import org.wordpress.android.fluxc.store.NotificationStore
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
+import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.DashboardActivityLogCardFeatureUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.config.DynamicDashboardCardsFeatureConfig
+import org.wordpress.android.util.config.FEATURE_FLAG_PLATFORM_PARAMETER
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -27,7 +34,10 @@ class CardsSource @Inject constructor(
     private val cardsStore: CardsStore,
     private val dashboardActivityLogCardFeatureUtils: DashboardActivityLogCardFeatureUtils,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val dynamicDashboardCardsFeatureConfig: DynamicDashboardCardsFeatureConfig,
+    private val preferences: PreferenceUtilsWrapper,
+    private val buildConfigWrapper: BuildConfigWrapper,
 ) : MySiteRefreshSource<CardsUpdate> {
     override val refresh = MutableLiveData(false)
 
@@ -87,7 +97,17 @@ class CardsSource @Inject constructor(
     ) {
         coroutineScope.launch(bgDispatcher) {
             delay(REFRESH_DELAY)
-            val result = cardsStore.fetchCards(selectedSite, getCardTypes(selectedSite))
+            val payload = CardsRestClient.FetchCardsPayload(
+                selectedSite,
+                getCardTypes(selectedSite),
+                buildNumber = buildConfigWrapper.getAppVersionCode().toString(),
+                deviceId = preferences.getFluxCPreferences().getString(NotificationStore.WPCOM_PUSH_DEVICE_UUID, null)
+                    ?: generateAndStoreUUID(),
+                identifier = buildConfigWrapper.getApplicationId(),
+                marketingVersion = buildConfigWrapper.getAppVersionName(),
+                platform = FEATURE_FLAG_PLATFORM_PARAMETER,
+            )
+            val result = cardsStore.fetchCards(payload)
             val model = result.model
             val error = result.error
             when {
@@ -98,11 +118,18 @@ class CardsSource @Inject constructor(
         }
     }
 
+    private fun generateAndStoreUUID(): String {
+        return UUID.randomUUID().toString().also {
+            preferences.getFluxCPreferences().edit().putString(NotificationStore.WPCOM_PUSH_DEVICE_UUID, it).apply()
+        }
+    }
+
     private fun getCardTypes(selectedSite: SiteModel) = mutableListOf<Type>().apply {
         if (shouldRequestStatsCard(selectedSite)) add(Type.TODAYS_STATS)
         if (shouldRequestPagesCard(selectedSite)) add(Type.PAGES)
         if (dashboardActivityLogCardFeatureUtils.shouldRequestActivityCard(selectedSite)) add(Type.ACTIVITY)
         add(Type.POSTS)
+        if (shouldRequestDynamicCards()) add(Type.DYNAMIC)
     }.toList()
 
     private fun shouldRequestPagesCard(selectedSite: SiteModel): Boolean {
@@ -112,6 +139,10 @@ class CardsSource @Inject constructor(
 
     private fun shouldRequestStatsCard(selectedSite: SiteModel): Boolean {
         return !appPrefsWrapper.getShouldHideTodaysStatsDashboardCard(selectedSite.siteId)
+    }
+
+    private fun shouldRequestDynamicCards(): Boolean {
+        return dynamicDashboardCardsFeatureConfig.isEnabled()
     }
 
     private fun MediatorLiveData<CardsUpdate>.postErrorState() {

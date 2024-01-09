@@ -1929,6 +1929,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "domains_dashboard_viewed";
             case DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED:
                 return "domains_dashboard_get_domain_tapped";
+            case DOMAINS_DASHBOARD_GET_PLAN_TAPPED:
+                return "domains_dashboard_get_plan_tapped";
             case DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED:
                 return "domains_dashboard_add_domain_tapped";
             case DOMAINS_SEARCH_SELECT_DOMAIN_TAPPED:
@@ -2597,14 +2599,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "free_to_paid_plan_dashboard_card_hidden";
             case TWITTER_NOTICE_LINK_TAPPED:
                 return "twitter_notice_link_tapped";
-            case DASHBOARD_CARD_DOMAIN_TRANSFER_SHOWN:
-                return "dashboard_card_domain_transfer_shown";
-            case DASHBOARD_CARD_DOMAIN_TRANSFER_TAPPED:
-                return "dashboard_card_domain_transfer_tapped";
-            case DASHBOARD_CARD_DOMAIN_TRANSFER_MORE_MENU_TAPPED:
-                return "dashboard_card_domain_transfer_more_menu_tapped";
-            case DASHBOARD_CARD_DOMAIN_TRANSFER_HIDDEN:
-                return "dashboard_card_domain_transfer_hidden";
             case JETPACK_SOCIAL_AUTO_SHARING_CONNECTION_TOGGLED:
                 return "jetpack_social_auto_sharing_connection_toggled";
             case JETPACK_SOCIAL_SHARE_LIMIT_DISPLAYED:
@@ -2689,6 +2683,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "sotw_2023_nudge_post_event_card_hide_tapped";
             case SOTW_2023_NUDGE_POST_EVENT_CARD_CTA_TAPPED:
                 return "sotw_2023_nudge_post_event_card_cta_tapped";
+            case DYNAMIC_DASHBOARD_CARD_SHOWN:
+                return "dynamic_dashboard_card_shown";
+            case DYNAMIC_DASHBOARD_CARD_TAPPED:
+                return "dynamic_dashboard_card_tapped";
+            case DYNAMIC_DASHBOARD_CARD_CTA_TAPPED:
+                return "dynamic_dashboard_card_cta_tapped";
+            case DYNAMIC_DASHBOARD_CARD_HIDE_TAPPED:
+                return "dynamic_dashboard_card_hide_tapped";
+            case DEEP_LINK_FAILED:
+                return "deep_link_failed";
         }
         return null;
     }

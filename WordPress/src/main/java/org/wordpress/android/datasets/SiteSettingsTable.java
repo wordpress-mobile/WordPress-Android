@@ -70,15 +70,6 @@ public final class SiteSettingsTable {
         }
     }
 
-    public static Cursor getCategory(long id) {
-        if (id < 0) {
-            return null;
-        }
-
-        String sqlCommand = sqlSelectAllCategories() + sqlWhere(CategoryModel.ID_COLUMN_NAME, Long.toString(id)) + ";";
-        return WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
-    }
-
     public static Cursor getSettings(long id) {
         if (id < 0) {
             return null;

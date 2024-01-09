@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
@@ -23,6 +24,8 @@ import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBlockTypeImpressionsEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBackHandlerEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnConnectionStatusEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOptionsListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
@@ -95,6 +98,8 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnSendEventToHostListener onSendEventToHostListener,
                                   OnToggleUndoButtonListener onToggleUndoButtonListener,
                                   OnToggleRedoButtonListener onToggleRedoButtonListener,
+                                  OnConnectionStatusEventListener onConnectionStatusEventListener,
+                                  OnBackHandlerEventListener onBackHandlerEventListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
@@ -120,6 +125,8 @@ public class GutenbergContainerFragment extends Fragment {
                     onSendEventToHostListener,
                     onToggleUndoButtonListener,
                     onToggleRedoButtonListener,
+                    onConnectionStatusEventListener,
+                    onBackHandlerEventListener,
                     isDarkMode);
     }
 
@@ -167,6 +174,22 @@ public class GutenbergContainerFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (mWPAndroidGlueCode.shouldHandleBackPress()) {
+                    mWPAndroidGlueCode.onBackPressed();
+                } else {
+                    if (isEnabled()) {
+                        setEnabled(false); // Disable this callback
+                        requireActivity().onBackPressed(); // Bubble up the onBackPressed event
+                        setEnabled(true); // Re-enable this callback
+                    }
+                }
+            }
+        };
+
+        getActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         mWPAndroidGlueCode.onResume(this, getActivity());
     }
 
@@ -319,5 +342,9 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void sendToJSFeaturedImageId(int mediaId) {
         mWPAndroidGlueCode.sendToJSFeaturedImageId(mediaId);
+    }
+
+    public void onConnectionStatusChange(boolean isConnected) {
+        mWPAndroidGlueCode.connectionStatusChange(isConnected);
     }
 }

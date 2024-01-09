@@ -54,6 +54,7 @@ rather than strict requirements.
     3. [MLKitBarcodeScanning](#mlkitbarcodescanning)
     4. [PlayServicesAuth](#playservicesauth)
     5. [PlayServicesCoreScanner](#playservicescodescanner)
+    6. [PlayReview](#playreview)
 5. Network
     1. [Okio](#okio)
 6. Tool
@@ -416,6 +417,19 @@ Step.3:
 - Scan the QR code on the web browser.
 - Follow the remaining prompts on your mobile to log in to WordPress on your web browser (desktop),
   verify that you have successfully logged-in and are able to use WordPress as expected.
+
+</details>
+
+-----
+
+### PlayReview [[googlePlayReviewVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="playreview"></a>
+
+<details>
+    <summary>1. In app reviews</summary>
+
+- Perform a clean install.
+- Publish three (`ReviewViewModel.TARGET_COUNT_POST_PUBLISHED + 1`) new posts or stories.
+- Verify that there are no crashes.
 
 </details>
 
