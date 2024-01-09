@@ -80,9 +80,11 @@ class DomainsDashboardViewModel @Inject constructor(
 
         val deferredPlansResult = async { fetchPlansUseCase.execute(site) }
         val deferredDomainsResult = async { siteStore.fetchSiteDomains(site) }
+        val deferredAllDomainsResult = async { siteStore.fetchAllDomains() }
 
         val plansResult = deferredPlansResult.await()
         val domainsResult = deferredDomainsResult.await()
+        val allDomainsResult = deferredAllDomainsResult.await()
 
         if (plansResult.isError) {
             AppLog.e(DOMAIN_REGISTRATION, "An error occurred while fetching plans: ${plansResult.error.message}")
