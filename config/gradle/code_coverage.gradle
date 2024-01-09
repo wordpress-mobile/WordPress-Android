@@ -1,8 +1,8 @@
 static String resolveProjectVariantForCodeCoverage(Project project) {
     if (project.name == "WordPress") {
-        return "wordpressWasabiDebug"
+        return "wordpressVanillaRelease"
     } else {
-        return "debug"
+        return "release"
     }
 }
 
