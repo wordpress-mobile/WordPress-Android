@@ -12,6 +12,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_V
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
@@ -25,6 +26,8 @@ import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDoma
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetPlan
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.OpenDomainManagement
 import org.wordpress.android.ui.domains.management.getDomainDetailsUrl
+import org.wordpress.android.ui.domains.usecases.AllDomains
+import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -48,6 +51,7 @@ class DomainsDashboardViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val fetchPlansUseCase: FetchPlansUseCase,
+    private val fetchAllDomainsUseCase: FetchAllDomainsUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     lateinit var site: SiteModel
@@ -82,7 +86,7 @@ class DomainsDashboardViewModel @Inject constructor(
 
         val deferredPlansResult = async { fetchPlansUseCase.execute(site) }
         val deferredDomainsResult = async { siteStore.fetchSiteDomains(site) }
-        val deferredAllDomainsResult = async { siteStore.fetchAllDomains() }
+        val deferredAllDomainsResult = async { fetchAllDomainsUseCase.execute() }
 
         val plansResult = deferredPlansResult.await()
         val domainsResult = deferredDomainsResult.await()
@@ -96,19 +100,9 @@ class DomainsDashboardViewModel @Inject constructor(
             AppLog.e(DOMAIN_REGISTRATION, "An error occurred while fetching domains: ${domainsResult.error.message}")
         }
 
-        if (allDomainsResult.isError) {
-            AppLog.e(
-                DOMAIN_REGISTRATION,
-                "An error occurred while fetching all domains: ${allDomainsResult.error.message}"
-            )
-        }
+        val allDomains = if (allDomainsResult is AllDomains.Success) allDomainsResult.domains else emptyList()
 
-        buildDashboardItems(
-            site,
-            plansResult.plans.orEmpty(),
-            domainsResult.domains.orEmpty(),
-            allDomainsResult.domains.orEmpty()
-        )
+        buildDashboardItems(site, plansResult.plans.orEmpty(), domainsResult.domains.orEmpty(), allDomains)
     }
 
     private fun buildDashboardItems(
