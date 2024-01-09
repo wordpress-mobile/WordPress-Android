@@ -55,10 +55,10 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
     lateinit var bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider
 
     @Mock
-    lateinit var bloggingPromptCardBuilder: BloggingPromptCardBuilder,
+    lateinit var bloggingPromptCardBuilder: BloggingPromptCardBuilder
 
     @Mock
-    lateinit var promptsStore: BloggingPromptsStore,
+    lateinit var promptsStore: BloggingPromptsStore
 
     @Mock
     lateinit var bloggingPromptsFeature: BloggingPromptsFeature
