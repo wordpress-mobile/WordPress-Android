@@ -22,7 +22,7 @@ sealed interface AllDomains {
         val domains: List<AllDomainsDomain>,
     ) : AllDomains
 
-    object Empty : AllDomains
+    data object Empty : AllDomains
 
-    object Error : AllDomains
+    data object Error : AllDomains
 }
