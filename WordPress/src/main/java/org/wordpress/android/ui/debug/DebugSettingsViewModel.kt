@@ -87,6 +87,10 @@ class DebugSettingsViewModel
         }
     }
 
+    fun onDebugFlagsClick() {
+        _onNavigation.value = Event(NavigationAction.DebugFlags)
+    }
+
     private fun buildDevelopedFeatures(): List<LocalFeatureFlag> {
         return FeaturesInDevelopment.featuresInDevelopment.map { name ->
             val value = if (manualFeatureConfig.hasManualSetup(name)) {
@@ -156,6 +160,7 @@ class DebugSettingsViewModel
 
     sealed class NavigationAction {
         object DebugCookies : NavigationAction()
+        object DebugFlags : NavigationAction()
         data class PreviewFragment(val name: String) : NavigationAction()
     }
 }
