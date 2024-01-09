@@ -389,9 +389,14 @@ class ReaderViewModel @Inject constructor(
                     menuItems = menuItems,
                     selectedItem = selectedItem,
                     filterUiState = filterUiState,
+                    onDropdownMenuClick = ::onDropdownMenuClick,
                 )
             )
         }
+    }
+
+    private fun onDropdownMenuClick() {
+        readerTracker.trackDropdownMenuOpened()
     }
 
     private fun getMenuItemFromReaderTag(readerTag: ReaderTag): MenuElementData.Item.Single? =
@@ -515,6 +520,7 @@ class ReaderViewModel @Inject constructor(
         val menuItems: List<MenuElementData>,
         val selectedItem: MenuElementData.Item.Single,
         val filterUiState: FilterUiState? = null,
+        val onDropdownMenuClick: () -> Unit,
     ) {
         data class FilterUiState(
             val blogsFilterCount: Int,

@@ -376,6 +376,10 @@ class ReaderTracker @Inject constructor(
         analyticsUtilsWrapper.trackRailcarRender(railcarJson)
     }
 
+    fun trackDropdownMenuOpened() {
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_DROPDOWN_MENU_OPENED)
+    }
+
     /* HELPER */
 
     @JvmOverloads

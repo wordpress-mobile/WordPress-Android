@@ -101,6 +101,7 @@ fun ReaderTopAppBar(
                     onSingleItemClick = onMenuItemClick,
                     menuButtonHeight = chipHeight,
                     contentSizeAnimation = tween(ANIM_DURATION),
+                    onDropdownMenuClick = topBarUiState.onDropdownMenuClick,
                 )
 
                 AnimatedVisibility(
@@ -206,6 +207,7 @@ fun ReaderTopAppBarPreview() {
             ReaderViewModel.TopBarUiState(
                 menuItems = menuItems,
                 selectedItem = menuItems.first() as MenuElementData.Item.Single,
+                onDropdownMenuClick = {},
             )
         )
     }

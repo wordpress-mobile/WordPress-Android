@@ -55,6 +55,7 @@ fun JetpackDropdownMenu(
     onSingleItemClick: (MenuElementData.Item.Single) -> Unit,
     menuButtonHeight: Dp = 36.dp,
     contentSizeAnimation: FiniteAnimationSpec<IntSize> = spring(),
+    onDropdownMenuClick: () -> Unit,
 ) {
     Column {
         var isMenuVisible by remember { mutableStateOf(false) }
@@ -63,6 +64,7 @@ fun JetpackDropdownMenu(
             contentSizeAnimation = contentSizeAnimation,
             selectedItem = selectedItem,
             onClick = {
+                onDropdownMenuClick()
                 isMenuVisible = !isMenuVisible
             }
         )
@@ -269,7 +271,8 @@ fun JetpackDropdownMenuPreview() {
             JetpackDropdownMenu(
                 selectedItem = selectedItem,
                 menuItems = menuItems,
-                onSingleItemClick = { selectedItem = it }
+                onSingleItemClick = { selectedItem = it },
+                onDropdownMenuClick = {},
             )
         }
     }
