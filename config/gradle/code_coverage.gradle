@@ -37,7 +37,8 @@ koverReport {
                     '*.debug*',
                     'hilt_aggregated_deps',
                     '*.databinding',
-                    'org.wordpress.android.widgets'
+                    'org.wordpress.android.modules',
+                    'org.wordpress.android.widgets',
             )
 
             classes(
@@ -54,6 +55,8 @@ koverReport {
                     '*Fragment$*',
                     '*FragmentDirections*',
                     '*FragmentKt*',
+                    '*Module',
+                    '*Module_*',
                     '*View',
                     '*View$*',
                     '*ViewHolder',
@@ -61,7 +64,7 @@ koverReport {
                     '*ViewHolderKt*',
                     '*.Hilt_*',
                     '*HiltModules*',
-                    '*_MembersInjector'
+                    '*_MembersInjector',
             )
         }
     }
