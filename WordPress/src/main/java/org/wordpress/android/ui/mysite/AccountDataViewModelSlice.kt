@@ -27,7 +27,7 @@ class AccountDataViewModelSlice @Inject constructor(
 
     val refresh = MutableLiveData(false)
 
-    fun getAccountData() {
+    private fun getAccountData() {
         scope.launch {
             _isRefreshing.postValue(true)
             val url = accountStore.account?.avatarUrl.orEmpty()

@@ -18,69 +18,123 @@ class AccountDataSourceTest : BaseUnitTest() {
 
     @Mock
     lateinit var accountModel: AccountModel
-    private lateinit var accountDataSource: AccountDataViewModelSlice
+    private lateinit var accountDataViewModelSlice: AccountDataViewModelSlice
     private lateinit var isRefreshing: MutableList<Boolean>
+    private lateinit var uiModel: MutableList<AccountData>
 
     @Before
     fun setUp() {
-        accountDataSource = AccountDataViewModelSlice(accountStore)
+        accountDataViewModelSlice = AccountDataViewModelSlice(accountStore)
         isRefreshing = mutableListOf()
+        uiModel = mutableListOf()
+        accountDataViewModelSlice.initialize(testScope())
     }
 
     @Test
-    fun `current avatar is empty on start`() = test {
+    fun `current avatar is empty on refresh`() = test {
         var result: AccountData? = null
-        accountDataSource.build(testScope()).observeForever {
+        accountDataViewModelSlice.uiModel.observeForever {
+            it?.let { result = it }
+        }
+        accountDataViewModelSlice.refresh()
+
+        assertThat(result?.url).isEmpty()
+    }
+
+    @Test
+    fun `uimodel is null when accessed before refresh request`() = test {
+        var result: AccountData? = null
+
+        accountDataViewModelSlice.uiModel.observeForever {
             it?.let { result = it }
         }
 
-        assertThat(result!!.url).isEqualTo("")
+        assertThat(result).isNull()
     }
 
     @Test
-    fun `current avatar is loaded on refresh from account store`() = test {
-        whenever(accountStore.account).thenReturn(accountModel)
-        val avatarUrl = "avatar.jpg"
-        whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
-
-        var result: AccountData? = null
-        accountDataSource.build(testScope()).observeForever {
-            it?.let { result = it }
+    fun `when refresh is invoked, then isRefreshing is true`() = test {
+        accountDataViewModelSlice.isRefreshing.observeForever {
+            it?.let { isRefreshing.add(it) }
         }
 
-        accountDataSource.refresh()
+        accountDataViewModelSlice.refresh()
 
-        assertThat(result!!.url).isEqualTo(avatarUrl)
-    }
 
-    @Test
-    fun `when buildSource is invoked, then refresh is true`() = test {
-        accountDataSource.refresh.observeForever { isRefreshing.add(it) }
-
-        accountDataSource.build(testScope())
-
-        assertThat(isRefreshing.last()).isTrue
-    }
-
-    @Test
-    fun `when refresh is invoked, then refresh is true`() = test {
-        accountDataSource.refresh.observeForever { isRefreshing.add(it) }
-
-        accountDataSource.refresh()
-
-        assertThat(isRefreshing.last()).isTrue
+        assertThat(isRefreshing.first()).isTrue
     }
 
     @Test
     fun `when data has been refreshed, then refresh is set to false`() = test {
-        whenever(accountStore.account).thenReturn(accountModel)
         val avatarUrl = "avatar.jpg"
+        val displayName = "Display Name"
+        whenever(accountStore.account).thenReturn(accountModel)
         whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
-        accountDataSource.refresh.observeForever { isRefreshing.add(it) }
+        whenever(accountModel.displayName).thenReturn(displayName)
+        accountDataViewModelSlice.isRefreshing.observeForever { isRefreshing.add(it) }
 
-        accountDataSource.build(testScope()).observeForever { }
-        accountDataSource.refresh()
+        accountDataViewModelSlice.refresh()
 
         assertThat(isRefreshing.last()).isFalse
+    }
+
+    @Test
+    fun `when data has been refreshed, then uiModel contains data from the account store`() = test {
+        val avatarUrl = "avatar.jpg"
+        val displayName = "Display Name"
+        whenever(accountStore.account).thenReturn(accountModel)
+        whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
+        whenever(accountModel.displayName).thenReturn(displayName)
+
+
+        accountDataViewModelSlice.uiModel.observeForever {
+            it?.let { uiModel.add(it) }
+        }
+
+        accountDataViewModelSlice.refresh()
+
+        assertThat(uiModel.last()).isNotNull
+        assertThat(uiModel.last().url).isEqualTo(avatarUrl)
+        assertThat(uiModel.last().name).isEqualTo(displayName)
+    }
+
+    @Test
+    fun `when display name is empty, then user name is used`() = test {
+        val avatarUrl = "avatar.jpg"
+        val displayName = ""
+        val userName = "User Name"
+        whenever(accountStore.account).thenReturn(accountModel)
+        whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
+        whenever(accountModel.displayName).thenReturn(displayName)
+        whenever(accountModel.userName).thenReturn(userName)
+
+
+        accountDataViewModelSlice.uiModel.observeForever {
+            it?.let { uiModel.add(it) }
+        }
+
+        accountDataViewModelSlice.refresh()
+
+        assertThat(uiModel.last().name).isEqualTo(userName)
+    }
+
+    @Test
+    fun `when display and user name are empty, then name is empty`() = test {
+        val avatarUrl = "avatar.jpg"
+        val displayName = ""
+        val userName = ""
+        whenever(accountStore.account).thenReturn(accountModel)
+        whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
+        whenever(accountModel.displayName).thenReturn(displayName)
+        whenever(accountModel.userName).thenReturn(userName)
+
+
+        accountDataViewModelSlice.uiModel.observeForever {
+            it?.let { uiModel.add(it) }
+        }
+
+        accountDataViewModelSlice.refresh()
+
+        assertThat(uiModel.last().name).isEmpty()
     }
 }
