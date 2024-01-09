@@ -7,6 +7,7 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_avatar"
+        style="@style/ReaderImageView.Avatar.OvalSurfaceBackground"
         android:visibility="gone"
         android:layout_width="40dp"
         android:layout_height="40dp"
