@@ -12,6 +12,13 @@ plugins {
     id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
     id "com.google.gms.google-services"
     id 'dagger.hilt.android.plugin'
+    id "org.jetbrains.kotlinx.kover"
+}
+
+koverReport {
+    defaults {
+        mergeWith("wordpressWasabiDebug")
+    }
 }
 
 sentry {
