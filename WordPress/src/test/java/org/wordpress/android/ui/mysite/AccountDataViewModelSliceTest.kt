@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.AccountData
 
 @ExperimentalCoroutinesApi
-class AccountDataSourceTest : BaseUnitTest() {
+class AccountDataViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var accountStore: AccountStore
 
