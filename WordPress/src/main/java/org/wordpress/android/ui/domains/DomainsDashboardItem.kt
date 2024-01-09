@@ -24,6 +24,7 @@ sealed class DomainsDashboardItem(val type: Type) {
         val domain: UiString,
         val expiry: UiString,
         val isPrimary: Boolean,
+        val onDomainClick: ListItemInteraction? = null
     ) : DomainsDashboardItem(SITE_DOMAINS)
 
     data class AddDomain(val onClick: ListItemInteraction) : DomainsDashboardItem(ADD_DOMAIN)
