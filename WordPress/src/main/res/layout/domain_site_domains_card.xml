@@ -16,16 +16,6 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_extra_large">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/primary_site_domain_actions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_ellipsis_vertical_white_24dp"
-            app:tint="?attr/wpColorOnSurfaceMedium" />
-
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/site_domain_expiry_date"
             android:layout_width="wrap_content"
