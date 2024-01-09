@@ -140,6 +140,13 @@ class DomainsDashboardViewModel @Inject constructor(
         _uiModel.postValue(listItems)
     }
 
+    private fun getStatusColor(statusType: StatusType?) = when (statusType) {
+        StatusType.SUCCESS -> R.color.jetpack_green_50
+        StatusType.NEUTRAL -> R.color.gray_50
+        StatusType.WARNING -> R.color.orange_50
+        else -> R.color.red_50
+    }
+
     private fun buildCtaItems(
         hasCustomDomains: Boolean,
         hasDomainCredit: Boolean,
