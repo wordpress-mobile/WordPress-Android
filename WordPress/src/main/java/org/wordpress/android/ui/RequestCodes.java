@@ -28,6 +28,7 @@ public class RequestCodes {
     public static final int SMART_LOCK_SAVE = 1400;
     public static final int SMART_LOCK_READ = 1500;
     public static final int NOTIFICATION_SETTINGS = 1600;
+    public static final int NOTIFICATION_SETTINGS_ALERT_RINGTONE = 1610;
     public static final int ACTIVITY_LOG_DETAIL = 1700;
     public static final int BACKUP_DOWNLOAD = 1710;
     public static final int RESTORE = 1720;
