@@ -43,8 +43,8 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.JetpackPoweredScreen
-import org.wordpress.android.networking.GravatarApi
-import org.wordpress.android.networking.GravatarApi.GravatarUploadListener
+import com.gravatar.GravatarApi
+import com.gravatar.GravatarApi.GravatarUploadListener
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.about.UnifiedAboutActivity

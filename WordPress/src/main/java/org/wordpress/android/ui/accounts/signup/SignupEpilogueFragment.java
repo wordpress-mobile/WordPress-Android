@@ -52,7 +52,7 @@ import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload
 import org.wordpress.android.fluxc.store.AccountStore.PushUsernamePayload;
 import org.wordpress.android.login.LoginBaseFormFragment;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
-import org.wordpress.android.networking.GravatarApi;
+import com.gravatar.GravatarApi;
 import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;

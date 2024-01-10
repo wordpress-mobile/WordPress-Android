@@ -62,6 +62,7 @@ include ':libs:analytics'
 include ':libs:editor'
 include ':libs:processors'
 include ':libs:annotations'
+include ':libs:gravatar'
 
 include ':libs:mocks'
 
