@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
@@ -89,7 +90,7 @@ class BlazeCardViewModelSlice @Inject constructor(
         postState(true)
     }
 
-    fun postState(isBlazeEligible: Boolean, campaign: BlazeCampaignModel? = null) {
+    private fun postState(isBlazeEligible: Boolean, campaign: BlazeCampaignModel? = null) {
         _isRefreshing.postValue(false)
         if(isBlazeEligible) {
             buildBlazeCard(campaign)?.let {
@@ -100,11 +101,13 @@ class BlazeCardViewModelSlice @Inject constructor(
         }
     }
 
-    fun buildBlazeCard(campaign: BlazeCampaignModel? = null): MySiteCardAndItem.Card.BlazeCard? {
+
+    private fun buildBlazeCard(campaign: BlazeCampaignModel? = null): MySiteCardAndItem.Card.BlazeCard? {
         return getBlazeCardBuilderParams(campaign).let { blazeCardBuilder.build(it) }
     }
 
-    fun getBlazeCardBuilderParams(campaign: BlazeCampaignModel? = null): BlazeCardBuilderParams {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal fun getBlazeCardBuilderParams(campaign: BlazeCampaignModel? = null): BlazeCardBuilderParams {
         return campaign?.let {
                     getCampaignWithBlazeCardBuilderParams(campaign)
                 } ?: getPromoteWithBlazeCardBuilderParams()
