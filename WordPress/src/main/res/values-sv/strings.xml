@@ -1884,8 +1884,6 @@ Language: sv_SE
     <string name="reader_my_likes_display_name">Gillar</string>
     <string name="reader_discover_display_name">Upptäck</string>
     <string name="reader_save_for_later_display_name">Sparat</string>
-    <string name="reader_filter_tags_title">Ämnen</string>
-    <string name="reader_filter_sites_title">Webbplatser</string>
     <string name="suffix_1_000_000_000_000_000_000">%s triljoner</string>
     <string name="suffix_1_000_000_000_000_000">%s biljarder</string>
     <string name="suffix_1_000_000_000_000">%s biljoner</string>

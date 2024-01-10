@@ -16,28 +16,10 @@
         android:id="@+id/title"
         style="@style/SiteTagBottomSheetTitle"
         android:layout_width="match_parent"
-        android:text="@string/reader_filter_main_title" />
+        android:text="@string/reader_filter_by_blog_title" />
 
-    <LinearLayout
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@id/tab_layout"
-            android:layout_width="match_parent"
-            android:elevation="0dp"
-            android:layout_height="@dimen/tab_height"
-            android:layout_marginStart="@dimen/content_margin_bottom_sheet_tab_start"
-            android:background="@android:color/transparent"
-            app:tabIndicatorColor="?attr/colorPrimary"
-            app:tabMode="scrollable"
-            app:tabPaddingEnd="@dimen/content_bottom_sheet_tab_padding"
-            app:tabPaddingStart="@dimen/content_bottom_sheet_tab_padding" />
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+        android:layout_height="match_parent" />
 </LinearLayout>

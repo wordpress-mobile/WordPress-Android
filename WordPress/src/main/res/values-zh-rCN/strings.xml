@@ -1872,8 +1872,6 @@ Language: zh_CN
     <string name="reader_my_likes_display_name">喜欢</string>
     <string name="reader_discover_display_name">发现</string>
     <string name="reader_save_for_later_display_name">已保存</string>
-    <string name="reader_filter_tags_title">主题</string>
-    <string name="reader_filter_sites_title">站点</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>

@@ -1610,8 +1610,6 @@ Language: cs_CZ
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
-    <string name="reader_filter_sites_title">Weby</string>
-    <string name="reader_filter_tags_title">Témata</string>
     <string name="reader_discover_display_name">Objevujte</string>
     <string name="reader_my_likes_display_name">Líbí se</string>
     <string name="reader_save_for_later_display_name">Uloženo</string>

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.subfilter
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
@@ -9,7 +8,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
@@ -17,15 +15,12 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.Organization.NO_ORGANIZATION
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetHidden
 import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetVisible
-import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
-import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
@@ -34,7 +29,6 @@ import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
@@ -65,9 +59,6 @@ class SubFilterViewModel @Inject constructor(
 
     private val _bottomSheetUiState = MutableLiveData<Event<BottomSheetUiState>>()
     val bottomSheetUiState: LiveData<Event<BottomSheetUiState>> = _bottomSheetUiState
-
-    private val _filtersMatchCount = MutableLiveData<HashMap<SubfilterCategory, Int>>()
-    val filtersMatchCount: LiveData<HashMap<SubfilterCategory, Int>> = _filtersMatchCount
 
     private val _bottomSheetEmptyViewAction = MutableLiveData<Event<ActionType>>()
     val bottomSheetEmptyViewAction: LiveData<Event<ActionType>> = _bottomSheetEmptyViewAction
@@ -114,8 +105,6 @@ class SubFilterViewModel @Inject constructor(
             updateSubfilter(currentSubfilter ?: getCurrentSubfilterValue())
             initSubfiltersTracking(tag.isFilterable)
         }
-
-        _filtersMatchCount.value = hashMapOf()
     }
 
     fun loadSubFilters() {
@@ -205,6 +194,7 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun setDefaultSubfilter() {
+        readerTracker.track(Stat.READER_FILTER_SHEET_CLEARED)
         updateSubfilter(
             SiteAll(
                 onClickAction = ::onSubfilterClicked,
@@ -213,19 +203,25 @@ class SubFilterViewModel @Inject constructor(
         )
     }
 
-    fun onSubFiltersListButtonClicked() {
+    fun onSubFiltersListButtonClicked(
+        category: SubfilterCategory,
+    ) {
+        updateTagsAndSites()
+        _bottomSheetUiState.value = Event(
+            BottomSheetVisible(
+                UiStringRes(category.titleRes),
+                listOf(category) // TODO thomashortadev this should accept only a single category
+            )
+        )
+    }
+
+    fun updateTagsAndSites() {
         _updateTagsAndSites.value = Event(
             EnumSet.of(
                 UpdateTask.TAGS,
                 UpdateTask.FOLLOWED_BLOGS
             )
         )
-        _bottomSheetUiState.value = Event(BottomSheetVisible(
-            mTagFragmentStartedWith?.let {
-                UiStringText(it.label)
-            } ?: UiStringRes(R.string.reader_filter_main_title),
-            if (mTagFragmentStartedWith?.organization == NO_ORGANIZATION) listOf(SITES, TAGS) else listOf(SITES)
-        ))
     }
 
     fun onBottomSheetCancelled() {
@@ -243,6 +239,7 @@ class SubFilterViewModel @Inject constructor(
             SubfilterListItem.ItemType.DIVIDER -> {
                 // nop
             }
+
             SubfilterListItem.ItemType.SITE_ALL -> _readerModeInfo.value = (ReaderModeInfo(
                 streamTag ?: ReaderUtils.getDefaultTag(),
                 ReaderPostListType.TAG_FOLLOWED,
@@ -253,6 +250,7 @@ class SubFilterViewModel @Inject constructor(
                 isFirstLoad,
                 false
             ))
+
             SubfilterListItem.ItemType.SITE -> {
                 val currentFeedId = (subfilterListItem as Site).blog.feedId
                 val currentBlogId = if (subfilterListItem.blog.hasFeedUrl()) {
@@ -272,6 +270,7 @@ class SubFilterViewModel @Inject constructor(
                     true
                 ))
             }
+
             SubfilterListItem.ItemType.TAG -> _readerModeInfo.value = (ReaderModeInfo(
                 (subfilterListItem as Tag).tag,
                 ReaderPostListType.TAG_FOLLOWED,
@@ -293,13 +292,6 @@ class SubFilterViewModel @Inject constructor(
 
     fun onSubfilterReselected() {
         changeSubfilter(getCurrentSubfilterValue(), false, mTagFragmentStartedWith)
-    }
-
-    @SuppressLint("NullSafeMutableLiveData")
-    fun onSubfilterPageUpdated(category: SubfilterCategory, count: Int) {
-        val currentValue = _filtersMatchCount.value
-        currentValue?.put(category, count)
-        _filtersMatchCount.postValue(currentValue)
     }
 
     fun onBottomSheetActionClicked(action: ActionType) {
@@ -341,7 +333,12 @@ class SubFilterViewModel @Inject constructor(
         }
 
         if (userIdChanged || accessTokenStatusChanged) {
-            _updateTagsAndSites.value = Event(EnumSet.of(UpdateTask.TAGS))
+            _updateTagsAndSites.value = Event(
+                EnumSet.of(
+                    UpdateTask.TAGS,
+                    UpdateTask.FOLLOWED_BLOGS
+                )
+            )
 
             setDefaultSubfilter()
         }
@@ -384,5 +381,10 @@ class SubFilterViewModel @Inject constructor(
         const val ARG_IS_FIRST_LOAD = "is_first_load"
 
         const val TRACK_TAB = "tab"
+
+        @JvmStatic
+        fun getViewModelKeyForTag(tag: ReaderTag): String {
+            return SUBFILTER_VM_BASE_KEY + tag.keyString
+        }
     }
 }

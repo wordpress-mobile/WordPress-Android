@@ -4,9 +4,11 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -20,6 +22,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.Organization
 import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
@@ -28,6 +31,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.reader.ReaderEvents
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
@@ -125,9 +129,9 @@ class ReaderViewModel @Inject constructor(
         launch {
             val currentContentUiState = _uiState.value as? ContentUiState
             val tagList = loadReaderTabsUseCase.loadTabs()
-            if (tagList.isNotEmpty()) {
+            if (tagList.isNotEmpty() && readerTagsList != tagList) {
                 updateReaderTagsList(tagList)
-                initializeTopBarUiState()
+                updateTopBarUiState()
                 _uiState.value = ContentUiState(
                     tabUiStates = tagList.map { TabUiState(label = UiStringText(it.label)) },
                     selectedReaderTag = selectedReaderTag(),
@@ -189,17 +193,13 @@ class ReaderViewModel @Inject constructor(
         return now - lastUpdated > UPDATE_TAGS_THRESHOLD
     }
 
-    fun updateSelectedContent(
-        selectedTag: ReaderTag,
-        // TODO replace with real logic
-        filterUiState: TopBarUiState.FilterUiState? = null
-    ) {
+    fun updateSelectedContent(selectedTag: ReaderTag) {
         getMenuItemFromReaderTag(selectedTag)?.let { newSelectedMenuItem ->
             // Update top bar UI state so menu is updated with new selected item
             _topBarUiState.value?.let {
                 _topBarUiState.value = it.copy(
                     selectedItem = newSelectedMenuItem,
-                    filterUiState = filterUiState,
+                    filterUiState = null,
                 )
             }
             // Updated post list content
@@ -369,14 +369,26 @@ class ReaderViewModel @Inject constructor(
             readerTagsList[readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(it.selectedItem)]
         }
 
-    private suspend fun initializeTopBarUiState(/*tagList: ReaderTagList*/) {
+    private suspend fun updateTopBarUiState() {
         withContext(bgDispatcher) {
             val menuItems = readerTopBarMenuHelper.createMenu(readerTagsList)
+
+            // if menu is exactly the same as before, don't update
+            if (_topBarUiState.value?.menuItems == menuItems) return@withContext
+
+            // if there's already a selected item, use it, otherwise use the first item
+            val selectedItem = _topBarUiState.value?.selectedItem
+                ?: menuItems.first { it is MenuElementData.Item.Single } as MenuElementData.Item.Single
+
+            // if there's a selected item and filter state, also use the filter state
+            val filterUiState = _topBarUiState.value?.filterUiState
+                ?.takeIf { _topBarUiState.value?.selectedItem != null }
+
             _topBarUiState.postValue(
                 TopBarUiState(
                     menuItems = menuItems,
-                    selectedItem = menuItems.first { it is MenuElementData.Item.Single } as MenuElementData.Item.Single,
-                    filterUiState = null,
+                    selectedItem = selectedItem,
+                    filterUiState = filterUiState,
                 )
             )
         }
@@ -407,45 +419,96 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun onTopBarMenuItemClick(item: MenuElementData.Item.Single) {
-        // TODO actual logic needs to be created
-        //  The current logic is for initial implementation and UI review only.
-        val filterUiState = TopBarUiState.FilterUiState(
-            followedBlogsCount = 23,
-            followedTagsCount = 41,
-        ).takeIf { item.id == "0" }
+        val selectedReaderTag = readerTagsList[readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(item)]
 
         // Avoid reloading a content stream that is already loaded
         if (item.id != _topBarUiState.value?.selectedItem?.id) {
-            readerTagsList[readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(item)]
-                ?.let { selectedReaderTag ->
-                    updateSelectedContent(selectedReaderTag, filterUiState)
-                }
+            selectedReaderTag?.let { updateSelectedContent(it) }
         }
     }
 
-    fun onTopBarFilterClick(type: ReaderFilterType) {
-        // TODO actual logic needs to be created (opening filter bottom sheet).
-        //  The current logic is for initial implementation and UI review only.
-        val itemText = when (type) {
-            ReaderFilterType.BLOG -> UiStringText("Selected Blog")
-            ReaderFilterType.TAG -> UiStringText("Selected Site")
+    fun onSubFilterItemSelected(item: SubfilterListItem) {
+        when (item) {
+            is SubfilterListItem.SiteAll -> clearTopBarFilter()
+            is SubfilterListItem.Site -> updateTopBarFilter(item.blog.name, ReaderFilterType.BLOG)
+            is SubfilterListItem.Tag -> updateTopBarFilter(item.tag.tagDisplayName, ReaderFilterType.TAG)
+            else -> Unit // do nothing
         }
-
-        val filterUiState = _topBarUiState.value?.filterUiState
-            ?.copy(selectedItem = ReaderFilterSelectedItem(itemText, type))
-
-        _topBarUiState.value = _topBarUiState.value
-            ?.copy(filterUiState = filterUiState)
     }
 
-    fun onTopBarClearFilterClick() {
-        // TODO actual logic needs to be created (clearing filter).
-        //  The current logic is for initial implementation and UI review only.
+    private fun clearTopBarFilter() {
         val filterUiState = _topBarUiState.value?.filterUiState
             ?.copy(selectedItem = null)
 
-        _topBarUiState.value = _topBarUiState.value
-            ?.copy(filterUiState = filterUiState)
+        viewModelScope.launch(mainDispatcher) {
+            delay(FILTER_UPDATE_DELAY) // small delay to achieve a fluid animation since other UI updates are happening
+            _topBarUiState.postValue(
+                _topBarUiState.value
+                    ?.copy(filterUiState = filterUiState)
+            )
+        }
+    }
+
+    private fun updateTopBarFilter(itemName: String, type: ReaderFilterType) {
+        val filterUiState = _topBarUiState.value?.filterUiState
+            ?.copy(selectedItem = ReaderFilterSelectedItem(UiStringText(itemName), type))
+
+        viewModelScope.launch(mainDispatcher) {
+            delay(FILTER_UPDATE_DELAY) // small delay to achieve a fluid animation since other UI updates are happening
+            _topBarUiState.postValue(
+                _topBarUiState.value
+                    ?.copy(filterUiState = filterUiState)
+            )
+        }
+    }
+
+    fun hideTopBarFilterGroup(readerTab: ReaderTag) {
+        val selectedReaderTag = _topBarUiState.value?.selectedItem?.let {
+            readerTagsList[readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(it)]
+        } ?: return
+
+        if (readerTab != selectedReaderTag) return
+
+        _topBarUiState.postValue(
+            topBarUiState.value?.copy(filterUiState = null)
+        )
+    }
+
+    fun showTopBarFilterGroup(readerTab: ReaderTag, subFilterItems: List<SubfilterListItem>) {
+        val selectedReaderTag = _topBarUiState.value?.selectedItem?.let {
+            readerTagsList[readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(it)]
+        } ?: return
+
+        if (readerTab != selectedReaderTag) return
+
+        val blogsFilterCount = subFilterItems.filterIsInstance<SubfilterListItem.Site>().size
+        val tagsFilterCount = subFilterItems.filterIsInstance<SubfilterListItem.Tag>().size
+
+        val filterState = _topBarUiState.value?.filterUiState
+            ?.copy(
+                blogsFilterCount = blogsFilterCount,
+                tagsFilterCount = tagsFilterCount,
+                showBlogsFilter = shouldShowBlogsFilter(selectedReaderTag),
+                showTagsFilter = shouldShowTagsFilter(selectedReaderTag),
+            )
+            ?: TopBarUiState.FilterUiState(
+                blogsFilterCount = blogsFilterCount,
+                tagsFilterCount = tagsFilterCount,
+                showBlogsFilter = shouldShowBlogsFilter(selectedReaderTag),
+                showTagsFilter = shouldShowTagsFilter(selectedReaderTag),
+            )
+
+        _topBarUiState.postValue(
+            topBarUiState.value?.copy(filterUiState = filterState)
+        )
+    }
+
+    private fun shouldShowBlogsFilter(readerTag: ReaderTag): Boolean {
+        return readerTag.isFilterable
+    }
+
+    private fun shouldShowTagsFilter(readerTag: ReaderTag): Boolean {
+        return readerTag.isFilterable && readerTag.organization == Organization.NO_ORGANIZATION
     }
 
     data class TopBarUiState(
@@ -454,9 +517,11 @@ class ReaderViewModel @Inject constructor(
         val filterUiState: FilterUiState? = null,
     ) {
         data class FilterUiState(
-            val followedBlogsCount: Int,
-            val followedTagsCount: Int,
+            val blogsFilterCount: Int,
+            val tagsFilterCount: Int,
             val selectedItem: ReaderFilterSelectedItem? = null,
+            val showBlogsFilter: Boolean = blogsFilterCount > 0,
+            val showTagsFilter: Boolean = tagsFilterCount > 0,
         )
     }
 
@@ -498,6 +563,7 @@ class ReaderViewModel @Inject constructor(
     companion object {
         private const val QUICK_START_DISCOVER_TAB_STEP_DELAY = 2000L
         private const val QUICK_START_PROMPT_DURATION = 5000
+        private const val FILTER_UPDATE_DELAY = 50L
     }
 }
 

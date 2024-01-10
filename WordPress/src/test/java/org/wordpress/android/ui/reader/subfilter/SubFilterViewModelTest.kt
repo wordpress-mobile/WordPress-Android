@@ -30,8 +30,6 @@ import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage
 import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetHidden
 import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetVisible
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel.Companion
-import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
-import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.SITE
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.SITE_ALL
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.TAG
@@ -82,7 +80,6 @@ class SubFilterViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        whenever(initialTag.label).thenReturn("tag-label")
         whenever(savedTag.label).thenReturn("tag-label")
 
         viewModel = SubFilterViewModel(
@@ -182,17 +179,6 @@ class SubFilterViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `view model updates count of matched sites and tags`() {
-        val data = hashMapOf(SITES to 3, TAGS to 25)
-
-        for (testStep in data.keys) {
-            viewModel.onSubfilterPageUpdated(testStep, data.getOrDefault(testStep, 0))
-        }
-
-        assertThat(viewModel.filtersMatchCount.value).isEqualTo(data)
-    }
-
-    @Test
     fun `when WPCOM user taps empty bottom sheet SITES cta the subs activity is opened on followed blogs page`() {
         val action = OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
         viewModel.onBottomSheetActionClicked(action)
@@ -237,7 +223,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
         verify(appPrefsWrapper, times(0)).setLastReaderKnownAccessTokenStatus(any())
 
         assertThat(viewModel.updateTagsAndSites.value!!.peekContent()).isEqualTo(
-            EnumSet.of(UpdateTask.TAGS)
+            EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS)
         )
 
         assertThat(viewModel.currentSubFilter.value).isInstanceOf(SiteAll::class.java)
@@ -255,7 +241,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
         verify(appPrefsWrapper, times(1)).setLastReaderKnownAccessTokenStatus(any())
 
         assertThat(viewModel.updateTagsAndSites.value!!.peekContent()).isEqualTo(
-            EnumSet.of(UpdateTask.TAGS)
+            EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS)
         )
 
         assertThat(viewModel.currentSubFilter.value).isInstanceOf(SiteAll::class.java)
@@ -304,7 +290,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
         viewModel.updateTagsAndSites.observeForever { updateTasks = it.peekContent() }
         viewModel.bottomSheetUiState.observeForever { uiState = it.peekContent() }
 
-        viewModel.onSubFiltersListButtonClicked()
+        viewModel.onSubFiltersListButtonClicked(SubfilterCategory.SITES)
 
         assertThat(updateTasks).isEqualTo(
             EnumSet.of(
