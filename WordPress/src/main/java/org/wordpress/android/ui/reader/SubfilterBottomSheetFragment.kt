@@ -16,6 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.reader.subfilter.ActionType
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
@@ -78,6 +79,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         // TODO thomashortadev: remove the pager and support only one category
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
         val title = view.findViewById<TextView>(R.id.title)
+        val editSubscriptions = view.findViewById<View>(R.id.edit_subscriptions)
         title.text = bottomSheetTitle
         pager.adapter = SubfilterPagerAdapter(
             requireActivity(),
@@ -103,6 +105,15 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         pager.currentItem = when (viewModel.getCurrentSubfilterValue()) {
             is Tag -> TAGS.ordinal
             else -> SITES.ordinal
+        }
+
+        editSubscriptions.setOnClickListener {
+            val category = categories.firstOrNull() ?: return@setOnClickListener
+            val subsPageIndex = when (category) {
+                SITES -> ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS
+                TAGS -> ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS
+            }
+            viewModel.onBottomSheetActionClicked(ActionType.OpenSubsAtPage(subsPageIndex))
         }
 
         dialog?.setOnShowListener { dialogInterface ->

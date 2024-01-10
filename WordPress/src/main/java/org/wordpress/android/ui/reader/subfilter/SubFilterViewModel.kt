@@ -60,8 +60,8 @@ class SubFilterViewModel @Inject constructor(
     private val _bottomSheetUiState = MutableLiveData<Event<BottomSheetUiState>>()
     val bottomSheetUiState: LiveData<Event<BottomSheetUiState>> = _bottomSheetUiState
 
-    private val _bottomSheetEmptyViewAction = MutableLiveData<Event<ActionType>>()
-    val bottomSheetEmptyViewAction: LiveData<Event<ActionType>> = _bottomSheetEmptyViewAction
+    private val _bottomSheetAction = MutableLiveData<Event<ActionType>>()
+    val bottomSheetAction: LiveData<Event<ActionType>> = _bottomSheetAction
 
     private val _updateTagsAndSites = MutableLiveData<Event<EnumSet<UpdateTask>>>()
     val updateTagsAndSites: LiveData<Event<EnumSet<UpdateTask>>> = _updateTagsAndSites
@@ -296,7 +296,7 @@ class SubFilterViewModel @Inject constructor(
 
     fun onBottomSheetActionClicked(action: ActionType) {
         _bottomSheetUiState.postValue(Event(BottomSheetHidden))
-        _bottomSheetEmptyViewAction.postValue(Event(action))
+        _bottomSheetAction.postValue(Event(action))
     }
 
     private fun updateSubfilter(filter: SubfilterListItem) {
