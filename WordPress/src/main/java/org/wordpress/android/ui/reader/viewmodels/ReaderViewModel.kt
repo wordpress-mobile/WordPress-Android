@@ -149,23 +149,6 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
-// TODO verify side effects of removing this logic
-//    private suspend fun initializeTabSelection(tagList: ReaderTagList) {
-//        withContext(bgDispatcher) {
-//            val selectTab = { readerTag: ReaderTag ->
-//                val index = tagList.indexOf(readerTag)
-//                if (index != -1) {
-//                    updateSelectedContent(readerTag)
-//                }
-//            }
-//            appPrefsWrapper.getReaderTag()?.let {
-//                selectTab.invoke(it)
-//            } ?: tagList.find { it.isDiscover }?.let {
-//                selectTab.invoke(it)
-//            }
-//        }
-//    }
-
     fun onTagChanged(selectedTag: ReaderTag?) {
         selectedTag?.let {
             trackReaderTabShownIfNecessary(it)
