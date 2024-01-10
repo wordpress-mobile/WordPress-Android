@@ -208,7 +208,9 @@ class DomainsDashboardViewModel @Inject constructor(
                     UiStringText(status)
                 } ?: UiStringRes(R.string.error),
                 getStatusColor(allDomainsDomain?.domainStatus?.statusType),
-                if (it.expirySoon) {
+                if (!it.hasRegistration) {
+                    null
+                } else if (it.expirySoon) {
                     UiStringText(
                         htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                             R.string.domains_site_domain_expires_soon,
