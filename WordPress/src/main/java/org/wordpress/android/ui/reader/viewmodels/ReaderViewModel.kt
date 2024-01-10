@@ -413,6 +413,9 @@ class ReaderViewModel @Inject constructor(
         if (item.id != _topBarUiState.value?.selectedItem?.id) {
             selectedReaderTag?.let { updateSelectedContent(it) }
         }
+        if (selectedReaderTag != null) {
+            readerTracker.trackDropdownMenuItemTapped(selectedReaderTag)
+        }
     }
 
     fun onSubFilterItemSelected(item: SubfilterListItem) {
