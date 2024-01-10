@@ -121,6 +121,8 @@ import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
+import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsMySitesFragment;
+import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsTypesFragment;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.ui.publicize.PublicizeAccountChooserListAdapter;
 import org.wordpress.android.ui.publicize.PublicizeButtonPrefsFragment;
@@ -293,6 +295,10 @@ public interface AppComponent {
     void inject(NotificationsListFragmentPage object);
 
     void inject(NotificationsSettingsFragment object);
+
+    void inject(NotificationsSettingsTypesFragment object);
+
+    void inject(NotificationsSettingsMySitesFragment object);
 
     void inject(NotificationsDetailActivity object);
 
