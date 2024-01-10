@@ -1,10 +1,8 @@
-package org.wordpress.android.networking;
+package com.gravatar;
 
 import android.os.Handler;
 import android.os.Looper;
-
-import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.util.AppLog;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +22,7 @@ import okhttp3.Response;
 public class GravatarApi {
     public static final String API_BASE_URL = "https://api.gravatar.com/v1/";
     private static final int DEFAULT_TIMEOUT = 15000;
+    private static final String LOG_TAG = "Gravatar";
 
     public interface GravatarUploadListener {
         void onSuccess();
@@ -92,10 +91,10 @@ public class GravatarApi {
                                 responseBody = "null";
                             }
                             properties.put("network_response_body", responseBody);
-
-                            AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_UNSUCCESSFUL,
-                                                   properties);
-                            AppLog.w(AppLog.T.API, "Network call unsuccessful trying to upload Gravatar: "
+                            // TODO: we should remove this
+                            // AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_UNSUCCESSFUL,
+                            //                       properties);
+                            Log.w(LOG_TAG, "Network call unsuccessful trying to upload Gravatar: "
                                                    + responseBody);
                         }
 
@@ -116,7 +115,7 @@ public class GravatarApi {
                         String exceptionClass = e != null ? e.getClass().getCanonicalName() : "null";
                         String exceptionMessage = e != null ? e.getMessage() : "null";
 
-                        AppLog.w(AppLog.T.API, "Network call failure trying to upload Gravatar!"
+                        Log.w(LOG_TAG, "Network call failure trying to upload Gravatar!"
                                                + exceptionMessage);
 
                         // Don't track exceptions caused by poor internet connectivity
@@ -124,7 +123,8 @@ public class GravatarApi {
                             Map<String, Object> properties = new HashMap<>();
                             properties.put("network_exception_class", exceptionClass);
                             properties.put("network_exception_message", exceptionMessage);
-                            AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
+                            // TODO: we should remove this
+                            // AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
                         }
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {

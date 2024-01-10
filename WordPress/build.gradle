@@ -388,6 +388,7 @@ dependencies {
         exclude group: 'com.mcxiaoke.volley'
     }
     implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
+    implementation project(':libs:gravatar')
 
     implementation "androidx.arch.core:core-common:$androidxArchCoreVersion"
     implementation "androidx.arch.core:core-runtime:$androidxArchCoreVersion"
