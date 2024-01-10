@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id "io.gitlab.arturbosch.detekt"
     id 'com.automattic.android.measure-builds'
+    id "org.jetbrains.kotlinx.kover"
     id "androidx.navigation.safeargs.kotlin" apply false
     id "com.android.library" apply false
     id 'com.google.gms.google-services' apply false
@@ -248,4 +249,5 @@ dependencies {
     detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$gradle.ext.detektVersion"
 }
 
+apply from: './config/gradle/code_coverage.gradle'
 apply from: './config/gradle/gradle_build_scan.gradle'
