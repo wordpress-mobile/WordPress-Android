@@ -31,6 +31,9 @@ class ActivityLogCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
+    @Mock
+    lateinit var activityCardBuilder: ActivityCardBuilder
+
     private lateinit var activityLogCardViewModelSlice: ActivityLogCardViewModelSlice
 
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
@@ -47,7 +50,8 @@ class ActivityLogCardViewModelSliceTest : BaseUnitTest() {
         activityLogCardViewModelSlice = ActivityLogCardViewModelSlice(
             cardsTracker,
             selectedSiteRepository,
-            appPrefsWrapper
+            appPrefsWrapper,
+            activityCardBuilder
         )
         navigationActions = mutableListOf()
         activityLogCardViewModelSlice.onNavigation.observeForever { event ->

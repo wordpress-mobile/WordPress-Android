@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.activity
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -30,7 +31,8 @@ class ActivityLogCardViewModelSlice @Inject constructor(
         return activityCardBuilder.build(getActivityLogCardBuilderParams(activityCardModel))
     }
 
-    fun getActivityLogCardBuilderParams(activityCardModel: CardModel.ActivityCardModel?) =
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal fun getActivityLogCardBuilderParams(activityCardModel: CardModel.ActivityCardModel?) =
         ActivityCardBuilderParams(
             activityCardModel = activityCardModel,
             onActivityItemClick = this::onActivityCardItemClick,
