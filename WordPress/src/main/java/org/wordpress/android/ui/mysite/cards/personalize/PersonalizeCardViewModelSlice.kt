@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.personalize
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
@@ -32,7 +33,8 @@ class PersonalizeCardViewModelSlice @Inject constructor(
         _uiModel.postValue(personalizeCardBuilder.build(getBuilderParams()))
     }
 
-    fun getBuilderParams() = PersonalizeCardBuilderParams(onClick = this::onCardClick)
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal fun getBuilderParams() = PersonalizeCardBuilderParams(onClick = this::onCardClick)
 
     fun onCardClick() {
         cardsTracker.trackCardItemClicked(
