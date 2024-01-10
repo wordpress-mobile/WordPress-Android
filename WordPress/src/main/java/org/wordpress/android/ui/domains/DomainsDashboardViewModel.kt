@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
+import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
@@ -121,8 +122,10 @@ class DomainsDashboardViewModel @Inject constructor(
 
         listItems += SiteDomains(
             UiStringText(freeDomainUrl),
-            UiStringRes(R.string.domains_site_domain_never_expires),
-            freeDomainIsPrimary
+            freeDomainIsPrimary,
+            UiStringRes(R.string.active),
+            getStatusColor(StatusType.SUCCESS),
+            UiStringRes(R.string.domains_site_domain_never_expires)
         )
 
         val customDomains = domains.filter { !it.wpcomDomain }
@@ -138,6 +141,13 @@ class DomainsDashboardViewModel @Inject constructor(
 
         _showProgressSpinner.postValue(false)
         _uiModel.postValue(listItems)
+    }
+
+    private fun getStatusColor(statusType: StatusType?) = when (statusType) {
+        StatusType.SUCCESS -> R.color.jetpack_green_50
+        StatusType.NEUTRAL -> R.color.gray_50
+        StatusType.WARNING -> R.color.orange_50
+        else -> R.color.red_50
     }
 
     private fun buildCtaItems(
@@ -193,7 +203,14 @@ class DomainsDashboardViewModel @Inject constructor(
 
             SiteDomains(
                 UiStringText(it.domain.orEmpty()),
-                if (it.expirySoon) {
+                it.primaryDomain,
+                allDomainsDomain?.domainStatus?.status?.let { status ->
+                    UiStringText(status)
+                } ?: UiStringRes(R.string.error),
+                getStatusColor(allDomainsDomain?.domainStatus?.statusType),
+                if (!it.hasRegistration) {
+                    null
+                } else if (it.expirySoon) {
                     UiStringText(
                         htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                             R.string.domains_site_domain_expires_soon,
@@ -206,7 +223,6 @@ class DomainsDashboardViewModel @Inject constructor(
                         listOf(UiStringText(it.expiry.orEmpty()))
                     )
                 },
-                it.primaryDomain,
                 allDomainsDomain?.let { ListItemInteraction.create(allDomainsDomain, this::onDomainClick) }
             )
         }

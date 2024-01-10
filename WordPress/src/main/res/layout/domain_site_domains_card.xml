@@ -22,7 +22,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium_large"
             android:text="@string/domains_site_domain_never_expires"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            app:layout_constraintEnd_toStartOf="@id/chevron"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toEndOf="@id/site_domain_status"
             app:layout_constraintTop_toBottomOf="@id/primary_site_domain_chip" />
 
         <com.google.android.material.chip.Chip
@@ -44,6 +47,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/site_domain"
             app:textStartPadding="@dimen/margin_small" />
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceBody2"
+            android:id="@+id/site_domain_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium_large"
+            android:drawablePadding="8dp"
+            android:drawableStart="@drawable/ic_dot_white_8dp"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/primary_site_domain_chip"
+            tools:text="Active" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/site_domain"
