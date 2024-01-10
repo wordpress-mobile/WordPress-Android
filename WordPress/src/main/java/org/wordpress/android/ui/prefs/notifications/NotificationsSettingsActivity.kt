@@ -8,6 +8,9 @@ import android.widget.CompoundButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.commit
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +32,8 @@ import javax.inject.Named
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarListener {
+class NotificationsSettingsActivity : LocaleAwareActivity(),
+    MainSwitchToolbarListener, PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     @Inject
     lateinit var updateNotificationSettingsUseCase: UpdateNotificationSettingsUseCase
 
@@ -52,10 +56,9 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
         setUpMainSwitch()
 
         if (savedInstanceState == null) {
-            @Suppress("DEPRECATION")
-            fragmentManager.beginTransaction()
-                .add(R.id.fragment_container, NotificationsSettingsFragment())
-                .commit()
+            supportFragmentManager.commit {
+                add(R.id.fragment_container, NotificationsSettingsFragment())
+            }
         }
 
         messageContainer = findViewById(R.id.notifications_settings_message_container)
@@ -80,6 +83,33 @@ class NotificationsSettingsActivity : LocaleAwareActivity(), MainSwitchToolbarLi
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    @Suppress("DEPRECATION")
+    override fun onPreferenceStartFragment(caller: PreferenceFragmentCompat, pref: Preference): Boolean {
+        val args = pref.extras
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(
+            classLoader,
+            pref.fragment!!
+        )
+
+        val titleView = findViewById<TextView>(R.id.toolbar_title)
+        titleView.text = pref.title
+
+        fragment.arguments = args
+        fragment.setTargetFragment(caller, 0)
+        // Replace the existing Fragment with the new Fragment.
+        supportFragmentManager.commit {
+            setCustomAnimations(
+                R.anim.fade_in,
+                R.anim.fade_out,
+                R.anim.fade_in,
+                R.anim.fade_out,
+            )
+            replace(R.id.fragment_container, fragment)
+            addToBackStack(null)
+        }
+        return true
     }
 
     @Subscribe(threadMode = MAIN)
