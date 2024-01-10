@@ -2695,6 +2695,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "deep_link_failed";
             case READER_DROPDOWN_MENU_OPENED:
                 return "reader_dropdown_menu_opened";
+            case READER_DROPDOWN_MENU_ITEM_TAPPED:
+                return "reader_dropdown_menu_item_tapped";
         }
         return null;
     }
