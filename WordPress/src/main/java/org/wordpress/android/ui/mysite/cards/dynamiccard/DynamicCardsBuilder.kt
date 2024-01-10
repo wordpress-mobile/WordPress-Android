@@ -8,14 +8,12 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DynamicCar
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.config.DynamicDashboardCardsFeatureConfig
-import org.wordpress.android.util.config.FeatureFlagConfig
 import javax.inject.Inject
 
 class DynamicCardsBuilder @Inject constructor(
     private val urlUtils: UrlUtilsWrapper,
     private val deepLinkHandlers: DeepLinkHandlers,
     private val dynamicDashboardCardsFeatureConfig: DynamicDashboardCardsFeatureConfig,
-    private val featureFlagConfig: FeatureFlagConfig,
 ) {
     fun build(params: DynamicCardsBuilderParams, order: CardOrder): List<Dynamic>? {
         if (!dynamicDashboardCardsFeatureConfig.isEnabled() || !shouldBuildCard(params, order)) {
@@ -29,7 +27,7 @@ class DynamicCardsBuilder @Inject constructor(
     }
 
     private fun convertToDynamicCards(params: DynamicCardsBuilderParams, order: CardOrder): List<Dynamic> {
-        val cards = params.dynamicCards?.dynamicCards?.filter { it.order == order && it.isEnabled() }.orEmpty()
+        val cards = params.dynamicCards?.dynamicCards?.filter { it.order == order }.orEmpty()
         return cards.map { card ->
             Dynamic(
                 id = card.id,
@@ -46,14 +44,6 @@ class DynamicCardsBuilder @Inject constructor(
                 onHideMenuItemClick = ListItemInteraction.create(card.id, params.onHideMenuItemClick),
             )
         }
-    }
-
-    fun DynamicCardModel.isEnabled(): Boolean {
-        // If there is no feature flag or there is no such remote feature flag, then the card is enabled
-        if (remoteFeatureFlag.isNullOrEmpty() ||
-            featureFlagConfig.getString(requireNotNull(remoteFeatureFlag)).isEmpty()
-        ) return true
-        return featureFlagConfig.isEnabled(requireNotNull(remoteFeatureFlag))
     }
 
     private fun getActionSource(
