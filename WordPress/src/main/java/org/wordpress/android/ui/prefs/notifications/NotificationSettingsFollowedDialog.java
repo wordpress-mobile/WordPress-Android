@@ -3,7 +3,6 @@ package org.wordpress.android.ui.prefs.notifications;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +14,8 @@ import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -52,7 +53,7 @@ public class NotificationSettingsFollowedDialog extends DialogFragment implement
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
         @SuppressLint("InflateParams")
         View layout = inflater.inflate(R.layout.followed_sites_dialog, null);
 
@@ -88,7 +89,7 @@ public class NotificationSettingsFollowedDialog extends DialogFragment implement
             }
         }
 
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(requireActivity());
         builder.setTitle(getString(R.string.notification_settings_followed_dialog_title));
         builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(R.string.cancel, this);
@@ -122,10 +123,7 @@ public class NotificationSettingsFollowedDialog extends DialogFragment implement
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        // TODO: android.app.Fragment  is deprecated since Android P.
-        // Needs to be replaced with android.support.v4.app.Fragment
-        // See https://developer.android.com/reference/android/app/Fragment
-        android.app.Fragment target = getTargetFragment();
+        Fragment target = getTargetFragment();
 
         if (target != null) {
             target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getResultIntent());
