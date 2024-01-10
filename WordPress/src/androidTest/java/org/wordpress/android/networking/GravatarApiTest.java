@@ -21,6 +21,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okio.Buffer;
 
+import com.gravatar.GravatarApi;
+
 @HiltAndroidTest
 public class GravatarApiTest {
     @Rule
