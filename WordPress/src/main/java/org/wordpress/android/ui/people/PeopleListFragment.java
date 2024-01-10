@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.FilterCriteria;
+import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.RoleUtils;
@@ -44,7 +45,6 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.JetpackBrandingUtils;
-import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -476,7 +476,6 @@ public class PeopleListFragment extends Fragment {
 
         @Override public void onViewRecycled(@NonNull ViewHolder holder) {
             super.onViewRecycled(holder);
-            PeopleViewHolder peopleViewHolder = (PeopleViewHolder) holder;
         }
 
         public class PeopleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

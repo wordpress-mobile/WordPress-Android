@@ -87,7 +87,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
 
             assertThat(navigationActions)
                 .containsOnly(
-                    SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl(
+                    SiteNavigationAction.OpenExternalUrl(
                         TodaysStatsCardBuilder.URL_GET_MORE_VIEWS_AND_TRAFFIC
                     )
                 )

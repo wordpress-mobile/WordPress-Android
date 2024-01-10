@@ -10,6 +10,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 object DashboardCardTypography {
+    val title: TextStyle
+        @Composable
+        get() = MaterialTheme.typography.bodyLarge.copy(
+            fontWeight = FontWeight.SemiBold,
+            color = colors.onSurface.copy(alpha = ContentAlpha.high)
+        )
+
     val smallTitle: TextStyle
         @Composable
         get() = MaterialTheme.typography.bodyLarge.copy(
@@ -28,9 +35,7 @@ object DashboardCardTypography {
 
     val detailText: TextStyle
         @Composable
-        get() = MaterialTheme.typography.bodyLarge.copy(
-            fontWeight = FontWeight.Normal,
-            fontSize = 14.sp,
+        get() = MaterialTheme.typography.bodyMedium.copy(
             color = colors.onSurface.copy(alpha = ContentAlpha.medium)
         )
 

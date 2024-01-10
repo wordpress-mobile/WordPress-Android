@@ -35,6 +35,7 @@
                 <data android:host="post" />
                 <data android:host="notifications" />
                 <data android:host="home" />
+                <data android:host="media" />
             </intent-filter>
         </activity>
 

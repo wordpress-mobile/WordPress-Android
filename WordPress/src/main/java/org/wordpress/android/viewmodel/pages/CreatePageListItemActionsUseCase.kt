@@ -5,7 +5,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.pages.PagesListAction
 import org.wordpress.android.ui.pages.PagesListAction.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PagesListAction.COPY
-import org.wordpress.android.ui.pages.PagesListAction.COPY_LINK
 import org.wordpress.android.ui.pages.PagesListAction.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PagesListAction.MOVE_TO_TRASH
@@ -14,6 +13,7 @@ import org.wordpress.android.ui.pages.PagesListAction.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PagesListAction.SET_AS_HOMEPAGE
 import org.wordpress.android.ui.pages.PagesListAction.SET_AS_POSTS_PAGE
 import org.wordpress.android.ui.pages.PagesListAction.SET_PARENT
+import org.wordpress.android.ui.pages.PagesListAction.SHARE
 import org.wordpress.android.ui.pages.PagesListAction.VIEW_PAGE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
@@ -57,7 +57,7 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
         return mutableListOf(
             VIEW_PAGE,
             SET_PARENT,
-            COPY_LINK,
+            SHARE,
             MOVE_TO_DRAFT,
             MOVE_TO_TRASH
         ).apply {
@@ -81,7 +81,7 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
         return mutableListOf(
             VIEW_PAGE,
             COPY,
-            COPY_LINK,
+            SHARE,
             SET_PARENT
         ).apply {
             if (siteModel.isUsingWpComRestApi &&
@@ -112,7 +112,7 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
     }
 
     private fun getDraftsPageActions(uploadUiState: PostUploadUiState): List<PagesListAction> {
-        return mutableListOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, COPY_LINK).apply {
+        return mutableListOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, SHARE).apply {
             if (canCancelPendingAutoUpload(uploadUiState)) {
                 add(CANCEL_AUTO_UPLOAD)
             }

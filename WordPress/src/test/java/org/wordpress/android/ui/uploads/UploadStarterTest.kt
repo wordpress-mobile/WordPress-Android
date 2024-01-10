@@ -143,7 +143,8 @@ class UploadStarterTest : BaseUnitTest() {
         verify(uploadServiceFacade, times(draftPosts.size + draftPages.size)).uploadPost(
             context = any(),
             post = any(),
-            trackAnalytics = any()
+            trackAnalytics = any(),
+            sourceForLogging = any(),
         )
     }
 
@@ -166,7 +167,8 @@ class UploadStarterTest : BaseUnitTest() {
         verify(uploadServiceFacade, times(0)).uploadPost(
             context = any(),
             post = any(),
-            trackAnalytics = any()
+            trackAnalytics = any(),
+            sourceForLogging = any(),
         )
     }
 
@@ -188,7 +190,8 @@ class UploadStarterTest : BaseUnitTest() {
         verify(uploadServiceFacade, times(draftPosts.size + draftPages.size)).uploadPost(
             context = any(),
             post = any(),
-            trackAnalytics = any()
+            trackAnalytics = any(),
+            sourceForLogging = any(),
         )
     }
 
@@ -211,7 +214,8 @@ class UploadStarterTest : BaseUnitTest() {
         verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
             context = any(),
             post = any(),
-            trackAnalytics = any()
+            trackAnalytics = any(),
+            sourceForLogging = any(),
         )
     }
 
@@ -241,7 +245,8 @@ class UploadStarterTest : BaseUnitTest() {
         verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
             context = any(),
             post = any(),
-            trackAnalytics = any()
+            trackAnalytics = any(),
+            sourceForLogging = any(),
         )
     }
 
@@ -283,7 +288,8 @@ class UploadStarterTest : BaseUnitTest() {
         verify(uploadServiceFacade, times(expectedUploadPostsAndPages.size)).uploadPost(
             context = any(),
             post = argWhere { expectedUploadPostsAndPages.contains(it) },
-            trackAnalytics = any()
+            trackAnalytics = any(),
+            sourceForLogging = any(),
         )
         verify(
             uploadServiceFacade,
@@ -315,7 +321,8 @@ class UploadStarterTest : BaseUnitTest() {
         verify(uploadServiceFacade, never()).uploadPost(
             context = any(),
             post = any(),
-            trackAnalytics = any()
+            trackAnalytics = any(),
+            sourceForLogging = any(),
         )
     }
 
@@ -333,7 +340,8 @@ class UploadStarterTest : BaseUnitTest() {
         verify(uploadServiceFacade, never()).uploadPost(
             context = any(),
             post = any(),
-            trackAnalytics = any()
+            trackAnalytics = any(),
+            sourceForLogging = any(),
         )
     }
 
@@ -351,7 +359,8 @@ class UploadStarterTest : BaseUnitTest() {
         verify(uploadServiceFacade, times(1)).uploadPost(
             context = any(),
             post = any(),
-            trackAnalytics = any()
+            trackAnalytics = any(),
+            sourceForLogging = any(),
         )
     }
 
@@ -373,7 +382,8 @@ class UploadStarterTest : BaseUnitTest() {
         verify(uploadServiceFacade, never()).uploadPost(
             context = any(),
             post = any(),
-            trackAnalytics = any()
+            trackAnalytics = any(),
+            sourceForLogging = any(),
         )
     }
 
@@ -395,7 +405,8 @@ class UploadStarterTest : BaseUnitTest() {
         verify(uploadServiceFacade, times(1)).uploadPost(
             context = any(),
             post = any(),
-            trackAnalytics = any()
+            trackAnalytics = any(),
+            sourceForLogging = any(),
         )
     }
 
@@ -416,7 +427,8 @@ class UploadStarterTest : BaseUnitTest() {
         verify(uploadServiceFacade, never()).uploadPost(
             context = any(),
             post = any(),
-            trackAnalytics = any()
+            trackAnalytics = any(),
+            sourceForLogging = any(),
         )
     }
 
@@ -436,7 +448,8 @@ class UploadStarterTest : BaseUnitTest() {
         verify(uploadServiceFacade, never()).uploadPost(
             context = any(),
             post = any(),
-            trackAnalytics = any()
+            trackAnalytics = any(),
+            sourceForLogging = any(),
         )
     }
 
@@ -463,7 +476,8 @@ class UploadStarterTest : BaseUnitTest() {
         verify(uploadServiceFacade, never()).uploadPost(
             context = any(),
             post = any(),
-            trackAnalytics = any()
+            trackAnalytics = any(),
+            sourceForLogging = any(),
         )
     }
 

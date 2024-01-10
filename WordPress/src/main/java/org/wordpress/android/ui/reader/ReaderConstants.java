@@ -18,7 +18,6 @@ public class ReaderConstants {
 
     public static final int READER_MAX_USERS_TO_DISPLAY = 500; // max # users to show in ReaderUserListActivity
     public static final long READER_AUTO_UPDATE_DELAY_MINUTES = 10; // 10 minute delay between automatic updates
-    public static final int READER_MAX_RECOMMENDED_TO_REQUEST = 20; // max # of recommended blogs to request
 
     // min width for an image to be suitable featured image
     public static final int MIN_FEATURED_IMAGE_WIDTH = 640;

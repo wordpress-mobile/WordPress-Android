@@ -175,7 +175,8 @@ class UploadStarter @Inject constructor(
                         uploadServiceFacade.uploadPost(
                             context = context,
                             post = post,
-                            trackAnalytics = false
+                            trackAnalytics = false,
+                            sourceForLogging = "UploadStarter#upload"
                         )
                     }
             }

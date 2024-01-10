@@ -1,2 +1,0 @@
-- Inactive social icons and Synced Pattern titles are no longer invisible in block-based themes using dark mode. Good try, fellas, but you’re not as ninja as you think.
-- In the Classic editor, you can now convert your content into blocks with the click of a button.

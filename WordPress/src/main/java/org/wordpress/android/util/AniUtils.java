@@ -15,8 +15,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 
-import org.wordpress.android.R;
-
 public class AniUtils {
     public enum Duration {
         SHORT,
@@ -47,18 +45,6 @@ public class AniUtils {
         startAnimation(target, aniResId, null);
     }
 
-    public static void startAnimation(View target, int aniResId, int duration) {
-        if (target == null) {
-            return;
-        }
-
-        Animation animation = AnimationUtils.loadAnimation(target.getContext(), aniResId);
-        if (animation != null) {
-            animation.setDuration(duration);
-            target.startAnimation(animation);
-        }
-    }
-
     public static void startAnimation(View target, int aniResId, AnimationListener listener) {
         if (target == null) {
             return;
@@ -71,51 +57,6 @@ public class AniUtils {
             }
             target.startAnimation(animation);
         }
-    }
-
-    /*
-     * in/out animation for floating action button
-     */
-    public static void showFab(final View view, final boolean show) {
-        if (view == null) {
-            return;
-        }
-
-        Context context = view.getContext();
-        int fabHeight = context.getResources()
-                       .getDimensionPixelSize(R.dimen.design_fab_size);
-        int fabMargin = context.getResources().getDimensionPixelSize(R.dimen.fab_margin);
-        int max = (fabHeight + fabMargin) * 2;
-        float fromY = (show ? max : 0f);
-        float toY = (show ? 0f : max);
-
-        ObjectAnimator anim = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, fromY, toY);
-        if (show) {
-            anim.setInterpolator(new DecelerateInterpolator());
-        } else {
-            anim.setInterpolator(new AccelerateInterpolator());
-        }
-        anim.setDuration(show ? Duration.LONG.toMillis(context) : Duration.SHORT.toMillis(context));
-
-        anim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                if (view.getVisibility() != View.VISIBLE) {
-                    view.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                if (!show) {
-                    view.setVisibility(View.GONE);
-                }
-            }
-        });
-
-        anim.start();
     }
 
     /*

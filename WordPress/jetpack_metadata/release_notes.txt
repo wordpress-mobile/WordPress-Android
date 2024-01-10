@@ -1,3 +1,4 @@
-- The All Domains screen lets you manage all your domains in the app.
-- Posts & Pages has improved display options and an expanded context menu.
-- We fixed block editor issues caused by pasting deeply nested content, or using text colors in older site themes.
+No updates this week! Enjoy these reindeer facts:
+- Male reindeer shed their antlers in fall and females in spring, so Santa’s reindeer are female.
+- Reindeer don’t actually have red noses.
+- Santa hasn’t eaten milk and cookies since 2003 because Blitzen always gets there first.

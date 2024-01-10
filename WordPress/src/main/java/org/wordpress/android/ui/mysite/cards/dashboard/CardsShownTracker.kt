@@ -5,7 +5,6 @@ import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainTransferCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardPlansCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
@@ -72,16 +71,16 @@ class CardsShownTracker @Inject constructor(
                 Type.BLOGGING_PROMPT.label
             )
         )
+        is Card.BloganuaryNudgeCardModel -> trackCardShown(
+            Pair(
+                card.type.toTypeValue().label,
+                Type.BLOGANUARY_NUDGE.label
+            )
+        )
         is Card.BlazeCard.PromoteWithBlazeCard -> trackCardShown(
             Pair(
                 card.type.toTypeValue().label,
                 BlazeSubtype.NO_CAMPAIGNS.label
-            )
-        )
-        is DomainTransferCardModel -> trackCardShown(
-            Pair(
-                card.type.toTypeValue().label,
-                Type.DASHBOARD_CARD_DOMAIN_TRANSFER.label
             )
         )
         is Card.BlazeCard.BlazeCampaignsCardModel -> trackCardShown(

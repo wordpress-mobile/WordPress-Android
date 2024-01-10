@@ -51,12 +51,13 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard.IconState
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.WpSotw2023NudgeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
@@ -76,12 +77,13 @@ import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
+import org.wordpress.android.ui.mysite.cards.dashboard.bloganuary.BloganuaryNudgeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.dashboard.domaintransfer.DomainTransferCardViewModel
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.plans.PlansCardUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsViewModelSlice
+import org.wordpress.android.ui.mysite.cards.dynamiccard.DynamicCardsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardBuilder
@@ -96,6 +98,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
+import org.wordpress.android.ui.mysite.cards.sotw2023.WpSotw2023NudgeCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
@@ -242,9 +245,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper
 
     @Mock
-    lateinit var domainTransferCardViewModel: DomainTransferCardViewModel
-
-    @Mock
     lateinit var todaysStatsViewModelSlice: TodaysStatsViewModelSlice
 
     @Mock
@@ -276,6 +276,16 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice
+
+    @Mock
+    lateinit var bloganuaryNudgeViewModelSlice: BloganuaryNudgeCardViewModelSlice
+
+    @Mock
+    lateinit var wpSotw2023NudgeCardViewModelSlice: WpSotw2023NudgeCardViewModelSlice
+
+    @Mock
+    lateinit var dynamicCardsViewModelSlice: DynamicCardsViewModelSlice
+
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<MySiteViewModel.State>
@@ -405,16 +415,25 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
         whenever(jetpackBrandingUtils.getBrandingTextForScreen(any())).thenReturn(mock())
         whenever(blazeCardViewModelSlice.refresh).thenReturn(refresh)
-        whenever(domainTransferCardViewModel.refresh).thenReturn(refresh)
         whenever(pagesCardViewModelSlice.getPagesCardBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(todaysStatsViewModelSlice.getTodaysStatsBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(postsCardViewModelSlice.getPostsCardBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(activityLogCardViewModelSlice.getActivityLogCardBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(personalizeCardViewModelSlice.getBuilderParams()).thenReturn(mock())
         whenever(personalizeCardBuilder.build(any())).thenReturn(mock())
+        whenever(dynamicCardsViewModelSlice.getBuilderParams(anyOrNull())).thenReturn(
+            MySiteCardAndItemBuilderParams.DynamicCardsBuilderParams(
+                mock(),
+                mock(),
+                mock(),
+                mock(),
+            )
+        )
+        whenever(bloganuaryNudgeViewModelSlice.getBuilderParams()).thenReturn(mock())
         whenever(bloggingPromptCardViewModelSlice.getBuilderParams(anyOrNull())).thenReturn(mock())
         whenever(quickLinksItemViewModelSlice.uiState).thenReturn(mock())
         whenever(quickStartRepository.quickStartMenuStep).thenReturn(mock())
+        whenever(wpSotw2023NudgeCardViewModelSlice.buildCard()).thenReturn(null)
 
         viewModel = MySiteViewModel(
             testDispatcher(),
@@ -455,8 +474,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             jetpackFeatureRemovalPhaseHelper,
             wpJetpackIndividualPluginHelper,
             blazeCardViewModelSlice,
-            domainTransferCardViewModel,
             pagesCardViewModelSlice,
+            dynamicCardsViewModelSlice,
             todaysStatsViewModelSlice,
             postsCardViewModelSlice,
             activityLogCardViewModelSlice,
@@ -467,7 +486,9 @@ class MySiteViewModelTest : BaseUnitTest() {
             bloggingPromptCardViewModelSlice,
             noCardsMessageViewModelSlice,
             siteInfoHeaderCardViewModelSlice,
-            quickLinksItemViewModelSlice
+            quickLinksItemViewModelSlice,
+            bloganuaryNudgeViewModelSlice,
+            wpSotw2023NudgeCardViewModelSlice,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1172,7 +1193,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite(isJetpackApp = true)
 
-        assertThat(getDashboardTabLastItems()[0]).isInstanceOf(SingleActionCard::class.java)
+        assertThat(getDashboardTabLastItems()[1]).isInstanceOf(SingleActionCard::class.java)
     }
 
     @Test
@@ -1184,7 +1205,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(isJetpackApp = true)
 
         val expected = R.string.jp_migration_success_card_message
-        assertThat((getDashboardTabLastItems()[0] as SingleActionCard).textResource).isEqualTo(expected)
+        assertThat((getDashboardTabLastItems()[1] as SingleActionCard).textResource).isEqualTo(expected)
     }
 
     @Test
@@ -1196,7 +1217,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(isJetpackApp = true)
 
         val expected = R.drawable.ic_wordpress_jetpack_appicon
-        assertThat((getDashboardTabLastItems()[0] as SingleActionCard).imageResource).isEqualTo(expected)
+        assertThat((getDashboardTabLastItems()[1] as SingleActionCard).imageResource).isEqualTo(expected)
     }
 
     @Test
@@ -1207,7 +1228,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(appStatus.isAppInstalled(packageName)).thenReturn(true)
         initSelectedSite(isJetpackApp = true)
 
-        (getDashboardTabLastItems()[0] as SingleActionCard).onActionClick.invoke()
+        (getDashboardTabLastItems()[1] as SingleActionCard).onActionClick.invoke()
 
         verify(contentMigrationAnalyticsTracker).trackPleaseDeleteWordPressCardTapped()
     }
@@ -1328,8 +1349,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        assertThat(getSiteMenuTabLastItems()[0]).isInstanceOf(JetpackFeatureCard::class.java)
-        assertThat(getMenuItems()[0]).isInstanceOf(JetpackFeatureCard::class.java)
+        assertThat(getSiteMenuTabLastItems()[1]).isInstanceOf(JetpackFeatureCard::class.java)
+        assertThat(getMenuItems()[1]).isInstanceOf(JetpackFeatureCard::class.java)
     }
 
     @Test
@@ -1424,6 +1445,24 @@ class MySiteViewModelTest : BaseUnitTest() {
             assertThat(viewModel.onShowJetpackIndividualPluginOverlay.value?.peekContent()).isNull()
         }
 
+    @Test
+    fun `when sotw card is not null then it is shown in the site menu`() {
+        whenever(wpSotw2023NudgeCardViewModelSlice.buildCard()).thenReturn(mock())
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems().filterIsInstance(WpSotw2023NudgeCardModel::class.java)).isNotEmpty
+    }
+
+    @Test
+    fun `when sotw card is null then it is not shown in the site menu`() {
+        whenever(wpSotw2023NudgeCardViewModelSlice.buildCard()).thenReturn(null)
+
+        initSelectedSite()
+
+        assertThat(getSiteMenuTabLastItems().filterIsInstance(WpSotw2023NudgeCardModel::class.java)).isEmpty()
+    }
+
     private fun findDomainRegistrationCard() =
         getLastItems().find { it is DomainRegistrationCard } as DomainRegistrationCard?
 
@@ -1447,7 +1486,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun getSiteMenuTabLastItems() = (uiModels.last() as SiteSelected).dashboardData
 
-    private fun getSiteInfoHeaderCard() = (uiModels.last() as SiteSelected).siteInfoHeader
+    private fun getSiteInfoHeaderCard() = (uiModels.last() as SiteSelected).dashboardData[0]
 
     @Suppress("LongParameterList")
     private fun initSelectedSite(

@@ -377,12 +377,6 @@ public class ReaderActivityLauncher {
         }
     }
 
-    public static void showReaderPhotoViewer(Context context,
-                                             String imageUrl,
-                                             EnumSet<PhotoViewerOption> imageOptions) {
-        showReaderPhotoViewer(context, imageUrl, null, null, imageOptions, 0, 0);
-    }
-
     public enum OpenUrlType {
         INTERNAL, EXTERNAL
     }

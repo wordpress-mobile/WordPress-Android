@@ -1,0 +1,4 @@
+23.8 :
+- L’éditeur de blocs affiche l’option « Dégrouper » uniquement pour les blocs imbriqués qui la prennent en charge.
+- Le réglage Optimiser les images utilise la taille et la qualité optimales par défaut.
+- Les thèmes s’installent correctement pour les sites disposant de plans Business et Commerce.

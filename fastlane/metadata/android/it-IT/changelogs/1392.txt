@@ -1,0 +1,4 @@
+23.8:
+- L'editor a blocchi mostra l'opzione "Non raggruppare" solo per i blocchi nidificati che supportano tale opzione.
+- L'impostazione Ottimizza le immagini utilizza dimensioni e qualità ottimali per impostazione predefinita.
+- I temi si installano correttamente sui siti con i piani Business e Commerce.

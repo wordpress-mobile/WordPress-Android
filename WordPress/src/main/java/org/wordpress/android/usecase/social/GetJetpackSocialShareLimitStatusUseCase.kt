@@ -10,9 +10,9 @@ class GetJetpackSocialShareLimitStatusUseCase @Inject constructor(
     private val siteStore: SiteStore,
 ) {
     suspend fun execute(siteModel: SiteModel): ShareLimit {
-        val isShareLimitEnabled =
-            !siteModel.isHostedAtWPCom
-                    && (siteModel.planActiveFeatures?.split(",")?.doesNotContain(FEATURE_SOCIAL_SHARES_1000) != false)
+        val isWPComSite = siteModel.isWPCom || siteModel.isWPComAtomic
+        val isShareLimitEnabled = !isWPComSite &&
+                    (siteModel.planActiveFeatures?.split(",")?.doesNotContain(FEATURE_SOCIAL_SHARES_1000) != false)
         val result = siteStore.fetchJetpackSocial(siteModel)
         return if (isShareLimitEnabled && result is FetchedJetpackSocialResult.Success) {
             with(result.jetpackSocial) {

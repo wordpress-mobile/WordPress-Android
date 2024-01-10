@@ -11,15 +11,12 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderIframeScanner;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DateTimeUtilsWrapper;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
-import java.text.BreakIterator;
 import java.util.Iterator;
 
 public class ReaderPost {
@@ -341,41 +338,6 @@ public class ReaderPost {
         post.setTags(tags);
     }
 
-    /*
-     * extracts a title from a post's excerpt - used when the post has no title
-     */
-    private static String extractTitle(final String excerpt, int maxLen) {
-        if (TextUtils.isEmpty(excerpt)) {
-            return null;
-        }
-
-        if (excerpt.length() < maxLen) {
-            return excerpt.trim();
-        }
-
-        StringBuilder result = new StringBuilder();
-        BreakIterator wordIterator = BreakIterator.getWordInstance();
-        wordIterator.setText(excerpt);
-        int start = wordIterator.first();
-        int end = wordIterator.next();
-        int totalLen = 0;
-        while (end != BreakIterator.DONE) {
-            String word = excerpt.substring(start, end);
-            result.append(word);
-            totalLen += word.length();
-            if (totalLen >= maxLen) {
-                break;
-            }
-            start = end;
-            end = wordIterator.next();
-        }
-
-        if (totalLen == 0) {
-            return null;
-        }
-        return result.toString().trim() + "...";
-    }
-
     // --------------------------------------------------------------------------------------------
 
     public String getAuthorName() {
@@ -568,10 +530,6 @@ public class ReaderPost {
         this.mSecondaryTag = StringUtils.notNullStr(tagName);
     }
 
-    public boolean hasSecondaryTag() {
-        return !TextUtils.isEmpty(mSecondaryTag);
-    }
-
     public Organization getOrganization() {
         return Organization.fromOrgId(organizationId);
     }
@@ -590,10 +548,6 @@ public class ReaderPost {
 
     public void setAttachmentsJson(String json) {
         mAttachmentsJson = StringUtils.notNullStr(json);
-    }
-
-    public boolean hasAttachments() {
-        return !TextUtils.isEmpty(mAttachmentsJson);
     }
 
     /*
@@ -644,16 +598,8 @@ public class ReaderPost {
         return !TextUtils.isEmpty(mFeaturedVideo);
     }
 
-    public boolean hasPostAvatar() {
-        return !TextUtils.isEmpty(mPostAvatar);
-    }
-
     public boolean hasBlogName() {
         return !TextUtils.isEmpty(mBlogName);
-    }
-
-    public boolean hasAuthorName() {
-        return !TextUtils.isEmpty(mAuthorName);
     }
 
     public boolean hasAuthorFirstName() {
@@ -779,46 +725,10 @@ public class ReaderPost {
     }
 
     /*
-     * returns the avatar url as a photon url set to the passed size
-     */
-    private transient String mAvatarForDisplay;
-
-    public String getPostAvatarForDisplay(int size) {
-        if (mAvatarForDisplay == null) {
-            if (!hasPostAvatar()) {
-                return "";
-            }
-            mAvatarForDisplay = GravatarUtils.fixGravatarUrl(mPostAvatar, size);
-        }
-        return mAvatarForDisplay;
-    }
-
-    /*
-     * returns the blog's blavatar url as a photon url set to the passed size
-     */
-    private transient String mBlavatarForDisplay;
-
-    public String getPostBlavatarForDisplay(int size) {
-        if (mBlavatarForDisplay == null) {
-            if (!hasBlogUrl()) {
-                return "";
-            }
-            mBlavatarForDisplay = GravatarUtils.blavatarFromUrl(getBlogUrl(), size);
-        }
-        return mBlavatarForDisplay;
-    }
-
-    /*
      * converts iso8601 pubDate to a java date for display - this is the date that appears on posts
      */
     private transient java.util.Date mDateDisplay;
 
-    public java.util.Date getDisplayDate() {
-        if (mDateDisplay == null) {
-            mDateDisplay = DateTimeUtils.dateFromIso8601(this.mDatePublished);
-        }
-        return mDateDisplay;
-    }
 
     public java.util.Date getDisplayDate(DateTimeUtilsWrapper dateTimeUtilsWrapper) {
         if (mDateDisplay == null) {

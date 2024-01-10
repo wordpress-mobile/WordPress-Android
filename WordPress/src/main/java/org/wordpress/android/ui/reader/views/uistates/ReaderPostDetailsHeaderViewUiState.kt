@@ -11,6 +11,7 @@ sealed class ReaderPostDetailsHeaderViewUiState {
         val tagItemsVisibility: Boolean,
         val blogSectionUiState: ReaderBlogSectionUiState,
         val followButtonUiState: FollowButtonUiState,
-        val dateLine: String
+        val dateLine: String,
+        val interactionSectionUiState: InteractionSectionUiState,
     ) : ReaderPostDetailsHeaderViewUiState()
 }

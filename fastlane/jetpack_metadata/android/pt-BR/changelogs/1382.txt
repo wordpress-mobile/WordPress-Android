@@ -1,5 +1,0 @@
-23.6:
-- Novas opções de domínio/plano e telas de pagamento no processo de criação do site
-- A navegação do meu site tem links para seções comuns
-- Ícones sociais inativos e títulos de padrões sincronizados agora ficam visíveis em temas baseados em blocos que usam o modo escuro
-- O conteúdo pode ser convertido em blocos no editor clássico
