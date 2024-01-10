@@ -9,6 +9,8 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
@@ -210,6 +212,108 @@ class ReaderTrackerTest {
     fun `Should track dropdown menu opened correctly`() {
         tracker.trackDropdownMenuOpened()
         verify(analyticsTrackerWrapper).track(AnalyticsTracker.Stat.READER_DROPDOWN_MENU_OPENED)
+    }
+
+    @Test
+    fun `Should track dropdown menu item Discover tapped`() {
+        tracker.trackDropdownMenuItemTapped(
+            ReaderTag(
+                "slug",
+                "displayName",
+                "title",
+                ReaderTag.DISCOVER_PATH,
+                ReaderTagType.DEFAULT,
+            )
+        )
+        verify(analyticsTrackerWrapper).track(
+            stat = AnalyticsTracker.Stat.READER_DROPDOWN_MENU_ITEM_TAPPED,
+            properties = mapOf("id" to "discover"),
+        )
+    }
+
+    @Test
+    fun `Should track dropdown menu item Subscriptions tapped`() {
+        tracker.trackDropdownMenuItemTapped(
+            ReaderTag(
+                "slug",
+                "displayName",
+                "title",
+                ReaderTag.FOLLOWING_PATH,
+                ReaderTagType.DEFAULT,
+            )
+        )
+        verify(analyticsTrackerWrapper).track(
+            stat = AnalyticsTracker.Stat.READER_DROPDOWN_MENU_ITEM_TAPPED,
+            properties = mapOf("id" to "following"),
+        )
+    }
+
+    @Test
+    fun `Should track dropdown menu item Saved tapped`() {
+        tracker.trackDropdownMenuItemTapped(
+            ReaderTag(
+                "slug",
+                "displayName",
+                "title",
+                null,
+                ReaderTagType.BOOKMARKED,
+            )
+        )
+        verify(analyticsTrackerWrapper).track(
+            stat = AnalyticsTracker.Stat.READER_DROPDOWN_MENU_ITEM_TAPPED,
+            properties = mapOf("id" to "saved"),
+        )
+    }
+
+    @Test
+    fun `Should track dropdown menu item Liked tapped`() {
+        tracker.trackDropdownMenuItemTapped(
+            ReaderTag(
+                "slug",
+                "displayName",
+                "title",
+                ReaderTag.LIKED_PATH,
+                ReaderTagType.DEFAULT,
+            )
+        )
+        verify(analyticsTrackerWrapper).track(
+            stat = AnalyticsTracker.Stat.READER_DROPDOWN_MENU_ITEM_TAPPED,
+            properties = mapOf("id" to "liked"),
+        )
+    }
+
+    @Test
+    fun `Should track dropdown menu item Automattic tapped`() {
+        tracker.trackDropdownMenuItemTapped(
+            ReaderTag(
+                "slug",
+                "displayName",
+                "title",
+                "/read/a8c",
+                ReaderTagType.DEFAULT,
+            )
+        )
+        verify(analyticsTrackerWrapper).track(
+            stat = AnalyticsTracker.Stat.READER_DROPDOWN_MENU_ITEM_TAPPED,
+            properties = mapOf("id" to "a8c"),
+        )
+    }
+
+    @Test
+    fun `Should track dropdown menu custom list item tapped`() {
+        tracker.trackDropdownMenuItemTapped(
+            ReaderTag(
+                "slug",
+                "displayName",
+                "title",
+                "/read/list/",
+                ReaderTagType.DEFAULT,
+            )
+        )
+        verify(analyticsTrackerWrapper).track(
+            stat = AnalyticsTracker.Stat.READER_DROPDOWN_MENU_ITEM_TAPPED,
+            properties = mapOf("id" to "list"),
+        )
     }
 
     private fun addToDate(date: Date, seconds: Int): Date {
