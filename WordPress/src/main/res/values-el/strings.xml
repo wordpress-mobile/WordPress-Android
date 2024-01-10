@@ -67,9 +67,7 @@ Language: el_GR
     <string name="post_settings_publish">Δημοσίευση</string>
     <string name="negative_prefix">-%s</string>
     <string name="my_site_bottom_sheet_add_page">Σελίδες του ιστότοπου</string>
-    <string name="reader_filter_sites_title">Ιστότοποι</string>
     <string name="reader_save_for_later_display_name">Αποθηκεύτηκε</string>
-    <string name="reader_filter_tags_title">Θέματα</string>
     <string name="gutenberg_native_take_a_video">Λήψη βίντεο</string>
     <string name="gutenberg_native_take_a_photo">Λήψη φωτογραφίας</string>
     <string name="gutenberg_native_start_writing">Ξεκινήστε να γράφετε …</string>
@@ -469,7 +467,6 @@ Language: el_GR
     <string name="connect_more">Συνδέστε Έναν Άλλο Ιστότοπο</string>
     <string name="next">Επόμενο</string>
     <string name="me_profile_photo">Φωτογραφία προφίλ</string>
-    <string name="turn_on">Ενεργοποίηση</string>
     <string name="post_title">Τίτλος</string>
     <string name="menu_redo">Επανάληψη</string>
     <string name="menu_undo">Αναίρεση</string>
@@ -561,11 +558,6 @@ Language: el_GR
     <string name="editor_post_saved_online">Το άρθρο αποθηκεύτηκε διαδικτυακά</string>
     <string name="site_settings_image_quality_hint">Ποιότητα εικόνων. Υψηλότερες τιμές σημαίνουν εικόνες καλύτερης ποιότητας.</string>
     <string name="site_settings_optimize_images_summary">Ενεργοποιήστε για αλλαγή μεγέθους και συμπίεσης εικόνων</string>
-    <string name="media_encoder_quality_maximum">Μέγιστο</string>
-    <string name="media_encoder_quality_very_high">Πολύ Υψηλό</string>
-    <string name="media_encoder_quality_high">Υψηλό</string>
-    <string name="media_encoder_quality_medium">Μεσαίο</string>
-    <string name="media_encoder_quality_low">Χαμηλό</string>
     <string name="media_upload_state_uploaded">Μεταφορτώθηκε</string>
     <string name="media_upload_state_deleted">Διαγράφηκε</string>
     <string name="media_upload_state_deleting">Γίνεται διαγραφή</string>

@@ -1,0 +1,4 @@
+23.8:
+- Blockredigeraren visar endast alternativet "avgruppera" för inbäddade block som stöder detta.
+- Inställningen Optimera bilder använder optimal storlek och kvalitet som standard.
+- Teman installeras korrekt för webbplatser med Business- och Commerce-paket.

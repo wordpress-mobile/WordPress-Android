@@ -30,6 +30,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.databinding.HistoryDetailContainerFragmentBinding;
 import org.wordpress.android.editor.EditorMediaUtils;
+import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.android.fluxc.model.revisions.RevisionModel;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
@@ -245,7 +246,10 @@ public class HistoryDetailContainerFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.history_load) {
             Intent intent = new Intent();
-            intent.putExtra(KEY_REVISION, mRevision);
+            SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(WordPress.getContext());
+            if (db != null) {
+                db.addParcel(KEY_REVISION, mRevision);
+            }
 
             requireActivity().setResult(Activity.RESULT_OK, intent);
             requireActivity().finish();

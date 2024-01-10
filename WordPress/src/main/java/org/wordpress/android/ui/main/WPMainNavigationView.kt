@@ -1,17 +1,22 @@
 package org.wordpress.android.ui.main
 
 import android.content.Context
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.setPadding
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -71,6 +76,9 @@ class WPMainNavigationView @JvmOverloads constructor(
         MaterialR.dimen.material_emphasis_disabled
     )
 
+    val disabledColorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(0f) })
+    val enabledColorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(1f) })
+
     @Inject
     lateinit var meGravatarLoader: MeGravatarLoader
 
@@ -126,8 +134,11 @@ class WPMainNavigationView @JvmOverloads constructor(
             if (i == getPosition(ME)) {
                 loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
             }
-
             itemView.addView(customView)
+        }
+
+        if(getMainPageIndex() != getPosition(ME)) {
+            setImageViewSelected(getPosition(ME), false)
         }
 
         currentPosition = getMainPageIndex()
@@ -138,6 +149,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             AppLog.d(AppLog.T.MAIN, "Attempted to load an empty Gravatar URL!")
             return
         }
+        imgIcon.setPadding(resources.getDimensionPixelSize(R.dimen.navbar_me_icon_padding))
         AppLog.d(AppLog.T.MAIN, meGravatarLoader.constructGravatarUrl(avatarUrl))
         imgIcon.let {
             meGravatarLoader.load(
@@ -201,8 +213,18 @@ class WPMainNavigationView @JvmOverloads constructor(
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val position = getPositionForItemId(item.itemId)
         currentPosition = position
+        performHapticFeedback()
         pageListener.onPageChanged(position)
         return true
+    }
+
+    private fun performHapticFeedback() {
+        val position = currentPosition
+        getItemView(position)?.run {
+            performHapticFeedback(
+                HapticFeedbackConstants.VIRTUAL_KEY
+            )
+        }
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
@@ -246,7 +268,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         setImageViewSelected(position, true)
 
-        if(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures())
+        if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures())
             AppPrefs.setMainPageIndex(0)
         else AppPrefs.setMainPageIndex(position)
 
@@ -272,8 +294,19 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     private fun setImageViewSelected(position: Int, isSelected: Boolean) {
         getImageViewForPosition(position)?.let {
+            if(position == getPosition(ME)) {
+                if(!isSelected){
+                    it.colorFilter = disabledColorFilter
+                } else
+                    it.colorFilter = enabledColorFilter
+            }
+
             it.isSelected = isSelected
             it.alpha = if (isSelected) 1f else unselectedButtonAlpha
+            if(it.isSelected) {
+                val pop = AnimationUtils.loadAnimation(it.context, R.anim.bottom_nav_icon_pop)
+                it.startAnimation(pop)
+            }
         }
     }
 
@@ -288,10 +321,10 @@ class WPMainNavigationView @JvmOverloads constructor(
     @DrawableRes
     private fun getDrawableResForPosition(position: Int): Int {
         return when (getPageTypeOrNull(position)) {
-            MY_SITE -> R.drawable.ic_my_sites_white_24dp
-            READER -> R.drawable.ic_reader_white_24dp
-            NOTIFS -> R.drawable.ic_bell_white_24dp
-            else -> R.drawable.ic_user_primary_white_24
+            MY_SITE -> R.drawable.ic_home_selected
+            READER -> R.drawable.ic_reader_selected
+            NOTIFS -> R.drawable.ic_notifications_selected
+            else -> R.drawable.ic_me_bottom_nav
         }
     }
 
@@ -386,9 +419,11 @@ class WPMainNavigationView @JvmOverloads constructor(
                 READER -> if (shouldUseStaticPostersFragment)
                     JetpackStaticPosterFragment.newInstance(UiData.READER)
                 else ReaderFragment()
+
                 NOTIFS -> if (shouldUseStaticPostersFragment)
                     JetpackStaticPosterFragment.newInstance(UiData.NOTIFICATIONS)
                 else NotificationsListFragment.newInstance()
+
                 ME -> MeFragment.newInstance()
             }
             fragmentManager?.beginTransaction()

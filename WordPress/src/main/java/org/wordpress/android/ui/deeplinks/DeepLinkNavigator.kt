@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.LoginForResult
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditor
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenEditorForPost
@@ -31,8 +32,8 @@ import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
 class DeepLinkNavigator
-@Inject constructor() {
-    @Suppress("ComplexMethod")
+@Inject constructor(private val activityNavigator: ActivityNavigator) {
+    @Suppress("ComplexMethod", "LongMethod")
     fun handleNavigationAction(navigateAction: NavigateAction, activity: AppCompatActivity) {
         when (navigateAction) {
             LoginForResult -> ActivityLauncher.loginForDeeplink(activity)
@@ -83,6 +84,13 @@ class DeepLinkNavigator
                 ActivityLauncher.openJetpackForDeeplink(activity, navigateAction.action, navigateAction.uri)
             is NavigateAction.OpenJetpackStaticPosterView ->
                 ActivityLauncher.showJetpackStaticPoster(activity)
+            is NavigateAction.OpenMediaForSite -> activityNavigator.openMediaInNewStack(activity, navigateAction.site)
+            NavigateAction.OpenMedia -> activityNavigator.openMediaInNewStack(activity)
+            is NavigateAction.OpenMediaPickerForSite -> activityNavigator.openMediaPickerInNewStack(
+                activity,
+                navigateAction.site
+            )
+            NavigateAction.DomainManagement -> ActivityLauncher.openDomainManagement(activity)
         }
         if (navigateAction != LoginForResult) {
             activity.finish()
@@ -114,5 +122,9 @@ class DeepLinkNavigator
         object OpenLoginPrologue : NavigateAction()
         data class OpenJetpackForDeepLink(val action: String?, val uri: UriWrapper) : NavigateAction()
         object OpenJetpackStaticPosterView : NavigateAction()
+        data class OpenMediaForSite(val site: SiteModel) : NavigateAction()
+        object OpenMedia : NavigateAction()
+        data class OpenMediaPickerForSite(val site: SiteModel) : NavigateAction()
+        object DomainManagement : NavigateAction()
     }
 }

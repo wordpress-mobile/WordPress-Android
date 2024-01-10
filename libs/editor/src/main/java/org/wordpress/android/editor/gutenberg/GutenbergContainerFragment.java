@@ -1,9 +1,11 @@
 package org.wordpress.android.editor.gutenberg;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
@@ -14,6 +16,7 @@ import com.facebook.react.bridge.WritableNativeMap;
 import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.R;
+import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.GutenbergProps;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
@@ -21,6 +24,8 @@ import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBlockTypeImpressionsEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBackHandlerEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnConnectionStatusEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOptionsListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
@@ -53,11 +58,12 @@ public class GutenbergContainerFragment extends Fragment {
     private boolean mHasReceivedAnyContent;
 
     private WPAndroidGlueCode mWPAndroidGlueCode;
-    public static GutenbergContainerFragment newInstance(GutenbergPropsBuilder gutenbergPropsBuilder) {
+    public static GutenbergContainerFragment newInstance(Context context, GutenbergPropsBuilder gutenbergPropsBuilder) {
         GutenbergContainerFragment fragment = new GutenbergContainerFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_GUTENBERG_PROPS_BUILDER, gutenbergPropsBuilder);
-        fragment.setArguments(args);
+        SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(context);
+        if (db != null) {
+            db.addParcel(ARG_GUTENBERG_PROPS_BUILDER, gutenbergPropsBuilder);
+        }
         return fragment;
     }
 
@@ -92,6 +98,8 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnSendEventToHostListener onSendEventToHostListener,
                                   OnToggleUndoButtonListener onToggleUndoButtonListener,
                                   OnToggleRedoButtonListener onToggleRedoButtonListener,
+                                  OnConnectionStatusEventListener onConnectionStatusEventListener,
+                                  OnBackHandlerEventListener onBackHandlerEventListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
@@ -117,6 +125,8 @@ public class GutenbergContainerFragment extends Fragment {
                     onSendEventToHostListener,
                     onToggleUndoButtonListener,
                     onToggleRedoButtonListener,
+                    onConnectionStatusEventListener,
+                    onBackHandlerEventListener,
                     isDarkMode);
     }
 
@@ -124,7 +134,11 @@ public class GutenbergContainerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        GutenbergPropsBuilder gutenbergPropsBuilder = getArguments().getParcelable(ARG_GUTENBERG_PROPS_BUILDER);
+        GutenbergPropsBuilder gutenbergPropsBuilder = null;
+        SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(getContext());
+        if (db != null) {
+            gutenbergPropsBuilder = db.getParcel(ARG_GUTENBERG_PROPS_BUILDER, GutenbergPropsBuilder.CREATOR);
+        }
 
         Consumer<Exception> exceptionLogger = null;
         Consumer<String> breadcrumbLogger = null;
@@ -160,6 +174,22 @@ public class GutenbergContainerFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (mWPAndroidGlueCode.shouldHandleBackPress()) {
+                    mWPAndroidGlueCode.onBackPressed();
+                } else {
+                    if (isEnabled()) {
+                        setEnabled(false); // Disable this callback
+                        requireActivity().onBackPressed(); // Bubble up the onBackPressed event
+                        setEnabled(true); // Re-enable this callback
+                    }
+                }
+            }
+        };
+
+        getActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         mWPAndroidGlueCode.onResume(this, getActivity());
     }
 
@@ -312,5 +342,9 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void sendToJSFeaturedImageId(int mediaId) {
         mWPAndroidGlueCode.sendToJSFeaturedImageId(mediaId);
+    }
+
+    public void onConnectionStatusChange(boolean isConnected) {
+        mWPAndroidGlueCode.connectionStatusChange(isConnected);
     }
 }

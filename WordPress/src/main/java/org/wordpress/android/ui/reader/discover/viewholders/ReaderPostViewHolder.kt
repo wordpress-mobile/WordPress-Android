@@ -109,7 +109,7 @@ class ReaderPostViewHolder(
         )
         state.blogSection.blogSectionClickData?.onBlogSectionClicked?.let {
             root.setOnClickListener {
-                state.blogSection.blogSectionClickData.onBlogSectionClicked.invoke(state.postId, state.blogId)
+                state.blogSection.blogSectionClickData.onBlogSectionClicked.invoke()
             }
         } ?: run {
             root.setOnClickListener(null)

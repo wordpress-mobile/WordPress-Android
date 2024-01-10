@@ -81,7 +81,8 @@ class WPJetpackIndividualPluginFragment : BottomSheetDialogFragment() {
         when (actionEvent) {
             is ActionEvent.PrimaryButtonClick -> activityLauncher.openPlayStoreLink(
                 requireActivity(),
-                ActivityLauncherWrapper.JETPACK_PACKAGE_NAME
+                ActivityLauncherWrapper.JETPACK_PACKAGE_NAME,
+                ActivityLauncherWrapper.CAMPAIGN_INDIVIDUAL_PLUGIN
             )
 
             is ActionEvent.Dismiss -> dismiss()

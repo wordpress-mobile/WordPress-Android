@@ -1,0 +1,4 @@
+23.8:
+- Der Block-Editor zeigt die Option „Gruppierung aufheben“ nur für verschachtelte Blöcke, die diese Option unterstützen.
+- Die Einstellung „Bilder optimieren“ nutzt standardmäßig die optimale Größe und Qualität.
+- Themes werden für Websites, die Business- und Commerce-Tarife verwenden, ordnungsgemäß installiert.

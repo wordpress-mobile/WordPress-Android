@@ -22,7 +22,7 @@
             style="@style/SiteTagBottomSheetTitle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/reader_filter_sites_title" />
+            android:text="@string/reader_filter_by_blog_title" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/edit_subscriptions"

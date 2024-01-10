@@ -23,6 +23,8 @@ import org.wordpress.android.util.AccessibilityUtils;
  * The view include title, message, positive button, negative button, and neutral button.  Any empty or null view is
  * hidden.  The only required view is message.
  */
+
+// TODO: 26/12/23 Remove this old view class /
 public class WPDialogSnackbar {
     private Snackbar mSnackbar;
     private View mContentView;
@@ -93,21 +95,6 @@ public class WPDialogSnackbar {
                 }
             });
         }
-    }
-
-    public WPDialogSnackbar setNegativeButton(CharSequence text, View.OnClickListener listener) {
-        setButtonTextAndVisibility((Button) mContentView.findViewById(R.id.button_negative), text, listener);
-        return this;
-    }
-
-    public WPDialogSnackbar setNeutralButton(CharSequence text, View.OnClickListener listener) {
-        setButtonTextAndVisibility((Button) mContentView.findViewById(R.id.button_neutral), text, listener);
-        return this;
-    }
-
-    public WPDialogSnackbar setPositiveButton(CharSequence text, View.OnClickListener listener) {
-        setButtonTextAndVisibility((Button) mContentView.findViewById(R.id.button_positive), text, listener);
-        return this;
     }
 
     public WPDialogSnackbar setTitle(@NonNull CharSequence text) {

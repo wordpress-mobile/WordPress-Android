@@ -785,6 +785,20 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         verify(observer, times(1)).onChanged(anyOrNull())
     }
 
+    @Test
+    fun `requests my site dashboard refresh when requestMySiteDashboardRefresh is called`() {
+        startViewModelWithDefaultParameters()
+
+        var observerCalledCount = 0
+        viewModel.mySiteDashboardRefreshRequested.observeForever {
+            observerCalledCount++
+        }
+
+        viewModel.requestMySiteDashboardRefresh()
+
+        assertThat(observerCalledCount).isEqualTo(1)
+    }
+
     private fun startViewModelWithDefaultParameters(
         isWhatsNewFeatureEnabled: Boolean = true,
         isCreateFabEnabled: Boolean = true,

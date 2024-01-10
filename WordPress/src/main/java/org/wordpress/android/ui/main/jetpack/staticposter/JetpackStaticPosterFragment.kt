@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.ui.ActivityLauncherWrapper
+import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.CAMPAIGN_STATIC_POSTER
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.theme.AppTheme
@@ -59,7 +60,8 @@ class JetpackStaticPosterFragment : Fragment() {
             when (event) {
                 is Event.PrimaryButtonClick -> activityLauncher.openPlayStoreLink(
                     requireActivity(),
-                    JETPACK_PACKAGE_NAME
+                    JETPACK_PACKAGE_NAME,
+                    CAMPAIGN_STATIC_POSTER
                 )
                 is Event.SecondaryButtonClick -> event.url?.let {
                     WPWebViewActivity.openURL(requireContext(), UrlUtils.addUrlSchemeIfNeeded(it, true))

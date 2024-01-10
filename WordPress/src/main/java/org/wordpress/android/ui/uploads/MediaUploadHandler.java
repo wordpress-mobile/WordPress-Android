@@ -395,7 +395,8 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         if (properties != null) {
             mediaProperties.putAll(properties);
         }
-        AnalyticsTracker.track(stat, mediaProperties);
+        SiteModel site = mSiteStore.getSiteByLocalId(media.getLocalSiteId());
+        AnalyticsUtils.trackWithSiteDetails(stat, site, mediaProperties);
     }
 
     private boolean mediaAlreadyQueuedOrUploading(MediaModel mediaModel) {

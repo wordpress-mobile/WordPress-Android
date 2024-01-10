@@ -175,8 +175,8 @@ class SubfilterPagerAdapter(
 }
 
 enum class SubfilterCategory(@StringRes val titleRes: Int, val type: ItemType) : Parcelable {
-    SITES(R.string.reader_filter_sites_title, SITE),
-    TAGS(R.string.reader_filter_tags_title, TAG);
+    SITES(R.string.reader_filter_by_blog_title, SITE),
+    TAGS(R.string.reader_filter_by_tag_title, TAG);
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(type.ordinal)

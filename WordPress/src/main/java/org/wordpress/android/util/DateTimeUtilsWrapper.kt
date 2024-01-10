@@ -1,5 +1,6 @@
 package org.wordpress.android.util
 
+import android.icu.util.Calendar
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.ContextProvider
 import java.text.SimpleDateFormat
@@ -9,6 +10,7 @@ import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 import android.text.format.DateUtils
+import java.time.Instant
 
 class DateTimeUtilsWrapper @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
@@ -53,4 +55,10 @@ class DateTimeUtilsWrapper @Inject constructor(
         return DateUtils.getRelativeTimeSpanString(date.time, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
             .toString()
     }
+
+    fun getCalendarInstance(): Calendar {
+        return Calendar.getInstance()
+    }
+
+    fun getInstantNow(): Instant = Instant.now()
 }
