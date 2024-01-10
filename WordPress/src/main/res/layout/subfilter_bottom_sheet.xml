@@ -16,7 +16,7 @@
         android:id="@+id/title"
         style="@style/SiteTagBottomSheetTitle"
         android:layout_width="match_parent"
-        android:text="@string/reader_filter_sites_title" />
+        android:text="@string/reader_filter_by_blog_title" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
