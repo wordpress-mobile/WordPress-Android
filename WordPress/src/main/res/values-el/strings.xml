@@ -67,7 +67,6 @@ Language: el_GR
     <string name="post_settings_publish">Δημοσίευση</string>
     <string name="negative_prefix">-%s</string>
     <string name="my_site_bottom_sheet_add_page">Σελίδες του ιστότοπου</string>
-    <string name="reader_filter_sites_title">Ιστότοποι</string>
     <string name="reader_save_for_later_display_name">Αποθηκεύτηκε</string>
     <string name="gutenberg_native_take_a_video">Λήψη βίντεο</string>
     <string name="gutenberg_native_take_a_photo">Λήψη φωτογραφίας</string>

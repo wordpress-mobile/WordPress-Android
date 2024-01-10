@@ -1835,7 +1835,6 @@ Language: gl_ES
     <string name="reader_my_likes_display_name">Gústame</string>
     <string name="reader_discover_display_name">Descubre</string>
     <string name="reader_save_for_later_display_name">Gardados</string>
-    <string name="reader_filter_sites_title">Sitios</string>
     <string name="suffix_1_000_000_000_000_000_000">%sE</string>
     <string name="suffix_1_000_000_000_000_000">%sP</string>
     <string name="suffix_1_000_000_000_000">%sT</string>

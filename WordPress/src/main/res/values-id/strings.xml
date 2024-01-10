@@ -1832,7 +1832,6 @@ Language: id
     <string name="reader_my_likes_display_name">Suka</string>
     <string name="reader_discover_display_name">Temukan</string>
     <string name="reader_save_for_later_display_name">Disimpan</string>
-    <string name="reader_filter_sites_title">Situs</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>

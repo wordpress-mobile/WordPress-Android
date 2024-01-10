@@ -1371,7 +1371,6 @@ Language: pl
     <string name="suffix_1_000_000_000_000_000">%s bld</string>
     <string name="suffix_1_000_000_000_000">%s bln</string>
     <string name="suffix_1_000_000_000_000_000_000">%s tln</string>
-    <string name="reader_filter_sites_title">Witryny</string>
     <string name="reader_save_for_later_display_name">Zapisano</string>
     <string name="reader_discover_display_name">Odkrywaj</string>
     <string name="reader_my_likes_display_name">Polubienia</string>
