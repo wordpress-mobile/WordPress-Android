@@ -845,7 +845,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         for (String mediaId : mFailedMediaIds) {
             // upload progress should work on numeric mediaIds only
             if (!TextUtils.isEmpty(mediaId) && TextUtils.isDigitsOnly(mediaId)) {
-                getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(mediaId));
+                if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                    getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(mediaId));
+                } else {
+                    getGutenbergContainerFragment().mediaFileUploadPaused(Integer.valueOf(mediaId));
+                }
             } else {
                 getGutenbergContainerFragment().mediaFileSaveFailed(mediaId);
             }
@@ -1492,6 +1496,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onMediaUploadFailed(final String localMediaId) {
         getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(localMediaId));
+        mFailedMediaIds.add(localMediaId);
+        mUploadingMediaProgressMax.remove(localMediaId);
+    }
+
+    @Override
+    public void onMediaUploadPaused(final String localMediaId) {
+        getGutenbergContainerFragment().mediaFileUploadPaused(Integer.valueOf(localMediaId));
         mFailedMediaIds.add(localMediaId);
         mUploadingMediaProgressMax.remove(localMediaId);
     }

@@ -2,7 +2,7 @@
 
 24.1
 -----
-
+* [**] Image block media uploads display a custom error message when there is no internet connection [https://github.com/wordpress-mobile/WordPress-Android/pull/19878]
 
 24.0
 -----
