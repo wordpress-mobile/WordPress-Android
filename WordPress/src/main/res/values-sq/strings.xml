@@ -1826,7 +1826,6 @@ Language: sq_AL
     <string name="reader_my_likes_display_name">Pëlqime</string>
     <string name="reader_discover_display_name">Zbuloni</string>
     <string name="reader_save_for_later_display_name">U ruajt</string>
-    <string name="reader_filter_tags_title">Tema</string>
     <string name="reader_filter_sites_title">Sajte</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>

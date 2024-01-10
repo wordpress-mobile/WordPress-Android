@@ -1377,7 +1377,6 @@ Language: pl
     <string name="reader_my_likes_display_name">Polubienia</string>
     <string name="site_cannot_be_loaded">Nie możemy w tym momencie wyczytać danych dla twojej witryny. Proszę spróbować ponownie później.</string>
     <string name="posts_cannot_be_started">Nie możemy w tym momencie otworzyć wpisów. Proszę spróbować ponownie później</string>
-    <string name="reader_filter_tags_title">Tematy</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteka mediów WordPressa</string>
     <string name="gutenberg_native_unsupported">Niewspierane</string>
     <string name="gutenberg_native_ungroup">Rozgrupuj</string>

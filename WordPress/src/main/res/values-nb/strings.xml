@@ -705,7 +705,6 @@ Language: nb_NO
     <string name="reader_my_likes_display_name">Likinger</string>
     <string name="reader_discover_display_name">Oppdag</string>
     <string name="reader_save_for_later_display_name">Lagret</string>
-    <string name="reader_filter_tags_title">Emner</string>
     <string name="reader_filter_sites_title">Nettsteder</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>

@@ -1835,7 +1835,6 @@ Language: es
     <string name="reader_my_likes_display_name">Me gusta</string>
     <string name="reader_discover_display_name">Descubrir</string>
     <string name="reader_save_for_later_display_name">Guardado</string>
-    <string name="reader_filter_tags_title">Temas</string>
     <string name="reader_filter_sites_title">Sitios</string>
     <string name="suffix_1_000_000_000_000_000_000">%sE</string>
     <string name="suffix_1_000_000_000_000_000">%sP</string>

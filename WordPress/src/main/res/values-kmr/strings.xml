@@ -552,7 +552,6 @@ Language: ku_TR
     <string name="posts_cannot_be_started">Em aniha nikarin şandiyan vekin. Ji kerema xwe piştre dîsa biceribîne</string>
     <string name="site_cannot_be_loaded">Em aniha nikarin daneyan ji bo malpera te bar bikin. Piştre dîsa biceribîne</string>
     <string name="reader_save_for_later_display_name">Hat tomarkirin</string>
-    <string name="reader_filter_tags_title">Mijar</string>
     <string name="gutenberg_native_wordpress_media_library">Medyageha WordPress\'ê</string>
     <string name="gutenberg_native_start_writing">Dest bi nivîsandinê bike…</string>
     <string name="gutenberg_native_take_a_photo_or_video">Vîdyo an jî Wêne Bikişîne</string>

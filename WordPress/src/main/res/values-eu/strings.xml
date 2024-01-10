@@ -90,7 +90,6 @@ Language: eu_ES
     <string name="reader_my_likes_display_name">Atsegiteak</string>
     <string name="site_cannot_be_loaded">Ezin ditugu zure gunearentzako datuak kargatu orain. Mesedez, saiatu geroago</string>
     <string name="suffix_1_000">%sK</string>
-    <string name="reader_filter_tags_title">Gaiak</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress Media Liburutegia</string>
     <string name="gutenberg_native_unsupported">Ez Bateragarria</string>
     <string name="gutenberg_native_ungroup">Taldea desegin</string>
