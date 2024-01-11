@@ -32,6 +32,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.core.widget.NestedScrollView.OnScrollChangeListener;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.gravatar.GravatarApi;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
@@ -52,7 +53,6 @@ import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload
 import org.wordpress.android.fluxc.store.AccountStore.PushUsernamePayload;
 import org.wordpress.android.login.LoginBaseFormFragment;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
-import com.gravatar.GravatarApi;
 import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
@@ -88,6 +88,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -724,14 +725,19 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     protected void startGravatarUpload(final String filePath) {
         if (!TextUtils.isEmpty(filePath)) {
             final File file = new File(filePath);
+            if (!mAccount.hasAccessToken()) {
+                // FIXME: show a toast
+                return;
+            }
 
             if (file.exists()) {
                 startProgress(false);
-
-                GravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(), mAccountStore.getAccessToken(),
+                GravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(),
+                        Objects.requireNonNull(mAccountStore.getAccessToken()),
                         new GravatarApi.GravatarUploadListener() {
                             @Override
                             public void onSuccess() {
+                                // FIXME: log analytics
                                 endProgress();
                                 mPhotoUrl = GravatarUtils.fixGravatarUrl(mAccount.getAccount().getAvatarUrl(),
                                         getResources().getDimensionPixelSize(R.dimen.avatar_sz_large));
@@ -741,9 +747,10 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                             }
 
                             @Override
-                            public void onError() {
+                            public void onError(@NonNull String exceptionClass, @NonNull String exceptionMessage) {
                                 endProgress();
                                 showErrorDialogWithCloseButton(getString(R.string.signup_epilogue_error_avatar));
+                                // FIXME: log analytics
                                 AppLog.e(T.NUX, "Uploading image to Gravatar failed");
                             }
                         });
@@ -829,12 +836,19 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                         new GravatarApi.GravatarUploadListener() {
                             @Override
                             public void onSuccess() {
+                                // FIXME: log analytics
                                 AppLog.i(T.NUX, "Google avatar download and Gravatar upload succeeded.");
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_UNSUCCESSFUL);
                             }
 
                             @Override
-                            public void onError() {
+                            public void onError(String exceptionClass, String exceptionMessage) {
                                 AppLog.i(T.NUX, "Google avatar download and Gravatar upload failed.");
+                                // FIXME: Don't track exceptions caused by poor internet connectivity
+                                Map<String, Object> properties = new HashMap<>();
+                                properties.put("network_exception_class", exceptionClass);
+                                properties.put("network_exception_message", exceptionMessage);
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
                             }
                         });
             } catch (NullPointerException | URISyntaxException exception) {

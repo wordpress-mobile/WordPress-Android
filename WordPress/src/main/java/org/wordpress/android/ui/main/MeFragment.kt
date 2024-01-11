@@ -677,13 +677,19 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             return
         }
         binding?.showGravatarProgressBar(true)
-        GravatarApi.uploadGravatar(file, accountStore.account.email, accountStore.accessToken,
+        if (!accountStore.hasAccessToken()) {
+            // FIXME: Change the toast message
+            ToastUtils.showToast(activity, R.string.error_locating_image, SHORT);
+        }
+        GravatarApi.uploadGravatar(file, accountStore.account.email, accountStore.accessToken!!,
             object : GravatarUploadListener {
                 override fun onSuccess() {
+                    // FIXME: log analytics
                     EventBus.getDefault().post(GravatarUploadFinished(filePath, true))
                 }
 
-                override fun onError() {
+                override fun onError(exceptionClass: String, exceptionMessage: String) {
+                    // FIXME: log analytics
                     EventBus.getDefault().post(GravatarUploadFinished(filePath, false))
                 }
             })
