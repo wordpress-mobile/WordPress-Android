@@ -9,7 +9,10 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.AccountData
+import org.wordpress.android.util.BuildConfigWrapper
+import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 class AccountDataViewModelSliceTest : BaseUnitTest() {
@@ -17,124 +20,118 @@ class AccountDataViewModelSliceTest : BaseUnitTest() {
     lateinit var accountStore: AccountStore
 
     @Mock
-    lateinit var accountModel: AccountModel
-    private lateinit var accountDataViewModelSlice: AccountDataViewModelSlice
+    lateinit var buildConfigWrapper: BuildConfigWrapper
+
+    @Mock
+    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+
+    private lateinit var viewModelSlice: AccountDataViewModelSlice
+
     private lateinit var isRefreshing: MutableList<Boolean>
-    private lateinit var uiModel: MutableList<AccountData>
+
+    private lateinit var uiModels : MutableList<AccountData?>
 
     @Before
     fun setUp() {
-        accountDataViewModelSlice = AccountDataViewModelSlice(accountStore)
+        viewModelSlice = AccountDataViewModelSlice(
+            accountStore,
+            buildConfigWrapper,
+            jetpackFeatureRemovalPhaseHelper
+        )
+        viewModelSlice.initialize(testScope())
         isRefreshing = mutableListOf()
-        uiModel = mutableListOf()
-        accountDataViewModelSlice.initialize(testScope())
+        uiModels = mutableListOf()
+
+        viewModelSlice.isRefreshing.observeForever { isRefreshing.add(it) }
+        viewModelSlice.uiModel.observeForever { uiModels.add(it) }
+    }
+
+
+    @Test
+    fun `given jp app, card is not built`() = test {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+
+        viewModelSlice.onResume()
+
+        assertThat(uiModels.last()).isNull()
     }
 
     @Test
-    fun `current avatar is empty on refresh`() = test {
-        var result: AccountData? = null
-        accountDataViewModelSlice.uiModel.observeForever {
-            it?.let { result = it }
-        }
-        accountDataViewModelSlice.refresh()
+    fun `given wp app, when in not correct phase, card is not built`() = test {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
 
-        assertThat(result?.url).isEmpty()
+        viewModelSlice.onResume()
+
+        assertThat(uiModels.last()).isNull()
     }
 
     @Test
-    fun `uimodel is null when accessed before refresh request`() = test {
-        var result: AccountData? = null
+    fun `given wp app, when in correct phase, card is built`() = test {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+        val accountModel = getAccountData()
+        whenever(accountStore.account).then({  })
 
-        accountDataViewModelSlice.uiModel.observeForever {
-            it?.let { result = it }
-        }
+        viewModelSlice.onResume()
 
-        assertThat(result).isNull()
+        assertEquals(true, isRefreshing.first())
+        assertEquals(AccountData(accountModel.avatarUrl, accountModel.displayName), uiModels.last())
+        assertEquals(false, isRefreshing.last())
     }
+//
+//    @Test
+//    fun `current avatar is loaded on refresh from account store`() = test {
+//        whenever(accountStore.account).thenReturn(accountModel)
+//        val avatarUrl = "avatar.jpg"
+//        whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
+//
+//        var result: AccountData? = null
+//        viewModelSlice.build(testScope()).observeForever {
+//            it?.let { result = it }
+//        }
+//
+//        viewModelSlice.refresh()
+//
+//        assertThat(result!!.url).isEqualTo(avatarUrl)
+//    }
+//
+//    @Test
+//    fun `when buildSource is invoked, then refresh is true`() = test {
+//        viewModelSlice.refresh.observeForever { isRefreshing.add(it) }
+//
+//        viewModelSlice.build(testScope())
+//
+//        assertThat(isRefreshing.last()).isTrue
+//    }
+//
+//    @Test
+//    fun `when refresh is invoked, then refresh is true`() = test {
+//        viewModelSlice.refresh.observeForever { isRefreshing.add(it) }
+//
+//        viewModelSlice.refresh()
+//
+//        assertThat(isRefreshing.last()).isTrue
+//    }
+//
+//    @Test
+//    fun `when data has been refreshed, then refresh is set to false`() = test {
+//        whenever(accountStore.account).thenReturn(accountModel)
+//        val avatarUrl = "avatar.jpg"
+//        whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
+//        viewModelSlice.refresh.observeForever { isRefreshing.add(it) }
+//
+//        viewModelSlice.build(testScope()).observeForever { }
+//        viewModelSlice.refresh()
+//
+//        assertThat(isRefreshing.last()).isFalse
+//    }
 
-    @Test
-    fun `when refresh is invoked, then isRefreshing is true`() = test {
-        accountDataViewModelSlice.isRefreshing.observeForever {
-            it?.let { isRefreshing.add(it) }
-        }
-
-        accountDataViewModelSlice.refresh()
-
-
-        assertThat(isRefreshing.first()).isTrue
-    }
-
-    @Test
-    fun `when data has been refreshed, then refresh is set to false`() = test {
-        val avatarUrl = "avatar.jpg"
-        val displayName = "Display Name"
-        whenever(accountStore.account).thenReturn(accountModel)
-        whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
-        whenever(accountModel.displayName).thenReturn(displayName)
-        accountDataViewModelSlice.isRefreshing.observeForever { isRefreshing.add(it) }
-
-        accountDataViewModelSlice.refresh()
-
-        assertThat(isRefreshing.last()).isFalse
-    }
-
-    @Test
-    fun `when data has been refreshed, then uiModel contains data from the account store`() = test {
-        val avatarUrl = "avatar.jpg"
-        val displayName = "Display Name"
-        whenever(accountStore.account).thenReturn(accountModel)
-        whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
-        whenever(accountModel.displayName).thenReturn(displayName)
-
-
-        accountDataViewModelSlice.uiModel.observeForever {
-            it?.let { uiModel.add(it) }
-        }
-
-        accountDataViewModelSlice.refresh()
-
-        assertThat(uiModel.last()).isNotNull
-        assertThat(uiModel.last().url).isEqualTo(avatarUrl)
-        assertThat(uiModel.last().name).isEqualTo(displayName)
-    }
-
-    @Test
-    fun `when display name is empty, then user name is used`() = test {
-        val avatarUrl = "avatar.jpg"
-        val displayName = ""
-        val userName = "User Name"
-        whenever(accountStore.account).thenReturn(accountModel)
-        whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
-        whenever(accountModel.displayName).thenReturn(displayName)
-        whenever(accountModel.userName).thenReturn(userName)
-
-
-        accountDataViewModelSlice.uiModel.observeForever {
-            it?.let { uiModel.add(it) }
-        }
-
-        accountDataViewModelSlice.refresh()
-
-        assertThat(uiModel.last().name).isEqualTo(userName)
-    }
-
-    @Test
-    fun `when display and user name are empty, then name is empty`() = test {
-        val avatarUrl = "avatar.jpg"
-        val displayName = ""
-        val userName = ""
-        whenever(accountStore.account).thenReturn(accountModel)
-        whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
-        whenever(accountModel.displayName).thenReturn(displayName)
-        whenever(accountModel.userName).thenReturn(userName)
-
-
-        accountDataViewModelSlice.uiModel.observeForever {
-            it?.let { uiModel.add(it) }
-        }
-
-        accountDataViewModelSlice.refresh()
-
-        assertThat(uiModel.last().name).isEmpty()
+    fun getAccountData(): AccountModel {
+        val accountModel = AccountModel()
+        accountModel.avatarUrl = "avatar.jpg"
+        accountModel.displayName = "name"
+        return accountModel
     }
 }

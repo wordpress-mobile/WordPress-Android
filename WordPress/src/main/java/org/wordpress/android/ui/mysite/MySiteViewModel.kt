@@ -95,6 +95,7 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
     private val siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice,
+    private val accountDataViewModelSlice: AccountDataViewModelSlice,
     private val dashboardCardsViewModelSlice: DashboardCardsViewModelSlice,
     private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice
 ) : ScopedViewModel(mainDispatcher) {
@@ -155,7 +156,10 @@ class MySiteViewModel @Inject constructor(
             dashboardCardsViewModelSlice.refresh
         )
 
-    val isRefreshingOrLoading = dashboardCardsViewModelSlice.isRefreshing
+    val isRefreshingOrLoading = merge(
+        dashboardCardsViewModelSlice.isRefreshing,
+        accountDataViewModelSlice.isRefreshing
+    )
 
     private var shouldMarkUpdateSiteTitleTaskComplete = false
 
@@ -173,12 +177,15 @@ class MySiteViewModel @Inject constructor(
 
     val uiModel: LiveData<State> = merge(
         siteInfoHeaderCardViewModelSlice.uiModel,
+        accountDataViewModelSlice.uiModel,
         dashboardCardsViewModelSlice.uiModel,
         dashboardItemsViewModelSlice.uiModel
     ) { siteInfoHeaderCard,
+        accountData,
         dashboardCards,
         siteItems ->
-        val nonNullSiteInfoHeaderCard = siteInfoHeaderCard ?: return@merge buildNoSiteState(null, null)
+        val nonNullSiteInfoHeaderCard =
+            siteInfoHeaderCard ?: return@merge buildNoSiteState(accountData?.url, accountData?.name)
         return@merge if (!dashboardCards.isNullOrEmpty<MySiteCardAndItem>())
             SiteSelected(dashboardData = listOf(nonNullSiteInfoHeaderCard) + dashboardCards)
         else if (!siteItems.isNullOrEmpty<MySiteCardAndItem>())
@@ -192,6 +199,7 @@ class MySiteViewModel @Inject constructor(
         siteInfoHeaderCardViewModelSlice.initialize(viewModelScope)
         dashboardCardsViewModelSlice.initialize(viewModelScope)
         dashboardItemsViewModelSlice.initialize(viewModelScope)
+        accountDataViewModelSlice.initialize(viewModelScope)
     }
 
     private fun getPositionOfQuickStartItem(
@@ -205,16 +213,9 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun buildNoSiteState(accountUrl: String?, accountName: String?): NoSites {
-        // Hide actionable empty view image when screen height is under specified min height.
-        val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
-                displayUtilsWrapper.getWindowPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
-
-        val shouldShowAccountSettings = jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
         return NoSites(
-            shouldShowImage = shouldShowImage,
             avatarUrl = accountUrl,
             accountName = accountName,
-            shouldShowAccountSettings = shouldShowAccountSettings
         )
     }
 
@@ -258,22 +259,26 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun refresh(isPullToRefresh: Boolean = false) {
-        Log.e("MySiteViewModel", "refresh")
         if (isPullToRefresh) analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH)
         dashboardCardsViewModelSlice.onRefresh()
         dashboardItemsViewModelSlice.onRefresh()
+        accountDataViewModelSlice.onRefresh()
     }
 
     fun onResume() {
+        siteInfoHeaderCardViewModelSlice.onResume()
 //        mySiteSourceManager.onResume(isSiteSelected)
         isSiteSelected = false
         checkAndShowJetpackFullPluginInstallOnboarding()
         checkAndShowQuickStartNotice()
 //        bloggingPromptCardViewModelSlice.onResume(uiModel.value as? SiteSelected)
 //        dashboardCardPlansUtils.onResume(uiModel.value as? SiteSelected)
-        siteInfoHeaderCardViewModelSlice.onResume()
-        dashboardCardsViewModelSlice.onResume()
-        dashboardItemsViewModelSlice.onResume()
+        selectedSiteRepository.getSelectedSite()?.let {
+            dashboardCardsViewModelSlice.onResume()
+            dashboardItemsViewModelSlice.onResume()
+        }?: run {
+            accountDataViewModelSlice.onResume()
+        }
     }
 
     private fun checkAndShowJetpackFullPluginInstallOnboarding() {
@@ -351,6 +356,8 @@ class MySiteViewModel @Inject constructor(
         quickStartRepository.clear()
         dispatcher.unregister(this)
         dashboardCardsViewModelSlice.onCleared()
+        dashboardItemsViewModelSlice.onCleared()
+        accountDataViewModelSlice.onCleared()
         super.onCleared()
     }
 
@@ -524,10 +531,8 @@ class MySiteViewModel @Inject constructor(
         ) : State()
 
         data class NoSites(
-            val shouldShowImage: Boolean,
             val avatarUrl: String? = null,
             val accountName: String? = null,
-            val shouldShowAccountSettings: Boolean = false
         ) : State()
     }
 
@@ -547,7 +552,6 @@ class MySiteViewModel @Inject constructor(
     }
 
     companion object {
-        private const val MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE = 600
         private const val LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM = -1
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"

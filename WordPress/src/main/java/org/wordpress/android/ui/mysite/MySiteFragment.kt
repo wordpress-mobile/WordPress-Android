@@ -537,15 +537,16 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
         if (!noSitesView.actionableEmptyView.isVisible) {
             noSitesView.actionableEmptyView.setVisible(true)
-            noSitesView.actionableEmptyView.image.setVisible(state.shouldShowImage)
             viewModel.onActionableEmptyViewVisible()
-            showAvatarSettingsView(state)
         }
+        showAvatarSettingsView(state)
         siteTitle = getString(R.string.my_site_section_screen_title)
     }
 
     private fun MySiteFragmentBinding.showAvatarSettingsView(state: State.NoSites) {
-        if (state.shouldShowAccountSettings) {
+        // For a newly created account, avatar may be null
+        if (state.accountName != null || state.avatarUrl != null){
+            noSitesView.actionableEmptyView.image.setVisible(true)
             noSitesView.avatarAccountSettings.visibility = View.VISIBLE
             noSitesView.meDisplayName.text = state.accountName
             if (state.accountName.isNullOrEmpty()) {
