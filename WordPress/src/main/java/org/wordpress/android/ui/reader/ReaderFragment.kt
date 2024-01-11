@@ -384,6 +384,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
 
     private fun clearFilter() {
         val viewModel = getSubFilterViewModel() ?: return
-        viewModel.setDefaultSubfilter()
+        viewModel.setDefaultSubfilter(isClearingFilter = true)
     }
 }
