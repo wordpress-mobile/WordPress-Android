@@ -298,6 +298,18 @@ class EditorMedia @Inject constructor(
         listener.onMediaUploadFailed(media.id.toString())
     }
 
+    fun onMediaUploadPaused(listener: EditorMediaUploadListener, media: MediaModel, error: MediaError) = launch {
+        val properties: Map<String, Any?> = withContext(bgDispatcher) {
+            analyticsUtilsWrapper
+                .getMediaProperties(media.isVideo, null, media.filePath)
+                .also {
+                    it["error_type"] = error.type.name
+                }
+        }
+        analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_FAILED, properties)
+        listener.onMediaUploadPaused(media.id.toString())
+    }
+
     sealed class AddMediaToPostUiState(
         val editorOverlayVisibility: Boolean,
         val progressDialogUiState: ProgressDialogUiState

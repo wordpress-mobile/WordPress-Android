@@ -12,6 +12,7 @@ plugins {
     id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
     id "com.google.gms.google-services"
     id 'dagger.hilt.android.plugin'
+    id "org.jetbrains.kotlinx.kover"
 }
 
 sentry {
@@ -146,6 +147,7 @@ android {
         buildConfigField "boolean", "IN_APP_REVIEWS", "false"
         buildConfigField "boolean", "DYNAMIC_DASHBOARD_CARDS", "false"
         buildConfigField "boolean", "CLARITY_ANALYTICS_TRACKING", "false"
+        buildConfigField "boolean", "STATS_TRAFFIC_TAB", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
