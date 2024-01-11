@@ -11,6 +11,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.EDITOR_UPLOAD_MEDIA_FAILED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.EDITOR_UPLOAD_MEDIA_PAUSED
 import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
@@ -306,7 +307,8 @@ class EditorMedia @Inject constructor(
                     it["error_type"] = error.type.name
                 }
         }
-        analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_FAILED, properties)
+
+        analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_PAUSED, site, properties)
         listener.onMediaUploadPaused(media.id.toString())
     }
 
