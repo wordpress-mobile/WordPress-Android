@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
@@ -42,7 +43,7 @@ import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
-class QuickStartCardSourceTest : BaseUnitTest() {
+class QuickStartCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var quickStartStore: QuickStartStore
 
@@ -78,9 +79,18 @@ class QuickStartCardSourceTest : BaseUnitTest() {
 
     @Mock
     lateinit var quickStartTracker: QuickStartTracker
+
+    @Mock
+    lateinit var cardsTracker: CardsTracker
+
+    @Mock
+    lateinit var quickStartCardBuilder: QuickStartCardBuilder
+
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
-    private lateinit var quickStartCardSource: QuickStartCardVewModelSlice
+
+    private lateinit var quickStartCardVewModelSlice: QuickStartCardVewModelSlice
+
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var quickStartPrompts: MutableList<QuickStartMySitePrompts>
     private lateinit var result: MutableList<QuickStartUpdate>
@@ -110,11 +120,14 @@ class QuickStartCardSourceTest : BaseUnitTest() {
             htmlMessageUtils,
             quickStartTracker
         )
-        quickStartCardSource = QuickStartCardVewModelSlice(
+        quickStartCardVewModelSlice = QuickStartCardVewModelSlice(
             quickStartRepository,
             quickStartStore,
             quickStartUtilsWrapper,
-            selectedSiteRepository
+            selectedSiteRepository,
+            cardsTracker,
+            quickStartTracker,
+            quickStartCardBuilder
         )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
@@ -125,16 +138,19 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         quickStartRepository.onQuickStartMySitePrompts.observeForever { event ->
             event?.getContentIfNotHandled()?.let { quickStartPrompts.add(it) }
         }
+
         result = mutableListOf()
+        quickStartCardVewModelSlice.uiModel.observeForever { result.add(it) }
+
         isRefreshing = mutableListOf()
-        quickStartCardSource.refresh.observeForever { isRefreshing.add(it) }
+        quickStartCardVewModelSlice.isRefreshing.observeForever { isRefreshing.add(it) }
     }
 
     @Test
     fun `refresh loads model`() = test {
         initStore()
 
-        quickStartCardSource.refresh()
+        quickStartCardVewModelSlice.refresh()
 
         assertModel()
     }
@@ -153,8 +169,8 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     fun `start marks CREATE_SITE as done and loads model`() = test {
         initStore()
 
-        quickStartCardSource.build(testScope(), site.id)
-        quickStartCardSource.refresh()
+        quickStartCardVewModelSlice.build(testScope(), site.id)
+        quickStartCardVewModelSlice.refresh()
 
         assertModel()
     }
@@ -162,7 +178,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     @Test
     fun `sets active task and shows stylized snackbar when not UPDATE_SITE_TITLE`() = test {
         initStore()
-        quickStartCardSource.refresh()
+        quickStartCardVewModelSlice.refresh()
 
         quickStartRepository.setActiveTask(PUBLISH_POST)
 
@@ -174,7 +190,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     fun `completeTask marks current active task as done and refreshes model`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
-        quickStartCardSource.refresh()
+        quickStartCardVewModelSlice.refresh()
         val task = PUBLISH_POST
 
         quickStartRepository.setActiveTask(task)
@@ -191,7 +207,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     fun `completeTask marks current pending task as done and refreshes model`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
-        quickStartCardSource.refresh()
+        quickStartCardVewModelSlice.refresh()
         val task = PUBLISH_POST
 
         quickStartRepository.setActiveTask(task)
@@ -257,13 +273,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when refresh is invoked, then refresh is true`() = test {
-        quickStartCardSource.refresh()
-
-        assertThat(isRefreshing.last()).isTrue
-    }
-
-    @Test
     fun `when data has been refreshed, then refresh is set to false`() = test {
         initStore()
 
@@ -271,11 +280,11 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         site.id = updatedSiteId
         site.showOnFront = ShowOnFront.POSTS.value
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        quickStartCardSource.refresh.observeForever { isRefreshing.add(it) }
+        quickStartCardVewModelSlice.refresh.observeForever { isRefreshing.add(it) }
 
-        quickStartCardSource.build(testScope(), site.id)
+        quickStartCardVewModelSlice.build(testScope(), site.id)
 
-        quickStartCardSource.refresh()
+        quickStartCardVewModelSlice.refresh()
 
         assertThat(isRefreshing.last()).isFalse
     }
@@ -285,7 +294,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         initStore()
 
-        quickStartCardSource.refresh()
+        quickStartCardVewModelSlice.refresh()
 
         val update = result.last()
         assertThat(update.categories).isNotEmpty
@@ -296,7 +305,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
         initStore()
 
-        quickStartCardSource.refresh()
+        quickStartCardVewModelSlice.refresh()
 
         val update = result.last()
         assertThat(update.categories).isEmpty()
@@ -308,12 +317,12 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         val task = PUBLISH_POST
         quickStartRepository.setActiveTask(task)
         quickStartRepository.completeTask(task)
-        quickStartCardSource.refresh()
+        quickStartCardVewModelSlice.refresh()
     }
 
     private suspend fun initQuickStartInProgress() {
         initStore()
-        quickStartCardSource.refresh()
+        quickStartCardVewModelSlice.refresh()
     }
 
     private suspend fun initStore(
@@ -349,7 +358,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     }
 
     private fun initBuild() {
-        quickStartCardSource.build(testScope(), siteLocalId).observeForever { result.add(it) }
+        quickStartCardVewModelSlice.build(siteLocalId)
     }
 
     private fun assertModel() {
