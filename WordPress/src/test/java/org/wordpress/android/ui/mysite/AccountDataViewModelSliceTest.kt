@@ -80,53 +80,79 @@ class AccountDataViewModelSliceTest : BaseUnitTest() {
         assertEquals(AccountData(accountModel.avatarUrl, accountModel.displayName), uiModels.last())
         assertEquals(false, isRefreshing.last())
     }
-//
-//    @Test
-//    fun `current avatar is loaded on refresh from account store`() = test {
-//        whenever(accountStore.account).thenReturn(accountModel)
-//        val avatarUrl = "avatar.jpg"
-//        whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
-//
-//        var result: AccountData? = null
-//        viewModelSlice.build(testScope()).observeForever {
-//            it?.let { result = it }
-//        }
-//
-//        viewModelSlice.refresh()
-//
-//        assertThat(result!!.url).isEqualTo(avatarUrl)
-//    }
-//
-//    @Test
-//    fun `when buildSource is invoked, then refresh is true`() = test {
-//        viewModelSlice.refresh.observeForever { isRefreshing.add(it) }
-//
-//        viewModelSlice.build(testScope())
-//
-//        assertThat(isRefreshing.last()).isTrue
-//    }
-//
-//    @Test
-//    fun `when refresh is invoked, then refresh is true`() = test {
-//        viewModelSlice.refresh.observeForever { isRefreshing.add(it) }
-//
-//        viewModelSlice.refresh()
-//
-//        assertThat(isRefreshing.last()).isTrue
-//    }
-//
-//    @Test
-//    fun `when data has been refreshed, then refresh is set to false`() = test {
-//        whenever(accountStore.account).thenReturn(accountModel)
-//        val avatarUrl = "avatar.jpg"
-//        whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
-//        viewModelSlice.refresh.observeForever { isRefreshing.add(it) }
-//
-//        viewModelSlice.build(testScope()).observeForever { }
-//        viewModelSlice.refresh()
-//
-//        assertThat(isRefreshing.last()).isFalse
-//    }
+
+    @Test
+    fun `uimodel is null when accessed before refresh request`() = test {
+        var result: AccountData? = null
+
+        viewModelSlice.uiModel.observeForever {
+            it?.let { result = it }
+        }
+
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `when refresh is invoked, then isRefreshing is true`() = test {
+        viewModelSlice.onRefresh()
+
+
+        assertThat(isRefreshing.first()).isTrue
+    }
+
+    @Test
+    fun `when data has been refreshed, then refresh is set to false`() = test {
+        val accountModel = getAccountData()
+        whenever(accountStore.account).thenReturn(accountModel)
+
+        viewModelSlice.onRefresh()
+
+        assertThat(isRefreshing.last()).isFalse
+    }
+
+    @Test
+    fun `when data has been refreshed, then uiModel contains data from the account store`() = test {
+        val accountModel = getAccountData()
+        whenever(accountStore.account).thenReturn(accountModel)
+
+        viewModelSlice.onRefresh()
+
+        assertThat(uiModels.last()).isNotNull
+        assertThat(uiModels.last()?.url).isEqualTo(accountModel.avatarUrl)
+        assertThat(uiModels.last()?.name).isEqualTo(accountModel.displayName)
+    }
+
+    @Test
+    fun `when display name is empty, then user name is used`() = test {
+        val accountModel = getAccountData()
+        val userName1 = "User Name"
+        accountModel.apply {
+            displayName = ""
+            userName = userName1
+        }
+        whenever(accountStore.account).thenReturn(accountModel)
+
+        viewModelSlice.onRefresh()
+
+        assertThat(uiModels.last()?.name).isEqualTo(userName1)
+    }
+
+    @Test
+    fun `when display and user name are empty, then name is empty`() = test {
+        val avatarUrl = "avatar.jpg"
+        val displayName = ""
+        val userName = ""
+        val accountModel = getAccountData().apply {
+            this.avatarUrl = avatarUrl
+            this.displayName = displayName
+            this.userName = userName
+        }
+        whenever(accountStore.account).thenReturn(accountModel)
+
+        viewModelSlice.onRefresh()
+
+        assertThat(uiModels.last()?.name).isEmpty()
+    }
 
     fun getAccountData(): AccountModel {
         val accountModel = AccountModel()
