@@ -672,10 +672,12 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         GravatarApi.uploadGravatar(file, accountStore.account.email, accountStore.accessToken!!,
             object : GravatarUploadListener {
                 override fun onSuccess() {
+                    // FIXME: log analytics
                     EventBus.getDefault().post(GravatarUploadFinished(filePath, true))
                 }
 
                 override fun onError(exceptionClass: String, exceptionMessage: String) {
+                    // FIXME: log analytics
                     EventBus.getDefault().post(GravatarUploadFinished(filePath, false))
                 }
             })
