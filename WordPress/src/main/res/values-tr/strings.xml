@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-13 13:56:48+0000
+Translation-Revision-Date: 2024-01-03 12:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: tr
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_title_january">Bloganuary burada!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Başlayalım!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Blog istemlerini aç</string>
     <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary Ocak ayı boyunca size konular göndermek için Günlük Blog İstemlerini kullanacak.</string>
@@ -16,7 +17,6 @@ Language: tr
     <string name="bloganuary_dashboard_nudge_overlay_title">Bir ay sürecek yazma etkinliğimize katılın</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Blog yılı</string>
     <string name="bloganuary_dashboard_nudge_text">Yeni yılda blog yazma alışkanlığı oluşturmayı hedefleyen topluluk etkinliğimiz Bloganuary\'den Ocak ayı boyunca blog istemleri alacaksınız.</string>
-    <string name="bloganuary_dashboard_nudge_title">Bloganuary yaklaşıyor!</string>
     <string name="turn_off">Hayır, kapat</string>
     <string name="leave_on">Evet, açık kalsın</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Bu nedenle, bloku web tarayıcınızı kullanarak düzenlemenizi öneririz.</string>

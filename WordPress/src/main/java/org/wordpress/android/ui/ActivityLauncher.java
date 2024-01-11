@@ -54,6 +54,7 @@ import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListA
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
+import org.wordpress.android.ui.debug.preferences.DebugSharedPreferenceFlagsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
 import org.wordpress.android.ui.domains.DomainsDashboardActivity;
@@ -975,20 +976,6 @@ public class ActivityLauncher {
         }
     }
 
-    public static void openUrlForSite(@NonNull final Context context, @NonNull final String url,
-                                      @NonNull final SiteModel site) {
-        if (!TextUtils.isEmpty(site.getUsername()) && !TextUtils.isEmpty(site.getPassword())) {
-            // Show self-hosted sites as authenticated since we should have the username & password
-            WPWebViewActivity
-                    .openUrlByUsingBlogCredentials(context, site, null, url, new String[]{}, false, true,
-                            false);
-        } else {
-            // Show non-wp.com sites without a password unauthenticated. These would be Jetpack sites that are
-            // connected through REST API.
-            WPWebViewActivity.openURL(context, url, true, site.isPrivateWPComAtomic() ? site.getSiteId() : 0);
-        }
-    }
-
     public static void viewBlogAdmin(Context context, SiteModel site) {
         if (site == null || site.getAdminUrl() == null) {
             ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT);
@@ -1083,21 +1070,6 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
     }
 
-    public static void editStoryWithMediaIdsForResult(
-            Activity activity,
-            SiteModel site,
-            long[] mediaIds,
-            boolean launchingFromGutenberg
-    ) {
-        if (site == null) {
-            return;
-        }
-
-        Intent intent = new Intent(activity, StoryComposerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaBrowserActivity.RESULT_IDS, mediaIds);
-        activity.startActivityForResult(intent, RequestCodes.EDIT_STORY);
-    }
 
     public static void editStoryForResult(
             Activity activity,
@@ -1832,6 +1804,9 @@ public class ActivityLauncher {
         context.startActivity(new Intent(context, DebugCookiesActivity.class));
     }
 
+    public static void viewDebugSharedPreferenceFlags(@NonNull Context context) {
+        context.startActivity(new Intent(context, DebugSharedPreferenceFlagsActivity.class));
+    }
     public static void startQRCodeAuthFlow(@NonNull Context context) {
         QRCodeAuthActivity.start(context);
     }

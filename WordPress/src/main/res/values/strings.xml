@@ -945,6 +945,7 @@
     <string name="debug_settings_missing_developed_feature" translatable="false">Don\'t see a feature you\'re working on? Check that your feature config file is annotated with the FeatureInDevelopment annotation.</string>
     <string name="debug_settings_tools" translatable="false">Tools</string>
     <string name="debug_settings_force_show_weekly_roundup" translatable="false">Force show Weekly Roundup notification</string>
+    <string name="debug_settings_debug_flags_screen" translatable="false">All shared preference flags</string>
 
     <!-- Debug cookies -->
     <string name="debug_cookies_title" translatable="false">Debug cookies</string>
@@ -2692,16 +2693,14 @@
     <string name="domain_registration_state_picker_dialog_title">Select State</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
 
-    <string name="domains_primary_domain_caption">Your free WordPress.com domain is</string>
-    <string name="domains_primary_site_more_menu_change_site_domain">Change domain</string>
-    <string name="domains_primary_site_address">%s</string>
+    <string name="domains_site_domain">%s</string>
     <string name="domains_primary_site_domain_chip">Primary domain</string>
-    <string name="domains_site_domains">Your site domains</string>
+    <string name="domains_site_other_domains">Other domains for %s</string>
+    <string name="domains_free_domain">Your free WordPress.com domain</string>
     <string name="domains_site_domain_expires">Expires on %s</string>
+    <string name="domains_site_domain_never_expires">Never expires</string>
     <string name="domains_site_domain_expires_soon">&lt;span style="color:#d63638;"&gt;Expires on %s&lt;/span&gt;</string>
     <string name="domains_add_a_domain">Add a domain</string>
-    <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at %s</string>
-    <string name="domains_manage_domains">Manage Domains</string>
     <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>
     <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your plan</string>
     <string name="domains_paid_plan_add_your_domain_title">Add your domain</string>
@@ -4819,7 +4818,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="media_cannot_be_started">We cannot open media at the moment. Please try again later</string>
 
     <!-- Bloganuary -->
-    <string name="bloganuary_dashboard_nudge_title">Bloganuary is coming!</string>
+    <string name="bloganuary_dashboard_nudge_title_december">Bloganuary is coming!</string>
+    <string name="bloganuary_dashboard_nudge_title_january">Bloganuary is here!</string>
     <string name="bloganuary_dashboard_nudge_text">For the month of January, blogging prompts will come from Bloganuary — our community challenge to build a blogging habit for the new year.</string>
     <string name="bloganuary_dashboard_nudge_learn_more" translatable="false">@string/learn_more</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
@@ -4836,5 +4836,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_sotw_2023_dashboard_nudge_title" translatable="false">State of the Word 2023</string>
     <string name="wp_sotw_2023_dashboard_nudge_text" translatable="false">Check out WordPress co-founder Matt Mullenweg’s annual keynote to stay on top of what’s coming in 2024 and beyond.</string>
     <string name="wp_sotw_2023_dashboard_nudge_cta" translatable="false">Watch now</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">File type not supported as a media file.</string>
+    <string name="gutenberg_native_font_size_1_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Font Size, %1$s</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Network connection lost, working offline</string>
+    <string name="gutenberg_native_network_connection_re_established" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Network connection re-established</string>
+    <string name="gutenberg_native_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Working Offline</string>
 
 </resources>

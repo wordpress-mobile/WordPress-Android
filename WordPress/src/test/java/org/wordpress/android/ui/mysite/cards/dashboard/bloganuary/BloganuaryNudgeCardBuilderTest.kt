@@ -4,12 +4,13 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloganuaryNudgeCardBuilderParams
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.R
 
 class BloganuaryNudgeCardBuilderTest {
     @Test
     fun `GIVEN not eligible, WHEN build is called, THEN return null`() {
         val params = BloganuaryNudgeCardBuilderParams(
+            title = UiString.UiStringText("title"),
+            text = UiString.UiStringText("text"),
             isEligible = false,
             onLearnMoreClick = {},
             onMoreMenuClick = {},
@@ -24,6 +25,8 @@ class BloganuaryNudgeCardBuilderTest {
         var currentAction = ""
 
         val params = BloganuaryNudgeCardBuilderParams(
+            title = UiString.UiStringText("title"),
+            text = UiString.UiStringText("text"),
             isEligible = true,
             onLearnMoreClick = { currentAction = "onLearnMoreClick" },
             onMoreMenuClick = { currentAction = "onMoreMenuClick" },
@@ -32,8 +35,8 @@ class BloganuaryNudgeCardBuilderTest {
         val cardModel = BloganuaryNudgeCardBuilder().build(params)
 
         assertThat(cardModel!!).isNotNull
-        assertThat(cardModel.title).isEqualTo(UiString.UiStringRes(R.string.bloganuary_dashboard_nudge_title))
-        assertThat(cardModel.text).isEqualTo(UiString.UiStringRes(R.string.bloganuary_dashboard_nudge_text))
+        assertThat(cardModel.title).isEqualTo(UiString.UiStringText("title"))
+        assertThat(cardModel.text).isEqualTo(UiString.UiStringText("text"))
 
         // check if the callbacks are hooked correctly
         assertThat(currentAction).isEmpty()

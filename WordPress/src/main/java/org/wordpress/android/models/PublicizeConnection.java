@@ -1,7 +1,5 @@
 package org.wordpress.android.models;
 
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 
 import org.json.JSONArray;
@@ -85,10 +83,6 @@ public class PublicizeConnection {
         this.mExternalDisplayName = StringUtils.notNullStr(name);
     }
 
-    public boolean hasExternalDisplayName() {
-        return !TextUtils.isEmpty(mExternalDisplayName);
-    }
-
     public String getExternalId() {
         return StringUtils.notNullStr(mExternalId);
     }
@@ -105,20 +99,12 @@ public class PublicizeConnection {
         this.mRefreshUrl = StringUtils.notNullStr(url);
     }
 
-    public boolean hasRefreshUrl() {
-        return !TextUtils.isEmpty(mRefreshUrl);
-    }
-
     public String getExternalProfilePictureUrl() {
         return StringUtils.notNullStr(mExternalProfilePictureUrl);
     }
 
     public void setExternalProfilePictureUrl(String url) {
         this.mExternalProfilePictureUrl = StringUtils.notNullStr(url);
-    }
-
-    public boolean hasExternalProfilePictureUrl() {
-        return !TextUtils.isEmpty(mExternalProfilePictureUrl);
     }
 
     public String getStatus() {

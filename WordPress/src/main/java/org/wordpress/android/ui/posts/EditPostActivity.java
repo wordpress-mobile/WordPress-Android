@@ -3669,12 +3669,21 @@ public class EditPostActivity extends LocaleAwareActivity implements
         new Handler(Looper.getMainLooper()).post(this::invalidateOptionsMenu);
     }
 
+    @Override public void onBackHandlerButton() {
+        handleBackPressed();
+    }
+
     // FluxC events
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
         if (isFinishing()) {
+            return;
+        }
+
+        if (event.isError() && !NetworkUtils.isNetworkAvailable(this)) {
+            mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media, event.error);
             return;
         }
 
@@ -3696,7 +3705,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, event.error);
         } else if (event.completed) {
             // if the remote url on completed is null, we consider this upload wasn't successful
-            if (TextUtils.isEmpty(event.media.getUrl())) {
+            if (TextUtils.isEmpty(event.media.getUrl()) && !NetworkUtils.isNetworkAvailable(this)) {
+                MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
+                mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media, error);
+            } else if (TextUtils.isEmpty(event.media.getUrl())) {
                 MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
                 mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, error);
             } else {

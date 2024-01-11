@@ -69,6 +69,7 @@ import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.UnsupportedBlock;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBlockTypeImpressionsEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBackHandlerEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnConnectionStatusEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOptionsListener;
@@ -596,6 +597,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
                 },
 
+                new OnBackHandlerEventListener() {
+                    @Override public void onBackHandler() {
+                        mEditorFragmentListener.onBackHandlerButton();
+                    }
+                },
+
                 GutenbergUtils.isDarkMode(getActivity()));
 
         // request dependency injection. Do this after setting min/max dimensions
@@ -838,7 +845,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         for (String mediaId : mFailedMediaIds) {
             // upload progress should work on numeric mediaIds only
             if (!TextUtils.isEmpty(mediaId) && TextUtils.isDigitsOnly(mediaId)) {
-                getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(mediaId));
+                if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                    getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(mediaId));
+                } else {
+                    getGutenbergContainerFragment().mediaFileUploadPaused(Integer.valueOf(mediaId));
+                }
             } else {
                 getGutenbergContainerFragment().mediaFileSaveFailed(mediaId);
             }
@@ -1490,6 +1501,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
+    public void onMediaUploadPaused(final String localMediaId) {
+        getGutenbergContainerFragment().mediaFileUploadPaused(Integer.valueOf(localMediaId));
+        mFailedMediaIds.add(localMediaId);
+        mUploadingMediaProgressMax.remove(localMediaId);
+    }
+
+    @Override
     public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
     }
 
@@ -1583,7 +1601,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onConnectionStatusChange(boolean isConnected) {
         getGutenbergContainerFragment().onConnectionStatusChange(isConnected);
-        if (BuildConfig.DEBUG && isConnected && hasFailedMediaUploads()) {
+        if (isConnected && hasFailedMediaUploads()) {
             mEditorFragmentListener.onMediaRetryAll(mFailedMediaIds);
         }
     }

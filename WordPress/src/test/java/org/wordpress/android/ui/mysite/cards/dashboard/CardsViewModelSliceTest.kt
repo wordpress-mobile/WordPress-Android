@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
+import android.content.SharedPreferences
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.single
@@ -9,6 +10,7 @@ import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -19,6 +21,7 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.CardOrder
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardRowModel
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.FetchCardsPayload
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel.PageCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
@@ -30,6 +33,7 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.fluxc.tools.FormattableContent
+import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.DashboardActivityLogCardFeatureUtils
@@ -38,6 +42,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelS
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dynamiccard.DynamicCardsViewModelSlice
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.DynamicDashboardCardsFeatureConfig
 import org.wordpress.android.viewmodel.Event
 
@@ -71,7 +76,6 @@ const val PAGE_DATE = "2023-03-02 10:30:53"
 /* DYNAMIC CARDS */
 const val DYNAMIC_CARD_ID = "year_in_review_2023"
 const val DYNAMIC_CARD_TITLE = "News"
-const val DYNAMIC_CARD_REMOTE_FEATURE_FLAG = "dynamic_dashboard_cards"
 const val DYNAMIC_CARD_FEATURED_IMAGE = "https://path/to/image"
 const val DYNAMIC_CARD_URL = "https://wordpress.com"
 const val DYNAMIC_CARD_ACTION = "Call to action"
@@ -96,6 +100,12 @@ const val ACTIVITY_ACTOR_ROLE = "admin"
 const val ACTIVITY_ACTOR_ICON_URL = "dog.jpg"
 const val ACTIVITY_PUBLISHED_DATE = "2021-12-27 11:33:55"
 const val ACTIVITY_CONTENT = "content"
+
+private const val BUILD_NUMBER_PARAM = "12345"
+private const val DEVICE_ID_PARAM = "device_id_param"
+private const val IDENTIFIER_PARAM = "identifier_param"
+private const val MARKETING_VERSION_PARAM = "marketing_version_param"
+private const val PLATFORM_PARAM = "android"
 
 /* MODEL */
 
@@ -142,7 +152,6 @@ private val DYNAMIC_CARD_ROW_MODEL = DynamicCardRowModel(
 private val DYNAMIC_CARD_MODEL = DynamicCardModel(
     id = DYNAMIC_CARD_ID,
     title = DYNAMIC_CARD_TITLE,
-    remoteFeatureFlag = DYNAMIC_CARD_REMOTE_FEATURE_FLAG,
     featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
     url = DYNAMIC_CARD_URL,
     action = DYNAMIC_CARD_ACTION,
@@ -227,7 +236,18 @@ class CardsViewModelSliceTest : BaseUnitTest() {
     @Mock
     private lateinit var activityLogCardViewModelSlice: ActivityLogCardViewModelSlice
 
+    @Mock
+    lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock
+    lateinit var preferenceUtilsWrapper: PreferenceUtilsWrapper
+
+    @Mock
+    lateinit var sharedPreferences: SharedPreferences
+
     private lateinit var viewModelSlice: CardViewModelSlice
+
+    private lateinit var defaultFetchCardsPayload: FetchCardsPayload
+    private lateinit var cardSource: CardsSource
 
     private val data = CardsResult(
         model = CARDS_MODEL
@@ -256,6 +276,18 @@ class CardsViewModelSliceTest : BaseUnitTest() {
             todaysStatsViewModelSlice,
             postsCardViewModelSlice,
             activityLogCardViewModelSlice
+            dynamicDashboardCardsFeatureConfig,
+            preferenceUtilsWrapper,
+            buildConfigWrapper,
+        )
+        defaultFetchCardsPayload = FetchCardsPayload(
+            siteModel,
+            DEFAULT_CARD_TYPE,
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
         )
         viewModelSlice.initialize(testScope())
 
@@ -286,6 +318,11 @@ class CardsViewModelSliceTest : BaseUnitTest() {
             .thenReturn(isTodaysStatsCardHidden)
         whenever(dynamicDashboardCardsFeatureConfig.isEnabled())
             .thenReturn(isDynamicCardsEnabled)
+        whenever(buildConfigWrapper.getAppVersionCode()).thenReturn(BUILD_NUMBER_PARAM.toInt())
+        whenever(buildConfigWrapper.getApplicationId()).thenReturn(IDENTIFIER_PARAM)
+        whenever(buildConfigWrapper.getAppVersionName()).thenReturn(MARKETING_VERSION_PARAM)
+        whenever(preferenceUtilsWrapper.getFluxCPreferences()).thenReturn(sharedPreferences)
+        whenever(sharedPreferences.getString(any(), anyOrNull())).thenReturn(DEVICE_ID_PARAM)
     }
 
     /* GET DATA */
@@ -336,7 +373,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         viewModelSlice.buildCard(siteModel)
         advanceUntilIdle()
 
-        verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
+        verify(cardsStore).fetchCards(defaultFetchCardsPayload)
     }
 
     @Test
@@ -360,14 +397,14 @@ class CardsViewModelSliceTest : BaseUnitTest() {
             setUpMocks()
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
-            whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success)
+            whenever(cardsStore.fetchCards(defaultFetchCardsPayload)).thenReturn(success)
             viewModelSlice.refresh.observeForever { }
 
             viewModelSlice.buildCard(siteModel)
 
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
+            verify(cardsStore).fetchCards(defaultFetchCardsPayload)
         }
 
     @Test
@@ -376,7 +413,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         val result = mutableListOf<CardsUpdate>()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
-        whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(apiError)
+        whenever(cardsStore.fetchCards(defaultFetchCardsPayload)).thenReturn(apiError)
         viewModelSlice.refresh.observeForever { }
 
         viewModelSlice.buildCard(siteModel)
@@ -405,7 +442,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         setUpMocks()
         val filteredData = CardsResult(model = data.model?.filterIsInstance<PostsCardModel>()?.toList())
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = filteredData.model)))
-        whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(success)
+        whenever(cardsStore.fetchCards(defaultFetchCardsPayload)).thenReturn(success).thenReturn(success)
 
         viewModelSlice.buildCard(siteModel)
 
@@ -418,7 +455,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         setUpMocks()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
-        whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(apiError)
+        whenever(cardsStore.fetchCards(defaultFetchCardsPayload)).thenReturn(success).thenReturn(apiError)
 
         viewModelSlice.buildCard(siteModel)
 
@@ -453,8 +490,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         setUpMocks()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
-        whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE))
-            .thenReturn(success)
+        whenever(cardsStore.fetchCards(defaultFetchCardsPayload)).thenReturn(success)
 
         viewModelSlice.buildCard(siteModel)
         advanceUntilIdle()
@@ -472,7 +508,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         setUpMocks()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
-        whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success)
+        whenever(cardsStore.fetchCards(defaultFetchCardsPayload)).thenReturn(success)
 
         viewModelSlice.buildCard(siteModel)
         advanceUntilIdle()
@@ -491,7 +527,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         val result = mutableListOf<Boolean>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
-        whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(apiError)
+        whenever(cardsStore.fetchCards(defaultFetchCardsPayload)).thenReturn(apiError)
 
         viewModelSlice.buildCard(siteModel)
         advanceUntilIdle()
@@ -535,15 +571,24 @@ class CardsViewModelSliceTest : BaseUnitTest() {
     fun `given pages feature enabled + card not hidden, when refresh is invoked, then pages requested from network`() =
         test {
             setUpMocks(isRequestPages = true)
+            val fetchCardsPayload = FetchCardsPayload(
+                siteModel,
+                PAGES_FEATURED_ENABLED_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
-            whenever(cardsStore.fetchCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)).thenReturn(success)
+            whenever(cardsStore.fetchCards(fetchCardsPayload)).thenReturn(success)
             viewModelSlice.refresh.observeForever { }
 
             viewModelSlice.buildCard(siteModel)
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, PAGES_FEATURED_ENABLED_CARD_TYPE)
+            verify(cardsStore).fetchCards(fetchCardsPayload)
         }
 
     @Test
@@ -557,37 +602,55 @@ class CardsViewModelSliceTest : BaseUnitTest() {
             viewModelSlice.buildCard(siteModel)
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
+            verify(cardsStore).fetchCards(defaultFetchCardsPayload)
         }
 
     @Test
     fun `given activity feature enabled, when refresh is invoked, then activity are requested from network`() =
         test {
             setUpMocks(isDashboardCardActivityLogEnabled = true)
+            val fetchCardsPayload = FetchCardsPayload(
+                siteModel,
+                ACTIVITY_FEATURED_ENABLED_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
-            whenever(cardsStore.fetchCards(siteModel, ACTIVITY_FEATURED_ENABLED_CARD_TYPE)).thenReturn(success)
+            whenever(cardsStore.fetchCards(fetchCardsPayload)).thenReturn(success)
             viewModelSlice.refresh.observeForever { }
 
             viewModelSlice.buildCard(siteModel)
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, ACTIVITY_FEATURED_ENABLED_CARD_TYPE)
+            verify(cardsStore).fetchCards(fetchCardsPayload)
         }
 
     @Test
     fun `given dynamic cards are enabled, when refresh is invoked, then dynamic cards are requested from network`() =
         test {
             setUpMocks(isDynamicCardsEnabled = true)
+            val fetchCardsPayload = FetchCardsPayload(
+                siteModel,
+                DYNAMIC_CARDS_ENABLED_CARD_TYPE,
+                BUILD_NUMBER_PARAM,
+                DEVICE_ID_PARAM,
+                IDENTIFIER_PARAM,
+                MARKETING_VERSION_PARAM,
+                PLATFORM_PARAM
+            )
             val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
-            whenever(cardsStore.fetchCards(siteModel, DYNAMIC_CARDS_ENABLED_CARD_TYPE)).thenReturn(success)
+            whenever(cardsStore.fetchCards(fetchCardsPayload)).thenReturn(success)
             viewModelSlice.refresh.observeForever { }
 
             viewModelSlice.buildCard(siteModel)
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, DYNAMIC_CARDS_ENABLED_CARD_TYPE)
+            verify(cardsStore).fetchCards(fetchCardsPayload)
         }
 
     @Test
@@ -595,13 +658,13 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         test {
             setUpMocks(isDashboardCardActivityLogEnabled = false)
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
-            whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(success)
+            whenever(cardsStore.fetchCards(defaultFetchCardsPayload)).thenReturn(success).thenReturn(success)
             viewModelSlice.refresh.observeForever { }
 
             viewModelSlice.buildCard(siteModel)
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
+            verify(cardsStore).fetchCards(defaultFetchCardsPayload)
         }
 
     @Test
@@ -609,13 +672,13 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         test {
             setUpMocks(isTodaysStatsCardHidden = false)
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
-            whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success)
+            whenever(cardsStore.fetchCards(defaultFetchCardsPayload)).thenReturn(success)
             viewModelSlice.refresh.observeForever { }
 
             viewModelSlice.buildCard(siteModel)
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, DEFAULT_CARD_TYPE)
+            verify(cardsStore).fetchCards(defaultFetchCardsPayload)
         }
 
     @Test
@@ -627,6 +690,16 @@ class CardsViewModelSliceTest : BaseUnitTest() {
             viewModelSlice.buildCard(siteModel)
             advanceUntilIdle()
 
-            verify(cardsStore).fetchCards(siteModel, listOf(CardModel.Type.POSTS))
+            verify(cardsStore).fetchCards(
+                FetchCardsPayload(
+                    siteModel,
+                    listOf(CardModel.Type.POSTS),
+                    BUILD_NUMBER_PARAM,
+                    DEVICE_ID_PARAM,
+                    IDENTIFIER_PARAM,
+                    MARKETING_VERSION_PARAM,
+                    PLATFORM_PARAM
+                )
+            )
         }
 }

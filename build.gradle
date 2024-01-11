@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id "io.gitlab.arturbosch.detekt"
     id 'com.automattic.android.measure-builds'
+    id "org.jetbrains.kotlinx.kover"
     id "androidx.navigation.safeargs.kotlin" apply false
     id "com.android.library" apply false
     id 'com.google.gms.google-services' apply false
@@ -22,12 +23,12 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticStoriesVersion = '2.4.0'
     automatticTracksVersion = '3.3.0'
-    gutenbergMobileVersion = 'v1.110.0-alpha2'
+    gutenbergMobileVersion = 'v1.111.0-alpha2'
     wordPressAztecVersion = 'v1.9.0'
-    wordPressFluxCVersion = 'trunk-67afc3a620b4ad56b981d21637db6b3509b07ab6'
+    wordPressFluxCVersion = '2.61.0'
     wordPressLoginVersion = '1.10.0'
     wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressUtilsVersion = '3.10.0'
+    wordPressUtilsVersion = '3.11.0'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 
     // debug
@@ -248,4 +249,5 @@ dependencies {
     detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$gradle.ext.detektVersion"
 }
 
+apply from: './config/gradle/code_coverage.gradle'
 apply from: './config/gradle/gradle_build_scan.gradle'
