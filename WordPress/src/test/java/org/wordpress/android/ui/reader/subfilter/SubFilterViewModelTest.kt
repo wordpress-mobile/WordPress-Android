@@ -16,6 +16,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
@@ -136,7 +137,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
 
     @Test
     fun `view model doesn't start tracking subfiltered list if filter is a not tracked item`() {
-        viewModel.setDefaultSubfilter()
+        viewModel.setDefaultSubfilter(false)
 
         // this is done to focus this unit test only on effects of initSubfiltersTracking
         // usually it's not considered great to use this function but here it seemed
@@ -171,7 +172,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
     @Test
     fun `view model is able to set default subfilter`() {
         var item: SubfilterListItem? = null
-        viewModel.setDefaultSubfilter()
+        viewModel.setDefaultSubfilter(false)
 
         viewModel.currentSubFilter.observeForever { item = it }
 
@@ -423,5 +424,25 @@ class SubFilterViewModelTest : BaseUnitTest() {
             assertThat(it.listType).isEqualTo(ReaderPostListType.TAG_FOLLOWED)
             assertThat(it.isFiltered).isEqualTo(true)
         }
+    }
+
+    @Test
+    fun `Should NOT track READER_FILTER_SHEET_ITEM_SELECTED if clearing filter when onSubfilterSelected is called`() {
+        val filter = SiteAll(
+            isClearingFilter = true,
+            onClickAction = {},
+        )
+        viewModel.onSubfilterSelected(filter)
+        verify(readerTracker, times(0)).track(AnalyticsTracker.Stat.READER_FILTER_SHEET_ITEM_SELECTED)
+    }
+
+    @Test
+    fun `Should track READER_FILTER_SHEET_ITEM_SELECTED if NOT clearing filter when onSubfilterSelected is called`() {
+        val filter = SiteAll(
+            isClearingFilter = false,
+            onClickAction = {},
+        )
+        viewModel.onSubfilterSelected(filter)
+        verify(readerTracker).track(AnalyticsTracker.Stat.READER_FILTER_SHEET_ITEM_SELECTED)
     }
 }
