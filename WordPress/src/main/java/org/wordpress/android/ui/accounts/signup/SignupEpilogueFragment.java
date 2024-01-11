@@ -737,6 +737,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                         new GravatarApi.GravatarUploadListener() {
                             @Override
                             public void onSuccess() {
+                                // FIXME: log analytics
                                 endProgress();
                                 mPhotoUrl = GravatarUtils.fixGravatarUrl(mAccount.getAccount().getAvatarUrl(),
                                         getResources().getDimensionPixelSize(R.dimen.avatar_sz_large));
@@ -749,6 +750,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                             public void onError(@NonNull String exceptionClass, @NonNull String exceptionMessage) {
                                 endProgress();
                                 showErrorDialogWithCloseButton(getString(R.string.signup_epilogue_error_avatar));
+                                // FIXME: log analytics
                                 AppLog.e(T.NUX, "Uploading image to Gravatar failed");
                             }
                         });
@@ -834,6 +836,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                         new GravatarApi.GravatarUploadListener() {
                             @Override
                             public void onSuccess() {
+                                // FIXME: log analytics
                                 AppLog.i(T.NUX, "Google avatar download and Gravatar upload succeeded.");
                                 AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_UNSUCCESSFUL);
                             }
