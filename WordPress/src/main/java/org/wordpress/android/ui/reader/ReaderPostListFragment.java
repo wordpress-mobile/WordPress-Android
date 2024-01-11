@@ -638,7 +638,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
                                 visibleState.getCategories(),
                                 mUiHelpers.getTextOfUiString(requireContext(), visibleState.getTitle())
                         );
-                        mReaderTracker.track(Stat.READER_FILTER_SHEET_DISPLAYED);
                         bottomSheet.show(getChildFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
                     } else if (!uiState.isVisible() && bottomSheet != null) {
                         bottomSheet.dismiss();

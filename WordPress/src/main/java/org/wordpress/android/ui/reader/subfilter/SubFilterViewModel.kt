@@ -213,6 +213,11 @@ class SubFilterViewModel @Inject constructor(
                 listOf(category) // TODO thomashortadev this should accept only a single category
             )
         )
+        val source = when(category) {
+            SubfilterCategory.SITES -> "blogs"
+            SubfilterCategory.TAGS -> "tags"
+        }
+        readerTracker.track(Stat.READER_FILTER_SHEET_DISPLAYED, source)
     }
 
     fun updateTagsAndSites() {
