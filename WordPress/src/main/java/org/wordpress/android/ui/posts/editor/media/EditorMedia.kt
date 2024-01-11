@@ -308,7 +308,7 @@ class EditorMedia @Inject constructor(
                 }
         }
 
-        analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_PAUSED, properties)
+        analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_PAUSED, site, properties)
         listener.onMediaUploadPaused(media.id.toString())
     }
 
