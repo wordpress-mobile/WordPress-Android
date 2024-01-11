@@ -63,7 +63,7 @@ class DomainRegistrationViewModelSlice @Inject constructor(
         this.scope = scope
     }
 
-    private fun getData(
+    fun getData(
         siteLocalId: Int,
         selectedSite: SiteModel?
     ) {
