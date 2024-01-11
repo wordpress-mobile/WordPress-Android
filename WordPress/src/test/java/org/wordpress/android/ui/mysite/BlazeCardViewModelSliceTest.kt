@@ -187,7 +187,7 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given should not show blaze campaigns, when build card is invoked, then promote blaze card is posted`() = test {
+    fun `given should not show blaze campaigns, when build card is invoked, then promote blaze card is shown`() = test {
         // Arrange
         val promoteWithBlazeCardBuilderParams = mock<PromoteWithBlazeCardBuilderParams>()
         whenever(blazeFeatureUtils.shouldShowBlazeCardEntryPoint(any())).thenReturn(true)
