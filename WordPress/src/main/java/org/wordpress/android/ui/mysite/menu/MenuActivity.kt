@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import dagger.hilt.android.AndroidEntryPoint
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
@@ -70,6 +71,7 @@ import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import org.wordpress.android.util.extensions.getParcelableExtraCompat
 import javax.inject.Inject
 
@@ -84,6 +86,9 @@ class MenuActivity : AppCompatActivity() {
 
     @Inject
     lateinit var quickStartUtils: QuickStartUtilsWrapper
+
+    @Inject
+    lateinit var statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
 
     private val viewModel: MenuViewModel by viewModels()
 
@@ -143,7 +148,13 @@ class MenuActivity : AppCompatActivity() {
             is SiteNavigationAction.OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(this, action.site)
             is SiteNavigationAction.OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(this)
             is SiteNavigationAction.OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(this, action.site)
-            is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(this, action.site)
+            is SiteNavigationAction.OpenStats -> {
+                if (BuildConfig.IS_JETPACK_APP && statsTrafficTabFeatureConfig.isEnabled()) {
+                    ActivityLauncher.viewStatsTrafficTab(this, action.site)
+                } else {
+                    ActivityLauncher.viewBlogStats(this, action.site)
+                }
+            }
             is SiteNavigationAction.OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
                 this,
                 action.site
