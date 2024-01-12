@@ -47,7 +47,7 @@ mkdir buildkite-test-analytics
 cp $test_log_dir buildkite-test-analytics
 
 echo "--- ⚒️ Uploading code coverage"
-if [[ $test_suite == 'image-editor' ]]; then
+if [[ "$1" == "image-editor" ]]; then
   ls
   ls libs/image-editor/build/
   ls libs/image-editor/build/reports
