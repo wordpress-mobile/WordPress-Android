@@ -36,7 +36,7 @@ class DomainRegistrationViewModelSlice @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val appLogWrapper: AppLogWrapper,
     private val siteUtils: SiteUtilsWrapper,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val domainRegistrationTracker: DomainRegistrationTracker
 ) {
     private lateinit var scope: CoroutineScope
 
@@ -125,7 +125,7 @@ class DomainRegistrationViewModelSlice @Inject constructor(
 
     private fun domainRegistrationClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
+        domainRegistrationTracker.track(AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
         _onNavigation.value = Event(SiteNavigationAction.OpenDomainRegistration(selectedSite))
     }
 
@@ -138,4 +138,10 @@ class DomainRegistrationViewModelSlice @Inject constructor(
         continuations[event.site.id]?.resume(event)
         continuations[event.site.id] = null
     }
+}
+
+/* This class is a helper to offset the AppLogWrapper dependency conflict (see AppLogWrapper itself for more info) */
+class DomainRegistrationTracker
+@Inject constructor(private val analyticsTrackerWrapper: AnalyticsTrackerWrapper) {
+    fun track(stat: AnalyticsTracker.Stat, site: SiteModel) = analyticsTrackerWrapper.track(stat, site)
 }

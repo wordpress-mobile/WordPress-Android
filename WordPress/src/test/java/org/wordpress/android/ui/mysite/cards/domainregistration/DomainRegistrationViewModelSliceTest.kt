@@ -3,9 +3,10 @@ package org.wordpress.android.ui.mysite.cards.domainregistration
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -22,12 +23,12 @@ import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.plans.PlansConstants.PREMIUM_PLAN_ID
 import org.wordpress.android.util.SiteUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
-@Ignore("Update tests to work with new architecture")
+@RunWith(MockitoJUnitRunner::class)
 class DomainRegistrationViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var dispatcher: Dispatcher
@@ -42,15 +43,14 @@ class DomainRegistrationViewModelSliceTest : BaseUnitTest() {
     lateinit var siteUtils: SiteUtilsWrapper
 
     @Mock
-    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    lateinit var domainRegistrationTracker: DomainRegistrationTracker
 
     private val siteLocalId = 1
     private val site = SiteModel()
     private lateinit var result: MutableList<MySiteCardAndItem.Card.DomainRegistrationCard>
-
-    private lateinit var viewModelSlice: DomainRegistrationViewModelSlice
-
     private lateinit var isRefreshing: MutableList<Boolean>
+    private lateinit var navigationActions: MutableList<SiteNavigationAction>
+    private lateinit var viewModelSlice: DomainRegistrationViewModelSlice
 
     @Before
     fun setUp() {
@@ -62,20 +62,33 @@ class DomainRegistrationViewModelSliceTest : BaseUnitTest() {
             selectedSiteRepository,
             appLogWrapper,
             siteUtils,
-            analyticsTrackerWrapper
+            domainRegistrationTracker
         )
-        result = mutableListOf()
-        viewModelSlice.uiModel.observeForever { result.add(it) }
 
+        viewModelSlice.initialize(testScope())
+        result = mutableListOf()
+        navigationActions = mutableListOf()
         isRefreshing = mutableListOf()
+
+        viewModelSlice.uiModel.observeForever { result.add(it) }
         viewModelSlice.isRefreshing.observeForever { isRefreshing.add(it) }
+        viewModelSlice.onNavigation.observeForever { event ->
+            event?.getContentIfNotHandled()?.let { navigationActions.add(it) }
+        }
+    }
+
+    @Test
+    fun `when getData is invoked, then refresh is true`() = test {
+        viewModelSlice.getData(siteLocalId, site)
+
+        assertThat(isRefreshing.last()).isTrue
     }
 
     @Test
     fun `when site is free, emit false and don't fetch`() = test {
         setupSite(site = site, isFree = true)
 
-        assertThat(result.last()).isNull()
+        assertThat(result).isEmpty()
 
         verify(dispatcher, never()).dispatch(any())
     }
@@ -93,7 +106,7 @@ class DomainRegistrationViewModelSliceTest : BaseUnitTest() {
     fun `when fetched site doesn't have a plan with credits, start to fetch and emit false`() = test {
         setupSite(site = site, currentPlan = buildPlan(hasDomainCredit = false))
 
-        assertThat(result.last()).isNull()
+        assertThat(result).isEmpty()
     }
 
     @Test
@@ -108,22 +121,17 @@ class DomainRegistrationViewModelSliceTest : BaseUnitTest() {
             viewModelSlice.onPlansFetched(event)
         }
 
-        assertThat(result.last()).isNull()
+        assertThat(result).isEmpty()
     }
 
     @Test
     fun `when fetch fails, emit false value`() = test {
         setupSite(site = site, error = GENERIC_ERROR)
 
-        assertThat(result.last()).isNull()
+        assertThat(result).isEmpty()
     }
 
-    @Test
-    fun `when build is invoked, then refresh is true`() = test {
-        viewModelSlice.getData(siteLocalId, site)
 
-        assertThat(isRefreshing.last()).isTrue
-    }
 
     @Test
     fun `when data has been refreshed, then refresh is set to false`() = test {
@@ -132,6 +140,16 @@ class DomainRegistrationViewModelSliceTest : BaseUnitTest() {
         assertThat(isRefreshing.last()).isFalse
     }
 
+    @Test
+    fun `given card is built, when domain registration click, then navigate to domain registration`() = test {
+        setupSite(site = site, currentPlan = buildPlan(hasDomainCredit = true))
+
+        assertThat(result.last()).isNotNull
+
+        result.last().onClick.click()
+
+        assertThat(navigationActions.last()).isEqualTo(SiteNavigationAction.OpenDomainRegistration(site))
+    }
     private fun setupSite(
         site: SiteModel,
         isFree: Boolean = false,
