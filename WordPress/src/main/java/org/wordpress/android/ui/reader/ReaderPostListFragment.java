@@ -638,7 +638,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
                                 visibleState.getCategories(),
                                 mUiHelpers.getTextOfUiString(requireContext(), visibleState.getTitle())
                         );
-                        mReaderTracker.track(Stat.READER_FILTER_SHEET_DISPLAYED);
                         bottomSheet.show(getChildFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
                     } else if (!uiState.isVisible() && bottomSheet != null) {
                         bottomSheet.dismiss();
@@ -792,7 +791,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mSubFilterViewModel.setSubfilterFromTag(newTag);
         } else if (isFollowingScreen() && !ReaderTagTable.tagExists(getCurrentTag())) {
             // user just removed a tag which was selected in the subfilter
-            mSubFilterViewModel.setDefaultSubfilter();
+            mSubFilterViewModel.setDefaultSubfilter(false);
         } else {
             // otherwise, refresh posts to make sure any changes are reflected and auto-update
             // posts in the current tag if it's time
@@ -828,7 +827,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             refreshPosts();
         } else {
             if (mIsFilterableScreen) {
-                mSubFilterViewModel.setDefaultSubfilter();
+                mSubFilterViewModel.setDefaultSubfilter(false);
             }
         }
     }
