@@ -1,6 +1,5 @@
 import se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask
 import se.bjurr.violations.lib.model.SEVERITY
-import io.sentry.android.gradle.extensions.InstrumentationFeature
 
 plugins {
     id "com.android.application"
@@ -384,7 +383,7 @@ dependencies {
         exclude group: 'com.mcxiaoke.volley'
     }
     implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
-    implementation project(':libs:gravatar')
+    implementation "$gradle.ext.gravatarBinaryPath:$gravatarVersion"
 
     // To enable Stetho, a debug bridge that enables the Chrome Developer Tools for debug purposes.
     debugImplementation "com.facebook.stetho:stetho:$stethoVersion"
