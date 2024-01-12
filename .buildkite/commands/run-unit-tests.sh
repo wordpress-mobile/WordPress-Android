@@ -50,7 +50,7 @@ mkdir buildkite-test-analytics
 cp $test_log_dir buildkite-test-analytics
 
 echo "--- ⚒️ Uploading code coverage"
-ls
+ls WordPress/build/reports/kover
 .buildkite/commands/upload-code-coverage.sh
 .buildkite/commands/upload-code-coverage.sh $code_coverage_report
 
