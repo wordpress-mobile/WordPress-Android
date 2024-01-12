@@ -5,12 +5,15 @@ set +e
 if [ "$1" == "wordpress" ]; then
     test_suite="testWordpressVanillaRelease koverXmlReportWordpressVanillaRelease"
     test_log_dir="WordPress/build/test-results/*/*.xml"
+    code_coverage_report="WordPress/build/reports/kover/reportWordpressVanillaRelease.xml"
 elif [ "$1" == "processors" ]; then
     test_suite=":libs:processors:test :libs:processors:koverXmlReport"
     test_log_dir="libs/processors/build/test-results/test/*.xml"
+    code_coverage_report="libs/processors/build/reports/kover/report.xml"
 elif [ "$1" == "image-editor" ]; then
     test_suite=":libs:image-editor:testReleaseUnitTest :libs:image-editor:koverXmlReportRelease"
     test_log_dir="libs/image-editor/build/test-results/testReleaseUnitTest/*.xml"
+    code_coverage_report="libs/image-editor/build/reports/kover/reportRelease.xml"
 else
     echo "Invalid Test Suite! Expected 'wordpress', 'processors', or 'image-editor', received '$1' instead"
     exit 1
@@ -54,6 +57,6 @@ if [[ "$1" == "image-editor" ]]; then
   ls libs/image-editor/build/reports/kover
   cat libs/image-editor/build/reports/kover/reportRelease.xml
 fi
-.buildkite/commands/upload-code-coverage.sh
+.buildkite/commands/upload-code-coverage.sh $code_coverage_report
 
 exit $TESTS_EXIT_STATUS
