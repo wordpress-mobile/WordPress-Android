@@ -50,13 +50,8 @@ mkdir buildkite-test-analytics
 cp $test_log_dir buildkite-test-analytics
 
 echo "--- ⚒️ Uploading code coverage"
-if [[ "$1" == "image-editor" ]]; then
-  ls
-  ls libs/image-editor/build/
-  ls libs/image-editor/build/reports
-  ls libs/image-editor/build/reports/kover
-  cat libs/image-editor/build/reports/kover/reportRelease.xml
-fi
+ls
+.buildkite/commands/upload-code-coverage.sh
 .buildkite/commands/upload-code-coverage.sh $code_coverage_report
 
 exit $TESTS_EXIT_STATUS
