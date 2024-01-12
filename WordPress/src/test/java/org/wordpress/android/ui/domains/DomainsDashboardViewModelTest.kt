@@ -10,6 +10,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
@@ -19,6 +20,8 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
+import org.wordpress.android.ui.domains.usecases.AllDomains
+import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
 import org.wordpress.android.ui.plans.PlansConstants.FREE_PLAN_ID
 import org.wordpress.android.ui.plans.PlansConstants.PREMIUM_PLAN_ID
@@ -32,6 +35,7 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()
     private val htmlMessageUtils: HtmlMessageUtils = mock()
     private val fetchPlansUseCase: FetchPlansUseCase = mock()
+    private val fetchAllDomainsUseCase: FetchAllDomainsUseCase = mock()
 
     private lateinit var viewModel: DomainsDashboardViewModel
 
@@ -44,6 +48,7 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             analyticsTracker,
             htmlMessageUtils,
             fetchPlansUseCase,
+            fetchAllDomainsUseCase,
             testDispatcher()
         )
 
@@ -171,6 +176,8 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
 
         val plan = if (hasDomainCredits) planWithCredits else planWithNoCredits
         whenever(fetchPlansUseCase.execute(site)).thenReturn(OnPlansFetched(site, listOf(plan)))
+        val allDomains = if (hasCustomDomains) listOf(allDomainsDomain) else emptyList()
+        whenever(fetchAllDomainsUseCase.execute()).thenReturn(AllDomains.Success(allDomains))
 
         viewModel.start(site)
     }
@@ -188,6 +195,8 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             primaryDomain = false,
             wpcomDomain = false
         )
+
+        private val allDomainsDomain = AllDomainsDomain(domain = "henna.tattoo")
 
         private val siteWithFreePlan = SiteModel().apply {
             siteId = TEST_SITE_ID
