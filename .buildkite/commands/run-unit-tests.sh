@@ -3,13 +3,13 @@
 echo "--- 🧪 Testing"
 set +e
 if [ "$1" == "wordpress" ]; then
-    test_suite="testWordpressVanillaRelease"
+    test_suite="testWordpressVanillaRelease koverXmlReportWordpressVanillaRelease"
     test_log_dir="WordPress/build/test-results/*/*.xml"
 elif [ "$1" == "processors" ]; then
-    test_suite=":libs:processors:test"
+    test_suite=":libs:processors:test :libs:processors:koverXmlReport"
     test_log_dir="libs/processors/build/test-results/test/*.xml"
 elif [ "$1" == "image-editor" ]; then
-    test_suite=":libs:image-editor:testReleaseUnitTest"
+    test_suite=":libs:image-editor:testReleaseUnitTest :libs:image-editor:koverXmlReportRelease"
     test_log_dir="libs/image-editor/build/test-results/testReleaseUnitTest/*.xml"
 else
     echo "Invalid Test Suite! Expected 'wordpress', 'processors', or 'image-editor', received '$1' instead"
@@ -45,5 +45,8 @@ done
 echo "--- 🧪 Copying test logs for test collector"
 mkdir buildkite-test-analytics
 cp $test_log_dir buildkite-test-analytics
+
+echo "--- ⚒️ Uploading code coverage"
+.buildkite/commands/upload-code-coverage.sh
 
 exit $TESTS_EXIT_STATUS
