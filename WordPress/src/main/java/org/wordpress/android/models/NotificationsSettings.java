@@ -1,6 +1,5 @@
 package org.wordpress.android.models;
 
-import androidx.annotation.NonNull;
 import androidx.collection.LongSparseArray;
 
 import org.json.JSONArray;

@@ -13,6 +13,8 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionsChanged
+import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.NotificationsSettings
 import org.wordpress.android.ui.RequestCodes
@@ -82,7 +84,7 @@ class NotificationsSettingsMySitesFragment: ChildNotificationSettingsFragment(),
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSubscriptionsChanged(event: AccountStore.OnSubscriptionsChanged) {
+    fun onSubscriptionsChanged(event: OnSubscriptionsChanged) {
         if (event.isError) {
             AppLog.e(AppLog.T.API, "NotificationsSettingsFragment.onSubscriptionsChanged: " + event.error.message)
         } else {
@@ -92,7 +94,7 @@ class NotificationsSettingsMySitesFragment: ChildNotificationSettingsFragment(),
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSubscriptionUpdated(event: AccountStore.OnSubscriptionUpdated) {
+    fun onSubscriptionUpdated(event: OnSubscriptionUpdated) {
         if (event.isError) {
             AppLog.e(AppLog.T.API, "NotificationsSettingsFragment.onSubscriptionUpdated: " + event.error.message)
         } else if (event.type == AccountStore.SubscriptionType.EMAIL_POST && mUpdateEmailPostsFirst) {
