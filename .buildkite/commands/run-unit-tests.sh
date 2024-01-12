@@ -47,7 +47,7 @@ mkdir buildkite-test-analytics
 cp $test_log_dir buildkite-test-analytics
 
 echo "--- ⚒️ Uploading code coverage"
-ls WordPress/build/reports
+ls
 .buildkite/commands/upload-code-coverage.sh
 
 exit $TESTS_EXIT_STATUS

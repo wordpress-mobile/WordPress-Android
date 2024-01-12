@@ -6,6 +6,10 @@ static String resolveProjectVariantForCodeCoverage(Project project) {
     }
 }
 
+project.tasks.named("koverGenerateArtifact") {
+    outputs.cacheIf { false }
+}
+
 subprojects {
     pluginManager.withPlugin("org.jetbrains.kotlinx.kover") {
         if (project.plugins.hasPlugin("com.android.library") || project.plugins.hasPlugin("com.android.application")) {
