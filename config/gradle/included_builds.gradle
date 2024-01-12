@@ -98,4 +98,13 @@ if (localBuilds.exists()) {
             }
         }
     }
+
+    if (ext.has("localGravatarAndroidPath")) {
+        includeBuild(ext.localGravatarAndroidPath) {
+            dependencySubstitution {
+                println "Substituting Gravatar-Android with the local build"
+                substitute module("$gradle.ext.gravatarBinaryPath") using project(':gravatar')
+            }
+        }
+    }
 }
