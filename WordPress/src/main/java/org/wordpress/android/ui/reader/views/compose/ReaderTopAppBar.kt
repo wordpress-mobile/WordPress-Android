@@ -54,7 +54,8 @@ fun ReaderTopAppBar(
     onMenuItemClick: (MenuElementData.Item.Single) -> Unit,
     onFilterClick: (ReaderFilterType) -> Unit,
     onClearFilterClick: () -> Unit,
-    onSearchClick: () -> Unit,
+    isSearchVisible: Boolean,
+    onSearchClick: () -> Unit = {},
 ) {
     var selectedItem by remember { mutableStateOf(topBarUiState.selectedItem) }
     var isFilterShown by remember { mutableStateOf(topBarUiState.filterUiState != null) }
@@ -124,17 +125,19 @@ fun ReaderTopAppBar(
             }
         }
         Spacer(Modifier.width(Margin.ExtraSmall.value))
-        IconButton(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            onClick = { onSearchClick() }
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_magnifying_glass_16dp),
-                contentDescription = stringResource(
-                    R.string.reader_search_content_description
-                ),
-                tint = MaterialTheme.colors.onSurface,
-            )
+        if (isSearchVisible) {
+            IconButton(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                onClick = { onSearchClick() }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_magnifying_glass_16dp),
+                    contentDescription = stringResource(
+                        R.string.reader_search_content_description
+                    ),
+                    tint = MaterialTheme.colors.onSurface,
+                )
+            }
         }
     }
 }
@@ -225,6 +228,7 @@ fun ReaderTopAppBarPreview() {
                 },
                 onFilterClick = {},
                 onClearFilterClick = {},
+                isSearchVisible = true,
                 onSearchClick = {},
             )
         }

@@ -389,6 +389,7 @@ class ReaderViewModel @Inject constructor(
                     menuItems = menuItems,
                     selectedItem = selectedItem,
                     filterUiState = filterUiState,
+                    isSearchActionVisible = isSearchSupported(),
                 )
             )
         }
@@ -515,6 +516,7 @@ class ReaderViewModel @Inject constructor(
         val menuItems: List<MenuElementData>,
         val selectedItem: MenuElementData.Item.Single,
         val filterUiState: FilterUiState? = null,
+        val isSearchActionVisible: Boolean = false,
     ) {
         data class FilterUiState(
             val blogsFilterCount: Int,
