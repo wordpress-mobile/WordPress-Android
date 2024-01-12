@@ -15,6 +15,49 @@ subprojects {
                 }
             }
         }
+
+        koverReport {
+            filters {
+                excludes {
+                    packages(
+                            'com.bumptech.glide',
+                            'dagger.*',
+                            '*.compose*',
+                            '*.debug*',
+                            'hilt_aggregated_deps',
+                            '*.databinding',
+                            'org.wordpress.android.modules',
+                            'org.wordpress.android.widgets',
+                    )
+
+                    classes(
+                            '*_Factory*',
+                            '*Activity',
+                            '*Activity$*',
+                            '*Adapter',
+                            '*Adapter$*',
+                            '*BuildConfig',
+                            '*DiffCallback*',
+                            '*Dialog',
+                            '*Dialog$*',
+                            '*Fragment',
+                            '*Fragment$*',
+                            '*FragmentDirections*',
+                            '*FragmentKt*',
+                            '*Module',
+                            '*Module_*',
+                            '*View',
+                            '*View$*',
+                            '*ViewHolder',
+                            '*ViewHolder$*',
+                            '*ViewHolderKt*',
+                            '*.Hilt_*',
+                            '*HiltModules*',
+                            '*_MembersInjector',
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -27,45 +70,3 @@ dependencies {
     )
 }
 
-koverReport {
-    filters {
-        excludes {
-            packages(
-                    'com.bumptech.glide',
-                    'dagger.*',
-                    '*.compose*',
-                    '*.debug*',
-                    'hilt_aggregated_deps',
-                    '*.databinding',
-                    'org.wordpress.android.modules',
-                    'org.wordpress.android.widgets',
-            )
-
-            classes(
-                    '*_Factory*',
-                    '*Activity',
-                    '*Activity$*',
-                    '*Adapter',
-                    '*Adapter$*',
-                    '*BuildConfig',
-                    '*DiffCallback*',
-                    '*Dialog',
-                    '*Dialog$*',
-                    '*Fragment',
-                    '*Fragment$*',
-                    '*FragmentDirections*',
-                    '*FragmentKt*',
-                    '*Module',
-                    '*Module_*',
-                    '*View',
-                    '*View$*',
-                    '*ViewHolder',
-                    '*ViewHolder$*',
-                    '*ViewHolderKt*',
-                    '*.Hilt_*',
-                    '*HiltModules*',
-                    '*_MembersInjector',
-            )
-        }
-    }
-}
