@@ -294,6 +294,11 @@
 
         <!-- Stats Activities -->
         <activity
+            android:name=".stats.StatsActivity"
+            android:exported="false"
+            android:label="@string/stats"
+            android:theme="@style/WordPress.NoActionBar" /> <!-- New Stats -->
+        <activity
             android:name=".ui.stats.refresh.StatsActivity"
             android:launchMode="singleTop"
             android:theme="@style/WordPress.NoActionBar" />
