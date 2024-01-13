@@ -145,7 +145,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
                         onMenuItemClick = viewModel::onTopBarMenuItemClick,
                         onFilterClick = ::tryOpenFilterList,
                         onClearFilterClick = ::clearFilter,
-                        onSearchClick = {}
+                        isSearchVisible = state.isSearchActionVisible,
+                        onSearchClick = viewModel::onSearchActionClicked,
                     )
                 }
             }
@@ -384,6 +385,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
 
     private fun clearFilter() {
         val viewModel = getSubFilterViewModel() ?: return
-        viewModel.setDefaultSubfilter()
+        viewModel.setDefaultSubfilter(isClearingFilter = true)
     }
 }

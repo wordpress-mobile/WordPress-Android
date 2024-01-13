@@ -193,13 +193,14 @@ class SubFilterViewModel @Inject constructor(
         )
     }
 
-    fun setDefaultSubfilter() {
+    fun setDefaultSubfilter(isClearingFilter: Boolean) {
         readerTracker.track(Stat.READER_FILTER_SHEET_CLEARED)
         updateSubfilter(
-            SiteAll(
+            filter = SiteAll(
                 onClickAction = ::onSubfilterClicked,
-                isSelected = true
-            )
+                isSelected = true,
+                isClearingFilter = isClearingFilter,
+            ),
         )
     }
 
@@ -213,6 +214,11 @@ class SubFilterViewModel @Inject constructor(
                 listOf(category) // TODO thomashortadev this should accept only a single category
             )
         )
+        val source = when(category) {
+            SubfilterCategory.SITES -> "blogs"
+            SubfilterCategory.TAGS -> "tags"
+        }
+        readerTracker.track(Stat.READER_FILTER_SHEET_DISPLAYED, source)
     }
 
     fun updateTagsAndSites() {
@@ -286,7 +292,10 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun onSubfilterSelected(subfilterListItem: SubfilterListItem) {
-        readerTracker.track(Stat.READER_FILTER_SHEET_ITEM_SELECTED)
+        // We should not track subfilter selected if we're clearing a filter that is currently applied.
+        if (!subfilterListItem.isClearingFilter) {
+            readerTracker.track(Stat.READER_FILTER_SHEET_ITEM_SELECTED)
+        }
         changeSubfilter(subfilterListItem, true, mTagFragmentStartedWith)
     }
 
@@ -340,7 +349,7 @@ class SubFilterViewModel @Inject constructor(
                 )
             )
 
-            setDefaultSubfilter()
+            setDefaultSubfilter(false)
         }
     }
 
