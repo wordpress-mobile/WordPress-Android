@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import androidx.annotation.StringRes
 import androidx.preference.DialogPreference
 import org.wordpress.android.models.NotificationsSettings
+
 class NotificationsSettingsDialogPreferenceX(
     context: Context,
     attrs: AttributeSet?,

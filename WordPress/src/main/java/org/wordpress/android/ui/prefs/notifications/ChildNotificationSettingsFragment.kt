@@ -9,6 +9,7 @@ import androidx.transition.Transition
 import androidx.transition.TransitionManager
 import com.google.android.material.appbar.AppBarLayout
 import org.wordpress.android.R
+import org.wordpress.android.util.AniUtils
 
 /** Child Notification fragments should inherit from this class in order to make navigation consistent.*/
 abstract class ChildNotificationSettingsFragment: PreferenceFragmentCompat() {
@@ -27,7 +28,7 @@ abstract class ChildNotificationSettingsFragment: PreferenceFragmentCompat() {
             val mainSwitchToolBarView = findViewById<PrefMainSwitchToolbarView>(R.id.main_switch)
             val rootView = findViewById<AppBarLayout>(R.id.app_bar_layout)
             val transition: Transition = Slide(Gravity.TOP)
-            transition.duration = 200
+            transition.duration = AniUtils.Duration.SHORT.toMillis(context)
             transition.addTarget(R.id.main_switch)
 
             TransitionManager.beginDelayedTransition(rootView, transition)

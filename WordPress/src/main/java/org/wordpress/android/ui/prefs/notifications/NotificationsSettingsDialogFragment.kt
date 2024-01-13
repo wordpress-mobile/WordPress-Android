@@ -32,7 +32,8 @@ class NotificationsSettingsDialogFragment(
     private val type: NotificationsSettings.Type,
     private val blogId: Long = 0,
     private val settings: NotificationsSettings,
-    private val onNotificationsSettingsChangedListener: NotificationsSettingsDialogPreference.OnNotificationsSettingsChangedListener,
+    private val onNotificationsSettingsChangedListener:
+        NotificationsSettingsDialogPreference.OnNotificationsSettingsChangedListener,
     private val bloggingRemindersProvider: NotificationsSettingsDialogPreference.BloggingRemindersProvider? = null,
     private val title: String
 ): DialogFragment(), PrefMainSwitchToolbarView.MainSwitchToolbarListener, DialogInterface.OnClickListener {
@@ -58,12 +59,10 @@ class NotificationsSettingsDialogFragment(
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = requireContext()
-
         @SuppressLint("InflateParams")
-        val layout = requireActivity().layoutInflater.inflate(
-            R.layout.notifications_settings_types_dialog, null)
-        val outerView = layout.findViewById<ScrollView>(R.id.outer_view)
+        val layout = requireActivity().layoutInflater.inflate(R.layout.notifications_settings_types_dialog, null)
 
+        val outerView = layout.findViewById<ScrollView>(R.id.outer_view)
         outerView.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -110,16 +109,13 @@ class NotificationsSettingsDialogFragment(
             setNegativeButton(R.string.cancel, this@NotificationsSettingsDialogFragment)
             setView(layout)
         }
-
         if (mShouldDisplayMainSwitch) {
             setupTitleViewWithMainSwitch(outerView)
-            if (mTitleViewWithMainSwitch == null) {
+            if (mTitleViewWithMainSwitch == null)
                 AppLog.e(AppLog.T.NOTIFS, "Main switch enabled but layout not set")
-            } else {
+            else
                 builder.setCustomTitle(mTitleViewWithMainSwitch)
-            }
         }
-
         return builder.create()
     }
 
@@ -172,15 +168,12 @@ class NotificationsSettingsDialogFragment(
     }
 
     private fun configureLayoutForView(view: LinearLayout): View {
-        val settingsJson = settings.getSettingsJsonForChannelAndType(this.channel,
-            this.type, this.blogId
-        )
+        val settingsJson = settings.getSettingsJsonForChannelAndType(this.channel, this.type, this.blogId)
         var summaryArray = arrayOfNulls<String>(0)
         when (this.channel) {
             NotificationsSettings.Channel.BLOGS -> {
                 mSettingsArray = requireContext().resources.getStringArray(R.array.notifications_blog_settings)
-                mSettingsValues = requireContext().resources
-                    .getStringArray(R.array.notifications_blog_settings_values)
+                mSettingsValues = requireContext().resources.getStringArray(R.array.notifications_blog_settings_values)
             }
 
             NotificationsSettings.Channel.OTHER -> {
@@ -222,7 +215,7 @@ class NotificationsSettingsDialogFragment(
             }
         }
         if (shouldShowLocalNotifications) {
-            val isBloggingRemindersEnabled = this.bloggingRemindersProvider != null
+            val isBloggingRemindersEnabled = bloggingRemindersProvider != null
             addWeeklyRoundupSetting(view, !isBloggingRemindersEnabled)
             if (isBloggingRemindersEnabled) {
                 addBloggingReminderSetting(view)
@@ -257,11 +250,9 @@ class NotificationsSettingsDialogFragment(
         })
     }
 
-    private fun setupSwitchSettingView(
-        settingName: String, settingValue: String?,
-        settingSummary: String?, isSettingChecked: Boolean,
-        isSettingLast: Boolean,
-        onCheckedChangeListener: CompoundButton.OnCheckedChangeListener
+    private fun setupSwitchSettingView(settingName: String, settingValue: String?, settingSummary: String?,
+                                       isSettingChecked: Boolean, isSettingLast: Boolean,
+                                       onCheckedChangeListener: CompoundButton.OnCheckedChangeListener
     ): View {
         return setupSettingView(
             settingName, settingValue, settingSummary, isSettingChecked,
@@ -269,9 +260,8 @@ class NotificationsSettingsDialogFragment(
         )
     }
 
-    private fun setupClickSettingView(
-        settingName: String, settingSummary: String?, isSettingLast: Boolean,
-        onClickListener: View.OnClickListener
+    private fun setupClickSettingView(settingName: String, settingSummary: String?, isSettingLast: Boolean,
+                                      onClickListener: View.OnClickListener
     ): View {
         return setupSettingView(
             settingName, null, settingSummary, false,
@@ -279,11 +269,10 @@ class NotificationsSettingsDialogFragment(
         )
     }
 
-    private fun setupSettingView(
-        settingName: String, settingValue: String?, settingSummary: String?,
-        isSettingChecked: Boolean, isSettingLast: Boolean,
-        onCheckedChangeListener: CompoundButton.OnCheckedChangeListener?,
-        onClickListener: View.OnClickListener?
+    private fun setupSettingView(settingName: String, settingValue: String?, settingSummary: String?,
+                                 isSettingChecked: Boolean, isSettingLast: Boolean,
+                                 onCheckedChangeListener: CompoundButton.OnCheckedChangeListener?,
+                                 onClickListener: View.OnClickListener?
     ): View {
         NotificationsSettingsSwitchBinding.inflate(layoutInflater).apply {
             notificationsSwitchTitle.text = settingName

@@ -13,8 +13,8 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionsChanged
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
+import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionsChanged
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.NotificationsSettings
 import org.wordpress.android.ui.RequestCodes
@@ -109,11 +109,10 @@ class NotificationsSettingsMySitesFragment: ChildNotificationSettingsFragment(),
         }
     }
 
-    @Suppress("DEPRECATION")
     private fun configureFollowedBlogsSettings(blogsCategory: PreferenceCategory?) {
-        if (!isAdded || blogsCategory == null) {
+        if (!isAdded || blogsCategory == null)
             return
-        }
+
         val models: List<FollowedBlogsProvider.PreferenceModel> =
             mFollowedBlogsProvider.getAllFollowedBlogs(null)
                 .sortedWith { (title): FollowedBlogsProvider.PreferenceModel,
@@ -125,11 +124,16 @@ class NotificationsSettingsMySitesFragment: ChildNotificationSettingsFragment(),
             }
         blogsCategory.removeAll()
 
+        setFollowedBlogsPreferenceScreen(models, blogsCategory)
+    }
+
+    @Suppress("DEPRECATION")
+    private fun setFollowedBlogsPreferenceScreen(models: List<FollowedBlogsProvider.PreferenceModel>,
+                                                 blogsCategory: PreferenceCategory) {
         val context: Context? = activity
         for ((title, summary, blogId, clickHandler) in models) {
-            if (context == null) {
+            if (context == null)
                 return
-            }
             val prefScreen = preferenceManager.createPreferenceScreen(context)
             prefScreen.title = title
             prefScreen.summary = summary
@@ -143,28 +147,15 @@ class NotificationsSettingsMySitesFragment: ChildNotificationSettingsFragment(),
                         mPreviousEmailComments = clickHandler.shouldEmailComments
                         val dialog = NotificationSettingsFollowedDialog()
                         val args = Bundle().apply {
-                            putBoolean(
-                                NotificationSettingsFollowedDialog.ARG_NOTIFICATION_POSTS,
-                                mPreviousNotifyPosts
-                            )
-                            putBoolean(
-                                NotificationSettingsFollowedDialog.ARG_EMAIL_POSTS,
-                                mPreviousEmailPosts
-                            )
-                            putString(
-                                NotificationSettingsFollowedDialog.ARG_EMAIL_POSTS_FREQUENCY,
-                                mPreviousEmailPostsFrequency
-                            )
-                            putBoolean(
-                                NotificationSettingsFollowedDialog.ARG_EMAIL_COMMENTS,
-                                mPreviousEmailComments
-                            )
+                            putBoolean(NotificationSettingsFollowedDialog.ARG_NOTIFICATION_POSTS, mPreviousNotifyPosts)
+                            putBoolean(NotificationSettingsFollowedDialog.ARG_EMAIL_POSTS, mPreviousEmailPosts)
+                            putString(NotificationSettingsFollowedDialog.ARG_EMAIL_POSTS_FREQUENCY,
+                                mPreviousEmailPostsFrequency)
+                            putBoolean(NotificationSettingsFollowedDialog.ARG_EMAIL_COMMENTS, mPreviousEmailComments)
                         }
                         dialog.arguments = args
-                        dialog.setTargetFragment(
-                            this@NotificationsSettingsMySitesFragment,
-                            RequestCodes.NOTIFICATION_SETTINGS
-                        )
+                        dialog.setTargetFragment(this@NotificationsSettingsMySitesFragment,
+                            RequestCodes.NOTIFICATION_SETTINGS)
                         dialog.show(parentFragmentManager, NotificationSettingsFollowedDialog.TAG)
                         true
                     }

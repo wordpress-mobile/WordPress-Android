@@ -71,7 +71,6 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPPermissionUtils
 import javax.inject.Inject
 
-
 class NotificationsSettingsFragment : PreferenceFragmentCompat(), NotificationsMySitesSettingsFragment,
     OnSharedPreferenceChangeListener {
     private var mNotificationsSettings: NotificationsSettings? = null
@@ -129,7 +128,7 @@ class NotificationsSettingsFragment : PreferenceFragmentCompat(), NotificationsM
         }
     }
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {}
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) = Unit
 
     @Suppress("DEPRECATION")
     override fun onDisplayPreferenceDialog(preference: Preference) {
@@ -501,8 +500,8 @@ class NotificationsSettingsFragment : PreferenceFragmentCompat(), NotificationsM
     }
 
     private fun shouldRequestRuntimePermission(): Boolean {
-        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-                && !WPPermissionUtils.isPermissionAlwaysDenied(requireActivity(), Manifest.permission.POST_NOTIFICATIONS))
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                !WPPermissionUtils.isPermissionAlwaysDenied(requireActivity(), Manifest.permission.POST_NOTIFICATIONS))
     }
 
     @get:StringRes
@@ -543,9 +542,28 @@ class NotificationsSettingsFragment : PreferenceFragmentCompat(), NotificationsM
                     .compareTo(SiteUtils.getSiteNameOrHomeURL(o2), ignoreCase = true)
             }
         }
-        val context: Context? = activity
         blogsCategory!!.removeAll()
         val maxSitesToShow = if (showAll) NO_MAXIMUM else MAX_SITES_TO_SHOW_ON_FIRST_SCREEN
+
+        setBlogsPreferenceScreen(sites, maxSitesToShow, blogsCategory)
+
+        // Add a message in a preference if there are no matching search results
+        if (mSiteCount == 0 && !TextUtils.isEmpty(trimmedQuery)) {
+            val searchResultsPref = Preference(requireContext())
+            searchResultsPref.summary =
+                String.format(getString(R.string.notifications_no_search_results), trimmedQuery)
+            blogsCategory.addPreference(searchResultsPref)
+        }
+        if (mSiteCount > maxSitesToShow && !showAll) {
+            // append a "view all" option
+            appendViewAllSitesOption(getString(R.string.pref_notification_blogs), false)
+        }
+        updateSearchMenuVisibility()
+    }
+
+    private fun setBlogsPreferenceScreen(sites: List<SiteModel>, maxSitesToShow: Int,
+                                         blogsCategory: PreferenceCategory) {
+        val context: Context? = activity
         var count = 0
         for (site in sites) {
             if (context == null) {
@@ -568,26 +586,12 @@ class NotificationsSettingsFragment : PreferenceFragmentCompat(), NotificationsM
             prefScreen.fragment = NotificationsSettingsTypesFragment::class.qualifiedName
             blogsCategory.addPreference(prefScreen)
         }
-
-        // Add a message in a preference if there are no matching search results
-        if (mSiteCount == 0 && !TextUtils.isEmpty(trimmedQuery)) {
-            val searchResultsPref = Preference(requireContext())
-            searchResultsPref.summary =
-                String.format(getString(R.string.notifications_no_search_results), trimmedQuery)
-            blogsCategory.addPreference(searchResultsPref)
-        }
-        if (mSiteCount > maxSitesToShow && !showAll) {
-            // append a "view all" option
-            appendViewAllSitesOption(getString(R.string.pref_notification_blogs), false)
-        }
-        updateSearchMenuVisibility()
     }
 
-    @Suppress("DEPRECATION")
     private fun configureFollowedBlogsSettings(blogsCategory: PreferenceCategory?, showAll: Boolean) {
-        if (!isAdded || blogsCategory == null) {
+        if (!isAdded || blogsCategory == null)
             return
-        }
+
         var models: List<PreferenceModel>
         var query = ""
         if (mSearchView != null && !TextUtils.isEmpty(mSearchView!!.query)) {
@@ -596,69 +600,16 @@ class NotificationsSettingsFragment : PreferenceFragmentCompat(), NotificationsM
         } else {
             models = mFollowedBlogsProvider.getAllFollowedBlogs(null)
         }
-        val context: Context? = activity
         blogsCategory.removeAll()
+
         val maxSitesToShow = if (showAll) NO_MAXIMUM else MAX_SITES_TO_SHOW_ON_FIRST_SCREEN
         mSubscriptionCount = 0
-        if (models.isNotEmpty()) {
-            models = models.sortedWith { (title): PreferenceModel, (otherTitle): PreferenceModel ->
-                title.compareTo(
-                    otherTitle,
-                    ignoreCase = true
-                )
-            }
+
+        models = models.sortedWith { (title): PreferenceModel, (otherTitle): PreferenceModel ->
+            title.compareTo(otherTitle, ignoreCase = true)
         }
-        for ((title, summary, blogId, clickHandler) in models) {
-            if (context == null) {
-                return
-            }
-            mSubscriptionCount++
-            if (!showAll && mSubscriptionCount > maxSitesToShow) {
-                break
-            }
-            val prefScreen = preferenceManager.createPreferenceScreen(context)
-            prefScreen.title = title
-            prefScreen.summary = summary
-            if (clickHandler != null) {
-                prefScreen.onPreferenceClickListener =
-                    Preference.OnPreferenceClickListener {
-                        mNotificationUpdatedSite = blogId
-                        mPreviousNotifyPosts = clickHandler.shouldNotifyPosts
-                        mPreviousEmailPosts = clickHandler.shouldEmailPosts
-                        mPreviousEmailPostsFrequency = clickHandler.emailPostFrequency
-                        mPreviousEmailComments = clickHandler.shouldEmailComments
-                        val dialog = NotificationSettingsFollowedDialog()
-                        val args = Bundle().apply {
-                            putBoolean(
-                                NotificationSettingsFollowedDialog.ARG_NOTIFICATION_POSTS,
-                                mPreviousNotifyPosts
-                            )
-                            putBoolean(
-                                NotificationSettingsFollowedDialog.ARG_EMAIL_POSTS,
-                                mPreviousEmailPosts
-                            )
-                            putString(
-                                NotificationSettingsFollowedDialog.ARG_EMAIL_POSTS_FREQUENCY,
-                                mPreviousEmailPostsFrequency
-                            )
-                            putBoolean(
-                                NotificationSettingsFollowedDialog.ARG_EMAIL_COMMENTS,
-                                mPreviousEmailComments
-                            )
-                        }
-                        dialog.arguments = args
-                        dialog.setTargetFragment(
-                            this@NotificationsSettingsFragment,
-                            RequestCodes.NOTIFICATION_SETTINGS
-                        )
-                        dialog.show(parentFragmentManager, NotificationSettingsFollowedDialog.TAG)
-                        true
-                    }
-            } else {
-                prefScreen.isEnabled = false
-            }
-            blogsCategory.addPreference(prefScreen)
-        }
+
+        setFollowedBlogsPreferenceScreen(models, maxSitesToShow, showAll, blogsCategory)
 
         // Add message if there are no matching search results.
         if (mSubscriptionCount == 0 && !TextUtils.isEmpty(query)) {
@@ -672,6 +623,48 @@ class NotificationsSettingsFragment : PreferenceFragmentCompat(), NotificationsM
             appendViewAllSitesOption(getString(R.string.pref_notification_blogs_followed), true)
         }
         updateSearchMenuVisibility()
+    }
+
+    @Suppress("DEPRECATION")
+    private fun setFollowedBlogsPreferenceScreen(models: List<PreferenceModel>, maxSitesToShow: Int, showAll: Boolean,
+                                                 blogsCategory: PreferenceCategory) {
+        val context: Context? = activity
+        for ((title, summary, blogId, clickHandler) in models) {
+            if (context == null)
+                return
+            mSubscriptionCount++
+            if (!showAll && mSubscriptionCount > maxSitesToShow)
+                break
+            val prefScreen = preferenceManager.createPreferenceScreen(context)
+            prefScreen.title = title
+            prefScreen.summary = summary
+            if (clickHandler != null) {
+                prefScreen.onPreferenceClickListener =
+                    Preference.OnPreferenceClickListener {
+                        mNotificationUpdatedSite = blogId
+                        mPreviousNotifyPosts = clickHandler.shouldNotifyPosts
+                        mPreviousEmailPosts = clickHandler.shouldEmailPosts
+                        mPreviousEmailPostsFrequency = clickHandler.emailPostFrequency
+                        mPreviousEmailComments = clickHandler.shouldEmailComments
+                        val dialog = NotificationSettingsFollowedDialog()
+                        val args = Bundle().apply {
+                            putBoolean(NotificationSettingsFollowedDialog.ARG_NOTIFICATION_POSTS, mPreviousNotifyPosts)
+                            putBoolean(NotificationSettingsFollowedDialog.ARG_EMAIL_POSTS, mPreviousEmailPosts)
+                            putString(NotificationSettingsFollowedDialog.ARG_EMAIL_POSTS_FREQUENCY,
+                                mPreviousEmailPostsFrequency)
+                            putBoolean(NotificationSettingsFollowedDialog.ARG_EMAIL_COMMENTS, mPreviousEmailComments)
+                        }
+                        dialog.arguments = args
+                        dialog.setTargetFragment(this@NotificationsSettingsFragment,
+                            RequestCodes.NOTIFICATION_SETTINGS)
+                        dialog.show(parentFragmentManager, NotificationSettingsFollowedDialog.TAG)
+                        true
+                    }
+            } else {
+                prefScreen.isEnabled = false
+            }
+            blogsCategory.addPreference(prefScreen)
+        }
     }
 
     private fun appendViewAllSitesOption(preference: String, isFollowed: Boolean) {

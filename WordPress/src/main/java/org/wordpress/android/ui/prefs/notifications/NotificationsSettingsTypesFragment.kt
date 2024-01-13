@@ -150,7 +150,8 @@ class NotificationsSettingsTypesFragment: ChildNotificationSettingsFragment() {
     }
 
     private val mOnSettingsChangedListener =
-        NotificationsSettingsDialogPreference.OnNotificationsSettingsChangedListener { channel, type, blogId, newValues ->
+        NotificationsSettingsDialogPreference.OnNotificationsSettingsChangedListener { channel, type, blogId,
+                                                                                       newValues ->
             if (!isAdded) {
                 return@OnNotificationsSettingsChangedListener
             }
