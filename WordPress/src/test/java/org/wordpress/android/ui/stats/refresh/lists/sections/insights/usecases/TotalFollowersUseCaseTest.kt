@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -24,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -51,6 +53,9 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
     lateinit var useCaseMode: UseCaseMode
 
     @Mock
+    lateinit var statsUtils: StatsUtils
+
+    @Mock
     lateinit var actionCardHandler: ActionCardHandler
     private lateinit var useCase: TotalFollowersUseCase
     private val followers = 100
@@ -66,9 +71,11 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
             totalStatsMapper,
             analyticsTrackerWrapper,
             actionCardHandler,
-            useCaseMode
+            useCaseMode,
+            statsUtils
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
     }
 
     @Test
