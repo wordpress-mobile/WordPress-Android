@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.plans
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import org.wordpress.android.fluxc.model.SiteModel
@@ -26,10 +27,11 @@ class PlansCardViewModelSlice @Inject constructor(
     val uiModel = _uiModel.distinctUntilChanged()
 
     fun buildCard(site:SiteModel){
-         _uiModel .postValue(plansCardBuilder.build(getParams(site)))
+         _uiModel.postValue(plansCardBuilder.build(getParams(site)))
     }
 
-    private fun getParams(site:SiteModel) = MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams(
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal fun getParams(site:SiteModel) = MySiteCardAndItemBuilderParams.DashboardCardPlansBuilderParams(
         isEligible = dashboardCardPlansUtils.shouldShowCard(site),
         onClick = this::onDashboardCardPlansClick,
         onMoreMenuClick = this::onDashboardCardPlansMoreMenuClick,
