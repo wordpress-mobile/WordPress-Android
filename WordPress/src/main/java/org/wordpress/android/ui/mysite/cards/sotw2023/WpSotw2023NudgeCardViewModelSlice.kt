@@ -36,15 +36,19 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
         this.scope = scope
     }
 
-    suspend fun buildCard(){
-        if(shouldShow().not()) _uiModel.postValue(null)
-        _uiModel.postValue(WpSotw2023NudgeCardModel(
-            title = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_title),
-            text = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_text),
-            ctaText = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_cta),
-            onHideMenuItemClick = ListItemInteraction.create(::onHideMenuItemClick),
-            onCtaClick = ListItemInteraction.create(::onCtaClick)
-        ))
+    fun buildCard(){
+        if (shouldShow().not()) _uiModel.postValue(null)
+        else {
+            _uiModel.postValue(
+                WpSotw2023NudgeCardModel(
+                    title = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_title),
+                    text = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_text),
+                    ctaText = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_cta),
+                    onHideMenuItemClick = ListItemInteraction.create(::onHideMenuItemClick),
+                    onCtaClick = ListItemInteraction.create(::onCtaClick)
+                )
+            )
+        }
     }
 
     fun trackShown() {
