@@ -7,6 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -14,6 +15,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.plans.PlansCardViewModelSlice
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -54,7 +56,26 @@ class PlansCardViewModelSliceTest : BaseUnitTest() {
         }
     }
 
+    @Test
+    fun `given plan card, when build is invoked, then uiModels is updated`() {
+        val site: SiteModel = mock()
+        val card = mock<MySiteCardAndItem.Card.DashboardPlansCard>()
+        whenever(plansCardBuilder.build(any())).thenReturn(card)
 
+        viewModel.buildCard(site)
+
+        assertThat(uiModels).last().isNotNull
+    }
+
+    @Test
+    fun `given plan card is null, when build is invoked, then uiModels is not updated`() {
+        val site: SiteModel = mock()
+        whenever(plansCardBuilder.build(any())).thenReturn(null)
+
+        viewModel.buildCard(site)
+
+        assertThat(uiModels).last().isNull()
+    }
 
     @Test
     fun `given plans card, when card item is clicked, then navigated to free domain search`() {
