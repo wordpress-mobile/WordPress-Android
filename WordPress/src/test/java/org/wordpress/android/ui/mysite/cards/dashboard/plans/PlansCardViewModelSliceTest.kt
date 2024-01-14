@@ -15,7 +15,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.plans.PlansCardViewModelSlice
 import org.wordpress.android.ui.mysite.SiteNavigationAction
