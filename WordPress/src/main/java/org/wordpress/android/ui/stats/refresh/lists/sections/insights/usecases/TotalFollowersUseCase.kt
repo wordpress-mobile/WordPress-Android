@@ -63,7 +63,10 @@ class TotalFollowersUseCase @Inject constructor(
         addActionCard(domainModel)
         val items = mutableListOf<BlockListItem>()
         items.add(buildTitle())
-        items.add(ValueWithChartItem(value = statsUtils.toFormattedString(domainModel, MILLION), extraBottomMargin = true))
+        items.add(ValueWithChartItem(
+            value = statsUtils.toFormattedString(domainModel, MILLION),
+            extraBottomMargin = true
+        ))
         if (totalStatsMapper.shouldShowFollowersGuideCard(domainModel)) {
             items.add(ListItemGuideCard(resourceProvider.getString(R.string.stats_insights_followers_guide_card)))
         }
