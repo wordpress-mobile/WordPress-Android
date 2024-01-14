@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite.cards.sotw2023
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -19,7 +18,6 @@ import org.wordpress.android.util.config.WpSotw2023NudgeFeatureConfig
 import java.time.Instant
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@Ignore("Update tests to work with new architecture")
 class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var featureConfig: WpSotw2023NudgeFeatureConfig
@@ -60,45 +58,45 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
     fun `WHEN feature is disabled THEN buildCard returns null `() = test {
         mockCardRequisites(isFeatureEnabled = false)
 
-        val card = viewModelSlice.buildCard()
+        viewModelSlice.buildCard()
 
-        assertThat(card).isNull()
+        assertThat(uiModels.last()).isNull()
     }
 
     @Test
     fun `WHEN card is hidden in app prefs THEN buildCard returns null`() = test {
         mockCardRequisites(isCardHidden = true)
 
-        val card = viewModelSlice.buildCard()
+        viewModelSlice.buildCard()
 
-        assertThat(card).isNull()
+        assertThat(uiModels.last()).isNull()
     }
 
     @Test
     fun `WHEN date is before event THEN buildCard returns null`() = test{
         mockCardRequisites(isDateAfterEvent = false)
 
-        val card = viewModelSlice.buildCard()
+        viewModelSlice.buildCard()
 
-        assertThat(card).isNull()
+        assertThat(uiModels.last()).isNull()
     }
 
     @Test
     fun `WHEN language is not english THEN buildCard returns null`() = test{
         mockCardRequisites(isLanguageEnglish = false)
 
-        val card = viewModelSlice.buildCard()
+        viewModelSlice.buildCard()
 
-        assertThat(card).isNull()
+        assertThat(uiModels.last()).isNull()
     }
 
     @Test
     fun `WHEN requisites are met THEN buildCard returns card `() = test{
         mockCardRequisites()
 
-        val card = viewModelSlice.buildCard()
+        viewModelSlice.buildCard()
 
-        assertThat(card).isNotNull
+        assertThat(uiModels.last()).isNotNull
     }
 
     @Test
@@ -116,10 +114,12 @@ class WpSotw2023NudgeCardViewModelSliceTest : BaseUnitTest() {
         mockCardRequisites()
 
         viewModelSlice.buildCard()
-        uiModels.last()?.onHideMenuItemClick?.click()
+
+        val uiModel = uiModels.last() as MySiteCardAndItem.Card.WpSotw2023NudgeCardModel
+        uiModel.onHideMenuItemClick.click()
 
         verify(appPrefsWrapper).setShouldHideSotw2023NudgeCard(true)
-        assertThat(uiModels).isNull()
+        assertThat(uiModels.last()).isNull()
     }
 
     // region Analytics
