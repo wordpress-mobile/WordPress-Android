@@ -115,9 +115,9 @@ def code_freeze_beta_version
   # Read the current release version from the .xcconfig file and parse it into an AppVersion object
   current_version = VERSION_FORMATTER.parse(VERSION_FILE.read_version_name)
   # Calculate the next major version number
-  next_minor_version = VERSION_CALCULATOR.next_minor_version(version: current_version)
+  next_version = VERSION_CALCULATOR.next_release_version(version: current_version)
   # Calculate the next build number
-  code_freeze_beta_version = VERSION_CALCULATOR.next_build_number(version: next_minor_version)
+  code_freeze_beta_version = VERSION_CALCULATOR.next_build_number(version: next_version)
   # Return the formatted release version
   VERSION_FORMATTER.beta_version(code_freeze_beta_version)
 end

@@ -1,4 +1,5 @@
-No updates this week! Enjoy these reindeer facts:
-- Male reindeer shed their antlers in fall and females in spring, so Santa’s reindeer are female.
-- Reindeer don’t actually have red noses.
-- Santa hasn’t eaten milk and cookies since 2003 because Blitzen always gets there first.
+Block Editor updates:
+- Device keyboard remains when editing text blocks
+- Screen auto-scrolls to newly inserted blocks
+- Unselect blocks by pressing your device’s back button
+- Share different media types to the app at once without crashing
