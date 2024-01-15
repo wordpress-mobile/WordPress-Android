@@ -21,6 +21,15 @@ repositories {
 }
 
 android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlin {
+        jvmToolchain(17)
+    }
+
     namespace "org.wordpress.android.login"
 
     compileSdkVersion rootProject.compileSdkVersion
