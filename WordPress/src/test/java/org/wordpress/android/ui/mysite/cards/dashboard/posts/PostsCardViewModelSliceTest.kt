@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite.cards.dashboard.posts
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -23,7 +22,6 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-@Ignore("Update tests to work with new architecture")
 class PostsCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var cardsTracker: CardsTracker
