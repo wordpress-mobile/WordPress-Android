@@ -665,7 +665,7 @@ public class ReaderPostTable {
     public static String getOldestPubDateInFeed(long feedId) {
         String sql = "SELECT date_published FROM tbl_posts"
                      + " WHERE feed_id=? AND tag_name='' AND tag_type=0"
-                     + " ORDER BY date_published LIMIT 1";
+                     + " ORDER BY datetime(date_published) LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(feedId)});
     }
 
