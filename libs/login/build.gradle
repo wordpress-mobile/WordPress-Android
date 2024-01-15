@@ -73,8 +73,8 @@ dependencies {
 
     implementation "com.google.android.gms:play-services-fido:$fidoVersion"
 
-    implementation "androidx.credentials:credentials:1.2.0"
-    implementation "androidx.credentials:credentials-play-services-auth:1.2.0"
+    implementation "androidx.credentials:credentials:$credentialManagerVersion"
+    implementation "androidx.credentials:credentials-play-services-auth:$credentialManagerVersion"
 
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
