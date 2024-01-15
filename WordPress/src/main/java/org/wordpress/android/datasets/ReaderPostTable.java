@@ -745,7 +745,7 @@ public class ReaderPostTable {
         if (tag.isPostsILike()) {
             return "datetime(date_liked)";
         } else if (tag.isFollowedSites()) {
-            return "date_published";
+            return "datetime(date_published)";
         } else if (tag.tagType == ReaderTagType.SEARCH) {
             return "score";
         } else if (tag.isTagTopic() || tag.isBookmarked()) {
