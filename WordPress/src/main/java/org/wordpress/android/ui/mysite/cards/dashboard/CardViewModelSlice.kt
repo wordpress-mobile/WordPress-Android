@@ -12,7 +12,10 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.Type
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
+import org.wordpress.android.fluxc.store.NotificationStore
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
+import org.wordpress.android.fluxc.utils.PreferenceUtils
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -26,9 +29,12 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.DynamicDashboardCardsFeatureConfig
+import org.wordpress.android.util.config.FEATURE_FLAG_PLATFORM_PARAMETER
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -43,6 +49,8 @@ class CardViewModelSlice @Inject constructor(
     private val todaysStatsViewModelSlice: TodaysStatsViewModelSlice,
     private val postsCardViewModelSlice: PostsCardViewModelSlice,
     private val activityLogCardViewModelSlice: ActivityLogCardViewModelSlice,
+    private val preferences: PreferenceUtils.PreferenceUtilsWrapper,
+    private val buildConfigWrapper: BuildConfigWrapper,
 ) {
     private lateinit var scope: CoroutineScope
 
@@ -102,12 +110,28 @@ class CardViewModelSlice @Inject constructor(
     ) {
         _isRefreshing.postValue(true)
         scope.launch(bgDispatcher) {
-            val result = cardsStore.fetchCards(selectedSite, getCardTypes(selectedSite))
+            val payload = CardsRestClient.FetchCardsPayload(
+                selectedSite,
+                getCardTypes(selectedSite),
+                buildNumber = buildConfigWrapper.getAppVersionCode().toString(),
+                deviceId = preferences.getFluxCPreferences().getString(NotificationStore.WPCOM_PUSH_DEVICE_UUID, null)
+                    ?: generateAndStoreUUID(),
+                identifier = buildConfigWrapper.getApplicationId(),
+                marketingVersion = buildConfigWrapper.getAppVersionName(),
+                platform = FEATURE_FLAG_PLATFORM_PARAMETER,
+            )
+            val result = cardsStore.fetchCards(payload)
             val error = result.error
             when {
                 error != null -> postErrorState()
                 else -> _isRefreshing.postValue(false)
             }
+        }
+    }
+
+    private fun generateAndStoreUUID(): String {
+        return UUID.randomUUID().toString().also {
+            preferences.getFluxCPreferences().edit().putString(NotificationStore.WPCOM_PUSH_DEVICE_UUID, it).apply()
         }
     }
 
@@ -166,8 +190,7 @@ class CardViewModelSlice @Inject constructor(
 
     fun postState(cards: List<CardModel>?) {
         _isRefreshing.postValue(false)
-        if (cards.isNullOrEmpty())
-        {
+        if (cards.isNullOrEmpty()) {
             _uiModel.postValue(CardsState.Success(emptyList()))
             return
         }

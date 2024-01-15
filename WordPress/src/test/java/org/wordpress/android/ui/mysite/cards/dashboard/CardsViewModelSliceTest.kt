@@ -21,12 +21,12 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.CardOrder
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel.DynamicCardRowModel
-import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.FetchCardsPayload
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel.PageCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.FetchCardsPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
@@ -247,7 +247,6 @@ class CardsViewModelSliceTest : BaseUnitTest() {
     private lateinit var viewModelSlice: CardViewModelSlice
 
     private lateinit var defaultFetchCardsPayload: FetchCardsPayload
-    private lateinit var cardSource: CardsSource
 
     private val data = CardsResult(
         model = CARDS_MODEL
@@ -275,8 +274,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
             dynamicCardsViewModelSlice,
             todaysStatsViewModelSlice,
             postsCardViewModelSlice,
-            activityLogCardViewModelSlice
-            dynamicDashboardCardsFeatureConfig,
+            activityLogCardViewModelSlice,
             preferenceUtilsWrapper,
             buildConfigWrapper,
         )
