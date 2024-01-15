@@ -743,7 +743,7 @@ public class ReaderPostTable {
      */
     private static String getSortColumnForTag(ReaderTag tag) {
         if (tag.isPostsILike()) {
-            return "date_liked";
+            return "datetime(date_liked)";
         } else if (tag.isFollowedSites()) {
             return "date_published";
         } else if (tag.tagType == ReaderTagType.SEARCH) {
