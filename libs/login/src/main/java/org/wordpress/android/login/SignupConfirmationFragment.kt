@@ -76,8 +76,8 @@ class SignupConfirmationFragment : Fragment() {
             mPhotoUrl = it.getString(ARG_SOCIAL_PHOTO_URL)
             mService = it.getString(ARG_SOCIAL_SERVICE)
         }
-        //TODO: Migrate this to current SDK requirement, this one is deprecated
-        //setHasOptionsMenu(true)
+        // TODO: Migrate this to current SDK requirement, this one is deprecated
+        // setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
