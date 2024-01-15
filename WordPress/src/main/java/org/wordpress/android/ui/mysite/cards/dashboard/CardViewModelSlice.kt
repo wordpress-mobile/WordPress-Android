@@ -157,22 +157,8 @@ class CardViewModelSlice @Inject constructor(
     }
 
     private fun postErrorState() {
-        if (_uiModel.value != null && _uiModel.value is CardsState.ErrorState) {
-            _onSnackbarMessage.postValue(
-                Event(
-                    SnackbarMessageHolder(UiString.UiStringRes(R.string.my_site_dashboard_update_error))
-                )
-            )
-            _uiModel.postValue(
-                CardsState.ErrorState(
-                    MySiteCardAndItem.Item.InfoItem(
-                        title = UiString.UiStringRes(R.string.my_site_dashboard_stale_message)
-                    )
-                )
-            )
-        }
-
-        if (_uiModel.value == null) {
+        if ((_uiModel.value == null) || isUiModelEmpty()){
+            // if the
             _uiModel.postValue(
                 CardsState.ErrorState(
                     MySiteCardAndItem.Card.ErrorCard(
@@ -180,8 +166,19 @@ class CardViewModelSlice @Inject constructor(
                     )
                 )
             )
-        }
+        } else if (_uiModel.value is CardsState.ErrorState) {
+            // if the error state is already posted, then post the snackbar message
+                _onSnackbarMessage.postValue(
+                    Event(
+                        SnackbarMessageHolder(UiString.UiStringRes(R.string.my_site_dashboard_update_error))
+                    )
+                )
+            }
         _isRefreshing.postValue(false)
+    }
+
+    private fun isUiModelEmpty(): Boolean {
+        return (_uiModel.value is CardsState.Success) && (_uiModel.value as CardsState.Success).cards.isEmpty()
     }
 
     private fun onDashboardErrorRetry() {

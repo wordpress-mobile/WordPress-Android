@@ -4,9 +4,9 @@ import android.content.SharedPreferences
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
@@ -204,7 +204,6 @@ private val DYNAMIC_CARDS_ENABLED_CARD_TYPE =
     listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.POSTS, CardModel.Type.DYNAMIC)
 
 @ExperimentalCoroutinesApi
-@Ignore("Update tests to work with new architecture")
 class CardsViewModelSliceTest : BaseUnitTest() {
     @Mock
     private lateinit var cardsStore: CardsStore
@@ -358,7 +357,6 @@ class CardsViewModelSliceTest : BaseUnitTest() {
 
         assertThat(result.size).isEqualTo(1)
         assertThat(result.first()).isInstanceOf(CardsState.Success::class.java)
-        assertThat((result.first() as CardsState.Success).cards).isEqualTo(CardsUpdate(data.model))
     }
 
     /* REFRESH DATA */
@@ -375,7 +373,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no error, when build is invoked, then data is only loaded from get cards (database)`() = test {
+    fun `given no error, when build is invoked, then data loaded from get cards (database)`() = test {
         setUpMocks(
             isDashboardCardActivityLogEnabled = true,
             isRequestPages = true,
@@ -385,15 +383,13 @@ class CardsViewModelSliceTest : BaseUnitTest() {
 
         viewModelSlice.buildCard(siteModel)
 
-        assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(CardsUpdate(data.model))
+        assertThat(result.first()).isInstanceOf(CardsState.Success::class.java)
     }
 
     @Test
     fun `when refresh is invoked, then todays stats are requested from network`() =
         test {
             setUpMocks()
-            val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
             whenever(cardsStore.fetchCards(defaultFetchCardsPayload)).thenReturn(success)
             viewModelSlice.refresh.observeForever { }
@@ -484,7 +480,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when isRefreshing is invoked, then refresh is set to false`() = test {
+    fun `when build is invoked, then refresh is set to true and then to false`() = test {
         setUpMocks()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
@@ -493,68 +489,55 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         viewModelSlice.buildCard(siteModel)
         advanceUntilIdle()
 
-        assertThat(refresh.size).isEqualTo(5)
-        assertThat(refresh[0].peekContent()).isFalse // init
-        assertThat(refresh[1].peekContent()).isTrue // build(...) -> refresh()
-        assertThat(refresh[2].peekContent()).isTrue // build(...) -> cardsStore.fetchCards(...) -> success
-        assertThat(refresh[3].peekContent()).isFalse // refresh()
-        assertThat(refresh[4].peekContent()).isFalse // refreshData(...) -> cardsStore.fetchCards(...) -> success
-    }
-
-    @Test
-    fun `given no error, when data has been refreshed, then refresh is set to true`() = test {
-        setUpMocks()
-        val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
-        whenever(cardsStore.fetchCards(defaultFetchCardsPayload)).thenReturn(success)
-
-        viewModelSlice.buildCard(siteModel)
-        advanceUntilIdle()
-
-        assertThat(refresh.size).isEqualTo(5)
-        assertThat(refresh[0].peekContent()).isFalse // init
-        assertThat(refresh[1].peekContent()).isTrue // build(...) -> refresh()
-        assertThat(refresh[2].peekContent()).isTrue // build(...) -> cardsStore.fetchCards(...) -> success
-        assertThat(refresh[3].peekContent()).isFalse // refresh()
-        assertThat(refresh[4].peekContent()).isFalse // refreshData(...) -> cardsStore.fetchCards(...) -> success
+        assertThat(isRefreshing.size).isEqualTo(4)
+        assertThat(isRefreshing[0]).isTrue // init
+        assertThat(isRefreshing[1]).isFalse // build(...) -> refresh()
+        assertThat(isRefreshing[2]).isTrue // build(...) -> cardsStore.fetchCards(...) -> success
+        assertThat(isRefreshing[3]).isFalse // refresh()
     }
 
     @Test
     fun `given error, when data has been refreshed, then refresh is set to false`() = test {
         setUpMocks()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
-        val result = mutableListOf<Boolean>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
         whenever(cardsStore.fetchCards(defaultFetchCardsPayload)).thenReturn(apiError)
 
         viewModelSlice.buildCard(siteModel)
         advanceUntilIdle()
 
-        assertThat(result.size).isEqualTo(5)
-        assertThat(result[0]).isFalse // init
-        assertThat(result[1]).isTrue // build(...) -> refresh()
-        assertThat(result[2]).isTrue // build(...) -> cardsStore.fetchCards(...) -> error
-        assertThat(result[3]).isFalse // refresh()
-        assertThat(result[4]).isFalse // refreshData(...) -> cardsStore.fetchCards(...) -> error
+        assertThat(isRefreshing.size).isEqualTo(4)
+        assertThat(isRefreshing[0]).isTrue // init
+        assertThat(isRefreshing[1]).isFalse // build(...) -> refresh()
+        assertThat(isRefreshing[2]).isTrue // build(...) -> cardsStore.fetchCards(...) -> success
+        assertThat(isRefreshing[3]).isFalse // refresh()
     }
 
     /* INVALID SITE */
 
     @Test
     fun `given invalid site, when build is invoked, then error card is shown`() = test {
-        val invalidSiteLocalId = 2
-        val result = mutableListOf<CardsUpdate>()
-        viewModelSlice.refresh.observeForever { }
+        setUpMocks(isRequestPages = true)
+        val fetchCardsPayload = FetchCardsPayload(
+            siteModel,
+            PAGES_FEATURED_ENABLED_CARD_TYPE,
+            BUILD_NUMBER_PARAM,
+            DEVICE_ID_PARAM,
+            IDENTIFIER_PARAM,
+            MARKETING_VERSION_PARAM,
+            PLATFORM_PARAM
+        )
+        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult()))
+        whenever(cardsStore.fetchCards(fetchCardsPayload)).thenReturn(apiError)
 
         viewModelSlice.buildCard(siteModel)
+        testScope().advanceUntilIdle()
 
-        assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(CardsUpdate(showErrorCard = true))
+        assertThat(result.last()).isInstanceOf(CardsState.ErrorState::class.java)
     }
 
     @Test
     fun `given invalid site, when refresh is invoked, then error card is shown`() = test {
-        val invalidSiteLocalId = 2
         val result = mutableListOf<CardsUpdate>()
         viewModelSlice.refresh.observeForever { }
 
@@ -578,7 +561,6 @@ class CardsViewModelSliceTest : BaseUnitTest() {
                 MARKETING_VERSION_PARAM,
                 PLATFORM_PARAM
             )
-            val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
             whenever(cardsStore.fetchCards(fetchCardsPayload)).thenReturn(success)
             viewModelSlice.refresh.observeForever { }
@@ -593,7 +575,6 @@ class CardsViewModelSliceTest : BaseUnitTest() {
     fun `given pages feature enabled + card hidden, when refresh is invoked, then pages not requested from network`() =
         test {
             setUpMocks(isRequestPages = true, isPagesCardHidden = true)
-            val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
             viewModelSlice.refresh.observeForever { }
 
@@ -616,7 +597,6 @@ class CardsViewModelSliceTest : BaseUnitTest() {
                 MARKETING_VERSION_PARAM,
                 PLATFORM_PARAM
             )
-            val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
             whenever(cardsStore.fetchCards(fetchCardsPayload)).thenReturn(success)
             viewModelSlice.refresh.observeForever { }
@@ -640,7 +620,6 @@ class CardsViewModelSliceTest : BaseUnitTest() {
                 MARKETING_VERSION_PARAM,
                 PLATFORM_PARAM
             )
-            val result = mutableListOf<CardsUpdate>()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
             whenever(cardsStore.fetchCards(fetchCardsPayload)).thenReturn(success)
             viewModelSlice.refresh.observeForever { }
