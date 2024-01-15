@@ -1020,7 +1020,7 @@ public class ReaderPostTable {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
         String sql =
                 "SELECT " + columns + " FROM tbl_posts WHERE feed_id=? AND tag_name='' AND tag_type=0"
-                + " ORDER BY date_published DESC";
+                + " ORDER BY datetime(date_published) DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + maxPosts;
