@@ -50,7 +50,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
 
     private lateinit var snackBarMessages: MutableList<SnackbarMessageHolder>
 
-    private lateinit var uiModels : MutableList<List<MySiteCardAndItem?>>
+    private lateinit var uiModels: MutableList<List<MySiteCardAndItem?>>
 
     private val site = SiteModel()
 
@@ -120,7 +120,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         siteItemsViewModelSlice.buildSiteItems(site = site)
 
         // Then
-        assertThat(uiModels).isTrue()
+        assertThat(uiModels.last().find { it?.type == MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE_CARD }).isNotNull
     }
 
     @Test
@@ -130,17 +130,20 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
         whenever(blazeFeatureUtils.isSiteBlazeEligible(site)).thenReturn(false)
 
         // When
-        val result = siteItemsViewModelSlice.buildItems(site = site)
+        siteItemsViewModelSlice.buildSiteItems(site = site)
 
         // Then
-        assertThat(result.isBlazeEligible).isFalse()
+        assertThat(uiModels.last().find { it?.type == MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE_CARD }).isNull()
     }
 
     private fun invokeItemClickAction(
-        enableFocusPoints: Boolean = false,
         action: ListItemAction,
-    ) {
-        val builderParams = siteItemsViewModelSlice.buildItems(enableFocusPoints, site)
-        builderParams.onClick.invoke(action)
+    ) = test {
+        siteItemsViewModelSlice.buildSiteItems(site)
+        val listItem =
+            ((uiModels.last())
+                .find { it is MySiteCardAndItem.Item.ListItem } as MySiteCardAndItem.Item.ListItem)
+                .takeIf { it.listItemAction == action }
+        listItem?.onClick?.click()
     }
 }
