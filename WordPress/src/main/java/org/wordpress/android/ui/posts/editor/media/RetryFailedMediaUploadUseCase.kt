@@ -38,7 +38,8 @@ class RetryFailedMediaUploadUseCase @Inject constructor(
                         editorMediaListener,
                         mediaModels
                     )
-                    val site: SiteModel? = siteStore.getSiteByLocalId(editorMediaListener.getImmutablePost().localSiteId)
+                    val siteId = editorMediaListener.getImmutablePost().localSiteId
+                    val site: SiteModel? = siteStore.getSiteByLocalId(siteId)
                     AnalyticsUtils.trackWithSiteDetails(tracker, Stat.EDITOR_UPLOAD_MEDIA_RETRIED, site, null);
                 }
             }
