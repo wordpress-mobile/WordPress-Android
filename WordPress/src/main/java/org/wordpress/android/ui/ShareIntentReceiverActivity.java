@@ -97,24 +97,21 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
         if (Intent.ACTION_SEND_MULTIPLE.equals(getIntent().getAction())) {
             ArrayList<Uri> externalUris = getIntent().getParcelableArrayListExtra((Intent.EXTRA_STREAM));
             for (Uri uri : externalUris) {
-                if (isAllowedMediaType(uri)) {
+                if (uri != null && isAllowedMediaType(uri)) {
                     mLocalMediaUris.add(MediaUtils.downloadExternalMedia(this, uri));
                 }
             }
         } else if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
             Uri externalUri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-            if (isAllowedMediaType(externalUri)) {
+            if (externalUri != null && isAllowedMediaType(externalUri)) {
                 mLocalMediaUris.add(MediaUtils.downloadExternalMedia(this, externalUri));
             }
         }
     }
 
     private boolean isAllowedMediaType(@NonNull Uri uri) {
-        if (uri != null) {
-            String filePath = MediaUtils.getRealPathFromURI(this, uri);
-            return MediaUtils.isValidImage(filePath) || MediaUtils.isVideo(filePath);
-        }
-        return false;
+        String filePath = MediaUtils.getRealPathFromURI(this, uri);
+        return MediaUtils.isValidImage(filePath) || MediaUtils.isVideo(filePath);
     }
 
     private void initShareFragment() {
