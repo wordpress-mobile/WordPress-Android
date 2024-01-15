@@ -110,8 +110,11 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
     }
 
     private boolean isAllowedMediaType(@NonNull Uri uri) {
-        String filePath = MediaUtils.getRealPathFromURI(this, uri);
-        return MediaUtils.isValidImage(filePath) || MediaUtils.isVideo(filePath);
+        if (uri != null) {
+            String filePath = MediaUtils.getRealPathFromURI(this, uri);
+            return MediaUtils.isValidImage(filePath) || MediaUtils.isVideo(filePath);
+        }
+        return false;
     }
 
     private void initShareFragment() {
@@ -182,7 +185,7 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
 
         if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             intent.putExtra(Intent.EXTRA_STREAM, mLocalMediaUris);
-        } else if (Intent.ACTION_SEND.equals(action)) {
+        } else if (Intent.ACTION_SEND.equals(action) && !mLocalMediaUris.isEmpty()) {
             intent.putExtra(Intent.EXTRA_STREAM, mLocalMediaUris.get(0));
         }
 
