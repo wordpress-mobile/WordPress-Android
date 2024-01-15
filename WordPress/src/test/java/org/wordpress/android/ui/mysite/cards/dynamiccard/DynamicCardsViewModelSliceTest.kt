@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite.cards.dynamiccard
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
@@ -66,7 +65,6 @@ private val filteredDynamicCardsModel = CardModel.DynamicCardsModel(
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@Ignore("Update tests to work with new architecture")
 class DynamicCardsViewModelSliceTest : BaseUnitTest() {
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
