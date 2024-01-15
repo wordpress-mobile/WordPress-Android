@@ -1097,7 +1097,7 @@ public class ReaderPostTable {
      */
     public static ReaderBlogIdPostIdList getBlogIdPostIdsInBlog(long blogId, int maxPosts) {
         String sql = "SELECT post_id FROM tbl_posts WHERE blog_id=? AND tag_name='' AND tag_type=0"
-                     + " ORDER BY date_published DESC";
+                     + " ORDER BY datetime(date_published) DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + maxPosts;
