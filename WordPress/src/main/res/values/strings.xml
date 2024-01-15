@@ -1328,6 +1328,7 @@
     <string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
 
     <!-- Stats insights -->
+    <string name="stats_traffic">Traffic</string>
     <string name="stats_insights">Insights</string>
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
