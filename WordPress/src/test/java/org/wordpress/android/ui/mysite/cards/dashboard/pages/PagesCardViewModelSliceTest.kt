@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite.cards.dashboard.pages
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -23,7 +22,6 @@ private const val MOCK_PAGE_ID = 1
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-@Ignore("Update tests to work with new architecture")
 class PagesCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var cardsTracker: CardsTracker
