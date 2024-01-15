@@ -33,6 +33,7 @@ import androidx.core.widget.NestedScrollView.OnScrollChangeListener;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.gravatar.GravatarApi;
+import com.gravatar.GravatarApi.ErrorType;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
@@ -737,8 +738,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                         new GravatarApi.GravatarUploadListener() {
                             @Override
                             public void onSuccess() {
-                                // FIXME: log analytics
                                 endProgress();
+                                AnalyticsTracker.track(Stat.ME_GRAVATAR_UPLOADED);
                                 mPhotoUrl = GravatarUtils.fixGravatarUrl(mAccount.getAccount().getAvatarUrl(),
                                         getResources().getDimensionPixelSize(R.dimen.avatar_sz_large));
                                 loadAvatar(mPhotoUrl, filePath);
@@ -747,10 +748,12 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                             }
 
                             @Override
-                            public void onError(@NonNull String exceptionClass, @NonNull String exceptionMessage) {
+                            public void onError(@NonNull ErrorType errorType) {
                                 endProgress();
                                 showErrorDialogWithCloseButton(getString(R.string.signup_epilogue_error_avatar));
-                                // FIXME: log analytics
+                                Map<String, Object> properties = new HashMap<>();
+                                properties.put("error_type", errorType);
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
                                 AppLog.e(T.NUX, "Uploading image to Gravatar failed");
                             }
                         });
@@ -836,18 +839,15 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                         new GravatarApi.GravatarUploadListener() {
                             @Override
                             public void onSuccess() {
-                                // FIXME: log analytics
                                 AppLog.i(T.NUX, "Google avatar download and Gravatar upload succeeded.");
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_UNSUCCESSFUL);
+                                AnalyticsTracker.track(Stat.ME_GRAVATAR_UPLOADED);
                             }
 
                             @Override
-                            public void onError(String exceptionClass, String exceptionMessage) {
+                            public void onError(@NonNull ErrorType errorType) {
                                 AppLog.i(T.NUX, "Google avatar download and Gravatar upload failed.");
-                                // FIXME: Don't track exceptions caused by poor internet connectivity
                                 Map<String, Object> properties = new HashMap<>();
-                                properties.put("network_exception_class", exceptionClass);
-                                properties.put("network_exception_message", exceptionMessage);
+                                properties.put("error_type", errorType);
                                 AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
                             }
                         });
