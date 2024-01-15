@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHT_DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TRAFFIC
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.ALL_TIME_VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.TODAY_VIEWS
@@ -55,7 +56,7 @@ fun AnalyticsTrackerWrapper.trackViewsVisitorsChips(position: Int) {
 
 fun AnalyticsTrackerWrapper.trackWithSection(stat: Stat, section: StatsSection) {
     val property = when (section) {
-        StatsSection.DAYS -> DAYS_PROPERTY
+        StatsSection.DAYS, TRAFFIC -> DAYS_PROPERTY // TODO: Replace with TRAFFIC when it's implemented
         StatsSection.WEEKS -> WEEKS_PROPERTY
         StatsSection.MONTHS -> MONTHS_PROPERTY
         StatsSection.YEARS -> YEARS_PROPERTY
