@@ -749,7 +749,7 @@ public class ReaderPostTable {
         } else if (tag.tagType == ReaderTagType.SEARCH) {
             return "score";
         } else if (tag.isTagTopic() || tag.isBookmarked()) {
-            return "date_tagged";
+            return "datetime(date_tagged)";
         } else {
             return "datetime(date_published)";
         }
