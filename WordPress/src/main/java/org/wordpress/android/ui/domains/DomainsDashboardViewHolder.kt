@@ -41,6 +41,11 @@ sealed class DomainsDashboardViewHolder<T : ViewBinding>(
             uiHelpers.setTextOrHide(siteDomain, item.domain)
             uiHelpers.setTextOrHide(siteDomainExpiryDate, item.expiry)
             primarySiteDomainChip.isVisible = item.isPrimary
+            uiHelpers.setTextOrHide(siteDomainStatus, item.domainStatus)
+            siteDomainStatus.compoundDrawablesRelative.first().setTint(
+                siteDomainStatus.context.getColor(item.domainStatusColor)
+            )
+            item.onDomainClick?.let { interaction -> root.setOnClickListener { interaction.click() } }
         }
     }
 

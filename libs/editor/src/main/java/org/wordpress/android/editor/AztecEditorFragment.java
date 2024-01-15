@@ -1432,6 +1432,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
+    public void onMediaUploadPaused(final String localMediaId) {
+        // Aztec does not leverage the paused media state, only the Gutenberg editor
+        onMediaUploadFailed(localMediaId);
+    }
+
+    @Override
     public void onVideoInfoRequested(final AztecAttributes attrs) {
         // VideoPress special case here
         if (attrs.hasAttribute(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID())) {
