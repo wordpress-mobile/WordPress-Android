@@ -79,7 +79,7 @@ constructor(
             StatsSection.TOTAL_FOLLOWERS_DETAIL,
             StatsSection.INSIGHTS,
             StatsSection.INSIGHT_DETAIL,
-            StatsSection.DAYS, TRAFFIC -> DAYS // TODO: Replace with TRAFFIC when it's implemented
+            StatsSection.DAYS, TRAFFIC -> DAYS // Replace with TRAFFIC when it's implemented
             StatsSection.WEEKS -> WEEKS
             StatsSection.MONTHS -> MONTHS
             StatsSection.ANNUAL_STATS,

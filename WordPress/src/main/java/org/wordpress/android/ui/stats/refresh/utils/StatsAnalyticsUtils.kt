@@ -56,7 +56,7 @@ fun AnalyticsTrackerWrapper.trackViewsVisitorsChips(position: Int) {
 
 fun AnalyticsTrackerWrapper.trackWithSection(stat: Stat, section: StatsSection) {
     val property = when (section) {
-        StatsSection.DAYS, TRAFFIC -> DAYS_PROPERTY // TODO: Replace with TRAFFIC when it's implemented
+        StatsSection.DAYS, TRAFFIC -> DAYS_PROPERTY // Replace with TRAFFIC when it's implemented
         StatsSection.WEEKS -> WEEKS_PROPERTY
         StatsSection.MONTHS -> MONTHS_PROPERTY
         StatsSection.YEARS -> YEARS_PROPERTY
