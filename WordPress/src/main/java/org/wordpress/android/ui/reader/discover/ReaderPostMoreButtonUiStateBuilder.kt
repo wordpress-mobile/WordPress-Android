@@ -196,7 +196,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         if (isPostFollowed) {
             SecondaryAction(
                 type = FOLLOW,
-                label = UiStringRes(R.string.reader_btn_unfollow),
+                label = UiStringRes(R.string.reader_btn_subscribed),
                 labelColor = R.attr.wpColorOnSurfaceMedium,
                 iconRes = R.drawable.ic_reader_following_white_24dp,
                 isSelected = true,

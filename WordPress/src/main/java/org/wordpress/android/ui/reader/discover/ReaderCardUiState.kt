@@ -169,7 +169,7 @@ sealed class ReaderCardUiState {
         ) {
             val followContentDescription: UiStringRes by lazy {
                 when (isFollowed) {
-                    true -> R.string.reader_btn_unfollow
+                    true -> R.string.reader_btn_subscribed
                     false -> R.string.reader_btn_subscribe
                 }.let(::UiStringRes)
             }
