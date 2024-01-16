@@ -36,7 +36,7 @@
         android:visibility="gone"
         app:aevButton="@string/reader_discover_no_posts_button_text"
         app:aevImage="@drawable/img_illustration_empty_results_216dp"
-        app:aevSubtitle="@string/reader_discover_no_posts_subtitle"
+        app:aevSubtitle="@string/reader_discover_no_posts_subscribe_subtitle"
         app:aevTitle="@string/reader_discover_no_posts_title"
         tools:visibility="visible" />
 

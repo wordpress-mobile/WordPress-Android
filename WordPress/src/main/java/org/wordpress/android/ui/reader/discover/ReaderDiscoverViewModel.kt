@@ -559,7 +559,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             data class ShowNoPostsUiState(override val action: () -> Unit) : EmptyUiState() {
                 override val titleResId = R.string.reader_discover_no_posts_title
                 override val buttonResId = R.string.reader_discover_no_posts_button_text
-                override val subTitleRes = R.string.reader_discover_no_posts_subtitle
+                override val subTitleRes = R.string.reader_discover_no_posts_subscribe_subtitle
                 override val illustrationResId = R.drawable.img_illustration_empty_results_216dp
             }
         }
