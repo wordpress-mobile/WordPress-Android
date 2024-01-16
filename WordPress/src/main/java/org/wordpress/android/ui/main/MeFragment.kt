@@ -145,6 +145,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject
     lateinit var domainManagementFeatureConfig: DomainManagementFeatureConfig
 
+    @Inject
+    lateinit var gravatarApi: GravatarApi
+
     private val viewModel: MeViewModel by viewModels()
 
     private val shouldShowDomainButton
@@ -662,7 +665,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             return
         }
         binding?.showGravatarProgressBar(true)
-        GravatarApi.uploadGravatar(file, accountStore.account.email, accountStore.accessToken!!,
+        gravatarApi.uploadGravatar(file, accountStore.account.email, accountStore.accessToken!!,
             object : GravatarUploadListener {
                 override fun onSuccess() {
                     AnalyticsTracker.track(ME_GRAVATAR_UPLOADED)
