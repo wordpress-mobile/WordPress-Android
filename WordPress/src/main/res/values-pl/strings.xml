@@ -3136,7 +3136,6 @@ Language: pl
     <string name="reader_toast_err_comment_failed">Nie udało się opublikować twojego komentarza</string>
     <string name="reader_toast_err_share_intent">Nie udało się udostępnić</string>
     <string name="reader_hint_comment_on_comment">Odpowiedz na komentarz…</string>
-    <string name="reader_btn_follow">Obserwuj</string>
     <string name="reader_likes_only_you">Lubisz to</string>
     <string name="reader_toast_err_view_image">Nie można wyświetlić obrazka</string>
     <string name="reader_view_reblog">Rebloguj</string>

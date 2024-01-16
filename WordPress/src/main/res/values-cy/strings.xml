@@ -533,7 +533,6 @@ Language: cy_GB
     <string name="empty_list_default">Mae\'r rhestr hon yn wag</string>
     <string name="reader_untitled_post">(Dideitl)</string>
     <string name="reader_btn_share">Rhannu</string>
-    <string name="reader_btn_follow">Dilyn</string>
     <string name="reader_btn_unfollow">Yn dilyn</string>
     <string name="reader_label_added_tag">Ychwanegu %s</string>
     <string name="reader_label_removed_tag">Tynnu %s</string>

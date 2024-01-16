@@ -3659,7 +3659,6 @@ Language: ja_JP
     <string name="reader_label_added_tag">%s を追加</string>
     <string name="reader_hint_comment_on_comment">コメントに返信…</string>
     <string name="reader_btn_unfollow">フォロー中</string>
-    <string name="reader_btn_follow">フォロー</string>
     <string name="reader_btn_share">共有</string>
     <string name="reader_view_reblog">リブログ</string>
     <string name="reader_untitled_post">(無題)</string>

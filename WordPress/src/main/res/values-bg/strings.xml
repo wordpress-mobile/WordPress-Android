@@ -755,7 +755,6 @@ Language: bg
     <string name="reader_hint_comment_on_comment">Отговор на коментар…</string>
     <string name="empty_list_default">Списъкът е празен</string>
     <string name="reader_btn_share">Споделяне</string>
-    <string name="reader_btn_follow">Последване</string>
     <string name="reader_btn_unfollow">Следва</string>
     <string name="reader_label_added_tag">%s е добавен</string>
     <string name="reader_label_removed_tag">%s е премахнат</string>

@@ -3666,7 +3666,6 @@ Language: ru
     <string name="reader_label_added_tag">Метка %s добавлена</string>
     <string name="reader_hint_comment_on_comment">Ответить на комментарий…</string>
     <string name="reader_btn_unfollow">Отписаться</string>
-    <string name="reader_btn_follow">Подписаться</string>
     <string name="reader_btn_share">Поделиться</string>
     <string name="reader_view_reblog">Перепубликация</string>
     <string name="reader_untitled_post">(Без названия)</string>

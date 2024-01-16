@@ -1422,7 +1422,6 @@ Language: sk
     <string name="reader_toast_err_comment_failed">Váš komentár nemohol byť odoslaný</string>
     <string name="reader_toast_err_share_intent">Nie je možné zdieľať</string>
     <string name="reader_toast_err_view_image">Nie je možné zobraziť obrázok</string>
-    <string name="reader_btn_follow">Sledovať</string>
     <string name="reader_btn_unfollow">Sledujem</string>
     <string name="reader_untitled_post">(bez názvu)</string>
     <string name="reader_likes_only_you">Páči sa vám to</string>

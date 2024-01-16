@@ -3655,7 +3655,6 @@ Language: sq_AL
     <string name="reader_label_added_tag">U shtua %s</string>
     <string name="reader_hint_comment_on_comment">Përgjigjuni komentit…</string>
     <string name="reader_btn_unfollow">Ndjekur prej jush</string>
-    <string name="reader_btn_follow">Ndiqe</string>
     <string name="reader_btn_share">Ndajeni me të tjerët</string>
     <string name="reader_view_reblog">Riblogoje</string>
     <string name="reader_untitled_post">(Pa titull)</string>

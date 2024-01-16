@@ -624,7 +624,6 @@ Language: hr
     <string name="pick_video">Odaberi video</string>
     <string name="reader_toast_err_get_post">Nije moguće dohvatiti ovu objavu</string>
     <string name="reader_likes_you_and_one">Vama i još jednoj osobi ovo se sviđa</string>
-    <string name="reader_btn_follow">Prati</string>
     <string name="empty_list_default">Popis je prazan</string>
     <string name="reader_untitled_post">(Bez naslova)</string>
     <string name="reader_btn_share">Podjeli</string>

@@ -247,7 +247,6 @@ Language: da_DK
     <string name="reader_toast_err_get_post">Kunne ikke hente dette indlæg</string>
     <string name="reader_likes_one">En person synes godt om dette</string>
     <string name="reader_btn_share">Del</string>
-    <string name="reader_btn_follow">Følg</string>
     <string name="reader_btn_unfollow">Følger</string>
     <string name="reader_label_added_tag">Tilføjede %s</string>
     <string name="reader_label_removed_tag">Fjernede %s</string>

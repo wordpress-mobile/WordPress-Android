@@ -3649,7 +3649,6 @@ Language: zh_CN
     <string name="reader_label_added_tag">已添加 %s</string>
     <string name="reader_hint_comment_on_comment">回复评论</string>
     <string name="reader_btn_unfollow">关注中</string>
-    <string name="reader_btn_follow">订阅</string>
     <string name="reader_btn_share">分享</string>
     <string name="reader_view_reblog">转载</string>
     <string name="reader_untitled_post">(未命名)</string>

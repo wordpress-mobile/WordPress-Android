@@ -3524,7 +3524,6 @@ Language: lv
     <string name="reader_label_added_tag">Pievienots %s</string>
     <string name="reader_hint_comment_on_comment">Atbildēt uz komentāru…</string>
     <string name="reader_btn_unfollow">Sekojošs</string>
-    <string name="reader_btn_follow">Sekot</string>
     <string name="reader_btn_share">Dalīties</string>
     <string name="reader_view_reblog">Atkārtots emuārs</string>
     <string name="reader_untitled_post">(Bez nosaukuma)</string>

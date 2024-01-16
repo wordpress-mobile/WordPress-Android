@@ -2241,7 +2241,6 @@ Language: ku_TR
     <string name="reader_likes_you_and_one">Te û kesekî din ev eciband</string>
     <string name="reader_toast_err_get_post">Ev şandî nayê anîn</string>
     <string name="reader_btn_share">Parve bike</string>
-    <string name="reader_btn_follow">Bişopîne</string>
     <string name="reader_toast_err_comment_failed">Şîroveya te nehat şandin</string>
     <string name="reader_untitled_post">(Bêsernav)</string>
     <string name="sign_up_label">Bibe Endam</string>

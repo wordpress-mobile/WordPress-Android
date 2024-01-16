@@ -3666,7 +3666,6 @@ Language: tr
     <string name="reader_label_added_tag">%s eklendi</string>
     <string name="reader_hint_comment_on_comment">Yorumu yanıtla…</string>
     <string name="reader_btn_unfollow">Takipte</string>
-    <string name="reader_btn_follow">Takip et</string>
     <string name="reader_btn_share">Paylaş</string>
     <string name="reader_view_reblog">Yeniden blogla</string>
     <string name="reader_untitled_post">(Başlıksız)</string>

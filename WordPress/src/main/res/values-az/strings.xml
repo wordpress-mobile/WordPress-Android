@@ -185,7 +185,6 @@ Language: az
     <string name="reader_untitled_post">(adsız)</string>
     <string name="reader_label_added_tag"> %s əlavə edildi</string>
     <string name="reader_label_removed_tag">%s silindi</string>
-    <string name="reader_btn_follow">İzlə</string>
     <string name="reader_btn_unfollow">İzlənən</string>
     <string name="reader_likes_one">Bir nəfər bunu bəyənir</string>
     <string name="reader_likes_only_you">Bunu bəyənirsiniz</string>

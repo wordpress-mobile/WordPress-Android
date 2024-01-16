@@ -3098,7 +3098,6 @@ Language: vi_VN
     <string name="reader_label_added_tag">Đã thêm %s</string>
     <string name="reader_hint_comment_on_comment">Trả lời bình luận…</string>
     <string name="reader_btn_unfollow">Đang theo dõi</string>
-    <string name="reader_btn_follow">Theo dõi</string>
     <string name="reader_btn_share">Chia sẻ</string>
     <string name="reader_view_reblog">Đăng lại</string>
     <string name="reader_untitled_post">(Không có tựa đề)</string>

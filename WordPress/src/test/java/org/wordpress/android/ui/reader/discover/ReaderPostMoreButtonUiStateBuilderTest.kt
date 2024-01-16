@@ -61,7 +61,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.FOLLOW &&
-                    (it as SecondaryAction).label == UiStringRes(R.string.reader_btn_follow)
+                    (it as SecondaryAction).label == UiStringRes(R.string.reader_btn_subscribe)
         }).isNotNull
     }
 

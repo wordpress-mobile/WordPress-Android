@@ -569,7 +569,6 @@ Language: eu_ES
     <string name="reader_toast_err_url_intent">Ezin izan da %s ireki</string>
     <string name="empty_list_default">Zerrenda hau hutsik dago</string>
     <string name="reader_btn_share">Partekatu</string>
-    <string name="reader_btn_follow">Jarraitu</string>
     <string name="reader_untitled_post">(Izenbururik gabe)</string>
     <string name="reader_btn_unfollow">Jarraitzen</string>
     <string name="reader_label_removed_tag">%s ezabatua</string>

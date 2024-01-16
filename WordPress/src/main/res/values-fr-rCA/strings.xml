@@ -3655,7 +3655,6 @@ Language: fr
     <string name="reader_label_added_tag">%s Ajouté</string>
     <string name="reader_hint_comment_on_comment">Répondre au commentaire…</string>
     <string name="reader_btn_unfollow">Abonné</string>
-    <string name="reader_btn_follow">Suivre</string>
     <string name="reader_btn_share">Partager</string>
     <string name="reader_view_reblog">Rebloguer</string>
     <string name="reader_untitled_post">(Sans Titre)</string>

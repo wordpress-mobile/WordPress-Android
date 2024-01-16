@@ -3656,7 +3656,6 @@ Language: zh_TW
     <string name="reader_label_added_tag">新增 %s</string>
     <string name="reader_hint_comment_on_comment">回應評論</string>
     <string name="reader_btn_unfollow">追蹤</string>
-    <string name="reader_btn_follow">追蹤</string>
     <string name="reader_btn_share">分享</string>
     <string name="reader_view_reblog">轉發</string>
     <string name="reader_untitled_post">（未命名）</string>

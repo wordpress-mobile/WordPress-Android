@@ -2096,7 +2096,6 @@
 
     <!-- button text -->
     <string name="reader_btn_share">Share</string>
-    <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_subscribe">Subscribe</string>
     <string name="reader_btn_unfollow">Following</string>
     <string name="reader_secondary_bookmark">Save</string>

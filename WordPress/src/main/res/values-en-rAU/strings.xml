@@ -1666,7 +1666,6 @@ Language: en_AU
     <string name="empty_list_default">This list is empty</string>
     <string name="reader_untitled_post">(Untitled)</string>
     <string name="reader_btn_share">Share</string>
-    <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_unfollow">Following</string>
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>

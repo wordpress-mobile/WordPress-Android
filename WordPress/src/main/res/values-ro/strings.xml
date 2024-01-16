@@ -3666,7 +3666,6 @@ Language: ro
     <string name="reader_label_added_tag">%s adăugat</string>
     <string name="reader_hint_comment_on_comment">Răspunde la comentariu…</string>
     <string name="reader_btn_unfollow">Urmăresc</string>
-    <string name="reader_btn_follow">Urmărește</string>
     <string name="reader_btn_share">Partajează</string>
     <string name="reader_view_reblog">Republicare</string>
     <string name="reader_untitled_post">(Fără titlu)</string>

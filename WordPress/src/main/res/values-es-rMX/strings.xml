@@ -2326,7 +2326,6 @@ Language: es_MX
     <string name="reader_likes_you_and_one">A ti y a otra persona os gusta esto.</string>
     <string name="pick_video">Elige un video</string>
     <string name="reader_label_added_tag">Añadido %s</string>
-    <string name="reader_btn_follow">Seguir</string>
     <string name="reader_btn_unfollow">Siguiendo</string>
     <string name="reader_likes_one">A una persona le gusta esto</string>
     <string name="reader_label_removed_tag">Eliminado %s</string>

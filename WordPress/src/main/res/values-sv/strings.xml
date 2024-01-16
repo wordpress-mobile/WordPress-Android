@@ -3666,7 +3666,6 @@ Language: sv_SE
     <string name="reader_label_added_tag">Lade till %s</string>
     <string name="reader_hint_comment_on_comment">Svara kommentaren…</string>
     <string name="reader_btn_unfollow">Följer</string>
-    <string name="reader_btn_follow">Följ</string>
     <string name="reader_btn_share">Dela</string>
     <string name="reader_view_reblog">Reblogga</string>
     <string name="reader_untitled_post">(Ingen titel)</string>
