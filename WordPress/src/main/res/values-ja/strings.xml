@@ -1402,7 +1402,6 @@ Language: ja_JP
     <string name="continue_site_credentials">ストアのログイン情報で続ける</string>
     <string name="login_find_your_connected_email">連携済みのメールアドレスを検索</string>
     <string name="reader_discover_no_posts_button_text">トピックをフォロー</string>
-    <string name="reader_discover_no_posts_subtitle">もっと多くのトピックをフォローして、検索を広げてみてください</string>
     <string name="reader_discover_no_posts_title">最近の投稿はありません</string>
     <string name="reader_discover_empty_title">ようこそ !</string>
     <string name="scan">スキャン</string>

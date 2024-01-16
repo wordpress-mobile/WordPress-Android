@@ -1400,7 +1400,6 @@ Language: he_IL
     <string name="continue_site_credentials">להמשיך עם פרטי הכניסה של החנות</string>
     <string name="login_find_your_connected_email">למצוא את כתובת האימייל המחוברת שלך</string>
     <string name="reader_discover_no_posts_button_text">לעקוב אחר נושאים</string>
-    <string name="reader_discover_no_posts_subtitle">כדאי לעקוב אחרי נושאים נוספים כדי להרחיב את החיפוש</string>
     <string name="reader_discover_no_posts_title">אין פוסטים אחרונים</string>
     <string name="reader_discover_empty_title">ברוך בואך!</string>
     <string name="scan">לסרוק</string>

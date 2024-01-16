@@ -1189,7 +1189,6 @@ Language: pt_BR
     <string name="continue_site_credentials">Prosseguir com as informações salvas</string>
     <string name="login_find_your_connected_email">Encontre o e-mail conectado</string>
     <string name="reader_discover_no_posts_button_text">Seguir tópicos</string>
-    <string name="reader_discover_no_posts_subtitle">Tente seguir mais assuntos para melhorar a pesquisa</string>
     <string name="reader_discover_no_posts_title">Nenhum post recente</string>
     <string name="reader_discover_empty_title">Desejamos boas-vindas!</string>
     <string name="scan">Examinar</string>

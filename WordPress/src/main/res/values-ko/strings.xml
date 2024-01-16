@@ -1402,7 +1402,6 @@ Language: ko_KR
     <string name="continue_site_credentials">상점 자격증명으로 계속하기</string>
     <string name="login_find_your_connected_email">연결한 이메일 찾기</string>
     <string name="reader_discover_no_posts_button_text">토픽 따르기</string>
-    <string name="reader_discover_no_posts_subtitle">폭 넓은 검색을 위해 더 많은 토픽을 따르도록 해보세요</string>
     <string name="reader_discover_no_posts_title">최근 글이 없습니다</string>
     <string name="reader_discover_empty_title">환영합니다!</string>
     <string name="scan">검색하기</string>

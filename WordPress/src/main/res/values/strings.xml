@@ -1645,7 +1645,6 @@
     <string name="reader_discover_empty_title">Welcome!</string>
     <string name="reader_discover_empty_subtitle">Follow topics to discover new blogs</string>
     <string name="reader_discover_no_posts_title">No recent posts</string>
-    <string name="reader_discover_no_posts_subtitle">Try following more topics to broaden the search</string>
     <string name="reader_discover_no_posts_subscribe_subtitle">Try subscribing to more topics to broaden the search</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
     <string name="reader_discover_no_posts_button_text">Follow topics</string>

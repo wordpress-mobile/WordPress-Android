@@ -1409,7 +1409,6 @@ Language: ru
     <string name="continue_site_credentials">Продолжить с учетными данными магазина</string>
     <string name="login_find_your_connected_email">Узнать адрес привязанной эл. почты</string>
     <string name="reader_discover_no_posts_button_text">Подписаться на темы</string>
-    <string name="reader_discover_no_posts_subtitle">Для расширения поиска попробуйте подписаться на больше тем</string>
     <string name="reader_discover_no_posts_title">Нет свежих записей</string>
     <string name="reader_discover_empty_title">Добро пожаловать!</string>
     <string name="scan">Сканировать</string>

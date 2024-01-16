@@ -1403,7 +1403,6 @@ Language: zh_TW
     <string name="continue_site_credentials">使用商店憑證繼續</string>
     <string name="login_find_your_connected_email">尋找你連結的電子郵件</string>
     <string name="reader_discover_no_posts_button_text">追蹤主題</string>
-    <string name="reader_discover_no_posts_subtitle">嘗試追蹤更多主題以擴大搜尋範圍</string>
     <string name="reader_discover_no_posts_title">沒有近期文章</string>
     <string name="reader_discover_empty_title">歡迎！</string>
     <string name="scan">掃瞄</string>

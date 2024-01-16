@@ -1409,7 +1409,6 @@ Language: ro
     <string name="continue_site_credentials">Continuă cu datele de conectare la magazin</string>
     <string name="login_find_your_connected_email">Găsește emailul conectat</string>
     <string name="reader_discover_no_posts_button_text">Urmărește subiecte</string>
-    <string name="reader_discover_no_posts_subtitle">Încearcă să urmărești mai multe subiecte pentru a extinde căutarea</string>
     <string name="reader_discover_no_posts_title">Niciun articol recent</string>
     <string name="reader_discover_empty_title">Bine ai venit!</string>
     <string name="scan">Scanează</string>

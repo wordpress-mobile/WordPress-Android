@@ -864,7 +864,6 @@ Language: vi_VN
     <string name="continue_site_credentials">Tiếp tục với định giá đã lưu</string>
     <string name="login_find_your_connected_email">Tìm email đã kết nối</string>
     <string name="reader_discover_no_posts_button_text">Theo dõi thẻ</string>
-    <string name="reader_discover_no_posts_subtitle">Thử theo dõi nhiều thẻ hơn để mở rộng kết quả tìm kiếm</string>
     <string name="reader_discover_no_posts_title">Không có bài viết mới</string>
     <string name="reader_discover_empty_title">Chào mừng!</string>
     <string name="scan">Quét</string>

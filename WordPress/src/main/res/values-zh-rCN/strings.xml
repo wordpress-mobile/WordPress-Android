@@ -1398,7 +1398,6 @@ Language: zh_CN
     <string name="continue_site_credentials">继续使用商店凭证</string>
     <string name="login_find_your_connected_email">找到您的关联电子邮件</string>
     <string name="reader_discover_no_posts_button_text">关注话题</string>
-    <string name="reader_discover_no_posts_subtitle">尝试关注更多话题以扩大搜索范围</string>
     <string name="reader_discover_no_posts_title">无近期文章</string>
     <string name="reader_discover_empty_title">欢迎！</string>
     <string name="scan">扫描</string>

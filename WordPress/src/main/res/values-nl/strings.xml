@@ -1350,7 +1350,6 @@ Language: nl
     <string name="continue_site_credentials">Ga verder met winkel-referenties</string>
     <string name="login_find_your_connected_email">Vind je verbonden e-mail</string>
     <string name="reader_discover_no_posts_button_text">Volg onderwerpen</string>
-    <string name="reader_discover_no_posts_subtitle">Probeer meer onderwerpen te volgen om de zoekopdracht uit te breiden</string>
     <string name="reader_discover_no_posts_title">Geen recente berichten</string>
     <string name="reader_discover_empty_title">Welkom!</string>
     <string name="scan">Scan</string>

@@ -143,7 +143,6 @@ Language: es_MX
     <string name="scan">Explorar</string>
     <string name="reader_discover_empty_title">¡Bienvenido!</string>
     <string name="reader_discover_no_posts_title">No hay entradas recientes</string>
-    <string name="reader_discover_no_posts_subtitle">Intenta seguir más temáticas para ampliar la búsqueda</string>
     <string name="reader_discover_no_posts_button_text">Seguir temáticas</string>
     <string name="login_find_your_connected_email">Encuentra tu correo electrónico conectado</string>
     <string name="continue_site_credentials">Continuar con las credenciales de la tienda</string>
