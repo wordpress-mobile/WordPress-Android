@@ -658,18 +658,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
         val file = File(filePath)
         if (!file.exists()) {
-            ToastUtils.showToast(
-                activity,
-                R.string.error_locating_image,
-                SHORT
-            )
+            ToastUtils.showToast(activity, R.string.error_locating_image, SHORT)
             return
         }
         binding?.showGravatarProgressBar(true)
-        if (!accountStore.hasAccessToken()) {
-            // FIXME: Change the toast message
-            ToastUtils.showToast(activity, R.string.error_locating_image, SHORT);
-        }
         GravatarApi.uploadGravatar(file, accountStore.account.email, accountStore.accessToken!!,
             object : GravatarUploadListener {
                 override fun onSuccess() {
