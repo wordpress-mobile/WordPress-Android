@@ -14,10 +14,9 @@ class RetryFailedMediaUploadUseCase @Inject constructor(
     private val getMediaModelUseCase: GetMediaModelUseCase,
     private val updateMediaModelUseCase: UpdateMediaModelUseCase,
     private val uploadMediaUseCase: UploadMediaUseCase,
-    private val tracker: AnalyticsTrackerWrapper
+    private val tracker: AnalyticsTrackerWrapper,
+    private val siteStore: SiteStore
 ) {
-    @Inject
-    lateinit var siteStore: SiteStore
     suspend fun retryFailedMediaAsync(
         editorMediaListener: EditorMediaListener,
         failedMediaLocalIds: List<Int>
