@@ -149,6 +149,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     @Inject protected UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject protected SignupUtils mSignupUtils;
     @Inject protected MediaPickerLauncher mMediaPickerLauncher;
+    @Inject protected GravatarApi mGravatarApi;
 
     public static SignupEpilogueFragment newInstance(String displayName, String emailAddress,
                                                      String photoUrl, String username,
@@ -728,7 +729,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             final File file = new File(filePath);
             if (file.exists()) {
                 startProgress(false);
-                GravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(),
+                mGravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(),
                         Objects.requireNonNull(mAccountStore.getAccessToken()),
                         new GravatarApi.GravatarUploadListener() {
                             @Override
@@ -830,7 +831,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             try {
                 Uri uri = MediaUtils.downloadExternalMedia(getContext(), Uri.parse(mUrl));
                 File file = new File(new URI(uri.toString()));
-                GravatarApi.uploadGravatar(file, mEmail, mToken,
+                mGravatarApi.uploadGravatar(file, mEmail, mToken,
                         new GravatarApi.GravatarUploadListener() {
                             @Override
                             public void onSuccess() {
