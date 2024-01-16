@@ -1880,7 +1880,6 @@ Language: gl_ES
     <string name="login_site_credentials_magic_link_label">Xa case estamos! Só necesitamos verificar o teu enderezo de correo electrónico conectado a Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Accede coas credenciais do teu sitio %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Páxina do sitio</string>
-    <string name="reader_following_display_name">Seguindo</string>
     <string name="reader_my_likes_display_name">Gústame</string>
     <string name="reader_discover_display_name">Descubre</string>
     <string name="reader_save_for_later_display_name">Gardados</string>

@@ -1820,7 +1820,6 @@ Language: nl
     <string name="login_site_credentials_magic_link_label">Bijna klaar! We hoeven nu alleen nog het e-mailadres (&lt;b&gt;%1$s&lt;/b&gt;) te verifiëren dat aan je Jetpack-account is gekoppeld</string>
     <string name="enter_credentials_for_site">Inloggen met je site-referenties voor %1$s.</string>
     <string name="my_site_bottom_sheet_add_page">Site-pagina</string>
-    <string name="reader_following_display_name">Volgen</string>
     <string name="reader_my_likes_display_name">Vind-ik-leuks</string>
     <string name="reader_discover_display_name">Ontdek</string>
     <string name="reader_save_for_later_display_name">Opgeslagen</string>

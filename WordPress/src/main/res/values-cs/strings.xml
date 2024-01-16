@@ -1597,7 +1597,6 @@ Language: cs_CZ
     <string name="login_discovery_error_http_auth">Nepodařilo se nám získat přístup na váš web, protože vyžaduje &lt;b&gt;Ověření HTTP&lt;/b&gt;. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
     <string name="login_discovery_error_ssl">Nepodařilo se nám získat přístup na váš web z důvodu problému s &lt;b&gt;certifikátem SSL&lt;/b&gt;. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
     <string name="login_discovery_error_generic">Nepodařilo se nám získat přístup na váš web. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
-    <string name="reader_following_display_name">Sleduji</string>
     <string name="my_site_bottom_sheet_add_page">Stránka webu</string>
     <string name="enter_credentials_for_site">Přihlaste se pomocí svých přihlašovacích údajů %1$s </string>
     <string name="login_site_credentials_magic_link_label">Téměř tam! Musíme jen ověřit vaši e-mailovou adresu připojenou k Jetpacku &lt;b&gt;%1$s&lt;/b&gt;</string>

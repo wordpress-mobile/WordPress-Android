@@ -1880,7 +1880,6 @@ Language: ru
     <string name="login_site_credentials_magic_link_label">Почти готово! Нужно только проверить адрес эл.почты подключения Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Войдите с именем пользователя и паролем для сайта %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Страница сайта</string>
-    <string name="reader_following_display_name">Подписчик</string>
     <string name="reader_my_likes_display_name">Отметки \"Нравится\"</string>
     <string name="reader_discover_display_name">Найти</string>
     <string name="reader_save_for_later_display_name">Сохранено</string>

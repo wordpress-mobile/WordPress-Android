@@ -1331,7 +1331,6 @@ Language: vi_VN
     <string name="login_site_credentials_magic_link_label">Sắp xong! Chúng tôi cần xác minh địa chỉ email &lt;b&gt;%1$s&lt;/b&gt; của bạn đã kết nối Jetpack</string>
     <string name="enter_credentials_for_site">Đăng nhập với chứng chỉ trang %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Trang</string>
-    <string name="reader_following_display_name">Đang theo dõi</string>
     <string name="reader_my_likes_display_name">Đã thích</string>
     <string name="reader_discover_display_name">Khám phá</string>
     <string name="reader_save_for_later_display_name">Đã lưu</string>

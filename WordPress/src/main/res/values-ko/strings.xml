@@ -1872,7 +1872,6 @@ Language: ko_KR
     <string name="login_site_credentials_magic_link_label">마지막 부분입니다! 젯팩에 연결된 이메일 주소 &lt;b&gt;%1$s&lt;/b&gt;만 확인하면 됩니다.</string>
     <string name="enter_credentials_for_site">%1$s 사이트 자격 증명으로 로그인</string>
     <string name="my_site_bottom_sheet_add_page">사이트 페이지</string>
-    <string name="reader_following_display_name">팔로우 중</string>
     <string name="reader_my_likes_display_name">좋아요</string>
     <string name="reader_discover_display_name">검색</string>
     <string name="reader_save_for_later_display_name">저장됨</string>

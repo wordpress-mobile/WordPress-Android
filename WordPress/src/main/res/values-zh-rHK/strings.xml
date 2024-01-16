@@ -1873,7 +1873,6 @@ Language: zh_TW
     <string name="login_site_credentials_magic_link_label">快完成了！我們只需驗證你與 Jetpack 綁定的電子郵件地址就行了&lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">請使用 %1$s 網站憑證登入</string>
     <string name="my_site_bottom_sheet_add_page">網頁</string>
-    <string name="reader_following_display_name">關注中</string>
     <string name="reader_my_likes_display_name">按讚數</string>
     <string name="reader_discover_display_name">探索</string>
     <string name="reader_save_for_later_display_name">已儲存</string>

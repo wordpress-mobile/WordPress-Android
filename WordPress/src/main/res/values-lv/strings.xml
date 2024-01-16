@@ -1747,7 +1747,6 @@ Language: lv
     <string name="login_site_credentials_magic_link_label">Gandrīz ir! Vēl tikai jāpārbauda jūsu ar Jetpack savienotā e-pasta adrese &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Piesakieties ar saviem %1$s vietnes akreditācijas datiem</string>
     <string name="my_site_bottom_sheet_add_page">Vietnes lapa</string>
-    <string name="reader_following_display_name">Pēc</string>
     <string name="reader_my_likes_display_name">Patīk</string>
     <string name="reader_discover_display_name">Atklājiet</string>
     <string name="reader_save_for_later_display_name">Saglabāts</string>

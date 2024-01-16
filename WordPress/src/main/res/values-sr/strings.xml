@@ -540,7 +540,6 @@ Language: sr_RS
     <string name="new_site_creation_unavailable_domain">Домен није доступан</string>
     <string name="negative_prefix">-%s</string>
     <string name="my_site_bottom_sheet_add_page">Страница сајта</string>
-    <string name="reader_following_display_name">Прати</string>
     <string name="reader_save_for_later_display_name">Сачувано</string>
     <string name="reader_discover_display_name">Откриј</string>
     <string name="reader_my_likes_display_name">Свиђања</string>

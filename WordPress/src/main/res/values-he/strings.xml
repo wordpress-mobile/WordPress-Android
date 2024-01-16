@@ -1870,7 +1870,6 @@ Language: he_IL
     <string name="login_site_credentials_magic_link_label">כמעט סיימת! אנחנו רק צריכים לאמת שהשירות של Jetpack מחובר לכתובת האימייל שלך &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">יש להתחבר עם פרטי הכניסה שלך לאתר %1$s</string>
     <string name="my_site_bottom_sheet_add_page">עמוד האתר</string>
-    <string name="reader_following_display_name">מעקב</string>
     <string name="reader_my_likes_display_name">לייקים</string>
     <string name="reader_discover_display_name">היכרות</string>
     <string name="reader_save_for_later_display_name">נשמר</string>

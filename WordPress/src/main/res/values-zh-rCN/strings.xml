@@ -1868,7 +1868,6 @@ Language: zh_CN
     <string name="login_site_credentials_magic_link_label">马上就好！我们需要验证您的 Jetpack 连接的电子邮箱地址 &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">使用 %1$s 站点凭据登录</string>
     <string name="my_site_bottom_sheet_add_page">站点页面</string>
-    <string name="reader_following_display_name">关注中</string>
     <string name="reader_my_likes_display_name">喜欢</string>
     <string name="reader_discover_display_name">发现</string>
     <string name="reader_save_for_later_display_name">已保存</string>

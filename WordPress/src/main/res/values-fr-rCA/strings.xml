@@ -1870,7 +1870,6 @@ Language: fr
     <string name="login_site_credentials_magic_link_label">Vous y êtes presque ! Nous devons juste vérifier votre adresse e-mail connectée à Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Connexion avec vos identifiants au site %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Page du site</string>
-    <string name="reader_following_display_name">Abonné</string>
     <string name="reader_my_likes_display_name">J’aime</string>
     <string name="reader_discover_display_name">Découvrez</string>
     <string name="reader_save_for_later_display_name">Enregistré</string>

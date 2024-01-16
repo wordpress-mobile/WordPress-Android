@@ -1868,7 +1868,6 @@ Language: ar
     <string name="login_discovery_error_xmlrpc">تعذر علينا الوصول إلى &lt;b&gt;ملف XMLRPC&lt;/b&gt; على موقعك. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
     <string name="login_site_credentials_magic_link_label">تقريبًا هناك! يتعين علينا فقط التحقق من صحة عنوان بريدك الإلكتروني المتصل بـ Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">تسجيل الدخول باستخدام بيانات اعتماد الموقع %1$s الخاصة بك</string>
-    <string name="reader_following_display_name">المتابعة</string>
     <string name="my_site_bottom_sheet_add_page">صفحة الموقع</string>
     <string name="posts_cannot_be_started">يتعذر علينا فتح هذه المقالات الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="suffix_1_000_000_000">%sB</string>

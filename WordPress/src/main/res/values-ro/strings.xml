@@ -1880,7 +1880,6 @@ Language: ro
     <string name="login_site_credentials_magic_link_label">Aproape gata! Trebuie doar să-ți verificăm adresa de email conectată la Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Autentifică-te cu datele de conectare ale site-ului %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Pagină site</string>
-    <string name="reader_following_display_name">Urmăresc</string>
     <string name="reader_my_likes_display_name">Aprecieri</string>
     <string name="reader_discover_display_name">Descoperă</string>
     <string name="reader_save_for_later_display_name">Salvate</string>

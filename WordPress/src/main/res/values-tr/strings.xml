@@ -1880,7 +1880,6 @@ Language: tr
     <string name="login_site_credentials_magic_link_label">Çok az kaldı! Sadece Jetpack bağlantılı e-posta adresinizi doğrulamamız gerekiyor&lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">%1$s site kimlik bilginizle giriş yapın</string>
     <string name="my_site_bottom_sheet_add_page">Site sayfası</string>
-    <string name="reader_following_display_name">Takip Ediliyor</string>
     <string name="reader_my_likes_display_name">Beğeniler</string>
     <string name="reader_discover_display_name">Keşfet</string>
     <string name="reader_save_for_later_display_name">Kaydedildi</string>

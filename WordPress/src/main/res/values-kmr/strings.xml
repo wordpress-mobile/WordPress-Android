@@ -537,7 +537,6 @@ Language: ku_TR
     <string name="login_discovery_error_ssl">Ji ber pirsgirêkeke eleqedarî &lt;b&gt;Sertîfîkaya SSL&lt;/b&gt;ê me nekarî xwe bigihînin malpera te. Ji bo çareserkirina vê pirsgirêkê hewce ye tu xwe bigihînî hewangeha(host) xwe.</string>
     <string name="login_discovery_error_http_auth">Me nekarî xwe bigihînin malpera te ji ber ku hewceyî bi &lt;b&gt;Rastandina HTTP&lt;/b&gt;ê heye. Ji bo vê çareser bikî divê tu bi hewangerê xwe re têkilî dayînî.</string>
     <string name="my_site_bottom_sheet_add_page">Rûpela malperê</string>
-    <string name="reader_following_display_name">Şopandî</string>
     <string name="login_site_credentials_magic_link_label">Hindikek ma! Tenê divê em navnîşana emaila te ya bi Jetpack\'ê ve girêdayî piştrast bikin &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Bi agahiyên xwe yên malpera %1$sê têkeve</string>
     <string name="login_discovery_error_xmlrpc">Me nekarî xwe bigihînin &lt;b&gt;dosyeya XMLRPC&lt;/b&gt;\'ê ya li ser malpera te. Divê tu bi hewangerê xwe re têkilî dayînî ji bo vê çareser bikî.</string>

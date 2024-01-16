@@ -1869,7 +1869,6 @@ Language: sq_AL
     <string name="login_site_credentials_magic_link_label">Thuajse mbërritëm! Na duhet vetëm të verifikojmë adresën tuaj email të lidhur me Jetpack-un &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Hyni me kredencialet tuaja për sajtin %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Faqe sajti</string>
-    <string name="reader_following_display_name">Ndjekur prej jush</string>
     <string name="reader_my_likes_display_name">Pëlqime</string>
     <string name="reader_discover_display_name">Zbuloni</string>
     <string name="reader_save_for_later_display_name">U ruajt</string>
