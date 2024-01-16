@@ -726,11 +726,6 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     protected void startGravatarUpload(final String filePath) {
         if (!TextUtils.isEmpty(filePath)) {
             final File file = new File(filePath);
-            if (!mAccount.hasAccessToken()) {
-                // FIXME: show a toast
-                return;
-            }
-
             if (file.exists()) {
                 startProgress(false);
                 GravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(),
