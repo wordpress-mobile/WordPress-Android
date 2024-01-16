@@ -258,7 +258,7 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="strokeColor">@color/transparent</item>
         <item name="iconTint">@color/primary_success_selector</item>
-        <item name="android:text">@string/reader_btn_follow</item>
+        <item name="android:text">@string/reader_btn_subscribe</item>
         <item name="android:padding">0dp</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:minWidth">0dp</item>

@@ -205,7 +205,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         } else {
             SecondaryAction(
                 type = FOLLOW,
-                label = UiStringRes(R.string.reader_btn_follow),
+                label = UiStringRes(R.string.reader_btn_subscribe),
                 labelColor = MaterialR.attr.colorSecondary,
                 iconRes = R.drawable.ic_reader_follow_white_24dp,
                 isSelected = false,
