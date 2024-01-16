@@ -50,7 +50,6 @@ class AccountDataViewModelSliceTest : BaseUnitTest() {
     @Test
     fun `given jp app, card is not built`() = test {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
 
         viewModelSlice.onResume()
 
@@ -72,7 +71,7 @@ class AccountDataViewModelSliceTest : BaseUnitTest() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
         val accountModel = getAccountData()
-        whenever(accountStore.account).then({  })
+        whenever(accountStore.account).thenReturn(accountModel)
 
         viewModelSlice.onResume()
 
