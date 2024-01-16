@@ -1159,7 +1159,6 @@ Language: el_GR
     <string name="reader_toast_err_share_intent">Δεν ήταν δυνατός ο διαμοιρασμός</string>
     <string name="comments_empty_list">Κανένα σχόλιο.</string>
     <string name="reader_btn_share">Μοιράσου</string>
-    <string name="reader_btn_unfollow">Ακολουθούν</string>
     <string name="reader_likes_one">Σ\'ένα άτομο άρεσε αυτό</string>
     <string name="reader_likes_only_you">Σας άρεσε αυτό</string>
     <string name="reader_toast_err_comment_failed">Δεν ήταν δυνατή η προσθήκη του σχόλιού σας</string>

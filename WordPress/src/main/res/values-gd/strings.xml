@@ -200,7 +200,6 @@ Language: gd_GB
     <string name="reader_toast_err_get_post">Chan urrainn dhuinn am post seo fhaighinn dhut</string>
     <string name="reader_untitled_post">(Gun tiotal)</string>
     <string name="reader_btn_share">Co-roinn</string>
-    <string name="reader_btn_unfollow">A\' leanntainn</string>
     <string name="reader_label_added_tag">Chaidh %s a chur ris</string>
     <string name="reader_label_removed_tag">Chaidh %s a thoirt air falbh</string>
     <string name="reader_likes_one">Tha aon duine ag ràdh gur toigh leotha seo</string>

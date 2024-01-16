@@ -3600,7 +3600,6 @@ Language: nl
     <string name="reader_label_removed_tag">%s verwijderd</string>
     <string name="reader_label_added_tag">%s toegevoegd</string>
     <string name="reader_hint_comment_on_comment">Beantwoord reactie…</string>
-    <string name="reader_btn_unfollow">Volgend</string>
     <string name="reader_btn_share">Delen</string>
     <string name="reader_view_reblog">Rebloggen</string>
     <string name="reader_untitled_post">(geen titel)</string>

@@ -2244,7 +2244,6 @@ Language: ku_TR
     <string name="reader_toast_err_comment_failed">Şîroveya te nehat şandin</string>
     <string name="reader_untitled_post">(Bêsernav)</string>
     <string name="sign_up_label">Bibe Endam</string>
-    <string name="reader_btn_unfollow">Tê şopandin</string>
     <string name="reader_toast_err_view_image">Wêne nehat nîşandan</string>
     <string name="reader_toast_err_share_intent">Nehat parvekirin</string>
     <string name="reader_likes_only_you">Te vêya eciband</string>

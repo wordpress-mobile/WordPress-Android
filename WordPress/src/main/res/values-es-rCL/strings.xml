@@ -1418,7 +1418,6 @@ Language: es_CL
     <string name="reader_likes_you_and_one">A ti y a otra persona les gusta esto</string>
     <string name="empty_list_default">Esta lista esta vacía</string>
     <string name="reader_btn_share">Compartir</string>
-    <string name="reader_btn_unfollow">Siguiendo</string>
     <string name="reader_label_removed_tag">Eliminado %s</string>
     <string name="reader_likes_one">A una persona le gusta esto</string>
     <string name="reader_likes_only_you">Te gusta esto</string>

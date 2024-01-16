@@ -3652,7 +3652,6 @@ Language: he_IL
     <string name="reader_label_removed_tag">%s הוסר</string>
     <string name="reader_label_added_tag">%s התווסף</string>
     <string name="reader_hint_comment_on_comment">השב לתגובה</string>
-    <string name="reader_btn_unfollow">עוקב</string>
     <string name="reader_btn_share">שתף</string>
     <string name="reader_view_reblog">פרסום מחדש בבלוג</string>
     <string name="reader_untitled_post">(ללא כותרת)</string>

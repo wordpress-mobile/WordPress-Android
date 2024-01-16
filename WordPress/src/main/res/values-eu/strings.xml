@@ -570,7 +570,6 @@ Language: eu_ES
     <string name="empty_list_default">Zerrenda hau hutsik dago</string>
     <string name="reader_btn_share">Partekatu</string>
     <string name="reader_untitled_post">(Izenbururik gabe)</string>
-    <string name="reader_btn_unfollow">Jarraitzen</string>
     <string name="reader_label_removed_tag">%s ezabatua</string>
     <string name="reader_likes_one">Pertsona batek hau gustuko du</string>
     <string name="reader_likes_only_you">Hau gustuko duzu</string>

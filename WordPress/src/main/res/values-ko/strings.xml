@@ -3652,7 +3652,6 @@ Language: ko_KR
     <string name="reader_label_removed_tag">%s를 제거</string>
     <string name="reader_label_added_tag">%s를 추가</string>
     <string name="reader_hint_comment_on_comment">답변 달기</string>
-    <string name="reader_btn_unfollow">팔로잉</string>
     <string name="reader_btn_share">공유</string>
     <string name="reader_view_reblog">리블로그</string>
     <string name="reader_untitled_post">(제목 없음)</string>

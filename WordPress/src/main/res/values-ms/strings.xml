@@ -811,7 +811,6 @@ Language: ms
     <string name="reader_untitled_post">(Tanpa tajuk)</string>
     <string name="reader_btn_share">Kongsi</string>
     <string name="reader_toast_err_url_intent">Tidak dapat membuka %s</string>
-    <string name="reader_btn_unfollow">Mengikuti</string>
     <string name="reader_label_added_tag">%s ditambah</string>
     <string name="reader_label_removed_tag">%s dibuang</string>
     <string name="reader_likes_one">Seorang menyukainya</string>

@@ -3376,7 +3376,6 @@ Language: cs_CZ
     <string name="reader_btn_share">Sdílet</string>
     <string name="empty_list_default">Tento seznam je prázdný</string>
     <string name="reader_untitled_post">(bez názvu)</string>
-    <string name="reader_btn_unfollow">Sleduji</string>
     <string name="reader_hint_comment_on_comment">Odpovědět na komentář…</string>
     <string name="reader_likes_one">To se líbí jedné osobě</string>
     <string name="reader_toast_err_share_intent">Nelze sdílet</string>

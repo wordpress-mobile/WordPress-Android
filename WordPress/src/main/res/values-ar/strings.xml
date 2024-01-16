@@ -3640,7 +3640,6 @@ Language: ar
     <string name="reader_likes_only_you">انت معجب بهذا</string>
     <string name="reader_btn_share">مشاركة</string>
     <string name="reader_untitled_post">( بدون اسم )</string>
-    <string name="reader_btn_unfollow">متابع</string>
     <string name="reader_label_added_tag">أضيف %s</string>
     <string name="reader_label_removed_tag">تم حذف %s</string>
     <string name="reader_toast_err_comment_failed">لايمكن نشر تعليقك</string>

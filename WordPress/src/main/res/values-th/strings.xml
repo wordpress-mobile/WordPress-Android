@@ -311,7 +311,6 @@ Language: th
     <string name="reader_label_added_tag">เพิ่ม %s แล้ว</string>
     <string name="reader_label_removed_tag">ลบ %s แล้ว</string>
     <string name="reader_btn_share">แบ่งปัน</string>
-    <string name="reader_btn_unfollow">กำลังติดตาม</string>
     <string name="reader_untitled_post">(ไม่มีหัวข้อ)</string>
     <string name="empty_list_default">รายชื่อนี้ว่างเปล่า</string>
     <string name="reader_hint_comment_on_comment">ตอบกลับไปที่ความเห็น…</string>

@@ -3431,7 +3431,6 @@ Language: pt_BR
     <string name="reader_label_removed_tag">Excluído %s</string>
     <string name="reader_label_added_tag">Adicionado %s</string>
     <string name="reader_hint_comment_on_comment">Responda para comentar</string>
-    <string name="reader_btn_unfollow">Seguindo</string>
     <string name="reader_btn_share">Compartilhar</string>
     <string name="reader_view_reblog">Reblogar</string>
     <string name="reader_untitled_post">(Sem título)</string>

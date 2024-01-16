@@ -3665,7 +3665,6 @@ Language: es
     <string name="reader_label_removed_tag">Eliminado %s</string>
     <string name="reader_label_added_tag">Añadido %s</string>
     <string name="reader_hint_comment_on_comment">Contestar al comentario </string>
-    <string name="reader_btn_unfollow">Siguiendo</string>
     <string name="reader_btn_share">Compartir</string>
     <string name="reader_view_reblog">Reblog</string>
     <string name="reader_untitled_post">Sin título</string>

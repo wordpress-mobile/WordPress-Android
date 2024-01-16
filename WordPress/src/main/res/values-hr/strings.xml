@@ -627,7 +627,6 @@ Language: hr
     <string name="empty_list_default">Popis je prazan</string>
     <string name="reader_untitled_post">(Bez naslova)</string>
     <string name="reader_btn_share">Podjeli</string>
-    <string name="reader_btn_unfollow">Prati se</string>
     <string name="reader_hint_comment_on_comment">Odgovor na komentar…</string>
     <string name="reader_label_added_tag">Dodano %s</string>
     <string name="reader_label_removed_tag">Uklonjeno %s</string>

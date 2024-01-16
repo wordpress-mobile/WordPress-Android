@@ -2006,7 +2006,6 @@ Language: sr_RS
     <string name="pick_video">Одаберите видео снимак</string>
     <string name="reader_toast_err_get_post">Није могуће добавити овај чланак</string>
     <string name="reader_likes_you_and_one">Вама и још некоме се ово свиђа</string>
-    <string name="reader_btn_unfollow">Престани са праћењем</string>
     <string name="reader_label_added_tag">Додат %s</string>
     <string name="reader_label_removed_tag">Уклоњен %s</string>
     <string name="reader_likes_one">Једној особи се ово свиђа</string>

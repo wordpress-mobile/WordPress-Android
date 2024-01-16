@@ -3654,7 +3654,6 @@ Language: id
     <string name="reader_label_removed_tag">%s dihapus</string>
     <string name="reader_label_added_tag">%s ditambahkan</string>
     <string name="reader_hint_comment_on_comment">Balas komentar…</string>
-    <string name="reader_btn_unfollow">Pengikut</string>
     <string name="reader_btn_share">Bagikan</string>
     <string name="reader_view_reblog">Reblog</string>
     <string name="reader_untitled_post">(Tanpa Judul)</string>

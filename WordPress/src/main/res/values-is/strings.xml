@@ -561,7 +561,6 @@ Language: is
     <string name="pick_video">Velja myndband</string>
     <string name="reader_untitled_post">(Án titils)</string>
     <string name="reader_label_added_tag">Bætti við %s</string>
-    <string name="reader_btn_unfollow">Fylgja</string>
     <string name="reader_likes_only_you">Þér líkar þessi færsla</string>
     <string name="reader_btn_share">Deila</string>
     <string name="empty_list_default">Þessi listi er tómur</string>

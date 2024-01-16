@@ -3665,7 +3665,6 @@ Language: gl_ES
     <string name="reader_label_removed_tag">%s eliminado</string>
     <string name="reader_label_added_tag">%s engadido</string>
     <string name="reader_hint_comment_on_comment">Responder ao comentario</string>
-    <string name="reader_btn_unfollow">Seguindo</string>
     <string name="reader_btn_share">Compartir</string>
     <string name="reader_view_reblog">Reblog</string>
     <string name="reader_untitled_post">(Sen título)</string>

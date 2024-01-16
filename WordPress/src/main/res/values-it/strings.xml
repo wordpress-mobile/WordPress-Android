@@ -3650,7 +3650,6 @@ Language: it
     <string name="reader_label_removed_tag">Rimosso %s</string>
     <string name="reader_label_added_tag">Aggiunto %s</string>
     <string name="reader_hint_comment_on_comment">Rispondi al commento…</string>
-    <string name="reader_btn_unfollow">Seguendo</string>
     <string name="reader_btn_share">Condividi</string>
     <string name="reader_view_reblog">Ripubblica</string>
     <string name="reader_untitled_post">(Senza titolo)</string>

@@ -132,7 +132,6 @@ Language: mk
     <string name="reader_toast_err_share_intent">Неможе да се сподели</string>
     <string name="reader_toast_err_view_image">Неможе да се види сликата</string>
     <string name="reader_toast_err_url_intent">Неможе да се отвори %s</string>
-    <string name="reader_btn_unfollow">Следење</string>
     <string name="reader_label_added_tag">Додадено %s</string>
     <string name="reader_likes_one">На едно лице му се допаѓа ова</string>
     <string name="reader_likes_only_you">На тебе ти се допаѓа ова</string>
