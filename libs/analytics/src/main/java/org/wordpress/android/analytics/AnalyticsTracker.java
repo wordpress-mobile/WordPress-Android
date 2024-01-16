@@ -1099,7 +1099,9 @@ public final class AnalyticsTracker {
         DYNAMIC_DASHBOARD_CARD_TAPPED,
         DYNAMIC_DASHBOARD_CARD_CTA_TAPPED,
         DYNAMIC_DASHBOARD_CARD_HIDE_TAPPED,
-        DEEP_LINK_FAILED
+        DEEP_LINK_FAILED,
+        READER_DROPDOWN_MENU_OPENED,
+        READER_DROPDOWN_MENU_ITEM_TAPPED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

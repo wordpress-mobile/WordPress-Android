@@ -149,23 +149,6 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
-// TODO verify side effects of removing this logic
-//    private suspend fun initializeTabSelection(tagList: ReaderTagList) {
-//        withContext(bgDispatcher) {
-//            val selectTab = { readerTag: ReaderTag ->
-//                val index = tagList.indexOf(readerTag)
-//                if (index != -1) {
-//                    updateSelectedContent(readerTag)
-//                }
-//            }
-//            appPrefsWrapper.getReaderTag()?.let {
-//                selectTab.invoke(it)
-//            } ?: tagList.find { it.isDiscover }?.let {
-//                selectTab.invoke(it)
-//            }
-//        }
-//    }
-
     fun onTagChanged(selectedTag: ReaderTag?) {
         selectedTag?.let {
             trackReaderTabShownIfNecessary(it)
@@ -389,10 +372,15 @@ class ReaderViewModel @Inject constructor(
                     menuItems = menuItems,
                     selectedItem = selectedItem,
                     filterUiState = filterUiState,
+                    onDropdownMenuClick = ::onDropdownMenuClick,
                     isSearchActionVisible = isSearchSupported(),
                 )
             )
         }
+    }
+
+    private fun onDropdownMenuClick() {
+        readerTracker.trackDropdownMenuOpened()
     }
 
     private fun getMenuItemFromReaderTag(readerTag: ReaderTag): MenuElementData.Item.Single? =
@@ -425,6 +413,9 @@ class ReaderViewModel @Inject constructor(
         // Avoid reloading a content stream that is already loaded
         if (item.id != _topBarUiState.value?.selectedItem?.id) {
             selectedReaderTag?.let { updateSelectedContent(it) }
+        }
+        if (selectedReaderTag != null) {
+            readerTracker.trackDropdownMenuItemTapped(selectedReaderTag)
         }
     }
 
@@ -516,6 +507,7 @@ class ReaderViewModel @Inject constructor(
         val menuItems: List<MenuElementData>,
         val selectedItem: MenuElementData.Item.Single,
         val filterUiState: FilterUiState? = null,
+        val onDropdownMenuClick: () -> Unit,
         val isSearchActionVisible: Boolean = false,
     ) {
         data class FilterUiState(
