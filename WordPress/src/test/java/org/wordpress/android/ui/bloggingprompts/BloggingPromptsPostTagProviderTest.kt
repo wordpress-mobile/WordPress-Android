@@ -27,19 +27,15 @@ class BloggingPromptsPostTagProviderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should return the expected tag when promptIdTag is called given valid url`() {
-        whenever(readerUtilsWrapper.getTagFromTagUrl(any())).thenReturn(BLOGGING_PROMPT_ID_TAG)
-
-        val actual = tagProvider.promptIdTag("valid-url")
+    fun `Should return the expected tag when promptIdTag is called given valid id`() {
+        val actual = tagProvider.promptIdTag(1234)
 
         assertThat(actual).isEqualTo(BLOGGING_PROMPT_ID_TAG)
     }
 
     @Test
-    fun `Should return the generic tag when promptIdTag is called given invalid url`() {
-        whenever(readerUtilsWrapper.getTagFromTagUrl(any())).thenReturn("")
-
-        val actual = tagProvider.promptIdTag("invalid-url")
+    fun `Should return the generic tag when promptIdTag is called given invalid id`() {
+        val actual = tagProvider.promptIdTag(0)
 
         assertThat(actual).isEqualTo(BloggingPromptsPostTagProvider.BLOGGING_PROMPT_TAG)
     }
@@ -54,7 +50,7 @@ class BloggingPromptsPostTagProviderTest : BaseUnitTest() {
             ReaderPostLogic.formatFullEndpointForTag(BLOGGING_PROMPT_ID_TAG),
             ReaderTagType.FOLLOWED,
         )
-        val actual = tagProvider.promptIdSearchReaderTag("valid-url")
+        val actual = tagProvider.promptSearchReaderTag("valid-url")
         assertEquals(expected, actual)
     }
 
