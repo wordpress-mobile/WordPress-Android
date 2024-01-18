@@ -34,7 +34,21 @@ class CredentialManagerHandler(
         val signal = CancellationSignal()
 
         try {
+            getCredentialAsync(
+                    request = getCredRequest,
+                    context = context,
+                    cancellationSignal = signal,
+                    executor = executor,
+                    callback = object : CredentialManagerCallback<GetCredentialResponse, GetCredentialException> {
+                        override fun onError(e: GetCredentialException) {
+                            onResult(Result.failure(e))
+                        }
 
+                        override fun onResult(result: GetCredentialResponse) {
+                            onResult(Result.success(result))
+                        }
+                    }
+            )
         } catch (e: GetCredentialException) {
             Log.e("Error", e.stackTraceToString())
             onResult(Result.failure(e))
