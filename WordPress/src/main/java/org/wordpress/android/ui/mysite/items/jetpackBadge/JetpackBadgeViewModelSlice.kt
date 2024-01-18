@@ -19,10 +19,11 @@ class JetpackBadgeViewModelSlice @Inject constructor(
     private val _uiModel = MutableLiveData<MySiteCardAndItem.JetpackBadge?>()
     val uiModel = _uiModel.distinctUntilChanged()
 
+    val screen = JetpackPoweredScreen.WithStaticText.HOME
+
     suspend fun buildJetpackBadge(){
         if(jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard().not())
             _uiModel.postValue(null)
-        val screen = JetpackPoweredScreen.WithStaticText.HOME
         _uiModel.postValue(MySiteCardAndItem.JetpackBadge(
             text = jetpackBrandingUtils.getBrandingTextForScreen(screen),
             onClick = if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
