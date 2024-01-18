@@ -33,6 +33,13 @@ class SelectedSiteRepository @Inject constructor(
 
     val siteSelected = _selectedSiteChange.mapSafe { it?.id }.distinctUntilChanged()
 
+    fun refresh() {
+        updateSiteSettingsIfNecessary()
+        _selectedSiteChange.value?.let {
+            dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(it))
+        }
+    }
+
     fun updateSite(selectedSite: SiteModel) {
         if (getSelectedSite()?.iconUrl != selectedSite.iconUrl) {
             showSiteIconProgressBar(false)
