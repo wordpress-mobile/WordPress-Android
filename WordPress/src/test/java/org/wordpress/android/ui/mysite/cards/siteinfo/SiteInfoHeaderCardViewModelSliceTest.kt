@@ -9,13 +9,17 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteDialogModel
@@ -71,6 +75,7 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
     private lateinit var textInputDialogModels: MutableList<MySiteViewModel.TextInputDialogModel>
     private lateinit var dialogModels: MutableList<SiteDialogModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
+    private lateinit var uiModels: MutableList<SiteInfoHeaderCard?>
 
     private val siteLocalId = 1
     private val siteUrl = "http://site.com"
@@ -108,6 +113,7 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
         textInputDialogModels = mutableListOf()
         dialogModels = mutableListOf()
         navigationActions = mutableListOf()
+        uiModels = mutableListOf()
 
         viewModelSlice.onSnackbarMessage.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
@@ -128,6 +134,9 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
             event?.getContentIfNotHandled()?.let {
                 navigationActions.add(it)
             }
+        }
+        viewModelSlice.uiModel.observeForever {
+            uiModels.add(it)
         }
 
         site = SiteModel()
@@ -455,6 +464,34 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
         viewModelSlice.onSiteNameChooserDismissed()
 
         verify(quickStartRepository).checkAndShowQuickStartNotice()
+    }
+
+    @Test
+    fun `when selectedSite is null, then card is not built`() {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+
+        clearInvocations(siteInfoHeaderCardBuilder)
+
+        viewModelSlice.onResume()
+
+        verifyNoInteractions(siteInfoHeaderCardBuilder)
+    }
+
+    @Test
+    fun `when selectedSite is not null, then card is built`() {
+        val siteModel = mock<SiteModel>().apply {
+            id = 1
+            name = "name"
+            url = "https://site.wordpress.com"
+        }
+
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
+
+        clearInvocations(siteInfoHeaderCardBuilder)
+
+        viewModelSlice.onResume()
+
+        verify(siteInfoHeaderCardBuilder).buildSiteInfoCard(any())
     }
 
     private enum class SiteInfoHeaderCardAction {
