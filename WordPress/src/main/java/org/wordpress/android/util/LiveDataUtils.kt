@@ -362,38 +362,43 @@ fun <S, T, U, V, W, X, Y> merge(
  * @param sourceF sixth source
  * @param sourceG seventh source
  * @param sourceH eightth source
+ * @param sourceH eightth source
+ * @param sourceH eightth source
+ * @param sourceH eightth source
  * @return new data source
  */
 @Suppress("DestructuringDeclarationWithTooManyEntries", "LongParameterList")
-fun <Q, R, S, T, U, V, W, X, Y, Z, A> merge(
-    sourceA: LiveData<Q>,
-    sourceB: LiveData<R>,
-    sourceC: LiveData<S>,
-    sourceD: LiveData<T>,
-    sourceE: LiveData<U>,
-    sourceF: LiveData<V>,
-    sourceG: LiveData<W>,
-    sourceH: LiveData<X>,
-    sourceI: LiveData<Y>,
-    sourceJ: LiveData<Z>,
+fun <A, B, C, D, E, F, G, H, I, J, K, Z> merge(
+    sourceA: LiveData<A>,
+    sourceB: LiveData<B>,
+    sourceC: LiveData<C>,
+    sourceD: LiveData<D>,
+    sourceE: LiveData<E>,
+    sourceF: LiveData<F>,
+    sourceG: LiveData<G>,
+    sourceH: LiveData<H>,
+    sourceI: LiveData<I>,
+    sourceJ: LiveData<J>,
+    sourceK: LiveData<K>,
     distinct: Boolean = false,
-    merger: (Q?, R?, S?, T?, U?, V?, W?, X?, Y?, Z?) -> A?
-): LiveData<A> {
-    data class NineItemContainer(
-        val first: Q? = null,
-        val second: R? = null,
-        val third: S? = null,
-        val fourth: T? = null,
-        val fifth: U? = null,
-        val sixth: V? = null,
-        val seventh: W? = null,
-        val eighth: X? = null,
-        val ninth: Y? = null,
-        val tenth: Z? = null,
+    merger: (A?, B?, C?, D?, E?, F?, G?, H?, I?, J?, K?) -> Z?
+): LiveData<Z> {
+    data class ElevenItemContainer(
+        val first: A? = null,
+        val second: B? = null,
+        val third: C? = null,
+        val fourth: D? = null,
+        val fifth: E? = null,
+        val sixth: F? = null,
+        val seventh: G? = null,
+        val eighth: H? = null,
+        val ninth: I? = null,
+        val tenth: J? = null,
+        val eleventh: K? = null
     )
 
-    val mediator = MediatorLiveData<NineItemContainer>()
-    mediator.value = NineItemContainer()
+    val mediator = MediatorLiveData<ElevenItemContainer>()
+    mediator.value = ElevenItemContainer()
     mediator.addSource(sourceA) {
         val container = mediator.value
         if (container?.first != it || !distinct) {
@@ -455,8 +460,16 @@ fun <Q, R, S, T, U, V, W, X, Y, Z, A> merge(
             mediator.value = container?.copy(tenth = it)
         }
     }
-    return mediator.mapSafe { (first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth) ->
-        merger(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth)
+
+    mediator.addSource(sourceK) {
+        val container = mediator.value
+        if (container?.eleventh != it || !distinct) {
+            mediator.value = container?.copy(eleventh = it)
+        }
+    }
+
+    return mediator.mapSafe { (first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh) ->
+        merger(first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth, eleventh)
     }
 }
 

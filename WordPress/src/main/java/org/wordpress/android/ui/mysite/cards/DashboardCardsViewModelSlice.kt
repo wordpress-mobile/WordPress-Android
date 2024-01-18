@@ -12,6 +12,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsState
 import org.wordpress.android.ui.mysite.cards.dashboard.bloganuary.BloganuaryNudgeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewModelSlice
+import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.migration.JpMigrationSuccessCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlice
@@ -28,6 +29,7 @@ import javax.inject.Inject
 class DashboardCardsViewModelSlice @Inject constructor(
     private val jpMigrationSuccessCardViewModelSlice: JpMigrationSuccessCardViewModelSlice,
     private val jetpackInstallFullPluginCardViewModelSlice: JetpackInstallFullPluginCardViewModelSlice,
+    private val domainRegistrationCardViewModelSlice: DomainRegistrationCardViewModelSlice,
     private val blazeCardViewModelSlice: BlazeCardViewModelSlice,
     private val cardViewModelSlice: CardViewModelSlice,
     private val personalizeCardViewModelSlice: PersonalizeCardViewModelSlice,
@@ -61,7 +63,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
         quickLinksItemViewModelSlice.navigation,
         plansCardViewModelSlice.onNavigation,
         jpMigrationSuccessCardViewModelSlice.onNavigation,
-        quickStartCardVewModelSlice.onNavigation
+        quickStartCardVewModelSlice.onNavigation,
+        domainRegistrationCardViewModelSlice.onNavigation,
     )
 
     val refresh = merge(
@@ -73,7 +76,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
         blazeCardViewModelSlice.isRefreshing,
         cardViewModelSlice.isRefreshing,
         bloggingPromptCardViewModelSlice.isRefreshing,
-        quickStartCardVewModelSlice.isRefreshing
+        quickStartCardVewModelSlice.isRefreshing,
+        domainRegistrationCardViewModelSlice.isRefreshing
     )
 
     val uiModel: MutableLiveData<List<MySiteCardAndItem>> = merge(
@@ -86,7 +90,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
         jpMigrationSuccessCardViewModelSlice.uiModel,
         plansCardViewModelSlice.uiModel,
         personalizeCardViewModelSlice.uiModel,
-        jetpackInstallFullPluginCardViewModelSlice.uiModel
+        jetpackInstallFullPluginCardViewModelSlice.uiModel,
+        domainRegistrationCardViewModelSlice.uiModel
     ) { quicklinks,
         quickStart,
         blazeCard,
@@ -96,7 +101,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
         migrationSuccessCard,
         plansCard,
         personalizeCard,
-        jpFullInstallFullPlugin ->
+        jpFullInstallFullPlugin,
+        domainRegistrationCard ->
         return@merge mergeUiModels(
             quicklinks,
             quickStart,
@@ -107,7 +113,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
             migrationSuccessCard,
             plansCard,
             personalizeCard,
-            jpFullInstallFullPlugin
+            jpFullInstallFullPlugin,
+            domainRegistrationCard
         )
     }.distinctUntilChanged() as MutableLiveData<List<MySiteCardAndItem>>
 
@@ -123,10 +130,12 @@ class DashboardCardsViewModelSlice @Inject constructor(
         plansCard: MySiteCardAndItem.Card.DashboardPlansCard?,
         personalizeCard: MySiteCardAndItem.Card.PersonalizeCardModel?,
         jpFullInstallFullPlugin: MySiteCardAndItem.Card.JetpackInstallFullPluginCard?,
+        domainRegistrationCard: MySiteCardAndItem.Card.DomainRegistrationCard?,
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
         quicklinks?.let { cards.add(it) }
         quickStart?.let { cards.add(it) }
+        domainRegistrationCard?.let { cards.add(it) }
         bloganuaryNudgeCard?.let { cards.add(it) }
         bloggingPromptCard?.let { cards.add(it) }
         blazeCard?.let { cards.add(it) }
