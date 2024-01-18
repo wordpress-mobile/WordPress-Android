@@ -41,7 +41,7 @@ class BloggingPromptsPostTagProviderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should return the expected ReaderTag when promptIdSearchReaderTag is called`() {
+    fun `Should return the expected ReaderTag when promptSearchReaderTag is called`() {
         whenever(readerUtilsWrapper.getTagFromTagUrl(any())).thenReturn(BLOGGING_PROMPT_ID_TAG)
         val expected = ReaderTag(
             BLOGGING_PROMPT_ID_TAG,
@@ -54,7 +54,22 @@ class BloggingPromptsPostTagProviderTest : BaseUnitTest() {
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun `Should return the base Prompt ReaderTag when promptSearchReaderTag is called`() {
+        whenever(readerUtilsWrapper.getTagFromTagUrl(any())).thenReturn("")
+        val expected = ReaderTag(
+            BLOGGING_PROMPT_TAG,
+            BLOGGING_PROMPT_TAG,
+            BLOGGING_PROMPT_TAG,
+            ReaderPostLogic.formatFullEndpointForTag(BLOGGING_PROMPT_TAG),
+            ReaderTagType.FOLLOWED,
+        )
+        val actual = tagProvider.promptSearchReaderTag("invalid-url")
+        assertEquals(expected, actual)
+    }
+
     companion object {
         private const val BLOGGING_PROMPT_ID_TAG = "dailyprompt-1234"
+        private const val BLOGGING_PROMPT_TAG = "dailyprompt"
     }
 }
