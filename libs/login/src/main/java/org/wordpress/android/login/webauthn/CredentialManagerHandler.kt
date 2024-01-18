@@ -1,6 +1,7 @@
 package org.wordpress.android.login.webauthn
 
 import android.content.Context
+import android.os.CancellationSignal
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.credentials.CredentialManager
@@ -10,40 +11,33 @@ import androidx.credentials.GetCredentialResponse
 import androidx.credentials.GetPasswordOption
 import androidx.credentials.GetPublicKeyCredentialOption
 import androidx.credentials.exceptions.GetCredentialException
+import java.util.concurrent.Executors
 
 class CredentialManagerHandler(
     private val context: Context
 ) {
-    val credentialManager = CredentialManager.create(context)
+    private val credentialManager = CredentialManager.create(context)
+    private val executor = Executors.newSingleThreadExecutor()
 
     @RequiresApi(34)
     private fun CredentialManager.createPasskey(
         context: Context,
-        requestJson: String
-    ): GetCredentialResponse? {
+        requestJson: String,
+        onResult: (Result<GetCredentialResponse>) -> Unit
+    ) {
         val password = GetPasswordOption()
         val publicKeyCred = GetPublicKeyCredentialOption(requestJson)
         val getCredRequest = GetCredentialRequest(
                 listOf(password, publicKeyCred)
         )
 
-        return try {
-            getCredentialAsync(
-                    request = getCredRequest,
-                    context = context,
-                    callback = object : CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
-                        override fun onError(e: GetCredentialException) {
-                            TODO("Not yet implemented")
-                        }
+        val signal = CancellationSignal()
 
-                        override fun onResult(result: GetCredentialResponse) {
-                            TODO("Not yet implemented")
-                        }
-                    }
-            )
+        try {
+
         } catch (e: GetCredentialException) {
             Log.e("Error", e.stackTraceToString())
-            null
+            onResult(Result.failure(e))
         }
     }
 }
