@@ -30,7 +30,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.resume
 
-class DomainRegistrationViewModelSlice @Inject constructor(
+class DomainRegistrationCardViewModelSlice @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val dispatcher: Dispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -63,7 +63,7 @@ class DomainRegistrationViewModelSlice @Inject constructor(
         this.scope = scope
     }
 
-    fun getData(
+    fun buildCard(
         siteLocalId: Int,
         selectedSite: SiteModel?
     ) {

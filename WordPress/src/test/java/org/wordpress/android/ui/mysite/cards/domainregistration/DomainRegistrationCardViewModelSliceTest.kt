@@ -29,7 +29,7 @@ import org.wordpress.android.util.SiteUtilsWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class DomainRegistrationViewModelSliceTest : BaseUnitTest() {
+class DomainRegistrationCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var dispatcher: Dispatcher
 
@@ -50,13 +50,13 @@ class DomainRegistrationViewModelSliceTest : BaseUnitTest() {
     private lateinit var result: MutableList<MySiteCardAndItem.Card.DomainRegistrationCard>
     private lateinit var isRefreshing: MutableList<Boolean>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
-    private lateinit var viewModelSlice: DomainRegistrationViewModelSlice
+    private lateinit var viewModelSlice: DomainRegistrationCardViewModelSlice
 
     @Before
     fun setUp() {
         site.id = siteLocalId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        viewModelSlice = DomainRegistrationViewModelSlice(
+        viewModelSlice = DomainRegistrationCardViewModelSlice(
             testDispatcher(),
             dispatcher,
             selectedSiteRepository,
@@ -79,7 +79,7 @@ class DomainRegistrationViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `when getData is invoked, then refresh is true`() = test {
-        viewModelSlice.getData(siteLocalId, site)
+        viewModelSlice.buildCard(siteLocalId, site)
 
         assertThat(isRefreshing.last()).isTrue
     }
@@ -160,7 +160,7 @@ class DomainRegistrationViewModelSliceTest : BaseUnitTest() {
         buildOnPlansFetchedEvent(site, currentPlan, error)?.let { event ->
             whenever(dispatcher.dispatch(any())).then { viewModelSlice.onPlansFetched(event) }
         }
-        viewModelSlice.getData(siteLocalId,site)
+        viewModelSlice.buildCard(siteLocalId,site)
     }
 
     private fun buildOnPlansFetchedEvent(
