@@ -3683,7 +3683,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (event.isError() && !NetworkUtils.isNetworkAvailable(this)) {
-            mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media, event.error);
+            mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media);
             return;
         }
 
@@ -3707,7 +3707,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             // if the remote url on completed is null, we consider this upload wasn't successful
             if (TextUtils.isEmpty(event.media.getUrl()) && !NetworkUtils.isNetworkAvailable(this)) {
                 MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
-                mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media, error);
+                mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media);
             } else if (TextUtils.isEmpty(event.media.getUrl())) {
                 MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
                 mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, error);
