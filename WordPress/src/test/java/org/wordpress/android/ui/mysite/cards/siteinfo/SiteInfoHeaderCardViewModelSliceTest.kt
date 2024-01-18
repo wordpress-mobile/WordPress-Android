@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -36,7 +35,6 @@ import org.wordpress.android.viewmodel.ContextProvider
 @Suppress("LargeClass")
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-@Ignore("The tests are failing, update it to the latest code")
 class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var wpMediaUtilsWrapper: WPMediaUtilsWrapper
@@ -84,8 +82,14 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var quickStartType: QuickStartType
 
+    @Mock
+    lateinit var siteModel: SiteModel
     @Before
     fun setUp() {
+        whenever(quickStartRepository.activeTask).thenReturn(activeTask)
+        whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(MutableLiveData(false))
+        whenever(selectedSiteRepository.selectedSiteChange).thenReturn(MutableLiveData(siteModel))
+
         viewModelSlice = SiteInfoHeaderCardViewModelSlice(
             testDispatcher(),
             quickStartRepository,
