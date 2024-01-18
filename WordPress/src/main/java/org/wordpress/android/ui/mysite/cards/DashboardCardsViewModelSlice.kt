@@ -139,6 +139,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         migrationSuccessCard?.let { cards.add(it) }
         plansCard?.let { cards.add(it) }
         jpFullInstallFullPlugin?.let { cards.add(it) }
+        noCardsMessageViewModelSlice.buildNoCardsMessage(cards)?.let { cards.add(it) }
         personalizeCard?.let { cards.add(it) }
         return cards.toList()
     }
