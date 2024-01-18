@@ -20,7 +20,7 @@ class CredentialManagerHandler(
     private val executor = Executors.newSingleThreadExecutor()
 
     @RequiresApi(34)
-    private fun CredentialManager.createPasskey(
+    fun fetchPasskey(
         context: Context,
         requestJson: String,
         onResult: (Result<GetCredentialResponse>) -> Unit
@@ -34,7 +34,7 @@ class CredentialManagerHandler(
         val signal = CancellationSignal()
 
         try {
-            getCredentialAsync(
+            credentialManager.getCredentialAsync(
                     request = getCredRequest,
                     context = context,
                     cancellationSignal = signal,
