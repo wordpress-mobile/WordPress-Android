@@ -40,6 +40,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/views_title"
                 tools:text="1,743" />
+
+            <View
+                android:id="@+id/vertical_divider_views"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:background="@color/gray_20"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -48,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_large"
-            app:layout_constraintEnd_toStartOf="@+id/likes_layout"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/views_layout"
             app:layout_constraintTop_toBottomOf="@+id/my_site_toolbar">
 
@@ -79,10 +89,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_large"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/visitors_layout"
-            app:layout_constraintTop_toBottomOf="@+id/my_site_toolbar">
+            app:layout_constraintEnd_toStartOf="@+id/comments_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/views_layout">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/likes_title"
@@ -104,6 +113,47 @@
                 app:layout_constraintTop_toBottomOf="@+id/likes_title"
                 tools:text="1,000" />
 
+            <View
+                android:id="@+id/vertical_divider_likes"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:background="@color/gray_20"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/comments_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_large"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/likes_layout"
+            app:layout_constraintTop_toBottomOf="@+id/visitors_layout">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/comments_title"
+                style="@style/MySiteTodaysStatsCardStatTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/my_site_todays_stat_card_comments"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <org.wordpress.android.widgets.MaterialTextViewWithNumerals
+                android:id="@+id/comments_count"
+                style="@style/MySiteTodaysStatsCardStatCountText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/comments_title"
+                tools:text="1,990" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
@@ -120,7 +170,7 @@
             android:id="@+id/card_footer_padding"
             android:layout_width="match_parent"
             android:layout_height="@dimen/margin_large"
-            app:layout_constraintTop_toBottomOf="@+id/views_layout"/>
+            app:layout_constraintTop_toBottomOf="@+id/likes_layout"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/get_more_views_message"
