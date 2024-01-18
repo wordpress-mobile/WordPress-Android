@@ -28,6 +28,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <!-- GCM all build types configuration -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -823,11 +824,13 @@
         <!-- Services -->
         <service
             android:name=".ui.uploads.UploadService"
-            android:label="Upload Service" />
+            android:label="Upload Service"
+            android:foregroundServiceType="dataSync"/>
         <service
             android:name=".ui.media.services.MediaDeleteService"
             android:label="Media Delete Service"
             android:exported="false"
+            android:foregroundServiceType="dataSync"
             />
 
         <service
@@ -1048,7 +1051,7 @@
 
         <service
             android:name=".push.GCMMessageService"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
