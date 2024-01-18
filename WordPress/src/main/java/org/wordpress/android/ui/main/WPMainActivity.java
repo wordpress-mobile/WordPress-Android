@@ -1141,7 +1141,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             if (!mIsChangingConfiguration) {
                 // Don't track if onResume was called after a screen orientation change
                 trackLastVisiblePage(currentPageType);
-                return;
             }
 
             if (currentPageType == PageType.NOTIFS) {
