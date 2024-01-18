@@ -111,6 +111,8 @@
     <color name="reader_blog_section_avatar_internal_border">@color/black_translucent_20</color>
     <color name="reader_post_body_link">@color/blue_50</color>
     <color name="reader_footer_progress_background">@color/white</color>
+    <color name="reader_subfilter_button_background">@color/black</color>
+    <color name="reader_subfilter_button_text">@color/white</color>
 
     <!-- These colors were removed from the login library and moved here as they are still being
     used by some old layouts. They should be replaced here as well, whenever possible. -->
