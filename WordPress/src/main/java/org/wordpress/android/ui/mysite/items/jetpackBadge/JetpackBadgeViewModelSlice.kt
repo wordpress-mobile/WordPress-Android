@@ -23,7 +23,7 @@ class JetpackBadgeViewModelSlice @Inject constructor(
 
     suspend fun buildJetpackBadge(){
         if(jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard().not())
-            _uiModel.postValue(null)
+            return _uiModel.postValue(null)
         _uiModel.postValue(MySiteCardAndItem.JetpackBadge(
             text = jetpackBrandingUtils.getBrandingTextForScreen(screen),
             onClick = if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {

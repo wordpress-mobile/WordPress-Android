@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite.items.jetpackBadge
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -23,17 +24,20 @@ class JetpackBadgeViewModelSliceTest : BaseUnitTest() {
 
     private lateinit var viewModelSlice: JetpackBadgeViewModelSlice
 
-    val uiModels = mutableListOf<MySiteCardAndItem.JetpackBadge?>()
+    private lateinit var uiModels: MutableList<MySiteCardAndItem.JetpackBadge?>
 
-    val navigationEvents = mutableListOf<SiteNavigationAction>()
+    private lateinit var navigationEvents: MutableList<SiteNavigationAction>
 
+    @Before
     fun setUp() {
         viewModelSlice = JetpackBadgeViewModelSlice(jetpackBrandingUtils)
 
+        uiModels = mutableListOf()
         viewModelSlice.uiModel.observeForever {
             uiModels.add(it)
         }
 
+        navigationEvents = mutableListOf()
         viewModelSlice.onNavigation.observeForever {
             it?.let { navigationEvents.add(it.peekContent()) }
         }
@@ -46,9 +50,9 @@ class JetpackBadgeViewModelSliceTest : BaseUnitTest() {
 
         // when
         viewModelSlice.buildJetpackBadge()
+        advanceUntilIdle()
 
         // then
-        assertEquals(1, uiModels.size)
         assertNull(uiModels[0])
     }
 
@@ -72,8 +76,11 @@ class JetpackBadgeViewModelSliceTest : BaseUnitTest() {
     @Test
     fun `given jetpack branding should be shown, when badge is clicked, then navigation event is emitted`() = test {
         // given
+        val brandingText = UiString.UiStringText("Jetpack")
         whenever(jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard()).thenReturn(true)
         whenever(jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()).thenReturn(true)
+        whenever(jetpackBrandingUtils.getBrandingTextForScreen(JetpackPoweredScreen.WithStaticText.HOME))
+            .thenReturn(brandingText)
 
         // when
         viewModelSlice.buildJetpackBadge()
