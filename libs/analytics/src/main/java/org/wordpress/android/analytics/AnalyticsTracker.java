@@ -211,7 +211,6 @@ public final class AnalyticsTracker {
         EDITOR_EDITED_IMAGE, // Visual editor only
         EDITOR_UPLOAD_MEDIA_FAILED, // Visual editor only
         EDITOR_UPLOAD_MEDIA_RETRIED, // Visual editor only
-        EDITOR_UPLOAD_MEDIA_PAUSED, // Visual editor only
         EDITOR_TAPPED_BLOCKQUOTE,
         EDITOR_TAPPED_BOLD,
         EDITOR_TAPPED_ELLIPSIS_COLLAPSE,
