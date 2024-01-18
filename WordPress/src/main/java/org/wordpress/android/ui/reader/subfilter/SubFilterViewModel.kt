@@ -66,6 +66,9 @@ class SubFilterViewModel @Inject constructor(
     private val _updateTagsAndSites = MutableLiveData<Event<EnumSet<UpdateTask>>>()
     val updateTagsAndSites: LiveData<Event<EnumSet<UpdateTask>>> = _updateTagsAndSites
 
+    private val _isTitleContainerVisible = MutableLiveData<Boolean>(true)
+    val isTitleContainerVisible: LiveData<Boolean> = _isTitleContainerVisible
+
     private var lastKnownUserId: Long? = null
     private var lastTokenAvailableStatus: Boolean? = null
 
@@ -362,6 +365,10 @@ class SubFilterViewModel @Inject constructor(
             ARG_CURRENT_SUBFILTER_JSON, getCurrentSubfilterJson()
         )
         outState.putBoolean(ARG_IS_FIRST_LOAD, isFirstLoad)
+    }
+
+    fun setTitleContainerVisibility(isVisible: Boolean) {
+        _isTitleContainerVisible.value = isVisible
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")

@@ -1815,8 +1815,8 @@ Language: ar
     <string name="reader_bottom_sheet_content_description">تحديد وسم أو موقع، نافذة منبثقة</string>
     <string name="reader_self_hosted_select_filter">استخدام زر الفلترة للعثور على مقالات في مواضيع معينة</string>
     <string name="reader_title_subs">إدارة المواضيع والمواقع</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">تسجيل الدخول إلى WordPress.com للاطلاع على أحدث المقالات من المواقع التي تتابعها</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">تسجيل الدخول إلى WordPress.com للاطلاع على أحدث المقالات من المواضيع التي تتابعها</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">تسجيل الدخول إلى WordPress.com للاطلاع على أحدث المقالات من المواقع التي تتابعها</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">تسجيل الدخول إلى WordPress.com للاطلاع على أحدث المقالات من المواضيع التي تتابعها</string>
     <string name="gutenberg_native_replace_current_block">استبدال المكوِّن الحالي</string>
     <string name="gutenberg_native_add_to_end">إضافة إلى النهاية</string>
     <string name="gutenberg_native_add_to_beginning">إضافة إلى البداية</string>

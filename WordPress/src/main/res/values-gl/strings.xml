@@ -1827,8 +1827,8 @@ Language: gl_ES
     <string name="reader_btn_select_filter_content_description">Selecciona un sitio ou etiqueta para filtrar entradas</string>
     <string name="reader_self_hosted_select_filter">Usa o botón de filtro para encontrar entradas sobre temas específicos</string>
     <string name="reader_title_subs">Xestionar etiquetas e sitios</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Accede a WordPress.com para ver as últimas entradas dos sitios que segues</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Accede a WordPress.com para ver as últimas entradas dos temas que segues</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">Accede a WordPress.com para ver as últimas entradas dos temas que segues</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">Accede a WordPress.com para ver as últimas entradas dos sitios que segues</string>
     <string name="gutenberg_native_add_to_end">Engadir ao final</string>
     <string name="reader_filter_empty_sites_action">Seguir un sitio</string>
     <string name="gutenberg_native_add_block_after">Engadir o bloque despois</string>

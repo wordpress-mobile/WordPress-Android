@@ -62,7 +62,9 @@ class SubfilterPageFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyStateContainer: LinearLayout
     private lateinit var title: WPTextView
-    private lateinit var actionButton: Button
+    private lateinit var text: WPTextView
+    private lateinit var primaryButton: Button
+    private lateinit var secondaryButton: Button
 
     companion object {
         const val CATEGORY_KEY = "category_key"
@@ -98,7 +100,9 @@ class SubfilterPageFragment : Fragment() {
 
         emptyStateContainer = view.findViewById(R.id.empty_state_container)
         title = emptyStateContainer.findViewById(R.id.title)
-        actionButton = emptyStateContainer.findViewById(R.id.action_button)
+        text = emptyStateContainer.findViewById(R.id.text)
+        primaryButton = emptyStateContainer.findViewById(R.id.action_button_primary)
+        secondaryButton = emptyStateContainer.findViewById(R.id.action_button_secondary)
 
         subFilterViewModel = ViewModelProvider(
             requireParentFragment().parentFragment as ViewModelStoreOwner,
@@ -126,16 +130,48 @@ class SubfilterPageFragment : Fragment() {
         viewModel.emptyState.observe(viewLifecycleOwner) { uiState ->
             if (isAdded) {
                 when (uiState) {
-                    HiddenEmptyUiState -> emptyStateContainer.visibility = View.GONE
-                    is VisibleEmptyUiState -> {
-                        emptyStateContainer.visibility = View.VISIBLE
-                        title.setText(uiState.title.stringRes)
-                        actionButton.setText(uiState.buttonText.stringRes)
-                        actionButton.setOnClickListener {
-                            subFilterViewModel.onBottomSheetActionClicked(uiState.action)
-                        }
-                    }
+                    HiddenEmptyUiState -> hideEmptyUi()
+                    is VisibleEmptyUiState -> showEmptyUi(uiState)
                 }
+            }
+        }
+    }
+
+    private fun hideEmptyUi() {
+        emptyStateContainer.visibility = View.GONE
+        subFilterViewModel.setTitleContainerVisibility(isVisible = true)
+    }
+
+    private fun showEmptyUi(uiState: VisibleEmptyUiState) {
+        emptyStateContainer.visibility = View.VISIBLE
+        subFilterViewModel.setTitleContainerVisibility(isVisible = false)
+
+        if (uiState.title == null) {
+            title.visibility = View.GONE
+        } else {
+            title.visibility = View.VISIBLE
+            title.text = uiHelpers.getTextOfUiString(requireContext(), uiState.title)
+        }
+
+        text.text = uiHelpers.getTextOfUiString(requireContext(), uiState.text)
+
+        if (uiState.primaryButton == null) {
+            primaryButton.visibility = View.GONE
+        } else {
+            primaryButton.visibility = View.VISIBLE
+            primaryButton.text = uiHelpers.getTextOfUiString(requireContext(), uiState.primaryButton.text)
+            primaryButton.setOnClickListener {
+                subFilterViewModel.onBottomSheetActionClicked(uiState.primaryButton.action)
+            }
+        }
+
+        if (uiState.secondaryButton == null) {
+            secondaryButton.visibility = View.GONE
+        } else {
+            secondaryButton.visibility = View.VISIBLE
+            secondaryButton.text = uiHelpers.getTextOfUiString(requireContext(), uiState.secondaryButton.text)
+            secondaryButton.setOnClickListener {
+                subFilterViewModel.onBottomSheetActionClicked(uiState.secondaryButton.action)
             }
         }
     }

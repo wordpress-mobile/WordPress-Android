@@ -11,9 +11,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.reader.ReaderSubsActivity
-import org.wordpress.android.ui.reader.subfilter.ActionType.OpenLoginPage
-import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.HiddenEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.VisibleEmptyUiState
@@ -97,18 +94,8 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
                             if (accountStore.hasAccessToken())
                                 R.string.reader_filter_empty_sites_list
                             else
-                                R.string.reader_filter_self_hosted_empty_sites_list
+                                R.string.reader_filter_self_hosted_empty_blogs_list
                         ),
-                        buttonText = UiStringRes(
-                            if (accountStore.hasAccessToken())
-                                R.string.reader_filter_empty_sites_action
-                            else
-                                R.string.reader_filter_self_hosted_empty_sites_tags_action
-                        ),
-                        action = if (accountStore.hasAccessToken())
-                            OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
-                        else
-                            OpenLoginPage
                     )
                 }
                 TAGS -> {
@@ -117,18 +104,8 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
                             if (accountStore.hasAccessToken())
                                 R.string.reader_filter_empty_tags_list
                             else
-                                R.string.reader_filter_self_hosted_empty_tagss_list
+                                R.string.reader_filter_self_hosted_empty_tags_list
                         ),
-                        buttonText = UiStringRes(
-                            if (accountStore.hasAccessToken())
-                                R.string.reader_filter_empty_tags_action
-                            else
-                                R.string.reader_filter_self_hosted_empty_sites_tags_action
-                        ),
-                        action = if (accountStore.hasAccessToken())
-                            OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
-                        else
-                            OpenLoginPage
                     )
                 }
             }

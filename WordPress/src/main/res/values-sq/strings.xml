@@ -1819,8 +1819,8 @@ Language: sq_AL
     <string name="reader_btn_remove_filter_content_description">Hiqe filtrin e tanishme</string>
     <string name="reader_title_subs">Administroni Tema &amp; Sajte</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Hyni te WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Që të shihni postimet më të reja në temat që ndiqni, bëni hyrjen te llogaria juaj në WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Bëni hyrjen te llogaria juaj në WordPress.com që të shihni postimet më të reja prej sajtesh që ndiqni</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">Që të shihni postimet më të reja në temat që ndiqni, bëni hyrjen te llogaria juaj në WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">Bëni hyrjen te llogaria juaj në WordPress.com që të shihni postimet më të reja prej sajtesh që ndiqni</string>
     <string name="gutenberg_native_replace_current_block">Zëvendëso Bllokun e Tanishëm</string>
     <string name="gutenberg_native_add_to_end">Shtoje Në Fund</string>
     <string name="gutenberg_native_add_to_beginning">Shtoje Në Fillim</string>

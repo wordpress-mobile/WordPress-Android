@@ -1820,8 +1820,8 @@ Language: id
     <string name="reader_btn_remove_filter_content_description">Hapus penyaring saat ini</string>
     <string name="reader_title_subs">Kelola Topik &amp; Situs</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Login ke WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Masuk ke WordPress.com untuk melihat pos terbaru dari topik yang Anda ikuti</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Login ke WordPress.com untuk melihat pos terbaru dari situs yang Anda ikuti</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">Masuk ke WordPress.com untuk melihat pos terbaru dari topik yang Anda ikuti</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">Login ke WordPress.com untuk melihat pos terbaru dari situs yang Anda ikuti</string>
     <string name="gutenberg_native_replace_current_block">Ganti Blok Saat Ini</string>
     <string name="gutenberg_native_add_to_end">Tambahkan ke Akhir</string>
     <string name="gutenberg_native_add_to_beginning">Tambahkan ke Awal</string>

@@ -484,8 +484,8 @@ Language: ku_TR
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Têkeve WordPress.com\'ê</string>
     <string name="reader_title_subs">Etîket û Malperan bi rê ve bibe</string>
     <string name="reader_bottom_sheet_content_description">Malper an jî Etîketê Hilbijêre, Pencereya Pop Up</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Ji bo tu şandiyên herî dawî yên ji mijarên tên şopandin bibînî têkeve WordPress.com\'ê</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Ji bo tu şandiyên herî dawî yên ji malperên tên şopandin bibînî têkeve WordPress.com\'ê</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">Ji bo tu şandiyên herî dawî yên ji mijarên tên şopandin bibînî têkeve WordPress.com\'ê</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">Ji bo tu şandiyên herî dawî yên ji malperên tên şopandin bibînî têkeve WordPress.com\'ê</string>
     <string name="gutenberg_native_replace_current_block">Bloka heyî biguherîne</string>
     <string name="gutenberg_native_add_to_end">Tevlî dawiyê bike</string>
     <string name="gutenberg_native_add_to_beginning">Tevlî serî bike</string>

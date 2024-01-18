@@ -1594,8 +1594,8 @@ Language: pt_BR
     <string name="reader_btn_remove_filter_content_description">Remover o filtro atual</string>
     <string name="reader_title_subs">Gerenciar tópicos e sites</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Acessar o WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Acesse com o WordPress.com para ver os posts mais recentes dos tópicos que você segue</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Acesse com o WordPress.com para ver os posts mais recentes dos sites que você segue</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">Acesse com o WordPress.com para ver os posts mais recentes dos tópicos que você segue</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">Acesse com o WordPress.com para ver os posts mais recentes dos sites que você segue</string>
     <string name="gutenberg_native_replace_current_block">Substituir o bloco atual</string>
     <string name="gutenberg_native_add_to_end">Adicionar ao final</string>
     <string name="gutenberg_native_add_to_beginning">Adicionar no início</string>

@@ -42,17 +42,18 @@
             android:layout_width="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
             android:text="@string/reader_filter_empty_tags_list_text"
             app:fixWidowWords="true" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/action_button"
+            android:id="@+id/action_button_primary"
             style="@style/SubfilterEmptyStateButton.Primary"
             android:ellipsize="end"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
+            android:layout_marginBottom="@dimen/margin_small"
             android:minHeight="@dimen/default_dialog_button_height"
             android:visibility="visible"
             android:text="@string/reader_filter_empty_tags_action_suggested" />
@@ -64,10 +65,9 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/margin_small"
             android:minHeight="@dimen/default_dialog_button_height"
             android:visibility="visible"
-            android:text="@string/reader_filter_empty_tags_action_search" />
+            android:text="@string/reader_filter_empty_tags_action_subscribe" />
 
     </LinearLayout>
 </RelativeLayout>
