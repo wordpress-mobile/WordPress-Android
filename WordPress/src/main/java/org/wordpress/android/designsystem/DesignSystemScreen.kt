@@ -26,10 +26,8 @@ import androidx.navigation.compose.rememberNavController
 import org.wordpress.android.R
 import org.wordpress.android.designsystem.DesignSystemDataSource.buttonOptions
 
-enum class DesignSystemScreens {
-    Start,
-    FoundationOptions,
-    ComponentsOptions
+enum class DesignSystemScreen {
+    Start
 }
 @Composable
 fun DesignSystemStartScreen(
@@ -88,9 +86,9 @@ fun DesignSystem(
 ) {
     NavHost(
         navController = navController,
-        startDestination = DesignSystemScreens.Start.name
+        startDestination = DesignSystemScreen.Start.name
     ) {
-        composable(route = DesignSystemScreens.Start.name) {
+        composable(route = DesignSystemScreen.Start.name) {
             DesignSystemStartScreen(
                 modifier = Modifier
                     .fillMaxSize()
