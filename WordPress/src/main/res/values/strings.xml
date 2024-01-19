@@ -2128,6 +2128,7 @@
     <string name="reader_hint_add_tag_or_url_subscribe">Enter a URL or tag to subscribe to</string>
     <string name="reader_hint_post_search">Search WordPress</string>
     <string name="reader_hint_search_followed_sites">Search followed sites</string>
+    <string name="reader_hint_search_subscribed_blogs">Search subscribed blogs</string>
 
     <!-- TextView labels -->
     <string name="reader_label_new_posts">New posts</string>
