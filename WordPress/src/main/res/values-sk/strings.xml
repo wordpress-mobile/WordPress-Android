@@ -1315,7 +1315,6 @@ Language: sk
     <string name="reader_menu_block_blog">Blokovať túto webovú stránku</string>
     <string name="update_verb">Aktualizovať</string>
     <string name="schedule_verb">Rozvrh</string>
-    <string name="reader_toast_err_unfollow_blog">Nepodarilo sa zrušiť sledovanie tejto webovej stránky</string>
     <string name="reader_empty_recommended_blogs">Žiadne odporúčané webové stránky</string>
     <string name="reader_title_blog_preview">Webová stránka čítačky</string>
     <string name="help">Pomocník</string>

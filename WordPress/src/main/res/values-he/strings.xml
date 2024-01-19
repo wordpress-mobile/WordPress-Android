@@ -3530,7 +3530,6 @@ Language: he_IL
     <string name="schedule_verb">תזמן</string>
     <string name="update_verb">עדכן</string>
     <string name="reader_empty_recommended_blogs">אין אתרים מומלצים</string>
-    <string name="reader_toast_err_unfollow_blog">לא ניתן לבטל את המעקב אחר אתר זה</string>
     <string name="reader_title_blog_preview">אתר</string>
     <string name="ssl_certificate_ask_trust">אם בדרך כלל אתה מתחבר לאתר זה ללא בעיות, ייתכן ששגיאה זו נובעת מכך שמישהו מנסה להתחזות לאתר ולכן אסור לך להמשיך. האם ברצונך בכל זאת לתת אמון באישור?</string>
     <string name="ssl_certificate_error">אישור SSL לא תקף</string>

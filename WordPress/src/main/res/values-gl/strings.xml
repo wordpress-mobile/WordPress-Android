@@ -3542,7 +3542,6 @@ Language: gl_ES
     <string name="schedule_verb">Programar</string>
     <string name="update_verb">Actualizar</string>
     <string name="reader_empty_recommended_blogs">Sen blogues recomendados</string>
-    <string name="reader_toast_err_unfollow_blog">Non foi posible deixar de seguir este blogue</string>
     <string name="reader_title_blog_preview">Blogue da Guía de Lectura</string>
     <string name="ssl_certificate_ask_trust">Se habitualmente conectas a este sitio sen problema, este erro pode significar que alguén esta¡á tentando suplantarche no sitio, así que que non deberías continuar.  Queres confiar no certificado aínda así?</string>
     <string name="ssl_certificate_error">Certificado SSL non válido</string>

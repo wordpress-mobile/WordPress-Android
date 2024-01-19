@@ -3525,7 +3525,6 @@ Language: zh_CN
     <string name="schedule_verb">计划</string>
     <string name="update_verb">更新</string>
     <string name="reader_empty_recommended_blogs">无推荐站点</string>
-    <string name="reader_toast_err_unfollow_blog">无法取消关注此站点</string>
     <string name="reader_title_blog_preview">“阅读器”站点</string>
     <string name="ssl_certificate_ask_trust">如果您平时连接该站点没有问题，则此错误可能意味着有人试图冒充该站点，您不应继续。是否仍然信任该证书？</string>
     <string name="ssl_certificate_error">无效的SSL证书</string>

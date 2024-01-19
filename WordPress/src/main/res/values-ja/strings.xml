@@ -3535,7 +3535,6 @@ Language: ja_JP
     <string name="schedule_verb">予約</string>
     <string name="update_verb">更新</string>
     <string name="reader_empty_recommended_blogs">おすすめサイトはありません</string>
-    <string name="reader_toast_err_unfollow_blog">このサイトをフォローできませんでした</string>
     <string name="reader_title_blog_preview">Reader サイト</string>
     <string name="ssl_certificate_ask_trust">通常問題なくサイトに接続できる場合、このエラーは誰かがあなたのサイトになりすましていることを意味しているかもしれないので、そのまま進むべきではありません。それでもこの証明書を信頼してもよいですか ?</string>
     <string name="ssl_certificate_error">無効な SSL 証明書</string>

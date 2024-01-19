@@ -2134,7 +2134,6 @@ Language: ku_TR
     <string name="update_verb">Hildemîne</string>
     <string name="reader_title_blog_preview">Malpera Xwînerê</string>
     <string name="reader_empty_recommended_blogs">Malperên pêşniyarkirî tune ye</string>
-    <string name="reader_toast_err_unfollow_blog">Ji şopandina vê malperê nayê derketin</string>
     <string name="help">Alîkarî</string>
     <string name="ssl_certificate_error">Sertîfîkaya SSL\'ê ya nederbasdar</string>
     <string name="ssl_certificate_ask_trust">Heke tu bi piranî bêyî ti pirsgirêkê dikevî vê malperê, dibe ku ev çewtî were wateya teqlîdkirina malpera te û divê tu dewam nekî. Dîsa jî tu dixwazî bi sertîfîkayê bawer bibî?</string>

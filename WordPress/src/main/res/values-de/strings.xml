@@ -3542,7 +3542,6 @@ Language: de
     <string name="schedule_verb">Zeitplan</string>
     <string name="update_verb">Aktualisieren</string>
     <string name="reader_empty_recommended_blogs">Keine empfohlenen Websites</string>
-    <string name="reader_toast_err_unfollow_blog">Kann das Folgen dieser Website nicht beenden</string>
     <string name="reader_title_blog_preview">Reader-Website</string>
     <string name="ssl_certificate_ask_trust">Wenn du dich üblicherweise ohne Probleme mit dieser Website verbinden kannst, könnte dieser Fehler bedeute, dass sich jemand als diese Website ausgibt und du daher nicht weitermachen solltest. Möchtest du dem Zertifikat trotzdem vertrauen?</string>
     <string name="ssl_certificate_error">Ungültiges SSL Zertifikat</string>

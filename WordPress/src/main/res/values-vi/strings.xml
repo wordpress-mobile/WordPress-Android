@@ -2976,7 +2976,6 @@ Language: vi_VN
     <string name="schedule_verb">Lịch đăng</string>
     <string name="update_verb">Cập nhật</string>
     <string name="reader_empty_recommended_blogs">Không có đề xuất blog</string>
-    <string name="reader_toast_err_unfollow_blog">Không thể ngưng theo dõi blog này</string>
     <string name="reader_title_blog_preview">Đọc Blog</string>
     <string name="ssl_certificate_ask_trust">Nếu bạn thường kết nối bình thường với trang web này, lỗi này có thể là ai do đó đang cố gắng mạo danh trang web, và bạn không nên tiếp tục. Bạn có chắc chắn tin tưởng chứng chỉ?</string>
     <string name="ssl_certificate_error">Chứng nhận SSL không hợp lệ</string>

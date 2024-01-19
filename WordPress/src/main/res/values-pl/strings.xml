@@ -3019,7 +3019,6 @@ Language: pl
     <string name="schedule_verb">Zaplanuj</string>
     <string name="reader_empty_recommended_blogs">Brak polecanych witryn</string>
     <string name="reader_title_blog_preview">Witryna Czytnika</string>
-    <string name="reader_toast_err_unfollow_blog">Nie udało się wyłączyć obserwowania tej witryny</string>
     <string name="help">Pomoc</string>
     <string name="ssl_certificate_error">Niepoprawny certyfikat SSL</string>
     <string name="ssl_certificate_ask_trust">Jeśli zazwyczaj łączysz się z tą stroną bez problemów, ten błąd może oznaczać, że ktoś próbuje się pod nią podszyć i nie powinieneś kontynuować. Czy mimo to chcesz zaufać temu certyfikatowi?</string>

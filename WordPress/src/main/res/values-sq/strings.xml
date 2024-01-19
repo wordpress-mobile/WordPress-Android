@@ -3531,7 +3531,6 @@ Language: sq_AL
     <string name="schedule_verb">Planifikoje</string>
     <string name="update_verb">Përditësoje</string>
     <string name="reader_empty_recommended_blogs">S’ka sajte të këshilluar</string>
-    <string name="reader_toast_err_unfollow_blog">S’arrihet të ndërpritet ndjekja e këtij sajti</string>
     <string name="reader_title_blog_preview">Sajti i Lexuesit</string>
     <string name="ssl_certificate_ask_trust">Nëse zakonisht lidheni te ky sajt pa probleme, ky gabim mund të thotë që dikush po provon të hiqet si ky sajt, dhe s’duhet të vazhdoni. Doni të besohet dëshmia, sido qoftë?</string>
     <string name="ssl_certificate_error">Dëshmi SSL e pavlefshme</string>

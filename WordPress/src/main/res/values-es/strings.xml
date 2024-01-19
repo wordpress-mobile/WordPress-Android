@@ -3542,7 +3542,6 @@ Language: es
     <string name="schedule_verb">Programar</string>
     <string name="update_verb">Actualizar</string>
     <string name="reader_empty_recommended_blogs">Sin sitios recomendados</string>
-    <string name="reader_toast_err_unfollow_blog">No se puede dejar de seguir este sitio</string>
     <string name="reader_title_blog_preview">Sitio del lector</string>
     <string name="ssl_certificate_ask_trust">SI normalmente se conecta sin problemas a este sitio sin problemas, este error puede significar que alguien están intentando suplantar el sitio, por lo que no deberías continuar. ¿Quieres, de todas formas, confiar en el certificado?</string>
     <string name="ssl_certificate_error">Certificado SSL no válido</string>
