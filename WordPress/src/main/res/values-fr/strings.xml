@@ -3535,7 +3535,6 @@ Language: fr
     <string name="reader_toast_err_unfollow_blog">Impossible de se désabonner de ce site</string>
     <string name="reader_toast_err_follow_blog">Impossible de suivre ce site</string>
     <string name="reader_toast_err_already_follow_blog">Vous suivez déjà ce site</string>
-    <string name="reader_toast_err_get_blog_info">Impossible d’afficher ce site</string>
     <string name="reader_title_blog_preview">Blog du Lecteur</string>
     <string name="ssl_certificate_ask_trust">Si vous vous connectez habituellement à ce site sans problème, cette erreur peut signifier que quelqu\'un essai de se faire passer pour vous et vous ne devriez pas continuer. Souhaitez-vous faire confiance à ce certificat ?</string>
     <string name="ssl_certificate_error">Certificat SSL invalide</string>

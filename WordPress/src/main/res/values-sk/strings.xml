@@ -1318,7 +1318,6 @@ Language: sk
     <string name="schedule_verb">Rozvrh</string>
     <string name="reader_toast_err_unfollow_blog">Nepodarilo sa zrušiť sledovanie tejto webovej stránky</string>
     <string name="reader_toast_err_already_follow_blog">Túto webovú stránku už sledujete</string>
-    <string name="reader_toast_err_get_blog_info">Nepodarilo sa zobraziť túto webovú stránku</string>
     <string name="reader_toast_err_follow_blog">Nepodarilo sa sledovať túto webovú stránku</string>
     <string name="reader_empty_recommended_blogs">Žiadne odporúčané webové stránky</string>
     <string name="reader_title_blog_preview">Webová stránka čítačky</string>

@@ -3314,7 +3314,6 @@ Language: pt_BR
     <string name="reader_toast_err_unfollow_blog">Não é possível deixar de seguir este site</string>
     <string name="reader_toast_err_follow_blog">Não é possível seguir este site</string>
     <string name="reader_toast_err_already_follow_blog">Você já segue este site</string>
-    <string name="reader_toast_err_get_blog_info">Não é possível mostrar este site</string>
     <string name="reader_title_blog_preview">Leitor do site</string>
     <string name="ssl_certificate_ask_trust">Se você geralmente se conecta a este site sem problemas, talvez este erro signifique que alguém está tentando imitar o site, e você não deve continuar. Deseja confiar no certificado mesmo assim?</string>
     <string name="ssl_certificate_error">Certificado SSL inválido</string>

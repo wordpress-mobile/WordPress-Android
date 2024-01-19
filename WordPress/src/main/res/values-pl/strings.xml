@@ -3019,7 +3019,6 @@ Language: pl
     <string name="update_verb">Zaktualizuj</string>
     <string name="schedule_verb">Zaplanuj</string>
     <string name="reader_empty_recommended_blogs">Brak polecanych witryn</string>
-    <string name="reader_toast_err_get_blog_info">Nie udało się pokazać tej witryny</string>
     <string name="reader_title_blog_preview">Witryna Czytnika</string>
     <string name="reader_toast_err_already_follow_blog">Już obserwujesz tą witrynę</string>
     <string name="reader_toast_err_unfollow_blog">Nie udało się wyłączyć obserwowania tej witryny</string>

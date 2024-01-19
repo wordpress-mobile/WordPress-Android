@@ -3525,7 +3525,6 @@ Language: ar
     <string name="update_verb">تحديث</string>
     <string name="schedule_verb">جدولة</string>
     <string name="reader_toast_err_already_follow_blog">أنت تتابع هذا الموقع بالفعل</string>
-    <string name="reader_toast_err_get_blog_info">تعذر إظهار هذا الموقع</string>
     <string name="reader_toast_err_follow_blog">تعذرت متابعة هذا الموقع</string>
     <string name="reader_toast_err_unfollow_blog">تعذر إلغاء متابعة هذا الموقع</string>
     <string name="reader_empty_recommended_blogs">لا توجد مواقع موصى بها</string>
