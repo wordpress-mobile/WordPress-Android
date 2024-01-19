@@ -954,6 +954,9 @@
     <string name="debug_cookies_cookie_name_hint" translatable="false">cookie_name</string>
     <string name="debug_cookies_cookie_value_hint" translatable="false">cookie_value</string>
 
+    <!-- Design System -->
+    <string name="preference_design_system" translatable="false">Design System</string>
+
     <!-- stats -->
     <string name="stats">Stats</string>
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
