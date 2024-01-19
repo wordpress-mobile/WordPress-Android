@@ -3347,7 +3347,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mEditorMedia.retryFailedMediaAsync(Collections.singletonList(media.getId()));
         }
 
-        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
+        AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_UPLOAD_MEDIA_RETRIED, mSite);
         return true;
     }
 

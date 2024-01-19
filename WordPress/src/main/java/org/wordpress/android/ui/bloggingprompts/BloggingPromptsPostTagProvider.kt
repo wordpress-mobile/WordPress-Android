@@ -10,15 +10,15 @@ class BloggingPromptsPostTagProvider @Inject constructor(
     private val readerUtilsWrapper: ReaderUtilsWrapper,
 ) {
     fun promptIdTag(
-        tagUrl: String
-    ): String = readerUtilsWrapper.getTagFromTagUrl(tagUrl)
-        .takeIf { it.isNotBlank() }
+        id: Int
+    ): String = "$BLOGGING_PROMPT_ID_TAG_PREFIX$id"
+        .takeIf { id > 0 }
         ?: BLOGGING_PROMPT_TAG
 
-    fun promptIdSearchReaderTag(
+    fun promptSearchReaderTag(
         tagUrl: String
     ): ReaderTag {
-        val promptIdTag = promptIdTag(tagUrl)
+        val promptIdTag = promptTagFromUrl(tagUrl)
         return ReaderTag(
             promptIdTag,
             promptIdTag,
@@ -28,8 +28,15 @@ class BloggingPromptsPostTagProvider @Inject constructor(
         )
     }
 
+    private fun promptTagFromUrl(
+        tagUrl: String
+    ): String = readerUtilsWrapper.getTagFromTagUrl(tagUrl)
+        .takeIf { it.isNotBlank() }
+        ?: BLOGGING_PROMPT_TAG
+
     companion object {
         const val BLOGGING_PROMPT_TAG = "dailyprompt"
+        const val BLOGGING_PROMPT_ID_TAG_PREFIX = "dailyprompt-"
         const val BLOGANUARY_TAG = "bloganuary"
     }
 }

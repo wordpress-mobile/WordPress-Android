@@ -147,7 +147,7 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
         val tagUrl = "valid-url"
 
         val expectedTag = mock<ReaderTag>()
-        whenever(bloggingPromptsPostTagProvider.promptIdSearchReaderTag(tagUrl)).thenReturn(expectedTag)
+        whenever(bloggingPromptsPostTagProvider.promptSearchReaderTag(tagUrl)).thenReturn(expectedTag)
 
         val params = viewModelSlice.getBuilderParams(mock())
         params.onViewAnswersClick(tagUrl)
