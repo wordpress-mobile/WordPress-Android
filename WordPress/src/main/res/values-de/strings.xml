@@ -1828,7 +1828,6 @@ Language: de
     <string name="gutenberg_native_add_to_beginning">Am Anfang hinzufügen</string>
     <string name="gutenberg_native_add_block_before">Block davor hinzufügen</string>
     <string name="gutenberg_native_add_block_after">Block dahinter hinzufügen</string>
-    <string name="reader_filter_empty_tags_action">Ein Thema hinzufügen</string>
     <string name="reader_filter_main_title">Folgen</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_video_caption_s">Videountertitel. %s</string>

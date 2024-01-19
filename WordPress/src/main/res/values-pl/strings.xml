@@ -1312,7 +1312,6 @@ Language: pl
     <string name="gutenberg_native_add_to_beginning">Dodaj początek</string>
     <string name="gutenberg_native_add_block_before">Dodaj blok przed</string>
     <string name="gutenberg_native_add_block_after">Dodaj blok za</string>
-    <string name="reader_filter_empty_tags_action">Dodaj temat</string>
     <string name="reader_filter_main_title">Obserwowane</string>
     <string name="reader_filter_cta">Filtr</string>
     <string name="gutenberg_native_edit_video">Edytuj film</string>

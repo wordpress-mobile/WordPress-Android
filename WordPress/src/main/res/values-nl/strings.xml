@@ -1768,7 +1768,6 @@ Language: nl
     <string name="gutenberg_native_add_to_beginning">Toevoegen aan begin</string>
     <string name="gutenberg_native_add_block_before">Blok toevoegen voor</string>
     <string name="gutenberg_native_add_block_after">Blok toevoegen na</string>
-    <string name="reader_filter_empty_tags_action">Voeg een onderwerp toe</string>
     <string name="reader_filter_main_title">Volgen</string>
     <string name="reader_filter_cta">Filteren</string>
     <string name="gutenberg_native_video_caption_s">Videobijschrift. %s</string>

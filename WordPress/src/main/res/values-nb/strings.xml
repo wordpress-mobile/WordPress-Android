@@ -657,7 +657,6 @@ Language: nb_NO
     <string name="gutenberg_native_add_to_beginning">Legg til i begynnelsen</string>
     <string name="gutenberg_native_add_block_before">Legg til blokk foran</string>
     <string name="gutenberg_native_add_block_after">Legg til blokk etter</string>
-    <string name="reader_filter_empty_tags_action">Legg til et emne</string>
     <string name="reader_filter_main_title">Følger</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_edit_video">Rediger video</string>

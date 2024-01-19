@@ -1828,7 +1828,6 @@ Language: en_GB
     <string name="gutenberg_native_add_to_beginning">Add To Beginning</string>
     <string name="gutenberg_native_add_block_before">Add Block Before</string>
     <string name="gutenberg_native_add_block_after">Add Block After</string>
-    <string name="reader_filter_empty_tags_action">Add a topic</string>
     <string name="reader_filter_main_title">Following</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_video_caption_s">Video caption. %s</string>

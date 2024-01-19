@@ -1822,7 +1822,6 @@ Language: id
     <string name="gutenberg_native_add_to_beginning">Tambahkan ke Awal</string>
     <string name="gutenberg_native_add_block_before">Tambahkan Blok Sebelum</string>
     <string name="gutenberg_native_add_block_after">Tambahkan Blok Setelah</string>
-    <string name="reader_filter_empty_tags_action">Tambahkan topik</string>
     <string name="reader_filter_main_title">Mengikuti</string>
     <string name="reader_filter_cta">Penyaring</string>
     <string name="gutenberg_native_video_caption_s">Keterangan video. %s</string>

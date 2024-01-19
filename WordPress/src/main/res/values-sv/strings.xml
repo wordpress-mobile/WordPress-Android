@@ -1828,7 +1828,6 @@ Language: sv_SE
     <string name="gutenberg_native_add_to_beginning">Lägg till först</string>
     <string name="gutenberg_native_add_block_before">Lägg till block före</string>
     <string name="gutenberg_native_add_block_after">Lägg till block efter</string>
-    <string name="reader_filter_empty_tags_action">Lägg till ett ämne</string>
     <string name="reader_filter_main_title">Följer</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_video_caption_s">Beskrivning för video. %s</string>

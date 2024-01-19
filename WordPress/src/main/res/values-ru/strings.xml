@@ -1828,7 +1828,6 @@ Language: ru
     <string name="gutenberg_native_add_to_beginning">Добавить в начале</string>
     <string name="gutenberg_native_add_block_before">Добавить блок перед</string>
     <string name="gutenberg_native_add_block_after">Добавить блок после</string>
-    <string name="reader_filter_empty_tags_action">Добавить тему</string>
     <string name="reader_filter_main_title">Подписки</string>
     <string name="reader_filter_cta">Фильтр</string>
     <string name="gutenberg_native_video_caption_s">Подпись к видео. %s</string>

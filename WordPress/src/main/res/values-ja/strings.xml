@@ -1821,7 +1821,6 @@ Language: ja_JP
     <string name="gutenberg_native_add_to_beginning">先頭に追加</string>
     <string name="gutenberg_native_add_block_before">前にブロックを追加</string>
     <string name="gutenberg_native_add_block_after">後にブロックを追加</string>
-    <string name="reader_filter_empty_tags_action">トピックを追加</string>
     <string name="reader_filter_main_title">フォロー中</string>
     <string name="reader_filter_cta">フィルター</string>
     <string name="gutenberg_native_video_caption_s">動画の見出しです。%s</string>

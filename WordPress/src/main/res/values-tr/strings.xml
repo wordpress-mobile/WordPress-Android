@@ -1828,7 +1828,6 @@ Language: tr
     <string name="gutenberg_native_add_to_beginning">Başa ekle</string>
     <string name="gutenberg_native_add_block_before">Blok öncesine ekle</string>
     <string name="gutenberg_native_add_block_after">Blok sonrasına ekle</string>
-    <string name="reader_filter_empty_tags_action">Bir konu ekle</string>
     <string name="reader_filter_main_title">Takip edilen</string>
     <string name="reader_filter_cta">Filtrele</string>
     <string name="gutenberg_native_video_caption_s">Video yazısı. %s</string>

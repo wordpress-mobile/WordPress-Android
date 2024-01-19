@@ -20,7 +20,6 @@ Language: sk
     <string name="dialog_confirm_autosave_body_first_part_for_page">Nedávno ste na tejto stránke vykonali zmeny, ale neboli uložené. Zvoľte verziu k načítaniu:\n\n</string>
     <string name="gutenberg_native_link_to">Odkaz na</string>
     <string name="gutenberg_native_link_settings">Nastavenia odkazu</string>
-    <string name="reader_filter_empty_tags_action">Pridať tému</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Inštaluj plugin</string>
     <string name="scheduled_for">Naplánované na: %s</string>

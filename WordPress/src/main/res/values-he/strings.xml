@@ -1818,7 +1818,6 @@ Language: he_IL
     <string name="gutenberg_native_add_to_beginning">הוספה להתחלה</string>
     <string name="gutenberg_native_add_block_before">הוספת בלוק לפני</string>
     <string name="gutenberg_native_add_block_after">הוספת בלוק לאחר</string>
-    <string name="reader_filter_empty_tags_action">להוסיף נושא</string>
     <string name="reader_filter_main_title">מעקב</string>
     <string name="reader_filter_cta">מסנן</string>
     <string name="gutenberg_native_video_caption_s">כיתוב לווידאו. %s</string>

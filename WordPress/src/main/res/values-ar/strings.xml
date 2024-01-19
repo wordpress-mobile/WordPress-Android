@@ -1817,7 +1817,6 @@ Language: ar
     <string name="gutenberg_native_add_to_beginning">إضافة إلى البداية</string>
     <string name="gutenberg_native_add_block_before">إضافة مكوّن قبل</string>
     <string name="gutenberg_native_add_block_after">إضافة مكوّن بعد</string>
-    <string name="reader_filter_empty_tags_action">إضافة موضوع</string>
     <string name="reader_filter_main_title">المتابعة</string>
     <string name="reader_filter_cta">عامل التصفية</string>
     <string name="gutenberg_native_video_caption_s">تسمية الفيديو. %s</string>
