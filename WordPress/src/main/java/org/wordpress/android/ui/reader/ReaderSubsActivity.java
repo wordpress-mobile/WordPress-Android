@@ -389,7 +389,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                     String errMsg;
                     switch (statusCode) {
                         case 401:
-                            errMsg = getString(R.string.reader_toast_err_follow_blog_not_authorized);
+                            errMsg = getString(R.string.reader_toast_err_follow_not_authorized_to_access_blog);
                             break;
                         case 0: // can happen when host name not found
                         case 404:
