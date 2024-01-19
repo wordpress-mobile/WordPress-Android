@@ -290,7 +290,6 @@ Language: vi_VN
     <string name="my_site_post_card_scheduled_title">Bài viết đã lên lịch sắp tới</string>
     <string name="my_site_post_card_draft_title">Chỉnh sửa bản nháp</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Miễn phí năm đầu tiên &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /năm&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Tên miền của bạn sẽ chỉ hướng tới %s</string>
     <string name="gutenberg_native_create_link">Chèn liên kết</string>
     <string name="domains_suggestions_select_domain">Chọn tên miền</string>
     <string name="domains_title">Tên miền</string>
@@ -311,14 +310,9 @@ Language: vi_VN
     <string name="domains_free_plan_get_your_domain_caption">Tên miền đã mua trên trang này sẽ chuyển hướng tới &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Bạn được tặng kèm tên miền miễn phí một năm kèm theo gói</string>
     <string name="domains_paid_plan_claim_your_domain_title">Chọn tên miền miễn phí</string>
-    <string name="domains_manage_domains">Quản lý tên miền</string>
     <string name="domains_add_a_domain">Thêm một tên miền</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Hết hạn vào %s&lt;span&gt;</string>
     <string name="domains_site_domain_expires">Hết hạn vào %s</string>
-    <string name="domains_site_domains">Những tên miền của bạn</string>
-    <string name="domains_primary_site_address_chip">Địa chỉ tên miền chính</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Đổi tên miền chính</string>
-    <string name="domains_primary_site_caption">Địa chỉ WordPress.com miễn phí của bạn là</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s cho năm đầu &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /năm&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /năm&lt;span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Bạn thật sự muốn bỏ qua?</string>
@@ -344,7 +338,6 @@ Language: vi_VN
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Bạn&lt;/a&gt; thích bài này.</string>
     <string name="gutenberg_native_line_height">Khoảng cách dòng</string>
     <string name="domains_free_plan_get_your_domain_title">Tên miền miễn phí</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Xảy ra lỗi khi tải mẫu ứng dụng đề xuất</string>
     <string name="recommend_app_bad_format_response">Phản hồi đã nhận không hợp lệ</string>
     <string name="recommend_app_null_response">Không nhận được phản hồi</string>
@@ -1524,8 +1517,6 @@ Language: vi_VN
     <string name="post_list_search_nothing_found">Không tìm thấy bài viết trùng khớp</string>
     <string name="post_list_search_prompt">Tìm bài viết</string>
     <string name="domains_suggestions_intro_description">Đây là nơi mọi người sẽ tìm thấy bạn trên internet.</string>
-    <string name="domains_suggestions_intro_title">Chọn một tên miền xịn xò</string>
-    <string name="my_site_custom_domain_name">Tất cả gói nâng cấp WordPress.com đều đi kèm với một tên miền tùy chỉnh. Đăng ký tên miền tùy chỉnh miễn phí của bạn ngay.</string>
     <string name="stats_widget_minified_name">Trong chớp mắt</string>
     <string name="stats_widget_today_insights_name">Hôm nay</string>
     <string name="stats_widget_all_time_insights_name">Mọi lúc</string>
