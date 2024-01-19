@@ -1274,7 +1274,6 @@ Language: vi_VN
     <string name="reader_btn_remove_filter_content_description">Xóa bộ lọc hiện tại</string>
     <string name="reader_title_subs">Thẻ &amp; Blog</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Đăng nhập WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Đăng nhập WordPress.com để đọc bài viết mới nhất từ những thẻ mà bạn theo dõi</string>
     <string name="gutenberg_native_replace_current_block">Thay thế khối hiện tại</string>
     <string name="gutenberg_native_add_to_end">Thêm đến Hết</string>
     <string name="gutenberg_native_add_to_beginning">Thêm đến Bắt Đầu</string>

@@ -1813,7 +1813,6 @@ Language: fr
     <string name="reader_btn_remove_filter_content_description">Supprimer le filtre actuel</string>
     <string name="reader_title_subs">Gérer les sujets et les sites</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Se connecter à WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Se connecter à WordPress.com pour voir les derniers articles à partir des sujets que vous suivez.</string>
     <string name="gutenberg_native_replace_current_block">Remplacer le bloc actuel</string>
     <string name="gutenberg_native_add_to_end">Ajouter à la fin</string>
     <string name="gutenberg_native_add_to_beginning">Ajouter au début</string>

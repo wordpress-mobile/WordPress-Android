@@ -1813,7 +1813,6 @@ Language: he_IL
     <string name="reader_btn_remove_filter_content_description">להסיר את המסנן הנוכחי</string>
     <string name="reader_title_subs">לנהל נושאים ואתרים</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">התחברות ל-WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">יש להתחבר ל-WordPress.com כדי להציג את הפוסטים האחרונים בנושאים שבחרת לעקוב אחריהם</string>
     <string name="gutenberg_native_replace_current_block">יש להחליף את הבלוק הנוכחי</string>
     <string name="gutenberg_native_add_to_end">הוספה לסוף</string>
     <string name="gutenberg_native_add_to_beginning">הוספה להתחלה</string>

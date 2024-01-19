@@ -652,7 +652,6 @@ Language: nb_NO
     <string name="reader_btn_remove_filter_content_description">Fjern nåværende filter</string>
     <string name="reader_title_subs">Behandle emner og nettsteder</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Logge inn på WordPress.com?</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Logg inn på WordPress.com for å se de siste innleggene fra emner du følger</string>
     <string name="gutenberg_native_replace_current_block">Erstatt nåværende blokk</string>
     <string name="gutenberg_native_add_to_end">Legg til på slutten</string>
     <string name="gutenberg_native_add_to_beginning">Legg til i begynnelsen</string>

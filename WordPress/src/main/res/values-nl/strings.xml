@@ -1763,7 +1763,6 @@ Language: nl
     <string name="reader_btn_remove_filter_content_description">Verwijder het huidige filter</string>
     <string name="reader_title_subs">Beheer onderwerpen &amp; sites</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Inloggen op WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Log in op WordPress.com om de laatste berichten van door jou gevolgde onderwerpen te zien</string>
     <string name="gutenberg_native_replace_current_block">Huidig blok vervangen</string>
     <string name="gutenberg_native_add_to_end">Toevoegen aan einde</string>
     <string name="gutenberg_native_add_to_beginning">Toevoegen aan begin</string>

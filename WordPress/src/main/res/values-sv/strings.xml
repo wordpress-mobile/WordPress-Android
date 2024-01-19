@@ -1823,7 +1823,6 @@ Language: sv_SE
     <string name="reader_btn_remove_filter_content_description">Ta bort befintligt filter</string>
     <string name="reader_title_subs">Hantera ämnen och webbplatser</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Logga in på WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Logga in på WordPress.com för att se de senaste inläggen från de ämnen du följer</string>
     <string name="gutenberg_native_replace_current_block">Ersätt aktuellt block</string>
     <string name="gutenberg_native_add_to_end">Lägg till sist</string>
     <string name="gutenberg_native_add_to_beginning">Lägg till först</string>
