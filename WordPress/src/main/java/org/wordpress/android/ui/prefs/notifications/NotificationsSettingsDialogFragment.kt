@@ -32,7 +32,8 @@ class NotificationsSettingsDialogFragment(
     private val type: NotificationsSettings.Type,
     private val blogId: Long = 0,
     private val settings: NotificationsSettings,
-    private val onNotificationsSettingsChangedListener: NotificationsSettingsDialogPreference.OnNotificationsSettingsChangedListener,
+    private val onNotificationsSettingsChangedListener:
+        NotificationsSettingsDialogPreference.OnNotificationsSettingsChangedListener,
     private val bloggingRemindersProvider: NotificationsSettingsDialogPreference.BloggingRemindersProvider? = null,
     private val title: String
 ): DialogFragment(), PrefMainSwitchToolbarView.MainSwitchToolbarListener, DialogInterface.OnClickListener {
@@ -110,7 +111,6 @@ class NotificationsSettingsDialogFragment(
             setNegativeButton(R.string.cancel, this@NotificationsSettingsDialogFragment)
             setView(layout)
         }
-
         if (mShouldDisplayMainSwitch) {
             setupTitleViewWithMainSwitch(outerView)
             if (mTitleViewWithMainSwitch == null) {
@@ -119,7 +119,6 @@ class NotificationsSettingsDialogFragment(
                 builder.setCustomTitle(mTitleViewWithMainSwitch)
             }
         }
-
         return builder.create()
     }
 
@@ -196,6 +195,25 @@ class NotificationsSettingsDialogFragment(
         }
         val shouldShowLocalNotifications =
             this.channel == NotificationsSettings.Channel.BLOGS && this.type == NotificationsSettings.Type.DEVICE
+
+        setupSwitchSettingsView(settingsJson, summaryArray, shouldShowLocalNotifications, view)
+
+        if (shouldShowLocalNotifications) {
+            val isBloggingRemindersEnabled = this.bloggingRemindersProvider != null
+            addWeeklyRoundupSetting(view, !isBloggingRemindersEnabled)
+            if (isBloggingRemindersEnabled) {
+                addBloggingReminderSetting(view)
+            }
+        }
+        return view
+    }
+
+    private fun setupSwitchSettingsView(
+        settingsJson: JSONObject?,
+        summaryArray: Array<String?>,
+        shouldShowLocalNotifications: Boolean,
+        view: LinearLayout
+    ) {
         if (settingsJson != null && mSettingsArray.size == mSettingsValues!!.size) {
             for (i in mSettingsArray.indices) {
                 val settingName = mSettingsArray[i]!!
@@ -214,95 +232,68 @@ class NotificationsSettingsDialogFragment(
                 val isSettingChecked = JSONUtils.queryJSON(settingsJson, settingValue, true)
                 val isSettingLast = !shouldShowLocalNotifications && i == mSettingsArray.size - 1
                 view.addView(
-                    setupSwitchSettingView(
-                        settingName, settingValue, settingSummary, isSettingChecked,
-                        isSettingLast, mOnCheckedChangedListener
+                    setupSettingView(
+                        SwitchSettingsInfo(
+                            settingName, settingValue, settingSummary, isSettingChecked,
+                            isSettingLast, mOnCheckedChangedListener
+                        )
                     )
                 )
             }
         }
-        if (shouldShowLocalNotifications) {
-            val isBloggingRemindersEnabled = this.bloggingRemindersProvider != null
-            addWeeklyRoundupSetting(view, !isBloggingRemindersEnabled)
-            if (isBloggingRemindersEnabled) {
-                addBloggingReminderSetting(view)
-            }
-        }
-        return view
     }
 
     private fun addWeeklyRoundupSetting(view: LinearLayout, isLast: Boolean) {
-        view.addView(setupSwitchSettingView(
-            requireContext().getString(R.string.weekly_roundup),
-            null,
-            null,
-            AppPrefs.shouldShowWeeklyRoundupNotification(this.blogId),
-            isLast
-        ) { compoundButton: CompoundButton?, isChecked: Boolean ->
-            AppPrefs.setShouldShowWeeklyRoundupNotification(
-                this.blogId,
-                isChecked
-            )
-        })
+        view.addView(setupSettingView(
+            SwitchSettingsInfo(
+                requireContext().getString(R.string.weekly_roundup),
+                null,
+                null,
+                AppPrefs.shouldShowWeeklyRoundupNotification(this.blogId),
+                isLast
+            ) { _: CompoundButton?, isChecked: Boolean ->
+                AppPrefs.setShouldShowWeeklyRoundupNotification(
+                    this.blogId,
+                    isChecked
+                )
+            }
+        ))
     }
 
     private fun addBloggingReminderSetting(view: LinearLayout) {
-        view.addView(setupClickSettingView(
-            requireContext().getString(R.string.site_settings_blogging_reminders_notification_title),
-            this.bloggingRemindersProvider?.getSummary(this.blogId),
-            true
-        ) { v: View? ->
-            this.bloggingRemindersProvider?.onClick(this.blogId)
-            requireDialog().dismiss()
-        })
-    }
-
-    private fun setupSwitchSettingView(
-        settingName: String, settingValue: String?,
-        settingSummary: String?, isSettingChecked: Boolean,
-        isSettingLast: Boolean,
-        onCheckedChangeListener: CompoundButton.OnCheckedChangeListener
-    ): View {
-        return setupSettingView(
-            settingName, settingValue, settingSummary, isSettingChecked,
-            isSettingLast, onCheckedChangeListener, null
-        )
-    }
-
-    private fun setupClickSettingView(
-        settingName: String, settingSummary: String?, isSettingLast: Boolean,
-        onClickListener: View.OnClickListener
-    ): View {
-        return setupSettingView(
-            settingName, null, settingSummary, false,
-            isSettingLast, null, onClickListener
-        )
-    }
-
-    private fun setupSettingView(
-        settingName: String, settingValue: String?, settingSummary: String?,
-        isSettingChecked: Boolean, isSettingLast: Boolean,
-        onCheckedChangeListener: CompoundButton.OnCheckedChangeListener?,
-        onClickListener: View.OnClickListener?
-    ): View {
-        NotificationsSettingsSwitchBinding.inflate(layoutInflater).apply {
-            notificationsSwitchTitle.text = settingName
-            if (!TextUtils.isEmpty(settingSummary)) {
-                notificationsSwitchSummary.visibility = View.VISIBLE
-                notificationsSwitchSummary.text = settingSummary
+        view.addView(setupSettingView(
+            ClickSettingsInfo(
+                requireContext().getString(R.string.site_settings_blogging_reminders_notification_title),
+                this.bloggingRemindersProvider?.getSummary(this.blogId),
+                true
+            ) {
+                this.bloggingRemindersProvider?.onClick(this.blogId)
+                requireDialog().dismiss()
             }
-            if (onCheckedChangeListener != null) {
-                notificationsSwitch.isChecked = isSettingChecked
-                notificationsSwitch.tag = settingValue
-                notificationsSwitch.setOnCheckedChangeListener(onCheckedChangeListener)
-                rowContainer.setOnClickListener { v -> notificationsSwitch.toggle() }
+        ))
+    }
+
+    /** @see ClickSettingsInfo
+     *  @see SwitchSettingsInfo*/
+    private fun setupSettingView(settingsInfo: SettingsInfo): View {
+        NotificationsSettingsSwitchBinding.inflate(layoutInflater).apply {
+            notificationsSwitchTitle.text = settingsInfo.settingName
+            if (!TextUtils.isEmpty(settingsInfo.settingSummary)) {
+                notificationsSwitchSummary.visibility = View.VISIBLE
+                notificationsSwitchSummary.text = settingsInfo.settingSummary
+            }
+            if (settingsInfo.onCheckedChangeListener != null) {
+                notificationsSwitch.isChecked = settingsInfo.isSettingChecked ?: false
+                notificationsSwitch.tag = settingsInfo.settingValue
+                notificationsSwitch.setOnCheckedChangeListener(settingsInfo.onCheckedChangeListener)
+                rowContainer.setOnClickListener { notificationsSwitch.toggle() }
             } else {
                 notificationsSwitch.visibility = View.GONE
             }
-            if (onClickListener != null) {
-                rowContainer.setOnClickListener(onClickListener)
+            if (settingsInfo.onClickListener != null) {
+                rowContainer.setOnClickListener(settingsInfo.onClickListener)
             }
-            if (mShouldDisplayMainSwitch && isSettingLast) {
+            if (mShouldDisplayMainSwitch && settingsInfo.isSettingLast) {
                 val divider: View = notificationsListDivider
                 val mlp = divider.layoutParams as ViewGroup.MarginLayoutParams
                 mlp.leftMargin = 0
@@ -374,5 +365,35 @@ class NotificationsSettingsDialogFragment(
         }
         return settingsSwitchesUnchecked
     }
-}
 
+    private data class SwitchSettingsInfo(
+        override val settingName: String,
+        override val settingValue: String?,
+        override val settingSummary: String?,
+        override val isSettingChecked: Boolean,
+        override val isSettingLast: Boolean,
+        override val onCheckedChangeListener: CompoundButton.OnCheckedChangeListener,
+    ): SettingsInfo(settingName, settingValue, settingSummary, isSettingChecked, isSettingLast) {
+        override val onClickListener: View.OnClickListener? = null
+    }
+
+    private data class ClickSettingsInfo(
+        override val settingName: String,
+        override val settingSummary: String?,
+        override val isSettingLast: Boolean,
+        override val onClickListener: View.OnClickListener,
+    ): SettingsInfo(settingName, null, settingSummary, null, isSettingLast) {
+        override val onCheckedChangeListener: CompoundButton.OnCheckedChangeListener? = null
+    }
+
+    private abstract class SettingsInfo(
+        open val settingName: String,
+        open val settingValue: String?,
+        open val settingSummary: String?,
+        open val isSettingChecked: Boolean?,
+        open val isSettingLast: Boolean
+    ) {
+        abstract val onCheckedChangeListener: CompoundButton.OnCheckedChangeListener?
+        abstract val onClickListener: View.OnClickListener?
+    }
+}

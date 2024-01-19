@@ -5,9 +5,10 @@ import android.util.AttributeSet
 import androidx.annotation.StringRes
 import androidx.preference.DialogPreference
 import org.wordpress.android.models.NotificationsSettings
-class NotificationsSettingsDialogPreferenceX(
-    context: Context,
-    attrs: AttributeSet?,
+
+data class NotificationsSettingsDialogPreferenceX(
+    val context: Context,
+    val attrs: AttributeSet?,
     val channel: NotificationsSettings.Channel,
     val type: NotificationsSettings.Type,
     val blogId: Long,
