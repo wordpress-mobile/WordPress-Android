@@ -3525,7 +3525,6 @@ Language: fr
     <string name="posts_empty_list">Pas encore d\'article. Pourquoi ne pas en créer un?</string>
     <string name="signing_out">Déconnexion…</string>
     <string name="reader_toast_err_generic">Impossible d\'effectuer cette action</string>
-    <string name="reader_toast_err_block_blog">Impossible de bloquer ce site</string>
     <string name="reader_menu_block_blog">Bloquer ce site</string>
     <string name="schedule_verb">Programmer</string>
     <string name="update_verb">Mettre à jour</string>

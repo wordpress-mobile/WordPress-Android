@@ -3536,7 +3536,6 @@ Language: gl_ES
     <string name="posts_empty_list">Aínda sen artigos. Por que non crear un?</string>
     <string name="signing_out">Saíndo…</string>
     <string name="reader_toast_err_generic">Non foi posible realizar esta acción</string>
-    <string name="reader_toast_err_block_blog">Non foi posible bloquear este blogue</string>
     <string name="reader_menu_block_blog">Bloquear este blogue</string>
     <string name="schedule_verb">Programar</string>
     <string name="update_verb">Actualizar</string>

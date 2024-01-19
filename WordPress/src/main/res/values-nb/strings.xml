@@ -2317,7 +2317,6 @@ Language: nb_NO
     <string name="posts_empty_list">Ingen innlegg er her ennå. Hvorfor ikke lage en?</string>
     <string name="signing_out">Logger av …</string>
     <string name="reader_toast_err_generic">Kan ikke gjøre dette</string>
-    <string name="reader_toast_err_block_blog">Kan ikke blokkere dette nettstedet</string>
     <string name="reader_menu_block_blog">Blokkér dette nettstedet</string>
     <string name="schedule_verb">Publiser</string>
     <string name="update_verb">Oppdater</string>

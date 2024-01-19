@@ -1899,7 +1899,6 @@ Language: sr_RS
     <string name="reader_empty_posts_in_tag">Нема чланака са овом темом</string>
     <string name="help_and_support">Помоћ и подршка</string>
     <string name="reader_toast_err_generic">Није могуће обавити овај поступак</string>
-    <string name="reader_toast_err_block_blog">Није могуће блокирати ову страницу</string>
     <string name="reader_menu_block_blog">Блокирај овај сајт</string>
     <string name="schedule_verb">Заказати</string>
     <string name="update_verb">Ажурирај</string>

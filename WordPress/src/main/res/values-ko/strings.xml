@@ -3524,7 +3524,6 @@ Language: ko_KR
     <string name="posts_empty_list">아직 글이 없습니다. 하나 만들어보세요!</string>
     <string name="signing_out">로그아웃…</string>
     <string name="reader_toast_err_generic">이 작업을 실행할 수 없습니다</string>
-    <string name="reader_toast_err_block_blog">이 블로그를 차단할 수 없습니다</string>
     <string name="reader_menu_block_blog">이 블로그 차단</string>
     <string name="schedule_verb">예약</string>
     <string name="update_verb">업데이트</string>

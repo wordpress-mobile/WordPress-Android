@@ -3396,7 +3396,6 @@ Language: lv
     <string name="posts_empty_list">Vēl nav ziņu. Kāpēc gan tādu neizveidot?</string>
     <string name="signing_out">Notiek izrakstīšanās…</string>
     <string name="reader_toast_err_generic">Nevar veikt šo darbību</string>
-    <string name="reader_toast_err_block_blog">Nevar bloķēt šo vietni</string>
     <string name="reader_menu_block_blog">Bloķēt šo vietni</string>
     <string name="schedule_verb">Grafiks</string>
     <string name="update_verb">Atjaunot</string>

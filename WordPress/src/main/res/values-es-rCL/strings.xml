@@ -1319,7 +1319,6 @@ Language: es_CL
     <string name="browse_our_faq_button">Revisa nuestras Preguntas Más Frecuentes</string>
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
     <string name="reader_menu_block_blog">Bloquear este sitio</string>
-    <string name="reader_toast_err_block_blog">No se pudo bloquear este sitio</string>
     <string name="update_verb">Actualizar</string>
     <string name="schedule_verb">Programación</string>
     <string name="reader_empty_recommended_blogs">No hay sitios recomendados</string>

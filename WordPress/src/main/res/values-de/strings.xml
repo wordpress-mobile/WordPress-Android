@@ -3536,7 +3536,6 @@ Language: de
     <string name="posts_empty_list">Keine Beiträge bisher. Warum nicht jetzt einen erstellen?</string>
     <string name="signing_out">Abmelden …</string>
     <string name="reader_toast_err_generic">Konnte diese Aktion nicht ausführen</string>
-    <string name="reader_toast_err_block_blog">Kann diese Website nicht blockieren</string>
     <string name="reader_menu_block_blog">Diese Website blockieren</string>
     <string name="schedule_verb">Zeitplan</string>
     <string name="update_verb">Aktualisieren</string>

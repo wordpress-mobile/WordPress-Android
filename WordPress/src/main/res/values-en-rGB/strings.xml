@@ -3536,7 +3536,6 @@ Language: en_GB
     <string name="posts_empty_list">No posts yet. Why not create one?</string>
     <string name="signing_out">Logging out…</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
-    <string name="reader_toast_err_block_blog">Unable to block this site</string>
     <string name="reader_menu_block_blog">Block this site</string>
     <string name="schedule_verb">Schedule</string>
     <string name="update_verb">Update</string>

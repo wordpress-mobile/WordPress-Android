@@ -3536,7 +3536,6 @@ Language: tr
     <string name="posts_empty_list">Henüz yazı yok. Bir yazı oluşturmaya ne dersiniz?</string>
     <string name="signing_out">Çıkış yapılıyor…</string>
     <string name="reader_toast_err_generic">Bu eylemi gerçekleştirilemiyor</string>
-    <string name="reader_toast_err_block_blog">Bu site engellenemiyor</string>
     <string name="reader_menu_block_blog">Bu siteyi engelleyin</string>
     <string name="schedule_verb">Zamanla</string>
     <string name="update_verb">Güncelle</string>

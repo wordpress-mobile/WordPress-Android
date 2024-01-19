@@ -1055,7 +1055,6 @@ Language: el_GR
     <string name="signing_out">Αποσύνδεση…</string>
     <string name="reader_toast_err_generic">Αδυναμία εκτέλεσης αυτής της ενέργειας</string>
     <string name="reader_menu_block_blog">Μπλοκάρισμα του ιστότοπου</string>
-    <string name="reader_toast_err_block_blog">Αδυναμία μπλοκαρίσματος αυτού του Ιστότοπου</string>
     <string name="update_verb">Ενημέρωση</string>
     <string name="schedule_verb">Προγραμματισμός</string>
     <string name="reader_empty_recommended_blogs">Δεν υπάρχουν προτεινόμενοι Ιστότοποι</string>

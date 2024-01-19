@@ -3473,7 +3473,6 @@ Language: nl
     <string name="posts_empty_list">Nog geen berichten. Waarom maak je er niet een?</string>
     <string name="signing_out">Uitloggen…</string>
     <string name="reader_toast_err_generic">Deze actie kan niet uitgevoerd worden</string>
-    <string name="reader_toast_err_block_blog">Blokkeren van deze site is mislukt</string>
     <string name="reader_menu_block_blog">Blokkeer deze site</string>
     <string name="schedule_verb">Inplannen</string>
     <string name="update_verb">Update</string>

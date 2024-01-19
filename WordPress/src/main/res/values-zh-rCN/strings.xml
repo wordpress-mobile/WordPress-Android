@@ -3519,7 +3519,6 @@ Language: zh_CN
     <string name="posts_empty_list">尚无文章。为何不创建一个？</string>
     <string name="signing_out">正在退出…</string>
     <string name="reader_toast_err_generic">无法执行此操作</string>
-    <string name="reader_toast_err_block_blog">无法阻止此站点</string>
     <string name="reader_menu_block_blog">阻止此站点</string>
     <string name="schedule_verb">计划</string>
     <string name="update_verb">更新</string>

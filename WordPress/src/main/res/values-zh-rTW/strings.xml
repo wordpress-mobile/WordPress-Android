@@ -3526,7 +3526,6 @@ Language: zh_TW
     <string name="posts_empty_list">尚無文章。建立文章？</string>
     <string name="signing_out">正在登出…</string>
     <string name="reader_toast_err_generic">無法執行此動作</string>
-    <string name="reader_toast_err_block_blog">無法封鎖此網站</string>
     <string name="reader_menu_block_blog">封鎖此網站</string>
     <string name="schedule_verb">排程</string>
     <string name="update_verb">更新</string>

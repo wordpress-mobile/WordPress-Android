@@ -3526,7 +3526,6 @@ Language: id
     <string name="posts_empty_list">Belum ada pos. Mengapa tidak membuatnya?</string>
     <string name="signing_out">Log out…</string>
     <string name="reader_toast_err_generic">Tidak bisa menjalankan proses ini</string>
-    <string name="reader_toast_err_block_blog">Tidak bisa memblokir situs ini</string>
     <string name="reader_menu_block_blog">Blokir situs ini</string>
     <string name="schedule_verb">Jadwalkan</string>
     <string name="update_verb">Mutakhirkan</string>

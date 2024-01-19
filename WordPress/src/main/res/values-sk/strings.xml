@@ -1310,7 +1310,6 @@ Language: sk
     <string name="signing_out">Odhlasovanie…</string>
     <string name="reader_empty_posts_in_tag">Neexistuje žiadny príspevok s touto témou</string>
     <string name="reader_toast_err_generic">Nie je možné vykonať túto akciu</string>
-    <string name="reader_toast_err_block_blog">Nepodarilo sa zablokovať túto webovú stránku</string>
     <string name="reader_menu_block_blog">Blokovať túto webovú stránku</string>
     <string name="update_verb">Aktualizovať</string>
     <string name="schedule_verb">Rozvrh</string>

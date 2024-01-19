@@ -3012,7 +3012,6 @@ Language: pl
     <string name="help_and_support">Pomoc i wsparcie</string>
     <string name="reader_empty_comments">Brak komentarzy</string>
     <string name="reader_toast_err_generic">Nie można wykonać tego działania</string>
-    <string name="reader_toast_err_block_blog">Nie można zablokować tej witryny</string>
     <string name="reader_menu_block_blog">Zablokuj tę witrynę</string>
     <string name="update_verb">Zaktualizuj</string>
     <string name="schedule_verb">Zaplanuj</string>
