@@ -1629,6 +1629,7 @@
     <string name="reader_filter_empty_tags_list_subscribe">You can subscribe to posts on a specific subject by adding a tag</string>
     <string name="reader_filter_self_hosted_empty_blogs_list">Log in to WordPress.com to see the latest posts from blogs you\'re subscribed to</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Log in to WordPress.com to see the latest posts from topics you follow</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">Log in to WordPress.com to see the latest posts from tags you\'re subscribed to</string>
     <string name="reader_filter_empty_sites_action">Follow a site</string>
     <string name="reader_filter_empty_tags_action">Add a topic</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>

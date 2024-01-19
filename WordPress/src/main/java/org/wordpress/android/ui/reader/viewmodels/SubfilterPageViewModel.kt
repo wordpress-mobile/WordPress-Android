@@ -51,7 +51,7 @@ class SubfilterPageViewModel @Inject constructor(
                         if (accountStore.hasAccessToken()) {
                             R.string.reader_filter_empty_tags_list_subscribe
                         } else {
-                            R.string.reader_filter_self_hosted_empty_tagss_list
+                            R.string.reader_filter_self_hosted_empty_tags_list
                         }
                     }
                 ),
