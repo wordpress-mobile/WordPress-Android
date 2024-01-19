@@ -3264,7 +3264,6 @@ Language: cs_CZ
     <string name="reader_menu_block_blog">Zablokovat tento web</string>
     <string name="update_verb">Aktualizovat</string>
     <string name="schedule_verb">Naplánovat</string>
-    <string name="reader_toast_err_follow_blog">Přidání webu mezi sledované se nezdařilo</string>
     <string name="reader_toast_err_unfollow_blog">Zrušení sledování tohoto webu se nezdařilo</string>
     <string name="reader_empty_recommended_blogs">Nejsou k dispozici žádné doporučené weby</string>
     <string name="reader_title_blog_preview">Web čtenáře</string>

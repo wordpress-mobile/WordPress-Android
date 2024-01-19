@@ -3534,7 +3534,6 @@ Language: id
     <string name="update_verb">Mutakhirkan</string>
     <string name="reader_empty_recommended_blogs">Tidak ada situs yang disarankan</string>
     <string name="reader_toast_err_unfollow_blog">Tidak dapat berhenti mengikuti situs ini</string>
-    <string name="reader_toast_err_follow_blog">Tidak dapat mengikuti situs ini</string>
     <string name="reader_title_blog_preview">Situs Pembaca</string>
     <string name="ssl_certificate_ask_trust">Jika biasanya Anda bisa terhubung dengan situs ini tanpa masalah, galat ini bisa berarti seseorang sedang mencoba meniru situs, dan Anda sebaiknya tidak melanjutkannya. Apakah Anda ingin mempercayai sertifikat ini?</string>
     <string name="ssl_certificate_error">Sertifikat SSL tidak sah</string>
