@@ -32,7 +32,7 @@
             app:fixWidowWords="true"
             android:layout_marginTop="50dp"
             style="@style/ActionableEmptyStateTitle"
-            android:text="@string/reader_filter_empty_sites_list"/>
+            android:text="@string/reader_filter_empty_blogs_list"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/action_button"

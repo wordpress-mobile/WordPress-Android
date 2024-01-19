@@ -95,7 +95,7 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
                     VisibleEmptyUiState(
                         title = UiStringRes(
                             if (accountStore.hasAccessToken())
-                                R.string.reader_filter_empty_sites_list
+                                R.string.reader_filter_empty_blogs_list
                             else
                                 R.string.reader_filter_self_hosted_empty_sites_list
                         ),
