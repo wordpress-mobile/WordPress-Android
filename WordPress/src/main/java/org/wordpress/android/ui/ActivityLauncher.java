@@ -25,6 +25,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.designsystem.DesignSystemActivityCompose;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -1367,6 +1368,11 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, AppSettingsActivity.class);
         AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_APP_SETTINGS);
         activity.startActivityForResult(intent, RequestCodes.APP_SETTINGS);
+    }
+
+    public static void viewDesignSystemForResult(Activity activity) {
+        Intent intent = new Intent(activity, DesignSystemActivityCompose.class);
+        activity.startActivityForResult(intent, RequestCodes.DESIGN_SYSTEM_SETTINGS);
     }
 
     public static void viewNotificationsSettings(Activity activity) {

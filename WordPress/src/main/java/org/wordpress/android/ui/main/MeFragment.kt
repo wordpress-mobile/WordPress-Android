@@ -208,6 +208,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             rowDebugSettings.setOnClickListener {
                 requireContext().startActivity(Intent(requireContext(), DebugSettingsActivity::class.java))
             }
+            rowDesignSystem.setOnClickListener {
+                ActivityLauncher.viewDesignSystemForResult(activity)
+            }
         }
 
         rowAboutTheApp.setOnClickListener {

@@ -197,6 +197,11 @@
             android:label="@string/me_btn_app_settings"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
+            android:name=".designsystem.DesignSystemActivityCompose"
+            android:configChanges="locale|orientation|screenSize"
+            android:label="@string/preference_design_system"
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/WordPress.NoActionBar"
