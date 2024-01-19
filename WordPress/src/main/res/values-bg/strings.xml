@@ -326,7 +326,6 @@ Language: bg
     <string name="person_remove_confirmation_title">Премахване на %1$s</string>
     <string name="role">Роля</string>
     <string name="people">Хора</string>
-    <string name="reader_empty_posts_in_custom_list">Няма нови публикации в сайтовете от този списък</string>
     <string name="error_remove_user">Потребителят не може да бъде премахнат</string>
     <string name="error_update_role">Грешка при обновяване на потребителската роля</string>
     <string name="error_fetch_viewers_list">Грешка при зареждане на потребителите на сайта</string>

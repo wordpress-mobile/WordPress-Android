@@ -3149,7 +3149,6 @@ Language: zh_CN
     <string name="person_remove_confirmation_title">删除 %1$s</string>
     <string name="role">角色</string>
     <string name="people">人员</string>
-    <string name="reader_empty_posts_in_custom_list">此列表中的站点最近未发布任何内容</string>
     <string name="error_remove_user">无法删除用户</string>
     <string name="error_update_role">无法更新用户角色</string>
     <string name="error_fetch_viewers_list">无法获取站点查看数</string>

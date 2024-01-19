@@ -961,7 +961,6 @@ Language: es_CL
     <string name="person_remove_confirmation_title">Quitar %1$s</string>
     <string name="role">Función</string>
     <string name="people">Gente</string>
-    <string name="reader_empty_posts_in_custom_list">Los sitios de esta lista no han publicado nada recientemente</string>
     <string name="error_remove_user">No se pudo quitar el usuario</string>
     <string name="error_update_role">No se pudo actualizar el rol del usuario</string>
     <string name="error_fetch_viewers_list">No se pudo recuperar los espectadores del sitio</string>

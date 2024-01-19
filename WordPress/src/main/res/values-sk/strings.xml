@@ -943,7 +943,6 @@ Language: sk
     <string name="person_remove_confirmation_title">Odstrániť %1$s</string>
     <string name="people">Ľudia</string>
     <string name="role">Rola</string>
-    <string name="reader_empty_posts_in_custom_list">Webové stránky v tomto zozname neuverejnili v poslednej dobe nič</string>
     <string name="error_remove_user">Nepodarilo sa odstrániť daného používateľa</string>
     <string name="error_update_role">Nepodarilo sa aktualizovať používateľskú rolu</string>
     <string name="error_fetch_viewers_list">Nepodarilo sa získať návštevníkov stránky</string>

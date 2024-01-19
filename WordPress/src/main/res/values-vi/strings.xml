@@ -2600,7 +2600,6 @@ Language: vi_VN
     <string name="person_remove_confirmation_title">Chặn %1$s</string>
     <string name="role">Vai trò</string>
     <string name="people">Mọi người</string>
-    <string name="reader_empty_posts_in_custom_list">Các blog trong danh sách này không có bài mới gần đây</string>
     <string name="error_remove_user">Không thể chặn người dùng</string>
     <string name="error_update_role">Không thể đổi vai trò người dùng</string>
     <string name="error_fetch_viewers_list">Không tải được danh sách độc giả</string>

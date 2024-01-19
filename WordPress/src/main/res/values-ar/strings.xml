@@ -3146,7 +3146,6 @@ Language: ar
     <string name="user_remove_confirmation_message">إذا قمت بإزالة %1$s، فلن يعود هذا المستخدم قادرًا على الوصول إلى هذا الموقع، ومع ذلك سيبقى أي محتوى تم إنشاؤه بواسطة %1$s على الموقع.\n\nهل لا تزال ترغب في إزالة هذا المستخدم؟</string>
     <string name="person_removed">تمت الإزالة بنجاح @%1$s</string>
     <string name="person_remove_confirmation_title">إزالة %1$s</string>
-    <string name="reader_empty_posts_in_custom_list">لم تنشر المواقع الموجودة في هذه القائمة أي شيء مؤخرًا</string>
     <string name="people">أشخاص</string>
     <string name="role">الدور</string>
     <string name="error_remove_user">تعذرت إزالة المستخدم</string>

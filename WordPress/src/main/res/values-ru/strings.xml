@@ -3166,7 +3166,6 @@ Language: ru
     <string name="person_remove_confirmation_title">Удалить %1$s</string>
     <string name="role">Роль</string>
     <string name="people">Люди</string>
-    <string name="reader_empty_posts_in_custom_list">На сайтах из этого списка за последнее время не было ничего опубликовано</string>
     <string name="error_remove_user">Не удалось удалить пользователя</string>
     <string name="error_update_role">Не удалось обновить роль пользователя</string>
     <string name="error_fetch_viewers_list">Не получить список пользователей сайта</string>

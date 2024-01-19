@@ -2642,7 +2642,6 @@ Language: pl
     <string name="person_remove_confirmation_title">Usuń %1$s</string>
     <string name="people">Ludzie</string>
     <string name="role">Rola</string>
-    <string name="reader_empty_posts_in_custom_list">Witryny na tej liście nie opublikowały ostatnio żadnych treści</string>
     <string name="error_remove_user">Nie można usunąć użytkownika</string>
     <string name="error_update_role">Nie można zaktualizować roli użytkownika</string>
     <string name="error_fetch_viewers_list">Nie można pobrać oglądających tej witryny</string>

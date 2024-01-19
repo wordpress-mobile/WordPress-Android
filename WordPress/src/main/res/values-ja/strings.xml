@@ -3159,7 +3159,6 @@ Language: ja_JP
     <string name="person_remove_confirmation_title">%1$s を削除</string>
     <string name="role">権限グループ</string>
     <string name="people">人</string>
-    <string name="reader_empty_posts_in_custom_list">このリスト内のサイトには最近の投稿がありません</string>
     <string name="error_remove_user">ユーザーを削除できませんでした</string>
     <string name="error_update_role">ユーザー権限グループを更新できませんでした</string>
     <string name="error_fetch_viewers_list">サイト閲覧者を取得できませんでした</string>

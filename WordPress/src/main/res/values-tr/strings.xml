@@ -3166,7 +3166,6 @@ Language: tr
     <string name="person_remove_confirmation_title">%1$s kullanıcısını kaldır</string>
     <string name="role">Rol</string>
     <string name="people">Kişiler</string>
-    <string name="reader_empty_posts_in_custom_list">Bu listedeki siteler yakın zamanda herhangi bir gönderide bulunmadı</string>
     <string name="error_remove_user">Kullanıcı kaldırılamıyor</string>
     <string name="error_update_role">Kullanıcı rolü güncellenemiyor</string>
     <string name="error_fetch_viewers_list">Site izleyicileri getirilemedi</string>

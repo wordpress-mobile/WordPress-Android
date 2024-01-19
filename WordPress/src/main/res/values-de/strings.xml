@@ -3166,7 +3166,6 @@ Language: de
     <string name="person_remove_confirmation_title">Entferne %1$s</string>
     <string name="role">Rolle</string>
     <string name="people">Personen</string>
-    <string name="reader_empty_posts_in_custom_list">Die Websites dieser Liste haben keine neuen Beiträge</string>
     <string name="error_remove_user">Benutzer konnte nicht entfernt werden</string>
     <string name="error_update_role">Benutzerrolle konnte nicht aktualisiert werden</string>
     <string name="error_fetch_viewers_list">Website-Besucher konnten nicht abgerufen werden</string>

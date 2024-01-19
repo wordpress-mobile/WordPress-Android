@@ -3103,7 +3103,6 @@ Language: nl
     <string name="person_remove_confirmation_title">Verwijder %1$s</string>
     <string name="role">Rol</string>
     <string name="people">Mensen</string>
-    <string name="reader_empty_posts_in_custom_list">De sites in deze lijst hebben recent niets geplaatst</string>
     <string name="error_remove_user">Gebruiker verwijderen mislukt</string>
     <string name="error_update_role">Gebruikersrol updaten mislukt</string>
     <string name="error_fetch_viewers_list">Site-gebruikers ophalen mislukt</string>

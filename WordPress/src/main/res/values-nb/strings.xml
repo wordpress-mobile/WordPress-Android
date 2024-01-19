@@ -1947,7 +1947,6 @@ Language: nb_NO
     <string name="person_remove_confirmation_title">Fjern %1$s</string>
     <string name="role">Rolle</string>
     <string name="people">Folk</string>
-    <string name="reader_empty_posts_in_custom_list">Nettstedene på denne listen har ikke lagt ut noe i det siste</string>
     <string name="error_remove_user">Klarte ikke å fjerne brukeren</string>
     <string name="error_update_role">Klarte ikke å oppdatere brukerrollen</string>
     <string name="error_fetch_viewers_list">Klarte ikke å hente inn sideleserne</string>

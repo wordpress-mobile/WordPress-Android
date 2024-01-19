@@ -3166,7 +3166,6 @@ Language: gl_ES
     <string name="person_remove_confirmation_title">Eliminar a %1$s</string>
     <string name="role">Rol</string>
     <string name="people">Xente</string>
-    <string name="reader_empty_posts_in_custom_list">Os sitios desta lista non publicaron nada ultimamente</string>
     <string name="error_remove_user">Non foi posible eliminar o usuario</string>
     <string name="error_update_role">Non foi posible actualizar o rol do usuario</string>
     <string name="error_fetch_viewers_list">Non foi posible obter os lectores do sitio</string>

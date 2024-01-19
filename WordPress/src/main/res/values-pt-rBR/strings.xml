@@ -2934,7 +2934,6 @@ Language: pt_BR
     <string name="person_remove_confirmation_title">Remover %1$s</string>
     <string name="role">Função</string>
     <string name="people">Pessoas</string>
-    <string name="reader_empty_posts_in_custom_list">Os sites desta lista não publicaram nada recentemente</string>
     <string name="error_remove_user">Não foi possível remover usuário</string>
     <string name="error_update_role">Não foi possível atualizar a função do usuário</string>
     <string name="error_fetch_viewers_list">Não foi possível recuperar os espectadores do site</string>

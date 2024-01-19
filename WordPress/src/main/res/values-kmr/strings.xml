@@ -1766,7 +1766,6 @@ Language: ku_TR
     <string name="person_remove_confirmation_title">%1$s rake</string>
     <string name="role">Rol</string>
     <string name="people">Kes</string>
-    <string name="reader_empty_posts_in_custom_list">Malperên di vê lîsteyê de vê gavê ti şandî neweşandine</string>
     <string name="error_remove_user">Bikarhêner nayê rakirin</string>
     <string name="error_update_role">Rola bikarhêner nayê hildemandin</string>
     <string name="error_fetch_viewers_list">Bînerên malperê nehatin stendin</string>

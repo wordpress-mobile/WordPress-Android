@@ -3154,7 +3154,6 @@ Language: he_IL
     <string name="person_remove_confirmation_title">הסרת %1$s</string>
     <string name="role">תפקיד</string>
     <string name="people">אנשים</string>
-    <string name="reader_empty_posts_in_custom_list">האתרים ברשימה זו לא פרסמו דבר בזמן האחרון</string>
     <string name="error_remove_user">לא ניתן היה להסיר משתמש</string>
     <string name="error_update_role">לא הצלחנו לעדכן תפקיד משתמש</string>
     <string name="error_fetch_viewers_list">לא הצלחנו לאחזר את משתמשי האתר</string>

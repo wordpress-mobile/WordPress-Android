@@ -3166,7 +3166,6 @@ Language: sv_SE
     <string name="person_remove_confirmation_title">Ta bort %1$s</string>
     <string name="role">Roll</string>
     <string name="people">Människor</string>
-    <string name="reader_empty_posts_in_custom_list">Webbplatserna i denna lista har inte publicerat några inlägg på senare tid</string>
     <string name="error_remove_user">Kunde inte ta bort användare</string>
     <string name="error_update_role">Kunde inte uppdatera användarroll</string>
     <string name="error_fetch_viewers_list">Kunde inte hämta webbplatsens läsare</string>

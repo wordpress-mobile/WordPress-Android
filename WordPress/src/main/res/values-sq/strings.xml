@@ -3155,7 +3155,6 @@ Language: sq_AL
     <string name="person_remove_confirmation_title">Hiqe %1$s</string>
     <string name="role">Rol</string>
     <string name="people">Persona</string>
-    <string name="reader_empty_posts_in_custom_list">Sajtet në këtë listë s’kanë postuar ndonjë gjë tani së fundi</string>
     <string name="error_remove_user">S’u hoq dot përdoruesi</string>
     <string name="error_update_role">S’u përditësua dot rol përdoruesi</string>
     <string name="error_fetch_viewers_list">S’u morën dot shikues sajti</string>

@@ -3154,7 +3154,6 @@ Language: ko_KR
     <string name="person_remove_confirmation_title">%1$s 제거</string>
     <string name="role">역할</string>
     <string name="people">사람</string>
-    <string name="reader_empty_posts_in_custom_list">이 목록에 있는 사이트에서 최근 게시된 글이 없습니다.</string>
     <string name="error_remove_user">사용자를 제거할 수 없습니다.</string>
     <string name="error_update_role">사용자 역할을 업데이트할 수 없습니다.</string>
     <string name="error_fetch_viewers_list">사이트 사용자를 가져올 수 없습니다.</string>

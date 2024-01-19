@@ -142,7 +142,6 @@ Language: is
     <string name="person_remove_confirmation_title">Fjarlægja %1$s</string>
     <string name="people">Fólk</string>
     <string name="role">Hlutverk</string>
-    <string name="reader_empty_posts_in_custom_list">Vefirnir á þessum lista hafa ekki birt neitt efni nýlega</string>
     <string name="error_remove_user">Gat ekki fjarlægt notanda</string>
     <string name="error_fetch_viewers_list">Gat ekki sótt vefgesti</string>
     <string name="error_update_role">Gat ekki uppfært hlutverk notanda</string>

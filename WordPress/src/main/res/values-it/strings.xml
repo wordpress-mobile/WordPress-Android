@@ -3152,7 +3152,6 @@ Language: it
     <string name="person_remove_confirmation_title">Rimuovere %1$s</string>
     <string name="role">Ruolo</string>
     <string name="people">Persone</string>
-    <string name="reader_empty_posts_in_custom_list">I siti in questo elenco non hanno pubblicato nullla di recente</string>
     <string name="error_remove_user">Impossibile rimuovere l\'utente</string>
     <string name="error_update_role">Impossibile aggiornare il ruolo utente</string>
     <string name="error_fetch_viewers_list">Non è possibile recuperare i visitatori del sito</string>

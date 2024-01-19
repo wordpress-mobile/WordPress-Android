@@ -1568,7 +1568,6 @@ Language: sr_RS
     <string name="person_remove_confirmation_title">Уклони %1$s</string>
     <string name="role">Улога</string>
     <string name="people">Људи</string>
-    <string name="reader_empty_posts_in_custom_list">Сајтови на овој листи нису ништа објавили неко време</string>
     <string name="error_remove_user">Корисник није уклоњен</string>
     <string name="error_update_role">Није промењена улога корисника</string>
     <string name="error_updating_gravatar">Грешка приликом мењања вашег Граватара</string>

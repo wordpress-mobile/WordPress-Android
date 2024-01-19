@@ -158,7 +158,6 @@ Language: hr
     <string name="person_remove_confirmation_title">Ukloni %1$s</string>
     <string name="people">Ljudi</string>
     <string name="role">Uloga</string>
-    <string name="reader_empty_posts_in_custom_list">Web-mjesta na ovom popisu već neko vrijeme nisu ništa objavila</string>
     <string name="error_remove_user">Korisnik nije uklonjen</string>
     <string name="error_update_role">Uloga korisnika nije promijenjena</string>
     <string name="error_updating_gravatar">Pogreška tijekom promjene vašeg Gravatara</string>

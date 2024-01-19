@@ -3155,7 +3155,6 @@ Language: fr
     <string name="person_remove_confirmation_title">Supprimer %1$s</string>
     <string name="role">Rôle</string>
     <string name="people">Personnes</string>
-    <string name="reader_empty_posts_in_custom_list">Les sites dans cette liste n’ont rien publié récemment</string>
     <string name="error_remove_user">Impossible de supprimer l’utilisateur</string>
     <string name="error_update_role">Impossible de mettre à jour le rôle utilisateur</string>
     <string name="error_fetch_viewers_list">Impossible de récupérer les utilisateurs du site</string>

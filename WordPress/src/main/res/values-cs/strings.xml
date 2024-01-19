@@ -2888,7 +2888,6 @@ Language: cs_CZ
     <string name="person_remove_confirmation_title">Ostranit %1$s</string>
     <string name="people">Lidé</string>
     <string name="role">Role</string>
-    <string name="reader_empty_posts_in_custom_list">Web v tomto seznamu nezveřejnil v poslední době nic</string>
     <string name="error_remove_user">Nepodařilo se odstranit vybraného uživatele</string>
     <string name="error_fetch_viewers_list">Nemohu získat zobrazení webu</string>
     <string name="error_update_role">Nemohu aktualizovat role uživatele</string>

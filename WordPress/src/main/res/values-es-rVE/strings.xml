@@ -2642,7 +2642,6 @@ Language: es_VE
     <string name="person_remove_confirmation_title">Eliminar %1$s</string>
     <string name="role">Perfil</string>
     <string name="people">Gente</string>
-    <string name="reader_empty_posts_in_custom_list">Los sitios de esta lista no han publicado nada últimamente.</string>
     <string name="error_remove_user">No se ha podido eliminar el usuario</string>
     <string name="error_update_role">No se ha podido actualizar el rol del usuario</string>
     <string name="error_fetch_viewers_list">No se pudieron recuperar los espectadores del sitio</string>

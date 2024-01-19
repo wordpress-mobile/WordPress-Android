@@ -382,7 +382,6 @@ Language: ms
     <string name="person_remove_confirmation_title">Buang %1$s</string>
     <string name="role">Peranan</string>
     <string name="people">Orang</string>
-    <string name="reader_empty_posts_in_custom_list">Laman dalam senarai ini tiada kiriman baharu.</string>
     <string name="error_remove_user">Tidak dapat membuang pengguna</string>
     <string name="error_fetch_viewers_list">Tidak boleh mendapatkan penonton laman</string>
     <string name="error_update_role">Tidak dapat mengemaskini peranan pengguna</string>

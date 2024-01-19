@@ -3026,7 +3026,6 @@ Language: lv
     <string name="person_remove_confirmation_title">Noņemt %1$s</string>
     <string name="role">Loma</string>
     <string name="people">Cilvēki</string>
-    <string name="reader_empty_posts_in_custom_list">Šajā sarakstā esošās vietnes pēdējā laikā neko nav publicējušas</string>
     <string name="error_remove_user">Nevarēja noņemt lietotāju</string>
     <string name="error_update_role">Nevarēja atjaunināt lietotāja lomu</string>
     <string name="error_fetch_viewers_list">Nevarēja izgūt vietnes skatītājus</string>

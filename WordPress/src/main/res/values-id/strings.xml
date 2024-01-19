@@ -3156,7 +3156,6 @@ Language: id
     <string name="person_remove_confirmation_title">Hapus %1$s</string>
     <string name="role">Peran</string>
     <string name="people">Pengguna</string>
-    <string name="reader_empty_posts_in_custom_list">Situs dalam daftar ini belum memposting apa pun baru-baru ini</string>
     <string name="error_remove_user">Tidak dapat menghapus pengguna</string>
     <string name="error_update_role">Tidak dapat memperbarui peran pengguna</string>
     <string name="error_fetch_viewers_list">Gagal menampilkan pengunjung situs</string>

@@ -3166,7 +3166,6 @@ Language: ro
     <string name="person_remove_confirmation_title">Înlătură %1$s</string>
     <string name="role">Rol</string>
     <string name="people">Oameni</string>
-    <string name="reader_empty_posts_in_custom_list">Site-urile din această listă nu au publicat nimic recent</string>
     <string name="error_remove_user">Nu s-a putut înlătura utilizatorul</string>
     <string name="error_update_role">Nu s-a putut actualiza rolul utilizatorului</string>
     <string name="error_fetch_viewers_list">N-am putut aduce vizitatorii site-ului</string>

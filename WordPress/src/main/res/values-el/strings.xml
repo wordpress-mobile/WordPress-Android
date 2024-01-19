@@ -682,7 +682,6 @@ Language: el_GR
     <string name="user_remove_confirmation_message">Αν αφαιρέσετε τον %1$s, αυτός ο χρήστης δεν θα μπορεί πλέον να συνδεθεί σε αυτό τον ιστότοπο αλλά ό,τι περιεχόμενο δημιουργήθηκε από τον %1$s θα παραμείνει στον ιστότοπο.\n\nΘέλετε ακόμη να αφαιρέσετε το χρήστη;</string>
     <string name="person_removed">Ο %1$s αφαιρέθηκε επιτυχώς</string>
     <string name="person_remove_confirmation_title">Αφαίρεση %1$s</string>
-    <string name="reader_empty_posts_in_custom_list">Οι ιστότοποι σε αυτή τη λίστα δεν έχουν δημοσιεύσει κάτι πρόσφατα</string>
     <string name="people">Άνθρωποι</string>
     <string name="role">Ρόλος</string>
     <string name="error_remove_user">Αδυναμία αφαίρεσης χρήστη</string>

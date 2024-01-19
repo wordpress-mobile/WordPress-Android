@@ -3156,7 +3156,6 @@ Language: zh_TW
     <string name="person_remove_confirmation_title">移除 %1$s</string>
     <string name="role">角色</string>
     <string name="people">使用者</string>
-    <string name="reader_empty_posts_in_custom_list">此清單中的網站最近未張貼任何文章</string>
     <string name="error_remove_user">無法移除使用者</string>
     <string name="error_update_role">無法更新使用者角色</string>
     <string name="error_fetch_viewers_list">無法擷取網站使用者</string>
