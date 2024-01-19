@@ -3555,7 +3555,6 @@ Language: tr
     <string name="reader_label_followed_blog">Site takip edildi</string>
     <string name="reader_label_followers_count">%s takipçi</string>
     <string name="reader_hint_add_tag_or_url">Bir URL veya takip etmek istediğiniz konuyu girin</string>
-    <string name="reader_page_followed_blogs">Takip edilen siteler</string>
     <string name="reader_title_blog_preview">Okuyucu sitesi</string>
     <string name="ssl_certificate_ask_trust">Eğer bu siteye genelde sorunsuz şekilde bağlanabiliyorsanız bu hata birilerinin siteyi taklit ettiği anlamına gelebilir. Yine de sertifikaya güvenmek ister misiniz?</string>
     <string name="ssl_certificate_error">Geçersiz SSL setifikası</string>

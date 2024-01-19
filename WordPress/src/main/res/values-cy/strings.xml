@@ -454,7 +454,6 @@ Language: cy_GB
     <string name="reader_toast_err_generic">Methu cyflawni\'r weithred hon</string>
     <string name="update_verb">Diweddaru</string>
     <string name="schedule_verb">Amserlen</string>
-    <string name="reader_page_followed_blogs">Gwefannau sy\'n cael eu dilyn</string>
     <string name="help">Cymorth</string>
     <string name="ssl_certificate_error">Tystysgrif SSL annilys</string>
     <string name="ssl_certificate_ask_trust">Os ydych fel arfer yn cysylltu â\'r wefan hon heb broblemau, gall y gwall hwn olygu bod rhywun yn ceisio dynwared y wefan a dylech chi beidio parhau. Hoffech chi ymddiried yn y dystysgrif beth bynnag?</string>

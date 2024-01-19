@@ -3537,7 +3537,6 @@ Language: ar
     <string name="reader_empty_recommended_blogs">لا توجد مواقع موصى بها</string>
     <string name="reader_title_blog_preview">موقع القارئ</string>
     <string name="reader_hint_add_tag_or_url">أدخل رابط URL أو موضوعًا للمتابعة</string>
-    <string name="reader_page_followed_blogs">مواقع تمّت متابعتها</string>
     <string name="reader_label_followers_count">%s من المتابعين</string>
     <string name="help">المساعدة</string>
     <string name="ssl_certificate_error">شهادة SSL غير صالحة</string>

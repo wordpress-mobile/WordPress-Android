@@ -2083,7 +2083,6 @@
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags_title">Followed tags</string>
-    <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_followed_blogs_title">Followed blogs</string>
 
     <!-- menu text -->

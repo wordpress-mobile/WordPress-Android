@@ -2221,7 +2221,6 @@ Language: es_MX
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
     <string name="update_verb">Actualizar</string>
     <string name="schedule_verb">Programación</string>
-    <string name="reader_page_followed_blogs">Sitios que sigues</string>
     <string name="reader_empty_recommended_blogs">Sin sitios recomendados</string>
     <string name="reader_toast_err_unfollow_blog">No se puede dejar de seguir este sitio</string>
     <string name="reader_toast_err_follow_blog">No se puede seguir este sitio</string>

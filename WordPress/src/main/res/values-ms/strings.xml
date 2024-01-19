@@ -728,7 +728,6 @@ Language: ms
     <string name="reader_toast_err_generic">Tidak dapat melaksanakan tindakan ini</string>
     <string name="update_verb">Kemas kini</string>
     <string name="schedule_verb">Jadual</string>
-    <string name="reader_page_followed_blogs">Laman yang diikuti</string>
     <string name="help">Bantuan</string>
     <string name="ssl_certificate_error">Sijil SSL tidak sah</string>
     <string name="ssl_certificate_ask_trust">Jika anda biasanya berhubung ke laman ini tanpa masalah, ralat ini mungkin bermakna bahawa seseorang sedang cuba menyamar sebagai laman ini, dan anda tidak sepatutnya teruskan. Adakah anda masih ingin mempercayai sijil ini?</string>

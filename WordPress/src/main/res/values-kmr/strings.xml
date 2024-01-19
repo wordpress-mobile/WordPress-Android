@@ -2137,7 +2137,6 @@ Language: ku_TR
     <string name="reader_toast_blog_blocked">Şandiyên ji vê malperê êdî ew ê neyên nîşandan</string>
     <string name="schedule_verb">Demsaz bike</string>
     <string name="update_verb">Hildemîne</string>
-    <string name="reader_page_followed_blogs">Malperên şopandî</string>
     <string name="reader_toast_err_already_follow_blog">Jixwe tu vê malperê dişopînî</string>
     <string name="reader_toast_err_get_blog_info">Ev malper nayê nîşandan</string>
     <string name="reader_label_followed_blog">Malper hat şopandin</string>

@@ -671,7 +671,6 @@ Language: bg
     <string name="reader_toast_err_generic">Действието беше неуспешно</string>
     <string name="update_verb">Актуализиране</string>
     <string name="schedule_verb">Планиране</string>
-    <string name="reader_page_followed_blogs">Следени сайтове</string>
     <string name="help">Помощ</string>
     <string name="ssl_certificate_error">Невалиден SSL сертификат</string>
     <string name="ssl_certificate_ask_trust">Ако обикновено се свързвате с този сайт без проблеми, тази грешка може да означава, че някой се опитва да имитира този сайт и не трябва да продължавате. Искате ли да се доверите на този сертификат въпреки това?</string>

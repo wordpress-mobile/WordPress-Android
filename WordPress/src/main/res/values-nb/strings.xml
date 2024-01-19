@@ -2334,7 +2334,6 @@ Language: nb_NO
     <string name="reader_toast_err_get_blog_info">Klarte ikke å vise dette nettstedet</string>
     <string name="reader_label_followed_blog">Nettstdedet ble fulgt</string>
     <string name="reader_hint_add_tag_or_url">Skriv inn en URL eller et emne å følge</string>
-    <string name="reader_page_followed_blogs">Fulgte nettsteder</string>
     <string name="reader_title_blog_preview">Leser-nettsted</string>
     <string name="ssl_certificate_ask_trust">Hvis du vanligvis har koblet deg til dette nettstedet uten problemer, kan denne feilen bety at noen prøver å imitere dette nettstedet, og at du ikke bør fortsette. Er du helt sikker på at du vil stole på dette sertifikatet likevel?</string>
     <string name="ssl_certificate_error">Ugyldig SSL-sertifikat</string>

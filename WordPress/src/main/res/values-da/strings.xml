@@ -166,7 +166,6 @@ Language: da_DK
     <string name="reader_toast_err_block_blog">Det er ikke muligt at blokere dette websted</string>
     <string name="update_verb">Opdater</string>
     <string name="schedule_verb">Planlæg</string>
-    <string name="reader_page_followed_blogs">Fulgte websteder</string>
     <string name="reader_empty_recommended_blogs">Ingen anbefalede websteder</string>
     <string name="reader_hint_add_tag_or_url">Indtast en URL eller emne for at følge</string>
     <string name="reader_toast_err_already_follow_blog">Du følger allerede dette websted</string>

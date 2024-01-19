@@ -3273,7 +3273,6 @@ Language: cs_CZ
     <string name="reader_toast_err_follow_blog">Přidání webu mezi sledované se nezdařilo</string>
     <string name="reader_toast_err_unfollow_blog">Zrušení sledování tohoto webu se nezdařilo</string>
     <string name="reader_empty_recommended_blogs">Nejsou k dispozici žádné doporučené weby</string>
-    <string name="reader_page_followed_blogs">Stránky které sledujete</string>
     <string name="reader_hint_add_tag_or_url">Zadejte URL nebo štítek, který chcete sledovat</string>
     <string name="reader_label_followed_blog">Web sledován</string>
     <string name="reader_title_blog_preview">Web čtenáře</string>

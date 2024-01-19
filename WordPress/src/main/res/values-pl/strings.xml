@@ -3022,7 +3022,6 @@ Language: pl
     <string name="reader_menu_block_blog">Zablokuj tę witrynę</string>
     <string name="update_verb">Zaktualizuj</string>
     <string name="schedule_verb">Zaplanuj</string>
-    <string name="reader_page_followed_blogs">Obserwowane blogi</string>
     <string name="reader_empty_recommended_blogs">Brak polecanych witryn</string>
     <string name="reader_toast_err_get_blog_info">Nie udało się pokazać tej witryny</string>
     <string name="reader_label_followed_blog">Witryna obserwowana</string>

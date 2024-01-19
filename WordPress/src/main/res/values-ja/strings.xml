@@ -3548,7 +3548,6 @@ Language: ja_JP
     <string name="reader_label_followed_blog">サイトをフォローしました</string>
     <string name="reader_label_followers_count">%s人のフォロワー</string>
     <string name="reader_hint_add_tag_or_url">フォローする URL またはトピックを入力</string>
-    <string name="reader_page_followed_blogs">フォロー中のサイト</string>
     <string name="reader_title_blog_preview">Reader サイト</string>
     <string name="ssl_certificate_ask_trust">通常問題なくサイトに接続できる場合、このエラーは誰かがあなたのサイトになりすましていることを意味しているかもしれないので、そのまま進むべきではありません。それでもこの証明書を信頼してもよいですか ?</string>
     <string name="ssl_certificate_error">無効な SSL 証明書</string>

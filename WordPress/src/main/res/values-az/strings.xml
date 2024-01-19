@@ -105,7 +105,6 @@ Language: az
     <string name="reader_toast_err_generic">Bu hərəkət həyata keçirilə bilmir</string>
     <string name="update_verb">Yenilə</string>
     <string name="schedule_verb">Planla</string>
-    <string name="reader_page_followed_blogs">İzlənilən saytlar</string>
     <string name="ssl_certificate_error">Yanlış SSL sertifikatı</string>
     <string name="help">Yardım</string>
     <string name="ssl_certificate_ask_trust">Əgər bu sayta əsasən problemsiz şəkildə qoşula bilirsinizsə, bu xəta başqalarının saytı təqlid etdiyi mənasına gəlir. yenə də sertifikata etibar etmək istəyirsinizmi?</string>

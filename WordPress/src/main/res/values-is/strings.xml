@@ -483,7 +483,6 @@ Language: is
     <string name="reader_toast_err_generic">Gat ekki framkvæmt þessa aðgerð</string>
     <string name="update_verb">Uppfæra</string>
     <string name="schedule_verb">Tímaáætla</string>
-    <string name="reader_page_followed_blogs">Vefir sem ég fylgi</string>
     <string name="help">Hjálp</string>
     <string name="ssl_certificate_error">Ógilt SSL skírteini</string>
     <string name="ssl_certificate_ask_trust">Ef þú getur vanalega tengst þessum vef án vandræða, þá gæti þessi villa þýtt að einhver er að reyna að þykjast vera vefurinn og þú ættir ekki að halda áfram. Viltu treysta þessu skírteini samt sem áður?</string>
