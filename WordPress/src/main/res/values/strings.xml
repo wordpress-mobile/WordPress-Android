@@ -956,6 +956,9 @@
 
     <!-- Design System -->
     <string name="preference_design_system" translatable="false">Design System</string>
+    <string name="design_system_foundation" translatable="false">Foundation</string>
+    <string name="design_system_components" translatable="false">Components</string>
+
 
     <!-- stats -->
     <string name="stats">Stats</string>
