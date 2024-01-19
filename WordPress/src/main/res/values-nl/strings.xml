@@ -1037,7 +1037,6 @@ Language: nl
     <string name="jetpack_brute_force_allowlist_title">Altijd toegestane IP-adressen</string>
     <string name="site_settings_denylist_title">Niet toegelaten reacties</string>
     <string name="gutenberg_native_add_button_text">Voeg knoptekst toe</string>
-    <string name="reader_title_interests">Volg onderwerpen</string>
     <string name="stories_intro_main_subtitle">Een nieuwe manier om boeiende inhoud op je site te maken en te publiceren.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Negeren</string>
     <string name="activity_log_backup_download_notice_download_action">Download</string>

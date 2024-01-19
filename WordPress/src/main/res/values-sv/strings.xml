@@ -1096,7 +1096,6 @@ Language: sv_SE
     <string name="jetpack_brute_force_allowlist_title">IP-adresser som alltid tillåts</string>
     <string name="site_settings_denylist_title">Kommentering avstängd</string>
     <string name="gutenberg_native_add_button_text">Lägg till knapptext</string>
-    <string name="reader_title_interests">Följ ämnen</string>
     <string name="stories_intro_main_subtitle">Ett nytt sätt att skapa och publicera engagerande innehåll på din webbplats.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Avfärda</string>
     <string name="activity_log_backup_download_notice_download_action">Ladda ner</string>

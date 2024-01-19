@@ -1088,7 +1088,6 @@ Language: it
     <string name="jetpack_brute_force_allowlist_title">Indirizzi IP sempre consentiti</string>
     <string name="site_settings_denylist_title">Commenti respinti</string>
     <string name="gutenberg_native_add_button_text">Aggiungi il testo del pulsante</string>
-    <string name="reader_title_interests">Argomenti seguiti</string>
     <string name="stories_intro_main_subtitle">Un nuovo modo per creare e pubblicare contenuti coinvolgenti nel tuo sito.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Ignora</string>
     <string name="activity_log_backup_download_notice_download_action">Scarica</string>

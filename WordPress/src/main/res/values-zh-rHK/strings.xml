@@ -1091,7 +1091,6 @@ Language: zh_TW
     <string name="jetpack_brute_force_allowlist_title">一律允許的 IP 位址</string>
     <string name="site_settings_denylist_title">留言含有不允許的內容</string>
     <string name="gutenberg_native_add_button_text">新增按鈕文字</string>
-    <string name="reader_title_interests">追蹤主題</string>
     <string name="stories_intro_main_subtitle">在網站創作並發布引人注目內容的全新方式。</string>
     <string name="activity_log_backup_download_notice_dismiss_action">關閉</string>
     <string name="activity_log_backup_download_notice_download_action">下載</string>

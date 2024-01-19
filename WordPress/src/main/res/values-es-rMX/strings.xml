@@ -50,7 +50,6 @@ Language: es_MX
     <string name="user_profile_untitled_site">(Sin título)</string>
     <string name="likes_list_screen_title">Lista de Me gusta %s</string>
     <string name="gutenberg_native_add_button_text">Añade el texto al botón</string>
-    <string name="reader_title_interests">Seguir temáticas</string>
     <string name="stories_intro_main_subtitle">Una nueva forma de crear y publicar contenido en tu sitio.</string>
     <string name="activity_log_backup_download_notice_download_action">Descargar</string>
     <string name="threat_fix_all_status_success_message_plural">Las amenazas se solucionaron con éxito.</string>

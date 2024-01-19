@@ -573,7 +573,6 @@ Language: es_CO
     <string name="jetpack_brute_force_allowlist_title">Direcciones IP permitidas siempre</string>
     <string name="site_settings_denylist_title">Comentarios no permitidos</string>
     <string name="gutenberg_native_add_button_text">Añadir el texto del botón</string>
-    <string name="reader_title_interests">Seguir temas</string>
     <string name="stories_intro_main_subtitle">Una nueva forma de crear y publicar contenidos atrayentes en tu sitio.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Descartar</string>
     <string name="activity_log_backup_download_notice_download_action">Descargar</string>

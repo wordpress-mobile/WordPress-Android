@@ -2079,7 +2079,6 @@
     <string name="reader_title_subs">Manage Topics &amp; Sites</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
-    <string name="reader_title_interests">Follow topics</string>
     <string name="reader_title_tags">Follow tags</string>
 
     <!-- view pager titles -->

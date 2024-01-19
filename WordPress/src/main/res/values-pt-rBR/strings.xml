@@ -877,7 +877,6 @@ Language: pt_BR
     <string name="jetpack_brute_force_allowlist_title">Endereços IP sempre permitidos</string>
     <string name="site_settings_denylist_title">Comentários não permitidos</string>
     <string name="gutenberg_native_add_button_text">Adicionar texto do botão</string>
-    <string name="reader_title_interests">Seguir tópicos</string>
     <string name="stories_intro_main_subtitle">Uma nova maneira de criar e publicar conteúdos atraentes em seu site.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Dispensar</string>
     <string name="activity_log_backup_download_notice_download_action">Baixar</string>

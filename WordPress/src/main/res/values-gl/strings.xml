@@ -1096,7 +1096,6 @@ Language: gl_ES
     <string name="jetpack_brute_force_allowlist_title">Direccións IP permitidas sempre</string>
     <string name="site_settings_denylist_title">Comentarios non permitidos</string>
     <string name="gutenberg_native_add_button_text">Engadir o texto do botón</string>
-    <string name="reader_title_interests">Seguir temas</string>
     <string name="stories_intro_main_subtitle">Unha nova forma de crear e publicar contidos atraíntes no teu sitio.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Descartar</string>
     <string name="activity_log_backup_download_notice_download_action">Descargar</string>

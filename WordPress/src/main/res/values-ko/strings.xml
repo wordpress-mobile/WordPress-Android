@@ -1090,7 +1090,6 @@ Language: ko_KR
     <string name="jetpack_brute_force_allowlist_title">항상 허용되는 IP 주소</string>
     <string name="site_settings_denylist_title">허용되지 않는 댓글</string>
     <string name="gutenberg_native_add_button_text">추가 버튼 텍스트</string>
-    <string name="reader_title_interests">토픽 따르기</string>
     <string name="stories_intro_main_subtitle">사이트에서 매력적인 콘텐츠를 만들고 공개하는 새로운 방법입니다.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">해제</string>
     <string name="activity_log_backup_download_notice_download_action">다운로드하기</string>

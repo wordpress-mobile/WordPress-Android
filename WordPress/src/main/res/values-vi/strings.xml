@@ -552,7 +552,6 @@ Language: vi_VN
     <string name="jetpack_brute_force_allowlist_title">Luôn cho phép những IP</string>
     <string name="site_settings_denylist_title">Cấm bình luận</string>
     <string name="gutenberg_native_add_button_text">Thêm chữ trên nút</string>
-    <string name="reader_title_interests">Theo dõi thẻ</string>
     <string name="stories_intro_main_subtitle">Một cách mới để viết và đăng nội dung trên blog của bạn.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Bỏ qua</string>
     <string name="activity_log_backup_download_notice_download_action">Tải về</string>

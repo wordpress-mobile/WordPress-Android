@@ -1096,7 +1096,6 @@ Language: de
     <string name="jetpack_brute_force_allowlist_title">IP-Adressen auf der Liste „Immer zulassen“</string>
     <string name="site_settings_denylist_title">Gesperrte Kommentare</string>
     <string name="gutenberg_native_add_button_text">Button-Text hinzufügen.</string>
-    <string name="reader_title_interests">Themen folgen</string>
     <string name="stories_intro_main_subtitle">Eine neue Möglichkeit, ansprechende Inhalte auf deiner Website zu erstellen und zu veröffentlichen.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Ausblenden</string>
     <string name="activity_log_backup_download_notice_download_action">Herunterladen</string>

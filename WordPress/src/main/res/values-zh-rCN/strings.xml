@@ -1086,7 +1086,6 @@ Language: zh_CN
     <string name="jetpack_brute_force_allowlist_title">始终允许的 IP 地址</string>
     <string name="site_settings_denylist_title">不允许的评论</string>
     <string name="gutenberg_native_add_button_text">添加按钮文本</string>
-    <string name="reader_title_interests">关注话题</string>
     <string name="stories_intro_main_subtitle">在您的站点上创建、发布吸引人内容的新方法。</string>
     <string name="activity_log_backup_download_notice_dismiss_action">忽略</string>
     <string name="activity_log_backup_download_notice_download_action">下载</string>

@@ -966,7 +966,6 @@ Language: lv
     <string name="jetpack_brute_force_allowlist_title">Vienmēr atļautās IP adreses</string>
     <string name="site_settings_denylist_title">Neatļautie komentāri</string>
     <string name="gutenberg_native_add_button_text">Pievienot pogas tekstu</string>
-    <string name="reader_title_interests">Sekojiet tēmām</string>
     <string name="stories_intro_main_subtitle">Jauns veids, kā izveidot un publicēt saistošu saturu savā vietnē.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Atlaist</string>
     <string name="activity_log_backup_download_notice_download_action">Lejupielādēt</string>

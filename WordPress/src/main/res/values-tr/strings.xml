@@ -1096,7 +1096,6 @@ Language: tr
     <string name="jetpack_brute_force_allowlist_title">Her zaman izin verilen IP adresleri</string>
     <string name="site_settings_denylist_title">İzin verilmeyen yorumlar</string>
     <string name="gutenberg_native_add_button_text">Düğme metni ekle</string>
-    <string name="reader_title_interests">Konuları takip et</string>
     <string name="stories_intro_main_subtitle">Sitenizde ilgi çekici içerik oluşturmanın ve yayınlamanın yeni bir yolu.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Kapat</string>
     <string name="activity_log_backup_download_notice_download_action">İndir</string>

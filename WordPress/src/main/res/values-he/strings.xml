@@ -1088,7 +1088,6 @@ Language: he_IL
     <string name="jetpack_brute_force_allowlist_title">כתובת IP שמותרות תמיד</string>
     <string name="site_settings_denylist_title">תגובות שלא יותרו לפרסום</string>
     <string name="gutenberg_native_add_button_text">להוסיף טקסט לכפתור</string>
-    <string name="reader_title_interests">לעקוב אחר נושאים</string>
     <string name="stories_intro_main_subtitle">דרך חדשה ליצור ולפרסם תוכן מעניין באתר שלך.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">ביטול</string>
     <string name="activity_log_backup_download_notice_download_action">הורדה</string>

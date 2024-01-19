@@ -606,7 +606,6 @@ Language: pl
     <string name="jetpack_brute_force_allowlist_title">Zawsze dozwolone adresy IP</string>
     <string name="site_settings_denylist_title">Niedozwolone komentarze</string>
     <string name="gutenberg_native_add_button_text">Dodaj tekst przycisku</string>
-    <string name="reader_title_interests">Obserwowane tematy</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Odrzuć</string>
     <string name="activity_log_backup_download_notice_download_action">Pobierz</string>
     <string name="stories_intro_main_subtitle">Nowy sposób tworzenia i publikacji angażujących treści na twojej witrynie.</string>

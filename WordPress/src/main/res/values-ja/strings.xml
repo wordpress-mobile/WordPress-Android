@@ -1090,7 +1090,6 @@ Language: ja_JP
     <string name="jetpack_brute_force_allowlist_title">常時許可 IP アドレス</string>
     <string name="site_settings_denylist_title">禁止コメント</string>
     <string name="gutenberg_native_add_button_text">ボタンのテキストを追加</string>
-    <string name="reader_title_interests">トピックをフォロー</string>
     <string name="stories_intro_main_subtitle">心をつかむコンテンツを作り、サイトで公開する新しい方法。</string>
     <string name="activity_log_backup_download_notice_dismiss_action">非表示</string>
     <string name="activity_log_backup_download_notice_download_action">ダウンロード</string>

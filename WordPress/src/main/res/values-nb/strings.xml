@@ -225,7 +225,6 @@ Language: nb_NO
     <string name="gutenberg_native_search_settings">Søkeinnstillinger</string>
     <string name="jetpack_brute_force_allowlist_title">IP-adresser som alltid er tillatt</string>
     <string name="site_settings_denylist_title">Ikke tillatte kommentarer</string>
-    <string name="reader_title_interests">Følg emner</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Avvis</string>
     <string name="activity_log_backup_download_notice_download_action">Last ned</string>
     <string name="invite_links_expire_date">Utløper %1$s</string>

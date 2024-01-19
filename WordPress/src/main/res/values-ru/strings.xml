@@ -1096,7 +1096,6 @@ Language: ru
     <string name="jetpack_brute_force_allowlist_title">Белый список IP</string>
     <string name="site_settings_denylist_title">Запрещённые комментарии</string>
     <string name="gutenberg_native_add_button_text">Добавить текст кнопки</string>
-    <string name="reader_title_interests">Подписаться на темы</string>
     <string name="stories_intro_main_subtitle">Новый способ создавать и публиковать захватывающее содержимое на вашем сайте.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Скрыть</string>
     <string name="activity_log_backup_download_notice_download_action">Скачать</string>
