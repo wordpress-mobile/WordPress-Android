@@ -1397,7 +1397,6 @@ Language: sq_AL
     <string name="hpp_error_title">S’mund të kihen skema, teksa jeni jashtë linje</string>
     <string name="continue_site_credentials">Vazhdo me kredenciale shitoreje</string>
     <string name="login_find_your_connected_email">Gjeni email-in tuaj të lidhur</string>
-    <string name="reader_discover_no_posts_button_text">Ndiqni tema</string>
     <string name="reader_discover_no_posts_title">Pa postime së fundi</string>
     <string name="reader_discover_empty_title">Mirë se vini!</string>
     <string name="scan">Skanoje</string>

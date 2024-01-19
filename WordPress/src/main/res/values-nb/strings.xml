@@ -339,7 +339,6 @@ Language: nb_NO
     <string name="label_done_button">Fullført</string>
     <string name="label_next_button">Neste</string>
     <string name="delete_button_alt">Slett</string>
-    <string name="reader_discover_no_posts_button_text">Følg emner</string>
     <string name="reader_discover_no_posts_title">Ingen nylige innlegg</string>
     <string name="reader_discover_empty_title">Velkommen!</string>
     <string name="scan">Skann</string>

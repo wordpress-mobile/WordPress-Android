@@ -1131,7 +1131,6 @@ Language: cs_CZ
     <string name="scan">Prohledat</string>
     <string name="reader_discover_empty_title">Vítejte!</string>
     <string name="reader_discover_no_posts_title">Žádné nedávné příspěvky</string>
-    <string name="reader_discover_no_posts_button_text">Sledujte témata</string>
     <string name="login_find_your_connected_email">Najděte svůj připojený e-mail</string>
     <string name="continue_site_credentials">Pokračujte s přihlašovacími údaji úložiště</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; lajkoval váš příspěvek</string>

@@ -1408,7 +1408,6 @@ Language: de
     <string name="hpp_error_title">Layouts sind offline nicht verfügbar</string>
     <string name="continue_site_credentials">Mit Store-Anmeldedaten fortfahren</string>
     <string name="login_find_your_connected_email">Verbundene E-Mail-Adresse suchen</string>
-    <string name="reader_discover_no_posts_button_text">Themen folgen</string>
     <string name="reader_discover_no_posts_title">Keine aktuellen Beiträge</string>
     <string name="reader_discover_empty_title">Willkommen!</string>
     <string name="scan">Scannen</string>

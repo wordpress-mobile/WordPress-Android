@@ -1402,7 +1402,6 @@ Language: zh_TW
     <string name="hpp_error_title">版面配置在離線時無法使用</string>
     <string name="continue_site_credentials">使用商店憑證繼續</string>
     <string name="login_find_your_connected_email">尋找你連結的電子郵件</string>
-    <string name="reader_discover_no_posts_button_text">追蹤主題</string>
     <string name="reader_discover_no_posts_title">沒有近期文章</string>
     <string name="reader_discover_empty_title">歡迎！</string>
     <string name="scan">掃瞄</string>

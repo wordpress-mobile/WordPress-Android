@@ -1408,7 +1408,6 @@ Language: tr
     <string name="hpp_error_title">Çevrimdışıyken düzenler kullanılamaz</string>
     <string name="continue_site_credentials">Mağaza kimlik bilgileriyle devam edin</string>
     <string name="login_find_your_connected_email">Bağlı e-postanızı bulun</string>
-    <string name="reader_discover_no_posts_button_text">Takip edilen konular</string>
     <string name="reader_discover_no_posts_title">Yeni yazı yok</string>
     <string name="reader_discover_empty_title">Hoş geldiniz!</string>
     <string name="scan">Tarama</string>

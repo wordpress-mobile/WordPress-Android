@@ -897,7 +897,6 @@ Language: pl
     <string name="hpp_choose_error">Wystąpił błąd podczas wyboru szablonu</string>
     <string name="continue_site_credentials">Zaloguj się za pomocą danych uwierzytelniających tej witryny</string>
     <string name="login_find_your_connected_email">Odnajdź swój połączony email</string>
-    <string name="reader_discover_no_posts_button_text">Obserwuj tematy</string>
     <string name="reader_discover_no_posts_title">Brak ostatnich wpisów</string>
     <string name="reader_discover_empty_title">Witaj!</string>
     <string name="scan">Skanuj</string>

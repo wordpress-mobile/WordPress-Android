@@ -1408,7 +1408,6 @@ Language: gl_ES
     <string name="hpp_error_title">Os deseños non están dispoñibles sen conexión</string>
     <string name="continue_site_credentials">Continuar coas credenciais da tenda</string>
     <string name="login_find_your_connected_email">Encontra o teu correo electrónico conectado</string>
-    <string name="reader_discover_no_posts_button_text">Seguir temas</string>
     <string name="reader_discover_no_posts_title">Non hai entradas recentes</string>
     <string name="reader_discover_empty_title">Benvido!</string>
     <string name="scan">Explorar</string>

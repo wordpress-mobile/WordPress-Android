@@ -89,7 +89,6 @@ Language: ku_TR
     <string name="hpp_error_subtitle">Dema ku tu ji nû ve serhêl bû li dîsa biceribîneyê bitikîne.</string>
     <string name="continue_site_credentials">Bi agahiyên xwe yên firoşgehê re dewam bike</string>
     <string name="login_find_your_connected_email">Emaila xwe ya girêdayî bibîne</string>
-    <string name="reader_discover_no_posts_button_text">Mijaran bişopîne</string>
     <string name="reader_discover_no_posts_title">Şandiyên nû tune ye</string>
     <string name="reader_discover_empty_title">Bi xêr hatî!</string>
     <string name="scan">venerîn</string>

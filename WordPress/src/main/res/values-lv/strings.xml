@@ -1277,7 +1277,6 @@ Language: lv
     <string name="hpp_error_title">Izkārtojumi nav pieejami bezsaistē</string>
     <string name="continue_site_credentials">Turpiniet ar veikala akreditācijas datiem</string>
     <string name="login_find_your_connected_email">Atrodiet pievienoto e-pastu</string>
-    <string name="reader_discover_no_posts_button_text">Sekojiet tēmām</string>
     <string name="reader_discover_no_posts_title">Nav pēdējo ziņu</string>
     <string name="reader_discover_empty_title">Laipni lūdzam!</string>
     <string name="scan">Skenēt</string>

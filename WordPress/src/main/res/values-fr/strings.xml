@@ -1400,7 +1400,6 @@ Language: fr
     <string name="hpp_error_title">Mises en page non disponibles hors connexion</string>
     <string name="continue_site_credentials">Continuer avec les identifiants de connexion de la boutique</string>
     <string name="login_find_your_connected_email">Trouver votre e-mail connecté</string>
-    <string name="reader_discover_no_posts_button_text">Suivre des sujets</string>
     <string name="reader_discover_no_posts_title">Pas d’articles récents.</string>
     <string name="reader_discover_empty_title">Bienvenue !</string>
     <string name="scan">Analyser</string>

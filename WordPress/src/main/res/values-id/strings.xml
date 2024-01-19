@@ -1402,7 +1402,6 @@ Language: id
     <string name="hpp_error_title">Tata letak tidak tersedia saat offline</string>
     <string name="continue_site_credentials">Lanjutkan dengan kredensial toko</string>
     <string name="login_find_your_connected_email">Temukan email Anda yang terhubung</string>
-    <string name="reader_discover_no_posts_button_text">Ikuti topik</string>
     <string name="reader_discover_no_posts_title">Tak ada pos terbaru</string>
     <string name="reader_discover_empty_title">Selamat datang!</string>
     <string name="scan">Pindai</string>

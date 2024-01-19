@@ -1400,7 +1400,6 @@ Language: it
     <string name="hpp_error_title">Layout non disponibili in modalità offline</string>
     <string name="continue_site_credentials">Continua con le credenziali del negozio</string>
     <string name="login_find_your_connected_email">Trova l\'email connessa</string>
-    <string name="reader_discover_no_posts_button_text">Segui gli argomenti</string>
     <string name="reader_discover_no_posts_title">Nessun articolo recente</string>
     <string name="reader_discover_empty_title">Benvenuto!</string>
     <string name="scan">Scansiona</string>

@@ -1408,7 +1408,6 @@ Language: sv_SE
     <string name="hpp_error_title">Layouter är inte tillgängliga när du saknar internetförbindelse</string>
     <string name="continue_site_credentials">Fortsätt med butiksautentiseringsuppgifter</string>
     <string name="login_find_your_connected_email">Hitta din anslutna e-postadress</string>
-    <string name="reader_discover_no_posts_button_text">Följ ämnen</string>
     <string name="reader_discover_no_posts_title">Inga nya inlägg</string>
     <string name="reader_discover_empty_title">Välkommen!</string>
     <string name="scan">Skanna</string>
