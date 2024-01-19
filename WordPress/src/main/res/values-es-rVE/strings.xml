@@ -3030,7 +3030,6 @@ Language: es_VE
     <string name="reader_label_followed_blog">Sitio seguido</string>
     <string name="reader_hint_add_tag_or_url">Introduce una URL o tema para seguir</string>
     <string name="reader_page_followed_blogs">Sitios que sigues</string>
-    <string name="reader_page_followed_tags">Temas seguidos</string>
     <string name="reader_title_blog_preview">Sitio del lector</string>
     <string name="ssl_certificate_ask_trust">SI normalmente se conecta sin problemas a este sitio sin problemas, este error puede significar que alguien están intentando suplantar el sitio, por lo que no deberías continuar. ¿Quieres, de todas formas, confiar en el certificado?</string>
     <string name="ssl_certificate_error">Certificado SSL no válido</string>

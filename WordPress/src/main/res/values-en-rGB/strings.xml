@@ -3556,7 +3556,6 @@ Language: en_GB
     <string name="reader_label_followers_count">%s followers</string>
     <string name="reader_hint_add_tag_or_url">Enter a URL or topic to follow</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
-    <string name="reader_page_followed_tags">Followed topics</string>
     <string name="reader_title_blog_preview">Reader Site</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>

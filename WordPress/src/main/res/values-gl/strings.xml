@@ -3556,7 +3556,6 @@ Language: gl_ES
     <string name="reader_label_followers_count">%s seguidores</string>
     <string name="reader_hint_add_tag_or_url">Introduce unha URL ou tema para seguir</string>
     <string name="reader_page_followed_blogs">Sitios que sigo</string>
-    <string name="reader_page_followed_tags">Temas seguidos</string>
     <string name="reader_title_blog_preview">Blogue da Guía de Lectura</string>
     <string name="ssl_certificate_ask_trust">Se habitualmente conectas a este sitio sen problema, este erro pode significar que alguén esta¡á tentando suplantarche no sitio, así que que non deberías continuar.  Queres confiar no certificado aínda así?</string>
     <string name="ssl_certificate_error">Certificado SSL non válido</string>

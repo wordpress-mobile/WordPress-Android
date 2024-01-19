@@ -1064,7 +1064,6 @@ Language: el_GR
     <string name="reader_toast_blog_blocked">Δεν εμφανίζονται πλέον άρθρα από αυτόν τον Ιστότοπο</string>
     <string name="update_verb">Ενημέρωση</string>
     <string name="schedule_verb">Προγραμματισμός</string>
-    <string name="reader_page_followed_tags">Παρακολουθούμενες ετικέτες</string>
     <string name="reader_page_followed_blogs">Παρακολουθούμενα ιστολόγια</string>
     <string name="reader_hint_add_tag_or_url">Εισάγετε μια ετικέτα ή URL για παρακολούθηση</string>
     <string name="reader_label_followed_blog">Παρακολουθούμενος Ιστότοπος</string>

@@ -2988,7 +2988,6 @@ Language: vi_VN
     <string name="reader_label_followed_blog">Đã theo dõi blog</string>
     <string name="reader_hint_add_tag_or_url">Nhập URL hoặc thẻ bạn thích</string>
     <string name="reader_page_followed_blogs">Blog theo dõi</string>
-    <string name="reader_page_followed_tags">Thẻ theo dõi</string>
     <string name="reader_title_blog_preview">Đọc Blog</string>
     <string name="ssl_certificate_ask_trust">Nếu bạn thường kết nối bình thường với trang web này, lỗi này có thể là ai do đó đang cố gắng mạo danh trang web, và bạn không nên tiếp tục. Bạn có chắc chắn tin tưởng chứng chỉ?</string>
     <string name="ssl_certificate_error">Chứng nhận SSL không hợp lệ</string>

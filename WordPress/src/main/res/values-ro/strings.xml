@@ -3556,7 +3556,6 @@ Language: ro
     <string name="reader_label_followers_count">%s urmăritori</string>
     <string name="reader_hint_add_tag_or_url">Introdu un URL sau un subiect pentru a-l urmări</string>
     <string name="reader_page_followed_blogs">Site-uri urmărite</string>
-    <string name="reader_page_followed_tags">Subiecte urmărite</string>
     <string name="reader_title_blog_preview">Site Cititor</string>
     <string name="ssl_certificate_ask_trust">Dacă în mod uzual te conectezi fără probleme la acest site, această eroare poate să însemne că cineva încearcă să se substituie site-ului și n-ar trebui să mai continui. Preferi să te încrezi în certificat oricum?</string>
     <string name="ssl_certificate_error">Certificat SSL invalid</string>

@@ -3545,7 +3545,6 @@ Language: sq_AL
     <string name="reader_label_followers_count">%s ndjekës</string>
     <string name="reader_hint_add_tag_or_url">Jepni një URL ose temë që të ndiqet</string>
     <string name="reader_page_followed_blogs">Sajte te ndjekur</string>
-    <string name="reader_page_followed_tags">Tema të ndjekura</string>
     <string name="reader_title_blog_preview">Sajti i Lexuesit</string>
     <string name="ssl_certificate_ask_trust">Nëse zakonisht lidheni te ky sajt pa probleme, ky gabim mund të thotë që dikush po provon të hiqet si ky sajt, dhe s’duhet të vazhdoni. Doni të besohet dëshmia, sido qoftë?</string>
     <string name="ssl_certificate_error">Dëshmi SSL e pavlefshme</string>

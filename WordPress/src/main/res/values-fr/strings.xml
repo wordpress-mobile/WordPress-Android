@@ -3545,7 +3545,6 @@ Language: fr
     <string name="reader_label_followers_count">%s abonnés</string>
     <string name="reader_hint_add_tag_or_url">Saisissez une URL ou un sujet à suivre</string>
     <string name="reader_page_followed_blogs">Sites suivis</string>
-    <string name="reader_page_followed_tags">Sujets suivis</string>
     <string name="reader_title_blog_preview">Blog du Lecteur</string>
     <string name="ssl_certificate_ask_trust">Si vous vous connectez habituellement à ce site sans problème, cette erreur peut signifier que quelqu\'un essai de se faire passer pour vous et vous ne devriez pas continuer. Souhaitez-vous faire confiance à ce certificat ?</string>
     <string name="ssl_certificate_error">Certificat SSL invalide</string>

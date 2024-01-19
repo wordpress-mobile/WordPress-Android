@@ -3030,7 +3030,6 @@ Language: pl
     <string name="reader_toast_err_already_follow_blog">Już obserwujesz tą witrynę</string>
     <string name="reader_toast_err_unfollow_blog">Nie udało się wyłączyć obserwowania tej witryny</string>
     <string name="reader_toast_err_follow_blog">Nie udało się włączyć obserwowania tego witryny</string>
-    <string name="reader_page_followed_tags">Obserwowane tematy</string>
     <string name="reader_hint_add_tag_or_url">Wpisz adres lub temat aby obserwować</string>
     <string name="help">Pomoc</string>
     <string name="ssl_certificate_error">Niepoprawny certyfikat SSL</string>
