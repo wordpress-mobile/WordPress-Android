@@ -184,6 +184,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             StatsSection.TOTAL_COMMENTS_DETAIL -> TotalCommentsDetailListViewModel::class.java
             StatsSection.TOTAL_FOLLOWERS_DETAIL -> TotalFollowersDetailListViewModel::class.java
             StatsSection.ANNUAL_STATS,
+            StatsSection.TRAFFIC -> DaysListViewModel::class.java // Replace with TrafficListViewModel
             StatsSection.INSIGHTS -> InsightsListViewModel::class.java
             StatsSection.DAYS -> DaysListViewModel::class.java
             StatsSection.WEEKS -> WeeksListViewModel::class.java

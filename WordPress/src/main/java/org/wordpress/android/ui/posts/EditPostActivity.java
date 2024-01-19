@@ -3347,7 +3347,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mEditorMedia.retryFailedMediaAsync(Collections.singletonList(media.getId()));
         }
 
-        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
+        AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_UPLOAD_MEDIA_RETRIED, mSite);
         return true;
     }
 
@@ -3682,6 +3682,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return;
         }
 
+        if (event.isError() && !NetworkUtils.isNetworkAvailable(this)) {
+            mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media, event.error);
+            return;
+        }
+
         // event for unknown media, ignoring
         if (event.media == null) {
             AppLog.w(AppLog.T.MEDIA, "Media event carries null media object, not recognized");
@@ -3700,7 +3705,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, event.error);
         } else if (event.completed) {
             // if the remote url on completed is null, we consider this upload wasn't successful
-            if (TextUtils.isEmpty(event.media.getUrl())) {
+            if (TextUtils.isEmpty(event.media.getUrl()) && !NetworkUtils.isNetworkAvailable(this)) {
+                MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
+                mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media, error);
+            } else if (TextUtils.isEmpty(event.media.getUrl())) {
                 MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
                 mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, error);
             } else {

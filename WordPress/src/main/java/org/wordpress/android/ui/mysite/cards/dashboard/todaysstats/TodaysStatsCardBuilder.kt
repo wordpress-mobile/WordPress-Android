@@ -47,6 +47,7 @@ class TodaysStatsCardBuilder @Inject constructor(
             views = statToUiString(model.views),
             visitors = statToUiString(model.visitors),
             likes = statToUiString(model.likes),
+            comments = statToUiString(model.comments),
             onCardClick = params.onTodaysStatsCardClick,
             message = model.takeIf { it.isEmptyStats() }?.let {
                 TextWithLinks(
