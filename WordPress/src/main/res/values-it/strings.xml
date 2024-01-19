@@ -3560,7 +3560,6 @@ Language: it
     <string name="gallery_error">Impossibile recuperare il file</string>
     <string name="no_network_message">Nessuna rete disponibile</string>
     <string name="reader_toast_err_remove_tag">Impossibile rimuovere questo argomento</string>
-    <string name="reader_toast_err_add_tag">Impossibile aggiungere questo argomento</string>
     <string name="reader_title_applog">Registro applicazione</string>
     <string name="fatal_db_error">Si è verificato un errore durante la creazione del database delle app. Prova a reinstallare l\'app.</string>
     <string name="error_blog_hidden">Questo blog è nascosto e non può essere caricato. Abilitalo nuovamente nelle impostazioni e riprova.</string>

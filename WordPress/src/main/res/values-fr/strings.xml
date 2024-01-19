@@ -3563,7 +3563,6 @@ Language: fr
     <string name="gallery_error">Le média ne peut pas être récupéré</string>
     <string name="no_network_message">Aucun réseau disponible</string>
     <string name="reader_toast_err_remove_tag">Impossible de supprimer ce sujet</string>
-    <string name="reader_toast_err_add_tag">Impossible d\'ajouter ce sujet</string>
     <string name="reader_title_applog">Journal de l\'application</string>
     <string name="fatal_db_error">Une erreur s\'est produite lors de la création de la base de données de l\'app. Essayez de réinstaller l\'app.</string>
     <string name="error_blog_hidden">Ce blog est caché et ne peut être chargé. Activez-le dans les paramètres et réessayez.</string>

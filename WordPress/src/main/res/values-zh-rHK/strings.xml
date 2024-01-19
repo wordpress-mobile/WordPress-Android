@@ -3564,7 +3564,6 @@ Language: zh_TW
     <string name="gallery_error">無法擷取媒體項目</string>
     <string name="no_network_message">沒有可用的網路</string>
     <string name="reader_toast_err_remove_tag">無法移除此主題</string>
-    <string name="reader_toast_err_add_tag">無法新增此主題</string>
     <string name="reader_title_applog">應用程式記錄檔</string>
     <string name="fatal_db_error">建立應用程式資料庫時發生錯誤。請嘗試重新安裝應用程式。</string>
     <string name="error_blog_hidden">此網誌已隱藏，無法載入。請在設定中啟用網誌，然後再試一次。</string>

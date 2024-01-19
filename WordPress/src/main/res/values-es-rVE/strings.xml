@@ -3050,7 +3050,6 @@ Language: es_VE
     <string name="gallery_error">El elemento multimedia no ha podido ser recuperado</string>
     <string name="no_network_message">No hay ninguna red disponible</string>
     <string name="reader_toast_err_remove_tag">No se ha podido eliminar este tema</string>
-    <string name="reader_toast_err_add_tag">No se ha podido añadir este tema</string>
     <string name="reader_title_applog">Registro de la aplicación</string>
     <string name="fatal_db_error">Ha ocurrido un error al crear la base de datos de la aplicación. Por favor, intenta reinstalar la aplicación. </string>
     <string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>

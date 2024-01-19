@@ -3574,7 +3574,6 @@ Language: de
     <string name="gallery_error">Das Medien-Objekt konnte nicht abgerufen werden</string>
     <string name="no_network_message">Es ist kein Netzwerk verfügbar</string>
     <string name="reader_toast_err_remove_tag">Dieses Thema konnte nicht entfernt werden</string>
-    <string name="reader_toast_err_add_tag">Dieses Thema konnte nicht hinzugefügt werden</string>
     <string name="reader_title_applog">Anwendungslog</string>
     <string name="fatal_db_error">Bei der Erstellung der App-Datenbank ist ein Fehler aufgetreten. Versuche die App erneut zu installieren.</string>
     <string name="error_blog_hidden">Dieser Blog ist versteckt und konnte nicht geladen werden. Aktiviere ihn wieder in den Einstellungen und versuche es erneut.</string>

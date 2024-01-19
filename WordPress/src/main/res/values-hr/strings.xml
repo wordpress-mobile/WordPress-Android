@@ -606,7 +606,6 @@ Language: hr
     <string name="invalid_site_url_message">Provjerite je li uneseni URL web stranice ispravan</string>
     <string name="error_refresh_media">Trenutno se medij ne može osvježiti</string>
     <string name="reader_toast_err_remove_tag">Nije moguće ukloniti ovu temu </string>
-    <string name="reader_toast_err_add_tag">Nije moguće dodati ovu temu </string>
     <string name="share_link">Podjeli poveznicu</string>
     <string name="reader_empty_posts_in_tag_updating">Dohvaćanje objava…</string>
     <string name="reader_likes_you_and_multi">Vi i %,d drugih se ovo sviđa</string>

@@ -3342,7 +3342,6 @@ Language: pt_BR
     <string name="gallery_error">O item de mídia não pode ser recuperado</string>
     <string name="no_network_message">Não há rede disponível</string>
     <string name="reader_toast_err_remove_tag">Não é possível remover este tópico</string>
-    <string name="reader_toast_err_add_tag">Não é possível adicionar este tópico</string>
     <string name="reader_title_applog">Log do aplicativo</string>
     <string name="fatal_db_error">Ocorreu um erro ao criar o banco de dados do aplicativo. Tente reinstalar o aplicativo.</string>
     <string name="error_blog_hidden">Este blog está oculto e não foi possível carregá-lo. Habilite-o em configurações e tente novamente.</string>

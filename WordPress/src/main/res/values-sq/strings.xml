@@ -3563,7 +3563,6 @@ Language: sq_AL
     <string name="gallery_error">S’u mor dot objekti media</string>
     <string name="no_network_message">S’ka rrjet gati</string>
     <string name="reader_toast_err_remove_tag">S’arrihet të hiqet kjo temë</string>
-    <string name="reader_toast_err_add_tag">S’arrihet të shtohet kjo temë</string>
     <string name="reader_title_applog">Regjistër aplikacioni</string>
     <string name="fatal_db_error">Ndodhi një gabim gjatë krijimit të bazës së të dhënave për aplikacionin. Provoni të riinstaloni aplikacionin.</string>
     <string name="error_blog_hidden">Ky blog është i fshehur dhe s’u ngarkua dot. Aktivizojeni sërish te rregullimet dhe riprovoni.</string>

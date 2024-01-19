@@ -3091,7 +3091,6 @@ Language: pl
     <string name="plugin_not_found">Wystąpił błąd podczas próby dostępu do tej wtyczki</string>
     <string name="delete_post">Usunąć wpis?</string>
     <string name="delete_page">Usunąć stronę?</string>
-    <string name="reader_toast_err_add_tag">Nie udało się dodać tematu</string>
     <string name="reader_toast_err_remove_tag">Nie udało się usunąć tematu</string>
     <string name="comment_status_unapproved">Oczekujący</string>
     <string name="trash">Kosz</string>

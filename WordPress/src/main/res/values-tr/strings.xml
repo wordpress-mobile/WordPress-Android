@@ -3574,7 +3574,6 @@ Language: tr
     <string name="gallery_error">Ortam dosyası geri getirilemedi</string>
     <string name="no_network_message">Uygun durumda şebeke yok</string>
     <string name="reader_toast_err_remove_tag">Bu konu silinemiyor</string>
-    <string name="reader_toast_err_add_tag">Bu konu eklenemiyor</string>
     <string name="reader_title_applog">Uygulama günlüğü</string>
     <string name="fatal_db_error">Uygulama veritabanı oluşturulurken hata meydana geldi. Uygulamayı tekrar yüklemeyi deneyin.</string>
     <string name="error_blog_hidden">Bu blog gizli ve yüklenemedi. Ayarlardan yeniden etkinleştirin ve yeniden deneyin.</string>

@@ -547,7 +547,6 @@ Language: eu_ES
     <string name="delete_page">Orrialdea ezabatu?</string>
     <string name="delete_post">Bidalketa ezabatu?</string>
     <string name="reader_toast_err_remove_tag">Ezin izan da etiketa hau kendu</string>
-    <string name="reader_toast_err_add_tag">Ezin izan da gai hau gehitu</string>
     <string name="share_link">Partekatu esteka</string>
     <string name="reader_empty_posts_in_tag_updating">Bidalketak eskuratzen…</string>
     <string name="cant_share_no_visible_blog">Ezin da WordPress-en partekatu blog ikusgai bat ez baduzu</string>

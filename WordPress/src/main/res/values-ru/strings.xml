@@ -3574,7 +3574,6 @@ Language: ru
     <string name="gallery_error">Медиа-файл не может быть восстановлен</string>
     <string name="no_network_message">Нет доступной сети.</string>
     <string name="reader_toast_err_remove_tag">Не удается удалить эту тему</string>
-    <string name="reader_toast_err_add_tag">Не удается подписаться на эту тему</string>
     <string name="reader_title_applog">Лог приложения</string>
     <string name="fatal_db_error">Произошла ошибка при создании базы данных приложения- попробуйте его переустановить.</string>
     <string name="error_blog_hidden">Этот блог является скрытым и не может быть загружен. Откройте его через настройки и попробуйте снова.</string>

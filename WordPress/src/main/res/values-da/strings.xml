@@ -228,7 +228,6 @@ Language: da_DK
     <string name="cannot_delete_multi_media_items">Nogle medier kan ikke slettes på nuværende tidspunkt. Prøv igen senere.</string>
     <string name="delete_page">Slet side?</string>
     <string name="delete_post">Slet indlæg?</string>
-    <string name="reader_toast_err_add_tag">Kunne ikke tilføje dette emne</string>
     <string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette emne</string>
     <string name="share_link">Del link</string>
     <string name="reader_empty_posts_in_tag_updating">Henter indlæg…</string>

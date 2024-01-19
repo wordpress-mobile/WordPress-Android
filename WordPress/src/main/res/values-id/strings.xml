@@ -3564,7 +3564,6 @@ Language: id
     <string name="gallery_error">Item media gagal diambil</string>
     <string name="no_network_message">Tidak ada jaringan yang tersedia</string>
     <string name="reader_toast_err_remove_tag">Tidak dapat menghapus topik ini</string>
-    <string name="reader_toast_err_add_tag">Tidak dapat menambahkan topik ini</string>
     <string name="reader_title_applog">Log aplikasi</string>
     <string name="fatal_db_error">Terjadi gagal ketika membuat basis data app. Coba instal ulang app.</string>
     <string name="error_blog_hidden">Blog ini tersembunyi dan tak bisa dimuat. Aktifkan lagi melalui pengaturan dan coba lagi.</string>

@@ -2355,7 +2355,6 @@ Language: nb_NO
     <string name="gallery_error">Mediegjenstanden kunne ikke bli hentet inn</string>
     <string name="no_network_message">Ingen nettverkstilgang er tilgjengelig</string>
     <string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette emnet</string>
-    <string name="reader_toast_err_add_tag">Kunne ikke legge til dette emnet</string>
     <string name="reader_title_applog">Applikasjonsloggen</string>
     <string name="fatal_db_error">En feil oppstod under oppretting av app-databasen. Prøv å reinstallere appen.</string>
     <string name="error_blog_hidden">Bloggen er skjult og kunne ikke bli lastet inn. Aktiver den igjen i innstillingene og prøv igjen.</string>

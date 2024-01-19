@@ -1393,7 +1393,6 @@ Language: sk
     <string name="file_not_found">Nepodarilo sa nájsť súbor na nahrávanie. Bol odstránený alebo presunutý?</string>
     <string name="delete_page">Vymazať stránku?</string>
     <string name="delete_post">Vymazať príspevok?</string>
-    <string name="reader_toast_err_add_tag">Túto tému nie je možné pridať</string>
     <string name="reader_toast_err_remove_tag">Túto tému nie je možné odstrániť</string>
     <string name="share_link">Zdieľať odkaz</string>
     <string name="reader_empty_posts_in_tag_updating">Načítavajú sa príspevky</string>

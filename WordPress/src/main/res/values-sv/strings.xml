@@ -3574,7 +3574,6 @@ Language: sv_SE
     <string name="gallery_error">Medieobjektet kunde inte hämtas</string>
     <string name="no_network_message">Inget nätverk tillgängligt</string>
     <string name="reader_toast_err_remove_tag">Kan inte ta bort detta ämne</string>
-    <string name="reader_toast_err_add_tag">Kan inte lägga till detta ämne</string>
     <string name="reader_title_applog">Programlogg</string>
     <string name="fatal_db_error">Ett fel uppstod vid skapandet av app-databasen. Försök återinstallera appen.</string>
     <string name="error_blog_hidden">Den här bloggen är dold och kunde inte laddas. Aktivera den igen i inställningarna och försök igen.</string>

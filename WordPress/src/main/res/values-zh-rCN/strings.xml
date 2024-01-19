@@ -3557,7 +3557,6 @@ Language: zh_CN
     <string name="gallery_error">抱歉,无法从图库检索该媒体对象</string>
     <string name="no_network_message">没用可用的网络</string>
     <string name="reader_toast_err_remove_tag">无法移除此主题</string>
-    <string name="reader_toast_err_add_tag">无法添加此主题</string>
     <string name="reader_title_applog">程序日志</string>
     <string name="fatal_db_error">创建程序数据库时出错，请重新安装程序.</string>
     <string name="error_blog_hidden">这个博客是隐藏的，无法加载。在设置中重新启用它并再次尝试。</string>
