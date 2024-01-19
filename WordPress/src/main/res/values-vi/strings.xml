@@ -2950,7 +2950,6 @@ Language: vi_VN
     <string name="cab_selected">Đã chọn %d</string>
     <string name="browse_our_faq_button">Câu hỏi thường gặp</string>
     <string name="reader_empty_comments">Chưa có bình luận</string>
-    <string name="reader_empty_posts_in_tag">Không có bài viết với thẻ này</string>
     <string name="reader_label_like">Thích</string>
     <string name="reader_label_view_original">Xem bài viết gốc</string>
     <string name="reader_label_comments_closed">Bình luận đã tắt</string>

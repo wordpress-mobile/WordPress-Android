@@ -3506,7 +3506,6 @@ Language: id
     <string name="cab_selected">%d terpilih</string>
     <string name="browse_our_faq_button">Telusuri Tanya Jawab Umum kami</string>
     <string name="reader_empty_comments">Belum ada komentar</string>
-    <string name="reader_empty_posts_in_tag">Tidak ada pos dengan topik ini</string>
     <string name="reader_label_like">Suka</string>
     <string name="reader_label_view_original">Lihat artikel asli</string>
     <string name="reader_label_comments_closed">Komentar ditutup</string>

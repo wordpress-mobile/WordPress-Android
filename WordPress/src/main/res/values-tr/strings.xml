@@ -3516,7 +3516,6 @@ Language: tr
     <string name="cab_selected">%d seçili</string>
     <string name="browse_our_faq_button">SSS sayfamıza göz atın</string>
     <string name="reader_empty_comments">Henüz yorum yapılmadı</string>
-    <string name="reader_empty_posts_in_tag">Bu konuyla ilgili hiç yazı yok</string>
     <string name="reader_label_like">Beğen</string>
     <string name="reader_label_view_original">Orijinal makaleyi oku</string>
     <string name="reader_label_comments_closed">Yorumlar kapandı</string>

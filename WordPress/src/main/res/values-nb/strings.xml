@@ -2297,7 +2297,6 @@ Language: nb_NO
     <string name="cab_selected">%d valgt</string>
     <string name="browse_our_faq_button">Bla gjennom vår FAQ</string>
     <string name="reader_empty_comments">Ingen kommentarer enda</string>
-    <string name="reader_empty_posts_in_tag">Ingen innlegg om dette emnet</string>
     <string name="reader_label_like">Liker</string>
     <string name="reader_label_view_original">Vis den opprinnelige artikkelen</string>
     <string name="reader_label_comments_closed">Kommentarer er lukket</string>

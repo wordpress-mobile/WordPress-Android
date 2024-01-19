@@ -158,7 +158,6 @@ Language: da_DK
     <string name="comment_reply_to_user">Besvar %s</string>
     <string name="posts_empty_list">Ingen indlæg endnu! Hvorfor ikke skabe et?</string>
     <string name="mnu_comment_liked">Synes godt om</string>
-    <string name="reader_empty_posts_in_tag">Ingen indlæg med dette emne</string>
     <string name="reader_toast_err_generic">Denne handling kan ikke udføres</string>
     <string name="reader_menu_block_blog">Blokere dette websted</string>
     <string name="update_verb">Opdater</string>

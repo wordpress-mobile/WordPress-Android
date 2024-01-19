@@ -3509,7 +3509,6 @@ Language: ja_JP
     <string name="cab_selected">%d件選択</string>
     <string name="browse_our_faq_button">よく聞かれる質問を表示</string>
     <string name="reader_empty_comments">コメントはまだありません</string>
-    <string name="reader_empty_posts_in_tag">このトピックには投稿がありません</string>
     <string name="reader_label_like">いいね</string>
     <string name="reader_label_view_original">元の記事を表示</string>
     <string name="reader_label_comments_closed">コメントは受け付けていません</string>

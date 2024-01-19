@@ -3516,7 +3516,6 @@ Language: en_GB
     <string name="cab_selected">%d selected</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="reader_empty_comments">No comments yet</string>
-    <string name="reader_empty_posts_in_tag">No posts with this topic</string>
     <string name="reader_label_like">Like</string>
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_label_comments_closed">Comments are closed</string>

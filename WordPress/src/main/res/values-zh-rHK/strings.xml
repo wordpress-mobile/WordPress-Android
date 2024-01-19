@@ -3506,7 +3506,6 @@ Language: zh_TW
     <string name="cab_selected">已選取：%d</string>
     <string name="browse_our_faq_button">瀏覽常見問題集</string>
     <string name="reader_empty_comments">尚未有留言</string>
-    <string name="reader_empty_posts_in_tag">沒有任何與此主題相關的文章</string>
     <string name="reader_label_like">按讚</string>
     <string name="reader_label_view_original">查看原始文章</string>
     <string name="reader_label_comments_closed">留言已關閉</string>

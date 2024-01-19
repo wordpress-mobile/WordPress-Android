@@ -3516,7 +3516,6 @@ Language: sv_SE
     <string name="cab_selected">%d valda</string>
     <string name="browse_our_faq_button">Bläddra bland vanliga frågor</string>
     <string name="reader_empty_comments">Inga kommentarer än</string>
-    <string name="reader_empty_posts_in_tag">Inga inlägg med detta ämne</string>
     <string name="reader_label_like">Gilla</string>
     <string name="reader_label_view_original">Visa originalartikel</string>
     <string name="reader_label_comments_closed">Kommentarer inaktiverade</string>

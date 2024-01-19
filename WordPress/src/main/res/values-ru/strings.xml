@@ -3516,7 +3516,6 @@ Language: ru
     <string name="cab_selected">Выбрано: %d</string>
     <string name="browse_our_faq_button">Поиск в списке часто задаваемых вопросов</string>
     <string name="reader_empty_comments">Пока нет комментариев</string>
-    <string name="reader_empty_posts_in_tag">Нет записей по этой теме</string>
     <string name="reader_label_like">Нравится</string>
     <string name="reader_label_view_original">Просмотреть исходную публикацию</string>
     <string name="reader_label_comments_closed">Комментарии закрыты</string>

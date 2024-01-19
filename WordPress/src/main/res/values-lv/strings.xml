@@ -3376,7 +3376,6 @@ Language: lv
     <string name="cab_selected">Atlasīts %d</string>
     <string name="browse_our_faq_button">Pārlūkojiet mūsu BUJ</string>
     <string name="reader_empty_comments">Pagaidām nav komentāru</string>
-    <string name="reader_empty_posts_in_tag">Nav ziņu ar šo tematu</string>
     <string name="reader_label_like">Patīk</string>
     <string name="reader_label_view_original">Skatīt oriģinālo rakstu</string>
     <string name="reader_label_comments_closed">Komentāri ir slēgti</string>

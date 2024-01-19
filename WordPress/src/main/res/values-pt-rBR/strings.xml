@@ -3284,7 +3284,6 @@ Language: pt_BR
     <string name="cab_selected">%d selecionados</string>
     <string name="browse_our_faq_button">Veja nossa seção de Perguntas Frequentes</string>
     <string name="reader_empty_comments">Nenhum comentário</string>
-    <string name="reader_empty_posts_in_tag">Nenhum post neste tópico</string>
     <string name="reader_label_like">Curtir</string>
     <string name="reader_label_view_original">Ver o artigo original</string>
     <string name="reader_label_comments_closed">Os comentários estão desativados</string>

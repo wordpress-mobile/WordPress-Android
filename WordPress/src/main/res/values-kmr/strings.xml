@@ -2118,7 +2118,6 @@ Language: ku_TR
     <string name="mnu_comment_liked">Hat ecibandin</string>
     <string name="signing_out">Tê derketin…</string>
     <string name="reader_empty_comments">Hîn ti şîrove tune ye</string>
-    <string name="reader_empty_posts_in_tag">Ti şandiyên eleqedarî vê mijarê tune ye</string>
     <string name="error_publish_empty_post">Şandiya vala nayê weşandin</string>
     <string name="error_refresh_unauthorized_posts">Ji bo dîtin an jî sererastkirina şandiyan destûra te nîn e</string>
     <string name="error_refresh_unauthorized_pages">Ji bo dîtin an jî sererastkirina rûpelan destûra te nîn e</string>

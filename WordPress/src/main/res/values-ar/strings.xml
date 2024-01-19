@@ -3515,7 +3515,6 @@ Language: ar
     <string name="posts_empty_list">لا توجد مقالات حتى الآن. لماذا لا تبادر بإنشاء واحدة؟</string>
     <string name="comment_reply_to_user">رد على %s</string>
     <string name="signing_out">جاري تسجيل الخروج…</string>
-    <string name="reader_empty_posts_in_tag">لا توجد مقالات بهذا الموضوع</string>
     <string name="help_and_support">المساعدة والدعم</string>
     <string name="reader_toast_err_generic">غير قادر على تنفيذ هذا الإجراء</string>
     <string name="reader_menu_block_blog">حظر هذا الموقع</string>

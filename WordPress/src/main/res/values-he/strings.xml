@@ -3504,7 +3504,6 @@ Language: he_IL
     <string name="cab_selected">%d נבחרו</string>
     <string name="browse_our_faq_button">לעיון בשאלות הנפוצות שלנו</string>
     <string name="reader_empty_comments">אין תגובות עדיין</string>
-    <string name="reader_empty_posts_in_tag">אין פוסטים עם נושא זה</string>
     <string name="reader_label_like">לייק</string>
     <string name="reader_label_view_original">לצפות בפוסט המקורי</string>
     <string name="reader_label_comments_closed">תגובות לא מופעלות</string>

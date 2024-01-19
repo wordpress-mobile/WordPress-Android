@@ -3005,7 +3005,6 @@ Language: pl
     <string name="posts_empty_list">Brak wpisów. Może jakiś opublikujesz?</string>
     <string name="mnu_comment_liked">Polubiony</string>
     <string name="signing_out">Wylogowywanie…</string>
-    <string name="reader_empty_posts_in_tag">Brak wpisów z tym tematem</string>
     <string name="reader_label_like">Lubię</string>
     <string name="comment_reply_to_user">Odpowiedz użytkownikowi %s</string>
     <string name="reader_label_comments_closed">Możliwość komentowania została wyłączona</string>

@@ -3250,7 +3250,6 @@ Language: cs_CZ
     <string name="comment_trashed">Komentář byl přesunut do koše</string>
     <string name="comment_reply_to_user">Odpovědět uživateli %s</string>
     <string name="browse_our_faq_button">Prohledat časté dotazy</string>
-    <string name="reader_empty_posts_in_tag">Neexistuje žádný příspěvek s tímto štítkem</string>
     <string name="posts_empty_list">Žádné příspěvky. Přejete si nějaký vytvořit?</string>
     <string name="more">Více</string>
     <string name="signing_out">Odhlašuji…</string>

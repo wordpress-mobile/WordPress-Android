@@ -3499,7 +3499,6 @@ Language: zh_CN
     <string name="cab_selected">已选 %d 个</string>
     <string name="browse_our_faq_button">浏览我们的常见问题解答</string>
     <string name="reader_empty_comments">尚无评论</string>
-    <string name="reader_empty_posts_in_tag">没有与此主题相关的博文</string>
     <string name="reader_label_like">喜欢</string>
     <string name="reader_label_view_original">查看原文</string>
     <string name="reader_label_comments_closed">评论功能被关闭</string>

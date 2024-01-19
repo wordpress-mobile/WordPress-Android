@@ -3504,7 +3504,6 @@ Language: ko_KR
     <string name="cab_selected">%d개 선택함</string>
     <string name="browse_our_faq_button">FAQ 찾아보기</string>
     <string name="reader_empty_comments">아직 댓글이 없음</string>
-    <string name="reader_empty_posts_in_tag">이 토픽의 글이 없습니다</string>
     <string name="reader_label_like">좋아요</string>
     <string name="reader_label_view_original">원본 기사 보기</string>
     <string name="reader_label_comments_closed">댓글을 남길 수 없습니다.</string>

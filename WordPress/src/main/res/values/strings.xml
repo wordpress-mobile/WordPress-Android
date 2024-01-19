@@ -2214,7 +2214,6 @@
     <string name="reader_empty_posts_no_connection" translatable="false">@string/no_network_title</string>
     <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
     <string name="reader_self_hosted_select_filter">Use the filter button to find posts on specific subjects</string>
-    <string name="reader_empty_posts_in_tag">No posts with this topic</string>
     <string name="reader_no_posts_with_this_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_blogs_posts_in_custom_list">The blogs in this list haven\'t posted anything recently</string>

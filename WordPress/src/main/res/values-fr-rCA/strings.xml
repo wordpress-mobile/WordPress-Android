@@ -3505,7 +3505,6 @@ Language: fr
     <string name="cab_selected">%d sélectionnés</string>
     <string name="browse_our_faq_button">Feuilleter notre FAQ</string>
     <string name="reader_empty_comments">Pas encore de commentaires</string>
-    <string name="reader_empty_posts_in_tag">Pas d\'article avec ce sujet</string>
     <string name="reader_label_like">Aime</string>
     <string name="reader_label_view_original">Voir l\'article original</string>
     <string name="reader_label_comments_closed">Les commentaires sont fermés</string>

@@ -2971,7 +2971,6 @@ Language: es_CO
     <string name="cab_selected">%d seleccionados</string>
     <string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
     <string name="reader_empty_comments">Aún no hay comentarios</string>
-    <string name="reader_empty_posts_in_tag">No hay entradas con esta temática</string>
     <string name="reader_label_like">Me gusta</string>
     <string name="reader_label_view_original">Ver artículo original</string>
     <string name="reader_label_comments_closed">Los comentarios están cerrados</string>

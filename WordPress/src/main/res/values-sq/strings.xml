@@ -3505,7 +3505,6 @@ Language: sq_AL
     <string name="cab_selected">%d të përzgjedhur</string>
     <string name="browse_our_faq_button">Shfletoni PBR tonat</string>
     <string name="reader_empty_comments">Ende pa komente</string>
-    <string name="reader_empty_posts_in_tag">S’ka postime me këtë temë</string>
     <string name="reader_label_like">Pëlqim</string>
     <string name="reader_label_view_original">Shihni shkrimin origjinal</string>
     <string name="reader_label_comments_closed">Komentet janë mbyllur</string>

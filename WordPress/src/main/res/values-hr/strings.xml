@@ -520,7 +520,6 @@ Language: hr
     <string name="browse_our_faq_button">Pregledajte naš ČPP (FAQ)</string>
     <string name="more">Više</string>
     <string name="help_and_support">Pomoć i podrška </string>
-    <string name="reader_empty_posts_in_tag">Nema članaka na ovu temu </string>
     <string name="reader_toast_err_generic">Nije moguće izvesti tu akciju</string>
     <string name="reader_menu_block_blog">Blokiraj ovu web-stranicu</string>
     <string name="update_verb">Ažuriraj</string>

@@ -3516,7 +3516,6 @@ Language: gl_ES
     <string name="cab_selected">%d seleccionados</string>
     <string name="browse_our_faq_button">Ves as FAQ</string>
     <string name="reader_empty_comments">Sen comentarios aínda</string>
-    <string name="reader_empty_posts_in_tag">Non hai entradas con esta temática</string>
     <string name="reader_label_like">Gústame</string>
     <string name="reader_label_view_original">Ver o artigo orixinal</string>
     <string name="reader_label_comments_closed">Os comentarios están pechados</string>

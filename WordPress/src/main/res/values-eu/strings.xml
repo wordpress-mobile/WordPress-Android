@@ -470,7 +470,6 @@ Language: eu_ES
     <string name="error_publish_empty_post">Ezin da bidalketa huts bat argitaratu</string>
     <string name="older_two_days">2 egun baino zaharragoa</string>
     <string name="older_last_week">Aste bat baino zaharragoa</string>
-    <string name="reader_empty_posts_in_tag">Ez dago bidalketarik gai honekin</string>
     <string name="comment">Iruzkindu</string>
     <string name="mnu_comment_liked">Atseginda</string>
     <string name="update_verb">Eguneratu</string>
