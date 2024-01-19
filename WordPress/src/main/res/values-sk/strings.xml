@@ -1324,7 +1324,6 @@ Language: sk
     <string name="reader_toast_err_follow_blog">Nepodarilo sa sledovať túto webovú stránku</string>
     <string name="reader_empty_recommended_blogs">Žiadne odporúčané webové stránky</string>
     <string name="reader_title_blog_preview">Webová stránka čítačky</string>
-    <string name="reader_label_followers_count">%s odberateľov</string>
     <string name="help">Pomocník</string>
     <string name="ssl_certificate_error">Neplatný SSL certifikát</string>
     <string name="ssl_certificate_ask_trust">Ak sa bežne pripájate bez problémov, táto chyba môže znamenať, že sa niekto pokúša prevziať vašu identitu. Neodporúčame vám pokračovať. Chcete aj napriek tomu dôverovať tomuto certifikátu?</string>

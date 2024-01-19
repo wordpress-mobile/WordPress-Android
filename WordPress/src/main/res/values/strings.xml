@@ -2138,7 +2138,6 @@
     <string name="reader_label_comments_closed">Comments are closed</string>
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_label_subscribe_count">%,d Subscribers</string>
-    <string name="reader_label_followers_count">%s followers</string>
     <string name="reader_label_subscribers_count">%s subscribers</string>
     <string name="reader_label_followers_count_single">1 follower</string>
     <string name="reader_label_gap_marker">Load more posts</string>

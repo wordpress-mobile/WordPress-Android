@@ -3550,7 +3550,6 @@ Language: de
     <string name="reader_toast_err_follow_blog">Kann dieser Website nicht folgen</string>
     <string name="reader_toast_err_already_follow_blog">Du folgst dieser Website bereits</string>
     <string name="reader_toast_err_get_blog_info">Diese Website kann nicht angezeigt werden</string>
-    <string name="reader_label_followers_count">%s Follower</string>
     <string name="reader_title_blog_preview">Reader-Website</string>
     <string name="ssl_certificate_ask_trust">Wenn du dich üblicherweise ohne Probleme mit dieser Website verbinden kannst, könnte dieser Fehler bedeute, dass sich jemand als diese Website ausgibt und du daher nicht weitermachen solltest. Möchtest du dem Zertifikat trotzdem vertrauen?</string>
     <string name="ssl_certificate_error">Ungültiges SSL Zertifikat</string>
