@@ -2326,7 +2326,6 @@ Language: nb_NO
     <string name="reader_empty_recommended_blogs">Ingen anbefalte nettsteder</string>
     <string name="reader_toast_err_unfollow_blog">Klarte ikke å avfølge dette nettstedet</string>
     <string name="reader_toast_err_follow_blog">Klarte ikke å følge dette nettstedet</string>
-    <string name="reader_toast_err_already_follow_blog">Du følger allerede dette nettstedet</string>
     <string name="reader_title_blog_preview">Leser-nettsted</string>
     <string name="ssl_certificate_ask_trust">Hvis du vanligvis har koblet deg til dette nettstedet uten problemer, kan denne feilen bety at noen prøver å imitere dette nettstedet, og at du ikke bør fortsette. Er du helt sikker på at du vil stole på dette sertifikatet likevel?</string>
     <string name="ssl_certificate_error">Ugyldig SSL-sertifikat</string>

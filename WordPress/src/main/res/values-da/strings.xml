@@ -166,7 +166,6 @@ Language: da_DK
     <string name="update_verb">Opdater</string>
     <string name="schedule_verb">Planlæg</string>
     <string name="reader_empty_recommended_blogs">Ingen anbefalede websteder</string>
-    <string name="reader_toast_err_already_follow_blog">Du følger allerede dette websted</string>
     <string name="reader_toast_err_follow_blog">Det er ikke muligt at følge dette websted</string>
     <string name="help">Hjælp</string>
     <string name="ssl_certificate_error">Dette er ikke et gyldigt SLL certifikat</string>

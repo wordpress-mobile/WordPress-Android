@@ -3545,7 +3545,6 @@ Language: tr
     <string name="reader_empty_recommended_blogs">Önerilen site yok</string>
     <string name="reader_toast_err_unfollow_blog">Bu sitenin takibi bırakılamıyor</string>
     <string name="reader_toast_err_follow_blog">Bu site takip edilemiyor</string>
-    <string name="reader_toast_err_already_follow_blog">Bu siteyi zaten takip ediyorsunuz</string>
     <string name="reader_title_blog_preview">Okuyucu sitesi</string>
     <string name="ssl_certificate_ask_trust">Eğer bu siteye genelde sorunsuz şekilde bağlanabiliyorsanız bu hata birilerinin siteyi taklit ettiği anlamına gelebilir. Yine de sertifikaya güvenmek ister misiniz?</string>
     <string name="ssl_certificate_error">Geçersiz SSL setifikası</string>

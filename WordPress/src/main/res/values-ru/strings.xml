@@ -3545,7 +3545,6 @@ Language: ru
     <string name="reader_empty_recommended_blogs">Нет рекомендованных сайтов</string>
     <string name="reader_toast_err_unfollow_blog">Не удалось отписаться</string>
     <string name="reader_toast_err_follow_blog">Не удалось подписаться на этот сайт</string>
-    <string name="reader_toast_err_already_follow_blog">Вы уже подписаны на этот сайт</string>
     <string name="reader_title_blog_preview">Сайт из Чтива</string>
     <string name="ssl_certificate_ask_trust">Если вы обычно заходите на этот сайт без проблем, эта ошибка может означать, что кто-то пытается подделать сайт и вам не стоит сюда заходить. Хотите ли вы доверять ssl сертификату?</string>
     <string name="ssl_certificate_error">Недействительный сертификат SSL</string>

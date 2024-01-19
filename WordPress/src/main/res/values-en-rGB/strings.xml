@@ -3545,7 +3545,6 @@ Language: en_GB
     <string name="reader_empty_recommended_blogs">No recommended sites</string>
     <string name="reader_toast_err_unfollow_blog">Unable to unfollow this site</string>
     <string name="reader_toast_err_follow_blog">Unable to follow this site</string>
-    <string name="reader_toast_err_already_follow_blog">You already follow this site</string>
     <string name="reader_title_blog_preview">Reader Site</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>

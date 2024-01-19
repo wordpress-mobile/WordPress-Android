@@ -1905,7 +1905,6 @@ Language: sr_RS
     <string name="reader_toast_blog_blocked">Чланци са овог сајта више неће бити приказивани</string>
     <string name="schedule_verb">Заказати</string>
     <string name="update_verb">Ажурирај</string>
-    <string name="reader_toast_err_already_follow_blog">Већ пратите овај сајт</string>
     <string name="reader_toast_err_follow_blog">Није могуће пратити овај сајт</string>
     <string name="reader_toast_err_unfollow_blog">Није могуће отпратити овај сајт</string>
     <string name="reader_empty_recommended_blogs">Нема препоручених сајтова</string>

@@ -1060,7 +1060,6 @@ Language: el_GR
     <string name="reader_toast_blog_blocked">Δεν εμφανίζονται πλέον άρθρα από αυτόν τον Ιστότοπο</string>
     <string name="update_verb">Ενημέρωση</string>
     <string name="schedule_verb">Προγραμματισμός</string>
-    <string name="reader_toast_err_already_follow_blog">Ακολουθείτε ήδη τον Ιστότοπο</string>
     <string name="reader_toast_err_follow_blog">Αδυναμία παρακολούθησης αυτού του Ιστότοπου</string>
     <string name="reader_toast_err_unfollow_blog">Αδυναμία διακοπής παρακολούθησης αυτού του Ιστότοπου</string>
     <string name="reader_empty_recommended_blogs">Δεν υπάρχουν προτεινόμενοι Ιστότοποι</string>

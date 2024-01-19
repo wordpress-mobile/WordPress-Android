@@ -3405,7 +3405,6 @@ Language: lv
     <string name="reader_empty_recommended_blogs">Nav ieteikto vietņu</string>
     <string name="reader_toast_err_unfollow_blog">Nevar pārtraukt sekošanu šai vietnei</string>
     <string name="reader_toast_err_follow_blog">Nevar sekot šai vietnei</string>
-    <string name="reader_toast_err_already_follow_blog">Jūs jau sekojat šai vietnei</string>
     <string name="reader_title_blog_preview">Lasītāja vietne</string>
     <string name="ssl_certificate_ask_trust">Ja parasti izveidojat savienojumu ar šo vietni bez problēmām, šī kļūda var nozīmēt, ka kāds mēģina uzdoties par vietni, un jums nevajadzētu turpināt. Vai jūs tomēr vēlaties uzticēties sertifikātam?</string>
     <string name="ssl_certificate_error">Nederīgs SSL sertifikāts</string>
