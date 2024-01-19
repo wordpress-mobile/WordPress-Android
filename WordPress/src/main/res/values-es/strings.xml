@@ -3066,7 +3066,6 @@ Language: es
     <string name="confirm">Confirmar</string>
     <string name="xmlrpc_endpoint_forbidden_error">No se pudo conectar. Se ha recibido un error 403 cuando se intenta acceder a \n        tu endpoint del XMLRPC de sitio. La aplicación lo necesita para comunicarse con tu sitio. Ponte en contacto con tu proveedor para solucionar este problema.</string>
     <string name="xmlrpc_post_blocked_error">No se pudo conectar. Tu alojamiento está bloqueando las peticiones POST, y la aplicación las necesita \n        para comunicarse con tu sitio. Ponte en contacto con tu alojamiento para solucionar este problema.</string>
-    <string name="reader_hint_search_followed_sites">Buscar en los sitios seguidos</string>
     <string name="pending_draft_one_generic">¡No dejes el trabajo a medias! «%1$s» está pendiente de publicarse.</string>
     <string name="pending_draft_one_month">¡No dejes el trabajo a medias! «%1$s» está pendiente de publicarse.</string>
     <string name="pending_draft_one_week_2">«%1$s» se ha guardado como borrador. ¡Acuérdate de publicarla!</string>

@@ -3054,7 +3054,6 @@ Language: ko_KR
     <string name="confirm">확인</string>
     <string name="xmlrpc_endpoint_forbidden_error">연결할 수 없습니다. 사이트\n XMLRPC 엔드포인트에 액세스를 시도할 때 403 오류가 발생했습니다. 사이트와 통신하려면 이 앱에 필요합니다. 호스트에 문의하여\n 이 문제를 해결하세요.</string>
     <string name="xmlrpc_post_blocked_error">연결할 수 없습니다. 호스트가 POST 요청을 차단하고 있으므로, 사이트와 통신하려면 이 앱에\n 필요합니다. 호스트에 문의하여 이 문제를 해결하세요.</string>
-    <string name="reader_hint_search_followed_sites">팔로우된 사이트 검색</string>
     <string name="pending_draft_one_generic">중단된 상태로 두지 마세요! \'%1$s\'이(가) 발행될 때까지 기다리는 중입니다.</string>
     <string name="pending_draft_one_month">중단된 상태로 두지 마세요! \'%1$s\'이(가) 발행될 때까지 기다리는 중입니다.</string>
     <string name="pending_draft_one_week_2">\'%1$s\'이(가) 임시글로 남아 있습니다. 발행하는 것을 잊지 마세요!</string>

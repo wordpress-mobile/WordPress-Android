@@ -1846,7 +1846,6 @@ Language: nb_NO
     <string name="confirm">Bekreft</string>
     <string name="xmlrpc_endpoint_forbidden_error">Klarte ikke å koble til. Vi mottok en 403-feil når vi prøvde å få tilgang til ditt nettsteds XMLRPC-sluttpunkt.\nAppen behøver det for å kunne kommunisere med nettstedet ditt. Kontakt verten din for å løse dette problemet.</string>
     <string name="xmlrpc_post_blocked_error">Klarte ikke å koble til. Verten din blokkerer POST-forespørsler, og appen trenger den for\nå kunne kommunisere med nettstedet ditt. Kontakt verten din for å løse dette problemet.</string>
-    <string name="reader_hint_search_followed_sites">Søk i fulgte nettsteder</string>
     <string name="pending_draft_one_generic">Ikke la den henge og slenge! \'%1$s\' venter på å bli publisert.</string>
     <string name="pending_draft_one_month">Ikke la den daffe rundt! \'%1$s\' venter på å bli publisert.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' er fortsatt et utkast. Husk på å publisere den!</string>

@@ -3066,7 +3066,6 @@ Language: sv_SE
     <string name="confirm">Bekräfta</string>
     <string name="xmlrpc_endpoint_forbidden_error">Det gick inte att ansluta. Vi får fel 403 (förbjudet) när vi anropar XMLRPC-ändpunkten för din webbplats. Appen behöver detta för att kunna kommunicera med din webbplats. Kontakta webbhotellet för att lösa detta problem.</string>
     <string name="xmlrpc_post_blocked_error">Det gick inte att ansluta. Din webbserver blockerar POST-anrop, som appen behöver för att kommunicera med din webbplats. Kontakta ditt webbhotell för att lösa detta problem.</string>
-    <string name="reader_hint_search_followed_sites">Sök följda webbplatser</string>
     <string name="pending_draft_one_generic">Dröj inte längre, \'%1$s\' vill bli publicerad!</string>
     <string name="pending_draft_one_month">Dröj inte längre, \'%1$s\' vill bli publicerad!</string>
     <string name="pending_draft_one_week_2">\'%1$s\' är fortfarande ett utkast. Kom ihåg att publicera!</string>

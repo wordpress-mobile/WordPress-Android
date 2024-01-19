@@ -842,7 +842,6 @@ Language: sk
     <string name="confirm">Potvrdiť</string>
     <string name="xmlrpc_endpoint_forbidden_error">Nepodarilo sa pripojiť. Došlo k chybe 403, keď ste sa snažili dostať na webovú stránku XMLRPC koncový bod. Aplikácia ho vyžaduje, aby mohla komunikovať s vašou webovou stránkou. Kontaktujte svojho hosta, aby vyriešil problém.</string>
     <string name="xmlrpc_post_blocked_error">Nemožno pripojiť. Váš hostiteľ blokuje žiadosti ČLÁNOK. Aplikácia potrebuje to potrebuje na komunikáciu s vašou webovou stránkou. Kontaktujte hostiteľa, aby vyriešil tento problém.</string>
-    <string name="reader_hint_search_followed_sites">Hľadajte sledované webové stránky</string>
     <string name="pending_draft_one_generic">Nečakajte! %1$s\' čaká na zverejnenie.</string>
     <string name="pending_draft_one_month">Nečakajte! %1$s\' čaká na zverejnenie.</string>
     <string name="pending_draft_one_week_2">%1$s\' zostáva ako koncept. Pripomenúť na zverjnenie!</string>

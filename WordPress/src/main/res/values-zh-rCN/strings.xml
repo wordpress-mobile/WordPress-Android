@@ -3049,7 +3049,6 @@ Language: zh_CN
     <string name="confirm">确认</string>
     <string name="xmlrpc_endpoint_forbidden_error">无法连接。尝试访问您的站点 XMLRPC 终端时\n收到 403 错误。与您的站点进行通信所需要的应用程序。请联系您的托管服务提供商\n以解决此问题。</string>
     <string name="xmlrpc_post_blocked_error">无法连接。您的主机阻止 POST 请求，app 需要\n该接口方可与您的站点通信。请联系您的托管服务提供商解决此问题。</string>
-    <string name="reader_hint_search_followed_sites">在已关注的站点中搜索</string>
     <string name="pending_draft_one_generic">请不要离开！「%1$s」正在等待发布。</string>
     <string name="pending_draft_one_month">请不要离开！「%1$s」正在等待发布。</string>
     <string name="pending_draft_one_week_2">「%1$s」仍是草稿。记得发布哦！</string>

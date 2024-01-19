@@ -3059,7 +3059,6 @@ Language: ja_JP
     <string name="confirm">確認</string>
     <string name="xmlrpc_endpoint_forbidden_error">接続できませんでした。サイトの XMLRPC エンドポイントにアクセスしようとした際に403エラーを受け取りました。サイトと通信するために、アプリはこのエンドポイントにアクセスする必要があります。この問題を解決するには、ホスティングサービスに連絡してください。</string>
     <string name="xmlrpc_post_blocked_error">接続できませんでした。ご使用のホストは POST リクエストをブロックしていますが、サイトと通信するためにアプリはこのリクエストを必要とします。ホストに連絡して、この問題を解決してください。</string>
-    <string name="reader_hint_search_followed_sites">フォローしているサイトの検索</string>
     <string name="pending_draft_one_generic">途中でやめないでください。「%1$s」は公開待ち中です。</string>
     <string name="pending_draft_one_month">途中でやめないでください。「%1$s」は公開待ち中です。</string>
     <string name="pending_draft_one_week_2">「%1$s」は下書きのままになります。忘れずに公開してください。</string>

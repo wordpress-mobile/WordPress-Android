@@ -2787,7 +2787,6 @@ Language: cs_CZ
     <string name="confirm">Potvrdit</string>
     <string name="xmlrpc_endpoint_forbidden_error">Nelze se připojit. Při pokusu o přístup k vašemu nám došlo k chybě 403\n         koncový bod XMLRPC webu. Aplikace to potřebuje, aby mohla komunikovat s vaším webem. Požádejte svého hostitele o řešení\n         tento problém.</string>
     <string name="xmlrpc_post_blocked_error">Nepodařilo se připojit. Váš hostitel blokuje požadavky POST, které jsou potřeba ke komunikaci s webovou stránkou. Pro vyřešení toho problému kontaktujte svého hostitele.</string>
-    <string name="reader_hint_search_followed_sites">Prohledat sledované stránky</string>
     <string name="pending_draft_one_generic">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
     <string name="pending_draft_one_month">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' zůstává konceptem. Nezapomeňte ho publikovat!</string>

@@ -19,7 +19,6 @@ Language: cy_GB
     <string name="retry">Ceisiwch eto</string>
     <string name="confirm">Cadarnhau</string>
     <string name="xmlrpc_post_blocked_error">Methu cysylltu. Mae eich gwesteiwr yn rhwystro ceisiadau POST, ac mae\'r ap angen\n       hynny er mwyn cyfathrebu â\'ch gwefan. Cysylltwch â eich gwesteiwr i ddatrys y broblem.</string>
-    <string name="reader_hint_search_followed_sites">Chwilio drwy\'r gwefannau rwy\'n eu dilyn</string>
     <string name="pending_draft_one_generic">Peidiwch â\'i adael! Mae \'%1$s\' disgwyl cael ei gyhoeddi.</string>
     <string name="pending_draft_one_month">Peidiwch â\'i adael! Mae \'%1$s\' disgwyl cael ei gyhoeddi.</string>
     <string name="pending_draft_one_week_2">Mae \'%1$s\' yn ddrafft o hyd. Cofiwch ei gyhoeddi!</string>

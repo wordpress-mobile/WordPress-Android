@@ -2925,7 +2925,6 @@ Language: lv
     <string name="confirm">Apstiprināt</string>
     <string name="xmlrpc_endpoint_forbidden_error">Nevarēja izveidot savienojumu. Mēģinot piekļūt jūsu vietnes XMLRPC galapunktam, \n        mēs saņēmām kļūdu 403. Lietotnei tas ir nepieciešams, lai sazinātos ar jūsu vietni. Lai atrisinātu šo problēmu, sazinieties ar savu mitinātāju.</string>
     <string name="xmlrpc_post_blocked_error">    Nebija iespējams izveidot savienojumu. Jūsu resursdators bloķē POST pieprasījumus, un lietotnei tad ir\nnepieciešams lai sazinātos ar jūsu vietni. Lai atrisinātu šo problēmu, sazinieties ar mitinātāju.</string>
-    <string name="reader_hint_search_followed_sites">Meklēt sekotajās vietnēs</string>
     <string name="pending_draft_one_generic">Neatstājiet to novārtā! \'%1$s\' gaida, kad tiks publicēts.</string>
     <string name="pending_draft_one_month">Neatstājiet to novārtā! \'%1$s\' gaida, kad tiks publicēts.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' paliek melnraksts. Atcerieties to publicēt!</string>

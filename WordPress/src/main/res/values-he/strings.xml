@@ -3054,7 +3054,6 @@ Language: he_IL
     <string name="confirm">אישור</string>
     <string name="xmlrpc_endpoint_forbidden_error">לא ניתן להתחבר. התקבלה שגיאת 403 בניסיון לגשת ל-\n נקודת הקצה XMLRPC של האתר שלך. כדי שהאפליקציה תוכל לבצע התקשרות עם האתר שלך, יש להפעיל אפשרות זו. יש ליצור קשר עם חברת האחסון שלך כדי לפתור בעיה זו.</string>
     <string name="xmlrpc_post_blocked_error">לא ניתן להתחבר. חברת האחסון שלך חוסמת בקשות POST, והאפליקציה דורשת את\n הפעלת האפשרות הזו כדי לבצע התקשרות עם האתר שלך. יש ליצור קשר עם חברת האחסון שלך כדי לפתור בעיה זו.</string>
-    <string name="reader_hint_search_followed_sites">חיפוש באתרים תחת מעקב</string>
     <string name="pending_draft_one_generic">מומלץ לסיים את הפעולה! הפוסט \'%1$s \' ממתין לפרסום.</string>
     <string name="pending_draft_one_month">מומלץ לסיים את הפעולה! הפוסט \'%1$s \' ממתין לפרסום.</string>
     <string name="pending_draft_one_week_2">האתר \'%1$s\' נשמר כטיוטה בלבד. לא לשכוח לפרסם אותו!</string>

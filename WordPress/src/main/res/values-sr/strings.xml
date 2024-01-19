@@ -1473,7 +1473,6 @@ Language: sr_RS
     <string name="media_upload_error">Дошло је до грешке са отпремањем садржаја</string>
     <string name="retry">Покушај поново</string>
     <string name="confirm">Потврди</string>
-    <string name="reader_hint_search_followed_sites">Претражи праћене сајтове</string>
     <string name="pending_draft_one_week_1">Ваш нацрт \'%1$s\' Вас чека - не заборавите да га објавите!</string>
     <string name="pending_draft_one_day_2">Да ли сте знали да је \'%1$s\' још увек нацрт? Објавите га!</string>
     <string name="reader_label_visit">Посети</string>

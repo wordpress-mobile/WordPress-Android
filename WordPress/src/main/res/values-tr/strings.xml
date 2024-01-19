@@ -3066,7 +3066,6 @@ Language: tr
     <string name="confirm">Onayla</string>
     <string name="xmlrpc_endpoint_forbidden_error">Bağlanılamıyor. Sitenizin XMLRPC uç noktasına bağlanırken bir 403\n     hatası aldık. Uygulamanın sitenizle iletişim kurabilmesi için gereklidir. Problemi çözmek için\n     servis sağlayıcınızla iletişime geçin.</string>
     <string name="xmlrpc_post_blocked_error">Bağlanılamıyor. Sunucunuz POST isteklerini engelliyor ve uygulama sitenizle\n    iletişim kurmak için buna ihtiyaç duyuyor. Bu problemi gidermek için servis sağlayıcınızla iletişime geçin.</string>
-    <string name="reader_hint_search_followed_sites">Takip edilen siteleri ara</string>
     <string name="pending_draft_one_generic">Asılı bırakmayın! \'%1$s\' yayınlanmayı bekliyor.</string>
     <string name="pending_draft_one_month">Asılı bırakmayın! \'%1$s\' yayınlanmayı bekliyor.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' bir taslak olarak kaldı. Yayınlamayı unutmayın!</string>

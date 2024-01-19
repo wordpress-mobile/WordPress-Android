@@ -2541,7 +2541,6 @@ Language: pl
     <string name="confirm">Potwierdź</string>
     <string name="xmlrpc_endpoint_forbidden_error">Nie można się połączyć. Otrzymaliśmy błąd nr 403 podczas próby dostępu do \npunktu końcowego XMLRPC twojej witryny. Aplikacja wymaga tego połączenia w celu komunikacji z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania\n tego problemu.</string>
     <string name="xmlrpc_post_blocked_error">Nie można się połączyć. Twój host blokuje zapytania POST - aplikacja wymaga tego połączenia w celu skomunikowania się z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania tego problemu. </string>
-    <string name="reader_hint_search_followed_sites">Przeszukaj obserwowane witryny</string>
     <string name="pending_draft_one_generic">Nie pozostawiaj wpisu w zawieszeniu! \'%1$s\' czeka na zatwierdzenie. </string>
     <string name="pending_draft_one_month">Nie pozostawiaj wpisu w zawieszeniu! \'%1$s\' czeka na zatwierdzenie</string>
     <string name="pending_draft_one_week_2">\'%1$s\' pozostaje szkicem. Pamiętaj aby opublikować ten wpis! </string>

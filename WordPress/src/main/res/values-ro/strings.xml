@@ -3066,7 +3066,6 @@ Language: ro
     <string name="confirm">Confirmă</string>
     <string name="xmlrpc_endpoint_forbidden_error">N-am putut conecta. Am primit o eroare 403 la încercarea de a accesa\n        punctul-final XMLRPC pentru site-ul tău. Aplicația are nevoie de el pentru a comunica cu site-ul tău. Contactează-ți gazda pentru a rezolva\n        această problemă.</string>
     <string name="xmlrpc_post_blocked_error">Nu m-am putut conecta. Gazda ta blochează cererile POST și aplicația trebuie\n        să comunice cu site-ul tău. Contactează-ți gazda pentru a rezolva această problemă.</string>
-    <string name="reader_hint_search_followed_sites">Caută site-uri urmărite</string>
     <string name="pending_draft_one_generic">Nu-l lăsa atârnat! \'%1$s\' așteaptă să fie publicat.</string>
     <string name="pending_draft_one_month">Nu-l lăsa atârnat! \'%1$s\' așteaptă să fie publicat.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' rămâne o ciornă. Nu uita să-l publici!</string>

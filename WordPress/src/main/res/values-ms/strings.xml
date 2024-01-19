@@ -287,7 +287,6 @@ Language: ms
     <string name="confirm">Sahkan</string>
     <string name="retry">Cuba Semula</string>
     <string name="xmlrpc_post_blocked_error">Tidak boleh berhubung. Hos anda menyekat permintaan POST, dan aplikasi\n        memerlukannya untuk berkomunikasi dengan laman anda. Hubungi hos anda untuk menyelesaikan masalah ini.</string>
-    <string name="reader_hint_search_followed_sites">Cari laman yang diikuti</string>
     <string name="pending_draft_one_generic">Jangan biarkannya bergantung! \'%1$s\' sedang menunggu untuk diterbitkan.</string>
     <string name="pending_draft_one_month">Jangan biarkannya bergantung! \'%1$s\' sedang menunggu untuk diterbitkan.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' kekal sebagai draf. Ingat untuk menerbitkannya!</string>

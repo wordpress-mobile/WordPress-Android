@@ -2499,7 +2499,6 @@ Language: vi_VN
     <string name="confirm">Xác nhận</string>
     <string name="xmlrpc_endpoint_forbidden_error">Không thể kết nối. Chúng tôi đã nhận được lỗi 403 khi cố gắng truy cập\n        XMLRPC endpoint. Ứng dụng cần thứ này để giao tiếp với trang web của bạn. Liên hệ với máy chủ của bạn để giải quyết\n        vấn đề này.</string>
     <string name="xmlrpc_post_blocked_error">Không thể kết nối. Máy chủ của bạn đang chặn các yêu cầu ĐĂNG\n         mà ứng dụng cần để giao tiếp với trang của bạn. Liên hệ với máy chủ của bạn để giải quyết vấn đề này.</string>
-    <string name="reader_hint_search_followed_sites">Tìm kiếm blog đã theo dõi</string>
     <string name="pending_draft_one_generic">Đừng để nó mọc nấm! \'%1$s\' đang chờ được đăng.</string>
     <string name="pending_draft_one_month">Đừng để nó mọc nấm! \'%1$s\' đang chờ được đăng.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' vẫn là bản nháp. Nhớ đăng nó!</string>

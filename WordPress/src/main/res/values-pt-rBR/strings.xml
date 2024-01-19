@@ -2833,7 +2833,6 @@ Language: pt_BR
     <string name="confirm">Confirmar</string>
     <string name="xmlrpc_endpoint_forbidden_error">Não foi possível conectar. Recebemos um erro 403 ao tentar acessar o arquivo XMLRPC de seu site.\nO aplicativo necessita dessa conexão para se comunicar com seu site.\nEntre em contato com sua hospedagem para corrigir esse problema.</string>
     <string name="xmlrpc_post_blocked_error">Não foi possível conectar. Seu servidor está bloqueando solicitações POST e\n       o aplicativo precisa delas para se comunicar com o seu site. Entre em contato com seu servidor para resolver este problema.</string>
-    <string name="reader_hint_search_followed_sites">Buscar sites seguidos</string>
     <string name="pending_draft_one_generic">Não o deixe de lado! \"%1$s\" está esperando ser publicado.</string>
     <string name="pending_draft_one_month">Não o deixe de lado! \"%1$s\" está esperando ser publicado.</string>
     <string name="pending_draft_one_week_2">\"%1$s\" ainda é um rascunho. Lembre-se de publicá-lo!</string>

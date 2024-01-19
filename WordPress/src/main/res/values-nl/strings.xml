@@ -3002,7 +3002,6 @@ Language: nl
     <string name="confirm">Bevestigen</string>
     <string name="xmlrpc_endpoint_forbidden_error">Kan geen verbinding maken. Er is een 403-fout opgetreden tijdens onze poging om het XMLRPC-eindpunt van je\n site te openen. De app heeft dat nodig om met je site te communiceren. Neem contact op met je host voor een oplossing voor\n dit probleem.</string>
     <string name="xmlrpc_post_blocked_error">Kan geen verbinding maken. Je host blokkeert POST-aanvragen en de app heeft\n dat nodig om met je site te communiceren. Neem contact op met je host om dit probleem op te lossen.</string>
-    <string name="reader_hint_search_followed_sites">Zoek gevolgde sites</string>
     <string name="pending_draft_one_generic">Niet weggaan! \'%1$s\' moet nog gepubliceerd worden.</string>
     <string name="pending_draft_one_month">Niet weggaan! \'%1$s\' moet nog gepubliceerd worden.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' blijft een concept. Vergeet niet deze te publiceren!</string>

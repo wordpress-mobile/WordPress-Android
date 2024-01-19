@@ -1668,7 +1668,6 @@ Language: ku_TR
     <string name="retry">Dîsa biceribîne</string>
     <string name="xmlrpc_endpoint_forbidden_error">Nayê girêdan. Dema me hewl da xwe bigihînin nuqteya dawîn XMLRPC\'ê\n        ya malpera te, çewtiyeke 403 qewimî. Ji bo ku sepan karibe bi malpera te re têkilî dayîne pêwîstî pê heye.\n        Ji bo çareserkirina vê pirsgirêkê bi hewangera (host) xwe re têkilî deyne.</string>
     <string name="xmlrpc_post_blocked_error">Nayê girêdan. Hewangera te daxwazên POSTê asteng dike, û ji bo ku sepan\n         karibe bi malpera te re têkilî dayîne pêwîstî pê heye. Ji bo çareserkirina vê pirsgirêkê bi hewangera (host) xwe re têkilî deyne.</string>
-    <string name="reader_hint_search_followed_sites">Li malperên şopandî bigere</string>
     <string name="pending_draft_one_generic">Wê daliqandî nehêle! \'%1$s\' li benda weşandinê ye.</string>
     <string name="pending_draft_one_month">Wê daliqandî nehêle! \'%1$s\' li benda weşandinê ye.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' wekî reşnivîsekê ma. Weşandina wê ji bîr neke!</string>

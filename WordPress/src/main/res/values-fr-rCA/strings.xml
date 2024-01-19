@@ -3055,7 +3055,6 @@ Language: fr
     <string name="confirm">Confirmer</string>
     <string name="xmlrpc_endpoint_forbidden_error">Connexion impossible. Nous avons reçu une erreur 403 lors de \nnotre tentative d\'accès au point de terminaison XML-RPC de votre site. \nL’application en a besoin pour communiquer avec votre site. \nContactez votre hébergeur pour résoudre ce problème.</string>
     <string name="xmlrpc_post_blocked_error">Connexion impossible. Votre hébergeur bloque les requêtes POST\ndont votre application a besoin pour communiquer avec votre site. \nContactez-le pour résoudre ce problème.</string>
-    <string name="reader_hint_search_followed_sites">Rechercher parmi les sites suivis</string>
     <string name="pending_draft_one_generic">Ne le laissez pas sur la touche&amp;nbsp;! «&amp;nbsp;%1$s&amp;nbsp;» attendre d’être publié.</string>
     <string name="pending_draft_one_month">Ne le laissez pas sur la touche&amp;nbsp;! «&amp;nbsp;%1$s&amp;nbsp;» attendre d’être publié.</string>
     <string name="pending_draft_one_week_2">«&amp;nbsp;%1$s&amp;nbsp;» est toujours un brouillon. N\'oubliez pas de le publier&amp;nbsp;!</string>

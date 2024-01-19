@@ -864,7 +864,6 @@ Language: es_CL
     <string name="confirm">Confirmar</string>
     <string name="xmlrpc_endpoint_forbidden_error">No se puede conectar. Recibimos un error 403 cuando intentamos conectarnos\n        al endpoint XMLRPC de tu sitio. La APP lo necesita para comunicarse con tu sitio. Contacta a tu hosting\n        para solucionarlo.</string>
     <string name="xmlrpc_post_blocked_error">No se puede conectar. Tu host está bloqueando las solicitudes POST, y la aplicación\n        Lo necesita para comunicarse con tu sitio. Contacta a tu host para resolver este problema.</string>
-    <string name="reader_hint_search_followed_sites">Buscar sitios seguidos</string>
     <string name="pending_draft_one_generic">¡no lo dejes colgado! \'%1$s\' está a la espera de ser publicado.</string>
     <string name="pending_draft_one_month">¡No lo dejes colgado! \'%1$s\' está a la espera de ser publicado.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' sigue siendo un borrador. ¡Recuerda publicarlo!</string>

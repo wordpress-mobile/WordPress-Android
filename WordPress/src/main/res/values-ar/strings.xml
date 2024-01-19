@@ -3048,7 +3048,6 @@ Language: ar
     <string name="confirm">تأكيد</string>
     <string name="xmlrpc_endpoint_forbidden_error">تعذر الاتصال. تلقينا الخطأ 403 عند محاولة الوصول إلى\n نقطة نهاية XMLRPC على موقعك. يحتاج التطبيق إلى ذلك للاتصال بموقعك. يرجى الاتصال بالمضيف لإيجاد حل\n لهذه المشكلة.</string>
     <string name="xmlrpc_post_blocked_error">تعذر الاتصال. يقوم المضيف الخاص بك بحظر طلبات POST، ويحتاج التطبيق إليها\n للاتصال بموقعك. يُرجى الاتصال بالمضيف لحل هذه المشكلة.</string>
-    <string name="reader_hint_search_followed_sites">بحث في المواقع التي تتم متابعتها</string>
     <string name="pending_draft_one_generic">لا تتركه معلقًا! \"%1$s\" بانتظار النشر.</string>
     <string name="pending_draft_one_month">لا تتركه معلقًا! \"%1$s\" بانتظار النشر.</string>
     <string name="pending_draft_one_week_2">يبقى \"%1$s\" كمسودة. تذكّر أن تنشرها!</string>
