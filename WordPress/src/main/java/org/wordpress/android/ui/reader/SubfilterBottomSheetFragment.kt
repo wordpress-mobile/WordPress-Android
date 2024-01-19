@@ -76,7 +76,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             viewModelFactory
         )[subfilterVmKey, SubFilterViewModel::class.java]
 
-        // TODO: remove the pager and support only one category
+        // TODO remove the pager and support only one category
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
         val titleContainer = view.findViewById<View>(R.id.title_container)
         val title = view.findViewById<TextView>(R.id.title)
