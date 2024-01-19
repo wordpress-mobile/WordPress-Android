@@ -573,7 +573,6 @@ Language: eu_ES
     <string name="reader_hint_comment_on_comment">Erantzun iruzkinari…</string>
     <string name="reader_toast_err_tag_invalid">Hori ez da etiketa zuzen bat</string>
     <string name="reader_view_reblog">Birblogeatu </string>
-    <string name="reader_toast_err_tag_exists">Dagoeneko gai hau jarraitzen duzu</string>
     <string name="comments_empty_list">Oraindik iruzkin gabe</string>
     <string name="sign_up_label">Izena eman</string>
     <string name="media_gallery_type_squares">Karratuak</string>

@@ -3620,7 +3620,6 @@ Language: zh_CN
     <string name="reader_toast_err_view_image">无法查看图片</string>
     <string name="reader_toast_err_share_intent">无法分享</string>
     <string name="reader_toast_err_tag_invalid">该主题无效</string>
-    <string name="reader_toast_err_tag_exists">您已经关注此主题</string>
     <string name="reader_toast_err_comment_failed">无法发表评论</string>
     <string name="reader_likes_only_you">您喜欢了</string>
     <string name="reader_likes_one">1人喜欢了</string>

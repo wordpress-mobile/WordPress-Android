@@ -3497,7 +3497,6 @@ Language: lv
     <string name="reader_toast_err_view_image">Nevar skatīt attēlu</string>
     <string name="reader_toast_err_share_intent">Nevar kopīgot</string>
     <string name="reader_toast_err_tag_invalid">Tā nav derīga tēma</string>
-    <string name="reader_toast_err_tag_exists">Jūs jau sekojat šai tēmai</string>
     <string name="reader_toast_err_comment_failed">Nevarēja ievietot jūsu komentāru</string>
     <string name="reader_likes_only_you">Jums patīk šis</string>
     <string name="reader_likes_one">Vienam cilvēkam tas patīk</string>

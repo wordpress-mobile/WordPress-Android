@@ -3611,7 +3611,6 @@ Language: en_CA
     <string name="comments_empty_list">No comments yet</string>
     <string name="reader_view_reblog">Reblog</string>
     <string name="sign_up_label">Sign Up</string>
-    <string name="reader_toast_err_tag_exists">You already follow this topic</string>
     <string name="reader_toast_err_tag_invalid">That isn\'t a valid topic</string>
     <string name="themes">Themes</string>
     <string name="media_gallery_type_squares">Squares</string>

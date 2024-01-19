@@ -3574,7 +3574,6 @@ Language: nl
     <string name="reader_toast_err_view_image">Onmogelijk afbeelding te bekijken</string>
     <string name="reader_toast_err_share_intent">Onmogelijk te delen</string>
     <string name="reader_toast_err_tag_invalid">Dat is geen geldig onderwerp</string>
-    <string name="reader_toast_err_tag_exists">Je volgt dit onderwerp al</string>
     <string name="reader_toast_err_comment_failed">Je reactie kon niet geplaatst worden</string>
     <string name="reader_likes_only_you">Je vindt dit leuk</string>
     <string name="reader_likes_one">1 persoon vindt dit leuk</string>

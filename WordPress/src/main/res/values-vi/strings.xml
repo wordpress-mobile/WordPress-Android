@@ -3071,7 +3071,6 @@ Language: vi_VN
     <string name="reader_toast_err_view_image">Không thể xem ảnh</string>
     <string name="reader_toast_err_share_intent">Không thể chia sẻ</string>
     <string name="reader_toast_err_tag_invalid">Đó không phải một thẻ hợp lệ</string>
-    <string name="reader_toast_err_tag_exists">Bạn đã theo dõi thẻ này rồi</string>
     <string name="reader_toast_err_comment_failed">Không thể đăng bình luận của bạn</string>
     <string name="reader_likes_only_you">Bạn thích bài này</string>
     <string name="reader_likes_one">1 người thích bài viết</string>

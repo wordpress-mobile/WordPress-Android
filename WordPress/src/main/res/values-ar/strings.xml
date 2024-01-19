@@ -3629,7 +3629,6 @@ Language: ar
     <string name="comments_empty_list">لا توجد تعليقات حتى الآن</string>
     <string name="reader_view_reblog">إعادة التدوين</string>
     <string name="sign_up_label">التسجيل</string>
-    <string name="reader_toast_err_tag_exists">أنت متابع لهذا الموضوع بالفعل</string>
     <string name="reader_toast_err_tag_invalid">هذا ليس موضوعًا صالحًا</string>
     <string name="themes">القوالب</string>
     <string name="media_edit_title_text">العنوان</string>

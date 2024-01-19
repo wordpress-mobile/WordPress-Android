@@ -3630,7 +3630,6 @@ Language: ja_JP
     <string name="reader_toast_err_view_image">画像を表示できません</string>
     <string name="reader_toast_err_share_intent">共有に失敗しました</string>
     <string name="reader_toast_err_tag_invalid">有効なトピックではありません</string>
-    <string name="reader_toast_err_tag_exists">このトピックをすでにフォローしています</string>
     <string name="reader_toast_err_comment_failed">コメントを投稿できませんでした</string>
     <string name="reader_likes_only_you">「いいね」をつけました</string>
     <string name="reader_likes_one">1人がいいねをつけました</string>

@@ -3122,7 +3122,6 @@ Language: pl
     <string name="reader_view_reblog">Rebloguj</string>
     <string name="sign_up_label">Zarejestruj się</string>
     <string name="reader_toast_err_tag_invalid">To nie jest poprawny temat</string>
-    <string name="reader_toast_err_tag_exists">Obserwujesz już ten temat</string>
     <string name="reader_untitled_post">(Bez nazwy)</string>
     <string name="comments_empty_list">Brak komentarzy</string>
     <string name="themes">Motywy</string>

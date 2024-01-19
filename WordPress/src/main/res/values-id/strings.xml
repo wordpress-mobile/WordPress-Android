@@ -3627,7 +3627,6 @@ Language: id
     <string name="reader_toast_err_view_image">Tidak dapat melihat gambar</string>
     <string name="reader_toast_err_share_intent">Tidak dapat membagikan</string>
     <string name="reader_toast_err_tag_invalid">Topik tersebut tidak valid</string>
-    <string name="reader_toast_err_tag_exists">Anda telah mengikuti topik ini</string>
     <string name="reader_toast_err_comment_failed">Tidak bisa menambahkan komentar anda</string>
     <string name="reader_likes_only_you">Anda menyukai ini</string>
     <string name="reader_likes_one">Satu orang menyukai ini</string>

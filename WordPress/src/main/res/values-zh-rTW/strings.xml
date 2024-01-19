@@ -3627,7 +3627,6 @@ Language: zh_TW
     <string name="reader_toast_err_view_image">無法檢視圖片</string>
     <string name="reader_toast_err_share_intent">無法分享</string>
     <string name="reader_toast_err_tag_invalid">這不是有效的主題</string>
-    <string name="reader_toast_err_tag_exists">你已經關注了此主題</string>
     <string name="reader_toast_err_comment_failed">無法張貼你的回應</string>
     <string name="reader_likes_only_you">你說這個讚</string>
     <string name="reader_likes_one">1 人說這個讚</string>
