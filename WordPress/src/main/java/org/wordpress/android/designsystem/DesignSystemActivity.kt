@@ -7,7 +7,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.util.extensions.setContent
 
-class DesignSystemActivityCompose : LocaleAwareActivity() {
+class DesignSystemActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
