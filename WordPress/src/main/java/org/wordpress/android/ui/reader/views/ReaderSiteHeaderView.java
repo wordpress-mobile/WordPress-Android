@@ -237,7 +237,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         } else {
             txtFollowCount.setText(String.format(
                     LocaleManager.getSafeLocale(getContext()),
-                    getContext().getString(R.string.reader_label_follow_count),
+                    getContext().getString(R.string.reader_label_subscribe_count),
                     blogInfo.numSubscribers));
         }
     }
