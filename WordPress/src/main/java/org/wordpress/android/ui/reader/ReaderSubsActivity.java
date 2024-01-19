@@ -278,7 +278,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         }
 
         if (!ReaderTag.isValidTagName(entry)) {
-            showInfoSnackbar(getString(R.string.reader_toast_err_tag_invalid));
+            showInfoSnackbar(getString(R.string.reader_toast_err_tag_not_valid));
             return;
         }
 
