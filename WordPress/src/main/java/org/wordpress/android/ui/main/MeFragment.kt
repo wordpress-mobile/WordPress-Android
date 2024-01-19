@@ -208,6 +208,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             rowDebugSettings.setOnClickListener {
                 requireContext().startActivity(Intent(requireContext(), DebugSettingsActivity::class.java))
             }
+            rowDesignSystem.isVisible = true
+            designSystemDivider.isVisible = true
             rowDesignSystem.setOnClickListener {
                 ActivityLauncher.viewDesignSystemForResult(activity)
             }

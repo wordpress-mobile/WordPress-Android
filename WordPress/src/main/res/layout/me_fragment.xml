@@ -221,10 +221,10 @@
                 android:visibility="gone"
                 style="@style/MeListSectionDividerView"
                 tools:visibility="visible"/>
-            <View style="@style/MeListSectionDividerView" />
 
             <LinearLayout
                 android:id="@+id/row_design_system"
+                android:visibility="gone"
                 style="@style/MeListRowLayout"
                 tools:visibility="visible">
 
@@ -243,8 +243,10 @@
 
             <View
                 android:id="@+id/design_system_divider"
+                android:visibility="gone"
                 style="@style/MeListSectionDividerView"
                 tools:visibility="visible"/>
+
             <LinearLayout
                 android:id="@+id/row_support"
                 style="@style/MeListRowLayout">
