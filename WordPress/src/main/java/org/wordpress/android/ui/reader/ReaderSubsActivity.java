@@ -416,7 +416,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                 // clear the edit text and hide the soft keyboard
                 mEditAdd.setText(null);
                 EditTextUtils.hideSoftInput(mEditAdd);
-                showInfoSnackbar(getString(R.string.reader_label_followed_blog));
+                showInfoSnackbar(getString(R.string.reader_label_blog_subscribed));
                 getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                 // update tags if the site we added belongs to a tag we don't yet have
                 // also update followed blogs so lists are ready in case we need to present them
