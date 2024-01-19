@@ -283,7 +283,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         }
 
         if (ReaderTagTable.isFollowedTagName(entry)) {
-            showInfoSnackbar(getString(R.string.reader_toast_err_tag_exists));
+            showInfoSnackbar(getString(R.string.reader_toast_err_tag_already_subscribed));
             return;
         }
 
