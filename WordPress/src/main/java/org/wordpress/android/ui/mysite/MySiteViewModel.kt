@@ -415,7 +415,7 @@ class MySiteViewModel @Inject constructor(
                     quickStartRepository.quickStartType,
                     quickStartTracker
                 )
-//            mySiteSourceManager.refreshQuickStart()
+            quickStartRepository.checkAndShowQuickStartNotice()
         }
     }
 
