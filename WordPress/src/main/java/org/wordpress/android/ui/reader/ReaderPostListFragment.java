@@ -1726,7 +1726,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         description = getString(R.string.reader_empty_posts_liked_description);
                         button = ActionableEmptyViewButtonType.FOLLOWED;
                     } else if (getCurrentTag().isListTopic()) {
-                        title = getString(R.string.reader_empty_posts_in_custom_list);
+                        title = getString(R.string.reader_empty_blogs_posts_in_custom_list);
                     } else {
                         title = getString(R.string.reader_empty_posts_in_tag);
                     }
@@ -2288,7 +2288,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         } else if (getCurrentTag().isListTopic() && isPostAdapterEmpty() && isAdded()) {
                             mActionableEmptyView.image.setImageResource(
                                     R.drawable.img_illustration_empty_results_216dp);
-                            mActionableEmptyView.title.setText(getString(R.string.reader_empty_posts_in_custom_list));
+                            mActionableEmptyView.title.setText(getString(R.string.reader_empty_blogs_posts_in_custom_list));
                             mActionableEmptyView.button.setVisibility(View.GONE);
                             mActionableEmptyView.subtitle.setVisibility(View.GONE);
                             showEmptyView();
