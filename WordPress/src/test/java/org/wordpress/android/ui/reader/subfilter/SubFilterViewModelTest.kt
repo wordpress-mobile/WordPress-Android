@@ -19,6 +19,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.getOrAwaitValue
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.BOOKMARKED
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -444,5 +445,13 @@ class SubFilterViewModelTest : BaseUnitTest() {
         )
         viewModel.onSubfilterSelected(filter)
         verify(readerTracker).track(AnalyticsTracker.Stat.READER_FILTER_SHEET_ITEM_SELECTED)
+    }
+
+    @Test
+    fun `Should propagate title container visibility state properly`() {
+        listOf(true, false).forEach { isTitleContainerVisible ->
+            viewModel.setTitleContainerVisibility(isTitleContainerVisible)
+            assertThat(viewModel.isTitleContainerVisible.getOrAwaitValue()).isEqualTo(isTitleContainerVisible)
+        }
     }
 }
