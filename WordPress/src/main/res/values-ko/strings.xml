@@ -3561,7 +3561,6 @@ Language: ko_KR
     <string name="blog_not_found">블로그에 접속하는 동안 에러가 발생하였습니다.</string>
     <string name="gallery_error">미디어 항목을 로드 할 수 없습니다.</string>
     <string name="no_network_message">사용 가능한 네트워크가 없습니다. 네트워크에 연결하고 다시 시도하십시오 .</string>
-    <string name="reader_toast_err_remove_tag">이 토픽을 삭제할 수 없습니다</string>
     <string name="reader_title_applog">응용 프로그램 로그</string>
     <string name="fatal_db_error">앱 데이터베이스를 생성하는 동안 에러가 발생했습니다. 앱을 다시 설치하시기 바랍니다.</string>
     <string name="error_blog_hidden">이 블로그는 비공개 설정이되어 로드 할 수 없습니다. 설정 화면에서 다시 활성하고 다시 시도하십시오.</string>

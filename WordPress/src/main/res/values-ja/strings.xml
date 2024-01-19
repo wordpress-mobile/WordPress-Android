@@ -3566,7 +3566,6 @@ Language: ja_JP
     <string name="blog_not_found">このブログにアクセスする際にエラーが発生しました</string>
     <string name="gallery_error">メディア項目を読み込めませんでした</string>
     <string name="no_network_message">利用可能なネットワークがありません</string>
-    <string name="reader_toast_err_remove_tag">このトピックを削除できません</string>
     <string name="reader_title_applog">アプリケーションログ</string>
     <string name="fatal_db_error">アプリのデータベースを作成する際にエラーが発生しました。アプリをもう一度インストールしてみてください。</string>
     <string name="error_blog_hidden">このブログは非表示になっており読み込めません。設定画面から再有効化してもう一度お試しください。</string>

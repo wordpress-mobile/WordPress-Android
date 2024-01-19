@@ -3327,7 +3327,6 @@ Language: cs_CZ
     <string name="dlg_confirm_trash_comments">Přesunout do koše?</string>
     <string name="image_settings">Vlastnosti obrázku</string>
     <string name="fatal_db_error">Vyskytla se chyba při vytváření databáze aplikace. Zkuste přeinstalovat tuto aplikaci.</string>
-    <string name="reader_toast_err_remove_tag">Nelze odstranit tento štítek</string>
     <string name="local_changes">Místní změny</string>
     <string name="reader_title_applog">Protokol aplikace</string>
     <string name="post_settings">Nastavení příspěvku</string>

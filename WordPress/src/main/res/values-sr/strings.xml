@@ -1982,7 +1982,6 @@ Language: sr_RS
     <string name="notifications_empty_all">Нема обавештења … још увек.</string>
     <string name="delete_page">Обриши страницу?</string>
     <string name="delete_post">Обриши чланак?</string>
-    <string name="reader_toast_err_remove_tag">Није могуће уклонити ову тему</string>
     <string name="share_link">Подели везу</string>
     <string name="reader_empty_posts_in_tag_updating">Добављам чланке…</string>
     <string name="comment_spammed">Коментар означен као непожељан</string>

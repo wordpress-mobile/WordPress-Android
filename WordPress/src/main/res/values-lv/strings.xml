@@ -3433,7 +3433,6 @@ Language: lv
     <string name="blog_not_found">Piekļūstot šim emuāram, radās kļūda</string>
     <string name="gallery_error">Multivides vienumu nevarēja izgūt</string>
     <string name="no_network_message">Nav pieejams neviens tīkls</string>
-    <string name="reader_toast_err_remove_tag">Nevar noņemt šo tēmu</string>
     <string name="reader_title_applog">Lietojumprogrammu žurnāls</string>
     <string name="fatal_db_error">Veidojot lietotņu datu bāzi, radās kļūda. Mēģiniet pārinstalēt lietotni.</string>
     <string name="error_blog_hidden">Šis emuārs ir paslēpts, un to nevarēja ielādēt. Iespējojiet to vēlreiz iestatījumos un mēģiniet vēlreiz.</string>

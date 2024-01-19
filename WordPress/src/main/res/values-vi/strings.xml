@@ -3007,7 +3007,6 @@ Language: vi_VN
     <string name="blog_not_found">Có lỗi xảy ra khi truy cập blog này</string>
     <string name="gallery_error">Không tải được danh sách media</string>
     <string name="no_network_message">Không có kết nối mạng</string>
-    <string name="reader_toast_err_remove_tag">Không thể loại bỏ thẻ này</string>
     <string name="reader_title_applog">Nhật ký ứng dụng</string>
     <string name="fatal_db_error">Xảy ra lỗi khi tạo cơ sở dữ liệu ứng dụng. Thử cài đặt lại ứng dụng.</string>
     <string name="error_blog_hidden">Blog này bị ẩn và không xem được. Hiện lại nó trong cài đặt và thử lại.</string>

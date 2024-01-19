@@ -3573,7 +3573,6 @@ Language: ro
     <string name="blog_not_found">A apărut o eroare la accesarea blogului</string>
     <string name="gallery_error">Elementul media nu a putut fi readus</string>
     <string name="no_network_message">Nu e nicio rețea disponibilă</string>
-    <string name="reader_toast_err_remove_tag">Nu pot să înlătur acest subiect</string>
     <string name="reader_title_applog">Jurnal aplicații</string>
     <string name="fatal_db_error">A apărut o eroare în timp ce se creea baza de date a aplicației. Încearcă reinstalarea ei.</string>
     <string name="error_blog_hidden">Acest blog este ascuns și nu poate fi încărcat. Validează-l din nou din setări și încearcă din nou.</string>

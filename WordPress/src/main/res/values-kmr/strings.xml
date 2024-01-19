@@ -2199,7 +2199,6 @@ Language: ku_TR
     <string name="file_not_found">Ji bo hilxistinê dosye nehat dîtin. Ew hatiye jêbirin an jî veguheztin?</string>
     <string name="local_draft">Reşnivîsa cîgehî</string>
     <string name="select_categories">Kategoriyan hilbijêre</string>
-    <string name="reader_toast_err_remove_tag">Ev mijar nayê rakirin</string>
     <string name="fatal_db_error">Dema danegeha sepanê dihat afirandin çewtiyek derket. Sepanê ji nû ve saz bike.</string>
     <string name="error_blog_hidden">Ev blog veşartî ye û nayê barkirin. Di sazkariyan de wê dîsa çalak bike û dîsa biceribîne.</string>
     <string name="error_refresh_media">Medya niha nayên nûkirin</string>

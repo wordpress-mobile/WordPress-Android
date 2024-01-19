@@ -3599,7 +3599,6 @@ Language: ar
     <string name="delete_page">هل تريد حذف الصفحة؟</string>
     <string name="file_not_found">تعذر العثور على الملف المراد رفعه. هل تم حذفه أم نقله؟</string>
     <string name="comment_status_trash">محذوف</string>
-    <string name="reader_toast_err_remove_tag">غير قادر على إزالة هذا الموضوع</string>
     <string name="http_authorization_required">التخويل مطلوب</string>
     <string name="comment_status_approved">تمّت الموافقة</string>
     <string name="share_link">رابط المشاركة</string>

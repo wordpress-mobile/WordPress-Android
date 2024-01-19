@@ -3561,7 +3561,6 @@ Language: he_IL
     <string name="blog_not_found">אירעה שגיאה בזמן הגישה לאתר זה</string>
     <string name="gallery_error">לא ניתן היה לאחזר את פריט המדיה</string>
     <string name="no_network_message">אין רשת זמינה</string>
-    <string name="reader_toast_err_remove_tag">לא ניתן להסיר נושא זה</string>
     <string name="reader_title_applog">יומן יישום</string>
     <string name="fatal_db_error">אירעה שגיאה בזמן יצירת מסד הנתונים של היישום. נסה להתקין מחדש את היישום.</string>
     <string name="error_blog_hidden">זה אתר סמוי ולא ניתן לטעון אותו. אפשר אותו שוב בהגדרות ונסה שנית.</string>

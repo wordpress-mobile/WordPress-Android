@@ -2294,7 +2294,6 @@ Language: es_MX
     <string name="media_gallery_type_thumbnail_grid">Malla (red) de miniaturas</string>
     <string name="post_not_found">Ocurrió un error al cargar la entrada. Actualiza tus entradas e intenta nuevamente.</string>
     <string name="plugin_not_found">Ocurrió un error al acceder a este plugin</string>
-    <string name="reader_toast_err_remove_tag">No se ha podido eliminar este tema</string>
     <string name="share_link">Compartir enlace</string>
     <string name="reader_empty_posts_in_tag_updating">Recuperando entradas…</string>
     <string name="reader_likes_multi">A %,d personas les gusta esto</string>

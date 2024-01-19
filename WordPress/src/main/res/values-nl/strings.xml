@@ -3510,7 +3510,6 @@ Language: nl
     <string name="blog_not_found">Er heeft zich een fout voorgedaan tijdens het openen van dit blog</string>
     <string name="gallery_error">Media-item kan niet worden opgehaald</string>
     <string name="no_network_message">Er is geen netwerk beschikbaar</string>
-    <string name="reader_toast_err_remove_tag">Niet mogelijk om dit onderwerp te verwijderen</string>
     <string name="reader_title_applog">Applicatie log</string>
     <string name="fatal_db_error">Er heeft zich een fout voorgedaan bij het aanmaken van de database van de app. Probeer de app opnieuw te installeren.</string>
     <string name="error_blog_hidden">Dit blog is verborgen en kan niet worden geladen. Schakel het blog in instellingen in en probeer het opnieuw.</string>

@@ -3573,7 +3573,6 @@ Language: en_GB
     <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="reader_toast_err_remove_tag">Unable to remove this topic</string>
     <string name="reader_title_applog">Application log</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
