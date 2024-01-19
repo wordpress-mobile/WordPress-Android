@@ -227,7 +227,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             followButton.setEnabled(true);
             if (!succeeded) {
                 int errResId = isAskingToFollow ? R.string.reader_toast_err_unable_to_follow_blog
-                        : R.string.reader_toast_err_unfollow_blog;
+                        : R.string.reader_toast_err_unable_to_unfollow_blog;
                 ToastUtils.showToast(context, errResId);
                 followButton.setIsFollowed(!isAskingToFollow);
                 blog.isFollowing = !isAskingToFollow;
