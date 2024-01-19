@@ -99,7 +99,7 @@ public class ReaderSiteSearchResultView extends LinearLayout {
                 }
                 mFollowButton.setEnabled(true);
                 if (!succeeded) {
-                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
+                    int errResId = isAskingToFollow ? R.string.reader_toast_err_unable_to_follow_blog
                             : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
                     mFollowButton.setIsFollowed(!isAskingToFollow);

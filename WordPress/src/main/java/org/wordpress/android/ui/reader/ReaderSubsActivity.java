@@ -396,7 +396,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                             errMsg = getString(R.string.reader_toast_err_follow_blog_not_found);
                             break;
                         default:
-                            errMsg = getString(R.string.reader_toast_err_follow_blog) + " (" + statusCode + ")";
+                            errMsg = getString(R.string.reader_toast_err_unable_to_follow_blog) + " (" + statusCode + ")";
                             break;
                     }
                     showInfoSnackbar(errMsg);
@@ -423,7 +423,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                 // in bottom sheet reader filtering
                 performUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
             } else {
-                showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
+                showInfoSnackbar(getString(R.string.reader_toast_err_unable_to_follow_blog));
             }
         };
         // note that this uses the endpoint to follow as a feed since typed URLs are more
