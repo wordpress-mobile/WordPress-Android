@@ -405,7 +405,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     _snackbarEvents.postValue(
                         Event(
                             SnackbarMessageHolder(
-                                UiStringRes(R.string.reader_toast_blog_blocked),
+                                UiStringRes(R.string.reader_toast_posts_from_this_blog_blocked),
                                 UiStringRes(R.string.undo),
                                 {
                                     coroutineScope.launch {
