@@ -393,7 +393,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                             break;
                         case 0: // can happen when host name not found
                         case 404:
-                            errMsg = getString(R.string.reader_toast_err_follow_blog_not_found);
+                            errMsg = getString(R.string.reader_toast_err_follow_blog_could_not_be_found);
                             break;
                         default:
                             errMsg = getString(R.string.reader_toast_err_unable_to_follow_blog) + " (" + statusCode + ")";
