@@ -631,7 +631,6 @@ Language: hr
     <string name="reader_toast_err_url_intent">Nije moguće otvoriti %s</string>
     <string name="comments_empty_list">Još nema komentara</string>
     <string name="sign_up_label">Prijavite se</string>
-    <string name="reader_toast_err_tag_invalid">Ovo nije prava tema </string>
     <string name="stats_timeframe_days">Dani</string>
     <string name="stats_timeframe_weeks">Tjedni</string>
     <string name="stats_timeframe_months">Mjeseci</string>

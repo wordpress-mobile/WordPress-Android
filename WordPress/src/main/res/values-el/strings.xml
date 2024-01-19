@@ -1158,7 +1158,6 @@ Language: el_GR
     <string name="reader_view_reblog">Αναμετάδοση</string>
     <string name="reader_toast_err_view_image">Αδυναμία προβολής της εικόνας</string>
     <string name="reader_label_added_tag">Προστέθηκε η %s</string>
-    <string name="reader_toast_err_tag_invalid">Αυτή η ετικέτα δεν είναι έγκυρη</string>
     <string name="reader_toast_err_url_intent">Δε στάθηκε δυνατό να ανοιχθεί το %s</string>
     <string name="empty_list_default">Αυτή η λίστα είναι κενή</string>
     <string name="reader_hint_comment_on_comment">Απάντηση σ\' αυτό το σχόλιο…</string>

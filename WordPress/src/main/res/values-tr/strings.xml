@@ -3636,7 +3636,6 @@ Language: tr
     <string name="reader_toast_err_url_intent">%s açılamadı</string>
     <string name="reader_toast_err_view_image">Görsel görüntülenemedi</string>
     <string name="reader_toast_err_share_intent">Paylaşılamadı</string>
-    <string name="reader_toast_err_tag_invalid">Bu geçerli bir konu değil</string>
     <string name="reader_toast_err_comment_failed">Yorumunuz gönderilemedi</string>
     <string name="reader_likes_only_you">Bunu beğendin</string>
     <string name="reader_likes_one">Bir kişi bunu beğendi</string>

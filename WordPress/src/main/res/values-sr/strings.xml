@@ -2009,7 +2009,6 @@ Language: sr_RS
     <string name="reader_hint_comment_on_comment">Одговор на коментар…</string>
     <string name="comments_empty_list">Још увек нема коментара</string>
     <string name="sign_up_label">Пријави се</string>
-    <string name="reader_toast_err_tag_invalid">Ово није исправна тема</string>
     <string name="media_gallery_type_squares">Квадрати</string>
     <string name="media_gallery_type_circles">Кругови</string>
     <string name="media_edit_title_text">Наслов</string>

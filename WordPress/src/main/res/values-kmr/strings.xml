@@ -2237,7 +2237,6 @@ Language: ku_TR
     <string name="reader_label_added_tag">%s hat tevlêkirin</string>
     <string name="comments_empty_list">Hîn ti şîrove tune ye</string>
     <string name="reader_toast_err_url_intent">%s nehat vekirin</string>
-    <string name="reader_toast_err_tag_invalid">Ew mijar ne derbasdar e</string>
     <string name="share_action">Parve bike</string>
     <string name="theme_activate_button">Biçalakîne</string>
     <string name="themes">Rûkar</string>

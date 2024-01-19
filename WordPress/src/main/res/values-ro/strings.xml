@@ -3636,7 +3636,6 @@ Language: ro
     <string name="reader_toast_err_url_intent">Nu pot deschide %s</string>
     <string name="reader_toast_err_view_image">Nu pot vedea imaginea</string>
     <string name="reader_toast_err_share_intent">Nu pot partaja</string>
-    <string name="reader_toast_err_tag_invalid">Acela nu este un subiect valid</string>
     <string name="reader_toast_err_comment_failed">Nu s-a putut publica comentariul tău</string>
     <string name="reader_likes_only_you">Îți place acesta</string>
     <string name="reader_likes_one">O persoană apreciază asta</string>

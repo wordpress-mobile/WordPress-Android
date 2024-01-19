@@ -252,7 +252,6 @@ Language: da_DK
     <string name="reader_toast_err_share_intent">Kunne ikke dele</string>
     <string name="reader_toast_err_comment_failed">Kunne ikke sende din kommentar</string>
     <string name="reader_hint_comment_on_comment">Besvar kommentar…</string>
-    <string name="reader_toast_err_tag_invalid">Dette er ikke et gyldigt emne</string>
     <string name="media_edit_failure">Opdatering mislykkedes</string>
     <string name="theme_activate_button">Aktiver</string>
     <string name="share_action">Del</string>

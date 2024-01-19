@@ -3625,7 +3625,6 @@ Language: sq_AL
     <string name="reader_toast_err_url_intent">S’arrin të hapë %s</string>
     <string name="reader_toast_err_view_image">S’arrin të shihet figura</string>
     <string name="reader_toast_err_share_intent">S’arrin të ndajë me të tjerët</string>
-    <string name="reader_toast_err_tag_invalid">Kjo s’është temë e vlefshme</string>
     <string name="reader_toast_err_comment_failed">S’u postua dot komenti juaj</string>
     <string name="reader_likes_only_you">E pëlqeni</string>
     <string name="reader_likes_one">Kjo i pëlqen një personi</string>

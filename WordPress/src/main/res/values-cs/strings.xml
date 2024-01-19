@@ -3363,7 +3363,6 @@ Language: cs_CZ
     <string name="reader_toast_err_view_image">Nelze zobrazit obrázek</string>
     <string name="reader_toast_err_url_intent">Nelze otevřít %s</string>
     <string name="reader_toast_err_comment_failed">Nepodařilo se publikovat váš komentář</string>
-    <string name="reader_toast_err_tag_invalid">Toto není platný štítek</string>
     <string name="reader_label_removed_tag">%s byl odebrán</string>
     <string name="reader_label_added_tag">%s byl přidán</string>
     <string name="reader_likes_only_you">To se vám líbí</string>

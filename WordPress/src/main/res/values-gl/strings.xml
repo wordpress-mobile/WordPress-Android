@@ -3636,7 +3636,6 @@ Language: gl_ES
     <string name="reader_toast_err_url_intent">No foi posible abrir %s</string>
     <string name="reader_toast_err_view_image">Non foi posible mostrar a imaxe</string>
     <string name="reader_toast_err_share_intent">Non foi posible compartir</string>
-    <string name="reader_toast_err_tag_invalid">Non é un tema válido</string>
     <string name="reader_toast_err_comment_failed">Non foi posible enviar o comentario</string>
     <string name="reader_likes_only_you">Gústache isto</string>
     <string name="reader_likes_one">A unha persoa gustoulle isto</string>

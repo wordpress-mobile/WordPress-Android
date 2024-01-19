@@ -3624,7 +3624,6 @@ Language: ko_KR
     <string name="reader_toast_err_url_intent">%s를 열 수 없습니다</string>
     <string name="reader_toast_err_view_image">이미지를 표시 할 수 없습니다</string>
     <string name="reader_toast_err_share_intent">공유에 실패</string>
-    <string name="reader_toast_err_tag_invalid">유효한 토픽이 아닙니다</string>
     <string name="reader_toast_err_comment_failed">의견을 게시 할 수 없습니다</string>
     <string name="reader_likes_only_you">\"좋아요\"를 클릭 했습니다</string>
     <string name="reader_likes_one">1명이 \"좋아요\"를 달았습니다</string>

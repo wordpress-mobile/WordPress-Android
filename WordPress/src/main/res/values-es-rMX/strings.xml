@@ -2321,7 +2321,6 @@ Language: es_MX
     <string name="comments_empty_list">No hay comentarios aún</string>
     <string name="reader_view_reblog">Reblog</string>
     <string name="sign_up_label">Registro</string>
-    <string name="reader_toast_err_tag_invalid">Este no es un tema válido</string>
     <string name="theme_activate_button">Activar</string>
     <string name="media_edit_caption_text">Leyenda</string>
     <string name="media_gallery_type_circles">Círculos</string>

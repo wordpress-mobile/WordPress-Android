@@ -1418,7 +1418,6 @@ Language: sk
     <string name="reader_likes_one">Jeden lajk</string>
     <string name="reader_hint_comment_on_comment">Odpovedajte na komentár…</string>
     <string name="comments_empty_list">Zatiaľ žiadne komentáre</string>
-    <string name="reader_toast_err_tag_invalid">Toto nie je platná téma</string>
     <string name="themes">Témy</string>
     <string name="stats_timeframe_days">Dní</string>
     <string name="stats_timeframe_weeks">Týždňov</string>

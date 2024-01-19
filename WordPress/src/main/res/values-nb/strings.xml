@@ -2416,7 +2416,6 @@ Language: nb_NO
     <string name="reader_toast_err_url_intent">Klarte ikke å åpne %s</string>
     <string name="reader_toast_err_view_image">Klarte ikke å vise bilde</string>
     <string name="reader_toast_err_share_intent">Klarte ikke å dele</string>
-    <string name="reader_toast_err_tag_invalid">Det var ikke et gyldig emne</string>
     <string name="reader_toast_err_comment_failed">Klarte ikke å poste kommentaren din</string>
     <string name="reader_likes_only_you">Du liker dette</string>
     <string name="reader_likes_one">En person liker dette</string>

@@ -3625,7 +3625,6 @@ Language: fr
     <string name="reader_toast_err_url_intent">Impossible d\'ouvrir %s</string>
     <string name="reader_toast_err_view_image">Impossible de voir l\'image</string>
     <string name="reader_toast_err_share_intent">Impossible de partager</string>
-    <string name="reader_toast_err_tag_invalid">Ce n’est pas un sujet valide</string>
     <string name="reader_toast_err_comment_failed">Impossible d\'envoyer votre commentaire</string>
     <string name="reader_likes_only_you">Vous aimez ça</string>
     <string name="reader_likes_one">Une personne aime ça</string>

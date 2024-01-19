@@ -2177,7 +2177,6 @@
     <!-- toast messages -->
     <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>
     <string name="reader_toast_err_tag_already_subscribed">You\'re already subscribed to this tag</string>
-    <string name="reader_toast_err_tag_invalid">That isn\'t a valid topic</string>
     <string name="reader_toast_err_tag_not_valid">That isn\'t a valid tag</string>
     <string name="reader_toast_err_add_tag">Unable to add this topic</string>
     <string name="reader_toast_err_remove_tag">Unable to remove this topic</string>
