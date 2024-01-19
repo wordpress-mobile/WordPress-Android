@@ -1829,7 +1829,6 @@ Language: gl_ES
     <string name="gutenberg_native_add_block_before">Engadir o bloque antes</string>
     <string name="gutenberg_native_add_block_after">Engadir o bloque despois</string>
     <string name="reader_filter_empty_tags_action">Engadir un tema</string>
-    <string name="reader_filter_empty_sites_action">Seguir un sitio</string>
     <string name="reader_filter_main_title">Seguindo</string>
     <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Lenda do vídeo. %s</string>

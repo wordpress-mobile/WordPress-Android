@@ -1819,7 +1819,6 @@ Language: fr
     <string name="gutenberg_native_add_block_before">Ajouter le bloc avant</string>
     <string name="gutenberg_native_add_block_after">Ajouter le bloc après</string>
     <string name="reader_filter_empty_tags_action">Ajouter un sujet</string>
-    <string name="reader_filter_empty_sites_action">S’abonner au site</string>
     <string name="reader_filter_main_title">Abonné</string>
     <string name="reader_filter_cta">Filtrer</string>
     <string name="gutenberg_native_video_caption_s">Sous-titre vidéo. %s</string>

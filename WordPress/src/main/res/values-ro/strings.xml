@@ -1829,7 +1829,6 @@ Language: ro
     <string name="gutenberg_native_add_block_before">Adaugă bloc înainte</string>
     <string name="gutenberg_native_add_block_after">Adaugă bloc după</string>
     <string name="reader_filter_empty_tags_action">Adaugă un subiect</string>
-    <string name="reader_filter_empty_sites_action">Urmărește un site</string>
     <string name="reader_filter_main_title">Urmăresc</string>
     <string name="reader_filter_cta">Filtrează</string>
     <string name="gutenberg_native_video_caption_s">Subtitrare video. %s</string>

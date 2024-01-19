@@ -1696,7 +1696,6 @@ Language: lv
     <string name="gutenberg_native_add_block_before">Pievienot bloku pirms</string>
     <string name="gutenberg_native_add_block_after">Pievienot bloku pēc</string>
     <string name="reader_filter_empty_tags_action">Pievienot tematu</string>
-    <string name="reader_filter_empty_sites_action">Sekot vietnei</string>
     <string name="reader_filter_main_title">Sekojošs</string>
     <string name="reader_filter_cta">Filtrs</string>
     <string name="gutenberg_native_video_caption_s">Video paraksts. %s</string>

@@ -1817,7 +1817,6 @@ Language: zh_CN
     <string name="gutenberg_native_add_block_before">在之前添加区块</string>
     <string name="gutenberg_native_add_block_after">在之后添加区块</string>
     <string name="reader_filter_empty_tags_action">添加主题</string>
-    <string name="reader_filter_empty_sites_action">关注站点</string>
     <string name="reader_filter_main_title">已关注</string>
     <string name="reader_filter_cta">过滤器</string>
     <string name="gutenberg_native_video_caption_s">视频说明。%s</string>

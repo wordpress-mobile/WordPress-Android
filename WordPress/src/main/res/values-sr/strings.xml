@@ -511,7 +511,6 @@ Language: sr_RS
     <string name="gutenberg_native_add_block_before">Додај блок пре</string>
     <string name="gutenberg_native_add_block_after">Додај блок после</string>
     <string name="reader_filter_empty_tags_action">Додај ознаку</string>
-    <string name="reader_filter_empty_sites_action">Прати сајт</string>
     <string name="reader_filter_cta">Филтрирај</string>
     <string name="gutenberg_native_edit_video">Уреди видео запис</string>
     <string name="post_list_author">Аутор чланка</string>
