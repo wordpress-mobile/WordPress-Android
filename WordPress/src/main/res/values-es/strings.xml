@@ -86,7 +86,6 @@ Language: es
     <string name="account_and_settings">Cuenta y ajustes</string>
     <string name="site_creation_plans_selection_title">Elige un plan</string>
     <string name="site_creation_domain_free_with_annual_plan">Gratis durante el primer año con los planes de pago anuales</string>
-    <string name="reader_label_followers_count_single">1 seguidor</string>
     <string name="reader_secondary_bookmarked">Guardado</string>
     <string name="reader_secondary_bookmark">Guardar</string>
     <string name="reader_discover_recommended_header_new">Puede que te guste</string>

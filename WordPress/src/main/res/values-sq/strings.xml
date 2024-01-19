@@ -83,7 +83,6 @@ Language: sq_AL
     <string name="account_and_settings">Rregullime dhe Llogari</string>
     <string name="site_creation_plans_selection_title">Përzgjidhni një plan</string>
     <string name="site_creation_domain_free_with_annual_plan">Falas për vitin e parë, me plane vjetore të paguar</string>
-    <string name="reader_label_followers_count_single">1 ndjekës</string>
     <string name="reader_secondary_bookmarked">U ruajt</string>
     <string name="reader_secondary_bookmark">Ruaje</string>
     <string name="reader_discover_recommended_header_new">Mund t’ju pëlqente edhe</string>

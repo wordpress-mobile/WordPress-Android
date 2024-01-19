@@ -83,7 +83,6 @@ Language: ko_KR
     <string name="account_and_settings">계정 및 설정</string>
     <string name="site_creation_plans_selection_title">요금제 선택</string>
     <string name="site_creation_domain_free_with_annual_plan">연간 유료 요금제에서는 첫해 무료</string>
-    <string name="reader_label_followers_count_single">팔로워 1명</string>
     <string name="reader_secondary_bookmarked">저장됨</string>
     <string name="reader_secondary_bookmark">저장</string>
     <string name="reader_discover_recommended_header_new">좋아할 수도 있습니다</string>

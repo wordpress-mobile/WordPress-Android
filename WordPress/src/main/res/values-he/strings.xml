@@ -85,7 +85,6 @@ Language: he_IL
     <string name="account_and_settings">חשבון והגדרות</string>
     <string name="site_creation_plans_selection_title">לבחור תוכנית</string>
     <string name="site_creation_domain_free_with_annual_plan">בחינם לשנה הראשונה ברכישת תוכנית שנתית בתשלום</string>
-    <string name="reader_label_followers_count_single">עוקב אחד</string>
     <string name="reader_secondary_bookmarked">נשמר</string>
     <string name="reader_secondary_bookmark">לשמור</string>
     <string name="reader_discover_recommended_header_new">אולי יעניין אותך</string>

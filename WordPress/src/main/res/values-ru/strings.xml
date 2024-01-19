@@ -86,7 +86,6 @@ Language: ru
     <string name="account_and_settings">Учетная запись и настройки</string>
     <string name="site_creation_plans_selection_title">Выберите тарифный план</string>
     <string name="site_creation_domain_free_with_annual_plan">Бесплатно на первый год при покупке любого годового тарифного плана</string>
-    <string name="reader_label_followers_count_single">1 подписчик</string>
     <string name="reader_secondary_bookmarked">Сохранено</string>
     <string name="reader_secondary_bookmark">Сохранить</string>
     <string name="reader_discover_recommended_header_new">Вам может понравиться</string>

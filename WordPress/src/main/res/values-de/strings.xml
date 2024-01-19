@@ -86,7 +86,6 @@ Language: de
     <string name="account_and_settings">Konto und Einstellungen</string>
     <string name="site_creation_plans_selection_title">Tarif auswählen</string>
     <string name="site_creation_domain_free_with_annual_plan">Bei kostenpflichtigen Jahrestarifen im ersten Jahr kostenlos</string>
-    <string name="reader_label_followers_count_single">1 Follower</string>
     <string name="reader_secondary_bookmarked">Gespeichert</string>
     <string name="reader_secondary_bookmark">Speichern</string>
     <string name="reader_discover_recommended_header_new">Das gefällt dir vielleicht</string>

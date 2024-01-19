@@ -83,7 +83,6 @@ Language: ja_JP
     <string name="account_and_settings">アカウントと設定</string>
     <string name="site_creation_plans_selection_title">プランを選択</string>
     <string name="site_creation_domain_free_with_annual_plan">年間有料プランでは初年度無料</string>
-    <string name="reader_label_followers_count_single">1人のフォロワー</string>
     <string name="reader_secondary_bookmarked">保存しました</string>
     <string name="reader_secondary_bookmark">保存</string>
     <string name="reader_discover_recommended_header_new">おすすめ</string>

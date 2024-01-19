@@ -85,7 +85,6 @@ Language: zh_TW
     <string name="account_and_settings">帳號與設定</string>
     <string name="site_creation_plans_selection_title">選取方案</string>
     <string name="site_creation_domain_free_with_annual_plan">選購任何年繳方案，第一年完全免費</string>
-    <string name="reader_label_followers_count_single">1 位關注者</string>
     <string name="reader_secondary_bookmarked">已儲存</string>
     <string name="reader_secondary_bookmark">儲存</string>
     <string name="reader_discover_recommended_header_new">你可能會喜歡</string>

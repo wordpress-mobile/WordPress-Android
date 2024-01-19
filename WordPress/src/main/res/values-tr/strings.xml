@@ -86,7 +86,6 @@ Language: tr
     <string name="account_and_settings">Hesap ve Ayarlar</string>
     <string name="site_creation_plans_selection_title">Paket seçin</string>
     <string name="site_creation_domain_free_with_annual_plan">Yıllık ücretli paketlerde ilk yıl ücretsizdir.</string>
-    <string name="reader_label_followers_count_single">1 takipçi</string>
     <string name="reader_secondary_bookmarked">Kaydedildi</string>
     <string name="reader_secondary_bookmark">Kaydet</string>
     <string name="reader_discover_recommended_header_new">Şunları beğenebilirsiniz:</string>

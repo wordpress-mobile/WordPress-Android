@@ -81,7 +81,6 @@ Language: ar
     <string name="account_and_settings">الحساب والإعدادات</string>
     <string name="site_creation_plans_selection_title">تحديد خطة</string>
     <string name="site_creation_domain_free_with_annual_plan">مجاني للعام الأول مع الخطط السنوية المدفوعة</string>
-    <string name="reader_label_followers_count_single">متابع واحد</string>
     <string name="reader_secondary_bookmarked">تم الحفظ</string>
     <string name="reader_secondary_bookmark">حفظ</string>
     <string name="reader_discover_recommended_header_new">ربما ينال إعجابك</string>

@@ -86,7 +86,6 @@ Language: gl_ES
     <string name="account_and_settings">Conta e axustes</string>
     <string name="site_creation_plans_selection_title">Selecciona un plan</string>
     <string name="site_creation_domain_free_with_annual_plan">Gratis durante o primeiro ano cos plans de pago anuais</string>
-    <string name="reader_label_followers_count_single">1 seguidor</string>
     <string name="reader_secondary_bookmarked">Gardado</string>
     <string name="reader_secondary_bookmark">Gardar</string>
     <string name="reader_discover_recommended_header_new">Pode que che guste</string>
