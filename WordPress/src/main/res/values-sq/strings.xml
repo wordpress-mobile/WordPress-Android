@@ -3526,7 +3526,6 @@ Language: sq_AL
     <string name="signing_out">Po dilet…</string>
     <string name="reader_toast_err_generic">I pazoti të kryejë këtë veprim</string>
     <string name="reader_toast_err_block_blog">S’arrihet të bllokohet ky sajt</string>
-    <string name="reader_toast_blog_blocked">Postimet prej këtij sajti s’do të shfaqen më</string>
     <string name="reader_menu_block_blog">Bllokoje këtë sajt</string>
     <string name="schedule_verb">Planifikoje</string>
     <string name="update_verb">Përditësoje</string>

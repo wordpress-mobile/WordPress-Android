@@ -3525,7 +3525,6 @@ Language: he_IL
     <string name="signing_out">יוצא מהמערכת…</string>
     <string name="reader_toast_err_generic">לא ניתן לבצע את הפעולה</string>
     <string name="reader_toast_err_block_blog">לא ניתן לחסום אתר זה</string>
-    <string name="reader_toast_blog_blocked">הפוסטים מהאתר הזה לא יוצגו עוד</string>
     <string name="reader_menu_block_blog">לחסום את האתר הזה</string>
     <string name="schedule_verb">תזמן</string>
     <string name="update_verb">עדכן</string>

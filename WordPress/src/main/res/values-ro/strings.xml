@@ -3537,7 +3537,6 @@ Language: ro
     <string name="signing_out">Deautentificare….</string>
     <string name="reader_toast_err_generic">Nu pot face acestă acțiune</string>
     <string name="reader_toast_err_block_blog">Nu pot bloca acest site</string>
-    <string name="reader_toast_blog_blocked">Articolele din acest site nu vor mai fi arătate</string>
     <string name="reader_menu_block_blog">Blochează acest site</string>
     <string name="schedule_verb">Programează</string>
     <string name="update_verb">Actualizează</string>

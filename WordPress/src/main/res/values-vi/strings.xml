@@ -2971,7 +2971,6 @@ Language: vi_VN
     <string name="signing_out">Đang đăng xuất…</string>
     <string name="reader_toast_err_generic">Không thể thực hiện thao tác này</string>
     <string name="reader_toast_err_block_blog">Không thể ẩn blog này</string>
-    <string name="reader_toast_blog_blocked">Bài viết từ blog này sẽ không được hiển thị nữa</string>
     <string name="reader_menu_block_blog">Ẩn blog này</string>
     <string name="schedule_verb">Lịch đăng</string>
     <string name="update_verb">Cập nhật</string>

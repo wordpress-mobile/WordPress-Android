@@ -2211,7 +2211,6 @@ Language: es_MX
     <string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
     <string name="reader_empty_posts_in_tag">No hay entradas con esta temática</string>
     <string name="reader_menu_block_blog">Bloquear este sitio</string>
-    <string name="reader_toast_blog_blocked">Las entradas de este sitio no volverán a mostrarse</string>
     <string name="reader_toast_err_block_blog">No es posible bloquear este sitio</string>
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
     <string name="update_verb">Actualizar</string>

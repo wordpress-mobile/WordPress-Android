@@ -3525,7 +3525,6 @@ Language: ko_KR
     <string name="signing_out">로그아웃…</string>
     <string name="reader_toast_err_generic">이 작업을 실행할 수 없습니다</string>
     <string name="reader_toast_err_block_blog">이 블로그를 차단할 수 없습니다</string>
-    <string name="reader_toast_blog_blocked">이 블로그에서 글 올리기는  더 이상 보이지 않을 것입니다</string>
     <string name="reader_menu_block_blog">이 블로그 차단</string>
     <string name="schedule_verb">예약</string>
     <string name="update_verb">업데이트</string>

@@ -2129,7 +2129,6 @@ Language: ku_TR
     <string name="reader_menu_block_blog">Vê malperê asteng bike</string>
     <string name="reader_toast_err_block_blog">Ev malper nayê astengkirin</string>
     <string name="reader_toast_err_generic">Ev çalakî nayê pêkanîn</string>
-    <string name="reader_toast_blog_blocked">Şandiyên ji vê malperê êdî ew ê neyên nîşandan</string>
     <string name="schedule_verb">Demsaz bike</string>
     <string name="update_verb">Hildemîne</string>
     <string name="reader_title_blog_preview">Malpera Xwînerê</string>

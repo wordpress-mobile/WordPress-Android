@@ -3537,7 +3537,6 @@ Language: sv_SE
     <string name="signing_out">Loggar ut…</string>
     <string name="reader_toast_err_generic">Kunde inte genomföra denna åtgärd</string>
     <string name="reader_toast_err_block_blog">Kunde inte blockera denna webbplats</string>
-    <string name="reader_toast_blog_blocked">Inlägg från denna webbplats kommer inte längre att visas</string>
     <string name="reader_menu_block_blog">Blockera denna webbplats</string>
     <string name="schedule_verb">Tidinställ</string>
     <string name="update_verb">Uppdatera</string>

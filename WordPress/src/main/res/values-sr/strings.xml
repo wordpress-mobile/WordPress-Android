@@ -1901,7 +1901,6 @@ Language: sr_RS
     <string name="reader_toast_err_generic">Није могуће обавити овај поступак</string>
     <string name="reader_toast_err_block_blog">Није могуће блокирати ову страницу</string>
     <string name="reader_menu_block_blog">Блокирај овај сајт</string>
-    <string name="reader_toast_blog_blocked">Чланци са овог сајта више неће бити приказивани</string>
     <string name="schedule_verb">Заказати</string>
     <string name="update_verb">Ажурирај</string>
     <string name="reader_empty_recommended_blogs">Нема препоручених сајтова</string>

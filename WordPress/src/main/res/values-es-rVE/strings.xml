@@ -3013,7 +3013,6 @@ Language: es_VE
     <string name="signing_out">Cerrando sesión…</string>
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
     <string name="reader_toast_err_block_blog">No es posible bloquear este sitio</string>
-    <string name="reader_toast_blog_blocked">Las entradas de este sitio no volverán a mostrarse</string>
     <string name="reader_menu_block_blog">Bloquear este sitio</string>
     <string name="schedule_verb">Programar</string>
     <string name="update_verb">Actualizar</string>

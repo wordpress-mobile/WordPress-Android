@@ -523,7 +523,6 @@ Language: hr
     <string name="reader_empty_posts_in_tag">Nema članaka na ovu temu </string>
     <string name="reader_toast_err_generic">Nije moguće izvesti tu akciju</string>
     <string name="reader_toast_err_block_blog">Nije moguće blokirati ovu web-stranicu</string>
-    <string name="reader_toast_blog_blocked">Objave sa ove web-stranice više neće biti prikazane</string>
     <string name="reader_menu_block_blog">Blokiraj ovu web-stranicu</string>
     <string name="update_verb">Ažuriraj</string>
     <string name="schedule_verb">Zakazati</string>

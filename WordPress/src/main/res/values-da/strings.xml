@@ -160,7 +160,6 @@ Language: da_DK
     <string name="mnu_comment_liked">Synes godt om</string>
     <string name="reader_empty_posts_in_tag">Ingen indlæg med dette emne</string>
     <string name="reader_toast_err_generic">Denne handling kan ikke udføres</string>
-    <string name="reader_toast_blog_blocked">Indlæg fra dette websted, vil ikke længere blive vist</string>
     <string name="reader_menu_block_blog">Blokere dette websted</string>
     <string name="reader_toast_err_block_blog">Det er ikke muligt at blokere dette websted</string>
     <string name="update_verb">Opdater</string>

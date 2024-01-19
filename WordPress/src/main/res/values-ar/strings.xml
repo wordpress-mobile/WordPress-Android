@@ -3520,7 +3520,6 @@ Language: ar
     <string name="reader_toast_err_generic">غير قادر على تنفيذ هذا الإجراء</string>
     <string name="reader_menu_block_blog">حظر هذا الموقع</string>
     <string name="reader_toast_err_block_blog">تعذر حظر هذا الموقع</string>
-    <string name="reader_toast_blog_blocked">لن تظهر المقالات من هذا الموقع بعد الآن</string>
     <string name="update_verb">تحديث</string>
     <string name="schedule_verb">جدولة</string>
     <string name="reader_empty_recommended_blogs">لا توجد مواقع موصى بها</string>

@@ -3537,7 +3537,6 @@ Language: gl_ES
     <string name="signing_out">Saíndo…</string>
     <string name="reader_toast_err_generic">Non foi posible realizar esta acción</string>
     <string name="reader_toast_err_block_blog">Non foi posible bloquear este blogue</string>
-    <string name="reader_toast_blog_blocked">Os artigos deste blogue non se mostrarán máis</string>
     <string name="reader_menu_block_blog">Bloquear este blogue</string>
     <string name="schedule_verb">Programar</string>
     <string name="update_verb">Actualizar</string>

@@ -3305,7 +3305,6 @@ Language: pt_BR
     <string name="signing_out">Saindo…</string>
     <string name="reader_toast_err_generic">Não é possível executar esta ação</string>
     <string name="reader_toast_err_block_blog">Não é possível bloquear este site</string>
-    <string name="reader_toast_blog_blocked">Os posts deste blog não serão mais exibidos</string>
     <string name="reader_menu_block_blog">Bloquear este site</string>
     <string name="schedule_verb">Agendar</string>
     <string name="update_verb">Atualizar</string>

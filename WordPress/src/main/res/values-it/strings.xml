@@ -3523,7 +3523,6 @@ Language: it
     <string name="signing_out">Disconnessione in corso…</string>
     <string name="reader_toast_err_generic">Impossibile eseguire questa azione</string>
     <string name="reader_toast_err_block_blog">Impossibile bloccare questo sito</string>
-    <string name="reader_toast_blog_blocked">Gli articoli di questo sito non verranno più mostrati</string>
     <string name="reader_menu_block_blog">Blocca questo sito</string>
     <string name="schedule_verb">Pianifica</string>
     <string name="update_verb">Aggiorna</string>
