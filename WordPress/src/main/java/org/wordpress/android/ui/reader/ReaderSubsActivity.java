@@ -353,7 +353,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                         ReaderTracker.SOURCE_SETTINGS
                 );
             } else {
-                showInfoSnackbar(getString(R.string.reader_toast_err_add_tag));
+                showInfoSnackbar(getString(R.string.reader_toast_err_adding_tag));
                 mLastAddedTagName = null;
             }
         };
