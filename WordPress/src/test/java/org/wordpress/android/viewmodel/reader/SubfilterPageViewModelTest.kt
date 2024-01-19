@@ -101,7 +101,7 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
                         ),
                         buttonText = UiStringRes(
                             if (accountStore.hasAccessToken())
-                                R.string.reader_filter_empty_sites_action
+                                R.string.reader_filter_empty_blogs_action
                             else
                                 R.string.reader_filter_self_hosted_empty_sites_tags_action
                         ),

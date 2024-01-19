@@ -1630,6 +1630,7 @@
     <string name="reader_filter_self_hosted_empty_blogs_list">Log in to WordPress.com to see the latest posts from blogs you\'re subscribed to</string>
     <string name="reader_filter_self_hosted_empty_tags_list">Log in to WordPress.com to see the latest posts from tags you\'re subscribed to</string>
     <string name="reader_filter_empty_sites_action">Follow a site</string>
+    <string name="reader_filter_empty_blogs_action">Subscribe to a blog</string>
     <string name="reader_filter_empty_tags_action">Add a topic</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
     <string name="reader_dot_separator" translatable="false">\u0020\u2022\u0020</string>

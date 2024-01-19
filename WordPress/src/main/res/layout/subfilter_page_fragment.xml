@@ -45,7 +45,7 @@
             android:textAllCaps="true"
             android:textColor="@color/primary"
             android:visibility="visible"
-            android:text="@string/reader_filter_empty_sites_action"
+            android:text="@string/reader_filter_empty_blogs_action"
             style="@style/Widget.AppCompat.Button.Borderless"/>
 
     </LinearLayout>
