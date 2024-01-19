@@ -59,22 +59,21 @@ class NotificationsSettingsDialogFragment(
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = requireContext()
-
         @SuppressLint("InflateParams")
         val layout = requireActivity().layoutInflater.inflate(
             R.layout.notifications_settings_types_dialog, null)
-        val outerView = layout.findViewById<ScrollView>(R.id.outer_view)
 
+        val outerView = layout.findViewById<ScrollView>(R.id.outer_view)
         outerView.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
+            LinearLayout.LayoutParams.WRAP_CONTENT)
+
         val innerView = LinearLayout(context)
         innerView.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.MATCH_PARENT
-        )
+            LinearLayout.LayoutParams.MATCH_PARENT)
         innerView.orientation = LinearLayout.VERTICAL
+
         if (mShouldDisplayMainSwitch) {
             val dividerView = View(context)
             val dividerHeight = context.resources.getDimensionPixelSize(
@@ -89,16 +88,16 @@ class NotificationsSettingsDialogFragment(
             spacerView.layoutParams = ViewGroup.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, spacerHeight)
             innerView.addView(spacerView)
         }
+
         mDisabledView = View.inflate(context, R.layout.notifications_tab_disabled_text_layout, null)
         mDisabledView?.layoutParams = ViewGroup.LayoutParams(
             ActionBar.LayoutParams.MATCH_PARENT,
-            ActionBar.LayoutParams.WRAP_CONTENT
-        )
+            ActionBar.LayoutParams.WRAP_CONTENT)
+
         mOptionsView = LinearLayout(context)
         mOptionsView?.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.MATCH_PARENT
-        )
+            LinearLayout.LayoutParams.MATCH_PARENT)
         mOptionsView?.orientation = LinearLayout.VERTICAL
         innerView.addView(mDisabledView)
         innerView.addView(mOptionsView)
@@ -111,14 +110,15 @@ class NotificationsSettingsDialogFragment(
             setNegativeButton(R.string.cancel, this@NotificationsSettingsDialogFragment)
             setView(layout)
         }
+
         if (mShouldDisplayMainSwitch) {
             setupTitleViewWithMainSwitch(outerView)
-            if (mTitleViewWithMainSwitch == null) {
+            if (mTitleViewWithMainSwitch == null)
                 AppLog.e(AppLog.T.NOTIFS, "Main switch enabled but layout not set")
-            } else {
+            else
                 builder.setCustomTitle(mTitleViewWithMainSwitch)
-            }
         }
+
         return builder.create()
     }
 
