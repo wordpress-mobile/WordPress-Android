@@ -1824,7 +1824,6 @@ Language: es
     <string name="reader_title_subs">Gestionar temas y sitios</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Acceder a WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Accede a WordPress.com para ver las últimas entradas de los temas que sigues</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Accede a WordPress.com para ver las últimas entradas de los sitios que sigues</string>
     <string name="gutenberg_native_replace_current_block">Reemplazar el bloque actual</string>
     <string name="gutenberg_native_add_to_end">Añadir al final</string>
     <string name="gutenberg_native_add_to_beginning">Añadir al principio</string>

@@ -1816,7 +1816,6 @@ Language: ko_KR
     <string name="reader_title_subs">토픽과 사이트 관리하기</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">워드프레스닷컴에 로그인</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">워드프레스닷컴에 로그인하여 팔로우하는 토픽의 최신 글을 확인하세요</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">워드프레스닷컴에 로그인하여 내가 팔로우하는 사이트의 최신 글을 확인하세요.</string>
     <string name="gutenberg_native_replace_current_block">현재 블록 대체하기</string>
     <string name="gutenberg_native_add_to_end">끝에 추가하기</string>
     <string name="gutenberg_native_add_to_beginning">처음에 추가하기</string>

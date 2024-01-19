@@ -1824,7 +1824,6 @@ Language: ru
     <string name="reader_title_subs">Управление темами и сайтами</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Войти на WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Войдите на WordPress.com, чтобы увидеть последние записи по темам, на которые вы подписаны</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Войдите на WordPress.com, чтобы увидеть последние записи с сайтов, на которые вы подписаны</string>
     <string name="gutenberg_native_replace_current_block">Заменить текущий блок</string>
     <string name="gutenberg_native_add_to_end">Добавить в конце</string>
     <string name="gutenberg_native_add_to_beginning">Добавить в начале</string>

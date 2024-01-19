@@ -1307,7 +1307,6 @@ Language: pl
     <string name="reader_btn_remove_filter_content_description">Usuń bieżący filtr</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Zaloguj się do WordPress.com</string>
     <string name="reader_title_subs">Zarządzaj Tematami i Witrynami</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Zaloguj się do WordPress.com aby zobaczyć ostatnie wpisy, z witryn które obserwujesz</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Zaloguj się do WordPress.com aby zobaczyć ostatnie wpisy dotyczące tematów, które obserwujesz</string>
     <string name="gutenberg_native_replace_current_block">Zamień aktualny blok</string>
     <string name="gutenberg_native_add_to_end">Dodaj zakończenie</string>

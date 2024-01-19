@@ -1824,7 +1824,6 @@ Language: de
     <string name="reader_title_subs">Themen und Websites verwalten</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Melde dich bei WordPress.com an</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Melde dich bei WordPress.com an, um die neuesten Beiträge zu Themen zu sehen, denen du folgst</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Melde dich bei WordPress.com an, um die neuesten Beiträge von Websites zu sehen, denen du folgst</string>
     <string name="gutenberg_native_replace_current_block">Aktuellen Block ersetzen</string>
     <string name="gutenberg_native_add_to_end">Am Ende hinzufügen</string>
     <string name="gutenberg_native_add_to_beginning">Am Anfang hinzufügen</string>

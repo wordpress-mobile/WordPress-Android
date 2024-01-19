@@ -1824,7 +1824,6 @@ Language: gl_ES
     <string name="reader_title_subs">Xestionar etiquetas e sitios</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Acceder a WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Accede a WordPress.com para ver as últimas entradas dos temas que segues</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Accede a WordPress.com para ver as últimas entradas dos sitios que segues</string>
     <string name="gutenberg_native_replace_current_block">Substituír o bloque actual</string>
     <string name="gutenberg_native_add_to_end">Engadir ao final</string>
     <string name="gutenberg_native_add_to_beginning">Engadir ao principio</string>
