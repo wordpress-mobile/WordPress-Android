@@ -39,10 +39,17 @@ class SubfilterPageViewModel @Inject constructor(
 
     fun onSubFiltersChanged(isEmpty: Boolean) {
         _emptyState.value = if (isEmpty) {
-            val primaryButton = VisibleEmptyUiState.Button(
-                text = UiStringRes(R.string.reader_filter_empty_tags_action_suggested),
-                action = ActionType.OpenSuggestedTagsPage
-            ).takeIf { category == TAGS }
+            val primaryButton = if (accountStore.hasAccessToken()) {
+                VisibleEmptyUiState.Button(
+                    text = UiStringRes(R.string.reader_filter_empty_tags_action_suggested),
+                    action = ActionType.OpenSuggestedTagsPage
+                ).takeIf { category == TAGS }
+            } else {
+                VisibleEmptyUiState.Button(
+                    text = UiStringRes(R.string.reader_filter_self_hosted_empty_sites_tags_action),
+                    action = ActionType.OpenLoginPage
+                )
+            }
 
             val secondaryButton = if (category == SITES) {
                 VisibleEmptyUiState.Button(
@@ -80,7 +87,7 @@ class SubfilterPageViewModel @Inject constructor(
                     }
                 ),
                 primaryButton = primaryButton,
-                secondaryButton = secondaryButton,
+                secondaryButton = secondaryButton.takeIf { accountStore.hasAccessToken() },
             )
         } else {
             HiddenEmptyUiState

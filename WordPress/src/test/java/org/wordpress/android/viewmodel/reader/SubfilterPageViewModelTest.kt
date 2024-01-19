@@ -11,10 +11,10 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState
+import org.wordpress.android.ui.reader.ReaderSubsActivity
+import org.wordpress.android.ui.reader.subfilter.ActionType
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.HiddenEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.VisibleEmptyUiState
-import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel
@@ -49,7 +49,17 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
 
         viewModel.onSubFiltersChanged(true)
 
-        assertThat(viewModel.emptyState.value).isEqualTo(getExpectedForCategory(accountStore, SITES))
+        with(viewModel.emptyState.value as VisibleEmptyUiState) {
+            assertThat(title).isEqualTo(UiStringRes(R.string.reader_filter_empty_blogs_list_title))
+            assertThat(text).isEqualTo(UiStringRes(R.string.reader_filter_empty_blogs_list_text))
+            assertThat(primaryButton).isNull()
+            assertThat(secondaryButton).isEqualTo(
+                VisibleEmptyUiState.Button(
+                    text = UiStringRes(R.string.reader_filter_empty_blogs_action_search),
+                    action = ActionType.OpenSearchPage
+                )
+            )
+        }
     }
 
     @Test
@@ -59,7 +69,22 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
 
         viewModel.onSubFiltersChanged(true)
 
-        assertThat(viewModel.emptyState.value).isEqualTo(getExpectedForCategory(accountStore, TAGS))
+        with(viewModel.emptyState.value as VisibleEmptyUiState) {
+            assertThat(title).isEqualTo(UiStringRes(R.string.reader_filter_empty_tags_list_title))
+            assertThat(text).isEqualTo(UiStringRes(R.string.reader_filter_empty_tags_list_text))
+            assertThat(primaryButton).isEqualTo(
+                VisibleEmptyUiState.Button(
+                    text = UiStringRes(R.string.reader_filter_empty_tags_action_suggested),
+                    action = ActionType.OpenSuggestedTagsPage
+                )
+            )
+            assertThat(secondaryButton).isEqualTo(
+                VisibleEmptyUiState.Button(
+                    text = UiStringRes(R.string.reader_filter_empty_tags_action_subscribe),
+                    action = ActionType.OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
+                )
+            )
+        }
     }
 
     @Test
@@ -69,7 +94,17 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
 
         viewModel.onSubFiltersChanged(true)
 
-        assertThat(viewModel.emptyState.value).isEqualTo(getExpectedForCategory(accountStore, SITES))
+        with(viewModel.emptyState.value as VisibleEmptyUiState) {
+            assertThat(title).isNull()
+            assertThat(text).isEqualTo(UiStringRes(R.string.reader_filter_self_hosted_empty_blogs_list))
+            assertThat(primaryButton).isEqualTo(
+                VisibleEmptyUiState.Button(
+                    text = UiStringRes(R.string.reader_filter_self_hosted_empty_sites_tags_action),
+                    action = ActionType.OpenLoginPage
+                )
+            )
+            assertThat(secondaryButton).isNull()
+        }
     }
 
     @Test
@@ -79,36 +114,16 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
 
         viewModel.onSubFiltersChanged(true)
 
-        assertThat(viewModel.emptyState.value).isEqualTo(getExpectedForCategory(accountStore, TAGS))
-    }
-
-    private companion object Fixtures {
-        fun getExpectedForCategory(
-            accountStore: AccountStore,
-            category: SubfilterCategory
-        ): SubfilterBottomSheetEmptyUiState {
-            return when (category) {
-                SITES -> {
-                    VisibleEmptyUiState(
-                        title = UiStringRes(
-                            if (accountStore.hasAccessToken())
-                                R.string.reader_filter_empty_sites_list
-                            else
-                                R.string.reader_filter_self_hosted_empty_blogs_list
-                        ),
-                    )
-                }
-                TAGS -> {
-                    VisibleEmptyUiState(
-                        title = UiStringRes(
-                            if (accountStore.hasAccessToken())
-                                R.string.reader_filter_empty_tags_list
-                            else
-                                R.string.reader_filter_self_hosted_empty_tags_list
-                        ),
-                    )
-                }
-            }
+        with(viewModel.emptyState.value as VisibleEmptyUiState) {
+            assertThat(title).isNull()
+            assertThat(text).isEqualTo(UiStringRes(R.string.reader_filter_self_hosted_empty_tags_list))
+            assertThat(primaryButton).isEqualTo(
+                VisibleEmptyUiState.Button(
+                    text = UiStringRes(R.string.reader_filter_self_hosted_empty_sites_tags_action),
+                    action = ActionType.OpenLoginPage
+                )
+            )
+            assertThat(secondaryButton).isNull()
         }
     }
 }
