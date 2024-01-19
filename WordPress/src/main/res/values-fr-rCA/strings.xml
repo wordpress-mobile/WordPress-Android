@@ -3367,7 +3367,6 @@ Language: fr
     <string name="reader_err_get_post_not_found">Cet article n’existe plus</string>
     <string name="reader_err_get_post_not_authorized">Vous n’avez pas les droits nécessaires pour voir cet article</string>
     <string name="reader_err_get_post_generic">Impossible de retrouver cet article</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Les sites que vous suivez n\'ont rien publié récemment.</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Pas d\'articles récents.</string>
     <string name="media_edit_copy_url_toast">URL copiée dans le presse-papiers.</string>
     <string name="selected_theme">Thème sélectionné</string>

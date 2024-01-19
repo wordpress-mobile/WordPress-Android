@@ -3360,7 +3360,6 @@ Language: ar
     <string name="reader_err_get_post_not_found">لم تعد هذه المقالة موجودة</string>
     <string name="reader_err_get_post_not_authorized">لست مخولاً لعرض هذه المقالة</string>
     <string name="reader_err_get_post_generic">يتعذر استرجاع هذه المقالة</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">لم تنشر المواقع التي تتابعها أي شيء مؤخرًا</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">لا توجد مقالات حديثة</string>
     <string name="media_edit_copy_url_toast">تم نسخ عنوان URL إلى الحافظة</string>
     <string name="selected_theme">تحديد قالب</string>

@@ -1972,7 +1972,6 @@ Language: ku_TR
     <string name="reader_err_get_post_not_found">Êdî ev şandî ne berdest e</string>
     <string name="reader_err_get_post_not_authorized">Ji bo tu vê şandiyê bibînî destûra te tune ye</string>
     <string name="reader_err_get_post_generic">Ev şandî nayê anîn</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Malperên tu dişopînî di demên dawîn de ti şandî neweşandine</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Şandiyên nû tune ye</string>
     <string name="media_edit_copy_url_toast">URL li rûnûsgehê hat kopîkirin</string>
     <string name="selected_theme">Rûkara Hilbijartî</string>

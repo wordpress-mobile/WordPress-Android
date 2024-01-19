@@ -3315,7 +3315,6 @@ Language: nl
     <string name="reader_err_get_post_not_found">Dit bericht bestaat niet meer</string>
     <string name="reader_err_get_post_not_authorized">Je hebt geen rechten om dit bericht te lezen</string>
     <string name="reader_err_get_post_generic">Kan dit bericht niet ophalen</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">De sites die je volgt hebben recent niets geplaatst</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Geen recente berichten</string>
     <string name="media_edit_copy_url_toast">URL gekopieerd naar klembord</string>
     <string name="selected_theme">Geselecteerd thema</string>

@@ -3366,7 +3366,6 @@ Language: he_IL
     <string name="reader_err_get_post_not_found">הפוסט כבר לא קיים</string>
     <string name="reader_err_get_post_not_authorized">אינך רשאי לראות פוסט זה</string>
     <string name="reader_err_get_post_generic">לא ניתן לאחזר פוסט זה</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">האתרים אחריהם אתה עוקב לא פרסמו דבר לאחרונה</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">אין פוסטים אחרונים</string>
     <string name="media_edit_copy_url_toast">הכתובת הועתקה</string>
     <string name="selected_theme">תבנית נבחרת</string>

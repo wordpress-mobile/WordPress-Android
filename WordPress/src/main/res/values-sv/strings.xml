@@ -3378,7 +3378,6 @@ Language: sv_SE
     <string name="reader_err_get_post_not_found">Detta inlägg finns inte längre</string>
     <string name="reader_err_get_post_not_authorized">Du har inte behörighet att se detta inlägg</string>
     <string name="reader_err_get_post_generic">Kunde inte hämta detta inlägg</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">De webbplatser du följer har inte publicerat något nyligen</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Inga nya inlägg</string>
     <string name="media_edit_copy_url_toast">URL kopierad till urklipp</string>
     <string name="selected_theme">Valt tema</string>

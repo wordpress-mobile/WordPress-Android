@@ -364,7 +364,6 @@ Language: hr
     <string name="reader_err_get_post_not_found">Objava više ne postoji</string>
     <string name="reader_err_get_post_not_authorized">Nemate pravo pristupa pregledavanja ove objave</string>
     <string name="reader_err_get_post_generic">Nije moguće učitati objavu</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Web-stranice koje pratite nisu ništa objavile u posljednje vrijeme</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Nema novijih objava</string>
     <string name="media_edit_copy_url_toast">URL kopiran u međuspremnik</string>
     <string name="selected_theme">Odabrana tema</string>

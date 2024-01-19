@@ -3364,7 +3364,6 @@ Language: it
     <string name="reader_err_get_post_not_found">Questo articolo non esiste più</string>
     <string name="reader_err_get_post_not_authorized">Non disponi del permesso per visualizzare questo articolo</string>
     <string name="reader_err_get_post_generic">Impossibile recuperare questo articolo</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">I siti che segui non hanno pubblicato nulla recentemente</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Nessun articolo recente</string>
     <string name="media_edit_copy_url_toast">URL copiato negli appunti</string>
     <string name="selected_theme">Tema selezionato</string>

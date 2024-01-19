@@ -3368,7 +3368,6 @@ Language: id
     <string name="reader_err_get_post_not_found">Pos ini tidak ada lagi</string>
     <string name="reader_err_get_post_not_authorized">Anda tidak diizinkan melihat pos ini</string>
     <string name="reader_err_get_post_generic">Gagal mengambil pos ini</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Situs-situs yang Anda ikuti belum menerbitkan pos apapun belakangan ini</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Tak ada pos terbaru</string>
     <string name="media_edit_copy_url_toast">URL disalin ke clipboard</string>
     <string name="selected_theme">Tema Terpilih</string>

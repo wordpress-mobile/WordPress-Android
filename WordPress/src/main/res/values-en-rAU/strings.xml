@@ -1408,7 +1408,6 @@ Language: en_AU
     <string name="reader_err_get_post_not_found">This post no longer exists</string>
     <string name="reader_err_get_post_not_authorized">You\'re not authorised to view this post</string>
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="media_edit_copy_url_toast">URL copied to clipboard</string>
     <string name="selected_theme">Selected Theme</string>

@@ -2159,7 +2159,6 @@ Language: nb_NO
     <string name="reader_err_get_post_not_found">Dette innlegget finnes ikke lenger</string>
     <string name="reader_err_get_post_not_authorized">Du er ikke autorisert til å vise dette innlegget</string>
     <string name="reader_err_get_post_generic">Klarte ikke å hente inn dette innlegget</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Nettstedene du følger har ikke lagt ut noe i det siste</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Ingen nylige innlegg</string>
     <string name="media_edit_copy_url_toast">Nettadressen ble kopiert til utklippstavlen</string>
     <string name="selected_theme">Valgt tema</string>

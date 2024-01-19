@@ -3368,7 +3368,6 @@ Language: zh_TW
     <string name="reader_err_get_post_not_found">此文章已不存在</string>
     <string name="reader_err_get_post_not_authorized">你未獲授權無法檢視此文章</string>
     <string name="reader_err_get_post_generic">無法擷取此文章</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">您所關注的網站最近未發表任何文章</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">沒有近期文章</string>
     <string name="media_edit_copy_url_toast">網址已複製到剪貼簿</string>
     <string name="selected_theme">選取的佈景主題</string>

@@ -525,7 +525,6 @@ Language: bg
     <string name="reader_err_get_post_not_found">Тази публикация вече не съществува</string>
     <string name="reader_err_get_post_not_authorized">Нямате права да четете тази публикация</string>
     <string name="reader_err_get_post_generic">Неуспешно отваряне на публикацията</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Сайтовете, които следвате, нямат нови публикации</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Няма скорошни публикации</string>
     <string name="media_edit_copy_url_toast">Адресът е копиран </string>
     <string name="selected_theme">Избрана тема</string>

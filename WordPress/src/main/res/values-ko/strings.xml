@@ -3366,7 +3366,6 @@ Language: ko_KR
     <string name="reader_err_get_post_not_found">이 글은 더 이상 존재하지 않습니다.</string>
     <string name="reader_err_get_post_not_authorized">이 글을 볼 권한이 없습니다.</string>
     <string name="reader_err_get_post_generic">이 글을 가져올 수 없습니다.</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">팔로우하는 사이트에 최근 게시된 글이 없습니다.</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">최근 글 없음</string>
     <string name="media_edit_copy_url_toast">URL이 클립보드에 복사됨</string>
     <string name="selected_theme">선택된 테마</string>

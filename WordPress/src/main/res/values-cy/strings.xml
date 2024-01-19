@@ -311,7 +311,6 @@ Language: cy_GB
     <string name="reader_err_get_post_not_found">Nid yw\'r cofnod yma\'n bodoli bellach</string>
     <string name="reader_err_get_post_not_authorized">Nid ydych wedi eich awdurdodi i weld y cofnod hwn</string>
     <string name="reader_err_get_post_generic">Methu estyn y cofnod hwn</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Nid yw\'r gwefannau rydych yn eu dilyn gofnodi dim yn ddiweddar</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Dim cofnodion diweddar</string>
     <string name="selected_theme">Thema Dewiswyd</string>
     <string name="could_not_load_theme">Methu llwytho\'r thema</string>

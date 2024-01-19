@@ -581,7 +581,6 @@ Language: ms
     <string name="reader_err_get_post_not_found">Kiriman ini tidak lagi wujud</string>
     <string name="reader_err_get_post_not_authorized">Anda tidak dibenarkan melihat kiriman ini</string>
     <string name="reader_err_get_post_generic">Tidak boleh mendapatkan kiriman ini</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Laman yang anda ikuti belum mengirim apa-apa baru-baru ini</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Tiada kiriman terkini</string>
     <string name="media_edit_copy_url_toast">URL disalin ke papan keratan</string>
     <string name="selected_theme">Tema Dipilih</string>

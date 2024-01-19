@@ -2854,7 +2854,6 @@ Language: pl
     <string name="reader_err_get_post_not_found">Ten wpis już nie istnieje</string>
     <string name="reader_err_get_post_not_authorized">Nie posiadasz uprawień do podglądu tego wpisu</string>
     <string name="reader_err_get_post_generic">Nie można odzyskać tego wpisu</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Witryny, które obserwujesz niczego ostatnio nie opublikowały</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Brak ostatnich wpisów</string>
     <string name="media_edit_copy_url_toast">Adres URL skopiowano do schowka</string>
     <string name="selected_theme">Wybrany motyw</string>

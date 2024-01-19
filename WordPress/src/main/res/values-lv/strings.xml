@@ -3238,7 +3238,6 @@ Language: lv
     <string name="reader_err_get_post_not_found">Šī ziņa vairs nepastāv</string>
     <string name="reader_err_get_post_not_authorized">Jums nav atļauts skatīt šo ziņu</string>
     <string name="reader_err_get_post_generic">Nevar izgūt šo ziņu</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Vietnes, kurām sekojat, pēdējā laikā neko nav publicējušas</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Nav jaunāko ziņu</string>
     <string name="media_edit_copy_url_toast">URL ir nokopēts starpliktuvē</string>
     <string name="selected_theme">Atlasītā tēma</string>

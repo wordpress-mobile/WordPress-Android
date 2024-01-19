@@ -1155,7 +1155,6 @@ Language: sk
     <string name="reader_err_get_post_not_found">Tento článok už neexistuje</string>
     <string name="reader_err_get_post_not_authorized">Nie ste autorizovaný na prezeranie tohto článku</string>
     <string name="reader_err_get_post_generic">Nemožno načítať tento článok</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Webové stránky, ktoré sledujete v poslednej dobe nezverejnili nič.</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Žiadne nové články</string>
     <string name="media_edit_copy_url_toast">URL adresa skopírovaná do schránky</string>
     <string name="selected_theme">Zvolená téma</string>

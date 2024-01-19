@@ -3378,7 +3378,6 @@ Language: de
     <string name="reader_err_get_post_not_found">Dieser Beitrag ist nicht mehr vorhanden</string>
     <string name="reader_err_get_post_not_authorized">Du hast nicht die erforderlichen Rechte diesen Beitrag anzusehen</string>
     <string name="reader_err_get_post_generic">Konnte den Beitrag nicht empfangen</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Die Websites, denen du folgst, haben keine aktuellen Beiträge veröffentlicht</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Keine aktuellen Beiträge</string>
     <string name="media_edit_copy_url_toast">URL in Zwischenablage kopiert</string>
     <string name="selected_theme">Gewähltes Theme</string>

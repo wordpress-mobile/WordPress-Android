@@ -3378,7 +3378,6 @@ Language: ru
     <string name="reader_err_get_post_not_found">Эта запись больше не существует</string>
     <string name="reader_err_get_post_not_authorized">У вас нет прав на просмотр этой записи</string>
     <string name="reader_err_get_post_generic">Не удается загрузить эту запись</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">На сайтах, на которые вы подписаны, в последнее время не публиковались новые записи</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Нет свежих записей</string>
     <string name="media_edit_copy_url_toast">URL-адрес скопирован в буфер обмена</string>
     <string name="selected_theme">Выбранная тема</string>

@@ -3378,7 +3378,6 @@ Language: tr
     <string name="reader_err_get_post_not_found">Bu yazı artık mevcut değil</string>
     <string name="reader_err_get_post_not_authorized">Bu yazıyı görüntülemeye yetkili değilsiniz</string>
     <string name="reader_err_get_post_generic">Bu yazı getirilemiyor</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Takip ettiğiniz siteler yakın tarihte herhangi bir gönderi yapmadı</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Yeni yazı yok</string>
     <string name="media_edit_copy_url_toast">Adres panoya kopyalandı</string>
     <string name="selected_theme">Seçili tema</string>

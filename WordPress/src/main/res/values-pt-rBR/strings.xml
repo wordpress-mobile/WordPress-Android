@@ -3146,7 +3146,6 @@ Language: pt_BR
     <string name="reader_err_get_post_not_found">Este post não existe mais</string>
     <string name="reader_err_get_post_not_authorized">Você não possui autorização para ver este post</string>
     <string name="reader_err_get_post_generic">Falha ao carregar esse post</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Os sites que você segue não publicaram nada recentemente</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Não há posts recentes</string>
     <string name="media_edit_copy_url_toast">O URL foi copiado para a área de transferência</string>
     <string name="selected_theme">Tema selecionado</string>

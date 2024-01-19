@@ -85,7 +85,6 @@ Language: th
     <string name="reader_err_get_post_not_found">ไม่มีเรื่องนี้อยู่อีกแล้ว</string>
     <string name="reader_err_get_post_not_authorized">คุณไม่มีสิทธิที่จะดูเรื่องนี้</string>
     <string name="reader_err_get_post_generic">ไม่สามารถดึงข้อมูลเรื่องนี้</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">เว็บที่คุณติดตามยังไม่มีเรื่องใหม่เมื่อเร็ว ๆ มานี้</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">ไม่มีเรื่องใหม่</string>
     <string name="selected_theme">ธีมที่เลือก</string>
     <string name="could_not_load_theme">ไม่สามารถโหลดธีม</string>

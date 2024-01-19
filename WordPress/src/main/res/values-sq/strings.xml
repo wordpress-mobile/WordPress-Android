@@ -3367,7 +3367,6 @@ Language: sq_AL
     <string name="reader_err_get_post_not_found">Ky postim s’ekziston më</string>
     <string name="reader_err_get_post_not_authorized">S’jeni i autorizuar ta shihni këtë postim</string>
     <string name="reader_err_get_post_generic">S’arrihet të merret ky postim</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Sajtet që ndiqni s’kanë postuar gjë tani afër</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Pa postime së fundi</string>
     <string name="media_edit_copy_url_toast">URL-ja u kopjua në të papastër</string>
     <string name="selected_theme">Temë e Përzgjedhur</string>

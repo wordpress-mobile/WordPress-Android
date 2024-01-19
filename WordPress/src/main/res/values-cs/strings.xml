@@ -3100,7 +3100,6 @@ Language: cs_CZ
     <string name="reader_err_get_post_not_found">Tento příspěvek již neexistuje</string>
     <string name="reader_err_get_post_not_authorized">Nemáte oprávnění prozobrazení tohoto příspěvku</string>
     <string name="reader_err_get_post_generic">Nelze načíst tento příspěvek</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Stránky, které sledujete v poslední době neměly žádné příspěvky</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Žádné nedávné příspěvky</string>
     <string name="media_edit_copy_url_toast">URL adresa byla zkopírována do schránky</string>
     <string name="selected_theme">Vybraná šablona</string>

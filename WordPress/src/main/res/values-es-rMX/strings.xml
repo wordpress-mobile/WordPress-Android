@@ -2056,7 +2056,6 @@ Language: es_MX
     <string name="reader_err_get_post_not_found">Esta entrada ya no existe</string>
     <string name="reader_err_get_post_not_authorized">No estás autorizado a ver esta entrada</string>
     <string name="reader_err_get_post_generic">No se pudo recuperar esta entrada</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Los sitios que estás siguiendo no han publicado nada recientemente</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No hay entradas recientes</string>
     <string name="media_edit_copy_url_toast">URL copiada en el portapapeles</string>
     <string name="selected_theme">Tema seleccionado</string>

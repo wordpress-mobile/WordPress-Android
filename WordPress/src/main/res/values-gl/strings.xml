@@ -3378,7 +3378,6 @@ Language: gl_ES
     <string name="reader_err_get_post_not_found">O artigo xa non existe</string>
     <string name="reader_err_get_post_not_authorized">Non tes permiso para ver este artigo</string>
     <string name="reader_err_get_post_generic">Non foi posible acceder a este artigo</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Os sitios que segues non publicaron nada ultimamente</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Sen artigos recentes</string>
     <string name="media_edit_copy_url_toast">URL copiado ao portapapeis</string>
     <string name="selected_theme">Tema escollido</string>

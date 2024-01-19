@@ -3361,7 +3361,6 @@ Language: zh_CN
     <string name="reader_err_get_post_not_found">此文章不再存在</string>
     <string name="reader_err_get_post_not_authorized">您不具备查看此文章的权限</string>
     <string name="reader_err_get_post_generic">无法检索这篇文章</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">您关注的站点近期未发布任何内容</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">无近期文章</string>
     <string name="media_edit_copy_url_toast">URL 已复制到剪贴板</string>
     <string name="selected_theme">选择的主题</string>

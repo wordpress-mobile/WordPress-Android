@@ -2812,7 +2812,6 @@ Language: vi_VN
     <string name="reader_err_get_post_not_found">Bài viết này không còn tồn tại</string>
     <string name="reader_err_get_post_not_authorized">Bạn không có quyền xem bài viết này</string>
     <string name="reader_err_get_post_generic">Không thể tải bài viết này</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Blog mà bạn theo dõi không đăng bất kì bài viết nào gần đây</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Không có bài viết mới</string>
     <string name="media_edit_copy_url_toast">Đã chép URL vào bộ nhớ tạm</string>
     <string name="selected_theme">Chủ đề đã chọn</string>

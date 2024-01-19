@@ -896,7 +896,6 @@ Language: el_GR
     <string name="reader_err_get_post_not_found">Αυτό το άρθρο δεν υπάρχει πια</string>
     <string name="reader_err_get_post_not_authorized">Δεν έχετε εξουσιοδότηση να δείτε αυτό το άρθρο</string>
     <string name="reader_err_get_post_generic">Αδυναμία ανάκτησης αυτού του άρθρου</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Οι σελίδες που ακολουθείτε δεν έχουν δημοσιεύσει κάτι πρόσφατα</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Καμία πρόσφατη δημοσίευση</string>
     <string name="media_edit_copy_url_toast">Η διεύθυνση αντιγράφτηκε στο πρόχειρο</string>
     <string name="selected_theme">Επιλεγμένο Θέμα</string>

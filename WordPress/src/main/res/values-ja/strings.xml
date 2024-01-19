@@ -3371,7 +3371,6 @@ Language: ja_JP
     <string name="reader_err_get_post_not_found">この投稿は存在しません</string>
     <string name="reader_err_get_post_not_authorized">この投稿を表示する権限がありません</string>
     <string name="reader_err_get_post_generic">この投稿を取得できません</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">フォローしているサイトには、最近の投稿はありません</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">最近の投稿はありません</string>
     <string name="media_edit_copy_url_toast">URL をクリップボードにコピーしました</string>
     <string name="selected_theme">選択済みテーマ</string>

@@ -339,7 +339,6 @@ Language: is
     <string name="reader_err_get_post_not_found">Þessi færsla er ekki lengur til.</string>
     <string name="reader_err_get_post_not_authorized">Þú hefur ekki heimild til að skoða þessa færslu</string>
     <string name="reader_err_get_post_generic">Gat ekki sótt þessa færslu</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Vefirnir sem þú fylgir hafa ekki birt neitt efni nýlega</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Engar nýlegar færslur</string>
     <string name="selected_theme">Valið þema</string>
     <string name="could_not_load_theme">Gat ekki hlaðið þema</string>
