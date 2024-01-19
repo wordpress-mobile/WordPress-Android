@@ -8,6 +8,7 @@
 * [**] Block Editor: Media uploads that failed due to lack of internet connectivity automatically retry once a connection is re-established [https://github.com/wordpress-mobile/WordPress-Android/pull/19803]
 * [*] [Jetpack-only] Added opening domain management from the Site Domain screen by tapping on the domain cards [https://github.com/wordpress-mobile/WordPress-Android/pull/19910]
 * [*] [Jetpack-only] Fix Prompt response posts not having one of the `dailyprompt` tags [https://github.com/wordpress-mobile/WordPress-Android/pull/19971]
+* [*] Reader: Fix the issue with icons displaying incorrectly in RTL languages. [https://github.com/wordpress-mobile/WordPress-Android/pull/19962]
 
 24.0
 -----
