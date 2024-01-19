@@ -1728,7 +1728,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     } else if (getCurrentTag().isListTopic()) {
                         title = getString(R.string.reader_empty_blogs_posts_in_custom_list);
                     } else {
-                        title = getString(R.string.reader_empty_posts_in_tag);
+                        title = getString(R.string.reader_no_posts_with_this_tag);
                     }
                     break;
                 case BLOG_PREVIEW:
@@ -1754,7 +1754,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 case TAG_PREVIEW:
                     // fall through to the default case
                 default:
-                    title = getString(R.string.reader_empty_posts_in_tag);
+                    title = getString(R.string.reader_no_posts_with_this_tag);
                     break;
             }
         }
