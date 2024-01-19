@@ -3425,7 +3425,6 @@ Language: tr
     <string name="reader_short_like_count_multi">%s beğeni</string>
     <string name="reader_short_like_count_one">1 beğeni</string>
     <string name="reader_short_like_count_none">Beğen</string>
-    <string name="reader_label_follow_count">%,d takipçi</string>
     <string name="reader_menu_tags">Konu ve site düzenleme</string>
     <string name="reader_title_post_detail">Okuyucu yazısı</string>
     <string name="notifications_push_summary">Cihazınızda görünen bildirimlerin ayarları.</string>

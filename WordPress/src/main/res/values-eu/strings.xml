@@ -381,7 +381,6 @@ Language: eu_ES
     <string name="reader_short_like_count_multi">%s atsegite</string>
     <string name="reader_short_like_count_one">Atsegite 1</string>
     <string name="reader_short_like_count_none">Atsegin dut</string>
-    <string name="reader_label_follow_count">%,d jarraitzaile</string>
     <string name="reader_title_post_detail">Irakurlearen postontzia</string>
     <string name="notification_types">Jakinarazpen motak</string>
     <string name="app_notifications">App-aren jakinarazpenak</string>

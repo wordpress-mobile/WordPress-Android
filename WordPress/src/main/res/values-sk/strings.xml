@@ -1196,7 +1196,6 @@ Language: sk
     <string name="reader_discover_attribution_author">Pôvodne publikované autorom %s</string>
     <string name="reader_discover_attribution_author_and_blog">Pôvodne publikované autorom %1$s v %2$s</string>
     <string name="reader_short_like_count_multi">počet lajkov: %s</string>
-    <string name="reader_label_follow_count">počet sledujúcich: %,d</string>
     <string name="reader_short_like_count_one">1 lajk</string>
     <string name="reader_short_like_count_none">lajk</string>
     <string name="reader_menu_tags">Upraviť témy a webové stránky</string>

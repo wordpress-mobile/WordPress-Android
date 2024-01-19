@@ -3361,7 +3361,6 @@ Language: nl
     <string name="reader_short_like_count_multi">%s vind-ik-leuks</string>
     <string name="reader_short_like_count_one">1 vind-ik-leuk</string>
     <string name="reader_short_like_count_none">Vind-ik-leuk</string>
-    <string name="reader_label_follow_count">%,d volgers</string>
     <string name="reader_menu_tags">Bewerk onderwerpen en sites</string>
     <string name="reader_title_post_detail">Reader-bericht</string>
     <string name="notifications_push_summary">Instellingen voor meldingen die op je apparaat verschijnen.</string>

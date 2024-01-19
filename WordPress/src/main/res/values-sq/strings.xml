@@ -3414,7 +3414,6 @@ Language: sq_AL
     <string name="reader_short_like_count_multi">%s Pëlqime</string>
     <string name="reader_short_like_count_one">1 Pëlqim</string>
     <string name="reader_short_like_count_none">Pëlqim</string>
-    <string name="reader_label_follow_count">%,d Ndjekës</string>
     <string name="reader_menu_tags">Përpunoni tema dhe sajte</string>
     <string name="reader_title_post_detail">Postim Te Lexuesi</string>
     <string name="notifications_push_summary">Rregullime për njoftime që shfaqen në pajisjen tuaj.</string>

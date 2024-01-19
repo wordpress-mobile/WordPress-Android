@@ -3425,7 +3425,6 @@ Language: ru
     <string name="reader_short_like_count_multi">%s оценок</string>
     <string name="reader_short_like_count_one">1 оценка</string>
     <string name="reader_short_like_count_none">Оценить</string>
-    <string name="reader_label_follow_count">%,d подписчиков</string>
     <string name="reader_menu_tags">Редактировать темы и сайты</string>
     <string name="reader_title_post_detail">Запись из Чтива</string>
     <string name="notifications_push_summary">Настройки уведомлений, отображаемых на вашем устройстве.</string>

@@ -3413,7 +3413,6 @@ Language: he_IL
     <string name="reader_short_like_count_multi">%s לייקים</string>
     <string name="reader_short_like_count_one">לייק אחד</string>
     <string name="reader_short_like_count_none">לייק</string>
-    <string name="reader_label_follow_count">%,d עוקבים</string>
     <string name="reader_menu_tags">לערוך נושאים ואתרים</string>
     <string name="reader_title_post_detail">פוסט</string>
     <string name="notifications_push_summary">הגדרת התראות יוצגו במכשיר שלך. </string>

@@ -3411,7 +3411,6 @@ Language: it
     <string name="reader_short_like_count_multi">%s Mi piace </string>
     <string name="reader_short_like_count_one">1 Mi piace</string>
     <string name="reader_short_like_count_none">Mi piace</string>
-    <string name="reader_label_follow_count">%,d ti seguono</string>
     <string name="reader_menu_tags">Modifica argomenti e siti</string>
     <string name="reader_title_post_detail">Reader articoli</string>
     <string name="notifications_push_summary">Impostazioni per le notifiche visualizzate sul dispositivo.</string>

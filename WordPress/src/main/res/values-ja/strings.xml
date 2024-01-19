@@ -3418,7 +3418,6 @@ Language: ja_JP
     <string name="reader_short_like_count_multi">%s個の「いいね」</string>
     <string name="reader_short_like_count_one">1個の「いいね」</string>
     <string name="reader_short_like_count_none">いいね</string>
-    <string name="reader_label_follow_count">%,d人のフォロワー</string>
     <string name="reader_menu_tags">トピックとサイトを編集</string>
     <string name="reader_title_post_detail">Reader 投稿</string>
     <string name="notifications_push_summary">端末に表示される通知の設定。</string>

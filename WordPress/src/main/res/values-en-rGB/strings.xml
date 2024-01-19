@@ -3425,7 +3425,6 @@ Language: en_GB
     <string name="reader_short_like_count_multi">%s Likes</string>
     <string name="reader_short_like_count_one">1 Like</string>
     <string name="reader_short_like_count_none">Like</string>
-    <string name="reader_label_follow_count">%,d Followers</string>
     <string name="reader_menu_tags">Edit topics and sites</string>
     <string name="reader_title_post_detail">Reader Post</string>
     <string name="notifications_push_summary">Settings for notifications that appear on your device.</string>

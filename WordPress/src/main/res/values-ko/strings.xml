@@ -3413,7 +3413,6 @@ Language: ko_KR
     <string name="reader_short_like_count_multi">좋아요 %s개</string>
     <string name="reader_short_like_count_one">좋아요 1개</string>
     <string name="reader_short_like_count_none">좋아요</string>
-    <string name="reader_label_follow_count">%,d명의 팔로워</string>
     <string name="reader_menu_tags">토픽과 블로그 편집하기</string>
     <string name="reader_title_post_detail">리더 글</string>
     <string name="notifications_push_summary">사용자 기기에 표시되는 알림에 대한 설정입니다.</string>
