@@ -105,7 +105,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         final ReaderBlog localBlogInfo;
         if (blogId == 0 && feedId == 0) {
-            ToastUtils.showToast(getContext(), R.string.reader_toast_err_get_blog_info);
+            ToastUtils.showToast(getContext(), R.string.reader_toast_err_show_blog);
             return;
         }
 
