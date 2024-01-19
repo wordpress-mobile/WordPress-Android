@@ -3551,7 +3551,6 @@ Language: tr
     <string name="reader_toast_err_follow_blog">Bu site takip edilemiyor</string>
     <string name="reader_toast_err_already_follow_blog">Bu siteyi zaten takip ediyorsunuz</string>
     <string name="reader_toast_err_get_blog_info">Bu site gösterilemiyor</string>
-    <string name="reader_label_followed_blog">Site takip edildi</string>
     <string name="reader_label_followers_count">%s takipçi</string>
     <string name="reader_title_blog_preview">Okuyucu sitesi</string>
     <string name="ssl_certificate_ask_trust">Eğer bu siteye genelde sorunsuz şekilde bağlanabiliyorsanız bu hata birilerinin siteyi taklit ettiği anlamına gelebilir. Yine de sertifikaya güvenmek ister misiniz?</string>

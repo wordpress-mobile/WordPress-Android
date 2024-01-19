@@ -2138,7 +2138,6 @@ Language: ku_TR
     <string name="update_verb">Hildemîne</string>
     <string name="reader_toast_err_already_follow_blog">Jixwe tu vê malperê dişopînî</string>
     <string name="reader_toast_err_get_blog_info">Ev malper nayê nîşandan</string>
-    <string name="reader_label_followed_blog">Malper hat şopandin</string>
     <string name="reader_title_blog_preview">Malpera Xwînerê</string>
     <string name="reader_toast_err_follow_blog">Ev malper nayê şopandin</string>
     <string name="reader_empty_recommended_blogs">Malperên pêşniyarkirî tune ye</string>

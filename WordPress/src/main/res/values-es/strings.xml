@@ -3551,7 +3551,6 @@ Language: es
     <string name="reader_toast_err_follow_blog">No se puede seguir este sitio</string>
     <string name="reader_toast_err_already_follow_blog">Ya estás siguiendo este sitio</string>
     <string name="reader_toast_err_get_blog_info">No se puede mostrar este sitio</string>
-    <string name="reader_label_followed_blog">Sitio seguido</string>
     <string name="reader_label_followers_count">%s seguidores</string>
     <string name="reader_title_blog_preview">Sitio del lector</string>
     <string name="ssl_certificate_ask_trust">SI normalmente se conecta sin problemas a este sitio sin problemas, este error puede significar que alguien están intentando suplantar el sitio, por lo que no deberías continuar. ¿Quieres, de todas formas, confiar en el certificado?</string>

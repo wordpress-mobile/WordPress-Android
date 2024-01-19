@@ -3528,7 +3528,6 @@ Language: ar
     <string name="reader_toast_blog_blocked">لن تظهر المقالات من هذا الموقع بعد الآن</string>
     <string name="update_verb">تحديث</string>
     <string name="schedule_verb">جدولة</string>
-    <string name="reader_label_followed_blog">تمت متابعة الموقع</string>
     <string name="reader_toast_err_already_follow_blog">أنت تتابع هذا الموقع بالفعل</string>
     <string name="reader_toast_err_get_blog_info">تعذر إظهار هذا الموقع</string>
     <string name="reader_toast_err_follow_blog">تعذرت متابعة هذا الموقع</string>

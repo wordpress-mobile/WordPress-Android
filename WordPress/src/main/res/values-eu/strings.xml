@@ -477,7 +477,6 @@ Language: eu_ES
     <string name="update_verb">Eguneratu</string>
     <string name="schedule_verb">Programatu</string>
     <string name="reader_empty_recommended_blogs">Ez dago gomendatutako gunerik</string>
-    <string name="reader_label_followed_blog">Gunea jarraituta</string>
     <string name="reader_title_blog_preview">Irakurle gunea</string>
     <string name="help">Laguntza</string>
     <string name="ssl_certificate_error">SSL ziurtagiri okerra</string>

@@ -3551,7 +3551,6 @@ Language: ru
     <string name="reader_toast_err_follow_blog">Не удалось подписаться на этот сайт</string>
     <string name="reader_toast_err_already_follow_blog">Вы уже подписаны на этот сайт</string>
     <string name="reader_toast_err_get_blog_info">Не удалось отобразить сайт</string>
-    <string name="reader_label_followed_blog">Вы подписаны на этот сайт</string>
     <string name="reader_label_followers_count">%s подписчиков</string>
     <string name="reader_title_blog_preview">Сайт из Чтива</string>
     <string name="ssl_certificate_ask_trust">Если вы обычно заходите на этот сайт без проблем, эта ошибка может означать, что кто-то пытается подделать сайт и вам не стоит сюда заходить. Хотите ли вы доверять ssl сертификату?</string>

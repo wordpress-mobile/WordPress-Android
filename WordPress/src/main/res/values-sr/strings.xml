@@ -1908,7 +1908,6 @@ Language: sr_RS
     <string name="schedule_verb">Заказати</string>
     <string name="update_verb">Ажурирај</string>
     <string name="reader_label_followers_count">%s пратилаца</string>
-    <string name="reader_label_followed_blog">Сајт запраћен</string>
     <string name="reader_toast_err_get_blog_info">Није могуће приказати овај сајт</string>
     <string name="reader_toast_err_already_follow_blog">Већ пратите овај сајт</string>
     <string name="reader_toast_err_follow_blog">Није могуће пратити овај сајт</string>

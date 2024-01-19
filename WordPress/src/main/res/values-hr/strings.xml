@@ -536,7 +536,6 @@ Language: hr
     <string name="reader_toast_err_follow_blog">Nije moguće pratiti ovu web-stranicu</string>
     <string name="reader_toast_err_unfollow_blog">Prestanak praćenja web-stranice nije moguć</string>
     <string name="reader_empty_recommended_blogs">Nema preporučenih web-stranica</string>
-    <string name="reader_label_followed_blog">Pratite web-stranicu</string>
     <string name="reader_title_blog_preview">Web-stranica u Čitaču</string>
     <string name="help">Pomoć</string>
     <string name="ssl_certificate_error">Nevažeći SSL certifikat</string>

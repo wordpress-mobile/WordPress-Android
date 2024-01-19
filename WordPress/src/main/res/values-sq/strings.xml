@@ -3540,7 +3540,6 @@ Language: sq_AL
     <string name="reader_toast_err_follow_blog">S’arrihet të ndiqet ky sajt</string>
     <string name="reader_toast_err_already_follow_blog">E ndiqni tashmë këtë sajt</string>
     <string name="reader_toast_err_get_blog_info">S’arrihet të shfaqet ky sajt</string>
-    <string name="reader_label_followed_blog">Sajti u ndoq</string>
     <string name="reader_label_followers_count">%s ndjekës</string>
     <string name="reader_title_blog_preview">Sajti i Lexuesit</string>
     <string name="ssl_certificate_ask_trust">Nëse zakonisht lidheni te ky sajt pa probleme, ky gabim mund të thotë që dikush po provon të hiqet si ky sajt, dhe s’duhet të vazhdoni. Doni të besohet dëshmia, sido qoftë?</string>
