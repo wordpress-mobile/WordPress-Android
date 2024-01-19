@@ -1460,7 +1460,6 @@ Language: ja_JP
     <string name="photo_picker_wordpress_media_library">WordPress メディアライブラリから選択</string>
     <string name="reader_label_toolbar_back">戻る</string>
     <string name="reader_discover_empty_button_text">今すぐ始める</string>
-    <string name="reader_discover_empty_subtitle">トピックをフォローして新しいブログを見つける</string>
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">このリファラーはスパムとしてマークできません</string>
     <string name="stats_referrer_popup_unmark_as_spam">スパムとしてのマークを解除</string>

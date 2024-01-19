@@ -1460,7 +1460,6 @@ Language: ko_KR
     <string name="photo_picker_wordpress_media_library">워드프레스 미디어 라이브러리에서 선택하기</string>
     <string name="reader_label_toolbar_back">돌아가기</string>
     <string name="reader_discover_empty_button_text">시작하기</string>
-    <string name="reader_discover_empty_subtitle">새 블로그를 발견할 수 있는 토픽을 팔로우하세요</string>
     <string name="reader_post_details_header_by_author_name">작성자</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">이 리퍼러는 스팸으로 표시할 수 없습니다.</string>
     <string name="stats_referrer_popup_unmark_as_spam">스팸 표시 해제하기</string>

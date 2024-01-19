@@ -201,7 +201,6 @@ Language: es_MX
     <string name="reader_label_toolbar_back">Volver</string>
     <string name="reader_post_details_header_by_author_name">por</string>
     <string name="reader_discover_empty_button_text">Primeros pasos</string>
-    <string name="reader_discover_empty_subtitle">Sigue temáticas para descubrir nuevos blogs</string>
     <string name="media_uploading_default">Subiendo medios</string>
     <string name="media_uploading_stock_library_photo">Subiendo medios de inventarios</string>
     <string name="media_uploading_gif_library_photo">Subiendo medios GIF</string>

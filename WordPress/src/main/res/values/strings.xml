@@ -1643,7 +1643,6 @@
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
     <string name="reader_discover_empty_title">Welcome!</string>
-    <string name="reader_discover_empty_subtitle">Follow topics to discover new blogs</string>
     <string name="reader_discover_empty_subtitle_subscribe">Subscribe to tags to discover new blogs</string>
     <string name="reader_discover_no_posts_title">No recent posts</string>
     <string name="reader_discover_no_posts_subscribe_subtitle">Try subscribing to more tags to broaden the search</string>

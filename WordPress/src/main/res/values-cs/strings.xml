@@ -1189,7 +1189,6 @@ Language: cs_CZ
     <string name="media_insert_failed">Vložení média se nezdařilo.</string>
     <string name="reader_label_toolbar_back">Zpět</string>
     <string name="reader_post_details_header_by_author_name">Od</string>
-    <string name="reader_discover_empty_subtitle">Sledujte témata a objevujte nové blogy</string>
     <string name="reader_discover_empty_button_text">Začínáme</string>
     <string name="media_uploading_default">Nahrávání médií</string>
     <string name="media_uploading_stock_library_photo">Nahrávání skladových médií</string>

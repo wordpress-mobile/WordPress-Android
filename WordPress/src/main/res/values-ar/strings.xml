@@ -1458,7 +1458,6 @@ Language: ar
     <string name="reader_label_toolbar_back">رجوع</string>
     <string name="reader_discover_empty_button_text">البدء</string>
     <string name="reader_post_details_header_by_author_name">بواسطة</string>
-    <string name="reader_discover_empty_subtitle">متابعة المواضيع لاكتشاف مدونات جديدة</string>
     <string name="stats_referrer_popup_menu_open_website">فتح الموقع الإلكتروني</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">يتعر وسم هذا المرجع بأنه بريد مزعج</string>
     <string name="stats_referrer_popup_unmark_as_spam">عدم الوسم بأنه بريد مزعج</string>

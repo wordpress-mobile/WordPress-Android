@@ -1467,7 +1467,6 @@ Language: de
     <string name="photo_picker_wordpress_media_library">Wähle aus der WordPress-Mediathek</string>
     <string name="reader_label_toolbar_back">Zurück</string>
     <string name="reader_discover_empty_button_text">Erste Schritte</string>
-    <string name="reader_discover_empty_subtitle">Folge Themen, um neue Blogs zu entdecken</string>
     <string name="reader_post_details_header_by_author_name">Von</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Dieser Referrer kann nicht als Spam markiert werden</string>
     <string name="stats_referrer_popup_unmark_as_spam">Spam-Markierung aufheben</string>

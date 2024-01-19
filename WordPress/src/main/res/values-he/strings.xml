@@ -1458,7 +1458,6 @@ Language: he_IL
     <string name="photo_picker_wordpress_media_library">לבחור מתוך ספריית המדיה של WordPress</string>
     <string name="reader_label_toolbar_back">חזרה</string>
     <string name="reader_discover_empty_button_text">מתחילים כאן</string>
-    <string name="reader_discover_empty_subtitle">לעקוב אחר נושאים כדי לגלות בלוגים חדשים</string>
     <string name="reader_post_details_header_by_author_name">לפי</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">לא ניתן לסמן את מקור ההפניה כזבל</string>
     <string name="stats_referrer_popup_unmark_as_spam">לבטל את הסימון כתגובת זבל</string>

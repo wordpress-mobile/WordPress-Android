@@ -1467,7 +1467,6 @@ Language: ro
     <string name="photo_picker_wordpress_media_library">Alege din biblioteca Media din WordPress</string>
     <string name="reader_label_toolbar_back">Înapoi</string>
     <string name="reader_discover_empty_button_text">Începe</string>
-    <string name="reader_discover_empty_subtitle">Urmărește niște subiecte pentru a descoperi bloguri noi</string>
     <string name="reader_post_details_header_by_author_name">De</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Acest referent nu poate fi marcat ca spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Anulează marcarea ca spam</string>

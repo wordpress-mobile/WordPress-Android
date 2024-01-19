@@ -1336,7 +1336,6 @@ Language: lv
     <string name="photo_picker_wordpress_media_library">Izvēlieties no WordPress multivides bibliotēkas</string>
     <string name="reader_label_toolbar_back">Atpakaļ</string>
     <string name="reader_discover_empty_button_text">Sāciet</string>
-    <string name="reader_discover_empty_subtitle">Sekojiet tēmām, lai atklātu jaunus emuārus</string>
     <string name="reader_post_details_header_by_author_name">Autors</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Šo novirzītāju nevar atzīmēt kā mēstuli</string>
     <string name="stats_referrer_popup_unmark_as_spam">Noņemt atzīmi no mēstules</string>

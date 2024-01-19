@@ -1467,7 +1467,6 @@ Language: tr
     <string name="photo_picker_wordpress_media_library">WordPress Ortam Kütüphanesi\'nden seçin</string>
     <string name="reader_label_toolbar_back">Geri</string>
     <string name="reader_discover_empty_button_text">Başlayın</string>
-    <string name="reader_discover_empty_subtitle">Yeni bloglar keşfetmek için konular takip edin</string>
     <string name="reader_post_details_header_by_author_name">gönderen:</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Bu yönlendiren, istenmeyen posta olarak işaretlenemez</string>
     <string name="stats_referrer_popup_unmark_as_spam">İstenmeyen posta işaretini kaldır</string>

@@ -1461,7 +1461,6 @@ Language: zh_TW
     <string name="photo_picker_wordpress_media_library">從 WordPress 媒體庫選擇</string>
     <string name="reader_label_toolbar_back">返回</string>
     <string name="reader_discover_empty_button_text">開始使用</string>
-    <string name="reader_discover_empty_subtitle">追蹤主題以探索新網誌</string>
     <string name="reader_post_details_header_by_author_name">發表者：</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">此推薦連結不能被標記為垃圾郵件</string>
     <string name="stats_referrer_popup_unmark_as_spam">取消標記為垃圾郵件</string>

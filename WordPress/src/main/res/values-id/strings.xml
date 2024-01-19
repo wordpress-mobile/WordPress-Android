@@ -1461,7 +1461,6 @@ Language: id
     <string name="photo_picker_wordpress_media_library">Pilih dari Pustaka Media WordPress</string>
     <string name="reader_label_toolbar_back">Kembali</string>
     <string name="reader_discover_empty_button_text">Memulai</string>
-    <string name="reader_discover_empty_subtitle">Ikuti topik untuk menemukan blog baru</string>
     <string name="reader_post_details_header_by_author_name">Oleh</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Perujuk ini tidak dapat ditandai sebagai spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Hilangkan tanda sebagai Spam</string>

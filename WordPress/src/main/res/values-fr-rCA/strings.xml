@@ -1459,7 +1459,6 @@ Language: fr
     <string name="photo_picker_wordpress_media_library">Choisir dans la bibliothèque des médias WordPress</string>
     <string name="reader_label_toolbar_back">Retour</string>
     <string name="reader_discover_empty_button_text">Premiers pas</string>
-    <string name="reader_discover_empty_subtitle">Suivre les sujets pour découvrir de nouveaux blogs</string>
     <string name="reader_post_details_header_by_author_name">Par</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Ce référent ne peut pas être marqué comme indésirable</string>
     <string name="stats_referrer_popup_unmark_as_spam">Marquer comme sain</string>

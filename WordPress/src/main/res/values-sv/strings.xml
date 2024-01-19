@@ -1467,7 +1467,6 @@ Language: sv_SE
     <string name="photo_picker_wordpress_media_library">Välj ur mediabiblioteket i WordPress</string>
     <string name="reader_label_toolbar_back">Tillbaka</string>
     <string name="reader_discover_empty_button_text">Kom igång</string>
-    <string name="reader_discover_empty_subtitle">Följ ämnen för att upptäcka nya bloggar</string>
     <string name="reader_post_details_header_by_author_name">Av</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Denna hänvisande webbplats går inte att avmarkera som skräp</string>
     <string name="stats_referrer_popup_unmark_as_spam">Ta bort markering som skräppost</string>

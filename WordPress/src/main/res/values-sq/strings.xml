@@ -1456,7 +1456,6 @@ Language: sq_AL
     <string name="photo_picker_wordpress_media_library">Zgjidhni prej Mediatekës WordPress</string>
     <string name="reader_label_toolbar_back">Mbrapsht</string>
     <string name="reader_discover_empty_button_text">Fillojani</string>
-    <string name="reader_discover_empty_subtitle">Ndiqni tema, që të zbuloni blogje të rinj</string>
     <string name="reader_post_details_header_by_author_name">Nga</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Këtij referuesi s’mund t’i vihet shenjë si i padëshiruar</string>
     <string name="stats_referrer_popup_unmark_as_spam">Hiqja Shenjën Si i Padëshiruar</string>

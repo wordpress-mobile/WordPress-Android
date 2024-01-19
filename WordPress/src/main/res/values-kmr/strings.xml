@@ -147,7 +147,6 @@ Language: ku_TR
     <string name="reader_label_toolbar_back">Paşve</string>
     <string name="reader_discover_empty_button_text">Dest Pê Bike</string>
     <string name="reader_post_details_header_by_author_name">Ji hêla</string>
-    <string name="reader_discover_empty_subtitle">Ji bo blogên nû keşf bikî, mijaran bişopîne</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Wekî Spam nîşan bike</string>
     <string name="stats_referrer_popup_menu_open_website">Malperê Veke</string>
     <string name="media_uploading_gif_library_photo">Hilxistina medyaya gif\'ê</string>

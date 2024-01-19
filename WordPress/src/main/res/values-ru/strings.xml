@@ -1467,7 +1467,6 @@ Language: ru
     <string name="photo_picker_wordpress_media_library">Выберите из медиатеки WordPress</string>
     <string name="reader_label_toolbar_back">Назад</string>
     <string name="reader_discover_empty_button_text">Начните</string>
-    <string name="reader_discover_empty_subtitle">Подписывайтесь на темы для того, чтобы найти новые блоги</string>
     <string name="reader_post_details_header_by_author_name">От автора</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Этот реферер не может быть отмечен как спам</string>
     <string name="stats_referrer_popup_unmark_as_spam">Убрать отметку спам</string>
