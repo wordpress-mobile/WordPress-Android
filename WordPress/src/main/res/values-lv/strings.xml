@@ -3412,7 +3412,6 @@ Language: lv
     <string name="reader_toast_err_already_follow_blog">Jūs jau sekojat šai vietnei</string>
     <string name="reader_toast_err_get_blog_info">Nevar parādīt šo vietni</string>
     <string name="reader_label_followed_blog">Vietne, kurai sekojat</string>
-    <string name="reader_hint_add_tag_or_url">Ievadiet URL vai tematu, kam sekot </string>
     <string name="reader_title_blog_preview">Lasītāja vietne</string>
     <string name="ssl_certificate_ask_trust">Ja parasti izveidojat savienojumu ar šo vietni bez problēmām, šī kļūda var nozīmēt, ka kāds mēģina uzdoties par vietni, un jums nevajadzētu turpināt. Vai jūs tomēr vēlaties uzticēties sertifikātam?</string>
     <string name="ssl_certificate_error">Nederīgs SSL sertifikāts</string>

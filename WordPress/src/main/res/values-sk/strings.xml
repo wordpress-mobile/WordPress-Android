@@ -1327,7 +1327,6 @@ Language: sk
     <string name="reader_toast_err_follow_blog">Nepodarilo sa sledovať túto webovú stránku</string>
     <string name="reader_empty_recommended_blogs">Žiadne odporúčané webové stránky</string>
     <string name="reader_title_blog_preview">Webová stránka čítačky</string>
-    <string name="reader_hint_add_tag_or_url">Zadajte adresu URL alebo tému, ktorú chcete sledovať</string>
     <string name="reader_label_followers_count">%s odberateľov</string>
     <string name="help">Pomocník</string>
     <string name="ssl_certificate_error">Neplatný SSL certifikát</string>

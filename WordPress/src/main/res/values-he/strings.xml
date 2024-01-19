@@ -3541,7 +3541,6 @@ Language: he_IL
     <string name="reader_toast_err_already_follow_blog">אתר זה כבר במעקב שלך</string>
     <string name="reader_toast_err_get_blog_info">לא ניתן להציג אתר זה</string>
     <string name="reader_label_followed_blog">האתר נעקב</string>
-    <string name="reader_hint_add_tag_or_url">יש להזין כתובת URL או נושא למעקב</string>
     <string name="reader_title_blog_preview">אתר</string>
     <string name="ssl_certificate_ask_trust">אם בדרך כלל אתה מתחבר לאתר זה ללא בעיות, ייתכן ששגיאה זו נובעת מכך שמישהו מנסה להתחזות לאתר ולכן אסור לך להמשיך. האם ברצונך בכל זאת לתת אמון באישור?</string>
     <string name="ssl_certificate_error">אישור SSL לא תקף</string>

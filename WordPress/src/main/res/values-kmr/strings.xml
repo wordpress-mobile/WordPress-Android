@@ -2142,7 +2142,6 @@ Language: ku_TR
     <string name="reader_label_followed_blog">Malper hat şopandin</string>
     <string name="reader_title_blog_preview">Malpera Xwînerê</string>
     <string name="reader_toast_err_follow_blog">Ev malper nayê şopandin</string>
-    <string name="reader_hint_add_tag_or_url">Ji bo şopandinê URL an jî mijarekê bikevê</string>
     <string name="reader_empty_recommended_blogs">Malperên pêşniyarkirî tune ye</string>
     <string name="reader_toast_err_unfollow_blog">Ji şopandina vê malperê nayê derketin</string>
     <string name="help">Alîkarî</string>
