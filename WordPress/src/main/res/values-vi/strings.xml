@@ -1282,7 +1282,6 @@ Language: vi_VN
     <string name="gutenberg_native_add_block_after">Thêm khối sau</string>
     <string name="reader_filter_empty_tags_action">Thêm thẻ</string>
     <string name="reader_filter_empty_sites_action">Theo dõi blog</string>
-    <string name="reader_filter_empty_tags_list">Bạn có thể theo dõi các bài viết có cùng đề tài bằng cách thêm thẻ</string>
     <string name="reader_filter_main_title">Đang theo dõi</string>
     <string name="reader_filter_cta">Bộ lọc</string>
     <string name="gutenberg_native_video_caption_s">Chú thích video. %s</string>

@@ -1303,7 +1303,6 @@ Language: es_CO
     <string name="gutenberg_native_add_block_after">Añadir el bloque después</string>
     <string name="reader_filter_empty_tags_action">Añadir un tema</string>
     <string name="reader_filter_empty_sites_action">Seguir un sitio</string>
-    <string name="reader_filter_empty_tags_list">Puedes seguir entradas sobre un tema específico añadiendo un tema</string>
     <string name="reader_filter_main_title">Siguiendo</string>
     <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Leyenda del video. %s</string>

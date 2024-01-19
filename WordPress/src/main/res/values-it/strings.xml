@@ -1821,7 +1821,6 @@ Language: it
     <string name="gutenberg_native_add_block_after">Aggiungi blocco dopo</string>
     <string name="reader_filter_empty_tags_action">Aggiungi un argomento</string>
     <string name="reader_filter_empty_sites_action">Segui un sito</string>
-    <string name="reader_filter_empty_tags_list">Puoi seguire gli articoli su uno specifico tema aggiungendo un argomento.</string>
     <string name="reader_filter_main_title">Stai seguendo</string>
     <string name="reader_filter_cta">Filtro</string>
     <string name="gutenberg_native_video_caption_s">Didascalia del video. %s</string>

@@ -1831,7 +1831,6 @@ Language: en_GB
     <string name="gutenberg_native_add_block_after">Add Block After</string>
     <string name="reader_filter_empty_tags_action">Add a topic</string>
     <string name="reader_filter_empty_sites_action">Follow a site</string>
-    <string name="reader_filter_empty_tags_list">You can follow posts on a specific subject by adding a topic</string>
     <string name="reader_filter_main_title">Following</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_video_caption_s">Video caption. %s</string>

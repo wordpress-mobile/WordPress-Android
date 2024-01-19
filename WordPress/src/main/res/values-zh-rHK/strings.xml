@@ -1824,7 +1824,6 @@ Language: zh_TW
     <string name="gutenberg_native_add_block_after">在之後新增區塊</string>
     <string name="reader_filter_empty_tags_action">新增主題</string>
     <string name="reader_filter_empty_sites_action">關注網站</string>
-    <string name="reader_filter_empty_tags_list">你可以新增主題以關注特定主題的文章</string>
     <string name="reader_filter_main_title">關注中</string>
     <string name="reader_filter_cta">篩選</string>
     <string name="gutenberg_native_video_caption_s">視訊標題。%s</string>

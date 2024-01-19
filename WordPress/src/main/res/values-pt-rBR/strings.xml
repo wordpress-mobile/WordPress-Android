@@ -1609,7 +1609,6 @@ Language: pt_BR
     <string name="gutenberg_native_add_block_after">Adicionar bloco depois</string>
     <string name="reader_filter_empty_tags_action">Adicionar um tópico</string>
     <string name="reader_filter_empty_sites_action">Seguir um site</string>
-    <string name="reader_filter_empty_tags_list">Você pode seguir posts de um assunto específico adicionando um tópico</string>
     <string name="reader_filter_main_title">Seguindo</string>
     <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Legenda do vídeo. %s</string>

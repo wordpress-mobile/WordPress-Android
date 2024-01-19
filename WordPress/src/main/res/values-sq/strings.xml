@@ -1820,7 +1820,6 @@ Language: sq_AL
     <string name="gutenberg_native_add_block_after">Shtoje Pas Bllokut</string>
     <string name="reader_filter_empty_tags_action">Shtoni një temë</string>
     <string name="reader_filter_empty_sites_action">Ndiqni një sajt</string>
-    <string name="reader_filter_empty_tags_list">Mund të ndiqni postime lidhur me një subjekt të caktuar, duke shtuar një temë</string>
     <string name="reader_filter_main_title">Në ndjekje</string>
     <string name="reader_filter_cta">Filtër</string>
     <string name="gutenberg_native_video_caption_s">Legjendë videoje. %s</string>
