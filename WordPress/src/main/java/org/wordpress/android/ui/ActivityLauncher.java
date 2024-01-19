@@ -1370,11 +1370,6 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.APP_SETTINGS);
     }
 
-    public static void viewDesignSystem(Activity activity) {
-        Intent intent = new Intent(activity, DesignSystemActivity.class);
-        activity.startActivity(intent);
-    }
-
     public static void viewNotificationsSettings(Activity activity) {
         Intent intent = new Intent(activity, NotificationsSettingsActivity.class);
         activity.startActivity(intent);

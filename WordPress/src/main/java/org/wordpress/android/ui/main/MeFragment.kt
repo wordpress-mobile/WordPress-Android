@@ -37,6 +37,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_SHOT_NE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_UPLOADED
 import org.wordpress.android.databinding.MeFragmentBinding
+import org.wordpress.android.designsystem.DesignSystemActivity
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
@@ -211,7 +212,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             rowDesignSystem.isVisible = true
             designSystemDivider.isVisible = true
             rowDesignSystem.setOnClickListener {
-                ActivityLauncher.viewDesignSystem(activity)
+                requireContext().startActivity(Intent(requireContext(), DesignSystemActivity::class.java))
             }
         }
 
