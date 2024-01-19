@@ -19,7 +19,7 @@ import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlic
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.plans.PlansCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinksItemViewModelSlice
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardVewModelSlice
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.merge
@@ -34,7 +34,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
     private val cardViewModelSlice: CardViewModelSlice,
     private val personalizeCardViewModelSlice: PersonalizeCardViewModelSlice,
     private val bloggingPromptCardViewModelSlice: BloggingPromptCardViewModelSlice,
-    private val quickStartCardVewModelSlice: QuickStartCardVewModelSlice,
+    private val quickStartCardViewModelSlice: QuickStartCardViewModelSlice,
     private val noCardsMessageViewModelSlice: NoCardsMessageViewModelSlice,
     private val quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice,
     private val bloganuaryNudgeCardViewModelSlice: BloganuaryNudgeCardViewModelSlice,
@@ -63,7 +63,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         quickLinksItemViewModelSlice.navigation,
         plansCardViewModelSlice.onNavigation,
         jpMigrationSuccessCardViewModelSlice.onNavigation,
-        quickStartCardVewModelSlice.onNavigation,
+        quickStartCardViewModelSlice.onNavigation,
         domainRegistrationCardViewModelSlice.onNavigation,
     )
 
@@ -76,13 +76,13 @@ class DashboardCardsViewModelSlice @Inject constructor(
         blazeCardViewModelSlice.isRefreshing,
         cardViewModelSlice.isRefreshing,
         bloggingPromptCardViewModelSlice.isRefreshing,
-        quickStartCardVewModelSlice.isRefreshing,
+        quickStartCardViewModelSlice.isRefreshing,
         domainRegistrationCardViewModelSlice.isRefreshing
     )
 
     val uiModel: MutableLiveData<List<MySiteCardAndItem>> = merge(
         quickLinksItemViewModelSlice.uiState,
-        quickStartCardVewModelSlice.uiModel,
+        quickStartCardViewModelSlice.uiModel,
         blazeCardViewModelSlice.uiModel,
         cardViewModelSlice.uiModel,
         bloggingPromptCardViewModelSlice.uiModel,
@@ -161,7 +161,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         personalizeCardViewModelSlice.initialize(scope)
         quickLinksItemViewModelSlice.initialization(scope)
         cardViewModelSlice.initialize(scope)
-        quickStartCardVewModelSlice.initialize(scope)
+        quickStartCardViewModelSlice.initialize(scope)
     }
 
     private fun buildCards(site: SiteModel) {
@@ -174,7 +174,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         quickLinksItemViewModelSlice.buildCard(site)
         plansCardViewModelSlice.buildCard(site)
         cardViewModelSlice.buildCard(site)
-        quickStartCardVewModelSlice.build(site)
+        quickStartCardViewModelSlice.build(site)
     }
 
     fun onResume() {

@@ -18,7 +18,7 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
-class QuickStartCardVewModelSlice @Inject constructor(
+class QuickStartCardViewModelSlice @Inject constructor(
     private val quickStartRepository: QuickStartRepository,
     private val quickStartStore: QuickStartStore,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,

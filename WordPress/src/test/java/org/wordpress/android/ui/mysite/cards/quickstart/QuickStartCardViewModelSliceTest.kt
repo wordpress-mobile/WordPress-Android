@@ -89,7 +89,7 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
 
-    private lateinit var quickStartCardVewModelSlice: QuickStartCardVewModelSlice
+    private lateinit var mQuickStartCardViewModelSlice: QuickStartCardViewModelSlice
 
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var quickStartPrompts: MutableList<QuickStartMySitePrompts>
@@ -120,7 +120,7 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
             htmlMessageUtils,
             quickStartTracker
         )
-        quickStartCardVewModelSlice = QuickStartCardVewModelSlice(
+        mQuickStartCardViewModelSlice = QuickStartCardViewModelSlice(
             quickStartRepository,
             quickStartStore,
             quickStartUtilsWrapper,
@@ -140,17 +140,17 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
         }
 
         result = mutableListOf()
-        quickStartCardVewModelSlice.uiModel.observeForever { result.add(it) }
+        mQuickStartCardViewModelSlice.uiModel.observeForever { result.add(it) }
 
         isRefreshing = mutableListOf()
-        quickStartCardVewModelSlice.isRefreshing.observeForever { isRefreshing.add(it) }
+        mQuickStartCardViewModelSlice.isRefreshing.observeForever { isRefreshing.add(it) }
     }
 
     @Test
     fun `refresh loads model`() = test {
         initStore()
 
-        quickStartCardVewModelSlice.refresh()
+        mQuickStartCardViewModelSlice.refresh()
 
         assertModel()
     }
@@ -169,8 +169,8 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
     fun `start marks CREATE_SITE as done and loads model`() = test {
         initStore()
 
-        quickStartCardVewModelSlice.build(testScope(), site.id)
-        quickStartCardVewModelSlice.refresh()
+        mQuickStartCardViewModelSlice.build(testScope(), site.id)
+        mQuickStartCardViewModelSlice.refresh()
 
         assertModel()
     }
@@ -178,7 +178,7 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
     @Test
     fun `sets active task and shows stylized snackbar when not UPDATE_SITE_TITLE`() = test {
         initStore()
-        quickStartCardVewModelSlice.refresh()
+        mQuickStartCardViewModelSlice.refresh()
 
         quickStartRepository.setActiveTask(PUBLISH_POST)
 
@@ -190,7 +190,7 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
     fun `completeTask marks current active task as done and refreshes model`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
-        quickStartCardVewModelSlice.refresh()
+        mQuickStartCardViewModelSlice.refresh()
         val task = PUBLISH_POST
 
         quickStartRepository.setActiveTask(task)
@@ -207,7 +207,7 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
     fun `completeTask marks current pending task as done and refreshes model`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
-        quickStartCardVewModelSlice.refresh()
+        mQuickStartCardViewModelSlice.refresh()
         val task = PUBLISH_POST
 
         quickStartRepository.setActiveTask(task)
@@ -280,11 +280,11 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
         site.id = updatedSiteId
         site.showOnFront = ShowOnFront.POSTS.value
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        quickStartCardVewModelSlice.refresh.observeForever { isRefreshing.add(it) }
+        mQuickStartCardViewModelSlice.refresh.observeForever { isRefreshing.add(it) }
 
-        quickStartCardVewModelSlice.build(testScope(), site.id)
+        mQuickStartCardViewModelSlice.build(testScope(), site.id)
 
-        quickStartCardVewModelSlice.refresh()
+        mQuickStartCardViewModelSlice.refresh()
 
         assertThat(isRefreshing.last()).isFalse
     }
@@ -294,7 +294,7 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         initStore()
 
-        quickStartCardVewModelSlice.refresh()
+        mQuickStartCardViewModelSlice.refresh()
 
         val update = result.last()
         assertThat(update.categories).isNotEmpty
@@ -305,7 +305,7 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
         initStore()
 
-        quickStartCardVewModelSlice.refresh()
+        mQuickStartCardViewModelSlice.refresh()
 
         val update = result.last()
         assertThat(update.categories).isEmpty()
@@ -317,12 +317,12 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
         val task = PUBLISH_POST
         quickStartRepository.setActiveTask(task)
         quickStartRepository.completeTask(task)
-        quickStartCardVewModelSlice.refresh()
+        mQuickStartCardViewModelSlice.refresh()
     }
 
     private suspend fun initQuickStartInProgress() {
         initStore()
-        quickStartCardVewModelSlice.refresh()
+        mQuickStartCardViewModelSlice.refresh()
     }
 
     private suspend fun initStore(
@@ -358,7 +358,7 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
     }
 
     private fun initBuild() {
-        quickStartCardVewModelSlice.build(siteLocalId)
+        mQuickStartCardViewModelSlice.build(siteLocalId)
     }
 
     private fun assertModel() {
