@@ -211,7 +211,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             rowDesignSystem.isVisible = true
             designSystemDivider.isVisible = true
             rowDesignSystem.setOnClickListener {
-                ActivityLauncher.viewDesignSystemForResult(activity)
+                ActivityLauncher.viewDesignSystem(activity)
             }
         }
 

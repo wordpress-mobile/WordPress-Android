@@ -19,10 +19,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import org.wordpress.android.R
 import org.wordpress.android.designsystem.DesignSystemDataSource.buttonOptions
 
@@ -73,7 +69,7 @@ fun SelectOptionButton(
 
 @Preview
 @Composable
-fun StartDesignSystemPreview(){
+fun StartDesignSystemPreview() {
     DesignSystemStartScreen(
         modifier = Modifier
             .fillMaxSize()
@@ -81,19 +77,10 @@ fun StartDesignSystemPreview(){
     )
 }
 @Composable
-fun DesignSystem(
-    navController: NavHostController = rememberNavController()
-) {
-    NavHost(
-        navController = navController,
-        startDestination = DesignSystemScreen.Start.name
-    ) {
-        composable(route = DesignSystemScreen.Start.name) {
-            DesignSystemStartScreen(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(dimensionResource(R.dimen.button_container_shadow_height))
-            )
-        }
-    }
+fun DesignSystem() {
+    DesignSystemStartScreen(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(dimensionResource(R.dimen.button_container_shadow_height))
+    )
 }
