@@ -537,7 +537,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case TAB_IDX_FOLLOWED_TAGS:
-                    return getString(R.string.reader_page_followed_tags);
+                    return getString(R.string.reader_page_followed_tags_title);
                 case TAB_IDX_FOLLOWED_BLOGS:
                     return getString(R.string.reader_page_followed_blogs);
                 default:
