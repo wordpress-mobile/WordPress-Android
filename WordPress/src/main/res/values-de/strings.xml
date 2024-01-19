@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-03 09:30:18+0000
+Translation-Revision-Date: 2024-01-09 21:04:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_working_offline">Offline arbeiten</string>
+    <string name="gutenberg_native_network_connection_re_established">Die Netzwerkverbindung wurde wiederhergestellt</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">Die Netzwerkverbindung ging verloren, offline arbeiten</string>
+    <string name="gutenberg_native_font_size_1_s">Schriftgröße: %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">Der Dateityp wird nicht als Mediendatei unterstützt.</string>
+    <string name="media_cannot_be_started">Wir können im Moment keine Medien öffnen. Bitte versuch es später noch einmal</string>
+    <string name="domains_just_search_for_a_domain_button">Nur nach einer Domain suchen</string>
+    <string name="domains_upgrade_to_a_plan_button">Tarif-Upgrade durchführen</string>
+    <string name="domains_upgrade_to_plan_caption">Erhalte mit jedem kostenpflichtigen Jahrestarif eine kostenlose Domain-Registrierung oder -Übertragung für ein Jahr.</string>
+    <string name="domains_site_domain_never_expires">Läuft nie ab</string>
+    <string name="domains_free_domain">Deine kostenlose WordPress.com-Domain</string>
+    <string name="domains_site_other_domains">Andere Domains für %s</string>
+    <string name="domains_primary_site_domain_chip">Hauptdomain</string>
+    <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_title_january">Der Bloganuary ist da!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Los geht\'s</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Blog-Schreibanregungen aktivieren</string>
@@ -156,10 +170,6 @@ Language: de
     <string name="campaign_detail_error_title">Es ist ein Fehler aufgetreten</string>
     <string name="campaign_listing_page_error_title">Es ist ein Fehler aufgetreten</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Es ist ein Fehler aufgetreten, Kampagnen konnten nicht abgerufen werden</string>
-    <string name="domain_transfer_card_cta">Deine Domains übertragen</string>
-    <string name="domain_transfer_card_caption">Wie du vielleicht schon weißt, wurde Google Domains an Squarespace verkauft. Übertrage deine Domains jetzt zu WordPress.com und wir übernehmen die Übertragungsgebühren und ein zusätzliches Jahr Domain-Registrierung.</string>
-    <string name="domain_transfer_card_sub_title">Hol dir deine Google-Domains zurück</string>
-    <string name="domain_transfer_card_title">Neuigkeiten</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Konten verbinden</string>
     <string name="prepublishing_nudges_toolbar_title_social">Social Sharing</string>
     <string name="prepublishing_nudges_social_action">Social Sharing</string>
@@ -824,7 +834,6 @@ Language: de
     <string name="my_site_post_card_scheduled_title">Anstehende geplante Beiträge</string>
     <string name="my_site_post_card_draft_title">An einem Beitragsentwurf arbeiten</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Kostenlos für das erste Jahr &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/Jahr&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Deine Domains werden zu deiner Website unter %s weiterleiten</string>
     <string name="gutenberg_native_create_link">Link erstellen</string>
     <string name="domains_suggestions_select_domain">Domain auswählen</string>
     <string name="domains_title">Domains</string>
@@ -845,14 +854,9 @@ Language: de
     <string name="domains_free_plan_get_your_domain_caption">Auf dieser Website erworbene Domains werden Besucher zu &lt;b&gt;%s&lt;/b&gt; weiterleiten</string>
     <string name="domains_paid_plan_claim_your_domain_caption">In deinem Tarif ist eine kostenlose Domain-Registrierung für ein Jahr enthalten</string>
     <string name="domains_paid_plan_claim_your_domain_title">Kostenlose Domain in Anspruch nehmen</string>
-    <string name="domains_manage_domains">Domains verwalten</string>
     <string name="domains_add_a_domain">Domain hinzufügen</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Läuft ab am %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Läuft ab am %s</string>
-    <string name="domains_site_domains">Deine Website-Domains</string>
-    <string name="domains_primary_site_address_chip">Adresse der Haupt-Website</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Website-Adresse ändern</string>
-    <string name="domains_primary_site_caption">Deine kostenlose WordPress.com-Adresse lautet</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s für das erste Jahr &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s/Jahr&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /Jahr&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Möchtest du sie verwerfen?</string>
@@ -878,7 +882,6 @@ Language: de
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Dir&lt;/a&gt; gefällt das.</string>
     <string name="gutenberg_native_line_height">Zeilenhöhe</string>
     <string name="domains_free_plan_get_your_domain_title">Hol dir deine Domain</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Unbekannter Fehler beim Abrufen des empfohlenen App-Templates</string>
     <string name="recommend_app_bad_format_response">Ungültige Antwort erhalten</string>
     <string name="recommend_app_null_response">Keine Antwort erhalten</string>
@@ -2077,7 +2080,7 @@ Language: de
     <string name="post_list_search_nothing_found">Es gibt keine Beiträge, die deiner Suche entsprechen</string>
     <string name="post_list_search_prompt">Beiträge durchsuchen</string>
     <string name="domains_suggestions_intro_description">Hier finden dich andere im Internet.</string>
-    <string name="domains_suggestions_intro_title">Wähle einen Premium-Domainnamen</string>
+    <string name="domains_suggestions_intro_title">Wähle einen individuellen Premium-Domainnamen</string>
     <string name="my_site_custom_domain_name">Alle Tarife auf WordPress.com enthalten einen individuellen Domainnamen. Registriere dir jetzt deine kostenlose Domain.</string>
     <string name="stats_widget_minified_name">Auf einen Blick</string>
     <string name="stats_widget_today_insights_name">Heute</string>

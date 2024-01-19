@@ -1,0 +1,6 @@
+24.0:
+- Ottieni un piano WordPress con un dominio gratuito nella pannello di amministrazione del dominio
+- La tastiera del dispositivo rimane attiva durante la modifica dei blocchi di testo
+- La schermata dell'editor scorre automaticamente sui blocchi appena inseriti
+- Deseleziona i blocchi premendo il tasto indietro del dispositivo
+- Condividi diversi tipi di media nell'app in una volta sola senza che si verifichino arresti anomali
