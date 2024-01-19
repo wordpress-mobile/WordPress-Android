@@ -220,7 +220,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
             if (blogInfo.numSubscribers == 1) {
                 followersStringRes = R.string.reader_label_followers_count_single;
             } else {
-                followersStringRes = R.string.reader_label_followers_count;
+                followersStringRes = R.string.reader_label_subscribers_count;
             }
 
             final String formattedNumberSubscribers;
