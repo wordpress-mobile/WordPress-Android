@@ -1823,7 +1823,6 @@ Language: fr
     <string name="reader_filter_empty_tags_action">Ajouter un sujet</string>
     <string name="reader_filter_empty_sites_action">S’abonner au site</string>
     <string name="reader_filter_empty_tags_list">Vous pouvez suivre les articles relatifs à un thème particulier en ajoutant un sujet.</string>
-    <string name="reader_filter_empty_sites_list">Découvrir les derniers articles des sites que vous suivez</string>
     <string name="reader_filter_main_title">Abonné</string>
     <string name="reader_filter_cta">Filtrer</string>
     <string name="gutenberg_native_video_caption_s">Sous-titre vidéo. %s</string>

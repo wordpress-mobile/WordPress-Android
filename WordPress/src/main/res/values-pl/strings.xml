@@ -1315,7 +1315,6 @@ Language: pl
     <string name="gutenberg_native_add_block_before">Dodaj blok przed</string>
     <string name="gutenberg_native_add_block_after">Dodaj blok za</string>
     <string name="reader_filter_empty_sites_action">Obserwuj witrynę</string>
-    <string name="reader_filter_empty_sites_list">Zobacz najnowsze wpisy z witryn, które obserwujesz</string>
     <string name="reader_filter_empty_tags_action">Dodaj temat</string>
     <string name="reader_filter_empty_tags_list">Możesz obserwować wpisy lub określony temat dodając temat</string>
     <string name="reader_filter_main_title">Obserwowane</string>

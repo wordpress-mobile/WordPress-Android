@@ -662,7 +662,6 @@ Language: nb_NO
     <string name="reader_filter_empty_tags_action">Legg til et emne</string>
     <string name="reader_filter_empty_sites_action">Følg et nettsted</string>
     <string name="reader_filter_empty_tags_list">Du kan følge innlegg om et spesifikt emne ved å legge til et emne</string>
-    <string name="reader_filter_empty_sites_list">Se de siste innleggene fra nettsteder du følger</string>
     <string name="reader_filter_main_title">Følger</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_edit_video">Rediger video</string>

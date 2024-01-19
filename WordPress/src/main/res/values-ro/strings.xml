@@ -1833,7 +1833,6 @@ Language: ro
     <string name="reader_filter_empty_tags_action">Adaugă un subiect</string>
     <string name="reader_filter_empty_sites_action">Urmărește un site</string>
     <string name="reader_filter_empty_tags_list">Poți urmări articole despre un anumit subiect prin adăugarea unei subiect</string>
-    <string name="reader_filter_empty_sites_list">Vezi ultimele articole de pe site-urile pe care le urmărești</string>
     <string name="reader_filter_main_title">Urmăresc</string>
     <string name="reader_filter_cta">Filtrează</string>
     <string name="gutenberg_native_video_caption_s">Subtitrare video. %s</string>

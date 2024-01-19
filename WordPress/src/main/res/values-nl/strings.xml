@@ -1773,7 +1773,6 @@ Language: nl
     <string name="reader_filter_empty_tags_action">Voeg een onderwerp toe</string>
     <string name="reader_filter_empty_sites_action">Een site volgen</string>
     <string name="reader_filter_empty_tags_list">Je kunt berichten over een bepaald onderwerp volgen door een onderwerp toe te voegen</string>
-    <string name="reader_filter_empty_sites_list">Bekijk de nieuwste berichten van sites die je volgt</string>
     <string name="reader_filter_main_title">Volgen</string>
     <string name="reader_filter_cta">Filteren</string>
     <string name="gutenberg_native_video_caption_s">Videobijschrift. %s</string>

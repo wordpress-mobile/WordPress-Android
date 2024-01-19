@@ -1833,7 +1833,6 @@ Language: gl_ES
     <string name="reader_filter_empty_tags_action">Engadir un tema</string>
     <string name="reader_filter_empty_sites_action">Seguir un sitio</string>
     <string name="reader_filter_empty_tags_list">Podes seguir entradas sobre un tema específico engadindo un tema</string>
-    <string name="reader_filter_empty_sites_list">Mira as entradas máis recentes dos sitios que segues</string>
     <string name="reader_filter_main_title">Seguindo</string>
     <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Lenda do vídeo. %s</string>

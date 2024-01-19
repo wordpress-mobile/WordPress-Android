@@ -492,7 +492,6 @@ Language: ku_TR
     <string name="gutenberg_native_add_block_before">Tevlî pêşiya blokê bike</string>
     <string name="gutenberg_native_add_block_after">Tevlî paşiya blokê bike</string>
     <string name="reader_filter_empty_sites_action">Malperekê bişopîne</string>
-    <string name="reader_filter_empty_sites_list">Şandiyên herî nû yên ji malperên tu wan dişopînî bibîne</string>
     <string name="reader_filter_empty_tags_action">Mijarekê tevlî bike</string>
     <string name="reader_filter_empty_tags_list">Tu dikarî bi lêzêdekirina mijarekê şandiyên eleqedarî babeteke diyar bişopînî</string>
     <string name="reader_filter_main_title">Şopandinên Te</string>

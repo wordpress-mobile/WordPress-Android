@@ -1833,7 +1833,6 @@ Language: ru
     <string name="reader_filter_empty_tags_action">Добавить тему</string>
     <string name="reader_filter_empty_sites_action">Подписаться на сайт</string>
     <string name="reader_filter_empty_tags_list">Вы можете подписаться на определенную тему добавив её</string>
-    <string name="reader_filter_empty_sites_list">Читайте свежие записи с сайтов, на которые вы подписаны</string>
     <string name="reader_filter_main_title">Подписки</string>
     <string name="reader_filter_cta">Фильтр</string>
     <string name="gutenberg_native_video_caption_s">Подпись к видео. %s</string>

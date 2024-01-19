@@ -1546,7 +1546,6 @@ Language: cs_CZ
     <string name="reader_self_hosted_select_filter">Pomocí tlačítka filtru vyhledejte příspěvky týkající se konkrétních témat</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Přihlaste se na WordPress.com a podívejte se na nejnovější příspěvky z webů, které sledujete</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Přihlaste se na WordPress.com a podívejte se na nejnovější příspěvky z témat, která sledujete</string>
-    <string name="reader_filter_empty_sites_list">Podívejte se na nejnovější příspěvky z webů, které sledujete</string>
     <string name="reader_filter_empty_tags_list">Přidáním tématu můžete sledovat příspěvky na konkrétní téma.</string>
     <string name="reader_filter_empty_sites_action">Sledujte web</string>
     <string name="reader_filter_empty_tags_action">Přidejte téma</string>
