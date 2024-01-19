@@ -539,7 +539,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                 case TAB_IDX_FOLLOWED_TAGS:
                     return getString(R.string.reader_page_followed_tags_title);
                 case TAB_IDX_FOLLOWED_BLOGS:
-                    return getString(R.string.reader_page_followed_blogs);
+                    return getString(R.string.reader_page_followed_blogs_title);
                 default:
                     return super.getPageTitle(position);
             }
