@@ -1441,7 +1441,6 @@ Language: id
     <string name="login_prologue_title_second">Dengan editor yang hebat, Anda dapat langsung menerbitkan pos.</string>
     <string name="login_prologue_title_first">Selamat datang di pembuat situs web terpopuler di dunia.</string>
     <string name="media_loading_failed">Gagal memuat media</string>
-    <string name="reader_discover_recommended_blogs_header">Rekomendasi situs</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Kami berusaha keras untuk menambahkan banyak blok setiap rilis.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' tidak sepenuhnya didukung</string>
     <string name="gutenberg_native_help_button">Tombol Bantuan</string>

@@ -1447,7 +1447,6 @@ Language: sv_SE
     <string name="login_prologue_title_second">Med den kraftfulla redigeringsmiljön kan du skapa inlägg på rörlig fot.</string>
     <string name="login_prologue_title_first">Välkommen till världens populäraste webbplatsbyggare.</string>
     <string name="media_loading_failed">Hämtningen av mediafiler misslyckades</string>
-    <string name="reader_discover_recommended_blogs_header">Webbplatser att följa</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Vi arbetar för fullt med att lägga till fler block i varje utgåva.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">”%s” stöds inte fullt ut</string>
     <string name="gutenberg_native_help_button">Hjälpknapp</string>

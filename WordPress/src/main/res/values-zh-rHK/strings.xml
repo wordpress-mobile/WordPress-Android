@@ -1441,7 +1441,6 @@ Language: zh_TW
     <string name="login_prologue_title_second">這個功能強大的編輯器讓你隨時隨地都能發佈文章。</string>
     <string name="login_prologue_title_first">歡迎使用全球最受歡迎的網站建置工具。</string>
     <string name="media_loading_failed">媒體載入失敗</string>
-    <string name="reader_discover_recommended_blogs_header">值得關注的網站</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">我們正在努力開發，讓每次版本更新都可以新增更多區塊。</string>
     <string name="gutenberg_native_s_is_not_fully_supported">系統不完全支援「%s」</string>
     <string name="gutenberg_native_help_button">「協助」按鈕</string>

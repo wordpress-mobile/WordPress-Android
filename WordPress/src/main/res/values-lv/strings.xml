@@ -1316,7 +1316,6 @@ Language: lv
     <string name="login_prologue_title_second">Izmantojot spēcīgo redaktoru, jūs varat ievietot ziņas, esot ceļā.</string>
     <string name="login_prologue_title_first">Laipni lūdzam pasaules populārākajā vietņu veidotājā.</string>
     <string name="media_loading_failed">Multivides ielāde neizdevās</string>
-    <string name="reader_discover_recommended_blogs_header">Vietnes, kurām sekot</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Mēs cītīgi strādājam, lai ar katru laidienu pievienotu vairāk bloku.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' netiek pilnībā atbalstīts</string>
     <string name="gutenberg_native_help_button">Palīdzības poga</string>

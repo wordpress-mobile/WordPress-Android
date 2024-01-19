@@ -923,7 +923,6 @@ Language: es_CO
     <string name="login_prologue_title_second">Con el potente editor puedes publicar sobre la marcha.</string>
     <string name="login_prologue_title_first">Bienvenido al maquetador web más popular del mundo.</string>
     <string name="media_loading_failed">La carga del medio ha fallado</string>
-    <string name="reader_discover_recommended_blogs_header">Sitios a seguir</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Estamos trabajando duro para añadir más bloques con cada versión.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">«%s» no es totalmente compatible</string>
     <string name="gutenberg_native_help_button">Botón de ayuda</string>

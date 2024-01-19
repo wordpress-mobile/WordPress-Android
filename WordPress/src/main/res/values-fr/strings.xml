@@ -1439,7 +1439,6 @@ Language: fr
     <string name="login_prologue_title_second">Avec cet éditeur puissant, vous pouvez publier de n’importe où.</string>
     <string name="login_prologue_title_first">Bienvenue sur le constructeur de site le plus populaire au monde.</string>
     <string name="media_loading_failed">Échec du chargement du média</string>
-    <string name="reader_discover_recommended_blogs_header">Sites à suivre</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Nous travaillons dur pour ajouter plus de blocs à chaque version.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">« %s » n’est pas entièrement pris en charge</string>
     <string name="gutenberg_native_help_button">Bouton d’aide</string>

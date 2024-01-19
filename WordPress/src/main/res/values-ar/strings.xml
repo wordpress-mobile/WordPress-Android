@@ -1436,7 +1436,6 @@ Language: ar
     <string name="login_prologue_title_third">شاهد التعليقات والإشعارات في الوقت الفعلي.</string>
     <string name="login_prologue_title_fourth">شاهد جمهورك يتزايد من خلال التحليلات المتعمقة.</string>
     <string name="login_prologue_title_fifth">تابع مواقعك المفضَّلة واكتشف مدوّنات جديدة.</string>
-    <string name="reader_discover_recommended_blogs_header">مواقع لمتابعتها</string>
     <string name="media_loading_failed">فشل تحميل الوسائط</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">نعمل بجد لإضافة المزيد من المكوِّنات مع كل إصدار.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">لم يتم دعم \"%s\" بالكامل</string>

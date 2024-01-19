@@ -1447,7 +1447,6 @@ Language: ru
     <string name="login_prologue_title_second">С настолько мощным редактором вы можете создавать публикации на ходу.</string>
     <string name="login_prologue_title_first">Добро пожаловать в самый популярный в мире конструктор сайтов.</string>
     <string name="media_loading_failed">Загрузка медиафайла неудалась</string>
-    <string name="reader_discover_recommended_blogs_header">Сайты для подписки</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Мы стараемся добавить как можно больше блоков в каждом выпуске.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' полностью не поддерживается</string>
     <string name="gutenberg_native_help_button">Кнопка помощи</string>

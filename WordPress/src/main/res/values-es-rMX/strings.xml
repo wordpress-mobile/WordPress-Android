@@ -180,7 +180,6 @@ Language: es_MX
     <string name="login_prologue_title_first">Bienvenido al maquetador web más popular del mundo.</string>
     <string name="login_prologue_title_third">Mira los comentarios y avisos en tiempo real.</string>
     <string name="media_loading_failed">La carga del medio ha fallado</string>
-    <string name="reader_discover_recommended_blogs_header">Sitios a seguir</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Estamos trabajando duro para añadir más bloques con cada versión.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\"%s\" no es totalmente compatible</string>
     <string name="stories_intro_description_second">Son publicados como una nueva entrada de blog en tu sitio para que tu audiencia nunca se pierda nada.</string>

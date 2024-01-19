@@ -1440,7 +1440,6 @@ Language: ja_JP
     <string name="login_prologue_title_second">強力なエディターで、外出中も投稿できます。</string>
     <string name="login_prologue_title_first">世界で最も人気のサイト構築サービスへようこそ。</string>
     <string name="media_loading_failed">メディア読み込み失敗</string>
-    <string name="reader_discover_recommended_blogs_header">フォローするサイト</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">リリースごとにブロックを追加できるよう努めています。</string>
     <string name="gutenberg_native_s_is_not_fully_supported">「%s」は十分にサポートされていません</string>
     <string name="gutenberg_native_help_button">ヘルプボタン</string>

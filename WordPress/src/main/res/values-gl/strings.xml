@@ -1447,7 +1447,6 @@ Language: gl_ES
     <string name="login_prologue_title_second">Co potente editor podes publicar sobre a marcha.</string>
     <string name="login_prologue_title_first">Benvido ao maquetador web máis popular do mundo.</string>
     <string name="media_loading_failed">A carga do medio fallou</string>
-    <string name="reader_discover_recommended_blogs_header">Sitios a seguir</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Estamos traballando duro para engadir máis bloques con cada versión.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">«%s» non é totalmente compatible</string>
     <string name="gutenberg_native_help_button">Botón de axuda</string>

@@ -1438,7 +1438,6 @@ Language: he_IL
     <string name="login_prologue_title_second">העורך העוצמתי הזה מאפשר לפרסם מכל מקום.</string>
     <string name="login_prologue_title_first">ברוך בואך לכלי הפופולרי ביותר בעולם לבניית אתרי אינטרנט.</string>
     <string name="media_loading_failed">העלאת מדיה נכשלה</string>
-    <string name="reader_discover_recommended_blogs_header">אתרים למעקב</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">אנחנו מקדישים מאמץ רב כדי להוסיף עוד בלוקים בכל גרסה.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' לא נתמך באופן מלא</string>
     <string name="gutenberg_native_help_button">כפתור עזרה</string>

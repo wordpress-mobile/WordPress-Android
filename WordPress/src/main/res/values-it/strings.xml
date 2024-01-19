@@ -1439,7 +1439,6 @@ Language: it
     <string name="login_prologue_title_second">Con l\'editor potente puoi pubblicare anche durante i tuoi spostamenti.</string>
     <string name="login_prologue_title_first">Benvenuto nel costruttore di siti web più popolare del mondo.</string>
     <string name="media_loading_failed">Caricamento dei file multimediali non riuscito</string>
-    <string name="reader_discover_recommended_blogs_header">Siti da seguire</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Stiamo lavorando duramente per aggiungere più blocchi con ogni versione.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' non è pienamente supportato</string>
     <string name="gutenberg_native_help_button">Pulsante di assistenza</string>

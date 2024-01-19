@@ -1447,7 +1447,6 @@ Language: de
     <string name="login_prologue_title_second">Mit dem leistungsstarken Editor kannst du auch von unterwegs aus Beiträge veröffentlichen.</string>
     <string name="login_prologue_title_first">Willkommen beim beliebtesten Website-Baukasten der Welt.</string>
     <string name="media_loading_failed">Laden der Medien fehlgeschlagen</string>
-    <string name="reader_discover_recommended_blogs_header">Websites, denen du folgen möchtest</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Wir arbeiten hart daran, mit jeder Veröffentlichung weitere Blöcke hinzuzufügen.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">‚%s‘ wird nicht vollständig unterstützt</string>
     <string name="gutenberg_native_help_button">Hilfe-Button</string>

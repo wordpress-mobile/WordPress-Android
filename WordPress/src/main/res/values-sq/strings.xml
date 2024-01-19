@@ -1436,7 +1436,6 @@ Language: sq_AL
     <string name="login_prologue_title_second">Me fuqinë e përpunuesit mund të postoni kudo që ndodheni.</string>
     <string name="login_prologue_title_first">Mirë se vini te krijuesi më popullor në botë i sajteve.</string>
     <string name="media_loading_failed">Dështoi ngarkimi i medias</string>
-    <string name="reader_discover_recommended_blogs_header">Sajte për t’u ndjekur</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Po punojmë fort për të shtuar më tepër blloqe me çdo hedhje në qarkullim.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' s’mbulohet plotësisht</string>
     <string name="gutenberg_native_help_button">Buton ndihme</string>

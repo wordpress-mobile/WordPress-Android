@@ -1168,7 +1168,6 @@ Language: cs_CZ
     <string name="login_prologue_title_fourth">Sledujte, jak vaše publikum roste pomocí hloubkové analýzy.</string>
     <string name="login_prologue_second_subtitle_one">Inspirovat se</string>
     <string name="login_prologue_title_fifth">Sledujte své oblíbené weby a objevujte nové blogy.</string>
-    <string name="reader_discover_recommended_blogs_header">Weby, které je třeba sledovat</string>
     <string name="media_loading_failed">Načítání média se nezdařilo</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' není plně podporován</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Usilovně pracujeme na přidání dalších bloků s každým vydáním.</string>
