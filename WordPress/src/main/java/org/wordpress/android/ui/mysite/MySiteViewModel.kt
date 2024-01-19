@@ -263,7 +263,6 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onResume() {
-        siteInfoHeaderCardViewModelSlice.onResume()
 //        mySiteSourceManager.onResume(isSiteSelected)
         isSiteSelected = false
         checkAndShowJetpackFullPluginInstallOnboarding()
@@ -273,6 +272,7 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let {
             dashboardCardsViewModelSlice.onResume()
             dashboardItemsViewModelSlice.onResume()
+            siteInfoHeaderCardViewModelSlice.onResume()
         }?: run {
             accountDataViewModelSlice.onResume()
         }
