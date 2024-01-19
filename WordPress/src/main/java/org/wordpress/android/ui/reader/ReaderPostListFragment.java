@@ -1713,7 +1713,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     if (getCurrentTag().isFollowedSites() || getCurrentTag().isDefaultInMemoryTag()) {
                         if (ReaderBlogTable.hasFollowedBlogs()) {
                             title = getString(R.string.reader_empty_followed_blogs_no_recent_posts_title);
-                            description = getString(R.string.reader_empty_followed_blogs_no_recent_posts_description);
+                            description = getString(R.string.reader_empty_followed_blogs_subscribed_no_recent_posts_description);
                         } else {
                             title = getString(R.string.reader_empty_followed_blogs_title);
                             description = getString(R.string.reader_empty_followed_blogs_description);
