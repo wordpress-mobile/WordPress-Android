@@ -1628,7 +1628,7 @@
     <string name="reader_filter_empty_blogs_list">See the newest posts from blogs you\'re subscribed to</string>
     <string name="reader_filter_empty_tags_list">You can follow posts on a specific subject by adding a topic</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Log in to WordPress.com to see the latest posts from sites you follow</string>
-    <string name="reader_filter_self_hosted_empty_blogs_list">Log in to WordPress.com to see the latest posts from blogs you\'re susbcribed to</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">Log in to WordPress.com to see the latest posts from blogs you\'re subscribed to</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Log in to WordPress.com to see the latest posts from topics you follow</string>
     <string name="reader_filter_empty_sites_action">Follow a site</string>
     <string name="reader_filter_empty_tags_action">Add a topic</string>
