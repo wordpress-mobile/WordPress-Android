@@ -317,7 +317,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
         // make sure it isn't already followed
         if (ReaderBlogTable.isFollowedBlogUrl(normUrl) || ReaderBlogTable.isFollowedFeedUrl(normUrl)) {
-            showInfoSnackbar(getString(R.string.reader_toast_err_already_follow_blog));
+            showInfoSnackbar(getString(R.string.reader_toast_err_already_follow_this_blog));
             return;
         }
 
