@@ -3304,7 +3304,6 @@ Language: lv
     <string name="button_view">Skats</string>
     <string name="button_publish">Publicēt</string>
     <string name="button_edit">Rediģēt</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Jums nav atļauts piekļūt šai vietnei</string>
     <string name="reader_toast_err_follow_blog_not_found">Šo vietni nevarēja atrast</string>
     <string name="undo">Atcelt</string>
     <string name="push_auth_expired">Pieprasījuma derīguma termiņš ir beidzies. Piesakieties vietnē WordPress.com, lai mēģinātu vēlreiz.</string>

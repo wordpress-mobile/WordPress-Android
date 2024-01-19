@@ -3444,7 +3444,6 @@ Language: ro
     <string name="button_view">Vizualizare</string>
     <string name="button_publish">Publică</string>
     <string name="button_edit">Editare</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Nu ești autorizat să accesezi acest site</string>
     <string name="reader_toast_err_follow_blog_not_found">Acest site nu a putut fi găsit</string>
     <string name="undo">Anulează</string>
     <string name="push_auth_expired">Cererea a expirat. Autentifică-te pe WordPress.com pentru a încerca din nou.</string>

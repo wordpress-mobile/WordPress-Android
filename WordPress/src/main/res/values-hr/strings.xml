@@ -430,7 +430,6 @@ Language: hr
     <string name="button_trash">Smeće</string>
     <string name="button_stats">Statistika</string>
     <string name="button_preview">Predpregled</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Nemate pravo pristupa ovoj web-stranici</string>
     <string name="reader_toast_err_follow_blog_not_found">Web-stranicu nije moguće pronaći</string>
     <string name="undo">Poništi</string>
     <string name="push_auth_expired">Zahtjev je istekao. Za ponovni pokušaj prijavite se u WordPress.com.</string>

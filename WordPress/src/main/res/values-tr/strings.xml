@@ -3444,7 +3444,6 @@ Language: tr
     <string name="button_view">Görüntüle</string>
     <string name="button_publish">Yayımla</string>
     <string name="button_edit">Düzenle</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Bu siteye erişim için yetkiniz yok</string>
     <string name="reader_toast_err_follow_blog_not_found">Site bulunamadı</string>
     <string name="undo">Geri al</string>
     <string name="push_auth_expired">İstek süresi doldu. WordPress.com\'a giriş yaparak tekrar deneyin.</string>

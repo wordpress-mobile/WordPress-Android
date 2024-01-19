@@ -1473,7 +1473,6 @@ Language: en_AU
     <string name="button_view">View</string>
     <string name="button_edit">Edit</string>
     <string name="button_publish">Publish</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">You are not authorised to access this site</string>
     <string name="reader_toast_err_follow_blog_not_found">This site could not be found</string>
     <string name="undo">Undo</string>
     <string name="push_auth_expired">The request has expired. Log in to WordPress.com to try again.</string>

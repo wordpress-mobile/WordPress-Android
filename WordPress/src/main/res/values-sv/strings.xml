@@ -3444,7 +3444,6 @@ Language: sv_SE
     <string name="button_view">Visa</string>
     <string name="button_publish">Publicera</string>
     <string name="button_edit">Redigera</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Du har inte behörighet för att komma åt denna blogg</string>
     <string name="reader_toast_err_follow_blog_not_found">Denna webbplats kunde inte hittas</string>
     <string name="undo">Ångra</string>
     <string name="push_auth_expired">Begäran har löpt ut. Logga in på WordPress.com för att försöka igen.</string>

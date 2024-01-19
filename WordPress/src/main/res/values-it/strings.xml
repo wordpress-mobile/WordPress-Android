@@ -3430,7 +3430,6 @@ Language: it
     <string name="button_view">Visualizza</string>
     <string name="button_publish">Pubblica</string>
     <string name="button_edit">Modifica</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Non sei autorizzato ad accedere a questo sito</string>
     <string name="reader_toast_err_follow_blog_not_found">Impossibile trovare questo sito</string>
     <string name="undo">Annulla</string>
     <string name="push_auth_expired">La richiesta è scaduta. Accedi a WordPress.com per riprovare.</string>

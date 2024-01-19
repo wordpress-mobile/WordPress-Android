@@ -1230,7 +1230,6 @@ Language: es_CL
     <string name="button_view">Ver</string>
     <string name="button_edit">Editar</string>
     <string name="button_publish">Publicar</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">No está autorizado para acceder a este sitio</string>
     <string name="reader_toast_err_follow_blog_not_found">No se pudo encontrar este sitio</string>
     <string name="undo">Deshacer</string>
     <string name="push_auth_expired">La solicitud ha expirado. Inicia sesión en WordPress.com para intentarlo de nuevo.</string>

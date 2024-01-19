@@ -3426,7 +3426,6 @@ Language: ar
     <string name="button_view">عرض</string>
     <string name="button_edit">تحرير</string>
     <string name="button_publish">نشر</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">غير مخوّل لك الوصول إلى هذا الموقع</string>
     <string name="reader_toast_err_follow_blog_not_found">تعذر العثور على هذا الموقع</string>
     <string name="undo">تراجع</string>
     <string name="push_auth_expired">انتهت صلاحية الطلب. سجِّل الدخول إلى WordPress.com للمحاولة مرة أخرى.</string>

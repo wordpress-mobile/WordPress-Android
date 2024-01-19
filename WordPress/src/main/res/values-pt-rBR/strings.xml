@@ -3212,7 +3212,6 @@ Language: pt_BR
     <string name="button_view">Exibir</string>
     <string name="button_publish">Publicar</string>
     <string name="button_edit">Editar</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Você não está autorizado a acessar este site</string>
     <string name="reader_toast_err_follow_blog_not_found">Não foi possível encontrar esse site</string>
     <string name="undo">Desfazer</string>
     <string name="push_auth_expired">A solicitação expirou. Faça login no WordPress.com para tentar novamente.</string>
