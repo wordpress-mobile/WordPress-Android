@@ -586,6 +586,21 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void viewStatsTrafficTab(Context context, @Nullable SiteModel site) {
+        if (site == null) {
+            AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
+            AnalyticsTracker.track(
+                    STATS_ACCESS_ERROR,
+                    ActivityLauncher.class.getName(),
+                    "NullPointerException",
+                    "Failed to open Stats because of the null SiteModel"
+            );
+            ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
+        } else {
+            org.wordpress.android.stats.StatsActivity.start(context, site);
+        }
+    }
+
     public static void viewBlogStats(Context context, SiteModel site) {
         if (site == null) {
             AppLog.e(T.STATS, "SiteModel is null when opening the stats.");

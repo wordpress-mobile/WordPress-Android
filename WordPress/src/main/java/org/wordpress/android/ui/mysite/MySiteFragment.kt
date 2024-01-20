@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -73,6 +74,7 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setVisible
@@ -135,6 +137,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     @Inject
     lateinit var packageManagerWrapper: PackageManagerWrapper
+
+    @Inject
+    lateinit var statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
@@ -607,7 +612,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             action.quickStartEvent
         )
         is SiteNavigationAction.OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(activity, action.site)
-        is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
+        is SiteNavigationAction.OpenStats -> {
+            if (BuildConfig.IS_JETPACK_APP && statsTrafficTabFeatureConfig.isEnabled()) {
+                ActivityLauncher.viewStatsTrafficTab(activity, action.site)
+            } else {
+                ActivityLauncher.viewBlogStats(activity, action.site)
+            }
+        }
         is SiteNavigationAction.ConnectJetpackForStats ->
             ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
         is SiteNavigationAction.StartWPComLoginForJetpackStats ->

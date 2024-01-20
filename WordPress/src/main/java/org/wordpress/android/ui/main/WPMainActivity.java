@@ -160,6 +160,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig;
 import org.wordpress.android.util.config.QRCodeAuthFlowFeatureConfig;
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -289,6 +290,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject GCMRegistrationScheduler mGCMRegistrationScheduler;
 
     @Inject ActivityNavigator mActivityNavigator;
+
+    @Inject StatsTrafficTabFeatureConfig mStatsTrafficTabFeatureConfig;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -948,7 +951,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         ActivityLauncher.viewBlogStatsForTimeframe(this, getSelectedSite(),
                                 (StatsTimeframe) intent.getSerializableExtra(ARG_STATS_TIMEFRAME));
                     } else {
-                        ActivityLauncher.viewBlogStats(this, getSelectedSite());
+                        if (BuildConfig.IS_JETPACK_APP && mStatsTrafficTabFeatureConfig.isEnabled()) {
+                            ActivityLauncher.viewStatsTrafficTab(this, getSelectedSite());
+                        } else {
+                            ActivityLauncher.viewBlogStats(this, getSelectedSite());
+                        }
                     }
                     break;
                 case ARG_PAGES:
