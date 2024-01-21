@@ -13,6 +13,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TRAFFIC
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import org.wordpress.android.util.perform
 import javax.inject.Inject
 
@@ -21,6 +22,7 @@ constructor(
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val siteProvider: StatsSiteProvider,
+    private val statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig,
     private val statsSection: StatsSection
 ) {
     private val _dateSelectorUiModel = MutableLiveData<DateSelectorUiModel>()
@@ -43,7 +45,11 @@ constructor(
         if (!shouldShowDateSelection && currentState?.isVisible != false) {
             emitValue(currentState, DateSelectorUiModel(false))
         } else {
-            val timeZone = statsDateFormatter.printTimeZone(siteProvider.siteModel)
+            val timeZone = if (statsTrafficTabFeatureConfig.isEnabled()) {
+                null
+            } else {
+                statsDateFormatter.printTimeZone(siteProvider.siteModel)
+            }
             val updatedState = DateSelectorUiModel(
                 shouldShowDateSelection,
                 updatedDate,
@@ -107,13 +113,15 @@ constructor(
     @Inject constructor(
         private val selectedDateProvider: SelectedDateProvider,
         private val siteProvider: StatsSiteProvider,
-        private val statsDateFormatter: StatsDateFormatter
+        private val statsDateFormatter: StatsDateFormatter,
+        private val statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
     ) {
         fun build(statsSection: StatsSection): StatsDateSelector {
             return StatsDateSelector(
                 selectedDateProvider,
                 statsDateFormatter,
                 siteProvider,
+                statsTrafficTabFeatureConfig,
                 statsSection
             )
         }
