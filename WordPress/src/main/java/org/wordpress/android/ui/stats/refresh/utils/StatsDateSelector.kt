@@ -39,6 +39,7 @@ constructor(
 
     fun updateDateSelector() {
         val shouldShowDateSelection = this.statsSection != INSIGHTS
+        val shouldShowGranularitySpinner = this.statsSection == TRAFFIC
 
         val updatedDate = getDateLabelForSection()
         val currentState = dateSelectorData.value
@@ -52,6 +53,7 @@ constructor(
             }
             val updatedState = DateSelectorUiModel(
                 shouldShowDateSelection,
+                shouldShowGranularitySpinner,
                 updatedDate,
                 enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsSection),
                 enableSelectNext = selectedDateProvider.hasNextDate(statsSection),
