@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -152,9 +151,6 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             }
         })
 
-        dateSelector.granularitySpinner.isVisible = statsTrafficTabFeatureConfig.isEnabled()
-        dateSelector.granularitySpace.isVisible = statsTrafficTabFeatureConfig.isEnabled()
-        dateSelector.dateSpace.isVisible = !statsTrafficTabFeatureConfig.isEnabled()
         if (statsTrafficTabFeatureConfig.isEnabled()) {
             dateSelector.granularitySpinner.adapter = ArrayAdapter(
                 requireContext(),
