@@ -1176,7 +1176,6 @@ Language: nb_NO
     <string name="login_error_sms_throttled">Vi har gjort for mange forsøk på å sende en verifiseringskode via SMS — ta en pause og be om en ny om et minutt.</string>
     <string name="login_error_email_not_found_v2">Det er ingen WordPress.com-konto som passer til denne Google-kontoen.</string>
     <string name="site_picker_remove_site_empty">Ingen nettsteder passer med ditt søk</string>
-    <string name="reader_empty_followed_blogs_search_title">Ingen nettsteder passer med ditt søk</string>
     <string name="page_parent_changed">Siden forelder har blitt endret</string>
     <string name="page_permanently_deleted">Siden er permanent slettet</string>
     <string name="page_moved_to_scheduled">Siden har blitt planlagt publisert</string>

@@ -2352,7 +2352,6 @@ Language: ko_KR
     <string name="login_error_sms_throttled">SMS 확인 코드를 보내려는 시도가 너무 많았습니다. 잠시 후 다시 요청하세요.</string>
     <string name="login_error_email_not_found_v2">이 Google 계정과 일치하는 워드프레스닷컴 계정이 없습니다.</string>
     <string name="site_picker_remove_site_empty">검색어와 일치하는 사이트 없음</string>
-    <string name="reader_empty_followed_blogs_search_title">검색어와 일치하는 사이트 없음</string>
     <string name="page_parent_changed">페이지 상위 항목이 변경되었습니다.</string>
     <string name="page_permanently_deleted">페이지가 영구적으로 삭제되었습니다.</string>
     <string name="page_moved_to_scheduled">페이지가 예약되었습니다.</string>

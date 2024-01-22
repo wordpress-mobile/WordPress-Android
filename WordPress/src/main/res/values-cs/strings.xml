@@ -2083,7 +2083,6 @@ Language: cs_CZ
     <string name="pages_view">Zobrazení</string>
     <string name="login_error_email_not_found_v2">Nenašli jsme WordPress.com účet propojený s tímto Google účtem.</string>
     <string name="site_picker_remove_site_empty">Stránka nenalezena</string>
-    <string name="reader_empty_followed_blogs_search_title">Stránka nenalezena</string>
     <string name="page_parent_changed">Nadřazená stránka byla změněna</string>
     <string name="page_permanently_deleted">Stránka trvale odstraněna</string>
     <string name="page_moved_to_scheduled">Zveřejnění naplánovano</string>

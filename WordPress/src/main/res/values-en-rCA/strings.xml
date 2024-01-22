@@ -2329,7 +2329,6 @@ Language: en_CA
     <string name="pages_trashed">Trashed</string>
     <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
     <string name="site_picker_remove_site_empty">No sites matching your search</string>
-    <string name="reader_empty_followed_blogs_search_title">No sites matching your search</string>
     <string name="page_parent_changed">Page parent has been changed</string>
     <string name="page_permanently_deleted">Page has been permanently deleted</string>
     <string name="page_moved_to_scheduled">Page has been scheduled</string>

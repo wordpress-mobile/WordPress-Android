@@ -146,7 +146,6 @@ Language: sk
     <string name="login_error_sms_throttled">Vynaložili sme veľké úsilie, aby sme odoslali cez SMS overovací kód - skús opätovne neskôr.</string>
     <string name="login_error_email_not_found_v2">Neexistuje žiaden účet na WordPress.com, ktorý zopodvedá tomuto Google účtu.</string>
     <string name="site_picker_remove_site_empty">Žiadna webová stránka nezodpovedá vyhľadávaniu.</string>
-    <string name="reader_empty_followed_blogs_search_title">Žiadna webová stránka nezodpovedá vášmu vyhľadávaniu.</string>
     <string name="page_parent_changed">Strana predlohy sa zmenila</string>
     <string name="page_moved_to_draft">Stránka bola presunutá do Koncepty</string>
     <string name="top_level">Najvyššia úroveň</string>

@@ -1807,7 +1807,6 @@ Language: vi_VN
     <string name="login_error_sms_throttled">Chúng tôi đã gửi mã xác minh SMS quá nhiều lần - hãy tạm dừng và yêu cầu mã mới sau một phút.</string>
     <string name="login_error_email_not_found_v2">Không có tài khoản WordPress.com nào kết nối với tài khoản Google này.</string>
     <string name="site_picker_remove_site_empty">Không có blog nào trùng khớp</string>
-    <string name="reader_empty_followed_blogs_search_title">Không có blog nào trùng khớp</string>
     <string name="page_parent_changed">Trang mẹ đã bị thay đổi</string>
     <string name="page_permanently_deleted">Đã xóa trang vĩnh viễn</string>
     <string name="page_moved_to_scheduled">Đã lên lịch đăng trang</string>

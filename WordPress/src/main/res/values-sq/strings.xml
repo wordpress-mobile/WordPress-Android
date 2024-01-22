@@ -2350,7 +2350,6 @@ Language: sq_AL
     <string name="login_error_sms_throttled">Provuam shumë herë t’ju dërgonin një kod verifikimi SMS — bëni ca pushim, dhe kërkoni një të ri pas ndonjë minute.</string>
     <string name="login_error_email_not_found_v2">S’ka llogari WordPress.com që përputhet me këtë llogari Google.</string>
     <string name="site_picker_remove_site_empty">S’u gjetën sajte me përputhje për kërkimin tuaj</string>
-    <string name="reader_empty_followed_blogs_search_title">S’u gjetën sajte me përputhje për kërkimin tuaj</string>
     <string name="page_parent_changed">Faqja mëmë është ndryshuar</string>
     <string name="page_permanently_deleted">Faqja është fshirë përgjithmonë</string>
     <string name="page_moved_to_scheduled">Faqja është planifikuar për botim</string>

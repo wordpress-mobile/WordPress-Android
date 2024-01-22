@@ -2361,7 +2361,6 @@ Language: de
     <string name="login_error_sms_throttled">Wir haben zu viele Versuche unternommen, einen SMS-Verifizierungscode zu senden – atme kurz durch und fordere in einer Minute einen neuen an.</string>
     <string name="login_error_email_not_found_v2">Kein WordPress.com-Konto stimmt mit diesem Google-Konto überein.</string>
     <string name="site_picker_remove_site_empty">Keine Websites entsprechen deiner Suche</string>
-    <string name="reader_empty_followed_blogs_search_title">Keine Websites entsprechen deiner Suche</string>
     <string name="page_parent_changed">Übergeordnete Seite wurde geändert</string>
     <string name="page_permanently_deleted">Seite wurde dauerhaft gelöscht</string>
     <string name="page_moved_to_scheduled">Seite wurde geplant</string>

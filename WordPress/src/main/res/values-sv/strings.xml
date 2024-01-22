@@ -2361,7 +2361,6 @@ Language: sv_SE
     <string name="login_error_sms_throttled">Vi har gjort för många försök att leverera en verifieringskod via SMS – Vänta lite och be om en ny om en minut.</string>
     <string name="login_error_email_not_found_v2">Det finns inget WordPress.com-konto som stämmer mot detta Google-konto.</string>
     <string name="site_picker_remove_site_empty">Inga webbplatser motsvarar din sökning</string>
-    <string name="reader_empty_followed_blogs_search_title">Inga webbplatser motsvarar din sökning</string>
     <string name="page_parent_changed">Överordnad sida har uppdaterats</string>
     <string name="page_permanently_deleted">Sidan har raderats permanent</string>
     <string name="page_moved_to_scheduled">Sidan har schemalagts</string>

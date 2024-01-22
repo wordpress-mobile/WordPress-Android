@@ -2361,7 +2361,6 @@ Language: gl_ES
     <string name="login_error_sms_throttled">Fixemos demasiados intentos para enviar un código de verificación por SMS - tómate un descanso e solicita un novo dentro dun minuto.</string>
     <string name="login_error_email_not_found_v2">Non hai ningunha conta de WordPress.com que coincida con esta conta de Google.</string>
     <string name="site_picker_remove_site_empty">Ningún sitio coincide coa túa busca</string>
-    <string name="reader_empty_followed_blogs_search_title">Ningún sitio coincide coa túa busca</string>
     <string name="page_parent_changed">A páxina superior cambiou</string>
     <string name="page_permanently_deleted">A páxina borrouse permanentemente</string>
     <string name="page_moved_to_scheduled">A páxina foi programada</string>

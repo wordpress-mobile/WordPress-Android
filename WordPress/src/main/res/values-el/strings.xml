@@ -180,7 +180,6 @@ Language: el_GR
     <string name="pages_trashed">Διαγραμμένες</string>
     <string name="pages_view">Εμφάνιση</string>
     <string name="site_picker_remove_site_empty">Δεν υπάρχουν ιστότοποι που να αντιστοιχούν στην αναζήτηση σας</string>
-    <string name="reader_empty_followed_blogs_search_title">Δεν υπάρχουν ιστότοποι που να αντιστοιχούν στην αναζήτηση σας</string>
     <string name="page_moved_to_scheduled">Η σελίδα προγραμματίστηκε</string>
     <string name="page_moved_to_published">Η σελίδα δημοσιεύθηκε</string>
     <string name="page_moved_to_trash">Η σελίδα διαγράφηκε</string>

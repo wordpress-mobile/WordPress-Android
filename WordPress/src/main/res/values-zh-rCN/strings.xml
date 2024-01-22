@@ -2348,7 +2348,6 @@ Language: zh_CN
     <string name="login_error_sms_throttled">尝试发送短信验证码的次数太多了 - 休息一下，在一分钟后再申请新的短信验证码。</string>
     <string name="login_error_email_not_found_v2">没有与此 Google 账户匹配的 WordPress.com 账户。</string>
     <string name="site_picker_remove_site_empty">没有与您的搜索匹配的站点</string>
-    <string name="reader_empty_followed_blogs_search_title">没有与您的搜索匹配的站点</string>
     <string name="page_parent_changed">已更改父页面</string>
     <string name="page_permanently_deleted">已永久删除页面</string>
     <string name="page_moved_to_scheduled">已预发布页面</string>

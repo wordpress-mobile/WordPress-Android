@@ -2361,7 +2361,6 @@ Language: ro
     <string name="login_error_sms_throttled">Am făcut prea multe încercări de a trimite un cod de verificare prin SMS — ia o pauză și cere altul nou peste un minut.</string>
     <string name="login_error_email_not_found_v2">Nu există niciun cont WordPress.com care să se potrivească cu acest cont Google.</string>
     <string name="site_picker_remove_site_empty">Nu se potrivește niciun site cu căutarea ta</string>
-    <string name="reader_empty_followed_blogs_search_title">Nu se potrivește niciun site cu căutarea ta</string>
     <string name="page_parent_changed">Părintele paginii a fost schimbat</string>
     <string name="page_permanently_deleted">Pagina a fost ștearsă definitiv</string>
     <string name="page_moved_to_scheduled">Pagina a fost programată</string>

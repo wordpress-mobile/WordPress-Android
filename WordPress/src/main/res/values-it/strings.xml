@@ -2351,7 +2351,6 @@ Language: it
     <string name="login_error_sms_throttled">Abbiamo effettuato troppi tentativi di invio di un codice di verifica SMS: prenditi una pausa e richiedine uno nuovo tra un minuto.</string>
     <string name="login_error_email_not_found_v2">Non è presente alcun account WordPress.com corrispondente a questo account Google.</string>
     <string name="site_picker_remove_site_empty">Nessun sito corrispondente alla ricerca</string>
-    <string name="reader_empty_followed_blogs_search_title">Nessun sito corrispondente alla ricerca</string>
     <string name="page_parent_changed">Il genitore della pagina è stato modificato</string>
     <string name="page_permanently_deleted">La pagina è stata eliminata definitivamente</string>
     <string name="page_moved_to_scheduled">La pagina è stata programmata</string>

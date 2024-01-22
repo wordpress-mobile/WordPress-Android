@@ -203,7 +203,6 @@ Language: es_CL
     <string name="login_error_sms_throttled">Hemos intentado demasiadas veces enviarte un código de verificación de SMS: Tómate un descanso y solicita uno nuevo en un minuto.</string>
     <string name="login_error_email_not_found_v2">No hay ninguna cuenta WordPress.com que coincida con esta cuenta de Google.</string>
     <string name="site_picker_remove_site_empty">No hay sitios que coincidan con tu búsqueda</string>
-    <string name="reader_empty_followed_blogs_search_title">No hay sitios que coincidan con tu búsqueda</string>
     <string name="page_parent_changed">Se ha cambiado la página padre</string>
     <string name="page_permanently_deleted">La página se ha eliminado permanentemente</string>
     <string name="page_moved_to_scheduled">La página se ha programado</string>

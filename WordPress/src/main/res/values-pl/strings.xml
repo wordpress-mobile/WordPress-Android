@@ -1845,7 +1845,6 @@ Language: pl
     <string name="pages_trashed">W koszu</string>
     <string name="login_error_email_not_found_v2">Nie ma konta WordPress skojarzonego z tym kontem Google.</string>
     <string name="site_picker_remove_site_empty">Brak witryn spełniających kryteria twojego wyszukiwania</string>
-    <string name="reader_empty_followed_blogs_search_title">Brak witryn spełniających kryteria twojego wyszukiwania</string>
     <string name="page_parent_changed">Strona nadrzędną została zmieniona</string>
     <string name="page_permanently_deleted">Strona została trwale usunięta</string>
     <string name="page_moved_to_scheduled">Strona została zaplanowana</string>

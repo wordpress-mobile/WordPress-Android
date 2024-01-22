@@ -994,7 +994,6 @@ Language: ku_TR
     <string name="login_error_sms_throttled">Melek gelek caran kodên pejirandinê yên SMS\'ê şand. Hinekî bisekîne û piştî xulekekê yeka din daxwaz bike.</string>
     <string name="login_error_email_not_found_v2">Ti hesabekî WordPress.com\'ê bi vî hesabê Googleê re hevberî hev nehatin.</string>
     <string name="site_picker_remove_site_empty">Li gorî lêgerîna te ti malper nehat dîtin</string>
-    <string name="reader_empty_followed_blogs_search_title">Li gorî lêgerîna te ti malper nehat dîtin</string>
     <string name="page_parent_changed">Make-rûpel hat guhertin</string>
     <string name="page_moved_to_scheduled">Rûpel hat demsazkirin</string>
     <string name="page_moved_to_published">Rûpel hat weşandin</string>

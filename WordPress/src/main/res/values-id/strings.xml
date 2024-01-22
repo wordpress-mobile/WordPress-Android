@@ -2355,7 +2355,6 @@ Language: id
     <string name="login_error_sms_throttled">Kami terlalu banyak melakukan upaya pengiriman kode verifikasi SMS. Tunggu sebentar, dan minta kode yang baru beberapa saat lagi.</string>
     <string name="login_error_email_not_found_v2">Tidak ada akun WordPress.com yang cocok dengan akun Google ini.</string>
     <string name="site_picker_remove_site_empty">Tidak ada situs yang cocok dengan pencarian Anda</string>
-    <string name="reader_empty_followed_blogs_search_title">Tidak ada situs yang cocok dengan pencarian Anda</string>
     <string name="page_parent_changed">Induk halaman telah diubah</string>
     <string name="page_permanently_deleted">Halaman telah dihapus permanen</string>
     <string name="page_moved_to_scheduled">Halaman telah dijadwalkan</string>

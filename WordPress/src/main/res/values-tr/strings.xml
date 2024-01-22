@@ -2361,7 +2361,6 @@ Language: tr
     <string name="login_error_sms_throttled">Çok fazla SMS doğrulama kodu gönderimi yaptık. Biraz mola verin ve bir dakika sonra yenisini talep edin.</string>
     <string name="login_error_email_not_found_v2">Bu Google hesabıyla eşleşen bir WordPress.com hesabı bulunmuyor.</string>
     <string name="site_picker_remove_site_empty">Aramanızla eşleşen site bulunamadı</string>
-    <string name="reader_empty_followed_blogs_search_title">Aramanızla eşleşen site bulunamadı</string>
     <string name="page_parent_changed">Üst sayfa değiştirildi</string>
     <string name="page_permanently_deleted">Sayfa kalıcı olarak silindi</string>
     <string name="page_moved_to_scheduled">Sayfa zamanlandı</string>

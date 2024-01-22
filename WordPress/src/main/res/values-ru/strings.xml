@@ -2361,7 +2361,6 @@ Language: ru
     <string name="login_error_sms_throttled">Слишком много попыток отправить СМС-код проверки, отдохните и запросите снова через пару минут.</string>
     <string name="login_error_email_not_found_v2">Ни одна учетная запись WordPress.com не совпадает с этой записью в Google.</string>
     <string name="site_picker_remove_site_empty">Нет сайтов по критериям поиска</string>
-    <string name="reader_empty_followed_blogs_search_title">Нет сайтов по критериям поиска</string>
     <string name="page_parent_changed">Родитель для страницы сменен</string>
     <string name="page_permanently_deleted">Страница удалена навсегда</string>
     <string name="page_moved_to_scheduled">Страница запланирована к публикации</string>

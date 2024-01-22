@@ -2139,7 +2139,6 @@ Language: pt_BR
     <string name="login_error_sms_throttled">Já fizemos muitas tentativas de enviar o código de verificação por SMS. Espere alguns minutos e solicite um novo código mais tarde.</string>
     <string name="login_error_email_not_found_v2">Não há nenhuma conta no WordPress.com usando essa conta do Google.</string>
     <string name="site_picker_remove_site_empty">Nenhum site corresponde à sua pesquisa</string>
-    <string name="reader_empty_followed_blogs_search_title">Nenhum site corresponde à sua pesquisa</string>
     <string name="page_parent_changed">A página ascendente foi alterada</string>
     <string name="page_permanently_deleted">Página excluída permanentemente</string>
     <string name="page_moved_to_scheduled">Página agendada</string>

@@ -2302,7 +2302,6 @@ Language: nl
     <string name="login_error_sms_throttled">We hebben te vaak geprobeerd om een sms-verificatiecode te versturen. Even geduld en vraag er over een minuut nog een aan.</string>
     <string name="login_error_email_not_found_v2">Er is geen WordPress.com-account gekoppeld aan dit Google-account.</string>
     <string name="site_picker_remove_site_empty">Er komen geen sites overeen met je zoekopdracht</string>
-    <string name="reader_empty_followed_blogs_search_title">Er komen geen sites overeen met je zoekopdracht</string>
     <string name="page_parent_changed">Bovenliggend item van pagina gewijzigd</string>
     <string name="page_permanently_deleted">Pagina is permanent verwijderd</string>
     <string name="page_moved_to_scheduled">Pagina is ingepland</string>

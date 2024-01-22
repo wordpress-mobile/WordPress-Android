@@ -2228,7 +2228,6 @@ Language: lv
     <string name="login_error_sms_throttled">Esam veikuši pārāk daudz mēģinājumu nosūtīt SMS verifikācijas kodu - paņemiet pārtraukumu un pēc minūtes pieprasiet jaunu kodu.</string>
     <string name="login_error_email_not_found_v2">Šim Google kontam nav atbilstoša WordPress.com konta.</string>
     <string name="site_picker_remove_site_empty">Nav vietņu, kas atbilstu jūsu meklējumam</string>
-    <string name="reader_empty_followed_blogs_search_title">Nav vietņu, kas atbilstu jūsu meklējumam</string>
     <string name="page_parent_changed">Lapas pamats ir mainīts</string>
     <string name="page_permanently_deleted">Lapa ir neatgriezeniski izdzēsta</string>
     <string name="page_moved_to_scheduled">Lapa ir ieplānota</string>

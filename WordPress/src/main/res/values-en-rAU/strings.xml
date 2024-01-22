@@ -426,7 +426,6 @@ Language: en_AU
     <string name="pages_drafts">Drafts</string>
     <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
     <string name="page_parent_changed">Page parent has been changed</string>
-    <string name="reader_empty_followed_blogs_search_title">No sites matching your search</string>
     <string name="site_picker_remove_site_empty">No sites matching your search</string>
     <string name="top_level">Top level</string>
     <string name="page_delete_error">There was a problem deleting the page</string>

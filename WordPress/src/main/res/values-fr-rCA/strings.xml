@@ -2351,7 +2351,6 @@ Language: fr
     <string name="login_error_sms_throttled">Le nombre de tentatives d\'envoi d\'un code de vérification par SMS a été dépassé – faites une pause et redemandez-en un dans une minute.</string>
     <string name="login_error_email_not_found_v2">Aucun compte WordPress.com ne correspond à ce compte Google.</string>
     <string name="site_picker_remove_site_empty">Aucun site ne correspond à votre recherche</string>
-    <string name="reader_empty_followed_blogs_search_title">Aucun site ne correspond à votre recherche</string>
     <string name="page_parent_changed">Le parent de la page a été modifié</string>
     <string name="page_permanently_deleted">La page a été supprimée définitivement</string>
     <string name="page_moved_to_scheduled">La page a été planifiée</string>

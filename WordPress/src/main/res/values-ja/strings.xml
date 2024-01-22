@@ -2354,7 +2354,6 @@ Language: ja_JP
     <string name="login_error_sms_throttled">SMS 認証コードの送信試行回数が多すぎます。しばらくしてから、新しい認証コードをリクエストしてください。</string>
     <string name="login_error_email_not_found_v2">この Google アカウントに一致する WordPress.com アカウントはありません。</string>
     <string name="site_picker_remove_site_empty">検索に一致するサイトはありません</string>
-    <string name="reader_empty_followed_blogs_search_title">検索に一致するサイトはありません</string>
     <string name="page_parent_changed">ページの親が変更されました</string>
     <string name="page_permanently_deleted">ページは完全に削除されました</string>
     <string name="page_moved_to_scheduled">ページが予約されました</string>

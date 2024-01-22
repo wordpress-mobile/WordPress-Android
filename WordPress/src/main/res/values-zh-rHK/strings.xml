@@ -2354,7 +2354,6 @@ Language: zh_TW
     <string name="login_error_sms_throttled">已嘗試傳送 SMS 驗證碼太多次，請稍待片刻，一分鐘後再送出新驗證碼要求。</string>
     <string name="login_error_email_not_found_v2">沒有 WordPress.com 帳號符合此 Google 帳號。</string>
     <string name="site_picker_remove_site_empty">沒有網站符合你的搜尋條件</string>
-    <string name="reader_empty_followed_blogs_search_title">沒有網站符合你的搜尋條件</string>
     <string name="page_parent_changed">頁面上層項目已變更</string>
     <string name="page_permanently_deleted">頁面已永久刪除</string>
     <string name="page_moved_to_scheduled">頁面已排程</string>

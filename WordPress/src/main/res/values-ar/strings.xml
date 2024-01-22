@@ -2348,7 +2348,6 @@ Language: ar
     <string name="login_error_sms_throttled">أجرينا عددًا كبيرًا جدًا من المحاولات لإرسال رمز التحقق عبر الرسائل القصيرة — استرح، واطلب رمزًا جديدًا في غضون دقيقة.</string>
     <string name="pages_trashed">محذوف</string>
     <string name="site_picker_remove_site_empty">لا تتطابق أي مواقع مع بحثك</string>
-    <string name="reader_empty_followed_blogs_search_title">لا تتطابق أي مواقع مع بحثك</string>
     <string name="page_parent_changed">تم تغيير أصل الصفحة</string>
     <string name="login_error_email_not_found_v2">لا يتطابق أي حساب على WordPress.com مع حساب Google هذا.</string>
     <string name="page_permanently_deleted">تم حذف الصفحة نهائيًّا</string>

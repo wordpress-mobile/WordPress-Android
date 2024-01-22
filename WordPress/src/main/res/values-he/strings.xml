@@ -2350,7 +2350,6 @@ Language: he_IL
     <string name="login_error_sms_throttled">ביצענו יותר מדי ניסיונות לשלוח קוד אימות בהודעת טקסט - אנחנו ממליצים להמתין רגע ולנסות שוב עוד דקה.</string>
     <string name="login_error_email_not_found_v2">אין חשבון WordPress.com שתואם לחשבון Google זה.</string>
     <string name="site_picker_remove_site_empty">לא נמצאו אתרים שתואמים לחיפוש שלך</string>
-    <string name="reader_empty_followed_blogs_search_title">לא נמצאו אתרים שתואמים לחיפוש שלך</string>
     <string name="page_parent_changed">ההורה של העמוד השתנה</string>
     <string name="page_permanently_deleted">העמוד נמחק לצמיתות</string>
     <string name="page_moved_to_scheduled">הפרסום של העמוד תוזמן</string>

@@ -45,7 +45,6 @@ Language: bg
     <string name="pages_published">Публикувана</string>
     <string name="login_error_sms_throttled">Направихте прекалено много опити да изпратите SMS кода за потвърждение - спрете за кратко и подайте нова заявка след минута.</string>
     <string name="login_error_email_not_found_v2">Няма профил в WordPress.com, съответстващ на този профил в Google.</string>
-    <string name="reader_empty_followed_blogs_search_title">Няма сайтове, съответстващи на търсенето ви</string>
     <string name="site_picker_remove_site_empty">Няма сайтове, съответстващи на търсенето ви</string>
     <string name="page_parent_changed">Родителската страница е сменена</string>
     <string name="page_permanently_deleted">Страницата е изтрита за постоянно</string>

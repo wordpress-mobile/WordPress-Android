@@ -903,7 +903,6 @@ Language: sr_RS
     <string name="pages_view">Види</string>
     <string name="site_picker_remove_site_empty">Нема сајтова који се поклапају са Вашом претрагом</string>
     <string name="login_error_email_not_found_v2">Не постоји WordPress.com налог који се поклапа са овим Google налогом.</string>
-    <string name="reader_empty_followed_blogs_search_title">Нема сајтова који се поклапају са Вашом претрагом</string>
     <string name="page_parent_changed">Родитељ странице је промењен</string>
     <string name="page_moved_to_scheduled">Страница је заказана</string>
     <string name="page_permanently_deleted">Страница је трајно обрисана</string>
