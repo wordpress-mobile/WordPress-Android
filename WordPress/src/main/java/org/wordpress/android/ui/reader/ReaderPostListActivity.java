@@ -104,7 +104,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
             toolbar.setNavigationOnClickListener(view -> finish());
 
             if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-                setTitle(R.string.reader_title_blog_preview);
+                setTitle(R.string.reader_activity_title_blog_preview);
                 if (savedInstanceState == null) {
                     long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                     long feedId = getIntent().getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
@@ -290,7 +290,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
 
         String title = ReaderBlogTable.getFeedName(feedId);
         if (title.isEmpty()) {
-            title = getString(R.string.reader_title_blog_preview);
+            title = getString(R.string.reader_activity_title_blog_preview);
         }
         setTitle(title);
     }
