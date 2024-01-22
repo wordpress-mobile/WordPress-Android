@@ -1055,7 +1055,6 @@ Language: el_GR
     <string name="reader_menu_block_blog">Μπλοκάρισμα του ιστότοπου</string>
     <string name="update_verb">Ενημέρωση</string>
     <string name="schedule_verb">Προγραμματισμός</string>
-    <string name="reader_empty_recommended_blogs">Δεν υπάρχουν προτεινόμενοι Ιστότοποι</string>
     <string name="help">Βοήθεια</string>
     <string name="ssl_certificate_error">Μη έγκυρο πιστοποιητικό SSL</string>
     <string name="ssl_certificate_ask_trust">Αν συνήθως δεν έχετε προβλήματα σύνδεσης σε αυτό τον ιστότοπο, αυτό το σφάλμα θα μπορούσε να σημαίνει ότι κάποιος προσπαθεί να μιμηθεί τον ιστότοπο και δεν θα πρέπει να συνεχίσετε. Θα θέλατε να εμπιστευτείτε το πιστοποιητικό όπως και να\'χει;</string>

@@ -1321,7 +1321,6 @@ Language: es_CL
     <string name="reader_menu_block_blog">Bloquear este sitio</string>
     <string name="update_verb">Actualizar</string>
     <string name="schedule_verb">Programación</string>
-    <string name="reader_empty_recommended_blogs">No hay sitios recomendados</string>
     <string name="reader_title_blog_preview">Lector del Sitio</string>
     <string name="help">Ayuda</string>
     <string name="ssl_certificate_error">Certificado SSL no válido</string>

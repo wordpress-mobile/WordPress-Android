@@ -3012,7 +3012,6 @@ Language: pl
     <string name="reader_menu_block_blog">Zablokuj tę witrynę</string>
     <string name="update_verb">Zaktualizuj</string>
     <string name="schedule_verb">Zaplanuj</string>
-    <string name="reader_empty_recommended_blogs">Brak polecanych witryn</string>
     <string name="reader_title_blog_preview">Witryna Czytnika</string>
     <string name="help">Pomoc</string>
     <string name="ssl_certificate_error">Niepoprawny certyfikat SSL</string>

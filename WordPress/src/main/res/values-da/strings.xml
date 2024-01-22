@@ -162,7 +162,6 @@ Language: da_DK
     <string name="reader_menu_block_blog">Blokere dette websted</string>
     <string name="update_verb">Opdater</string>
     <string name="schedule_verb">Planlæg</string>
-    <string name="reader_empty_recommended_blogs">Ingen anbefalede websteder</string>
     <string name="help">Hjælp</string>
     <string name="ssl_certificate_error">Dette er ikke et gyldigt SLL certifikat</string>
     <string name="ssl_certificate_ask_trust">Hvis du plejer at tilgå dit websted på denne måde uden problemer, kan denne fejl betyde at nogen forsøger udgive sig for at være dit websted, og du burde ikke fortsætte. Vælger du at stole på certifikatet alligevel?</string>

@@ -1899,7 +1899,6 @@ Language: sr_RS
     <string name="reader_menu_block_blog">Блокирај овај сајт</string>
     <string name="schedule_verb">Заказати</string>
     <string name="update_verb">Ажурирај</string>
-    <string name="reader_empty_recommended_blogs">Нема препоручених сајтова</string>
     <string name="reader_title_blog_preview">Сајт читача</string>
     <string name="help">Помоћ</string>
     <string name="ssl_certificate_error">Неисправна SSL потврда</string>
