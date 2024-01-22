@@ -2088,6 +2088,7 @@
     <!-- menu text -->
     <string name="reader_menu_tags_and_blogs">Edit tags and blogs</string>
     <string name="reader_menu_block_blog">Block this site</string>
+    <string name="reader_menu_block_this_blog">Block this blog</string>
     <string name="reader_menu_report_post">Report this post</string>
     <string name="reader_menu_report_user">Report this user</string>
     <string name="reader_menu_mark_as_seen">Mark as seen</string>

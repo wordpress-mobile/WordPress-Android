@@ -216,7 +216,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     private fun buildBlockSite(onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit) =
         SecondaryAction(
             type = BLOCK_SITE,
-            label = UiStringRes(R.string.reader_menu_block_blog),
+            label = UiStringRes(R.string.reader_menu_block_this_blog),
             labelColor = R.attr.wpColorError,
             iconRes = R.drawable.ic_block_white_24dp,
             iconColor = R.attr.wpColorError,
