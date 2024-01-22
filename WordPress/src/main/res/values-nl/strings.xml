@@ -1639,7 +1639,6 @@ Language: nl
     <string name="page_cannot_set_homepage">Instellingen</string>
     <string name="gutenberg_native_select_a_color">Selecteer een kleur</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Twee keer tikken om naar de kleurinstellingen te gaan</string>
-    <string name="reader_empty_followed_blogs_description">Wanneer je sites volgt, zie je hier de inhoud ervan</string>
     <string name="feature_announcement_find_out_mode">Meer informatie</string>
     <string name="feature_announcement_dialog_label">Nieuw in %s</string>
     <string name="insert_label_with_count">Invoegen %d</string>

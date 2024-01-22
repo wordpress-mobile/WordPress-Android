@@ -1477,7 +1477,6 @@ Language: pt_BR
     <string name="page_cannot_set_homepage">Para definir uma \"Página inicial\" ative a opção \"Página inicial estática\" em \"Configurações do site\"</string>
     <string name="gutenberg_native_select_a_color">Selecionar uma cor</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toque duas vezes para ir para as configurações de cor</string>
-    <string name="reader_empty_followed_blogs_description">Ao seguir sites, você verá o conteúdo deles aqui</string>
     <string name="feature_announcement_find_out_mode">Saiba mais</string>
     <string name="feature_announcement_dialog_label">O que há de novo em %s</string>
     <string name="insert_label_with_count">Inserir %d</string>

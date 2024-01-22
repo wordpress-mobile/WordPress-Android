@@ -422,7 +422,6 @@ Language: es_MX
     <string name="site_settings_homepage">Página de inicio</string>
     <string name="page_posts_page_update_failed">Ha fallado la actualización de la página de entradas</string>
     <string name="gutenberg_native_select_a_color">Seleccionar un color</string>
-    <string name="reader_empty_followed_blogs_description">Cuando sigas sitios, verás aquí su contenido</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dos veces para ir a los ajustes del color</string>
     <string name="feature_announcement_find_out_mode">Saber más</string>
     <string name="insert_label_with_count">Insertar %d</string>

@@ -1688,7 +1688,6 @@ Language: he_IL
     <string name="page_cannot_set_homepage">כדי להגדיר את עמוד הבית, עליך להפעיל את \'עמוד בית קבוע\' בהגדרות האתר</string>
     <string name="gutenberg_native_select_a_color">לבחור צבע</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">יש להקיש פעמיים כדי לעבור להגדרות הצבע</string>
-    <string name="reader_empty_followed_blogs_description">כאשר יש לך אתרים במעקב, התוכן שלהם יופיע כאן</string>
     <string name="feature_announcement_find_out_mode">למידע נוסף</string>
     <string name="feature_announcement_dialog_label">מה חדש ב-%s</string>
     <string name="insert_label_with_count">להוסיף %d</string>

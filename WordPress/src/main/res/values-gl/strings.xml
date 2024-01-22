@@ -1697,7 +1697,6 @@ Language: gl_ES
     <string name="page_cannot_set_homepage">Para establecer a páxina de inicio, activa «Páxina de inicio estática» nos axustes do sitio</string>
     <string name="gutenberg_native_select_a_color">Seleccionar unha cor</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dúas veces para ir aos axustes da cor</string>
-    <string name="reader_empty_followed_blogs_description">Cando sigas sitios, verás aquí o seu contido</string>
     <string name="feature_announcement_find_out_mode">Saber máis</string>
     <string name="feature_announcement_dialog_label">Que hai de novo en %s</string>
     <string name="insert_label_with_count">Insertar %d</string>

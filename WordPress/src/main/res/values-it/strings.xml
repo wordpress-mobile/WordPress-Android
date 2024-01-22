@@ -1688,7 +1688,6 @@ Language: it
     <string name="page_cannot_set_homepage">Per impostare la homepage abilita \"Homepage statica\" nelle impostazioni del sito</string>
     <string name="gutenberg_native_select_a_color">Seleziona un colore</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Tocca due volte per andare alle impostazioni del colore</string>
-    <string name="reader_empty_followed_blogs_description">Quando segui i siti, visualizzerai i contenuti qui</string>
     <string name="feature_announcement_find_out_mode">Scopri di più</string>
     <string name="feature_announcement_dialog_label">Novità su %s</string>
     <string name="insert_label_with_count">Inserisci %d</string>

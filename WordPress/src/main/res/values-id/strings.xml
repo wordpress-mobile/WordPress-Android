@@ -1691,7 +1691,6 @@ Language: id
     <string name="page_cannot_set_homepage">Untuk memasang Halaman Beranda, aktifkan \"Halaman Beranda Statis\" di Pengaturan Situs</string>
     <string name="gutenberg_native_select_a_color">Pilih warna</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Ketuk dua kali untuk membuka pengaturan warna</string>
-    <string name="reader_empty_followed_blogs_description">Saat Anda mengikuti situs, Anda akan melihat kontennya di sini</string>
     <string name="feature_announcement_find_out_mode">Cari tahu selengkapnya</string>
     <string name="feature_announcement_dialog_label">Apa yang Baru Di %s</string>
     <string name="insert_label_with_count">Sisipkan %d</string>

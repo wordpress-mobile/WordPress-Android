@@ -1184,7 +1184,6 @@ Language: pl
     <string name="page_cannot_set_homepage">Aby ustawić Stronę główną włącz opcję \"Statyczna strona główna\" w ustawieniach witryny</string>
     <string name="gutenberg_native_select_a_color">Wybierz kolor</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Stuknij dwukrotnie, by przejść do ustawień kolorów</string>
-    <string name="reader_empty_followed_blogs_description">Gdy zaczniesz śledzić inne witryny, zobaczysz tutaj ich treść</string>
     <string name="feature_announcement_find_out_mode">Dowiedz się więcej</string>
     <string name="insert_label_with_count">Wstaw %d</string>
     <string name="crop">przytnij</string>

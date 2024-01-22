@@ -1697,7 +1697,6 @@ Language: en_GB
     <string name="page_cannot_set_homepage">To set Homepage, enable \"Static Homepage\" in Site Settings</string>
     <string name="gutenberg_native_select_a_color">Select a colour</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Double tap to go to colour settings</string>
-    <string name="reader_empty_followed_blogs_description">When you follow sites, you\'ll see their content here</string>
     <string name="feature_announcement_find_out_mode">Find out more</string>
     <string name="feature_announcement_dialog_label">What\'s New In %s</string>
     <string name="insert_label_with_count">Insert %d</string>

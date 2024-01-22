@@ -1690,7 +1690,6 @@ Language: ko_KR
     <string name="page_cannot_set_homepage">사이트 설정에서 홈페이지를 “정적 홈페이지” 활성화로 설정하기</string>
     <string name="gutenberg_native_select_a_color">색상 선택</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">색상 설정으로 이동하려면 두 번 탭하세요.</string>
-    <string name="reader_empty_followed_blogs_description">사이트를 팔로우하면 여기에 해당 콘텐츠가 표시됩니다.</string>
     <string name="feature_announcement_find_out_mode">더 알아보기</string>
     <string name="feature_announcement_dialog_label">%s의 새로운 기능</string>
     <string name="insert_label_with_count">%d 삽입</string>

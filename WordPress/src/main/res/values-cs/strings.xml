@@ -1418,7 +1418,6 @@ Language: cs_CZ
     <string name="page_posts_page_update_failed">Aktualizace stránky příspěvků se nezdařila</string>
     <string name="site_settings_homepage">Domovská stránka</string>
     <string name="gutenberg_native_select_a_color">Zvolit barvu</string>
-    <string name="reader_empty_followed_blogs_description">Když sledujete weby, uvidíte jejich obsah zde.</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dvojitým klepnutím přejdete do nastavení barev</string>
     <string name="site_picker_ask_site_select">Web se nepodařilo vybrat. Prosím zkuste to znovu.</string>
     <string name="photo_picker_video_title">Zvolit video</string>

@@ -1697,7 +1697,6 @@ Language: ro
     <string name="page_cannot_set_homepage">Pentru a seta Prima pagină activează „Prima pagină statică” în Setări site</string>
     <string name="gutenberg_native_select_a_color">Selectează o culoare</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Atinge de două ori pentru a merge la setări culori</string>
-    <string name="reader_empty_followed_blogs_description">Când urmărești site-uri, vei vedea conținutul lor aici</string>
     <string name="feature_announcement_find_out_mode">Află mai mult</string>
     <string name="feature_announcement_dialog_label">Care sunt noutățile în %s</string>
     <string name="insert_label_with_count">Inserează %d</string>

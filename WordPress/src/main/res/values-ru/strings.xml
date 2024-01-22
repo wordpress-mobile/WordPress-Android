@@ -1697,7 +1697,6 @@ Language: ru
     <string name="page_cannot_set_homepage">Для установки главной страницы включите \"Статическую главную страницу\" в настройках сайта</string>
     <string name="gutenberg_native_select_a_color">Выберите цвет</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Нажмите дважды для перехода в настройки цветов</string>
-    <string name="reader_empty_followed_blogs_description">При подписке на сайты вы увидите их содержимое здесь</string>
     <string name="feature_announcement_find_out_mode">Подробнее</string>
     <string name="feature_announcement_dialog_label">Что нового в %s?</string>
     <string name="insert_label_with_count">Вставить %d</string>

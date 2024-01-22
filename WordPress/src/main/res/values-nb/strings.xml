@@ -542,7 +542,6 @@ Language: nb_NO
     <string name="page_homepage_successfully_updated">Hjemmeside oppdatert</string>
     <string name="gutenberg_native_select_a_color">Velg en farge</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dobbelttrykk for å gå til fargeinnstillinger</string>
-    <string name="reader_empty_followed_blogs_description">Når du følger nettsteder vil du se innholdet her</string>
     <string name="feature_announcement_find_out_mode">Finn ut mer</string>
     <string name="insert_label_with_count">Sett inn %d</string>
     <string name="crop">klipp</string>

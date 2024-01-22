@@ -1686,7 +1686,6 @@ Language: zh_CN
     <string name="page_cannot_set_homepage">要设置主页，请在“站点设置”中启用“静态主页”</string>
     <string name="gutenberg_native_select_a_color">选择一种颜色</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">点击两下以进入颜色设置</string>
-    <string name="reader_empty_followed_blogs_description">在您关注站点时，您会在这里看到其内容</string>
     <string name="feature_announcement_find_out_mode">了解更多</string>
     <string name="feature_announcement_dialog_label">%s 中有何新内容？</string>
     <string name="insert_label_with_count">插入 %d</string>

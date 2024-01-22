@@ -432,7 +432,6 @@ Language: sr_RS
     <string name="page_homepage_successfully_updated">Почетна страница успешно ажурирана</string>
     <string name="gutenberg_native_select_a_color">Одабери боју</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Додирни двапут за подешавања боја</string>
-    <string name="reader_empty_followed_blogs_description">Када пратите веб локације, овде ћете видети њихов садржај</string>
     <string name="crop">исеци</string>
     <string name="feature_announcement_find_out_mode">Сазнај више</string>
     <string name="insert_label_with_count">Убаци %d</string>
