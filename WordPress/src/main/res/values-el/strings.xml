@@ -937,7 +937,6 @@ Language: el_GR
     <string name="reader_short_like_count_multi">%s \"Like\"</string>
     <string name="reader_short_like_count_one">1 \"Like\"</string>
     <string name="reader_short_like_count_none">\"Like\"</string>
-    <string name="reader_menu_tags">Επεξεργασία ετικετών και ιστότοπων</string>
     <string name="reader_title_post_detail">Άρθρο Αναγνώστη</string>
     <string name="notifications_push_summary">Ρυθμίσεις για τις ειδοποιήσεις που εμφανίζονται στη συσκευή σας.</string>
     <string name="notifications_email_summary">Ρυθμίσεις για τις ειδοποιήσεις που στέλνονται στο email που είναι συνδεδεμένο με το λογαριασμό σας.</string>

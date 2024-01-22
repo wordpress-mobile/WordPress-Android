@@ -3405,7 +3405,6 @@ Language: id
     <string name="reader_short_like_count_multi">%s Suka</string>
     <string name="reader_short_like_count_one">1 Suka</string>
     <string name="reader_short_like_count_none">Suka</string>
-    <string name="reader_menu_tags">Edit topik dan situs</string>
     <string name="reader_title_post_detail">Pos Pembaca</string>
     <string name="notifications_push_summary">Pengaturan pemberitahuan yang muncul di perangkat Anda.</string>
     <string name="notifications_email_summary">Pengaturan pemberitahuan yang dikirim melalui email yang terhubung dengan akun Anda.</string>

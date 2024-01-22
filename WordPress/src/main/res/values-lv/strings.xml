@@ -3275,7 +3275,6 @@ Language: lv
     <string name="reader_short_like_count_multi">%s patīk</string>
     <string name="reader_short_like_count_one">1 patīk</string>
     <string name="reader_short_like_count_none">Patīk</string>
-    <string name="reader_menu_tags">Tematu un vietņu rediģēšana</string>
     <string name="reader_title_post_detail">Lasītāja ziņa</string>
     <string name="notifications_push_summary">Ierīcē parādīto paziņojumu iestatījumi.</string>
     <string name="notifications_email_summary">Paziņojumu iestatījumi, kas tiek nosūtīti uz jūsu kontam piesaistīto e-pastu.</string>

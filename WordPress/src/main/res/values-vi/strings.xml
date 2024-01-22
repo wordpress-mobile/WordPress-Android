@@ -2849,7 +2849,6 @@ Language: vi_VN
     <string name="reader_short_like_count_multi">%s thích</string>
     <string name="reader_short_like_count_one">1 thích</string>
     <string name="reader_short_like_count_none">Thích</string>
-    <string name="reader_menu_tags">Sửa các thẻ và blog</string>
     <string name="reader_title_post_detail">Bài viết theo dõi</string>
     <string name="notifications_push_summary">Những thông báo trên thiết bị của bạn.</string>
     <string name="notifications_email_summary">Những thông báo được gửi đến email.</string>

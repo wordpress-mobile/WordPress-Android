@@ -3404,7 +3404,6 @@ Language: fr
     <string name="reader_short_like_count_multi">%s Likes</string>
     <string name="reader_short_like_count_one">1 Like</string>
     <string name="reader_short_like_count_none">Like</string>
-    <string name="reader_menu_tags">Modifier les sujets et les sites</string>
     <string name="reader_title_post_detail">Article du Reader</string>
     <string name="notifications_push_summary">Paramètres de notifications qui apparaissent sur votre appareil.</string>
     <string name="notifications_email_summary">Paramètres de notifications qui vous sont envoyé par email.</string>

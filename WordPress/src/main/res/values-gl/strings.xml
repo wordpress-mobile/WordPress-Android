@@ -3415,7 +3415,6 @@ Language: gl_ES
     <string name="reader_short_like_count_multi">%s gústame</string>
     <string name="reader_short_like_count_one">1 gústame</string>
     <string name="reader_short_like_count_none">Gústame</string>
-    <string name="reader_menu_tags">Editar temas e sitios</string>
     <string name="reader_title_post_detail">Artigo da Guía de Lectura</string>
     <string name="notifications_push_summary">Configuración de notificacións que aparece no teu dispositivo</string>
     <string name="notifications_email_summary">Configuración de notificacións enviada ao correo electrónico asociado á túa conta.</string>

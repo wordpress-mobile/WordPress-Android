@@ -3415,7 +3415,6 @@ Language: sv_SE
     <string name="reader_short_like_count_multi">%s gillar</string>
     <string name="reader_short_like_count_one">1 gillar</string>
     <string name="reader_short_like_count_none">Gilla</string>
-    <string name="reader_menu_tags">Redigera ämnen och webbplatser</string>
     <string name="reader_title_post_detail">Läsare-inlägg</string>
     <string name="notifications_push_summary">Inställningar för aviseringar som visas på din enhet.</string>
     <string name="notifications_email_summary">Inställningar för aviseringar som skickas till den e-postadress som är knuten till ditt konto.</string>

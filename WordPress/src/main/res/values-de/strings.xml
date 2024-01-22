@@ -3415,7 +3415,6 @@ Language: de
     <string name="reader_short_like_count_multi">%s Likes</string>
     <string name="reader_short_like_count_one">1 Like</string>
     <string name="reader_short_like_count_none">Like</string>
-    <string name="reader_menu_tags">Themen und Websites bearbeiten</string>
     <string name="reader_title_post_detail">Reader-Beitrag</string>
     <string name="notifications_push_summary">Einstellungen für Benachrichtigungen, die auf deinem Gerät angezeigt werden.</string>
     <string name="notifications_email_summary">Einstellungen für Benachrichtigungen, die an die E-Mail-Adresse für dein Konto gesendet werden.</string>

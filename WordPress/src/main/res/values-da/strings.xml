@@ -71,7 +71,6 @@ Language: da_DK
     <string name="reader_short_like_count_multi">%s Likes</string>
     <string name="reader_short_like_count_one">1 Like</string>
     <string name="reader_short_like_count_none">Like</string>
-    <string name="reader_menu_tags">Rediger emner og websteder</string>
     <string name="button_publish">Udgiv</string>
     <string name="button_edit">Rediger</string>
     <string name="push_auth_expired">Forespørgslen er udløbet. Log ind på WordPress.com og prøv igen.</string>

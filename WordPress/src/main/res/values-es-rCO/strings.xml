@@ -2870,7 +2870,6 @@ Language: es_CO
     <string name="reader_short_like_count_multi">%s Me gusta</string>
     <string name="reader_short_like_count_one">1 Me gusta</string>
     <string name="reader_short_like_count_none">Me gusta</string>
-    <string name="reader_menu_tags">Editar temas y sitios</string>
     <string name="reader_title_post_detail">Entrada del lector</string>
     <string name="notifications_push_summary">Ajustes para los avisos que aparecen en tu dispositivo.</string>
     <string name="notifications_email_summary">Ajustes para los avisos que se envían al correo electrónico enlazado a tu cuenta.</string>

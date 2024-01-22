@@ -2196,7 +2196,6 @@ Language: nb_NO
     <string name="reader_short_like_count_multi">%s Likes</string>
     <string name="reader_short_like_count_one">1 Like</string>
     <string name="reader_short_like_count_none">Like</string>
-    <string name="reader_menu_tags">Rediger emner og nettsteder</string>
     <string name="reader_title_post_detail">Leser-innlegg</string>
     <string name="notifications_push_summary">Innstillinger for notifikasjoner som dukker opp på din enhet.</string>
     <string name="notifications_email_summary">Innstillinger for notifikasjoner som sendes til din kontotilknyttede E-postadresse.</string>

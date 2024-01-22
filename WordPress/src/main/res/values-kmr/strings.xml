@@ -2009,7 +2009,6 @@ Language: ku_TR
     <string name="reader_short_like_count_multi">%s Ecibandin</string>
     <string name="reader_short_like_count_none">Biecibîne</string>
     <string name="reader_short_like_count_one">Ecibandinek</string>
-    <string name="reader_menu_tags">Malper û etîketan sererast bike</string>
     <string name="reader_title_post_detail">Şandiya Xwînerê</string>
     <string name="notifications_push_summary">Sazkariyên ji bo danezanên ku li cîhaza te tê xuyan.</string>
     <string name="notifications_email_summary">Danezanên sazkariyê ji bo epeyama te ya girêdayî hesabê te re hatin şandin.</string>

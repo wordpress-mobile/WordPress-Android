@@ -3137,7 +3137,6 @@ Language: cs_CZ
     <string name="reader_short_like_count_multi">%s to se mi líbí</string>
     <string name="reader_short_like_count_one">1 to se mi libí</string>
     <string name="reader_short_like_count_none">To se mi líbí</string>
-    <string name="reader_menu_tags">Upravit štítky a weby</string>
     <string name="reader_title_post_detail">Čtenáři příspěvku</string>
     <string name="notifications_push_summary">Nastavení upozornění, které se objeví na vašem přístroji.</string>
     <string name="notifications_email_summary">Nastavení upozornění, které jsou odesílány na e-mail vázaný na váš účet.</string>

@@ -2891,7 +2891,6 @@ Language: pl
     <string name="reader_short_like_count_multi">%s polubień</string>
     <string name="reader_short_like_count_one">1 polubienie</string>
     <string name="reader_short_like_count_none">Lubię</string>
-    <string name="reader_menu_tags">Edytuj tematy i witryny</string>
     <string name="reader_title_post_detail">Wpis czytnika</string>
     <string name="notifications_push_summary">Ustawienia powiadomień pojawiających się na twoim urządzeniu</string>
     <string name="notifications_email_summary">Ustawienia powiadomień wysyłanych na adres email przywiązany do twojego konta.</string>

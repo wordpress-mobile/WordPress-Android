@@ -1192,7 +1192,6 @@ Language: sk
     <string name="reader_short_like_count_multi">počet lajkov: %s</string>
     <string name="reader_short_like_count_one">1 lajk</string>
     <string name="reader_short_like_count_none">lajk</string>
-    <string name="reader_menu_tags">Upraviť témy a webové stránky</string>
     <string name="reader_title_post_detail">Článok čítačky</string>
     <string name="notifications_push_summary">Nastavenia upozornení zobrazujúcich sa na vašom zariadení.</string>
     <string name="notifications_email_summary">Nastavenia upozornení odosielaných na e-mail, ktorý je spojený s vašim účtom.</string>

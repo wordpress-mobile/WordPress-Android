@@ -1779,7 +1779,6 @@ Language: sr_RS
     <string name="reader_short_like_count_multi">%s свиђања</string>
     <string name="reader_short_like_count_one">1 свиђање</string>
     <string name="reader_short_like_count_none">Свиђање</string>
-    <string name="reader_menu_tags">Уреди ознаке и сајтове</string>
     <string name="reader_title_post_detail">Чланак читача</string>
     <string name="notifications_push_summary">Подешавања за обавештења која се појављују на вашем уређају.</string>
     <string name="notifications_email_summary">Подешавања за обавештења која су послата на е-пошту повезану са вашим налогом.</string>

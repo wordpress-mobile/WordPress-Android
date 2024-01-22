@@ -408,7 +408,6 @@ Language: hr
     <string name="reader_short_like_count_multi">%s Lajkova</string>
     <string name="reader_short_like_count_none">Lajkovi</string>
     <string name="reader_short_like_count_one">1 lajk</string>
-    <string name="reader_menu_tags">Uredite teme i web-stranice</string>
     <string name="reader_title_post_detail">Objava u Čitaču</string>
     <string name="notifications_push_summary">Postavke za obavijesti na vašem uređaju</string>
     <string name="notifications_email_summary">Postavke za obavijesti koje će biti poslane na adresu e-pošte povezane s tvojim korisničkim računom</string>

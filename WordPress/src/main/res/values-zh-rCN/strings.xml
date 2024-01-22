@@ -3398,7 +3398,6 @@ Language: zh_CN
     <string name="reader_short_like_count_multi">%s 喜欢</string>
     <string name="reader_short_like_count_one">1 喜欢</string>
     <string name="reader_short_like_count_none">顶</string>
-    <string name="reader_menu_tags">编辑主题和站点</string>
     <string name="reader_title_post_detail">读者文章</string>
     <string name="notifications_push_summary">关于出现在设备上的通知的设置。</string>
     <string name="notifications_email_summary">发送到与您的账户相关联的电子邮件中的通知的设置。</string>
