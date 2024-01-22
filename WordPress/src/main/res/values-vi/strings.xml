@@ -2960,7 +2960,6 @@ Language: vi_VN
     <string name="posts_empty_list">Chưa có bài viết nào. Viết ngay bây giờ?</string>
     <string name="signing_out">Đang đăng xuất…</string>
     <string name="reader_toast_err_generic">Không thể thực hiện thao tác này</string>
-    <string name="reader_menu_block_blog">Ẩn blog này</string>
     <string name="schedule_verb">Lịch đăng</string>
     <string name="update_verb">Cập nhật</string>
     <string name="ssl_certificate_ask_trust">Nếu bạn thường kết nối bình thường với trang web này, lỗi này có thể là ai do đó đang cố gắng mạo danh trang web, và bạn không nên tiếp tục. Bạn có chắc chắn tin tưởng chứng chỉ?</string>

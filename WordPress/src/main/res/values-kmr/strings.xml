@@ -2116,7 +2116,6 @@ Language: ku_TR
     <string name="comment_trashed">Şîrove betal bû</string>
     <string name="comment_reply_to_user">Vêya %s bibersivîne</string>
     <string name="posts_empty_list">Hîn ti şandî tune ye. Ka em şandiyekê çêkin?</string>
-    <string name="reader_menu_block_blog">Vê malperê asteng bike</string>
     <string name="reader_toast_err_generic">Ev çalakî nayê pêkanîn</string>
     <string name="schedule_verb">Demsaz bike</string>
     <string name="update_verb">Hildemîne</string>

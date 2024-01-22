@@ -3508,7 +3508,6 @@ Language: ar
     <string name="signing_out">جاري تسجيل الخروج…</string>
     <string name="help_and_support">المساعدة والدعم</string>
     <string name="reader_toast_err_generic">غير قادر على تنفيذ هذا الإجراء</string>
-    <string name="reader_menu_block_blog">حظر هذا الموقع</string>
     <string name="update_verb">تحديث</string>
     <string name="schedule_verb">جدولة</string>
     <string name="help">المساعدة</string>

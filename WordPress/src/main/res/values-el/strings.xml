@@ -1048,7 +1048,6 @@ Language: el_GR
     <string name="comment_reply_to_user">Απάντηση σε %s</string>
     <string name="signing_out">Αποσύνδεση…</string>
     <string name="reader_toast_err_generic">Αδυναμία εκτέλεσης αυτής της ενέργειας</string>
-    <string name="reader_menu_block_blog">Μπλοκάρισμα του ιστότοπου</string>
     <string name="update_verb">Ενημέρωση</string>
     <string name="schedule_verb">Προγραμματισμός</string>
     <string name="help">Βοήθεια</string>

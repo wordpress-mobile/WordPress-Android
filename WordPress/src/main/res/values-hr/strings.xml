@@ -519,7 +519,6 @@ Language: hr
     <string name="more">Više</string>
     <string name="help_and_support">Pomoć i podrška </string>
     <string name="reader_toast_err_generic">Nije moguće izvesti tu akciju</string>
-    <string name="reader_menu_block_blog">Blokiraj ovu web-stranicu</string>
     <string name="update_verb">Ažuriraj</string>
     <string name="schedule_verb">Zakazati</string>
     <string name="help">Pomoć</string>

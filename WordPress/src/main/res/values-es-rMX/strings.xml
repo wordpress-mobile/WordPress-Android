@@ -2200,7 +2200,6 @@ Language: es_MX
     <string name="error_publish_empty_post">No se puede publicar una entrada vacía.</string>
     <string name="reader_empty_comments">Aún no hay comentarios</string>
     <string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
-    <string name="reader_menu_block_blog">Bloquear este sitio</string>
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
     <string name="update_verb">Actualizar</string>
     <string name="schedule_verb">Programación</string>

@@ -3515,7 +3515,6 @@ Language: fr
     <string name="posts_empty_list">Pas encore d\'article. Pourquoi ne pas en créer un?</string>
     <string name="signing_out">Déconnexion…</string>
     <string name="reader_toast_err_generic">Impossible d\'effectuer cette action</string>
-    <string name="reader_menu_block_blog">Bloquer ce site</string>
     <string name="schedule_verb">Programmer</string>
     <string name="update_verb">Mettre à jour</string>
     <string name="ssl_certificate_ask_trust">Si vous vous connectez habituellement à ce site sans problème, cette erreur peut signifier que quelqu\'un essai de se faire passer pour vous et vous ne devriez pas continuer. Souhaitez-vous faire confiance à ce certificat ?</string>

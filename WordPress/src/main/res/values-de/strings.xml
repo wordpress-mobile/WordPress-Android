@@ -3526,7 +3526,6 @@ Language: de
     <string name="posts_empty_list">Keine Beiträge bisher. Warum nicht jetzt einen erstellen?</string>
     <string name="signing_out">Abmelden …</string>
     <string name="reader_toast_err_generic">Konnte diese Aktion nicht ausführen</string>
-    <string name="reader_menu_block_blog">Diese Website blockieren</string>
     <string name="schedule_verb">Zeitplan</string>
     <string name="update_verb">Aktualisieren</string>
     <string name="ssl_certificate_ask_trust">Wenn du dich üblicherweise ohne Probleme mit dieser Website verbinden kannst, könnte dieser Fehler bedeute, dass sich jemand als diese Website ausgibt und du daher nicht weitermachen solltest. Möchtest du dem Zertifikat trotzdem vertrauen?</string>

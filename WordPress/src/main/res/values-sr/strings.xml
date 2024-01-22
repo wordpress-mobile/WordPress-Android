@@ -1890,7 +1890,6 @@ Language: sr_RS
     <string name="comment_reply_to_user">Одговорите %s</string>
     <string name="help_and_support">Помоћ и подршка</string>
     <string name="reader_toast_err_generic">Није могуће обавити овај поступак</string>
-    <string name="reader_menu_block_blog">Блокирај овај сајт</string>
     <string name="schedule_verb">Заказати</string>
     <string name="update_verb">Ажурирај</string>
     <string name="help">Помоћ</string>

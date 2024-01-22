@@ -3516,7 +3516,6 @@ Language: zh_TW
     <string name="posts_empty_list">尚無文章。建立文章？</string>
     <string name="signing_out">正在登出…</string>
     <string name="reader_toast_err_generic">無法執行此動作</string>
-    <string name="reader_menu_block_blog">封鎖此網站</string>
     <string name="schedule_verb">排程</string>
     <string name="update_verb">更新</string>
     <string name="ssl_certificate_ask_trust">如果你通常能夠順利連線至此網站，則此錯誤可能代表有人正嘗試冒充該網站，因此請勿繼續操作。是否仍然要信任憑證？</string>

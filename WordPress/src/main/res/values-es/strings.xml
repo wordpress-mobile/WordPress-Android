@@ -3526,7 +3526,6 @@ Language: es
     <string name="posts_empty_list">Aún no se han publicado entradas. ¿Por qué no crear una?</string>
     <string name="signing_out">Cerrando sesión…</string>
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
-    <string name="reader_menu_block_blog">Bloquear este sitio</string>
     <string name="schedule_verb">Programar</string>
     <string name="update_verb">Actualizar</string>
     <string name="ssl_certificate_ask_trust">SI normalmente se conecta sin problemas a este sitio sin problemas, este error puede significar que alguien están intentando suplantar el sitio, por lo que no deberías continuar. ¿Quieres, de todas formas, confiar en el certificado?</string>

@@ -3514,7 +3514,6 @@ Language: he_IL
     <string name="posts_empty_list">אין פוסטים עדיין. למה לא ליצור אחד?</string>
     <string name="signing_out">יוצא מהמערכת…</string>
     <string name="reader_toast_err_generic">לא ניתן לבצע את הפעולה</string>
-    <string name="reader_menu_block_blog">לחסום את האתר הזה</string>
     <string name="schedule_verb">תזמן</string>
     <string name="update_verb">עדכן</string>
     <string name="ssl_certificate_ask_trust">אם בדרך כלל אתה מתחבר לאתר זה ללא בעיות, ייתכן ששגיאה זו נובעת מכך שמישהו מנסה להתחזות לאתר ולכן אסור לך להמשיך. האם ברצונך בכל זאת לתת אמון באישור?</string>

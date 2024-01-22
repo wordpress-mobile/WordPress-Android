@@ -3526,7 +3526,6 @@ Language: ro
     <string name="posts_empty_list">Niciun articol încă. De ce să nu creezi unul?</string>
     <string name="signing_out">Deautentificare….</string>
     <string name="reader_toast_err_generic">Nu pot face acestă acțiune</string>
-    <string name="reader_menu_block_blog">Blochează acest site</string>
     <string name="schedule_verb">Programează</string>
     <string name="update_verb">Actualizează</string>
     <string name="ssl_certificate_ask_trust">Dacă în mod uzual te conectezi fără probleme la acest site, această eroare poate să însemne că cineva încearcă să se substituie site-ului și n-ar trebui să mai continui. Preferi să te încrezi în certificat oricum?</string>
