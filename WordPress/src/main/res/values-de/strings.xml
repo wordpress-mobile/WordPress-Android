@@ -1621,7 +1621,6 @@ Language: de
     <string name="gutenberg_native_block_copied">Block wurde kopiert</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Der Website-Titel kann nur von einem Benutzer mit Administratorrolle geändert werden.</string>
     <string name="my_site_title_changer_dialog_hint">Der Website-Titel wird in der Titelleiste eines Webbrowsers angezeigt und wird bei den meisten Themes im Header angezeigt.</string>
-    <string name="reader_title_tag_preview">Thema</string>
     <string name="error_update_site_title_network">Konnte den Website-Titel nicht aktualisieren. Bitte überprüfe deine Netzwerkverbindung und versuche es erneut.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ungespeicherte Änderungen</string>
     <string name="gutenberg_native_open_link_in_a_browser">Link in einem Browser öffnen</string>

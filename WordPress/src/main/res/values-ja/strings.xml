@@ -1614,7 +1614,6 @@ Language: ja_JP
     <string name="gutenberg_native_block_copied">ブロックをコピーしました</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">サイトのタイトルを変更できるのは管理者の役割を持つユーザーだけです。</string>
     <string name="my_site_title_changer_dialog_hint">サイトのタイトルは、Web ブラウザーのタイトルバーに表示され、ほとんどのテーマのヘッダーに表示されます。</string>
-    <string name="reader_title_tag_preview">トピック</string>
     <string name="error_update_site_title_network">サイトのタイトルを更新できませんでした。 ネットワーク接続を確認して、もう一度お試しください。</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">保存されていない変更</string>
     <string name="gutenberg_native_open_link_in_a_browser">リンクをブラウザーで開く</string>

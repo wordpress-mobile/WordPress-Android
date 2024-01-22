@@ -297,7 +297,6 @@ Language: ku_TR
     <string name="gutenberg_native_block_cut">Blokê jê bike</string>
     <string name="gutenberg_native_block_copied">Blok hat kopîkirin</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Sernavê Malperê tenê ji aliyê rêveberekî dikare were guhertin.</string>
-    <string name="reader_title_tag_preview">Mijar</string>
     <string name="error_update_site_title_network">Sernavê malperê nehat hildemandin. Girêdana tora xwe kontrol bike û dîsa biceribîne.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Guhertinên netomarkirî</string>
     <string name="my_site_title_changer_dialog_hint">Sernavê Malperê, li benda-sernavê ya geroka webê tê xuyan û di pirî rûkaran de jî li sermalperê tê xuyan.</string>

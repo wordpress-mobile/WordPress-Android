@@ -1613,7 +1613,6 @@ Language: fr
     <string name="gutenberg_native_block_copied">Bloc copié</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Le titre du site peut seulement être changé par une personne avec un rôle d’administrateur.</string>
     <string name="my_site_title_changer_dialog_hint">Le titre du site est affiché dans la barre de titre du navigateur et est affiché dans l’en-tête de la plupart des thèmes.</string>
-    <string name="reader_title_tag_preview">Sujet</string>
     <string name="error_update_site_title_network">Impossible de mettre à jour le titre du site. Vérifier votre connexion réseau et réessayez.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Modifications non enregistrées</string>
     <string name="gutenberg_native_open_link_in_a_browser">Ouvrir le lien dans un navigateur</string>

@@ -1621,7 +1621,6 @@ Language: ro
     <string name="gutenberg_native_block_copied">Bloc copiat</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Titlul site-ului poate fi modificat numai de un utilizator cu rolul de administrator.</string>
     <string name="my_site_title_changer_dialog_hint">Titlul site-ului este afișat în bara de titluri a unui navigator web și, pentru majoritatea temelor, este afișat în antet.</string>
-    <string name="reader_title_tag_preview">Subiect</string>
     <string name="error_update_site_title_network">Nu am putut actualiza titlul site-ului. Verifică conexiunea la rețea și încearcă din nou.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Modificări nesalvate</string>
     <string name="gutenberg_native_open_link_in_a_browser">Deschide legătura într-un navigator</string>

@@ -377,7 +377,6 @@ Language: sr_RS
     <string name="gutenberg_native_block_cut">Блок исечен</string>
     <string name="gutenberg_native_block_copied">Блок копиран</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Наслов сајта може да измени само корисник са администраторском улогом.</string>
-    <string name="reader_title_tag_preview">Тема</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Несачуване измене</string>
     <string name="gutenberg_native_open_link_in_a_browser">Отвори везу у прегледачу</string>
     <string name="gutenberg_native_go_back">Иди назад</string>

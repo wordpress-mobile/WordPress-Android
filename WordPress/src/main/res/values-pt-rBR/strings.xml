@@ -1402,7 +1402,6 @@ Language: pt_BR
     <string name="gutenberg_native_block_copied">Bloco copiado</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">O título do site pode ser editado somente por contas com função de administrador.</string>
     <string name="my_site_title_changer_dialog_hint">O título do site é exibido na barra de título do navegador e também no cabeçalho da maioria dos temas.</string>
-    <string name="reader_title_tag_preview">Tópico</string>
     <string name="error_update_site_title_network">Não foi possível atualizar o título do site. Verifique sua conexão de rede e tente novamente.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Alterações não salvas</string>
     <string name="gutenberg_native_open_link_in_a_browser">Abrir link no navegador</string>

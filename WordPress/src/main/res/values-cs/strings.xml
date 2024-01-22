@@ -1345,7 +1345,6 @@ Language: cs_CZ
     <string name="gutenberg_native_remove_block">Odstranit blok</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Neuložené změny</string>
     <string name="error_update_site_title_network">Název webu se nepodařilo aktualizovat. Zkontrolujte připojení k síti a zkuste to znovu.</string>
-    <string name="reader_title_tag_preview">Téma</string>
     <string name="my_site_title_changer_dialog_hint">Název webu se zobrazuje v záhlaví webového prohlížeče a u většiny šablon se zobrazuje v záhlaví.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Otevřít odkaz v prohlížeči</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Přejde na předchozí stránku s obsahem</string>

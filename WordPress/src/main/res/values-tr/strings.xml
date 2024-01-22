@@ -1621,7 +1621,6 @@ Language: tr
     <string name="gutenberg_native_block_copied">Blok kopyalandı</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Site Başlığı yalnızca yönetici rolüne sahip bir kullanıcı tarafından değiştirilebilir.</string>
     <string name="my_site_title_changer_dialog_hint">Site Başlığı, web tarayıcısının başlık çubuğunda görüntülenir ve çoğu temada üst bilgide gösterilir.</string>
-    <string name="reader_title_tag_preview">Konu</string>
     <string name="error_update_site_title_network">Site başlığı güncellenemedi. Ağ bağlantınızı kontrol edip tekrar deneyin.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Kaydedilmemiş değişiklikler</string>
     <string name="gutenberg_native_open_link_in_a_browser">Bağlantıyı tarayıcıda aç</string>

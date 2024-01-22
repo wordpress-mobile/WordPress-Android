@@ -1611,7 +1611,6 @@ Language: ar
     <string name="my_site_title_changer_dialog_not_allowed_hint">يمكن للمستخدم فقط تغيير عنوان الموقع باستخدام دور المسؤول.</string>
     <string name="gutenberg_native_remove_block">إزالة المكوّن</string>
     <string name="my_site_title_changer_dialog_hint">يُعرض عنوان الموقع في شريط العناوين في متصفح الويب ويُعرض في رأس الصفحة في معظم القوالب.</string>
-    <string name="reader_title_tag_preview">موضوع</string>
     <string name="error_update_site_title_network">تعذر تحديث عنوان الموقع. تحقَّق من اتصال شبكتك وحاول مجددًا.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">تغييرات غير محفوظة</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">التنقل إلى ورقة المحتوى السابقة</string>

@@ -487,7 +487,6 @@ Language: nb_NO
     <string name="gutenberg_native_block_duplicated">Blokk duplisert</string>
     <string name="gutenberg_native_block_cut">Blokk kuttet</string>
     <string name="gutenberg_native_block_copied">Blokk kopiert</string>
-    <string name="reader_title_tag_preview">Emne</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ulagrede endringer</string>
     <string name="gutenberg_native_open_link_in_a_browser">Åpne lenke i en nettleser</string>
     <string name="gutenberg_native_gradient_type">Gradienttype</string>

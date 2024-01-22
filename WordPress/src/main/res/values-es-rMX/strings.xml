@@ -351,7 +351,6 @@ Language: es_MX
     <string name="gutenberg_native_block_copied">Bloque copiado</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">El título del sitio solo puede ser cambiado por un usuario con el perfil de administrador.</string>
     <string name="my_site_title_changer_dialog_hint">El título del sitio se muestra en la barra de título de un navegador web y en la cabecera de la mayoría de los temas.</string>
-    <string name="reader_title_tag_preview">Debate</string>
     <string name="error_update_site_title_network">No se ha podido actualizar el título del sitio. Comprueba tu conexión de red e inténtalo nuevamente.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Cambios sin guardar</string>
     <string name="gutenberg_native_open_link_in_a_browser">Abrir el enlace en un navegador</string>

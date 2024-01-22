@@ -1563,7 +1563,6 @@ Language: nl
     <string name="gutenberg_native_block_copied">Blok gekopieerd</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">De site titel kan alleen gewijzigd worden door een gebruiker met de beheerder rol.</string>
     <string name="my_site_title_changer_dialog_hint">De site titel wordt getoont in de titelbalk van een webbrowser en wordt getoont in de header van de meeste thema\'s.</string>
-    <string name="reader_title_tag_preview">Onderwerp</string>
     <string name="error_update_site_title_network">Kon de site titel niet updaten. Controleer je netwerkverbinding en probeer het dan opnieuw.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Niet opgeslagen wijzigingen</string>
     <string name="gutenberg_native_open_link_in_a_browser">Open link in een browser</string>

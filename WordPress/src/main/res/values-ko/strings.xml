@@ -1614,7 +1614,6 @@ Language: ko_KR
     <string name="gutenberg_native_block_copied">블록을 복사하였습니다</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">사이트 제목은 사용자가 관리자 역할일 때만 바꿀 수 있습니다.</string>
     <string name="my_site_title_changer_dialog_hint">사이트 제목은 웹브라우저의 제목표시줄에 보이고 대부분의 테마에서 헤더에 보입니다.</string>
-    <string name="reader_title_tag_preview">주제</string>
     <string name="error_update_site_title_network">사이트 제목을 업데이트할 수 없습니다. 네트워크 연결을 확인하고 다시 시도하세요.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">저장하지 않은 변경사항</string>
     <string name="gutenberg_native_open_link_in_a_browser">브라우저에서 링크 열기</string>

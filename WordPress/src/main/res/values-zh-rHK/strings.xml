@@ -1615,7 +1615,6 @@ Language: zh_TW
     <string name="gutenberg_native_block_copied">已複製區塊</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">只有具有管理員角色的使用者才能變更網站標題。</string>
     <string name="my_site_title_changer_dialog_hint">網站標題會顯示在網頁瀏覽器的標題列中，且會顯示在大部分佈景主題的頁首中。</string>
-    <string name="reader_title_tag_preview">主旨</string>
     <string name="error_update_site_title_network">無法更新網站標題。 請檢查你的網路連線並再試一次。</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">未儲存的變更</string>
     <string name="gutenberg_native_open_link_in_a_browser">在瀏覽器中開啟連結</string>

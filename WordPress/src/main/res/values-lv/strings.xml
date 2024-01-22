@@ -1491,7 +1491,6 @@ Language: lv
     <string name="gutenberg_native_block_copied">Bloks nokopēts</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Vietnes nosaukumu var mainīt tikai lietotājs ar administratora pilnvarām.</string>
     <string name="my_site_title_changer_dialog_hint">Vietnes nosaukums tiek parādīts tīmekļa pārlūkprogrammas virsraksta joslā, un lielākajai daļai motīvu tas tiek parādīts galvenē.</string>
-    <string name="reader_title_tag_preview">Temats</string>
     <string name="error_update_site_title_network">Nevarēja atjaunot vietnes nosaukumu. Pārbaudiet tīkla savienojumu un mēģiniet vēlreiz.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Nesaglabātas izmaiņas</string>
     <string name="gutenberg_native_open_link_in_a_browser">Atvērt saiti pārlūkprogrammā</string>

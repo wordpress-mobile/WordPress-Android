@@ -1621,7 +1621,6 @@ Language: ru
     <string name="gutenberg_native_block_copied">Блок скопирован</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Название сайта может быть изменено только администратором.</string>
     <string name="my_site_title_changer_dialog_hint">Название сайта отображается в заголовке браузера и отображается большинством тем в заголовке сайта.</string>
-    <string name="reader_title_tag_preview">Тема</string>
     <string name="error_update_site_title_network">Невозможно обновить название сайта. Проверьте подключение к сети и попробуйте снова.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Несохранённые изменения</string>
     <string name="gutenberg_native_open_link_in_a_browser">Открыть ссылку в браузере</string>

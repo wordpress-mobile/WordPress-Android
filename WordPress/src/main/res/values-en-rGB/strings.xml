@@ -1621,7 +1621,6 @@ Language: en_GB
     <string name="gutenberg_native_block_copied">Block copied</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">The Site Title can only be changed by a user with the administrator role.</string>
     <string name="my_site_title_changer_dialog_hint">The Site Title is displayed in the title bar of a web browser and is displayed in the header for most themes.</string>
-    <string name="reader_title_tag_preview">Topic</string>
     <string name="error_update_site_title_network">Couldn\'t update site title. Check your network connection and try again.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Unsaved changes</string>
     <string name="gutenberg_native_open_link_in_a_browser">Open link in a browser</string>

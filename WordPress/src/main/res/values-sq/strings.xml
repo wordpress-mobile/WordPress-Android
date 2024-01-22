@@ -1610,7 +1610,6 @@ Language: sq_AL
     <string name="gutenberg_native_block_copied">Blloku u kopjua</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Titulli i Sajtit mund të ndryshohet vetëm nga një përdorues në rolin e përgjegjësit.</string>
     <string name="my_site_title_changer_dialog_hint">Titulli i Sajtit shfaqet te shtylla e titujve e një shfletuesi dhe, për shumicën e temave, shfaqet te kryet.</string>
-    <string name="reader_title_tag_preview">Subjekt</string>
     <string name="error_update_site_title_network">S’u përditësua dot titull sajti. Kontrolloni lidhjen në rrjet dhe riprovoni.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ndryshime të paruajtura</string>
     <string name="gutenberg_native_open_link_in_a_browser">Hape lidhjen në një shfletues</string>

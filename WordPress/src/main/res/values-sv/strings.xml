@@ -1621,7 +1621,6 @@ Language: sv_SE
     <string name="gutenberg_native_block_copied">Blocket kopierat</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Webbplatsrubriken kan bara ändras av en användare med rollen administratör.</string>
     <string name="my_site_title_changer_dialog_hint">Webbplatsrubriken syns webbläsarens titelrad och de flesta teman visar den också i sidhuvudet.</string>
-    <string name="reader_title_tag_preview">Ämne</string>
     <string name="error_update_site_title_network">Det gick inte att uppdatera webbplatsens rubrik. Kontrollera din nätverksanslutning och försök igen.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ej sparade ändringar</string>
     <string name="gutenberg_native_open_link_in_a_browser">Öppna länken i en webbläsare</string>

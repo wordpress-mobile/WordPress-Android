@@ -25,7 +25,6 @@ Language: hi_IN
     <string name="text_button_alt">टेक्स्ट</string>
     <string name="login_or">या</string>
     <string name="login_done">हो गया</string>
-    <string name="reader_title_tag_preview">विषय</string>
     <string name="me">मैं</string>
     <string name="suffix_1_000">%sK</string>
     <string name="suffix_1_000_000">%sM</string>

@@ -1077,7 +1077,6 @@ Language: vi_VN
     <string name="gutenberg_native_block_copied">Đã chép khối</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Chỉ có quản trị viên mới có quyền đổi tiêu đề blog.</string>
     <string name="my_site_title_changer_dialog_hint">Tiêu đề blog xuất hiện trên thanh tiêu đề trình duyệt và hiển thị ở phần đầu trang của hầu hết các chủ đề.</string>
-    <string name="reader_title_tag_preview">Thẻ</string>
     <string name="error_update_site_title_network">Không thể đổi tiêu đề blog. Kiểm tra kết nối mạng và thử lại.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Thay đổi chưa được lưu</string>
     <string name="gutenberg_native_open_link_in_a_browser">Mở liên kết trong trình duyệt</string>
