@@ -2406,7 +2406,6 @@ Language: id
     <string name="reader_empty_posts_liked_description">Pos yang Anda sukai akan ditampilkan di sini</string>
     <string name="reader_empty_posts_liked_title">Belum ada yang menyukai</string>
     <string name="reader_empty_followed_blogs_button_followed">Buka yang diikuti</string>
-    <string name="reader_empty_followed_blogs_button_discover">Temukan situs</string>
     <string name="reader_empty_followed_blogs_title">Tidak ada situs yang diikuti</string>
     <string name="notifications_empty_likes">Belum ada suka</string>
     <string name="notifications_empty_followers">Belum ada pengikut</string>

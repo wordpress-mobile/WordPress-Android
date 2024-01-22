@@ -2401,7 +2401,6 @@ Language: sq_AL
     <string name="reader_empty_posts_liked_description">Postimet që pëlqeni do të shfaqen këtu</string>
     <string name="reader_empty_posts_liked_title">Ende pa pëlqyer gjë</string>
     <string name="reader_empty_followed_blogs_button_followed">Shko te vijuesja</string>
-    <string name="reader_empty_followed_blogs_button_discover">Zbuloni sajte</string>
     <string name="reader_empty_followed_blogs_title">Pa sajte të ndjekur</string>
     <string name="notifications_empty_likes">Ende pa pëlqime</string>
     <string name="notifications_empty_followers">Ende pa ndjekës</string>

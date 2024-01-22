@@ -2401,7 +2401,6 @@ Language: he_IL
     <string name="reader_empty_posts_liked_description">כאן יופיעו פוסטים שסימנת ב\'לייק\'</string>
     <string name="reader_empty_posts_liked_title">עדיין אין לייקים</string>
     <string name="reader_empty_followed_blogs_button_followed">מעבר לבא</string>
-    <string name="reader_empty_followed_blogs_button_discover">עיון באתרים</string>
     <string name="reader_empty_followed_blogs_title">לא מתבצע מעקב אחר אתרים</string>
     <string name="notifications_empty_likes">עדיין אין לייקים</string>
     <string name="notifications_empty_followers">עדיין אין עוקבים</string>

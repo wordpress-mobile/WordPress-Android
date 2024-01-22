@@ -2405,7 +2405,6 @@ Language: ja_JP
     <string name="reader_empty_posts_liked_description">お気に入りの投稿はここに表示されます</string>
     <string name="reader_empty_posts_liked_title">「いいね」がつけられているものはまだありません</string>
     <string name="reader_empty_followed_blogs_button_followed">次に移動</string>
-    <string name="reader_empty_followed_blogs_button_discover">サイトを見つける</string>
     <string name="reader_empty_followed_blogs_title">フォロー中のサイトはまだありません</string>
     <string name="notifications_empty_likes">新しい「いいね」はまだついていません</string>
     <string name="notifications_empty_followers">フォロワーはまだいません</string>

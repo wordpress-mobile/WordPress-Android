@@ -1877,7 +1877,6 @@ Language: es_CO
     <string name="reader_empty_posts_liked_description">Las entradas que te gusten aparecerán aquí</string>
     <string name="reader_empty_posts_liked_title">Nada que te gustó aún</string>
     <string name="reader_empty_followed_blogs_button_followed">Ir a los siguientes</string>
-    <string name="reader_empty_followed_blogs_button_discover">Descubre sitios</string>
     <string name="reader_empty_followed_blogs_title">Sitios a los que no sigues</string>
     <string name="notifications_empty_likes">No hay me gusta aún</string>
     <string name="notifications_empty_followers">No hay seguidores aún</string>

@@ -1896,7 +1896,6 @@ Language: pl
     <string name="reader_empty_posts_liked_title">Nic jeszcze nie polubione</string>
     <string name="reader_empty_followed_blogs_title">Brak obserwowanych witryn</string>
     <string name="reader_empty_followed_blogs_button_followed">Idź do obserwowanych</string>
-    <string name="reader_empty_followed_blogs_button_discover">Odkrywaj witryny </string>
     <string name="notifications_empty_followers">Brak obserwujących</string>
     <string name="notifications_empty_likes">Brak polubień</string>
     <string name="activity_log_limited_content_on_free_plan">Korzystasz z planu darmowego,  więc zobaczysz tylko ograniczoną liczbę działań w ramach swojej aktywności. </string>

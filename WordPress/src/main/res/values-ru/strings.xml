@@ -2412,7 +2412,6 @@ Language: ru
     <string name="reader_empty_posts_liked_description">Записи, которые вам понравились будут здесь</string>
     <string name="reader_empty_posts_liked_title">Нет отметок \"нравится\"</string>
     <string name="reader_empty_followed_blogs_button_followed">Перейти к подпискам</string>
-    <string name="reader_empty_followed_blogs_button_discover">Найти сайты</string>
     <string name="reader_empty_followed_blogs_title">Нет подписок на сайты</string>
     <string name="notifications_empty_likes">Ещё нет отметок \"нравится\"</string>
     <string name="notifications_empty_followers">Ещё нет подписчиков</string>

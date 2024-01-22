@@ -2412,7 +2412,6 @@ Language: sv_SE
     <string name="reader_empty_posts_liked_description">Inlägg som du gillar kommer att visas här</string>
     <string name="reader_empty_posts_liked_title">Ingenting gillat än</string>
     <string name="reader_empty_followed_blogs_button_followed">Gå till följda webbplatser</string>
-    <string name="reader_empty_followed_blogs_button_discover">Hitta webbplatser</string>
     <string name="reader_empty_followed_blogs_title">Inga följda webbplatser</string>
     <string name="notifications_empty_likes">Inga gillamarkeringar än</string>
     <string name="notifications_empty_followers">Inga följare än</string>

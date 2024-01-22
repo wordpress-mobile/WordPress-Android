@@ -2398,7 +2398,6 @@ Language: zh_CN
     <string name="reader_empty_posts_liked_description">您喜欢的文章会显示在这里</string>
     <string name="reader_empty_posts_liked_title">暂无喜欢</string>
     <string name="reader_empty_followed_blogs_button_followed">去关注</string>
-    <string name="reader_empty_followed_blogs_button_discover">发现站点</string>
     <string name="reader_empty_followed_blogs_title">无关注的站点</string>
     <string name="notifications_empty_likes">尚无喜欢</string>
     <string name="notifications_empty_followers">尚无粉丝</string>

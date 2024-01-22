@@ -2412,7 +2412,6 @@ Language: tr
     <string name="reader_empty_posts_liked_description">Beğendiğiniz yazılar burada yer alacak</string>
     <string name="reader_empty_posts_liked_title">Henüz herhangi bir şey beğenilmedi</string>
     <string name="reader_empty_followed_blogs_button_followed">Takip edilenlere git</string>
-    <string name="reader_empty_followed_blogs_button_discover">Siteleri keşfet</string>
     <string name="reader_empty_followed_blogs_title">Takip edilen site yok</string>
     <string name="notifications_empty_likes">Henüz beğeni yok</string>
     <string name="notifications_empty_followers">Henüz takipçi yok</string>

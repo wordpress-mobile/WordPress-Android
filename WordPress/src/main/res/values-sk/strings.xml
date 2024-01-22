@@ -195,7 +195,6 @@ Language: sk
     <string name="reader_empty_posts_liked_description">Zobrazia sa tu príspevky, ktoré sa vám páčia</string>
     <string name="reader_empty_posts_liked_title">Zatiaľ nebolo nič označené Páči sa mi to</string>
     <string name="reader_empty_followed_blogs_button_followed">Prejdite na sledovanie</string>
-    <string name="reader_empty_followed_blogs_button_discover">Objavte webové stránky</string>
     <string name="reader_empty_followed_blogs_title">Žiadne sledované webové stránky</string>
     <string name="notifications_empty_likes">Zatiaľ žiadne lajky</string>
     <string name="notifications_empty_followers">Zatiaľ žiadni odberatelia</string>

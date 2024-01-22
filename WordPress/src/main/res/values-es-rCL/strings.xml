@@ -249,7 +249,6 @@ Language: es_CL
     <string name="reader_empty_posts_liked_description">Los posts que te gusten aparecerán aquí</string>
     <string name="reader_empty_posts_liked_title">Aún no te gusta algo</string>
     <string name="reader_empty_followed_blogs_button_followed">Ir a siguiendo</string>
-    <string name="reader_empty_followed_blogs_button_discover">Descubre sitios</string>
     <string name="reader_empty_followed_blogs_title">Sin sitios seguidos</string>
     <string name="activity_log_limited_content_on_free_plan">Ya que estás en un plan gratuito, verás eventos limitados en tu actividad.</string>
     <string name="notifications_empty_followers">Aún sin seguidores</string>

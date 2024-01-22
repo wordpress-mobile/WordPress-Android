@@ -2188,7 +2188,6 @@ Language: pt_BR
     <string name="reader_empty_posts_liked_description">Os posts que você gosta aparecerão aqui</string>
     <string name="reader_empty_posts_liked_title">Nada foi curtido ainda</string>
     <string name="reader_empty_followed_blogs_button_followed">Ir para sites seguidos</string>
-    <string name="reader_empty_followed_blogs_button_discover">Descubra sites</string>
     <string name="reader_empty_followed_blogs_title">Nenhum site seguido</string>
     <string name="notifications_empty_likes">Nenhuma curtida ainda</string>
     <string name="notifications_empty_followers">Nenhum seguidor ainda</string>

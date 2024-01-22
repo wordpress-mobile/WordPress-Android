@@ -2412,7 +2412,6 @@ Language: de
     <string name="reader_empty_posts_liked_description">Beiträge, die dir gefallen, werden hier angezeigt</string>
     <string name="reader_empty_posts_liked_title">Noch nichts mit „Gefällt mir“ markiert</string>
     <string name="reader_empty_followed_blogs_button_followed">Zu „Du folgst“ wechseln</string>
-    <string name="reader_empty_followed_blogs_button_discover">Websites entdecken</string>
     <string name="reader_empty_followed_blogs_title">Keine abonnierten Websites</string>
     <string name="notifications_empty_likes">Noch keine Likes</string>
     <string name="notifications_empty_followers">Noch keine Follower</string>

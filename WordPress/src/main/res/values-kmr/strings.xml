@@ -1038,7 +1038,6 @@ Language: ku_TR
     <string name="people_empty_list_filtered_users">Hîn bikarhêner tune ye</string>
     <string name="reader_empty_posts_liked_description">Şandiyên ku te ecibandine ew ê li vir xuya bibin</string>
     <string name="reader_empty_posts_liked_title">Hîn ti tişt nehatiye ecibandin</string>
-    <string name="reader_empty_followed_blogs_button_discover">Malperan keşf bike</string>
     <string name="reader_empty_followed_blogs_button_followed">Here şopandinan</string>
     <string name="reader_empty_followed_blogs_title">Malperên tu dişopînî tune ye</string>
     <string name="notifications_empty_likes">Hîn ecibandin tune ye</string>

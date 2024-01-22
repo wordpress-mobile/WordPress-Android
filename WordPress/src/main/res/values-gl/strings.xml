@@ -2412,7 +2412,6 @@ Language: gl_ES
     <string name="reader_empty_posts_liked_description">As entradas que che gusten aparecerán aquí</string>
     <string name="reader_empty_posts_liked_title">Aínda non che gustou nada</string>
     <string name="reader_empty_followed_blogs_button_followed">Ir aos seguintes</string>
-    <string name="reader_empty_followed_blogs_button_discover">Descubre sitios</string>
     <string name="reader_empty_followed_blogs_title">Sitios que non segues</string>
     <string name="notifications_empty_likes">Aínda non hai gústame</string>
     <string name="notifications_empty_followers">Aínda non hai seguidores</string>

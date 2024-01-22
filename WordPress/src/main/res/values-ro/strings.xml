@@ -2412,7 +2412,6 @@ Language: ro
     <string name="reader_empty_posts_liked_description">Articolele pe care le apreciezi vor apărea aici</string>
     <string name="reader_empty_posts_liked_title">Nu ai apreciat nimic până acum</string>
     <string name="reader_empty_followed_blogs_button_followed">Du-te la urmărire</string>
-    <string name="reader_empty_followed_blogs_button_discover">Descoperă site-uri</string>
     <string name="reader_empty_followed_blogs_title">Niciun site urmărit</string>
     <string name="notifications_empty_likes">Nicio apreciere până acum</string>
     <string name="notifications_empty_followers">Niciun urmăritor până acum</string>

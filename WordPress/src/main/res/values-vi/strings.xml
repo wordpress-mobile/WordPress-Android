@@ -1856,7 +1856,6 @@ Language: vi_VN
     <string name="reader_empty_posts_liked_description">Bài viết bạn thích sẽ xuất hiện ở đây</string>
     <string name="reader_empty_posts_liked_title">Chưa có bài viết được thích</string>
     <string name="reader_empty_followed_blogs_button_followed">Những blog bạn đang theo dõi</string>
-    <string name="reader_empty_followed_blogs_button_discover">Khám phá</string>
     <string name="reader_empty_followed_blogs_title">Chưa theo dõi blog nào</string>
     <string name="notifications_empty_likes">Chưa có lượt thích</string>
     <string name="notifications_empty_followers">Chưa có người theo dõi</string>

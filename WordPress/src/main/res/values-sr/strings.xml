@@ -943,7 +943,6 @@ Language: sr_RS
     <string name="people_empty_list_filtered_email_followers">Још увек нема пратилаца електронске поште</string>
     <string name="people_empty_list_filtered_viewers">Још увек нема гледалаца</string>
     <string name="reader_empty_posts_liked_description">Чланци који Вам се свиђају ће се појавити овде</string>
-    <string name="reader_empty_followed_blogs_button_discover">Откриј сајтове</string>
     <string name="reader_empty_followed_blogs_title">Нема праћених сајтова</string>
     <string name="notifications_empty_likes">Још нема свиђања</string>
     <string name="notifications_empty_followers">Још нема пратилаца</string>
