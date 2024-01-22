@@ -1804,7 +1804,6 @@ Language: it
     <string name="reader_bottom_sheet_content_description">Seleziona un tag o un sito, finestra pop-up</string>
     <string name="reader_btn_select_filter_content_description">Seleziona un sito o un tag per filtrare gli articoli</string>
     <string name="reader_btn_remove_filter_content_description">Rimuovi filtro attuale</string>
-    <string name="reader_title_subs">Gestisci argomenti e siti</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Accedi a WordPress.com</string>
     <string name="gutenberg_native_replace_current_block">Sostituisci blocco attuale</string>
     <string name="gutenberg_native_add_to_end">Aggiungi alla fine</string>

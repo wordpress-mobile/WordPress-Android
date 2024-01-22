@@ -1814,7 +1814,6 @@ Language: gl_ES
     <string name="reader_bottom_sheet_content_description">Selecciona unha etiqueta ou un sitio, ventá emergente</string>
     <string name="reader_btn_select_filter_content_description">Selecciona un sitio ou etiqueta para filtrar entradas</string>
     <string name="reader_btn_remove_filter_content_description">Quitar o filtro actual</string>
-    <string name="reader_title_subs">Xestionar etiquetas e sitios</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Acceder a WordPress.com</string>
     <string name="gutenberg_native_replace_current_block">Substituír o bloque actual</string>
     <string name="gutenberg_native_add_to_end">Engadir ao final</string>

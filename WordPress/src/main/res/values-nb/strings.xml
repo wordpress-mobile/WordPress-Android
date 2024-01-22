@@ -644,7 +644,6 @@ Language: nb_NO
     <string name="stats_management_add_new_stats_card">Legg til nytt statistikkort</string>
     <string name="reader_btn_select_filter_content_description">Velg nettsted eller nøkkelord for å filtrere innlegg</string>
     <string name="reader_btn_remove_filter_content_description">Fjern nåværende filter</string>
-    <string name="reader_title_subs">Behandle emner og nettsteder</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Logge inn på WordPress.com?</string>
     <string name="gutenberg_native_replace_current_block">Erstatt nåværende blokk</string>
     <string name="gutenberg_native_add_to_end">Legg til på slutten</string>

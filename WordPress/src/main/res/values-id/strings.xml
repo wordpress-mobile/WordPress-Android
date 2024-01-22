@@ -1808,7 +1808,6 @@ Language: id
     <string name="reader_bottom_sheet_content_description">Pilih Tag atau Situs, Jendela Pop Up</string>
     <string name="reader_btn_select_filter_content_description">Pilih Situs atau Tag untuk menyaring pos</string>
     <string name="reader_btn_remove_filter_content_description">Hapus penyaring saat ini</string>
-    <string name="reader_title_subs">Kelola Topik &amp; Situs</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Login ke WordPress.com</string>
     <string name="gutenberg_native_replace_current_block">Ganti Blok Saat Ini</string>
     <string name="gutenberg_native_add_to_end">Tambahkan ke Akhir</string>

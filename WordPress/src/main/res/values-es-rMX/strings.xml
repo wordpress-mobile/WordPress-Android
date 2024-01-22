@@ -535,7 +535,6 @@ Language: es_MX
     <string name="reader_btn_select_filter_content_description">Selecciona un sitio o etiqueta para filtrar entradas</string>
     <string name="reader_btn_remove_filter_content_description">Quitar el filtro actual</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Acceder a WordPress.com</string>
-    <string name="reader_title_subs">Gestionar temas y sitios</string>
     <string name="gutenberg_native_replace_current_block">Reemplazar el bloque actual</string>
     <string name="gutenberg_native_add_to_end">Añadir al final</string>
     <string name="gutenberg_native_add_to_beginning">Añadir al principio</string>

@@ -1533,7 +1533,6 @@ Language: cs_CZ
     <string name="stats_management_screen_title">Přidat novou kartu</string>
     <string name="stats_management_add_new_stats_card">Přidejte novou kartu statistik</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Přihlásit se k WordPress.com</string>
-    <string name="reader_title_subs">Spravujte témata a weby</string>
     <string name="reader_btn_remove_filter_content_description">Odstraňte aktuální filtr</string>
     <string name="reader_btn_select_filter_content_description">Chcete-li filtrovat příspěvky, vyberte web nebo značku</string>
     <string name="reader_bottom_sheet_content_description">Vyberte značku nebo web, vyskakovací okno</string>

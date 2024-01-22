@@ -1802,7 +1802,6 @@ Language: zh_CN
     <string name="reader_bottom_sheet_content_description">选择标签、站点或弹出窗口</string>
     <string name="reader_btn_select_filter_content_description">选择站点或标签来过滤文章</string>
     <string name="reader_btn_remove_filter_content_description">删除当前过滤器</string>
-    <string name="reader_title_subs">管理主题和站点</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">登录 WordPress.com</string>
     <string name="gutenberg_native_replace_current_block">替换现有区块</string>
     <string name="gutenberg_native_add_to_end">添加到结尾</string>

@@ -1755,7 +1755,6 @@ Language: nl
     <string name="reader_bottom_sheet_content_description">Selecteer een tag of site, pop-upvenster</string>
     <string name="reader_btn_select_filter_content_description">Selecteer een site of tag om berichten te filteren</string>
     <string name="reader_btn_remove_filter_content_description">Verwijder het huidige filter</string>
-    <string name="reader_title_subs">Beheer onderwerpen &amp; sites</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Inloggen op WordPress.com</string>
     <string name="gutenberg_native_replace_current_block">Huidig blok vervangen</string>
     <string name="gutenberg_native_add_to_end">Toevoegen aan einde</string>

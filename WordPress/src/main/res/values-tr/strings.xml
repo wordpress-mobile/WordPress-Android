@@ -1814,7 +1814,6 @@ Language: tr
     <string name="reader_bottom_sheet_content_description">Etiket veya Site Seçin, Açılır Pencere</string>
     <string name="reader_btn_select_filter_content_description">Yazıları filtrelemek için bir Site veya Etiket seçin</string>
     <string name="reader_btn_remove_filter_content_description">Geçerli filtreyi kaldır</string>
-    <string name="reader_title_subs">Konuları ve Siteleri Yönetme</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">WordPress.com\'da oturum aç</string>
     <string name="gutenberg_native_replace_current_block">Mevcut bloğu değiştir</string>
     <string name="gutenberg_native_add_to_end">Sona ekle</string>

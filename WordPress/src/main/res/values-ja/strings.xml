@@ -1807,7 +1807,6 @@ Language: ja_JP
     <string name="reader_bottom_sheet_content_description">タグまたはサイトを選択 (ポップアップウィンドウ)</string>
     <string name="reader_btn_select_filter_content_description">投稿を絞り込むためのサイトまたはタグを選択</string>
     <string name="reader_btn_remove_filter_content_description">現在のフィルターを削除</string>
-    <string name="reader_title_subs">トピックとサイトを管理</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">WordPress.com にログイン</string>
     <string name="gutenberg_native_replace_current_block">現在のブロックを置き換え</string>
     <string name="gutenberg_native_add_to_end">末尾に追加</string>

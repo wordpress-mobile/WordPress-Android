@@ -1814,7 +1814,6 @@ Language: de
     <string name="reader_bottom_sheet_content_description">Wähle ein Schlagwort oder eine Website, ein Popup-Fenster aus</string>
     <string name="reader_btn_select_filter_content_description">Wähle eine Website oder ein Schlagwort aus, um Beiträge zu filtern</string>
     <string name="reader_btn_remove_filter_content_description">Entferne den aktuellen Filter</string>
-    <string name="reader_title_subs">Themen und Websites verwalten</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Melde dich bei WordPress.com an</string>
     <string name="gutenberg_native_replace_current_block">Aktuellen Block ersetzen</string>
     <string name="gutenberg_native_add_to_end">Am Ende hinzufügen</string>

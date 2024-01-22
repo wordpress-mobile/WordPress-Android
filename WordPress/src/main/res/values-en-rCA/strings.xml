@@ -1783,7 +1783,6 @@ Language: en_CA
     <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
-    <string name="reader_title_subs">Manage Topics &amp; Sites</string>
     <string name="gutenberg_native_add_to_end">Add To End</string>
     <string name="gutenberg_native_add_to_beginning">Add To Beginning</string>
     <string name="gutenberg_native_add_block_before">Add Block Before</string>

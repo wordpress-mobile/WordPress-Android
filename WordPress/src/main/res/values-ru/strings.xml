@@ -1814,7 +1814,6 @@ Language: ru
     <string name="reader_bottom_sheet_content_description">Выберите метку или сайт, всплывающее окно</string>
     <string name="reader_btn_select_filter_content_description">Выберите сайт или метку для фильтрации записей</string>
     <string name="reader_btn_remove_filter_content_description">Убрать текущий фильтр</string>
-    <string name="reader_title_subs">Управление темами и сайтами</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Войти на WordPress.com</string>
     <string name="gutenberg_native_replace_current_block">Заменить текущий блок</string>
     <string name="gutenberg_native_add_to_end">Добавить в конце</string>
