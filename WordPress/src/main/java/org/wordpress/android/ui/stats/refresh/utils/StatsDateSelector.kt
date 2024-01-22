@@ -39,7 +39,7 @@ constructor(
 
     fun updateDateSelector() {
         val shouldShowDateSelection = this.statsSection != INSIGHTS
-        val shouldShowGranularitySpinner = this.statsSection == TRAFFIC
+        val shouldShowGranularitySpinner = statsTrafficTabFeatureConfig.isEnabled() && this.statsSection == TRAFFIC
 
         val updatedDate = getDateLabelForSection()
         val currentState = dateSelectorData.value
