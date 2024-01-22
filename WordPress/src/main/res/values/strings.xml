@@ -2220,6 +2220,7 @@
     <string name="reader_empty_subscribed_tags_subtitle">Add tags here to find posts about your favorite tags</string>
     <string name="reader_no_followed_tags_title">No followed tags</string>
     <string name="reader_empty_recommended_blogs">No recommended sites</string>
+    <string name="reader_no_recommended_blogs_title">No recommended blogs</string>
     <string name="reader_empty_followed_blogs_title">No followed sites</string>
     <string name="reader_empty_followed_blogs_search_title">No sites matching your search</string>
     <string name="reader_empty_followed_blogs_description">When you follow sites, you\'ll see their content here</string>
