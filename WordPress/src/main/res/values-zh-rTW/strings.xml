@@ -2400,7 +2400,6 @@ Language: zh_TW
     <string name="reader_empty_posts_liked_description">這裡會顯示你按讚的文章</string>
     <string name="reader_empty_posts_liked_title">尚未有按讚的文章</string>
     <string name="reader_empty_followed_blogs_button_followed">前往關注</string>
-    <string name="reader_empty_followed_blogs_title">尚未有關注的網站</string>
     <string name="notifications_empty_likes">尚未有人按讚</string>
     <string name="notifications_empty_followers">尚未有關注者</string>
     <string name="activity_log_limited_content_on_free_plan">由於你使用免費版方案，你將無法查看所有活動。</string>

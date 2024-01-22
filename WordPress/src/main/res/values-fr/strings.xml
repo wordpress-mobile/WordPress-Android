@@ -2398,7 +2398,6 @@ Language: fr
     <string name="reader_empty_posts_liked_description">Les articles que vous aimez apparaîtront ici</string>
     <string name="reader_empty_posts_liked_title">Aucune mention J\'aime</string>
     <string name="reader_empty_followed_blogs_button_followed">Accéder à la page des abonnés</string>
-    <string name="reader_empty_followed_blogs_title">Aucun site suivi</string>
     <string name="notifications_empty_likes">Pas encore de mentions J\'aime</string>
     <string name="notifications_empty_followers">Pas encore d\'abonnés</string>
     <string name="activity_log_limited_content_on_free_plan">Comme vous disposez d\'un plan gratuit, vous ne verrez qu\'un nombre limité d\'événements dans vos activités.</string>

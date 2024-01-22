@@ -1890,7 +1890,6 @@ Language: pl
     <string name="people_empty_list_filtered_email_followers">Brak oglądających przez email</string>
     <string name="people_empty_list_filtered_users">Jeszcze nie ma użytkowników</string>
     <string name="reader_empty_posts_liked_title">Nic jeszcze nie polubione</string>
-    <string name="reader_empty_followed_blogs_title">Brak obserwowanych witryn</string>
     <string name="reader_empty_followed_blogs_button_followed">Idź do obserwowanych</string>
     <string name="notifications_empty_followers">Brak obserwujących</string>
     <string name="notifications_empty_likes">Brak polubień</string>

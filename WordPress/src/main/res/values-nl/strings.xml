@@ -2349,7 +2349,6 @@ Language: nl
     <string name="reader_empty_posts_liked_description">Berichten die je liked, verschijnen hier</string>
     <string name="reader_empty_posts_liked_title">Nog niets leuk gevonden</string>
     <string name="reader_empty_followed_blogs_button_followed">Ga naar volgen</string>
-    <string name="reader_empty_followed_blogs_title">Geen gevolgde sites</string>
     <string name="notifications_empty_likes">Nog geen vind-ik-leuks</string>
     <string name="notifications_empty_followers">Nog geen volgers</string>
     <string name="activity_log_limited_content_on_free_plan">Aangezien je een gratis abonnement gebruikt, zie je een beperkt aantal gebeurtenissen in je activiteit.</string>

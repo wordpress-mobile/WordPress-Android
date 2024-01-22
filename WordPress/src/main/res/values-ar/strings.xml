@@ -2393,7 +2393,6 @@ Language: ar
     <string name="people_empty_list_filtered_viewers">لا توجد مشاهدات بعد</string>
     <string name="people_empty_list_filtered_followers">لا متابِعون حتى الآن</string>
     <string name="people_empty_list_filtered_users">لا يوجد مستخدمين حتى الآن</string>
-    <string name="reader_empty_followed_blogs_title">لا توجد مواقع تمت متابعتها</string>
     <string name="reader_empty_posts_liked_title">لا توجد إعجابات حتى الآن</string>
     <string name="reader_empty_followed_blogs_button_followed">الذهاب للمتابعة</string>
     <string name="notifications_empty_followers">لا متابعين حتى الآن</string>

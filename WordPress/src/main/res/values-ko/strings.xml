@@ -2399,7 +2399,6 @@ Language: ko_KR
     <string name="reader_empty_posts_liked_description">좋아요를 누른 글이 여기에 표시됩니다.</string>
     <string name="reader_empty_posts_liked_title">좋아요 없음</string>
     <string name="reader_empty_followed_blogs_button_followed">팔로우로 이동</string>
-    <string name="reader_empty_followed_blogs_title">팔로우된 사이트 없음</string>
     <string name="notifications_empty_likes">아직 좋아요가 없음</string>
     <string name="notifications_empty_followers">아직 팔로워 없음</string>
     <string name="activity_log_limited_content_on_free_plan">무료 요금제 사용자이므로 활동에 제한된 이벤트가 표시됩니다.</string>

@@ -1222,7 +1222,6 @@ Language: nb_NO
     <string name="reader_empty_posts_liked_description">Innlegg du liker vil dukke opp her</string>
     <string name="reader_empty_posts_liked_title">Ingen likt ennå</string>
     <string name="reader_empty_followed_blogs_button_followed">Gå til fulgte</string>
-    <string name="reader_empty_followed_blogs_title">Ingen fulgte nettsteder</string>
     <string name="notifications_empty_likes">Ingen likinger ennå</string>
     <string name="notifications_empty_followers">Ingen følgere ennå</string>
     <string name="activity_log_limited_content_on_free_plan">Siden du ikke har et abonnement vil du bare se et begrenset antall handelser i din aktivitet.</string>

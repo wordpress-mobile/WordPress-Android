@@ -2128,7 +2128,6 @@ Language: cs_CZ
     <string name="people_empty_list_filtered_viewers">Zatím žádné zobrazení</string>
     <string name="reader_empty_posts_liked_description">Příspěvky, kterým jste dali líbí se mi se zobrazí zde.</string>
     <string name="people_empty_list_filtered_email_followers">Zatím žádné e-mailové následovníci</string>
-    <string name="reader_empty_followed_blogs_title">Žádné sledované weby</string>
     <string name="reader_empty_posts_liked_title">Zatím se nic nelíbilo</string>
     <string name="reader_empty_followed_blogs_button_followed">Přejít na sledované</string>
     <string name="activity_log_limited_content_on_free_plan">Jelikož máte bezplatný plán, uvidíte ve své aktivitě omezené události.</string>

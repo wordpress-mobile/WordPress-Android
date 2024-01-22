@@ -2394,7 +2394,6 @@ Language: zh_CN
     <string name="reader_empty_posts_liked_description">您喜欢的文章会显示在这里</string>
     <string name="reader_empty_posts_liked_title">暂无喜欢</string>
     <string name="reader_empty_followed_blogs_button_followed">去关注</string>
-    <string name="reader_empty_followed_blogs_title">无关注的站点</string>
     <string name="notifications_empty_likes">尚无喜欢</string>
     <string name="notifications_empty_followers">尚无粉丝</string>
     <string name="activity_log_limited_content_on_free_plan">由于您使用的是免费套餐，因此您的活动中显示有限的事件。</string>

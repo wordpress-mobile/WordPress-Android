@@ -1036,7 +1036,6 @@ Language: ku_TR
     <string name="reader_empty_posts_liked_description">Şandiyên ku te ecibandine ew ê li vir xuya bibin</string>
     <string name="reader_empty_posts_liked_title">Hîn ti tişt nehatiye ecibandin</string>
     <string name="reader_empty_followed_blogs_button_followed">Here şopandinan</string>
-    <string name="reader_empty_followed_blogs_title">Malperên tu dişopînî tune ye</string>
     <string name="notifications_empty_likes">Hîn ecibandin tune ye</string>
     <string name="notifications_empty_followers">Hîn şopîner tune ye</string>
     <string name="activity_log_limited_content_on_free_plan">Ji ber ku tu di pakêta azad de yî, tu yê di çalakiyên xwe de bûyerên sînordar bibînî.</string>

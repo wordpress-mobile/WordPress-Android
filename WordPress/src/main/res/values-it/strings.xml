@@ -2398,7 +2398,6 @@ Language: it
     <string name="reader_empty_posts_liked_description">Gli articoli che ti piacciono vengono visualizzati qui</string>
     <string name="reader_empty_posts_liked_title">Ancora nessun contenuto collegato</string>
     <string name="reader_empty_followed_blogs_button_followed">Vai al seguente</string>
-    <string name="reader_empty_followed_blogs_title">Nessun sito seguito</string>
     <string name="notifications_empty_likes">Ancora nessun Mi piace</string>
     <string name="notifications_empty_followers">Ancora nessun follower</string>
     <string name="activity_log_limited_content_on_free_plan">Poiché hai un piano Gratuito, nelle attività visualizzerai un numero limitato di eventi.</string>
