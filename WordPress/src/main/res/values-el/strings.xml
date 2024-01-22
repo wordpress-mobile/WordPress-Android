@@ -957,7 +957,6 @@ Language: el_GR
     <string name="button_view">Προβολή</string>
     <string name="button_edit">Αλλαγή</string>
     <string name="button_publish">Δημοσίευση</string>
-    <string name="reader_toast_err_follow_blog_not_found">Αδυναμία εύρεσης αυτού του ιστότοπου</string>
     <string name="undo">Αναίρεση</string>
     <string name="push_auth_expired">Το αίτημα έληξε. Συνδεθείτε στο WordPress.com για να προσπαθήσετε ξανά.</string>
     <string name="ignore">Αγνοήστε</string>

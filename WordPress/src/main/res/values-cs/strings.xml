@@ -3155,7 +3155,6 @@ Language: cs_CZ
     <string name="button_stats">Statistiky</string>
     <string name="button_trash">Koš</string>
     <string name="button_preview">Náhled</string>
-    <string name="reader_toast_err_follow_blog_not_found">Web nebyl nalezen</string>
     <string name="undo">Zpět</string>
     <string name="push_auth_expired">Žádost vypršela. Přihlaste se znovu přes WordPress.com </string>
     <string name="ignore">Ignorovat</string>

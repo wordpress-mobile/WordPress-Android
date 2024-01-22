@@ -2112,7 +2112,6 @@ Language: es_MX
     <string name="button_trash">Papelera</string>
     <string name="button_view">Ver</string>
     <string name="button_preview">Vista previa</string>
-    <string name="reader_toast_err_follow_blog_not_found">No se pudo encontrar este sitio</string>
     <string name="undo">Deshacer</string>
     <string name="push_auth_expired">La solicitud ha expirado. Accede a WordPress.com para volver a intentarlo.</string>
     <string name="ignore">Ignorar</string>

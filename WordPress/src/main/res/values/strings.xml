@@ -2185,7 +2185,6 @@
     <string name="reader_toast_err_show_blog">Unable to show this blog</string>
     <string name="reader_toast_err_already_follow_this_blog">You\'re already subscribed to this blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">Unable to follow this blog</string>
-    <string name="reader_toast_err_follow_blog_not_found">This site could not be found</string>
     <string name="reader_toast_err_follow_blog_could_not_be_found">This blog could not be found</string>
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">You are not authorized to access this blog</string>
     <string name="reader_toast_err_unable_to_unfollow_blog">Unable to unfollow this blog</string>

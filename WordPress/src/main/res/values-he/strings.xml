@@ -3421,7 +3421,6 @@ Language: he_IL
     <string name="button_view">הצגה</string>
     <string name="button_publish">פרסום</string>
     <string name="button_edit">עריכה</string>
-    <string name="reader_toast_err_follow_blog_not_found">האתר לא נמצא</string>
     <string name="undo">ביטול פעולה אחרונה</string>
     <string name="push_auth_expired">פג תוקף הבקשה. יש להיכנס לוורדפרס.קום כדי לנסות שוב.</string>
     <string name="ignore">להתעלם</string>

@@ -2028,7 +2028,6 @@ Language: ku_TR
     <string name="button_trash">Jêbirdank</string>
     <string name="button_publish">Biweşîne</string>
     <string name="post_trashed">Şandî çû jêbirdankê</string>
-    <string name="reader_toast_err_follow_blog_not_found">Ev malper nehat dîtin</string>
     <string name="undo">Vegerîne</string>
     <string name="push_auth_expired">Dema daxwazê qediya. Ji bo ku dîsa biceribînî têkeve WordPress.com\'ê.</string>
     <string name="ignore">Piştguh bike</string>

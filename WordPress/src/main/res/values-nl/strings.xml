@@ -3370,7 +3370,6 @@ Language: nl
     <string name="button_view">Bekijk</string>
     <string name="button_publish">Publiceren</string>
     <string name="button_edit">Bewerken</string>
-    <string name="reader_toast_err_follow_blog_not_found">Deze site kon niet gevonden worden</string>
     <string name="undo">Ongedaan maken</string>
     <string name="push_auth_expired">Je verzoek is verlopen. Log in bij WordPress.com probeer opnieuw.</string>
     <string name="ignore">Negeren</string>

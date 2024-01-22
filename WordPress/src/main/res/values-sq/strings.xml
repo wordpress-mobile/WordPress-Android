@@ -3422,7 +3422,6 @@ Language: sq_AL
     <string name="button_view">Shiheni</string>
     <string name="button_publish">Botojeni</string>
     <string name="button_edit">Përpunojeni</string>
-    <string name="reader_toast_err_follow_blog_not_found">Ky sajt s’u gjet dot</string>
     <string name="undo">Zhbëje</string>
     <string name="push_auth_expired">Kërkesa skadoi. Hyni te WordPress.com që të riprovoni.</string>
     <string name="ignore">Shpërfille</string>

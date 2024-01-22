@@ -2215,7 +2215,6 @@ Language: nb_NO
     <string name="button_view">Vis</string>
     <string name="button_publish">Publiser</string>
     <string name="button_edit">Rediger</string>
-    <string name="reader_toast_err_follow_blog_not_found">Dette nettstdet ble ikke funnet</string>
     <string name="undo">Angre</string>
     <string name="push_auth_expired">Forespørselen har utløpt. Logg inn på WordPress.com og prøv igjen.</string>
     <string name="ignore">Ignorer</string>

@@ -1798,7 +1798,6 @@ Language: sr_RS
     <string name="button_edit">Уређивање</string>
     <string name="button_publish">Објављивање</string>
     <string name="button_stats">Статистика</string>
-    <string name="reader_toast_err_follow_blog_not_found">Овај сајт не може бити пронађен</string>
     <string name="undo">Врати</string>
     <string name="push_auth_expired">Захтев је истекао. Пријавите се на WordPress.com да бисте покушали поново.</string>
     <string name="ignore">Занемари</string>

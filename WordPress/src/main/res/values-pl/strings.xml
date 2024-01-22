@@ -2909,7 +2909,6 @@ Language: pl
     <string name="button_stats">Statystyki</string>
     <string name="button_view">Zobacz</string>
     <string name="button_trash">Do kosza</string>
-    <string name="reader_toast_err_follow_blog_not_found">Nie można odnaleźć tej witryny</string>
     <string name="undo">Cofnij</string>
     <string name="push_auth_expired">Zapytanie wygasło. Zaloguj się na WordPress.com aby spróbować ponownie.</string>
     <string name="stats_insights_best_ever">Najwięcej wyświetleń</string>

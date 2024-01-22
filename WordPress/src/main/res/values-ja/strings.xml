@@ -3426,7 +3426,6 @@ Language: ja_JP
     <string name="button_view">表示</string>
     <string name="button_publish">公開</string>
     <string name="button_edit">編集</string>
-    <string name="reader_toast_err_follow_blog_not_found">サイトが見つかりませんでした</string>
     <string name="undo">元に戻す</string>
     <string name="push_auth_expired">リクエストの有効期限が切れています。もう一度試すには WordPress.com にログインしてください。</string>
     <string name="ignore">無視</string>

@@ -3422,7 +3422,6 @@ Language: fr
     <string name="button_view">Vue</string>
     <string name="button_publish">Publier</string>
     <string name="button_edit">Editer</string>
-    <string name="reader_toast_err_follow_blog_not_found">Ce site est introuvable</string>
     <string name="undo">Annuler</string>
     <string name="push_auth_expired">La requête a expiré. Connectez-vous à WordPress.com et réessayez.</string>
     <string name="ignore">Ignorer</string>

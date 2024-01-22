@@ -3433,7 +3433,6 @@ Language: ru
     <string name="button_view">Просмотреть</string>
     <string name="button_publish">Опубликовать</string>
     <string name="button_edit">Изменить</string>
-    <string name="reader_toast_err_follow_blog_not_found">Не удаётся найти этот сайт.</string>
     <string name="undo">Назад</string>
     <string name="push_auth_expired">Время запроса истекло. Авторизуйтесь на WordPress.com и попробуйте еще раз.</string>
     <string name="ignore">Пропустить</string>

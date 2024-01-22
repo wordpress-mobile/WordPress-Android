@@ -3433,7 +3433,6 @@ Language: gl_ES
     <string name="button_view">Ver</string>
     <string name="button_publish">Publicar</string>
     <string name="button_edit">Editar</string>
-    <string name="reader_toast_err_follow_blog_not_found">Non foi posible atopar este blogue</string>
     <string name="undo">Desfacer</string>
     <string name="push_auth_expired">A solicitude expirou. Inicia sesión en WordPress.com para tentalo de novo.</string>
     <string name="ignore">Ignorar</string>

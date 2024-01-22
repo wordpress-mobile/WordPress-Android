@@ -1212,7 +1212,6 @@ Language: sk
     <string name="button_view">Zobraziť</string>
     <string name="button_publish">Zverejniť</string>
     <string name="post_trashed">Článok presunutý do koša</string>
-    <string name="reader_toast_err_follow_blog_not_found">Táto webová stránka sa nenašla</string>
     <string name="undo">Zrušiť zmenu</string>
     <string name="push_auth_expired">Platnosť požiadavky uplynula. Prihláste sa na stránku WordPress.com a skúste to znova.</string>
     <string name="stats_insights_best_ever">Najlepšie zobrazenia</string>

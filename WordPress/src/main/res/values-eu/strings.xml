@@ -395,7 +395,6 @@ Language: eu_ES
     <string name="button_view">Ikusi</string>
     <string name="button_edit">Editatu</string>
     <string name="button_publish">Argitaratu</string>
-    <string name="reader_toast_err_follow_blog_not_found">Ezin izan da gune hori aurkitu</string>
     <string name="undo">Desegin</string>
     <string name="push_auth_expired">Eskaria iraungi da. Hasi saioa WordPress.com-en berriro saiatzeko.</string>
     <string name="ignore">Ezikusi</string>

@@ -3423,7 +3423,6 @@ Language: id
     <string name="button_view">Lihat</string>
     <string name="button_publish">Terbitkan</string>
     <string name="button_edit">Sunting</string>
-    <string name="reader_toast_err_follow_blog_not_found">Situs ini tidak ditemukan</string>
     <string name="undo">Urungkan</string>
     <string name="push_auth_expired">Permintaan sudah kadaluwarsa. Log in ke WordPress.com untuk mencoba lagi.</string>
     <string name="ignore">Abaikan</string>

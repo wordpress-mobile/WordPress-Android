@@ -3423,7 +3423,6 @@ Language: zh_TW
     <string name="button_view">檢視</string>
     <string name="button_publish">上架</string>
     <string name="button_edit">編輯</string>
-    <string name="reader_toast_err_follow_blog_not_found">找不到這個網站</string>
     <string name="undo">復原</string>
     <string name="push_auth_expired">要求已到期。登入 WordPress.com 再試一次。</string>
     <string name="ignore">忽略</string>
