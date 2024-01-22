@@ -1839,7 +1839,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
             switch (button) {
                 case DISCOVER:
-                    mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_discover);
+                    mActionableEmptyView.button.setText(R.string.reader_no_followed_blogs_button_discover);
                     break;
                 case FOLLOWED:
                     mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_subscriptions);

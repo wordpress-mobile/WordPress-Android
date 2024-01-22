@@ -2227,6 +2227,7 @@
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">The blogs you\'re subscribed to haven\'t posted anything recently</string>
     <string name="reader_empty_followed_blogs_button_discover">Discover sites</string>
+    <string name="reader_no_followed_blogs_button_discover">Discover blogs</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Go to subscriptions</string>
     <string name="reader_empty_posts_liked_title">Nothing liked yet</string>
     <string name="reader_empty_posts_liked_description">Posts that you like will appear here</string>
