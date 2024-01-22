@@ -2221,7 +2221,7 @@
     <string name="reader_no_recommended_blogs_title">No recommended blogs</string>
     <string name="reader_no_followed_blogs_title">No subscribed blogs</string>
     <string name="reader_no_followed_blogs_search_title">No blogs matching your search</string>
-    <string name="reader_no_followed_blogs_description">When you follow blogs, you\'ll see their content here</string>
+    <string name="reader_no_followed_blogs_description">When you subscribe to blogs, you\'ll see their content here</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">The blogs you\'re subscribed to haven\'t posted anything recently</string>
     <string name="reader_no_followed_blogs_button_discover">Discover blogs</string>
