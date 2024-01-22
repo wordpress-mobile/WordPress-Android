@@ -2115,7 +2115,6 @@ Language: cs_CZ
     <string name="quick_start_button_negative">Né teď</string>
     <string name="content_description_more">Hotovo</string>
     <string name="quick_start_button_positive">Go</string>
-    <string name="reader_empty_followed_tags_title">Žádné sledované štítky</string>
     <string name="my_site_create_new_site_title">Nemáte žádné stránky</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>

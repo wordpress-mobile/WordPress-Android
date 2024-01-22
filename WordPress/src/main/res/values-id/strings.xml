@@ -2388,7 +2388,6 @@ Language: id
     <string name="quick_start_button_negative">Jangan sekarang</string>
     <string name="content_description_more">Lainnya</string>
     <string name="my_site_create_new_site_title">Anda belum memiliki situs</string>
-    <string name="reader_empty_followed_tags_title">Tidak ada topi yang diikuti</string>
     <string name="login_to_to_connect_jetpack">Login ke akun WordPress.com yang Anda gunakan untuk menghubungkan Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>

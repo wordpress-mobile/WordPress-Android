@@ -2394,7 +2394,6 @@ Language: gl_ES
     <string name="quick_start_button_negative">Agora non</string>
     <string name="content_description_more">Máis</string>
     <string name="my_site_create_new_site_title">Non tes sitios</string>
-    <string name="reader_empty_followed_tags_title">Temas non seguidos</string>
     <string name="login_to_to_connect_jetpack">Accede á conta de WordPress.com que usaches para conectar con Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ de Jetpack</string>

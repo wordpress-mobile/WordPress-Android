@@ -195,7 +195,6 @@ Language: el_GR
     <string name="quick_start_button_negative">Οχι τώρα</string>
     <string name="my_site_create_new_site_title">Δεν έχετε ιστότοπους</string>
     <string name="content_description_more">Περισσότερα</string>
-    <string name="reader_empty_followed_tags_title">Μη ακολουθούμενα θέματα</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Συχνές Ερωτήσεις για το Jetpack</string>
     <string name="login_to_to_connect_jetpack">Συνδεθείτε στο WordPress.com λογαριασμό σας που χρησιμοποιείτε για να συνδεθείτε με το Jetpack.</string>

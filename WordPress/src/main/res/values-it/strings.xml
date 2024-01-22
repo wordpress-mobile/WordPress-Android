@@ -2384,7 +2384,6 @@ Language: it
     <string name="quick_start_button_negative">Non ora</string>
     <string name="content_description_more">Leggi tutto</string>
     <string name="my_site_create_new_site_title">Non sono presenti siti</string>
-    <string name="reader_empty_followed_tags_title">Nessun argomento seguito</string>
     <string name="login_to_to_connect_jetpack">Accedi all\'account WordPress.com che hai utilizzato per connettere Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>

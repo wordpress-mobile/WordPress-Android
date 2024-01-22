@@ -2383,7 +2383,6 @@ Language: sq_AL
     <string name="quick_start_button_negative">Jo tani</string>
     <string name="content_description_more">Më tepër</string>
     <string name="my_site_create_new_site_title">S’keni ende ndonjë sajt</string>
-    <string name="reader_empty_followed_tags_title">Pa tema të ndjekura</string>
     <string name="login_to_to_connect_jetpack">Bëni hyrjen te llogaria WordPress.com që përdorët për t’ia përshoqëruar Jetpack-ut.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">PBR për Jetpack</string>

@@ -2386,7 +2386,6 @@ Language: zh_TW
     <string name="quick_start_button_negative">現在不要</string>
     <string name="content_description_more">更多</string>
     <string name="my_site_create_new_site_title">你沒有任何網站</string>
-    <string name="reader_empty_followed_tags_title">沒有關注任何主題</string>
     <string name="login_to_to_connect_jetpack">請登入你用來連結 Jetpack 的 WordPress.com 帳號。</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack 常見問題</string>

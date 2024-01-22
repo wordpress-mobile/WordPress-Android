@@ -176,7 +176,6 @@ Language: sk
     <string name="quick_start_button_negative">Teraz nie</string>
     <string name="my_site_create_new_site_title">Nemáte žiadne webové stránky</string>
     <string name="content_description_more">Viac</string>
-    <string name="reader_empty_followed_tags_title">Žiadne sledované témy</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Najčastejšie otázky Jetpack</string>
     <string name="login_to_to_connect_jetpack">Prihláste sa do účtu WordPress.com. ktorý používate na pripojenie Jetpack.</string>

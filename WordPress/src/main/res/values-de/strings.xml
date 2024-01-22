@@ -2394,7 +2394,6 @@ Language: de
     <string name="quick_start_button_negative">Später</string>
     <string name="content_description_more">Mehr</string>
     <string name="my_site_create_new_site_title">Du hast keine Websites</string>
-    <string name="reader_empty_followed_tags_title">Keine abonnierten Themen</string>
     <string name="login_to_to_connect_jetpack">Melde dich bei deinem WordPress.com-Konto an, das du für die Jetpack-Verbindung verwendet hast.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Häufige Fragen zu Jetpack</string>

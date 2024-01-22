@@ -2394,7 +2394,6 @@ Language: ro
     <string name="quick_start_button_negative">Nu acum</string>
     <string name="content_description_more">Mai mult</string>
     <string name="my_site_create_new_site_title">Nu ai niciun site</string>
-    <string name="reader_empty_followed_tags_title">Nu urmărești niciun subiect</string>
     <string name="login_to_to_connect_jetpack">Autentifică-te în contul WordPress.com pe care l-ai folosit pentru a conecta Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Întrebări frecvente Jetpack</string>
