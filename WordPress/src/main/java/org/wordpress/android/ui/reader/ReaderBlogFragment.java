@@ -126,7 +126,7 @@ public class ReaderBlogFragment extends Fragment
                         actionableEmptyView.image.setVisibility(View.GONE);
                     } else {
                         actionableEmptyView.updateLayoutForSearch(false, 0);
-                        actionableEmptyView.title.setText(R.string.reader_empty_followed_blogs_title);
+                        actionableEmptyView.title.setText(R.string.reader_no_followed_blogs_title);
                         actionableEmptyView.subtitle.setVisibility(View.VISIBLE);
                         actionableEmptyView.button.setVisibility(View.VISIBLE);
                         actionableEmptyView.image.setVisibility(View.VISIBLE);
