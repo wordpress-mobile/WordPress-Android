@@ -119,7 +119,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                     mSiteId = savedInstanceState.getLong(ReaderConstants.KEY_SITE_ID);
                 }
             } else if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
-                setTitle(R.string.reader_title_tag_preview);
+                setTitle(R.string.reader_activity_title_tag_preview);
                 ReaderTag tag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
                 if (tag != null && savedInstanceState == null) {
                     showListFragmentForTag(tag, mPostListType);
