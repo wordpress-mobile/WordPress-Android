@@ -1716,7 +1716,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             description = getString(R.string.reader_empty_followed_blogs_subscribed_no_recent_posts_description);
                         } else {
                             title = getString(R.string.reader_no_followed_blogs_title);
-                            description = getString(R.string.reader_empty_followed_blogs_description);
+                            description = getString(R.string.reader_no_followed_blogs_description);
                         }
                         mActionableEmptyView.image.setImageResource(
                                 R.drawable.img_illustration_following_empty_results_196dp);

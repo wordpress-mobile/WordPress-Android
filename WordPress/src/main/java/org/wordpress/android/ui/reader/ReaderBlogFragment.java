@@ -98,7 +98,7 @@ public class ReaderBlogFragment extends Fragment
         if (hasBlogAdapter() && getBlogAdapter().isEmpty()) {
             actionableEmptyView.setVisibility(View.VISIBLE);
             actionableEmptyView.image.setImageResource(R.drawable.img_illustration_following_empty_results_196dp);
-            actionableEmptyView.subtitle.setText(R.string.reader_empty_followed_blogs_description);
+            actionableEmptyView.subtitle.setText(R.string.reader_no_followed_blogs_description);
             actionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_discover);
             actionableEmptyView.button.setOnClickListener(new OnClickListener() {
                 @Override public void onClick(View view) {
