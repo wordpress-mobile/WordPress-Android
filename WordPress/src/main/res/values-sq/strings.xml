@@ -3472,7 +3472,6 @@ Language: sq_AL
     <string name="posts_fetching">Po sillen postimet…</string>
     <string name="media_fetching">Po sillet media…</string>
     <string name="logs_copied_to_clipboard">Regjistrat e aplikacionit u kopjuan te e papastra</string>
-    <string name="reader_empty_posts_in_blog">Ky sajt është i zbrazët</string>
     <string name="reader_label_new_posts">Postime të reja</string>
     <string name="error_copy_to_clipboard">Ndodhi një gabim gjatë kopjimit të tekstit te e papastra</string>
     <string name="post_uploading">Po ngarkohet postimi</string>

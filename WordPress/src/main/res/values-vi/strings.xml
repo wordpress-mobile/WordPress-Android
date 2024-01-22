@@ -2917,7 +2917,6 @@ Language: vi_VN
     <string name="posts_fetching">Đang tải bài viết…</string>
     <string name="media_fetching">Đang tải media…</string>
     <string name="logs_copied_to_clipboard">Nhật ký ứng dụng đã được chép vào bộ nhớ tạm</string>
-    <string name="reader_empty_posts_in_blog">Blog này chưa đăng gì</string>
     <string name="reader_label_new_posts">Có bài viết mới</string>
     <string name="error_copy_to_clipboard">Có lỗi xảy ra trong khi chép văn bản vào bộ nhớ tạm</string>
     <string name="post_uploading">Đang đăng bài viết</string>

@@ -1006,7 +1006,6 @@ Language: el_GR
     <string name="reader_label_new_posts">Νέα άρθρα</string>
     <string name="error_copy_to_clipboard">Προέκυψε σφάλμα κατά την αντιγραφή κειμένου στο πρόχειρο</string>
     <string name="post_uploading">Μεταφόρτωση άρθρου</string>
-    <string name="reader_empty_posts_in_blog">Ο ιστότοπος αυτός είναι κενός</string>
     <string name="stats_followers_a_year">Ένας χρόνος</string>
     <string name="stats_followers_a_month">Ένας μήνας</string>
     <string name="stats_followers_a_day">Μια ημέρα</string>

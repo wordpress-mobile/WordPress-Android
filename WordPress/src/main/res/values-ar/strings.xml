@@ -3467,7 +3467,6 @@ Language: ar
     <string name="logs_copied_to_clipboard">تم نسخ سجلات التطبيق إلى الحافظة</string>
     <string name="reader_label_new_posts">مقالات جديدة</string>
     <string name="error_copy_to_clipboard">حدث خطأ أثناء نسخ النص إلى الحافظة</string>
-    <string name="reader_empty_posts_in_blog">هذا الموقع فارغ</string>
     <string name="post_uploading">جاري رفع المقالة</string>
     <string name="stats_followers_months">%1$d من الشهور</string>
     <string name="stats_followers_a_year">كل عام</string>

@@ -3476,7 +3476,6 @@ Language: ja_JP
     <string name="posts_fetching">投稿を取得中…</string>
     <string name="media_fetching">メディアを取得中…</string>
     <string name="logs_copied_to_clipboard">アプリケーションログをクリップボードにコピーしました</string>
-    <string name="reader_empty_posts_in_blog">このサイトは空です</string>
     <string name="reader_label_new_posts">新規投稿</string>
     <string name="error_copy_to_clipboard">テキストをクリップボードにコピーする際にエラーが発生しました</string>
     <string name="post_uploading">投稿をアップロード中</string>

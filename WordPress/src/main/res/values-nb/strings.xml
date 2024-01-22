@@ -2264,7 +2264,6 @@ Language: nb_NO
     <string name="posts_fetching">Henter innlegg …</string>
     <string name="media_fetching">Henter media …</string>
     <string name="logs_copied_to_clipboard">App-loggbøker har blitt kopiert til utklippstavlen</string>
-    <string name="reader_empty_posts_in_blog">Dette nettstedet er tomt</string>
     <string name="reader_label_new_posts">Nye innlegg</string>
     <string name="error_copy_to_clipboard">En feil oppstod under kopiering av tekst til utklippstavlen</string>
     <string name="post_uploading">Laster opp innlegg</string>

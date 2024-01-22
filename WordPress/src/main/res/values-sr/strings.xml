@@ -1849,7 +1849,6 @@ Language: sr_RS
     <string name="reader_label_new_posts">Нови чланци</string>
     <string name="error_copy_to_clipboard">Дошло је до грешке приликом копирања текста у оставу</string>
     <string name="post_uploading">Отпремање чланка</string>
-    <string name="reader_empty_posts_in_blog">Овај сајт је празан</string>
     <string name="themes_fetching">Добављам теме…</string>
     <string name="stats_followers_months">%1$d месеци</string>
     <string name="stats_followers_a_year">Година</string>

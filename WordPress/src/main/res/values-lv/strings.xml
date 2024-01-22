@@ -3343,7 +3343,6 @@ Language: lv
     <string name="posts_fetching">Notiek ziņu iegūšana…</string>
     <string name="media_fetching">Notiek multivides iegūšana…</string>
     <string name="logs_copied_to_clipboard">Lietojumprogrammu žurnāli ir nokopēti starpliktuvē</string>
-    <string name="reader_empty_posts_in_blog">Šī vietne ir tukša</string>
     <string name="reader_label_new_posts">Jaunas ziņas</string>
     <string name="error_copy_to_clipboard">Kopējot tekstu starpliktuvē, radās kļūda</string>
     <string name="post_uploading">Notiek ziņas augšupielāde</string>

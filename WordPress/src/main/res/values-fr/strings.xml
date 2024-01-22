@@ -3472,7 +3472,6 @@ Language: fr
     <string name="posts_fetching">Récupération des articles…</string>
     <string name="media_fetching">Récupération des médias…</string>
     <string name="logs_copied_to_clipboard">Les logs de l\'application ont été copiés dans le presse papier</string>
-    <string name="reader_empty_posts_in_blog">Ce site est vide</string>
     <string name="reader_label_new_posts">Nouveaux articles</string>
     <string name="error_copy_to_clipboard">Une erreur s\'est produite lors de la copie dans le presse papier</string>
     <string name="post_uploading">Article en cours de téléversement</string>

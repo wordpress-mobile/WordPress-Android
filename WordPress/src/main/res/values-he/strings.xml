@@ -3471,7 +3471,6 @@ Language: he_IL
     <string name="posts_fetching">מביא פוסטים…</string>
     <string name="media_fetching">מביא מדיה…</string>
     <string name="logs_copied_to_clipboard">הלוגים של האפליקציה הועתקו אל ה-clipboard</string>
-    <string name="reader_empty_posts_in_blog">האתר הזה ריק</string>
     <string name="reader_label_new_posts">פוסטים חדשים</string>
     <string name="error_copy_to_clipboard">אירעה שגיאה בעת העתקת הטקסט אל ה-clipboard</string>
     <string name="post_uploading">מעלה פוסט</string>

@@ -3483,7 +3483,6 @@ Language: sv_SE
     <string name="posts_fetching">Hämtar inlägg…</string>
     <string name="media_fetching">Hämtar media…</string>
     <string name="logs_copied_to_clipboard">App-loggar har kopierats till urklipp</string>
-    <string name="reader_empty_posts_in_blog">Denna webbplats är tom</string>
     <string name="reader_label_new_posts">Nya inlägg</string>
     <string name="error_copy_to_clipboard">Ett fel uppstod när text skulle kopieras till urklipp</string>
     <string name="post_uploading">Laddar upp inlägg</string>

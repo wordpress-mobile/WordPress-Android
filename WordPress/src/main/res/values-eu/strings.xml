@@ -436,7 +436,6 @@ Language: eu_ES
     <string name="reader_label_new_posts">Bidalketa berriak</string>
     <string name="error_copy_to_clipboard">Errore bat gertatu da testua arbelera kopiatzean</string>
     <string name="post_uploading">Bidalketa igotzen</string>
-    <string name="reader_empty_posts_in_blog">Gune hau hutsik dago</string>
     <string name="stats_view_top_posts_and_pages">Bidalketak eta orrialdeak</string>
     <string name="stats_view_videos">Bideoak</string>
     <string name="stats_view_followers">Jarraitzaileak</string>

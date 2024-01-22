@@ -3420,7 +3420,6 @@ Language: nl
     <string name="posts_fetching">Berichten ophalen…</string>
     <string name="media_fetching">Media ophalen…</string>
     <string name="logs_copied_to_clipboard">Applicatielogs zijn gekopieerd naar het klembord</string>
-    <string name="reader_empty_posts_in_blog">Deze site is leeg</string>
     <string name="reader_label_new_posts">Nieuwe berichten</string>
     <string name="error_copy_to_clipboard">Er is een fout opgetreden tijdens het kopiëren van de tekst naar het klembord</string>
     <string name="post_uploading">Bericht wordt geüpload</string>

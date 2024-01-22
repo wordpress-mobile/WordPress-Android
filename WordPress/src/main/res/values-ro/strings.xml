@@ -3483,7 +3483,6 @@ Language: ro
     <string name="posts_fetching">Se aduc articole…</string>
     <string name="media_fetching">Se aduc media…</string>
     <string name="logs_copied_to_clipboard">Jurnalele aplicației au fost copiate în clipbord</string>
-    <string name="reader_empty_posts_in_blog">Acest site este gol</string>
     <string name="reader_label_new_posts">Articole noi</string>
     <string name="error_copy_to_clipboard">A apărut o eroare în timp ce copiam textul în clipbord</string>
     <string name="post_uploading">Încarc articolul</string>

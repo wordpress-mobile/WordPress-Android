@@ -3483,7 +3483,6 @@ Language: de
     <string name="posts_fetching">Beiträge werden abgerufen…</string>
     <string name="media_fetching">Medien werden abgerufen…</string>
     <string name="logs_copied_to_clipboard">Anwendungsprotokolle wurden in die Zwischenablage kopiert</string>
-    <string name="reader_empty_posts_in_blog">Diese Website ist leer</string>
     <string name="reader_label_new_posts">Neue Beiträge</string>
     <string name="error_copy_to_clipboard">Beim Kopieren von Text in die Zwischenablage ist ein Fehler aufgetreten</string>
     <string name="post_uploading">Beitrag wird hochgeladen</string>

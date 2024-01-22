@@ -1261,7 +1261,6 @@ Language: sk
     <string name="reader_label_new_posts">Nové príspevky</string>
     <string name="logs_copied_to_clipboard">Záznamy aplikácie boli skopírované do schránky</string>
     <string name="post_uploading">Nahrávanie príspevku</string>
-    <string name="reader_empty_posts_in_blog">Táto webová stránka je prázdna</string>
     <string name="themes_fetching">Načítavajú sa témy</string>
     <string name="stats_followers_a_month">Mesiac</string>
     <string name="stats_followers_an_hour_ago">Pred hodinou</string>

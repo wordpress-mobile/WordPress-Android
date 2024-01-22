@@ -3473,7 +3473,6 @@ Language: id
     <string name="posts_fetching">Memuat pos…</string>
     <string name="media_fetching">Memuat media…</string>
     <string name="logs_copied_to_clipboard">Log aplikasi sudah disalin ke clipboard</string>
-    <string name="reader_empty_posts_in_blog">Situs ini kosong</string>
     <string name="reader_label_new_posts">Pos baru</string>
     <string name="error_copy_to_clipboard">Terjadi kesalahan saat menyalin teks ke clipboard</string>
     <string name="post_uploading">Mengunggah pos</string>

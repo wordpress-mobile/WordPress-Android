@@ -3471,7 +3471,6 @@ Language: ko_KR
     <string name="posts_fetching">글을 가져오는 중…</string>
     <string name="media_fetching">미디어를 가져오는 중…</string>
     <string name="logs_copied_to_clipboard">애플리케이션 로그가 클립보드에 복사되었습니다.</string>
-    <string name="reader_empty_posts_in_blog">이 블로그는 비었습니다.</string>
     <string name="reader_label_new_posts">새 게시물</string>
     <string name="error_copy_to_clipboard">텍스트를 클립보드에 복사하는 동안 오류가 발생했습니다.</string>
     <string name="post_uploading">업로드</string>

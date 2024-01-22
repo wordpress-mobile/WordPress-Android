@@ -3466,7 +3466,6 @@ Language: zh_CN
     <string name="posts_fetching">正在获取文章…</string>
     <string name="media_fetching">正在获取媒体…</string>
     <string name="logs_copied_to_clipboard">已将应用程序日志复制到剪贴板</string>
-    <string name="reader_empty_posts_in_blog">此站点为空</string>
     <string name="reader_label_new_posts">新文章</string>
     <string name="error_copy_to_clipboard">复制文本到剪贴板时出错</string>
     <string name="post_uploading">正在上传文章</string>

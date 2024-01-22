@@ -3483,7 +3483,6 @@ Language: ru
     <string name="posts_fetching">Загрузка записей…</string>
     <string name="media_fetching">Загрузка медиафайлов…</string>
     <string name="logs_copied_to_clipboard">Журналы приложения скопированы в буфер обмена.</string>
-    <string name="reader_empty_posts_in_blog">Этот сайт пуст.</string>
     <string name="reader_label_new_posts">Новые записи</string>
     <string name="error_copy_to_clipboard">Произошла ошибка при копировании текста в буфер обмена.</string>
     <string name="post_uploading">Идет отправка на сервер.</string>

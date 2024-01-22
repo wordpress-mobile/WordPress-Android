@@ -3473,7 +3473,6 @@ Language: zh_TW
     <string name="posts_fetching">正在擷取文章…</string>
     <string name="media_fetching">正在擷取媒體…</string>
     <string name="logs_copied_to_clipboard">應用程式記錄已複製到剪貼簿</string>
-    <string name="reader_empty_posts_in_blog">這個網站沒有內容</string>
     <string name="reader_label_new_posts">新文章</string>
     <string name="error_copy_to_clipboard">將文字複製到剪貼簿時發生錯誤</string>
     <string name="post_uploading">正在上傳文章</string>

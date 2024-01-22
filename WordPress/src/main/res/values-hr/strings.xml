@@ -477,7 +477,6 @@ Language: hr
     <string name="reader_label_new_posts">Nove objave</string>
     <string name="logs_copied_to_clipboard">Zapisi aplikacije su kopirani međuspremnik</string>
     <string name="post_uploading">Objava se prenosi</string>
-    <string name="reader_empty_posts_in_blog">Ova web-stranica je prazna</string>
     <string name="stats_followers_an_hour_ago">Prije sat vremena</string>
     <string name="stats_followers_hours">%1$d sati</string>
     <string name="stats_followers_a_day">Jučer</string>

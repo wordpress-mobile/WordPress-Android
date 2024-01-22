@@ -2962,7 +2962,6 @@ Language: pl
     <string name="logs_copied_to_clipboard">Dziennik aplikacji został skopiowany do schowka</string>
     <string name="reader_label_new_posts">Nowe wpisy</string>
     <string name="post_uploading">Przesyłanie wpisu</string>
-    <string name="reader_empty_posts_in_blog">Ta witryna jest pusta</string>
     <string name="stats_followers_minutes">%1$d minut</string>
     <string name="stats_followers_a_year">Rok</string>
     <string name="stats_followers_years">%1$d lat</string>

@@ -3205,7 +3205,6 @@ Language: cs_CZ
     <string name="stats_search_terms_unknown_search_terms">Neznámé hledané výrazy</string>
     <string name="error_notification_open">Oznámení se nepodařilo otevřít</string>
     <string name="reader_label_new_posts">Nové příspěvky</string>
-    <string name="reader_empty_posts_in_blog">Tento web je prázdný</string>
     <string name="logs_copied_to_clipboard">Aplikační protokoly byly zkopírovány do schránky</string>
     <string name="error_copy_to_clipboard">Při kopírování textu do schránky nastala chyba</string>
     <string name="post_uploading">Nahrávám příspěvek</string>

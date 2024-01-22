@@ -3483,7 +3483,6 @@ Language: gl_ES
     <string name="posts_fetching">Á procura dos artigos…</string>
     <string name="media_fetching">Á procura dos ficheiros…</string>
     <string name="logs_copied_to_clipboard">Os rexistros da aplicación foron copiados no portapapeis</string>
-    <string name="reader_empty_posts_in_blog">Este blogue está baleiro</string>
     <string name="reader_label_new_posts">Artigos novos</string>
     <string name="error_copy_to_clipboard">Houbo un erro ao copiar o texto no portapapeis</string>
     <string name="post_uploading">Cargando</string>

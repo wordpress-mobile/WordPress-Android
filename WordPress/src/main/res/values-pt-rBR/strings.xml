@@ -3251,7 +3251,6 @@ Language: pt_BR
     <string name="posts_fetching">Obtendo posts…</string>
     <string name="media_fetching">Obtendo mídia…</string>
     <string name="logs_copied_to_clipboard">O logs do aplicativo foram copiados para a área de transferência</string>
-    <string name="reader_empty_posts_in_blog">Este site está vazio</string>
     <string name="reader_label_new_posts">Novos posts</string>
     <string name="error_copy_to_clipboard">Ocorreu um erro ao copiar o texto para a área de transferência</string>
     <string name="post_uploading">Fazendo upload do post</string>

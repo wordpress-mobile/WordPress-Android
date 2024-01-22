@@ -2959,7 +2959,6 @@ Language: es_VE
     <string name="posts_fetching">Recuperando entradas…</string>
     <string name="media_fetching">Recuperando medios…</string>
     <string name="logs_copied_to_clipboard">Los registros de la aplicación han sido copiados al portapapeles</string>
-    <string name="reader_empty_posts_in_blog">Este sitio está vacío</string>
     <string name="reader_label_new_posts">Nuevas entradas</string>
     <string name="error_copy_to_clipboard">Ha ocurrido un error al copiar el texto en el portapapeles</string>
     <string name="post_uploading">Subiendo entrada</string>

@@ -3483,7 +3483,6 @@ Language: en_GB
     <string name="posts_fetching">Fetching posts…</string>
     <string name="media_fetching">Fetching media…</string>
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
-    <string name="reader_empty_posts_in_blog">This site is empty</string>
     <string name="reader_label_new_posts">New posts</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
     <string name="post_uploading">Uploading post</string>

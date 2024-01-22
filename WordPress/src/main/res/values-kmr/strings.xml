@@ -2075,7 +2075,6 @@ Language: ku_TR
     <string name="posts_fetching">Şandî tên stendin…</string>
     <string name="media_fetching">Medya tê stendin…</string>
     <string name="error_copy_to_clipboard">Dema nivîs li rûnûsgehê dihat kopîkirin çewtî pêk hat</string>
-    <string name="reader_empty_posts_in_blog">Ev malper vala ye</string>
     <string name="reader_label_new_posts">Şandiyên nû</string>
     <string name="logs_copied_to_clipboard">Tomarên sepanê li rûnûsgehê hatin kopîkirin</string>
     <string name="post_uploading">Şandî tê hilxistin</string>

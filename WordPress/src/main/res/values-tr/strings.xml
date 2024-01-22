@@ -3483,7 +3483,6 @@ Language: tr
     <string name="posts_fetching">Yazılar alınıyor…</string>
     <string name="media_fetching">Medya alınıyor…</string>
     <string name="logs_copied_to_clipboard">Uygulama günlükleri panoya kopyalandı</string>
-    <string name="reader_empty_posts_in_blog">Bu site boş</string>
     <string name="reader_label_new_posts">Yeni yazılar</string>
     <string name="error_copy_to_clipboard">Metin panoya kopyalanırken bir hata oluştu</string>
     <string name="post_uploading">Yazı yükleniyor</string>

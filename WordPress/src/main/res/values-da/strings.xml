@@ -116,7 +116,6 @@ Language: da_DK
     <string name="reader_label_new_posts">Nye indlæg</string>
     <string name="logs_copied_to_clipboard">Log-filerne er kopieret til udklipsholderen</string>
     <string name="error_copy_to_clipboard">Der skete en fejl under kopieringen af teksten til udklipsholderen</string>
-    <string name="reader_empty_posts_in_blog">Dette websted er tomt</string>
     <string name="stats_followers_seconds_ago">sekunder siden</string>
     <string name="stats_followers_a_minute_ago">et minut siden</string>
     <string name="stats_followers_a_day">En dag</string>

@@ -3469,7 +3469,6 @@ Language: it
     <string name="posts_fetching">Recupero degli articoli in corso…</string>
     <string name="media_fetching">Recupero file multimediali in corso…</string>
     <string name="logs_copied_to_clipboard">I log dell\'applicazione sono stati copiati negli appunti</string>
-    <string name="reader_empty_posts_in_blog">Questo sito è vuoto</string>
     <string name="reader_label_new_posts">Nuovi articoli</string>
     <string name="error_copy_to_clipboard">Si è verificato un errore durante la copia del testo negli appunti</string>
     <string name="post_uploading">Caricamento dell\'articolo</string>

@@ -1272,7 +1272,6 @@ Language: es_CL
     <string name="logs_copied_to_clipboard">Los informes de la aplicación se han copiado al portapapeles</string>
     <string name="reader_label_new_posts">Nuevas entradas</string>
     <string name="error_copy_to_clipboard">Ocurrió un error al copiar el texto en el portapapeles</string>
-    <string name="reader_empty_posts_in_blog">Este sitio está vacío</string>
     <string name="post_uploading">Subiendo entrada</string>
     <string name="themes_fetching">Obteniendo temas…</string>
     <string name="stats_followers_months">%1$d meses</string>
