@@ -3390,7 +3390,6 @@ Language: lv
     <string name="reader_menu_block_blog">Bloķēt šo vietni</string>
     <string name="schedule_verb">Grafiks</string>
     <string name="update_verb">Atjaunot</string>
-    <string name="reader_title_blog_preview">Lasītāja vietne</string>
     <string name="ssl_certificate_ask_trust">Ja parasti izveidojat savienojumu ar šo vietni bez problēmām, šī kļūda var nozīmēt, ka kāds mēģina uzdoties par vietni, un jums nevajadzētu turpināt. Vai jūs tomēr vēlaties uzticēties sertifikātam?</string>
     <string name="ssl_certificate_error">Nederīgs SSL sertifikāts</string>
     <string name="help">Palīdzība</string>

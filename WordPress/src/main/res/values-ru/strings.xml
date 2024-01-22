@@ -3530,7 +3530,6 @@ Language: ru
     <string name="reader_menu_block_blog">Заблокировать этот сайт</string>
     <string name="schedule_verb">Запланировать</string>
     <string name="update_verb">Обновить</string>
-    <string name="reader_title_blog_preview">Сайт из Чтива</string>
     <string name="ssl_certificate_ask_trust">Если вы обычно заходите на этот сайт без проблем, эта ошибка может означать, что кто-то пытается подделать сайт и вам не стоит сюда заходить. Хотите ли вы доверять ssl сертификату?</string>
     <string name="ssl_certificate_error">Недействительный сертификат SSL</string>
     <string name="help">Помощь</string>

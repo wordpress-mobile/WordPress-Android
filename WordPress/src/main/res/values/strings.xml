@@ -2072,7 +2072,6 @@
 
     <!-- activity titles -->
     <string name="reader_title_applog">Application log</string>
-    <string name="reader_title_blog_preview">Reader Site</string>
     <string name="reader_activity_title_blog_preview">Reader Blog</string>
     <string name="reader_activity_title_tag_preview">Tag</string>
     <string name="reader_title_post_detail">Reader Post</string>

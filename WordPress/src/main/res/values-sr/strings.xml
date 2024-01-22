@@ -1894,7 +1894,6 @@ Language: sr_RS
     <string name="reader_menu_block_blog">Блокирај овај сајт</string>
     <string name="schedule_verb">Заказати</string>
     <string name="update_verb">Ажурирај</string>
-    <string name="reader_title_blog_preview">Сајт читача</string>
     <string name="help">Помоћ</string>
     <string name="ssl_certificate_error">Неисправна SSL потврда</string>
     <string name="ssl_certificate_ask_trust">Уколико се уобичајено на ово веб место повезујете без проблема, ова грешка може да значи да неко други покушава да се представи као ваше веб место и у том случају не би требало да наставите. Желите ли ипак да верујете овој потврди?</string>

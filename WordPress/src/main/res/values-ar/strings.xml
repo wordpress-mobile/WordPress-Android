@@ -3512,7 +3512,6 @@ Language: ar
     <string name="reader_menu_block_blog">حظر هذا الموقع</string>
     <string name="update_verb">تحديث</string>
     <string name="schedule_verb">جدولة</string>
-    <string name="reader_title_blog_preview">موقع القارئ</string>
     <string name="help">المساعدة</string>
     <string name="ssl_certificate_error">شهادة SSL غير صالحة</string>
     <string name="ssl_certificate_ask_trust">إذا كنت عادة تتصل بهذا الموقع بدون أي مشاكل، فربما يعني هذا الخطأ أن شخصًا ما يحاول سرقة هذا الموقع, وينبغي ألا تقوم بالاستمرار. هل ترغب في الوثوق بالشهادة على أي حال؟</string>

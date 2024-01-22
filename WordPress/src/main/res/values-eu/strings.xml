@@ -473,7 +473,6 @@ Language: eu_ES
     <string name="mnu_comment_liked">Atseginda</string>
     <string name="update_verb">Eguneratu</string>
     <string name="schedule_verb">Programatu</string>
-    <string name="reader_title_blog_preview">Irakurle gunea</string>
     <string name="help">Laguntza</string>
     <string name="ssl_certificate_error">SSL ziurtagiri okerra</string>
     <string name="ssl_certificate_ask_trust">Normalean gune honetara arazo gabe konektatzen bazara, errore honek norbait zu ordezkatu nahian dabilela adieraz lezake eta ez zenuke aurrera jarraitu beharko. Hala ere ziurtagiriaz fidatu nahi duzu?</string>

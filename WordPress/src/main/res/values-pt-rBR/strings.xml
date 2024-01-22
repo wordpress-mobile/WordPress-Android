@@ -3298,7 +3298,6 @@ Language: pt_BR
     <string name="reader_menu_block_blog">Bloquear este site</string>
     <string name="schedule_verb">Agendar</string>
     <string name="update_verb">Atualizar</string>
-    <string name="reader_title_blog_preview">Leitor do site</string>
     <string name="ssl_certificate_ask_trust">Se você geralmente se conecta a este site sem problemas, talvez este erro signifique que alguém está tentando imitar o site, e você não deve continuar. Deseja confiar no certificado mesmo assim?</string>
     <string name="ssl_certificate_error">Certificado SSL inválido</string>
     <string name="help">Ajuda</string>

@@ -3520,7 +3520,6 @@ Language: zh_TW
     <string name="reader_menu_block_blog">封鎖此網站</string>
     <string name="schedule_verb">排程</string>
     <string name="update_verb">更新</string>
-    <string name="reader_title_blog_preview">讀者網站</string>
     <string name="ssl_certificate_ask_trust">如果你通常能夠順利連線至此網站，則此錯誤可能代表有人正嘗試冒充該網站，因此請勿繼續操作。是否仍然要信任憑證？</string>
     <string name="ssl_certificate_error">無效的 SSL 憑證</string>
     <string name="help">說明</string>
