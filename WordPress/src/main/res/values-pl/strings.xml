@@ -1141,7 +1141,6 @@ Language: pl
     <string name="prepublishing_nudges_back_button">Powrót</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Przesieść wpis do Szkiców?</string>
     <string name="reader_label_choose_your_interests">Wybierz swoje zainteresowania</string>
-    <string name="reader_choose_interests_content_description">Wybierz swoje zainteresowania</string>
     <string name="reader_btn_done">Gotowe</string>
     <string name="reader_btn_select_few_interests">Wybierz kilka aby kontynuować</string>
     <string name="post_status_post_published">Opublikowano</string>

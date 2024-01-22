@@ -1109,7 +1109,6 @@ Language: vi_VN
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Không thể sửa những bài trong thùng rác. Hãy thay đổi trạng thái thành \"Nháp\" để sửa.</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Chuyển về nháp?</string>
     <string name="reader_label_choose_your_interests">Chọn thẻ bạn thích</string>
-    <string name="reader_choose_interests_content_description">Chọn thẻ bạn thích</string>
     <string name="reader_btn_done">Xong</string>
     <string name="reader_btn_select_few_interests">Chọn vài mục để tiếp tục</string>
     <string name="post_status_post_published">Đã đăng</string>

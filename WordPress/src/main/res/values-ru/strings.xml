@@ -1653,7 +1653,6 @@ Language: ru
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Записи из корзины не могут быть отредактированы. Хотите изменить статус на \"черновик\", чтобы получить возможность редактирования?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Переместить записи в черновики</string>
     <string name="reader_label_choose_your_interests">Выберите ваши интересы</string>
-    <string name="reader_choose_interests_content_description">Выберите ваши интересы</string>
     <string name="reader_btn_done">Готово</string>
     <string name="reader_btn_select_few_interests">Выберите несколько для продолжения</string>
     <string name="post_status_post_published">Опубликована</string>

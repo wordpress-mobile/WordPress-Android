@@ -1653,7 +1653,6 @@ Language: en_GB
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Binned posts can\'t be edited. Do you want to change the status of this post to \"draft\", so you can work on it?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Move post to Drafts?</string>
     <string name="reader_label_choose_your_interests">Choose your topics</string>
-    <string name="reader_choose_interests_content_description">Choose your topics</string>
     <string name="reader_btn_done">Done</string>
     <string name="reader_btn_select_few_interests">Select a few to continue</string>
     <string name="post_status_post_published">Published</string>

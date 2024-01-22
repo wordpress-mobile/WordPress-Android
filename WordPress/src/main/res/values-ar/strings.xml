@@ -1650,7 +1650,6 @@ Language: ar
     <string name="ccpa_privacy_notice_read">قراءة إشعار الخصوصية لقانون خصوصية المستهلك في كاليفورنيا</string>
     <string name="ccpa_privacy_notice_caption">يتطلب قانون خصوصية المستهلك في كاليفورنيا (\"CCPA\") منا تزويد سكان كاليفورنيا ببعض المعلومات الإضافية حول تصنيفات المعلومات الشخصية التي نقوم بتجميعها ومشاركتها، مع تحديد المصدر الذي نحصل على تلك المعلومات الشخصية منه، وكيف نستخدمها ولماذا.</string>
     <string name="post_status_post_scheduled">مجدولة</string>
-    <string name="reader_choose_interests_content_description">اختر مواضيعك</string>
     <string name="reader_label_choose_your_interests">اختر مواضيعك</string>
     <string name="status_and_visibility">الحالة والظهور</string>
     <string name="ccpa_privacy_notice_header">إشعار الخصوصية الخاص بالمستخدمين في كاليفورنيا</string>

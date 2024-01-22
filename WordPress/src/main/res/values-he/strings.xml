@@ -1644,7 +1644,6 @@ Language: he_IL
     <string name="post_list_move_trashed_post_to_draft_dialog_message">לא ניתן לערוך פוסטים שהועברו לפח. האם ברצונך לשנות את המצב של הפוסט ל\'טיוטה\' כדי לערוך אותו?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">האם להעביר את הפוסט ל\'טיוטות\'?</string>
     <string name="reader_label_choose_your_interests">לבחור את הנושאים שמעניינים אותך</string>
-    <string name="reader_choose_interests_content_description">לבחור את הנושאים שמעניינים אותך</string>
     <string name="reader_btn_done">סיימתי</string>
     <string name="reader_btn_select_few_interests">יש לבחור מספר אפשרויות כדי להמשיך</string>
     <string name="post_status_post_published">פורסם</string>

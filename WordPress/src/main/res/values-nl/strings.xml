@@ -1595,7 +1595,6 @@ Language: nl
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Berichten in prullenbak kunnen niet bewerkt worden. Wil je de status van dit bericht wijzigen naar \"concept\" zodat je er aan kan werken?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Verplaats bericht naar concept?</string>
     <string name="reader_label_choose_your_interests">Kies je onderwerpen</string>
-    <string name="reader_choose_interests_content_description">Kies je onderwerpen</string>
     <string name="reader_btn_done">Klaar</string>
     <string name="reader_btn_select_few_interests">Selecteer een paar om verder te gaan</string>
     <string name="post_status_post_published">Gepubliceerd</string>

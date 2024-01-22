@@ -1645,7 +1645,6 @@ Language: it
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Gli articoli eliminati non possono essere modificati. Vuoi modificare lo stato di questo articolo da \"bozza\" in modo da poterlo lavorare?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Spostare gli articoli in bozze?</string>
     <string name="reader_label_choose_your_interests">Scegli gli argomenti</string>
-    <string name="reader_choose_interests_content_description">Scegli gli argomenti</string>
     <string name="reader_btn_done">Fatto</string>
     <string name="reader_btn_select_few_interests">Selezionane alcuni per continuare</string>
     <string name="post_status_post_published">Pubblicato</string>

@@ -1646,7 +1646,6 @@ Language: ja_JP
     <string name="post_list_move_trashed_post_to_draft_dialog_message">ゴミ箱にある投稿は編集できません。この投稿のステータスを「下書き」に戻して編集しますか ?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">投稿を下書きに移動しますか ?</string>
     <string name="reader_label_choose_your_interests">関心のあるものを選択</string>
-    <string name="reader_choose_interests_content_description">関心のあるものを選択</string>
     <string name="reader_btn_done">終了</string>
     <string name="reader_btn_select_few_interests">選択して続ける</string>
     <string name="post_status_post_published">公開済み</string>

@@ -1653,7 +1653,6 @@ Language: gl_ES
     <string name="post_list_move_trashed_post_to_draft_dialog_message">As entradas na papeleira non se poden editar. Desexas cambiar o estado desta entrada a «borrador» para poder traballar nela?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Mover entrada a borrador?</string>
     <string name="reader_label_choose_your_interests">Elixe as túas temáticas</string>
-    <string name="reader_choose_interests_content_description">Elixe as túas temáticas</string>
     <string name="reader_btn_done">Feito</string>
     <string name="reader_btn_select_few_interests">Selecciona algúns para continuar</string>
     <string name="post_status_post_published">Publicado</string>

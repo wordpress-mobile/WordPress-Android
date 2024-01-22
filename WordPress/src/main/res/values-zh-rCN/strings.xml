@@ -1642,7 +1642,6 @@ Language: zh_CN
     <string name="post_list_move_trashed_post_to_draft_dialog_message">无法编辑已放入回收站的文章。 您想将此文章的状态更改为“草稿”，以便您可以进行编辑？</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">将文章移动到“草稿”？</string>
     <string name="reader_label_choose_your_interests">选择您的兴趣</string>
-    <string name="reader_choose_interests_content_description">选择您的兴趣</string>
     <string name="reader_btn_done">完成</string>
     <string name="reader_btn_select_few_interests">选择一些以继续</string>
     <string name="post_status_post_published">已发布</string>

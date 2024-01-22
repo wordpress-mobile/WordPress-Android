@@ -1434,7 +1434,6 @@ Language: pt_BR
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Posts na lixeira não podem ser editados. Você deseja alterar o status deste post para rascunho para que possa editá-lo?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Mover post para rascunhos?</string>
     <string name="reader_label_choose_your_interests">Escolha seus interesses</string>
-    <string name="reader_choose_interests_content_description">Escolher seus interesses</string>
     <string name="reader_btn_done">Concluído</string>
     <string name="reader_btn_select_few_interests">Selecione alguns para continuar</string>
     <string name="post_status_post_published">Publicado</string>

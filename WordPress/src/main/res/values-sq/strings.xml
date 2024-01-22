@@ -1642,7 +1642,6 @@ Language: sq_AL
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Postimet e shpënë në hedhurina s’mund të përpunohen. Doni të ndryshohet gjendja e këtij postimi në “skicë”, që të mund të merreni me të?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Të kalohet postimi te Skicat?</string>
     <string name="reader_label_choose_your_interests">Zgjidhni temat tuaja</string>
-    <string name="reader_choose_interests_content_description">Zgjidhni temat tuaja</string>
     <string name="reader_btn_done">U bë</string>
     <string name="reader_btn_select_few_interests">Që të vazhdohet, përzgjidhni ndoca</string>
     <string name="post_status_post_published">Të botuar</string>

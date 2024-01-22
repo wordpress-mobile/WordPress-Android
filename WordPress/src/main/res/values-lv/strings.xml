@@ -1523,7 +1523,6 @@ Language: lv
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Atkritnē ievietotās ziņas nevar rediģēt. Vai vēlaties mainīt šīs ziņas statusu uz \"melnraksts\", lai jūs varētu strādāt pie tās?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Vai pārvietot ziņu uz mapi Melnraksti?</string>
     <string name="reader_label_choose_your_interests">Izvēlieties savus tematus</string>
-    <string name="reader_choose_interests_content_description">Izvēlieties savus tematus</string>
     <string name="reader_btn_done">Gatavs</string>
     <string name="reader_btn_select_few_interests">Atlasiet dažus, lai turpinātu</string>
     <string name="post_status_post_published">Publicēts</string>

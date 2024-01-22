@@ -1653,7 +1653,6 @@ Language: ro
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Articolele aruncate la gunoi nu pot fi editate. Vrei să modifici starea acestui articol în „ciornă” pentru a-l putea edita?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Muți articolul în Ciorne?</string>
     <string name="reader_label_choose_your_interests">Alege subiecte</string>
-    <string name="reader_choose_interests_content_description">Alege subiecte</string>
     <string name="reader_btn_done">Gata</string>
     <string name="reader_btn_select_few_interests">Selectează câteva pentru a continua</string>
     <string name="post_status_post_published">Publicat</string>

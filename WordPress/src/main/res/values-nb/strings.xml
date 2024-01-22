@@ -513,7 +513,6 @@ Language: nb_NO
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Flytt til kladd</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Flytt innlegg til kladder?</string>
     <string name="reader_label_choose_your_interests">Velg dine emner</string>
-    <string name="reader_choose_interests_content_description">Velg dine emner</string>
     <string name="reader_btn_done">Utført</string>
     <string name="reader_btn_select_few_interests">Velg noen for å fortsette</string>
     <string name="post_status_post_published">Publisert</string>

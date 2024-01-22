@@ -1653,7 +1653,6 @@ Language: tr
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Çöpe atılan yazılar düzenlenemez. Üzerinde çalışabilmek için bu yazının durumunu \"taslak\" olarak değiştirmek ister misiniz?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Yazı taslaklara taşınsın mı?</string>
     <string name="reader_label_choose_your_interests"> Konularınızı seçin</string>
-    <string name="reader_choose_interests_content_description">Konularınızı seçin</string>
     <string name="reader_btn_done">Tamamlandı</string>
     <string name="reader_btn_select_few_interests">Devam etmek için birkaç tane seçin</string>
     <string name="post_status_post_published">Yayımlandı</string>

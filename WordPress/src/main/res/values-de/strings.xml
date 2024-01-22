@@ -1653,7 +1653,6 @@ Language: de
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Beiträge im Papierkorb können nicht bearbeitet werden. Möchtest du den Status dieses Beitrags in \"Entwurf\" ändern, damit du ihn bearbeiten kannst?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Beitrag zu \"Entwürfe\" verschieben?</string>
     <string name="reader_label_choose_your_interests">Wähle deine Themen</string>
-    <string name="reader_choose_interests_content_description">Wähle deine Themen</string>
     <string name="reader_btn_done">Fertig</string>
     <string name="reader_btn_select_few_interests">Wähle ein paar aus, um fortzufahren</string>
     <string name="post_status_post_published">Veröffentlicht</string>

@@ -1645,7 +1645,6 @@ Language: fr
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Les articles dans la corbeille ne peuvent pas être modifier. Voulez-vous changer le statut de cet article vers « brouillon » pour pouvoir travailler dessus ?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Déplacer l’article vers Brouillons ?</string>
     <string name="reader_label_choose_your_interests">Choisir vos thèmes</string>
-    <string name="reader_choose_interests_content_description">Choisir vos thèmes</string>
     <string name="reader_btn_done">Terminé</string>
     <string name="reader_btn_select_few_interests">Sélectionnez-en quelques-uns pour continuer.</string>
     <string name="post_status_post_published">Publié</string>

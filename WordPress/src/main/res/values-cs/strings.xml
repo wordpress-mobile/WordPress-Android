@@ -1383,7 +1383,6 @@ Language: cs_CZ
     <string name="reader_btn_select_few_interests">Chcete-li pokračovat, vyberte několik</string>
     <string name="reader_btn_done">Hotovo</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Přesunout příspěvek do konceptů?</string>
-    <string name="reader_choose_interests_content_description">Vyberte si svá témata</string>
     <string name="reader_label_choose_your_interests">Vyberte si svá témata</string>
     <string name="status_and_visibility">Stav &amp; Viditelnost</string>
     <string name="update_now">Aktualizovat nyní</string>

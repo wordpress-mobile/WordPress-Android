@@ -407,7 +407,6 @@ Language: sr_RS
     <string name="publish_date">Датум објаве</string>
     <string name="ccpa_privacy_notice_read">Прочитај објаву CCPA везану за приватност</string>
     <string name="reader_label_choose_your_interests">Одаберите своје теме</string>
-    <string name="reader_choose_interests_content_description">Одаберите своје теме</string>
     <string name="ccpa_privacy_notice_header">Објава везана за приватност за кориснике из Калифорније</string>
     <string name="status_and_visibility">Статус &amp; Видљивост</string>
     <string name="update_now">Ажурирај сада</string>

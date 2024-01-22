@@ -1647,7 +1647,6 @@ Language: id
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Pos yang dibuang tidak dapat disunting. Apakah Anda ingin mengubah status pos ini menjadi \"konsep\" sehingga Anda dapat menyuntingnya?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Pindahkan pos ke Konsep?</string>
     <string name="reader_label_choose_your_interests">Pilih topik Anda</string>
-    <string name="reader_choose_interests_content_description">Pilih topik Anda</string>
     <string name="reader_btn_done">Selesai</string>
     <string name="reader_btn_select_few_interests">Pilih beberapa untuk melanjutkan</string>
     <string name="post_status_post_published">Dipublikasikan</string>

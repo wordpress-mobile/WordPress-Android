@@ -1150,7 +1150,6 @@ Language: es_VE
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Las entradas en la papelera no se pueden editar. ¿Deseas cambiar el estado de esta entrada a «borrador» para poder trabajar en ella?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">¿Mover entrada a borradores?</string>
     <string name="reader_label_choose_your_interests">Elige tus temáticas</string>
-    <string name="reader_choose_interests_content_description">Elige tus temáticas</string>
     <string name="reader_btn_done">Hecho</string>
     <string name="reader_btn_select_few_interests">Selecciona algunos para continuar</string>
     <string name="post_status_post_published">Publicado</string>

@@ -1653,7 +1653,6 @@ Language: sv_SE
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Kastade inlägg kan inte redigeras. Vill du ändra statusen för detta inlägg till “utkast“ så att du kan arbeta med det?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Flytta inlägget till utkast?</string>
     <string name="reader_label_choose_your_interests">Välj dina ämnen</string>
-    <string name="reader_choose_interests_content_description">Välj dina ämnen</string>
     <string name="reader_btn_done">Klar</string>
     <string name="reader_btn_select_few_interests">Välj några för att fortsätta</string>
     <string name="post_status_post_published">Publicerat</string>
