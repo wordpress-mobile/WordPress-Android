@@ -2336,7 +2336,6 @@ Language: nl
     <string name="content_description_more">Meer</string>
     <string name="my_site_create_new_site_title">Je hebt geen sites</string>
     <string name="reader_empty_followed_tags_title">Geen gevolgde onderwerpen</string>
-    <string name="reader_empty_followed_tags_subtitle">Voeg hier onderwerpen toe om berichten te vinden over je favoriete onderwerpen</string>
     <string name="login_to_to_connect_jetpack">Log in op het WordPress.com-account dat je gebruikte om verbinding te maken met Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Veelgestelde vragen Jetpack</string>

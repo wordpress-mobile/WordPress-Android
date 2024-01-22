@@ -2381,7 +2381,6 @@ Language: zh_CN
     <string name="content_description_more">更多</string>
     <string name="my_site_create_new_site_title">您没有任何站点</string>
     <string name="reader_empty_followed_tags_title">无已关注的主题</string>
-    <string name="reader_empty_followed_tags_subtitle">在此处添加主题，以查找有关您喜爱的主题的博文</string>
     <string name="login_to_to_connect_jetpack">登录用于关联 Jetpack 的 WordPress.com 账户。</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack 常见问题解答</string>

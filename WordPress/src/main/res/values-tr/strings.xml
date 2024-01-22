@@ -2395,7 +2395,6 @@ Language: tr
     <string name="content_description_more">Daha fazlası</string>
     <string name="my_site_create_new_site_title">Hiçbir siteniz yok</string>
     <string name="reader_empty_followed_tags_title">Takip edilen konu yok</string>
-    <string name="reader_empty_followed_tags_subtitle">En sevdiğiniz konularla ilgili yazıları bulmak için buraya konu ekleyin</string>
     <string name="login_to_to_connect_jetpack">Jetpack\'i bağlamak için kullandığınız WordPress.com hesabına giriş yapın.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack SSS</string>

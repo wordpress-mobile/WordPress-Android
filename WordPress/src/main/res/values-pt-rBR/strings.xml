@@ -2171,7 +2171,6 @@ Language: pt_BR
     <string name="content_description_more">Mais</string>
     <string name="my_site_create_new_site_title">Você não tem nenhum site</string>
     <string name="reader_empty_followed_tags_title">Nenhum tópico seguido</string>
-    <string name="reader_empty_followed_tags_subtitle">Adicione tópicos aqui para encontrar posts sobre seus assuntos favoritos</string>
     <string name="login_to_to_connect_jetpack">Acesse a conta do WordPress.com usada para conectar o Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Perguntas frequentes sobre o Jetpack</string>

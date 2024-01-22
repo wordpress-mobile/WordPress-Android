@@ -2388,7 +2388,6 @@ Language: ja_JP
     <string name="content_description_more">もっと見る</string>
     <string name="my_site_create_new_site_title">サイトがありません</string>
     <string name="reader_empty_followed_tags_title">フォローしているトピックがありません</string>
-    <string name="reader_empty_followed_tags_subtitle">ここでトピックを追加して、お気に入りのトピックに関する投稿を検索します</string>
     <string name="login_to_to_connect_jetpack">Jetpack を接続するのに使用した WordPress.com アカウントにログインします。</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack よくある質問</string>

@@ -1208,7 +1208,6 @@ Language: nb_NO
     <string name="content_description_more">Mer</string>
     <string name="my_site_create_new_site_title">Du har ingen nettsteder</string>
     <string name="reader_empty_followed_tags_title">Ingen fulgte emner</string>
-    <string name="reader_empty_followed_tags_subtitle">Legg til emner for å finne innlegg om dine favoritt-emner</string>
     <string name="login_to_to_connect_jetpack">Logg inn på dem WordPres.com-kontoen du brukte til koble til Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>

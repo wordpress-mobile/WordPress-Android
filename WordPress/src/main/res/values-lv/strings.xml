@@ -2261,7 +2261,6 @@ Language: lv
     <string name="content_description_more">Vairāk</string>
     <string name="my_site_create_new_site_title">Jums nav nevienas vietnes</string>
     <string name="reader_empty_followed_tags_title">Nav tēmas, kurām sekoju</string>
-    <string name="reader_empty_followed_tags_subtitle">Pievienojiet tematus šeit, lai atrastu ziņas par iecienītākajām tēmām</string>
     <string name="login_to_to_connect_jetpack">Piesakieties WordPress.com kontā, kuru izmantojāt, lai izveidotu savienojumu ar Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack BUJ</string>

@@ -2386,7 +2386,6 @@ Language: ko_KR
     <string name="content_description_more">더 보기</string>
     <string name="my_site_create_new_site_title">사이트가 없습니다</string>
     <string name="reader_empty_followed_tags_title">팔로우하고 있는 토픽이 없습니다</string>
-    <string name="reader_empty_followed_tags_subtitle">즐겨 찾는 토픽에 대한 글을 찾으려면 여기에 토픽을 추가하세요</string>
     <string name="login_to_to_connect_jetpack">젯팩에 연결하는 데 사용한 워드프레스닷컴 계정으로 로그인하세요.</string>
     <string name="jetpack">젯팩</string>
     <string name="stats_jetpack_connection_faq">젯팩 자주 찾는 질문</string>

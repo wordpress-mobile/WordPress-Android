@@ -2395,7 +2395,6 @@ Language: sv_SE
     <string name="content_description_more">Mera</string>
     <string name="my_site_create_new_site_title">Du har inga webbplatser</string>
     <string name="reader_empty_followed_tags_title">Inga följda ämnen</string>
-    <string name="reader_empty_followed_tags_subtitle">Lägg till ämnen här för att hitta inlägg om dina favoritämnen</string>
     <string name="login_to_to_connect_jetpack">Logga in på WordPress.com-kontot du använde för att ansluta Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>

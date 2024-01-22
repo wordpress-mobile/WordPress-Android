@@ -1091,7 +1091,6 @@ Language: es_MX
     <string name="quick_start_button_negative">Ahora no</string>
     <string name="my_site_create_new_site_title">No tienes sitios</string>
     <string name="content_description_more">Más</string>
-    <string name="reader_empty_followed_tags_subtitle">Añade aquí temas para descubrir entradas sobre tus temáticas favoritas</string>
     <string name="reader_empty_followed_tags_title">Temas no seguidos</string>
     <string name="login_to_to_connect_jetpack">Accede a la cuenta de WordPress.com que usaste para conectar Jetpack.</string>
     <string name="jetpack">Jetpack</string>

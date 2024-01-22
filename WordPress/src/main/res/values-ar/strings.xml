@@ -2381,7 +2381,6 @@ Language: ar
     <string name="quick_start_button_negative">ليس الآن</string>
     <string name="my_site_create_new_site_title">ليس لديك أي مواقع</string>
     <string name="content_description_more">المزيد</string>
-    <string name="reader_empty_followed_tags_subtitle">أضف موضوعًا هنا للعثور على مقالات حول موضوعاتك المفضلة</string>
     <string name="reader_empty_followed_tags_title">لا توجد مواضيع تمت متابعتها</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">الأسئلة الشائعة عن Jetpack</string>

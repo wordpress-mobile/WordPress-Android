@@ -2384,7 +2384,6 @@ Language: he_IL
     <string name="content_description_more">עוד</string>
     <string name="my_site_create_new_site_title">אין לך עוד אתרים</string>
     <string name="reader_empty_followed_tags_title">אין נושאים במעקב</string>
-    <string name="reader_empty_followed_tags_subtitle">אפשר להוסיף כאן נושאים כדי למצוא פוסטים על הנושאים המועדפים עליך</string>
     <string name="login_to_to_connect_jetpack">יש להיכנס לחשבון WordPress.com שדרכו חיברת את Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">שאלות נפוצות בנושא Jetpack</string>

@@ -931,7 +931,6 @@ Language: sr_RS
     <string name="content_description_more">Више</string>
     <string name="my_site_create_new_site_title">Немате ниједан сајт</string>
     <string name="reader_empty_followed_tags_title">Нема праћених ознака</string>
-    <string name="reader_empty_followed_tags_subtitle">Додајте ознаке како бисте пронашли чланке о својим омиљеним темама</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack Често Постављана Питања</string>
     <string name="login_to_to_connect_jetpack">Пријавите се на WordPress.com налог који сте користили за повезивање Jetpack-а.</string>

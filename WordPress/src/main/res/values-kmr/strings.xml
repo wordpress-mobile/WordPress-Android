@@ -1022,7 +1022,6 @@ Language: ku_TR
     <string name="content_description_more">Zêdetir</string>
     <string name="my_site_create_new_site_title">Ti malperên te tune ye</string>
     <string name="reader_empty_followed_tags_title">Mijarên şopandî tune ye</string>
-    <string name="reader_empty_followed_tags_subtitle">Ji bo ku tu şandiyên têkildarî mijarên xwe yên favorî bibinî, mijaran tevlî vir bike</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack PPP</string>
     <string name="login_to_to_connect_jetpack">Ji bo Jetpackê girêbidî têkeve hesabê xwe yê WordPress.com\'ê yê tu bi kar tînî.</string>
