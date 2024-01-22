@@ -1811,7 +1811,6 @@ Language: sv_SE
     <string name="stats_management_screen_title">Lägg till nytt kort</string>
     <string name="stats_management_add_new_stats_card">Lägg till nytt kort med statistik</string>
     <string name="reader_self_hosted_select_filter">Använd filtreringsknappen för att hitta inlägg om specifika ämnen</string>
-    <string name="reader_bottom_sheet_content_description">Välj en etikett eller en webbplats, popup-fönster</string>
     <string name="reader_btn_select_filter_content_description">Välj en webbplats eller etikett för att filtrera inläggen</string>
     <string name="reader_btn_remove_filter_content_description">Ta bort befintligt filter</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Logga in på WordPress.com</string>

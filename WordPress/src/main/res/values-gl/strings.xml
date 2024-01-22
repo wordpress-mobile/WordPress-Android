@@ -1811,7 +1811,6 @@ Language: gl_ES
     <string name="stats_management_screen_title">Engadir unha nova tarxeta</string>
     <string name="stats_management_add_new_stats_card">Engadir unha nova tarxeta de estatísticas</string>
     <string name="reader_self_hosted_select_filter">Usa o botón de filtro para encontrar entradas sobre temas específicos</string>
-    <string name="reader_bottom_sheet_content_description">Selecciona unha etiqueta ou un sitio, ventá emergente</string>
     <string name="reader_btn_select_filter_content_description">Selecciona un sitio ou etiqueta para filtrar entradas</string>
     <string name="reader_btn_remove_filter_content_description">Quitar o filtro actual</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Acceder a WordPress.com</string>

@@ -1811,7 +1811,6 @@ Language: de
     <string name="stats_management_screen_title">Neue Karte hinzufügen</string>
     <string name="stats_management_add_new_stats_card">Neue Statistikkarte hinzufügen</string>
     <string name="reader_self_hosted_select_filter">Verwende den Filter-Button, um Beiträge zu bestimmten Themen zu finden</string>
-    <string name="reader_bottom_sheet_content_description">Wähle ein Schlagwort oder eine Website, ein Popup-Fenster aus</string>
     <string name="reader_btn_select_filter_content_description">Wähle eine Website oder ein Schlagwort aus, um Beiträge zu filtern</string>
     <string name="reader_btn_remove_filter_content_description">Entferne den aktuellen Filter</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Melde dich bei WordPress.com an</string>

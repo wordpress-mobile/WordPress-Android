@@ -1805,7 +1805,6 @@ Language: id
     <string name="stats_management_screen_title">Tambahkan Kartu Baru</string>
     <string name="stats_management_add_new_stats_card">Tambahkan kartu statistik baru</string>
     <string name="reader_self_hosted_select_filter">Gunakan tombol penyaring untuk menemukan pos pada subjek tertentu</string>
-    <string name="reader_bottom_sheet_content_description">Pilih Tag atau Situs, Jendela Pop Up</string>
     <string name="reader_btn_select_filter_content_description">Pilih Situs atau Tag untuk menyaring pos</string>
     <string name="reader_btn_remove_filter_content_description">Hapus penyaring saat ini</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Login ke WordPress.com</string>

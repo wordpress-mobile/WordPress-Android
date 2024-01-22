@@ -1535,7 +1535,6 @@ Language: cs_CZ
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Přihlásit se k WordPress.com</string>
     <string name="reader_btn_remove_filter_content_description">Odstraňte aktuální filtr</string>
     <string name="reader_btn_select_filter_content_description">Chcete-li filtrovat příspěvky, vyberte web nebo značku</string>
-    <string name="reader_bottom_sheet_content_description">Vyberte značku nebo web, vyskakovací okno</string>
     <string name="reader_self_hosted_select_filter">Pomocí tlačítka filtru vyhledejte příspěvky týkající se konkrétních témat</string>
     <string name="gutenberg_native_add_block_after">Přidat blok po</string>
     <string name="gutenberg_native_add_block_before">Přidat blok před</string>

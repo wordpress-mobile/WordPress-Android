@@ -1799,7 +1799,6 @@ Language: zh_CN
     <string name="stats_management_screen_title">添加新卡片</string>
     <string name="stats_management_add_new_stats_card">添加新统计信息卡片</string>
     <string name="reader_self_hosted_select_filter">使用“过滤器”按钮查找特定主题的文章</string>
-    <string name="reader_bottom_sheet_content_description">选择标签、站点或弹出窗口</string>
     <string name="reader_btn_select_filter_content_description">选择站点或标签来过滤文章</string>
     <string name="reader_btn_remove_filter_content_description">删除当前过滤器</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">登录 WordPress.com</string>

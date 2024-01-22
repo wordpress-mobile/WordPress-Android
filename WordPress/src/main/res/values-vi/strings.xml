@@ -1263,7 +1263,6 @@ Language: vi_VN
     <string name="stats_management_screen_title">Thêm mục mới</string>
     <string name="stats_management_add_new_stats_card">Thêm mục thống kê mới</string>
     <string name="reader_self_hosted_select_filter">Dùng nút lọc để tìm bài viết cụ thể</string>
-    <string name="reader_bottom_sheet_content_description">Chọn Thẻ hoặc Blog, cửa sổ Pop Up</string>
     <string name="reader_btn_select_filter_content_description">Chọn Blog hoặc Thẻ để lọc bài viết</string>
     <string name="reader_btn_remove_filter_content_description">Xóa bộ lọc hiện tại</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Đăng nhập WordPress.com</string>

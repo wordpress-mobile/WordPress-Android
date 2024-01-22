@@ -1296,7 +1296,6 @@ Language: pl
     <string name="stats_management_add_new_stats_card">Dodaj kartę nowych statystyk</string>
     <string name="stats_insights_management_posts_and_pages">Wpisy i strony</string>
     <string name="reader_self_hosted_select_filter">Użyj przycisku filtra aby odnaleźć wpisy dotyczące określonych tematów</string>
-    <string name="reader_bottom_sheet_content_description">Wybierz znacznik lub witrynę, wyskakujące okienko</string>
     <string name="reader_btn_select_filter_content_description">Wybierz witrynę lub znacznik aby odfiltrować wpisy</string>
     <string name="reader_btn_remove_filter_content_description">Usuń bieżący filtr</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Zaloguj się do WordPress.com</string>

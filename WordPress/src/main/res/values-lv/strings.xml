@@ -1679,7 +1679,6 @@ Language: lv
     <string name="stats_management_screen_title">Pievienot jaunu karti</string>
     <string name="stats_management_add_new_stats_card">Pievienot jaunu statistikas karti</string>
     <string name="reader_self_hosted_select_filter">Izmantojiet filtra pogu, lai atrastu ziņas par konkrētām tēmām</string>
-    <string name="reader_bottom_sheet_content_description">Atlasiet birku vai vietni, uznirstošais logs</string>
     <string name="reader_btn_select_filter_content_description">Atlasīt vietni vai tagu, lai filtrētu ziņas</string>
     <string name="reader_btn_remove_filter_content_description">Noņemt pašreizējo filtru</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Piesakieties vietnē WordPress.com</string>

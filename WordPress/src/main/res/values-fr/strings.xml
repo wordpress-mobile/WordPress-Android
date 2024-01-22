@@ -1801,7 +1801,6 @@ Language: fr
     <string name="stats_management_screen_title">Ajouter une nouvelle carte</string>
     <string name="stats_management_add_new_stats_card">Ajouter une nouvelle carte de statistiques</string>
     <string name="reader_self_hosted_select_filter">Utiliser le bouton de filtre pour trouver des articles sur des sujets spécifiques</string>
-    <string name="reader_bottom_sheet_content_description">Sélectionner une étiquette ou un site, fenêtre contextuelle</string>
     <string name="reader_btn_select_filter_content_description">Sélectionner un site ou une étiquette pour filtrer des articles</string>
     <string name="reader_btn_remove_filter_content_description">Supprimer le filtre actuel</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Se connecter à WordPress.com</string>

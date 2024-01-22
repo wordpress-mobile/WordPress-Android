@@ -1811,7 +1811,6 @@ Language: ru
     <string name="stats_management_screen_title">Добавить новую карточку</string>
     <string name="stats_management_add_new_stats_card">Добавить новую карточку статистики</string>
     <string name="reader_self_hosted_select_filter">Используйте кнопку фильтра для поиска записей по интересующим темам</string>
-    <string name="reader_bottom_sheet_content_description">Выберите метку или сайт, всплывающее окно</string>
     <string name="reader_btn_select_filter_content_description">Выберите сайт или метку для фильтрации записей</string>
     <string name="reader_btn_remove_filter_content_description">Убрать текущий фильтр</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Войти на WordPress.com</string>

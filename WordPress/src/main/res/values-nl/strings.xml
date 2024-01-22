@@ -1752,7 +1752,6 @@ Language: nl
     <string name="stats_management_screen_title">Nieuwe kaart toevoegen</string>
     <string name="stats_management_add_new_stats_card">Nieuwe statistiekenkaart toevoegen</string>
     <string name="reader_self_hosted_select_filter">Gebruik de filterknop om berichten over specifieke onderwerpen te vinden</string>
-    <string name="reader_bottom_sheet_content_description">Selecteer een tag of site, pop-upvenster</string>
     <string name="reader_btn_select_filter_content_description">Selecteer een site of tag om berichten te filteren</string>
     <string name="reader_btn_remove_filter_content_description">Verwijder het huidige filter</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Inloggen op WordPress.com</string>

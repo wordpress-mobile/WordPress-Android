@@ -1800,7 +1800,6 @@ Language: sq_AL
     <string name="stats_management_screen_title">Shtoni Kartë të Re</string>
     <string name="stats_management_add_new_stats_card">Shtoni kartë të re statistikash</string>
     <string name="reader_self_hosted_select_filter">Përdorni butonin e filtrave që të gjeni postime rreth subjektesh specifike</string>
-    <string name="reader_bottom_sheet_content_description">Përzgjidhni një Etiketë ose Sajt, Dritare Flluskë</string>
     <string name="reader_btn_select_filter_content_description">Përzgjidhni një Sajt ose Etiketë që të filtrohen postime</string>
     <string name="reader_btn_remove_filter_content_description">Hiqe filtrin e tanishme</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Hyni te WordPress.com</string>

@@ -1802,7 +1802,6 @@ Language: ar
     <string name="reader_filter_self_hosted_empty_sites_tags_action">تسجيل الدخول إلى WordPress.com</string>
     <string name="reader_btn_remove_filter_content_description">إزالة الفلتر الحالي</string>
     <string name="reader_btn_select_filter_content_description">تحديد موقع أو وسم لفلترة المقالات</string>
-    <string name="reader_bottom_sheet_content_description">تحديد وسم أو موقع، نافذة منبثقة</string>
     <string name="reader_self_hosted_select_filter">استخدام زر الفلترة للعثور على مقالات في مواضيع معينة</string>
     <string name="gutenberg_native_replace_current_block">استبدال المكوِّن الحالي</string>
     <string name="gutenberg_native_add_to_end">إضافة إلى النهاية</string>

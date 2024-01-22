@@ -1803,7 +1803,6 @@ Language: ko_KR
     <string name="stats_management_screen_title">새 카드 추가</string>
     <string name="stats_management_add_new_stats_card">새 스탯 카드 추가</string>
     <string name="reader_self_hosted_select_filter">필터 버튼을 사용하여 특정 주제에 대한 글을 찾습니다.</string>
-    <string name="reader_bottom_sheet_content_description">태그 또는 사이트, 팝업 창을 선택합니다.</string>
     <string name="reader_btn_select_filter_content_description">사이트 또는 태그를 선택하여 글을 필터링합니다.</string>
     <string name="reader_btn_remove_filter_content_description">현재 필터 제거</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">워드프레스닷컴에 로그인</string>

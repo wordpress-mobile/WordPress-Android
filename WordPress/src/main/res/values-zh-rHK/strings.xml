@@ -1804,7 +1804,6 @@ Language: zh_TW
     <string name="stats_management_screen_title">新增卡片</string>
     <string name="stats_management_add_new_stats_card">新增統計資料卡片</string>
     <string name="reader_self_hosted_select_filter">使用篩選按鈕尋找特定主題的文章</string>
-    <string name="reader_bottom_sheet_content_description">選擇一個標籤或網站、快顯視窗</string>
     <string name="reader_btn_select_filter_content_description">選擇網站或標籤以篩選文章</string>
     <string name="reader_btn_remove_filter_content_description">移除目前的篩選條件</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">登入 WordPress.com</string>

@@ -1811,7 +1811,6 @@ Language: en_GB
     <string name="stats_management_screen_title">Add New Card</string>
     <string name="stats_management_add_new_stats_card">Add new stats card</string>
     <string name="reader_self_hosted_select_filter">Use the filter button to find posts on specific subjects</string>
-    <string name="reader_bottom_sheet_content_description">Select a Tag or Site, Pop Up Window</string>
     <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>

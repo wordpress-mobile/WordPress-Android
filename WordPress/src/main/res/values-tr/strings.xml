@@ -1811,7 +1811,6 @@ Language: tr
     <string name="stats_management_screen_title">Yeni kart ekle</string>
     <string name="stats_management_add_new_stats_card">Yeni istatistik kartı ekle</string>
     <string name="reader_self_hosted_select_filter">Belirli konular hakkında yazılar bulmak için filtre düğmesini kullanın</string>
-    <string name="reader_bottom_sheet_content_description">Etiket veya Site Seçin, Açılır Pencere</string>
     <string name="reader_btn_select_filter_content_description">Yazıları filtrelemek için bir Site veya Etiket seçin</string>
     <string name="reader_btn_remove_filter_content_description">Geçerli filtreyi kaldır</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">WordPress.com\'da oturum aç</string>

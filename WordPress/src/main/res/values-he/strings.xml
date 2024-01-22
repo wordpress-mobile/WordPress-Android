@@ -1801,7 +1801,6 @@ Language: he_IL
     <string name="stats_management_screen_title">להוסיף כרטיס חדש</string>
     <string name="stats_management_add_new_stats_card">להוסיף כרטיס חדש של נתונים סטטיסטיים</string>
     <string name="reader_self_hosted_select_filter">להשתמש בכפתור הסינון לחיפוש פוסטים בנושאים מסוימים</string>
-    <string name="reader_bottom_sheet_content_description">לבחור תגית או אתר, חלון קופץ</string>
     <string name="reader_btn_select_filter_content_description">לבחור אתר או תגית כדי לסנן את הפוסטים</string>
     <string name="reader_btn_remove_filter_content_description">להסיר את המסנן הנוכחי</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">התחברות ל-WordPress.com</string>
