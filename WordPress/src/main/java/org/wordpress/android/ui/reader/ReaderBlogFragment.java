@@ -120,7 +120,7 @@ public class ReaderBlogFragment extends Fragment
                 case FOLLOWED:
                     if (getBlogAdapter().hasSearchFilter()) {
                         actionableEmptyView.updateLayoutForSearch(true, 0);
-                        actionableEmptyView.title.setText(R.string.reader_empty_followed_blogs_search_title);
+                        actionableEmptyView.title.setText(R.string.reader_no_followed_blogs_search_title);
                         actionableEmptyView.subtitle.setVisibility(View.GONE);
                         actionableEmptyView.button.setVisibility(View.GONE);
                         actionableEmptyView.image.setVisibility(View.GONE);

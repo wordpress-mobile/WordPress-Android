@@ -2223,6 +2223,7 @@
     <string name="reader_empty_followed_blogs_title">No followed sites</string>
     <string name="reader_no_followed_blogs_title">No followed blogs</string>
     <string name="reader_empty_followed_blogs_search_title">No sites matching your search</string>
+    <string name="reader_no_followed_blogs_search_title">No blogs matching your search</string>
     <string name="reader_empty_followed_blogs_description">When you follow sites, you\'ll see their content here</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">The blogs you\'re subscribed to haven\'t posted anything recently</string>
