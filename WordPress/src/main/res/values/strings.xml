@@ -2240,6 +2240,7 @@
     <string name="reader_comments_be_first_to_comment">Be the first to comment</string>
     <string name="reader_comments_follow_conversation">Follow Conversation</string>
     <string name="reader_empty_posts_in_blog">This site is empty</string>
+    <string name="reader_no_posts_in_blog">This blog is empty</string>
     <string name="reader_empty_search_title">No results found</string>
     <string name="reader_empty_search_description">No results found for %s for your language</string>
     <string name="reader_empty_search_request_failed">Unable to perform search</string>

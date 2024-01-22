@@ -1732,7 +1732,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     }
                     break;
                 case BLOG_PREVIEW:
-                    title = getString(R.string.reader_empty_posts_in_blog);
+                    title = getString(R.string.reader_no_posts_in_blog);
                     break;
                 case SEARCH_RESULTS:
                     isSearching = true;
