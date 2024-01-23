@@ -14,7 +14,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.FormattableContentUtilsKt;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -123,7 +123,8 @@ public class HeaderNoteBlock extends NoteBlock {
     };
 
     private String getAvatarUrl() {
-        return GravatarUtils.fixGravatarUrl(FormattableContentUtilsKt.getMediaUrlOrEmpty(getHeader(0), 0), mAvatarSize);
+        return WPAvatarUtils.rewriteAvatarUrl(FormattableContentUtilsKt.getMediaUrlOrEmpty(
+                getHeader(0), 0), mAvatarSize);
     }
 
     private String getUserUrl() {

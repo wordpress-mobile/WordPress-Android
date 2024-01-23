@@ -10,14 +10,16 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gravatar.DefaultAvatarImage;
+import com.gravatar.GravatarUtilsKt;
+
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.image.ImageManager;
 
-import static org.wordpress.android.util.GravatarUtils.DefaultImage.STATUS_404;
 import static org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND;
 
 /**
@@ -97,10 +99,12 @@ class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
     }
 
     private String constructGravatarUrl(Context context, AccountModel account) {
-        return GravatarUtils.fixGravatarUrl(account.getAvatarUrl(), getAvatarSize(context), STATUS_404);
+        return WPAvatarUtils.rewriteAvatarUrl(account.getAvatarUrl(), getAvatarSize(context),
+                DefaultAvatarImage.STATUS_404);
     }
 
     private String constructGravatarUrl(Context context, SiteModel site) {
-        return GravatarUtils.gravatarFromEmail(site.getEmail(), getAvatarSize(context), STATUS_404);
+        return GravatarUtilsKt.emailAddressToGravatarUrl(site.getEmail(), getAvatarSize(context),
+                DefaultAvatarImage.STATUS_404, null, null);
     }
 }

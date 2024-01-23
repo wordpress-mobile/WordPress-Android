@@ -27,7 +27,7 @@ import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
@@ -287,7 +287,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             noteViewHolder.mTxtDetail.setVisibility(View.GONE);
         }
 
-        String avatarUrl = GravatarUtils.fixGravatarUrl(note.getIconURL(), mAvatarSz);
+        String avatarUrl = WPAvatarUtils.rewriteAvatarUrl(note.getIconURL(), mAvatarSz);
         mImageManager.loadIntoCircle(noteViewHolder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
 
         boolean isUnread = note.isUnread();

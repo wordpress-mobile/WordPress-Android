@@ -70,7 +70,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -736,7 +736,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                             public void onSuccess() {
                                 endProgress();
                                 AnalyticsTracker.track(Stat.ME_GRAVATAR_UPLOADED);
-                                mPhotoUrl = GravatarUtils.fixGravatarUrl(mAccount.getAccount().getAvatarUrl(),
+                                mPhotoUrl = WPAvatarUtils.rewriteAvatarUrl(mAccount.getAccount().getAvatarUrl(),
                                         getResources().getDimensionPixelSize(R.dimen.avatar_sz_large));
                                 loadAvatar(mPhotoUrl, filePath);
                                 mHeaderAvatarAdd.setVisibility(View.GONE);
