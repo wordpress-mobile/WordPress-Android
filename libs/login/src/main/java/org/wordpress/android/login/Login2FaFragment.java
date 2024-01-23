@@ -3,6 +3,8 @@ package org.wordpress.android.login;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -46,6 +48,7 @@ import org.wordpress.android.fluxc.store.AccountStore.StartWebauthnChallengePayl
 import org.wordpress.android.fluxc.store.AccountStore.WebauthnChallengeReceived;
 import org.wordpress.android.fluxc.store.AccountStore.WebauthnPasskeyAuthenticated;
 import org.wordpress.android.login.util.SiteUtils;
+import org.wordpress.android.login.webauthn.CredentialManagerHandler;
 import org.wordpress.android.login.webauthn.Fido2ClientHandler;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -628,17 +631,33 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             handleAuthError(event.error.type, getString(R.string.login_error_security_key));
             return;
         }
-        mFido2ClientHandler = new Fido2ClientHandler(
-                event.mUserId,
-                event.mChallengeInfo
-        );
-        mFido2ClientHandler.createIntentSender(
-                requireContext(),
-                intent -> {
-                    if (mResultLauncher != null) {
-                        mResultLauncher.launch(intent);
+//        mFido2ClientHandler = new Fido2ClientHandler(
+//                event.mUserId,
+//                event.mChallengeInfo
+//        );
+//        mFido2ClientHandler.createIntentSender(
+//                requireContext(),
+//                intent -> {
+//                    if (mResultLauncher != null) {
+//                        mResultLauncher.launch(intent);
+//                    }
+//                });
+        CredentialManagerHandler handler = new CredentialManagerHandler(requireContext());
+        if (VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            handler.fetchPasskey(
+                    event.mUserId,
+                    event.mChallengeInfo.getTwoStepNonce(),
+                    event.mChallengeInfo.getChallenge(),
+                    result -> {
+                        FinishWebauthnChallengePayload payload = result;
+                        return null;
+                    },
+                    error -> {
+                        handleWebauthnError();
+                        return null;
                     }
-                });
+                    );
+        }
     }
 
     private void onCredentialsResultAvailable(@NonNull Intent resultData) {

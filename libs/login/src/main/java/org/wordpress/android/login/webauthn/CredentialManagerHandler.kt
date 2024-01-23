@@ -26,7 +26,8 @@ class CredentialManagerHandler(
         userId: String,
         twoStepNonce: String,
         requestJson: String,
-        onResult: (Result<FinishWebauthnChallengePayload>) -> Unit
+        onSuccess: (FinishWebauthnChallengePayload) -> Unit,
+        onFailure: (Throwable) -> Unit
     ) {
         val password = GetPasswordOption()
         val publicKeyCred = GetPublicKeyCredentialOption(requestJson)
@@ -44,7 +45,7 @@ class CredentialManagerHandler(
                     executor = executor,
                     callback = object : CredentialManagerCallback<GetCredentialResponse, GetCredentialException> {
                         override fun onError(e: GetCredentialException) {
-                            onResult(Result.failure(e))
+                            onFailure(e)
                         }
 
                         override fun onResult(result: GetCredentialResponse) {
@@ -52,13 +53,13 @@ class CredentialManagerHandler(
                                 mUserId = userId
                                 mTwoStepNonce = twoStepNonce
                                 mClientData = result.toJson().orEmpty()
-                            }.let { onResult(Result.success(it)) }
+                            }.let { onSuccess(it) }
                         }
                     }
             )
         } catch (e: GetCredentialException) {
             Log.e("Error", e.stackTraceToString())
-            onResult(Result.failure(e))
+            onFailure(e)
         }
     }
 
