@@ -46,7 +46,7 @@ import org.wordpress.android.fluxc.store.AccountStore.StartWebauthnChallengePayl
 import org.wordpress.android.fluxc.store.AccountStore.WebauthnChallengeReceived;
 import org.wordpress.android.fluxc.store.AccountStore.WebauthnPasskeyAuthenticated;
 import org.wordpress.android.login.util.SiteUtils;
-import org.wordpress.android.login.webauthn.PasskeyCredentialsHandler;
+import org.wordpress.android.login.webauthn.Fido2ClientHandler;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
 import org.wordpress.android.util.AppLog;
@@ -125,7 +125,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private boolean mIsSocialLoginConnect;
     private boolean mSentSmsCode;
     private List<SupportedAuthTypes> mSupportedAuthTypes;
-    @Nullable private PasskeyCredentialsHandler mPasskeyCredentialsHandler = null;
+    @Nullable private Fido2ClientHandler mFido2ClientHandler = null;
     @Nullable private ActivityResultLauncher<IntentSenderRequest> mResultLauncher = null;
 
     public static Login2FaFragment newInstance(String emailAddress, String password) {
@@ -628,11 +628,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             handleAuthError(event.error.type, getString(R.string.login_error_security_key));
             return;
         }
-        mPasskeyCredentialsHandler = new PasskeyCredentialsHandler(
+        mFido2ClientHandler = new Fido2ClientHandler(
                 event.mUserId,
                 event.mChallengeInfo
         );
-        mPasskeyCredentialsHandler.createIntentSender(
+        mFido2ClientHandler.createIntentSender(
                 requireContext(),
                 intent -> {
                     if (mResultLauncher != null) {
@@ -644,7 +644,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private void onCredentialsResultAvailable(@NonNull Intent resultData) {
         if (resultData.hasExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA)) {
             byte[] credentialBytes = resultData.getByteArrayExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA);
-            if (credentialBytes == null || mPasskeyCredentialsHandler == null) {
+            if (credentialBytes == null || mFido2ClientHandler == null) {
                 handleWebauthnError();
                 return;
             }
@@ -652,7 +652,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             PublicKeyCredential credentials =
                     PublicKeyCredential.deserializeFromBytes(credentialBytes);
             FinishWebauthnChallengePayload payload =
-                    mPasskeyCredentialsHandler.onCredentialsAvailable(credentials);
+                    mFido2ClientHandler.onCredentialsAvailable(credentials);
             mDispatcher.dispatch(
                     AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(payload));
         }
