@@ -2466,7 +2466,6 @@ Language: id
     <string name="reader_followed_blog_notifications_this">situs ini</string>
     <string name="reader_followed_blog_notifications_action">Aktifkan</string>
     <string name="reader_followed_blog_notifications">Aktifkan pemberitahuan untuk %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_off">Nonaktifkan pemberitahuan situs</string>
     <string name="activity_log_jetpack_icon">Ikon Jetpack</string>
     <string name="activity_log_event">Peristiwa</string>
     <string name="activity_log_icon">Ikon aktivitas</string>

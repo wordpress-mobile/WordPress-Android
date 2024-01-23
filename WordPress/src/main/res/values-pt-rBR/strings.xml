@@ -2248,7 +2248,6 @@ Language: pt_BR
     <string name="reader_followed_blog_notifications_this">este site</string>
     <string name="reader_followed_blog_notifications_action">Ativar</string>
     <string name="reader_followed_blog_notifications">Ativar notificações para %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_off">Desativar notificações do site</string>
     <string name="activity_log_jetpack_icon">Ícone do Jetpack</string>
     <string name="activity_log_event">Evento</string>
     <string name="activity_log_icon">Ícone da atividade</string>

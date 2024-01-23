@@ -2194,7 +2194,6 @@ Language: cs_CZ
     <string name="reader_followed_blog_notifications_this">tento web</string>
     <string name="reader_followed_blog_notifications_action">Zapnout</string>
     <string name="reader_followed_blog_notifications">Zapnout notifikace pro %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_off">Vypnout notifikace</string>
     <string name="activity_log_jetpack_icon">Ikona Jetpack</string>
     <string name="activity_log_event">Událost</string>
     <string name="activity_log_icon">Ikona aktivit</string>

@@ -2472,7 +2472,6 @@ Language: sv_SE
     <string name="reader_followed_blog_notifications_this">denna webbplats</string>
     <string name="reader_followed_blog_notifications_action">Aktivera</string>
     <string name="reader_followed_blog_notifications">Aktivera aviseringar för %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_off">Stäng av webbplatsaviseringar</string>
     <string name="activity_log_jetpack_icon">Jetpack-ikon</string>
     <string name="activity_log_event">Händelse</string>
     <string name="activity_log_icon">Aktivitetsikon</string>

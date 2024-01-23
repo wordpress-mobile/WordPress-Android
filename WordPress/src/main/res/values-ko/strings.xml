@@ -2463,7 +2463,6 @@ Language: ko_KR
     <string name="reader_followed_blog_notifications_this">이 사이트</string>
     <string name="reader_followed_blog_notifications_action">활성화</string>
     <string name="reader_followed_blog_notifications">%1$s%2$s%3$s에 대한 알림을 활성화하시겠습니까?</string>
-    <string name="reader_btn_notifications_off">사이트 알림 끄기</string>
     <string name="activity_log_jetpack_icon">젯팩 아이콘</string>
     <string name="activity_log_event">이벤트</string>
     <string name="activity_log_icon">활동 아이콘</string>

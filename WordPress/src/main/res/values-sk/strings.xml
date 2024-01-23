@@ -259,7 +259,6 @@ Language: sk
     <string name="reader_followed_blog_notifications_this">Táto webová stránka</string>
     <string name="reader_followed_blog_notifications_action">Oprávnenie</string>
     <string name="reader_followed_blog_notifications">Umožniť upozornenia pre %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_off">Vypnúť upozornenia webovej stránky</string>
     <string name="activity_log_jetpack_icon">Ikona Jetpack</string>
     <string name="activity_log_event">Udalosť</string>
     <string name="activity_log_icon">Ikonka aktivity</string>

@@ -1096,7 +1096,6 @@ Language: ku_TR
     <string name="my_site_icon_dialog_change_message">Tu dixwazî îkonê çawa sererast bikî?</string>
     <string name="my_site_icon_dialog_add_message">Tu dixwazî îkona malperê tevlî bikî?</string>
     <string name="cookie_policy_learn_more_caption">Dema têketina te ya ajimêra WordPress.comê, di derheqê bikaranîna xizmetan de bi alavê me ya analîzê re agahî parve bikin.</string>
-    <string name="reader_btn_notifications_off">Danezanên malperê bigire</string>
     <string name="preference_collect_information">Agahî berhev bike</string>
     <string name="reader_followed_blog_notifications">Bila ji bo \"%1$s%2$s%3$s\"ê danezan çalak bibin?</string>
     <string name="privacy_policy_read">Polîtîkaya nihêniyê bixwîne</string>

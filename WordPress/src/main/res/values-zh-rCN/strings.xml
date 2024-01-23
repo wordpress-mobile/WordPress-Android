@@ -2458,7 +2458,6 @@ Language: zh_CN
     <string name="reader_followed_blog_notifications_this">此站点</string>
     <string name="reader_followed_blog_notifications_action">启用</string>
     <string name="reader_followed_blog_notifications">是否为 %1$s%2$s%3$s 启用通知？</string>
-    <string name="reader_btn_notifications_off">关闭站点通知</string>
     <string name="activity_log_jetpack_icon">Jetpack 图标</string>
     <string name="activity_log_event">事件</string>
     <string name="activity_log_icon">活动图标</string>

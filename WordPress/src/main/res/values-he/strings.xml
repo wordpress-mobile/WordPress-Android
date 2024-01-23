@@ -2461,7 +2461,6 @@ Language: he_IL
     <string name="reader_followed_blog_notifications_this">האתר הזה</string>
     <string name="reader_followed_blog_notifications_action">הפעלה</string>
     <string name="reader_followed_blog_notifications">האם להפעיל התראות עבור %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_off">השבתת הודעות אתר</string>
     <string name="activity_log_jetpack_icon">סמל Jetpack</string>
     <string name="activity_log_event">אירוע</string>
     <string name="activity_log_icon">סמל פעילות</string>

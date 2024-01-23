@@ -2338,7 +2338,6 @@ Language: lv
     <string name="reader_followed_blog_notifications_this">šajā vietnē</string>
     <string name="reader_followed_blog_notifications_action">Iespējot</string>
     <string name="reader_followed_blog_notifications">Vai iespējot paziņojumus par %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_off">Izslēgt vietnes paziņojumus</string>
     <string name="activity_log_jetpack_icon">Jetpack ikona</string>
     <string name="activity_log_event">Notikums</string>
     <string name="activity_log_icon">Darbības ikona</string>

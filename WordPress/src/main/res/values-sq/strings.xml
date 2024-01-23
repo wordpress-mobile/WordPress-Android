@@ -2461,7 +2461,6 @@ Language: sq_AL
     <string name="reader_followed_blog_notifications_this">këtë sajt</string>
     <string name="reader_followed_blog_notifications_action">Aktivizoji</string>
     <string name="reader_followed_blog_notifications">Aktivizo njoftime për %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_off">Çaktivizoni njoftime sajti</string>
     <string name="activity_log_jetpack_icon">Ikonë Jetpack</string>
     <string name="activity_log_event">Veprimtari</string>
     <string name="activity_log_icon">Ikonë veprimtarie</string>
