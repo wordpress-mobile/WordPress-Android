@@ -319,7 +319,6 @@ Language: es_CL
     <string name="privacy_policy_learn_more_caption">Esta información nos ayuda a mejorar nuestros productos, hacer marketing más relevante para ti, personalizar tu experiencia en WordPress.com, y más, como se detalla en nuestra política de privacidad.</string>
     <string name="privacy_policy_read">Leer la política de privacidad</string>
     <string name="reader_btn_notifications_off">Desactivar notificaciones del sitio</string>
-    <string name="reader_btn_notifications_on">Activar notificaciones de sitio</string>
     <string name="reader_followed_blog_notifications">¿Habilitar notificaciones para %1$s%2$s%3$s?</string>
     <string name="third_party_policy_learn_more_caption">Usamos otras herramientas de rastreo, incluyendo algunas de terceras partes. Lee acerca de estos y cómo controlarlos.</string>
     <string name="third_party_policy_learn_more_header">Política de Terceras Partes</string>

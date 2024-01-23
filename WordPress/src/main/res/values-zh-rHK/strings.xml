@@ -2464,7 +2464,6 @@ Language: zh_TW
     <string name="reader_followed_blog_notifications_this">此網站</string>
     <string name="reader_followed_blog_notifications_action">啟用</string>
     <string name="reader_followed_blog_notifications">要啟用 %1$s%2$s%3$s 的通知？</string>
-    <string name="reader_btn_notifications_on">開啟網站通知</string>
     <string name="reader_btn_notifications_off">關閉網站通知</string>
     <string name="activity_log_jetpack_icon">Jetpack 圖示</string>
     <string name="activity_log_event">事件</string>

@@ -1955,7 +1955,6 @@ Language: pl
     <string name="reader_followed_blog_notifications_this">ta witryna</string>
     <string name="reader_followed_blog_notifications_action">Włącz</string>
     <string name="reader_followed_blog_notifications">Włączyć powiadomienia dla %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Włącz powiadomienia dla witryny</string>
     <string name="reader_btn_notifications_off">Wyłącz powiadomienia dla witryny</string>
     <string name="activity_log_jetpack_icon">Ikona Jetpacka</string>
     <string name="activity_log_event">Wydarzenie</string>

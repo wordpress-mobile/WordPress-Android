@@ -2413,7 +2413,6 @@ Language: nl
     <string name="reader_followed_blog_notifications_this">deze site</string>
     <string name="reader_followed_blog_notifications_action">Inschakelen</string>
     <string name="reader_followed_blog_notifications">Meldingen voor %1$s%2$s%3$s inschakelen?</string>
-    <string name="reader_btn_notifications_on">Site meldingen inschakelen</string>
     <string name="reader_btn_notifications_off">Site meldingen uitschakelen</string>
     <string name="activity_log_jetpack_icon">Jetpack pictogram</string>
     <string name="activity_log_event">Gebeurtenis</string>

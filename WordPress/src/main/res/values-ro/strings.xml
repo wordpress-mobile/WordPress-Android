@@ -2472,7 +2472,6 @@ Language: ro
     <string name="reader_followed_blog_notifications_this">acest site</string>
     <string name="reader_followed_blog_notifications_action">Activează</string>
     <string name="reader_followed_blog_notifications">Activezi notificările pentru %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Activează notificările pe site</string>
     <string name="reader_btn_notifications_off">Dezactivează notificările pe site</string>
     <string name="activity_log_jetpack_icon">Icon Jetpack</string>
     <string name="activity_log_event">Eveniment</string>

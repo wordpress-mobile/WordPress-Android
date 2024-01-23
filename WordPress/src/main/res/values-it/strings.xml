@@ -2462,7 +2462,6 @@ Language: it
     <string name="reader_followed_blog_notifications_this">questo sito</string>
     <string name="reader_followed_blog_notifications_action">Abilita</string>
     <string name="reader_followed_blog_notifications">Attiva notifiche per %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Attiva notifiche sito</string>
     <string name="reader_btn_notifications_off">Disattiva notifiche sito</string>
     <string name="activity_log_jetpack_icon">Icona Jetpack</string>
     <string name="activity_log_event">Evento</string>

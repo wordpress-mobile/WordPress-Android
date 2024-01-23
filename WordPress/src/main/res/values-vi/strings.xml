@@ -1916,7 +1916,6 @@ Language: vi_VN
     <string name="reader_followed_blog_notifications_this">blog này</string>
     <string name="reader_followed_blog_notifications_action">Bật</string>
     <string name="reader_followed_blog_notifications">Bật thông báo cho %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Bật thông báo blog</string>
     <string name="reader_btn_notifications_off">Tắt thông báo blog</string>
     <string name="activity_log_jetpack_icon">Biểu tượng Jetpack</string>
     <string name="activity_log_event">Sự kiện</string>

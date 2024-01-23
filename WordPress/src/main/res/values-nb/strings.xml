@@ -1285,7 +1285,6 @@ Language: nb_NO
     <string name="reader_followed_blog_notifications_this">dette nettstedet</string>
     <string name="reader_followed_blog_notifications_action">Aktiver</string>
     <string name="reader_followed_blog_notifications">Aktiver varsler for %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Skru på varsler for nettstedet</string>
     <string name="reader_btn_notifications_off">Skru av varsler for nettstedet</string>
     <string name="activity_log_jetpack_icon">Jetpack-ikon</string>
     <string name="activity_log_event">Hendelse</string>

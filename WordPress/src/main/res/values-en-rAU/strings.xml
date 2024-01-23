@@ -532,7 +532,6 @@ Language: en_AU
     <string name="my_site_icon_dialog_change_button">Change</string>
     <string name="my_site_icon_dialog_cancel_button">Cancel</string>
     <string name="third_party_policy_learn_more_caption">We use other tracking tools, including some from third parties. Read about these and how to control them.</string>
-    <string name="reader_btn_notifications_on">Turn on site notifications</string>
     <string name="reader_btn_notifications_off">Turn off site notifications</string>
     <string name="privacy_policy_learn_more_caption">This information helps us improve our products, make marketing to you more relevant, personalise your WordPress.com experience, and more as detailed in our privacy policy.</string>
     <string name="third_party_policy_learn_more_header">Third Party Policy</string>

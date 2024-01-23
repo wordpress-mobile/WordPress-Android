@@ -2462,7 +2462,6 @@ Language: fr
     <string name="reader_followed_blog_notifications_this">ce site</string>
     <string name="reader_followed_blog_notifications_action">Activer</string>
     <string name="reader_followed_blog_notifications">Activer les notifications pour %1$s%2$s%3$s ?</string>
-    <string name="reader_btn_notifications_on">Activer les notifications de site</string>
     <string name="reader_btn_notifications_off">Désactiver les notifications de site</string>
     <string name="activity_log_jetpack_icon">Icône Jetpack</string>
     <string name="activity_log_event">Événement</string>

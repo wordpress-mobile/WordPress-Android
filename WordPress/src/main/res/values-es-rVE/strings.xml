@@ -1957,7 +1957,6 @@ Language: es_VE
     <string name="reader_followed_blog_notifications_this">este sitio</string>
     <string name="reader_followed_blog_notifications_action">Activar</string>
     <string name="reader_followed_blog_notifications">¿Activar avisos para %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Activar los avisos del sitio</string>
     <string name="reader_btn_notifications_off">Desactivar los avisos del sitio</string>
     <string name="activity_log_jetpack_icon">Icono de Jetpack</string>
     <string name="activity_log_event">Evento</string>

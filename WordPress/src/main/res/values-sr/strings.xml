@@ -997,7 +997,6 @@ Language: sr_RS
     <string name="my_site_icon_dialog_change_requires_permission_message">Немате дозволу да уређујете иконицу сајта</string>
     <string name="activity_log_icon">Иконица активности</string>
     <string name="reader_followed_blog_notifications">Омогући обавештења за %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Укључи обавештења сајта</string>
     <string name="reader_btn_notifications_off">Искључи обавештења сајта</string>
     <string name="activity_log_jetpack_icon">Иконица Jetpack-а</string>
     <string name="activity_log_event">Догађај</string>

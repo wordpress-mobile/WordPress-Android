@@ -2472,7 +2472,6 @@ Language: ru
     <string name="reader_followed_blog_notifications_this">этот сайт</string>
     <string name="reader_followed_blog_notifications_action">Включить</string>
     <string name="reader_followed_blog_notifications">Включить уведомления для %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Включить уведомления сайта</string>
     <string name="reader_btn_notifications_off">Отключить уведомления сайта</string>
     <string name="activity_log_jetpack_icon">Значок Jetpack</string>
     <string name="activity_log_event">Событие</string>
