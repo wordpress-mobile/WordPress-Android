@@ -1579,7 +1579,6 @@ Language: lv
     <string name="reader_reblog_error">Atkārtots blogs neizdevās</string>
     <string name="reader_no_site_to_reblog_action">Pārvaldīt vietnes</string>
     <string name="reader_no_site_to_reblog_detail">Kad esat izveidojis vietni WordPress.com, varat pārpublicēt saturu, kas jums patīk, savā vietnē.</string>
-    <string name="reader_no_site_to_reblog_title">Nav pieejamu WordPress.com vietņu</string>
     <string name="whats_new_in_version_title">Kas jauns</string>
     <string name="comment_q_action_copied_url">Saites adrese ir nokopēta</string>
     <string name="copy_link_address">Kopēt saites adresi</string>

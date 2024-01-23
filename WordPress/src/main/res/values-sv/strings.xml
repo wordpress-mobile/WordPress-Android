@@ -1710,7 +1710,6 @@ Language: sv_SE
     <string name="reader_reblog_error">Reblogg misslyckades</string>
     <string name="reader_no_site_to_reblog_action">Hantera webbplatser</string>
     <string name="reader_no_site_to_reblog_detail">När du har skapat en webbplats på WordPress.com kan du reblogga innehåll du tycker om till din egen webbplats.</string>
-    <string name="reader_no_site_to_reblog_title">Inga webbplatser på WordPress.com tillgängliga</string>
     <string name="whats_new_in_version_title">Nyheter</string>
     <string name="comment_q_action_copied_url">Länkadress kopierad</string>
     <string name="copy_link_address">Kopiera länkadress</string>

@@ -1437,7 +1437,6 @@ Language: cs_CZ
     <string name="comment_share_link_via">Sdílet přes</string>
     <string name="copy_link_address">Kopírovat adresu odkazu</string>
     <string name="comment_q_action_copied_url">Adresa odkazu byla zkopírována</string>
-    <string name="reader_no_site_to_reblog_title">Žádné dostupné weby WordPress.com</string>
     <string name="reader_no_site_to_reblog_detail">Jakmile vytvoříte web na WordPress.com, můžete přesdílet obsah, který se vám líbí, na svůj vlastní web.</string>
     <string name="reader_no_site_to_reblog_action">Spravovat weby</string>
     <string name="reader_reblog_error">Reblog se nezdařil</string>

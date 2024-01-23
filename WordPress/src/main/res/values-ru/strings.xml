@@ -1710,7 +1710,6 @@ Language: ru
     <string name="reader_reblog_error">Перепубликация не удалась</string>
     <string name="reader_no_site_to_reblog_action">Управление сайтами</string>
     <string name="reader_no_site_to_reblog_detail">После создания сайта на WordPress.com вы сможете сделать перепубликацию понравившегося содержимого на своем сайте.</string>
-    <string name="reader_no_site_to_reblog_title">Нет доступных сайтов на WordPress.com</string>
     <string name="whats_new_in_version_title">Что нового</string>
     <string name="comment_q_action_copied_url">Адрес ссылки скопирован</string>
     <string name="copy_link_address">Скопировать адрес ссылки</string>

@@ -1652,7 +1652,6 @@ Language: nl
     <string name="reader_reblog_error">Reblog mislukt</string>
     <string name="reader_no_site_to_reblog_action">Beheer sites</string>
     <string name="reader_no_site_to_reblog_detail">Zodra je een WordPress.com site maakt, kun je inhoud die je leuk vindt rebloggen op je eigen site.</string>
-    <string name="reader_no_site_to_reblog_title">Geen beschikbare WordPress.com sites</string>
     <string name="whats_new_in_version_title">Wat is er nieuw</string>
     <string name="comment_q_action_copied_url">Link adres gekopieerd</string>
     <string name="copy_link_address">Link adres kopiëren</string>

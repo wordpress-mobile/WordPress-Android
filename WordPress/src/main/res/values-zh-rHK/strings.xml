@@ -1704,7 +1704,6 @@ Language: zh_TW
     <string name="reader_reblog_error">轉發失敗</string>
     <string name="reader_no_site_to_reblog_action">管理網站</string>
     <string name="reader_no_site_to_reblog_detail">建立 WordPress.com 網站後，可以將喜歡的內容轉發到自己的網站。</string>
-    <string name="reader_no_site_to_reblog_title">沒有可用的 WordPress.com 網站</string>
     <string name="whats_new_in_version_title">最新內容</string>
     <string name="comment_q_action_copied_url">已複製連結位址</string>
     <string name="copy_link_address">複製連結位址</string>

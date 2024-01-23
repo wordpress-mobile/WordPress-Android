@@ -2153,7 +2153,6 @@
 
     <!-- reblog -->
     <string name="reader_view_reblog">Reblog</string>
-    <string name="reader_no_site_to_reblog_title">No available WordPress.com sites</string>
     <string name="reader_no_blog_to_reblog_title">No available WordPress.com blogs</string>
     <string name="reader_no_site_to_reblog_detail">Once you create a WordPress.com site, you can reblog content that you like to your own site.</string>
     <string name="reader_no_site_to_reblog_action">Manage Sites</string>

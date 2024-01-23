@@ -1710,7 +1710,6 @@ Language: tr
     <string name="reader_reblog_error">Yeniden bloglama başarısız</string>
     <string name="reader_no_site_to_reblog_action">Siteleri yönet</string>
     <string name="reader_no_site_to_reblog_detail">Bir WordPress.com sitesi oluşturduktan sonra, beğendiğiniz içeriği kendi sitenize yeniden bloglayabilirsiniz.</string>
-    <string name="reader_no_site_to_reblog_title">Kullanılabilir WordPress.com sitesi yok</string>
     <string name="whats_new_in_version_title">Neler yeni</string>
     <string name="comment_q_action_copied_url">Bağlantı kopyalandı</string>
     <string name="copy_link_address">Bağlantıyı kopyala</string>

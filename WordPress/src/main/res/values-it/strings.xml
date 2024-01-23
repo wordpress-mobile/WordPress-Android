@@ -1701,7 +1701,6 @@ Language: it
     <string name="reader_reblog_error">Ripubblicazione non riuscita</string>
     <string name="reader_no_site_to_reblog_action">Gestisci siti</string>
     <string name="reader_no_site_to_reblog_detail">Una volta creato un sito WordPress.com, puoi ripubblicare il contenuto che ti piace sul tuo sito.</string>
-    <string name="reader_no_site_to_reblog_title">Nessun sito WordPress.com disponibile</string>
     <string name="whats_new_in_version_title">Novità</string>
     <string name="comment_q_action_copied_url">Indirizzo del link copiato</string>
     <string name="copy_link_address">Copia indirizzo del link</string>

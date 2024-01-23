@@ -1703,7 +1703,6 @@ Language: ja_JP
     <string name="reader_reblog_error">リブログに失敗しました</string>
     <string name="reader_no_site_to_reblog_action">サイトの管理</string>
     <string name="reader_no_site_to_reblog_detail">WordPress.com サイトの作成後は、お気に入りのコンテンツを自分のサイトにリブログできます。</string>
-    <string name="reader_no_site_to_reblog_title">利用可能な WordPress.com サイトがありません</string>
     <string name="whats_new_in_version_title">新機能</string>
     <string name="comment_q_action_copied_url">リンクアドレスをコピーしました</string>
     <string name="copy_link_address">リンクアドレスをコピー</string>

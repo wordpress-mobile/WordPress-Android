@@ -1699,7 +1699,6 @@ Language: sq_AL
     <string name="reader_reblog_error">Riblogimi dështoi</string>
     <string name="reader_no_site_to_reblog_action">Administroni Sajte</string>
     <string name="reader_no_site_to_reblog_detail">Pasi të krijoni një sajt WordPress.com, mund të riblogoni në sajtin tuaj lëndën që doni.</string>
-    <string name="reader_no_site_to_reblog_title">S’ka sajte WordPress.com</string>
     <string name="whats_new_in_version_title">Ç’ka të Re</string>
     <string name="comment_q_action_copied_url">Adresa e lidhjes u kopjua</string>
     <string name="copy_link_address">Kopjo adresë lidhjeje</string>

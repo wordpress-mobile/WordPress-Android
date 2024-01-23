@@ -1701,7 +1701,6 @@ Language: fr
     <string name="reader_reblog_error">Échec du reblogue</string>
     <string name="reader_no_site_to_reblog_action">Gérer les sites</string>
     <string name="reader_no_site_to_reblog_detail">Une fois que vous avez créé un site WordPress.com, vous pouvez rebloguer un contenu que vous avez aimé sur votre propre site.</string>
-    <string name="reader_no_site_to_reblog_title">Aucun site WordPress.com disponible</string>
     <string name="whats_new_in_version_title">Quoi de neuf ?</string>
     <string name="comment_q_action_copied_url">Adresse du lien copiée</string>
     <string name="copy_link_address">Copier l’adresse du lien</string>

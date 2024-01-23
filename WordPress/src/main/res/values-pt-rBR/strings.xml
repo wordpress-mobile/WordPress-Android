@@ -1490,7 +1490,6 @@ Language: pt_BR
     <string name="reader_reblog_error">Falha ao reblogar</string>
     <string name="reader_no_site_to_reblog_action">Gerenciar sites</string>
     <string name="reader_no_site_to_reblog_detail">Assim que você criar um site no WordPress.com, você poderá republicar o conteúdo que você curtir em seu próprio site.</string>
-    <string name="reader_no_site_to_reblog_title">Nenhum site WordPress.com disponível</string>
     <string name="whats_new_in_version_title">Novidades</string>
     <string name="comment_q_action_copied_url">Link copiado</string>
     <string name="copy_link_address">Copiar link</string>
