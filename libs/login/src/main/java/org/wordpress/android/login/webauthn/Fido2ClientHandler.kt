@@ -17,7 +17,7 @@ interface OnPasskeyRequestReadyListener {
     fun onPasskeyRequestReady(intentSenderRequest: IntentSenderRequest)
 }
 
-class PasskeyCredentialsHandler(
+class Fido2ClientHandler(
     private val userId: String,
     private val challengeInfo: WebauthnChallengeInfo
 ) {
