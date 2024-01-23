@@ -10,6 +10,7 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.GetPasswordOption
 import androidx.credentials.GetPublicKeyCredentialOption
+import androidx.credentials.PublicKeyCredential
 import androidx.credentials.exceptions.GetCredentialException
 import org.wordpress.android.fluxc.store.AccountStore.FinishWebauthnChallengePayload
 import java.util.concurrent.Executors
@@ -50,7 +51,7 @@ class CredentialManagerHandler(
                             FinishWebauthnChallengePayload().apply {
                                 mUserId = userId
                                 mTwoStepNonce = twoStepNonce
-                                mClientData = result.toString()
+                                mClientData = result.toJson().orEmpty()
                             }.let { onResult(Result.success(it)) }
                         }
                     }
@@ -58,6 +59,16 @@ class CredentialManagerHandler(
         } catch (e: GetCredentialException) {
             Log.e("Error", e.stackTraceToString())
             onResult(Result.failure(e))
+        }
+    }
+
+    private fun GetCredentialResponse.toJson(): String? {
+        return when (val credential = this.credential) {
+            is PublicKeyCredential -> credential.authenticationResponseJson
+            else -> {
+                Log.e("Credential Manager", "Unexpected type of credential")
+                null
+            }
         }
     }
 }
