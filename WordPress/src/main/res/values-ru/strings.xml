@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-08 10:30:27+0000
+Translation-Revision-Date: 2024-01-10 13:29:45+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_working_offline">Автономная работа</string>
+    <string name="gutenberg_native_network_connection_re_established">Сетевое соединение восстановлено</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">Сетевое соединение потеряно, работа в автономном режиме</string>
+    <string name="gutenberg_native_font_size_1_s">Размер шрифта: %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">Тип файла не поддерживается в качестве медиафайла.</string>
+    <string name="media_cannot_be_started">Невозможно открыть медиафайл в данный момент. Пожалуйста, попробуйте позже</string>
+    <string name="domains_just_search_for_a_domain_button">Просто найти домен</string>
+    <string name="domains_upgrade_to_a_plan_button">Улучшение тарифа</string>
+    <string name="domains_upgrade_to_plan_caption">Получите бесплатную регистрацию домена на один год или перенесите его с любым годовым платным тарифом.</string>
+    <string name="domains_site_domain_never_expires">Бессрочно</string>
+    <string name="domains_free_domain">Бесплатный домен WordPress.com</string>
+    <string name="domains_site_other_domains">Другие домены для %s</string>
+    <string name="domains_primary_site_domain_chip">Основной домен</string>
+    <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary уже идёт!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Поехали!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Включить подсказки по ведению блога</string>
@@ -156,10 +170,6 @@ Language: ru
     <string name="campaign_detail_error_title">Что-то пошло не так</string>
     <string name="campaign_listing_page_error_title">Что-то пошло не так</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Что-то пошло не так, не удалось загрузить кампании</string>
-    <string name="domain_transfer_card_cta">Перенести домены</string>
-    <string name="domain_transfer_card_caption">Как вы, возможно, знаете, домены Google были проданы компании Squarespace. Перенесите свои домены на WordPress.com сейчас, и мы оплатим все сборы за перенос плюс дополнительный год регистрации вашего домена.</string>
-    <string name="domain_transfer_card_sub_title">Заберите ваши домены Google</string>
-    <string name="domain_transfer_card_title">Новости</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Подключить учётные записи</string>
     <string name="prepublishing_nudges_toolbar_title_social">Поделиться в социальных сетях</string>
     <string name="prepublishing_nudges_social_action">Поделиться в социальных сетях</string>
@@ -824,7 +834,6 @@ Language: ru
     <string name="my_site_post_card_scheduled_title">Запланированные к публикации записи</string>
     <string name="my_site_post_card_draft_title">Работа над черновой записью</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Первый год - бесплатно &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s в год&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Ваши домены направят на ваш сайт по адресу %s</string>
     <string name="gutenberg_native_create_link">Создать ссылку</string>
     <string name="domains_suggestions_select_domain">Выберите домен</string>
     <string name="domains_title">Домены</string>
@@ -845,14 +854,9 @@ Language: ru
     <string name="domains_free_plan_get_your_domain_caption">Домены, купленные для этого сайта, направят пользователей на &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">На вашем тарифе возможно зарегистрировать бесплатно домен сроком на 1 год</string>
     <string name="domains_paid_plan_claim_your_domain_title">Получите бесплатный домен</string>
-    <string name="domains_manage_domains">Управление доменами</string>
     <string name="domains_add_a_domain">Добавить домен</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Истекает %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Истекает %s</string>
-    <string name="domains_site_domains">Домены вашего сайта</string>
-    <string name="domains_primary_site_address_chip">Основной адрес сайта</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Изменить адрес сайта</string>
-    <string name="domains_primary_site_caption">Адрес вашего сайта (бесплатный) на WordPress.com -</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s за первый год &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s в год&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /в год&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Хотите отменить их?</string>
@@ -878,7 +882,6 @@ Language: ru
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Вам&lt;/a&gt; это нравится.</string>
     <string name="gutenberg_native_line_height">Высота строки</string>
     <string name="domains_free_plan_get_your_domain_title">Получите собственный домен</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Возникла неизвестная ошибка получания шаблона приложения рекомендаций</string>
     <string name="recommend_app_bad_format_response">Получен неверный ответ</string>
     <string name="recommend_app_null_response">Ответ не получен</string>
