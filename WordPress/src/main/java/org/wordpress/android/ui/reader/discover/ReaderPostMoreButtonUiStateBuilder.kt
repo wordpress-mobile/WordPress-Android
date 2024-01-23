@@ -112,7 +112,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         } else {
             SecondaryAction(
                 type = SITE_NOTIFICATIONS,
-                label = UiStringRes(R.string.reader_btn_notifications_on),
+                label = UiStringRes(R.string.reader_btn_blog_notifications_on),
                 labelColor = MaterialR.attr.colorOnSurface,
                 iconRes = R.drawable.ic_reader_bell_24dp,
                 iconColor = R.attr.wpColorOnSurfaceMedium,
