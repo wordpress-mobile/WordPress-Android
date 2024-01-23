@@ -11,6 +11,7 @@ import androidx.credentials.GetCredentialResponse
 import androidx.credentials.GetPasswordOption
 import androidx.credentials.GetPublicKeyCredentialOption
 import androidx.credentials.exceptions.GetCredentialException
+import org.wordpress.android.fluxc.store.AccountStore.FinishWebauthnChallengePayload
 import java.util.concurrent.Executors
 
 class CredentialManagerHandler(
@@ -21,9 +22,10 @@ class CredentialManagerHandler(
 
     @RequiresApi(34)
     fun fetchPasskey(
-        context: Context,
+        userId: String,
+        twoStepNonce: String,
         requestJson: String,
-        onResult: (Result<GetCredentialResponse>) -> Unit
+        onResult: (Result<FinishWebauthnChallengePayload>) -> Unit
     ) {
         val password = GetPasswordOption()
         val publicKeyCred = GetPublicKeyCredentialOption(requestJson)
@@ -45,7 +47,11 @@ class CredentialManagerHandler(
                         }
 
                         override fun onResult(result: GetCredentialResponse) {
-                            onResult(Result.success(result))
+                            FinishWebauthnChallengePayload().apply {
+                                mUserId = userId
+                                mTwoStepNonce = twoStepNonce
+                                mClientData = result.toString()
+                            }.let { onResult(Result.success(it)) }
                         }
                     }
             )
