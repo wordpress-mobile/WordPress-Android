@@ -103,7 +103,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         if (isNotificationsEnabled) {
             SecondaryAction(
                 type = SITE_NOTIFICATIONS,
-                label = UiStringRes(R.string.reader_btn_notifications_off),
+                label = UiStringRes(R.string.reader_btn_blog_notifications_off),
                 labelColor = R.attr.wpColorOnSurfaceMedium,
                 iconRes = R.drawable.ic_reader_bell_24dp,
                 isSelected = true,

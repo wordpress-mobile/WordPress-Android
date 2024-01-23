@@ -138,7 +138,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS &&
-                    (it as SecondaryAction).label == UiStringRes(R.string.reader_btn_notifications_off)
+                    (it as SecondaryAction).label == UiStringRes(R.string.reader_btn_blog_notifications_off)
         }).isNotNull
     }
 
