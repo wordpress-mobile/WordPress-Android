@@ -1708,7 +1708,6 @@ Language: tr
     <string name="site_picker_ask_site_select">Site seçilemedi. Lütfen yeniden deneyin.</string>
     <string name="sitepicker_continue_flow">Devam</string>
     <string name="reader_reblog_error">Yeniden bloglama başarısız</string>
-    <string name="reader_no_site_to_reblog_action">Siteleri yönet</string>
     <string name="whats_new_in_version_title">Neler yeni</string>
     <string name="comment_q_action_copied_url">Bağlantı kopyalandı</string>
     <string name="copy_link_address">Bağlantıyı kopyala</string>

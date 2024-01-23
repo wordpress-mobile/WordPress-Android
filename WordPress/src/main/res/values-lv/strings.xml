@@ -1577,7 +1577,6 @@ Language: lv
     <string name="site_picker_ask_site_select">Nevarēja atlasīt vietni. Lūdzu mēģiniet vēlreiz.</string>
     <string name="sitepicker_continue_flow">Turpināt</string>
     <string name="reader_reblog_error">Atkārtots blogs neizdevās</string>
-    <string name="reader_no_site_to_reblog_action">Pārvaldīt vietnes</string>
     <string name="whats_new_in_version_title">Kas jauns</string>
     <string name="comment_q_action_copied_url">Saites adrese ir nokopēta</string>
     <string name="copy_link_address">Kopēt saites adresi</string>

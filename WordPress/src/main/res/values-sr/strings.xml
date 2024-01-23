@@ -443,7 +443,6 @@ Language: sr_RS
     <string name="comment_toast_err_share_intent">Није могуће поделити</string>
     <string name="comment_q_action_copied_url">Адреса везе је копирана</string>
     <string name="sitepicker_continue_flow">Настави</string>
-    <string name="reader_no_site_to_reblog_action">Управљај сајтовима</string>
     <string name="whats_new_in_version_title">Шта има ново</string>
     <string name="button_insert">Убаци</string>
     <string name="continue_label">Настави</string>

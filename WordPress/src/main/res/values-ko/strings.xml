@@ -1701,7 +1701,6 @@ Language: ko_KR
     <string name="site_picker_ask_site_select">사이트를 선택할 수 없습니다. 다시 시도해 보시기 바랍니다.</string>
     <string name="sitepicker_continue_flow">계속</string>
     <string name="reader_reblog_error">리블로그에 실패하였습니다</string>
-    <string name="reader_no_site_to_reblog_action">사이트 관리</string>
     <string name="whats_new_in_version_title">새로운 기능</string>
     <string name="comment_q_action_copied_url">링크 주소가 복사되었습니다</string>
     <string name="copy_link_address">링크 주소 복사</string>

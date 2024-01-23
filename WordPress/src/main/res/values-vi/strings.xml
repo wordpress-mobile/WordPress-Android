@@ -1162,7 +1162,6 @@ Language: vi_VN
     <string name="site_picker_ask_site_select">Không thể chọn blog. Xin thử lại.</string>
     <string name="sitepicker_continue_flow">Tiếp tục</string>
     <string name="reader_reblog_error">Đăng lại thất bại</string>
-    <string name="reader_no_site_to_reblog_action">Quản lý Blog</string>
     <string name="whats_new_in_version_title">Có gì mới?</string>
     <string name="comment_q_action_copied_url">Đã chép địa chỉ liên kết</string>
     <string name="copy_link_address">Chép địa chỉ liên kết</string>

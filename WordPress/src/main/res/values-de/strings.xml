@@ -1708,7 +1708,6 @@ Language: de
     <string name="site_picker_ask_site_select">Die Website konnte nicht ausgewählt werden. Bitte versuche es erneut.</string>
     <string name="sitepicker_continue_flow">Weiter</string>
     <string name="reader_reblog_error">Rebloggen ist fehlgeschlagen</string>
-    <string name="reader_no_site_to_reblog_action">Websites verwalten</string>
     <string name="whats_new_in_version_title">Was ist neu?</string>
     <string name="comment_q_action_copied_url">Link-Adresse wurde kopiert</string>
     <string name="copy_link_address">Link-Adresse kopieren</string>

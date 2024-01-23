@@ -1697,7 +1697,6 @@ Language: ar
     <string name="feature_announcement_dialog_label">ما الجديد في %s</string>
     <string name="sitepicker_continue_flow">المتابعة</string>
     <string name="reader_reblog_error">فشلت إعادة التدوين</string>
-    <string name="reader_no_site_to_reblog_action">إدارة المواقع</string>
     <string name="whats_new_in_version_title">الجديد</string>
     <string name="comment_q_action_copied_url">تم نسخ عنوان الرابط</string>
     <string name="copy_link_address">نسخ عنوان الرابط</string>

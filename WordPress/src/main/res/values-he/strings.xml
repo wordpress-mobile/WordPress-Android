@@ -1699,7 +1699,6 @@ Language: he_IL
     <string name="site_picker_ask_site_select">לא ניתן היה לבחור אתר. יש לנסות שוב.</string>
     <string name="sitepicker_continue_flow">המשך</string>
     <string name="reader_reblog_error">הפרסום החדש בבלוג נכשל</string>
-    <string name="reader_no_site_to_reblog_action">ניהול אתרים</string>
     <string name="whats_new_in_version_title">מה חדש</string>
     <string name="comment_q_action_copied_url">כתובת הקישור הועתקה</string>
     <string name="copy_link_address">להעתיק את הכתובת של הקישור</string>

@@ -1650,7 +1650,6 @@ Language: nl
     <string name="site_picker_ask_site_select">Kan site niet selecteren. Probeer het opnieuw.</string>
     <string name="sitepicker_continue_flow">Doorgaan</string>
     <string name="reader_reblog_error">Reblog mislukt</string>
-    <string name="reader_no_site_to_reblog_action">Beheer sites</string>
     <string name="whats_new_in_version_title">Wat is er nieuw</string>
     <string name="comment_q_action_copied_url">Link adres gekopieerd</string>
     <string name="copy_link_address">Link adres kopiëren</string>

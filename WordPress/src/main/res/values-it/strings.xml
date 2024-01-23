@@ -1699,7 +1699,6 @@ Language: it
     <string name="site_picker_ask_site_select">Impossibile selezionare il sito. Riprova.</string>
     <string name="sitepicker_continue_flow">Continua</string>
     <string name="reader_reblog_error">Ripubblicazione non riuscita</string>
-    <string name="reader_no_site_to_reblog_action">Gestisci siti</string>
     <string name="whats_new_in_version_title">Novità</string>
     <string name="comment_q_action_copied_url">Indirizzo del link copiato</string>
     <string name="copy_link_address">Copia indirizzo del link</string>

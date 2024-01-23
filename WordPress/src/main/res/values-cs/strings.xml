@@ -1437,7 +1437,6 @@ Language: cs_CZ
     <string name="comment_share_link_via">Sdílet přes</string>
     <string name="copy_link_address">Kopírovat adresu odkazu</string>
     <string name="comment_q_action_copied_url">Adresa odkazu byla zkopírována</string>
-    <string name="reader_no_site_to_reblog_action">Spravovat weby</string>
     <string name="reader_reblog_error">Reblog se nezdařil</string>
     <string name="gutenberg_native_number_of_columns">Počet sloupců</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dvojitým klepnutím přesunete blok doleva</string>

@@ -1708,7 +1708,6 @@ Language: ru
     <string name="site_picker_ask_site_select">Не удалось выбрать сайт. Повторите попытку.</string>
     <string name="sitepicker_continue_flow">Продолжить</string>
     <string name="reader_reblog_error">Перепубликация не удалась</string>
-    <string name="reader_no_site_to_reblog_action">Управление сайтами</string>
     <string name="whats_new_in_version_title">Что нового</string>
     <string name="comment_q_action_copied_url">Адрес ссылки скопирован</string>
     <string name="copy_link_address">Скопировать адрес ссылки</string>

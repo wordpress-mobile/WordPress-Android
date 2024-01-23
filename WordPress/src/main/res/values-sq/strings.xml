@@ -1697,7 +1697,6 @@ Language: sq_AL
     <string name="site_picker_ask_site_select">S’u përzgjodh dot sajt. Ju lutemi, riprovoni.</string>
     <string name="sitepicker_continue_flow">Vazhdo</string>
     <string name="reader_reblog_error">Riblogimi dështoi</string>
-    <string name="reader_no_site_to_reblog_action">Administroni Sajte</string>
     <string name="whats_new_in_version_title">Ç’ka të Re</string>
     <string name="comment_q_action_copied_url">Adresa e lidhjes u kopjua</string>
     <string name="copy_link_address">Kopjo adresë lidhjeje</string>

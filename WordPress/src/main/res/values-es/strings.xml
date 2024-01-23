@@ -1708,7 +1708,6 @@ Language: es
     <string name="site_picker_ask_site_select">No se ha podido seleccionar el sitio. Por favor, inténtalo de nuevo.</string>
     <string name="sitepicker_continue_flow">Continuar</string>
     <string name="reader_reblog_error">Ha fallado reblog</string>
-    <string name="reader_no_site_to_reblog_action">Gestionar los sitios</string>
     <string name="whats_new_in_version_title">Qué hay de nuevo</string>
     <string name="comment_q_action_copied_url">Copiada la dirección del enlace</string>
     <string name="copy_link_address">Copiar la dirección del enlace</string>
