@@ -1568,8 +1568,6 @@ Language: he_IL
     <string name="mlp_choose_layout_subtitle">ניתן להתחיל באמצעות בחירה ממגוון רחב של פריסות עמוד שהוכנו מראש. או פשוט להתחיל מעמוד ריק.</string>
     <string name="mlp_choose_layout_title">יש לבחור פריסה</string>
     <string name="prepublishing_nudges_story_title_hint">להגדיר שם לסטורי</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">ליצור פוסט או סטורי</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">ליצור פוסט, עמוד או סטורי</string>
     <string name="quick_start_dialog_create_new_post_message_short">יש להקיש על ⁦%1$s⁩ כדי ליצור. ⁦%2$s⁩ לאחר מכן, יש לבחור &lt;b&gt;פוסט בבלוג&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">לבחור מהמכשיר</string>
     <string name="my_site_bottom_sheet_add_story">פוסט של סטורי</string>

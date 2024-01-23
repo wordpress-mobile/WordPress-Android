@@ -1570,8 +1570,6 @@ Language: ko_KR
     <string name="mlp_choose_layout_subtitle">넓고 다양한 이전에 만들어진 페이지 레이아웃에서 선택하여 시작하세요. 또는 빈 페이지로 시작하세요.</string>
     <string name="mlp_choose_layout_title">레이아웃을 선택하기</string>
     <string name="prepublishing_nudges_story_title_hint">스토리에 제목을 부여하기</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">글 또는 스토리 만들기</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">글, 페이지 또는 스토리를 만들기</string>
     <string name="quick_start_dialog_create_new_post_message_short">%1$s 만들기를 %2$s탭하세요. 다음 &lt;b&gt;블로그 글&lt;/b&gt;을 선택하세요</string>
     <string name="photo_picker_choose_file">장치에서 선택하기</string>
     <string name="my_site_bottom_sheet_add_story">스토리 글</string>

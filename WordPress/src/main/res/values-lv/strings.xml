@@ -1432,8 +1432,6 @@ Language: lv
     <string name="mlp_choose_layout_subtitle">Sāciet, izvēloties no dažādiem iepriekš sagatavotiem lapu izkārtojumiem. Vai vienkārši sāciet ar tukšu lapu.</string>
     <string name="mlp_choose_layout_title">Izvēlieties izkārtojumu</string>
     <string name="prepublishing_nudges_story_title_hint">Piešķiriet savam stāstam nosaukumu</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Izveidojiet ziņu vai stāstu</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Izveidojiet ziņu, lapu vai stāstu</string>
     <string name="quick_start_dialog_create_new_post_message_short">Piesitiet %1$s Izveidojiet. %2$s Pēc tam atlasiet &lt;b&gt;Emuāra ziņa&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Izvēlieties no ierīces</string>
     <string name="my_site_bottom_sheet_add_story">Stāsta ziņa</string>

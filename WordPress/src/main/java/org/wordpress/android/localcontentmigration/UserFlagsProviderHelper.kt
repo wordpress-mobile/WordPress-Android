@@ -69,7 +69,6 @@ class UserFlagsProviderHelper @Inject constructor(
         UndeletablePrefKey.IMAGE_OPTIMIZE_PROMO_REQUIRED.name,
         UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS.name,
         UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER.name,
-        UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO.name,
         UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING.name,
         UndeletablePrefKey.LAST_USED_USER_ID.name,
         contextProvider.getContext().getString(R.string.pref_key_app_theme),

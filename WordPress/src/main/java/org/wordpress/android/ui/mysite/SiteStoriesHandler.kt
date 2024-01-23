@@ -11,13 +11,10 @@ import com.wordpress.stories.compose.story.StoryRepository
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStories
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler
-import org.wordpress.android.ui.stories.StoriesTrackerHelper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
@@ -31,15 +28,12 @@ class SiteStoriesHandler
 @Inject constructor(
     private val eventBusWrapper: EventBusWrapper,
     private val resourceProvider: ResourceProvider,
-    private val storiesTrackerHelper: StoriesTrackerHelper,
     private val contextProvider: ContextProvider,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
 ) {
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
-    val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
-    val onNavigation = merge(_onNavigation, storiesMediaPickerResultHandler.onNavigation)
+    val onNavigation = merge(_onNavigation)
 
     init {
         eventBusWrapper.register(this)
@@ -73,29 +67,11 @@ class SiteStoriesHandler
                             val selectedSite = selectedSiteRepository.getSelectedSite()
                                 ?: return@SnackbarMessageHolder
                             _onNavigation.postValue(Event(OpenStories(selectedSite, event)))
-                            storiesTrackerHelper.trackStorySaveResultEvent(
-                                event,
-                                STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
-                            )
                         },
                         onDismissAction = { }
                     )
                 )
             )
         }
-    }
-
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onStorySaveStart(event: StorySaveProcessStart) {
-        eventBusWrapper.removeStickyEvent(event)
-        val snackbarMessage = String.format(
-            resourceProvider.getString(R.string.story_saving_snackbar_started),
-            StoryRepository.getStoryAtIndex(event.storyIndex).title
-        )
-        _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(snackbarMessage))))
-    }
-
-    fun handleStoriesResult(siteModel: SiteModel, data: Intent, source: PagePostCreationSourcesDetail) {
-        storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, siteModel, source)
     }
 }

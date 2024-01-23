@@ -316,9 +316,7 @@ Language: sr_RS
     <string name="label_frame_selected_border">одабрано</string>
     <string name="label_frame_unselected_border">није одабрано</string>
     <string name="mlp_create_page">Напарвити страницу</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Направити чланак или причу</string>
     <string name="mlp_create_blank_page">Направити празну страницу</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Направите чланак, страницу или причу</string>
     <string name="label_frame_image">Слајд</string>
     <string name="label_retry_icon">Покушај поново</string>
     <string name="label_saved_icon">Сачувано</string>

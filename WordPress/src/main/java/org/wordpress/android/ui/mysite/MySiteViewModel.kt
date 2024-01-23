@@ -125,7 +125,6 @@ class MySiteViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteIconUploadHandler: SiteIconUploadHandler,
-    private val siteStoriesHandler: SiteStoriesHandler,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartCardBuilder: QuickStartCardBuilder,
@@ -206,7 +205,6 @@ class MySiteViewModel @Inject constructor(
     }
     val onSnackbarMessage = merge(
         _onSnackbarMessage,
-        siteStoriesHandler.onSnackbar,
         quickStartRepository.onSnackbar,
         siteItemsViewModelSlice.onSnackbarMessage,
         bloggingPromptCardViewModelSlice.onSnackbarMessage,
@@ -221,7 +219,6 @@ class MySiteViewModel @Inject constructor(
 
     val onNavigation = merge(
         _onNavigation,
-        siteStoriesHandler.onNavigation,
         blazeCardViewModelSlice.onNavigation,
         pagesCardViewModelSlice.onNavigation,
         todaysStatsViewModelSlice.onNavigation,
@@ -781,17 +778,10 @@ class MySiteViewModel @Inject constructor(
 
     override fun onCleared() {
         siteIconUploadHandler.clear()
-        siteStoriesHandler.clear()
         quickStartRepository.clear()
         mySiteSourceManager.clear()
         dispatcher.unregister(this)
         super.onCleared()
-    }
-
-    fun handleStoriesPhotoPickerResult(data: Intent) {
-        selectedSiteRepository.getSelectedSite()?.let {
-            siteStoriesHandler.handleStoriesResult(it, data, STORY_FROM_MY_SITE)
-        }
     }
 
     fun onSitePicked() {

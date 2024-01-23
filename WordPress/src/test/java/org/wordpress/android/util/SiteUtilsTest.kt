@@ -186,7 +186,8 @@ class SiteUtilsTest {
             setIsWPCom(true)
         }
 
-        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)
+        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(
+        )
 
         assertTrue(supportsStoriesFeature)
     }
@@ -198,7 +199,8 @@ class SiteUtilsTest {
             jetpackVersion = SiteUtils.WP_STORIES_JETPACK_VERSION
         }
 
-        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)
+        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(
+        )
 
         assertTrue(supportsStoriesFeature)
     }
@@ -209,7 +211,8 @@ class SiteUtilsTest {
             jetpackVersion = (SiteUtils.WP_STORIES_JETPACK_VERSION.toFloat() - 1).toString()
         }
 
-        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)
+        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(
+        )
 
         assertFalse(supportsStoriesFeature)
     }
@@ -222,7 +225,8 @@ class SiteUtilsTest {
         }
         whenever(jetpackFeatureRemovalPhaseHelper.shouldShowStoryPost()).thenReturn(false)
 
-        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)
+        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(
+        )
 
         assertFalse(supportsStoriesFeature)
     }

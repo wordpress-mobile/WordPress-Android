@@ -1570,8 +1570,6 @@ Language: ja_JP
     <string name="mlp_choose_layout_subtitle">事前に用意されたさまざまなページレイアウトを選ぶところから始めましょう。 空白ページから始めることもできます。</string>
     <string name="mlp_choose_layout_title">レイアウトを選択</string>
     <string name="prepublishing_nudges_story_title_hint">ストーリーにタイトルを付ける</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">投稿またはストーリーを作成</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">投稿、ページ、ストーリーを作成</string>
     <string name="quick_start_dialog_create_new_post_message_short">「%1$s 作成」をタップします。%2$s 次に「&lt;b&gt;ブログ投稿&lt;/b&gt;」を選択します</string>
     <string name="photo_picker_choose_file">端末から選択</string>
     <string name="my_site_bottom_sheet_add_story">ストーリー投稿</string>

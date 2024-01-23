@@ -1273,8 +1273,6 @@ Language: cs_CZ
     <string name="mlp_create_page">Vytvořit stránku</string>
     <string name="mlp_create_blank_page">Vytvořit prázdnou stránku</string>
     <string name="quick_start_dialog_create_new_post_message_short">Klepněte na %1$s Vytvořit. %2$s Poté vyberte &lt;b&gt;Blogový příspěvek&lt;/b&gt;</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Vytvořte příspěvek, stránku nebo příběh</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Vytvořte příspěvek nebo příběh</string>
     <string name="prepublishing_nudges_story_title_hint">Dejte svému příběhu název</string>
     <string name="mlp_choose_layout_title">Vyberte rozložení</string>
     <string name="mlp_choose_layout_subtitle">Začněte výběrem z široké škály předem připravených rozvržení stránky. Nebo jen začněte s prázdnou stránkou.</string>

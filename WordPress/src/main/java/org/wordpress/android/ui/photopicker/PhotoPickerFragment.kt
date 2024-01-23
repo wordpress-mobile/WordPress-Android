@@ -57,8 +57,7 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
         ANDROID_CHOOSE_PHOTO_OR_VIDEO(true),
         WP_MEDIA(false),
         STOCK_MEDIA(true),
-        GIF(true),
-        WP_STORIES_CAPTURE(true);
+        GIF(true);
 
         fun requiresUploadPermission(): Boolean {
             return mRequiresUploadPermission

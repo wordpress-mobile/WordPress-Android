@@ -71,10 +71,6 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getReaderCardsPageHandle()
         set(pageHandle) = AppPrefs.setReaderCardsPageHandle(pageHandle)
 
-    var shouldShowStoriesIntro: Boolean
-        get() = AppPrefs.shouldShowStoriesIntro()
-        set(shouldShow) = AppPrefs.setShouldShowStoriesIntro(shouldShow)
-
     var shouldScheduleCreateSiteNotification: Boolean
         get() = AppPrefs.shouldScheduleCreateSiteNotification()
         set(shouldSchedule) = AppPrefs.setShouldScheduleCreateSiteNotification(shouldSchedule)

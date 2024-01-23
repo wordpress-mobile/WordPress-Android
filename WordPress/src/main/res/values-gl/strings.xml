@@ -1575,9 +1575,7 @@ Language: gl_ES
     <string name="label_snackbar_loop_frame_saved">Gardado en fotos</string>
     <string name="mlp_choose_layout_title">Elixir un deseño</string>
     <string name="mlp_create_blank_page">Crear unha páxina en branco</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Crear unha entrada ou historia</string>
     <string name="prepublishing_nudges_story_title_hint">Pon un título á túa historia</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Crear unha entrada, páxina ou historia</string>
     <string name="quick_start_dialog_create_new_post_message_short">Toca %1$s Crear. %2$s Despois selecciona &lt;b&gt;Entrada do blog&lt;/b&gt;</string>
     <string name="mlp_choose_layout_subtitle">Empeza elixindo entre unha ampla variedade de deseños de páxina prefabricados. Ou simplemente empeza cunha páxina en branco.</string>
     <string name="label_close_button">Pechar</string>

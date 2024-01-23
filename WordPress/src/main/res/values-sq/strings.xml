@@ -1570,8 +1570,6 @@ Language: sq_AL
     <string name="mlp_choose_layout_subtitle">Nisjani duke zgjedhur nga një larmi e madhe skemash të parapërgatitura faqesh. Ose thjesht fillojani me një faqe të zbrazët.</string>
     <string name="mlp_choose_layout_title">Zgjidhni një skemë</string>
     <string name="prepublishing_nudges_story_title_hint">Jepini një titull shkrimit tuaj</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Krijoni një postim ose një shkrim</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Krijoni një postim, faqe ose shkrim</string>
     <string name="quick_start_dialog_create_new_post_message_short">Prekni %1$s Krijoni. %2$s Mandej përzgjidhni &lt;b&gt;Postim blogu&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Zgjidhni nga pajisje</string>
     <string name="my_site_bottom_sheet_add_story">Postim shkrimi</string>

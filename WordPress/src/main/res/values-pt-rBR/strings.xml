@@ -1347,8 +1347,6 @@ Language: pt_BR
     <string name="mlp_choose_layout_subtitle">Comece escolhendo entre uma grande variedade de modelos prontos ou crie uma página vazia.</string>
     <string name="mlp_choose_layout_title">Escolher um modelo</string>
     <string name="prepublishing_nudges_story_title_hint">Adicione um título para seu story</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Criar um post ou story</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Criar um post, página ou story</string>
     <string name="quick_start_dialog_create_new_post_message_short">Toque em %1$s Criar. %2$s Então selecione  &lt;b&gt;Post do blog&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Escolher no dispositivo</string>
     <string name="my_site_bottom_sheet_add_story">Story</string>

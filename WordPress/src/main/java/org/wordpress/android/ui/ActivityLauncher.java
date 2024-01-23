@@ -85,8 +85,6 @@ import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.pages.PageParentActivity;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
-import org.wordpress.android.ui.photopicker.MediaPickerConstants;
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
@@ -248,33 +246,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, SitePickerActivity.class);
         intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, site.getId());
         intent.putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, mode);
-        return intent;
-    }
-
-    /**
-     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showPhotoPickerForResult}  instead
-     */
-    @Deprecated
-    public static void showPhotoPickerForResult(Activity activity,
-                                                @NonNull MediaBrowserType browserType,
-                                                @Nullable SiteModel site,
-                                                @Nullable Integer localPostId) {
-        Intent intent = createShowPhotoPickerIntent(activity, browserType, site, localPostId);
-        activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
-    }
-
-    private static Intent createShowPhotoPickerIntent(Context context,
-                                                      @NonNull MediaBrowserType browserType,
-                                                      @Nullable SiteModel site,
-                                                      @Nullable Integer localPostId) {
-        Intent intent = new Intent(context, PhotoPickerActivity.class);
-        intent.putExtra(ARG_BROWSER_TYPE, browserType);
-        if (site != null) {
-            intent.putExtra(WordPress.SITE, site);
-        }
-        if (localPostId != null) {
-            intent.putExtra(MediaPickerConstants.LOCAL_POST_ID, localPostId.intValue());
-        }
         return intent;
     }
 
@@ -1020,57 +991,6 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void addNewStoryForResult(
-            Activity activity,
-            SiteModel site,
-            PagePostCreationSourcesDetail source
-    ) {
-        if (site == null) {
-            return;
-        }
-
-        Intent intent = new Intent(activity, StoryComposerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-        intent.putExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
-        activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
-    }
-
-    public static void addNewStoryWithMediaIdsForResult(
-            Activity activity,
-            SiteModel site,
-            PagePostCreationSourcesDetail source,
-            long[] mediaIds
-    ) {
-        if (site == null) {
-            return;
-        }
-
-        Intent intent = new Intent(activity, StoryComposerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaBrowserActivity.RESULT_IDS, mediaIds);
-        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-        activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
-    }
-
-    public static void addNewStoryWithMediaUrisForResult(
-            Activity activity,
-            SiteModel site,
-            PagePostCreationSourcesDetail source,
-            String[] mediaUris
-    ) {
-        if (site == null) {
-            return;
-        }
-
-            Intent intent = new Intent(activity, StoryComposerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaPickerConstants.EXTRA_MEDIA_URIS, mediaUris);
-        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-        activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
-    }
-
-
     public static void editStoryForResult(
             Activity activity,
             SiteModel site,
@@ -1105,11 +1025,9 @@ public class ActivityLauncher {
             return;
         }
 
-        AnalyticsTracker.track(Stat.STORY_BLOCK_ADD_MEDIA_TAPPED);
         Intent intent = new Intent(activity, StoryComposerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(KEY_LAUNCHED_FROM_GUTENBERG, true);
-        intent.putExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_MEDIA_PICKER_REQUESTED, true);
         intent.putExtra(KEY_POST_LOCAL_ID, localPostId.getValue());
         intent.putExtra(KEY_STORY_INDEX, storyIndex);
         intent.putExtra(ARG_STORY_BLOCK_ID, storyBlockId);

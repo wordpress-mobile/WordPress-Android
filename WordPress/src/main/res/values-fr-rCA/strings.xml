@@ -1568,8 +1568,6 @@ Language: fr
     <string name="mlp_choose_layout_subtitle">Commencez en choisissant parmi une large variété de mises en page prédéfinies. Ou commencez simplement avec une page vide.</string>
     <string name="mlp_choose_layout_title">Choisissez une mise en page</string>
     <string name="prepublishing_nudges_story_title_hint">Donnez un titre à votre story</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Créez un article ou une story</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Créez un article, une page ou une story</string>
     <string name="quick_start_dialog_create_new_post_message_short">Appuyez sur %1$s Créer. %2$s Puis sélectionnez &lt;b&gt;Article de blog&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Choisir depuis l’appareil</string>
     <string name="my_site_bottom_sheet_add_story">Publication de story</string>

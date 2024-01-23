@@ -93,7 +93,6 @@ import org.wordpress.android.ui.posts.editor.ImageEditorTracker
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
-import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
@@ -170,9 +169,6 @@ class AppInitializer @Inject constructor(
 
     @Inject
     lateinit var imageEditorTracker: ImageEditorTracker
-
-    @Inject
-    lateinit var storyMediaSaveUploadBridge: StoryMediaSaveUploadBridge
 
     @Inject
     lateinit var crashLogging: CrashLogging
@@ -369,8 +365,6 @@ class AppInitializer @Inject constructor(
         ImageEditorInitializer.init(imageManager, imageEditorTracker, imageEditorFileUtils, appScope)
 
         storyNotificationTrackerProvider = StoryNotificationTrackerProvider()
-        storyMediaSaveUploadBridge.init(application)
-        ProcessLifecycleOwner.get().lifecycle.addObserver(storyMediaSaveUploadBridge)
 
         exPlat.forceRefresh()
 

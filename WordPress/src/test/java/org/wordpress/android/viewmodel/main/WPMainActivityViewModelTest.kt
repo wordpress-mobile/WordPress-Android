@@ -167,7 +167,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(false)
         whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(bloggingPrompt))
-        whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(true)
+        whenever(siteUtilsWrapper.supportsStoriesFeature()).thenReturn(true)
         whenever(shouldAskPrivacyConsent()).thenReturn(false)
         viewModel = WPMainActivityViewModel(
             featureAnnouncementProvider,
@@ -426,7 +426,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `new post action is triggered from FAB when no full access to content if stories unavailable`() {
         startViewModelWithDefaultParameters()
-        whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(false)
+        whenever(siteUtilsWrapper.supportsStoriesFeature()).thenReturn(false)
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = false, isWpcomOrJpSite = false))
         assertThat(viewModel.isBottomSheetShowing.value).isNull()
         assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_POST)
@@ -494,7 +494,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `onResume set expected content message when user has not full access to content`() {
         startViewModelWithDefaultParameters()
-        whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(true)
+        whenever(siteUtilsWrapper.supportsStoriesFeature()).thenReturn(true)
         viewModel.onResume(site = initSite(hasFullAccessToContent = false), isOnMySitePageWithValidSite = true)
 
         assertThat(fabUiState!!.CreateContentMessageId)

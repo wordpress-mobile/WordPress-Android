@@ -26,7 +26,6 @@ import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.posts.editor.media.AddLocalMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase
-import org.wordpress.android.ui.stories.StoriesTrackerHelper
 import org.wordpress.android.ui.stories.StoryComposerActivity
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
@@ -70,9 +69,6 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
     @Inject
     lateinit var editPostRepository: EditPostRepository
-
-    @Inject
-    lateinit var storiesTrackerHelper: StoriesTrackerHelper
 
     @Inject
     lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
@@ -220,13 +216,6 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                         appContext, editPostRepository.id, true,
                         "StoryMediaSaveUploadBridge#addNewMediaItemsInStoryFramesToPostAsync"
                     )
-                    // SAVED_ONLINE
-                    storiesTrackerHelper.trackStoryPostSavedEvent(uriList.size, site, false)
-                } else {
-                    // SAVED_LOCALLY
-                    storiesTrackerHelper.trackStoryPostSavedEvent(uriList.size, site, true)
-                    // no op, when network is available the offline mode in WPAndroid will gather the queued Post
-                    // and try to upload.
                 }
             }
         }
@@ -239,9 +228,6 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
     @Subscribe(sticky = true, threadMode = MAIN)
     fun onEventMainThread(event: StorySaveResult) {
-        // track event
-        storiesTrackerHelper.trackStorySaveResultEvent(event)
-
         event.metadata?.let {
             val site = requireNotNull(it.getSerializableCompat<SiteModel>(WordPress.SITE))
             val story = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)

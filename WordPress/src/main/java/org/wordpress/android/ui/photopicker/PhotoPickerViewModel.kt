@@ -13,7 +13,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_MEDIA
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_RECENT_MEDIA_SELECTED
 import org.wordpress.android.fluxc.model.SiteModel
@@ -97,8 +96,8 @@ class PhotoPickerViewModel @Inject constructor(
                 softAskRequest?.show == true,
             ),
             buildSoftAskView(softAskRequest),
-            FabUiModel(browserType.isWPStoriesPicker && selectedIds.isNullOrEmpty()) {
-                clickIcon(PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE)
+            FabUiModel(selectedIds.isNullOrEmpty()) {
+                clickIcon(PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_PHOTO)
             },
             buildActionModeUiModel(selectedIds),
             progressDialogModel ?: ProgressDialogUiModel.Hidden,
@@ -205,7 +204,7 @@ class PhotoPickerViewModel @Inject constructor(
         }
 
         val insertEditTextBarVisible = count != 0 && browserType.isGutenbergPicker && !isVideoSelected
-        val showCamera = !browserType.isGutenbergPicker && !browserType.isWPStoriesPicker
+        val showCamera = !browserType.isGutenbergPicker
         return BottomBarUiModel(
             type = defaultBottomBar,
             insertEditTextBarVisible = insertEditTextBarVisible,
@@ -319,8 +318,7 @@ class PhotoPickerViewModel @Inject constructor(
     @Suppress("DEPRECATION")
     fun clickIcon(icon: PhotoPickerFragment.PhotoPickerIcon) {
         if (icon == PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_PHOTO ||
-            icon == PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_VIDEO ||
-            icon == PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE
+            icon == PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_VIDEO
         ) {
             if (!permissionsHandler.hasPermissionsToTakePhoto()) {
                 _onCameraPermissionsRequested.value = Event(Unit)
@@ -352,10 +350,6 @@ class PhotoPickerViewModel @Inject constructor(
             PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA -> AnalyticsTracker.track(MEDIA_PICKER_OPEN_WP_MEDIA)
             PhotoPickerFragment.PhotoPickerIcon.STOCK_MEDIA -> Unit // Do nothing
             PhotoPickerFragment.PhotoPickerIcon.GIF -> Unit // Do nothing
-            PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE -> AnalyticsTracker.track(
-                MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
-            )
-
             PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO -> Unit // Do nothing
         }
         _onIconClicked.postValue(Event(IconClickEvent(icon, browserType.canMultiselect())))
@@ -413,11 +407,9 @@ class PhotoPickerViewModel @Inject constructor(
                 clickIcon(PhotoPickerFragment.PhotoPickerIcon.STOCK_MEDIA)
             })
             // only show GIF picker from Tenor if this is NOT the WPStories picker
-            if (!browserType.isWPStoriesPicker) {
-                items.add(PopupMenuUiModel.PopupMenuItem(UiStringRes(R.string.photo_picker_gif)) {
-                    clickIcon(PhotoPickerFragment.PhotoPickerIcon.GIF)
-                })
-            }
+            items.add(PopupMenuUiModel.PopupMenuItem(UiStringRes(R.string.photo_picker_gif)) {
+                clickIcon(PhotoPickerFragment.PhotoPickerIcon.GIF)
+            })
         }
         if (items.size == 1) {
             items[0].action()

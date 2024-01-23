@@ -319,11 +319,6 @@ public class SiteUtils {
         return VersionUtils.checkMinimalVersion(site.getSoftwareVersion(), minVersion);
     }
 
-    public static boolean supportsStoriesFeature(SiteModel site, JetpackFeatureRemovalPhaseHelper helper) {
-       return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_STORIES_JETPACK_VERSION))
-               && helper.shouldShowStoryPost();
-    }
-
     public static boolean supportsContactInfoFeature(SiteModel site) {
         return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_CONTACT_INFO_JETPACK_VERSION));
     }

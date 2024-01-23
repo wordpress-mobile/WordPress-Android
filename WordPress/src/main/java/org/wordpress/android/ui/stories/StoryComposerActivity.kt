@@ -188,7 +188,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setNotificationExtrasLoader(this)
         setMetadataProvider(this)
         setStoryDiscardListener(this)
-        setStoriesAnalyticsListener(StoriesAnalyticsReceiver())
         setNotificationTrackerProvider((application as WordPress).storyNotificationTrackerProvider)
         setPrepublishingEventProvider(this)
         setPermissionDialogProvider(this)
@@ -296,7 +295,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         })
 
         viewModel.submitButtonClicked.observeEvent(this, {
-            analyticsTrackerWrapper.track(Stat.STORY_POST_PUBLISH_TAPPED)
             processStorySaving()
         })
 
@@ -390,20 +388,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun setupRequestCodes(requestCodes: ExternalMediaPickerRequestCodesAndExtraKeys) {
         requestCodes.PHOTO_PICKER = RequestCodes.PHOTO_PICKER
-        requestCodes.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED =
-            MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
-        requestCodes.EXTRA_LAUNCH_WPSTORIES_MEDIA_PICKER_REQUESTED =
-            MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_MEDIA_PICKER_REQUESTED
         // we're handling EXTRA_MEDIA_URIS at the app level (not at the Stories library level)
         // hence we set the requestCode to UNUSED
         requestCodes.EXTRA_MEDIA_URIS = UNUSED_KEY
     }
 
     override fun showProvidedMediaPicker() {
-        mediaPickerLauncher.showStoriesPhotoPickerForResult(
-            this,
-            site
-        )
     }
 
     override fun providerHandlesOnActivityResult(): Boolean {
@@ -436,10 +426,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     return
                 }
                 storyEditorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
-            }
-            data.hasExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED) -> {
-                // when coming from this entry point, we can start the analytics session
-                viewModel.onStoryComposerStartAnalyticsSession()
             }
         }
     }

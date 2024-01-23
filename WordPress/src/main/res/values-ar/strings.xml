@@ -1566,8 +1566,6 @@ Language: ar
     <string name="prepublishing_nudges_story_title_hint">امنح قصتك عنواناً</string>
     <string name="mlp_choose_layout_subtitle">ابدأ بالاختيار من بين مجموعة متنوعة من تخطيطات الصفحات المعدَّة سابقًا. أو ما عليك سوى البدء بصفحة فارغة.</string>
     <string name="quick_start_dialog_create_new_post_message_short">اضغط على إنشاء ⁦%1$s⁩. ⁦%2$s⁩ بعدها، حدِّد &lt;b&gt;مقالة&lt;/b&gt;</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">إنشاء مقالة، صفحة أو قصة</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">إنشاء مقالة أو قصة</string>
     <string name="mlp_choose_layout_title">اختيار تخطيط</string>
     <string name="my_site_bottom_sheet_add_story">مقالة قصة</string>
     <string name="photo_picker_choose_file">الاختيار من الجهاز</string>

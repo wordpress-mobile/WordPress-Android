@@ -5,18 +5,14 @@ import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.FEATURED_IMAGE_PICKER
-import org.wordpress.android.ui.media.MediaBrowserType.WP_STORIES_MEDIA_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.ENABLED
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
-import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.STORIES
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
@@ -115,19 +111,6 @@ class MediaPickerLauncher @Inject constructor(
             localPostId
         )
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
-    }
-
-    fun showStoriesPhotoPickerForResultAndTrack(activity: Activity, site: SiteModel?) {
-        analyticsTrackerWrapper.track(Stat.MEDIA_PICKER_OPEN_FOR_STORIES)
-        showStoriesPhotoPickerForResult(activity, site)
-    }
-
-    @Suppress("DEPRECATION")
-    fun showStoriesPhotoPickerForResult(
-        activity: Activity,
-        site: SiteModel?
-    ) {
-        ActivityLauncher.showPhotoPickerForResult(activity, WP_STORIES_MEDIA_PICKER, site, null)
     }
 
     @Suppress("DEPRECATION")
@@ -299,12 +282,12 @@ class MediaPickerLauncher @Inject constructor(
         }
         return MediaPickerSetup(
             primaryDataSource = DEVICE,
-            availableDataSources = if (browserType.isWPStoriesPicker) setOf(WP_LIBRARY) else setOf(),
+            availableDataSources = setOf(),
             canMultiselect = browserType.canMultiselect(),
             requiresPhotosVideosPermissions = browserType.isImagePicker || browserType.isVideoPicker,
             requiresMusicAudioPermissions = browserType.isAudioPicker,
             allowedTypes = allowedTypes,
-            cameraSetup = if (browserType.isWPStoriesPicker) STORIES else HIDDEN,
+            cameraSetup = HIDDEN,
             systemPickerEnabled = true,
             editingEnabled = browserType.isImagePicker,
             queueResults = browserType == FEATURED_IMAGE_PICKER,
@@ -337,7 +320,7 @@ class MediaPickerLauncher @Inject constructor(
             requiresPhotosVideosPermissions = false,
             requiresMusicAudioPermissions = false,
             allowedTypes = allowedTypes,
-            cameraSetup = if (browserType.isWPStoriesPicker) STORIES else HIDDEN,
+            cameraSetup = HIDDEN,
             systemPickerEnabled = false,
             editingEnabled = false,
             queueResults = false,

@@ -1565,8 +1565,6 @@ Language: zh_CN
     <string name="mlp_choose_layout_subtitle">从种类繁多的预设页面布局中选择心仪的布局，开始打造自己的页面。 或者，您也可以从一个空白页面开始。</string>
     <string name="mlp_choose_layout_title">选择布局</string>
     <string name="prepublishing_nudges_story_title_hint">为您的故事设定标题</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">创建文章或故事</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">创建文章、页面或故事</string>
     <string name="quick_start_dialog_create_new_post_message_short">轻点%1$s创建。 %2$s 然后选择&lt;b&gt;博文&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">从设备中选择</string>
     <string name="my_site_bottom_sheet_add_story">故事文章</string>

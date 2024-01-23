@@ -1530,8 +1530,6 @@ Language: en_CA
     <string name="mlp_create_page">Create page</string>
     <string name="mlp_create_blank_page">Create blank page</string>
     <string name="prepublishing_nudges_story_title_hint">Give your story a title</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Create a post or story</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Create a post, page or story</string>
     <string name="sound_button_alt">Sound</string>
     <string name="mlp_choose_layout_title">Choose a layout</string>
     <string name="photo_picker_choose_file">Choose from device</string>

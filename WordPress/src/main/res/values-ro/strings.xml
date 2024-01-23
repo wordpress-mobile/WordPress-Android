@@ -1578,8 +1578,6 @@ Language: ro
     <string name="mlp_choose_layout_subtitle">Începe și alege dintr-o mare varietate de aranjamente gata pregătite. Sau începe cu o pagină goală.</string>
     <string name="mlp_choose_layout_title">Alege un aranjament</string>
     <string name="prepublishing_nudges_story_title_hint">Dă-i un titlu narațiunii tale</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Creează un articol sau o narațiune</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Creează un articol, o pagină sau o narațiune</string>
     <string name="quick_start_dialog_create_new_post_message_short">Atinge Creează %1$s. %2$s Apoi selectează &lt;b&gt;Articol blog&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Alege de pe dispozitiv</string>
     <string name="my_site_bottom_sheet_add_story">Articol narațiune</string>

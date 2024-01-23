@@ -27,7 +27,6 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGI
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
@@ -204,16 +203,6 @@ class WPMainActivityViewModel @Inject constructor(
                 onClickAction = null
             )
         )
-        if (siteUtilsWrapper.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
-            actionsList.add(
-                CreateAction(
-                    actionType = CREATE_NEW_STORY,
-                    iconRes = R.drawable.ic_story_icon_24dp,
-                    labelRes = R.string.my_site_bottom_sheet_add_story,
-                    onClickAction = ::onCreateActionClicked
-                )
-            )
-        }
         actionsList.add(
             CreateAction(
                 actionType = CREATE_NEW_POST,
@@ -277,11 +266,7 @@ class WPMainActivityViewModel @Inject constructor(
 
         _showQuickStarInBottomSheet.postValue(quickStartRepository.activeTask.value == PUBLISH_POST)
 
-        if (siteUtilsWrapper.supportsStoriesFeature(
-            site,
-            jetpackFeatureRemovalPhaseHelper) ||
-            hasFullAccessToContent(site)
-        ) {
+        if (hasFullAccessToContent(site)) {
             launch {
                 // The user has at least two create options available for this site (pages and/or story posts),
                 // so we should show a bottom sheet.
@@ -349,20 +334,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun getCreateContentMessageId(site: SiteModel?): Int {
-        return if (siteUtilsWrapper.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
-            getCreateContentMessageIdStoriesFlagOn(hasFullAccessToContent(site))
-        } else {
-            getCreateContentMessageIdStoriesFlagOff(hasFullAccessToContent(site))
-        }
-    }
-
-    // create_post_page_fab_tooltip_stories_feature_flag_on
-    private fun getCreateContentMessageIdStoriesFlagOn(hasFullAccessToContent: Boolean): Int {
-        return if (hasFullAccessToContent) {
-            R.string.create_post_page_fab_tooltip_stories_enabled
-        } else {
-            R.string.create_post_page_fab_tooltip_contributors_stories_enabled
-        }
+        return getCreateContentMessageIdStoriesFlagOff(hasFullAccessToContent(site))
     }
 
     private fun getCreateContentMessageIdStoriesFlagOff(hasFullAccessToContent: Boolean): Int {
