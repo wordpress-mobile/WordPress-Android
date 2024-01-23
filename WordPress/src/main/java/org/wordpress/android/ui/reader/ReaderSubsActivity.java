@@ -396,7 +396,8 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                             errMsg = getString(R.string.reader_toast_err_follow_blog_could_not_be_found);
                             break;
                         default:
-                            errMsg = getString(R.string.reader_toast_err_unable_to_follow_blog) + " (" + statusCode + ")";
+                            errMsg = getString(R.string.reader_toast_err_unable_to_follow_blog) + " (" + statusCode
+                                     + ")";
                             break;
                     }
                     showInfoSnackbar(errMsg);

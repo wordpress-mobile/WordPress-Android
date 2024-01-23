@@ -1713,7 +1713,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     if (getCurrentTag().isFollowedSites() || getCurrentTag().isDefaultInMemoryTag()) {
                         if (ReaderBlogTable.hasFollowedBlogs()) {
                             title = getString(R.string.reader_empty_followed_blogs_no_recent_posts_title);
-                            description = getString(R.string.reader_empty_followed_blogs_subscribed_no_recent_posts_description);
+                            description = getString(
+                                    R.string.reader_empty_followed_blogs_subscribed_no_recent_posts_description);
                         } else {
                             title = getString(R.string.reader_no_followed_blogs_title);
                             description = getString(R.string.reader_no_followed_blogs_description);
@@ -2288,7 +2289,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         } else if (getCurrentTag().isListTopic() && isPostAdapterEmpty() && isAdded()) {
                             mActionableEmptyView.image.setImageResource(
                                     R.drawable.img_illustration_empty_results_216dp);
-                            mActionableEmptyView.title.setText(getString(R.string.reader_empty_blogs_posts_in_custom_list));
+                            mActionableEmptyView.title.setText(
+                                    getString(R.string.reader_empty_blogs_posts_in_custom_list));
                             mActionableEmptyView.button.setVisibility(View.GONE);
                             mActionableEmptyView.subtitle.setVisibility(View.GONE);
                             showEmptyView();
