@@ -733,6 +733,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_upload_media_failed";
             case EDITOR_UPLOAD_MEDIA_RETRIED:
                 return "editor_upload_media_retried";
+            case EDITOR_UPLOAD_MEDIA_PAUSED:
+                return "editor_upload_media_paused";
             case EDITOR_CLOSED:
                 return "editor_closed";
             case EDITOR_SESSION_START:
@@ -1071,6 +1073,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_accessed";
             case STATS_ACCESS_ERROR:
                 return "stats_access_error";
+            case STATS_TRAFFIC_ACCESSED:
+                return "stats_traffic_accessed";
             case STATS_INSIGHTS_ACCESSED:
                 return "stats_insights_accessed";
             case STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED:

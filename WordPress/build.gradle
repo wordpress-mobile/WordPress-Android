@@ -12,6 +12,7 @@ plugins {
     id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
     id "com.google.gms.google-services"
     id 'dagger.hilt.android.plugin'
+    id "org.jetbrains.kotlinx.kover"
 }
 
 sentry {
@@ -35,12 +36,16 @@ repositories {
             includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress.fluxc"
             includeGroup "org.wordpress.wellsql"
-            includeGroup "org.wordpress-mobile"
-            includeGroup "org.wordpress-mobile.gutenberg-mobile"
-            includeGroupByRegex "org.wordpress-mobile.react-native-libraries.*"
+            includeGroup "org.wordpress.gutenberg-mobile"
+            includeGroupByRegex "org.wordpress.react-native-libraries.*"
             includeGroup "com.automattic"
             includeGroup "com.automattic.stories"
             includeGroup "com.automattic.tracks"
+            // 'org.wordpress-mobile' group is deprecated. It's kept for now for smoother transition
+            // but it should be removed soon (within couple weeks)
+            includeGroup "org.wordpress-mobile"
+            includeGroup "org.wordpress-mobile.gutenberg-mobile"
+            includeGroupByRegex "org.wordpress-mobile.react-native-libraries.*"
         }
     }
     maven {
@@ -145,6 +150,7 @@ android {
         buildConfigField "boolean", "BLOGANUARY_DASHBOARD_NUDGE", "false"
         buildConfigField "boolean", "IN_APP_REVIEWS", "false"
         buildConfigField "boolean", "DYNAMIC_DASHBOARD_CARDS", "false"
+        buildConfigField "boolean", "STATS_TRAFFIC_TAB", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
