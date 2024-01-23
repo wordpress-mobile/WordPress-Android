@@ -199,7 +199,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
     }
 
     fun onCleared() {
-        uiModel
         quickLinksItemViewModelSlice.onCleared()
         scope.cancel()
     }
