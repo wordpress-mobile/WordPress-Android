@@ -1709,7 +1709,6 @@ Language: ro
     <string name="sitepicker_continue_flow">Continuă</string>
     <string name="reader_reblog_error">Republicarea a eșuat</string>
     <string name="reader_no_site_to_reblog_action">Administrează site-urile</string>
-    <string name="reader_no_site_to_reblog_detail">După ce ai creat un site WordPress.com, poți republica un conținut care îți place pe propriul site.</string>
     <string name="whats_new_in_version_title">Ce este nou</string>
     <string name="comment_q_action_copied_url">Adresa legăturii a fost copiată</string>
     <string name="copy_link_address">Copiază adresa legăturii</string>

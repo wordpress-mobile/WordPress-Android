@@ -387,7 +387,6 @@ Language: ku_TR
     <string name="copy_text">Kopî bike</string>
     <string name="reader_reblog_error">Dîsblog bi ser neket</string>
     <string name="reader_no_site_to_reblog_action">Malperan Birêve Bibe</string>
-    <string name="reader_no_site_to_reblog_detail">Piştî te malpereke WordPress.com\'ê saz kir, tu dikarî naverokên kêfa te ji wan re tê li malpera xwe dîsblog bikî.</string>
     <string name="comment_q_action_copied_url">Girêdan hat kopîkirin</string>
     <string name="button_insert">Tevlî bike</string>
     <string name="gutenberg_native_move_block_right">Blokê veguhezîne rastê</string>

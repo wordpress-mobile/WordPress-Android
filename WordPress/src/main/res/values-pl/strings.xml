@@ -1203,7 +1203,6 @@ Language: pl
     <string name="copy_link_address">Skopiuj adres odnośnika</string>
     <string name="reader_reblog_error">Nie udało się reblogować</string>
     <string name="reader_no_site_to_reblog_action">Zarządzanie witryny</string>
-    <string name="reader_no_site_to_reblog_detail">Kiedy utowrzysz witrynę WordPress.com, możesz reblogować zawartość, którą chcesz na swoją własną witrynę</string>
     <string name="whats_new_in_version_title">Co nowego</string>
     <string name="gutenberg_native_number_of_columns">Liczba kolumn</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Stuknij dwukrotnie, aby przesunąć blok w lewo</string>

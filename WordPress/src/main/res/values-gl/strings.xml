@@ -1709,7 +1709,6 @@ Language: gl_ES
     <string name="sitepicker_continue_flow">Continuar</string>
     <string name="reader_reblog_error">Fallou o reblog</string>
     <string name="reader_no_site_to_reblog_action">Xestionar os sitios</string>
-    <string name="reader_no_site_to_reblog_detail">Unha vez que crees un sitio en WordPress.com, podes volver a publicar o contido que che gusta no teu propio sitio.</string>
     <string name="whats_new_in_version_title">Que hai de novo</string>
     <string name="comment_q_action_copied_url">Copiada o enderezo do enlace</string>
     <string name="copy_link_address">Copiar o enderezo do enlace</string>

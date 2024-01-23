@@ -1163,7 +1163,6 @@ Language: vi_VN
     <string name="sitepicker_continue_flow">Tiếp tục</string>
     <string name="reader_reblog_error">Đăng lại thất bại</string>
     <string name="reader_no_site_to_reblog_action">Quản lý Blog</string>
-    <string name="reader_no_site_to_reblog_detail">Nếu bạn đã tạo một trang WordPress.com, bạn có thể đăng lại nội dung bạn thích trên trang đó.</string>
     <string name="whats_new_in_version_title">Có gì mới?</string>
     <string name="comment_q_action_copied_url">Đã chép địa chỉ liên kết</string>
     <string name="copy_link_address">Chép địa chỉ liên kết</string>

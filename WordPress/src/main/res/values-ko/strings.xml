@@ -1702,7 +1702,6 @@ Language: ko_KR
     <string name="sitepicker_continue_flow">계속</string>
     <string name="reader_reblog_error">리블로그에 실패하였습니다</string>
     <string name="reader_no_site_to_reblog_action">사이트 관리</string>
-    <string name="reader_no_site_to_reblog_detail">WordPress.com 사이트를 만들면, 다른 사이트의 좋아하는 내용을 리블로그할 수 있습니다.</string>
     <string name="whats_new_in_version_title">새로운 기능</string>
     <string name="comment_q_action_copied_url">링크 주소가 복사되었습니다</string>
     <string name="copy_link_address">링크 주소 복사</string>

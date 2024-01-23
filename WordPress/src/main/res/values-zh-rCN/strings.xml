@@ -1698,7 +1698,6 @@ Language: zh_CN
     <string name="sitepicker_continue_flow">继续</string>
     <string name="reader_reblog_error">转载失败</string>
     <string name="reader_no_site_to_reblog_action">管理站点</string>
-    <string name="reader_no_site_to_reblog_detail">建立 WordPress.com 站点后，您可以将喜爱的内容转载到自己的站点。</string>
     <string name="whats_new_in_version_title">新变化</string>
     <string name="comment_q_action_copied_url">链接地址已复制</string>
     <string name="copy_link_address">复制链接地址</string>

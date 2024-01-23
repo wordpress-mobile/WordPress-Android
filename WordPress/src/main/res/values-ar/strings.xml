@@ -1706,7 +1706,6 @@ Language: ar
     <string name="button_insert">إدراج</string>
     <string name="continue_label">المتابعة</string>
     <string name="copy_text">نسخ</string>
-    <string name="reader_no_site_to_reblog_detail">بمجرد إنشاء موقع WordPress.com، يمكنك إعادة تدوين المحتوى الذي أعجبك على موقعك الخاص.</string>
     <string name="gutenberg_native_number_of_columns">عدد الأعمدة</string>
     <string name="gutenberg_native_move_block_right">نقل المكوِّن إلى اليمين</string>
     <string name="gutenberg_native_move_block_left">نقل المكوِّن إلى اليسار</string>
