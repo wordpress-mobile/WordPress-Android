@@ -2183,11 +2183,11 @@
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_show_blog">Unable to show this blog</string>
-    <string name="reader_toast_err_already_follow_this_blog">You\'re already subscribed to this blog</string>
+    <string name="reader_toast_err_already_follow_this_blog">You are already subscribed to this blog</string>
     <string name="reader_toast_err_unable_to_follow_blog">Unable to subscribe to this blog</string>
     <string name="reader_toast_err_follow_blog_could_not_be_found">This blog could not be found</string>
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">You are not authorized to access this blog</string>
-    <string name="reader_toast_err_unable_to_unfollow_blog">Unable to unsubscribe to this blog</string>
+    <string name="reader_toast_err_unable_to_unfollow_blog">Unable to unsubscribe from blog</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Posts from this blog will no longer be shown</string>
     <string name="reader_toast_err_unable_to_block_blog">Unable to block this blog</string>
     <string name="reader_toast_user_blocked">Posts from this user will no longer be shown</string>
@@ -2215,7 +2215,7 @@
     <string name="reader_self_hosted_select_filter">Use the filter button to find posts on specific subjects</string>
     <string name="reader_no_posts_with_this_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
-    <string name="reader_empty_blogs_posts_in_custom_list">The blogs in this list haven\'t posted anything recently</string>
+    <string name="reader_empty_blogs_posts_in_custom_list">The blogs in this list have not posted anything recently</string>
     <string name="reader_empty_subscribed_tags_subtitle">Add tags here to find posts about your favorite tags</string>
     <string name="reader_no_followed_tags_title">No subscribed tags</string>
     <string name="reader_no_recommended_blogs_title">No recommended blogs</string>
