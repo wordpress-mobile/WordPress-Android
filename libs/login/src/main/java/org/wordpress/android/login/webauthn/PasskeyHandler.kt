@@ -21,7 +21,7 @@ class PasskeyHandler {
         )
         { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK && result.data != null) {
-                onResult(PasskeyDataResult(isFailure = false))
+                onResult(parseFIDO2IntentData(result.data, userId, challengeInfo))
             } else {
                 onResult(PasskeyDataResult(isFailure = true))
             }
@@ -29,11 +29,12 @@ class PasskeyHandler {
     }
 
     private fun parseFIDO2IntentData(
-        resultData: Intent,
+        resultData: Intent?,
         userId: String,
         challengeInfo: WebauthnChallengeInfo
-    ): PasskeyDataResult? =
-            resultData.takeIf { it.hasExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA) }
+    ): PasskeyDataResult =
+            resultData
+                    ?.takeIf { it.hasExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA) }
                     ?.getByteArrayExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA)
                     ?.let { PublicKeyCredential.deserializeFromBytes(it).toJson() }
                     ?.let { clientData ->
@@ -43,7 +44,7 @@ class PasskeyHandler {
                                 twoStepNonce = challengeInfo.twoStepNonce,
                                 clientData = clientData
                         )
-                    }
+                    } ?: PasskeyDataResult(isFailure = true)
 
     data class PasskeyDataResult(
         val isFailure: Boolean,
