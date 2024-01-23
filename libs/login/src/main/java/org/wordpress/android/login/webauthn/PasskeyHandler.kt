@@ -47,8 +47,8 @@ class PasskeyHandler {
 
     data class PasskeyDataResult(
         val isFailure: Boolean,
-        val userId: String,
-        val twoStepNonce: String,
-        val clientData: String
+        val userId: String? = null,
+        val twoStepNonce: String? = null,
+        val clientData: String? = null
     )
 }
