@@ -48,12 +48,16 @@ class FakeBlazeTargetingRestClient @Inject constructor() {
         return BlazeTargetingPayload(generateFakeDevices(locale))
     }
 
-    suspend fun fetchBlazeAdSuggestions(siteId: Long, productId: Long): BlazeTargetingPayload<List<BlazeAdSuggestionEntity>> {
+    suspend fun fetchBlazeAdSuggestions(
+        siteId: Long,
+        productId: Long
+    ): BlazeTargetingPayload<List<BlazeAdSuggestionEntity>> {
         delay(FAKE_DELAY)
 
         return BlazeTargetingPayload(generateFakeAdSuggestions(siteId, productId))
     }
 
+    @Suppress("MagicNumber")
     private fun generateFakeAdSuggestions(
         siteId: Long,
         productId: Long
