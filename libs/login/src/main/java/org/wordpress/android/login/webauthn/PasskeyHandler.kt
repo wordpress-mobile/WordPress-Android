@@ -10,12 +10,18 @@ import com.google.android.gms.fido.fido2.api.common.PublicKeyCredential
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnChallengeInfo
 
 class PasskeyHandler {
-    fun fetch(
+    fun onFragmentCreation(
         requestingFragment: Fragment,
         userId: String,
         challengeInfo: WebauthnChallengeInfo,
         onResult: (PasskeyDataResult) -> Unit
     ) {
+        // run only if API is 34 or above
+        if (android.os.Build.VERSION.SDK_INT >= 34) {
+            onResult(PasskeyDataResult(isFailure = true))
+            return
+        }
+
         requestingFragment.registerForActivityResult(
                 StartIntentSenderForResult()
         )
