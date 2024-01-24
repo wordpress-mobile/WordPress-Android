@@ -190,7 +190,10 @@ class BlazeCampaignsStore @Inject constructor(
         fakeTargetingRestClient.fetchBlazeAdSuggestions(siteModel.siteId, productId).let { payload ->
             when {
                 payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
-                else -> BlazeTargetingResult(payload.data)
+                else -> {
+                    campaignsDao.replaceAdSuggestions(payload.data)
+                    BlazeTargetingResult(payload.data)
+                }
             }
         }
     }
