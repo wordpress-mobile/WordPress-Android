@@ -57,32 +57,6 @@ fun StartDesignSystemPreview(){
     DesignSystem {}
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DesignSystemAppBar(
-//    currentScreen: DesignSystemScreen,
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    TopAppBar(
-        title = { Text(stringResource(id = R.string.app_name)) },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ),
-        modifier = modifier,
-        navigationIcon = {
-            if (canNavigateBack) {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.backdated_for)
-                    )
-                }
-            }
-        }
-    )
-}
 @Composable
 fun DesignSystem(
     onBackTapped: () -> Unit
