@@ -23,6 +23,7 @@ import org.wordpress.android.ui.mysite.items.PLUGINS_ITEM
 import org.wordpress.android.ui.mysite.items.SCAN_ITEM
 import org.wordpress.android.ui.mysite.items.SHARING_ITEM
 import org.wordpress.android.ui.mysite.items.SITE_ITEM_ACTION
+import org.wordpress.android.ui.mysite.items.SITE_MONITORING_ITEM
 import org.wordpress.android.ui.mysite.items.SITE_SETTINGS_ITEM
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
@@ -414,6 +415,58 @@ class SiteListItemBuilderTest {
         assertThat(item).isNull()
     }
 
+    /* SITE MONITORING */
+    @Test
+    fun `give jetpack app, when is atomic and admin, then site monitoring item is built`() {
+        setupSiteMonitoringItems()
+
+        val item = siteListItemBuilder.buildSiteMonitoringItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+
+        assertThat(item).isEqualTo(SITE_MONITORING_ITEM)
+    }
+
+    @Test
+    fun `give jetpack app, when is not atomic, then site monitoring item is not built`() {
+        setupSiteMonitoringItems(
+            isAtomic = false
+        )
+
+        val item = siteListItemBuilder.buildSiteMonitoringItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+
+        assertThat(item).isNull()
+    }
+
+    @Test
+    fun `give jetpack app, when is not admin, then site monitoring item is not built`() {
+        setupSiteMonitoringItems(
+            isAdmin = false
+        )
+
+        val item = siteListItemBuilder.buildSiteMonitoringItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+
+        assertThat(item).isNull()
+    }
+
+    @Test
+    fun `give not jetpack app, when site monitoring item requested, then site monitoring item is not built`() {
+        setupSiteMonitoringItems(
+            isJetpackApp = false
+        )
+
+        val item = siteListItemBuilder.buildSiteMonitoringItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+
+        assertThat(item).isNull()
+    }
+
+    private fun setupSiteMonitoringItems(
+        isJetpackApp: Boolean = true,
+        isAtomic: Boolean = true,
+        isAdmin: Boolean = true
+    ) {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(isJetpackApp)
+        whenever(siteModel.isAdmin).thenReturn(isAdmin)
+        whenever(siteModel.isWPComAtomic).thenReturn(isAtomic)
+    }
     private fun setupSiteSettings(canManageOptions: Boolean = false, isAccessedViaWPComRest: Boolean = true) {
         whenever(siteModel.hasCapabilityManageOptions).thenReturn(canManageOptions)
         whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(isAccessedViaWPComRest)
