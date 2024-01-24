@@ -9,15 +9,12 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import javax.inject.Inject;
 
 
 public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
-    @Inject SaveStoryGutenbergBlockUseCase mSaveStoryGutenbergBlockUseCase;
-
     @Inject public MediaUploadReadyProcessor() {
         ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
     }

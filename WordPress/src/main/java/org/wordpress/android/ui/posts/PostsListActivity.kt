@@ -27,7 +27,6 @@ import com.google.android.play.core.review.model.ReviewErrorCode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostListActivityBinding
-import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
@@ -37,7 +36,6 @@ import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATIO
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
-import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_POSTS_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
@@ -312,8 +310,7 @@ class PostsListActivity : LocaleAwareActivity(),
             if (fragment == null) {
                 val prepublishingFragment = newInstance(
                     site = site,
-                    isPage = editPostRepository.isPage,
-                    isStoryPost = false
+                    isPage = editPostRepository.isPage
                 )
                 prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
             }
