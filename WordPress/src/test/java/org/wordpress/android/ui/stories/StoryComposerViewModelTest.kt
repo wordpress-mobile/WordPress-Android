@@ -26,7 +26,6 @@ import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSessionWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
-import org.wordpress.android.ui.stories.usecase.SetUntitledStoryTitleIfTitleEmptyUseCase
 
 @ExperimentalCoroutinesApi
 class StoryComposerViewModelTest : BaseUnitTest() {

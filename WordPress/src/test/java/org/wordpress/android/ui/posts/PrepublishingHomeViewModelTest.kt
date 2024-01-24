@@ -28,8 +28,6 @@ import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUi
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewModel
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
-import org.wordpress.android.ui.stories.StoryRepositoryWrapper
-import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event

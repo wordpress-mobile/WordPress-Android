@@ -21,7 +21,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.TestContent
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.util.helpers.MediaFile
 
 @ExperimentalCoroutinesApi

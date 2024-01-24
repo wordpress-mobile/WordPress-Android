@@ -14,7 +14,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 
 @ExperimentalCoroutinesApi
 class SetUntitledStoryTitleIfTitleEmptyUseCaseTest : BaseUnitTest() {
