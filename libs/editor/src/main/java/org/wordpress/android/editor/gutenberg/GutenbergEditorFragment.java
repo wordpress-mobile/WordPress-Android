@@ -110,8 +110,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_GUTENBERG_WEB_VIEW_AUTH_DATA = "param_gutenberg_web_view_auth_data";
     private static final String ARG_GUTENBERG_PROPS_BUILDER = "param_gutenberg_props_builder";
-    private static final String ARG_STORY_EDITOR_REQUEST_CODE = "param_sory_editor_request_code";
-    public static final String ARG_STORY_BLOCK_ID = "story_block_id";
     public static final String ARG_STORY_BLOCK_UPDATED_CONTENT = "story_block_updated_content";
     public static final String ARG_STORY_BLOCK_EXTERNALLY_EDITED_ORIGINAL_HASH = "story_block_original_hash";
     public static final String ARG_FAILED_MEDIAS = "arg_failed_medias";
@@ -142,7 +140,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private Runnable mInvalidateOptionsRunnable;
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
-    private int mStoryBlockEditRequestCode;
 
     // pointer (to the Gutenberg container fragment) that outlives this fragment's Android lifecycle. The retained
     //  fragment can be alive and accessible even before it gets attached to an activity.
@@ -170,12 +167,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       boolean isNewPost,
                                                       GutenbergWebViewAuthorizationData webViewAuthorizationData,
                                                       GutenbergPropsBuilder gutenbergPropsBuilder,
-                                                      int storyBlockEditRequestCode,
                                                       boolean jetpackFeaturesEnabled) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
-        args.putInt(ARG_STORY_EDITOR_REQUEST_CODE, storyBlockEditRequestCode);
         args.putBoolean(ARG_JETPACK_FEATURES_ENABLED, jetpackFeaturesEnabled);
         fragment.setArguments(args);
         SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(context);
@@ -245,7 +240,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         if (getArguments() != null) {
             mIsNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
-            mStoryBlockEditRequestCode = getArguments().getInt(ARG_STORY_EDITOR_REQUEST_CODE);
         }
 
         ViewGroup gutenbergContainer = view.findViewById(R.id.gutenberg_container);
@@ -729,18 +723,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 trackWebViewClosed("save");
             } else {
                 trackWebViewClosed("dismiss");
-            }
-        } else if (requestCode == mStoryBlockEditRequestCode) {
-            if (resultCode == Activity.RESULT_OK) {
-                // handle edited block content, also keep edited block content to handle later if Gutenberg not
-                // mounted right now
-                String blockId = data.getStringExtra(ARG_STORY_BLOCK_ID);
-                mUpdatedStoryBlockContent = data.getStringExtra(ARG_STORY_BLOCK_UPDATED_CONTENT);
-                getGutenbergContainerFragment().replaceStoryEditedBlock(mUpdatedStoryBlockContent, blockId);
-                // TODO maybe we need to track something here?
-            } else {
-                // TODO maybe we need to track something here?
-                mExternallyEditedBlockOriginalHash = null;
             }
         }
     }

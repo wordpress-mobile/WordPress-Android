@@ -71,12 +71,12 @@ import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.ExceptionLogger;
-import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.android.editor.gutenberg.DialogVisibility;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
 import org.wordpress.android.editor.gutenberg.StorySaveMediaListener;
+import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -89,7 +89,6 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
 import org.wordpress.android.fluxc.model.EditorTheme;
 import org.wordpress.android.fluxc.model.EditorThemeSupport;
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
@@ -447,7 +446,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
     private boolean mIsJetpackSsoEnabled;
-    private boolean mStoryEditingCancelled = false;
 
     private boolean mNetworkErrorOnLastMediaFetchAttempt = false;
 
@@ -2386,7 +2384,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 mIsNewPost,
                                 gutenbergWebViewAuthorizationData,
                                 gutenbergPropsBuilder,
-                                RequestCodes.EDIT_STORY,
                                 mJetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures()
                         );
                     } else {
@@ -2815,20 +2812,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK:
                     mEditorFragment.mediaSelectionCancelled();
                     return;
-                case RequestCodes.EDIT_STORY:
-                    mStoryEditingCancelled = true;
-                    return;
                 default:
                     // noop
                     return;
-            }
-        }
-
-        if (requestCode == RequestCodes.EDIT_STORY) {
-            mStoryEditingCancelled = false;
-            if (mEditorFragment instanceof GutenbergEditorFragment) {
-                mEditorFragment.onActivityResult(requestCode, resultCode, data);
-                return;
             }
         }
 
@@ -3505,7 +3491,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         // don't start listening for Story events just now if we're waiting for a block to be replaced,
         // unless the user cancelled editing in which case we should continue as normal and attach the listener
-        if (!replaceBlockActionWaiting || mStoryEditingCancelled) {
+        if (!replaceBlockActionWaiting) {
             mStoriesEventListener.startListening();
         }
 
@@ -3588,10 +3574,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         updateAndSavePostAsync(updatePostResult -> {
             boolean noSlidesLoaded = mStoriesEventListener.onRequestMediaFilesEditorLoad(
                     EditPostActivity.this,
-                    new LocalId(mEditPostRepository.getId()),
                     mNetworkErrorOnLastMediaFetchAttempt,
-                    mediaFiles,
-                    blockId
+                    mediaFiles
             );
 
             if (mNetworkErrorOnLastMediaFetchAttempt && noSlidesLoaded) {

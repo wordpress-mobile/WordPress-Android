@@ -45,8 +45,6 @@ sealed class SiteNavigationAction {
     object StartWPComLoginForJetpackStats : SiteNavigationAction()
     data class OpenStats(val site: SiteModel) : SiteNavigationAction()
     data class ConnectJetpackForStats(val site: SiteModel) : SiteNavigationAction()
-    data class OpenStories(val site: SiteModel, val event: StorySaveResult) : SiteNavigationAction()
-
     data class OpenDomainRegistration(val site: SiteModel) : SiteNavigationAction()
     data class OpenPaidDomainSearch(val site: SiteModel) : SiteNavigationAction()
     data class OpenFreeDomainSearch(val site: SiteModel) : SiteNavigationAction()

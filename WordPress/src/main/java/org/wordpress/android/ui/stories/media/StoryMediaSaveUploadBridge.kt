@@ -26,7 +26,6 @@ import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.posts.editor.media.AddLocalMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase
-import org.wordpress.android.ui.stories.StoryComposerActivity
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
@@ -244,7 +243,6 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 // only remove it if it was successful - we want to keep it and show a snackbar once when the user
                 // comes back to the app if it wasn't, see MySiteFragment for details.
                 eventBusWrapper.removeStickyEvent(event)
-                editPostRepository.loadPostByLocalPostId(it.getInt(StoryComposerActivity.KEY_POST_LOCAL_ID))
                 // media upload tracking already in addLocalMediaToPostUseCase.addNewMediaToEditorAsync
                 addNewStoryFrameMediaItemsToPostAndUploadAsync(site, event)
             }

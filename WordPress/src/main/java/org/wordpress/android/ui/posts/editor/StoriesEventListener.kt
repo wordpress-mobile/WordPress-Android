@@ -29,7 +29,6 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.UPLOADED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.editor.media.EditorMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
@@ -251,36 +250,17 @@ class StoriesEventListener @Inject constructor(
     // Editor load / cancel events
     fun onRequestMediaFilesEditorLoad(
         activity: Activity,
-        postId: LocalId,
         networkErrorOnLastMediaFetchAttempt: Boolean,
-        mediaFiles: ArrayList<Any>,
-        blockId: String
+        mediaFiles: ArrayList<Any>
     ): Boolean {
         if (mediaFiles.isEmpty()) {
-            ActivityLauncher.editEmptyStoryForResult(
-                activity,
-                site,
-                postId,
-                storyRepositoryWrapper.getCurrentStoryIndex(),
-                blockId
-            )
+            // do nothing?
             return false
         }
 
         val reCreateStoryResult = loadStoryFromStoriesPrefsUseCase
             .loadStoryFromMemoryOrRecreateFromPrefs(site, mediaFiles)
-        if (!reCreateStoryResult.noSlidesLoaded) {
-            // Story instance loaded or re-created! Load it onto the StoryComposer for editing now
-            ActivityLauncher.editStoryForResult(
-                activity,
-                site,
-                postId,
-                reCreateStoryResult.storyIndex,
-                reCreateStoryResult.allStorySlidesAreEditable,
-                true,
-                blockId
-            )
-        } else {
+        if (reCreateStoryResult.noSlidesLoaded) {
             // unfortunately we couldn't even load the remote media Ids indicated by the StoryBlock so we can't allow
             // editing at this time :(
             if (networkErrorOnLastMediaFetchAttempt) {
