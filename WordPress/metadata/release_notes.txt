@@ -1,6 +1,4 @@
-* [*] Block Editor: Fix missing custom color indicator for custom gradients [https://github.com/WordPress/gutenberg/pull/57605]
-* [**] Block Editor: Display a notice when a network connection is unavailable [https://github.com/WordPress/gutenberg/pull/56934]
-* [**] Block Editor: Image block media uploads display a custom error message when there is no internet connection [https://github.com/wordpress-mobile/WordPress-Android/pull/19878]
-* [**] Block Editor: Media uploads that failed due to lack of internet connectivity automatically retry once a connection is re-established [https://github.com/wordpress-mobile/WordPress-Android/pull/19803]
-* [*] Reader: Fix the issue with icons displaying incorrectly in RTL languages. [https://github.com/wordpress-mobile/WordPress-Android/pull/19962]
-
+- Get notified when you’re working offline.
+- Image block uploads pause when you lose internet and resume when you reconnect.
+- Select a custom gradient in the editor and see a color indicator.
+- “Forward” and “back” arrows are correct for right-to-left readers.
