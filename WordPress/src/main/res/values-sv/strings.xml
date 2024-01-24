@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-03 12:52:11+0000
+Translation-Revision-Date: 2024-01-22 20:13:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">Väntar på anslutning</string>
+    <string name="stats_traffic">Trafik</string>
+    <string name="gutenberg_native_working_offline">Arbetar offline</string>
+    <string name="gutenberg_native_network_connection_re_established">Nätverksanslutningen har återupprättats</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">Nätverksanslutning förlorad, arbetar offline</string>
+    <string name="gutenberg_native_font_size_1_s">Textstorlek, %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">Filtypen stöds inte som en mediafil.</string>
+    <string name="media_cannot_be_started">Vi kan inte öppna mediafilen för tillfället. Försök igen senare</string>
+    <string name="domains_just_search_for_a_domain_button">Sök bara efter en domän</string>
+    <string name="domains_upgrade_to_a_plan_button">Uppgradera till ett paket</string>
+    <string name="domains_upgrade_to_plan_caption">Få en gratis domänregistrering eller -överföring i ett år med ett valfritt årligt betalpaket.</string>
+    <string name="domains_site_domain_never_expires">Löper aldrig ut</string>
+    <string name="domains_free_domain">Din gratis WordPress.com-domän</string>
+    <string name="domains_site_other_domains">Andra domäner för %s</string>
+    <string name="domains_primary_site_domain_chip">Primär domän</string>
+    <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary är här!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Nu kör vi!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Aktivera bloggningsförslag</string>
@@ -156,10 +172,6 @@ Language: sv_SE
     <string name="campaign_detail_error_title">Något gick fel</string>
     <string name="campaign_listing_page_error_title">Något gick fel</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Något gick fel: kunde inte hämta kampanjerna</string>
-    <string name="domain_transfer_card_cta">Överför dina domäner</string>
-    <string name="domain_transfer_card_caption">Som du kanske vet, har Google Domains blivit uppköpta av Squarespace. Nu kan du föra över dina domäner till WordPress.com. Vi betalar kostnaden för överföringen och ett extra år på din domänregistrering.</string>
-    <string name="domain_transfer_card_sub_title">Ta tillbaka dina Google-domäner</string>
-    <string name="domain_transfer_card_title">Nyheter</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Anslut konton</string>
     <string name="prepublishing_nudges_toolbar_title_social">Social delning</string>
     <string name="prepublishing_nudges_social_action">Social delning</string>
@@ -401,7 +413,7 @@ Language: sv_SE
     <string name="stats_timeframe_last_seven_days">Senaste 7 dagarna</string>
     <string name="weeks_quantity_other">%d veckor</string>
     <string name="weeks_quantity_one">1 vecka</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Från &lt;b&gt;dag ett&lt;/b&gt;</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">Från &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Påminn mig senare</string>
     <string name="jetpack_feature_card_content_phase_three">Statistik, läsare, aviseringar och andra funktioner kommer snart att flyttas till Jetpacks mobilapp.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Byt till Jetpack-appen</string>
@@ -824,7 +836,6 @@ Language: sv_SE
     <string name="my_site_post_card_scheduled_title">Kommande schemalagda inlägg</string>
     <string name="my_site_post_card_draft_title">Arbeta med ett inläggsutkast</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis för det första året &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/år&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Din domän kommer omdirigeras till din webbplats på %s</string>
     <string name="gutenberg_native_create_link">Skapa länk</string>
     <string name="domains_suggestions_select_domain">Välj domän</string>
     <string name="domains_title">Domäner</string>
@@ -845,14 +856,9 @@ Language: sv_SE
     <string name="domains_free_plan_get_your_domain_caption">Domäner som är köpta på denna webbplats kommer att omdirigera besökare till &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Ditt paket inkluderar en gratis domännamnsregistrering i ett år</string>
     <string name="domains_paid_plan_claim_your_domain_title">Gör anspråk på din gratisdomän</string>
-    <string name="domains_manage_domains">Hantera domäner</string>
     <string name="domains_add_a_domain">Lägg till en domän</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Upphör att gälla %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Upphör att gälla %s</string>
-    <string name="domains_site_domains">Domänerna för din webbplats</string>
-    <string name="domains_primary_site_address_chip">Primär webbplatsadress</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Ändra webbplatsens adress</string>
-    <string name="domains_primary_site_caption">Din gratisadress hos WordPress.com är</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s för det första året &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /år&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /år&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Vill du kasta dem?</string>
@@ -878,7 +884,6 @@ Language: sv_SE
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Du&lt;/a&gt; gillar detta.</string>
     <string name="gutenberg_native_line_height">Radhöjd</string>
     <string name="domains_free_plan_get_your_domain_title">Skaffa din egen domän</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Okänt fel vid hämtning av rekommenderad app-mall</string>
     <string name="recommend_app_bad_format_response">Ett ogiltigt svar har tagits emot</string>
     <string name="recommend_app_null_response">Inget svar har tagits emot</string>
@@ -2077,8 +2082,8 @@ Language: sv_SE
     <string name="post_list_search_nothing_found">Inga inlägg passar in på dina sökbegrepp</string>
     <string name="post_list_search_prompt">Sök inlägg</string>
     <string name="domains_suggestions_intro_description">Det är här du kommer att hittas på internet.</string>
-    <string name="domains_suggestions_intro_title">Välj ett premium-domännamn</string>
-    <string name="my_site_custom_domain_name">Alla prispaket hos WordPress.com innehåller ett anpassat domännamn. Registrera ditt fria premium-domännamn nu.</string>
+    <string name="domains_suggestions_intro_title">Välj ett anpassade domännamn</string>
+    <string name="my_site_custom_domain_name">Alla årliga WordPress.com-paket inkluderar ett anpassat domännamn. Registrera din gratis domän nu.</string>
     <string name="stats_widget_minified_name">I korthet</string>
     <string name="stats_widget_today_insights_name">Idag</string>
     <string name="stats_widget_all_time_insights_name">Sedan starten</string>

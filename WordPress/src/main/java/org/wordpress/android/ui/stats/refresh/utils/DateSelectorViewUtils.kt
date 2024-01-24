@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
 import android.view.View
+import androidx.core.view.isVisible
 import org.wordpress.android.databinding.StatsListFragmentBinding
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 
@@ -26,5 +27,8 @@ fun StatsListFragmentBinding.drawDateSelector(dateSelectorUiModel: DateSelectorU
         if (nextDateButton.isEnabled != enableNextButton) {
             nextDateButton.isEnabled = enableNextButton
         }
+        granularitySpinner.isVisible = dateSelectorUiModel?.isGranularitySpinnerVisible == true
+        granularitySpace.isVisible = dateSelectorUiModel?.isGranularitySpinnerVisible == true
+        dateSpace.isVisible = dateSelectorUiModel?.isGranularitySpinnerVisible != true
     }
 }
