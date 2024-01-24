@@ -86,6 +86,7 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
         }
     }
 
+    @Suppress("FunctionOnlyReturningConstant")
     fun shouldShowStoryPost(): Boolean = false
 
     fun shouldShowJetpackPoweredEditorFeatures(): Boolean {
