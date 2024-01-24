@@ -32,7 +32,6 @@ import java.util.ArrayList;
 public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
-    public static final String WP_STORIES_CREATOR_NAME = "wp_stories_creator";
     public static final String WP_STORIES_JETPACK_VERSION = "9.1";
     public static final String WP_CONTACT_INFO_JETPACK_VERSION = "8.5";
     public static final String WP_FACEBOOK_EMBED_JETPACK_VERSION = "9.0";

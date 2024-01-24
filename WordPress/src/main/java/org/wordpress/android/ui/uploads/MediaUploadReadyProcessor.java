@@ -29,10 +29,7 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
             boolean showAztecEditor = AppPrefs.isAztecEditorEnabled();
             boolean showGutenbergEditor = AppPrefs.isGutenbergEditorEnabled();
 
-            if (PostUtils.contentContainsWPStoryGutenbergBlocks(post.getContent())) {
-                mSaveStoryGutenbergBlockUseCase
-                    .replaceLocalMediaIdsWithRemoteMediaIdsInPost(post, site, mediaFile);
-            } else if (showGutenbergEditor && PostUtils.contentContainsGutenbergBlocks(post.getContent())) {
+            if (showGutenbergEditor && PostUtils.contentContainsGutenbergBlocks(post.getContent())) {
                 String siteUrl = site != null ? site.getUrl() : "";
                 post.setContent(
                         PostUtils.replaceMediaFileWithUrlInGutenbergPost(post.getContent(), localMediaId, mediaFile,

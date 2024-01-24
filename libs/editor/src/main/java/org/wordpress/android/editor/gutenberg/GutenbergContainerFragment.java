@@ -88,8 +88,6 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnGutenbergDidSendButtonPressedActionListener
                                           onGutenbergDidSendButtonPressedActionListener,
                                   ShowSuggestionsUtil showSuggestionsUtil,
-                                  OnMediaFilesCollectionBasedBlockEditorListener
-                                          onMediaFilesCollectionBasedBlockEditorListener,
                                   OnFocalPointPickerTooltipShownEventListener onFPPTooltipShownEventListener,
                                   OnGutenbergDidRequestPreviewListener
                                           onGutenbergDidRequestPreviewListener,
@@ -117,7 +115,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onGutenbergDidRequestEmbedFullscreenPreviewListener,
                     onGutenbergDidSendButtonPressedActionListener,
                     showSuggestionsUtil,
-                    onMediaFilesCollectionBasedBlockEditorListener,
+                    null, //todo
                     onFPPTooltipShownEventListener,
                     onGutenbergDidRequestPreviewListener,
                     onBlockTypeImpressionsListener,

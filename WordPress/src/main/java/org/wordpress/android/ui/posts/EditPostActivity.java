@@ -75,7 +75,6 @@ import org.wordpress.android.editor.gutenberg.DialogVisibility;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
-import org.wordpress.android.editor.gutenberg.StorySaveMediaListener;
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
@@ -167,7 +166,6 @@ import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor.PostFields;
-import org.wordpress.android.ui.posts.editor.StoriesEventListener;
 import org.wordpress.android.ui.posts.editor.XPostsCapabilityChecker;
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
@@ -182,9 +180,6 @@ import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessage
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
-import org.wordpress.android.ui.stories.StoryRepositoryWrapper;
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs;
-import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
 import org.wordpress.android.ui.uploads.PostEvents;
@@ -427,10 +422,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject XPostsCapabilityChecker mXpostsCapabilityChecker;
     @Inject CrashLogging mCrashLogging;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
-    @Inject StoryRepositoryWrapper mStoryRepositoryWrapper;
-    @Inject LoadStoryFromStoriesPrefsUseCase mLoadStoryFromStoriesPrefsUseCase;
-    @Inject StoriesPrefs mStoriesPrefs;
-    @Inject StoriesEventListener mStoriesEventListener;
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
     @Inject GlobalStyleSupportFeatureConfig mGlobalStyleSupportFeatureConfig;
     @Inject ZendeskHelper mZendeskHelper;
@@ -733,10 +724,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
             if (mEditorFragment instanceof EditorMediaUploadListener) {
                 mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
             }
-
-            if (mEditorFragment instanceof StorySaveMediaListener) {
-                mStoriesEventListener.setSaveMediaListener((StorySaveMediaListener) mEditorFragment);
-            }
         }
 
         if (mSite == null) {
@@ -788,13 +775,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (!mIsNewPost) {
-            // if we are opening an existing Post, and it contains a Story block, pre-fetch the media in case
-            // the user wants to edit the block (we'll need to download it first if the slides images weren't
-            // created on this device)
-            if (PostUtils.contentContainsWPStoryGutenbergBlocks(mEditPostRepository.getPost().getContent())) {
-                fetchMediaList();
-            }
-
             // if we are opening a Post for which an error notification exists, we need to remove it from the dashboard
             // to prevent the user from tapping RETRY on a Post that is being currently edited
             UploadService.cancelFinalNotification(this, mEditPostRepository.getPost());
@@ -814,8 +794,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
 
         setupPrepublishingBottomSheetRunnable();
-
-        mStoriesEventListener.start(this.getLifecycle(), mSite, mEditPostRepository, this);
 
         // The check on savedInstanceState should allow to show the dialog only on first start
         // (even in cases when the VM could be re-created like when activity is destroyed in the background)
@@ -1505,29 +1483,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
             invalidateOptionsMenu();
         } else if (mEditorPhotoPicker.isPhotoPickerShowing()) {
             mEditorPhotoPicker.hidePhotoPicker();
-        } else {
-            performWhenNoStoriesBeingSaved(new DoWhenNoStoriesBeingSavedCallback() {
-                @Override public void doWhenNoStoriesBeingSaved() {
-                    savePostAndOptionallyFinish(true, false);
-                }
-            });
         }
 
         return true;
-    }
-
-    interface DoWhenNoStoriesBeingSavedCallback {
-        void doWhenNoStoriesBeingSaved();
-    }
-
-    private void performWhenNoStoriesBeingSaved(DoWhenNoStoriesBeingSavedCallback callback) {
-        if (mStoriesEventListener.getStoriesSavingInProgress().isEmpty()) {
-            callback.doWhenNoStoriesBeingSaved();
-        } else {
-            // Oops! A story is still being saved, let's wait
-            ToastUtils.showToast(EditPostActivity.this,
-                    getString(R.string.toast_edit_story_update_in_progress_title));
-        }
     }
 
     private RemotePreviewLogicHelper.RemotePreviewHelperFunctions getEditPostActivityStrategyFunctions() {
@@ -1692,7 +1650,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
             case PUBLISH_NOW:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
                 mPublishPostImmediatelyUseCase.updatePostToPublishImmediately(mEditPostRepository, mIsNewPost);
-                checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
                 return true;
             case NONE:
                 throw new IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case");
@@ -1790,13 +1747,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         switch (getPrimaryAction()) {
             case PUBLISH_NOW:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
-                checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
                 return;
             case UPDATE:
             case CONTINUE:
             case SCHEDULE:
             case SUBMIT_FOR_REVIEW:
-                checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
                 return;
             case SAVE:
                 uploadPost(false);
@@ -1854,13 +1809,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
             if (!media.getMarkedLocallyAsFeatured() && mEditorMediaUploadListener != null) {
                 mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
                         FluxCUtils.mediaFileFromMediaModel(media));
-                if (PostUtils.contentContainsWPStoryGutenbergBlocks(mEditPostRepository.getContent())) {
-                    // make sure to sync the local post object with the UI and save
-                    // then post the event for StoriesEventListener to process
-                    updateAndSavePostAsync(
-                            updatePostResult -> mStoriesEventListener.postStoryMediaUploadedEvent(media)
-                    );
-                }
             } else if (media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mEditPostRepository
                     .getId()) {
                 setFeaturedImageId(media.getMediaId(), false, false);
@@ -2165,14 +2113,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         };
     }
 
-    private void checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet() {
-        performWhenNoStoriesBeingSaved(new DoWhenNoStoriesBeingSavedCallback() {
-            @Override public void doWhenNoStoriesBeingSaved() {
-                showPrepublishingNudgeBottomSheet();
-            }
-        });
-    }
-
     private void showPrepublishingNudgeBottomSheet() {
         mViewPager.setCurrentItem(PAGE_CONTENT);
         ActivityUtils.hideKeyboard(this);
@@ -2420,10 +2360,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         mEditorFragment.setCustomHttpHeader("User-Agent", WordPress.getUserAgent());
 
                         reattachUploadingMediaForAztec();
-                    }
-
-                    if (mEditorFragment instanceof StorySaveMediaListener) {
-                        mStoriesEventListener.setSaveMediaListener((StorySaveMediaListener) mEditorFragment);
                     }
                     break;
                 case PAGE_SETTINGS:
@@ -3489,28 +3425,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mPostEditorAnalyticsSession.start(unsupportedBlocksList, themeSupportsGalleryWithImageBlocks(), entryPoint);
         presentNewPageNoticeIfNeeded();
 
-        // don't start listening for Story events just now if we're waiting for a block to be replaced,
-        // unless the user cancelled editing in which case we should continue as normal and attach the listener
-        if (!replaceBlockActionWaiting) {
-            mStoriesEventListener.startListening();
-        }
-
         // Start VM, load prompt and populate Editor with content after edit IS ready.
         final int promptId = getIntent().getIntExtra(EXTRA_PROMPT_ID, -1);
         mEditorBloggingPromptsViewModel.start(mSite, promptId);
-    }
-
-    @Override
-    public void onReplaceStoryEditedBlockActionSent() {
-        // when a replaceBlock signal has been sent, it uses the DeferredEventEmitter so we have to wait for
-        // the block replacement to be completed before we can start throwing block-related events at it
-        // otherwise these events will miss their target
-        mStoriesEventListener.pauseListening();
-    }
-
-    @Override
-    public void onReplaceStoryEditedBlockActionReceived() {
-        mStoriesEventListener.startListening();
     }
 
     private void logTemplateSelection() {
@@ -3567,34 +3484,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onTrackableEvent(TrackableEvent event, Map<String, String> properties) {
         mEditorTracker.trackEditorEvent(event, mEditorFragment.getEditorName(), properties);
-    }
-
-    @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
-        // we need to save the latest before editing
-        updateAndSavePostAsync(updatePostResult -> {
-            boolean noSlidesLoaded = mStoriesEventListener.onRequestMediaFilesEditorLoad(
-                    EditPostActivity.this,
-                    mNetworkErrorOnLastMediaFetchAttempt,
-                    mediaFiles
-            );
-
-            if (mNetworkErrorOnLastMediaFetchAttempt && noSlidesLoaded) {
-                // try another fetchMedia request
-                fetchMediaList();
-            }
-        });
-    }
-
-    @Override public void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles) {
-        mStoriesEventListener.onRetryUploadForMediaCollection(this, mediaFiles, mEditorMediaUploadListener);
-    }
-
-    @Override public void onCancelUploadForMediaCollection(ArrayList<Object> mediaFiles) {
-        mStoriesEventListener.onCancelUploadForMediaCollection(mediaFiles);
-    }
-
-    @Override public void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles) {
-        mStoriesEventListener.onCancelSaveForMediaCollection(mediaFiles);
     }
 
     @Override public boolean showPreview() {
