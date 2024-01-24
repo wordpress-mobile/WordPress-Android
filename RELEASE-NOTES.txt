@@ -6,6 +6,7 @@
 
 24.1
 -----
+* [**] Disabled the ability of creating new Story posts. [#20014]
 
 24.0.1
 -----
