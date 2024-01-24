@@ -69,7 +69,7 @@ class DeviceListBuilder(
             // This item sets the threshold for the visible items in all the list
             val lastShownTimestamp = results.fold(0L) { timestamp, (_, result) ->
                 val nextTimestamp = result?.nextTimestamp
-                if (nextTimestamp != null && nextTimestamp > timestamp) {
+                if (result?.items?.isNotEmpty() == true && nextTimestamp != null && nextTimestamp > timestamp) {
                     nextTimestamp
                 } else {
                     timestamp
