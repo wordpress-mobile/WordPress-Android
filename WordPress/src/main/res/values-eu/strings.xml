@@ -40,13 +40,11 @@ Language: eu_ES
     <string name="post_status_sticky">Itsaskorra</string>
     <string name="domains_search_for_a_domain_button">Bilatu domeinu bat</string>
     <string name="domains_add_a_domain">Gehitu domeinu bat</string>
-    <string name="domains_site_domains">Zure gunearen domeinuak</string>
     <string name="comment_edit_user_name">Izena</string>
     <string name="comment_edit_comment">Iruzkina</string>
     <string name="comment_edit_web_address">Web helbidea</string>
     <string name="comment_edit_email_address">E-posta helbidea</string>
     <string name="comment_edit_menu_done">Eginda</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="my_site_btn_domains">Domeinuak</string>
     <string name="my_site_quick_actions_title">Esteka azkarrak</string>
     <string name="gutenberg_native_selected_s">Hautatuta: %s</string>

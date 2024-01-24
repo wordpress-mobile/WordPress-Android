@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-16 21:49:30+0000
+Translation-Revision-Date: 2024-01-17 21:47:13+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_working_offline">Çevrimdışı Çalışıyor</string>
+    <string name="gutenberg_native_network_connection_re_established">Ağ bağlantısı yeniden kuruldu</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">Ağ bağlantısı kesildi, çevrimdışı çalışıyor</string>
+    <string name="gutenberg_native_font_size_1_s">Yazı Tipi Boyutu, %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">Dosya türü bir ortam dosyası olarak desteklenmiyor.</string>
+    <string name="media_cannot_be_started">Şu anda ortamı açamıyoruz. Lütfen daha sonra tekrar deneyin</string>
+    <string name="domains_just_search_for_a_domain_button">Sadece alan adı arayacağım</string>
+    <string name="domains_upgrade_to_a_plan_button">Ücretli bir pakete geç</string>
+    <string name="domains_upgrade_to_plan_caption">Yıllık ücretli paketlerden herhangi biriyle bir yıllık ücretsiz alan adı kaydı veya transferi hakkı edinin.</string>
+    <string name="domains_site_domain_never_expires">Süresi asla bitmez</string>
+    <string name="domains_free_domain">Ücretsiz WordPress.com alan adınız</string>
+    <string name="domains_primary_site_domain_chip">Birincil alan adı</string>
+    <string name="bloganuary_dashboard_nudge_title_january">Bloganuary burada!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Başlayalım!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Blog istemlerini aç</string>
     <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary Ocak ayı boyunca size konular göndermek için Günlük Blog İstemlerini kullanacak.</string>
@@ -16,7 +29,6 @@ Language: tr
     <string name="bloganuary_dashboard_nudge_overlay_title">Bir ay sürecek yazma etkinliğimize katılın</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Blog yılı</string>
     <string name="bloganuary_dashboard_nudge_text">Yeni yılda blog yazma alışkanlığı oluşturmayı hedefleyen topluluk etkinliğimiz Bloganuary\'den Ocak ayı boyunca blog istemleri alacaksınız.</string>
-    <string name="bloganuary_dashboard_nudge_title">Bloganuary yaklaşıyor!</string>
     <string name="turn_off">Hayır, kapat</string>
     <string name="leave_on">Evet, açık kalsın</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Bu nedenle, bloku web tarayıcınızı kullanarak düzenlemenizi öneririz.</string>
@@ -155,10 +167,6 @@ Language: tr
     <string name="campaign_detail_error_title">Bir şeyler yanlış gitti</string>
     <string name="campaign_listing_page_error_title">Bir şeyler yanlış gitti</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Bir şeyler yanlış gitti, kampanyalar çekilemiyor</string>
-    <string name="domain_transfer_card_cta">Alan adlarınızı aktarın</string>
-    <string name="domain_transfer_card_caption">Bildiğiniz gibi Google Domains, Squarespace firmasına satıldı. Alan adlarınızı şimdi WordPress.com\'a taşıyın, tüm taşıma masrafları ve ek bir yıllık alan adı kaydı ücretini biz üstlenelim.</string>
-    <string name="domain_transfer_card_sub_title">Google Domains için harekete geçin</string>
-    <string name="domain_transfer_card_title">Haberler</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Hesapları bağla</string>
     <string name="prepublishing_nudges_toolbar_title_social">Sosyal paylaşım</string>
     <string name="prepublishing_nudges_social_action">Sosyal paylaşım</string>
@@ -400,7 +408,6 @@ Language: tr
     <string name="stats_timeframe_last_seven_days">Son 7 gün</string>
     <string name="weeks_quantity_other">%d hafta</string>
     <string name="weeks_quantity_one">1 hafta</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt; tarafından</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Daha sonra hatırlat</string>
     <string name="jetpack_feature_card_content_phase_three">İstatistikler, Okuyucu, Bildirimler ve diğer özellikler yakında Jetpack mobil uygulamasına taşınacak.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Jetpack uygulamasına geçiş yapın</string>
@@ -823,7 +830,6 @@ Language: tr
     <string name="my_site_post_card_scheduled_title">Yaklaşan zamanlanmış gönderiler</string>
     <string name="my_site_post_card_draft_title">Bir taslak yazı üzerinde çalışın</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;İlk yıl ücretsiz, &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /yıl&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Alan adlarınız %s adresindeki sitenize yönlendirilecektir.</string>
     <string name="gutenberg_native_create_link">Bağlantı oluştur</string>
     <string name="domains_suggestions_select_domain">Alan adı seç</string>
     <string name="domains_title">Alan adları</string>
@@ -844,14 +850,9 @@ Language: tr
     <string name="domains_free_plan_get_your_domain_caption">Bu siteden satın alınan alan adları ziyaretçileri &lt;b&gt;%s&lt;/b&gt; sitesine yönlendirir</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Paketiniz ücretsiz bir yıllık alan adı kaydını içerir</string>
     <string name="domains_paid_plan_claim_your_domain_title">Ücretsiz alan adınızı isteyin</string>
-    <string name="domains_manage_domains">Alan Adlarını Yönet</string>
     <string name="domains_add_a_domain">Alan adı ekle</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Sona erme tarihi: %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Sona erme tarihi: %s</string>
-    <string name="domains_site_domains">Sitenizin alan adları</string>
-    <string name="domains_primary_site_address_chip">Birincil site adresi</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Site adresini değiştir</string>
-    <string name="domains_primary_site_caption">Ücretsiz WordPress.com adresiniz</string>
     <string name="domain_suggestions_list_item_cost_on_sale">İlk yıl için &lt;span style=\"color:#B26200;\"&gt;%1$s &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /yıl&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/yıl&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Bunları iptal etmek istiyor musunuz?</string>
@@ -877,7 +878,6 @@ Language: tr
     <string name="like_faces_you_like_text">Bunu &lt;a href=\"\"&gt;beğendiniz&lt;/a&gt;.</string>
     <string name="gutenberg_native_line_height">Çizgi Yüksekliği</string>
     <string name="domains_free_plan_get_your_domain_title">Alan adınızı alma</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Önerilen uygulama şablonu getirilirken bilinmeyen bir hata oluştu</string>
     <string name="recommend_app_bad_format_response">Geçersiz yanıt alındı</string>
     <string name="recommend_app_null_response">Yanıt alınamadı</string>
@@ -2074,8 +2074,8 @@ Language: tr
     <string name="post_list_search_nothing_found">Aramanızla eşleşen gönderi yok</string>
     <string name="post_list_search_prompt">Yazıları ara</string>
     <string name="domains_suggestions_intro_description">Bu, insanların sizi internette bulacakları yerdir.</string>
-    <string name="domains_suggestions_intro_title">Bir premium alan adı seçin</string>
-    <string name="my_site_custom_domain_name">Tüm WordPress.com planları kişisel bir alan adı içerir. Ücretsiz premium alan adınızı hemen kaydedin.</string>
+    <string name="domains_suggestions_intro_title">Özel alan adı seçin</string>
+    <string name="my_site_custom_domain_name">Tüm WordPress.com yıllık paketleri kişisel bir alan adı içerir. Ücretsiz alan adınızı hemen kaydedin.</string>
     <string name="stats_widget_minified_name">Bir bakışta</string>
     <string name="stats_widget_today_insights_name">Bugün</string>
     <string name="stats_widget_all_time_insights_name">Tüm zamanlar</string>

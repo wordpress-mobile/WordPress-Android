@@ -45,7 +45,6 @@ Language: ku_TR
     <string name="comment_edit_menu_done">Qediya</string>
     <string name="comment_edit_user_name">Nav</string>
     <string name="comment_edit_comment">Şîrove bike</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="blogging_reminders_tip">Serbend</string>
     <string name="blogging_reminders_update">Nûvekirin</string>
     <string name="blogging_reminders_done">Qediya</string>
@@ -719,9 +718,7 @@ Language: ku_TR
     <string name="stats_widget_minified_name">Bi nêrînekê</string>
     <string name="stats_widget_all_time_insights_name">Hemû-dem</string>
     <string name="domains_suggestions_intro_description">Mirov di înternetê de ew ê te li vir bibînin.</string>
-    <string name="domains_suggestions_intro_title">Navê navpereke(domain) premiûm hilbijêre</string>
     <string name="post_list_search_nothing_found">Li gorî lêgerîna te ti şandî nehatin dîtin</string>
-    <string name="my_site_custom_domain_name">Di hemû pakêtên WordPress.com\'ê de navperên(domain) taybet hene. Aniha navpera xwe ya premiûm bi belaşî tomar bike.</string>
     <string name="stats_widget_weekly_views_name">Dîtinên vê hefteyê</string>
     <string name="stats_widget_error_no_data">Dane nehatin barkirin</string>
     <string name="stats_widget_select_color">Reng</string>

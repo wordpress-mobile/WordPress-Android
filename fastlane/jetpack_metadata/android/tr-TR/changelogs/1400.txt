@@ -1,0 +1,6 @@
+24.0:
+- Alan adı panosunda ücretsiz bir alan adı içeren WordPress paketi alın
+- Metin blokları eklerken cihaz klavyesi kalır
+- Düzenleyici ekranı yeni eklenen bloklara otomatik olarak kaydırır
+- Cihazın geri düğmesine basarak blokların seçimini kaldırın
+- Tek seferde uygulamayla farklı ortam türleri paylaştığınızda uygulama çökmeyecek

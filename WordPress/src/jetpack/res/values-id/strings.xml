@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-09 16:54:03+0000
+Translation-Revision-Date: 2024-01-16 09:54:03+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="login_prologue_revamped_jetpack_feature_text_13">Perbanyak pengunjung</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">Baca blog lain</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_16">Kelola domain Anda</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_15">Tulis dari mana saja</string>
     <string name="missing_splits_dialog_message">Beberapa komponen penting aplikasi Jetpack tidak tersedia. Aplikasi perlu diinstal ulang dari Google Play Store.</string>
     <string name="me_btn_share">Rekomendasikan Jetpack kepada teman</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_12">Tambahkan penulis</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_14">Kirim foto</string>
     <string name="login_prologue_revamped_jetpack_feature_text_11">Kirim foto</string>
     <string name="login_prologue_revamped_jetpack_feature_text_10">Perbaiki masalah keamanan</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_9">Bagikan ke Facebook</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">Bagikan pos di media sosial</string>
     <string name="login_prologue_revamped_jetpack_feature_text_8">Cari plugin</string>
     <string name="login_prologue_revamped_jetpack_feature_text_7">Pulihkan cadangan</string>
     <string name="login_prologue_revamped_jetpack_feature_text_6">Tanggapi komentar</string>

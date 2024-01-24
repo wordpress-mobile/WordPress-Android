@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-12 17:55:56+0000
+Translation-Revision-Date: 2024-01-04 16:01:45+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: pt_BR
 -->
 <resources>
+    <string name="bloganuary_dashboard_nudge_title_january">O Bloganuary está aqui!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Vamos lá!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Ativar sugestões de publicação</string>
     <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">O Bloganuary usará sugestões de publicação diárias para enviar tópicos do mês de janeiro para você.</string>
@@ -15,7 +16,6 @@ Language: pt_BR
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Receba uma nova sugestão por dia para se inspirar.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Participe do nosso desafio de escrita do mês</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
-    <string name="bloganuary_dashboard_nudge_title">O Bloganuary está chegando!</string>
     <string name="turn_off">Não, desativar</string>
     <string name="leave_on">Sim, manter ativa</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Por isso, recomendamos editar o bloco usando seu navegador.</string>
@@ -187,7 +187,6 @@ Language: pt_BR
     <string name="stats_timeframe_last_seven_days">Últimos 7 dias</string>
     <string name="weeks_quantity_other">%d semanas</string>
     <string name="weeks_quantity_one">1 semana</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Do &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Lembre-me depois</string>
     <string name="jetpack_feature_card_content_phase_three">As estatísticas, o Leitor, as notificações e outras funcionalidades em breve irão para o aplicativo móvel do Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Mudar para o aplicativo do Jetpack</string>
@@ -608,7 +607,6 @@ Language: pt_BR
     <string name="my_site_post_card_scheduled_title">Próximos posts agendados</string>
     <string name="my_site_post_card_draft_title">Trabalhe em um rascunho de post</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratuito no primeiro ano &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /ano&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Seus domínios redirecionarão para o site em %s</string>
     <string name="gutenberg_native_create_link">Criar link</string>
     <string name="domains_suggestions_select_domain">Selecionar domínio</string>
     <string name="domains_title">Domínios</string>
@@ -629,14 +627,9 @@ Language: pt_BR
     <string name="domains_free_plan_get_your_domain_caption">Domínios comprados neste site redirecionarão visitantes para &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Você tem um registro de domínio gratuito por um ano incluso em seu plano.</string>
     <string name="domains_paid_plan_claim_your_domain_title">Resgatar seu domínio gratuito</string>
-    <string name="domains_manage_domains">Gerenciar domínios</string>
     <string name="domains_add_a_domain">Adicionar um domínio</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Expira em %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Expira em %s</string>
-    <string name="domains_site_domains">Domínios do seu site</string>
-    <string name="domains_primary_site_address_chip">Endereço principal do site</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Alterar o endereço do site</string>
-    <string name="domains_primary_site_caption">Seu endereço gratuito WordPress.com é</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s no primeiro ano &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /ano&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /ano&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Você deseja descartá-las?</string>
@@ -662,7 +655,6 @@ Language: pt_BR
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Você&lt;/a&gt; curtiu isso.</string>
     <string name="gutenberg_native_line_height">Altura da linha</string>
     <string name="domains_free_plan_get_your_domain_title">Obtenha seu domínio</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Erro desconhecido ao coletar modelos recomendados pelo aplicativo</string>
     <string name="recommend_app_bad_format_response">Resposta inválida recebida</string>
     <string name="recommend_app_null_response">Nenhuma resposta recebida</string>
@@ -1851,8 +1843,6 @@ Language: pt_BR
     <string name="post_list_search_nothing_found">Nenhum post corresponde à sua pesquisa</string>
     <string name="post_list_search_prompt">Pesquisar posts</string>
     <string name="domains_suggestions_intro_description">É onde as pessoas encontrarão seu site na internet.</string>
-    <string name="domains_suggestions_intro_title">Escolha um domínio premium</string>
-    <string name="my_site_custom_domain_name">Todos os planos do WordPress.com incluem um domínio personalizado. Registre seu domínio gratuito agora.</string>
     <string name="stats_widget_minified_name">Agora</string>
     <string name="stats_widget_today_insights_name">Hoje</string>
     <string name="stats_widget_all_time_insights_name">Até o momento</string>

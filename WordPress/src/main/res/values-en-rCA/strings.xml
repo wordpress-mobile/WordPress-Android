@@ -121,10 +121,6 @@ Language: en_CA
     <string name="campaign_detail_error_title">Something went wrong</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Something went wrong, could not fetch campaigns</string>
     <string name="campaign_listing_page_error_title">Something went wrong</string>
-    <string name="domain_transfer_card_caption">As you may know, Google Domains has been sold to Squarespace. Transfer your domains to WordPress.com now, and we\'ll pay all transfer fees plus an extra year of your domain registration.</string>
-    <string name="domain_transfer_card_cta">Transfer your domains</string>
-    <string name="domain_transfer_card_sub_title">Reclaim Your Google Domains</string>
-    <string name="domain_transfer_card_title">News</string>
     <string name="missing_splits_dialog_button">CLOSE</string>
     <string name="missing_splits_dialog_message">The app WordPress is missing required components and must be reinstalled from the Google Play Store.</string>
     <string name="missing_splits_dialog_title">Installation failed</string>
@@ -369,7 +365,6 @@ Language: en_CA
     <string name="weeks_quantity_one">1 week</string>
     <string name="weeks_quantity_other">%d weeks</string>
     <string name="wp_jetpack_powered_phase_2">Get the Jetpack app</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">From &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
@@ -791,7 +786,6 @@ Language: en_CA
     <string name="my_site_post_card_scheduled_title">Upcoming scheduled posts</string>
     <string name="my_site_post_card_draft_title">Work on a draft post</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Free for the first year &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Your domains will redirect to your site at %s</string>
     <string name="gutenberg_native_create_link">Create link</string>
     <string name="domains_title">Domains</string>
     <string name="post_status_sticky">Sticky</string>
@@ -812,16 +806,11 @@ Language: en_CA
     <string name="domains_paid_plan_claim_your_domain_caption">You have a free one-year domain registration included with your plan</string>
     <string name="domains_search_for_a_domain_button">Search for a domain</string>
     <string name="domains_add_a_domain">Add a domain</string>
-    <string name="domains_manage_domains">Manage Domains</string>
     <string name="domains_paid_plan_claim_your_domain_title">Claim your free domain</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Expires on %s&lt;/span&gt;</string>
-    <string name="domains_primary_site_address_chip">Primary site address</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Change site address</string>
     <string name="domains_site_domain_expires">Expires on %s</string>
-    <string name="domains_site_domains">Your site domains</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /year&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s for the first year &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /year&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_primary_site_caption">Your free WordPress.com address is</string>
     <string name="comment_edit_cancel_dialog_message">Do you want to discard them?</string>
     <string name="comment_edit_cancel_dialog_title">There are unsaved changes</string>
     <string name="comment_edit_comment">Comment</string>
@@ -844,7 +833,6 @@ Language: en_CA
     <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;You and %1$s bloggers&lt;/a&gt; like this.</string>
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;You&lt;/a&gt; like this.</string>
     <string name="domains_free_plan_get_your_domain_title">Get your domain</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="gutenberg_native_line_height">Line Height</string>
     <string name="recommend_app_generic_get_template_error">Unknown error fetching recommend app template</string>
     <string name="me_btn_share">Share WordPress with a friend</string>
@@ -2042,8 +2030,6 @@ Language: en_CA
     <string name="post_list_search_nothing_found">No posts matching your search</string>
     <string name="post_list_search_prompt">Search posts</string>
     <string name="domains_suggestions_intro_description">This is where people will find you on the internet.</string>
-    <string name="domains_suggestions_intro_title">Choose a premium domain name</string>
-    <string name="my_site_custom_domain_name">All WordPress.com plans include a custom domain name. Register your free premium domain now.</string>
     <string name="stats_widget_minified_name">At a glance</string>
     <string name="stats_widget_today_insights_name">Today</string>
     <string name="stats_widget_all_time_insights_name">All-time</string>

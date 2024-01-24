@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-19 15:54:08+0000
+Translation-Revision-Date: 2024-01-17 21:46:01+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.11
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_working_offline">العمل من دون اتصال بالإنترنت</string>
+    <string name="gutenberg_native_network_connection_re_established">أعيد إنشاء الاتصال بالشبكة</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">فقدان الاتصال بالشبكة، العمل من دون اتصال بالإنترنت</string>
+    <string name="gutenberg_native_font_size_1_s">حجم الخط، ⁦%1$s⁩</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">نوع الملف غير مدعوم كملف وسائط.</string>
+    <string name="media_cannot_be_started">يتعذر علينا فتح الوسائط في الوقت الحالي. يرجى المحاولة مجددًا في وقت لاحق</string>
+    <string name="domains_just_search_for_a_domain_button">البحث عن نطاق فحسب</string>
+    <string name="domains_upgrade_to_a_plan_button">الترقية إلى خطة</string>
+    <string name="domains_upgrade_to_plan_caption">احصل على تسجيل نطاق مجاني مدته عام أو نقله مع أي خطة سنوية.</string>
+    <string name="domains_site_domain_never_expires">لا تنتهي الصلاحية أبدًا</string>
+    <string name="domains_free_domain">نطاق ووردبريس.كوم المجاني الخاص بك</string>
+    <string name="domains_site_other_domains">نطاقات أخرى لـ %s</string>
+    <string name="domains_primary_site_domain_chip">النطاق الأساسي</string>
+    <string name="bloganuary_dashboard_nudge_title_january">أصبحت Bloganuary هنا!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">هيا بنا!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">تشغيل موجّهات التدوين</string>
     <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">ستستخدم Bloganuary موجّهات التدوين اليومية لإرسال الموضوعات الخاصة بشهر يناير إليك.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_three">اقرأ ردود المدونين الأخرى للحصول على الإلهام وإقامة اتصالات جديدة.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_two">انشر ردك.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">استقبل موجّهًا جديدًا لإلهامك في كل يوم.</string>
-    <string name="bloganuary_dashboard_nudge_title">Bloganuary قادمة!</string>
     <string name="bloganuary_dashboard_nudge_text">في شهر يناير، ستأتي موجّهات التدوين من Bloganuary - تحدٍّ مجتمعي لدينا لإنشاء عادة التدوين الخاصة بالعام الجديد.</string>
     <string name="turn_off">لا، توقف عن الاستخدام</string>
     <string name="leave_on">نعم، واصل الاستخدام</string>
@@ -145,16 +158,12 @@ Language: ar
     <string name="missing_splits_dialog_title">فشل التثبيت</string>
     <string name="campaign_detail_error_title">حدث خطأ</string>
     <string name="campaign_listing_page_error_title">حدث خطأ</string>
-    <string name="domain_transfer_card_cta">نقل نطاقاتك</string>
-    <string name="domain_transfer_card_title">الأخبار</string>
     <string name="prepublishing_nudges_social_new_connection_cta">ربط الحسابات</string>
     <string name="prepublishing_nudges_toolbar_title_social">المشاركة عبر شبكات التواصل الاجتماعي</string>
     <string name="prepublishing_nudges_social_action">المشاركة عبر شبكات التواصل الاجتماعي</string>
     <string name="sharing">اجتماعي</string>
     <string name="missing_splits_dialog_message">يفتقد تطبيق ووردبريس إلى المكوّنات المطلوبة ولا بد من إعادة تثبيته من متجر Google Play.</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> حدث خطأ، يتعذر إحضار الحملات</string>
-    <string name="domain_transfer_card_caption">مثلما تعرف، تم بيع Google Domains إلى Squarespace. انقل نطاقاتك إلى ووردبريس.كوم الآن، وسندفع كل رسوم النقل بالإضافة إلى عام إضافي من تسجيلك للنطاق.</string>
-    <string name="domain_transfer_card_sub_title">استعادة Google Domains الخاصة بك</string>
     <string name="jetpack_social_social_shares_title_all_accounts">المشاركة إلى ⁦%1$d⁩ من الحسابات</string>
     <string name="jetpack_social_social_shares_title_part_of_the_accounts">المشاركة إلى ⁦%1$d⁩ من أصل ⁦%2$d⁩ من الحسابات</string>
     <string name="jetpack_social_social_shares_title_not_sharing">لم تتم المشاركة على شبكات التواصل الاجتماعي</string>
@@ -390,7 +399,6 @@ Language: ar
     <string name="stats_timeframe_last_seven_days">آخر 7 أيام</string>
     <string name="weeks_quantity_other">%d من الأسابيع</string>
     <string name="weeks_quantity_one">أسبوع واحد</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">من &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">ذكرني لاحقًا</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">التبديل إلى تطبيق Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">معرفة المزيد على jetpack.com</string>
@@ -813,7 +821,6 @@ Language: ar
     <string name="domains_paid_plan_add_your_domain_title">إضافة نطاقك</string>
     <string name="my_site_post_card_draft_title">العمل على مسودة مقالة</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;مجاني للعام الأول &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s في العام&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">سيتم توجيه نطاقاتك إلى موقعك على %s</string>
     <string name="gutenberg_native_create_link">إنشاء رابط</string>
     <string name="post_status_sticky">مثبّت</string>
     <string name="domains_title">النطاقات</string>
@@ -834,14 +841,9 @@ Language: ar
     <string name="domains_free_plan_get_your_domain_caption">النطاقات التي تم شراؤها على هذا الموقع ستعيد توجيه الزائرين إلى &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">لديك تسجيل نطاق مجاني مدته عام واحد ضمن خطتك</string>
     <string name="domains_paid_plan_claim_your_domain_title">طالب بنطاقك المجاني</string>
-    <string name="domains_manage_domains">إدارة النطاقات</string>
     <string name="domains_add_a_domain">إضافة نطاق</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;تنتهي الصلاحية في %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">تنتهي الصلاحية في %s</string>
-    <string name="domains_site_domains">نطاقات موقعك</string>
-    <string name="domains_primary_site_address_chip">عنوان الموقع الأساسي</string>
-    <string name="domains_primary_site_more_menu_change_site_address">تغيير عنوان الموقع</string>
-    <string name="domains_primary_site_caption">عنوان ووردبريس.كوم المجاني الخاص بك هو</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /سنة&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;⁦%1$s⁩ للسنة الأولى &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;⁦%2$s⁩ / سنة&lt;/s&gt;&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">هل تريد تجاهلها؟</string>
@@ -868,7 +870,6 @@ Language: ar
     <string name="gutenberg_native_line_height">ارتفاع السطر</string>
     <string name="domains_free_plan_get_your_domain_title">الحصول على نطاقك</string>
     <string name="recommend_app_generic_get_template_error">خطأ غير معروف في أثناء إحضار قالب توصية التطبيق</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_bad_format_response">تم تلقي ردّ غير صالح</string>
     <string name="recommend_app_null_response">لم يتم تلقي أي ردّ</string>
     <string name="me_btn_share">مشاركة ووردبريس مع صديق</string>
@@ -1662,6 +1663,7 @@ Language: ar
     <string name="status_and_visibility">الحالة والظهور</string>
     <string name="ccpa_privacy_notice_header">إشعار الخصوصية الخاص بالمستخدمين في كاليفورنيا</string>
     <string name="update_now">قم بالتحديث الآن</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">فتح قائمة إجراءات المكوِّن</string>
     <string name="gutenberg_native_move_to_top">تحريك للأعلى</string>
     <string name="gutenberg_native_insert_mention">إدراج إشارة</string>
@@ -2061,12 +2063,12 @@ Language: ar
     <string name="stats_widget_error_no_access_token">لعرض إحصائياتك، سجّل الدخول إلى حساب WordPress.com.</string>
     <string name="post_list_search_nothing_found">لا تتطابق أي مقالة مع بحثك</string>
     <string name="post_list_search_prompt">بحث في المقالات</string>
-    <string name="domains_suggestions_intro_title">اختيار اسم نطاق متميز</string>
     <string name="stats_widget_minified_name">نبذة سريعة</string>
     <string name="stats_widget_today_insights_name">اليوم</string>
     <string name="stats_widget_all_time_insights_name">كل الوقت</string>
-    <string name="my_site_custom_domain_name">تتضمن جميع خطط WordPress.com اسم نطاق مخصص. سجّل نطاقك المميز المجاني الآن.</string>
     <string name="domains_suggestions_intro_description">هذا هو المكان الذي سيجدك فيه الأشخاص على الإنترنت.</string>
+    <string name="domains_suggestions_intro_title">اختيار اسم نطاق مخصص</string>
+    <string name="my_site_custom_domain_name">تتضمن جميع خطط ووردبريس.كوم السنوية اسم نطاق مخصصًا. سجِّل نطاقك المجاني الآن.</string>
     <string name="stats_widget_weekly_views_name">المشاهدات هذا الأسبوع</string>
     <string name="stats_widget_log_in_message">الرجاء تسجيل الدخول إلى تطبيق ووردبريس لإضافة ودجت.</string>
     <string name="stats_widget_error_no_network">لا توجد شبكة متاحة</string>
@@ -2608,6 +2610,7 @@ Language: ar
     <string name="plugin_caption_featured">بارز</string>
     <string name="version_with_name_param">الإصدار %s</string>
     <string name="sharing_disabled">تم تعطيل الوحدة النمطية لشبكات التواصل الاجتماعي</string>
+    <string name="sharing_disabled_description">يتعذر عليك الوصول إلى إعدادات المشاركة الاجتماعية لديك بسبب تعطيل الوحدة النمطية للمشاركة على شبكات التواصل الاجتماعي عبر Jetpack.</string>
     <string name="notification_sound_has_invalid_path">يتضمن الصوت المختار مسارًا غير صالح. يُرجى اختيار صوت آخر.</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_pages_posts">%1$d من الصفحات / المقالات متبقٍّ</string>

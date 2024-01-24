@@ -82,6 +82,7 @@ public final class AnalyticsTracker {
         READER_SITE_SHARED,
         STATS_ACCESSED,
         STATS_ACCESS_ERROR,
+        STATS_TRAFFIC_ACCESSED,
         STATS_INSIGHTS_ACCESSED,
         STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED,
         STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED,
@@ -210,6 +211,7 @@ public final class AnalyticsTracker {
         EDITOR_EDITED_IMAGE, // Visual editor only
         EDITOR_UPLOAD_MEDIA_FAILED, // Visual editor only
         EDITOR_UPLOAD_MEDIA_RETRIED, // Visual editor only
+        EDITOR_UPLOAD_MEDIA_PAUSED, // Visual editor only
         EDITOR_TAPPED_BLOCKQUOTE,
         EDITOR_TAPPED_BOLD,
         EDITOR_TAPPED_ELLIPSIS_COLLAPSE,
