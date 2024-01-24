@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.TypeConverters
@@ -42,6 +43,24 @@ abstract class BlazeCampaignsDao {
 
     @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY createdAt DESC LIMIT 1")
     abstract fun observeMostRecentCampaignForSite(siteId: Long): Flow<BlazeCampaignEntity?>
+
+    @Query("SELECT * FROM BlazeAdSuggestions WHERE siteId = :siteId AND productId = :productId")
+    abstract suspend fun getBlazeAdSuggestions(
+            siteId: Long,
+            productId: Long
+    ): List<BlazeAdSuggestionEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun insertAdSuggestions(suggestions: List<BlazeAdSuggestionEntity>)
+
+    @Query("DELETE FROM BlazeAdSuggestions")
+    abstract suspend fun deleteAdSuggestions()
+
+    @Transaction
+    open suspend fun replaceAdSuggestions(suggestions: List<BlazeAdSuggestionEntity>) {
+        deleteAdSuggestions()
+        insertAdSuggestions(suggestions)
+    }
 
     @Transaction
     open suspend fun insertCampaignsAndPageInfoForSite(
@@ -159,4 +178,13 @@ abstract class BlazeCampaignsDao {
             )
         }
     }
+
+    @Entity(tableName = "BlazeAdSuggestions")
+    data class BlazeAdSuggestionEntity(
+            @PrimaryKey val id: String,
+            val siteId: Long,
+            val productId: Long,
+            val tagLine: String,
+            val description: String
+    )
 }
