@@ -4,8 +4,8 @@ import org.wordpress.android.R
 
 object DesignSystemDataSource {
     val startScreenButtonOptions = listOf(
-        R.string.design_system_foundation,
-        R.string.design_system_components
+        Pair(R.string.design_system_foundation, DesignSystemScreen.Foundation.name),
+        Pair(R.string.design_system_components, DesignSystemScreen.Components.name),
     )
     val foundationScreenButtonOptions = listOf(
         R.string.design_system_foundation_colors,

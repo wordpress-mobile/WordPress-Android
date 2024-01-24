@@ -15,7 +15,7 @@ import org.wordpress.android.R
 
 @Composable
 fun DesignSystemStartScreen(
-    onNextButtonClicked: () -> Unit,
+    onNextButtonClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ){
     Column(
@@ -32,8 +32,8 @@ fun DesignSystemStartScreen(
             ) {
                 DesignSystemDataSource.startScreenButtonOptions.forEach { item ->
                     SelectOptionButton(
-                        labelResourceId = item,
-                        onClick = { onNextButtonClicked() }
+                        labelResourceId = item.first,
+                        onClick = { onNextButtonClicked(item.second) }
                     )
                 }
             }

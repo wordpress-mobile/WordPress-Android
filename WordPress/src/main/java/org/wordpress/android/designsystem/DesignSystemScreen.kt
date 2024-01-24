@@ -73,7 +73,7 @@ fun DesignSystem(
             composable(route = DesignSystemScreen.Start.name) {
                 DesignSystemStartScreen(
                     onNextButtonClicked = {
-                        navController.navigate(DesignSystemScreen.Foundation.name)
+                        navController.navigate(it)
                     },
                     modifier = Modifier
                         .fillMaxSize()
@@ -84,14 +84,14 @@ fun DesignSystem(
                 DesignSystemFoundationScreen(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(dimensionResource(R.dimen.button_container_shadow_height))
+                        .padding(innerPadding)
                 )
             }
             composable(route = DesignSystemScreen.Components.name) {
-                DesignSystemFoundationScreen(
+                DesignSystemComponentsScreen(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(dimensionResource(R.dimen.button_container_shadow_height))
+                        .padding(innerPadding)
                 )
             }
         }
