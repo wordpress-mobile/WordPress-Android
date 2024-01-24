@@ -2,7 +2,6 @@ package org.wordpress.android.ui
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.core.app.TaskStackBuilder
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -159,8 +158,9 @@ class ActivityNavigator @Inject constructor() {
     }
 
     fun navigateToSiteMonitoring(context: Context, site: SiteModel) {
-        Log.i(javaClass.simpleName, "Request to navigateToSiteMonitoring for ${site.name} within ${context.packageName}")
-        // todo: Implement this method after the SiteMonitorActivity is available
+        // todo: Implement this method after the SiteMonitorActivity is available and remove the lines below
+        site.name
+        context.packageName
     }
 }
 
