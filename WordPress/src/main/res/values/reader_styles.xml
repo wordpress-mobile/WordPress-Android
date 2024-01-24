@@ -407,12 +407,20 @@
         <item name="chipCornerRadius">@dimen/reader_chip_radius</item>
     </style>
 
-    <style name="ReaderInterestFilterChip" parent="@style/ReaderChip">
-        <item name="chipMinHeight">@dimen/reader_chip_height</item>
-        <item name="chipStartPadding">@dimen/margin_medium_large</item>
-        <item name="chipEndPadding">@dimen/margin_medium_large</item>
-        <item name="android:textColor">@color/on_surface_on_primary_surface_selector</item>
-        <item name="chipBackgroundColor">@color/on_surface_disabled_primary_selector</item>
+    <style name="ReaderInterestFilterChip" parent="@style/ReaderChipNew">
+        <item name="android:checkable">true</item>
+        <item name="chipMinHeight">@dimen/reader_interest_filter_chip_height</item>
+        <item name="chipStartPadding">@dimen/margin_large</item>
+        <item name="chipEndPadding">@dimen/margin_large</item>
+        <item name="textStartPadding">0dp</item>
+        <item name="textEndPadding">0dp</item>
+        <item name="ensureMinTouchTargetSize">false</item>
+        <item name="chipCornerRadius">@dimen/reader_interest_filter_chip_radius</item>
+        <item name="android:textColor">@color/reader_interest_filter_chip_text_selector</item>
+        <item name="chipBackgroundColor">@color/reader_interest_filter_chip_background_selector</item>
+        <item name="chipStrokeColor">@color/reader_interest_filter_chip_stroke_selector</item>
+        <item name="chipStrokeWidth">@dimen/reader_interest_filter_chip_border</item>
+        <item name="rippleColor">@color/reader_interest_filter_chip_ripple_selector</item>
     </style>
 
     <style name="ReaderExpandableTagsViewChip" parent="@style/ReaderChip">

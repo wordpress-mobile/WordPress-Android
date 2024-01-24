@@ -111,4 +111,8 @@
     <color name="reader_subfilter_button_background">@color/white</color>
     <color name="reader_subfilter_button_text">@color/black</color>
 
+    <!-- Reader Interest Chips -->
+    <color name="reader_interest_filter_chip_text_checked">@color/black</color>
+    <color name="reader_interest_filter_chip_background_checked">@color/white</color>
+
 </resources>
