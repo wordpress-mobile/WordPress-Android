@@ -1684,7 +1684,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         int heightTabs = getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
         mActionableEmptyView.updateLayoutForSearch(false, 0);
         mActionableEmptyView.subtitle.setContentDescription(null);
-        boolean isSearching = false;
+        boolean isImageHidden = false;
         String title;
         String description = null;
         ActionableEmptyViewButtonType button = null;
@@ -1713,6 +1713,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
             switch (getPostListType()) {
                 case TAG_FOLLOWED:
                     if (getCurrentTag().isFollowedSites() || getCurrentTag().isDefaultInMemoryTag()) {
+                        isImageHidden = true;
+
                         if (ReaderBlogTable.hasFollowedBlogs()) {
                             title = getString(R.string.reader_empty_followed_blogs_no_recent_posts_title);
                             description = getString(
@@ -1721,16 +1723,19 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             title = getString(R.string.reader_no_followed_blogs_title);
                             description = getString(R.string.reader_no_followed_blogs_description);
                         }
-                        mActionableEmptyView.image.setImageResource(
-                                R.drawable.img_illustration_following_empty_results_196dp);
-                        button = ActionableEmptyViewButtonType.DISCOVER;
                     } else if (getCurrentTag().isPostsILike()) {
+                        isImageHidden = true;
+
                         title = getString(R.string.reader_empty_posts_liked_title);
                         description = getString(R.string.reader_empty_posts_liked_description);
                         button = ActionableEmptyViewButtonType.FOLLOWED;
                     } else if (getCurrentTag().isListTopic()) {
+                        isImageHidden = true;
+
                         title = getString(R.string.reader_empty_blogs_posts_in_custom_list);
                     } else {
+                        isImageHidden = true;
+
                         title = getString(R.string.reader_no_posts_with_this_tag);
                     }
                     break;
@@ -1738,7 +1743,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     title = getString(R.string.reader_no_posts_in_blog);
                     break;
                 case SEARCH_RESULTS:
-                    isSearching = true;
+                    isImageHidden = true;
 
                     if (isSearchViewEmpty() || TextUtils.isEmpty(mCurrentSearchQuery)) {
                         title = getString(R.string.reader_label_post_search_explainer);
@@ -1762,7 +1767,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
         }
 
-        setEmptyTitleDescriptionAndButton(title, description, button, isSearching);
+        setEmptyTitleDescriptionAndButton(title, description, button, isImageHidden);
     }
 
     /*
@@ -1813,12 +1818,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void setEmptyTitleDescriptionAndButton(@NonNull String title, String description,
-                                                   final ActionableEmptyViewButtonType button, boolean isSearching) {
+                                                   final ActionableEmptyViewButtonType button,
+                                                   boolean isImageHidden) {
         if (!isAdded()) {
             return;
         }
 
-        mActionableEmptyView.image.setVisibility(!isUpdating() && !isSearching ? View.VISIBLE : View.GONE);
+        mActionableEmptyView.image.setVisibility(!isUpdating() && !isImageHidden ? View.VISIBLE : View.GONE);
         mActionableEmptyView.title.setText(title);
 
         if (description == null) {
