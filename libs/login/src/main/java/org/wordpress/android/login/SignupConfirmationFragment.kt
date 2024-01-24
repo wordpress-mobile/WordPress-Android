@@ -13,13 +13,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import dagger.android.support.AndroidSupportInjection
 import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener
 import org.wordpress.android.login.util.AvatarHelper.loadAvatarFromUrl
 import javax.inject.Inject
 
-class SignupConfirmationFragment : Fragment() {
+class SignupConfirmationFragment : Fragment(), MenuProvider {
     private var mLoginListener: LoginListener? = null
 
     private var mEmail: String? = null
@@ -76,7 +78,8 @@ class SignupConfirmationFragment : Fragment() {
             mPhotoUrl = it.getString(ARG_SOCIAL_PHOTO_URL)
             mService = it.getString(ARG_SOCIAL_SERVICE)
         }
-        setHasOptionsMenu(true)
+
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     override fun onCreateView(
@@ -129,11 +132,11 @@ class SignupConfirmationFragment : Fragment() {
         mLoginListener = null
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_login, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.help) {
             mAnalyticsListener.trackShowHelpClick()
             if (mLoginListener != null) {
