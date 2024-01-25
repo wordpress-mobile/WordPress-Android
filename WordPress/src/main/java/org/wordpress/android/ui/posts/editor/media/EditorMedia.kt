@@ -95,20 +95,6 @@ class EditorMedia @Inject constructor(
         _uiState.value = AddingMediaIdle
     }
 
-    // region Adding new media to a post
-    fun advertiseImageOptimisationAndAddMedia(uriList: List<Uri>) {
-        if (mediaUtilsWrapper.shouldAdvertiseImageOptimization()) {
-            editorMediaListener.advertiseImageOptimization {
-                addNewMediaItemsToEditorAsync(
-                    uriList,
-                    false
-                )
-            }
-        } else {
-            addNewMediaItemsToEditorAsync(uriList, false)
-        }
-    }
-
     fun addNewMediaToEditorAsync(mediaUri: Uri, freshlyTaken: Boolean) {
         addNewMediaItemsToEditorAsync(listOf(mediaUri), freshlyTaken)
     }
@@ -147,12 +133,7 @@ class EditorMedia @Inject constructor(
     }
 
     fun onPhotoPickerMediaChosen(uriList: List<Uri>) {
-        val onlyVideos = uriList.all { mediaUtilsWrapper.isVideo(it.toString()) }
-        if (onlyVideos) {
-            addNewMediaItemsToEditorAsync(uriList, false)
-        } else {
-            advertiseImageOptimisationAndAddMedia(uriList)
-        }
+        addNewMediaItemsToEditorAsync(uriList, false)
     }
     // endregion
 
