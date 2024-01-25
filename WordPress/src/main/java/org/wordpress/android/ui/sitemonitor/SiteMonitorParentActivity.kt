@@ -97,5 +97,6 @@ class SiteMonitorParentActivity: AppCompatActivity() {
 
     @Composable
     fun SiteMonitoringWebView(){
+        Text(text = "SiteMonitoringWebView")
     }
 }
