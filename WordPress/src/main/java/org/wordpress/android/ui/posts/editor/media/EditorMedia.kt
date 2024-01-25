@@ -34,7 +34,6 @@ import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiS
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingSingleMedia
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils.Duration
@@ -52,7 +51,6 @@ class EditorMedia @Inject constructor(
     private val updateMediaModelUseCase: UpdateMediaModelUseCase,
     private val getMediaModelUseCase: GetMediaModelUseCase,
     private val dispatcher: Dispatcher,
-    private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase,
     private val addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase,
