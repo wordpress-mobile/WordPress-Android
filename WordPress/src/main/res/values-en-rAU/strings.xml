@@ -426,6 +426,7 @@ Language: en_AU
     <string name="pages_drafts">Drafts</string>
     <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
     <string name="page_parent_changed">Page parent has been changed</string>
+    <string name="reader_empty_followed_blogs_search_title">No sites matching your search</string>
     <string name="site_picker_remove_site_empty">No sites matching your search</string>
     <string name="top_level">Top level</string>
     <string name="page_delete_error">There was a problem deleting the page</string>
@@ -472,7 +473,9 @@ Language: en_AU
     <string name="people_empty_list_filtered_followers">No followers yet</string>
     <string name="people_empty_list_filtered_email_followers">No email followers yet</string>
     <string name="reader_empty_posts_liked_title">Nothing liked yet</string>
+    <string name="reader_empty_followed_blogs_title">No followed sites</string>
     <string name="reader_empty_followed_blogs_button_followed">Go to following</string>
+    <string name="reader_empty_followed_blogs_button_discover">Discover sites</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
     <string name="notifications_empty_likes">No likes yet</string>
     <string name="notifications_empty_followers">No followers yet</string>
@@ -532,6 +535,8 @@ Language: en_AU
     <string name="my_site_icon_dialog_change_button">Change</string>
     <string name="my_site_icon_dialog_cancel_button">Cancel</string>
     <string name="third_party_policy_learn_more_caption">We use other tracking tools, including some from third parties. Read about these and how to control them.</string>
+    <string name="reader_btn_notifications_on">Turn on site notifications</string>
+    <string name="reader_btn_notifications_off">Turn off site notifications</string>
     <string name="privacy_policy_learn_more_caption">This information helps us improve our products, make marketing to you more relevant, personalise your WordPress.com experience, and more as detailed in our privacy policy.</string>
     <string name="third_party_policy_learn_more_header">Third Party Policy</string>
     <string name="cookie_policy_learn_more_caption">Share information with our analytics tool about your use of services while logged in to your WordPress.com account.</string>
@@ -1101,6 +1106,7 @@ Language: en_AU
     <string name="confirm">Confirm</string>
     <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your\n        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve\n        this problem.</string>
     <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs\n        that in order to communicate with your site. Contact your host to solve this problem.</string>
+    <string name="reader_hint_search_followed_sites">Search followed sites</string>
     <string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
     <string name="pending_draft_one_month">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' remains a draft. Remember to publish it!</string>
@@ -1196,6 +1202,7 @@ Language: en_AU
     <string name="user_remove_confirmation_message">If you remove %1$s, that user will no longer be able to access this site, but any content that was created by %1$s will remain on the site.\n\nWould you still like to remove this user?</string>
     <string name="person_removed">Successfully removed %1$s</string>
     <string name="person_remove_confirmation_title">Remove %1$s</string>
+    <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>
     <string name="people">People</string>
     <string name="role">Role</string>
     <string name="error_remove_user">Couldn\'t remove user</string>
@@ -1403,6 +1410,7 @@ Language: en_AU
     <string name="reader_err_get_post_not_found">This post no longer exists</string>
     <string name="reader_err_get_post_not_authorized">You\'re not authorised to view this post</string>
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
+    <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="media_edit_copy_url_toast">URL copied to clipboard</string>
     <string name="selected_theme">Selected Theme</string>
@@ -1468,6 +1476,8 @@ Language: en_AU
     <string name="button_view">View</string>
     <string name="button_edit">Edit</string>
     <string name="button_publish">Publish</string>
+    <string name="reader_toast_err_follow_blog_not_authorized">You are not authorised to access this site</string>
+    <string name="reader_toast_err_follow_blog_not_found">This site could not be found</string>
     <string name="undo">Undo</string>
     <string name="push_auth_expired">The request has expired. Log in to WordPress.com to try again.</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
@@ -1512,6 +1522,7 @@ Language: en_AU
     <string name="reader_label_new_posts">New posts</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
     <string name="post_uploading">Uploading post</string>
+    <string name="reader_empty_posts_in_blog">This site is empty</string>
     <string name="themes_fetching">Fetching themes…</string>
     <string name="stats_followers_months">%1$d months</string>
     <string name="stats_followers_a_year">A year</string>
@@ -1554,8 +1565,19 @@ Language: en_AU
     <string name="comment_reply_to_user">Reply to %s</string>
     <string name="signing_out">Logging out…</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
+    <string name="reader_toast_err_block_blog">Unable to block this site</string>
+    <string name="reader_toast_blog_blocked">Posts from this site will no longer be shown</string>
+    <string name="reader_menu_block_blog">Block this site</string>
     <string name="update_verb">Update</string>
     <string name="schedule_verb">Schedule</string>
+    <string name="reader_page_followed_blogs">Followed sites</string>
+    <string name="reader_toast_err_already_follow_blog">You already follow this site</string>
+    <string name="reader_toast_err_unfollow_blog">Unable to unfollow this site</string>
+    <string name="reader_toast_err_get_blog_info">Unable to show this site</string>
+    <string name="reader_toast_err_follow_blog">Unable to follow this site</string>
+    <string name="reader_label_followed_blog">Site followed</string>
+    <string name="reader_title_blog_preview">Reader Site</string>
+    <string name="reader_empty_recommended_blogs">No recommended sites</string>
     <string name="help">Help</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
@@ -1644,6 +1666,8 @@ Language: en_AU
     <string name="empty_list_default">This list is empty</string>
     <string name="reader_untitled_post">(Untitled)</string>
     <string name="reader_btn_share">Share</string>
+    <string name="reader_btn_follow">Follow</string>
+    <string name="reader_btn_unfollow">Following</string>
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
     <string name="reader_likes_one">One person likes this</string>

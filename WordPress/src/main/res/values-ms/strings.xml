@@ -287,6 +287,7 @@ Language: ms
     <string name="confirm">Sahkan</string>
     <string name="retry">Cuba Semula</string>
     <string name="xmlrpc_post_blocked_error">Tidak boleh berhubung. Hos anda menyekat permintaan POST, dan aplikasi\n        memerlukannya untuk berkomunikasi dengan laman anda. Hubungi hos anda untuk menyelesaikan masalah ini.</string>
+    <string name="reader_hint_search_followed_sites">Cari laman yang diikuti</string>
     <string name="pending_draft_one_generic">Jangan biarkannya bergantung! \'%1$s\' sedang menunggu untuk diterbitkan.</string>
     <string name="pending_draft_one_month">Jangan biarkannya bergantung! \'%1$s\' sedang menunggu untuk diterbitkan.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' kekal sebagai draf. Ingat untuk menerbitkannya!</string>
@@ -382,6 +383,7 @@ Language: ms
     <string name="person_remove_confirmation_title">Buang %1$s</string>
     <string name="role">Peranan</string>
     <string name="people">Orang</string>
+    <string name="reader_empty_posts_in_custom_list">Laman dalam senarai ini tiada kiriman baharu.</string>
     <string name="error_remove_user">Tidak dapat membuang pengguna</string>
     <string name="error_fetch_viewers_list">Tidak boleh mendapatkan penonton laman</string>
     <string name="error_update_role">Tidak dapat mengemaskini peranan pengguna</string>
@@ -581,6 +583,7 @@ Language: ms
     <string name="reader_err_get_post_not_found">Kiriman ini tidak lagi wujud</string>
     <string name="reader_err_get_post_not_authorized">Anda tidak dibenarkan melihat kiriman ini</string>
     <string name="reader_err_get_post_generic">Tidak boleh mendapatkan kiriman ini</string>
+    <string name="reader_empty_followed_blogs_no_recent_posts_description">Laman yang anda ikuti belum mengirim apa-apa baru-baru ini</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Tiada kiriman terkini</string>
     <string name="media_edit_copy_url_toast">URL disalin ke papan keratan</string>
     <string name="selected_theme">Tema Dipilih</string>
@@ -725,6 +728,7 @@ Language: ms
     <string name="reader_toast_err_generic">Tidak dapat melaksanakan tindakan ini</string>
     <string name="update_verb">Kemas kini</string>
     <string name="schedule_verb">Jadual</string>
+    <string name="reader_page_followed_blogs">Laman yang diikuti</string>
     <string name="help">Bantuan</string>
     <string name="ssl_certificate_error">Sijil SSL tidak sah</string>
     <string name="ssl_certificate_ask_trust">Jika anda biasanya berhubung ke laman ini tanpa masalah, ralat ini mungkin bermakna bahawa seseorang sedang cuba menyamar sebagai laman ini, dan anda tidak sepatutnya teruskan. Adakah anda masih ingin mempercayai sijil ini?</string>
@@ -806,7 +810,9 @@ Language: ms
     <string name="empty_list_default">Senarai ini kosong</string>
     <string name="reader_untitled_post">(Tanpa tajuk)</string>
     <string name="reader_btn_share">Kongsi</string>
+    <string name="reader_btn_follow">Ikut</string>
     <string name="reader_toast_err_url_intent">Tidak dapat membuka %s</string>
+    <string name="reader_btn_unfollow">Mengikuti</string>
     <string name="reader_label_added_tag">%s ditambah</string>
     <string name="reader_label_removed_tag">%s dibuang</string>
     <string name="reader_likes_one">Seorang menyukainya</string>

@@ -19,6 +19,7 @@ Language: cy_GB
     <string name="retry">Ceisiwch eto</string>
     <string name="confirm">Cadarnhau</string>
     <string name="xmlrpc_post_blocked_error">Methu cysylltu. Mae eich gwesteiwr yn rhwystro ceisiadau POST, ac mae\'r ap angen\n       hynny er mwyn cyfathrebu â\'ch gwefan. Cysylltwch â eich gwesteiwr i ddatrys y broblem.</string>
+    <string name="reader_hint_search_followed_sites">Chwilio drwy\'r gwefannau rwy\'n eu dilyn</string>
     <string name="pending_draft_one_generic">Peidiwch â\'i adael! Mae \'%1$s\' disgwyl cael ei gyhoeddi.</string>
     <string name="pending_draft_one_month">Peidiwch â\'i adael! Mae \'%1$s\' disgwyl cael ei gyhoeddi.</string>
     <string name="pending_draft_one_week_2">Mae \'%1$s\' yn ddrafft o hyd. Cofiwch ei gyhoeddi!</string>
@@ -112,6 +113,7 @@ Language: cy_GB
     <string name="user_remove_confirmation_message">Os ydych am dynnu %1$s, ni fydd y defnyddiwr yn gallu cael mynediad at y wefan, ond bydd unrhyw gynnwys crëwyd gan %1$s yn aros ar y wefan.\n\nYdych chi dal eisiau tynnu\'r defnyddiwr yma?</string>
     <string name="person_removed">Wedi tynnu %1$s yn llwyddiannus</string>
     <string name="person_remove_confirmation_title">Tynnu %1$s</string>
+    <string name="reader_empty_posts_in_custom_list">Nid yw\'r gwefannau ar y rhestr hon wedi cofnodi dim yn ddiweddar</string>
     <string name="people">Pobl</string>
     <string name="role">Rôl</string>
     <string name="error_remove_user">Methu tynnu defnyddiwr</string>
@@ -311,6 +313,7 @@ Language: cy_GB
     <string name="reader_err_get_post_not_found">Nid yw\'r cofnod yma\'n bodoli bellach</string>
     <string name="reader_err_get_post_not_authorized">Nid ydych wedi eich awdurdodi i weld y cofnod hwn</string>
     <string name="reader_err_get_post_generic">Methu estyn y cofnod hwn</string>
+    <string name="reader_empty_followed_blogs_no_recent_posts_description">Nid yw\'r gwefannau rydych yn eu dilyn gofnodi dim yn ddiweddar</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Dim cofnodion diweddar</string>
     <string name="selected_theme">Thema Dewiswyd</string>
     <string name="could_not_load_theme">Methu llwytho\'r thema</string>
@@ -451,6 +454,7 @@ Language: cy_GB
     <string name="reader_toast_err_generic">Methu cyflawni\'r weithred hon</string>
     <string name="update_verb">Diweddaru</string>
     <string name="schedule_verb">Amserlen</string>
+    <string name="reader_page_followed_blogs">Gwefannau sy\'n cael eu dilyn</string>
     <string name="help">Cymorth</string>
     <string name="ssl_certificate_error">Tystysgrif SSL annilys</string>
     <string name="ssl_certificate_ask_trust">Os ydych fel arfer yn cysylltu â\'r wefan hon heb broblemau, gall y gwall hwn olygu bod rhywun yn ceisio dynwared y wefan a dylech chi beidio parhau. Hoffech chi ymddiried yn y dystysgrif beth bynnag?</string>
@@ -529,6 +533,8 @@ Language: cy_GB
     <string name="empty_list_default">Mae\'r rhestr hon yn wag</string>
     <string name="reader_untitled_post">(Dideitl)</string>
     <string name="reader_btn_share">Rhannu</string>
+    <string name="reader_btn_follow">Dilyn</string>
+    <string name="reader_btn_unfollow">Yn dilyn</string>
     <string name="reader_label_added_tag">Ychwanegu %s</string>
     <string name="reader_label_removed_tag">Tynnu %s</string>
     <string name="reader_likes_one">Mae un person yn hoffi hwn</string>

@@ -24,6 +24,7 @@ Language: hi_IN
     <string name="text_button_alt">टेक्स्ट</string>
     <string name="login_or">या</string>
     <string name="login_done">हो गया</string>
+    <string name="reader_title_tag_preview">विषय</string>
     <string name="me">मैं</string>
     <string name="suffix_1_000">%sK</string>
     <string name="suffix_1_000_000">%sM</string>
@@ -237,6 +238,7 @@ Language: hi_IN
     <string name="reader_toast_err_generic">इस कार्य को निष्पादित करने में असमर्थ</string>
     <string name="update_verb">अपडेट करे</string>
     <string name="schedule_verb">निर्धारित करे</string>
+    <string name="reader_page_followed_blogs">अनुसरण किये गए ब्लॉग </string>
     <string name="help">सहायता</string>
     <string name="ssl_certificate_error">अमान्य एसएसएल  प्रमाणपत्र</string>
     <string name="ssl_certificate_ask_trust">आप आमतौर पर समस्याओं के बिना इस साइट से कनेक्ट करते हैं, तो यह त्रुटि किसी साइट को प्रतिरूपित करने की कोशिश कर रहा है कि अर्थ हो सकता है, और यदि आप जारी नहीं किया जाना चाहिए. क्या आप फिर भी प्रमाण पत्र पर विश्वास करना चाहेंगे?</string>
@@ -318,6 +320,8 @@ Language: hi_IN
     <string name="reader_likes_one">एक व्यक्ति ने पसंद किया</string>
     <string name="reader_btn_share">साझा करे</string>
     <string name="reader_likes_only_you">आपने इसे पसंद किया</string>
+    <string name="reader_btn_follow">अनुसरण करे</string>
+    <string name="reader_btn_unfollow">अनुसरण कर रहे</string>
     <string name="reader_label_removed_tag">हटाये गए %s</string>
     <string name="reader_toast_err_url_intent">खोलने में असमर्थ %s</string>
     <string name="reader_toast_err_share_intent">साझा करने में असमर्थ</string>

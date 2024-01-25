@@ -810,6 +810,7 @@ Language: cs_CZ
     <string name="jetpack_brute_force_allowlist_title">Vždy povolené adresy IP</string>
     <string name="site_settings_denylist_title">Nepovolené komentáře</string>
     <string name="gutenberg_native_add_button_text">Přidat text tlačítka</string>
+    <string name="reader_title_interests">Sledujte témata</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Zamítnout</string>
     <string name="activity_log_backup_download_notice_download_action">Stáhnout</string>
     <string name="stories_intro_main_subtitle">Nový způsob vytváření a publikování poutavého obsahu na vašem webu.</string>
@@ -1122,6 +1123,8 @@ Language: cs_CZ
     <string name="scan">Prohledat</string>
     <string name="reader_discover_empty_title">Vítejte!</string>
     <string name="reader_discover_no_posts_title">Žádné nedávné příspěvky</string>
+    <string name="reader_discover_no_posts_subtitle">Zkuste rozšířit vyhledávání podle dalších témat</string>
+    <string name="reader_discover_no_posts_button_text">Sledujte témata</string>
     <string name="login_find_your_connected_email">Najděte svůj připojený e-mail</string>
     <string name="continue_site_credentials">Pokračujte s přihlašovacími údaji úložiště</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; lajkoval váš příspěvek</string>
@@ -1158,6 +1161,7 @@ Language: cs_CZ
     <string name="login_prologue_title_fourth">Sledujte, jak vaše publikum roste pomocí hloubkové analýzy.</string>
     <string name="login_prologue_second_subtitle_one">Inspirovat se</string>
     <string name="login_prologue_title_fifth">Sledujte své oblíbené weby a objevujte nové blogy.</string>
+    <string name="reader_discover_recommended_blogs_header">Weby, které je třeba sledovat</string>
     <string name="media_loading_failed">Načítání média se nezdařilo</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' není plně podporován</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Usilovně pracujeme na přidání dalších bloků s každým vydáním.</string>
@@ -1179,6 +1183,7 @@ Language: cs_CZ
     <string name="media_insert_failed">Vložení média se nezdařilo.</string>
     <string name="reader_label_toolbar_back">Zpět</string>
     <string name="reader_post_details_header_by_author_name">Od</string>
+    <string name="reader_discover_empty_subtitle">Sledujte témata a objevujte nové blogy</string>
     <string name="reader_discover_empty_button_text">Začínáme</string>
     <string name="media_uploading_default">Nahrávání médií</string>
     <string name="media_uploading_stock_library_photo">Nahrávání skladových médií</string>
@@ -1337,6 +1342,7 @@ Language: cs_CZ
     <string name="gutenberg_native_remove_block">Odstranit blok</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Neuložené změny</string>
     <string name="error_update_site_title_network">Název webu se nepodařilo aktualizovat. Zkontrolujte připojení k síti a zkuste to znovu.</string>
+    <string name="reader_title_tag_preview">Téma</string>
     <string name="my_site_title_changer_dialog_hint">Název webu se zobrazuje v záhlaví webového prohlížeče a u většiny šablon se zobrazuje v záhlaví.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Otevřít odkaz v prohlížeči</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Přejde na předchozí stránku s obsahem</string>
@@ -1375,6 +1381,7 @@ Language: cs_CZ
     <string name="reader_btn_select_few_interests">Chcete-li pokračovat, vyberte několik</string>
     <string name="reader_btn_done">Hotovo</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Přesunout příspěvek do konceptů?</string>
+    <string name="reader_choose_interests_content_description">Vyberte si svá témata</string>
     <string name="reader_label_choose_your_interests">Vyberte si svá témata</string>
     <string name="status_and_visibility">Stav &amp; Viditelnost</string>
     <string name="update_now">Aktualizovat nyní</string>
@@ -1408,6 +1415,7 @@ Language: cs_CZ
     <string name="page_posts_page_update_failed">Aktualizace stránky příspěvků se nezdařila</string>
     <string name="site_settings_homepage">Domovská stránka</string>
     <string name="gutenberg_native_select_a_color">Zvolit barvu</string>
+    <string name="reader_empty_followed_blogs_description">Když sledujete weby, uvidíte jejich obsah zde.</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dvojitým klepnutím přejdete do nastavení barev</string>
     <string name="site_picker_ask_site_select">Web se nepodařilo vybrat. Prosím zkuste to znovu.</string>
     <string name="photo_picker_video_title">Zvolit video</string>
@@ -1429,6 +1437,9 @@ Language: cs_CZ
     <string name="comment_share_link_via">Sdílet přes</string>
     <string name="copy_link_address">Kopírovat adresu odkazu</string>
     <string name="comment_q_action_copied_url">Adresa odkazu byla zkopírována</string>
+    <string name="reader_no_site_to_reblog_title">Žádné dostupné weby WordPress.com</string>
+    <string name="reader_no_site_to_reblog_detail">Jakmile vytvoříte web na WordPress.com, můžete přesdílet obsah, který se vám líbí, na svůj vlastní web.</string>
+    <string name="reader_no_site_to_reblog_action">Spravovat weby</string>
     <string name="reader_reblog_error">Reblog se nezdařil</string>
     <string name="gutenberg_native_number_of_columns">Počet sloupců</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dvojitým klepnutím přesunete blok doleva</string>
@@ -1521,9 +1532,17 @@ Language: cs_CZ
     <string name="stats_management_screen_title">Přidat novou kartu</string>
     <string name="stats_management_add_new_stats_card">Přidejte novou kartu statistik</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Přihlásit se k WordPress.com</string>
+    <string name="reader_title_subs">Spravujte témata a weby</string>
     <string name="reader_btn_remove_filter_content_description">Odstraňte aktuální filtr</string>
     <string name="reader_btn_select_filter_content_description">Chcete-li filtrovat příspěvky, vyberte web nebo značku</string>
+    <string name="reader_bottom_sheet_content_description">Vyberte značku nebo web, vyskakovací okno</string>
     <string name="reader_self_hosted_select_filter">Pomocí tlačítka filtru vyhledejte příspěvky týkající se konkrétních témat</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Přihlaste se na WordPress.com a podívejte se na nejnovější příspěvky z webů, které sledujete</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Přihlaste se na WordPress.com a podívejte se na nejnovější příspěvky z témat, která sledujete</string>
+    <string name="reader_filter_empty_sites_list">Podívejte se na nejnovější příspěvky z webů, které sledujete</string>
+    <string name="reader_filter_empty_tags_list">Přidáním tématu můžete sledovat příspěvky na konkrétní téma.</string>
+    <string name="reader_filter_empty_sites_action">Sledujte web</string>
+    <string name="reader_filter_empty_tags_action">Přidejte téma</string>
     <string name="gutenberg_native_add_block_after">Přidat blok po</string>
     <string name="gutenberg_native_add_block_before">Přidat blok před</string>
     <string name="gutenberg_native_add_to_beginning">Přidat na začátek</string>
@@ -1570,6 +1589,7 @@ Language: cs_CZ
     <string name="login_discovery_error_http_auth">Nepodařilo se nám získat přístup na váš web, protože vyžaduje &lt;b&gt;Ověření HTTP&lt;/b&gt;. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
     <string name="login_discovery_error_ssl">Nepodařilo se nám získat přístup na váš web z důvodu problému s &lt;b&gt;certifikátem SSL&lt;/b&gt;. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
     <string name="login_discovery_error_generic">Nepodařilo se nám získat přístup na váš web. K vyřešení tohoto problému budete muset kontaktovat svého hostitele.</string>
+    <string name="reader_following_display_name">Sleduji</string>
     <string name="my_site_bottom_sheet_add_page">Stránka webu</string>
     <string name="enter_credentials_for_site">Přihlaste se pomocí svých přihlašovacích údajů %1$s </string>
     <string name="login_site_credentials_magic_link_label">Téměř tam! Musíme jen ověřit vaši e-mailovou adresu připojenou k Jetpacku &lt;b&gt;%1$s&lt;/b&gt;</string>
@@ -2065,6 +2085,7 @@ Language: cs_CZ
     <string name="pages_view">Zobrazení</string>
     <string name="login_error_email_not_found_v2">Nenašli jsme WordPress.com účet propojený s tímto Google účtem.</string>
     <string name="site_picker_remove_site_empty">Stránka nenalezena</string>
+    <string name="reader_empty_followed_blogs_search_title">Stránka nenalezena</string>
     <string name="page_parent_changed">Nadřazená stránka byla změněna</string>
     <string name="page_permanently_deleted">Stránka trvale odstraněna</string>
     <string name="page_moved_to_scheduled">Zveřejnění naplánovano</string>
@@ -2096,6 +2117,8 @@ Language: cs_CZ
     <string name="quick_start_button_negative">Né teď</string>
     <string name="content_description_more">Hotovo</string>
     <string name="quick_start_button_positive">Go</string>
+    <string name="reader_empty_followed_tags_title">Žádné sledované štítky</string>
+    <string name="reader_empty_followed_tags_subtitle">Sem přidejte témata a vyhledejte příspěvky o svých oblíbených tématech</string>
     <string name="my_site_create_new_site_title">Nemáte žádné stránky</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
@@ -2115,6 +2138,8 @@ Language: cs_CZ
     <string name="people_empty_list_filtered_viewers">Zatím žádné zobrazení</string>
     <string name="reader_empty_posts_liked_description">Příspěvky, kterým jste dali líbí se mi se zobrazí zde.</string>
     <string name="people_empty_list_filtered_email_followers">Zatím žádné e-mailové následovníci</string>
+    <string name="reader_empty_followed_blogs_title">Žádné sledované weby</string>
+    <string name="reader_empty_followed_blogs_button_discover">Objevte weby</string>
     <string name="reader_empty_posts_liked_title">Zatím se nic nelíbilo</string>
     <string name="reader_empty_followed_blogs_button_followed">Přejít na sledované</string>
     <string name="activity_log_limited_content_on_free_plan">Jelikož máte bezplatný plán, uvidíte ve své aktivitě omezené události.</string>
@@ -2181,6 +2206,8 @@ Language: cs_CZ
     <string name="reader_followed_blog_notifications_this">tento web</string>
     <string name="reader_followed_blog_notifications_action">Zapnout</string>
     <string name="reader_followed_blog_notifications">Zapnout notifikace pro %1$s%2$s%3$s?</string>
+    <string name="reader_btn_notifications_off">Vypnout notifikace</string>
+    <string name="reader_btn_notifications_on">Zapnout notifikace</string>
     <string name="activity_log_jetpack_icon">Ikona Jetpack</string>
     <string name="activity_log_event">Událost</string>
     <string name="activity_log_icon">Ikona aktivit</string>
@@ -2762,6 +2789,7 @@ Language: cs_CZ
     <string name="confirm">Potvrdit</string>
     <string name="xmlrpc_endpoint_forbidden_error">Nelze se připojit. Při pokusu o přístup k vašemu nám došlo k chybě 403\n         koncový bod XMLRPC webu. Aplikace to potřebuje, aby mohla komunikovat s vaším webem. Požádejte svého hostitele o řešení\n         tento problém.</string>
     <string name="xmlrpc_post_blocked_error">Nepodařilo se připojit. Váš hostitel blokuje požadavky POST, které jsou potřeba ke komunikaci s webovou stránkou. Pro vyřešení toho problému kontaktujte svého hostitele.</string>
+    <string name="reader_hint_search_followed_sites">Prohledat sledované stránky</string>
     <string name="pending_draft_one_generic">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
     <string name="pending_draft_one_month">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' zůstává konceptem. Nezapomeňte ho publikovat!</string>
@@ -2863,6 +2891,7 @@ Language: cs_CZ
     <string name="person_remove_confirmation_title">Ostranit %1$s</string>
     <string name="people">Lidé</string>
     <string name="role">Role</string>
+    <string name="reader_empty_posts_in_custom_list">Web v tomto seznamu nezveřejnil v poslední době nic</string>
     <string name="error_remove_user">Nepodařilo se odstranit vybraného uživatele</string>
     <string name="error_fetch_viewers_list">Nemohu získat zobrazení webu</string>
     <string name="error_update_role">Nemohu aktualizovat role uživatele</string>
@@ -3075,6 +3104,7 @@ Language: cs_CZ
     <string name="reader_err_get_post_not_found">Tento příspěvek již neexistuje</string>
     <string name="reader_err_get_post_not_authorized">Nemáte oprávnění prozobrazení tohoto příspěvku</string>
     <string name="reader_err_get_post_generic">Nelze načíst tento příspěvek</string>
+    <string name="reader_empty_followed_blogs_no_recent_posts_description">Stránky, které sledujete v poslední době neměly žádné příspěvky</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Žádné nedávné příspěvky</string>
     <string name="media_edit_copy_url_toast">URL adresa byla zkopírována do schránky</string>
     <string name="selected_theme">Vybraná šablona</string>
@@ -3117,8 +3147,10 @@ Language: cs_CZ
     <string name="reader_discover_attribution_author">Původně publikoval %s</string>
     <string name="reader_discover_attribution_author_and_blog">Původně publikoval %1$s na webu %2$s</string>
     <string name="reader_short_like_count_multi">%s to se mi líbí</string>
+    <string name="reader_label_follow_count">sledující %,d</string>
     <string name="reader_short_like_count_one">1 to se mi libí</string>
     <string name="reader_short_like_count_none">To se mi líbí</string>
+    <string name="reader_menu_tags">Upravit štítky a weby</string>
     <string name="reader_title_post_detail">Čtenáři příspěvku</string>
     <string name="notifications_push_summary">Nastavení upozornění, které se objeví na vašem přístroji.</string>
     <string name="notifications_email_summary">Nastavení upozornění, které jsou odesílány na e-mail vázaný na váš účet.</string>
@@ -3140,6 +3172,8 @@ Language: cs_CZ
     <string name="button_stats">Statistiky</string>
     <string name="button_trash">Koš</string>
     <string name="button_preview">Náhled</string>
+    <string name="reader_toast_err_follow_blog_not_authorized">Nemáte oprávnění pro přístup k tomuto webu</string>
+    <string name="reader_toast_err_follow_blog_not_found">Web nebyl nalezen</string>
     <string name="undo">Zpět</string>
     <string name="push_auth_expired">Žádost vypršela. Přihlaste se znovu přes WordPress.com </string>
     <string name="ignore">Ignorovat</string>
@@ -3183,6 +3217,7 @@ Language: cs_CZ
     <string name="stats_search_terms_unknown_search_terms">Neznámé hledané výrazy</string>
     <string name="error_notification_open">Oznámení se nepodařilo otevřít</string>
     <string name="reader_label_new_posts">Nové příspěvky</string>
+    <string name="reader_empty_posts_in_blog">Tento web je prázdný</string>
     <string name="logs_copied_to_clipboard">Aplikační protokoly byly zkopírovány do schránky</string>
     <string name="error_copy_to_clipboard">Při kopírování textu do schránky nastala chyba</string>
     <string name="post_uploading">Nahrávám příspěvek</string>
@@ -3222,6 +3257,7 @@ Language: cs_CZ
     <string name="comment_trashed">Komentář byl přesunut do koše</string>
     <string name="comment_reply_to_user">Odpovědět uživateli %s</string>
     <string name="browse_our_faq_button">Prohledat časté dotazy</string>
+    <string name="reader_empty_posts_in_tag">Neexistuje žádný příspěvek s tímto štítkem</string>
     <string name="posts_empty_list">Žádné příspěvky. Přejete si nějaký vytvořit?</string>
     <string name="more">Více</string>
     <string name="signing_out">Odhlašuji…</string>
@@ -3229,8 +3265,21 @@ Language: cs_CZ
     <string name="reader_label_like">To se mi líbí</string>
     <string name="help_and_support">Nápověda a podpora</string>
     <string name="reader_toast_err_generic">Nepodařilo se provést tuto akci</string>
+    <string name="reader_toast_blog_blocked">Příspěvky z tohoto webu se již nebudou zobrazovat</string>
+    <string name="reader_toast_err_block_blog">Nepodařilo se zablokovat tento web</string>
+    <string name="reader_menu_block_blog">Zablokovat tento web</string>
     <string name="update_verb">Aktualizovat</string>
     <string name="schedule_verb">Naplánovat</string>
+    <string name="reader_toast_err_get_blog_info">Nepodařilo se zobrazit tento web</string>
+    <string name="reader_toast_err_already_follow_blog">Tento web už sledujete</string>
+    <string name="reader_toast_err_follow_blog">Přidání webu mezi sledované se nezdařilo</string>
+    <string name="reader_toast_err_unfollow_blog">Zrušení sledování tohoto webu se nezdařilo</string>
+    <string name="reader_empty_recommended_blogs">Nejsou k dispozici žádné doporučené weby</string>
+    <string name="reader_page_followed_tags">Štítky které sledujete</string>
+    <string name="reader_page_followed_blogs">Stránky které sledujete</string>
+    <string name="reader_hint_add_tag_or_url">Zadejte URL nebo štítek, který chcete sledovat</string>
+    <string name="reader_label_followed_blog">Web sledován</string>
+    <string name="reader_title_blog_preview">Web čtenáře</string>
     <string name="help">Nápověda</string>
     <string name="ssl_certificate_error">Neplatný SSL certifikát</string>
     <string name="ssl_certificate_ask_trust">Pokud se k tomuto webu obvykle připojujete bez problémů, pak tato chyba znamená, že se někdo snaží podvrhnout vaši identitu a neměli byste dále pokračovat. Chcete i přesto důvěřovat tomuto certifikátu?</string>
@@ -3288,6 +3337,8 @@ Language: cs_CZ
     <string name="dlg_confirm_trash_comments">Přesunout do koše?</string>
     <string name="image_settings">Vlastnosti obrázku</string>
     <string name="fatal_db_error">Vyskytla se chyba při vytváření databáze aplikace. Zkuste přeinstalovat tuto aplikaci.</string>
+    <string name="reader_toast_err_add_tag">Nelze přidat tento štítek</string>
+    <string name="reader_toast_err_remove_tag">Nelze odstranit tento štítek</string>
     <string name="local_changes">Místní změny</string>
     <string name="reader_title_applog">Protokol aplikace</string>
     <string name="post_settings">Nastavení příspěvku</string>
@@ -3316,12 +3367,16 @@ Language: cs_CZ
     <string name="reader_btn_share">Sdílet</string>
     <string name="empty_list_default">Tento seznam je prázdný</string>
     <string name="reader_untitled_post">(bez názvu)</string>
+    <string name="reader_btn_follow">Sledovat</string>
+    <string name="reader_btn_unfollow">Sleduji</string>
     <string name="reader_hint_comment_on_comment">Odpovědět na komentář…</string>
     <string name="reader_likes_one">To se líbí jedné osobě</string>
     <string name="reader_toast_err_share_intent">Nelze sdílet</string>
     <string name="reader_toast_err_view_image">Nelze zobrazit obrázek</string>
     <string name="reader_toast_err_url_intent">Nelze otevřít %s</string>
     <string name="reader_toast_err_comment_failed">Nepodařilo se publikovat váš komentář</string>
+    <string name="reader_toast_err_tag_exists">Tento štítek už sledujete</string>
+    <string name="reader_toast_err_tag_invalid">Toto není platný štítek</string>
     <string name="reader_label_removed_tag">%s byl odebrán</string>
     <string name="reader_label_added_tag">%s byl přidán</string>
     <string name="reader_likes_only_you">To se vám líbí</string>

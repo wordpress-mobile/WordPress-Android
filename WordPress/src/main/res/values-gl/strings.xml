@@ -101,6 +101,7 @@ Language: gl_ES
     <string name="account_and_settings">Conta e axustes</string>
     <string name="site_creation_plans_selection_title">Selecciona un plan</string>
     <string name="site_creation_domain_free_with_annual_plan">Gratis durante o primeiro ano cos plans de pago anuais</string>
+    <string name="reader_label_followers_count_single">1 seguidor</string>
     <string name="reader_secondary_bookmarked">Gardado</string>
     <string name="reader_secondary_bookmark">Gardar</string>
     <string name="reader_discover_recommended_header_new">Pode que che guste</string>
@@ -1098,6 +1099,7 @@ Language: gl_ES
     <string name="site_settings_denylist_title">Comentarios non permitidos</string>
     <string name="jetpack_brute_force_allowlist_title">Direccións IP permitidas sempre</string>
     <string name="gutenberg_native_add_button_text">Engadir o texto do botón</string>
+    <string name="reader_title_interests">Seguir temas</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Descartar</string>
     <string name="activity_log_backup_download_notice_download_action">Descargar</string>
     <string name="stories_intro_main_subtitle">Unha nova forma de crear e publicar contidos atraíntes no teu sitio.</string>
@@ -1409,9 +1411,11 @@ Language: gl_ES
     <string name="hpp_choose_error">Ocorreu un erro ao seleccionar o tema.</string>
     <string name="scan">Explorar</string>
     <string name="reader_discover_empty_title">Benvido!</string>
+    <string name="reader_discover_no_posts_button_text">Seguir temas</string>
     <string name="reader_discover_no_posts_title">Non hai entradas recentes</string>
     <string name="login_find_your_connected_email">Encontra o teu correo electrónico conectado</string>
     <string name="continue_site_credentials">Continuar coas credenciais da tenda</string>
+    <string name="reader_discover_no_posts_subtitle">Proba a seguir máis temas para ampliar a busca</string>
     <string name="login_prologue_third_subtitle_one">A &lt;b&gt;Madison Ruíz&lt;/b&gt; gustoullea túa entrada</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Xan Vilaboi&lt;/b&gt; respondeu na túa entrada</string>
     <string name="login_prologue_third_subtitle_two">Hoxe recibiches &lt;b&gt;50 gústame&lt;/b&gt; no teu sitio</string>
@@ -1446,6 +1450,7 @@ Language: gl_ES
     <string name="login_prologue_title_fourth">Observa como crece a túa audiencia con analíticas avanzadas.</string>
     <string name="login_prologue_title_fifth">Segue o teus sitios favoritos e descobre novos blogs.</string>
     <string name="login_prologue_title_first">Benvido ao maquetador web máis popular do mundo.</string>
+    <string name="reader_discover_recommended_blogs_header">Sitios a seguir</string>
     <string name="media_loading_failed">A carga do medio fallou</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Estamos traballando duro para engadir máis bloques con cada versión.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">«%s» non é totalmente compatible</string>
@@ -1468,6 +1473,7 @@ Language: gl_ES
     <string name="reader_label_toolbar_back">Volver</string>
     <string name="reader_post_details_header_by_author_name">por</string>
     <string name="reader_discover_empty_button_text">Primeiros pasos</string>
+    <string name="reader_discover_empty_subtitle">Segue temáticas para descubrir novos blogs</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Marcar como spam</string>
     <string name="stats_referrer_popup_menu_open_website">Abrir a web</string>
     <string name="stats_referrer_popup_unmark_as_spam">Desmarcar como spam</string>
@@ -1623,6 +1629,7 @@ Language: gl_ES
     <string name="gutenberg_native_block_copied">Bloque copiado</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">O título do sitio só pode ser cambiado por un usuario co perfil de administrador.</string>
     <string name="gutenberg_native_remove_block">Eliminar o bloque</string>
+    <string name="reader_title_tag_preview">Tema</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Cambios sen gardar</string>
     <string name="error_update_site_title_network">Non se puido actualizar o título do sitio. Comproba a túa conexión de rede e inténtao de novo.</string>
     <string name="my_site_title_changer_dialog_hint">O título do sitio móstrase na barra de título dun navegador web e na cabeceira da maioría dos temas.</string>
@@ -1663,6 +1670,7 @@ Language: gl_ES
     <string name="ccpa_privacy_notice_read">Le o aviso de privacidade de CCPA</string>
     <string name="reader_btn_select_few_interests">Selecciona algúns para continuar</string>
     <string name="reader_label_choose_your_interests">Elixe as túas temáticas</string>
+    <string name="reader_choose_interests_content_description">Elixe as túas temáticas</string>
     <string name="ccpa_privacy_notice_caption">A Ley de Privacidade do Consumidor de California («CCPA») obríganos a que proporcionemos información adicional aos residentes de California sobre as categorías de información personal que recompilamos e compartimos, onde obtemos esa información personal e como e por que a usamos.</string>
     <string name="update_now">Actualizar agora</string>
     <string name="status_and_visibility">Estado e visibilidade</string>
@@ -1698,6 +1706,7 @@ Language: gl_ES
     <string name="page_cannot_set_posts_page">Para establecer a páxina de entradas, activa «Páxina de inicio estática» nos axustes do sitio</string>
     <string name="gutenberg_native_select_a_color">Seleccionar unha cor</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dúas veces para ir aos axustes da cor</string>
+    <string name="reader_empty_followed_blogs_description">Cando sigas sitios, verás aquí o seu contido</string>
     <string name="crop">recortar</string>
     <string name="insert_label_with_count">Insertar %d</string>
     <string name="photo_picker_video_title">Elixir o vídeo</string>
@@ -1715,10 +1724,13 @@ Language: gl_ES
     <string name="sitepicker_continue_flow">Continuar</string>
     <string name="comment_share_link_via">Compartir en</string>
     <string name="whats_new_in_version_title">Que hai de novo</string>
+    <string name="reader_no_site_to_reblog_action">Xestionar os sitios</string>
     <string name="reader_reblog_error">Fallou o reblog</string>
     <string name="comment_toast_err_share_intent">Non se puido compartir</string>
     <string name="copy_link_address">Copiar o enderezo do enlace</string>
     <string name="comment_q_action_copied_url">Copiada o enderezo do enlace</string>
+    <string name="reader_no_site_to_reblog_title">Non hai dispoñibles sitios WordPress.com</string>
+    <string name="reader_no_site_to_reblog_detail">Unha vez que crees un sitio en WordPress.com, podes volver a publicar o contido que che gusta no teu propio sitio.</string>
     <string name="gutenberg_native_number_of_columns">Número de columnas</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Toca dúas veces para mover o bloque cara a esquerda</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Toca dúas veces para mover o bloque cara a dereita</string>
@@ -1811,13 +1823,21 @@ Language: gl_ES
     <string name="stats_management_add_new_stats_card">Engadir unha nova tarxeta de estatísticas</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Acceder a WordPress.com</string>
     <string name="reader_btn_remove_filter_content_description">Quitar o filtro actual</string>
+    <string name="reader_bottom_sheet_content_description">Selecciona unha etiqueta ou un sitio, ventá emergente</string>
     <string name="reader_btn_select_filter_content_description">Selecciona un sitio ou etiqueta para filtrar entradas</string>
     <string name="reader_self_hosted_select_filter">Usa o botón de filtro para encontrar entradas sobre temas específicos</string>
+    <string name="reader_title_subs">Xestionar etiquetas e sitios</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Accede a WordPress.com para ver as últimas entradas dos sitios que segues</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Accede a WordPress.com para ver as últimas entradas dos temas que segues</string>
     <string name="gutenberg_native_add_to_end">Engadir ao final</string>
+    <string name="reader_filter_empty_sites_action">Seguir un sitio</string>
     <string name="gutenberg_native_add_block_after">Engadir o bloque despois</string>
     <string name="gutenberg_native_add_block_before">Engadir o bloque antes</string>
     <string name="gutenberg_native_add_to_beginning">Engadir ao principio</string>
     <string name="gutenberg_native_replace_current_block">Substituír o bloque actual</string>
+    <string name="reader_filter_empty_sites_list">Mira as entradas máis recentes dos sitios que segues</string>
+    <string name="reader_filter_empty_tags_action">Engadir un tema</string>
+    <string name="reader_filter_empty_tags_list">Podes seguir entradas sobre un tema específico engadindo un tema</string>
     <string name="reader_filter_cta">Filtrar</string>
     <string name="reader_filter_main_title">Seguindo</string>
     <string name="gutenberg_native_edit_video">Editar o vídeo</string>
@@ -1859,6 +1879,7 @@ Language: gl_ES
     <string name="login_discovery_error_generic">Non puidemos acceder ao teu sitio. Terás que contactar co teu aloxamento para solucionalo.</string>
     <string name="login_discovery_error_http_auth">Non puidemos acceder ao teu sitio porque necesita &lt;b&gt;identificación HTTP&lt;/b&gt;. Terás que contactar co teu aloxamento para solucionalo.</string>
     <string name="login_discovery_error_ssl">Non puidemos acceder ao teu sitio debido a un problema co &lt;b&gt;certificado SSL&lt;/b&gt;. Terás que contactar co teu aloxamento para solucionalo.</string>
+    <string name="reader_following_display_name">Seguindo</string>
     <string name="my_site_bottom_sheet_add_page">Páxina do sitio</string>
     <string name="enter_credentials_for_site">Accede coas credenciais do teu sitio %1$s</string>
     <string name="login_site_credentials_magic_link_label">Xa case estamos! Só necesitamos verificar o teu enderezo de correo electrónico conectado a Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
@@ -2357,6 +2378,7 @@ Language: gl_ES
     <string name="pages_set_parent">Facer superior</string>
     <string name="login_error_sms_throttled">Fixemos demasiados intentos para enviar un código de verificación por SMS - tómate un descanso e solicita un novo dentro dun minuto.</string>
     <string name="page_parent_changed">A páxina superior cambiou</string>
+    <string name="reader_empty_followed_blogs_search_title">Ningún sitio coincide coa túa busca</string>
     <string name="site_picker_remove_site_empty">Ningún sitio coincide coa túa busca</string>
     <string name="login_error_email_not_found_v2">Non hai ningunha conta de WordPress.com que coincida con esta conta de Google.</string>
     <string name="top_level">Nivel superior</string>
@@ -2390,6 +2412,8 @@ Language: gl_ES
     <string name="quick_start_button_negative_short">Cancelar</string>
     <string name="quick_start_button_negative">Agora non</string>
     <string name="my_site_create_new_site_title">Non tes sitios</string>
+    <string name="reader_empty_followed_tags_title">Temas non seguidos</string>
+    <string name="reader_empty_followed_tags_subtitle">Engade aquí temas para descubrir entradas sobre as túas temáticas favoritas</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ de Jetpack</string>
     <string name="login_to_to_connect_jetpack">Accede á conta de WordPress.com que usaches para conectar con Jetpack.</string>
@@ -2408,7 +2432,9 @@ Language: gl_ES
     <string name="people_empty_list_filtered_followers">Aínda non tes seguidores</string>
     <string name="people_empty_list_filtered_email_followers">Aínda non hai seguidores por correo electrónico</string>
     <string name="reader_empty_posts_liked_description">As entradas que che gusten aparecerán aquí</string>
+    <string name="reader_empty_followed_blogs_button_discover">Descubre sitios</string>
     <string name="reader_empty_followed_blogs_button_followed">Ir aos seguintes</string>
+    <string name="reader_empty_followed_blogs_title">Sitios que non segues</string>
     <string name="reader_empty_posts_liked_title">Aínda non che gustou nada</string>
     <string name="notifications_empty_likes">Aínda non hai gústame</string>
     <string name="notifications_empty_followers">Aínda non hai seguidores</string>
@@ -2483,6 +2509,8 @@ Language: gl_ES
     <string name="third_party_policy_learn_more_header">Política de terceiros</string>
     <string name="preference_collect_information">Recompilar información</string>
     <string name="privacy_policy_read">Le a política de privacidade</string>
+    <string name="reader_btn_notifications_on">Activar os avisos do sitio</string>
+    <string name="reader_btn_notifications_off">Desactivar os avisos do sitio</string>
     <string name="reader_followed_blog_notifications">Activar avisos para %1$s%2$s%3$s?</string>
     <string name="third_party_policy_learn_more_caption">Usamos outras ferramentas de seguimento, incluídas algunhas de terceiros. Le acerca destas e como controlalas.</string>
     <string name="cookie_policy_learn_more_caption">Comparte información coa nosa ferramenta de análise acerca do uso que fas dos servizos mentres estás conectado á túa conta de WordPress.com.</string>
@@ -3055,6 +3083,7 @@ Language: gl_ES
     <string name="confirm">Confirmar</string>
     <string name="xmlrpc_endpoint_forbidden_error">Non se puido conectar. Recibiuse un erro 403 cando se intenta acceder ao \n        teu endpoint do XMLRPC do sitio. A aplicación necesítao para comunicarse co teu sitio. Ponte en contacto co teu provedor para solucionar este problema.</string>
     <string name="xmlrpc_post_blocked_error">Non se puido conectar. O teu aloxamento está bloqueando as peticións POST e a aplicación necesítaas \n        para comunicarse co teu sitio. Ponte en contacto co teu aloxamento para solucionar este problema.</string>
+    <string name="reader_hint_search_followed_sites">Busca nos sitios que segues</string>
     <string name="pending_draft_one_generic">Non deixes o traballo a medias! «%1$s» está pendente de publicarse.</string>
     <string name="pending_draft_one_month">No deixes o traballo a medias! «%1$s» está pendente de publicarse.</string>
     <string name="pending_draft_one_week_2">«%1$s» gardouse como borrador. Acórdate de publicala!</string>
@@ -3154,6 +3183,7 @@ Language: gl_ES
     <string name="user_remove_confirmation_message">Se eliminas a %1$s, o usuario non poderá acceder máis a este sitio, aínda que todos os contidos creados por %1$s permanecerán nel.\n\nQueres aínda así eliminar a este usuario?</string>
     <string name="person_removed">%1$s foi eliminado</string>
     <string name="person_remove_confirmation_title">Eliminar a %1$s</string>
+    <string name="reader_empty_posts_in_custom_list">Os sitios desta lista non publicaron nada ultimamente</string>
     <string name="people">Xente</string>
     <string name="role">Rol</string>
     <string name="error_remove_user">Non foi posible eliminar o usuario</string>
@@ -3368,6 +3398,7 @@ Language: gl_ES
     <string name="reader_err_get_post_not_found">O artigo xa non existe</string>
     <string name="reader_err_get_post_not_authorized">Non tes permiso para ver este artigo</string>
     <string name="reader_err_get_post_generic">Non foi posible acceder a este artigo</string>
+    <string name="reader_empty_followed_blogs_no_recent_posts_description">Os sitios que segues non publicaron nada ultimamente</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Sen artigos recentes</string>
     <string name="media_edit_copy_url_toast">URL copiado ao portapapeis</string>
     <string name="selected_theme">Tema escollido</string>
@@ -3412,6 +3443,7 @@ Language: gl_ES
     <string name="reader_short_like_count_multi">%s gústame</string>
     <string name="reader_short_like_count_none">Gústame</string>
     <string name="reader_short_like_count_one">1 gústame</string>
+    <string name="reader_label_follow_count">%,d seguidores</string>
     <string name="reader_menu_tags">Editar temas e sitios</string>
     <string name="reader_title_post_detail">Artigo da Guía de Lectura</string>
     <string name="notifications_push_summary">Configuración de notificacións que aparece no teu dispositivo</string>
@@ -3434,6 +3466,8 @@ Language: gl_ES
     <string name="button_edit">Editar</string>
     <string name="button_publish">Publicar</string>
     <string name="button_trash">Lixo</string>
+    <string name="reader_toast_err_follow_blog_not_authorized">Non tes autorización para acceder a este blogue</string>
+    <string name="reader_toast_err_follow_blog_not_found">Non foi posible atopar este blogue</string>
     <string name="undo">Desfacer</string>
     <string name="push_auth_expired">A solicitude expirou. Inicia sesión en WordPress.com para tentalo de novo.</string>
     <string name="ignore">Ignorar</string>
@@ -3478,6 +3512,7 @@ Language: gl_ES
     <string name="reader_empty_posts_request_failed">Fallou a procura de artigos</string>
     <string name="post_uploading">Cargando</string>
     <string name="reader_label_new_posts">Artigos novos</string>
+    <string name="reader_empty_posts_in_blog">Este blogue está baleiro</string>
     <string name="error_copy_to_clipboard">Houbo un erro ao copiar o texto no portapapeis</string>
     <string name="logs_copied_to_clipboard">Os rexistros da aplicación foron copiados no portapapeis</string>
     <string name="stats_followers_an_hour_ago">hai unha hora</string>
@@ -3521,10 +3556,25 @@ Language: gl_ES
     <string name="mnu_comment_liked">Gustou</string>
     <string name="browse_our_faq_button">Ves as FAQ</string>
     <string name="signing_out">Saíndo…</string>
+    <string name="reader_empty_posts_in_tag">Non hai entradas con esta temática</string>
     <string name="help_and_support">Axuda e soporte</string>
+    <string name="reader_menu_block_blog">Bloquear este blogue</string>
+    <string name="reader_toast_err_block_blog">Non foi posible bloquear este blogue</string>
+    <string name="reader_toast_blog_blocked">Os artigos deste blogue non se mostrarán máis</string>
     <string name="reader_toast_err_generic">Non foi posible realizar esta acción</string>
     <string name="update_verb">Actualizar</string>
     <string name="schedule_verb">Programar</string>
+    <string name="reader_page_followed_blogs">Sitios que sigo</string>
+    <string name="reader_toast_err_get_blog_info">Non se pode mostrar este blogue</string>
+    <string name="reader_toast_err_already_follow_blog">Xa segues este blogue</string>
+    <string name="reader_toast_err_follow_blog">Non foi posible seguir este blogue</string>
+    <string name="reader_toast_err_unfollow_blog">Non foi posible deixar de seguir este blogue</string>
+    <string name="reader_empty_recommended_blogs">Sen blogues recomendados</string>
+    <string name="reader_title_blog_preview">Blogue da Guía de Lectura</string>
+    <string name="reader_label_followed_blog">Blogue en seguimento</string>
+    <string name="reader_page_followed_tags">Temas seguidos</string>
+    <string name="reader_hint_add_tag_or_url">Introduce unha URL ou tema para seguir</string>
+    <string name="reader_label_followers_count">%s seguidores</string>
     <string name="help">Axuda</string>
     <string name="ssl_certificate_error">Certificado SSL non válido</string>
     <string name="ssl_certificate_ask_trust">Se habitualmente conectas a este sitio sen problema, este erro pode significar que alguén esta¡á tentando suplantarche no sitio, así que que non deberías continuar.  Queres confiar no certificado aínda así?</string>
@@ -3596,6 +3646,8 @@ Language: gl_ES
     <string name="file_not_found">Non foi posible atopar o ficheiro para cargar. Terá sido eliminado ou movido?</string>
     <string name="error_refresh_media">Non se poden actualizar os medios neste momento</string>
     <string name="plugin_not_found">Ocorreu un erro ao acceder a este plugin</string>
+    <string name="reader_toast_err_add_tag">Non se puido engadir este tema</string>
+    <string name="reader_toast_err_remove_tag">Non se puido eliminar este tema</string>
     <string name="share_link">Enlace para compartir</string>
     <string name="reader_empty_posts_in_tag_updating">Á procura de artigos…</string>
     <string name="comment_spammed">Comentario sinalado como spam</string>
@@ -3609,6 +3661,8 @@ Language: gl_ES
     <string name="reader_toast_err_get_post">Non foi posible acceder a este artigo</string>
     <string name="reader_untitled_post">(Sen título)</string>
     <string name="reader_btn_share">Compartir</string>
+    <string name="reader_btn_follow">Seguir</string>
+    <string name="reader_btn_unfollow">Seguindo</string>
     <string name="reader_hint_comment_on_comment">Responder ao comentario</string>
     <string name="reader_label_added_tag">%s engadido</string>
     <string name="reader_label_removed_tag">%s eliminado</string>
@@ -3622,6 +3676,8 @@ Language: gl_ES
     <string name="comments_empty_list">Sen comentarios aínda</string>
     <string name="reader_view_reblog">Reblog</string>
     <string name="sign_up_label">Rexistro</string>
+    <string name="reader_toast_err_tag_exists">Xa segues este tema</string>
+    <string name="reader_toast_err_tag_invalid">Non é un tema válido</string>
     <string name="stats_view_tags_and_categories">Etiquetas e categorías</string>
     <string name="stats_view_referrers">Referencias</string>
     <string name="stats_timeframe_today">Hoxe</string>

@@ -14,6 +14,7 @@ Language: hu
     <string name="pages_fetching">Oldalak betöltése…</string>
     <string name="media_fetching">Média betöltése…</string>
     <string name="posts_fetching">Bejegyzések betöltése…</string>
+    <string name="reader_empty_posts_in_blog">Ez az oldal üres</string>
     <string name="stats_followers_years">%1$d év</string>
     <string name="stats_followers_a_month">Egy hónap</string>
     <string name="stats_followers_a_year">Egy év</string>
@@ -55,6 +56,7 @@ Language: hu
     <string name="media_error_no_permission">Nincs elég jogosultság a médiatár megtekitéséhez</string>
     <string name="post_settings">Bejegyzés beálitások</string>
     <string name="edit_comment">Hozzászólás szerkesztése</string>
+    <string name="reader_btn_follow">Követés</string>
     <string name="empty_list_default">Ez a lista üres</string>
     <string name="themes">Sablonok</string>
     <string name="media_edit_caption_text">Felirat</string>
