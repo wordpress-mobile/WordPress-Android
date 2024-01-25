@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts.editor.media
 
-import android.net.Uri
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
