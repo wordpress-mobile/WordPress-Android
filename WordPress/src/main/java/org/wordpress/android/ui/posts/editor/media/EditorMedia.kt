@@ -129,10 +129,6 @@ class EditorMedia @Inject constructor(
             )
         }
     }
-
-    fun onPhotoPickerMediaChosen(uriList: List<Uri>) {
-        addNewMediaItemsToEditorAsync(uriList, false)
-    }
     // endregion
 
     // region Add existing media to a post
