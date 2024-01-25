@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewpager.widget.ViewPager
@@ -132,7 +133,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         viewModel.isTitleContainerVisible.observe(viewLifecycleOwner) { isVisible ->
-            titleContainer.visibility = if (isVisible) View.VISIBLE else View.GONE
+            titleContainer.isVisible = isVisible
         }
     }
 
