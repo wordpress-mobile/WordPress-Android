@@ -10,7 +10,7 @@ object DesignSystemDataSource {
     val foundationScreenButtonOptions = listOf(
         R.string.design_system_foundation_colors,
         R.string.design_system_foundation_fonts,
-        R.string.design_system_foundation_Lengths
+        R.string.design_system_foundation_lengths
     )
     val componentsScreenButtonOptions = listOf(
         R.string.design_system_components_dsbutton

@@ -960,7 +960,7 @@
     <string name="design_system_components" translatable="false">Components</string>
     <string name="design_system_foundation_colors" translatable="false">Colors</string>
     <string name="design_system_foundation_fonts" translatable="false">Fonts</string>
-    <string name="design_system_foundation_Lengths" translatable="false">Lengths</string>
+    <string name="design_system_foundation_lengths" translatable="false">Lengths</string>
     <string name="design_system_components_dsbutton" translatable="false">DSButton</string>
 
     <!-- stats -->
