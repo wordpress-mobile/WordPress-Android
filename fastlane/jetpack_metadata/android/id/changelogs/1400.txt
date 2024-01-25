@@ -1,0 +1,6 @@
+24.0:
+- Dapatkan paket WordPress dengan domain gratis di dasbor domain
+- Keyboard perangkat tetap terlihat ketika menyunting blok teks
+- Layar editor bergulir otomatis ke blok yang baru disisipkan
+- Batalkan pemilihan blok dengan menekan tombol kembali pada perangkat
+- Bagikan berbagai jenis media ke aplikasi sekaligus tanpa crash

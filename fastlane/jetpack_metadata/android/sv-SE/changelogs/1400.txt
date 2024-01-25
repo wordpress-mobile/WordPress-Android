@@ -1,0 +1,6 @@
+24.0:
+- Skaffa ett WordPress-paket med en gratis domän i domänadminpanelen
+- Enhetstangentbordet förblir kvar vid redigering av textblock
+- Redigerarskärmen bläddrar automatiskt till nyinfogade block
+- Avmarkera block genom att trycka på enhetens tillbakaknapp
+- Dela olika mediatyper till appen med en gång utan någon krasch

@@ -1,5 +1,4 @@
-Block Editor updates:
-- Device keyboard remains when editing text blocks
-- Screen auto-scrolls to newly inserted blocks
-- Unselect blocks by pressing your device’s back button
-- Share different media types to the app at once without crashing
+- Get notified when you’re working offline.
+- Image block uploads pause when you lose internet and resume when you reconnect.
+- Select a custom gradient in the editor and see a color indicator.
+- “Forward” and “back” arrows are correct for right-to-left readers.

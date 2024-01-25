@@ -29,10 +29,6 @@ Language: lv
     <string name="campaign_detail_error_title">Kaut kas nogāja greizi</string>
     <string name="campaign_listing_page_error_title">Kaut kas ir nogājis greizi</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Kaut kas nogāja greizi, nevarēja ielādēt kampaņas</string>
-    <string name="domain_transfer_card_cta">Pārcelt savus domēnus</string>
-    <string name="domain_transfer_card_caption">Kā jūs varbūt zināt, Google Domains tika pārdots Squarespace. Pārceliet savus domēnus uz WordPress.com tagad, un mēs segsim visas pārneses maksas, kā arī nodrošināsim papildu gadu jūsu domēna reģistrācijai.</string>
-    <string name="domain_transfer_card_sub_title">Atgūstiet savus Google domēnus</string>
-    <string name="domain_transfer_card_title">Jaunumi</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Pievienot kontus</string>
     <string name="prepublishing_nudges_toolbar_title_social">Sociālā kopīgošana</string>
     <string name="prepublishing_nudges_social_action">Sociālā kopīgošana</string>
@@ -273,7 +269,6 @@ Language: lv
     <string name="stats_timeframe_last_seven_days">Pēdējās 7 dienas</string>
     <string name="weeks_quantity_other">%d nedēļas</string>
     <string name="weeks_quantity_one">1 nedēļa</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">No &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Atgādināt vēlāk</string>
     <string name="jetpack_feature_card_content_phase_three">Statistika, Lasītājs, Paziņojumi un citi līdzekļi drīzumā tiks pārvietoti uz Jetpack mobilo lietotni.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Pārslēdzieties uz Jetpack lietotni</string>
@@ -694,7 +689,6 @@ Language: lv
     <string name="my_site_post_card_scheduled_title">Gaidāmās ieplānotās ziņas</string>
     <string name="my_site_post_card_draft_title">Strādājiet pie ziņojuma melnraksta</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Bezmaksas pirmo gadu &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s / gadā&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Jūsu domēni tiks novirzīti uz jūsu vietni %s</string>
     <string name="gutenberg_native_create_link">Izveidot saiti</string>
     <string name="domains_suggestions_select_domain">Izvēlieties domēnu</string>
     <string name="domains_title">Domēni</string>
@@ -715,14 +709,9 @@ Language: lv
     <string name="domains_free_plan_get_your_domain_caption">Šajā vietnē iegādātie domēni novirzīs apmeklētājus uz &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Jūsu plānā ir iekļauta bezmaksas domēna reģistrācija uz vienu gadu</string>
     <string name="domains_paid_plan_claim_your_domain_title">Pieprasiet savu bezmaksas domēnu</string>
-    <string name="domains_manage_domains">Pārvaldīt domēnus</string>
     <string name="domains_add_a_domain">Pievienojiet domēnu</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Derīguma termiņš beigsies %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Derīguma termiņš beidzas %s</string>
-    <string name="domains_site_domains">Jūsu vietnes domēni</string>
-    <string name="domains_primary_site_address_chip">Galvenā vietnes adrese</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Mainīt vietnes adresi</string>
-    <string name="domains_primary_site_caption">Jūsu bezmaksas WordPress.com adrese ir</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s par pirmo gadu &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s gadā&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /gads&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Vai vēlaties tos izmest?</string>
@@ -748,7 +737,6 @@ Language: lv
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Jums&lt;/a&gt; tas patīk.</string>
     <string name="gutenberg_native_line_height">Līnijas augstums</string>
     <string name="domains_free_plan_get_your_domain_title">Iegūstiet savu domēnu</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Nezināma kļūda, ienesot ieteicamās lietotnes veidni</string>
     <string name="recommend_app_bad_format_response">Saņemta nederīga atbilde</string>
     <string name="recommend_app_null_response">Atbilde nav saņemta</string>
@@ -1942,8 +1930,6 @@ Language: lv
     <string name="post_list_search_nothing_found">Nav ziņu, kas atbilstu jūsu meklēšanas vaicājumam</string>
     <string name="post_list_search_prompt">Meklēt ziņas</string>
     <string name="domains_suggestions_intro_description">Šeit cilvēki jūs atradīs internetā.</string>
-    <string name="domains_suggestions_intro_title">Izvēlieties premium domēna nosaukumu</string>
-    <string name="my_site_custom_domain_name">Visos WordPress.com plānos ir iekļauts pielāgots domēna nosaukums. Reģistrējiet savu bezmaksas premium domēnu tūlīt.</string>
     <string name="stats_widget_minified_name">Īsumā</string>
     <string name="stats_widget_today_insights_name">Šodien</string>
     <string name="stats_widget_all_time_insights_name">Visu laiku</string>

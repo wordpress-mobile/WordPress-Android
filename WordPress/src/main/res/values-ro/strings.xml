@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-04 07:31:29+0000
+Translation-Revision-Date: 2024-01-23 16:55:56+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">Aștept conexiunea</string>
+    <string name="stats_traffic">Trafic</string>
+    <string name="gutenberg_native_working_offline">Lucrează offline</string>
+    <string name="gutenberg_native_network_connection_re_established">Conexiunea la rețea este restabilită</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">Conexiune la rețea este pierdută, lucrează offline</string>
+    <string name="gutenberg_native_font_size_1_s">Dimensiune font, %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">Tipul de fișier nu este acceptat ca fișier media.</string>
+    <string name="media_cannot_be_started">Nu putem să deschidem media în acest moment. Te rog să reîncerci mai târziu</string>
+    <string name="domains_just_search_for_a_domain_button">Caută pur și simplu un domeniu</string>
+    <string name="domains_upgrade_to_a_plan_button">Actualizează la un plan</string>
+    <string name="domains_upgrade_to_plan_caption">Cu orice plan cu plată anuală, beneficiezi de înregistrarea gratuită a domeniului în primul an sau de transferul lui gratuit.</string>
+    <string name="domains_site_domain_never_expires">Nu expiră niciodată</string>
+    <string name="domains_free_domain">Domeniul tău gratuit WordPress.com</string>
+    <string name="domains_site_other_domains">Alte domenii pentru %s</string>
+    <string name="domains_primary_site_domain_chip">Domeniu principal</string>
+    <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary este aici!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Să începem!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Activează îndemnurile de a scrie</string>
@@ -156,10 +172,6 @@ Language: ro
     <string name="campaign_detail_error_title">Ceva nu a mers bine</string>
     <string name="campaign_listing_page_error_title">Ceva nu a mers bine</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Ceva nu a mers bine, nu am putut să preiau campaniile</string>
-    <string name="domain_transfer_card_cta">Transferă-ți domeniile</string>
-    <string name="domain_transfer_card_caption">După cum probabil știi, Google Domains a fost vândut la Squarespace. Transferă-ți domeniile la WordPress.com acum și îți vom plăti toate taxele de transfer, în plus ai un an suplimentar la înregistrarea domeniului.</string>
-    <string name="domain_transfer_card_sub_title">Revendică-ți domeniile Google</string>
-    <string name="domain_transfer_card_title">Noutăți</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Conectează conturile</string>
     <string name="prepublishing_nudges_toolbar_title_social">Partajare pe media socială</string>
     <string name="prepublishing_nudges_social_action">Partajare pe media socială</string>
@@ -401,7 +413,7 @@ Language: ro
     <string name="stats_timeframe_last_seven_days">Ultimele 7 zile</string>
     <string name="weeks_quantity_other">%d săptămâni</string>
     <string name="weeks_quantity_one">O săptămână</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">De la &lt;b&gt;DayOne&lt;/b&gt;</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">De la &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Amintește-mi mai târziu</string>
     <string name="jetpack_feature_card_content_phase_three">În curând, Statistici, Cititor, Notificări și alte funcționalități se vor muta în aplicația Jetpack pentru mobil.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Comută la aplicația Jetpack</string>
@@ -824,7 +836,6 @@ Language: ro
     <string name="my_site_post_card_scheduled_title">Articole programate în viitor</string>
     <string name="my_site_post_card_draft_title">Lucrează la un articol ciornă</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratuit în primul an &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/an&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Domeniile tale vor fi redirecționate la site-ul tău %s</string>
     <string name="gutenberg_native_create_link">Creează o legătură</string>
     <string name="domains_suggestions_select_domain">Selectează domeniul</string>
     <string name="domains_title">Domenii</string>
@@ -845,14 +856,9 @@ Language: ro
     <string name="domains_free_plan_get_your_domain_caption">Domeniile cumpărate pentru acest site vor redirecționa vizitatorii la &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">În planul tău este inclusă o înregistrare gratuită pentru un domeniu în primul an</string>
     <string name="domains_paid_plan_claim_your_domain_title">Revendică-ți domeniul gratuit</string>
-    <string name="domains_manage_domains">Administrează domeniile</string>
     <string name="domains_add_a_domain">Adaugă un domeniu</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Expiră pe %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Expiră pe %s</string>
-    <string name="domains_site_domains">Domeniile site-ului tău</string>
-    <string name="domains_primary_site_address_chip">Adresă principală site</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Schimbă adresa site-ului</string>
-    <string name="domains_primary_site_caption">Adresa ta gratuită pentru WordPress.com este</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s în primul an &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s/an&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/an&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Vrei să le elimini?</string>
@@ -878,7 +884,6 @@ Language: ro
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Ai&lt;/a&gt; apreciat asta.</string>
     <string name="gutenberg_native_line_height">Înălțime linie</string>
     <string name="domains_free_plan_get_your_domain_title">Ia-ți domeniul</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Eroare necunoscută la aducerea șablonului recomandat pentru aplicație</string>
     <string name="recommend_app_bad_format_response">Am primit un răspuns invalid</string>
     <string name="recommend_app_null_response">Nu am primit niciun răspuns</string>
@@ -2077,8 +2082,8 @@ Language: ro
     <string name="post_list_search_nothing_found">Nu se potrivește niciun articol cu căutarea ta</string>
     <string name="post_list_search_prompt">Caută articole</string>
     <string name="domains_suggestions_intro_description">Aici vei fi găsit pe internet.</string>
-    <string name="domains_suggestions_intro_title">Alege un nume de domeniu premium</string>
-    <string name="my_site_custom_domain_name">Toate planurile WordPress.com includ un nume de domeniu personalizat. Înregistrează-ți domeniul premium gratuit acum.</string>
+    <string name="domains_suggestions_intro_title">Alege un nume de domeniu personalizat</string>
+    <string name="my_site_custom_domain_name">Toate planurile WordPress.com cu plată anuală includ un nume de domeniu personalizat. Înregistrează-ți domeniul gratuit acum.</string>
     <string name="stats_widget_minified_name">Dintr-o privire</string>
     <string name="stats_widget_today_insights_name">Azi</string>
     <string name="stats_widget_all_time_insights_name">Total general</string>

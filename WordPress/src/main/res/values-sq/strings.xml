@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-04 11:10:59+0000
+Translation-Revision-Date: 2024-01-16 09:25:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_working_offline">Punim i Palidhur</string>
+    <string name="gutenberg_native_network_connection_re_established">Lidhja me rrjetin u rivendos</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">Humbi lidhja me rrjetin, po punohet pa u lidhur</string>
+    <string name="gutenberg_native_font_size_1_s">Madhësi Shkronjash, %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">Lloj kartelash i pambuluar si kartelë media.</string>
+    <string name="media_cannot_be_started">S’hapim dot media tani. Ju lutemi, riprovoni më vonë</string>
+    <string name="domains_just_search_for_a_domain_button">Thjesht kërko për një përkatësi</string>
+    <string name="domains_upgrade_to_a_plan_button">Përmirësojeni me një plan</string>
+    <string name="domains_upgrade_to_plan_caption">Merrni një regjistrim përkatësie falas për një vit, ose kaloni në çfarëdo plani vjetor me pagesë.</string>
+    <string name="domains_site_domain_never_expires">S’skadon kurrë</string>
+    <string name="domains_free_domain">Përkatësia juaj falas WordPress.com</string>
+    <string name="domains_site_other_domains">Tjetër përkatësi për %s</string>
+    <string name="domains_primary_site_domain_chip">Përkatësia parësore</string>
+    <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary erdhi!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Shkojmë!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Aktivizoni cytje blogimi</string>
@@ -156,10 +170,6 @@ Language: sq_AL
     <string name="campaign_detail_error_title">Diç shkoi ters</string>
     <string name="campaign_listing_page_error_title">Diç shkoi ters</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Diç shkoi ters, s’u sollën dot fushata</string>
-    <string name="domain_transfer_card_cta">Shpërngulni përkatësitë tuaja</string>
-    <string name="domain_transfer_card_caption">Si edhe mund ta dini, Përkatësitë Google iu shitën Squarespace-it. Shpërngulini përkatësitë tuaj që sot te WordPress.com dhe do të paguajmë krejt tarifat e shpërnguljes, plus një vit shtesë në regjistrimin e përkatësisë tuaj.</string>
-    <string name="domain_transfer_card_sub_title">Kërkoni Përkatësitë Tuaja Google</string>
-    <string name="domain_transfer_card_title">Lajme</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Lidhni llogari</string>
     <string name="prepublishing_nudges_toolbar_title_social">Ndarje me të tjerë në shoqërorë</string>
     <string name="prepublishing_nudges_social_action">Ndarje me të tjerë në shoqërorë</string>
@@ -400,7 +410,6 @@ Language: sq_AL
     <string name="stats_timeframe_last_seven_days">7 ditët e fundit</string>
     <string name="weeks_quantity_other">%d javë</string>
     <string name="weeks_quantity_one">1 javë</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Nga &lt;b&gt;Dita e Parë&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Kujtoma më vonë</string>
     <string name="jetpack_feature_card_content_phase_three">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të Jetpack-ut së shpejti do të kalohen te aplikacioni Jetpack për celular.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Kaloni te aplikacioni Jetpack</string>
@@ -819,7 +828,6 @@ Language: sq_AL
     <string name="my_site_post_card_scheduled_title">Postime të ardhshme të planifikuara</string>
     <string name="my_site_post_card_draft_title">Merruni me një skicë postimi</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Falas për vitin e parë &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /vit&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Përkatësia juaj do të ridrejtojë për te sajti juaj te %s</string>
     <string name="gutenberg_native_create_link">Krijo lidhje</string>
     <string name="domains_suggestions_select_domain">Përzgjidhni përkatësi</string>
     <string name="domains_title">Përkatësi</string>
@@ -840,14 +848,9 @@ Language: sq_AL
     <string name="domains_free_plan_get_your_domain_caption">Përkatësitë e blera në këtë sajt do t’i ridrejtojnë vizitorët te &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Me planin tuaj keni të përfshirë një regjistrim përkatësie falas për një vit</string>
     <string name="domains_paid_plan_claim_your_domain_title">Kërkoni përkatësinë tuaj falas</string>
-    <string name="domains_manage_domains">Administroni Përkatësi</string>
     <string name="domains_add_a_domain">Shtoni një përkatësi</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Skadon më %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Skadon më %s</string>
-    <string name="domains_site_domains">Përkatësitë e sajtit tuaj</string>
-    <string name="domains_primary_site_address_chip">Adresë parësore sajti</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Ndryshoni adresën e sajtit</string>
-    <string name="domains_primary_site_caption">Adresa juaj falas WordPress.com është</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s për vitin e parë &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /vit&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /vit&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Doni të hidhen tej?</string>
@@ -873,7 +876,6 @@ Language: sq_AL
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Ju&lt;/a&gt; pëlqen kjo.</string>
     <string name="gutenberg_native_line_height">Lartësi Rreshti</string>
     <string name="domains_free_plan_get_your_domain_title">Merrni përkatësinë tuaj</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Gabim i panjohur në prurje gjedheje aplikacioni të rekomanduar</string>
     <string name="recommend_app_bad_format_response">U mor përgjigje e pavlefshme</string>
     <string name="recommend_app_null_response">S’u mor përgjigje</string>
@@ -2069,8 +2071,8 @@ Language: sq_AL
     <string name="post_list_search_nothing_found">Kërkimi juaj s’ka përputhje me ndonjë postim</string>
     <string name="post_list_search_prompt">Kërkoni te postimet</string>
     <string name="domains_suggestions_intro_description">Ky është vendi ku do t’ju gjejnë njerëzit në internet.</string>
-    <string name="domains_suggestions_intro_title">Zgjidhni një emër përkatësie me pagesë</string>
-    <string name="my_site_custom_domain_name">Krejt planet WordPress.com përmbajnë një emër përkatësie vetjake. Regjistrohuni që tani për të marrë falas përkatësinë tuaj me pagesë.</string>
+    <string name="domains_suggestions_intro_title">Zgjidhni një emër vetjak përkatësie</string>
+    <string name="my_site_custom_domain_name">Krejt planet vjetore WordPress.com përmbajnë një emër përkatësie vetjake. Regjistrohuni që tani për të marrë falas përkatësinë tuaj.</string>
     <string name="stats_widget_minified_name">Me një vështrim</string>
     <string name="stats_widget_today_insights_name">Sot</string>
     <string name="stats_widget_all_time_insights_name">Për krejt kohën</string>

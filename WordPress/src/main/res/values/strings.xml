@@ -954,6 +954,11 @@
     <string name="debug_cookies_cookie_name_hint" translatable="false">cookie_name</string>
     <string name="debug_cookies_cookie_value_hint" translatable="false">cookie_value</string>
 
+    <!-- Design System -->
+    <string name="preference_design_system" translatable="false">Design System</string>
+    <string name="design_system_foundation" translatable="false">Foundation</string>
+    <string name="design_system_components" translatable="false">Components</string>
+
     <!-- stats -->
     <string name="stats">Stats</string>
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
@@ -1275,6 +1280,10 @@
     <string name="stats_timeframe_weeks">Weeks</string>
     <string name="stats_timeframe_months">Months</string>
     <string name="stats_timeframe_years">Years</string>
+    <string name="stats_timeframe_by_day">By day</string>
+    <string name="stats_timeframe_by_week">By week</string>
+    <string name="stats_timeframe_by_month">By month</string>
+    <string name="stats_timeframe_by_year">By year</string>
     <string name="stats_timeframe_last_seven_days">Last 7-days</string>
     <string name="stats_timeframe_previous_seven_days">Previous 7-days</string>
     <string name="stats_views">Views</string>
@@ -2369,6 +2378,7 @@
     <string name="my_site_todays_stat_card_likes" translatable="false">@string/stats_likes</string>
     <string name="my_site_todays_stat_card_views" translatable="false">@string/stats_views</string>
     <string name="my_site_todays_stat_card_visitors" translatable="false">@string/stats_visitors</string>
+    <string name="my_site_todays_stat_card_comments" translatable="false">@string/stats_comments</string>
     <string name="my_site_todays_stats_get_more_views_message">Interested in building your audience? Check out our &lt;a href="%1$s"&gt;top tips&lt;/a&gt;.</string>
     <string name="my_site_todays_stats_card_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
     <string name="my_site_todays_stats_menu_view_stats">View stats</string>
@@ -2400,7 +2410,7 @@
     <string name="my_site_blogging_prompt_card_menu_view_more">View more prompts</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Skip for today</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Turn off prompts</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">From &lt;b&gt;DayOne&lt;/b&gt;</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">From &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="my_site_blogging_prompt_card_attribution_bloganuary">From &lt;b&gt;Bloganuary&lt;/b&gt;</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Learn more</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Skipped today\'s blogging prompt</string>
@@ -4842,5 +4852,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_network_connection_lost_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Network connection lost, working offline</string>
     <string name="gutenberg_native_network_connection_re_established" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Network connection re-established</string>
     <string name="gutenberg_native_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Working Offline</string>
+    <string name="gutenberg_native_waiting_for_connection" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Waiting for connection</string>
 
 </resources>

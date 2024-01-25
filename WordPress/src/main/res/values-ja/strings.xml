@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-04 11:54:09+0000
+Translation-Revision-Date: 2024-01-17 21:46:16+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_working_offline">オフラインで作業</string>
+    <string name="gutenberg_native_network_connection_re_established">ネットワーク接続が再確立されました</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">ネットワーク接続が失われ、オフラインで作業しています</string>
+    <string name="gutenberg_native_font_size_1_s">フォントサイズ、%1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">メディアファイルとしてサポートされていないファイルタイプです。</string>
+    <string name="media_cannot_be_started">現在メディアを開けません。 後でもう一度お試しください</string>
+    <string name="domains_just_search_for_a_domain_button">ドメイン検索のみ</string>
+    <string name="domains_upgrade_to_a_plan_button">プランをアップグレード</string>
+    <string name="domains_upgrade_to_plan_caption">1年間の無料ドメイン登録、または有料年間プランでの移管をご利用ください。</string>
+    <string name="domains_site_domain_never_expires">期限なし</string>
+    <string name="domains_free_domain">お使いの無料 WordPress.com ドメイン</string>
+    <string name="domains_site_other_domains">%s の他のドメイン</string>
+    <string name="domains_primary_site_domain_chip">主要ドメイン</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary が登場 !</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">スタート</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">ブログ作成のプロンプトをオンにする</string>
@@ -151,10 +164,6 @@ Language: ja_JP
     <string name="campaign_detail_error_title">エラーが発生しました</string>
     <string name="campaign_listing_page_error_title">エラーが発生しました</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> エラーが発生しました。キャンペーンを取得できませんでした</string>
-    <string name="domain_transfer_card_cta">ドメインを移管する</string>
-    <string name="domain_transfer_card_caption">ご存知かもしれませんが、Google Domains は Squarespace に売却されました。 今すぐドメインを WordPress.com に移管していただければ、移管費用に加え、ドメイン登録料も当社が負担いたします。</string>
-    <string name="domain_transfer_card_sub_title">Google ドメインを再利用する</string>
-    <string name="domain_transfer_card_title">ニュース</string>
     <string name="prepublishing_nudges_social_new_connection_cta">アカウントを接続する</string>
     <string name="prepublishing_nudges_toolbar_title_social">ソーシャル共有</string>
     <string name="prepublishing_nudges_social_action">ソーシャル共有</string>
@@ -395,7 +404,6 @@ Language: ja_JP
     <string name="stats_timeframe_last_seven_days">過去7日間</string>
     <string name="weeks_quantity_other">%d週</string>
     <string name="weeks_quantity_one">1週</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt; から</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">後で再通知</string>
     <string name="jetpack_feature_card_content_phase_three">統計、Reader、通知などの機能は、まもなく Jetpack モバイルアプリに移動します。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Jetpack アプリに切り替える</string>
@@ -818,7 +826,6 @@ Language: ja_JP
     <string name="my_site_post_card_scheduled_title">予約済み投稿</string>
     <string name="my_site_post_card_draft_title">下書き投稿を作成</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;1年目は無料 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s / 年&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">ドメインはご自分のサイト (%s) に転送されます</string>
     <string name="gutenberg_native_create_link">リンクを作成</string>
     <string name="domains_suggestions_select_domain">ドメインを選択</string>
     <string name="domains_title">ドメイン</string>
@@ -839,14 +846,9 @@ Language: ja_JP
     <string name="domains_free_plan_get_your_domain_caption">このサイトで購入したドメインを訪問すると &lt;b&gt;%s&lt;/b&gt; に転送されます</string>
     <string name="domains_paid_plan_claim_your_domain_caption">このプランには、1年間の無料ドメイン登録が含まれています</string>
     <string name="domains_paid_plan_claim_your_domain_title">無料ドメインを取得</string>
-    <string name="domains_manage_domains">ドメインを管理</string>
     <string name="domains_add_a_domain">ドメインを追加</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;有効期限日 %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">有効期限日 %s</string>
-    <string name="domains_site_domains">あなたのサイトドメイン</string>
-    <string name="domains_primary_site_address_chip">主要サイトのアドレス</string>
-    <string name="domains_primary_site_more_menu_change_site_address">サイトのアドレスを変更</string>
-    <string name="domains_primary_site_caption">あなたの WordPress.com の無料アドレスは</string>
     <string name="domain_suggestions_list_item_cost_on_sale">最初の1年間は&lt;span style=\"color:#B26200;\"&gt;%1$s&lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s / 年&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; / 年&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">破棄してもよろしいですか ? </string>
@@ -872,7 +874,6 @@ Language: ja_JP
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;あなた&lt;/a&gt;が「いいね」をつけています。</string>
     <string name="gutenberg_native_line_height">行の高さ</string>
     <string name="domains_free_plan_get_your_domain_title">ドメインを取得</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">おすすめのアプリテンプレートの取得中に不明なエラーが発生しました</string>
     <string name="recommend_app_bad_format_response">無効な応答を受信しました</string>
     <string name="recommend_app_null_response">応答がありませんでした</string>
@@ -2070,8 +2071,8 @@ Language: ja_JP
     <string name="post_list_search_nothing_found">検索に一致する投稿はありません</string>
     <string name="post_list_search_prompt">投稿を検索</string>
     <string name="domains_suggestions_intro_description">これを使って、他の人があなたのサイトをインターネット上で見つけます。</string>
-    <string name="domains_suggestions_intro_title">プレミアムドメイン名を選択</string>
-    <string name="my_site_custom_domain_name">WordPress.com のすべてのプランにはカスタムドメイン名があります。無料プレミアムドメインを登録してください。</string>
+    <string name="domains_suggestions_intro_title">カスタムドメイン名を選択する</string>
+    <string name="my_site_custom_domain_name">WordPress.com のすべての年間プランにはカスタムドメイン名が含まれています。 無料ドメインを登録してください。</string>
     <string name="stats_widget_minified_name">概要</string>
     <string name="stats_widget_today_insights_name">今日</string>
     <string name="stats_widget_all_time_insights_name">全期間</string>
