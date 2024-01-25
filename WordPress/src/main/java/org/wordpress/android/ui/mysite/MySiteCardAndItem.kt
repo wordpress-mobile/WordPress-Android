@@ -176,6 +176,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 val views: UiString,
                 val visitors: UiString,
                 val likes: UiString,
+                val comments: UiString,
                 val onCardClick: () -> Unit,
                 val message: TextWithLinks? = null,
                 val moreMenuOptions: MoreMenuOptions

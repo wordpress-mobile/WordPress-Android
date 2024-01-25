@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-08 21:54:25+0000
+Translation-Revision-Date: 2024-01-15 15:54:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="login_prologue_revamped_jetpack_feature_text_13">Crea un pubblico</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">Leggi altri articoli</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_16">Gestisci i tuoi domini</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_15">Scrivi da ovunque</string>
     <string name="missing_splits_dialog_message">All\'app Jetpack mancano alcuni componenti richiesti ed è necessario reinstallarla da Google Play Store.</string>
     <string name="me_btn_share">Condividi Jetpack con un amico</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_12">Aggiungi un autore</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_14">Pubblica una foto</string>
     <string name="login_prologue_revamped_jetpack_feature_text_11">Pubblica una foto</string>
     <string name="login_prologue_revamped_jetpack_feature_text_10">Risolvi un problema di sicurezza</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_9">Condividi su Facebook</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">Condividi sui social</string>
     <string name="login_prologue_revamped_jetpack_feature_text_8">Cerca i plugin</string>
     <string name="login_prologue_revamped_jetpack_feature_text_7">Ripristina un backup</string>
     <string name="login_prologue_revamped_jetpack_feature_text_6">Rispondi ai commenti</string>

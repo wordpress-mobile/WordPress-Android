@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-10 16:54:02+0000
+Translation-Revision-Date: 2024-01-16 09:54:05+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="login_prologue_revamped_jetpack_feature_text_13">Takipçi kitlesi oluşturun</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">Diğer blogları okuyun</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_16">Alan adlarınızı yönetin</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_15">Her yerden yazın</string>
     <string name="missing_splits_dialog_message">Jetpack uygulaması için gerekli bileşenler eksik ve Google Play Store\'dan yeniden yüklenmesi gerekiyor.</string>
     <string name="me_btn_share">Jetpack\'i bir arkadaşınızla paylaşın</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_12">Bir yazar ekleyin</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_14">Bir fotoğraf yayınlayın</string>
     <string name="login_prologue_revamped_jetpack_feature_text_11">Bir fotoğraf yayınlayın</string>
     <string name="login_prologue_revamped_jetpack_feature_text_10">Bir güvenlik sorununu düzeltin</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_9">Facebook\' da Paylaş</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">Sosyal medyada paylaşın</string>
     <string name="login_prologue_revamped_jetpack_feature_text_8">Eklenti arayın</string>
     <string name="login_prologue_revamped_jetpack_feature_text_7">Bir yedeği geri yükleyin</string>
     <string name="login_prologue_revamped_jetpack_feature_text_6">Yorumlara yanıt verin</string>
