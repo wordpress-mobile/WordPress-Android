@@ -4866,4 +4866,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Working Offline</string>
     <string name="gutenberg_native_waiting_for_connection" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Waiting for connection</string>
 
+    <!-- Site Monitoring -->
+    <string name="site_monitoring">Site Monitoring</string>
+    <string name="site_monitoring_tab_title_metrics">Metrics</string>
+    <string name="site_monitoring_tab_title_php_logs">PHP Logs</string>
+    <string name="site_monitoring_tab_title_web_server_logs">Web Server Logs</string>
 </resources>

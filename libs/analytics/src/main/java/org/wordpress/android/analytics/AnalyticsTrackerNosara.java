@@ -2701,6 +2701,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_dropdown_menu_opened";
             case READER_DROPDOWN_MENU_ITEM_TAPPED:
                 return "reader_dropdown_menu_item_tapped";
+            case SITE_MONITORING_SCREEN_SHOWN:
+                return "site_monitoring_screen_shown";
         }
         return null;
     }
