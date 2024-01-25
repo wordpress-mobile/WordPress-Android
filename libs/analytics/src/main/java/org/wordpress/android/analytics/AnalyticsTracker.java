@@ -82,6 +82,7 @@ public final class AnalyticsTracker {
         READER_SITE_SHARED,
         STATS_ACCESSED,
         STATS_ACCESS_ERROR,
+        STATS_TRAFFIC_ACCESSED,
         STATS_INSIGHTS_ACCESSED,
         STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED,
         STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED,
@@ -210,6 +211,7 @@ public final class AnalyticsTracker {
         EDITOR_EDITED_IMAGE, // Visual editor only
         EDITOR_UPLOAD_MEDIA_FAILED, // Visual editor only
         EDITOR_UPLOAD_MEDIA_RETRIED, // Visual editor only
+        EDITOR_UPLOAD_MEDIA_PAUSED, // Visual editor only
         EDITOR_TAPPED_BLOCKQUOTE,
         EDITOR_TAPPED_BOLD,
         EDITOR_TAPPED_ELLIPSIS_COLLAPSE,
@@ -1099,7 +1101,10 @@ public final class AnalyticsTracker {
         DYNAMIC_DASHBOARD_CARD_TAPPED,
         DYNAMIC_DASHBOARD_CARD_CTA_TAPPED,
         DYNAMIC_DASHBOARD_CARD_HIDE_TAPPED,
-        DEEP_LINK_FAILED
+        DEEP_LINK_FAILED,
+        READER_DROPDOWN_MENU_OPENED,
+        READER_DROPDOWN_MENU_ITEM_TAPPED,
+        SITE_MONITORING_SCREEN_SHOWN
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

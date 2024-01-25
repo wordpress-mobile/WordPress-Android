@@ -311,7 +311,6 @@ Language: es_CO
     <string name="my_site_post_card_scheduled_title">Siguientes entradas programadas</string>
     <string name="my_site_post_card_draft_title">Trabaja en el borrador de una entrada </string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis el primer año &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /año&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Tus dominios redirigirán tu sitio a %s</string>
     <string name="gutenberg_native_create_link">Crear un enlace</string>
     <string name="domains_suggestions_select_domain">Seleccionar el dominio</string>
     <string name="domains_title">Dominios</string>
@@ -332,14 +331,9 @@ Language: es_CO
     <string name="domains_free_plan_get_your_domain_caption">Los dominios comprados en este sitio redirigirán a los visitantes a &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Con tu plan, tienes incluido el registro de dominio gratis durante un año</string>
     <string name="domains_paid_plan_claim_your_domain_title">Reclama tu dominio gratuito</string>
-    <string name="domains_manage_domains">Gestionar los dominios</string>
     <string name="domains_add_a_domain">Añadir un dominio</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Caduca el %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Caduca el %s</string>
-    <string name="domains_site_domains">Dominios de tu sitio</string>
-    <string name="domains_primary_site_address_chip">Dirección principal del sitio</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Cambiar la dirección del sitio</string>
-    <string name="domains_primary_site_caption">Tu dirección gratuita de WordPress.com es</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s el primer año &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /año&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /año&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">¿Quieres descartarlos?</string>
@@ -365,7 +359,6 @@ Language: es_CO
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;A ti&lt;/a&gt; te gusta.</string>
     <string name="gutenberg_native_line_height">Altura de la línea</string>
     <string name="domains_free_plan_get_your_domain_title">Obtén tu dominio</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Error desconocido al recuperar la plantilla recomendada de la aplicación</string>
     <string name="recommend_app_bad_format_response">Respuesta recibida no válida</string>
     <string name="recommend_app_null_response">No se ha recibido ninguna respuesta</string>
@@ -1523,8 +1516,6 @@ Language: es_CO
     <string name="post_list_search_nothing_found">Ninguna entrada coincide con tu búsqueda</string>
     <string name="post_list_search_prompt">Buscar entradas</string>
     <string name="domains_suggestions_intro_description">Aquí es donde la gente te encuentra en Internet.</string>
-    <string name="domains_suggestions_intro_title">Elige un nombre de dominio premium</string>
-    <string name="my_site_custom_domain_name">Todos los planes de WordPress.com incluyen un nombre de dominio personalizado. Registra ahora tu dominio premium gratuito.</string>
     <string name="stats_widget_minified_name">De un vistazo</string>
     <string name="stats_widget_today_insights_name">Hoy</string>
     <string name="stats_widget_all_time_insights_name">Histórico</string>

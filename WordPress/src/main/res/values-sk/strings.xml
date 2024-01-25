@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-11-18 17:35:24+0000
+Translation-Revision-Date: 2024-01-07 08:57:55+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: sk
@@ -811,6 +811,10 @@ Language: sk
     <string name="site_settings_image_quality_hint">Kvalita obrázkov. Vyššie hodnoty znamenajú lepšiu kvalitu obrázkov.</string>
     <string name="site_settings_optimize_images_summary">Povoliť zmenu veľkosti a komprimovanie obrázkov.</string>
     <string name="media_upload_state_uploaded">Nahraté</string>
+    <string name="media_encoder_quality_maximum">Maximálne</string>
+    <string name="media_encoder_quality_high">Vysoká</string>
+    <string name="media_encoder_quality_medium">Stredná</string>
+    <string name="media_encoder_quality_low">Nízka</string>
     <string name="media_upload_state_failed">Nahrávanie zlyhalo</string>
     <string name="media_upload_state_deleted">Vymazané</string>
     <string name="media_upload_state_deleting">Vymazávanie</string>

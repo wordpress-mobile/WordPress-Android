@@ -95,7 +95,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
 
     private fun onBloggingPromptViewAnswersClick(tagUrl: String) {
         bloggingPromptsCardAnalyticsTracker.trackMySiteCardViewAnswersClicked()
-        val tag = bloggingPromptsPostTagProvider.promptIdSearchReaderTag(tagUrl)
+        val tag = bloggingPromptsPostTagProvider.promptSearchReaderTag(tagUrl)
         _onNavigation.value = Event(BloggingPromptCardNavigationAction.ViewAnswers(tag))
     }
 

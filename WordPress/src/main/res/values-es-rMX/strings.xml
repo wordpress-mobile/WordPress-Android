@@ -765,8 +765,6 @@ Language: es_MX
     <string name="post_settings_featured_image_uploading_tap_for_options">Subiendo medios.\nPor favor, toca para ver las opciones.</string>
     <string name="link_open_new_window">Abrir enlace en una nueva ventana/pestaña</string>
     <string name="stats_widget_error_no_access_token">Para ver tus estadísticas inicia sesión en WordPress.com.</string>
-    <string name="domains_suggestions_intro_title">Elige un nombre de dominio premium</string>
-    <string name="my_site_custom_domain_name">Todos los planes de WordPress.com incluyen un nombre de dominio personalizado. Registra ahora tu dominio premium gratuito.</string>
     <string name="stats_widget_minified_name">De un vistazo</string>
     <string name="stats_widget_today_insights_name">Hoy</string>
     <string name="stats_widget_all_time_insights_name">Histórico</string>

@@ -13,7 +13,6 @@ Language: hi_IN
     <string name="stop_upload_dialog_button_no">नहीं</string>
     <string name="stop_save_dialog_ok_button">ठीक हैं</string>
     <string name="my_site_menu_tab_title">मेनू</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="user_profile_site_section_header">साइट</string>
     <string name="gutenberg_native_new">नया</string>
     <string name="reader_post_details_header_by_author_name">द्वारा</string>

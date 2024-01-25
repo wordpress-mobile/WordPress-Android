@@ -733,6 +733,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_upload_media_failed";
             case EDITOR_UPLOAD_MEDIA_RETRIED:
                 return "editor_upload_media_retried";
+            case EDITOR_UPLOAD_MEDIA_PAUSED:
+                return "editor_upload_media_paused";
             case EDITOR_CLOSED:
                 return "editor_closed";
             case EDITOR_SESSION_START:
@@ -1071,6 +1073,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_accessed";
             case STATS_ACCESS_ERROR:
                 return "stats_access_error";
+            case STATS_TRAFFIC_ACCESSED:
+                return "stats_traffic_accessed";
             case STATS_INSIGHTS_ACCESSED:
                 return "stats_insights_accessed";
             case STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED:
@@ -2693,6 +2697,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "dynamic_dashboard_card_hide_tapped";
             case DEEP_LINK_FAILED:
                 return "deep_link_failed";
+            case READER_DROPDOWN_MENU_OPENED:
+                return "reader_dropdown_menu_opened";
+            case READER_DROPDOWN_MENU_ITEM_TAPPED:
+                return "reader_dropdown_menu_item_tapped";
+            case SITE_MONITORING_SCREEN_SHOWN:
+                return "site_monitoring_screen_shown";
         }
         return null;
     }

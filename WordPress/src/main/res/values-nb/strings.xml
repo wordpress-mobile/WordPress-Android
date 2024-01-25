@@ -162,7 +162,6 @@ Language: nb_NO
     <string name="comment_edit_comment">Kommentar</string>
     <string name="comment_edit_user_name">Navn</string>
     <string name="comment_edit_menu_done">Ferdig</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="my_site_btn_domains">Domener</string>
     <string name="gutenberg_native_selected_s">Valgt: %s</string>
     <string name="create_site_notification_create_site_action">Opprett netsted</string>
@@ -876,8 +875,6 @@ Language: nb_NO
     <string name="post_list_search_nothing_found">Ingen innlegg passer til ditt søk.</string>
     <string name="post_list_search_prompt">Søk innlegg</string>
     <string name="domains_suggestions_intro_description">Dette er hvor folk vil finne deg på internett,</string>
-    <string name="domains_suggestions_intro_title">Velg et premium domenenavn</string>
-    <string name="my_site_custom_domain_name">Alle WordPress.com-pakker inkluderer et eget domenenavn. Registrer ditt gratis premium domenenavn nå.</string>
     <string name="stats_widget_minified_name">På et øyeblikk</string>
     <string name="stats_widget_today_insights_name">I dag</string>
     <string name="stats_widget_all_time_insights_name">Til all tid</string>

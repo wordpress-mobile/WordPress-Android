@@ -10,8 +10,10 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TRAFFIC
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import org.wordpress.android.util.perform
 import javax.inject.Inject
 
@@ -20,6 +22,7 @@ constructor(
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val siteProvider: StatsSiteProvider,
+    private val statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig,
     private val statsSection: StatsSection
 ) {
     private val _dateSelectorUiModel = MutableLiveData<DateSelectorUiModel>()
@@ -36,15 +39,21 @@ constructor(
 
     fun updateDateSelector() {
         val shouldShowDateSelection = this.statsSection != INSIGHTS
+        val shouldShowGranularitySpinner = statsTrafficTabFeatureConfig.isEnabled() && this.statsSection == TRAFFIC
 
         val updatedDate = getDateLabelForSection()
         val currentState = dateSelectorData.value
         if (!shouldShowDateSelection && currentState?.isVisible != false) {
             emitValue(currentState, DateSelectorUiModel(false))
         } else {
-            val timeZone = statsDateFormatter.printTimeZone(siteProvider.siteModel)
+            val timeZone = if (statsTrafficTabFeatureConfig.isEnabled()) {
+                null
+            } else {
+                statsDateFormatter.printTimeZone(siteProvider.siteModel)
+            }
             val updatedState = DateSelectorUiModel(
                 shouldShowDateSelection,
+                shouldShowGranularitySpinner,
                 updatedDate,
                 enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsSection),
                 enableSelectNext = selectedDateProvider.hasNextDate(statsSection),
@@ -78,7 +87,7 @@ constructor(
             StatsSection.TOTAL_FOLLOWERS_DETAIL,
             StatsSection.INSIGHTS,
             StatsSection.INSIGHT_DETAIL,
-            StatsSection.DAYS -> DAYS
+            StatsSection.DAYS, TRAFFIC -> DAYS // Replace with TRAFFIC when it's implemented
             StatsSection.WEEKS -> WEEKS
             StatsSection.MONTHS -> MONTHS
             StatsSection.ANNUAL_STATS,
@@ -106,13 +115,15 @@ constructor(
     @Inject constructor(
         private val selectedDateProvider: SelectedDateProvider,
         private val siteProvider: StatsSiteProvider,
-        private val statsDateFormatter: StatsDateFormatter
+        private val statsDateFormatter: StatsDateFormatter,
+        private val statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
     ) {
         fun build(statsSection: StatsSection): StatsDateSelector {
             return StatsDateSelector(
                 selectedDateProvider,
                 statsDateFormatter,
                 siteProvider,
+                statsTrafficTabFeatureConfig,
                 statsSection
             )
         }

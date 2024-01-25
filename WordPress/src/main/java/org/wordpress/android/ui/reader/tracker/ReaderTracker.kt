@@ -376,6 +376,27 @@ class ReaderTracker @Inject constructor(
         analyticsUtilsWrapper.trackRailcarRender(railcarJson)
     }
 
+    fun trackDropdownMenuOpened() {
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_DROPDOWN_MENU_OPENED)
+    }
+
+    fun trackDropdownMenuItemTapped(readerTag: ReaderTag) {
+        when {
+            readerTag.isDiscover -> "discover"
+            readerTag.isFollowedSites -> "following"
+            readerTag.isBookmarked -> "saved"
+            readerTag.isPostsILike -> "liked"
+            readerTag.isA8C -> "a8c"
+            readerTag.isListTopic -> "list"
+            else -> null
+        }?.let { trackingId ->
+            analyticsTrackerWrapper.track(
+                stat = AnalyticsTracker.Stat.READER_DROPDOWN_MENU_ITEM_TAPPED,
+                properties = mapOf("id" to trackingId)
+            )
+        }
+    }
+
     /* HELPER */
 
     @JvmOverloads

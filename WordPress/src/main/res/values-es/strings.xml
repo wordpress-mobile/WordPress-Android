@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-14 08:54:37+0000
+Translation-Revision-Date: 2024-01-23 12:31:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">Esperando conexión</string>
+    <string name="stats_traffic">Tráfico</string>
+    <string name="gutenberg_native_working_offline">Trabajo sin conexión</string>
+    <string name="gutenberg_native_network_connection_re_established">Conexión de red restablecida</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">Conexión de red perdida, trabajando sin conexión</string>
+    <string name="gutenberg_native_font_size_1_s">Tamaño de fuente, %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">Tipo de archivo no admitido como archivo de medios.</string>
+    <string name="media_cannot_be_started">No podemos abrir las páginas en este momento. Por favor, inténtalo de nuevo más tarde</string>
+    <string name="domains_just_search_for_a_domain_button">Simplemente busca un dominio</string>
+    <string name="domains_upgrade_to_a_plan_button">Mejora a un plan</string>
+    <string name="domains_upgrade_to_plan_caption">Registra o transfiere un dominio gratis durante un año con cualquier plan de pago anual.</string>
+    <string name="domains_site_domain_never_expires">Nunca caduca</string>
+    <string name="domains_free_domain">Tu dominio gratuito de WordPress.com</string>
+    <string name="domains_site_other_domains">Otros dominios para %s</string>
+    <string name="domains_primary_site_domain_chip">Dominio principal</string>
+    <string name="domains_site_domain">%s</string>
+    <string name="bloganuary_dashboard_nudge_title_january">¡Bloganuary ya está aquí!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">¡Vamos allá!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Activa las sugerencias de publicación</string>
     <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary utilizará las sugerencias de publicación diarias para enviarte temas durante el mes de enero.</string>
@@ -16,7 +33,7 @@ Language: es
     <string name="bloganuary_dashboard_nudge_overlay_title">Únete a nuestro reto de escritura de un mes</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">Durante el mes de enero, las sugerencias para escribir en el blog provendrán de Bloganuary, nuestro reto comunitario para crear un hábito de blogueo para el nuevo año.</string>
-    <string name="bloganuary_dashboard_nudge_title">¡Bloganuary está a la vuelta de la esquina!</string>
+    <string name="bloganuary_dashboard_nudge_title_december">¡Bloganuary está a la vuelta de la esquina!</string>
     <string name="turn_off">No, apágala</string>
     <string name="leave_on">Sí, déjala encendida</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Por esta razón, te recomendamos que edites el bloque utilizando tu navegador web.</string>
@@ -154,10 +171,6 @@ Language: es
     <string name="campaign_detail_error_title">Algo ha salido mal</string>
     <string name="campaign_listing_page_error_title">Algo ha salido mal</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Algo ha salido mal, no se han podido recoger las campañas</string>
-    <string name="domain_transfer_card_cta">Transfiere tus dominios</string>
-    <string name="domain_transfer_card_caption">Como probablemente sabes, Google Domains ha sido transferido a Squarespace. Transfiere tus dominios a WordPress.com y nosotros pagaremos todas las tasas de transferencia además de un año extra en el registro de tu domino.</string>
-    <string name="domain_transfer_card_sub_title">Reclama tus dominios de Google</string>
-    <string name="domain_transfer_card_title">Noticias</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Conectar cuentas</string>
     <string name="prepublishing_nudges_toolbar_title_social">Compartir social</string>
     <string name="prepublishing_nudges_social_action">Compartir social</string>
@@ -399,7 +412,7 @@ Language: es
     <string name="stats_timeframe_last_seven_days">Últimos siete días</string>
     <string name="weeks_quantity_other">%d semanas</string>
     <string name="weeks_quantity_one">1 semana</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Desde el &lt;b&gt;DayOne&lt;/b&gt;</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">Desde &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Recuérdamelo más tarde</string>
     <string name="jetpack_feature_card_content_phase_three">Algunas funciones, como estadísticas, lector o avisos, se trasladarán pronto a la aplicación móvil de Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Cambiar a la aplicación de Jetpack</string>
@@ -822,7 +835,6 @@ Language: es
     <string name="my_site_post_card_scheduled_title">Siguientes entradas programadas</string>
     <string name="my_site_post_card_draft_title">Trabaja en el borrador de una entrada </string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis el primer año &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /año&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Tus dominios redirigirán tu sitio a %s</string>
     <string name="gutenberg_native_create_link">Crear un enlace</string>
     <string name="domains_suggestions_select_domain">Seleccionar el dominio</string>
     <string name="domains_title">Dominios</string>
@@ -843,14 +855,9 @@ Language: es
     <string name="domains_free_plan_get_your_domain_caption">Los dominios comprados en este sitio redirigirán a los visitantes a &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Con tu plan, tienes incluido el registro de dominio gratis durante un año</string>
     <string name="domains_paid_plan_claim_your_domain_title">Reclama tu dominio gratuito</string>
-    <string name="domains_manage_domains">Gestionar los dominios</string>
     <string name="domains_add_a_domain">Añadir un dominio</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Caduca el %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Caduca el %s</string>
-    <string name="domains_site_domains">Dominios de tu sitio</string>
-    <string name="domains_primary_site_address_chip">Dirección principal del sitio</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Cambiar la dirección del sitio</string>
-    <string name="domains_primary_site_caption">Tu dirección gratuita de WordPress.com es</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s el primer año &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /año&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /año&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">¿Quieres descartarlos?</string>
@@ -876,7 +883,6 @@ Language: es
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;A ti&lt;/a&gt; te gusta.</string>
     <string name="gutenberg_native_line_height">Altura de la línea</string>
     <string name="domains_free_plan_get_your_domain_title">Obtén tu dominio</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Error desconocido al recuperar la plantilla recomendada de la aplicación</string>
     <string name="recommend_app_bad_format_response">Respuesta recibida no válida</string>
     <string name="recommend_app_null_response">No se ha recibido ninguna respuesta</string>

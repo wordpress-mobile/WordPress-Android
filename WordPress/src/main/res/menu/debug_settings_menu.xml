@@ -13,4 +13,8 @@
         android:id="@+id/menu_show_weekly_notifications"
         android:title="@string/debug_settings_force_show_weekly_roundup"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_debug_flags"
+        android:title="@string/debug_settings_debug_flags_screen"
+        app:showAsAction="never" />
 </menu>

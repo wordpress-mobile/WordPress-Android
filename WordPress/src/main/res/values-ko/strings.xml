@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-19 09:54:26+0000
+Translation-Revision-Date: 2024-01-17 21:47:15+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.11
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_working_offline">오프라인 작업 중</string>
+    <string name="gutenberg_native_network_connection_re_established">네트워크 연결 다시 설정됨</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">네트워크 연결 해제됨, 오프라인 작업 중</string>
+    <string name="gutenberg_native_font_size_1_s">글꼴 크기, %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">파일 유형이 미디어 파일로 지원되지 않습니다.</string>
+    <string name="media_cannot_be_started">지금은 미디어를 열 수 없습니다. 나중에 다시 시도하세요.</string>
+    <string name="domains_just_search_for_a_domain_button">바로 도메인 검색</string>
+    <string name="domains_upgrade_to_a_plan_button">요금제로 업그레이드</string>
+    <string name="domains_upgrade_to_plan_caption">연간 유료 요금제로 도메인 등록 또는 이전을 1년간 무료로 이용하세요.</string>
+    <string name="domains_site_domain_never_expires">만료 기간 없음</string>
+    <string name="domains_free_domain">무료 워드프레스닷컴 도메인</string>
+    <string name="domains_site_other_domains">%s의 기타 도메인</string>
+    <string name="domains_primary_site_domain_chip">기본 도메인</string>
+    <string name="bloganuary_dashboard_nudge_title_january">Bloganuary가 여기에 있습니다!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">지금 시작하세요!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">블로깅 프롬프트 켜기</string>
     <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Bloganuary에서 일일 블로깅 프롬프트를 사용하여 1월 한 달 동안의 게시글을 보내드립니다.</string>
@@ -15,7 +29,6 @@ Language: ko_KR
     <string name="bloganuary_dashboard_nudge_overlay_text_one">영감을 주는 새로운 프롬프트를 매일 받아보세요.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">한 달 동안 진행되는 글쓰기 챌린지 참여</string>
     <string name="bloganuary_dashboard_nudge_text">새해에 블로깅 습관을 들이는 커뮤니티 챌린지인 Bloganuary에서 1월 한 달 동안 블로깅 프롬프트가 제공됩니다.</string>
-    <string name="bloganuary_dashboard_nudge_title">Bloganuary가 다가오고 있습니다!</string>
     <string name="turn_off">아니요. 끄기</string>
     <string name="leave_on">예. 그대로 두기</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">따라서 웹 브라우저를 사용하여 블록을 편집하는 것이 좋습니다.</string>
@@ -107,6 +120,7 @@ Language: ko_KR
     <string name="personalization_screen_draft_posts_card_description">최근 임시글입니다.</string>
     <string name="personalization_screen_draft_posts_card_title">임시글</string>
     <string name="personalization_screen_stats_card_description">조회수, 방문자 수 및 좋아요 개수</string>
+    <string name="personalization_screen_title"> 홈 탭 개인 설정</string>
     <string name="personalize_card_content_description">눌러서 홈 탭 개인 설정</string>
     <string name="personalize_card_text">홈 탭 개인 설정</string>
     <string name="partial_media_access_prompt_change_settings">설정 변경</string>
@@ -148,10 +162,6 @@ Language: ko_KR
     <string name="campaign_detail_error_title">문제가 발생했습니다.</string>
     <string name="campaign_listing_page_error_title">문제가 발생했습니다.</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> 문제가 발생했습니다. 캠페인을 가져올 수 없습니다.</string>
-    <string name="domain_transfer_card_cta">도메인 이전</string>
-    <string name="domain_transfer_card_caption">아시다시피 Google 도메인이 Squarespace에 매각되었습니다. 지금 도메인을 워드프레스닷컴으로 이전하면 모든 이전 수수료와 도메인 1년 추가 등록을 결제해 드립니다.</string>
-    <string name="domain_transfer_card_sub_title">Google 도메인 되찾기</string>
-    <string name="domain_transfer_card_title">뉴스</string>
     <string name="prepublishing_nudges_social_new_connection_cta">계정 연결</string>
     <string name="prepublishing_nudges_toolbar_title_social">소셜 공유</string>
     <string name="prepublishing_nudges_social_action">소셜 공유</string>
@@ -393,7 +403,6 @@ Language: ko_KR
     <string name="stats_timeframe_last_seven_days">최근 7일</string>
     <string name="weeks_quantity_other">%d주</string>
     <string name="weeks_quantity_one">1주</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">&lt;b&gt;DayOne&lt;/b&gt;부터</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">나중에 다시 알림</string>
     <string name="jetpack_feature_card_content_phase_three">곧 통계, 리더, 알림 및 기타 기능이 젯팩 모바일 앱으로 이동됩니다.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">젯팩 앱으로 전환</string>
@@ -816,7 +825,6 @@ Language: ko_KR
     <string name="my_site_post_card_scheduled_title">공개 예정된 글</string>
     <string name="my_site_post_card_draft_title">임시글로 글 작업</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;첫해 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s/년 무료&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">도메인이 %s의 사이트로 리디렉팅됩니다.</string>
     <string name="gutenberg_native_create_link">링크 생성</string>
     <string name="domains_suggestions_select_domain">도메인 선택</string>
     <string name="domains_title">도메인</string>
@@ -837,14 +845,9 @@ Language: ko_KR
     <string name="domains_free_plan_get_your_domain_caption">이 사이트에서 구매한 도메인에서는 방문자가 &lt;b&gt;%s&lt;/b&gt;(으)로 리디렉팅됩니다.</string>
     <string name="domains_paid_plan_claim_your_domain_caption">이용 중인 요금제에 1년 무료 도메인 등록이 포함되어 있음</string>
     <string name="domains_paid_plan_claim_your_domain_title">무료 도메인 신청</string>
-    <string name="domains_manage_domains">도메인 관리</string>
     <string name="domains_add_a_domain">도메인 추가</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;만료 날짜 %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">만료 날짜 %s</string>
-    <string name="domains_site_domains">사이트 도메인</string>
-    <string name="domains_primary_site_address_chip">기본 사이트 주소</string>
-    <string name="domains_primary_site_more_menu_change_site_address">사이트 주소 변경</string>
-    <string name="domains_primary_site_caption">무료 워드프레스닷컴 주소:</string>
     <string name="domain_suggestions_list_item_cost_on_sale">첫해 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s/년 &lt;span style=\"color:#B26200;\"&gt;%1$s&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/년&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">취소하시겠어요?</string>
@@ -870,7 +873,6 @@ Language: ko_KR
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;회원님&lt;/a&gt;이 좋아합니다.</string>
     <string name="gutenberg_native_line_height">줄 높이</string>
     <string name="domains_free_plan_get_your_domain_title">도메인 가져오기</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">권장 앱 템플릿 가져오기 중 알 수 없는 오류 발생</string>
     <string name="recommend_app_bad_format_response">유효하지 않은 응답 수신됨</string>
     <string name="recommend_app_null_response">수신된 응답 없음</string>
@@ -2044,8 +2046,8 @@ Language: ko_KR
     <string name="post_list_search_nothing_found">검색어와 일치하는 글 없음</string>
     <string name="post_list_search_prompt">글 검색</string>
     <string name="domains_suggestions_intro_description">사람들이 인터넷에서 회원님을 찾을 수 있는 곳입니다.</string>
-    <string name="domains_suggestions_intro_title">프리미엄 도메인 네임 선택</string>
-    <string name="my_site_custom_domain_name">모든 워드프레스닷컴 요금제에는 사용자 정의 도메인 네임이 포함됩니다. 지금 무료 프리미엄 도메인을 등록하세요.</string>
+    <string name="domains_suggestions_intro_title">사용자 정의 도메인 네임 선택</string>
+    <string name="my_site_custom_domain_name">모든 워드프레스닷컴 연간 요금제에는 사용자 정의 도메인 네임이 포함됩니다. 지금 무료 도메인을 등록하세요.</string>
     <string name="stats_widget_minified_name">둘러보기</string>
     <string name="stats_widget_today_insights_name">오늘</string>
     <string name="stats_widget_all_time_insights_name">모든 기간</string>

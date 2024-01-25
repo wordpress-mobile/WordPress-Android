@@ -27,6 +27,7 @@ import org.wordpress.android.ui.mysite.menu.KEY_QUICK_START_EVENT
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.quickstart.QuickStartEvent
+import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import javax.inject.Inject
@@ -155,6 +156,12 @@ class ActivityNavigator @Inject constructor() {
         val mainActivityIntent = Intent(context, WPMainActivity::class.java)
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         return mainActivityIntent
+    }
+
+    fun navigateToSiteMonitoring(context: Context, site: SiteModel) {
+        val intent = Intent(context, SiteMonitorParentActivity::class.java)
+        intent.putExtra(WordPress.SITE, site)
+        context.startActivity(intent)
     }
 }
 

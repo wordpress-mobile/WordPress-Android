@@ -1,0 +1,6 @@
+24.0:
+Updates van de blokeditor:
+- Toetsenbord van apparaat blijft in beeld wanneer tekstblokken bewerkt worden
+- Scherm scrolt automatisch naar nieuw ingevoegde blokken
+- Deselecteer blokken door op de terugknop op je apparaat te klikken
+- Deel tegelijkertijd verschillende typen media met de app zonder crashen

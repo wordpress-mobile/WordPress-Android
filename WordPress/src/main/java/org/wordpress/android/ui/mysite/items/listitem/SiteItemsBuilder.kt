@@ -91,6 +91,7 @@ class SiteItemsBuilder @Inject constructor(
     private fun getManageSiteItems(
         params: SiteItemsBuilderParams
     ): List<MySiteCardAndItem> {
+        val siteMonitoring = buildSiteMonitoringOptionsIfNeeded(params)
         val manageSiteItems = buildManageSiteItems(params)
 
         val emptyHeaderItem1 = CategoryEmptyHeaderItem(UiString.UiStringText(""))
@@ -101,6 +102,7 @@ class SiteItemsBuilder @Inject constructor(
         val emptyHeaderItem2 = CategoryEmptyHeaderItem(UiString.UiStringText(""))
         val admin = siteListItemBuilder.buildAdminItemIfAvailable(params.site, params.onClick)
         return listOf(manageHeader) +
+                siteMonitoring +
                 manageSiteItems +
                 emptyHeaderItem1 +
                 jetpackConfiguration +
@@ -123,6 +125,12 @@ class SiteItemsBuilder @Inject constructor(
             siteListItemBuilder.buildDomainsItemIfAvailable(params.site, params.onClick),
             siteListItemBuilder.buildMeItemIfAvailable(params.site, params.onClick),
             siteListItemBuilder.buildSiteSettingsItemIfAvailable(params.site, params.onClick)
+        )
+    }
+
+    private fun buildSiteMonitoringOptionsIfNeeded(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
+        return listOfNotNull(
+            siteListItemBuilder.buildSiteMonitoringItemIfAvailable(params.site, params.onClick)
         )
     }
 

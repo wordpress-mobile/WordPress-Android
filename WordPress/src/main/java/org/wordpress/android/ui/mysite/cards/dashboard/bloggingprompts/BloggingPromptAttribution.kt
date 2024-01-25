@@ -13,7 +13,7 @@ enum class BloggingPromptAttribution(
     NO_ATTRIBUTION("", -1, -1),
     DAY_ONE(
         "dayone",
-        R.string.my_site_blogging_prompt_card_attribution_dayone,
+        R.string.my_site_blogging_prompt_card_attribution_day_one,
         R.drawable.ic_dayone_24dp,
     ),
     BLOGANUARY(

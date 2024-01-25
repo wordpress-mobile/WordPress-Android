@@ -18,6 +18,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.QUEUED
+import org.wordpress.android.fluxc.model.PostImmutableModel
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
@@ -29,8 +31,9 @@ class RetryFailedMediaUploadUseCaseTest : BaseUnitTest() {
         val getMediaModelUseCase = createGetMediaModelUseCase()
         val useCase = createUseCase(getMediaModelUseCase = getMediaModelUseCase)
 
+
         // Act
-        useCase.retryFailedMediaAsync(mock(), FAILED_MEDIA_IDS)
+        useCase.retryFailedMediaAsync(createEditorMediaListener(), FAILED_MEDIA_IDS)
         // Assert
         verify(getMediaModelUseCase).loadMediaByLocalId(FAILED_MEDIA_IDS)
     }
@@ -42,7 +45,7 @@ class RetryFailedMediaUploadUseCaseTest : BaseUnitTest() {
         val useCase = createUseCase(updateMediaModelUseCase = updateMediaModelUseCase)
 
         // Act
-        useCase.retryFailedMediaAsync(mock(), FAILED_MEDIA_IDS)
+        useCase.retryFailedMediaAsync(createEditorMediaListener(), FAILED_MEDIA_IDS)
 
         // Assert
         verify(updateMediaModelUseCase, times(FAILED_MEDIA_IDS.size)).updateMediaModel(
@@ -59,7 +62,7 @@ class RetryFailedMediaUploadUseCaseTest : BaseUnitTest() {
         val useCase = createUseCase(uploadMediaUseCase = uploadMediaUseCase)
 
         // Act
-        useCase.retryFailedMediaAsync(mock(), FAILED_MEDIA_IDS)
+        useCase.retryFailedMediaAsync(createEditorMediaListener(), FAILED_MEDIA_IDS)
 
         // Assert
         verify(uploadMediaUseCase).saveQueuedPostAndStartUpload(
@@ -74,7 +77,7 @@ class RetryFailedMediaUploadUseCaseTest : BaseUnitTest() {
         val trackerWrapper: AnalyticsTrackerWrapper = mock()
         val useCase = createUseCase(tracker = trackerWrapper)
         // Act
-        useCase.retryFailedMediaAsync(mock(), FAILED_MEDIA_IDS)
+        useCase.retryFailedMediaAsync(createEditorMediaListener(), FAILED_MEDIA_IDS)
         // Assert
         verify(trackerWrapper).track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED)
     }
@@ -112,13 +115,15 @@ class RetryFailedMediaUploadUseCaseTest : BaseUnitTest() {
             getMediaModelUseCase: GetMediaModelUseCase = createGetMediaModelUseCase(),
             updateMediaModelUseCase: UpdateMediaModelUseCase = mock(),
             uploadMediaUseCase: UploadMediaUseCase = mock(),
-            tracker: AnalyticsTrackerWrapper = mock()
+            tracker: AnalyticsTrackerWrapper = mock(),
+            siteStore: SiteStore = mock()
         ): RetryFailedMediaUploadUseCase {
             return RetryFailedMediaUploadUseCase(
                 getMediaModelUseCase,
                 updateMediaModelUseCase,
                 uploadMediaUseCase,
-                tracker
+                tracker,
+                siteStore
             )
         }
 
@@ -136,5 +141,13 @@ class RetryFailedMediaUploadUseCaseTest : BaseUnitTest() {
                 this.id = mediaModelId
                 this.uploadState = MediaUploadState.FAILED.name
             }
+
+        fun createEditorMediaListener() = mock<EditorMediaListener> {
+            on { getImmutablePost() } doAnswer {
+                mock<PostImmutableModel> {
+                    on { localSiteId } doAnswer { 0 }
+                }
+            }
+        }
     }
 }
