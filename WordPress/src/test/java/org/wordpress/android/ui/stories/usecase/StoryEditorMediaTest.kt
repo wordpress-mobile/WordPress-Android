@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stories.usecase
 
-import android.net.Uri
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -86,18 +85,13 @@ class StoryEditorMediaTest : BaseUnitTest() {
     }
 
     private companion object Fixtures {
-        private val VIDEO_URI = mock<Uri>()
-        private val IMAGE_URI = mock<Uri>()
-
         fun createStoryEditorMedia(
-            mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper(),
             addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase = createAddLocalMediaToPostUseCase(),
             addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase = mock(),
             siteModel: SiteModel = mock(),
             editorMediaListener: EditorMediaListener = mock()
         ): StoryEditorMedia {
             val editorMedia = StoryEditorMedia(
-                mediaUtilsWrapper,
                 addLocalMediaToPostUseCase,
                 addExistingMediaToPostUseCase,
                 UnconfinedTestDispatcher()
