@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitemonitor
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -22,5 +23,8 @@ class SiteMonitorParentViewModel @Inject constructor(
     }
 
     private fun trackActivityLaunched() {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.SITE_MONITORING_SCREEN_SHOWN
+        )
     }
 }
