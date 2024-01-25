@@ -74,10 +74,6 @@ class StoryEditorMedia @Inject constructor(
             _uiState.value = AddingMediaToStoryIdle
         }
     }
-
-    fun onPhotoPickerMediaChosen(uriList: List<Uri>) {
-        addNewMediaItemsToEditorAsync(uriList, false)
-    }
     // endregion
 
     fun addExistingMediaToEditorAsync(source: AddExistingMediaSource, mediaIdList: List<Long>) {

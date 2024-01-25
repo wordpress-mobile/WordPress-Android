@@ -1306,7 +1306,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onPhotoPickerMediaChosen(@NonNull final List<? extends Uri> uriList) {
         mEditorPhotoPicker.hidePhotoPicker();
-        mEditorMedia.onPhotoPickerMediaChosen(uriList);
+        mEditorMedia.addNewMediaItemsToEditorAsync(uriList, false);
     }
 
     /*

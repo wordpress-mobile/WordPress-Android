@@ -345,7 +345,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                         it.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) -> {
                             data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)?.let {
                                 val uriList: List<Uri> = convertStringArrayIntoUrisList(it)
-                                storyEditorMedia.onPhotoPickerMediaChosen(uriList)
+                                storyEditorMedia.addNewMediaItemsToEditorAsync(uriList, false)
                             }
                         }
                         it.hasExtra(MediaBrowserActivity.RESULT_IDS) -> {
@@ -421,7 +421,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     val uriList: List<Uri> = convertStringArrayIntoUrisList(it)
 
                     if (uriList.isNotEmpty()) {
-                        storyEditorMedia.onPhotoPickerMediaChosen(uriList)
+                        storyEditorMedia.addNewMediaItemsToEditorAsync(uriList, false)
                     }
                 }
             }
