@@ -260,8 +260,6 @@ class EditorMediaTest : BaseUnitTest() {
     }
 
     private companion object Fixtures {
-        private val VIDEO_URI = mock<Uri>()
-        private val IMAGE_URI = mock<Uri>()
         private const val MEDIA_MODEL_REMOTE_ID = 123L
         private const val MEDIA_MODEL_LOCAL_ID = 1
 
