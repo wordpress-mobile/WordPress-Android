@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-10 13:29:45+0000
+Translation-Revision-Date: 2024-01-23 04:14:20+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.11
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">Ожидание подключения</string>
+    <string name="stats_traffic">Посещаемость</string>
     <string name="gutenberg_native_working_offline">Автономная работа</string>
     <string name="gutenberg_native_network_connection_re_established">Сетевое соединение восстановлено</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">Сетевое соединение потеряно, работа в автономном режиме</string>
@@ -411,7 +413,7 @@ Language: ru
     <string name="stats_timeframe_last_seven_days">Последние 7 дней</string>
     <string name="weeks_quantity_other">%d нед.</string>
     <string name="weeks_quantity_one">1 неделя</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">От &lt;b&gt;В Первый День&lt;/b&gt;</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">От &lt;b&gt;В Первый День&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Напомнить мне позже</string>
     <string name="jetpack_feature_card_content_phase_three">Статистика, Чтиво, Уведомления и другие функции скоро переедут в мобильное приложение Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Перейти в новое приложение Jetpack</string>

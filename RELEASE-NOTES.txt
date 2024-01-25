@@ -6,6 +6,12 @@
 
 24.1
 -----
+* [**] Disabled the ability of creating new Story posts. [#20014]
+
+24.0.1
+-----
+* [**] Fix crash when RichText values are not defined [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6563]
+
 * [*] Block Editor: Fix missing custom color indicator for custom gradients [https://github.com/WordPress/gutenberg/pull/57605]
 * [**] Block Editor: Display a notice when a network connection is unavailable [https://github.com/WordPress/gutenberg/pull/56934]
 * [**] Block Editor: Image block media uploads display a custom error message when there is no internet connection [https://github.com/wordpress-mobile/WordPress-Android/pull/19878]

@@ -404,7 +404,6 @@ Language: id
     <string name="stats_timeframe_last_seven_days">7 hari terakhir</string>
     <string name="weeks_quantity_other">%d minggu</string>
     <string name="weeks_quantity_one">1 minggu</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Dari &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Ingatkan saya nanti</string>
     <string name="jetpack_feature_card_content_phase_three">Statistik, Reader, Pemberitahuan, dan berbagai fitur lain akan segera berpindah ke aplikasi ponsel Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Ganti ke aplikasi Jetpack</string>

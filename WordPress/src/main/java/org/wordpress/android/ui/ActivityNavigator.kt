@@ -156,5 +156,11 @@ class ActivityNavigator @Inject constructor() {
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         return mainActivityIntent
     }
+
+    fun navigateToSiteMonitoring(context: Context, site: SiteModel) {
+        // todo: Implement this method after the SiteMonitorActivity is available and remove the lines below
+        site.name
+        context.packageName
+    }
 }
 
