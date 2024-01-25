@@ -1824,8 +1824,8 @@ Language: tr
     <string name="reader_btn_remove_filter_content_description">Geçerli filtreyi kaldır</string>
     <string name="reader_title_subs">Konuları ve Siteleri Yönetme</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">WordPress.com\'da oturum aç</string>
-    <string name="reader_filter_self_hosted_empty_tags_list">Takip ettiğiniz konulardaki en yeni yazıları görmek için WordPress.com\'da oturum açın</string>
-    <string name="reader_filter_self_hosted_empty_blogs_list">Takip ettiğiniz sitelerdeki en son yazıları görmek için WordPress.com\'da oturum açın</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Takip ettiğiniz konulardaki en yeni yazıları görmek için WordPress.com\'da oturum açın</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Takip ettiğiniz sitelerdeki en son yazıları görmek için WordPress.com\'da oturum açın</string>
     <string name="gutenberg_native_replace_current_block">Mevcut bloğu değiştir</string>
     <string name="gutenberg_native_add_to_end">Sona ekle</string>
     <string name="gutenberg_native_add_to_beginning">Başa ekle</string>

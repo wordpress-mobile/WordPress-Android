@@ -1679,8 +1679,8 @@ Language: lv
     <string name="reader_btn_remove_filter_content_description">Noņemt pašreizējo filtru</string>
     <string name="reader_title_subs">Pārvaldiet tēmas un vietnes</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Piesakieties vietnē WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tags_list">Piesakieties vietnē WordPress.com, lai skatītu jaunākās ziņas par tēmām, kurām sekojat</string>
-    <string name="reader_filter_self_hosted_empty_blogs_list">Piesakieties vietnē WordPress.com, lai skatītu jaunākās ziņas no vietnēm, kurām sekojat</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Piesakieties vietnē WordPress.com, lai skatītu jaunākās ziņas par tēmām, kurām sekojat</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Piesakieties vietnē WordPress.com, lai skatītu jaunākās ziņas no vietnēm, kurām sekojat</string>
     <string name="gutenberg_native_replace_current_block">Aizstāt pašreizējo bloku</string>
     <string name="gutenberg_native_add_to_end">Pievienot beigām</string>
     <string name="gutenberg_native_add_to_beginning">Pievienot sākumam</string>

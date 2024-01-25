@@ -1818,8 +1818,8 @@ Language: it
     <string name="reader_btn_remove_filter_content_description">Rimuovi filtro attuale</string>
     <string name="reader_title_subs">Gestisci argomenti e siti</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Accedi a WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tags_list">Accedi a WordPress.com per vedere gli ultimi articoli degli argomenti che segui</string>
-    <string name="reader_filter_self_hosted_empty_blogs_list">Accedi a WordPress.com per vedere gli ultimi articoli dei siti che segui</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Accedi a WordPress.com per vedere gli ultimi articoli degli argomenti che segui</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Accedi a WordPress.com per vedere gli ultimi articoli dei siti che segui</string>
     <string name="gutenberg_native_replace_current_block">Sostituisci blocco attuale</string>
     <string name="gutenberg_native_add_to_end">Aggiungi alla fine</string>
     <string name="gutenberg_native_add_to_beginning">Aggiungi all\'inizio</string>
