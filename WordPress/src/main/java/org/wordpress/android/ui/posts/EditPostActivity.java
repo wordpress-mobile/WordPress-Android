@@ -1650,6 +1650,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             case PUBLISH_NOW:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
                 mPublishPostImmediatelyUseCase.updatePostToPublishImmediately(mEditPostRepository, mIsNewPost);
+                showPrepublishingNudgeBottomSheet();
                 return true;
             case NONE:
                 throw new IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case");
@@ -1747,11 +1748,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
         switch (getPrimaryAction()) {
             case PUBLISH_NOW:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
+                showPrepublishingNudgeBottomSheet();
                 return;
             case UPDATE:
             case CONTINUE:
             case SCHEDULE:
             case SUBMIT_FOR_REVIEW:
+                showPrepublishingNudgeBottomSheet();
                 return;
             case SAVE:
                 uploadPost(false);
