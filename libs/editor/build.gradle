@@ -11,12 +11,8 @@ repositories {
         content {
             includeGroup "org.wordpress"
             includeGroup "org.wordpress.aztec"
+            includeGroup "org.wordpress.gutenberg-mobile"
             includeGroupByRegex "org.wordpress.react-native-libraries.*"
-            // 'org.wordpress-mobile' group is deprecated. It's kept for now for smoother transition
-            // but it should be removed soon (within couple weeks)
-            includeGroup "org.wordpress-mobile"
-            includeGroup "org.wordpress-mobile.gutenberg-mobile"
-            includeGroupByRegex "org.wordpress-mobile.react-native-libraries.*"
         }
     }
     maven {
