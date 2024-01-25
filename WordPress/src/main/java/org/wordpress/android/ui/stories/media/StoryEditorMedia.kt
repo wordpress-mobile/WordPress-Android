@@ -22,14 +22,12 @@ import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPo
 import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState.AddingMultipleMediaToStory
 import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState.AddingSingleMediaToStory
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
 class StoryEditorMedia @Inject constructor(
-    private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase,
     private val addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
