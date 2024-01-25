@@ -29,38 +29,6 @@ import org.wordpress.android.viewmodel.Event
 @ExperimentalCoroutinesApi
 class StoryEditorMediaTest : BaseUnitTest() {
     @Test
-    fun `advertiseImageOptimisationAndAddMedia shows dialog when shouldAdvertiseImageOptimization is true`() {
-        // Arrange
-        val editorMediaListener = mock<EditorMediaListener>()
-        val mediaUtilsWrapper = createMediaUtilsWrapper(shouldAdvertiseImageOptimization = true)
-
-        // Act
-        createStoryEditorMedia(
-            editorMediaListener = editorMediaListener,
-            mediaUtilsWrapper = mediaUtilsWrapper
-        ).advertiseImageOptimisationAndAddMedia(mock())
-
-        // Assert
-        verify(editorMediaListener).advertiseImageOptimization(anyOrNull())
-    }
-
-    @Test
-    fun `advertiseImageOptimisationAndAddMedia does NOT show dialog when shouldAdvertiseImageOptimization is false`() {
-        // Arrange
-        val editorMediaListener = mock<EditorMediaListener>()
-        val mediaUtilsWrapper = createMediaUtilsWrapper(shouldAdvertiseImageOptimization = false)
-
-        // Act
-        createStoryEditorMedia(
-            editorMediaListener = editorMediaListener,
-            mediaUtilsWrapper = mediaUtilsWrapper
-        )
-            .advertiseImageOptimisationAndAddMedia(mock())
-        // Assert
-        verify(editorMediaListener, never()).advertiseImageOptimization(anyOrNull())
-    }
-
-    @Test
     fun `addNewMediaItemsToEditorAsync emits AddingSingleMedia for a single uri`() = test {
         // Arrange
         val editorMedia = createStoryEditorMedia()
@@ -118,26 +86,6 @@ class StoryEditorMediaTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onPhotoPickerMediaChosen does NOT invoke shouldAdvertiseImageOptimization when only video files`() =
-        test {
-            // Arrange
-            val uris = listOf(VIDEO_URI, VIDEO_URI, VIDEO_URI, VIDEO_URI)
-            val editorMediaListener = mock<EditorMediaListener>()
-
-            val mediaUtilsWrapper = createMediaUtilsWrapper()
-
-            // Act
-            createStoryEditorMedia(
-                mediaUtilsWrapper = mediaUtilsWrapper,
-                editorMediaListener = editorMediaListener
-            )
-                .onPhotoPickerMediaChosen(uris)
-            // Assert
-            verify(editorMediaListener, never()).advertiseImageOptimization(anyOrNull())
-            verify(mediaUtilsWrapper, never()).shouldAdvertiseImageOptimization()
-        }
-
-    @Test
     fun `onPhotoPickerMediaChosen invokes shouldAdvertiseImageOptimization when at least 1 image file`() =
         test {
             // Arrange
@@ -177,12 +125,8 @@ class StoryEditorMediaTest : BaseUnitTest() {
             return editorMedia
         }
 
-        fun createMediaUtilsWrapper(
-            shouldAdvertiseImageOptimization: Boolean = false
-        ) =
+        fun createMediaUtilsWrapper() =
             mock<MediaUtilsWrapper> {
-                on { shouldAdvertiseImageOptimization() }
-                    .thenReturn(shouldAdvertiseImageOptimization)
                 on { isVideo(VIDEO_URI.toString()) }.thenReturn(true)
                 on { isVideo(IMAGE_URI.toString()) }.thenReturn(false)
             }
