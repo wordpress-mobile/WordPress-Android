@@ -260,9 +260,6 @@ import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.MED
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
-
 public class EditPostActivity extends LocaleAwareActivity implements
         EditorFragmentActivity,
         EditorImageSettingsListener,

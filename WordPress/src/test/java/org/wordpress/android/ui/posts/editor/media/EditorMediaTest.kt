@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -270,7 +269,6 @@ class EditorMediaTest : BaseUnitTest() {
             updateMediaModelUseCase: UpdateMediaModelUseCase = mock(),
             getMediaModelUseCase: GetMediaModelUseCase = createGetMediaModelUseCase(),
             dispatcher: Dispatcher = mock(),
-            mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper(),
             networkUtilsWrapper: NetworkUtilsWrapper = mock(),
             addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase = createAddLocalMediaToPostUseCase(),
             addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase = mock(),
@@ -287,7 +285,6 @@ class EditorMediaTest : BaseUnitTest() {
                 updateMediaModelUseCase,
                 getMediaModelUseCase,
                 dispatcher,
-                mediaUtilsWrapper,
                 networkUtilsWrapper,
                 addLocalMediaToPostUseCase,
                 addExistingMediaToPostUseCase,
@@ -303,16 +300,6 @@ class EditorMediaTest : BaseUnitTest() {
             editorMedia.start(siteModel, editorMediaListener)
             return editorMedia
         }
-
-        fun createMediaUtilsWrapper(
-            shouldAdvertiseImageOptimization: Boolean = false
-        ) =
-            mock<MediaUtilsWrapper> {
-                on { shouldAdvertiseImageOptimization() }
-                    .thenReturn(shouldAdvertiseImageOptimization)
-                on { isVideo(VIDEO_URI.toString()) }.thenReturn(true)
-                on { isVideo(IMAGE_URI.toString()) }.thenReturn(false)
-            }
 
         fun createAddLocalMediaToPostUseCase(resultForAddNewMediaToEditorAsync: Boolean = true) =
             mock<AddLocalMediaToPostUseCase> {
