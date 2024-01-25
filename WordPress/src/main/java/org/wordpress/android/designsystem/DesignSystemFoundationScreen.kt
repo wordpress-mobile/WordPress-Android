@@ -1,11 +1,9 @@
 package org.wordpress.android.designsystem
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,25 +14,20 @@ import org.wordpress.android.R
 @Composable
 fun DesignSystemFoundationScreen(
     modifier: Modifier = Modifier
-){
-    Column(
+) {
+    LazyColumn (
         modifier = modifier,
-        verticalArrangement = Arrangement.SpaceBetween
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(
+            dimensionResource(id = R.dimen.reader_follow_sheet_button_margin_top)
+        )
     ) {
-        Row(modifier = Modifier.weight(1f, false)) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(
-                    dimensionResource(id = R.dimen.button_container_shadow_height)
+        item {
+            DesignSystemDataSource.foundationScreenButtonOptions.forEach { item ->
+                SelectOptionButton(
+                    labelResourceId = item,
+                    onClick = {}
                 )
-            ) {
-                DesignSystemDataSource.foundationScreenButtonOptions.forEach { item ->
-                    SelectOptionButton(
-                        labelResourceId = item,
-                        onClick = {}
-                    )
-                }
             }
         }
     }
