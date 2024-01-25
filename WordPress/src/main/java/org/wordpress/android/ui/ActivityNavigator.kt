@@ -27,6 +27,7 @@ import org.wordpress.android.ui.mysite.menu.KEY_QUICK_START_EVENT
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.quickstart.QuickStartEvent
+import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import javax.inject.Inject
@@ -158,9 +159,9 @@ class ActivityNavigator @Inject constructor() {
     }
 
     fun navigateToSiteMonitoring(context: Context, site: SiteModel) {
-        // todo: Implement this method after the SiteMonitorActivity is available and remove the lines below
-        site.name
-        context.packageName
+        val intent = Intent(context, SiteMonitorParentActivity::class.java)
+        intent.putExtra(WordPress.SITE, site)
+        context.startActivity(intent)
     }
 }
 
