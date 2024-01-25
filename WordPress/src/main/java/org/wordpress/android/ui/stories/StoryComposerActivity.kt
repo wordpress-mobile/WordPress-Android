@@ -488,10 +488,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         listener?.onPostUpdatedFromUI(null)
     }
 
-    override fun advertiseImageOptimization(listener: () -> Unit) {
-        WPMediaUtils.advertiseImageOptimization(this) { listener.invoke() }
-    }
-
     override fun onMediaModelsCreatedFromOptimizedUris(oldUriToMediaFiles: Map<Uri, MediaModel>) {
         // no op - we're not doing any special handling while composing, only when saving in the UploadBridge
     }
