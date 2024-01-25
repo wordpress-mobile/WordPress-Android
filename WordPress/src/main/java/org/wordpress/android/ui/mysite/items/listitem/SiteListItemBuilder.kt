@@ -29,6 +29,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.config.SiteMonitoringFeatureConfig
 import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
@@ -39,7 +40,8 @@ class SiteListItemBuilder @Inject constructor(
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val themeBrowserUtils: ThemeBrowserUtils,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
+    private val siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
@@ -246,8 +248,7 @@ class SiteListItemBuilder @Inject constructor(
     }
 
     fun buildSiteMonitoringItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): MySiteCardAndItem? {
-        // todo: Add the feature flag wrapper once it is available
-        return if (buildConfigWrapper.isJetpackApp && site.isWPComAtomic && site.isAdmin) {
+        return if (siteMonitoringFeatureConfig.isEnabled() && site.isWPComAtomic && site.isAdmin) {
             ListItem(
                 R.drawable.gb_ic_tool,
                 UiStringRes(R.string.site_monitoring),
