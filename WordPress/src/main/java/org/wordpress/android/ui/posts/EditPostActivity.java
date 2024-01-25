@@ -2842,12 +2842,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     // handleMediaPickerResult -> addExistingMediaToEditorAndSave
                     break;
                 case RequestCodes.PHOTO_PICKER:
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
-                        WPMediaUtils.advertiseImageOptimization(this, () -> handlePhotoPickerResult(data));
-                    } else {
-                        handlePhotoPickerResult(data);
-                    }
-                    break;
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
                     handlePhotoPickerResult(data);
                     break;
@@ -2861,17 +2855,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     break;
                 case RequestCodes.MEDIA_LIBRARY:
                 case RequestCodes.PICTURE_LIBRARY:
-                    mEditorMedia.advertiseImageOptimisationAndAddMedia(WPMediaUtils.retrieveMediaUris(data));
-                    break;
-                case RequestCodes.TAKE_PHOTO:
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
-                        WPMediaUtils.advertiseImageOptimization(this, this::addLastTakenPicture);
-                    } else {
-                        addLastTakenPicture();
-                    }
-                    break;
                 case RequestCodes.VIDEO_LIBRARY:
                     mEditorMedia.addNewMediaItemsToEditorAsync(WPMediaUtils.retrieveMediaUris(data), false);
+                    break;
+                case RequestCodes.TAKE_PHOTO:
+                    addLastTakenPicture();
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     Uri videoUri = data.getData();
@@ -3938,10 +3926,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void syncPostObjectWithUiAndSaveIt(@Nullable OnPostUpdatedFromUIListener listener) {
         updateAndSavePostAsync(listener);
-    }
-
-    @Override public void advertiseImageOptimization(@NonNull Function0<Unit> listener) {
-        WPMediaUtils.advertiseImageOptimization(this, listener::invoke);
     }
 
     @Override
