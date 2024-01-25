@@ -23,8 +23,6 @@ class SiteMonitorParentViewModel @Inject constructor(
     }
 
     private fun trackActivityLaunched() {
-        analyticsTrackerWrapper.track(
-            AnalyticsTracker.Stat.SITE_MONITORING_SCREEN_SHOWN
-        )
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SITE_MONITORING_SCREEN_SHOWN)
     }
 }
