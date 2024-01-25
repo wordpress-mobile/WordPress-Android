@@ -245,6 +245,18 @@ class SiteListItemBuilder @Inject constructor(
         } else null
     }
 
+    fun buildSiteMonitoringItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): MySiteCardAndItem? {
+        // todo: Add the feature flag wrapper once it is available
+        return if (buildConfigWrapper.isJetpackApp && site.isWPComAtomic && site.isAdmin) {
+            ListItem(
+                R.drawable.gb_ic_tool,
+                UiStringRes(R.string.site_monitoring),
+                onClick = ListItemInteraction.create(ListItemAction.SITE_MONITORING, onClick),
+                listItemAction = ListItemAction.SITE_MONITORING
+            )
+        } else null
+    }
+
     companion object {
         const val HIDE_WP_ADMIN_YEAR = 2015
         const val HIDE_WP_ADMIN_MONTH = 9
