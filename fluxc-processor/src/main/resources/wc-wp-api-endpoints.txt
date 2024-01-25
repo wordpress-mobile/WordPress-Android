@@ -4,6 +4,7 @@
 /orders/<id>/shipment-trackings/
 /orders/<id>/shipment-trackings/<tracking>#String/
 /orders/<id>/shipment-trackings/providers/
+/orders/<id>/receipt/
 
 /products/<id>/
 /products/<id>/variations/
