@@ -179,6 +179,30 @@ class BlazeCampaignsStore @Inject constructor(
         locale: String = Locale.getDefault().language
     ) = targetingDao.observeDevices(locale)
 
+    suspend fun fetchBlazeAdSuggestions(
+        siteModel: SiteModel,
+        productId: Long
+    ) = coroutineEngine.withDefaultContext(
+        AppLog.T.API,
+        this,
+        "fetch blaze ad suggestions"
+    ) {
+        fakeTargetingRestClient.fetchBlazeAdSuggestions(siteModel.siteId, productId).let { payload ->
+            when {
+                payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
+                else -> {
+                    campaignsDao.replaceAdSuggestions(payload.data)
+                    BlazeTargetingResult(payload.data)
+                }
+            }
+        }
+    }
+
+    suspend fun getBlazeAdSuggestions(
+        siteModel: SiteModel,
+        productId: Long
+    ) = campaignsDao.getBlazeAdSuggestions(siteModel.siteId, productId)
+
     data class BlazeCampaignsResult<T>(
         val model: T? = null,
         val cached: Boolean = false
