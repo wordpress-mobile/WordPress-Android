@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.sitemonitor
 
 import android.text.TextUtils
-import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,7 +40,6 @@ class SiteMonitorParentViewModel @Inject constructor(
     }
 
     private fun loadViews() {
-        Log.i(javaClass.simpleName, "***=> loadViews")
         postUiState(SiteMonitorUiState.Preparing)
 
         if (!checkForInternetConnectivityAndPostErrorIfNeeded()) return
