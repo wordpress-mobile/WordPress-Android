@@ -39,12 +39,6 @@ import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.iid.FirebaseInstanceId
 import com.wordpress.rest.RestClient
-import com.wordpress.stories.compose.NotificationTrackerProvider
-import com.wordpress.stories.compose.frame.StoryNotificationType
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_FRAME_SAVE_ERROR
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_FRAME_SAVE_SUCCESS
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_SAVE_ERROR
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_SAVE_SUCCESS
 import kotlinx.coroutines.CoroutineScope
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -229,8 +223,6 @@ class AppInitializer @Inject constructor(
     lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
-    lateinit var storyNotificationTrackerProvider: StoryNotificationTrackerProvider
-        private set
 
     @Suppress("DEPRECATION")
     private lateinit var credentialsClient: GoogleApiClient
@@ -363,8 +355,6 @@ class AppInitializer @Inject constructor(
 
         systemNotificationsTracker.checkSystemNotificationsState()
         ImageEditorInitializer.init(imageManager, imageEditorTracker, imageEditorFileUtils, appScope)
-
-        storyNotificationTrackerProvider = StoryNotificationTrackerProvider()
 
         exPlat.forceRefresh()
 
@@ -947,29 +937,6 @@ class AppInitializer @Inject constructor(
                 // getBitmapCache
                 WordPress.getBitmapCache().evictAll()
             }
-        }
-    }
-
-    inner class StoryNotificationTrackerProvider : NotificationTrackerProvider {
-        private fun translateNotificationTypes(storyNotificationType: StoryNotificationType): NotificationType {
-            return when (storyNotificationType) {
-                STORY_SAVE_SUCCESS -> NotificationType.STORY_SAVE_SUCCESS
-                STORY_SAVE_ERROR -> NotificationType.STORY_SAVE_ERROR
-                STORY_FRAME_SAVE_SUCCESS -> NotificationType.STORY_FRAME_SAVE_SUCCESS
-                STORY_FRAME_SAVE_ERROR -> NotificationType.STORY_FRAME_SAVE_ERROR
-            }
-        }
-
-        override fun trackShownNotification(storyNotificationType: StoryNotificationType) {
-            systemNotificationsTracker.trackShownNotification(translateNotificationTypes(storyNotificationType))
-        }
-
-        override fun trackTappedNotification(storyNotificationType: StoryNotificationType) {
-            systemNotificationsTracker.trackTappedNotification(translateNotificationTypes(storyNotificationType))
-        }
-
-        override fun trackDismissedNotification(storyNotificationType: StoryNotificationType) {
-            systemNotificationsTracker.trackDismissedNotification(translateNotificationTypes(storyNotificationType))
         }
     }
 
