@@ -1692,6 +1692,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
         // Ensure the default image is reset for empty views before applying logic
         mActionableEmptyView.image.setImageResource(R.drawable.img_illustration_empty_results_216dp);
 
+        // TODO thomashortadev re-add button for subscriptions feed (look at git diffs)
+        //  try to quickly hack some way of making the button black
+        //  also add the illustration matching iOS for the other empty feed states instead of
+        //  img_illustration_empty_results_216dp
+
         if (shouldShowEmptyViewForSelfHostedCta()) {
             setEmptyTitleAndDescriptionForSelfHostedCta();
             return;
