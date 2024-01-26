@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.CampaignStats
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.ContentConfig
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.FakeBlazeTargetingRestClient
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
+import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeAdSuggestionEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
@@ -337,5 +338,40 @@ class BlazeCampaignsStoreTest {
 
         assertThat(devices).isNotNull
         assertThat(devices.size).isEqualTo(10)
+    }
+
+    @Test
+    fun `when fetching targeting ad suggestions, then persist data in DB`() = test {
+        whenever(targetingRestClient.fetchBlazeAdSuggestions(any(), any())).thenReturn(
+            BlazeTargetingPayload(
+                generateAdSuggestions()
+            )
+        )
+
+        store.fetchBlazeAdSuggestions(siteModel, 1L)
+
+        verify(blazeCampaignsDao).replaceAdSuggestions(any())
+    }
+
+    @Test
+    fun `when getting ad suggestions, then return data from DB`() = test {
+        whenever(blazeCampaignsDao.getBlazeAdSuggestions(any(), any())).thenReturn(
+            generateAdSuggestions()
+        )
+
+        val adSuggestions = store.getBlazeAdSuggestions(siteModel, 1L)
+
+        assertThat(adSuggestions).isNotNull
+        assertThat(adSuggestions.size).isEqualTo(3)
+    }
+
+    private fun generateAdSuggestions() = List(3) {
+        BlazeAdSuggestionEntity(
+            id = it.toString(),
+            siteId = 1L,
+            productId = 1L,
+            tagLine = "Tag line $it",
+            description = "Description $it"
+        )
     }
 }

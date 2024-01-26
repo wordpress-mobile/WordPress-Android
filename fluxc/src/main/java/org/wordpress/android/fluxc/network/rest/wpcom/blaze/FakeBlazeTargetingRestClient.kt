@@ -4,6 +4,7 @@ import kotlinx.coroutines.delay
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLocation
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
+import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeAdSuggestionEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingLanguageEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingTopicEntity
@@ -45,6 +46,37 @@ class FakeBlazeTargetingRestClient @Inject constructor() {
         delay(FAKE_DELAY)
 
         return BlazeTargetingPayload(generateFakeDevices(locale))
+    }
+
+    suspend fun fetchBlazeAdSuggestions(
+        siteId: Long,
+        productId: Long
+    ): BlazeTargetingPayload<List<BlazeAdSuggestionEntity>> {
+        delay(FAKE_DELAY)
+
+        return BlazeTargetingPayload(generateFakeAdSuggestions(siteId, productId))
+    }
+
+    @Suppress("MagicNumber")
+    private fun generateFakeAdSuggestions(
+        siteId: Long,
+        productId: Long
+    ): List<BlazeAdSuggestionEntity> {
+        val adSuggestions = mutableListOf<BlazeAdSuggestionEntity>()
+
+        for (i in 1..3) {
+            adSuggestions.add(
+                BlazeAdSuggestionEntity(
+                    id = i.toString(),
+                    siteId = siteId,
+                    productId = productId,
+                    tagLine = "Suggested tag line $i",
+                    description = "Suggested description $i"
+                )
+            )
+        }
+
+        return adSuggestions
     }
 }
 
