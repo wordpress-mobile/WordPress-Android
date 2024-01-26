@@ -13,8 +13,5 @@ class SiteMonitoringFeatureConfig @Inject constructor(
     appConfig,
     BuildConfig.ENABLE_SITE_MONITORING,
     SITE_MONITORING_FEATURE_REMOTE_FIELD
-) {
-    override fun isEnabled(): Boolean {
-        return super.isEnabled() && BuildConfig.IS_JETPACK_APP
-    }
-}
+)
+

@@ -247,8 +247,13 @@ class SiteListItemBuilder @Inject constructor(
         } else null
     }
 
+    @Suppress("ComplexCondition")
     fun buildSiteMonitoringItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): MySiteCardAndItem? {
-        return if (siteMonitoringFeatureConfig.isEnabled() && site.isWPComAtomic && site.isAdmin) {
+        return if (buildConfigWrapper.isJetpackApp
+            && site.isWPComAtomic
+            && site.isAdmin
+            && siteMonitoringFeatureConfig.isEnabled()
+        ) {
             ListItem(
                 R.drawable.gb_ic_tool,
                 UiStringRes(R.string.site_monitoring),
