@@ -1,5 +1,6 @@
 package org.wordpress.android.login;
 
+import android.annotation.SuppressLint;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -623,7 +624,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 .newStartSecurityKeyChallengeAction(payload));
     }
 
-    @SuppressWarnings("unused")
+    @SuppressLint("NewApi") @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWebauthnChallengeReceived(WebauthnChallengeReceived event) {
         if (event.isError()) {
@@ -643,23 +644,21 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 //                    }
 //                });
         CredentialManagerHandler handler = new CredentialManagerHandler(requireContext());
-        if (VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            handler.fetchPasskey(
-                    event.mUserId,
-                    event.mChallengeInfo.getTwoStepNonce(),
-                    event.mChallengeInfo.getChallenge(),
-                    result -> {
-                        FinishWebauthnChallengePayload payload = result;
-                        mDispatcher.dispatch(
-                                AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(payload));
-                        return null;
-                    },
-                    error -> {
-                        handleWebauthnError();
-                        return null;
-                    }
-                    );
-        }
+        handler.fetchPasskey(
+                event.mUserId,
+                event.mChallengeInfo.getTwoStepNonce(),
+                event.mChallengeInfo.getChallenge(),
+                result -> {
+                    FinishWebauthnChallengePayload payload = result;
+                    mDispatcher.dispatch(
+                            AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(payload));
+                    return null;
+                },
+                error -> {
+                    handleWebauthnError();
+                    return null;
+                }
+                            );
     }
 
     private void onCredentialsResultAvailable(@NonNull Intent resultData) {
