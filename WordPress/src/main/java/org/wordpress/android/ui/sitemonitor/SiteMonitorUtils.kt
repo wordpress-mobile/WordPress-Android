@@ -25,7 +25,17 @@ class SiteMonitorUtils @Inject constructor(
 
     fun sanitizeSiteUrl(url: String?) = url?.replace(Regex(HTTP_PATTERN), "") ?: ""
 
+    fun urlToType(url: String): SiteMonitorType {
+        return when {
+            url.contains(PHP_LOGS_PATTERN) -> SiteMonitorType.PHP_LOGS
+            url.contains(WEB_SERVER_LOGS_PATTERN) -> SiteMonitorType.WEB_SERVER_LOGS
+            else -> SiteMonitorType.METRICS
+        }
+    }
+
     companion object {
         const val HTTP_PATTERN = "(https?://)"
+        const val PHP_LOGS_PATTERN = "/php"
+        const val WEB_SERVER_LOGS_PATTERN = "/web"
     }
 }
