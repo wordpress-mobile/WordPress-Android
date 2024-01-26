@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.gravatar.DefaultAvatarImage;
 
-import static com.gravatar.GravatarUtilsKt.gravatarImageUrlToGravatarImageUrl;
+import static com.gravatar.GravatarUtilsKt.rewriteGravatarImageUrlQueryParams;
 
 /**
  * This file contains utility functions for working with avatar urls coming from WordPress accounts.
@@ -37,7 +37,7 @@ public class WPAvatarUtils {
         if (!imageUrl.contains("gravatar.com")) {
             return PhotonUtils.getPhotonImageUrl(imageUrl, avatarSz, avatarSz);
         } else {
-            return gravatarImageUrlToGravatarImageUrl(imageUrl, avatarSz, defaultImage, null, null);
+            return rewriteGravatarImageUrlQueryParams(imageUrl, avatarSz, defaultImage, null, null);
         }
     }
 
