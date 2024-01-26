@@ -648,9 +648,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 event.mChallengeInfo.getTwoStepNonce(),
                 event.mChallengeInfo.getChallenge(),
                 result -> {
-                    FinishWebauthnChallengePayload payload = result;
                     mDispatcher.dispatch(
-                            AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(payload));
+                            AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(result));
                     return null;
                 },
                 error -> {
