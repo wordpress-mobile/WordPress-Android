@@ -38,6 +38,7 @@
         app:aevImage="@drawable/illustration_reader_empty"
         app:aevSubtitle="@string/reader_discover_no_posts_subscribe_subtitle"
         app:aevTitle="@string/reader_discover_no_posts_title"
+        app:aevButtonStyle="reader"
         tools:visibility="visible" />
 
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout

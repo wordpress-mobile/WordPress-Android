@@ -64,14 +64,7 @@ class ActionableEmptyView : LinearLayout {
         bottomImage = layout.findViewById(R.id.bottom_image)
         progressBar = layout.findViewById(R.id.actionable_empty_view_progress_bar)
 
-        attrs.let {
-            val typedArray = context.obtainStyledAttributes(
-                it,
-                R.styleable.ActionableEmptyView,
-                0,
-                0
-            )
-
+        context.obtainStyledAttributes(attrs, R.styleable.ActionableEmptyView, 0, 0).use { typedArray ->
             val imageResource = typedArray.getResourceId(
                 R.styleable.ActionableEmptyView_aevImage,
                 0
@@ -83,6 +76,10 @@ class ActionableEmptyView : LinearLayout {
             val titleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevTitle)
             val subtitleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevSubtitle)
             val buttonAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevButton)
+            val buttonStyleAttribute = typedArray.getInt(
+                R.styleable.ActionableEmptyView_aevButtonStyle,
+                BUTTON_STYLE_PRIMARY
+            )
 
             if (imageResource != 0) {
                 image.setImageResource(imageResource)
@@ -107,7 +104,10 @@ class ActionableEmptyView : LinearLayout {
                 button.visibility = View.VISIBLE
             }
 
-            typedArray.recycle()
+            if (buttonStyleAttribute == BUTTON_STYLE_READER) {
+                button.backgroundTintList = context.getColorStateList(R.color.reader_button_primary_background_selector)
+                button.setTextColor(context.getColorStateList(R.color.reader_button_primary_text))
+            }
         }
     }
 
@@ -162,5 +162,10 @@ class ActionableEmptyView : LinearLayout {
         } ?: ""
 
         announceForAccessibility("${title.text}.$subTitle")
+    }
+
+    companion object {
+        private const val BUTTON_STYLE_PRIMARY = 0
+        private const val BUTTON_STYLE_READER = 1
     }
 }
