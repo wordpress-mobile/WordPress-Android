@@ -260,9 +260,6 @@ import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.MED
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
-
 public class EditPostActivity extends LocaleAwareActivity implements
         EditorFragmentActivity,
         EditorImageSettingsListener,
@@ -1309,7 +1306,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onPhotoPickerMediaChosen(@NonNull final List<? extends Uri> uriList) {
         mEditorPhotoPicker.hidePhotoPicker();
-        mEditorMedia.onPhotoPickerMediaChosen(uriList);
+        mEditorMedia.addNewMediaItemsToEditorAsync(uriList, false);
     }
 
     /*
@@ -2842,12 +2839,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     // handleMediaPickerResult -> addExistingMediaToEditorAndSave
                     break;
                 case RequestCodes.PHOTO_PICKER:
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
-                        WPMediaUtils.advertiseImageOptimization(this, () -> handlePhotoPickerResult(data));
-                    } else {
-                        handlePhotoPickerResult(data);
-                    }
-                    break;
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
                     handlePhotoPickerResult(data);
                     break;
@@ -2861,17 +2852,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     break;
                 case RequestCodes.MEDIA_LIBRARY:
                 case RequestCodes.PICTURE_LIBRARY:
-                    mEditorMedia.advertiseImageOptimisationAndAddMedia(WPMediaUtils.retrieveMediaUris(data));
-                    break;
-                case RequestCodes.TAKE_PHOTO:
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
-                        WPMediaUtils.advertiseImageOptimization(this, this::addLastTakenPicture);
-                    } else {
-                        addLastTakenPicture();
-                    }
-                    break;
                 case RequestCodes.VIDEO_LIBRARY:
                     mEditorMedia.addNewMediaItemsToEditorAsync(WPMediaUtils.retrieveMediaUris(data), false);
+                    break;
+                case RequestCodes.TAKE_PHOTO:
+                    addLastTakenPicture();
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     Uri videoUri = data.getData();
@@ -3938,10 +3923,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void syncPostObjectWithUiAndSaveIt(@Nullable OnPostUpdatedFromUIListener listener) {
         updateAndSavePostAsync(listener);
-    }
-
-    @Override public void advertiseImageOptimization(@NonNull Function0<Unit> listener) {
-        WPMediaUtils.advertiseImageOptimization(this, listener::invoke);
     }
 
     @Override
