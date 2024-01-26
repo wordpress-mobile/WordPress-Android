@@ -388,6 +388,7 @@ class ReaderTracker @Inject constructor(
             readerTag.isPostsILike -> "liked"
             readerTag.isA8C -> "a8c"
             readerTag.isListTopic -> "list"
+            readerTag.isP2 -> "p2"
             else -> null
         }?.let { trackingId ->
             analyticsTrackerWrapper.track(
