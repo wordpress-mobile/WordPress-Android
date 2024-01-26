@@ -3,6 +3,10 @@
 24.1
 -----
 
+24.0.2
+-----
+* [**] Fix Aztec editor crash when losing or gaining network connectivity [https://github.com/wordpress-mobile/WordPress-Android/pull/20053]
+
 24.0.1
 -----
 * [**] Fix crash when RichText values are not defined [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6563]
