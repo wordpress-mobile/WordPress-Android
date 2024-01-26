@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferFeature
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfig
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
+import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeAdSuggestionEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignsPaginationEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
@@ -35,7 +36,7 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.JetpackSocialEntity
 
 @Database(
-        version = 24,
+        version = 25,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -54,6 +55,7 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.Je
             BlazeTargetingLanguageEntity::class,
             BlazeTargetingDeviceEntity::class,
             BlazeTargetingTopicEntity::class,
+            BlazeAdSuggestionEntity::class
         ],
         autoMigrations = [
             AutoMigration(from = 11, to = 12),
@@ -63,6 +65,7 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.Je
             AutoMigration(from = 17, to = 18),
             AutoMigration(from = 22, to = 23),
             AutoMigration(from = 23, to = 24),
+            AutoMigration(from = 24, to = 25),
         ]
 )
 @TypeConverters(
