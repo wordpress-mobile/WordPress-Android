@@ -108,5 +108,7 @@
     <color name="reader_blog_section_avatar_internal_border">@color/white_translucent_20</color>
     <color name="reader_post_body_link">@color/blue_30</color>
     <color name="reader_footer_progress_background">@color/background_dark_elevated</color>
+    <color name="reader_subfilter_button_background">@color/white</color>
+    <color name="reader_subfilter_button_text">@color/black</color>
 
 </resources>

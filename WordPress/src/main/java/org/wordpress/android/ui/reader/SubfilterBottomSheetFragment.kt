@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewpager.widget.ViewPager
@@ -76,8 +77,9 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             viewModelFactory
         )[subfilterVmKey, SubFilterViewModel::class.java]
 
-        // TODO thomashortadev: remove the pager and support only one category
+        // TODO remove the pager and support only one category
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
+        val titleContainer = view.findViewById<View>(R.id.title_container)
         val title = view.findViewById<TextView>(R.id.title)
         val editSubscriptions = view.findViewById<View>(R.id.edit_subscriptions)
         title.text = bottomSheetTitle
@@ -128,6 +130,10 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
                 val metrics = resources.displayMetrics
                 behavior.peekHeight = metrics.heightPixels / 2
             }
+        }
+
+        viewModel.isTitleContainerVisible.observe(viewLifecycleOwner) { isVisible ->
+            titleContainer.isVisible = isVisible
         }
     }
 
