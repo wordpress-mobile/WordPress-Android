@@ -2226,7 +2226,7 @@
     <string name="reader_no_posts_with_this_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_blogs_posts_in_custom_list">The blogs in this list have not posted anything recently</string>
-    <string name="reader_empty_subscribed_tags_subtitle">Add tags here to find posts about your favorite tags</string>
+    <string name="reader_empty_subscribed_tags_subtitle">Add tags here to find posts about your favorite topics</string>
     <string name="reader_no_followed_tags_title">No subscribed tags</string>
     <string name="reader_no_recommended_blogs_title">No recommended blogs</string>
     <string name="reader_no_followed_blogs_title">No subscribed blogs</string>
