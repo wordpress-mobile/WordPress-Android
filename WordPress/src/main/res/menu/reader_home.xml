@@ -4,7 +4,7 @@
     <item
         android:id="@+id/menu_settings"
         app:actionLayout="@layout/reader_home_settings_menu_action_layout"
-        android:title="@string/reader_menu_tags"
+        android:title="@string/reader_menu_tags_and_blogs"
         android:visible="false"
         app:showAsAction="always" />
 

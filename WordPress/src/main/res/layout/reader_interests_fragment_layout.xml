@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSurface"
-    android:contentDescription="@string/reader_choose_interests_content_description">
+    android:contentDescription="@string/reader_choose_interests_tags_content_description">
 
     <RelativeLayout
         android:id="@+id/back_button"

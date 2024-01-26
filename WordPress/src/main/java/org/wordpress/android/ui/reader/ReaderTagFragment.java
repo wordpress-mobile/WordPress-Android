@@ -49,8 +49,8 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
 
         actionableEmptyView.image.setImageResource(R.drawable.img_illustration_empty_results_216dp);
         actionableEmptyView.image.setVisibility(View.VISIBLE);
-        actionableEmptyView.title.setText(R.string.reader_empty_followed_tags_title);
-        actionableEmptyView.subtitle.setText(R.string.reader_empty_followed_tags_subtitle);
+        actionableEmptyView.title.setText(R.string.reader_no_followed_tags_title);
+        actionableEmptyView.subtitle.setText(R.string.reader_empty_subscribed_tags_subtitle);
         actionableEmptyView.subtitle.setVisibility(View.VISIBLE);
         actionableEmptyView.setVisibility(hasTagAdapter() && getTagAdapter().isEmpty() ? View.VISIBLE : View.GONE);
     }

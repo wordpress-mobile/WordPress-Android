@@ -1715,10 +1715,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     if (getCurrentTag().isFollowedSites() || getCurrentTag().isDefaultInMemoryTag()) {
                         if (ReaderBlogTable.hasFollowedBlogs()) {
                             title = getString(R.string.reader_empty_followed_blogs_no_recent_posts_title);
-                            description = getString(R.string.reader_empty_followed_blogs_no_recent_posts_description);
+                            description = getString(
+                                    R.string.reader_empty_followed_blogs_subscribed_no_recent_posts_description);
                         } else {
-                            title = getString(R.string.reader_empty_followed_blogs_title);
-                            description = getString(R.string.reader_empty_followed_blogs_description);
+                            title = getString(R.string.reader_no_followed_blogs_title);
+                            description = getString(R.string.reader_no_followed_blogs_description);
                         }
                         mActionableEmptyView.image.setImageResource(
                                 R.drawable.img_illustration_following_empty_results_196dp);
@@ -1728,13 +1729,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         description = getString(R.string.reader_empty_posts_liked_description);
                         button = ActionableEmptyViewButtonType.FOLLOWED;
                     } else if (getCurrentTag().isListTopic()) {
-                        title = getString(R.string.reader_empty_posts_in_custom_list);
+                        title = getString(R.string.reader_empty_blogs_posts_in_custom_list);
                     } else {
-                        title = getString(R.string.reader_empty_posts_in_tag);
+                        title = getString(R.string.reader_no_posts_with_this_tag);
                     }
                     break;
                 case BLOG_PREVIEW:
-                    title = getString(R.string.reader_empty_posts_in_blog);
+                    title = getString(R.string.reader_no_posts_in_blog);
                     break;
                 case SEARCH_RESULTS:
                     isSearching = true;
@@ -1756,7 +1757,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 case TAG_PREVIEW:
                     // fall through to the default case
                 default:
-                    title = getString(R.string.reader_empty_posts_in_tag);
+                    title = getString(R.string.reader_no_posts_with_this_tag);
                     break;
             }
         }
@@ -1841,7 +1842,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
             switch (button) {
                 case DISCOVER:
-                    mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_discover);
+                    mActionableEmptyView.button.setText(R.string.reader_no_followed_blogs_button_discover);
                     break;
                 case FOLLOWED:
                     mActionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_subscriptions);
@@ -2290,7 +2291,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         } else if (getCurrentTag().isListTopic() && isPostAdapterEmpty() && isAdded()) {
                             mActionableEmptyView.image.setImageResource(
                                     R.drawable.img_illustration_empty_results_216dp);
-                            mActionableEmptyView.title.setText(getString(R.string.reader_empty_posts_in_custom_list));
+                            mActionableEmptyView.title.setText(
+                                    getString(R.string.reader_empty_blogs_posts_in_custom_list));
                             mActionableEmptyView.button.setVisibility(View.GONE);
                             mActionableEmptyView.subtitle.setVisibility(View.GONE);
                             showEmptyView();

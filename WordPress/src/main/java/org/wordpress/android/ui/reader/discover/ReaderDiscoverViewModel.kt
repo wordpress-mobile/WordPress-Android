@@ -552,14 +552,14 @@ class ReaderDiscoverViewModel @Inject constructor(
 
             data class ShowNoFollowedTagsUiState(override val action: () -> Unit) : EmptyUiState() {
                 override val titleResId = R.string.reader_discover_empty_title
-                override val subTitleRes = R.string.reader_discover_empty_subtitle
+                override val subTitleRes = R.string.reader_discover_empty_subtitle_subscribe
                 override val buttonResId = R.string.reader_discover_empty_button_text
             }
 
             data class ShowNoPostsUiState(override val action: () -> Unit) : EmptyUiState() {
                 override val titleResId = R.string.reader_discover_no_posts_title
-                override val buttonResId = R.string.reader_discover_no_posts_button_text
-                override val subTitleRes = R.string.reader_discover_no_posts_subtitle
+                override val buttonResId = R.string.reader_discover_no_posts_button_tags_text
+                override val subTitleRes = R.string.reader_discover_no_posts_subscribe_subtitle
                 override val illustrationResId = R.drawable.img_illustration_empty_results_216dp
             }
         }

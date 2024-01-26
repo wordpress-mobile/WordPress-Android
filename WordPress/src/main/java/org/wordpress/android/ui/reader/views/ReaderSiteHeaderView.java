@@ -105,7 +105,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         final ReaderBlog localBlogInfo;
         if (blogId == 0 && feedId == 0) {
-            ToastUtils.showToast(getContext(), R.string.reader_toast_err_get_blog_info);
+            ToastUtils.showToast(getContext(), R.string.reader_toast_err_show_blog);
             return;
         }
 
@@ -218,9 +218,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
             final int followersStringRes;
             if (blogInfo.numSubscribers == 1) {
-                followersStringRes = R.string.reader_label_followers_count_single;
+                followersStringRes = R.string.reader_label_subscribers_count_single;
             } else {
-                followersStringRes = R.string.reader_label_followers_count;
+                followersStringRes = R.string.reader_label_subscribers_count;
             }
 
             final String formattedNumberSubscribers;
@@ -237,7 +237,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         } else {
             txtFollowCount.setText(String.format(
                     LocaleManager.getSafeLocale(getContext()),
-                    getContext().getString(R.string.reader_label_follow_count),
+                    getContext().getString(R.string.reader_label_subscribe_count),
                     blogInfo.numSubscribers));
         }
     }
@@ -283,8 +283,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
             }
             mFollowButton.setEnabled(true);
             if (!succeeded) {
-                int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
-                        : R.string.reader_toast_err_unfollow_blog;
+                int errResId = isAskingToFollow ? R.string.reader_toast_err_unable_to_follow_blog
+                        : R.string.reader_toast_err_unable_to_unfollow_blog;
                 ToastUtils.showToast(getContext(), errResId);
                 mFollowButton.setIsFollowed(!isAskingToFollow);
             }

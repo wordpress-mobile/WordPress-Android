@@ -1633,12 +1633,6 @@
     <string name="reader_filter_sites_title">Sites</string>
     <string name="reader_filter_tags_title">Topics</string>
     <string name="reader_filter_main_title">Following</string>
-    <string name="reader_filter_empty_sites_list">See the newest posts from sites you follow</string>
-    <string name="reader_filter_empty_tags_list">You can follow posts on a specific subject by adding a topic</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Log in to WordPress.com to see the latest posts from sites you follow</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Log in to WordPress.com to see the latest posts from topics you follow</string>
-    <string name="reader_filter_empty_sites_action">Follow a site</string>
-    <string name="reader_filter_empty_tags_action">Add a topic</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
     <string name="reader_dot_separator" translatable="false">\u0020\u2022\u0020</string>
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
@@ -1646,16 +1640,12 @@
     <string name="reader_expandable_tags_view_overflow_indicator_expand_title_new" translatable="false">+%1$s</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Hide</string>
     <string name="reader_discover_interests_header">You might like</string>
-    <string name="reader_discover_recommended_blogs_header">Sites to follow</string>
     <string name="reader_discover_recommended_header_new">You might like</string>
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
     <string name="reader_discover_empty_title">Welcome!</string>
-    <string name="reader_discover_empty_subtitle">Follow topics to discover new blogs</string>
     <string name="reader_discover_no_posts_title">No recent posts</string>
-    <string name="reader_discover_no_posts_subtitle">Try following more topics to broaden the search</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
-    <string name="reader_discover_no_posts_button_text">Follow topics</string>
     <string name="reader_author_with_blog_name" translatable="false">%1$s ▸ %2$s</string>
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
@@ -2054,7 +2044,6 @@
     <string name="reader_save_for_later_display_name">Saved</string>
     <string name="reader_discover_display_name">Discover</string>
     <string name="reader_my_likes_display_name">Likes</string>
-    <string name="reader_following_display_name">Following</string>
 
     <!-- timespan shown for posts/comments published within the past 60 seconds -->
     <string name="timespan_now" tools:ignore="UnusedResources">now</string>
@@ -2074,7 +2063,6 @@
     <string name="reader_title_subs">Manage Topics &amp; Sites</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
-    <string name="reader_title_interests">Follow topics</string>
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed topics</string>
@@ -2091,8 +2079,6 @@
 
     <!-- button text -->
     <string name="reader_btn_share">Share</string>
-    <string name="reader_btn_follow">Follow</string>
-    <string name="reader_btn_unfollow">Following</string>
     <string name="reader_secondary_bookmark">Save</string>
     <string name="reader_secondary_bookmarked">Saved</string>
     <string name="reader_add_bookmark">Add to saved posts</string>
