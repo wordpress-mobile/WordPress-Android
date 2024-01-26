@@ -2983,12 +2983,6 @@
     <string name="permission_camera">Camera</string>
     <string name="permission_microphone">Microphone</string>
 
-    <!-- Image Optimization promo -->
-    <string name="leave_on">Yes, leave on</string>
-    <string name="turn_off">No, turn off</string>
-    <string name="image_optimization_popup_title">Keep optimizing images?</string>
-    <string name="image_optimization_popup_desc">Image optimization shrinks images for faster uploading.\n\nThis option is enabled by default, but you can change it in the app settings at any time.</string>
-
     <!-- Login -->
     <!-- If any of these appear unused, be sure to check the same string in the login library -
     it may be used there and keeping it here is required for translation. -->
