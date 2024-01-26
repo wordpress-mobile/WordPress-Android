@@ -36,9 +36,6 @@ updates:
       # dependapot.
       - dependency-name: "org.wordpress:fluxc"
       - dependency-name: "org.wordpress:utils"
-      # org.wordpress-mobile.gutenberg-mobile is deprecated and org.wordpress.gutenberg-mobile is used instead.
-      # Temporarily leaving this declaration during transition, but this should be removed soon.
-      - dependency-name: "org.wordpress-mobile.gutenberg-mobile:react-native-gutenberg-bridge"
       - dependency-name: "org.wordpress.gutenberg-mobile:react-native-gutenberg-bridge"
       - dependency-name: "org.wordpress:login"
       - dependency-name: "com.automattic:stories"

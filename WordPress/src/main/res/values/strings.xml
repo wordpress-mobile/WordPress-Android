@@ -1280,6 +1280,10 @@
     <string name="stats_timeframe_weeks">Weeks</string>
     <string name="stats_timeframe_months">Months</string>
     <string name="stats_timeframe_years">Years</string>
+    <string name="stats_timeframe_by_day">By day</string>
+    <string name="stats_timeframe_by_week">By week</string>
+    <string name="stats_timeframe_by_month">By month</string>
+    <string name="stats_timeframe_by_year">By year</string>
     <string name="stats_timeframe_last_seven_days">Last 7-days</string>
     <string name="stats_timeframe_previous_seven_days">Previous 7-days</string>
     <string name="stats_views">Views</string>
@@ -4844,4 +4848,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Working Offline</string>
     <string name="gutenberg_native_waiting_for_connection" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Waiting for connection</string>
 
+    <!-- Site Monitoring -->
+    <string name="site_monitoring">Site Monitoring</string>
+    <string name="site_monitoring_tab_title_metrics">Metrics</string>
+    <string name="site_monitoring_tab_title_php_logs">PHP Logs</string>
+    <string name="site_monitoring_tab_title_web_server_logs">Web Server Logs</string>
 </resources>
