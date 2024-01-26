@@ -391,10 +391,6 @@ dependencies {
     }
     implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
 
-    // To enable Stetho, a debug bridge that enables the Chrome Developer Tools for debug purposes.
-    debugImplementation "com.facebook.stetho:stetho:$stethoVersion"
-    debugImplementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
-
     implementation "androidx.arch.core:core-common:$androidxArchCoreVersion"
     implementation "androidx.arch.core:core-runtime:$androidxArchCoreVersion"
     implementation "com.google.code.gson:gson:$googleGsonVersion"
@@ -562,6 +558,16 @@ dependencies {
     // - Jetpack Compose - UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test-junit4"
     implementation "androidx.compose.material3:material3:$androidxComposeMaterial3Version"
+
+    // - Flipper
+    debugImplementation ("com.facebook.flipper:flipper:$flipperVersion") {
+        exclude group:'org.jetbrains.kotlinx', module:'kotlinx-serialization-json-jvm'
+    }
+    debugImplementation "com.facebook.soloader:soloader:$soLoaderVersion"
+    debugImplementation ("com.facebook.flipper:flipper-network-plugin:$flipperVersion"){
+        exclude group:'org.jetbrains.kotlinx', module:'kotlinx-serialization-json-jvm'
+    }
+    releaseImplementation "com.facebook.flipper:flipper-noop:$flipperVersion"
 }
 
 configurations.all {
