@@ -43,25 +43,16 @@ sealed class SiteMonitorUiState {
 }
 
 data class SiteMonitorModel(
+    val siteMonitorType: SiteMonitorType,
     val enableJavascript: Boolean = true,
     val enableDomStorage: Boolean = true,
     val enableChromeClient: Boolean = true,
     val userAgent: String = "",
-    val urls: List<SiteMonitorUrl> = emptyList()
-) {
-    fun getUrlByType(type: SiteMonitorUrl.SiteMonitorType): SiteMonitorUrl? {
-        return urls.find { it.type == type }
-    }
-}
-
-data class SiteMonitorUrl(
-    val type: SiteMonitorType,
     val url: String,
     val addressToLoad: String
-) {
-    enum class SiteMonitorType {
-        METRICS,
-        PHP_LOGS,
-        WEB_SERVER_LOGS
-    }
+)
+enum class SiteMonitorType {
+    METRICS,
+    PHP_LOGS,
+    WEB_SERVER_LOGS
 }
