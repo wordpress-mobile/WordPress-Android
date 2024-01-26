@@ -2093,8 +2093,8 @@
     <string name="reader_title_tags">Follow tags</string>
 
     <!-- view pager titles -->
-    <string name="reader_page_followed_tags_title">Followed tags</string>
-    <string name="reader_page_followed_blogs_title">Followed blogs</string>
+    <string name="reader_page_followed_tags_title">Subscribed tags</string>
+    <string name="reader_page_followed_blogs_title">Subscribed blogs</string>
 
     <!-- menu text -->
     <string name="reader_menu_tags_and_blogs">Edit tags and blogs</string>
