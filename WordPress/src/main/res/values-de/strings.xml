@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-09 21:04:20+0000
+Translation-Revision-Date: 2024-01-24 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">Warten auf Verbindung</string>
+    <string name="stats_traffic">Traffic</string>
     <string name="gutenberg_native_working_offline">Offline arbeiten</string>
     <string name="gutenberg_native_network_connection_re_established">Die Netzwerkverbindung wurde wiederhergestellt</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">Die Netzwerkverbindung ging verloren, offline arbeiten</string>
@@ -411,6 +413,7 @@ Language: de
     <string name="stats_timeframe_last_seven_days">Letzte 7 Tage</string>
     <string name="weeks_quantity_other">%d Wochen</string>
     <string name="weeks_quantity_one">1 Woche</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">Von &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Später daran erinnern</string>
     <string name="jetpack_feature_card_content_phase_three">Die Statistiken, der Reader, die Benachrichtigungen und weitere Funktionen werden bald in die Jetpack-Mobil-App verschoben.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Zur Jetpack-App wechseln</string>
