@@ -77,8 +77,6 @@ import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.ui.main.WPMainNavigationView;
-import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
@@ -108,7 +106,9 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateT
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider;
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenLoginPage;
+import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSearchPage;
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage;
+import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSuggestedTagsPage;
 import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetVisible;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
@@ -655,9 +655,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             ((OpenSubsAtPage) action).getTabIndex()
                     );
                 } else if (action instanceof OpenLoginPage) {
-                    wpMainActivityViewModel.onOpenLoginPage(
-                            WPMainNavigationView.Companion.getPosition(PageType.MY_SITE)
-                    );
+                    wpMainActivityViewModel.onOpenLoginPage();
+                } else if (action instanceof OpenSearchPage) {
+                    ReaderActivityLauncher.showReaderSearch(requireActivity());
+                } else if (action instanceof OpenSuggestedTagsPage) {
+                    ReaderActivityLauncher.showReaderInterests(requireActivity());
                 }
 
                 return null;

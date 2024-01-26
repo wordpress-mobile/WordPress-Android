@@ -797,18 +797,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
-        mViewModel.getStartLoginFlow().observe(this, event -> {
-            event.applyIfNotHandled(unit -> {
-                ActivityLauncher.viewMeActivityForResult(this);
-
-                return null;
-            });
-        });
-
-        mViewModel.getSwitchToMySite().observe(this, event -> {
+        mViewModel.getSwitchToMeTab().observe(this, event -> {
             event.applyIfNotHandled(unit -> {
                 if (mBottomNav != null) {
-                    mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+                    mBottomNav.setCurrentSelectedPage(PageType.ME);
                 }
 
                 return null;
