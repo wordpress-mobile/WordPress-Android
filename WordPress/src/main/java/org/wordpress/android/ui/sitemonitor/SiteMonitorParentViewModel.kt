@@ -29,8 +29,9 @@ class SiteMonitorParentViewModel @Inject constructor(
     private val phpLogsUrlTemplate = "https://wordpress.com/site-monitoring/{blog}/php"
     private val webServerLogsUrlTemplate = "https://wordpress.com/site-monitoring/{blog}/web"
 
-    private val _uiState = MutableStateFlow<SiteMonitorUiState>(SiteMonitorUiState.Preparing)
-    val uiState = _uiState as StateFlow<SiteMonitorUiState>
+    private val _uiStates = MutableStateFlow<Map<SiteMonitorType, SiteMonitorUiState>>(emptyMap())
+    val uiStates: StateFlow<Map<SiteMonitorType, SiteMonitorUiState>> = _uiStates
+
 
     fun start(site: SiteModel) {
         this.site = site
@@ -40,46 +41,30 @@ class SiteMonitorParentViewModel @Inject constructor(
     }
 
     private fun loadViews() {
-        postUiState(SiteMonitorUiState.Preparing)
+        SiteMonitorType.entries.forEach { type ->
+            postUiState(type, SiteMonitorUiState.Preparing)
 
-        if (!checkForInternetConnectivityAndPostErrorIfNeeded()) return
+            if (!checkForInternetConnectivityAndPostErrorIfNeeded(type)) return@forEach
 
-        if (!validateAndPostErrorIfNeeded()) return
+            if (!validateAndPostErrorIfNeeded(type)) return@forEach
 
-        assembleAndShowSiteMonitor()
-    }
-
-    private fun assembleAndShowSiteMonitor() {
-        val sanitizedUrl = siteMonitorUtils.sanitizeSiteUrl(site.url)
-
-        val siteMonitorUrls = mutableListOf<SiteMonitorUrl>().apply {
-            add(
-                createSiteMonitorUrl(
-                    metricUrlTemplate.replace("{blog}", sanitizedUrl), SiteMonitorUrl.SiteMonitorType.METRICS)
-            )
-            add(
-                createSiteMonitorUrl(
-                    phpLogsUrlTemplate.replace("{blog}", sanitizedUrl),
-                    SiteMonitorUrl.SiteMonitorType.PHP_LOGS
-                )
-            )
-            add(
-                createSiteMonitorUrl(
-                    webServerLogsUrlTemplate.replace("{blog}", sanitizedUrl),
-                    SiteMonitorUrl.SiteMonitorType.WEB_SERVER_LOGS
-                )
-            )
+            assembleAndShowSiteMonitor(type)
         }
-        postUiState(mapper.toPrepared(siteMonitorUrls))
     }
 
-    private fun createSiteMonitorUrl(url: String, type: SiteMonitorUrl.SiteMonitorType): SiteMonitorUrl {
-        return SiteMonitorUrl(
-            type = type,
-            url = url,
-            addressToLoad = prepareAddressToLoad(url)
-        )
+    private fun assembleAndShowSiteMonitor(type: SiteMonitorType) {
+        val sanitizedUrl = siteMonitorUtils.sanitizeSiteUrl(site.url)
+        val url = when (type) {
+            SiteMonitorType.METRICS -> metricUrlTemplate
+            SiteMonitorType.PHP_LOGS -> phpLogsUrlTemplate
+            SiteMonitorType.WEB_SERVER_LOGS -> webServerLogsUrlTemplate
+        }.replace("{blog}", sanitizedUrl)
+
+        val addressToLoad = prepareAddressToLoad(url)
+        val uiState = mapper.toPrepared(url, addressToLoad, type)
+        postUiState(type, uiState)
     }
+
     private fun prepareAddressToLoad(url: String): String {
         val username = accountStore.account.userName
         val accessToken = accountStore.accessToken
@@ -106,32 +91,40 @@ class SiteMonitorParentViewModel @Inject constructor(
             accessToken?:""
         )
     }
-    private fun checkForInternetConnectivityAndPostErrorIfNeeded(): Boolean {
+    private fun checkForInternetConnectivityAndPostErrorIfNeeded(type: SiteMonitorType) : Boolean {
         if (networkUtilsWrapper.isNetworkAvailable()) return true
-        postUiState(mapper.toNoNetworkError(this@SiteMonitorParentViewModel::loadViews))
-        return false
+        postUiState(type, mapper.toNoNetworkError(this@SiteMonitorParentViewModel::loadViews))
+         return false
     }
 
-    private fun validateAndPostErrorIfNeeded(): Boolean {
+    private fun validateAndPostErrorIfNeeded(type: SiteMonitorType): Boolean {
         if (accountStore.account.userName.isNullOrEmpty() || accountStore.accessToken.isNullOrEmpty()) {
-            postUiState(mapper.toGenericError(this@SiteMonitorParentViewModel::loadViews))
+            postUiState(type, mapper.toGenericError(this@SiteMonitorParentViewModel::loadViews))
             return false
         }
         return true
     }
 
-    private fun postUiState(uiState: SiteMonitorUiState) {
+    private fun postUiState(type: SiteMonitorType, uiState: SiteMonitorUiState) {
         launch {
-            _uiState.value = uiState
+            _uiStates.value = _uiStates.value.toMutableMap().apply {
+                this[type] = uiState
+            }
         }
     }
 
-    fun onUrlLoaded() {
-        postUiState(SiteMonitorUiState.Loaded)
+    fun onUrlLoaded(url: String) {
+        val currentState = _uiStates.value
+        val type = siteMonitorUtils.urlToType(url)
+        val updatedState = currentState + (type to SiteMonitorUiState.Loaded)
+        _uiStates.value = updatedState
     }
 
-    fun onWebViewError() {
-        postUiState(mapper.toGenericError(this@SiteMonitorParentViewModel::loadViews))
+    fun onWebViewError(url: String) {
+        val currentState = _uiStates.value
+        val type = siteMonitorUtils.urlToType(url)
+        val updatedState = currentState + (type to mapper.toGenericError(this@SiteMonitorParentViewModel::loadViews))
+        _uiStates.value = updatedState
     }
 
     companion object {
