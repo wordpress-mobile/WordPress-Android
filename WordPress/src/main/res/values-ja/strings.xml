@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-17 21:46:16+0000
+Translation-Revision-Date: 2024-01-24 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">接続を待機中</string>
+    <string name="stats_traffic">トラフィック</string>
     <string name="gutenberg_native_working_offline">オフラインで作業</string>
     <string name="gutenberg_native_network_connection_re_established">ネットワーク接続が再確立されました</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">ネットワーク接続が失われ、オフラインで作業しています</string>
@@ -404,6 +406,7 @@ Language: ja_JP
     <string name="stats_timeframe_last_seven_days">過去7日間</string>
     <string name="weeks_quantity_other">%d週</string>
     <string name="weeks_quantity_one">1週</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">&lt;b&gt;Day One&lt;/b&gt; から</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">後で再通知</string>
     <string name="jetpack_feature_card_content_phase_three">統計、Reader、通知などの機能は、まもなく Jetpack モバイルアプリに移動します。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Jetpack アプリに切り替える</string>

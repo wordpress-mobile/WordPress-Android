@@ -2273,8 +2273,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_settings_privacy_settings_tapped";
             case APP_SETTINGS_OPEN_DEVICE_SETTINGS_TAPPED:
                 return "app_settings_open_device_settings_tapped";
-            case APP_SETTINGS_OPTIMIZE_IMAGES_POPUP_TAPPED:
-                return "app_settings_optimize_images_popup_tapped";
             case APP_SETTINGS_MAX_IMAGE_SIZE_CHANGED:
                 return "app_settings_max_image_size_changed";
             case APP_SETTINGS_IMAGE_QUALITY_CHANGED:
