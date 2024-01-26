@@ -71,6 +71,7 @@ import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.ExceptionLogger;
+import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener;
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.android.editor.gutenberg.DialogVisibility;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
@@ -3835,6 +3836,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
+        if (!(mEditorFragment instanceof GutenbergNetworkConnectionListener)) return;
+
         ((GutenbergEditorFragment) mEditorFragment).onConnectionStatusChange(event.isConnected());
     }
 
