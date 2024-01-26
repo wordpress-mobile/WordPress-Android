@@ -2,7 +2,7 @@
 
 24.2
 -----
-
+* [**] Fix editor crash occurring on large posts [https://github.com/wordpress-mobile/WordPress-Android/pull/20046]
 
 24.1
 -----
