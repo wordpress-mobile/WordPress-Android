@@ -35,7 +35,7 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         app:aevButton="@string/reader_discover_no_posts_button_tags_text"
-        app:aevImage="@drawable/img_illustration_empty_results_216dp"
+        app:aevImage="@drawable/illustration_reader_empty"
         app:aevSubtitle="@string/reader_discover_no_posts_subscribe_subtitle"
         app:aevTitle="@string/reader_discover_no_posts_title"
         tools:visibility="visible" />

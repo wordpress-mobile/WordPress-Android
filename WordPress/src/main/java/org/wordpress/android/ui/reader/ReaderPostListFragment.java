@@ -1690,12 +1690,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
         ActionableEmptyViewButtonType button = null;
 
         // Ensure the default image is reset for empty views before applying logic
-        mActionableEmptyView.image.setImageResource(R.drawable.img_illustration_empty_results_216dp);
+        mActionableEmptyView.image.setImageResource(R.drawable.illustration_reader_empty);
 
         // TODO thomashortadev
         //  try to quickly hack some way of making the button black
-        //  also add the illustration matching iOS for the other empty feed states instead of
-        //  img_illustration_empty_results_216dp
 
         if (shouldShowEmptyViewForSelfHostedCta()) {
             setEmptyTitleAndDescriptionForSelfHostedCta();
@@ -2299,11 +2297,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         if ((isBookmarksList()) && isPostAdapterEmpty() && isAdded()) {
                             setEmptyTitleAndDescriptionForBookmarksList();
                             mActionableEmptyView.image.setImageResource(
-                                    R.drawable.img_illustration_empty_results_216dp);
+                                    R.drawable.illustration_reader_empty);
                             showEmptyView();
                         } else if (getCurrentTag().isListTopic() && isPostAdapterEmpty() && isAdded()) {
                             mActionableEmptyView.image.setImageResource(
-                                    R.drawable.img_illustration_empty_results_216dp);
+                                    R.drawable.illustration_reader_empty);
                             mActionableEmptyView.title.setText(
                                     getString(R.string.reader_empty_blogs_posts_in_custom_list));
                             mActionableEmptyView.button.setVisibility(View.GONE);
