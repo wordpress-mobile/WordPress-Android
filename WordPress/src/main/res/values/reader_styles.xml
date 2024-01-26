@@ -244,8 +244,8 @@
     <!-- Buttons -->
     <style name="Reader.Button.Primary" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:textAllCaps">false</item>
-        <item name="android:backgroundTint">@color/reader_button_background_selector</item>
-        <item name="android:textColor">@color/reader_subfilter_button_text</item>
+        <item name="android:backgroundTint">@color/reader_button_primary_background_selector</item>
+        <item name="android:textColor">@color/reader_button_primary_text</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
