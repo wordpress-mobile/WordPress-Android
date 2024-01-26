@@ -50,13 +50,9 @@ import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
 @AndroidEntryPoint
 class SiteMonitorParentActivity: AppCompatActivity(), SiteMonitorWebViewClientListener {
-    override fun onRedirectToExternalBrowser(url: String) {
-        // todo: not sure if this is needed
-    }
+    override fun onWebViewPageLoaded(url: String) = viewModel.onUrlLoaded(url)
 
-    override fun onWebViewPageLoaded() = viewModel.onUrlLoaded()
-
-    override fun onWebViewReceivedError() = viewModel.onWebViewError()
+    override fun onWebViewReceivedError(url: String) = viewModel.onWebViewError(url)
 
 val viewModel:SiteMonitorParentViewModel by viewModels()
 
@@ -78,7 +74,7 @@ val viewModel:SiteMonitorParentViewModel by viewModels()
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     fun SiteMonitorScreen(modifier: Modifier = Modifier,
                           viewModel: SiteMonitorParentViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
-        val uiState by viewModel.uiState.collectAsState()
+        val uiStates by viewModel.uiStates.collectAsState()
         Scaffold(
             topBar = {
                 MainTopAppBar(
@@ -88,20 +84,26 @@ val viewModel:SiteMonitorParentViewModel by viewModels()
                 )
             },
             content = {
-                TabScreen(modifier = modifier, uiState)
+                TabScreen(modifier = modifier, uiStates)
             }
         )
     }
 
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    fun TabScreen(modifier: Modifier = Modifier, uiState: SiteMonitorUiState) {
+    fun TabScreen(modifier: Modifier = Modifier, uiStates: Map<SiteMonitorType, SiteMonitorUiState>) {
         var tabIndex by remember { mutableIntStateOf(0) }
 
         val tabs = listOf(
             R.string.site_monitoring_tab_title_metrics,
             R.string.site_monitoring_tab_title_php_logs,
             R.string.site_monitoring_tab_title_web_server_logs
+        )
+
+        val tabsToType = mapOf(
+            0 to SiteMonitorType.METRICS,
+            1 to SiteMonitorType.PHP_LOGS,
+            2 to SiteMonitorType.WEB_SERVER_LOGS
         )
 
         Column(modifier = modifier.fillMaxWidth()) {
@@ -117,19 +119,16 @@ val viewModel:SiteMonitorParentViewModel by viewModels()
                     )
                 }
             }
-            when (tabIndex) {
-                0 -> SiteMonitoringWebViewForTab(uiState, SiteMonitorUrl.SiteMonitorType.METRICS)
-                1 -> SiteMonitoringWebViewForTab(uiState, SiteMonitorUrl.SiteMonitorType.PHP_LOGS)
-                2 -> SiteMonitoringWebViewForTab(uiState, SiteMonitorUrl.SiteMonitorType.WEB_SERVER_LOGS)
-            }
+            val uiState = uiStates[tabsToType[tabIndex]] as SiteMonitorUiState
+            SiteMonitoringWebViewForTab(uiState)
         }
     }
 
     @Composable
-    fun SiteMonitoringWebViewForTab(uiState: SiteMonitorUiState, tab: SiteMonitorUrl.SiteMonitorType) {
+    fun SiteMonitoringWebViewForTab(uiState: SiteMonitorUiState) {
         when (uiState) {
             is SiteMonitorUiState.Preparing -> LoadingState()
-            is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded -> SiteMonitoringWebView(uiState, tab)
+            is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded -> SiteMonitoringWebView(uiState)
             is SiteMonitorUiState.Error -> SiteMonitorError(uiState)
         }
     }
@@ -167,7 +166,7 @@ val viewModel:SiteMonitorParentViewModel by viewModels()
     }
     @SuppressLint("SetJavaScriptEnabled")
     @Composable
-    fun SiteMonitoringWebView(uiState: SiteMonitorUiState, tab: SiteMonitorUrl.SiteMonitorType) {
+    fun SiteMonitoringWebView(uiState: SiteMonitorUiState) {
         var webView: WebView? by remember { mutableStateOf(null) }
 
         if (uiState is SiteMonitorUiState.Prepared) {
@@ -183,9 +182,7 @@ val viewModel:SiteMonitorParentViewModel by viewModels()
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
                     webViewClient = SiteMonitorWebViewClient(this@SiteMonitorParentActivity)
-                    model.getUrlByType(tab)?.addressToLoad?.let {
-                        postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, it.toByteArray())
-                    }
+                    postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, model.addressToLoad.toByteArray())
                 }
             }
         }
