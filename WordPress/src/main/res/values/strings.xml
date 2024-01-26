@@ -2125,7 +2125,6 @@
 
     <!-- accessibility content desciptions -->
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
-    <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
     <string name="reader_bottom_sheet_select_content_description">Select a Tag or Blog, Pop Up Window</string>
     <string name="reader_choose_interests_tags_content_description">Choose your tags</string>
 
