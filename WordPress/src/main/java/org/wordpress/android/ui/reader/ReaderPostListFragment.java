@@ -1729,18 +1729,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
                         button = ActionableEmptyViewButtonType.DISCOVER;
                     } else if (getCurrentTag().isPostsILike()) {
-                        isImageHidden = true;
-
                         title = getString(R.string.reader_empty_posts_liked_title);
                         description = getString(R.string.reader_empty_posts_liked_description);
                         button = ActionableEmptyViewButtonType.FOLLOWED;
                     } else if (getCurrentTag().isListTopic()) {
-                        isImageHidden = true;
-
                         title = getString(R.string.reader_empty_blogs_posts_in_custom_list);
                     } else {
-                        isImageHidden = true;
-
                         title = getString(R.string.reader_no_posts_with_this_tag);
                     }
                     break;
