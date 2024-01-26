@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-17 21:46:05+0000
+Translation-Revision-Date: 2024-01-22 17:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: it
@@ -120,6 +120,7 @@ Language: it
     <string name="personalization_screen_draft_posts_card_description">I tuoi articoli in bozza recenti.</string>
     <string name="personalization_screen_draft_posts_card_title">Articoli in bozza</string>
     <string name="personalization_screen_stats_card_description">Visualizzazioni, visitatori e mi piace</string>
+    <string name="personalization_screen_tab_cards_footer_cards">Le schede possono mostrare contenuti diversi a seconda di ciò che sta accadendo nel sito</string>
     <string name="personalization_screen_title"> Personalizza la scheda home</string>
     <string name="personalize_card_content_description">Tocca per personalizzare la scheda home</string>
     <string name="personalize_card_text">Personalizza la scheda home</string>
@@ -403,7 +404,6 @@ Language: it
     <string name="stats_timeframe_last_seven_days">Ultimi 7 giorni</string>
     <string name="weeks_quantity_other">%d settimane</string>
     <string name="weeks_quantity_one">1 settimana</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Da &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Ricordamelo più tardi</string>
     <string name="jetpack_feature_card_content_phase_three">Statistiche, Reader, Notifiche e altre funzionalità passeranno presto all\'app mobile Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Passa all\'app Jetpack</string>

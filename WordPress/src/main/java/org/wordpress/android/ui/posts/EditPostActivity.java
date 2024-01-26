@@ -261,9 +261,6 @@ import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.MED
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
-
 public class EditPostActivity extends LocaleAwareActivity implements
         EditorFragmentActivity,
         EditorImageSettingsListener,
@@ -1310,7 +1307,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onPhotoPickerMediaChosen(@NonNull final List<? extends Uri> uriList) {
         mEditorPhotoPicker.hidePhotoPicker();
-        mEditorMedia.onPhotoPickerMediaChosen(uriList);
+        mEditorMedia.addNewMediaItemsToEditorAsync(uriList, false);
     }
 
     /*
@@ -2491,7 +2488,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     false,
                     false,
                     false,
-                    false,
                     true,
                     false,
                     !isFreeWPCom,
@@ -2514,7 +2510,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_INSTAGRAM_EMBED_JETPACK_VERSION),
                 SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_LOOM_EMBED_JETPACK_VERSION),
                 SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_SMARTFRAME_EMBED_JETPACK_VERSION),
-                SiteUtils.supportsStoriesFeature(mSite, mJetpackFeatureRemovalPhaseHelper),
                 mSite.isUsingWpComRestApi(),
                 enableXPosts,
                 isUnsupportedBlockEditorEnabled,
@@ -2843,12 +2838,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     // handleMediaPickerResult -> addExistingMediaToEditorAndSave
                     break;
                 case RequestCodes.PHOTO_PICKER:
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
-                        WPMediaUtils.advertiseImageOptimization(this, () -> handlePhotoPickerResult(data));
-                    } else {
-                        handlePhotoPickerResult(data);
-                    }
-                    break;
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
                     handlePhotoPickerResult(data);
                     break;
@@ -2862,17 +2851,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     break;
                 case RequestCodes.MEDIA_LIBRARY:
                 case RequestCodes.PICTURE_LIBRARY:
-                    mEditorMedia.advertiseImageOptimisationAndAddMedia(WPMediaUtils.retrieveMediaUris(data));
-                    break;
-                case RequestCodes.TAKE_PHOTO:
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
-                        WPMediaUtils.advertiseImageOptimization(this, this::addLastTakenPicture);
-                    } else {
-                        addLastTakenPicture();
-                    }
-                    break;
                 case RequestCodes.VIDEO_LIBRARY:
                     mEditorMedia.addNewMediaItemsToEditorAsync(WPMediaUtils.retrieveMediaUris(data), false);
+                    break;
+                case RequestCodes.TAKE_PHOTO:
+                    addLastTakenPicture();
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     Uri videoUri = data.getData();
@@ -3348,7 +3331,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mEditorMedia.retryFailedMediaAsync(Collections.singletonList(media.getId()));
         }
 
-        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
+        AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_UPLOAD_MEDIA_RETRIED, mSite);
         return true;
     }
 
@@ -3683,6 +3666,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return;
         }
 
+        if (event.isError() && !NetworkUtils.isNetworkAvailable(this)) {
+            mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media, event.error);
+            return;
+        }
+
         // event for unknown media, ignoring
         if (event.media == null) {
             AppLog.w(AppLog.T.MEDIA, "Media event carries null media object, not recognized");
@@ -3701,7 +3689,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, event.error);
         } else if (event.completed) {
             // if the remote url on completed is null, we consider this upload wasn't successful
-            if (TextUtils.isEmpty(event.media.getUrl())) {
+            if (TextUtils.isEmpty(event.media.getUrl()) && !NetworkUtils.isNetworkAvailable(this)) {
+                MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
+                mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media, error);
+            } else if (TextUtils.isEmpty(event.media.getUrl())) {
                 MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
                 mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, error);
             } else {
@@ -3933,10 +3924,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void syncPostObjectWithUiAndSaveIt(@Nullable OnPostUpdatedFromUIListener listener) {
         updateAndSavePostAsync(listener);
-    }
-
-    @Override public void advertiseImageOptimization(@NonNull Function0<Unit> listener) {
-        WPMediaUtils.advertiseImageOptimization(this, listener::invoke);
     }
 
     @Override

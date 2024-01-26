@@ -18,6 +18,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_DAYS_A
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_TRAFFIC_ACCESSED
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.DEFAULT_INSIGHTS
 import org.wordpress.android.fluxc.store.JETPACK_DEFAULT_INSIGHTS
@@ -279,6 +280,7 @@ class StatsViewModel
 
     private fun trackSectionSelected(statsSection: StatsSection) {
         when (statsSection) {
+            StatsSection.TRAFFIC -> analyticsTracker.track(STATS_TRAFFIC_ACCESSED)
             StatsSection.INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
             StatsSection.DAYS -> analyticsTracker.trackGranular(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)
             StatsSection.WEEKS -> analyticsTracker.trackGranular(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)

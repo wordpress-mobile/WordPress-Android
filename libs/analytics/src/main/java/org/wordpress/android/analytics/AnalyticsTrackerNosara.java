@@ -733,6 +733,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_upload_media_failed";
             case EDITOR_UPLOAD_MEDIA_RETRIED:
                 return "editor_upload_media_retried";
+            case EDITOR_UPLOAD_MEDIA_PAUSED:
+                return "editor_upload_media_paused";
             case EDITOR_CLOSED:
                 return "editor_closed";
             case EDITOR_SESSION_START:
@@ -1071,6 +1073,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_accessed";
             case STATS_ACCESS_ERROR:
                 return "stats_access_error";
+            case STATS_TRAFFIC_ACCESSED:
+                return "stats_traffic_accessed";
             case STATS_INSIGHTS_ACCESSED:
                 return "stats_insights_accessed";
             case STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED:
@@ -2269,8 +2273,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_settings_privacy_settings_tapped";
             case APP_SETTINGS_OPEN_DEVICE_SETTINGS_TAPPED:
                 return "app_settings_open_device_settings_tapped";
-            case APP_SETTINGS_OPTIMIZE_IMAGES_POPUP_TAPPED:
-                return "app_settings_optimize_images_popup_tapped";
             case APP_SETTINGS_MAX_IMAGE_SIZE_CHANGED:
                 return "app_settings_max_image_size_changed";
             case APP_SETTINGS_IMAGE_QUALITY_CHANGED:

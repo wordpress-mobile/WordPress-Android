@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-09 22:02:26+0000
+Translation-Revision-Date: 2024-01-23 12:31:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.11
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">Esperando conexión</string>
+    <string name="stats_traffic">Tráfico</string>
     <string name="gutenberg_native_working_offline">Trabajo sin conexión</string>
     <string name="gutenberg_native_network_connection_re_established">Conexión de red restablecida</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">Conexión de red perdida, trabajando sin conexión</string>
@@ -411,7 +413,7 @@ Language: es
     <string name="stats_timeframe_last_seven_days">Últimos siete días</string>
     <string name="weeks_quantity_other">%d semanas</string>
     <string name="weeks_quantity_one">1 semana</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Desde el &lt;b&gt;DayOne&lt;/b&gt;</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">Desde &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Recuérdamelo más tarde</string>
     <string name="jetpack_feature_card_content_phase_three">Algunas funciones, como estadísticas, lector o avisos, se trasladarán pronto a la aplicación móvil de Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Cambiar a la aplicación de Jetpack</string>

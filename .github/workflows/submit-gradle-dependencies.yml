@@ -1,0 +1,24 @@
+name: Submit dependencies to GitHub Dependency Graph
+on:
+  push:
+    branches:
+      - trunk
+      - release/*
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - run: cp gradle.properties-example gradle.properties
+      - name: Setup Gradle to generate and submit dependency graphs
+        uses: gradle/gradle-build-action@v2
+        with:
+          dependency-graph: generate-and-submit
+      - name: Generate the dependency graph which will be submitted post-job
+        run: ./gradlew :WordPress:dependencies --no-configure-on-demand

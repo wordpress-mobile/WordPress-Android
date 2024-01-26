@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TRAFFIC
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.util.perform
@@ -78,7 +79,7 @@ constructor(
             StatsSection.TOTAL_FOLLOWERS_DETAIL,
             StatsSection.INSIGHTS,
             StatsSection.INSIGHT_DETAIL,
-            StatsSection.DAYS -> DAYS
+            StatsSection.DAYS, TRAFFIC -> DAYS // Replace with TRAFFIC when it's implemented
             StatsSection.WEEKS -> WEEKS
             StatsSection.MONTHS -> MONTHS
             StatsSection.ANNUAL_STATS,
