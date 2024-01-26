@@ -624,7 +624,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 .newStartSecurityKeyChallengeAction(payload));
     }
 
-    @SuppressLint("NewApi") @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWebauthnChallengeReceived(WebauthnChallengeReceived event) {
         if (event.isError()) {

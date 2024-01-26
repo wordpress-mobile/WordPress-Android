@@ -21,7 +21,6 @@ class CredentialManagerHandler(
     private val credentialManager = CredentialManager.create(context)
     private val executor = Executors.newSingleThreadExecutor()
 
-    @RequiresApi(34)
     fun fetchPasskey(
         userId: String,
         twoStepNonce: String,
