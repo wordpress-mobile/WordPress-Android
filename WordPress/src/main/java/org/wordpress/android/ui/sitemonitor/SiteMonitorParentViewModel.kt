@@ -40,16 +40,23 @@ class SiteMonitorParentViewModel @Inject constructor(
         loadViews()
     }
 
-    private fun loadViews() {
-        SiteMonitorType.entries.forEach { type ->
-            postUiState(type, SiteMonitorUiState.Preparing)
-
-            if (!checkForInternetConnectivityAndPostErrorIfNeeded(type)) return@forEach
-
-            if (!validateAndPostErrorIfNeeded(type)) return@forEach
-
-            assembleAndShowSiteMonitor(type)
+    private fun loadViews(siteMonitorType: SiteMonitorType? = null) {
+        if (siteMonitorType != null) {
+            loadIndividualView(siteMonitorType)
+            return
         }
+
+        SiteMonitorType.entries.forEach { type -> loadIndividualView(type) }
+    }
+
+    private fun loadIndividualView(siteMonitorType: SiteMonitorType) {
+            postUiState(siteMonitorType, SiteMonitorUiState.Preparing)
+
+            if (!checkForInternetConnectivityAndPostErrorIfNeeded(siteMonitorType)) return
+
+            if (!validateAndPostErrorIfNeeded(siteMonitorType)) return
+
+            assembleAndShowSiteMonitor(siteMonitorType)
     }
 
     private fun assembleAndShowSiteMonitor(type: SiteMonitorType) {
@@ -94,7 +101,7 @@ class SiteMonitorParentViewModel @Inject constructor(
     private fun checkForInternetConnectivityAndPostErrorIfNeeded(type: SiteMonitorType) : Boolean {
         if (networkUtilsWrapper.isNetworkAvailable()) return true
         postUiState(type, mapper.toNoNetworkError(this@SiteMonitorParentViewModel::loadViews))
-         return false
+        return false
     }
 
     private fun validateAndPostErrorIfNeeded(type: SiteMonitorType): Boolean {
@@ -114,17 +121,17 @@ class SiteMonitorParentViewModel @Inject constructor(
     }
 
     fun onUrlLoaded(url: String) {
-        val currentState = _uiStates.value
         val type = siteMonitorUtils.urlToType(url)
-        val updatedState = currentState + (type to SiteMonitorUiState.Loaded)
-        _uiStates.value = updatedState
+        postUiState(type, SiteMonitorUiState.Loaded)
     }
 
     fun onWebViewError(url: String) {
-        val currentState = _uiStates.value
         val type = siteMonitorUtils.urlToType(url)
-        val updatedState = currentState + (type to mapper.toGenericError(this@SiteMonitorParentViewModel::loadViews))
-        _uiStates.value = updatedState
+        postUiState(type, mapper.toGenericError(this@SiteMonitorParentViewModel::loadViews))
+    }
+
+    fun onTabSelected(siteMonitorType: SiteMonitorType?) {
+        loadViews(siteMonitorType)
     }
 
     companion object {
