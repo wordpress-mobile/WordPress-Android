@@ -643,7 +643,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         handler.fetchPasskey(
                 event.mUserId,
                 event.mChallengeInfo.getTwoStepNonce(),
-                event.mChallengeInfo.getChallenge(),
+                event.mRawChallengeInfoJson,
                 result -> {
                     mDispatcher.dispatch(
                             AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(result));
