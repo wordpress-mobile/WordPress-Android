@@ -79,12 +79,12 @@ class SiteMonitorTabViewModel @Inject constructor(
         var addressToLoad = url
 
         // Custom domains are not properly authenticated due to a server side(?) issue, so this gets around that
-        if (!addressToLoad.contains(SiteMonitorParentViewModel.WPCOM_DOMAIN)) {
+        if (!addressToLoad.contains(WPCOM_DOMAIN)) {
             val wpComSites: List<SiteModel> = siteStore.wPComSites
             for (siteModel in wpComSites) {
                 // Only replace the url if we know the unmapped url and if it's a custom domain
                 if (!TextUtils.isEmpty(siteModel.unmappedUrl)
-                    && !siteModel.url.contains(SiteMonitorParentViewModel.WPCOM_DOMAIN)
+                    && !siteModel.url.contains(WPCOM_DOMAIN)
                 ) {
                     addressToLoad = addressToLoad.replace(siteModel.url, siteModel.unmappedUrl)
                 }
@@ -116,5 +116,6 @@ class SiteMonitorTabViewModel @Inject constructor(
 
     companion object {
         const val WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php"
+        const val WPCOM_DOMAIN = ".wordpress.com"
     }
 }
