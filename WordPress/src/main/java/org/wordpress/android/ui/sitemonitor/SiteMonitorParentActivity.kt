@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TabRow
@@ -44,7 +47,6 @@ import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
-import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
 import org.wordpress.android.ui.sitemonitor.SiteMonitorWebViewClient.SiteMonitorWebViewClientListener
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
@@ -54,7 +56,7 @@ class SiteMonitorParentActivity: AppCompatActivity(), SiteMonitorWebViewClientLi
 
     override fun onWebViewReceivedError(url: String) = viewModel.onWebViewError(url)
 
-val viewModel:SiteMonitorParentViewModel by viewModels()
+    val viewModel:SiteMonitorParentViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,58 +117,39 @@ val viewModel:SiteMonitorParentViewModel by viewModels()
                 tabs.forEachIndexed { index, title ->
                     Tab(text = { Text(stringResource(id = title)) },
                         selected = tabIndex == index,
-                        onClick = { tabIndex = index }
+                        onClick = {
+                            tabIndex = index
+                            viewModel.onTabSelected(tabsToType[index])
+                        }
                     )
                 }
             }
-            val uiState = uiStates[tabsToType[tabIndex]] as SiteMonitorUiState
-            SiteMonitoringWebViewForTab(uiState)
+            val siteMonitorType = tabsToType[tabIndex] ?: SiteMonitorType.METRICS
+            val uiState = uiStates[siteMonitorType] as SiteMonitorUiState
+            when(siteMonitorType) {
+                SiteMonitorType.METRICS -> SiteMonitoringWebViewForMetric(uiState)
+                SiteMonitorType.PHP_LOGS -> SiteMonitoringWebViewForTabPhp(uiState)
+                SiteMonitorType.WEB_SERVER_LOGS -> SiteMonitoringWebViewForTabWeb(uiState)
+            }
         }
     }
 
     @Composable
-    fun SiteMonitoringWebViewForTab(uiState: SiteMonitorUiState) {
-        when (uiState) {
-            is SiteMonitorUiState.Preparing -> LoadingState()
-            is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded -> SiteMonitoringWebView(uiState)
-            is SiteMonitorUiState.Error -> SiteMonitorError(uiState)
-        }
-    }
-
-    @Composable
-    fun SiteMonitorError(error: SiteMonitorUiState.Error) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .padding(20.dp)
-                .fillMaxWidth()
-                .fillMaxHeight(),
-        ) {
-            Text(
-                text = uiStringText(uiString = error.title),
-                style = MaterialTheme.typography.h5,
-                textAlign = TextAlign.Center
-            )
-            Text(
-                text = uiStringText(uiString = error.description),
-                style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-            if (error.button != null) {
-                Button(
-                    modifier = Modifier.padding(top = 8.dp),
-                    onClick = error.button.click
-                ) {
-                    Text(text = uiStringText(uiString = error.button.text))
+    fun SiteMonitoringWebViewForMetric(uiState: SiteMonitorUiState) {
+        LazyColumn {
+            item {
+                when (uiState) {
+                    is SiteMonitorUiState.Preparing -> LoadingState()
+                    is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded -> SiteMonitoringWebViewMetric(uiState)
+                    is SiteMonitorUiState.Error -> SiteMonitorError(uiState)
                 }
             }
         }
     }
+
     @SuppressLint("SetJavaScriptEnabled")
     @Composable
-    fun SiteMonitoringWebView(uiState: SiteMonitorUiState) {
+    fun SiteMonitoringWebViewMetric(uiState: SiteMonitorUiState) {
         var webView: WebView? by remember { mutableStateOf(null) }
 
         if (uiState is SiteMonitorUiState.Prepared) {
@@ -201,6 +184,154 @@ val viewModel:SiteMonitorParentViewModel by viewModels()
                     )
                 }
             }
+        }
+    }
+
+    @Composable
+    fun SiteMonitorError(error: SiteMonitorUiState.Error) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .padding(20.dp)
+                .fillMaxWidth()
+                .fillMaxHeight(),
+        ) {
+            Text(
+                text = uiStringText(uiString = error.title),
+                style = MaterialTheme.typography.h5,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = uiStringText(uiString = error.description),
+                style = MaterialTheme.typography.body1,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+            if (error.button != null) {
+                Button(
+                    modifier = Modifier.padding(top = 8.dp),
+                    onClick = error.button.click
+                ) {
+                    Text(text = uiStringText(uiString = error.button.text))
+                }
+            }
+        }
+    }
+    @Composable
+    fun SiteMonitoringWebViewForTabPhp(uiState: SiteMonitorUiState) {
+        LazyColumn {
+            item {
+                when (uiState) {
+                    is SiteMonitorUiState.Preparing -> LoadingState()
+                    is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded -> SiteMonitoringWebViewPhp(uiState)
+                    is SiteMonitorUiState.Error -> SiteMonitorError(uiState)
+                }
+            }
+        }
+    }
+    @SuppressLint("SetJavaScriptEnabled")
+    @Composable
+    fun SiteMonitoringWebViewPhp(uiState: SiteMonitorUiState) {
+        var webView: WebView? by remember { mutableStateOf(null) }
+
+        if (uiState is SiteMonitorUiState.Prepared) {
+            val model = uiState.model
+            LaunchedEffect(true) {
+                webView = WebView(this@SiteMonitorParentActivity).apply {
+                    layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                    scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
+                    settings.userAgentString = model.userAgent
+                    settings.javaScriptEnabled = true
+                    settings.domStorageEnabled = true
+                    webViewClient = SiteMonitorWebViewClient(this@SiteMonitorParentActivity)
+                    postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, model.addressToLoad.toByteArray())
+                }
+            }
+        }
+
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            if (uiState is SiteMonitorUiState.Prepared) {
+                LoadingState()
+            } else {
+                webView?.let { theWebView ->
+                    AndroidView(
+                        factory = { theWebView },
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun SiteMonitoringWebViewForTabWeb(uiState: SiteMonitorUiState) {
+        LazyColumn {
+            item {
+                when (uiState) {
+                    is SiteMonitorUiState.Preparing -> LoadingState()
+                    is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded -> SiteMonitoringWebViewWeb(uiState)
+                    is SiteMonitorUiState.Error -> SiteMonitorError(uiState)
+                }
+            }
+        }
+    }
+    @SuppressLint("SetJavaScriptEnabled")
+    @Composable
+    fun SiteMonitoringWebViewWeb(uiState: SiteMonitorUiState) {
+        var webView: WebView? by remember { mutableStateOf(null) }
+
+        if (uiState is SiteMonitorUiState.Prepared) {
+            val model = uiState.model
+            LaunchedEffect(true) {
+                webView = WebView(this@SiteMonitorParentActivity).apply {
+                    layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                    scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
+                    settings.userAgentString = model.userAgent
+                    settings.javaScriptEnabled = true
+                    settings.domStorageEnabled = true
+                    webViewClient = SiteMonitorWebViewClient(this@SiteMonitorParentActivity)
+                    postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, model.addressToLoad.toByteArray())
+                }
+            }
+        }
+
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            if (uiState is SiteMonitorUiState.Prepared) {
+                LoadingState()
+            } else {
+                webView?.let { theWebView ->
+                    AndroidView(
+                        factory = { theWebView },
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun LoadingState() {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(48.dp).fillMaxSize()
+            )
+            Text(text = "Loading...", modifier = Modifier.padding(top = 8.dp))
         }
     }
 }
