@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -359,6 +360,7 @@ public class AccountStore extends Store {
     public static class WebauthnChallengeReceived extends OnChanged<AuthenticationError> {
         public WebauthnChallengeInfo mChallengeInfo;
         public String mUserId;
+        public String mRawChallengeInfoJson;
     }
 
     public static class FinishWebauthnChallengePayload {
@@ -1414,6 +1416,7 @@ public class AccountStore extends Store {
         mAuthenticator.makeRequest(payload.mUserId, payload.mWebauthnNonce,
                 (Response.Listener<WebauthnChallengeInfo>) info -> {
                     WebauthnChallengeReceived event = new WebauthnChallengeReceived();
+                    event.mRawChallengeInfoJson = new Gson().toJson(info);
                     event.mChallengeInfo = info;
                     event.mUserId = payload.mUserId;
                     emitChange(event);
