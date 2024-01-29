@@ -65,7 +65,13 @@ class SiteMonitorParentActivity: AppCompatActivity() {
         return requireNotNull(intent.getSerializableExtraCompat(WordPress.SITE)) as SiteModel
     }
 
+    private fun getInitialTab(): SiteMonitorType {
+        return intent?.getSerializableExtraCompat(ARG_SITE_MONITOR_TYPE_KEY) as SiteMonitorType?
+            ?: SiteMonitorType.METRICS
+    }
+
     companion object {
+        const val ARG_SITE_MONITOR_TYPE_KEY = "ARG_SITE_MONITOR_TYPE_KEY"
         const val SAVED_STATE_CONTAINER_KEY = "ContainerKey"
         const val SAVED_STATE_CURRENT_TAB_KEY = "CurrentTabKey"
     }
@@ -90,7 +96,7 @@ class SiteMonitorParentActivity: AppCompatActivity() {
                 SiteMonitorTabNavigation(selectedTab) { selectedTab ->
                     val item = enumValues<SiteMonitorTabItem>().find {
                         it.route == selectedTab
-                    } ?: SiteMonitorTabItem.Metrics
+                    } ?: initialItem(getInitialTab())
 
                     SiteMonitorFragmentContainer(
                         modifier = Modifier.fillMaxSize(),
@@ -102,6 +108,12 @@ class SiteMonitorParentActivity: AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun initialItem(type: SiteMonitorType): SiteMonitorTabItem {
+        return enumValues<SiteMonitorTabItem>().find {
+            it.siteMonitorType == type
+        } ?: SiteMonitorTabItem.Metrics
     }
 
     private fun getCommitFunction(
