@@ -1,0 +1,47 @@
+package org.wordpress.android.ui.sitemonitor
+
+import android.util.Log
+import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import javax.inject.Inject
+
+class SiteMonitorUtils @Inject constructor(
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+) {
+    fun getUserAgent() = WordPress.getUserAgent()
+
+    fun getAuthenticationPostData(authenticationUrl: String,
+                                  urlToLoad: String,
+                                  username: String,
+                                  password: String,
+                                  token: String): String =
+        WPWebViewActivity.getAuthenticationPostData(authenticationUrl, urlToLoad, username, password, token)
+
+
+    fun trackActivityLaunched() {
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SITE_MONITORING_SCREEN_SHOWN)
+    }
+
+    fun sanitizeSiteUrl(url: String?) = url?.replace(Regex(HTTP_PATTERN), "") ?: ""
+
+    fun urlToType(url: String): SiteMonitorType {
+        return when {
+            url.contains(PHP_LOGS_PATTERN) -> SiteMonitorType.PHP_LOGS
+            url.contains(WEB_SERVER_LOGS_PATTERN) -> SiteMonitorType.WEB_SERVER_LOGS
+            else -> SiteMonitorType.METRICS
+        }
+    }
+
+    fun trackTabLoaded(siteMonitorType: SiteMonitorType) {
+        // todo: need to set this up properly with track events
+        Log.i(javaClass.simpleName, "track TabLoaded with $siteMonitorType")
+    }
+
+    companion object {
+        const val HTTP_PATTERN = "(https?://)"
+        const val PHP_LOGS_PATTERN = "/php"
+        const val WEB_SERVER_LOGS_PATTERN = "/web"
+    }
+}

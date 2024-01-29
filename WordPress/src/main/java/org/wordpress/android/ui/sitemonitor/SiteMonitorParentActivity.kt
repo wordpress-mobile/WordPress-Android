@@ -2,23 +2,24 @@ package org.wordpress.android.ui.sitemonitor
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.SparseArray
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.material.TabRow
-import androidx.compose.material.Text
-import androidx.compose.material3.Tab
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -30,25 +31,49 @@ import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
 @AndroidEntryPoint
 class SiteMonitorParentActivity: AppCompatActivity() {
-    val viewModel:SiteMonitorParentViewModel by viewModels()
+    private var savedStateSparseArray = SparseArray<Fragment.SavedState>()
+    private var currentSelectItemId = 0
 
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (savedInstanceState != null) {
+            savedStateSparseArray = savedInstanceState.getSparseParcelableArray(
+                SAVED_STATE_CONTAINER_KEY
+            )
+                ?: savedStateSparseArray
+            currentSelectItemId = savedInstanceState.getInt(SAVED_STATE_CURRENT_TAB_KEY)
+        }
         setContent {
             AppTheme {
-                viewModel.start(getSite())
-                SiteMonitorScreen()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    SiteMonitorScreen()
+                }
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSparseParcelableArray(SAVED_STATE_CONTAINER_KEY, savedStateSparseArray)
+        outState.putInt(SAVED_STATE_CURRENT_TAB_KEY, currentSelectItemId)
     }
 
     private fun getSite(): SiteModel {
         return requireNotNull(intent.getSerializableExtraCompat(WordPress.SITE)) as SiteModel
     }
 
+    companion object {
+        const val SAVED_STATE_CONTAINER_KEY = "ContainerKey"
+        const val SAVED_STATE_CURRENT_TAB_KEY = "CurrentTabKey"
+    }
+
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    fun SiteMonitorScreen(modifier: Modifier = Modifier) {
+    fun SiteMonitorScreen() {
+        var selectedTab by rememberSaveable { mutableStateOf(SiteMonitorTabItem.Metrics.route) }
         Scaffold(
             topBar = {
                 MainTopAppBar(
@@ -56,47 +81,51 @@ class SiteMonitorParentActivity: AppCompatActivity() {
                     navigationIcon = NavigationIcons.BackIcon,
                     onNavigationIconClick = onBackPressedDispatcher::onBackPressed,
                 )
-            },
-            content = {
-                TabScreen(modifier = modifier)
             }
-        )
-    }
+        ) { padding ->
+            Column(modifier = Modifier.padding(padding)) {
+                SiteMonitorTabHeader { clickTab ->
+                    selectedTab = clickTab
+                }
+                SiteMonitorTabNavigation(selectedTab) { selectedTab ->
+                    val item = enumValues<SiteMonitorTabItem>().find {
+                        it.route == selectedTab
+                    } ?: SiteMonitorTabItem.Metrics
 
-    @Composable
-    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    fun TabScreen(modifier: Modifier = Modifier) {
-        var tabIndex by remember { mutableStateOf(0) }
-
-        val tabs = listOf(
-            R.string.site_monitoring_tab_title_metrics,
-            R.string.site_monitoring_tab_title_php_logs,
-            R.string.site_monitoring_tab_title_web_server_logs
-        )
-
-        Column(modifier = modifier.fillMaxWidth()) {
-            TabRow(
-                selectedTabIndex = tabIndex,
-                backgroundColor = MaterialTheme.colors.surface,
-                contentColor = MaterialTheme.colors.onSurface,
-            ) {
-                tabs.forEachIndexed { index, title ->
-                    Tab(text = { Text(stringResource(id = title)) },
-                        selected = tabIndex == index,
-                        onClick = { tabIndex = index }
+                    SiteMonitorFragmentContainer(
+                        modifier = Modifier.fillMaxSize(),
+                        commit = getCommitFunction(
+                            SiteMonitorTabFragment.newInstance(item.urlTemplate, item.siteMonitorType, getSite()),
+                            item.route
+                        )
                     )
                 }
-            }
-            when (tabIndex) {
-                0 -> SiteMonitoringWebView()
-                1 -> SiteMonitoringWebView()
-                2 -> SiteMonitoringWebView()
             }
         }
     }
 
-    @Composable
-    fun SiteMonitoringWebView(){
-        Text(text = "SiteMonitoringWebView")
+    private fun getCommitFunction(
+        fragment : Fragment,
+        tag: String
+    ): FragmentTransaction.(containerId: Int) -> Unit =
+        {
+            saveAndRetrieveFragment(supportFragmentManager, it, fragment)
+            replace(it, fragment, tag)
+        }
+
+    private fun saveAndRetrieveFragment(
+        supportFragmentManager: FragmentManager,
+        tabId: Int,
+        fragment: Fragment
+    ) {
+        val currentFragment = supportFragmentManager.findFragmentById(currentSelectItemId)
+        if (currentFragment != null) {
+            savedStateSparseArray.put(
+                currentSelectItemId,
+                supportFragmentManager.saveFragmentInstanceState(currentFragment)
+            )
+        }
+        currentSelectItemId = tabId
+        fragment.setInitialSavedState(savedStateSparseArray[currentSelectItemId])
     }
 }
