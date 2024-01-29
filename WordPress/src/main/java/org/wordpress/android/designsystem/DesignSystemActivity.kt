@@ -11,7 +11,7 @@ class DesignSystemActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DesignSystem()
+            DesignSystem(onBackPressedDispatcher::onBackPressed)
         }
     }
 
@@ -24,7 +24,7 @@ class DesignSystemActivity : LocaleAwareActivity() {
     
     @Composable
     fun PreviewDesignSystemActivity() {
-        DesignSystem()
+        DesignSystem(onBackPressedDispatcher::onBackPressed)
     }
 }
 
