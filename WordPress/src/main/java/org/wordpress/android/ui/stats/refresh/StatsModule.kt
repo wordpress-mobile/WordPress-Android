@@ -67,6 +67,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 const val INSIGHTS_USE_CASE = "InsightsUseCase"
+const val TRAFFIC_USE_CASE = "TrafficStatsUseCase"
 const val DAY_STATS_USE_CASE = "DayStatsUseCase"
 const val WEEK_STATS_USE_CASE = "WeekStatsUseCase"
 const val MONTH_STATS_USE_CASE = "MonthStatsUseCase"
@@ -266,6 +267,32 @@ class StatsModule {
     }
 
     /**
+     * Provides a singleton usecase that represents the TRAFFIC stats screen.
+     * @param useCasesFactories build the use cases for the DAYS granularity
+     */
+    @Provides
+    @Singleton
+    @Named(TRAFFIC_USE_CASE)
+    @Suppress("LongParameterList")
+    fun provideTrafficUseCase(
+        statsStore: StatsStore,
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        statsSiteProvider: StatsSiteProvider,
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
+        uiModelMapper: UiModelMapper
+    ): BaseListUseCase {
+        return BaseListUseCase(
+            bgDispatcher,
+            mainDispatcher,
+            statsSiteProvider,
+            useCasesFactories.map { it.build(DAYS, BLOCK) },
+            { statsStore.getTimeStatsTypes(it) },
+            uiModelMapper::mapTimeStats
+        )
+    }
+
+    /**
      * Provides a singleton usecase that represents the Day stats screen.
      * @param useCasesFactories build the use cases for the DAYS granularity
      */
@@ -376,6 +403,7 @@ class StatsModule {
     @Named(LIST_STATS_USE_CASES)
     fun provideListStatsUseCases(
         @Named(INSIGHTS_USE_CASE) insightsUseCase: BaseListUseCase,
+        @Named(TRAFFIC_USE_CASE) trafficUseCase: BaseListUseCase,
         @Named(DAY_STATS_USE_CASE) dayStatsUseCase: BaseListUseCase,
         @Named(WEEK_STATS_USE_CASE) weekStatsUseCase: BaseListUseCase,
         @Named(MONTH_STATS_USE_CASE) monthStatsUseCase: BaseListUseCase,
@@ -383,6 +411,7 @@ class StatsModule {
     ): Map<StatsSection, BaseListUseCase> {
         return mapOf(
             StatsSection.INSIGHTS to insightsUseCase,
+            StatsSection.TRAFFIC to trafficUseCase,
             StatsSection.DAYS to dayStatsUseCase,
             StatsSection.WEEKS to weekStatsUseCase,
             StatsSection.MONTHS to monthStatsUseCase,

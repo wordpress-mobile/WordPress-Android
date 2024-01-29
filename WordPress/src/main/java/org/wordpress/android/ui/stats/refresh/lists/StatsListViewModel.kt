@@ -20,6 +20,7 @@ import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.TOTAL_COMMENTS_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.TOTAL_FOLLOWERS_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.TOTAL_LIKES_DETAIL_USE_CASE
+import org.wordpress.android.ui.stats.refresh.TRAFFIC_USE_CASE
 import org.wordpress.android.ui.stats.refresh.VIEWS_AND_VISITORS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.WEEK_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.YEAR_STATS_USE_CASE
@@ -199,6 +200,13 @@ class InsightsListViewModel
     actionCardHandler
 )
 
+class TrafficListViewModel @Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(TRAFFIC_USE_CASE) statsUseCase: BaseListUseCase,
+    analyticsTracker: AnalyticsTrackerWrapper,
+    dateSelectorFactory: StatsDateSelector.Factory
+) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(TRAFFIC))
+
 class YearsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(YEAR_STATS_USE_CASE) statsUseCase: BaseListUseCase,
@@ -226,13 +234,6 @@ class DaysListViewModel @Inject constructor(
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory
 ) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(DAYS))
-
-class TrafficListViewModel @Inject constructor(
-    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Named(DAY_STATS_USE_CASE) statsUseCase: BaseListUseCase,
-    analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(TRAFFIC))
 
 // Using Weeks granularity on new insight details screens
 class InsightsDetailListViewModel @Inject constructor(
