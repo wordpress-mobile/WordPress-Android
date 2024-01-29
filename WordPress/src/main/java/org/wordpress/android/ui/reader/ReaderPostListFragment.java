@@ -2323,6 +2323,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     private void setIsUpdating(boolean isUpdating, UpdateAction updateAction) {
         if (!isAdded() || mIsUpdating == isUpdating) {
+            if (!isUpdating) {
+                mRecyclerView.setRefreshing(false);
+            }
             return;
         }
 
