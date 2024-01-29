@@ -95,7 +95,7 @@ class SiteMonitorTabFragment : Fragment(), SiteMonitorWebViewClient.SiteMonitorW
         val uiState by viewModel.uiState.collectAsState()
         when (uiState) {
             is SiteMonitorUiState.Preparing -> LoadingState()
-            is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded -> TheWebView(uiState)
+            is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded -> SiteMonitorWebView(uiState)
             is SiteMonitorUiState.Error -> SiteMonitorError(uiState as SiteMonitorUiState.Error)
         }
     }
@@ -134,7 +134,7 @@ class SiteMonitorTabFragment : Fragment(), SiteMonitorWebViewClient.SiteMonitorW
 
     @SuppressLint("SetJavaScriptEnabled")
     @Composable
-    private fun TheWebView(uiState: SiteMonitorUiState) {
+    private fun SiteMonitorWebView(uiState: SiteMonitorUiState) {
         var webView: WebView? by remember { mutableStateOf(null) }
 
         if (uiState is SiteMonitorUiState.Prepared) {
