@@ -240,7 +240,7 @@ class StatsViewAllFragment : Fragment(R.layout.stats_view_all_fragment) {
             navigator.navigate(activity, target)
         })
 
-        viewModel.selectedDate.observe(viewLifecycleOwner, { event ->
+        viewModel.selectedDate?.observe(viewLifecycleOwner, { event ->
             if (event != null) {
                 viewModel.onDateChanged()
             }
