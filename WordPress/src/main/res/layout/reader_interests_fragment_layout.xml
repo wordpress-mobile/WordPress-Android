@@ -83,7 +83,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/margin_extra_large"
                 android:layoutDirection="locale"
-                app:chipSpacing="@dimen/margin_small_medium"
+                app:chipSpacing="@dimen/margin_medium"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@id/guideline_beginning"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
@@ -116,7 +116,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/done_button"
-            style="@style/WordPress.ReaderPrimaryButton"
+            style="@style/Reader.Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/interests_done_button_margin"

@@ -47,7 +47,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/action_button_primary"
-            style="@style/SubfilterEmptyStateButton.Primary"
+            style="@style/Reader.Button.Primary"
             android:ellipsize="end"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -59,7 +59,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/action_button_secondary"
-            style="@style/SubfilterEmptyStateButton.Secondary"
+            style="@style/Reader.Button.Secondary"
             android:ellipsize="end"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"

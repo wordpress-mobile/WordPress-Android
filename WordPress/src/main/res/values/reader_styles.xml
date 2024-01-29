@@ -242,9 +242,36 @@
     </style>
 
     <!-- Buttons -->
-    <style name="WordPress.ReaderPrimaryButton" parent="WordPress.Button.Primary">
+    <style name="Reader.Button.Primary" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:textAllCaps">false</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:backgroundTint">@color/reader_button_primary_background_selector</item>
+        <item name="android:textColor">@color/reader_button_primary_text</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:paddingTop">@dimen/margin_large</item>
+        <item name="android:paddingBottom">@dimen/margin_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="Reader.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:paddingTop">@dimen/margin_large</item>
+        <item name="android:paddingBottom">@dimen/margin_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="rippleColor">@color/on_surface_disabled_transparent_selector</item>
+    </style>
+
+    <style name="Reader.Button.Error" parent="WordPress.Button.Primary">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_extra_medium_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_extra_medium_large</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
     </style>
 
     <style name="Reader.Follow.Button" parent="Widget.MaterialComponents.Button.OutlinedButton">
@@ -284,14 +311,6 @@
         <item name="android:paddingEnd">0dp</item>
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>
-    </style>
-
-    <style name="Reader.Button.Error" parent="WordPress.Button.Primary">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginEnd">@dimen/margin_extra_extra_medium_large</item>
-        <item name="android:layout_marginStart">@dimen/margin_extra_extra_medium_large</item>
-        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
     </style>
 
     <style name="WordPress.FollowComments.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
@@ -388,12 +407,20 @@
         <item name="chipCornerRadius">@dimen/reader_chip_radius</item>
     </style>
 
-    <style name="ReaderInterestFilterChip" parent="@style/ReaderChip">
-        <item name="chipMinHeight">@dimen/reader_chip_height</item>
-        <item name="chipStartPadding">@dimen/margin_medium_large</item>
-        <item name="chipEndPadding">@dimen/margin_medium_large</item>
-        <item name="android:textColor">@color/on_surface_on_primary_surface_selector</item>
-        <item name="chipBackgroundColor">@color/on_surface_disabled_primary_selector</item>
+    <style name="ReaderInterestFilterChip" parent="@style/ReaderChipNew">
+        <item name="android:checkable">true</item>
+        <item name="chipMinHeight">@dimen/reader_interest_filter_chip_height</item>
+        <item name="chipStartPadding">@dimen/margin_large</item>
+        <item name="chipEndPadding">@dimen/margin_large</item>
+        <item name="textStartPadding">0dp</item>
+        <item name="textEndPadding">0dp</item>
+        <item name="ensureMinTouchTargetSize">false</item>
+        <item name="chipCornerRadius">@dimen/reader_interest_filter_chip_radius</item>
+        <item name="android:textColor">@color/reader_interest_filter_chip_text_selector</item>
+        <item name="chipBackgroundColor">@color/reader_interest_filter_chip_background_selector</item>
+        <item name="chipStrokeColor">@color/reader_interest_filter_chip_stroke_selector</item>
+        <item name="chipStrokeWidth">@dimen/reader_interest_filter_chip_border</item>
+        <item name="rippleColor">@color/reader_interest_filter_chip_ripple_selector</item>
     </style>
 
     <style name="ReaderExpandableTagsViewChip" parent="@style/ReaderChip">

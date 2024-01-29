@@ -1684,13 +1684,16 @@ public class ReaderPostListFragment extends ViewPagerFragment
         int heightTabs = getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
         mActionableEmptyView.updateLayoutForSearch(false, 0);
         mActionableEmptyView.subtitle.setContentDescription(null);
-        boolean isSearching = false;
+        boolean isImageHidden = false;
         String title;
         String description = null;
         ActionableEmptyViewButtonType button = null;
 
         // Ensure the default image is reset for empty views before applying logic
-        mActionableEmptyView.image.setImageResource(R.drawable.img_illustration_empty_results_216dp);
+        mActionableEmptyView.image.setImageResource(R.drawable.illustration_reader_empty);
+
+        // TODO thomashortadev
+        //  try to quickly hack some way of making the button black
 
         if (shouldShowEmptyViewForSelfHostedCta()) {
             setEmptyTitleAndDescriptionForSelfHostedCta();
@@ -1713,6 +1716,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
             switch (getPostListType()) {
                 case TAG_FOLLOWED:
                     if (getCurrentTag().isFollowedSites() || getCurrentTag().isDefaultInMemoryTag()) {
+                        isImageHidden = true;
+
                         if (ReaderBlogTable.hasFollowedBlogs()) {
                             title = getString(R.string.reader_empty_followed_blogs_no_recent_posts_title);
                             description = getString(
@@ -1721,8 +1726,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             title = getString(R.string.reader_no_followed_blogs_title);
                             description = getString(R.string.reader_no_followed_blogs_description);
                         }
-                        mActionableEmptyView.image.setImageResource(
-                                R.drawable.img_illustration_following_empty_results_196dp);
+
                         button = ActionableEmptyViewButtonType.DISCOVER;
                     } else if (getCurrentTag().isPostsILike()) {
                         title = getString(R.string.reader_empty_posts_liked_title);
@@ -1738,7 +1742,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     title = getString(R.string.reader_no_posts_in_blog);
                     break;
                 case SEARCH_RESULTS:
-                    isSearching = true;
+                    isImageHidden = true;
 
                     if (isSearchViewEmpty() || TextUtils.isEmpty(mCurrentSearchQuery)) {
                         title = getString(R.string.reader_label_post_search_explainer);
@@ -1762,7 +1766,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
         }
 
-        setEmptyTitleDescriptionAndButton(title, description, button, isSearching);
+        setEmptyTitleDescriptionAndButton(title, description, button, isImageHidden);
     }
 
     /*
@@ -1813,12 +1817,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void setEmptyTitleDescriptionAndButton(@NonNull String title, String description,
-                                                   final ActionableEmptyViewButtonType button, boolean isSearching) {
+                                                   final ActionableEmptyViewButtonType button,
+                                                   boolean isImageHidden) {
         if (!isAdded()) {
             return;
         }
 
-        mActionableEmptyView.image.setVisibility(!isUpdating() && !isSearching ? View.VISIBLE : View.GONE);
+        mActionableEmptyView.image.setVisibility(!isUpdating() && !isImageHidden ? View.VISIBLE : View.GONE);
         mActionableEmptyView.title.setText(title);
 
         if (description == null) {
@@ -2286,11 +2291,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         if ((isBookmarksList()) && isPostAdapterEmpty() && isAdded()) {
                             setEmptyTitleAndDescriptionForBookmarksList();
                             mActionableEmptyView.image.setImageResource(
-                                    R.drawable.img_illustration_empty_results_216dp);
+                                    R.drawable.illustration_reader_empty);
                             showEmptyView();
                         } else if (getCurrentTag().isListTopic() && isPostAdapterEmpty() && isAdded()) {
                             mActionableEmptyView.image.setImageResource(
-                                    R.drawable.img_illustration_empty_results_216dp);
+                                    R.drawable.illustration_reader_empty);
                             mActionableEmptyView.title.setText(
                                     getString(R.string.reader_empty_blogs_posts_in_custom_list));
                             mActionableEmptyView.button.setVisibility(View.GONE);
