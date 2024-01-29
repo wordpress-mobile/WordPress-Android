@@ -43,7 +43,7 @@ class SiteMonitorTabFragment : Fragment(), SiteMonitorWebViewClient.SiteMonitorW
         savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
-            TheContent()
+            SiteMonitorTabContent()
         }
     }
 
@@ -91,7 +91,7 @@ class SiteMonitorTabFragment : Fragment(), SiteMonitorWebViewClient.SiteMonitorW
     }
 
     @Composable
-    private fun TheContent() {
+    private fun SiteMonitorTabContent() {
         val uiState by viewModel.uiState.collectAsState()
         when (uiState) {
             is SiteMonitorUiState.Preparing -> LoadingState()
