@@ -28,6 +28,7 @@ import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
+import org.wordpress.android.ui.sitemonitor.SiteMonitorType
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import javax.inject.Inject
@@ -162,6 +163,24 @@ class ActivityNavigator @Inject constructor() {
         val intent = Intent(context, SiteMonitorParentActivity::class.java)
         intent.putExtra(WordPress.SITE, site)
         context.startActivity(intent)
+    }
+
+    fun openSiteMonitoringInNewStack(context: Context, site: SiteModel?, siteMonitorType: SiteMonitorType = SiteMonitorType.METRICS) {
+        if (site == null) {
+            ToastUtils.showToast(context, R.string.site_monitoring_cannot_be_started, ToastUtils.Duration.SHORT)
+            return
+        }
+        val props = mutableMapOf("site_monitoring_type" to siteMonitorType.name as Any)
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_SITE_MONITORING, site, props)
+        val taskStackBuilder = TaskStackBuilder.create(context)
+        val mainActivityIntent = getMainActivityInNewStack(context)
+        val intent = Intent(context, SiteMonitorParentActivity::class.java)
+        intent.putExtra(WordPress.SITE, site)
+        intent.putExtra(SiteMonitorParentActivity.ARG_SITE_MONITOR_TYPE_KEY, siteMonitorType)
+        taskStackBuilder
+            .addNextIntent(mainActivityIntent)
+            .addNextIntent(intent)
+            .startActivities()
     }
 }
 
