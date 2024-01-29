@@ -127,9 +127,11 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
 
             bottomSheet?.let {
                 val behavior = BottomSheetBehavior.from(it)
-                val metrics = resources.displayMetrics
+                val metrics = it.context.resources.displayMetrics
                 behavior.peekHeight = metrics.heightPixels / 2
             }
+
+            dialog?.setOnShowListener(null)
         }
 
         viewModel.isTitleContainerVisible.observe(viewLifecycleOwner) { isVisible ->
