@@ -19,10 +19,15 @@ class SiteMonitorLinkHandler
     }
 
     override fun buildNavigateAction(uri: UriWrapper): DeepLinkNavigator.NavigateAction {
-        val targetHost = uri.pathSegments[1]
+        val targetHost = extractHost(uri)
         val site: SiteModel? = deepLinkUriUtils.hostToSite(targetHost)
         val siteMonitorType = urlToType(uri.toString())
         return DeepLinkNavigator.NavigateAction.OpenSiteMonitoringForSite(site, siteMonitorType)
+    }
+
+    private fun extractHost(uri: UriWrapper): String {
+        if (uri.pathSegments.size <= 1) return ""
+        return uri.pathSegments[1]
     }
 
     override fun stripUrl(uri: UriWrapper): String {
