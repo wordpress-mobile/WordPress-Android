@@ -3,7 +3,6 @@ package org.wordpress.android.login.webauthn
 import android.content.Context
 import android.os.CancellationSignal
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.credentials.CredentialManager
 import androidx.credentials.CredentialManagerCallback
 import androidx.credentials.GetCredentialRequest
@@ -45,6 +44,7 @@ class CredentialManagerHandler(
                     callback = object : CredentialManagerCallback<GetCredentialResponse, GetCredentialException> {
                         override fun onError(e: GetCredentialException) {
                             onFailure(e)
+                            Log.e("Credential Manager error", e.stackTraceToString())
                         }
 
                         override fun onResult(result: GetCredentialResponse) {
@@ -57,7 +57,7 @@ class CredentialManagerHandler(
                     }
             )
         } catch (e: GetCredentialException) {
-            Log.e("Error", e.stackTraceToString())
+            Log.e("Credential Manager error", e.stackTraceToString())
             onFailure(e)
         }
     }
