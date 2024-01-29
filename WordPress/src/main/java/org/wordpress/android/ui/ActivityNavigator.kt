@@ -165,7 +165,11 @@ class ActivityNavigator @Inject constructor() {
         context.startActivity(intent)
     }
 
-    fun openSiteMonitoringInNewStack(context: Context, site: SiteModel?, siteMonitorType: SiteMonitorType = SiteMonitorType.METRICS) {
+    fun openSiteMonitoringInNewStack(
+        context: Context,
+        site: SiteModel?,
+        siteMonitorType: SiteMonitorType = SiteMonitorType.METRICS
+    ) {
         if (site == null) {
             ToastUtils.showToast(context, R.string.site_monitoring_cannot_be_started, ToastUtils.Duration.SHORT)
             return
