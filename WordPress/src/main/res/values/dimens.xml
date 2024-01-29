@@ -232,7 +232,6 @@
     <dimen name="reader_more_image_extra_padding">12dp</dimen>
 
     <dimen name="reader_chip_radius">8dp</dimen>
-    <dimen name="reader_chip_height">44dp</dimen>
     <dimen name="reader_site_header_avatar_padding">2dp</dimen>
     <dimen name="reader_site_header_avatar_padding_new">1dp</dimen>
 
