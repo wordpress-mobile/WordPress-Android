@@ -9,8 +9,6 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TRAFFIC
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
@@ -38,8 +36,8 @@ constructor(
     }
 
     fun updateDateSelector() {
-        val shouldShowDateSelection = this.statsSection != INSIGHTS
-        val shouldShowGranularitySpinner = statsTrafficTabFeatureConfig.isEnabled() && this.statsSection == TRAFFIC
+        val shouldShowDateSelection = this.statsSection != StatsSection.INSIGHTS
+        val shouldShowGranularitySpinner = statsTrafficTabFeatureConfig.isEnabled() && this.statsSection == StatsSection.TRAFFIC
 
         val updatedDate = getDateLabelForSection()
         val currentState = dateSelectorData.value
@@ -87,7 +85,7 @@ constructor(
             StatsSection.TOTAL_FOLLOWERS_DETAIL,
             StatsSection.INSIGHTS,
             StatsSection.INSIGHT_DETAIL,
-            StatsSection.DAYS, TRAFFIC -> DAYS // Replace with TRAFFIC when it's implemented
+            StatsSection.DAYS, StatsSection.TRAFFIC -> DAYS // Replace with TRAFFIC when it's implemented
             StatsSection.WEEKS -> WEEKS
             StatsSection.MONTHS -> MONTHS
             StatsSection.ANNUAL_STATS,
