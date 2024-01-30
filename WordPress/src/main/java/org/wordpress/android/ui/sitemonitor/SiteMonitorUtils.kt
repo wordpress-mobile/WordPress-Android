@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.sitemonitor
 
-import android.util.Log
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.WPWebViewActivity
@@ -21,7 +20,6 @@ class SiteMonitorUtils @Inject constructor(
 
 
     fun trackActivityLaunched() {
-        Log.i(javaClass.simpleName, "track Site Monitor screen shown")
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SITE_MONITORING_SCREEN_SHOWN)
     }
 
@@ -36,7 +34,6 @@ class SiteMonitorUtils @Inject constructor(
     }
 
     fun trackTabLoaded(siteMonitorType: SiteMonitorType) {
-        Log.i(javaClass.simpleName, "track TabLoaded with $siteMonitorType")
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.SITE_MONITORING_TAB_SHOWN,
             mapOf(

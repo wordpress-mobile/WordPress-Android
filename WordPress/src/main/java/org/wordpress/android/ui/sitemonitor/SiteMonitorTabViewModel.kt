@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.sitemonitor
 
 import android.text.TextUtils
-import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +31,6 @@ class SiteMonitorTabViewModel @Inject constructor(
     val uiState: StateFlow<SiteMonitorUiState> = _uiState
 
     fun start(type: SiteMonitorType, urlTemplate: String, site: SiteModel) {
-        Log.i("Track", "TheViewModel start with $urlTemplate and $type")
         this.siteMonitorType = type
         this.urlTemplate = urlTemplate
         this.site = site
