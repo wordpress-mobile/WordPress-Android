@@ -8,17 +8,17 @@ import androidx.compose.runtime.Composable
 val DesignSystemLightPalette = lightColors(
     primaryForeground = DesignSystemAppColor.Black,
     primaryBackground = DesignSystemAppColor.White,
-    secondaryForeground = DesignSystemAppColor.Gray60,
-    secondaryBackground = DesignSystemAppColor.OffWhite,
-    tertiaryForeground = DesignSystemAppColor.Gray30,
-    tertiaryBackground = DesignSystemAppColor.Gray,
-    quartenaryBackground = DesignSystemAppColor.Gray2,
-    brandForeground = DesignSystemAppColor.JetpackGreen50,
-    brandBackground = DesignSystemAppColor.JetpackGreen50,
-    error = DesignSystemAppColor.Red50,
-    warning = DesignSystemAppColor.Orange40,
-    wp = DesignSystemAppColor.Blue50,
-    wpBackground = DesignSystemAppColor.Blue50
+    secondaryForeground = DesignSystemAppColor.GrayWIP2,
+    secondaryBackground = DesignSystemAppColor.Gray,
+    tertiaryForeground = DesignSystemAppColor.GrayWIP,
+    tertiaryBackground = DesignSystemAppColor.Gray10,
+    quartenaryBackground = DesignSystemAppColor.Gray30,
+    brandForeground = DesignSystemAppColor.Green,
+    brandBackground = DesignSystemAppColor.Green,
+    error = DesignSystemAppColor.Red,
+    warning = DesignSystemAppColor.Orange,
+    wp = DesignSystemAppColor.Blue,
+    wpBackground = DesignSystemAppColor.Blue
 
 )
 
@@ -26,17 +26,17 @@ val DesignSystemLightPalette = lightColors(
 val DesignSystemDarkPalette = darkColors(
     primaryForeground = DesignSystemAppColor.White,
     primaryBackground = DesignSystemAppColor.Black,
-    secondaryForeground = DesignSystemAppColor.OffWhite60,
-    secondaryBackground = DesignSystemAppColor.DarkGrey,
-    tertiaryForeground = DesignSystemAppColor.Gray,
-    tertiaryBackground = DesignSystemAppColor.Gray3,
-    quartenaryBackground = DesignSystemAppColor.Gray4,
-    brandForeground = DesignSystemAppColor.JetpackGreen30,
-    brandBackground = DesignSystemAppColor.JetpackGreen1,
-    error = DesignSystemAppColor.Red1,
-    warning = DesignSystemAppColor.Orange1,
-    wp = DesignSystemAppColor.Blue30,
-    wpBackground = DesignSystemAppColor.Blue1
+    secondaryForeground = DesignSystemAppColor.Gray20,
+    secondaryBackground = DesignSystemAppColor.Gray50,
+    tertiaryForeground = DesignSystemAppColor.Gray10,
+    tertiaryBackground = DesignSystemAppColor.Gray60,
+    quartenaryBackground = DesignSystemAppColor.Gray40,
+    brandForeground = DesignSystemAppColor.Green10,
+    brandBackground = DesignSystemAppColor.Green20,
+    error = DesignSystemAppColor.Red10,
+    warning = DesignSystemAppColor.Orange10,
+    wp = DesignSystemAppColor.Blue10,
+    wpBackground = DesignSystemAppColor.Blue20
 )
 
 @Composable
