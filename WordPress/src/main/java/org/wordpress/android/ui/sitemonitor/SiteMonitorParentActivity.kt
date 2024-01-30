@@ -28,15 +28,22 @@ import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SiteMonitorParentActivity: AppCompatActivity() {
+    @Inject
+    lateinit var siteMonitorUtils: SiteMonitorUtils
+
     private var savedStateSparseArray = SparseArray<Fragment.SavedState>()
     private var currentSelectItemId = 0
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        siteMonitorUtils.trackActivityLaunched()
+
         if (savedInstanceState != null) {
             savedStateSparseArray = savedInstanceState.getSparseParcelableArray(
                 SAVED_STATE_CONTAINER_KEY
@@ -97,6 +104,8 @@ class SiteMonitorParentActivity: AppCompatActivity() {
                     val item = enumValues<SiteMonitorTabItem>().find {
                         it.route == selectedTab
                     } ?: initialItem(getInitialTab())
+
+                    siteMonitorUtils.trackTabLoaded(item.siteMonitorType)
 
                     SiteMonitorFragmentContainer(
                         modifier = Modifier.fillMaxSize(),

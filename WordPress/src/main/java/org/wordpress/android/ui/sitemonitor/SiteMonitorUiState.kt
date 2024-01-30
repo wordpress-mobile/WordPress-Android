@@ -51,8 +51,8 @@ data class SiteMonitorModel(
     val url: String,
     val addressToLoad: String
 )
-enum class SiteMonitorType {
-    METRICS,
-    PHP_LOGS,
-    WEB_SERVER_LOGS
+enum class SiteMonitorType(val analyticsDescription: String) {
+    METRICS("metrics"),
+    PHP_LOGS("php_logs"),
+    WEB_SERVER_LOGS("server_logs")
 }
