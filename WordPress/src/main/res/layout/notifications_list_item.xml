@@ -76,8 +76,8 @@
                     android:ellipsize="end"
                     android:gravity="start"
                     android:maxLines="2"
+                    android:textAppearance="@style/WordPress.TextAppearance.NotificationItemTitle"
                     android:textAlignment="viewStart"
-                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     tools:text="Bob Ross commented on your post Happy Trees" />
 
             </FrameLayout>
@@ -91,7 +91,7 @@
                 android:ellipsize="end"
                 android:importantForAccessibility="no"
                 android:maxLines="2"
-                android:textAppearance="?attr/textAppearanceBody2"
+                android:textAppearance="@style/WordPress.TextAppearance.NotificationItemContent"
                 android:visibility="gone"
                 tools:text="What an amazing post!"
                 tools:visibility="visible" />
