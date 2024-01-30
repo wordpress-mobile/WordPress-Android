@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitemonitor
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,6 @@ import androidx.compose.material.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,7 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -38,6 +38,11 @@ import org.wordpress.android.ui.compose.utils.uiStringText
 
 @AndroidEntryPoint
 class SiteMonitorTabFragment : Fragment(), SiteMonitorWebViewClient.SiteMonitorWebViewClientListener {
+    val tabType by lazy { getSiteMonitorType() }
+
+    private val siteMonitorWebViewClient = SiteMonitorWebViewClient(this@SiteMonitorTabFragment, SiteMonitorType.PHP_LOGS)
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,20 +52,14 @@ class SiteMonitorTabFragment : Fragment(), SiteMonitorWebViewClient.SiteMonitorW
         }
     }
 
-    private val viewModel: SiteMonitorTabViewModel by viewModels()
+    override fun onResume() {
+        super.onResume()
+    }
+
+    private val viewModel: SiteMonitorParentViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel(getSiteMonitorType(), getUrlTemplate(), getSite())
-    }
-
-    @Suppress("DEPRECATION")
-    private fun getSite(): SiteModel {
-        return requireNotNull(arguments?.getSerializable(WordPress.SITE)) as SiteModel
-    }
-
-    private fun getUrlTemplate(): String {
-        return requireNotNull(arguments?.getString(KEY_URL_TEMPLATE))
     }
 
     @Suppress("DEPRECATION")
@@ -68,13 +67,11 @@ class SiteMonitorTabFragment : Fragment(), SiteMonitorWebViewClient.SiteMonitorW
         return requireNotNull(arguments?.getSerializable(KEY_SITE_MONITOR_TYPE)) as SiteMonitorType
     }
 
-    private fun initViewModel(type: SiteMonitorType, urlTemplate: String, site: SiteModel) {
-        viewModel.start(type, urlTemplate, site)
-    }
+    override fun onWebViewPageLoaded(url: String, tabType: SiteMonitorType) =
+        viewModel.onUrlLoaded(tabType, url)
 
-    override fun onWebViewPageLoaded(url: String)  = viewModel.onUrlLoaded()
-
-    override fun onWebViewReceivedError(url: String) = viewModel.onWebViewError()
+    override fun onWebViewReceivedError(url: String, tabType: SiteMonitorType) =
+        viewModel.onWebViewError(tabType)
 
     companion object {
         const val KEY_URL_TEMPLATE = "KEY_URL"
@@ -92,7 +89,7 @@ class SiteMonitorTabFragment : Fragment(), SiteMonitorWebViewClient.SiteMonitorW
 
     @Composable
     private fun SiteMonitorTabContent() {
-        val uiState by viewModel.uiState.collectAsState()
+        val uiState by viewModel.getUiState(tabType)
         when (uiState) {
             is SiteMonitorUiState.Preparing -> LoadingState()
             is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded -> SiteMonitorWebView(uiState)
@@ -135,7 +132,10 @@ class SiteMonitorTabFragment : Fragment(), SiteMonitorWebViewClient.SiteMonitorW
     @SuppressLint("SetJavaScriptEnabled")
     @Composable
     private fun SiteMonitorWebView(uiState: SiteMonitorUiState) {
+        Log.e("Track", "SiteMonitorWebView $uiState")
         var webView: WebView? by remember { mutableStateOf(null) }
+
+        Log.e("Track", "SiteMonitorWebView $webView")
 
         if (uiState is SiteMonitorUiState.Prepared) {
             val model = uiState.model
@@ -149,8 +149,23 @@ class SiteMonitorTabFragment : Fragment(), SiteMonitorWebViewClient.SiteMonitorW
                     settings.userAgentString = model.userAgent
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
-                    webViewClient = SiteMonitorWebViewClient(this@SiteMonitorTabFragment)
+                    webViewClient = SiteMonitorWebViewClient(this@SiteMonitorTabFragment, SiteMonitorType.PHP_LOGS)
                     postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, model.addressToLoad.toByteArray())
+                }
+            }
+        } else if (uiState is SiteMonitorUiState.Loaded) {
+            val model = uiState.model
+            LaunchedEffect(true) {
+                webView = WebView(requireContext()).apply {
+                    layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                    scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
+                    settings.userAgentString = model.userAgent
+                    settings.javaScriptEnabled = true
+                    settings.domStorageEnabled = true
+                    loadUrl(model.url)
                 }
             }
         }
