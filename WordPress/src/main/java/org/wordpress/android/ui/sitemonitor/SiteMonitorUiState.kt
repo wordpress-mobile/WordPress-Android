@@ -10,7 +10,7 @@ sealed class SiteMonitorUiState {
         val model: SiteMonitorModel
     ) : SiteMonitorUiState()
 
-    object Loaded : SiteMonitorUiState()
+    data class Loaded(val userAgent: String? = null) : SiteMonitorUiState()
 
     open class Error(
         val title: UiString,

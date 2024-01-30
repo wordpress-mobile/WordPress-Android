@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.SparseArray
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,6 +39,8 @@ class SiteMonitorParentActivity: AppCompatActivity() {
     private var savedStateSparseArray = SparseArray<Fragment.SavedState>()
     private var currentSelectItemId = 0
 
+    private val parentViewModel: SiteMonitorParentViewModel by viewModels()
+
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +56,7 @@ class SiteMonitorParentActivity: AppCompatActivity() {
         }
         setContent {
             AppTheme {
+                parentViewModel.start()
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {

@@ -20,4 +20,6 @@ class SiteMonitorMapper @Inject constructor(
     fun toNoNetworkError(buttonClick: () -> Unit) = SiteMonitorUiState.NoNetworkError(buttonClick = buttonClick)
 
     fun toGenericError(buttonClick: () -> Unit) = SiteMonitorUiState.GenericError(buttonClick =  buttonClick)
+
+    fun toLoaded() = SiteMonitorUiState.Loaded(siteMonitorUtils.getUserAgent())
 }
