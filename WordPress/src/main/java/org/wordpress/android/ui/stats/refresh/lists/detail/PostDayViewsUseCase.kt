@@ -59,15 +59,15 @@ class PostDayViewsUseCase
 
         return when {
             error != null -> {
-                selectedDateProvider.onDateLoadingFailed(DETAIL)
+                selectedDateProvider.onDateLoadingFailed(DAYS)
                 State.Error(error.message ?: error.type.name)
             }
             model != null && model.hasData() -> {
-                selectedDateProvider.onDateLoadingSucceeded(DETAIL)
+                selectedDateProvider.onDateLoadingSucceeded(DAYS)
                 State.Data(model)
             }
             else -> {
-                selectedDateProvider.onDateLoadingSucceeded(DETAIL)
+                selectedDateProvider.onDateLoadingSucceeded(DAYS)
                 State.Empty()
             }
         }
@@ -78,14 +78,14 @@ class PostDayViewsUseCase
         val visibleBarCount = uiState.visibleBarCount ?: domainModel.dayViews.size
 
         if (domainModel.hasData() && visibleBarCount > 0) {
-            val periodFromProvider = selectedDateProvider.getSelectedDate(DETAIL)
+            val periodFromProvider = selectedDateProvider.getSelectedDate(DAYS)
             val availablePeriods = domainModel.dayViews.takeLast(visibleBarCount)
             val availableDates = availablePeriods.map { statsDateFormatter.parseStatsDate(DAYS, it.period) }
 
             val selectedPeriod = periodFromProvider ?: availableDates.last()
             val index = availableDates.indexOf(selectedPeriod)
 
-            selectedDateProvider.selectDate(selectedPeriod, availableDates, DETAIL)
+            selectedDateProvider.selectDate(selectedPeriod, availableDates, DAYS)
 
             val shiftedIndex = index + domainModel.dayViews.size - visibleBarCount
             val selectedItem = domainModel.dayViews.getOrNull(shiftedIndex) ?: domainModel.dayViews.last()
@@ -107,7 +107,7 @@ class PostDayViewsUseCase
                 )
             )
         } else {
-            selectedDateProvider.onDateLoadingFailed(DETAIL)
+            selectedDateProvider.onDateLoadingFailed(DAYS)
             AppLog.e(T.STATS, "There is no data to be shown in the post day view block")
         }
         return items
@@ -129,7 +129,7 @@ class PostDayViewsUseCase
             val selectedDate = statsDateFormatter.parseStatsDate(DAYS, period)
             selectedDateProvider.selectDate(
                 selectedDate,
-                DETAIL
+                DAYS
             )
         }
     }
