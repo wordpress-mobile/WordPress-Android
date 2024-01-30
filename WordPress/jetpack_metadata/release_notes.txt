@@ -1,5 +1,6 @@
-- Get a WordPress plan with a free domain in the domain dashboard
-- Device keyboard remains when editing text blocks
-- Editor screen auto-scrolls to newly inserted blocks
-- Unselect blocks by pressing device’s back button
-- Share different media types to the app at once without crashing
+- Get notified when you’re working offline.
+- Image block uploads pause/resume with internet connection.
+- See custom gradient selections in the editor.
+- Fixed forward/back arrows for right-to-left readers.
+- Daily Prompt tags work properly.
+- Tap Site Domain cards to manage domains.

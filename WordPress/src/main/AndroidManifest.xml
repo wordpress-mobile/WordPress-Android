@@ -28,6 +28,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <!-- GCM all build types configuration -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -195,6 +196,11 @@
             android:name=".ui.prefs.AppSettingsActivity"
             android:configChanges="locale|orientation|screenSize"
             android:label="@string/me_btn_app_settings"
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity
+            android:name=".designsystem.DesignSystemActivity"
+            android:configChanges="locale|orientation|screenSize"
+            android:label="@string/preference_design_system"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
@@ -476,12 +482,22 @@
                 <data
                     android:host="wordpress.com"
                     android:pathPattern="/media/.*"
-                    android:scheme="http" />
+                    android:scheme="https" />
 
                 <data
                     android:host="wordpress.com"
                     android:pathPattern="/domains/manage"
                     android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/site-monitoring/.*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/site-monitoring/.*"
+                    android:scheme="http" />
 
             </intent-filter>
         </activity-alias>
@@ -823,11 +839,13 @@
         <!-- Services -->
         <service
             android:name=".ui.uploads.UploadService"
-            android:label="Upload Service" />
+            android:label="Upload Service"
+            android:foregroundServiceType="dataSync"/>
         <service
             android:name=".ui.media.services.MediaDeleteService"
             android:label="Media Delete Service"
             android:exported="false"
+            android:foregroundServiceType="dataSync"
             />
 
         <service
@@ -1048,7 +1066,7 @@
 
         <service
             android:name=".push.GCMMessageService"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -1113,6 +1131,11 @@
         <activity android:name=".ui.mysite.personalization.PersonalizationActivity"
             android:exported="false"
             android:label="@string/stats"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <activity android:name=".ui.sitemonitor.SiteMonitorParentActivity"
+            android:exported="false"
+            android:label="@string/site_monitoring"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <meta-data android:name="io.sentry.traces.activity.enable" android:value="false" />

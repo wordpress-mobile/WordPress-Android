@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.utils
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -63,4 +64,11 @@ fun StatsGranularity.toStatsSection(): StatsSection {
         MONTHS -> StatsSection.MONTHS
         YEARS -> StatsSection.YEARS
     }
+}
+
+fun StatsGranularity.toNameResource() = when {
+    this == DAYS -> R.string.stats_timeframe_by_day
+    this == WEEKS -> R.string.stats_timeframe_by_week
+    this == MONTHS -> R.string.stats_timeframe_by_month
+    else -> R.string.stats_timeframe_by_year
 }

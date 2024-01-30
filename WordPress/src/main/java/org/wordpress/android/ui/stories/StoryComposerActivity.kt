@@ -81,7 +81,6 @@ import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
-import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -346,7 +345,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                         it.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) -> {
                             data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)?.let {
                                 val uriList: List<Uri> = convertStringArrayIntoUrisList(it)
-                                storyEditorMedia.onPhotoPickerMediaChosen(uriList)
+                                storyEditorMedia.addNewMediaItemsToEditorAsync(uriList, false)
                             }
                         }
                         it.hasExtra(MediaBrowserActivity.RESULT_IDS) -> {
@@ -422,7 +421,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     val uriList: List<Uri> = convertStringArrayIntoUrisList(it)
 
                     if (uriList.isNotEmpty()) {
-                        storyEditorMedia.onPhotoPickerMediaChosen(uriList)
+                        storyEditorMedia.addNewMediaItemsToEditorAsync(uriList, false)
                     }
                 }
             }
@@ -486,10 +485,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // updateAndSavePostAsync(listener)
         // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
         listener?.onPostUpdatedFromUI(null)
-    }
-
-    override fun advertiseImageOptimization(listener: () -> Unit) {
-        WPMediaUtils.advertiseImageOptimization(this) { listener.invoke() }
     }
 
     override fun onMediaModelsCreatedFromOptimizedUris(oldUriToMediaFiles: Map<Uri, MediaModel>) {

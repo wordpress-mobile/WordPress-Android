@@ -1,0 +1,6 @@
+24.0:
+- Consigue un plan de WordPress con un dominio gratuito en el panel de administración de dominios.
+- El teclado del dispositivo se mantiene al editar bloques de texto.
+- La pantalla del editor se desplaza automáticamente a los bloques recién insertados.
+- Deselecciona los bloques pulsando el botón Atrás del dispositivo.
+- Comparte diferentes tipos de medios en la aplicación a la vez sin que se bloquee.

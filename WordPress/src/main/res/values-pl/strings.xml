@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-08-08 09:40:32+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: pl
 -->
 <resources>
@@ -344,7 +344,6 @@ Language: pl
     <string name="my_site_create_first_post_excerpt">Wpisy pojawiają się na stronie twojego blogu w odwrotnym porządku chronologicznym. Czas najwyższy aby podzielić się ze światem twoimi pomysłami!</string>
     <string name="my_site_post_card_draft_title">Pracuj nad wpisem roboczym</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Darmowy w pierwszym roku&lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Twoje domeny przekierują na twoją witrynę pod adresem %s</string>
     <string name="gutenberg_native_create_link">Stwórz odnośnik</string>
     <string name="domains_suggestions_select_domain">Wybierz domenę</string>
     <string name="domains_title">Domeny</string>
@@ -364,15 +363,10 @@ Language: pl
     <string name="domains_search_for_a_domain_button">Wyszukaj domenę</string>
     <string name="domains_free_plan_get_your_domain_caption">Domeny zakupione na tej witrynie przekierują odwiedzających na &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">W ramach swojego planu posiadasz darmową rejestrację przez jeden rok</string>
-    <string name="domains_manage_domains">Zarządzaj domenami</string>
     <string name="domains_add_a_domain">Dodaj domenę</string>
     <string name="domains_paid_plan_claim_your_domain_title">Uzyskaj swoją darmową domenę</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Wygasa w dniu %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Wygasa w dniu %s</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Zmień adres witryny</string>
-    <string name="domains_site_domains">Domeny twojej witryny</string>
-    <string name="domains_primary_site_address_chip">Główny adres witryny</string>
-    <string name="domains_primary_site_caption">Twój darmowy adres WordPress.com to</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s przez pierwszy rok &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /year&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /year&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_title">Masz niezapisane zmiany.</string>
@@ -397,7 +391,6 @@ Language: pl
     <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Ty oraz 1 blogujący&lt;/a&gt; lubicie to.</string>
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Ty&lt;/a&gt; to polubiłeś.</string>
     <string name="domains_free_plan_get_your_domain_title">Zdobądź własną domenę</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Nieznany błąd podczas pobierania rekomendowanego szablonu aplikacji</string>
     <string name="gutenberg_native_line_height">Interlinia</string>
     <string name="recommend_app_bad_format_response">Otrzymano nieprawidłową odpowiedź</string>
@@ -1557,11 +1550,9 @@ Language: pl
     <string name="link_open_new_window">Otwórz odnośnik w nowym oknie lub karcie</string>
     <string name="stats_widget_error_no_access_token">Aby przejrzeć statystyki witryny, zaloguj się do konta WordPress.com.</string>
     <string name="stats_widget_minified_name">W skrócie</string>
-    <string name="domains_suggestions_intro_title">Wybierz domenę premium</string>
     <string name="domains_suggestions_intro_description">To tu ludzie odnajdą ciebie w internecie.</string>
     <string name="post_list_search_nothing_found">Brak wpisów pasujących do twoich kryteriów wyszukiwania</string>
     <string name="stats_widget_all_time_insights_name">Od początku</string>
-    <string name="my_site_custom_domain_name">Wszystkie plany WordPress.com zawierają własną nazwę domeny. Zarejestruj własną darmową domenę premium w tym momencie.</string>
     <string name="post_list_search_prompt">Przeszukaj wpisy</string>
     <string name="stats_widget_today_insights_name">Dzisiaj</string>
     <string name="stats_widget_color_dark">Ciemny</string>

@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-03 14:54:08+0000
+Translation-Revision-Date: 2024-01-24 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: nl
 -->
 <resources>
+    <string name="stats_traffic">Bezoekersaantallen</string>
+    <string name="gutenberg_native_working_offline">Werk offline</string>
+    <string name="gutenberg_native_network_connection_re_established">Netwerk opnieuw verbonden</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">Netwerkverbinding verbroken, offline werken</string>
+    <string name="gutenberg_native_font_size_1_s">Lettergrootte, %1$s</string>
+    <string name="media_cannot_be_started">We kunnen momenteel geen media openen. Probeer het later opnieuw</string>
+    <string name="domains_upgrade_to_plan_caption">Krijg een jaar lang gratis domeinregistratie of een overdracht bij elk betaald jaarabonnement.</string>
+    <string name="domains_free_domain">Jouw gratis WordPress.com-domein</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary is aangebroken!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Aan de slag.</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Blogmeldingen inschakelen</string>
@@ -104,6 +112,7 @@ Language: nl
     <string name="contact_support_bot_ticket_loading">Een ondersteuningsticket aanmaken …</string>
     <string name="contact_support_question_six">Hoe kan ik mijn aangepaste domein gebruiken in de app?</string>
     <string name="contact_support_question_five">Ik ben mijn inloggegevens vergeten</string>
+    <string name="contact_support_question_three">Ik kan geen foto\'s en video\'s uploaden</string>
     <string name="contact_support_question_two">Help, mijn site is onbereikbaar!</string>
     <string name="contact_support_question_one">Wat is mijn siteadres?</string>
     <string name="contact_support_suggestions">Weet je niet wat je moet vragen?</string>
@@ -115,9 +124,6 @@ Language: nl
     <string name="campaign_detail_error_title">Er is iets fout gegaan</string>
     <string name="campaign_listing_page_error_title">Er is iets fout gegaan</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Er is iets fout gegaan, er kunnen geen campagnes worden opgehaald</string>
-    <string name="domain_transfer_card_cta">Je domeinen overdragen</string>
-    <string name="domain_transfer_card_caption">Zoals je misschien weet is Google Domains verkocht aan Squarespace. Draag nu je domeinen over aan WordPress.com, en we betalen alle overdrachtskosten plus een extra jaar van je domeinregistratie.</string>
-    <string name="domain_transfer_card_sub_title">Je Google-domeinen opnieuw opeisen</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Accounts koppelen</string>
     <string name="prepublishing_nudges_toolbar_title_social">Delen op social media</string>
     <string name="prepublishing_nudges_social_action">Delen op social media</string>
@@ -343,7 +349,7 @@ Language: nl
     <string name="stats_timeframe_last_seven_days">Afgelopen 7 dagen</string>
     <string name="weeks_quantity_other">%d weken</string>
     <string name="weeks_quantity_one">1 week</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Vanaf &lt;b&gt;DayOne&lt;/b&gt;</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">Van &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Herinner mij hier later aan</string>
     <string name="jetpack_feature_card_content_phase_three">Statistieken, Lezer, Meldingen en andere functies worden binnenkort verplaatst naar de mobiele Jetpack-app.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Schakel over naar de Jetpack-app</string>
@@ -765,7 +771,6 @@ Language: nl
     <string name="my_site_post_card_scheduled_title">Aankomende geplande berichten</string>
     <string name="my_site_post_card_draft_title">Werk aan een conceptbericht</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis voor het eerste jaar &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /jaar&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Je domeinen zullen omleiden naar je site op %s</string>
     <string name="gutenberg_native_create_link">Maak link</string>
     <string name="domains_suggestions_select_domain">Selecteer domein</string>
     <string name="domains_title">Domeinen</string>
@@ -786,14 +791,9 @@ Language: nl
     <string name="domains_free_plan_get_your_domain_caption">Domeinen aangeschaft op deze site, zullen bezoekers omleiden naar &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Je hebt een gratis één-jaar domein registratie met je abonnement</string>
     <string name="domains_paid_plan_claim_your_domain_title">Claim je gratis domein</string>
-    <string name="domains_manage_domains">Beheer domeinen</string>
     <string name="domains_add_a_domain">Voeg een domein toe</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Verloopt op %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Verloopt op %s</string>
-    <string name="domains_site_domains">Je site domeinen</string>
-    <string name="domains_primary_site_address_chip">Primair site adres</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Site adres wijzigen</string>
-    <string name="domains_primary_site_caption">Je gratis WordPress.com adres is</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s voor het eerste jaar &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /jaar&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /jaar&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Wil je ze negeren?</string>
@@ -819,7 +819,6 @@ Language: nl
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Je&lt;/a&gt; vindt dit leuk.</string>
     <string name="gutenberg_native_line_height">Regelafstand</string>
     <string name="domains_free_plan_get_your_domain_title">Krijg je domein</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Onbekende fout bij het ophalen van aanbevolen app template</string>
     <string name="recommend_app_bad_format_response">Ongeldige reactie ontvangen</string>
     <string name="recommend_app_null_response">Geen reactie ontvangen</string>
@@ -2017,8 +2016,8 @@ Language: nl
     <string name="post_list_search_nothing_found">Geen berichten voldoen aan je zoekopdracht</string>
     <string name="post_list_search_prompt">Berichten zoeken</string>
     <string name="domains_suggestions_intro_description">Dit is waar mensen je op internet zullen vinden.</string>
-    <string name="domains_suggestions_intro_title">Kies een premium domeinnaam</string>
-    <string name="my_site_custom_domain_name">Alle WordPress.com abonnementen bevatten een eigen domeinnaam. Registreer nu je gratis premium domein.</string>
+    <string name="domains_suggestions_intro_title">Een aangepaste domeinnaam kiezen</string>
+    <string name="my_site_custom_domain_name">Alle jaarlijkse abonnementen van WordPress.com zijn inclusief aangepaste domeinnaam. Registreer nu je gratis domein.</string>
     <string name="stats_widget_minified_name">In een oogopslag</string>
     <string name="stats_widget_today_insights_name">Vandaag</string>
     <string name="stats_widget_all_time_insights_name">All-time</string>

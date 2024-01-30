@@ -133,10 +133,6 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                     listener?.onPostUpdatedFromUI(null)
                 }
 
-                override fun advertiseImageOptimization(listener: () -> Unit) {
-                    // no op
-                }
-
                 override fun onMediaModelsCreatedFromOptimizedUris(oldUriToMediaFiles: Map<Uri, MediaModel>) {
                     // in order to support Story editing capabilities, we save a serialized version of the Story slides
                     // after their composedFrameFiles have been processed.
