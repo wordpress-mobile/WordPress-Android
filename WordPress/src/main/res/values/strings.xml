@@ -4857,4 +4857,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="site_monitoring_tab_title_metrics">Metrics</string>
     <string name="site_monitoring_tab_title_php_logs">PHP Logs</string>
     <string name="site_monitoring_tab_title_web_server_logs">Web Server Logs</string>
+    <string name="site_monitoring_cannot_be_started">We cannot open site monitoring at the moment. Please try again later</string>
 </resources>
