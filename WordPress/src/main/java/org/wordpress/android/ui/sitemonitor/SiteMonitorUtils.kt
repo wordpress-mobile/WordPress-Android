@@ -21,6 +21,7 @@ class SiteMonitorUtils @Inject constructor(
 
 
     fun trackActivityLaunched() {
+        Log.i(javaClass.simpleName, "track Site Monitor screen shown")
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SITE_MONITORING_SCREEN_SHOWN)
     }
 
@@ -35,13 +36,18 @@ class SiteMonitorUtils @Inject constructor(
     }
 
     fun trackTabLoaded(siteMonitorType: SiteMonitorType) {
-        // todo: need to set this up properly with track events
         Log.i(javaClass.simpleName, "track TabLoaded with $siteMonitorType")
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.SITE_MONITORING_TAB_SHOWN,
+            mapOf(
+                TAB_TRACK_KEY to siteMonitorType
+            ))
     }
 
     companion object {
         const val HTTP_PATTERN = "(https?://)"
         const val PHP_LOGS_PATTERN = "/php"
         const val WEB_SERVER_LOGS_PATTERN = "/web"
+        const val TAB_TRACK_KEY = "tab"
     }
 }

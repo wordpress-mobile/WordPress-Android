@@ -106,7 +106,6 @@ class SiteMonitorTabViewModel @Inject constructor(
     }
 
     fun onUrlLoaded() {
-        siteMonitorUtils.trackTabLoaded(siteMonitorType)
         postUiState(SiteMonitorUiState.Loaded)
     }
 
