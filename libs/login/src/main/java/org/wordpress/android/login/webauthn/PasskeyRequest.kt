@@ -12,12 +12,11 @@ import androidx.credentials.GetPublicKeyCredentialOption
 import androidx.credentials.PublicKeyCredential
 import androidx.credentials.exceptions.GetCredentialException
 import org.wordpress.android.fluxc.store.AccountStore.FinishWebauthnChallengePayload
-import org.wordpress.android.fluxc.store.AccountStore.WebauthnChallengeReceived
 import java.util.concurrent.Executors
 
 class PasskeyRequest(
     context: Context,
-    challengeEvent: WebauthnChallengeReceived,
+    requestData: PasskeyRequestData,
     onSuccess: (FinishWebauthnChallengePayload) -> Unit,
     onFailure: (Throwable) -> Unit
 ) {
@@ -25,7 +24,7 @@ class PasskeyRequest(
         val executor = Executors.newSingleThreadExecutor()
         val signal = CancellationSignal()
         val getCredRequest = GetCredentialRequest(
-                listOf(GetPasswordOption(), GetPublicKeyCredentialOption(challengeEvent.mRawChallengeInfoJson))
+                listOf(GetPasswordOption(), GetPublicKeyCredentialOption(requestData.requestJson))
         )
 
         val passkeyRequestCallback = object : CredentialManagerCallback<GetCredentialResponse, GetCredentialException> {
@@ -36,8 +35,8 @@ class PasskeyRequest(
 
             override fun onResult(result: GetCredentialResponse) {
                 FinishWebauthnChallengePayload().apply {
-                    mUserId = challengeEvent.mUserId
-                    mTwoStepNonce = challengeEvent.mChallengeInfo.twoStepNonce
+                    mUserId = requestData.userId
+                    mTwoStepNonce = requestData.twoStepNonce
                     mClientData = result.toJson().orEmpty()
                 }.let { onSuccess(it) }
             }
@@ -66,6 +65,12 @@ class PasskeyRequest(
             }
         }
     }
+
+    data class PasskeyRequestData(
+        val userId: String,
+        val twoStepNonce: String,
+        val requestJson: String
+    )
 
     companion object {
         const val TAG = "PasskeyRequest"

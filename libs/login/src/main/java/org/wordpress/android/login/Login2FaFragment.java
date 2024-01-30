@@ -48,6 +48,7 @@ import org.wordpress.android.fluxc.store.AccountStore.WebauthnPasskeyAuthenticat
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.webauthn.PasskeyRequest;
 import org.wordpress.android.login.webauthn.Fido2ClientHandler;
+import org.wordpress.android.login.webauthn.PasskeyRequest.PasskeyRequestData;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
 import org.wordpress.android.util.AppLog;
@@ -629,9 +630,15 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             return;
         }
 
+        PasskeyRequestData passkeyRequestData = new PasskeyRequestData(
+                event.mUserId,
+                event.mChallengeInfo.getTwoStepNonce(),
+                event.mRawChallengeInfoJson
+        );
+
         new PasskeyRequest(
                 requireContext(),
-                event,
+                passkeyRequestData,
                 result -> {
                     mDispatcher.dispatch(
                             AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(
