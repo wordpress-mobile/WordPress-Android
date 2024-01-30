@@ -631,9 +631,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         new PasskeyRequest(
                 requireContext(),
-                event.mUserId,
-                event.mChallengeInfo.getTwoStepNonce(),
-                event.mRawChallengeInfoJson,
+                event,
                 result -> {
                     mDispatcher.dispatch(
                             AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(
