@@ -958,6 +958,10 @@
     <string name="preference_design_system" translatable="false">Design System</string>
     <string name="design_system_foundation" translatable="false">Foundation</string>
     <string name="design_system_components" translatable="false">Components</string>
+    <string name="design_system_foundation_colors" translatable="false">Colors</string>
+    <string name="design_system_foundation_fonts" translatable="false">Fonts</string>
+    <string name="design_system_foundation_lengths" translatable="false">Lengths</string>
+    <string name="design_system_components_dsbutton" translatable="false">DSButton</string>
 
     <!-- stats -->
     <string name="stats">Stats</string>
@@ -2987,12 +2991,6 @@
     <string name="permission_camera">Camera</string>
     <string name="permission_microphone">Microphone</string>
 
-    <!-- Image Optimization promo -->
-    <string name="leave_on">Yes, leave on</string>
-    <string name="turn_off">No, turn off</string>
-    <string name="image_optimization_popup_title">Keep optimizing images?</string>
-    <string name="image_optimization_popup_desc">Image optimization shrinks images for faster uploading.\n\nThis option is enabled by default, but you can change it in the app settings at any time.</string>
-
     <!-- Login -->
     <!-- If any of these appear unused, be sure to check the same string in the login library -
     it may be used there and keeping it here is required for translation. -->
@@ -4856,4 +4854,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Site Monitoring -->
     <string name="site_monitoring">Site Monitoring</string>
+    <string name="site_monitoring_tab_title_metrics">Metrics</string>
+    <string name="site_monitoring_tab_title_php_logs">PHP Logs</string>
+    <string name="site_monitoring_tab_title_web_server_logs">Web Server Logs</string>
+    <string name="site_monitoring_cannot_be_started">We cannot open site monitoring at the moment. Please try again later</string>
 </resources>

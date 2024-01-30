@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-17 21:47:26+0000
+Translation-Revision-Date: 2024-01-24 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: nl
 -->
 <resources>
+    <string name="stats_traffic">Bezoekersaantallen</string>
     <string name="gutenberg_native_working_offline">Werk offline</string>
     <string name="gutenberg_native_network_connection_re_established">Netwerk opnieuw verbonden</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">Netwerkverbinding verbroken, offline werken</string>
@@ -111,6 +112,7 @@ Language: nl
     <string name="contact_support_bot_ticket_loading">Een ondersteuningsticket aanmaken …</string>
     <string name="contact_support_question_six">Hoe kan ik mijn aangepaste domein gebruiken in de app?</string>
     <string name="contact_support_question_five">Ik ben mijn inloggegevens vergeten</string>
+    <string name="contact_support_question_three">Ik kan geen foto\'s en video\'s uploaden</string>
     <string name="contact_support_question_two">Help, mijn site is onbereikbaar!</string>
     <string name="contact_support_question_one">Wat is mijn siteadres?</string>
     <string name="contact_support_suggestions">Weet je niet wat je moet vragen?</string>
@@ -347,6 +349,7 @@ Language: nl
     <string name="stats_timeframe_last_seven_days">Afgelopen 7 dagen</string>
     <string name="weeks_quantity_other">%d weken</string>
     <string name="weeks_quantity_one">1 week</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">Van &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Herinner mij hier later aan</string>
     <string name="jetpack_feature_card_content_phase_three">Statistieken, Lezer, Meldingen en andere functies worden binnenkort verplaatst naar de mobiele Jetpack-app.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Schakel over naar de Jetpack-app</string>

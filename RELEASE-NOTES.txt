@@ -7,6 +7,11 @@
 24.1
 -----
 * [**] Disabled the ability of creating new Story posts. [#20014]
+* [**] Disable Story block [https://github.com/wordpress-mobile/WordPress-Android/pull/20005]
+
+24.0.2
+-----
+* [**] Fix Aztec editor crash when losing or gaining network connectivity [https://github.com/wordpress-mobile/WordPress-Android/pull/20053]
 
 24.0.1
 -----

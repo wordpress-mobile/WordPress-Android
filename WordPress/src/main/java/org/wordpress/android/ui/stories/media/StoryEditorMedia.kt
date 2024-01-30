@@ -22,14 +22,12 @@ import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPo
 import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState.AddingMultipleMediaToStory
 import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState.AddingSingleMediaToStory
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
 class StoryEditorMedia @Inject constructor(
-    private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase,
     private val addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
@@ -55,20 +53,6 @@ class StoryEditorMedia @Inject constructor(
         _uiState.value = AddingMediaToStoryIdle
     }
 
-    // region Adding new media to a post
-    fun advertiseImageOptimisationAndAddMedia(uriList: List<Uri>) {
-        if (mediaUtilsWrapper.shouldAdvertiseImageOptimization()) {
-            editorMediaListener.advertiseImageOptimization {
-                addNewMediaItemsToEditorAsync(
-                    uriList,
-                    false
-                )
-            }
-        } else {
-            addNewMediaItemsToEditorAsync(uriList, false)
-        }
-    }
-
     fun addNewMediaItemsToEditorAsync(uriList: List<Uri>, freshlyTaken: Boolean) {
         launch {
             _uiState.value = if (uriList.size > 1) {
@@ -88,15 +72,6 @@ class StoryEditorMedia @Inject constructor(
                 _snackBarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.gallery_error)))
             }
             _uiState.value = AddingMediaToStoryIdle
-        }
-    }
-
-    fun onPhotoPickerMediaChosen(uriList: List<Uri>) {
-        val onlyVideos = uriList.all { mediaUtilsWrapper.isVideo(it.toString()) }
-        if (onlyVideos) {
-            addNewMediaItemsToEditorAsync(uriList, false)
-        } else {
-            advertiseImageOptimisationAndAddMedia(uriList)
         }
     }
     // endregion

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-17 21:45:57+0000
+Translation-Revision-Date: 2024-01-25 19:56:22+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">En attente de connexion</string>
+    <string name="stats_traffic">Trafic</string>
     <string name="gutenberg_native_working_offline">Travail hors ligne</string>
     <string name="gutenberg_native_network_connection_re_established">Connexion réseau rétablie</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">Perte de la connexion réseau, travail hors ligne</string>
@@ -402,6 +404,7 @@ Language: fr
     <string name="stats_timeframe_last_seven_days">7 derniers jours</string>
     <string name="weeks_quantity_other">%d semaines</string>
     <string name="weeks_quantity_one">1 semaine</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">De &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Me rappeler ultérieurement</string>
     <string name="jetpack_feature_card_content_phase_three">Les statistiques, le lecteur, les notifications et d’autres fonctionnalités seront bientôt transférées vers l’application mobile Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Passer à l’application Jetpack</string>
@@ -1641,7 +1644,7 @@ Language: fr
     <string name="prepublishing_tags_description">Les étiquettes indiquent aux lecteurs de quoi traite l’article.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Date de publication</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Ajouter des étiquettes</string>
-    <string name="prepublishing_nudges_back_button">Précédent</string>
+    <string name="prepublishing_nudges_back_button">Retour</string>
     <string name="prepublishing_nudges_home_save_button">Enregistrer maintenant</string>
     <string name="prepublishing_nudges_home_submit_button">Soumettre maintenant</string>
     <string name="prepublishing_nudges_home_schedule_button">Planifier maintenant</string>
