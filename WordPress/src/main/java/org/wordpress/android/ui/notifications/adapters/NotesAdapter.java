@@ -277,18 +277,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         String noteSnippet = note.getCommentSubject();
 
         if (!TextUtils.isEmpty(noteSnippet)) {
-            // handle the max lines for the view of detail
-            noteViewHolder.mTxtSubject.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                @Override public boolean onPreDraw() {
-                    noteViewHolder.mTxtSubject.getViewTreeObserver().removeOnPreDrawListener(this);
-                    if (noteViewHolder.mTxtSubject.getLineCount() == 2) {
-                        noteViewHolder.mTxtDetail.setMaxLines(1);
-                    } else {
-                        noteViewHolder.mTxtDetail.setMaxLines(2);
-                    }
-                    return false;
-                }
-            });
+            handleMaxLines(noteViewHolder.mTxtSubject, noteViewHolder.mTxtDetail);
             noteViewHolder.mTxtDetail.setText(noteSnippet);
             noteViewHolder.mTxtDetail.setVisibility(View.VISIBLE);
         } else {
@@ -308,6 +297,20 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         if (mOnLoadMoreListener != null && position >= getItemCount() - 1) {
             mOnLoadMoreListener.onLoadMore(note.getTimestamp());
         }
+    }
+
+    private void handleMaxLines(final TextView subject, final TextView detail) {
+        subject.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override public boolean onPreDraw() {
+                subject.getViewTreeObserver().removeOnPreDrawListener(this);
+                if (subject.getLineCount() == 2) {
+                    detail.setMaxLines(1);
+                } else {
+                    detail.setMaxLines(2);
+                }
+                return false;
+            }
+        });
     }
 
     private int getPositionForNoteUnfiltered(String noteId) {
