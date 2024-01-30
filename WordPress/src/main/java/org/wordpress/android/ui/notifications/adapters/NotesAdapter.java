@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.graphics.ColorUtils;
@@ -22,7 +23,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.models.NoticonUtils;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
@@ -32,7 +32,6 @@ import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
-import org.wordpress.android.widgets.BadgedImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,7 +50,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     private final ArrayList<Note> mFilteredNotes = new ArrayList<>();
     @Inject protected ImageManager mImageManager;
     @Inject protected NotificationsUtilsWrapper mNotificationsUtilsWrapper;
-    @Inject protected NoticonUtils mNoticonUtils;
 
     public enum FILTERS {
         FILTER_ALL,
@@ -290,19 +288,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         String avatarUrl = GravatarUtils.fixGravatarUrl(note.getIconURL(), mAvatarSz);
         mImageManager.loadIntoCircle(noteViewHolder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
 
-        boolean isUnread = note.isUnread();
-
-        int gridicon = mNoticonUtils.noticonToGridicon(note.getNoticonCharacter());
-        noteViewHolder.mImgAvatar.setBadgeIcon(gridicon);
-        if (commentStatus == CommentStatus.UNAPPROVED) {
-            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_warning_dark);
-        } else if (isUnread) {
-            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_note_avatar_badge);
-        } else {
-            noteViewHolder.mImgAvatar.setBadgeBackground(R.drawable.bg_oval_neutral_20);
-        }
-
-        if (isUnread) {
+        if (note.isUnread()) {
             noteViewHolder.mContentView.setBackgroundColor(mColorUnread);
         } else {
             noteViewHolder.mContentView.setBackgroundColor(0);
@@ -371,7 +357,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         private final TextView mTxtSubject;
         private final TextView mTxtSubjectNoticon;
         private final TextView mTxtDetail;
-        private final BadgedImageView mImgAvatar;
+        private final ImageView mImgAvatar;
 
         NoteViewHolder(View view) {
             super(view);
