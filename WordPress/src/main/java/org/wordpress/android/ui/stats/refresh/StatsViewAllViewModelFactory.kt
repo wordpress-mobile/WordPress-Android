@@ -29,7 +29,6 @@ import org.wordpress.android.ui.stats.StatsViewType.SEARCH_TERMS
 import org.wordpress.android.ui.stats.StatsViewType.TAGS_AND_CATEGORIES
 import org.wordpress.android.ui.stats.StatsViewType.TOP_POSTS_AND_PAGES
 import org.wordpress.android.ui.stats.StatsViewType.VIDEO_PLAYS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostAverageViewsPerDayUseCase
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostMonthsAndYearsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostRecentWeeksUseCase
@@ -55,7 +54,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import java.security.InvalidParameterException
 import javax.inject.Inject
 import javax.inject.Named
@@ -106,7 +104,7 @@ class StatsViewAllViewModelFactory(
             val dateSelector = if (granularity == null) {
                 null
             } else {
-                dateSelectorFactory.build(granularity.toStatsSection())
+                dateSelectorFactory.build(granularity)
             }
             return StatsViewAllViewModelFactory(
                 mainDispatcher,
@@ -127,7 +125,7 @@ class StatsViewAllViewModelFactory(
                 bgDispatcher,
                 useCase,
                 statsSiteProvider,
-                dateSelectorFactory.build(StatsSection.ANNUAL_STATS),
+                dateSelectorFactory.build(StatsGranularity.YEARS),
                 R.string.stats_insights_annual_site_stats
             )
         }

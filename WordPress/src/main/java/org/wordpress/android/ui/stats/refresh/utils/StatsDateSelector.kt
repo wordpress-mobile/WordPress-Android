@@ -3,12 +3,7 @@ package org.wordpress.android.ui.stats.refresh.utils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
@@ -20,45 +15,39 @@ constructor(
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val siteProvider: StatsSiteProvider,
-    private val statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig,
-    private val statsSection: StatsSection
+    private val statsGranularity: StatsGranularity,
+    private val isGranularitySpinnerVisible: Boolean,
+    private val statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
 ) {
     private val _dateSelectorUiModel = MutableLiveData<DateSelectorUiModel>()
     val dateSelectorData: LiveData<DateSelectorUiModel> = _dateSelectorUiModel
 
-    val selectedDate = selectedDateProvider.granularSelectedDateChanged(this.statsSection)
+    val selectedDate = selectedDateProvider.granularSelectedDateChanged(statsGranularity)
         .perform {
             updateDateSelector()
         }
 
     fun start(startDate: SelectedDate) {
-        selectedDateProvider.updateSelectedDate(startDate, statsSection)
+        selectedDateProvider.updateSelectedDate(startDate, statsGranularity)
     }
 
     fun updateDateSelector() {
-        val shouldShowDateSelection = this.statsSection != StatsSection.INSIGHTS
-        val shouldShowGranularitySpinner = statsTrafficTabFeatureConfig.isEnabled() && this.statsSection == StatsSection.TRAFFIC
-
         val updatedDate = getDateLabelForSection()
         val currentState = dateSelectorData.value
-        if (!shouldShowDateSelection && currentState?.isVisible != false) {
-            emitValue(currentState, DateSelectorUiModel(false))
+        val timeZone = if (statsTrafficTabFeatureConfig.isEnabled()) {
+            null
         } else {
-            val timeZone = if (statsTrafficTabFeatureConfig.isEnabled()) {
-                null
-            } else {
-                statsDateFormatter.printTimeZone(siteProvider.siteModel)
-            }
-            val updatedState = DateSelectorUiModel(
-                shouldShowDateSelection,
-                shouldShowGranularitySpinner,
-                updatedDate,
-                enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsSection),
-                enableSelectNext = selectedDateProvider.hasNextDate(statsSection),
-                timeZone = timeZone
-            )
-            emitValue(currentState, updatedState)
+            statsDateFormatter.printTimeZone(siteProvider.siteModel)
         }
+        val updatedState = DateSelectorUiModel(
+            true,
+            isGranularitySpinnerVisible,
+            updatedDate,
+            enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsGranularity),
+            enableSelectNext = selectedDateProvider.hasNextDate(statsGranularity),
+            timeZone = timeZone
+        )
+        emitValue(currentState, updatedState)
     }
 
     private fun emitValue(
@@ -72,41 +61,25 @@ constructor(
 
     private fun getDateLabelForSection(): String? {
         return statsDateFormatter.printGranularDate(
-            selectedDateProvider.getSelectedDate(statsSection) ?: selectedDateProvider.getCurrentDate(),
-            toStatsGranularity()
+            selectedDateProvider.getSelectedDate(statsGranularity) ?: selectedDateProvider.getCurrentDate(),
+            statsGranularity
         )
     }
 
-    private fun toStatsGranularity(): StatsGranularity {
-        return when (statsSection) {
-            StatsSection.DETAIL,
-            StatsSection.TOTAL_LIKES_DETAIL,
-            StatsSection.TOTAL_COMMENTS_DETAIL,
-            StatsSection.TOTAL_FOLLOWERS_DETAIL,
-            StatsSection.INSIGHTS,
-            StatsSection.INSIGHT_DETAIL,
-            StatsSection.DAYS, StatsSection.TRAFFIC -> DAYS // Replace with TRAFFIC when it's implemented
-            StatsSection.WEEKS -> WEEKS
-            StatsSection.MONTHS -> MONTHS
-            StatsSection.ANNUAL_STATS,
-            StatsSection.YEARS -> YEARS
-        }
-    }
-
     fun onNextDateSelected() {
-        selectedDateProvider.selectNextDate(statsSection)
+        selectedDateProvider.selectNextDate(statsGranularity)
     }
 
     fun onPreviousDateSelected() {
-        selectedDateProvider.selectPreviousDate(statsSection)
+        selectedDateProvider.selectPreviousDate(statsGranularity)
     }
 
     fun clear() {
-        selectedDateProvider.clear(statsSection)
+        selectedDateProvider.clear(statsGranularity)
     }
 
     fun getSelectedDate(): SelectedDate {
-        return selectedDateProvider.getSelectedDateState(statsSection)
+        return selectedDateProvider.getSelectedDateState(statsGranularity)
     }
 
     class Factory
@@ -116,13 +89,14 @@ constructor(
         private val statsDateFormatter: StatsDateFormatter,
         private val statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
     ) {
-        fun build(statsSection: StatsSection): StatsDateSelector {
+        fun build(statsGranularity: StatsGranularity, isGranularitySpinnerVisible: Boolean = false): StatsDateSelector {
             return StatsDateSelector(
                 selectedDateProvider,
                 statsDateFormatter,
                 siteProvider,
-                statsTrafficTabFeatureConfig,
-                statsSection
+                statsGranularity,
+                isGranularitySpinnerVisible,
+                statsTrafficTabFeatureConfig
             )
         }
     }

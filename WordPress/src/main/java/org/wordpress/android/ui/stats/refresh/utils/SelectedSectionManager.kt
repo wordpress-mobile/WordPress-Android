@@ -47,9 +47,8 @@ class SelectedSectionManager
 
 fun StatsSection.toStatsGranularity(): StatsGranularity? {
     return when (this) {
-        ANNUAL_STATS, DETAIL, TOTAL_LIKES_DETAIL, TOTAL_COMMENTS_DETAIL, TOTAL_FOLLOWERS_DETAIL, INSIGHTS -> null
+        StatsSection.TRAFFIC, ANNUAL_STATS, DETAIL, TOTAL_LIKES_DETAIL, TOTAL_COMMENTS_DETAIL, TOTAL_FOLLOWERS_DETAIL, INSIGHTS -> null
         StatsSection.INSIGHT_DETAIL,
-        StatsSection.TRAFFIC -> DAYS // Replace with TRAFFIC when it's implemented
         StatsSection.DAYS -> DAYS
         StatsSection.WEEKS -> WEEKS
         StatsSection.MONTHS -> MONTHS
