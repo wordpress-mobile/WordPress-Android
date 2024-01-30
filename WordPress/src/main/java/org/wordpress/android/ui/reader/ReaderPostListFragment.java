@@ -144,6 +144,7 @@ import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.WPSnackbar;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -213,7 +214,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private int mSearchTabsPos = NO_POSITION;
     private boolean mIsFilterableScreen;
     private boolean mIsFiltered = false;
-    @NonNull private final HashSet<UpdateAction> mCurrentUpdateActions = new HashSet<>();
+    @NonNull private HashSet<UpdateAction> mCurrentUpdateActions = new HashSet<>();
     /*
      * called by post adapter to load older posts when user scrolls to the last post
      */
@@ -958,8 +959,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasRequestedPosts);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasUpdatedPosts);
         outState.putBoolean(ReaderConstants.KEY_FIRST_LOAD, mFirstLoad);
+        outState.putSerializable(ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS, mCurrentUpdateActions);
         if (mRecyclerView != null) {
-            outState.putBoolean(ReaderConstants.KEY_IS_REFRESHING, mRecyclerView.isRefreshing());
             outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         }
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
@@ -1181,8 +1182,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
         }
 
-        if (savedInstanceState != null && savedInstanceState.getBoolean(ReaderConstants.KEY_IS_REFRESHING)) {
-            setIsUpdating(true, UpdateAction.REQUEST_NEWER);
+        if (savedInstanceState != null) {
+            Serializable actions = savedInstanceState.getSerializable(ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS);
+            if (actions instanceof HashSet<?>) {
+                mCurrentUpdateActions = (HashSet<UpdateAction>) actions;
+                updateProgressIndicators();
+            }
         }
 
         return rootView;
