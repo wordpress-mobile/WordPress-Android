@@ -85,7 +85,7 @@ class SiteMonitorParentActivity: AppCompatActivity() {
 
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    fun SiteMonitorScreen() {
+    fun SiteMonitorScreen(modifier: Modifier = Modifier) {
         var selectedTab by rememberSaveable { mutableStateOf(SiteMonitorTabItem.Metrics.route) }
         Scaffold(
             topBar = {
@@ -96,7 +96,7 @@ class SiteMonitorParentActivity: AppCompatActivity() {
                 )
             }
         ) { padding ->
-            Column(modifier = Modifier.padding(padding)) {
+            Column(modifier = modifier.padding(padding)) {
                 SiteMonitorTabHeader { clickTab ->
                     selectedTab = clickTab
                 }
