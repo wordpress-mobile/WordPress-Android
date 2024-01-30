@@ -31,7 +31,7 @@ class PasskeyRequest(
         val passkeyRequestCallback = object : CredentialManagerCallback<GetCredentialResponse, GetCredentialException> {
             override fun onError(e: GetCredentialException) {
                 onFailure(e)
-                Log.e("Credential Manager error", e.stackTraceToString())
+                Log.e(TAG, e.stackTraceToString())
             }
 
             override fun onResult(result: GetCredentialResponse) {
@@ -52,7 +52,7 @@ class PasskeyRequest(
                     callback = passkeyRequestCallback
             )
         } catch (e: GetCredentialException) {
-            Log.e("Credential Manager error", e.stackTraceToString())
+            Log.e(TAG, e.stackTraceToString())
             onFailure(e)
         }
     }
@@ -61,9 +61,13 @@ class PasskeyRequest(
         return when (val credential = this.credential) {
             is PublicKeyCredential -> credential.authenticationResponseJson
             else -> {
-                Log.e("Credential Manager", "Unexpected type of credential")
+                Log.e(TAG, "Unexpected type of credential")
                 null
             }
         }
+    }
+
+    companion object {
+        const val TAG = "PasskeyRequest"
     }
 }
