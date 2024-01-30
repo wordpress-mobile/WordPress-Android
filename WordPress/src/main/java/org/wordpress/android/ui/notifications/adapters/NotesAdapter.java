@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -276,12 +277,23 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
 
         String noteSnippet = note.getCommentSubject();
+
         if (!TextUtils.isEmpty(noteSnippet)) {
-            noteViewHolder.mTxtSubject.setMaxLines(2);
+            // handle the max lines for the view of detail
+            noteViewHolder.mTxtSubject.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override public boolean onPreDraw() {
+                    noteViewHolder.mTxtSubject.getViewTreeObserver().removeOnPreDrawListener(this);
+                    if (noteViewHolder.mTxtSubject.getLineCount() == 2) {
+                        noteViewHolder.mTxtDetail.setMaxLines(1);
+                    } else {
+                        noteViewHolder.mTxtDetail.setMaxLines(2);
+                    }
+                    return false;
+                }
+            });
             noteViewHolder.mTxtDetail.setText(noteSnippet);
             noteViewHolder.mTxtDetail.setVisibility(View.VISIBLE);
         } else {
-            noteViewHolder.mTxtSubject.setMaxLines(3);
             noteViewHolder.mTxtDetail.setVisibility(View.GONE);
         }
 
