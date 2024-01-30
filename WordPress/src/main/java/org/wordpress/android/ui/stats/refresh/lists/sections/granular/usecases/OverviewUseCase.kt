@@ -24,7 +24,6 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWi
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
-import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -60,7 +59,7 @@ class OverviewUseCase constructor(
     mainDispatcher,
     backgroundDispatcher,
     UiState(),
-    uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(statsGranularity.toStatsSection()))
+    uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(statsGranularity))
 ) {
     override fun buildLoadingItem(): List<BlockListItem> =
         listOf(

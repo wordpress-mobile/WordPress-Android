@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
@@ -140,8 +141,8 @@ class BaseListUseCase(
         data.value = null
     }
 
-    suspend fun onDateChanged(selectedSection: StatsSection) {
-        onParamChanged(UseCaseParam.SelectedDateParam(selectedSection))
+    suspend fun onDateChanged(selectedGranularity: StatsGranularity) {
+        onParamChanged(UseCaseParam.SelectedDateParam(selectedGranularity))
     }
 
     fun onListSelected() {

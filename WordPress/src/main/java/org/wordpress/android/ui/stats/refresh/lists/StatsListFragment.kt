@@ -254,7 +254,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
 
         viewModel.selectedDate?.observe(viewLifecycleOwner) { event ->
             if (event != null) {
-                viewModel.onDateChanged(event.selectedSection)
+                viewModel.onDateChanged(event.selectedGranularity)
             }
         }
 

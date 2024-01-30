@@ -39,7 +39,7 @@ class PostDayViewsUseCase
     mainDispatcher,
     backgroundDispatcher,
     UiState(),
-    uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(DETAIL))
+    uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(DAYS))
 ) {
     override suspend fun loadCachedData(): PostDetailStatsModel? {
         return statsPostProvider.postId?.let { postId ->
