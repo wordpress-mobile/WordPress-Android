@@ -37,7 +37,7 @@ class SiteMonitorUtils @Inject constructor(
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.SITE_MONITORING_TAB_SHOWN,
             mapOf(
-                TAB_TRACK_KEY to siteMonitorType
+                TAB_TRACK_KEY to siteMonitorType.analyticsDescription
             ))
     }
 
