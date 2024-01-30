@@ -174,7 +174,7 @@ class SiteMonitorTabFragment : Fragment(), SiteMonitorWebViewClient.SiteMonitorW
 }
 
 @Composable
-fun LoadingState(modifier: Modifier = Modifier) {
+internal fun LoadingState(modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier.fillMaxSize()

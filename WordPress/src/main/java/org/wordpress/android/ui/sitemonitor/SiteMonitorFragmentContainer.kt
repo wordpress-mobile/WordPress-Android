@@ -22,7 +22,7 @@ import androidx.fragment.app.findFragment
 
 @Suppress("SwallowedException")
 @Composable
-fun SiteMonitorFragmentContainer(
+internal fun SiteMonitorFragmentContainer(
     modifier: Modifier = Modifier,
     commit: FragmentTransaction.(containerId: Int) -> Unit
 ) {

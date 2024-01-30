@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SiteMonitorTabHeader(navController: (String) -> Unit) {
+internal fun SiteMonitorTabHeader(navController: (String) -> Unit) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val tabs = listOf(
         SiteMonitorTabItem.Metrics,

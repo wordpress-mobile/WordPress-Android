@@ -6,7 +6,7 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
 
 @Composable
-fun <T : Any> SiteMonitorTabNavigation (
+internal fun <T : Any> SiteMonitorTabNavigation (
     currentScreen: T,
     modifier: Modifier = Modifier,
     content: @Composable (T) -> Unit
