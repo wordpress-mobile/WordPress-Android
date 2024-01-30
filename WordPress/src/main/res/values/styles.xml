@@ -48,6 +48,8 @@
         <item name="wpColorActionModeIcon">?attr/colorOnSurface</item>
         <item name="wpColorSurfaceSecondary">@color/neutral_5</item>
         <item name="wpColorLoginPrologueBg">@color/blue_0</item>
+        <item name="wpColorTextPrimary">?attr/wpColorOnSurfaceHigh</item>
+        <item name="wpColorTextSecondary">@color/text_secondary</item>
 
         <item name="colorGutenbergDivider">@color/wp_grey_lighten_30</item>
         <item name="colorGutenbergBackground">@android:color/white</item>
@@ -625,6 +627,15 @@
     <style name="DialogAnimations">
         <item name="android:windowEnterAnimation">@anim/activity_slide_in_from_right</item>
         <item name="android:windowExitAnimation">@anim/activity_slide_out_to_right</item>
+    </style>
+
+    <style name="WordPress.TextAppearance.NotificationItemTitle" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textSize">@dimen/text_sz_medium_large</item>
+        <item name="android:textColor">?attr/wpColorTextPrimary</item>
+    </style>
+
+    <style name="WordPress.TextAppearance.NotificationItemContent" parent="WordPress.TextAppearance.NotificationItemTitle">
+        <item name="android:textColor">?attr/wpColorTextSecondary</item>
     </style>
 
     <style name="MyProfileRow">

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -214,10 +215,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         if (previousTimeGroup != null && previousTimeGroup == timeGroup) {
             noteViewHolder.mHeaderText.setVisibility(View.GONE);
-            noteViewHolder.mHeaderDivider.setVisibility(View.GONE);
         } else {
             noteViewHolder.mHeaderText.setVisibility(View.VISIBLE);
-            noteViewHolder.mHeaderDivider.setVisibility(View.VISIBLE);
 
             if (timeGroup == Note.NoteTimeGroup.GROUP_TODAY) {
                 noteViewHolder.mHeaderText.setText(R.string.stats_timeframe_today);
@@ -276,12 +275,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
 
         String noteSnippet = note.getCommentSubject();
+
         if (!TextUtils.isEmpty(noteSnippet)) {
-            noteViewHolder.mTxtSubject.setMaxLines(2);
+            handleMaxLines(noteViewHolder.mTxtSubject, noteViewHolder.mTxtDetail);
             noteViewHolder.mTxtDetail.setText(noteSnippet);
             noteViewHolder.mTxtDetail.setVisibility(View.VISIBLE);
         } else {
-            noteViewHolder.mTxtSubject.setMaxLines(3);
             noteViewHolder.mTxtDetail.setVisibility(View.GONE);
         }
 
@@ -298,6 +297,20 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         if (mOnLoadMoreListener != null && position >= getItemCount() - 1) {
             mOnLoadMoreListener.onLoadMore(note.getTimestamp());
         }
+    }
+
+    private void handleMaxLines(final TextView subject, final TextView detail) {
+        subject.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override public boolean onPreDraw() {
+                subject.getViewTreeObserver().removeOnPreDrawListener(this);
+                if (subject.getLineCount() == 2) {
+                    detail.setMaxLines(1);
+                } else {
+                    detail.setMaxLines(2);
+                }
+                return false;
+            }
+        });
     }
 
     private int getPositionForNoteUnfiltered(String noteId) {
@@ -353,7 +366,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     class NoteViewHolder extends RecyclerView.ViewHolder {
         private final View mContentView;
         private final TextView mHeaderText;
-        private final View mHeaderDivider;
         private final TextView mTxtSubject;
         private final TextView mTxtSubjectNoticon;
         private final TextView mTxtDetail;
@@ -363,7 +375,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             super(view);
             mContentView = view.findViewById(R.id.note_content_container);
             mHeaderText = view.findViewById(R.id.header_text);
-            mHeaderDivider = view.findViewById(R.id.header_divider);
             mTxtSubject = view.findViewById(R.id.note_subject);
             mTxtSubjectNoticon = view.findViewById(R.id.note_subject_noticon);
             mTxtDetail = view.findViewById(R.id.note_detail);

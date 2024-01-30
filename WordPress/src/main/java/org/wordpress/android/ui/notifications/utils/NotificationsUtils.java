@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AlignmentSpan;
 import android.text.style.ImageSpan;
-import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -278,13 +276,6 @@ public class NotificationsUtils {
                     && indices.get(1) <= spannableStringBuilder.length()) {
                     spannableStringBuilder
                             .setSpan(clickableSpan, indices.get(0), indices.get(1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-
-                    // Add additional styling if the range wants it
-                    if (clickableSpan.getSpanStyle() != Typeface.NORMAL) {
-                        StyleSpan styleSpan = new StyleSpan(clickableSpan.getSpanStyle());
-                        spannableStringBuilder
-                                .setSpan(styleSpan, indices.get(0), indices.get(1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                    }
 
                     if (onNoteBlockTextClickListener != null && textView != null) {
                         textView.setLinksClickable(true);

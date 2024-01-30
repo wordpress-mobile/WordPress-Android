@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -21,12 +20,6 @@
         android:textSize="@dimen/text_sz_large"
         tools:text="Today"
         tools:visibility="visible" />
-
-    <View
-        android:id="@+id/header_divider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_divider_height"
-        android:background="?android:attr/listDivider" />
 
     <FrameLayout
         android:id="@+id/note_content_container"
@@ -77,8 +70,8 @@
                     android:ellipsize="end"
                     android:gravity="start"
                     android:maxLines="2"
+                    android:textAppearance="@style/WordPress.TextAppearance.NotificationItemTitle"
                     android:textAlignment="viewStart"
-                    android:textAppearance="?attr/textAppearanceSubtitle1"
                     tools:text="Bob Ross commented on your post Happy Trees" />
 
             </FrameLayout>
@@ -92,17 +85,11 @@
                 android:ellipsize="end"
                 android:importantForAccessibility="no"
                 android:maxLines="2"
-                android:textAppearance="?attr/textAppearanceBody2"
+                android:textAppearance="@style/WordPress.TextAppearance.NotificationItemContent"
                 android:visibility="gone"
                 tools:text="What an amazing post!"
                 tools:visibility="visible" />
 
         </RelativeLayout>
     </FrameLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_divider_height"
-        android:background="?android:attr/listDivider" />
-
 </LinearLayout>
