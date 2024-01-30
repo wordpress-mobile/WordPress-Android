@@ -2,34 +2,34 @@ package org.wordpress.android.ui.sitemonitor
 
 import android.text.TextUtils
 import android.util.Log
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import androidx.compose.runtime.mutableStateOf
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
-import javax.inject.Named
-
-@HiltViewModel
-class SiteMonitorTabViewModel @Inject constructor(
-    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+class SiteMonitorTabViewModelSlice @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val accountStore: AccountStore,
     private val mapper: SiteMonitorMapper,
     private val siteMonitorUtils: SiteMonitorUtils,
     private val siteStore: SiteStore,
-) : ScopedViewModel(bgDispatcher) {
+){
+    private lateinit var scope: CoroutineScope
+
     private lateinit var site: SiteModel
     private lateinit var siteMonitorType: SiteMonitorType
     private lateinit var urlTemplate: String
 
-    private val _uiState = MutableStateFlow<SiteMonitorUiState>(SiteMonitorUiState.Preparing)
-    val uiState: StateFlow<SiteMonitorUiState> = _uiState
+    private val _uiState = mutableStateOf<SiteMonitorUiState>(SiteMonitorUiState.Preparing)
+    val uiState = _uiState
+
+    fun initialize(scope: CoroutineScope) {
+        this.scope = scope
+    }
 
     fun start(type: SiteMonitorType, urlTemplate: String, site: SiteModel) {
         Log.i("Track", "TheViewModel start with $urlTemplate and $type")
@@ -52,13 +52,13 @@ class SiteMonitorTabViewModel @Inject constructor(
 
     private fun checkForInternetConnectivityAndPostErrorIfNeeded() : Boolean {
         if (networkUtilsWrapper.isNetworkAvailable()) return true
-        postUiState(mapper.toNoNetworkError(this@SiteMonitorTabViewModel::loadView))
+        postUiState(mapper.toNoNetworkError(::loadView))
         return false
     }
 
     private fun validateAndPostErrorIfNeeded(): Boolean {
         if (accountStore.account.userName.isNullOrEmpty() || accountStore.accessToken.isNullOrEmpty()) {
-            postUiState(mapper.toGenericError(this@SiteMonitorTabViewModel::loadView))
+            postUiState(mapper.toGenericError(this::loadView))
             return false
         }
         return true
@@ -100,18 +100,28 @@ class SiteMonitorTabViewModel @Inject constructor(
     }
 
     private fun postUiState(state: SiteMonitorUiState) {
-        launch {
+        scope.launch {
             _uiState.value = state
         }
     }
 
-    fun onUrlLoaded() {
+    fun onUrlLoaded(url: String) {
+        Log.i("Track", "TheViewModel onUrlLoaded $url")
         siteMonitorUtils.trackTabLoaded(siteMonitorType)
-        postUiState(SiteMonitorUiState.Loaded)
+        if (uiState.value is SiteMonitorUiState.Prepared){
+            postUiState(SiteMonitorUiState
+                .Loaded((_uiState.value as SiteMonitorUiState.Prepared).model.copy(url = url)))
+        }
     }
 
+
     fun onWebViewError() {
-        postUiState(mapper.toGenericError(this@SiteMonitorTabViewModel::loadView))
+        postUiState(mapper.toGenericError(::loadView))
+    }
+
+    fun onCleared() {
+        Log.i("Track", "TheViewModel onCleared")
+        scope.cancel()
     }
 
     companion object {
