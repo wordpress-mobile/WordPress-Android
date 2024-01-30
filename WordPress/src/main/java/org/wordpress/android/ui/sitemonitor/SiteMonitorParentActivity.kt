@@ -28,15 +28,22 @@ import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SiteMonitorParentActivity: AppCompatActivity() {
+    @Inject
+    lateinit var siteMonitorUtils: SiteMonitorUtils
+
     private var savedStateSparseArray = SparseArray<Fragment.SavedState>()
     private var currentSelectItemId = 0
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        siteMonitorUtils.trackActivityLaunched()
+
         if (savedInstanceState != null) {
             savedStateSparseArray = savedInstanceState.getSparseParcelableArray(
                 SAVED_STATE_CONTAINER_KEY
@@ -65,7 +72,13 @@ class SiteMonitorParentActivity: AppCompatActivity() {
         return requireNotNull(intent.getSerializableExtraCompat(WordPress.SITE)) as SiteModel
     }
 
+    private fun getInitialTab(): SiteMonitorType {
+        return intent?.getSerializableExtraCompat(ARG_SITE_MONITOR_TYPE_KEY) as SiteMonitorType?
+            ?: SiteMonitorType.METRICS
+    }
+
     companion object {
+        const val ARG_SITE_MONITOR_TYPE_KEY = "ARG_SITE_MONITOR_TYPE_KEY"
         const val SAVED_STATE_CONTAINER_KEY = "ContainerKey"
         const val SAVED_STATE_CURRENT_TAB_KEY = "CurrentTabKey"
     }
@@ -90,7 +103,9 @@ class SiteMonitorParentActivity: AppCompatActivity() {
                 SiteMonitorTabNavigation(selectedTab) { selectedTab ->
                     val item = enumValues<SiteMonitorTabItem>().find {
                         it.route == selectedTab
-                    } ?: SiteMonitorTabItem.Metrics
+                    } ?: initialItem(getInitialTab())
+
+                    siteMonitorUtils.trackTabLoaded(item.siteMonitorType)
 
                     SiteMonitorFragmentContainer(
                         modifier = Modifier.fillMaxSize(),
@@ -102,6 +117,12 @@ class SiteMonitorParentActivity: AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun initialItem(type: SiteMonitorType): SiteMonitorTabItem {
+        return enumValues<SiteMonitorTabItem>().find {
+            it.siteMonitorType == type
+        } ?: SiteMonitorTabItem.Metrics
     }
 
     private fun getCommitFunction(

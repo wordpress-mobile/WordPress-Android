@@ -1101,7 +1101,9 @@ public final class AnalyticsTracker {
         DYNAMIC_DASHBOARD_CARD_CTA_TAPPED,
         DYNAMIC_DASHBOARD_CARD_HIDE_TAPPED,
         DEEP_LINK_FAILED,
-        SITE_MONITORING_SCREEN_SHOWN
+        SITE_MONITORING_SCREEN_SHOWN,
+        OPENED_SITE_MONITORING,
+        SITE_MONITORING_TAB_SHOWN,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
