@@ -14,26 +14,23 @@ import androidx.credentials.exceptions.GetCredentialException
 import org.wordpress.android.fluxc.store.AccountStore.FinishWebauthnChallengePayload
 import java.util.concurrent.Executors
 
-class CredentialManagerHandler(
-    private val context: Context
+class PasskeyRequest(
+    context: Context,
+    userId: String,
+    twoStepNonce: String,
+    requestJson: String,
+    onSuccess: (FinishWebauthnChallengePayload) -> Unit,
+    onFailure: (Throwable) -> Unit
 ) {
-    private val credentialManager = CredentialManager.create(context)
-    private val executor = Executors.newSingleThreadExecutor()
-
-    fun fetchPasskey(
-        userId: String,
-        twoStepNonce: String,
-        requestJson: String,
-        onSuccess: (FinishWebauthnChallengePayload) -> Unit,
-        onFailure: (Throwable) -> Unit
-    ) {
+    init {
+        val credentialManager = CredentialManager.create(context)
+        val executor = Executors.newSingleThreadExecutor()
+        val signal = CancellationSignal()
         val password = GetPasswordOption()
         val publicKeyCred = GetPublicKeyCredentialOption(requestJson)
         val getCredRequest = GetCredentialRequest(
                 listOf(password, publicKeyCred)
         )
-
-        val signal = CancellationSignal()
 
         try {
             credentialManager.getCredentialAsync(
