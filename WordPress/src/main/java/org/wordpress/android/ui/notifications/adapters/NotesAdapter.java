@@ -14,7 +14,6 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.core.graphics.ColorUtils;
 import androidx.core.text.BidiFormatter;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,7 +29,6 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.RtlUtils;
-import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -42,7 +40,6 @@ import javax.inject.Inject;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
     private final int mAvatarSz;
-    private final int mColorUnread;
     private final int mTextIndentSize;
 
     private final DataLoadedListener mDataLoadedListener;
@@ -103,10 +100,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         setHasStableIds(false);
 
         mAvatarSz = (int) context.getResources().getDimension(R.dimen.notifications_avatar_sz);
-        mColorUnread = ColorUtils.setAlphaComponent(
-                ContextExtensionsKt.getColorFromAttribute(context, com.google.android.material.R.attr.colorOnSurface),
-                context.getResources().getInteger(R.integer.selected_list_item_opacity)
-        );
         mTextIndentSize = context.getResources().getDimensionPixelSize(R.dimen.notifications_text_indent_sz);
     }
 
@@ -288,9 +281,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         mImageManager.loadIntoCircle(noteViewHolder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
 
         if (note.isUnread()) {
-            noteViewHolder.mContentView.setBackgroundColor(mColorUnread);
+            noteViewHolder.mUnreadNotificationView.setVisibility(View.VISIBLE);
         } else {
-            noteViewHolder.mContentView.setBackgroundColor(0);
+            noteViewHolder.mUnreadNotificationView.setVisibility(View.GONE);
         }
 
         // request to load more comments when we near the end
@@ -370,6 +363,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         private final TextView mTxtSubjectNoticon;
         private final TextView mTxtDetail;
         private final ImageView mImgAvatar;
+        private final View mUnreadNotificationView;
 
         NoteViewHolder(View view) {
             super(view);
@@ -379,6 +373,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             mTxtSubjectNoticon = view.findViewById(R.id.note_subject_noticon);
             mTxtDetail = view.findViewById(R.id.note_detail);
             mImgAvatar = view.findViewById(R.id.note_avatar);
+            mUnreadNotificationView = view.findViewById(R.id.notification_unread);
 
             mContentView.setOnClickListener(mOnClickListener);
         }

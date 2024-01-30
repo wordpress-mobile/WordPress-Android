@@ -29,6 +29,15 @@
         android:clipToPadding="false"
         android:foreground="?android:selectableItemBackground">
 
+        <ImageView
+            android:id="@+id/notification_unread"
+            android:layout_width="@dimen/notifications_unread_icon_sz"
+            android:layout_height="@dimen/notifications_unread_icon_sz"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/notifications_unread_content_description"
+            android:src="@drawable/ic_notification_unread" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
