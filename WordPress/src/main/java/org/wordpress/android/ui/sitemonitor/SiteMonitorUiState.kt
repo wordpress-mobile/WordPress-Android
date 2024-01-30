@@ -44,9 +44,6 @@ sealed class SiteMonitorUiState {
 
 data class SiteMonitorModel(
     val siteMonitorType: SiteMonitorType,
-    val enableJavascript: Boolean = true,
-    val enableDomStorage: Boolean = true,
-    val enableChromeClient: Boolean = true,
     val userAgent: String = "",
     val url: String,
     val addressToLoad: String

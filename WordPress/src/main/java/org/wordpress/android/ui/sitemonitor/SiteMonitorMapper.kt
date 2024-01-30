@@ -7,10 +7,7 @@ class SiteMonitorMapper @Inject constructor(
 ) {
     fun toPrepared(url: String, addressToLoad: String, siteMonitorType: SiteMonitorType) = SiteMonitorUiState.Prepared(
         model = SiteMonitorModel(
-            enableJavascript = true,
-            enableDomStorage = true,
             userAgent = siteMonitorUtils.getUserAgent(),
-            enableChromeClient = true,
             url = url,
             addressToLoad = addressToLoad,
             siteMonitorType = siteMonitorType
