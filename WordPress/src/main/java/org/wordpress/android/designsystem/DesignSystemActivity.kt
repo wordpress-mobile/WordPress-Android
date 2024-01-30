@@ -27,6 +27,9 @@ class DesignSystemActivity : LocaleAwareActivity() {
     )
     @Composable
     fun PreviewDesignSystemActivity() {
-        DesignSystem(onBackPressedDispatcher::onBackPressed)
+        val colors = if (isSystemInDarkTheme()) darkColors() else lightColors()
+        DesignSystemTheme(colors) {
+            DesignSystem(onBackPressedDispatcher::onBackPressed)
+        }
     }
 }
