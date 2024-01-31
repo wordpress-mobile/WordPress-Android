@@ -20,10 +20,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.Fragment
@@ -152,35 +154,48 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
                 )
             },
             content = {
-                SiteMonitorTab(initialTab, modifier = modifier)
+                SiteMonitorHeader(initialTab, modifier = modifier)
             }
         )
     }
 
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    fun SiteMonitorTab(initialTab: Int, modifier: Modifier = Modifier) {
+    fun SiteMonitorHeader(initialTab: Int, modifier: Modifier = Modifier) {
         var tabIndex by remember { mutableStateOf(initialTab) }
 
-        val tabs = listOf(
-            R.string.site_monitoring_tab_title_metrics,
-            R.string.site_monitoring_tab_title_php_logs,
-            R.string.site_monitoring_tab_title_web_server_logs
-        )
+        val tabs = SiteMonitorTabItem.entries
 
         Column(modifier = modifier.fillMaxWidth()) {
-            TabRow(
+            androidx.compose.material3.TabRow(
                 selectedTabIndex = tabIndex,
-                backgroundColor = MaterialTheme.colors.surface,
+                containerColor = MaterialTheme.colors.surface,
                 contentColor = MaterialTheme.colors.onSurface,
+                indicator = { tabPositions ->
+                    // Customizing the indicator color and style
+                    TabRowDefaults.Indicator(
+                        Modifier.tabIndicatorOffset(tabPositions[tabIndex]),
+                        color = MaterialTheme.colors.onSurface,
+                        height = 2.0.dp
+                    )
+                }
             ) {
-                tabs.forEachIndexed { index, title ->
-                    Tab(text = { Text(stringResource(id = title)) },
+                tabs.forEachIndexed { index, item ->
+                    Tab(
+                        text = {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                androidx.compose.material3.Text(
+                                    text = stringResource(item.title),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        },
                         selected = tabIndex == index,
                         onClick = {
-                            siteMonitorUtils.trackTabLoaded(SiteMonitorType.entries[index])
+                            siteMonitorUtils.trackTabLoaded(tabs[index].siteMonitorType)
                             tabIndex = index
-                        }
+                        },
                     )
                 }
             }
@@ -201,6 +216,7 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
             is SiteMonitorUiState.Preparing -> LoadingState(modifier)
             is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded ->
                 SiteMonitorWebView(uiState, tabType, modifier)
+
             is SiteMonitorUiState.Error -> SiteMonitorError(uiState as SiteMonitorUiState.Error, modifier)
         }
     }
