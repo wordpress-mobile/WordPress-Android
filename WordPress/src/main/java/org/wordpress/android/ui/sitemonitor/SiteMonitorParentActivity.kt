@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.material3.Surface
@@ -40,6 +41,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.compose.components.MainTopAppBar
+import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
@@ -103,7 +106,7 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    SiteMonitorScreen()
+                    SiteMonitorTabScreen()
                 }
             }
         }
@@ -128,6 +131,23 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
         const val ARG_SITE_MONITOR_TYPE_KEY = "ARG_SITE_MONITOR_TYPE_KEY"
         const val SAVED_STATE_CONTAINER_KEY = "ContainerKey"
         const val SAVED_STATE_CURRENT_TAB_KEY = "CurrentTabKey"
+    }
+
+    @Composable
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+    fun SiteMonitorTabScreen(modifier: Modifier = Modifier) {
+        Scaffold(
+            topBar = {
+                MainTopAppBar(
+                    title = stringResource(id = R.string.site_monitoring),
+                    navigationIcon = NavigationIcons.BackIcon,
+                    onNavigationIconClick = onBackPressedDispatcher::onBackPressed,
+                )
+            },
+            content = {
+                SiteMonitorScreen(modifier = modifier)
+            }
+        )
     }
 
     @Composable
