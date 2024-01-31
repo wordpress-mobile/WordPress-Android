@@ -30,19 +30,19 @@ object DesignSystemAppColor {
     val Gray30 = Color(0xFF9B9B9E)
 
     @Stable
-    val Gray40 = Color(0xFF4E4E4F)
+    val Gray40 = Color(0x993C3C43)
 
     @Stable
-    val Gray50 = Color(0xFF3A3A3C)
+    val Gray50 = Color(0x4D3C3C43)
 
     @Stable
-    val Gray60 = Color(0xFF2C2C2E)
+    val Gray60 = Color(0xFF4E4E4F)
 
     @Stable
-    val GrayWIP2 = Color(0x993C3C43) // this doesn't look right - foreground light mode: secondary
+    val Gray70 = Color(0xFF3A3A3C)
 
     @Stable
-    val GrayWIP = Color(0x4D3C3C43) // this doesn't look right - foreground light mode: tertiary
+    val Gray80 = Color(0xFF2C2C2E)
 
     // Blues
     @Stable
