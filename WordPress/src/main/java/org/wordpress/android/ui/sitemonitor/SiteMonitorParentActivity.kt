@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -214,12 +215,15 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
         val uiState by remember(key1 = tabType) {
             siteMonitorParentViewModel.getUiState(tabType)
         }
-        when (uiState) {
-            is SiteMonitorUiState.Preparing -> LoadingState(modifier)
-            is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded ->
-                SiteMonitorWebView(uiState, tabType, modifier)
-
-            is SiteMonitorUiState.Error -> SiteMonitorError(uiState as SiteMonitorUiState.Error, modifier)
+        LazyColumn  {
+            item {
+                when (uiState) {
+                    is SiteMonitorUiState.Preparing -> LoadingState(modifier)
+                    is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded ->
+                        SiteMonitorWebView(uiState, tabType, modifier)
+                    is SiteMonitorUiState.Error -> SiteMonitorError(uiState as SiteMonitorUiState.Error, modifier)
+                }
+            }
         }
     }
     @Composable
