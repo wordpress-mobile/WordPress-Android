@@ -1,0 +1,6 @@
+24.0:
+Block-Editor-Aktualisierungen:
+- Gerätetastatur bleibt beim Bearbeiten von Textblöcken erhalten
+- Die Ansicht scrollt automatisch zu neu eingefügten Blöcken
+- Hebe die Auswahl von Blöcken auf, indem du den Zurück-Button deines Geräts drückst
+- Teile verschiedene Medientypen gleichzeitig in der App, ohne Abstürze
