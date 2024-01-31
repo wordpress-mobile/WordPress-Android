@@ -20,6 +20,6 @@ class DetailListViewModel
 ) : StatsListViewModel(mainDispatcher, detailUseCase, analyticsTracker, dateSelectorFactory.build(DETAIL)) {
     override fun onCleared() {
         super.onCleared()
-        dateSelector.clear()
+        dateSelector?.clear()
     }
 }

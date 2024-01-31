@@ -30,7 +30,6 @@ import org.wordpress.android.ui.stats.StatsViewType.TAGS_AND_CATEGORIES
 import org.wordpress.android.ui.stats.StatsViewType.TOP_POSTS_AND_PAGES
 import org.wordpress.android.ui.stats.StatsViewType.VIDEO_PLAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostAverageViewsPerDayUseCase
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostMonthsAndYearsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostRecentWeeksUseCase
@@ -66,7 +65,7 @@ class StatsViewAllViewModelFactory(
     private val bgDispatcher: CoroutineDispatcher,
     private val useCase: BaseStatsUseCase<*, *>,
     private val statsSiteProvider: StatsSiteProvider,
-    private val dateSelector: StatsDateSelector,
+    private val dateSelector: StatsDateSelector?,
     @StringRes private val titleResource: Int
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -92,34 +91,29 @@ class StatsViewAllViewModelFactory(
         private val statsSiteProvider: StatsSiteProvider,
         private val dateSelectorFactory: StatsDateSelector.Factory
     ) {
-        fun build(type: StatsViewType, granularity: StatsGranularity?): StatsViewAllViewModelFactory {
-            return when {
-                type == ANNUAL_STATS -> buildAnnualStatsFactory()
-                granularity == null -> buildFactory(type)
-                else -> buildFactory(type, granularity)
+        fun build(type: StatsViewType, granularity: StatsGranularity?) = if (type == ANNUAL_STATS) {
+            buildAnnualStatsFactory()
+        } else {
+            buildFactory(type, granularity)
+        }
+
+        private fun buildFactory(type: StatsViewType, granularity: StatsGranularity?): StatsViewAllViewModelFactory {
+            val (useCase, title) = if (granularity == null) {
+                getInsightsUseCase(type, insightsUseCases)
+            } else {
+                getGranularUseCase(type, granularity, granularFactories)
             }
-        }
-
-        private fun buildFactory(type: StatsViewType, granularity: StatsGranularity): StatsViewAllViewModelFactory {
-            val (useCase, title) = getGranularUseCase(type, granularity, granularFactories)
+            val dateSelector = if (granularity == null) {
+                null
+            } else {
+                dateSelectorFactory.build(granularity.toStatsSection())
+            }
             return StatsViewAllViewModelFactory(
                 mainDispatcher,
                 bgDispatcher,
                 useCase,
                 statsSiteProvider,
-                dateSelectorFactory.build(granularity.toStatsSection()),
-                title
-            )
-        }
-
-        private fun buildFactory(type: StatsViewType): StatsViewAllViewModelFactory {
-            val (useCase, title) = getInsightsUseCase(type, insightsUseCases)
-            return StatsViewAllViewModelFactory(
-                mainDispatcher,
-                bgDispatcher,
-                useCase,
-                statsSiteProvider,
-                dateSelectorFactory.build(INSIGHTS),
+                dateSelector,
                 title
             )
         }

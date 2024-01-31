@@ -49,7 +49,7 @@ abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     private val statsUseCase: BaseListUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    protected val dateSelector: StatsDateSelector,
+    protected val dateSelector: StatsDateSelector?,
     popupMenuHandler: ItemPopupMenuHandler? = null,
     private val newsCardHandler: NewsCardHandler? = null,
     actionCardHandler: ActionCardHandler? = null
@@ -72,7 +72,7 @@ abstract class StatsListViewModel(
         ANNUAL_STATS(R.string.stats_insights_annual_site_stats);
     }
 
-    val selectedDate = dateSelector.selectedDate
+    val selectedDate = dateSelector?.selectedDate
 
     private val mutableNavigationTarget = MutableLiveData<Event<NavigationTarget>>()
     val navigationTarget: LiveData<Event<NavigationTarget>> = mergeNotNull(
@@ -85,9 +85,9 @@ abstract class StatsListViewModel(
         statsUseCase.data.throttle(viewModelScope, distinct = true)
     }
 
-    val dateSelectorData: LiveData<DateSelectorUiModel> = dateSelector.dateSelectorData.mapNullable {
+    val dateSelectorData: LiveData<DateSelectorUiModel> = dateSelector?.dateSelectorData?.mapNullable {
         it ?: DateSelectorUiModel(false)
-    }
+    } ?: MutableLiveData(DateSelectorUiModel(false))
 
     val typesChanged = merge(
         popupMenuHandler?.typeMoved,
@@ -115,13 +115,13 @@ abstract class StatsListViewModel(
 
     fun onNextDateSelected() {
         launch(Dispatchers.Default) {
-            dateSelector.onNextDateSelected()
+            dateSelector?.onNextDateSelected()
         }
     }
 
     fun onPreviousDateSelected() {
         launch(Dispatchers.Default) {
-            dateSelector.onPreviousDateSelected()
+            dateSelector?.onPreviousDateSelected()
         }
     }
 
@@ -138,7 +138,7 @@ abstract class StatsListViewModel(
     }
 
     fun onListSelected() {
-        dateSelector.updateDateSelector()
+        dateSelector?.updateDateSelector()
     }
 
     fun onEmptyInsightsButtonClicked() {
@@ -156,10 +156,10 @@ abstract class StatsListViewModel(
             isInitialized = true
             launch {
                 statsUseCase.loadData()
-                dateSelector.updateDateSelector()
+                dateSelector?.updateDateSelector()
             }
         }
-        dateSelector.updateDateSelector()
+        dateSelector?.updateDateSelector()
     }
 
     sealed class UiModel {
