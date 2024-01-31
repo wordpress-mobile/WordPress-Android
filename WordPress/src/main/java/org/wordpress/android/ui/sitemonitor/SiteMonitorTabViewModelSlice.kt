@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitemonitor
 
 import android.text.TextUtils
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
@@ -25,7 +26,7 @@ class SiteMonitorTabViewModelSlice @Inject constructor(
     private lateinit var urlTemplate: String
 
     private val _uiState = mutableStateOf<SiteMonitorUiState>(SiteMonitorUiState.Preparing)
-    val uiState = _uiState
+    val uiState: State<SiteMonitorUiState> = _uiState
 
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
