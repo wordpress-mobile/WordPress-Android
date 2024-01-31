@@ -73,7 +73,9 @@ class PasskeyRequest private constructor(
     )
 
     companion object {
-        const val TAG = "PasskeyRequest"
+        private const val TAG = "PasskeyRequest"
+
+        @JvmStatic
         fun create(
             context: Context,
             requestData: PasskeyRequestData,
