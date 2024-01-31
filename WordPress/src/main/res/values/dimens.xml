@@ -283,6 +283,8 @@
     <dimen name="notifications_item_vertical_padding">12dp</dimen>
     <dimen name="notifications_item_horizontal_padding">18dp</dimen>
     <dimen name="notifications_item_action_padding">12dp</dimen>
+    <dimen name="notifications_header_margin_top_position_0">16dp</dimen>
+    <dimen name="notifications_header_margin_top_position_n">4dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
     <dimen name="activity_progress_bar_height">5dp</dimen>

@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -290,6 +291,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         if (mOnLoadMoreListener != null && position >= getItemCount() - 1) {
             mOnLoadMoreListener.onLoadMore(note.getTimestamp());
         }
+
+        final int headerMarginTop;
+        final Context context = noteViewHolder.itemView.getContext();
+        if (position == 0) {
+            headerMarginTop = context.getResources()
+                                     .getDimensionPixelSize(R.dimen.notifications_header_margin_top_position_0);
+        } else {
+            headerMarginTop = context.getResources()
+                                     .getDimensionPixelSize(R.dimen.notifications_header_margin_top_position_n);
+        }
+        MarginLayoutParams layoutParams = (MarginLayoutParams) noteViewHolder.mHeaderText.getLayoutParams();
+        layoutParams.topMargin = headerMarginTop;
+        noteViewHolder.mHeaderText.setLayoutParams(layoutParams);
     }
 
     private void handleMaxLines(final TextView subject, final TextView detail) {
