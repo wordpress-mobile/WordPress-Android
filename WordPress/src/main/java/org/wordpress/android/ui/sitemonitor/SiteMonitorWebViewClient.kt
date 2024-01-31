@@ -7,13 +7,15 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 
 class SiteMonitorWebViewClient(
-    private val listener: SiteMonitorWebViewClientListener
+    private val listener: SiteMonitorWebViewClientListener,
+    private val tabType: SiteMonitorType
 ) : WebViewClient() {
     private var errorReceived = false
     private var requestedUrl: String? = null
+
     interface SiteMonitorWebViewClientListener {
-        fun onWebViewPageLoaded(url: String)
-        fun onWebViewReceivedError(url: String)
+        fun onWebViewPageLoaded(url: String, tabType: SiteMonitorType)
+        fun onWebViewReceivedError(url: String, tabType: SiteMonitorType)
     }
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
         return false
@@ -28,7 +30,7 @@ class SiteMonitorWebViewClient(
     override fun onPageFinished(view: WebView, url: String?) {
         super.onPageFinished(view, url)
         if (!errorReceived) {
-            url?.let { listener.onWebViewPageLoaded(it) }
+            url?.let { listener.onWebViewPageLoaded(it, tabType) }
         }
     }
 
@@ -40,7 +42,7 @@ class SiteMonitorWebViewClient(
         // > Thus, it is recommended to perform minimum required work in this callback.
         if (request?.isForMainFrame == true && requestedUrl == request.url.toString()) {
             errorReceived = true
-            listener.onWebViewReceivedError(request.url.toString())
+            listener.onWebViewReceivedError(request.url.toString(), tabType)
         }
     }
 }

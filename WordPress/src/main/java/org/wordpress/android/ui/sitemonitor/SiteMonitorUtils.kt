@@ -33,6 +33,14 @@ class SiteMonitorUtils @Inject constructor(
             ))
     }
 
+    fun trackTabLoadingError(siteMonitorType: SiteMonitorType) {
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.SITE_MONITORING_TAB_LOADING_ERROR,
+            mapOf(
+                TAB_TRACK_KEY to siteMonitorType.analyticsDescription
+            ))
+    }
+
     companion object {
         const val HTTP_PATTERN = "(https?://)"
         const val PHP_LOGS_PATTERN = "/php"
