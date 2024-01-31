@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.sitemonitor
 
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
