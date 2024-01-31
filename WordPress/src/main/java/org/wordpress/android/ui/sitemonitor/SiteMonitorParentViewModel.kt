@@ -4,10 +4,8 @@ import androidx.compose.runtime.State
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -15,7 +13,7 @@ import javax.inject.Named
 @HiltViewModel
 class SiteMonitorParentViewModel @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val siteMonitorUtils: SiteMonitorUtils,
     private val metricsViewModel: SiteMonitorTabViewModelSlice,
     private val phpLogViewModel: SiteMonitorTabViewModelSlice,
     private val webServerViewModel: SiteMonitorTabViewModelSlice
@@ -30,7 +28,7 @@ class SiteMonitorParentViewModel @Inject constructor(
 
     fun start(site: SiteModel) {
         this.site = site
-        trackActivityLaunched()
+        siteMonitorUtils.trackActivityLaunched()
         loadData()
     }
 
@@ -86,10 +84,6 @@ class SiteMonitorParentViewModel @Inject constructor(
                 webServerViewModel.onWebViewError()
             }
         }
-    }
-
-    private fun trackActivityLaunched() {
-        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.SITE_MONITORING_SCREEN_SHOWN)
     }
 
     override fun onCleared() {
