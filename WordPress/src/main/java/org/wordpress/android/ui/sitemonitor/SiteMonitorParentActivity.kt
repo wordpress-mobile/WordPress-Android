@@ -103,13 +103,14 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
             currentSelectItemId = savedInstanceState.getInt(SAVED_STATE_CURRENT_TAB_KEY)
         } else {
             siteMonitorParentViewModel.start(getSite())
+            currentSelectItemId = getInitialTab()
         }
         setContent {
             AppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    SiteMonitorScreen()
+                    SiteMonitorScreen(initialTab = currentSelectItemId)
                 }
             }
         }
@@ -125,9 +126,14 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
         return requireNotNull(intent.getSerializableExtraCompat(WordPress.SITE)) as SiteModel
     }
 
-    private fun getInitialTab(): SiteMonitorType {
-        return intent?.getSerializableExtraCompat(ARG_SITE_MONITOR_TYPE_KEY) as SiteMonitorType?
+    private fun getInitialTab(): Int {
+        val tab = intent?.getSerializableExtraCompat(ARG_SITE_MONITOR_TYPE_KEY) as SiteMonitorType?
             ?: SiteMonitorType.METRICS
+        return when (tab) {
+            SiteMonitorType.METRICS -> 0
+            SiteMonitorType.PHP_LOGS -> 1
+            SiteMonitorType.WEB_SERVER_LOGS -> 2
+        }
     }
 
     companion object {
@@ -138,7 +144,7 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
 
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    fun SiteMonitorTabScreen(modifier: Modifier = Modifier) {
+    fun SiteMonitorScreen(initialTab: Int, modifier: Modifier = Modifier) {
         Scaffold(
             topBar = {
                 MainTopAppBar(
@@ -148,15 +154,15 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
                 )
             },
             content = {
-                SiteMonitorScreen(modifier = modifier)
+                SiteMonitorTab(initialTab, modifier = modifier)
             }
         )
     }
 
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-    fun SiteMonitorScreen(modifier: Modifier = Modifier) {
-        var tabIndex by remember { mutableStateOf(0) }
+    fun SiteMonitorTab(initialTab: Int, modifier: Modifier = Modifier) {
+        var tabIndex by remember { mutableStateOf(initialTab) }
 
         val tabs = listOf(
             R.string.site_monitoring_tab_title_metrics,
@@ -173,7 +179,9 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
                 tabs.forEachIndexed { index, title ->
                     Tab(text = { Text(stringResource(id = title)) },
                         selected = tabIndex == index,
-                        onClick = { tabIndex = index }
+                        onClick = {
+                            tabIndex = index
+                        }
                     )
                 }
             }
