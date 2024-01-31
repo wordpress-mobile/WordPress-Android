@@ -14,7 +14,7 @@ import androidx.credentials.exceptions.GetCredentialException
 import org.wordpress.android.fluxc.store.AccountStore.FinishWebauthnChallengePayload
 import java.util.concurrent.Executors
 
-class PasskeyRequest(
+class PasskeyRequest private constructor(
     context: Context,
     requestData: PasskeyRequestData,
     onSuccess: (FinishWebauthnChallengePayload) -> Unit,
@@ -74,5 +74,13 @@ class PasskeyRequest(
 
     companion object {
         const val TAG = "PasskeyRequest"
+        fun create(
+            context: Context,
+            requestData: PasskeyRequestData,
+            onSuccess: (FinishWebauthnChallengePayload) -> Unit,
+            onFailure: (Throwable) -> Unit
+        ) {
+            PasskeyRequest(context, requestData, onSuccess, onFailure)
+        }
     }
 }
