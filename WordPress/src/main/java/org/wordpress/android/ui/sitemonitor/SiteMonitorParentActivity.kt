@@ -102,6 +102,7 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
             )
                 ?: savedStateSparseArray
             currentSelectItemId = savedInstanceState.getInt(SAVED_STATE_CURRENT_TAB_KEY)
+            siteMonitorParentViewModel.loadData()
         } else {
             siteMonitorParentViewModel.start(getSite())
             currentSelectItemId = getInitialTab()

@@ -31,19 +31,25 @@ class SiteMonitorParentViewModel @Inject constructor(
     fun start(site: SiteModel) {
         this.site = site
         trackActivityLaunched()
+        loadData()
+    }
+
+    fun loadData() {
         metricsViewModel.start(SiteMonitorType.METRICS, SiteMonitorTabItem.Metrics.urlTemplate, site)
         phpLogViewModel.start(SiteMonitorType.PHP_LOGS, SiteMonitorTabItem.PHPLogs.urlTemplate, site)
         webServerViewModel.start(SiteMonitorType.WEB_SERVER_LOGS, SiteMonitorTabItem.WebServerLogs.urlTemplate, site)
     }
 
-    fun getUiState(siteMonitorType: SiteMonitorType): MutableState<SiteMonitorUiState> {
+    fun getUiState(siteMonitorType: SiteMonitorType): State<SiteMonitorUiState> {
         return when (siteMonitorType) {
             SiteMonitorType.METRICS -> {
                 metricsViewModel.uiState
             }
+
             SiteMonitorType.PHP_LOGS -> {
                 phpLogViewModel.uiState
             }
+
             SiteMonitorType.WEB_SERVER_LOGS -> {
                 webServerViewModel.uiState
             }
@@ -55,9 +61,11 @@ class SiteMonitorParentViewModel @Inject constructor(
             SiteMonitorType.METRICS -> {
                 metricsViewModel.onUrlLoaded()
             }
+
             SiteMonitorType.PHP_LOGS -> {
                 phpLogViewModel.onUrlLoaded()
             }
+
             SiteMonitorType.WEB_SERVER_LOGS -> {
                 webServerViewModel.onUrlLoaded()
             }
@@ -69,9 +77,11 @@ class SiteMonitorParentViewModel @Inject constructor(
             SiteMonitorType.METRICS -> {
                 metricsViewModel.onWebViewError()
             }
+
             SiteMonitorType.PHP_LOGS -> {
                 phpLogViewModel.onWebViewError()
             }
+
             SiteMonitorType.WEB_SERVER_LOGS -> {
                 webServerViewModel.onWebViewError()
             }
