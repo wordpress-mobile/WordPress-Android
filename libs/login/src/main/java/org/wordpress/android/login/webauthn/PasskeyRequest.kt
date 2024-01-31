@@ -11,6 +11,9 @@ import androidx.credentials.GetPasswordOption
 import androidx.credentials.GetPublicKeyCredentialOption
 import androidx.credentials.PublicKeyCredential
 import androidx.credentials.exceptions.GetCredentialException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore.FinishWebauthnChallengePayload
 import java.util.concurrent.Executors
 
@@ -29,7 +32,7 @@ class PasskeyRequest private constructor(
 
         val passkeyRequestCallback = object : CredentialManagerCallback<GetCredentialResponse, GetCredentialException> {
             override fun onError(e: GetCredentialException) {
-                onFailure(e)
+                CoroutineScope(Dispatchers.Main).launch { onFailure(e) }
                 Log.e(TAG, e.stackTraceToString())
             }
 
