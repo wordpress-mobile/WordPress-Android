@@ -25,6 +25,7 @@ import androidx.compose.material.Text
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
@@ -175,7 +176,7 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
         }
 
         Column(modifier = modifier.fillMaxWidth()) {
-            androidx.compose.material3.TabRow(
+            TabRow(
                 selectedTabIndex = tabIndex,
                 containerColor = MaterialTheme.colors.surface,
                 contentColor = MaterialTheme.colors.onSurface,
@@ -192,8 +193,8 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
                     Tab(
                         text = {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                androidx.compose.material3.Text(
-                                    text = stringResource(item.title),
+                                Text(
+                                    text = stringResource(item.title).uppercase(),
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
