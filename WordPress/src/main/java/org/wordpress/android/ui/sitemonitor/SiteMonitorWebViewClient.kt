@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.sitemonitor
 
 import android.graphics.Bitmap
-import android.util.Log
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -29,7 +28,6 @@ class SiteMonitorWebViewClient(
     }
 
     override fun onPageFinished(view: WebView, url: String?) {
-        Log.e("Site Monitor Webview client", "onPageFinished: $url")
         super.onPageFinished(view, url)
         if (!errorReceived) {
             url?.let { listener.onWebViewPageLoaded(it, tabType) }
