@@ -9,6 +9,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.structuralEqualityPolicy
 import androidx.compose.ui.graphics.Color
 
+@Suppress("complexity:LongParameterList")
 @Stable
 class DesignSystemColorsBase(
     primaryForeground: Color,
