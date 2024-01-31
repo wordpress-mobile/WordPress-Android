@@ -324,5 +324,4 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
         siteMonitorParentViewModel.onWebViewError(tabType)
         siteMonitorUtils.trackTabLoadingError(tabType)
     }
-
 }
