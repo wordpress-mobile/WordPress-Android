@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 
 @Suppress("complexity:LongParameterList")
 @Stable
-class DesignSystemColorsBase(
+class DesignSystemColors(
     primaryForeground: Color,
     primaryBackground: Color,
     secondaryForeground: Color,
@@ -74,7 +74,7 @@ class DesignSystemColorsBase(
         wp: Color = this.wp,
         wpBackground: Color = this.wpBackground,
         isLight: Boolean = this.isLight
-    ): DesignSystemColorsBase = DesignSystemColorsBase(
+    ): DesignSystemColors = DesignSystemColors(
         primaryForeground,
         primaryBackground,
         secondaryForeground,
@@ -130,7 +130,7 @@ fun lightColors(
     warning: Color = DesignSystemAppColor.Orange,
     wp: Color = DesignSystemAppColor.Blue,
     wpBackground: Color = DesignSystemAppColor.Blue
-): DesignSystemColorsBase = DesignSystemColorsBase(
+): DesignSystemColors = DesignSystemColors(
     primaryForeground,
     primaryBackground,
     secondaryForeground,
@@ -166,7 +166,7 @@ fun darkColors(
     warning: Color = DesignSystemAppColor.Orange10,
     wp: Color = DesignSystemAppColor.Blue10,
     wpBackground: Color = DesignSystemAppColor.Blue20
-): DesignSystemColorsBase = DesignSystemColorsBase(
+): DesignSystemColors = DesignSystemColors(
     primaryForeground,
     primaryBackground,
     secondaryForeground,
@@ -183,7 +183,7 @@ fun darkColors(
     false
 )
 
-internal fun DesignSystemColorsBase.updateColorsFrom(other: DesignSystemColorsBase) {
+internal fun DesignSystemColors.updateColorsFrom(other: DesignSystemColors) {
     primaryForeground = other.primaryForeground
     primaryBackground = other.primaryBackground
     secondaryForeground = other.secondaryForeground

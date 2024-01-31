@@ -7,7 +7,7 @@ import androidx.compose.runtime.remember
 
 @Composable
 fun DesignSystemTheme(
-    colors: DesignSystemColorsBase = DesignSystemTheme.colors,
+    colors: DesignSystemColors = DesignSystemTheme.colors,
     content: @Composable () -> Unit
 ) {
     val rememberedColors = remember { colors.copy() }.apply { updateColorsFrom(colors) }
@@ -19,7 +19,7 @@ fun DesignSystemTheme(
 }
 
     object DesignSystemTheme {
-        val colors: DesignSystemColorsBase
+        val colors: DesignSystemColors
             @Composable
             @ReadOnlyComposable
             get() = LocalColors.current
