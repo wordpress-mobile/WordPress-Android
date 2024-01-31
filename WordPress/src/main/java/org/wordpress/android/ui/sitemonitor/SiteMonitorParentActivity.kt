@@ -60,15 +60,15 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
     private val siteMonitorParentViewModel: SiteMonitorParentViewModel by viewModels()
 
     private val metricsWebView by lazy {
-         commonWebView(SiteMonitorType.METRICS)
+        commonWebView(SiteMonitorType.METRICS)
     }
 
     private val phpLogsWebView by lazy {
-         commonWebView(SiteMonitorType.PHP_LOGS)
+        commonWebView(SiteMonitorType.PHP_LOGS)
     }
 
     private val webServerLogsWebView by lazy {
-         commonWebView(SiteMonitorType.WEB_SERVER_LOGS)
+        commonWebView(SiteMonitorType.WEB_SERVER_LOGS)
     }
 
     private fun commonWebView(
@@ -85,7 +85,7 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
         webViewClient = SiteMonitorWebViewClient(this@SiteMonitorParentActivity, siteMonitorType)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             // not sure about this one, double check if this works as expected
-            settings.isAlgorithmicDarkeningAllowed =true
+            settings.isAlgorithmicDarkeningAllowed = true
         }
     }
 
@@ -240,7 +240,11 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
 
     @SuppressLint("SetJavaScriptEnabled")
     @Composable
-    private fun SiteMonitorWebView(uiState: SiteMonitorUiState, tabType: SiteMonitorType, modifier: Modifier) {
+    private fun SiteMonitorWebView(
+        uiState: SiteMonitorUiState,
+        tabType: SiteMonitorType,
+        modifier: Modifier = Modifier
+    ) {
         // retrieve the webview from the actvity
         var webView = when (tabType) {
             SiteMonitorType.METRICS -> metricsWebView
@@ -257,13 +261,13 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
             contentAlignment = Alignment.Center
         ) {
             if (uiState is SiteMonitorUiState.Prepared) {
-                LoadingState(modifier)
+                LoadingState()
             } else {
                 webView.let { theWebView ->
                     AndroidView(
                         factory = { theWebView },
                         update = { webView = it },
-                        modifier = modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
