@@ -401,6 +401,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(LIST_STATS_USE_CASES)
+    @Suppress("LongParameterList")
     fun provideListStatsUseCases(
         @Named(INSIGHTS_USE_CASE) insightsUseCase: BaseListUseCase,
         @Named(TRAFFIC_USE_CASE) trafficUseCase: BaseListUseCase,
