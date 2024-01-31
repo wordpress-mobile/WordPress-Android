@@ -186,15 +186,15 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
                 }
             }
             when (tabIndex) {
-                0 -> SiteMonitorTabContent(SiteMonitorType.METRICS, modifier)
-                1 -> SiteMonitorTabContent(SiteMonitorType.PHP_LOGS, modifier)
-                2 -> SiteMonitorTabContent(SiteMonitorType.WEB_SERVER_LOGS, modifier)
+                0 -> SiteMonitorTabContent(SiteMonitorType.METRICS)
+                1 -> SiteMonitorTabContent(SiteMonitorType.PHP_LOGS)
+                2 -> SiteMonitorTabContent(SiteMonitorType.WEB_SERVER_LOGS)
             }
         }
     }
 
     @Composable
-    private fun SiteMonitorTabContent(tabType: SiteMonitorType, modifier: Modifier) {
+    private fun SiteMonitorTabContent(tabType: SiteMonitorType, modifier: Modifier = Modifier) {
         val uiState by remember(key1 = tabType) {
             siteMonitorParentViewModel.getUiState(tabType)
         }
