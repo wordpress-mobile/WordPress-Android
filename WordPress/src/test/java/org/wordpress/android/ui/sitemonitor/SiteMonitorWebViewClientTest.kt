@@ -13,7 +13,9 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import android.webkit.WebResourceError
-import org.mockito.Mockito.*
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mockito.mock
+import org.mockito.kotlin.never
 
 @ExperimentalCoroutinesApi
 class SiteMonitorWebViewClientTest : BaseUnitTest() {
@@ -32,7 +34,7 @@ class SiteMonitorWebViewClientTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when onPageFinished, then should invoke on webview page loaded`() {
+    fun `when onPageFinished, then should invoke on web view page loaded`() {
         webViewClient.onPageFinished(mock(WebView::class.java), "https://example.com")
 
         verify(mockListener).onWebViewPageLoaded("https://example.com", SiteMonitorType.METRICS)
