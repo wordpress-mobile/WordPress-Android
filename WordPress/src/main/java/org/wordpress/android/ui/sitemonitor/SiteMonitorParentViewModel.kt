@@ -50,16 +50,16 @@ class SiteMonitorParentViewModel @Inject constructor(
         }
     }
 
-    fun onUrlLoaded(siteMonitorType: SiteMonitorType, url: String) {
+    fun onUrlLoaded(siteMonitorType: SiteMonitorType) {
         when (siteMonitorType) {
             SiteMonitorType.METRICS -> {
-                metricsViewModel.onUrlLoaded(url)
+                metricsViewModel.onUrlLoaded()
             }
             SiteMonitorType.PHP_LOGS -> {
-                phpLogViewModel.onUrlLoaded(url)
+                phpLogViewModel.onUrlLoaded()
             }
             SiteMonitorType.WEB_SERVER_LOGS -> {
-                webServerViewModel.onUrlLoaded(url)
+                webServerViewModel.onUrlLoaded()
             }
         }
     }

@@ -307,7 +307,7 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
     }
 
     override fun onWebViewPageLoaded(url: String, tabType: SiteMonitorType) =
-        siteMonitorParentViewModel.onUrlLoaded(tabType, url)
+        siteMonitorParentViewModel.onUrlLoaded(tabType)
 
     override fun onWebViewReceivedError(url: String, tabType: SiteMonitorType) =
         siteMonitorParentViewModel.onWebViewError(tabType)

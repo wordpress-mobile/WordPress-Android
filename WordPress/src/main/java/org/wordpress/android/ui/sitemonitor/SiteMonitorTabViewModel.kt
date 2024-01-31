@@ -104,10 +104,9 @@ class SiteMonitorTabViewModelSlice @Inject constructor(
         }
     }
 
-    fun onUrlLoaded(url: String) {
+    fun onUrlLoaded() {
         if (uiState.value is SiteMonitorUiState.Prepared){
-            postUiState(SiteMonitorUiState
-                .Loaded((_uiState.value as SiteMonitorUiState.Prepared).model.copy(url = url)))
+            postUiState(SiteMonitorUiState.Loaded)
         }
     }
 
