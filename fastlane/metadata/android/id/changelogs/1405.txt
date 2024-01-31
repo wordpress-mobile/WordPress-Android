@@ -1,0 +1,5 @@
+24.1:
+- Dapatkan pemberitahuan ketika Anda sedang offline.
+- Pengunggahan ke blok gambar dijeda saat internet terputus dan dilanjutkan saat internet tersambung kembali.
+- Pilih gradien kustom di editor dan lihat indikator warna.
+- Panah “maju” dan “mundur” sudah sesuai untuk pembaca tulisan dari kanan ke kiri.

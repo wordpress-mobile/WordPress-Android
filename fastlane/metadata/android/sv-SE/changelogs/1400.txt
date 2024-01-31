@@ -1,6 +1,0 @@
-24.0:
-Blockredigeraruppdateringar:
-- Enhetstangentbordet förblir kvar vid redigering av textblock
-- Skärmen bläddrar automatiskt till nyinfogade block
-- Avmarkera block genom att trycka på din enhets tillbakaknapp
-- Dela olika mediatyper till appen med en gång utan någon krasch
