@@ -24,7 +24,7 @@ class PasskeyRequest private constructor(
         val executor = Executors.newSingleThreadExecutor()
         val signal = CancellationSignal()
         val getCredRequest = GetCredentialRequest(
-                listOf(GetPasswordOption(), GetPublicKeyCredentialOption(requestData.requestJson))
+                listOf(GetPublicKeyCredentialOption(requestData.requestJson))
         )
 
         val passkeyRequestCallback = object : CredentialManagerCallback<GetCredentialResponse, GetCredentialException> {
