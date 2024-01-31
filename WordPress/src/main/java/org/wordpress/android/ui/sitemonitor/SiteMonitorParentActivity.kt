@@ -28,6 +28,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -168,6 +169,10 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
         var tabIndex by remember { mutableStateOf(initialTab) }
 
         val tabs = SiteMonitorTabItem.entries
+
+        LaunchedEffect(true) {
+            siteMonitorUtils.trackTabLoaded(tabs[initialTab].siteMonitorType)
+        }
 
         Column(modifier = modifier.fillMaxWidth()) {
             androidx.compose.material3.TabRow(
