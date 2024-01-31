@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.sitemonitor
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.util.SparseArray
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +24,6 @@ import androidx.compose.material.Text
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,13 +43,48 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
+import javax.inject.Inject
 
+@SuppressLint("SetJavaScriptEnabled")
 @AndroidEntryPoint
 class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.SiteMonitorWebViewClientListener {
     private var savedStateSparseArray = SparseArray<Fragment.SavedState>()
     private var currentSelectItemId = 0
 
     private val siteMonitorParentViewModel: SiteMonitorParentViewModel by viewModels()
+
+    @Inject
+    lateinit var siteMonitorUtils: SiteMonitorUtils
+
+    private val metricsWebView by lazy {
+         commonWebView(SiteMonitorType.METRICS)
+    }
+
+    private val phpLogsWebView by lazy {
+         commonWebView(SiteMonitorType.PHP_LOGS)
+    }
+
+    private val webServerLogsWebView by lazy {
+         commonWebView(SiteMonitorType.WEB_SERVER_LOGS)
+    }
+
+    private fun commonWebView(
+        siteMonitorType: SiteMonitorType
+    ) = WebView(this@SiteMonitorParentActivity).apply {
+        layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
+        settings.userAgentString = siteMonitorUtils.getUserAgent()
+        settings.javaScriptEnabled = true
+        settings.domStorageEnabled = true
+        webViewClient = SiteMonitorWebViewClient(this@SiteMonitorParentActivity, siteMonitorType)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // not sure about this one, double check if this works as expected
+            settings.isAlgorithmicDarkeningAllowed =true
+        }
+    }
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -176,36 +210,15 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
     @SuppressLint("SetJavaScriptEnabled")
     @Composable
     private fun SiteMonitorWebView(uiState: SiteMonitorUiState, tabType: SiteMonitorType, modifier: Modifier) {
-        Log.e("Track", "SiteMonitorWebView $uiState")
-        var webView: WebView? by remember { mutableStateOf(null) }
-
-        Log.e("Track", "SiteMonitorWebView $webView")
-
-        val model = when (uiState) {
-            is SiteMonitorUiState.Prepared -> uiState.model
-            is SiteMonitorUiState.Loaded -> uiState.model
-            else -> null
+        // retrieve the webview from the actvity
+        var webView = when (tabType) {
+            SiteMonitorType.METRICS -> metricsWebView
+            SiteMonitorType.PHP_LOGS -> phpLogsWebView
+            SiteMonitorType.WEB_SERVER_LOGS -> webServerLogsWebView
         }
 
-        model?.let {
-            LaunchedEffect(true) {
-                webView = WebView(this@SiteMonitorParentActivity).apply {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                    scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
-                    settings.userAgentString = model.userAgent
-                    settings.javaScriptEnabled = true
-                    settings.domStorageEnabled = true
-                    webViewClient = SiteMonitorWebViewClient(this@SiteMonitorParentActivity, tabType)
-                }
-            }
-            if(uiState is SiteMonitorUiState.Prepared) {
-                webView?.postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, model.addressToLoad.toByteArray())
-            } else {
-                webView?.loadUrl(model.url)
-            }
+        if (uiState is SiteMonitorUiState.Prepared) {
+            webView.postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, uiState.model.addressToLoad.toByteArray())
         }
 
         Box(
@@ -213,17 +226,24 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
             contentAlignment = Alignment.Center
         ) {
             if (uiState is SiteMonitorUiState.Prepared) {
-                LoadingState()
+                LoadingState(modifier)
             } else {
-                webView?.let { theWebView ->
+                webView.let { theWebView ->
                     AndroidView(
                         factory = { theWebView },
                         update = { webView = it },
-                        modifier = Modifier.fillMaxSize()
+                        modifier = modifier.fillMaxSize()
                     )
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        metricsWebView.destroy()
+        phpLogsWebView.destroy()
+        webServerLogsWebView.destroy()
     }
 
     override fun onWebViewPageLoaded(url: String, tabType: SiteMonitorType) =
