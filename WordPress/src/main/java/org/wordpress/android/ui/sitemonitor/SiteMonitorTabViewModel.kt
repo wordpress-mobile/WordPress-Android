@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.sitemonitor
 
 import android.text.TextUtils
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
@@ -11,6 +10,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
+
 class SiteMonitorTabViewModelSlice @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val accountStore: AccountStore,
@@ -32,7 +32,6 @@ class SiteMonitorTabViewModelSlice @Inject constructor(
     }
 
     fun start(type: SiteMonitorType, urlTemplate: String, site: SiteModel) {
-        Log.i("Track", "TheViewModel start with $urlTemplate and $type")
         this.siteMonitorType = type
         this.urlTemplate = urlTemplate
         this.site = site
@@ -106,7 +105,6 @@ class SiteMonitorTabViewModelSlice @Inject constructor(
     }
 
     fun onUrlLoaded(url: String) {
-        Log.i("Track", "TheViewModel onUrlLoaded $url")
         siteMonitorUtils.trackTabLoaded(siteMonitorType)
         if (uiState.value is SiteMonitorUiState.Prepared){
             postUiState(SiteMonitorUiState
@@ -114,13 +112,11 @@ class SiteMonitorTabViewModelSlice @Inject constructor(
         }
     }
 
-
     fun onWebViewError() {
         postUiState(mapper.toGenericError(::loadView))
     }
 
     fun onCleared() {
-        Log.i("Track", "TheViewModel onCleared")
         scope.cancel()
     }
 

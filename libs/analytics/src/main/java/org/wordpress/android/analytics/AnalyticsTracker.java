@@ -1103,6 +1103,7 @@ public final class AnalyticsTracker {
         DEEP_LINK_FAILED,
         SITE_MONITORING_SCREEN_SHOWN,
         OPENED_SITE_MONITORING,
+        SITE_MONITORING_TAB_SHOWN,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

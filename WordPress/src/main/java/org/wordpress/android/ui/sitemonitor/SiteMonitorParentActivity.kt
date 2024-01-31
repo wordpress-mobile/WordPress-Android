@@ -51,13 +51,13 @@ import javax.inject.Inject
 @SuppressLint("SetJavaScriptEnabled")
 @AndroidEntryPoint
 class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.SiteMonitorWebViewClientListener {
+    @Inject
+    lateinit var siteMonitorUtils: SiteMonitorUtils
+
     private var savedStateSparseArray = SparseArray<Fragment.SavedState>()
     private var currentSelectItemId = 0
 
     private val siteMonitorParentViewModel: SiteMonitorParentViewModel by viewModels()
-
-    @Inject
-    lateinit var siteMonitorUtils: SiteMonitorUtils
 
     private val metricsWebView by lazy {
          commonWebView(SiteMonitorType.METRICS)
@@ -92,6 +92,9 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        siteMonitorUtils.trackActivityLaunched()
+
         if (savedInstanceState != null) {
             savedStateSparseArray = savedInstanceState.getSparseParcelableArray(
                 SAVED_STATE_CONTAINER_KEY
@@ -106,7 +109,7 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    SiteMonitorTabScreen()
+                    SiteMonitorScreen()
                 }
             }
         }

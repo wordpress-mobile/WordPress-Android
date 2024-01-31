@@ -2699,6 +2699,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_monitoring_screen_shown";
             case OPENED_SITE_MONITORING:
                 return "opened_site_monitoring";
+            case SITE_MONITORING_TAB_SHOWN:
+                return "site_monitoring_tab_shown";
         }
         return null;
     }
