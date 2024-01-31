@@ -93,8 +93,6 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        siteMonitorUtils.trackActivityLaunched()
-
         if (savedInstanceState != null) {
             savedStateSparseArray = savedInstanceState.getSparseParcelableArray(
                 SAVED_STATE_CONTAINER_KEY
@@ -180,6 +178,7 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
                     Tab(text = { Text(stringResource(id = title)) },
                         selected = tabIndex == index,
                         onClick = {
+                            siteMonitorUtils.trackTabLoaded(SiteMonitorType.entries[index])
                             tabIndex = index
                         }
                     )
