@@ -608,18 +608,19 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     @Test
     fun `Scroll to top is triggered when discover feed is updated after swipe to refresh`() = test {
         // Arrange
-        val uiStates = init().uiStates
+        val scrollToTopCounter = init().scrollToTopCounter
+
         // Act
         viewModel.swipeToRefresh()
         fakeDiscoverFeed.value = createDummyReaderCardsList()
         // Assert
-        assertThat(uiStates.last().scrollToTop).isTrue
+        assertThat(scrollToTopCounter.count).isEqualTo(1)
     }
 
     @Test
     fun `Scroll to top is not triggered when discover feed is updated after load more action`() = test {
         // Arrange
-        val uiStates = init().uiStates
+        val scrollToTopCounter = init().scrollToTopCounter
         val closeToEndIndex = NUMBER_OF_ITEMS.toInt() - INITIATE_LOAD_MORE_OFFSET
         init()
         // Act
@@ -628,7 +629,34 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         }
         fakeDiscoverFeed.value = createDummyReaderCardsList()
         // Assert
-        assertThat(uiStates.last().scrollToTop).isFalse
+        assertThat(scrollToTopCounter.count).isZero()
+    }
+
+    @Test
+    fun `Scroll to top is triggered only once when discover feed is updated with load more after swipe to refresh`() =
+        test {
+            // Arrange
+            val scrollToTopCounter = init().scrollToTopCounter
+            val closeToEndIndex = NUMBER_OF_ITEMS.toInt() - INITIATE_LOAD_MORE_OFFSET
+
+            // Act for swipe to refresh
+            viewModel.swipeToRefresh()
+            fakeDiscoverFeed.value = createDummyReaderCardsList()
+
+            // Assert for swipe to refresh
+            assertThat(scrollToTopCounter.count).isEqualTo(1)
+
+            // Arrange for load more
+            scrollToTopCounter.reset()
+
+            // Act for load more
+            ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostUiState).let {
+                it.onItemRendered.invoke(it)
+            }
+            fakeDiscoverFeed.value = createDummyReaderCardsList()
+
+            // Assert for load more
+            assertThat(scrollToTopCounter.count).isZero()
     }
 
     @Test
@@ -679,11 +707,15 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         viewModel.snackbarEvents.observeForever {
             msgs.add(it)
         }
+        val scrollToTop = SimpleCounter()
+        viewModel.scrollToTopEvent.observeForever {
+            scrollToTop.increment()
+        }
         viewModel.start(parentViewModel)
         if (autoUpdateFeed) {
             fakeDiscoverFeed.value = createDummyReaderCardsList()
         }
-        return Observers(uiStates, navigation, msgs)
+        return Observers(uiStates, navigation, msgs, scrollToTop)
     }
 
     // since we are adding an InterestsYouMayLikeCard we remove one item from the numberOfItems since it counts as 1.
@@ -881,6 +913,18 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     private data class Observers(
         val uiStates: List<DiscoverUiState>,
         val navigation: List<Event<ReaderNavigationEvents>>,
-        val snackbarMsgs: List<Event<SnackbarMessageHolder>>
+        val snackbarMsgs: List<Event<SnackbarMessageHolder>>,
+        val scrollToTopCounter: SimpleCounter, // number of calls to this event
     )
+
+    private class SimpleCounter {
+        var count: Int = 0
+            private set
+
+        fun increment() = count++
+
+        fun reset() {
+            count = 0
+        }
+    }
 }
