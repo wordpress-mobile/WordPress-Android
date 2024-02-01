@@ -3,22 +3,26 @@ package org.wordpress.android.ui.sitemonitor
 import android.text.TextUtils
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
+import javax.inject.Named
 
 class SiteMonitorTabViewModelSlice @Inject constructor(
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val accountStore: AccountStore,
     private val mapper: SiteMonitorMapper,
     private val siteMonitorUtils: SiteMonitorUtils,
     private val siteStore: SiteStore,
-){
+) {
     private lateinit var scope: CoroutineScope
 
     private lateinit var site: SiteModel
@@ -77,8 +81,10 @@ class SiteMonitorTabViewModelSlice @Inject constructor(
         val sanitizedUrl = siteMonitorUtils.sanitizeSiteUrl(site.url)
         val url = urlTemplate.replace("{blog}", sanitizedUrl)
 
-        val addressToLoad = prepareAddressToLoad(url)
-        postUiState(mapper.toPrepared(url, addressToLoad, siteMonitorType))
+        scope.launch(bgDispatcher) {
+            val addressToLoad = prepareAddressToLoad(url)
+            postUiState(mapper.toPrepared(url, addressToLoad, siteMonitorType))
+        }
     }
 
     private fun prepareAddressToLoad(url: String): String {
@@ -115,7 +121,7 @@ class SiteMonitorTabViewModelSlice @Inject constructor(
     }
 
     fun onUrlLoaded() {
-        if (uiState.value is SiteMonitorUiState.Prepared){
+        if (uiState.value is SiteMonitorUiState.Prepared) {
             postUiState(SiteMonitorUiState.Loaded)
         }
     }
