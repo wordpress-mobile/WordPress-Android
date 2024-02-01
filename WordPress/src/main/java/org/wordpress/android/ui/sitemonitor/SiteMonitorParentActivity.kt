@@ -221,24 +221,24 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
         val uiState by remember(key1 = tabType) {
             siteMonitorParentViewModel.getUiState(tabType)
         }
-        LazyColumn  {
-            item {
-                when (uiState) {
-                    is SiteMonitorUiState.Preparing -> LoadingState(modifier)
-                    is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded ->
-                        SiteMonitorWebView(uiState, tabType, modifier)
-                    is SiteMonitorUiState.Error -> SiteMonitorError(uiState as SiteMonitorUiState.Error, modifier)
-                }
-            }
+        when (uiState) {
+            is SiteMonitorUiState.Preparing -> LoadingState(modifier)
+            is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded ->
+                SiteMonitorWebViewContent(uiState, tabType, modifier)
+
+            is SiteMonitorUiState.Error -> SiteMonitorError(uiState as SiteMonitorUiState.Error, modifier)
         }
     }
+
     @Composable
     fun LoadingState(modifier: Modifier = Modifier) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier.fillMaxSize()
         ) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(
+                color = MaterialTheme.colors.onSurface
+            )
         }
     }
 
@@ -276,32 +276,44 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
 
     @SuppressLint("SetJavaScriptEnabled")
     @Composable
-    private fun SiteMonitorWebView(
+    private fun SiteMonitorWebViewContent(
         uiState: SiteMonitorUiState,
         tabType: SiteMonitorType,
         modifier: Modifier = Modifier
     ) {
         // retrieve the webview from the actvity
-        var webView = when (tabType) {
+        val webView = when (tabType) {
             SiteMonitorType.METRICS -> metricsWebView
             SiteMonitorType.PHP_LOGS -> phpLogsWebView
             SiteMonitorType.WEB_SERVER_LOGS -> webServerLogsWebView
         }
 
-        if (uiState is SiteMonitorUiState.Prepared) {
-            webView.postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, uiState.model.addressToLoad.toByteArray())
-        }
-
-        Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            if (uiState is SiteMonitorUiState.Prepared) {
+        when(uiState) {
+            is SiteMonitorUiState.Prepared -> {
+                webView.postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, uiState.model.addressToLoad.toByteArray())
                 LoadingState()
-            } else {
-                webView.let { theWebView ->
+            }
+            is SiteMonitorUiState.Loaded -> {
+                SiteMonitorWebView(webView, modifier)
+            }
+            else -> {}
+        }
+    }
+
+    @Composable
+    private fun SiteMonitorWebView(tabWebView: WebView, modifier: Modifier = Modifier) {
+        // the webview is retrieved from the activity, so we need to use a mutable variable
+        // to assign to android view
+
+        var webView = tabWebView
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+        ) {
+            LazyColumn(modifier = Modifier.fillMaxHeight()) {
+                item {
                     AndroidView(
-                        factory = { theWebView },
+                        factory = { webView },
                         update = { webView = it },
                         modifier = Modifier.fillMaxWidth()
                     )
