@@ -34,6 +34,7 @@ class SiteMonitorTabViewModelSliceTest : BaseUnitTest() {
     @Before
     fun setUp() = test {
         viewModel = SiteMonitorTabViewModelSlice(
+            testDispatcher(),
             networkUtilsWrapper,
             accountStore,
             mapper,
