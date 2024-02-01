@@ -28,6 +28,9 @@ class SiteMonitorTabViewModelSlice @Inject constructor(
     private val _uiState = mutableStateOf<SiteMonitorUiState>(SiteMonitorUiState.Preparing)
     val uiState: State<SiteMonitorUiState> = _uiState
 
+    private val _isRefreshing = mutableStateOf<Boolean>(false)
+    val isRefreshing: State<Boolean> = _isRefreshing
+
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
     }
@@ -48,6 +51,12 @@ class SiteMonitorTabViewModelSlice @Inject constructor(
         if (!validateAndPostErrorIfNeeded()) return
 
         assembleAndShowSiteMonitor()
+    }
+
+    fun refreshData() {
+        _isRefreshing.value = true
+        loadView()
+        _isRefreshing.value = false
     }
 
     private fun checkForInternetConnectivityAndPostErrorIfNeeded() : Boolean {
