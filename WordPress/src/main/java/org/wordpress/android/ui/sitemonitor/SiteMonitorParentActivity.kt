@@ -236,7 +236,9 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
             contentAlignment = Alignment.Center,
             modifier = modifier.fillMaxSize()
         ) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(
+                color = MaterialTheme.colors.onSurface
+            )
         }
     }
 
