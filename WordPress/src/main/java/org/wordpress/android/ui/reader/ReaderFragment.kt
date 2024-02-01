@@ -232,6 +232,11 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
         if (uiState.selectedReaderTag == null) {
             return
         }
+
+        // only initialize the fragment if it's not already initialized
+        val currentFragmentTag = childFragmentManager.findFragmentById(R.id.container)?.tag
+        if (currentFragmentTag == uiState.selectedReaderTag.tagSlug) return
+
         childFragmentManager.beginTransaction().apply {
             val fragment = if (uiState.selectedReaderTag.isDiscover()) {
                 ReaderDiscoverFragment()
@@ -243,7 +248,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
                     uiState.selectedReaderTag.isFilterable
                 )
             }
-            replace(R.id.container, fragment)
+            replace(R.id.container, fragment, uiState.selectedReaderTag.tagSlug)
             commit()
         }
         viewModel.uiState.value?.let {
