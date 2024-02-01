@@ -105,7 +105,14 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                 }
                 mReaderTracker.track(Stat.READER_MANAGE_VIEW_DISMISSED);
                 final Intent data = new Intent();
-                data.putExtra(RESULT_SHOULD_REFRESH_SUBSCRIPTIONS, true);
+                boolean shouldRefreshSubscriptions = false;
+                if (mPageAdapter != null) {
+                    final ReaderTagFragment readerTagFragment = mPageAdapter.getReaderTagFragment();
+                    if (readerTagFragment != null) {
+                        shouldRefreshSubscriptions = readerTagFragment.hasChangedSelectedTags();
+                    }
+                }
+                data.putExtra(RESULT_SHOULD_REFRESH_SUBSCRIPTIONS, shouldRefreshSubscriptions);
                 setResult(RESULT_OK, data);
                 CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
             }
@@ -569,12 +576,20 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         }
 
         private void refreshFollowedTagFragment() {
-            for (Fragment fragment : mFragments) {
+            final ReaderTagFragment fragment = getReaderTagFragment();
+            if (fragment != null) {
+                fragment.refresh();
+            }
+        }
+
+        @Nullable
+        private ReaderTagFragment getReaderTagFragment() {
+            for (final Fragment fragment : mFragments) {
                 if (fragment instanceof ReaderTagFragment) {
-                    ReaderTagFragment tagFragment = (ReaderTagFragment) fragment;
-                    tagFragment.refresh();
+                    return (ReaderTagFragment) fragment;
                 }
             }
+            return null;
         }
 
         private void refreshBlogFragments(ReaderBlogType blogType) {

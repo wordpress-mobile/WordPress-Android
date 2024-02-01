@@ -93,6 +93,10 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
         return new TagViewHolder(view);
     }
 
+    public ReaderTagList getItems() {
+        return mTags;
+    }
+
     @Override
     public void onBindViewHolder(TagViewHolder holder, int position) {
         final ReaderTag tag = mTags.get(position);
