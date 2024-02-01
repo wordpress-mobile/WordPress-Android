@@ -32,7 +32,7 @@ class SiteMonitorTabViewModelSlice @Inject constructor(
     private val _uiState = mutableStateOf<SiteMonitorUiState>(SiteMonitorUiState.Preparing)
     val uiState: State<SiteMonitorUiState> = _uiState
 
-    private val _isRefreshing = mutableStateOf<Boolean>(false)
+    private val _isRefreshing = mutableStateOf(false)
     val isRefreshing: State<Boolean> = _isRefreshing
 
     fun initialize(scope: CoroutineScope) {
@@ -63,7 +63,7 @@ class SiteMonitorTabViewModelSlice @Inject constructor(
         _isRefreshing.value = false
     }
 
-    private fun checkForInternetConnectivityAndPostErrorIfNeeded() : Boolean {
+    private fun checkForInternetConnectivityAndPostErrorIfNeeded(): Boolean {
         if (networkUtilsWrapper.isNetworkAvailable()) return true
         postUiState(mapper.toNoNetworkError(::loadView))
         return false
@@ -110,7 +110,7 @@ class SiteMonitorTabViewModelSlice @Inject constructor(
             addressToLoad,
             username,
             "",
-            accessToken?:""
+            accessToken ?: ""
         )
     }
 
