@@ -104,18 +104,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                     EventBus.getDefault().postSticky(new ReaderEvents.TagAdded(mLastAddedTagName));
                 }
                 mReaderTracker.track(Stat.READER_MANAGE_VIEW_DISMISSED);
-                final Intent data = new Intent();
-                boolean shouldRefreshSubscriptions = false;
-                if (mPageAdapter != null) {
-                    final ReaderTagFragment readerTagFragment = mPageAdapter.getReaderTagFragment();
-                    final ReaderBlogFragment readerBlogFragment = mPageAdapter.getReaderBlogFragment();
-                    if (readerTagFragment != null && readerBlogFragment != null) {
-                        shouldRefreshSubscriptions = readerTagFragment.hasChangedSelectedTags()
-                                                     || readerBlogFragment.hasChangedSelectedBlogs();
-                    }
-                }
-                data.putExtra(RESULT_SHOULD_REFRESH_SUBSCRIPTIONS, shouldRefreshSubscriptions);
-                setResult(RESULT_OK, data);
+                setResult();
                 CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
             }
         };
@@ -183,6 +172,21 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         });
 
         mReaderTracker.track(Stat.READER_MANAGE_VIEW_DISPLAYED);
+    }
+
+    private void setResult() {
+        final Intent data = new Intent();
+        boolean shouldRefreshSubscriptions = false;
+        if (mPageAdapter != null) {
+            final ReaderTagFragment readerTagFragment = mPageAdapter.getReaderTagFragment();
+            final ReaderBlogFragment readerBlogFragment = mPageAdapter.getReaderBlogFragment();
+            if (readerTagFragment != null && readerBlogFragment != null) {
+                shouldRefreshSubscriptions = readerTagFragment.hasChangedSelectedTags()
+                                             || readerBlogFragment.hasChangedSelectedBlogs();
+            }
+        }
+        data.putExtra(RESULT_SHOULD_REFRESH_SUBSCRIPTIONS, shouldRefreshSubscriptions);
+        setResult(RESULT_OK, data);
     }
 
     @Override

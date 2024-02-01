@@ -850,6 +850,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mBottomNavController = (BottomNavController) context;
         }
 
+        initReaderSubsActivityResultLauncher();
+    }
+
+    private void initReaderSubsActivityResultLauncher() {
         mReaderSubsActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -859,7 +863,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             final boolean shouldRefreshSubscriptions =
                                     data.getBooleanExtra(ReaderSubsActivity.RESULT_SHOULD_REFRESH_SUBSCRIPTIONS, false);
                             if (shouldRefreshSubscriptions) {
-                                // TODO refresh tags if list have changed
+                                // TODO refresh chips if there were changes
                             }
                         }
                     }
