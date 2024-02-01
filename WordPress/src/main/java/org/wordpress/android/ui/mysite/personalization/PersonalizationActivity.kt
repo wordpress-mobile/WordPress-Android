@@ -107,7 +107,7 @@ class PersonalizationActivity : AppCompatActivity() {
                 contentColor = MaterialTheme.colors.onSurface,
             ) {
                 tabs.forEachIndexed { index, title ->
-                    Tab(text = { Text(stringResource(id = title)) },
+                    Tab(text = { Text(stringResource(id = title).uppercase()) },
                         selected = tabIndex == index,
                         onClick = { tabIndex = index }
                     )

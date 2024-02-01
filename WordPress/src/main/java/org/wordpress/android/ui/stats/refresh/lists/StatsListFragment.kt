@@ -27,6 +27,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.E
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Success
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
+import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
@@ -56,6 +57,9 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
 
     @Inject
     lateinit var statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+
+    @Inject
+    lateinit var selectedTrafficGranularityManager: SelectedTrafficGranularityManager
 
     private lateinit var viewModel: StatsListViewModel
     private lateinit var statsSection: StatsSection
@@ -158,9 +162,14 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
                 StatsGranularity.entries.map { getString(it.toNameResource()) }
             ).apply { setDropDownViewResource(R.layout.toolbar_spinner_dropdown_item) }
 
+            val selectedGranularityItemPos = StatsGranularity.entries.indexOf(
+                selectedTrafficGranularityManager.getSelectedTrafficGranularity()
+            )
+            dateSelector.granularitySpinner.setSelection(selectedGranularityItemPos)
+
             dateSelector.granularitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    // TODO update TRAFFIC tab
+                    selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.entries[position])
                 }
 
                 @Suppress("EmptyFunctionBlock")
@@ -243,9 +252,9 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             navigator.navigate(activity, target)
         }
 
-        viewModel.selectedDate.observe(viewLifecycleOwner) { event ->
+        viewModel.selectedDate?.observe(viewLifecycleOwner) { event ->
             if (event != null) {
-                viewModel.onDateChanged(event.selectedSection)
+                viewModel.onDateChanged(event.selectedGranularity)
             }
         }
 

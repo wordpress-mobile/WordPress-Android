@@ -8,7 +8,6 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import java.util.Date
 
 abstract class GranularStatelessUseCase<DOMAIN_MODEL>(
@@ -22,7 +21,7 @@ abstract class GranularStatelessUseCase<DOMAIN_MODEL>(
     type,
     mainDispatcher,
     backgroundDispatcher,
-    listOf(UseCaseParam.SelectedDateParam(statsGranularity.toStatsSection()))
+    listOf(UseCaseParam.SelectedDateParam(statsGranularity))
 ) {
     abstract suspend fun loadCachedData(selectedDate: Date, site: SiteModel): DOMAIN_MODEL?
 

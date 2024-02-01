@@ -2701,6 +2701,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "opened_site_monitoring";
             case SITE_MONITORING_TAB_SHOWN:
                 return "site_monitoring_tab_shown";
+            case SITE_MONITORING_TAB_LOADING_ERROR:
+                return "site_monitoring_tab_loading_error";
         }
         return null;
     }
