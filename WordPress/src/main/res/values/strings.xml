@@ -2162,7 +2162,7 @@
     <string name="reader_label_local_related_posts">More from %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
     <string name="reader_label_visit">Visit site</string>
-    <string name="reader_label_choose_your_interests">Choose your topics</string>
+    <string name="reader_label_choose_interests">Choose your interests</string>
     <string name="reader_view_comments">View comments</string>
     <string name="reader_welcome_banner">Welcome to Reader. Discover millions of blogs at your fingertips.</string>
     <string name="reader_label_toolbar_back">Back</string>
