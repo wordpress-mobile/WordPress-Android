@@ -24,6 +24,7 @@ import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
@@ -284,6 +285,29 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     fun `ShowFollowInterestsEmptyUiState is shown when the user does NOT follow any tags`() = test {
         // Arrange
         whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList())
+        val uiStates = init().uiStates
+        // Act
+        viewModel.start(parentViewModel)
+        // Assert
+        assertThat(uiStates.size).isEqualTo(2)
+        assertThat(uiStates[1]).isInstanceOf(ShowNoFollowedTagsUiState::class.java)
+    }
+
+    @Test
+    fun `ShowFollowInterestsEmptyUiState is shown when the user follows only the daily prompt tag`() = test {
+        // Arrange
+        val tagsWithDailyPrompt = ReaderTagList().apply {
+            add(
+                ReaderTag(
+                    "dailyprompt",
+                    "dailyprompt",
+                    "dailyprompt",
+                    "https://public-api.wordpress.com/rest/v1.2/read/tags/dailyprompt/posts",
+                    ReaderTagType.DEFAULT
+                )
+            )
+        }
+        whenever(getFollowedTagsUseCase.get()).thenReturn(tagsWithDailyPrompt)
         val uiStates = init().uiStates
         // Act
         viewModel.start(parentViewModel)

@@ -16,6 +16,7 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommende
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider.Companion.BLOGGING_PROMPT_TAG
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
@@ -149,7 +150,10 @@ class ReaderDiscoverViewModel @Inject constructor(
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             launch {
                 val userTags = getFollowedTagsUseCase.get()
-                if (userTags.isEmpty()) {
+
+                // since new users have the dailyprompt tag followed by default, we need to ignore them when
+                // checking if the user has any tags followed, so we show the onboarding state (ShowNoFollowedTags)
+                if (userTags.filterNot { it.tagSlug == BLOGGING_PROMPT_TAG }.isEmpty()) {
                     _uiState.value = DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState {
                         parentViewModel.onShowReaderInterests()
                     }
