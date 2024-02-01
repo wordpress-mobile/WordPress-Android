@@ -52,8 +52,10 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
         }
         final List<ReaderTag> currentReaderTagList = getTagAdapter().getItems();
         final Set<String> currentTagsSlugs = new HashSet<>();
-        for (final ReaderTag readerTag : currentReaderTagList) {
-            currentTagsSlugs.add(readerTag.getTagSlug());
+        if (currentReaderTagList != null) {
+            for (final ReaderTag readerTag : currentReaderTagList) {
+                currentTagsSlugs.add(readerTag.getTagSlug());
+            }
         }
         return !(initialTagsSlugs.containsAll(currentTagsSlugs));
     }
@@ -102,13 +104,12 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mTagAdapter = new ReaderTagAdapter(context);
             mTagAdapter.setTagDeletedListener(this);
-            mTagAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
-                @Override
-                public void onDataLoaded(boolean isEmpty) {
-                    checkEmptyView();
-                    if (mIsFirstDataLoaded) {
-                        mIsFirstDataLoaded = false;
-                        mInitialReaderTagList.clear();
+            mTagAdapter.setDataLoadedListener(isEmpty -> {
+                checkEmptyView();
+                if (mIsFirstDataLoaded) {
+                    mIsFirstDataLoaded = false;
+                    mInitialReaderTagList.clear();
+                    if (mTagAdapter != null && mTagAdapter.getItems() != null) {
                         mInitialReaderTagList.addAll(mTagAdapter.getItems());
                     }
                 }

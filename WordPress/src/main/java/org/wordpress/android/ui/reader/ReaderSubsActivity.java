@@ -108,8 +108,10 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                 boolean shouldRefreshSubscriptions = false;
                 if (mPageAdapter != null) {
                     final ReaderTagFragment readerTagFragment = mPageAdapter.getReaderTagFragment();
-                    if (readerTagFragment != null) {
-                        shouldRefreshSubscriptions = readerTagFragment.hasChangedSelectedTags();
+                    final ReaderBlogFragment readerBlogFragment = mPageAdapter.getReaderBlogFragment();
+                    if (readerTagFragment != null && readerBlogFragment != null) {
+                        shouldRefreshSubscriptions = readerTagFragment.hasChangedSelectedTags()
+                                                     || readerBlogFragment.hasChangedSelectedBlogs();
                     }
                 }
                 data.putExtra(RESULT_SHOULD_REFRESH_SUBSCRIPTIONS, shouldRefreshSubscriptions);
@@ -587,6 +589,16 @@ public class ReaderSubsActivity extends LocaleAwareActivity
             for (final Fragment fragment : mFragments) {
                 if (fragment instanceof ReaderTagFragment) {
                     return (ReaderTagFragment) fragment;
+                }
+            }
+            return null;
+        }
+
+        @Nullable
+        private ReaderBlogFragment getReaderBlogFragment() {
+            for (final Fragment fragment : mFragments) {
+                if (fragment instanceof ReaderBlogFragment) {
+                    return (ReaderBlogFragment) fragment;
                 }
             }
             return null;

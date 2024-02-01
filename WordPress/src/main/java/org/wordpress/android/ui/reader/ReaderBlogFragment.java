@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,12 +18,18 @@ import androidx.fragment.app.Fragment;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderBlog;
+import org.wordpress.android.models.ReaderBlogList;
+import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -38,6 +45,9 @@ public class ReaderBlogFragment extends Fragment
     private boolean mIgnoreNextSearch;
 
     @Inject ReaderTracker mReaderTracker;
+
+    private boolean mIsFirstDataLoaded;
+    private final ReaderBlogList mInitialReaderBlogList = new ReaderBlogList();
 
     private static final String ARG_BLOG_TYPE = "blog_type";
     private static final String KEY_SEARCH_FILTER = "search_filter";
@@ -77,6 +87,21 @@ public class ReaderBlogFragment extends Fragment
         setHasOptionsMenu(getBlogType() == ReaderBlogType.FOLLOWED);
 
         return view;
+    }
+
+    public boolean hasChangedSelectedBlogs() {
+        final Set<String> initialBlogsUrls = new HashSet<>();
+        for (final ReaderBlog readerBlog : mInitialReaderBlogList) {
+            initialBlogsUrls.add(readerBlog.getUrl());
+        }
+        final List<ReaderBlog> currentReaderBlogList = mAdapter.getItems();
+        final Set<String> currentBlogsUrls = new HashSet<>();
+        if (currentReaderBlogList != null) {
+            for (final ReaderBlog readerBlog : currentReaderBlogList) {
+                currentBlogsUrls.add(readerBlog.getUrl());
+            }
+        }
+        return !(initialBlogsUrls.containsAll(currentBlogsUrls));
     }
 
     private void checkEmptyView() {
@@ -145,6 +170,12 @@ public class ReaderBlogFragment extends Fragment
     public void onResume() {
         super.onResume();
         refresh();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mIsFirstDataLoaded = true;
     }
 
     /*
@@ -227,10 +258,14 @@ public class ReaderBlogFragment extends Fragment
                     ReaderTracker.SOURCE_SETTINGS
             );
             mAdapter.setBlogClickListener(this);
-            mAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
-                @Override
-                public void onDataLoaded(boolean isEmpty) {
-                    checkEmptyView();
+            mAdapter.setDataLoadedListener(isEmpty -> {
+                checkEmptyView();
+                if (mIsFirstDataLoaded) {
+                    mIsFirstDataLoaded = false;
+                    mInitialReaderBlogList.clear();
+                    if (mAdapter != null && mAdapter.getItems() != null) {
+                        mInitialReaderBlogList.addAll(mAdapter.getItems());
+                    }
                 }
             });
         }
