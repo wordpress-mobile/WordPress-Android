@@ -221,17 +221,14 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
         val uiState by remember(key1 = tabType) {
             siteMonitorParentViewModel.getUiState(tabType)
         }
-        LazyColumn  {
-            item {
-                when (uiState) {
-                    is SiteMonitorUiState.Preparing -> LoadingState(modifier)
-                    is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded ->
-                        SiteMonitorWebView(uiState, tabType, modifier)
-                    is SiteMonitorUiState.Error -> SiteMonitorError(uiState as SiteMonitorUiState.Error, modifier)
-                }
-            }
+        when (uiState) {
+            is SiteMonitorUiState.Preparing -> LoadingState(modifier)
+            is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded ->
+                SiteMonitorWebView(uiState, tabType, modifier)
+            is SiteMonitorUiState.Error -> SiteMonitorError(uiState as SiteMonitorUiState.Error, modifier)
         }
     }
+
     @Composable
     fun LoadingState(modifier: Modifier = Modifier) {
         Box(
@@ -299,12 +296,14 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
             if (uiState is SiteMonitorUiState.Prepared) {
                 LoadingState()
             } else {
-                webView.let { theWebView ->
-                    AndroidView(
-                        factory = { theWebView },
-                        update = { webView = it },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                LazyColumn(modifier = modifier.fillMaxHeight()) {
+                    item {
+                        AndroidView(
+                            factory = { webView },
+                            update = { webView = it },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
         }
