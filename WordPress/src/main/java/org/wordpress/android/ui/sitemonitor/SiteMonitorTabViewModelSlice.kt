@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -14,6 +15,8 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
+
+const val REFRESH_DELAY = 500L
 
 class SiteMonitorTabViewModelSlice @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -58,9 +61,15 @@ class SiteMonitorTabViewModelSlice @Inject constructor(
     }
 
     fun refreshData() {
-        _isRefreshing.value = true
-        loadView()
-        _isRefreshing.value = false
+        scope.launch {
+            _isRefreshing.value = true
+            // this delay is to prevent the refresh from being too fast
+            // so that the user can see the refresh animation
+            // also this would fix the unit tests
+            delay(REFRESH_DELAY)
+            loadView()
+            _isRefreshing.value = false
+        }
     }
 
     private fun checkForInternetConnectivityAndPostErrorIfNeeded(): Boolean {
