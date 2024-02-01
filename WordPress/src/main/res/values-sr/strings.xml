@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-12-11 09:55:05+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: sr_RS
 -->
 <resources>
@@ -49,8 +49,6 @@ Language: sr_RS
     <string name="missing_splits_dialog_title">Неуспела инсталација</string>
     <string name="campaign_detail_error_title">Нешто је пошло по злу</string>
     <string name="campaign_listing_page_error_title">Нешто је пошло по злу</string>
-    <string name="domain_transfer_card_cta">Пренеси своје домене</string>
-    <string name="domain_transfer_card_title">Новости</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Повежи налоге</string>
     <string name="prepublishing_nudges_toolbar_title_social">Дељења на друштвеним мрежама</string>
     <string name="prepublishing_nudges_social_action">Дељења на друштвеним мрежама</string>
@@ -127,7 +125,6 @@ Language: sr_RS
     <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Вама и %1$s блогера&lt;/a&gt; се ово свиђа.</string>
     <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Вама и 1 блогеру&lt;/a&gt; се ово свиђа.</string>
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Вама&lt;/a&gt; се ово свиђа.</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="my_site_btn_domains">Домени</string>
     <string name="blogging_reminders_site_settings_label">%1$s недељно у %2$s</string>
     <string name="gutenberg_native_selected_s">Одабрано: %s</string>
@@ -663,11 +660,9 @@ Language: sr_RS
     <string name="stats_widget_error_no_access_token">Да би видели своју статистику, пријавите се на WordPress.com налог.</string>
     <string name="post_list_search_nothing_found">Нема чланака које се подударају са твојом претрагом</string>
     <string name="domains_suggestions_intro_description">Овде ће вас људи наћи на интернету.</string>
-    <string name="domains_suggestions_intro_title">Изабери премиум назив домене</string>
     <string name="stats_widget_minified_name">На први поглед</string>
     <string name="stats_widget_today_insights_name">Данас</string>
     <string name="stats_widget_all_time_insights_name">Све време</string>
-    <string name="my_site_custom_domain_name">Сви WordPress.com пакети укључују жељени назив домена. Региструјте свој бесплатни премиум домен одмах.</string>
     <string name="post_list_search_prompt">Претражи чланке</string>
     <string name="stats_widget_all_time_title">Све време</string>
     <string name="stats_widget_weekly_views_name">Прегледи ове недеље</string>

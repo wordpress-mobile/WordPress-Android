@@ -3,18 +3,14 @@ package org.wordpress.android.ui.stats.refresh.utils
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_COMMENTS_DETAIL
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_FOLLOWERS_DETAIL
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
 import javax.inject.Inject
 
 const val SELECTED_SECTION_KEY = "SELECTED_STATS_SECTION_KEY"
@@ -46,7 +42,13 @@ class SelectedSectionManager
 
 fun StatsSection.toStatsGranularity(): StatsGranularity? {
     return when (this) {
-        ANNUAL_STATS, DETAIL, TOTAL_LIKES_DETAIL, TOTAL_COMMENTS_DETAIL, TOTAL_FOLLOWERS_DETAIL, INSIGHTS -> null
+        StatsSection.TRAFFIC,
+        StatsSection.ANNUAL_STATS,
+        StatsSection.DETAIL,
+        StatsSection.TOTAL_LIKES_DETAIL,
+        StatsSection.TOTAL_COMMENTS_DETAIL,
+        StatsSection.TOTAL_FOLLOWERS_DETAIL,
+        StatsSection.INSIGHTS -> null
         StatsSection.INSIGHT_DETAIL,
         StatsSection.DAYS -> DAYS
         StatsSection.WEEKS -> WEEKS
@@ -62,4 +64,11 @@ fun StatsGranularity.toStatsSection(): StatsSection {
         MONTHS -> StatsSection.MONTHS
         YEARS -> StatsSection.YEARS
     }
+}
+
+fun StatsGranularity.toNameResource() = when {
+    this == DAYS -> R.string.stats_timeframe_by_day
+    this == WEEKS -> R.string.stats_timeframe_by_week
+    this == MONTHS -> R.string.stats_timeframe_by_month
+    else -> R.string.stats_timeframe_by_year
 }

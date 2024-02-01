@@ -12,7 +12,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_V
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
+import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
@@ -23,6 +25,10 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.ClaimDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetDomain
 import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.GetPlan
+import org.wordpress.android.ui.domains.DomainsDashboardNavigationAction.OpenDomainManagement
+import org.wordpress.android.ui.domains.management.getDomainDetailsUrl
+import org.wordpress.android.ui.domains.usecases.AllDomains
+import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -46,6 +52,7 @@ class DomainsDashboardViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val fetchPlansUseCase: FetchPlansUseCase,
+    private val fetchAllDomainsUseCase: FetchAllDomainsUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     lateinit var site: SiteModel
@@ -80,9 +87,11 @@ class DomainsDashboardViewModel @Inject constructor(
 
         val deferredPlansResult = async { fetchPlansUseCase.execute(site) }
         val deferredDomainsResult = async { siteStore.fetchSiteDomains(site) }
+        val deferredAllDomainsResult = async { fetchAllDomainsUseCase.execute() }
 
         val plansResult = deferredPlansResult.await()
         val domainsResult = deferredDomainsResult.await()
+        val allDomainsResult = deferredAllDomainsResult.await()
 
         if (plansResult.isError) {
             AppLog.e(DOMAIN_REGISTRATION, "An error occurred while fetching plans: ${plansResult.error.message}")
@@ -92,10 +101,17 @@ class DomainsDashboardViewModel @Inject constructor(
             AppLog.e(DOMAIN_REGISTRATION, "An error occurred while fetching domains: ${domainsResult.error.message}")
         }
 
-        buildDashboardItems(site, plansResult.plans.orEmpty(), domainsResult.domains.orEmpty())
+        val allDomains = if (allDomainsResult is AllDomains.Success) allDomainsResult.domains else emptyList()
+
+        buildDashboardItems(site, plansResult.plans.orEmpty(), domainsResult.domains.orEmpty(), allDomains)
     }
 
-    private fun buildDashboardItems(site: SiteModel, plans: List<PlanModel>, domains: List<Domain>) {
+    private fun buildDashboardItems(
+        site: SiteModel,
+        plans: List<PlanModel>,
+        domains: List<Domain>,
+        allDomains: List<AllDomainsDomain>
+    ) {
         val listItems = mutableListOf<DomainsDashboardItem>()
 
         listItems += SiteDomainsHeader(UiStringRes(R.string.domains_free_domain))
@@ -106,8 +122,10 @@ class DomainsDashboardViewModel @Inject constructor(
 
         listItems += SiteDomains(
             UiStringText(freeDomainUrl),
-            UiStringRes(R.string.domains_site_domain_never_expires),
-            freeDomainIsPrimary
+            freeDomainIsPrimary,
+            UiStringRes(R.string.active),
+            getStatusColor(StatusType.SUCCESS),
+            UiStringRes(R.string.domains_site_domain_never_expires)
         )
 
         val customDomains = domains.filter { !it.wpcomDomain }
@@ -116,13 +134,20 @@ class DomainsDashboardViewModel @Inject constructor(
         val hasPaidPlan = !SiteUtils.onFreePlan(site)
 
         if (hasCustomDomains) {
-            listItems += buildCustomDomainItems(site, customDomains)
+            listItems += buildCustomDomainItems(site, customDomains, allDomains)
         }
 
         listItems += buildCtaItems(hasCustomDomains, hasDomainCredit, hasPaidPlan)
 
         _showProgressSpinner.postValue(false)
         _uiModel.postValue(listItems)
+    }
+
+    private fun getStatusColor(statusType: StatusType?) = when (statusType) {
+        StatusType.SUCCESS -> R.color.jetpack_green_50
+        StatusType.NEUTRAL -> R.color.gray_50
+        StatusType.WARNING -> R.color.orange_50
+        else -> R.color.red_50
     }
 
     private fun buildCtaItems(
@@ -161,7 +186,11 @@ class DomainsDashboardViewModel @Inject constructor(
         return listItems
     }
 
-    private fun buildCustomDomainItems(site: SiteModel, customDomains: List<Domain>): List<DomainsDashboardItem> {
+    private fun buildCustomDomainItems(
+        site: SiteModel,
+        customDomains: List<Domain>,
+        allDomains: List<AllDomainsDomain>
+    ): List<DomainsDashboardItem> {
         val listItems = mutableListOf<DomainsDashboardItem>()
         listItems += SiteDomainsHeader(
             UiStringResWithParams(
@@ -170,9 +199,18 @@ class DomainsDashboardViewModel @Inject constructor(
             )
         )
         listItems += customDomains.map {
+            val allDomainsDomain = allDomains.find { allDomainsItem -> it.domain == allDomainsItem.domain }
+
             SiteDomains(
                 UiStringText(it.domain.orEmpty()),
-                if (it.expirySoon) {
+                it.primaryDomain,
+                allDomainsDomain?.domainStatus?.status?.let { status ->
+                    UiStringText(status)
+                } ?: UiStringRes(R.string.error),
+                getStatusColor(allDomainsDomain?.domainStatus?.statusType),
+                if (!it.hasRegistration) {
+                    null
+                } else if (it.expirySoon) {
                     UiStringText(
                         htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                             R.string.domains_site_domain_expires_soon,
@@ -185,13 +223,22 @@ class DomainsDashboardViewModel @Inject constructor(
                         listOf(UiStringText(it.expiry.orEmpty()))
                     )
                 },
-                it.primaryDomain
+                allDomainsDomain?.let { ListItemInteraction.create(allDomainsDomain, this::onDomainClick) }
             )
         }
         return listItems
     }
 
     private fun getCleanUrl(url: String?) = StringUtils.removeTrailingSlash(UrlUtils.removeScheme(url))
+
+    private fun onDomainClick(allDomainsDomain: AllDomainsDomain) {
+        _onNavigation.value = Event(
+            OpenDomainManagement(
+                allDomainsDomain.domain ?: return,
+                allDomainsDomain.getDomainDetailsUrl() ?: return
+            )
+        )
+    }
 
     private fun onGetDomainClick() {
         analyticsTrackerWrapper.track(DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED, site)

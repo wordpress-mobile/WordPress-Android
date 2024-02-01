@@ -6,6 +6,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.StatsListFragmentBinding
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
@@ -24,9 +27,12 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.E
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Success
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
+import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
+import org.wordpress.android.ui.stats.refresh.utils.toNameResource
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
@@ -48,6 +54,13 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
 
     @Inject
     lateinit var navigator: StatsNavigator
+
+    @Inject
+    lateinit var statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+
+    @Inject
+    lateinit var selectedTrafficGranularityManager: SelectedTrafficGranularityManager
+
     private lateinit var viewModel: StatsListViewModel
     private lateinit var statsSection: StatsSection
 
@@ -142,6 +155,29 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             }
         })
 
+        if (statsTrafficTabFeatureConfig.isEnabled()) {
+            dateSelector.granularitySpinner.adapter = ArrayAdapter(
+                requireContext(),
+                R.layout.filter_spinner_item,
+                StatsGranularity.entries.map { getString(it.toNameResource()) }
+            ).apply { setDropDownViewResource(R.layout.toolbar_spinner_dropdown_item) }
+
+            val selectedGranularityItemPos = StatsGranularity.entries.indexOf(
+                selectedTrafficGranularityManager.getSelectedTrafficGranularity()
+            )
+            dateSelector.granularitySpinner.setSelection(selectedGranularityItemPos)
+
+            dateSelector.granularitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.entries[position])
+                }
+
+                @Suppress("EmptyFunctionBlock")
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+            }
+        }
+
         dateSelector.nextDateButton.setOnClickListener {
             viewModel.onNextDateSelected()
         }
@@ -183,6 +219,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             StatsSection.TOTAL_LIKES_DETAIL -> TotalLikesDetailListViewModel::class.java
             StatsSection.TOTAL_COMMENTS_DETAIL -> TotalCommentsDetailListViewModel::class.java
             StatsSection.TOTAL_FOLLOWERS_DETAIL -> TotalFollowersDetailListViewModel::class.java
+            StatsSection.TRAFFIC -> TrafficListViewModel::class.java
             StatsSection.ANNUAL_STATS,
             StatsSection.INSIGHTS -> InsightsListViewModel::class.java
             StatsSection.DAYS -> DaysListViewModel::class.java
@@ -215,9 +252,9 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             navigator.navigate(activity, target)
         }
 
-        viewModel.selectedDate.observe(viewLifecycleOwner) { event ->
+        viewModel.selectedDate?.observe(viewLifecycleOwner) { event ->
             if (event != null) {
-                viewModel.onDateChanged(event.selectedSection)
+                viewModel.onDateChanged(event.selectedGranularity)
             }
         }
 

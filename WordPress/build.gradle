@@ -1,6 +1,5 @@
 import se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask
 import se.bjurr.violations.lib.model.SEVERITY
-import io.sentry.android.gradle.extensions.InstrumentationFeature
 
 plugins {
     id "com.android.application"
@@ -36,9 +35,8 @@ repositories {
             includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress.fluxc"
             includeGroup "org.wordpress.wellsql"
-            includeGroup "org.wordpress-mobile"
-            includeGroup "org.wordpress-mobile.gutenberg-mobile"
-            includeGroupByRegex "org.wordpress-mobile.react-native-libraries.*"
+            includeGroup "org.wordpress.gutenberg-mobile"
+            includeGroupByRegex "org.wordpress.react-native-libraries.*"
             includeGroup "com.automattic"
             includeGroup "com.automattic.stories"
             includeGroup "com.automattic.tracks"
@@ -161,6 +159,7 @@ android {
         buildConfigField "boolean", "ENABLE_OPEN_WEB_LINKS_WITH_JP_FLOW", "true"
         buildConfigField "boolean", "BLAZE_MANAGE_CAMPAIGNS", "false"
         buildConfigField "boolean", "DASHBOARD_PERSONALIZATION", "false"
+        buildConfigField "boolean", "ENABLE_SITE_MONITORING", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -345,6 +344,7 @@ kapt {
 
 dependencies {
     implementation 'androidx.webkit:webkit:1.7.0'
+    implementation "androidx.navigation:navigation-compose:$androidxComposeNavigationVersion"
     compileOnly project(path: ':libs:annotations')
     kapt project(':libs:processors')
     implementation (project(path:':libs:networking')) {
@@ -387,10 +387,6 @@ dependencies {
         exclude group: 'com.mcxiaoke.volley'
     }
     implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
-
-    // To enable Stetho, a debug bridge that enables the Chrome Developer Tools for debug purposes.
-    debugImplementation "com.facebook.stetho:stetho:$stethoVersion"
-    debugImplementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
 
     implementation "androidx.arch.core:core-common:$androidxArchCoreVersion"
     implementation "androidx.arch.core:core-runtime:$androidxArchCoreVersion"
@@ -565,6 +561,16 @@ dependencies {
 
     // Microsoft Clarity SDK
     implementation "com.microsoft.clarity:clarity:$microsoftClarityVersion"
+
+    // - Flipper
+    debugImplementation ("com.facebook.flipper:flipper:$flipperVersion") {
+        exclude group:'org.jetbrains.kotlinx', module:'kotlinx-serialization-json-jvm'
+    }
+    debugImplementation "com.facebook.soloader:soloader:$soLoaderVersion"
+    debugImplementation ("com.facebook.flipper:flipper-network-plugin:$flipperVersion"){
+        exclude group:'org.jetbrains.kotlinx', module:'kotlinx-serialization-json-jvm'
+    }
+    releaseImplementation "com.facebook.flipper:flipper-noop:$flipperVersion"
 }
 
 configurations.all {

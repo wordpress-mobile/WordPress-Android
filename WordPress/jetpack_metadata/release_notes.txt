@@ -1,9 +1,6 @@
-* [*] Filter media types when sharing files to the editor [https://github.com/wordpress-mobile/WordPress-Android/pull/19754]
-* [***] [Jetpack-only] Plans: Upgrade to a Plan from domains dashboard in Jetpack app [https://github.com/wordpress-mobile/WordPress-Android/pull/19818]
-* [**] [internal] Removes unused resources and code [https://github.com/wordpress-mobile/WordPress-Android/pull/19788]
-* [*] Block Editor: Add support for unselecting blocks with the hardware back button [https://github.com/wordpress-mobile/WordPress-Android/pull/19828]
-* [**] [internal] Removes unused code using android tool [https://github.com/wordpress-mobile/WordPress-Android/pull/19850]
-* [**] [internal] [Jetpack-only] Adds support for dynamic dashboard cards driven by the backend [https://github.com/wordpress-mobile/WordPress-Android/pull/19801]
-* [***] Block Editor: Avoid keyboard dismiss when interacting with text blocks [https://github.com/WordPress/gutenberg/pull/57070]
-* [**] Block Editor: Auto-scroll upon block insertion [https://github.com/WordPress/gutenberg/pull/57273]
-
+- Get notified when you’re working offline.
+- Image block uploads pause/resume with internet connection.
+- See custom gradient selections in the editor.
+- Fixed forward/back arrows for right-to-left readers.
+- Daily Prompt tags work properly.
+- Tap Site Domain cards to manage domains.

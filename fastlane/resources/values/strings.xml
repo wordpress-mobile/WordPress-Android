@@ -945,6 +945,7 @@
     <string name="debug_settings_missing_developed_feature" translatable="false">Don\'t see a feature you\'re working on? Check that your feature config file is annotated with the FeatureInDevelopment annotation.</string>
     <string name="debug_settings_tools" translatable="false">Tools</string>
     <string name="debug_settings_force_show_weekly_roundup" translatable="false">Force show Weekly Roundup notification</string>
+    <string name="debug_settings_debug_flags_screen" translatable="false">All shared preference flags</string>
 
     <!-- Debug cookies -->
     <string name="debug_cookies_title" translatable="false">Debug cookies</string>
@@ -952,6 +953,11 @@
     <string name="debug_cookies_cookie_host_hint" translatable="false">wordpress.com</string>
     <string name="debug_cookies_cookie_name_hint" translatable="false">cookie_name</string>
     <string name="debug_cookies_cookie_value_hint" translatable="false">cookie_value</string>
+
+    <!-- Design System -->
+    <string name="preference_design_system" translatable="false">Design System</string>
+    <string name="design_system_foundation" translatable="false">Foundation</string>
+    <string name="design_system_components" translatable="false">Components</string>
 
     <!-- stats -->
     <string name="stats">Stats</string>
@@ -1327,6 +1333,7 @@
     <string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
 
     <!-- Stats insights -->
+    <string name="stats_traffic">Traffic</string>
     <string name="stats_insights">Insights</string>
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
@@ -2367,6 +2374,7 @@
     <string name="my_site_todays_stat_card_likes" translatable="false">@string/stats_likes</string>
     <string name="my_site_todays_stat_card_views" translatable="false">@string/stats_views</string>
     <string name="my_site_todays_stat_card_visitors" translatable="false">@string/stats_visitors</string>
+    <string name="my_site_todays_stat_card_comments" translatable="false">@string/stats_comments</string>
     <string name="my_site_todays_stats_get_more_views_message">Interested in building your audience? Check out our &lt;a href="%1$s"&gt;top tips&lt;/a&gt;.</string>
     <string name="my_site_todays_stats_card_menu_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
     <string name="my_site_todays_stats_menu_view_stats">View stats</string>
@@ -2398,7 +2406,7 @@
     <string name="my_site_blogging_prompt_card_menu_view_more">View more prompts</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Skip for today</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Turn off prompts</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">From &lt;b&gt;DayOne&lt;/b&gt;</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">From &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="my_site_blogging_prompt_card_attribution_bloganuary">From &lt;b&gt;Bloganuary&lt;/b&gt;</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Learn more</string>
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Skipped today\'s blogging prompt</string>
@@ -2974,12 +2982,6 @@
     <string name="permission_images_video_audio">Photos and videos &amp; Music and audio</string>
     <string name="permission_camera">Camera</string>
     <string name="permission_microphone">Microphone</string>
-
-    <!-- Image Optimization promo -->
-    <string name="leave_on">Yes, leave on</string>
-    <string name="turn_off">No, turn off</string>
-    <string name="image_optimization_popup_title">Keep optimizing images?</string>
-    <string name="image_optimization_popup_desc">Image optimization shrinks images for faster uploading.\n\nThis option is enabled by default, but you can change it in the app settings at any time.</string>
 
     <!-- Login -->
     <!-- If any of these appear unused, be sure to check the same string in the login library -
@@ -4840,5 +4842,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_network_connection_lost_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Network connection lost, working offline</string>
     <string name="gutenberg_native_network_connection_re_established" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Network connection re-established</string>
     <string name="gutenberg_native_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Working Offline</string>
+    <string name="gutenberg_native_waiting_for_connection" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Waiting for connection</string>
 
 </resources>

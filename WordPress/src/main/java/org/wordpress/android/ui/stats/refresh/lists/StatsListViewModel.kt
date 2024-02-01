@@ -10,6 +10,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.DAY_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
@@ -20,14 +21,10 @@ import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.TOTAL_COMMENTS_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.TOTAL_FOLLOWERS_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.TOTAL_LIKES_DETAIL_USE_CASE
+import org.wordpress.android.ui.stats.refresh.TRAFFIC_USE_CASE
 import org.wordpress.android.ui.stats.refresh.VIEWS_AND_VISITORS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.WEEK_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.YEAR_STATS_USE_CASE
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
@@ -48,7 +45,7 @@ abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     private val statsUseCase: BaseListUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    protected val dateSelector: StatsDateSelector,
+    protected val dateSelector: StatsDateSelector?,
     popupMenuHandler: ItemPopupMenuHandler? = null,
     private val newsCardHandler: NewsCardHandler? = null,
     actionCardHandler: ActionCardHandler? = null
@@ -57,6 +54,7 @@ abstract class StatsListViewModel(
     private var isInitialized = false
 
     enum class StatsSection(@StringRes val titleRes: Int) {
+        TRAFFIC(R.string.stats_traffic),
         INSIGHTS(R.string.stats_insights),
         DAYS(R.string.stats_timeframe_days),
         WEEKS(R.string.stats_timeframe_weeks),
@@ -70,7 +68,7 @@ abstract class StatsListViewModel(
         ANNUAL_STATS(R.string.stats_insights_annual_site_stats);
     }
 
-    val selectedDate = dateSelector.selectedDate
+    val selectedDate = dateSelector?.selectedDate
 
     private val mutableNavigationTarget = MutableLiveData<Event<NavigationTarget>>()
     val navigationTarget: LiveData<Event<NavigationTarget>> = mergeNotNull(
@@ -83,9 +81,9 @@ abstract class StatsListViewModel(
         statsUseCase.data.throttle(viewModelScope, distinct = true)
     }
 
-    val dateSelectorData: LiveData<DateSelectorUiModel> = dateSelector.dateSelectorData.mapNullable {
+    val dateSelectorData: LiveData<DateSelectorUiModel> = dateSelector?.dateSelectorData?.mapNullable {
         it ?: DateSelectorUiModel(false)
-    }
+    } ?: MutableLiveData(DateSelectorUiModel(false))
 
     val typesChanged = merge(
         popupMenuHandler?.typeMoved,
@@ -113,13 +111,13 @@ abstract class StatsListViewModel(
 
     fun onNextDateSelected() {
         launch(Dispatchers.Default) {
-            dateSelector.onNextDateSelected()
+            dateSelector?.onNextDateSelected()
         }
     }
 
     fun onPreviousDateSelected() {
         launch(Dispatchers.Default) {
-            dateSelector.onPreviousDateSelected()
+            dateSelector?.onPreviousDateSelected()
         }
     }
 
@@ -129,14 +127,14 @@ abstract class StatsListViewModel(
         }
     }
 
-    fun onDateChanged(selectedSection: StatsSection) {
+    fun onDateChanged(selectedGranularity: StatsGranularity) {
         launch {
-            statsUseCase.onDateChanged(selectedSection)
+            statsUseCase.onDateChanged(selectedGranularity)
         }
     }
 
     fun onListSelected() {
-        dateSelector.updateDateSelector()
+        dateSelector?.updateDateSelector()
     }
 
     fun onEmptyInsightsButtonClicked() {
@@ -154,10 +152,10 @@ abstract class StatsListViewModel(
             isInitialized = true
             launch {
                 statsUseCase.loadData()
-                dateSelector.updateDateSelector()
+                dateSelector?.updateDateSelector()
             }
         }
-        dateSelector.updateDateSelector()
+        dateSelector?.updateDateSelector()
     }
 
     sealed class UiModel {
@@ -183,7 +181,6 @@ class InsightsListViewModel
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(INSIGHTS_USE_CASE) private val insightsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory,
     popupMenuHandler: ItemPopupMenuHandler,
     newsCardHandler: NewsCardHandler,
     actionCardHandler: ActionCardHandler
@@ -191,10 +188,22 @@ class InsightsListViewModel
     mainDispatcher,
     insightsUseCase,
     analyticsTracker,
-    dateSelectorFactory.build(INSIGHTS),
+    null,
     popupMenuHandler,
     newsCardHandler,
     actionCardHandler
+)
+
+class TrafficListViewModel @Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(TRAFFIC_USE_CASE) statsUseCase: BaseListUseCase,
+    analyticsTracker: AnalyticsTrackerWrapper,
+    dateSelectorFactory: StatsDateSelector.Factory
+) : StatsListViewModel(
+    mainDispatcher,
+    statsUseCase,
+    analyticsTracker,
+    dateSelectorFactory.build(StatsGranularity.DAYS, isGranularitySpinnerVisible = true)
 )
 
 class YearsListViewModel @Inject constructor(
@@ -202,54 +211,94 @@ class YearsListViewModel @Inject constructor(
     @Named(YEAR_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(YEARS))
+) : StatsListViewModel(
+    mainDispatcher,
+    statsUseCase,
+    analyticsTracker,
+    dateSelectorFactory.build(StatsGranularity.YEARS)
+)
 
 class MonthsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(MONTH_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(MONTHS))
+) : StatsListViewModel(
+    mainDispatcher,
+    statsUseCase,
+    analyticsTracker,
+    dateSelectorFactory.build(StatsGranularity.MONTHS)
+)
 
 class WeeksListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(WEEK_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(WEEKS))
+) : StatsListViewModel(
+    mainDispatcher,
+    statsUseCase,
+    analyticsTracker,
+    dateSelectorFactory.build(StatsGranularity.WEEKS)
+)
 
 class DaysListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(DAY_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(DAYS))
+) : StatsListViewModel(
+    mainDispatcher,
+    statsUseCase,
+    analyticsTracker,
+    dateSelectorFactory.build(StatsGranularity.DAYS)
+)
 
-// Using Weeks granularity on new insight details screens
+// Using Weeks granularity on insight details screens
 class InsightsDetailListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(VIEWS_AND_VISITORS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(WEEKS))
+) : StatsListViewModel(
+    mainDispatcher,
+    statsUseCase,
+    analyticsTracker,
+    dateSelectorFactory.build(StatsGranularity.WEEKS)
+)
 
 class TotalLikesDetailListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(TOTAL_LIKES_DETAIL_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(WEEKS))
+) : StatsListViewModel(
+    mainDispatcher,
+    statsUseCase,
+    analyticsTracker,
+    dateSelectorFactory.build(StatsGranularity.WEEKS)
+)
 
 class TotalCommentsDetailListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(TOTAL_COMMENTS_DETAIL_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(WEEKS))
+) : StatsListViewModel(
+    mainDispatcher,
+    statsUseCase,
+    analyticsTracker,
+    dateSelectorFactory.build(StatsGranularity.WEEKS)
+)
 
 class TotalFollowersDetailListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(TOTAL_FOLLOWERS_DETAIL_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(WEEKS))
+) : StatsListViewModel(
+    mainDispatcher,
+    statsUseCase,
+    analyticsTracker,
+    dateSelectorFactory.build(StatsGranularity.WEEKS)
+)

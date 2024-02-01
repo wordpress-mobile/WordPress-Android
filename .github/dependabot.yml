@@ -36,7 +36,7 @@ updates:
       # dependapot.
       - dependency-name: "org.wordpress:fluxc"
       - dependency-name: "org.wordpress:utils"
-      - dependency-name: "org.wordpress-mobile.gutenberg-mobile:react-native-gutenberg-bridge"
+      - dependency-name: "org.wordpress.gutenberg-mobile:react-native-gutenberg-bridge"
       - dependency-name: "org.wordpress:login"
       - dependency-name: "com.automattic:stories"
       - dependency-name: "com.automattic.stories:mp4compose"

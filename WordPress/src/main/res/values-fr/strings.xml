@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-03 18:54:09+0000
+Translation-Revision-Date: 2024-01-25 19:56:22+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">En attente de connexion</string>
+    <string name="stats_traffic">Trafic</string>
+    <string name="gutenberg_native_working_offline">Travail hors ligne</string>
+    <string name="gutenberg_native_network_connection_re_established">Connexion réseau rétablie</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">Perte de la connexion réseau, travail hors ligne</string>
+    <string name="gutenberg_native_font_size_1_s">Taille de la police, %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">Type de fichier non pris en charge comme fichier média.</string>
+    <string name="media_cannot_be_started">Nous ne sommes pas en mesure d’ouvrir le média actuellement. Veuillez réessayer plus tard</string>
+    <string name="domains_just_search_for_a_domain_button">Chercher simplement un domaine</string>
+    <string name="domains_upgrade_to_a_plan_button">Mettre à niveau vers un plan</string>
+    <string name="domains_upgrade_to_plan_caption">Bénéficiez d’un enregistrement ou d’un transfert de domaine gratuit d’un an avec un plan payant annuel.</string>
+    <string name="domains_site_domain_never_expires">N’expire jamais</string>
+    <string name="domains_free_domain">Votre domaine WordPress.com gratuit</string>
+    <string name="domains_site_other_domains">Autres domaines pour %s</string>
+    <string name="domains_primary_site_domain_chip">Domaine principal</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary, c’est parti !</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">C’est parti !</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Activer les invites à bloguer</string>
@@ -149,10 +164,6 @@ Language: fr
     <string name="campaign_detail_error_title">Un problème est survenu</string>
     <string name="campaign_listing_page_error_title">Un problème est survenu</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Un problème est survenu. Impossible d’extraire les campagnes.</string>
-    <string name="domain_transfer_card_cta">Transférer vos domaines</string>
-    <string name="domain_transfer_card_caption">Comme vous le savez peut-être, Google Domains a été vendu à Squarespace. Transférez gratuitement vos domaines vers WordPress.com dès maintenant et bénéficiez gratuitement d’une année supplémentaire d’enregistrement de domaine.</string>
-    <string name="domain_transfer_card_sub_title">Récupérer vos domaines Google</string>
-    <string name="domain_transfer_card_title">Actualités</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Connecter des comptes</string>
     <string name="prepublishing_nudges_toolbar_title_social">Partage sur les réseaux sociaux</string>
     <string name="prepublishing_nudges_social_action">Partage sur les réseaux sociaux</string>
@@ -393,7 +404,7 @@ Language: fr
     <string name="stats_timeframe_last_seven_days">7 derniers jours</string>
     <string name="weeks_quantity_other">%d semaines</string>
     <string name="weeks_quantity_one">1 semaine</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Depuis le &lt;b&gt;jour 1&lt;/b&gt;</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">De &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Me rappeler ultérieurement</string>
     <string name="jetpack_feature_card_content_phase_three">Les statistiques, le lecteur, les notifications et d’autres fonctionnalités seront bientôt transférées vers l’application mobile Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Passer à l’application Jetpack</string>
@@ -816,7 +827,6 @@ Language: fr
     <string name="my_site_post_card_scheduled_title">Articles planifiés à venir</string>
     <string name="my_site_post_card_draft_title">Travailler sur un brouillon d’article</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratuit la 1ère année &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /an&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Vos domaines renverront vers votre site à %s</string>
     <string name="gutenberg_native_create_link">Créer un lien</string>
     <string name="domains_suggestions_select_domain">Sélectionnez un domaine</string>
     <string name="domains_title">Domaines</string>
@@ -837,14 +847,9 @@ Language: fr
     <string name="domains_free_plan_get_your_domain_caption">Les domaines achetés sur ce site redirigeront les visiteurs vers &lt;b&gt;%s.&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Avec votre plan, vous disposez de l’enregistrement gratuit d’un domaine pendant un an.</string>
     <string name="domains_paid_plan_claim_your_domain_title">Demander votre domaine gratuit</string>
-    <string name="domains_manage_domains">Gérer les domaines</string>
     <string name="domains_add_a_domain">Ajouter un domaine</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Expire le %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Expire le %s</string>
-    <string name="domains_site_domains">Les domaines de votre site</string>
-    <string name="domains_primary_site_address_chip">Adresse principale du site</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Modifier l’adresse du site</string>
-    <string name="domains_primary_site_caption">Votre adresse WordPress.com gratuite est</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s la première année &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /an&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/an&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Voulez-vous les annuler ?</string>
@@ -870,7 +875,6 @@ Language: fr
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Vous&lt;/a&gt; aimez ceci.</string>
     <string name="gutenberg_native_line_height">hauteur de ligne</string>
     <string name="domains_free_plan_get_your_domain_title">Obtenir votre domaine</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Erreur inconnue lors de la récupération du modèle de recommandation d’application</string>
     <string name="recommend_app_bad_format_response">Réponse reçue non valide</string>
     <string name="recommend_app_null_response">Aucune réponse reçue</string>
@@ -1640,7 +1644,7 @@ Language: fr
     <string name="prepublishing_tags_description">Les étiquettes indiquent aux lecteurs de quoi traite l’article.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Date de publication</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Ajouter des étiquettes</string>
-    <string name="prepublishing_nudges_back_button">Précédent</string>
+    <string name="prepublishing_nudges_back_button">Retour</string>
     <string name="prepublishing_nudges_home_save_button">Enregistrer maintenant</string>
     <string name="prepublishing_nudges_home_submit_button">Soumettre maintenant</string>
     <string name="prepublishing_nudges_home_schedule_button">Planifier maintenant</string>
@@ -2066,8 +2070,8 @@ Language: fr
     <string name="post_list_search_nothing_found">Aucun article ne correspond à votre recherche</string>
     <string name="post_list_search_prompt">Rechercher dans les articles</string>
     <string name="domains_suggestions_intro_description">C\'est ici que les internautes vous trouveront sur Internet.</string>
-    <string name="domains_suggestions_intro_title">Choisissez un nom de domaine Premium</string>
-    <string name="my_site_custom_domain_name">Tous les plans de WordPress.com comprennent un nom de domaine. Vous pouvez enregistrer votre nom de domaine Premium gratuit dès maintenant.</string>
+    <string name="domains_suggestions_intro_title">Choisir un nom de domaine personnalisé</string>
+    <string name="my_site_custom_domain_name">Tous les plans annuels WordPress.com incluent un nom de domaine personnalisé. Enregistrez votre domaine gratuit dès maintenant.</string>
     <string name="stats_widget_minified_name">D’un coup d’œil</string>
     <string name="stats_widget_today_insights_name">Aujourd\'hui</string>
     <string name="stats_widget_all_time_insights_name">Depuis le début</string>

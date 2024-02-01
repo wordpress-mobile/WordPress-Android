@@ -1,0 +1,6 @@
+24.0:
+Aggiornamenti all'editor dei blocchi:
+- La tastiera del dispositivo rimane attiva durante la modifica dei blocchi di testo
+- La schermata scorre automaticamente sui blocchi appena inseriti
+- Deseleziona i blocchi premendo il tasto indietro del tuo dispositivo
+- Condividi diversi tipi di media nell'app in una volta sola senza che si verifichino arresti anomali

@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-04 09:54:09+0000
+Translation-Revision-Date: 2024-01-24 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">正在等待連線</string>
+    <string name="stats_traffic">流量</string>
+    <string name="gutenberg_native_working_offline">離線作業</string>
+    <string name="gutenberg_native_network_connection_re_established">重新建立網路連線</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">網路連線中斷，離線作業</string>
+    <string name="gutenberg_native_font_size_1_s">字型大小，%1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">媒體檔案不支援的檔案類型。</string>
+    <string name="media_cannot_be_started">目前我們無法開啟媒體。 請稍後再試一次</string>
+    <string name="domains_just_search_for_a_domain_button">先搜尋可用網域名稱</string>
+    <string name="domains_upgrade_to_a_plan_button">升級方案</string>
+    <string name="domains_upgrade_to_plan_caption">任何年繳方案使用者，均享一年的免費網域註冊或轉移。</string>
+    <string name="domains_site_domain_never_expires">永不過期</string>
+    <string name="domains_free_domain">你的免費 WordPress.com 網域</string>
+    <string name="domains_site_other_domains">其他 %s 網域</string>
+    <string name="domains_primary_site_domain_chip">主要網域</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary 正式開跑！</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">開始行動！</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">開啟網誌提示</string>
@@ -153,10 +168,6 @@ Language: zh_TW
     <string name="campaign_detail_error_title">發生錯誤</string>
     <string name="campaign_listing_page_error_title">發生錯誤</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> 發生錯誤，無法擷取行銷活動</string>
-    <string name="domain_transfer_card_cta">轉移你的網域</string>
-    <string name="domain_transfer_card_caption">如你所知，Google Domains 已由 Squarespace 收購。 立即將網域轉移至 WordPress.com，我們不僅會全額負擔轉移費用，還附贈一年網域註冊。</string>
-    <string name="domain_transfer_card_sub_title">重新申請你的 Google Domains</string>
-    <string name="domain_transfer_card_title">新聞</string>
     <string name="prepublishing_nudges_social_new_connection_cta">連結帳號</string>
     <string name="prepublishing_nudges_toolbar_title_social">社群分享</string>
     <string name="prepublishing_nudges_social_action">社群分享</string>
@@ -396,7 +407,7 @@ Language: zh_TW
     <string name="stats_timeframe_last_seven_days">過去 7 天</string>
     <string name="weeks_quantity_other">%d 週</string>
     <string name="weeks_quantity_one">1 週</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">從 &lt;b&gt;DayOne&lt;/b&gt;</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">來自 &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">稍後再提醒我</string>
     <string name="jetpack_feature_card_content_phase_three">「統計資料」、「閱讀器」、「通知」及其他功能即將搬遷至 Jetpack 行動應用程式。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">切換至 Jetpack 應用程式</string>
@@ -819,7 +830,6 @@ Language: zh_TW
     <string name="my_site_post_card_scheduled_title">即將發表的排程文章</string>
     <string name="my_site_post_card_draft_title">編輯草稿文章</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;第一年免費，以後每年 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">你的網域會重新導向你的網站 %s</string>
     <string name="gutenberg_native_create_link">建立連結</string>
     <string name="domains_suggestions_select_domain">選取網域</string>
     <string name="domains_title">網域</string>
@@ -840,14 +850,9 @@ Language: zh_TW
     <string name="domains_free_plan_get_your_domain_caption">此網站購買的網域會將訪客重新導向至 &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">你的方案已包含一年免費網域註冊</string>
     <string name="domains_paid_plan_claim_your_domain_title">索取你的免費網域</string>
-    <string name="domains_manage_domains">管理網域</string>
     <string name="domains_add_a_domain">新增網域</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;到期日： %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">到期日： %s</string>
-    <string name="domains_site_domains">你網站的網域名稱</string>
-    <string name="domains_primary_site_address_chip">網站主要網址</string>
-    <string name="domains_primary_site_more_menu_change_site_address">變更網址</string>
-    <string name="domains_primary_site_caption">你的 WordPress.com 免費位址是</string>
     <string name="domain_suggestions_list_item_cost_on_sale">第一年 &lt;span style=\"color:#B26200;\"&gt;%1$s，以後每年 &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/年&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">你要捨棄這些變更嗎？</string>
@@ -873,7 +878,6 @@ Language: zh_TW
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;你&lt;/a&gt;說這個讚。</string>
     <string name="gutenberg_native_line_height">行高</string>
     <string name="domains_free_plan_get_your_domain_title">取得你的網域</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">擷取建議的應用程式範本時發生未知錯誤</string>
     <string name="recommend_app_bad_format_response">收到無效回應</string>
     <string name="recommend_app_null_response">未收到回應</string>
@@ -2069,8 +2073,8 @@ Language: zh_TW
     <string name="post_list_search_nothing_found">沒有文章符合你的搜尋條件</string>
     <string name="post_list_search_prompt">搜尋文章</string>
     <string name="domains_suggestions_intro_description">這是人們在網際網路上找到你的地方。</string>
-    <string name="domains_suggestions_intro_title">選擇進階網域名稱</string>
-    <string name="my_site_custom_domain_name">所有 WordPress.com 方案都包含一個自訂網域名稱。立即註冊你的免費進階網域。</string>
+    <string name="domains_suggestions_intro_title">選擇你的自訂網域名稱</string>
+    <string name="my_site_custom_domain_name">所有 WordPress.com 年繳方案皆隨附一個自訂網域名稱。 立即註冊你的免費網域。</string>
     <string name="stats_widget_minified_name">總覽</string>
     <string name="stats_widget_today_insights_name">今天</string>
     <string name="stats_widget_all_time_insights_name">有史以來</string>
@@ -2696,7 +2700,7 @@ Language: zh_TW
     <string name="plugin_chevron_icon_content_description">切換文字</string>
     <string name="plugin_info_your_version">你的 WordPress 版本</string>
     <string name="plugin_info_requires_version">需要的 WordPress 版本</string>
-    <string name="plugin_info_lastupdated">最近更新</string>
+    <string name="plugin_info_lastupdated">最後更新</string>
     <string name="plugin_info_version">版本</string>
     <string name="plugin_five_stars">5 星</string>
     <string name="plugin_four_stars">4 星</string>

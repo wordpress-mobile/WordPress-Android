@@ -508,24 +508,14 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             case RequestCodes.PICTURE_LIBRARY:
             case RequestCodes.VIDEO_LIBRARY:
             case RequestCodes.AUDIO_LIBRARY:
-                handlePickerResult(data, resultCode);
-                break;
             case RequestCodes.FILE_LIBRARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
-                        WPMediaUtils.advertiseImageOptimization(this, () -> handlePickerResult(data, resultCode));
-                    } else {
-                        handlePickerResult(data, resultCode);
-                    }
+                    handlePickerResult(data, resultCode);
                 }
                 break;
             case RequestCodes.TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this)) {
-                        WPMediaUtils.advertiseImageOptimization(this, this::addLastTakenPicture);
-                    } else {
-                        addLastTakenPicture();
-                    }
+                    addLastTakenPicture();
                 }
                 break;
             case RequestCodes.TAKE_VIDEO:
