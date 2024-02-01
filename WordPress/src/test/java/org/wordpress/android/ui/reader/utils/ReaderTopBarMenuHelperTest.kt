@@ -23,9 +23,10 @@ class ReaderTopBarMenuHelperTest {
             add(mockSavedTag()) // item 2
             add(mockLikedTag()) // item 3
             add(mockA8CTag()) // item 4
-            add(createCustomListTag("custom-list-1")) // item 5
-            add(createCustomListTag("custom-list-2")) // item 6
-            add(createCustomListTag("custom-list-3")) // item 7
+            add(mockFollowedP2sTag()) // item 5
+            add(createCustomListTag("custom-list-1")) // item 6
+            add(createCustomListTag("custom-list-2")) // item 7
+            add(createCustomListTag("custom-list-3")) // item 8
         }
 
         val menu = helper.createMenu(tags)
@@ -46,18 +47,21 @@ class ReaderTopBarMenuHelperTest {
         val a8cItem = menu.findSingleItem { it.id == "4" }!!
         assertThat(a8cItem.text).isEqualTo(UiStringRes(R.string.reader_dropdown_menu_automattic))
 
+        val followedP2sItem = menu.findSingleItem { it.id == "5" }!!
+        assertThat(followedP2sItem.text).isEqualTo(UiStringText("Followed P2s"))
+
         assertThat(menu).contains(MenuElementData.Divider)
 
         val customListsItem = menu.findSubMenu()!!
         assertThat(customListsItem.text).isEqualTo(UiStringRes(R.string.reader_dropdown_menu_lists))
 
-        val customList1Item = customListsItem.children.findSingleItem { it.id == "5" }!!
+        val customList1Item = customListsItem.children.findSingleItem { it.id == "6" }!!
         assertThat(customList1Item.text).isEqualTo(UiStringText("custom-list-1"))
 
-        val customList2Item = customListsItem.children.findSingleItem { it.id == "6" }!!
+        val customList2Item = customListsItem.children.findSingleItem { it.id == "7" }!!
         assertThat(customList2Item.text).isEqualTo(UiStringText("custom-list-2"))
 
-        val customList3Item = customListsItem.children.findSingleItem { it.id == "7" }!!
+        val customList3Item = customListsItem.children.findSingleItem { it.id == "8" }!!
         assertThat(customList3Item.text).isEqualTo(UiStringText("custom-list-3"))
     }
 
@@ -261,6 +265,13 @@ class ReaderTopBarMenuHelperTest {
     private fun mockA8CTag(): ReaderTag {
         return mock {
             on { isA8C } doReturn true
+        }
+    }
+
+    private fun mockFollowedP2sTag(): ReaderTag {
+        return mock {
+            on { isP2 } doReturn true
+            on { tagTitle } doReturn "Followed P2s"
         }
     }
 

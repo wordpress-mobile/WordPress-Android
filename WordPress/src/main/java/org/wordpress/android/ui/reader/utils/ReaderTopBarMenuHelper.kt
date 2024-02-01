@@ -31,6 +31,12 @@ class ReaderTopBarMenuHelper @Inject constructor() {
             readerTagsList.indexOrNull { it.isA8C }?.let { a8cIndex ->
                 add(createAutomatticItem(getMenuItemIdFromReaderTagIndex(a8cIndex)))
             }
+            readerTagsList.indexOrNull { it.isP2 }?.let { followedP2sIndex ->
+                add(createFollowedP2sItem(
+                    id = getMenuItemIdFromReaderTagIndex(followedP2sIndex),
+                    text = readerTagsList[followedP2sIndex].tagTitle,
+                ))
+            }
             readerTagsList
                 .foldIndexed(SparseArrayCompat<ReaderTag>()) { index, sparseArray, readerTag ->
                     if (readerTag.tagType == ReaderTagType.CUSTOM_LIST) {
@@ -82,6 +88,13 @@ class ReaderTopBarMenuHelper @Inject constructor() {
         return MenuElementData.Item.Single(
             id = id,
             text = UiString.UiStringRes(R.string.reader_dropdown_menu_automattic),
+        )
+    }
+
+    private fun createFollowedP2sItem(id: String, text: String): MenuElementData.Item.Single {
+        return MenuElementData.Item.Single(
+            id = id,
+            text = UiString.UiStringText(text),
         )
     }
 

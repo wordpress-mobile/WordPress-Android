@@ -144,8 +144,10 @@ import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.WPSnackbar;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Stack;
 
@@ -210,9 +212,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private int mPostSearchAdapterPos;
     private int mSiteSearchAdapterPos;
     private int mSearchTabsPos = NO_POSITION;
-    private boolean mIsUpdating;
     private boolean mIsFilterableScreen;
     private boolean mIsFiltered = false;
+    @NonNull private HashSet<UpdateAction> mCurrentUpdateActions = new HashSet<>();
     /*
      * called by post adapter to load older posts when user scrolls to the last post
      */
@@ -957,8 +959,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasRequestedPosts);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasUpdatedPosts);
         outState.putBoolean(ReaderConstants.KEY_FIRST_LOAD, mFirstLoad);
+        outState.putSerializable(ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS, mCurrentUpdateActions);
         if (mRecyclerView != null) {
-            outState.putBoolean(ReaderConstants.KEY_IS_REFRESHING, mRecyclerView.isRefreshing());
             outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         }
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
@@ -1180,9 +1182,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
         }
 
-        if (savedInstanceState != null && savedInstanceState.getBoolean(ReaderConstants.KEY_IS_REFRESHING)) {
-            mIsUpdating = true;
-            mRecyclerView.setRefreshing(true);
+        if (savedInstanceState != null) {
+            Serializable actions = savedInstanceState.getSerializable(ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS);
+            if (actions instanceof HashSet<?>) {
+                mCurrentUpdateActions = (HashSet<UpdateAction>) actions;
+                updateProgressIndicators();
+            }
         }
 
         return rootView;
@@ -1702,7 +1707,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             setEmptyTitleAndDescriptionForBookmarksList();
             return;
         } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            mIsUpdating = false;
+            clearCurrentUpdateActions();
             title = getString(R.string.reader_empty_posts_no_connection);
         } else if (requestFailed) {
             if (isSearching()) {
@@ -2311,7 +2316,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private boolean isUpdating() {
-        return mIsUpdating;
+        return mCurrentUpdateActions.size() > 0;
     }
 
     /*
@@ -2328,27 +2333,45 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     }
 
-    private void setIsUpdating(boolean isUpdating, UpdateAction updateAction) {
-        if (!isAdded() || mIsUpdating == isUpdating) {
-            return;
+    private void clearCurrentUpdateActions() {
+        if (!isAdded() || !isUpdating()) return;
+
+        mCurrentUpdateActions.clear();
+        updateProgressIndicators();
+    }
+
+    private void setIsUpdating(boolean isUpdating, @NonNull UpdateAction updateAction) {
+        if (!isAdded()) return;
+
+        boolean isUiUpdateNeeded;
+        if (isUpdating) {
+            isUiUpdateNeeded = mCurrentUpdateActions.add(updateAction);
+        } else {
+            isUiUpdateNeeded = mCurrentUpdateActions.remove(updateAction);
         }
 
-        if (updateAction == UpdateAction.REQUEST_OLDER) {
-            // show/hide progress bar at bottom if these are older posts
-            showLoadingProgress(isUpdating);
-        } else if (isUpdating) {
-            // show swipe-to-refresh if update started
-            mRecyclerView.setRefreshing(true);
-        } else {
-            // hide swipe-to-refresh progress if update is complete
+        if (isUiUpdateNeeded) updateProgressIndicators();
+    }
+
+    private void updateProgressIndicators() {
+        if (!isUpdating()) {
+            // when there's no update in progress, hide the bottom and swipe-to-refresh progress bars
+            showLoadingProgress(false);
             mRecyclerView.setRefreshing(false);
+        } else if (mCurrentUpdateActions.size() == 1 && mCurrentUpdateActions.contains(UpdateAction.REQUEST_OLDER)) {
+            // if only older posts are being updated, show only the bottom progress bar
+            showLoadingProgress(true);
+            mRecyclerView.setRefreshing(false);
+        } else {
+            // if anything else is being updated, show only the swipe-to-refresh progress bar
+            showLoadingProgress(false);
+            mRecyclerView.setRefreshing(true);
         }
-        mIsUpdating = isUpdating;
 
         // if swipe-to-refresh isn't active, keep it disabled during an update - this prevents
         // doing a refresh while another update is already in progress
-        if (mRecyclerView != null && !mRecyclerView.isRefreshing()) {
-            mRecyclerView.setSwipeToRefreshEnabled(!isUpdating && isSwipeToRefreshSupported());
+        if (!mRecyclerView.isRefreshing()) {
+            mRecyclerView.setSwipeToRefreshEnabled(!isUpdating() && isSwipeToRefreshSupported());
         }
     }
 
