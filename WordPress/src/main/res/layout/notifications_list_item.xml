@@ -55,12 +55,14 @@
             android:id="@+id/action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="@dimen/notifications_item_action_padding"
             android:contentDescription="@null"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/note_avatar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/note_avatar"
+            tools:visibility="visible"
             tools:src="@drawable/star_empty" />
 
         <FrameLayout

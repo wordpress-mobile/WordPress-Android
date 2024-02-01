@@ -304,6 +304,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         MarginLayoutParams layoutParams = (MarginLayoutParams) noteViewHolder.mHeaderText.getLayoutParams();
         layoutParams.topMargin = headerMarginTop;
         noteViewHolder.mHeaderText.setLayoutParams(layoutParams);
+
+        handleInlineActions(noteViewHolder, note);
+    }
+
+    private void handleInlineActions(final NoteViewHolder noteViewHolder, final Note note) {
+        note.getType();
     }
 
     private void handleMaxLines(final TextView subject, final TextView detail) {
@@ -378,6 +384,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         private final TextView mTxtDetail;
         private final ImageView mImgAvatar;
         private final View mUnreadNotificationView;
+        private final ImageView mAction;
 
         NoteViewHolder(View view) {
             super(view);
@@ -388,6 +395,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             mTxtDetail = view.findViewById(R.id.note_detail);
             mImgAvatar = view.findViewById(R.id.note_avatar);
             mUnreadNotificationView = view.findViewById(R.id.notification_unread);
+            mAction = view.findViewById(R.id.action);
 
             mContentView.setOnClickListener(mOnClickListener);
         }
