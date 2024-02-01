@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.discover
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
@@ -79,6 +80,9 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
     val preloadPostEvents: LiveData<Event<PreLoadPostContent>> = _preloadPostEvents
 
+    private val _scrollToTopEvent = MutableLiveData<Event<Unit>>()
+    val scrollToTopEvent: LiveData<Event<Unit>> = _scrollToTopEvent
+
     /**
      * Post which is about to be reblogged after the user selects a target site.
      */
@@ -155,9 +159,11 @@ class ReaderDiscoverViewModel @Inject constructor(
                             convertCardsToUiStates(posts),
                             reloadProgressVisibility = false,
                             loadMoreProgressVisibility = false,
-                            scrollToTop = swipeToRefreshTriggered
                         )
-                        swipeToRefreshTriggered = false
+                        if (swipeToRefreshTriggered) {
+                            _scrollToTopEvent.postValue(Event(Unit))
+                            swipeToRefreshTriggered = false
+                        }
                     } else {
                         _uiState.value = DiscoverUiState.EmptyUiState.ShowNoPostsUiState {
                             _navigationEvents.value = Event(ShowReaderSubs)
@@ -523,7 +529,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         val fullscreenProgressVisibility: Boolean = false,
         val swipeToRefreshEnabled: Boolean = false,
         open val fullscreenEmptyVisibility: Boolean = false,
-        open val scrollToTop: Boolean = false
     ) {
         open val reloadProgressVisibility: Boolean = false
         open val loadMoreProgressVisibility: Boolean = false
@@ -532,7 +537,6 @@ class ReaderDiscoverViewModel @Inject constructor(
             val cards: List<ReaderCardUiState>,
             override val reloadProgressVisibility: Boolean,
             override val loadMoreProgressVisibility: Boolean,
-            override val scrollToTop: Boolean
         ) : DiscoverUiState(contentVisiblity = true, swipeToRefreshEnabled = true)
 
         object LoadingUiState : DiscoverUiState(fullscreenProgressVisibility = true)
