@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.fluxc.store.AccountStore.OnTwoFactorAuthStarted;
 import org.wordpress.android.fluxc.store.SiteStore.OnProfileFetched;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
@@ -504,13 +505,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
             case INVALID_TOKEN:
             case AUTHORIZATION_REQUIRED:
             case NEEDS_2FA:
-                if (mIsWpcom) {
-                    if (mLoginListener != null) {
-                        mLoginListener.needs2fa(mRequestedUsername, mRequestedPassword);
-                    }
-                } else {
-                    showError("2FA not supported for self-hosted sites. Please use an app-password.");
-                }
+                handle2fa();
                 break;
             default:
                 AppLog.e(T.NUX, "Server response: " + errorMessage);
@@ -521,7 +516,25 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         }
     }
 
+    private void handle2fa() {
+        if (mIsWpcom) {
+            if (mLoginListener != null) {
+                mLoginListener.needs2fa(mRequestedUsername, mRequestedPassword);
+            }
+        } else {
+            showError("2FA not supported for self-hosted sites. Please use an app-password.");
+        }
+    }
+
     // OnChanged events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTwoFactorAuthStarted(OnTwoFactorAuthStarted event) {
+        mLoginStarted = false;
+        handle2fa();
+        endProgress();
+    }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
