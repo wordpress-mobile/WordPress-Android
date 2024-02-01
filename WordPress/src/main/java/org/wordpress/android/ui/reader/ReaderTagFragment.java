@@ -30,9 +30,8 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
     private ReaderRecyclerView mRecyclerView;
     private ReaderTagAdapter mTagAdapter;
 
-    private boolean mIsFirstDataLoaded = true;
-    // TODO set to true onAttach?
-    private ReaderTagList mInitialReaderTagList = new ReaderTagList();
+    private boolean mIsFirstDataLoaded;
+    private final ReaderTagList mInitialReaderTagList = new ReaderTagList();
 
     static ReaderTagFragment newInstance() {
         AppLog.d(AppLog.T.READER, "reader tag list > newInstance");
@@ -83,6 +82,12 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
         super.onActivityCreated(savedInstanceState);
         mRecyclerView.setAdapter(getTagAdapter());
         refresh();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mIsFirstDataLoaded = true;
     }
 
     void refresh() {
