@@ -19,9 +19,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
@@ -294,21 +298,30 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
                 LoadingState()
             }
             is SiteMonitorUiState.Loaded -> {
-                SiteMonitorWebView(webView, modifier)
+                SiteMonitorWebView(webView, tabType, modifier)
             }
             else -> {}
         }
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
-    private fun SiteMonitorWebView(tabWebView: WebView, modifier: Modifier = Modifier) {
+    private fun SiteMonitorWebView(tabWebView: WebView, tabType: SiteMonitorType, modifier: Modifier = Modifier) {
         // the webview is retrieved from the activity, so we need to use a mutable variable
         // to assign to android view
-
         var webView = tabWebView
+
+        val refreshState = siteMonitorParentViewModel.getRefreshState(tabType)
+
+        val pullRefreshState = rememberPullRefreshState(
+            refreshing = refreshState.value,
+            onRefresh = { siteMonitorParentViewModel.refreshData(tabType) }
+        )
+
         Box(
             modifier = modifier
                 .fillMaxSize()
+                .pullRefresh(pullRefreshState)
         ) {
             LazyColumn(modifier = Modifier.fillMaxHeight()) {
                 item {
@@ -319,6 +332,12 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
                     )
                 }
             }
+            PullRefreshIndicator(
+                refreshing = refreshState.value,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter),
+                contentColor = MaterialTheme.colors.primaryVariant,
+            )
         }
     }
 
