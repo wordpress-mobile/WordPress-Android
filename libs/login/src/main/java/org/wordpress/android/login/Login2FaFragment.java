@@ -15,9 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.IntentSenderRequest;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,8 +23,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.fido.Fido;
-import com.google.android.gms.fido.fido2.api.common.PublicKeyCredential;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -36,7 +31,6 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateTwoFactorPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
-import org.wordpress.android.fluxc.store.AccountStore.FinishWebauthnChallengePayload;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialAuthPayload;
@@ -47,7 +41,6 @@ import org.wordpress.android.fluxc.store.AccountStore.WebauthnChallengeReceived;
 import org.wordpress.android.fluxc.store.AccountStore.WebauthnPasskeyAuthenticated;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.webauthn.PasskeyRequest;
-import org.wordpress.android.login.webauthn.Fido2ClientHandler;
 import org.wordpress.android.login.webauthn.PasskeyRequest.PasskeyRequestData;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
