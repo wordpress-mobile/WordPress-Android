@@ -466,7 +466,7 @@ class ReaderViewModel @Inject constructor(
         )
     }
 
-    fun showTopBarFilterGroup(readerTab: ReaderTag, subFilterItems: List<SubfilterListItem>) {
+    fun showTopBarFilterGroup(readerTag: ReaderTag, subFilterItems: List<SubfilterListItem>) {
         val selectedReaderTag = _topBarUiState.value?.selectedItem?.let {
             readerTagsList[readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(it)]
         } ?: return

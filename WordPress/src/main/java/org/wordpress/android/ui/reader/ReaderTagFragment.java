@@ -18,7 +18,6 @@ import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPActivityUtils;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,7 +56,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
                 currentTagsSlugs.add(readerTag.getTagSlug());
             }
         }
-        return !(initialTagsSlugs.containsAll(currentTagsSlugs));
+        return !(initialTagsSlugs.equals(currentTagsSlugs));
     }
 
     private void checkEmptyView() {

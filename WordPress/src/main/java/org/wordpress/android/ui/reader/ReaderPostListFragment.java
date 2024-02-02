@@ -863,7 +863,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             final boolean shouldRefreshSubscriptions =
                                     data.getBooleanExtra(ReaderSubsActivity.RESULT_SHOULD_REFRESH_SUBSCRIPTIONS, false);
                             if (shouldRefreshSubscriptions) {
-                                // TODO refresh chips if there were changes
+                                mSubFilterViewModel.loadSubFilters();
                             }
                         }
                     }

@@ -101,7 +101,7 @@ public class ReaderBlogFragment extends Fragment
                 currentBlogsUrls.add(readerBlog.getUrl());
             }
         }
-        return !(initialBlogsUrls.containsAll(currentBlogsUrls));
+        return !(initialBlogsUrls.equals(currentBlogsUrls));
     }
 
     private void checkEmptyView() {
