@@ -40,11 +40,6 @@ repositories {
             includeGroup "com.automattic"
             includeGroup "com.automattic.stories"
             includeGroup "com.automattic.tracks"
-            // 'org.wordpress-mobile' group is deprecated. It's kept for now for smoother transition
-            // but it should be removed soon (within couple weeks)
-            includeGroup "org.wordpress-mobile"
-            includeGroup "org.wordpress-mobile.gutenberg-mobile"
-            includeGroupByRegex "org.wordpress-mobile.react-native-libraries.*"
         }
     }
     maven {
@@ -348,6 +343,7 @@ kapt {
 
 dependencies {
     implementation 'androidx.webkit:webkit:1.7.0'
+    implementation "androidx.navigation:navigation-compose:$androidxComposeNavigationVersion"
     compileOnly project(path: ':libs:annotations')
     kapt project(':libs:processors')
     implementation (project(path:':libs:networking')) {
@@ -390,10 +386,6 @@ dependencies {
         exclude group: 'com.mcxiaoke.volley'
     }
     implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
-
-    // To enable Stetho, a debug bridge that enables the Chrome Developer Tools for debug purposes.
-    debugImplementation "com.facebook.stetho:stetho:$stethoVersion"
-    debugImplementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
 
     implementation "androidx.arch.core:core-common:$androidxArchCoreVersion"
     implementation "androidx.arch.core:core-runtime:$androidxArchCoreVersion"
@@ -562,8 +554,19 @@ dependencies {
     // - Jetpack Compose - UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test-junit4"
     implementation "androidx.compose.material3:material3:$androidxComposeMaterial3Version"
+
     // Cascade - Compose nested menu
     implementation "me.saket.cascade:cascade-compose:2.3.0"
+
+    // - Flipper
+    debugImplementation ("com.facebook.flipper:flipper:$flipperVersion") {
+        exclude group:'org.jetbrains.kotlinx', module:'kotlinx-serialization-json-jvm'
+    }
+    debugImplementation "com.facebook.soloader:soloader:$soLoaderVersion"
+    debugImplementation ("com.facebook.flipper:flipper-network-plugin:$flipperVersion"){
+        exclude group:'org.jetbrains.kotlinx', module:'kotlinx-serialization-json-jvm'
+    }
+    releaseImplementation "com.facebook.flipper:flipper-noop:$flipperVersion"
 }
 
 configurations.all {

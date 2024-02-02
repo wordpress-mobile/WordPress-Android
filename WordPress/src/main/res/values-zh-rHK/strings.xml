@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-22 19:53:33+0000
+Translation-Revision-Date: 2024-01-24 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">正在等待連線</string>
+    <string name="stats_traffic">流量</string>
     <string name="gutenberg_native_working_offline">離線作業</string>
     <string name="gutenberg_native_network_connection_re_established">重新建立網路連線</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">網路連線中斷，離線作業</string>
@@ -405,6 +407,7 @@ Language: zh_TW
     <string name="stats_timeframe_last_seven_days">過去 7 天</string>
     <string name="weeks_quantity_other">%d 週</string>
     <string name="weeks_quantity_one">1 週</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">來自 &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">稍後再提醒我</string>
     <string name="jetpack_feature_card_content_phase_three">「統計資料」、「閱讀器」、「通知」及其他功能即將搬遷至 Jetpack 行動應用程式。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">切換至 Jetpack 應用程式</string>

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts.editor.media
 
-import android.net.Uri
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -27,7 +26,6 @@ import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -36,38 +34,6 @@ import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 
 @ExperimentalCoroutinesApi
 class EditorMediaTest : BaseUnitTest() {
-    @Test
-    fun `advertiseImageOptimisationAndAddMedia shows dialog when shouldAdvertiseImageOptimization is true`() {
-        // Arrange
-        val editorMediaListener = mock<EditorMediaListener>()
-        val mediaUtilsWrapper = createMediaUtilsWrapper(shouldAdvertiseImageOptimization = true)
-
-        // Act
-        createEditorMedia(
-            editorMediaListener = editorMediaListener,
-            mediaUtilsWrapper = mediaUtilsWrapper
-        )
-            .advertiseImageOptimisationAndAddMedia(mock())
-        // Assert
-        verify(editorMediaListener).advertiseImageOptimization(anyOrNull())
-    }
-
-    @Test
-    fun `advertiseImageOptimisationAndAddMedia does NOT show dialog when shouldAdvertiseImageOptimization is false`() {
-        // Arrange
-        val editorMediaListener = mock<EditorMediaListener>()
-        val mediaUtilsWrapper = createMediaUtilsWrapper(shouldAdvertiseImageOptimization = false)
-
-        // Act
-        createEditorMedia(
-            editorMediaListener = editorMediaListener,
-            mediaUtilsWrapper = mediaUtilsWrapper
-        )
-            .advertiseImageOptimisationAndAddMedia(mock())
-        // Assert
-        verify(editorMediaListener, never()).advertiseImageOptimization(anyOrNull())
-    }
-
     @Test
     fun `addNewMediaItemsToEditorAsync emits AddingSingleMedia for a single uri`() = test {
         // Arrange
@@ -141,45 +107,6 @@ class EditorMediaTest : BaseUnitTest() {
             anyBoolean()
         )
     }
-
-    @Test
-    fun `onPhotoPickerMediaChosen does NOT invoke shouldAdvertiseImageOptimization when only video files`() =
-        test {
-            // Arrange
-            val uris = listOf(VIDEO_URI, VIDEO_URI, VIDEO_URI, VIDEO_URI)
-            val editorMediaListener = mock<EditorMediaListener>()
-
-            val mediaUtilsWrapper = createMediaUtilsWrapper()
-
-            // Act
-            createEditorMedia(
-                mediaUtilsWrapper = mediaUtilsWrapper,
-                editorMediaListener = editorMediaListener
-            )
-                .onPhotoPickerMediaChosen(uris)
-            // Assert
-            verify(editorMediaListener, never()).advertiseImageOptimization(anyOrNull())
-            verify(mediaUtilsWrapper, never()).shouldAdvertiseImageOptimization()
-        }
-
-    @Test
-    fun `onPhotoPickerMediaChosen invokes shouldAdvertiseImageOptimization when at least 1 image file`() =
-        test {
-            // Arrange
-            val uris = listOf(VIDEO_URI, VIDEO_URI, IMAGE_URI, VIDEO_URI)
-            val editorMediaListener = mock<EditorMediaListener>()
-
-            val mediaUtilsWrapper = createMediaUtilsWrapper()
-
-            // Act
-            createEditorMedia(
-                mediaUtilsWrapper = mediaUtilsWrapper,
-                editorMediaListener = editorMediaListener
-            )
-                .onPhotoPickerMediaChosen(uris)
-            // Assert
-            verify(mediaUtilsWrapper).shouldAdvertiseImageOptimization()
-        }
 
     @Test
     fun `addExistingMediaToEditorAsync passes mediaId to addExistingMediaToPostUseCase`() =
@@ -332,8 +259,6 @@ class EditorMediaTest : BaseUnitTest() {
     }
 
     private companion object Fixtures {
-        private val VIDEO_URI = mock<Uri>()
-        private val IMAGE_URI = mock<Uri>()
         private const val MEDIA_MODEL_REMOTE_ID = 123L
         private const val MEDIA_MODEL_LOCAL_ID = 1
 
@@ -341,7 +266,6 @@ class EditorMediaTest : BaseUnitTest() {
             updateMediaModelUseCase: UpdateMediaModelUseCase = mock(),
             getMediaModelUseCase: GetMediaModelUseCase = createGetMediaModelUseCase(),
             dispatcher: Dispatcher = mock(),
-            mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper(),
             networkUtilsWrapper: NetworkUtilsWrapper = mock(),
             addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase = createAddLocalMediaToPostUseCase(),
             addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase = mock(),
@@ -358,7 +282,6 @@ class EditorMediaTest : BaseUnitTest() {
                 updateMediaModelUseCase,
                 getMediaModelUseCase,
                 dispatcher,
-                mediaUtilsWrapper,
                 networkUtilsWrapper,
                 addLocalMediaToPostUseCase,
                 addExistingMediaToPostUseCase,
@@ -374,16 +297,6 @@ class EditorMediaTest : BaseUnitTest() {
             editorMedia.start(siteModel, editorMediaListener)
             return editorMedia
         }
-
-        fun createMediaUtilsWrapper(
-            shouldAdvertiseImageOptimization: Boolean = false
-        ) =
-            mock<MediaUtilsWrapper> {
-                on { shouldAdvertiseImageOptimization() }
-                    .thenReturn(shouldAdvertiseImageOptimization)
-                on { isVideo(VIDEO_URI.toString()) }.thenReturn(true)
-                on { isVideo(IMAGE_URI.toString()) }.thenReturn(false)
-            }
 
         fun createAddLocalMediaToPostUseCase(resultForAddNewMediaToEditorAsync: Boolean = true) =
             mock<AddLocalMediaToPostUseCase> {
