@@ -229,16 +229,14 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     }
 
     private fun initContentContainer(uiState: ContentUiState) {
-        if (uiState.selectedReaderTag == null) {
+        // only initialize the fragment if there's one selected and it's not already initialized
+        val currentFragmentTag = childFragmentManager.findFragmentById(R.id.container)?.tag
+        if (uiState.selectedReaderTag == null || uiState.selectedReaderTag.tagSlug == currentFragmentTag) {
             return
         }
 
-        // only initialize the fragment if it's not already initialized
-        val currentFragmentTag = childFragmentManager.findFragmentById(R.id.container)?.tag
-        if (currentFragmentTag == uiState.selectedReaderTag.tagSlug) return
-
         childFragmentManager.beginTransaction().apply {
-            val fragment = if (uiState.selectedReaderTag.isDiscover()) {
+            val fragment = if (uiState.selectedReaderTag.isDiscover) {
                 ReaderDiscoverFragment()
             } else {
                 ReaderPostListFragment.newInstanceForTag(
