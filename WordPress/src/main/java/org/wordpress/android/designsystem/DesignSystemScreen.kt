@@ -2,11 +2,13 @@ package org.wordpress.android.designsystem
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +39,10 @@ fun SelectOptionButton(
     Button(
         onClick = onClick,
         modifier = modifier.widthIn(min = 250.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = DesignSystemTheme.colors.brandForeground)
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.brand,
+            contentColor = MaterialTheme.colorScheme.primaryContainer
+        )
     ) {
         Text(stringResource(labelResourceId))
     }
@@ -46,7 +51,9 @@ fun SelectOptionButton(
 @Preview
 @Composable
 fun StartDesignSystemPreview(){
-    DesignSystem {}
+    DesignSystemTheme(isSystemInDarkTheme()) {
+        DesignSystem {}
+    }
 }
 
 @Composable
@@ -60,13 +67,13 @@ fun DesignSystem(
                 title = stringResource(R.string.preference_design_system),
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = { onBackTapped() },
-                backgroundColor = DesignSystemTheme.colors.primaryBackground,
-                contentColor = DesignSystemTheme.colors.primaryForeground,
+                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.primary,
             )
         }
     ) { innerPadding ->
         NavHost(
-            modifier = Modifier.background(DesignSystemTheme.colors.primaryBackground),
+            modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer),
             navController = navController,
             startDestination = DesignSystemScreen.Start.name
         ) {
