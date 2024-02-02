@@ -118,6 +118,9 @@ class CampaignListingFragment : Fragment() {
                 }
             }
         }
+        viewModel.onSelectedSiteMissing.observe(viewLifecycleOwner) {
+            requireActivity().finish()
+        }
     }
 
     private fun getPageSource(): CampaignListingPageSource {
