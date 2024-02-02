@@ -29,11 +29,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.play.core.review.ReviewException;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
-import com.google.android.play.core.review.model.ReviewErrorCode;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -139,6 +137,7 @@ import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
+import org.wordpress.android.ui.utils.InAppReviewsUtilsKt;
 import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.util.AniUtils;
@@ -854,12 +853,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 Task<Void> flow = manager.launchReviewFlow(this, reviewInfo);
                 flow.addOnFailureListener(e -> AppLog.e(T.MAIN, "Error launching google review API flow.", e));
             } else {
-                @ReviewErrorCode int reviewErrorCode = ((ReviewException) task.getException()).getErrorCode();
-                AppLog.e(
-                        T.MAIN,
-                        "Error fetching ReviewInfo object from Review API to start in-app review process",
-                        reviewErrorCode
-                );
+                InAppReviewsUtilsKt.logException(task);
             }
         });
     }
