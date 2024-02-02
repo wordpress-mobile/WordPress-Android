@@ -118,7 +118,7 @@ class ReaderViewModel @Inject constructor(
         EventBus.getDefault().register(this)
     }
 
-    fun start(savedInstanceState: Bundle?) {
+    fun start(savedInstanceState: Bundle? = null) {
         if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
         if (initialized) return
         loadTabs(savedInstanceState)
