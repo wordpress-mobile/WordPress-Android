@@ -619,14 +619,11 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 requireContext(),
                 passkeyRequestData,
                 result -> {
-                    mDispatcher.dispatch(
-                            AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(
-                                    result));
+                    mDispatcher.dispatch(result);
                     return null;
                 },
                 error -> {
                     handleWebauthnError();
-                    getParentFragmentManager().popBackStack();
                     return null;
                 }
         );

@@ -7,20 +7,21 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.CredentialManagerCallback
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
-import androidx.credentials.GetPasswordOption
 import androidx.credentials.GetPublicKeyCredentialOption
 import androidx.credentials.PublicKeyCredential
 import androidx.credentials.exceptions.GetCredentialException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore.FinishWebauthnChallengePayload
 import java.util.concurrent.Executors
 
 class PasskeyRequest private constructor(
     context: Context,
     requestData: PasskeyRequestData,
-    onSuccess: (FinishWebauthnChallengePayload) -> Unit,
+    onSuccess: (Action<FinishWebauthnChallengePayload>) -> Unit,
     onFailure: (Throwable) -> Unit
 ) {
     init {
@@ -41,7 +42,9 @@ class PasskeyRequest private constructor(
                     mUserId = requestData.userId
                     mTwoStepNonce = requestData.twoStepNonce
                     mClientData = result.toJson().orEmpty()
-                }.let { onSuccess(it) }
+                }.let {
+                    AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(it)
+                }.let(onSuccess)
             }
         }
 
@@ -82,7 +85,7 @@ class PasskeyRequest private constructor(
         fun create(
             context: Context,
             requestData: PasskeyRequestData,
-            onSuccess: (FinishWebauthnChallengePayload) -> Unit,
+            onSuccess: (Action<FinishWebauthnChallengePayload>) -> Unit,
             onFailure: (Throwable) -> Unit
         ) {
             PasskeyRequest(context, requestData, onSuccess, onFailure)
