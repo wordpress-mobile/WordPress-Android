@@ -4,11 +4,10 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -52,6 +51,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.coroutines.CoroutineContext
 
 const val UPDATE_TAGS_THRESHOLD = 1000 * 60 * 60 // 1 hr
 const val TRACK_TAB_CHANGED_THROTTLE = 100L
@@ -428,55 +428,70 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
-    private fun clearTopBarFilter() {
-        val filterUiState = _topBarUiState.value?.filterUiState
-            ?.copy(selectedItem = null)
+    private fun tryWaitNonNullTopBarUiStateThenRun(
+        initialDelay: Long = 0L,
+        retryTime: Long = 50L,
+        maxRetries: Int = 10,
+        runContext: CoroutineContext = mainDispatcher,
+        block: suspend CoroutineScope.(topBarUiState: TopBarUiState) -> Unit
+    ) {
+        launch(bgDispatcher) {
+            if (initialDelay > 0L) delay(initialDelay)
 
-        viewModelScope.launch(mainDispatcher) {
-            delay(FILTER_UPDATE_DELAY) // small delay to achieve a fluid animation since other UI updates are happening
-            _topBarUiState.postValue(
-                _topBarUiState.value
-                    ?.copy(filterUiState = filterUiState)
-            )
+            var remainingTries = maxRetries
+            while (_topBarUiState.value == null && remainingTries > 0) {
+                delay(retryTime)
+                remainingTries--
+            }
+
+            // only run the block if the topBarUiState is not null, otherwise do nothing
+            _topBarUiState.value?.let { topBarUiState ->
+                withContext(runContext) {
+                    block(topBarUiState)
+                }
+            }
+        }
+    }
+
+    private fun clearTopBarFilter() {
+        // small delay to achieve a fluid animation since other UI updates are happening
+        tryWaitNonNullTopBarUiStateThenRun(initialDelay = FILTER_UPDATE_DELAY) { topBarUiState ->
+            val filterUiState = topBarUiState.filterUiState?.copy(selectedItem = null)
+            _topBarUiState.postValue(topBarUiState.copy(filterUiState = filterUiState))
         }
     }
 
     private fun updateTopBarFilter(itemName: String, type: ReaderFilterType) {
-        val filterUiState = _topBarUiState.value?.filterUiState
-            ?.copy(selectedItem = ReaderFilterSelectedItem(UiStringText(itemName), type))
-
-        viewModelScope.launch(mainDispatcher) {
-            delay(FILTER_UPDATE_DELAY) // small delay to achieve a fluid animation since other UI updates are happening
-            _topBarUiState.postValue(
-                _topBarUiState.value
-                    ?.copy(filterUiState = filterUiState)
-            )
+        // small delay to achieve a fluid animation since other UI updates are happening
+        tryWaitNonNullTopBarUiStateThenRun(initialDelay = FILTER_UPDATE_DELAY) { topBarUiState ->
+            val filterUiState = topBarUiState.filterUiState
+                ?.copy(selectedItem = ReaderFilterSelectedItem(UiStringText(itemName), type))
+            _topBarUiState.postValue(topBarUiState.copy(filterUiState = filterUiState))
         }
     }
 
-    fun hideTopBarFilterGroup(readerTab: ReaderTag) {
-        val selectedReaderTag = _topBarUiState.value?.selectedItem?.let {
-            readerTagsList[readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(it)]
-        } ?: return
+    fun hideTopBarFilterGroup(readerTab: ReaderTag) = tryWaitNonNullTopBarUiStateThenRun { topBarUiState ->
+        val readerTagIndex = readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(topBarUiState.selectedItem)
+        val selectedReaderTag = readerTagsList[readerTagIndex]
 
-        if (readerTab != selectedReaderTag) return
+        if (readerTab != selectedReaderTag) return@tryWaitNonNullTopBarUiStateThenRun
 
-        _topBarUiState.postValue(
-            topBarUiState.value?.copy(filterUiState = null)
-        )
+        _topBarUiState.postValue(topBarUiState.copy(filterUiState = null))
     }
 
-    fun showTopBarFilterGroup(readerTab: ReaderTag, subFilterItems: List<SubfilterListItem>) {
-        val selectedReaderTag = _topBarUiState.value?.selectedItem?.let {
-            readerTagsList[readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(it)]
-        } ?: return
+    fun showTopBarFilterGroup(
+        readerTab: ReaderTag,
+        subFilterItems: List<SubfilterListItem>
+    ) = tryWaitNonNullTopBarUiStateThenRun { topBarUiState ->
+        val readerTagIndex = readerTopBarMenuHelper.getReaderTagIndexFromMenuItem(topBarUiState.selectedItem)
+        val selectedReaderTag = readerTagsList[readerTagIndex]
 
-        if (readerTab != selectedReaderTag) return
+        if (readerTab != selectedReaderTag) return@tryWaitNonNullTopBarUiStateThenRun
 
         val blogsFilterCount = subFilterItems.filterIsInstance<SubfilterListItem.Site>().size
         val tagsFilterCount = subFilterItems.filterIsInstance<SubfilterListItem.Tag>().size
 
-        val filterState = _topBarUiState.value?.filterUiState
+        val filterState = topBarUiState.filterUiState
             ?.copy(
                 blogsFilterCount = blogsFilterCount,
                 tagsFilterCount = tagsFilterCount,
@@ -491,7 +506,7 @@ class ReaderViewModel @Inject constructor(
             )
 
         _topBarUiState.postValue(
-            topBarUiState.value?.copy(filterUiState = filterState)
+            topBarUiState.copy(filterUiState = filterState)
         )
     }
 
