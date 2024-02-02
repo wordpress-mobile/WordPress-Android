@@ -2,7 +2,8 @@
 
 24.2
 -----
-
+* [**] Fix editor crash occurring on large posts [https://github.com/wordpress-mobile/WordPress-Android/pull/20046]
+* [*] [Jetpack-only] Site Monitoring: Add Metrics, PHP Logs, and Web Server Logs under Site Monitoring [https://github.com/wordpress-mobile/WordPress-Android/issues/20067]
 
 24.1
 -----
