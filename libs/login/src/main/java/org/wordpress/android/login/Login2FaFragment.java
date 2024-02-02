@@ -624,6 +624,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 },
                 error -> {
                     handleWebauthnError();
+                    getParentFragmentManager().popBackStack();
                     return null;
                 }
         );
