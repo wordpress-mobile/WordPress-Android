@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.discover
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,6 +16,7 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommende
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider.Companion.BLOGGING_PROMPT_TAG
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
@@ -78,6 +80,9 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
     val preloadPostEvents: LiveData<Event<PreLoadPostContent>> = _preloadPostEvents
+
+    private val _scrollToTopEvent = MutableLiveData<Event<Unit>>()
+    val scrollToTopEvent: LiveData<Event<Unit>> = _scrollToTopEvent
 
     /**
      * Post which is about to be reblogged after the user selects a target site.
@@ -145,7 +150,10 @@ class ReaderDiscoverViewModel @Inject constructor(
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             launch {
                 val userTags = getFollowedTagsUseCase.get()
-                if (userTags.isEmpty()) {
+
+                // since new users have the dailyprompt tag followed by default, we need to ignore them when
+                // checking if the user has any tags followed, so we show the onboarding state (ShowNoFollowedTags)
+                if (userTags.filterNot { it.tagSlug == BLOGGING_PROMPT_TAG }.isEmpty()) {
                     _uiState.value = DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState {
                         parentViewModel.onShowReaderInterests()
                     }
@@ -155,9 +163,11 @@ class ReaderDiscoverViewModel @Inject constructor(
                             convertCardsToUiStates(posts),
                             reloadProgressVisibility = false,
                             loadMoreProgressVisibility = false,
-                            scrollToTop = swipeToRefreshTriggered
                         )
-                        swipeToRefreshTriggered = false
+                        if (swipeToRefreshTriggered) {
+                            _scrollToTopEvent.postValue(Event(Unit))
+                            swipeToRefreshTriggered = false
+                        }
                     } else {
                         _uiState.value = DiscoverUiState.EmptyUiState.ShowNoPostsUiState {
                             _navigationEvents.value = Event(ShowReaderSubs)
@@ -523,7 +533,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         val fullscreenProgressVisibility: Boolean = false,
         val swipeToRefreshEnabled: Boolean = false,
         open val fullscreenEmptyVisibility: Boolean = false,
-        open val scrollToTop: Boolean = false
     ) {
         open val reloadProgressVisibility: Boolean = false
         open val loadMoreProgressVisibility: Boolean = false
@@ -532,7 +541,6 @@ class ReaderDiscoverViewModel @Inject constructor(
             val cards: List<ReaderCardUiState>,
             override val reloadProgressVisibility: Boolean,
             override val loadMoreProgressVisibility: Boolean,
-            override val scrollToTop: Boolean
         ) : DiscoverUiState(contentVisiblity = true, swipeToRefreshEnabled = true)
 
         object LoadingUiState : DiscoverUiState(fullscreenProgressVisibility = true)

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-17 21:47:15+0000
+Translation-Revision-Date: 2024-01-24 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">연결 대기 중</string>
+    <string name="stats_traffic">트래픽</string>
     <string name="gutenberg_native_working_offline">오프라인 작업 중</string>
     <string name="gutenberg_native_network_connection_re_established">네트워크 연결 다시 설정됨</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">네트워크 연결 해제됨, 오프라인 작업 중</string>
@@ -404,6 +406,7 @@ Language: ko_KR
     <string name="stats_timeframe_last_seven_days">최근 7일</string>
     <string name="weeks_quantity_other">%d주</string>
     <string name="weeks_quantity_one">1주</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">출처: &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">나중에 다시 알림</string>
     <string name="jetpack_feature_card_content_phase_three">곧 통계, 리더, 알림 및 기타 기능이 젯팩 모바일 앱으로 이동됩니다.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">젯팩 앱으로 전환</string>

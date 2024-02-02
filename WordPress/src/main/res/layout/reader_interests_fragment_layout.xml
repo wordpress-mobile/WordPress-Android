@@ -66,7 +66,7 @@
             <com.google.android.material.textview.MaterialTextView
                 style="@style/ReaderTextView.Interests.Title"
                 android:id="@+id/title"
-                android:text="@string/reader_label_choose_your_interests"
+                android:text="@string/reader_label_choose_interests"
                 android:visibility="gone"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@id/guideline_beginning"

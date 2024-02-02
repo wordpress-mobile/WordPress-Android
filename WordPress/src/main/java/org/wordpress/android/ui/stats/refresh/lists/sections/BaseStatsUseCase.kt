@@ -9,9 +9,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Data
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Error
@@ -282,6 +282,6 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     }
 
     sealed class UseCaseParam {
-        data class SelectedDateParam(val statsSection: StatsSection) : UseCaseParam()
+        data class SelectedDateParam(val statsGranularity: StatsGranularity) : UseCaseParam()
     }
 }

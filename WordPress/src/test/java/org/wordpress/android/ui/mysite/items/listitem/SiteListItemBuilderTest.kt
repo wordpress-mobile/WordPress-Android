@@ -29,6 +29,7 @@ import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.config.SiteMonitoringFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteListItemBuilderTest {
@@ -53,6 +54,9 @@ class SiteListItemBuilderTest {
     @Mock
     lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
+    @Mock
+    lateinit var siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig
+
     private lateinit var siteListItemBuilder: SiteListItemBuilder
 
     @Before
@@ -63,7 +67,8 @@ class SiteListItemBuilderTest {
             siteUtilsWrapper,
             buildConfigWrapper,
             themeBrowserUtils,
-            jetpackFeatureRemovalPhaseHelper
+            jetpackFeatureRemovalPhaseHelper,
+            siteMonitoringFeatureConfig
         )
     }
 
@@ -417,8 +422,13 @@ class SiteListItemBuilderTest {
 
     /* SITE MONITORING */
     @Test
-    fun `give jetpack app, when is atomic and admin, then site monitoring item is built`() {
-        setupSiteMonitoringItems()
+    fun `give jetpack app, when FF is true and site is atomic and admin, then site monitoring item is built`() {
+        setupSiteMonitoringItems(
+            isJetpackApp = true,
+            isSiteMonitoringFeatureFlagEnabled = true,
+            isAtomic = true,
+            isAdmin = true
+        )
 
         val item = siteListItemBuilder.buildSiteMonitoringItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
@@ -426,19 +436,11 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `give jetpack app, when is not atomic, then site monitoring item is not built`() {
+    fun `give jetpack app, when FF is true and site is atomic and NOT admin, then site monitoring item is not built`() {
         setupSiteMonitoringItems(
-            isAtomic = false
-        )
-
-        val item = siteListItemBuilder.buildSiteMonitoringItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(item).isNull()
-    }
-
-    @Test
-    fun `give jetpack app, when is not admin, then site monitoring item is not built`() {
-        setupSiteMonitoringItems(
+            isJetpackApp = true,
+            isSiteMonitoringFeatureFlagEnabled = true,
+            isAtomic = true,
             isAdmin = false
         )
 
@@ -448,9 +450,38 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `give not jetpack app, when site monitoring item requested, then site monitoring item is not built`() {
+    fun `give jetpack app, when FF is true and site is admin and NOT atomic, then site monitoring item is not built`() {
         setupSiteMonitoringItems(
-            isJetpackApp = false
+            isJetpackApp = true,
+            isSiteMonitoringFeatureFlagEnabled = true,
+            isAdmin = true
+        )
+
+        val item = siteListItemBuilder.buildSiteMonitoringItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+
+        assertThat(item).isNull()
+    }
+
+    @Test
+    fun `give jetpack app, when FF is false and site is admin and atomic, then site monitoring item is not built`() {
+        setupSiteMonitoringItems(
+            isJetpackApp = true,
+            isAtomic = true,
+            isAdmin = true
+        )
+
+        val item = siteListItemBuilder.buildSiteMonitoringItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+
+        assertThat(item).isNull()
+    }
+
+    @Test
+    fun `give not jetpack app, when FF is true and site is atomic and admin, then site monitoring item is not built`() {
+        setupSiteMonitoringItems(
+            isJetpackApp = false,
+            isSiteMonitoringFeatureFlagEnabled = true,
+            isAtomic = true,
+            isAdmin = true
         )
 
         val item = siteListItemBuilder.buildSiteMonitoringItemIfAvailable(siteModel, SITE_ITEM_ACTION)
@@ -459,11 +490,13 @@ class SiteListItemBuilderTest {
     }
 
     private fun setupSiteMonitoringItems(
-        isJetpackApp: Boolean = true,
-        isAtomic: Boolean = true,
-        isAdmin: Boolean = true
+        isJetpackApp: Boolean = false,
+        isSiteMonitoringFeatureFlagEnabled: Boolean = false,
+        isAtomic: Boolean = false,
+        isAdmin: Boolean = false
     ) {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(isJetpackApp)
+        whenever(siteMonitoringFeatureConfig.isEnabled()).thenReturn(isSiteMonitoringFeatureFlagEnabled)
         whenever(siteModel.isAdmin).thenReturn(isAdmin)
         whenever(siteModel.isWPComAtomic).thenReturn(isAtomic)
     }

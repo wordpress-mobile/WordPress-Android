@@ -482,12 +482,22 @@
                 <data
                     android:host="wordpress.com"
                     android:pathPattern="/media/.*"
-                    android:scheme="http" />
+                    android:scheme="https" />
 
                 <data
                     android:host="wordpress.com"
                     android:pathPattern="/domains/manage"
                     android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/site-monitoring/.*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/site-monitoring/.*"
+                    android:scheme="http" />
 
             </intent-filter>
         </activity-alias>
