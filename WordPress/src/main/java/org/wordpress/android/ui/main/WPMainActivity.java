@@ -137,7 +137,6 @@ import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
-import org.wordpress.android.ui.utils.InAppReviewsUtilsKt;
 import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.util.AniUtils;
@@ -183,6 +182,7 @@ import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVari
 import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.EMAIL;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
+import static org.wordpress.android.util.extensions.InAppReviewExtensionsKt.logException;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -853,7 +853,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 Task<Void> flow = manager.launchReviewFlow(this, reviewInfo);
                 flow.addOnFailureListener(e -> AppLog.e(T.MAIN, "Error launching google review API flow.", e));
             } else {
-                InAppReviewsUtilsKt.logException(task);
+                logException(task);
             }
         });
     }
