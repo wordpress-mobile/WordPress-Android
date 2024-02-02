@@ -127,8 +127,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private boolean mIsSocialLoginConnect;
     private boolean mSentSmsCode;
     private List<SupportedAuthTypes> mSupportedAuthTypes;
-    @Nullable private Fido2ClientHandler mFido2ClientHandler = null;
-    @Nullable private ActivityResultLauncher<IntentSenderRequest> mResultLauncher = null;
 
     public static Login2FaFragment newInstance(String emailAddress, String password) {
         Login2FaFragment fragment = new Login2FaFragment();
@@ -299,16 +297,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             mPhoneNumber = savedInstanceState.getString(KEY_SMS_NUMBER);
             mSentSmsCode = savedInstanceState.getBoolean(KEY_SMS_SENT);
         }
-
-        mResultLauncher =
-                registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        onCredentialsResultAvailable(result.getData());
-                    } else {
-                        handleWebauthnError();
-                    }
-                });
     }
 
     @Override
@@ -650,23 +638,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                     return null;
                 }
         );
-    }
-
-    private void onCredentialsResultAvailable(@NonNull Intent resultData) {
-        if (resultData.hasExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA)) {
-            byte[] credentialBytes = resultData.getByteArrayExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA);
-            if (credentialBytes == null || mFido2ClientHandler == null) {
-                handleWebauthnError();
-                return;
-            }
-
-            PublicKeyCredential credentials =
-                    PublicKeyCredential.deserializeFromBytes(credentialBytes);
-            FinishWebauthnChallengePayload payload =
-                    mFido2ClientHandler.onCredentialsAvailable(credentials);
-            mDispatcher.dispatch(
-                    AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(payload));
-        }
     }
 
     @SuppressWarnings("unused")
