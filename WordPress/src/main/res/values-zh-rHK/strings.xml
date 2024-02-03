@@ -31,8 +31,6 @@ Language: zh_TW
     <string name="bloganuary_dashboard_nudge_overlay_text_one">每天接收新提示，激發靈感。</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">參加為期一個月的寫作挑戰</string>
     <string name="bloganuary_dashboard_nudge_text">Bloganuary 會在 1 月送上網誌提示：這個社群挑戰的目的，是為了協助你在新的一年養成寫網誌的習慣。</string>
-    <string name="turn_off">否，關閉</string>
-    <string name="leave_on">是，保持開啟</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">因此，我們建議使用網頁瀏覽器來編輯區塊。</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">因此，我們建議使用網頁編輯器來編輯區塊。</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">或者，你可以取消區塊群組來簡化內容。</string>
@@ -47,8 +45,6 @@ Language: zh_TW
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">行動編輯器可能無法正確顯示內嵌超過 %d 層的區塊。</string>
     <string name="jp_migration_lets_go_button">我們開始吧</string>
     <string name="jp_migration_done_no_sites_message">現在就在 Jetpack 應用程式上繼續你的 WordPress 旅程。</string>
-    <string name="image_optimization_popup_desc">為加快上傳速度，圖片最佳化功能會壓縮圖片。\n\n系統預設啟用此選項，但你可以隨時在應用程式設定中變更。</string>
-    <string name="image_optimization_popup_title">是否要繼續將圖片最佳化？</string>
     <string name="domain_management_clear_search">清除搜尋</string>
     <string name="media_encoder_quality_very_high">超高</string>
     <string name="notification_security_key_needed">請提供安全性金鑰以繼續使用。</string>

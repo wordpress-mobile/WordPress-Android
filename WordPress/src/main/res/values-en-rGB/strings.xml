@@ -34,8 +34,6 @@ Language: en_GB
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">For the month of January, blogging prompts will come from Bloganuary – our community challenge to build a blogging habit for the new year.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Bloganuary is coming!</string>
-    <string name="turn_off">No, turn off</string>
-    <string name="leave_on">Yes, leave on</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">For this reason, we recommend editing the block using your web browser.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">For this reason, we recommend editing the block using the web editor.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternatively, you can flatten the content by ungrouping the block.</string>
@@ -50,8 +48,6 @@ Language: en_GB
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blocks nested deeper than %d levels may not render properly in the mobile editor.</string>
     <string name="jp_migration_lets_go_button">Let\'s go</string>
     <string name="jp_migration_done_no_sites_message">It\'s time to continue your WordPress journey on the Jetpack app.</string>
-    <string name="image_optimization_popup_desc">Image optimisation shrinks images for faster uploading.\n\nThis option is enabled by default, but you can change it in the app settings at any time.</string>
-    <string name="image_optimization_popup_title">Keep optimising images?</string>
     <string name="domain_management_clear_search">Clear search</string>
     <string name="media_encoder_quality_very_high">Very High</string>
     <string name="notification_security_key_needed">Please provide your security key to continue.</string>

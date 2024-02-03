@@ -1,0 +1,5 @@
+24.1:
+- Çevrimdışı çalışırken bildirim alın.
+- İnternet bağlantınız kesildiğinde görsel bloku yüklemeleri durur ve yeniden bağlandığınızda devam eder.
+- Düzenleyicide özel bir gradyan seçin ve renk göstergesini görün.
+- "İleri" ve "geri" okları, sağdan sola okuyucular için doğrudur.

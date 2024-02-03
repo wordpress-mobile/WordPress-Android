@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-24 09:54:08+0000
+Translation-Revision-Date: 2024-01-31 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-beta.2
 Language: zh_CN
@@ -30,8 +30,6 @@ Language: zh_CN
     <string name="bloganuary_dashboard_nudge_overlay_text_two">发表您的回复。</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">每天接收新的提示，以获取灵感。</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">加入我们为期一个月的写作挑战</string>
-    <string name="turn_off">不，停止优化</string>
-    <string name="leave_on">是，继续优化</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">因此，我们建议使用 Web 浏览器编辑该区块。</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">因此，我们建议使用 Web 编辑器编辑该区块。</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">或者，您也可以取消区块分组，以使内容扁平化。</string>
@@ -52,6 +50,7 @@ Language: zh_CN
     <string name="login_error_security_key">安全密钥登录出现问题</string>
     <string name="login_text_security_key">使用安全密钥</string>
     <string name="new_domain_search_screen_error_title">无法检索域名</string>
+    <string name="new_domain_search_screen_list_item_sale_price">第一年 %s</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s/年</string>
     <string name="new_domain_search_screen_transfer_domain_button">转移域名</string>
     <string name="new_domain_search_screen_transfer_domain_description">想要转移已有的域名？</string>
