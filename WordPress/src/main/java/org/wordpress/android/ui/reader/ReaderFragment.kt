@@ -210,7 +210,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
 
         observeJetpackOverlayEvent(savedInstanceState)
 
-        viewModel.start()
+        viewModel.start(savedInstanceState)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        viewModel.onSaveInstanceState(outState)
     }
 
     private fun updateUiState(uiState: ReaderViewModel.ReaderUiState) {

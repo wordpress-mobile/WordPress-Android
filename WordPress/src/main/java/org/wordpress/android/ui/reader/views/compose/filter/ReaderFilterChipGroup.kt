@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.views.compose.filter
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.os.Parcelable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -37,6 +38,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.compose.unit.Margin
@@ -210,10 +212,11 @@ enum class ReaderFilterType {
     TAG,
 }
 
+@Parcelize
 data class ReaderFilterSelectedItem(
     val text: UiString,
     val type: ReaderFilterType,
-)
+) : Parcelable
 
 @Preview(name = "Light Mode", showBackground = true)
 @Preview(name = "Dark Mode", showBackground = true, uiMode = UI_MODE_NIGHT_YES)
