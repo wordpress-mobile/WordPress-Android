@@ -1,6 +1,0 @@
-24.0 :
-- Obtenir un plan WordPress avec un domaine gratuit dans la section Domaine du tableau de bord
-- Le clavier de l’appareil reste visible lors de l’édition de blocs Paragraphe
-- L’écran de l’éditeur défile automatiquement jusqu’aux blocs qui viennent d’être insérés
-- Désélectionner des blocs en appuyant sur le bouton Retour de l’appareil
-- Partager simultanément divers types de médias vers l’application sans incident
