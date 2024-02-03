@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-24 13:54:08+0000
+Translation-Revision-Date: 2024-01-30 13:54:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-beta.2
 Language: he_IL
@@ -31,8 +31,6 @@ Language: he_IL
     <string name="bloganuary_dashboard_nudge_overlay_text_one">כך תגיע אליך מדי יום הצעת כתיבה חדשה שתיתן לך השראה.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">אנו מזמינים אותך להצטרף לאתגר הכתיבה שלנו שיימשך חודש שלם</string>
     <string name="bloganuary_dashboard_nudge_text">לאורך כל חודש ינואר יתקבלו מ-Bloganuary הצעות כתיבה יומיות בבלוג. זהו האתגר הקהילתי שלנו לביסוס הרגלי פרסום בבלוג לשנה החדשה.</string>
-    <string name="turn_off">לא, נא לכבות</string>
-    <string name="leave_on">כן, להמשיך</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">מסיבה זו מומלץ \'לשטח\' את התוכן על ידי ביטול הקבצת הבלוק או לערוך את הבלוק בעזרת דפדפן האינטרנט.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">מסיבה זו מומלץ \'לשטח\' את התוכן על ידי ביטול הקבצת הבלוק או לערוך את הבלוק בעזרת עורך האינטרנט.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternatively, you can flatten the content by ungrouping the block.</string>
@@ -47,8 +45,6 @@ Language: he_IL
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">בעורך לנייד ייתכן עיבוד לא תקין של בלוקים בקינון עמוק מ-%d רמות.</string>
     <string name="jp_migration_lets_go_button">קדימה</string>
     <string name="jp_migration_done_no_sites_message">It\'s time to continue your WordPress journey on the Jetpack app.</string>
-    <string name="image_optimization_popup_desc">מיטוב התמונות מכווץ תמונות להעלאה מואצת.\n\nאפשרות זאת מופעלת כברירת מחדל, אך ניתן לשנות אותה בכל עת דרך הגדרות האפליקציה.</string>
-    <string name="image_optimization_popup_title">האם להמשיך במיטוב תמונות?</string>
     <string name="domain_management_clear_search">לנקות את החיפוש</string>
     <string name="media_encoder_quality_very_high">גבוהה מאוד</string>
     <string name="notification_security_key_needed">כדי להמשיך עליך לספק מפתח אבטחה.</string>
@@ -431,6 +427,7 @@ Language: he_IL
     <string name="blogging_prompts_list_answered_prompt">✓ תשובה התקבלה</string>
     <string name="blogging_prompts_list_title">הצעות</string>
     <string name="close_desc">לסגור</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta">לחלופין, ניתן לנתק ולערוך את הבלוק הזה בנפרד על ידי הקשה על \'להפריד\'.</string>
     <string name="dlg_confirm_delete_category">למחוק לצמיתות את הקטגוריה \'%s\'?</string>
     <string name="deleting_cat_success">מחקת את הקטגוריה בהצלחה</string>
     <string name="deleting_cat_failed">מחיקת הקטגוריה נכשלה</string>
