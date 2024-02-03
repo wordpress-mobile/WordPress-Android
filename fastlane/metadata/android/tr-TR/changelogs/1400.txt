@@ -1,6 +1,0 @@
-24.0:
-Blok Düzenleyici güncellemeleri:
-- Metin blokları eklerken cihaz klavyesi kalır
-- Ekran yeni eklenen bloklara otomatik olarak kaydırır
-- Cihazınızın geri düğmesine basarak blokların seçimini kaldırın
-- Tek seferde uygulamayla farklı ortam türleri paylaştığınızda uygulama çökmeyecek
