@@ -109,7 +109,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && hasContext()) {
-                    ToastUtils.showToast(getContext(), R.string.reader_toast_err_remove_tag);
+                    ToastUtils.showToast(getContext(), R.string.reader_toast_err_removing_tag);
                     refresh();
                 }
             }

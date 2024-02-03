@@ -1876,8 +1876,6 @@ Language: fr
     <string name="reader_my_likes_display_name">J’aime</string>
     <string name="reader_discover_display_name">Découvrez</string>
     <string name="reader_save_for_later_display_name">Enregistré</string>
-    <string name="reader_filter_tags_title">Sujets</string>
-    <string name="reader_filter_sites_title">Sites</string>
     <string name="suffix_1_000_000_000_000_000_000">%s trillion</string>
     <string name="suffix_1_000_000_000_000_000">%s billiard</string>
     <string name="suffix_1_000_000_000_000">%s billion</string>

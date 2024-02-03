@@ -18,7 +18,7 @@ class ReaderInterestsActivity : LocaleAwareActivity() {
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
-            it.title = getString(R.string.reader_title_interests)
+            it.title = getString(R.string.reader_title_tags)
         }
     }
 

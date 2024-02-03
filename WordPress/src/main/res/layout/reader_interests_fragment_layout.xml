@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSurface"
-    android:contentDescription="@string/reader_choose_interests_content_description">
+    android:contentDescription="@string/reader_choose_interests_tags_content_description">
 
     <RelativeLayout
         android:id="@+id/back_button"
@@ -66,7 +66,7 @@
             <com.google.android.material.textview.MaterialTextView
                 style="@style/ReaderTextView.Interests.Title"
                 android:id="@+id/title"
-                android:text="@string/reader_label_choose_your_interests"
+                android:text="@string/reader_label_choose_interests"
                 android:visibility="gone"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@id/guideline_beginning"
@@ -83,7 +83,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/margin_extra_large"
                 android:layoutDirection="locale"
-                app:chipSpacing="@dimen/margin_small_medium"
+                app:chipSpacing="@dimen/margin_medium"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@id/guideline_beginning"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
@@ -116,7 +116,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/done_button"
-            style="@style/WordPress.ReaderPrimaryButton"
+            style="@style/Reader.Button.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/interests_done_button_margin"
