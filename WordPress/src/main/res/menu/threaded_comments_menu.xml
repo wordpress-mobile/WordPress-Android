@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/follow_item"
-        android:title="@string/reader_btn_subscribe"
+        android:title="@string/reader_btn_follow"
         app:actionLayout="@layout/follow_action_layout"
         app:showAsAction="always" />
     <item

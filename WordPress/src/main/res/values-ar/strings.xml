@@ -29,8 +29,6 @@ Language: ar
     <string name="bloganuary_dashboard_nudge_overlay_text_two">انشر ردك.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">استقبل موجّهًا جديدًا لإلهامك في كل يوم.</string>
     <string name="bloganuary_dashboard_nudge_text">في شهر يناير، ستأتي موجّهات التدوين من Bloganuary - تحدٍّ مجتمعي لدينا لإنشاء عادة التدوين الخاصة بالعام الجديد.</string>
-    <string name="turn_off">لا، توقف عن الاستخدام</string>
-    <string name="leave_on">نعم، واصل الاستخدام</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">لهذا السبب، نوصي بتحرير المكوّن باستخدام متصفح الويب لديك.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">لهذا السبب، نوصي بتحرير المكوّن باستخدام محرر الويب.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">بدلاً من ذلك، يمكنك تمهيد المحتوى عن طريق فك تجميع المكوّن.</string>

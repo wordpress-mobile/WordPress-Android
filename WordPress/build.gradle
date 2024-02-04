@@ -423,8 +423,14 @@ dependencies {
     implementation "com.google.android.play:review:$googlePlayReviewVersion"
     implementation "com.google.android.play:review-ktx:$googlePlayReviewVersion"
     implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
-    implementation "com.google.android.gms:play-services-code-scanner:$googlePlayServicesCodeScannerVersion"
-    implementation "com.google.mlkit:barcode-scanning-common:$googleMLKitBarcodeScanningVersion"
+    implementation "com.google.mlkit:barcode-scanning-common:$googleMLKitBarcodeScanningCommonVersion"
+    implementation "com.google.mlkit:text-recognition:$googleMLKitTextRecognitionVersion"
+    implementation "com.google.mlkit:barcode-scanning:$googleMLKitBarcodeScanningVersion"
+
+    // CameraX
+    implementation "androidx.camera:camera-camera2:$androidxCameraVersion"
+    implementation "androidx.camera:camera-lifecycle:$androidxCameraVersion"
+    implementation "androidx.camera:camera-view:$androidxCameraVersion"
 
     implementation "com.android.installreferrer:installreferrer:$androidInstallReferrerVersion"
     implementation "com.github.chrisbanes:PhotoView:$chrisbanesPhotoviewVersion"

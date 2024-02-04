@@ -31,8 +31,6 @@ Language: it
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Ricevi un nuovo suggerimento per ottenere ispirazione ogni giorno.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Prendi parte alla nostra sfida di scrittura: dura un mese.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Bloganuary sta arrivando!</string>
-    <string name="turn_off">No, disattiva</string>
-    <string name="leave_on">Si, continua</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Per questo motivo consigliamo di modificare il blocco tramite il browser web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Per questo motivo consigliamo di modificare il blocco tramite l\'editor web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">In alternativa, puoi uniformare i contenuti separando il blocco.</string>

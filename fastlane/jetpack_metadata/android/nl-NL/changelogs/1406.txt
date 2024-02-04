@@ -1,0 +1,7 @@
+24.1:
+- Krijg een melding wanneer je offline werkt.
+- Pauzeer/hervat uploads naar het afbeeldingblok wanneer de internetverbinding wordt verbroken/opnieuw wordt gemaakt.
+- Geef aangepaste kleurverloopselecties weer in de editor.
+- De pijlen verder/terug zijn gerepareerd voor lezers die van rechts naar links lezen.
+- Tags voor dagelijkse opdracht werken weer als normaal.
+- Tik op Sitedomeinkaarten om domeinen te beheren.

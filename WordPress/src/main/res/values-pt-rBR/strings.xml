@@ -16,8 +16,6 @@ Language: pt_BR
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Receba uma nova sugestão por dia para se inspirar.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Participe do nosso desafio de escrita do mês</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
-    <string name="turn_off">Não, desativar</string>
-    <string name="leave_on">Sim, manter ativa</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Por isso, recomendamos editar o bloco usando seu navegador.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Por isso, recomendamos editar o bloco usando seu editor da web.</string>
     <string name="my_site_blogging_prompt_card_attribution_bloganuary">Do &lt;b&gt;Bloganuary&lt;/b&gt;</string>

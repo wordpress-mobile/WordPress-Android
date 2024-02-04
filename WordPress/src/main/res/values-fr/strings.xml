@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-25 19:56:22+0000
+Translation-Revision-Date: 2024-02-02 09:34:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-beta.2
 Language: fr
@@ -31,8 +31,6 @@ Language: fr
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Recevez chaque jour une invite pour vous inspirer.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Participer à notre défi d’écriture d’un mois</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">De Bloganuary</string>
-    <string name="turn_off">Non, désactiver</string>
-    <string name="leave_on">Oui, laisser activé</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Pour cette raison, nous vous recommandons de modifier le bloc à l’aide de votre navigateur web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Pour cette raison, nous vous recommandons de modifier le bloc à l’aide de l’éditeur web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Sinon, vous pouvez aplatir le contenu en dégroupant le bloc.</string>
@@ -2361,7 +2359,7 @@ Language: fr
     <string name="pages_move_to_draft">Passer en brouillon</string>
     <string name="pages_set_parent">Configurer le parent</string>
     <string name="pages_view">Afficher</string>
-    <string name="pages_trashed">Mises à la Corbeille</string>
+    <string name="pages_trashed">Mis à la corbeille</string>
     <string name="pages_scheduled">Planifiées</string>
     <string name="pages_drafts">Brouillons</string>
     <string name="pages_published">Publiées</string>
@@ -3615,7 +3613,7 @@ Language: fr
     <string name="mnu_comment_unapprove">Désapprouver</string>
     <string name="mnu_comment_approve">Approuver</string>
     <string name="edit_comment">Modifier le commentaire</string>
-    <string name="comment_status_trash">À la Corbeille</string>
+    <string name="comment_status_trash">Mis à la corbeille</string>
     <string name="comment_status_spam">Indésirable</string>
     <string name="comment_status_unapproved">En attente</string>
     <string name="comment_status_approved">Approuvé</string>
