@@ -16,9 +16,9 @@ class WebauthnChallengeRequest(
     twoStepNonce: String,
     clientId: String,
     clientSecret: String,
-    listener: Response.Listener<WebauthnChallengeInfo>,
+    listener: Response.Listener<String>,
     errorListener: ErrorListener
-): BaseWebauthnRequest<WebauthnChallengeInfo>(webauthnChallengeEndpointUrl, errorListener, listener) {
+): BaseWebauthnRequest<String>(webauthnChallengeEndpointUrl, errorListener, listener) {
     override val parameters: Map<String, String> = mapOf(
         CLIENT_ID.value to clientId,
         CLIENT_SECRET.value to clientSecret,
@@ -27,8 +27,7 @@ class WebauthnChallengeRequest(
         TWO_STEP_NONCE.value to twoStepNonce
     )
 
-    override fun serializeResponse(response: String): WebauthnChallengeInfo =
-        gson.fromJson(response, WebauthnChallengeInfo::class.java)
+    override fun serializeResponse(response: String) = response
 }
 
 @SuppressWarnings("LongParameterList")
