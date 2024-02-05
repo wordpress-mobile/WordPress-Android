@@ -1,4 +1,5 @@
-- Get notified when you’re working offline.
-- Image block uploads pause when you lose internet and resume when you reconnect.
-- Select a custom gradient in the editor and see a color indicator.
-- “Forward” and “back” arrows are correct for right-to-left readers.
+* [**] Fix editor crash occurring on large posts [https://github.com/wordpress-mobile/WordPress-Android/pull/20046]
+* [*] [Jetpack-only] Site Monitoring: Add Metrics, PHP Logs, and Web Server Logs under Site Monitoring [https://github.com/wordpress-mobile/WordPress-Android/issues/20067]
+* [**] Prevent images from temporarily disappearing when uploading media [https://github.com/WordPress/gutenberg/pull/57869]
+* [***] [Jetpack-only] Reader: introduced new UI/UX for content navigation and filtering [https://github.com/wordpress-mobile/WordPress-Android/pull/19978]
+
