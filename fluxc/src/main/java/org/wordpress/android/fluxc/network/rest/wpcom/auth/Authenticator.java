@@ -129,7 +129,7 @@ public class Authenticator {
     }
 
     public void makeRequest(String userId, String webauthnNonce,
-                            Response.Listener<WebauthnChallengeInfo> listener,
+                            Response.Listener<String> listener,
                             ErrorListener errorListener) {
         WebauthnChallengeRequest request = new WebauthnChallengeRequest(
                 userId,
