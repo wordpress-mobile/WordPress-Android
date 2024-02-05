@@ -7,7 +7,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.sotw2023.WpSotw2023NudgeCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.jetpackBadge.JetpackBadgeViewModelSlice
@@ -25,7 +24,6 @@ class DashboardItemsViewModelSlice @Inject constructor(
     private val siteItemsViewModelSlice: SiteItemsViewModelSlice,
     private val sotw2023NudgeCardViewModelSlice: WpSotw2023NudgeCardViewModelSlice,
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
-    private val selectedSiteRepository: SelectedSiteRepository,
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
     private lateinit var scope: CoroutineScope
