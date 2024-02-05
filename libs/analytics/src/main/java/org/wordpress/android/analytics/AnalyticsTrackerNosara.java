@@ -2273,8 +2273,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_settings_privacy_settings_tapped";
             case APP_SETTINGS_OPEN_DEVICE_SETTINGS_TAPPED:
                 return "app_settings_open_device_settings_tapped";
-            case APP_SETTINGS_OPTIMIZE_IMAGES_POPUP_TAPPED:
-                return "app_settings_optimize_images_popup_tapped";
             case APP_SETTINGS_MAX_IMAGE_SIZE_CHANGED:
                 return "app_settings_max_image_size_changed";
             case APP_SETTINGS_IMAGE_QUALITY_CHANGED:
@@ -2697,6 +2695,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "dynamic_dashboard_card_hide_tapped";
             case DEEP_LINK_FAILED:
                 return "deep_link_failed";
+            case READER_DROPDOWN_MENU_OPENED:
+                return "reader_dropdown_menu_opened";
+            case READER_DROPDOWN_MENU_ITEM_TAPPED:
+                return "reader_dropdown_menu_item_tapped";
+            case SITE_MONITORING_SCREEN_SHOWN:
+                return "site_monitoring_screen_shown";
+            case OPENED_SITE_MONITORING:
+                return "opened_site_monitoring";
+            case SITE_MONITORING_TAB_SHOWN:
+                return "site_monitoring_tab_shown";
+            case SITE_MONITORING_TAB_LOADING_ERROR:
+                return "site_monitoring_tab_loading_error";
         }
         return null;
     }

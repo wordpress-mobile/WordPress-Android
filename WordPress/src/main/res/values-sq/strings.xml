@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-16 09:25:31+0000
+Translation-Revision-Date: 2024-01-24 11:45:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">Po pritet për lidhje</string>
+    <string name="stats_traffic">Trafik</string>
     <string name="gutenberg_native_working_offline">Punim i Palidhur</string>
     <string name="gutenberg_native_network_connection_re_established">Lidhja me rrjetin u rivendos</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">Humbi lidhja me rrjetin, po punohet pa u lidhur</string>
@@ -32,8 +34,6 @@ Language: sq_AL
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">Për muajin janar, cytjet për blogim do të vijnë nga Bloganuary — sfida e bashkësisë tonë për të krijuar një zakon blogimi për vitin e ri.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Bloganuary po vjen!</string>
-    <string name="turn_off">Jo, çaktivizoje</string>
-    <string name="leave_on">Po, lëre të aktivizuar</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Për këtë arsye, rekomandojmë përpunimin e bllokut duke përdorur shfletuesin tuaj.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Për këtë arsye, rekomandojmë përpunimin e bllokut duke përdorur përpunuesin web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Ndryshe, mund ta sheshoni lëndën duke hequr bllokun nga grupi.</string>
@@ -48,8 +48,6 @@ Language: sq_AL
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blloqe brenda njëri-tjetri më thellë se %d nivele mund të mos funksionojnë si duhet te përpunuesi për celular.</string>
     <string name="jp_migration_lets_go_button">Shkojmë</string>
     <string name="jp_migration_done_no_sites_message">Ka ardhur koha a vazhdoni udhëtimin tuaj WordPress te aplikacioni Jetpack.</string>
-    <string name="image_optimization_popup_desc">Optimizimi i figurave i tkurr këto, për ngarkim më të shpejtë.\n\nKjo mundësi, si parazgjedhje, është e aktivizuar, por mund ta ndryshoni që nga rregullimet e aplikacioni kurdo.</string>
-    <string name="image_optimization_popup_title">Të vazhdohet të optimizohen figura?</string>
     <string name="domain_management_clear_search">Spastroje kërkimin</string>
     <string name="media_encoder_quality_very_high">Shumë e Lartë</string>
     <string name="notification_security_key_needed">Ju lutemi, që të vazhdohet, jepni kyçin tuaj të sigurisë.</string>
@@ -410,6 +408,7 @@ Language: sq_AL
     <string name="stats_timeframe_last_seven_days">7 ditët e fundit</string>
     <string name="weeks_quantity_other">%d javë</string>
     <string name="weeks_quantity_one">1 javë</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">Nga &lt;b&gt;Dita e Parë&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Kujtoma më vonë</string>
     <string name="jetpack_feature_card_content_phase_three">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të Jetpack-ut së shpejti do të kalohen te aplikacioni Jetpack për celular.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Kaloni te aplikacioni Jetpack</string>
@@ -1879,8 +1878,6 @@ Language: sq_AL
     <string name="reader_my_likes_display_name">Pëlqime</string>
     <string name="reader_discover_display_name">Zbuloni</string>
     <string name="reader_save_for_later_display_name">U ruajt</string>
-    <string name="reader_filter_tags_title">Tema</string>
-    <string name="reader_filter_sites_title">Sajte</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>

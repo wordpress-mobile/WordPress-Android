@@ -278,12 +278,12 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         }
 
         if (!ReaderTag.isValidTagName(entry)) {
-            showInfoSnackbar(getString(R.string.reader_toast_err_tag_invalid));
+            showInfoSnackbar(getString(R.string.reader_toast_err_tag_not_valid));
             return;
         }
 
         if (ReaderTagTable.isFollowedTagName(entry)) {
-            showInfoSnackbar(getString(R.string.reader_toast_err_tag_exists));
+            showInfoSnackbar(getString(R.string.reader_toast_err_tag_already_subscribed));
             return;
         }
 
@@ -317,7 +317,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
         // make sure it isn't already followed
         if (ReaderBlogTable.isFollowedBlogUrl(normUrl) || ReaderBlogTable.isFollowedFeedUrl(normUrl)) {
-            showInfoSnackbar(getString(R.string.reader_toast_err_already_follow_blog));
+            showInfoSnackbar(getString(R.string.reader_toast_err_already_follow_this_blog));
             return;
         }
 
@@ -353,7 +353,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                         ReaderTracker.SOURCE_SETTINGS
                 );
             } else {
-                showInfoSnackbar(getString(R.string.reader_toast_err_add_tag));
+                showInfoSnackbar(getString(R.string.reader_toast_err_adding_tag));
                 mLastAddedTagName = null;
             }
         };
@@ -389,14 +389,15 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                     String errMsg;
                     switch (statusCode) {
                         case 401:
-                            errMsg = getString(R.string.reader_toast_err_follow_blog_not_authorized);
+                            errMsg = getString(R.string.reader_toast_err_follow_not_authorized_to_access_blog);
                             break;
                         case 0: // can happen when host name not found
                         case 404:
-                            errMsg = getString(R.string.reader_toast_err_follow_blog_not_found);
+                            errMsg = getString(R.string.reader_toast_err_follow_blog_could_not_be_found);
                             break;
                         default:
-                            errMsg = getString(R.string.reader_toast_err_follow_blog) + " (" + statusCode + ")";
+                            errMsg = getString(R.string.reader_toast_err_unable_to_follow_blog) + " (" + statusCode
+                                     + ")";
                             break;
                     }
                     showInfoSnackbar(errMsg);
@@ -416,14 +417,14 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                 // clear the edit text and hide the soft keyboard
                 mEditAdd.setText(null);
                 EditTextUtils.hideSoftInput(mEditAdd);
-                showInfoSnackbar(getString(R.string.reader_label_followed_blog));
+                showInfoSnackbar(getString(R.string.reader_label_blog_subscribed));
                 getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                 // update tags if the site we added belongs to a tag we don't yet have
                 // also update followed blogs so lists are ready in case we need to present them
                 // in bottom sheet reader filtering
                 performUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
             } else {
-                showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
+                showInfoSnackbar(getString(R.string.reader_toast_err_unable_to_follow_blog));
             }
         };
         // note that this uses the endpoint to follow as a feed since typed URLs are more
@@ -537,9 +538,9 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case TAB_IDX_FOLLOWED_TAGS:
-                    return getString(R.string.reader_page_followed_tags);
+                    return getString(R.string.reader_page_followed_tags_title);
                 case TAB_IDX_FOLLOWED_BLOGS:
-                    return getString(R.string.reader_page_followed_blogs);
+                    return getString(R.string.reader_page_followed_blogs_title);
                 default:
                     return super.getPageTitle(position);
             }

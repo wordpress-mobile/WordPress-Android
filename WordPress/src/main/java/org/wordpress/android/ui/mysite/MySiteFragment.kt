@@ -724,6 +724,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 .newInstance(action.isPromptsEnabled)
                 .show(requireActivity().supportFragmentManager, BloganuaryNudgeLearnMoreOverlayFragment.TAG)
         }
+
+        is SiteNavigationAction.OpenSiteMonitoring -> activityNavigator.navigateToSiteMonitoring(
+            requireActivity(),
+            action.site
+        )
     }
 
     private fun handleNavigation(action: BloggingPromptCardNavigationAction) {

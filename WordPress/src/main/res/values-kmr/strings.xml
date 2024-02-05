@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-11-12 12:10:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: ku_TR
 -->
 <resources>
@@ -547,11 +547,9 @@ Language: ku_TR
     <string name="suffix_1_000_000">%sM</string>
     <string name="reader_my_likes_display_name">Ecibandî</string>
     <string name="reader_discover_display_name">Keşf bike</string>
-    <string name="reader_filter_sites_title">Malper</string>
     <string name="posts_cannot_be_started">Em aniha nikarin şandiyan vekin. Ji kerema xwe piştre dîsa biceribîne</string>
     <string name="site_cannot_be_loaded">Em aniha nikarin daneyan ji bo malpera te bar bikin. Piştre dîsa biceribîne</string>
     <string name="reader_save_for_later_display_name">Hat tomarkirin</string>
-    <string name="reader_filter_tags_title">Mijar</string>
     <string name="gutenberg_native_wordpress_media_library">Medyageha WordPress\'ê</string>
     <string name="gutenberg_native_start_writing">Dest bi nivîsandinê bike…</string>
     <string name="gutenberg_native_take_a_photo_or_video">Vîdyo an jî Wêne Bikişîne</string>

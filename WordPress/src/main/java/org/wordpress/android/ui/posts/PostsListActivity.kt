@@ -21,9 +21,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.play.core.review.ReviewException
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.google.android.play.core.review.model.ReviewErrorCode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostListActivityBinding
@@ -66,6 +64,7 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
+import org.wordpress.android.util.extensions.logException
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.observeEvent
@@ -360,12 +359,7 @@ class PostsListActivity : LocaleAwareActivity(),
                     AppLog.e(AppLog.T.POSTS, "Error launching google review API flow.", e)
                 }
             } else {
-                @ReviewErrorCode val reviewErrorCode = (task.exception as ReviewException).errorCode
-                AppLog.e(
-                    AppLog.T.POSTS,
-                    "Error fetching ReviewInfo object from Review API to start in-app review process",
-                    reviewErrorCode
-                )
+                task.logException()
             }
         }
     }

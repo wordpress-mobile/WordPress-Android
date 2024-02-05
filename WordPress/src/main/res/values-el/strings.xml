@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-06-13 08:27:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: el_GR
 -->
 <resources>
@@ -67,9 +67,7 @@ Language: el_GR
     <string name="post_settings_publish">Δημοσίευση</string>
     <string name="negative_prefix">-%s</string>
     <string name="my_site_bottom_sheet_add_page">Σελίδες του ιστότοπου</string>
-    <string name="reader_filter_sites_title">Ιστότοποι</string>
     <string name="reader_save_for_later_display_name">Αποθηκεύτηκε</string>
-    <string name="reader_filter_tags_title">Θέματα</string>
     <string name="gutenberg_native_take_a_video">Λήψη βίντεο</string>
     <string name="gutenberg_native_take_a_photo">Λήψη φωτογραφίας</string>
     <string name="gutenberg_native_start_writing">Ξεκινήστε να γράφετε …</string>

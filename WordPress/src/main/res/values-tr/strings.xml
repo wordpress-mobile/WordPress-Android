@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-17 21:47:13+0000
+Translation-Revision-Date: 2024-01-24 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">Bağlantı bekleniyor</string>
+    <string name="stats_traffic">Trafik</string>
     <string name="gutenberg_native_working_offline">Çevrimdışı Çalışıyor</string>
     <string name="gutenberg_native_network_connection_re_established">Ağ bağlantısı yeniden kuruldu</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">Ağ bağlantısı kesildi, çevrimdışı çalışıyor</string>
@@ -29,8 +31,6 @@ Language: tr
     <string name="bloganuary_dashboard_nudge_overlay_title">Bir ay sürecek yazma etkinliğimize katılın</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Blog yılı</string>
     <string name="bloganuary_dashboard_nudge_text">Yeni yılda blog yazma alışkanlığı oluşturmayı hedefleyen topluluk etkinliğimiz Bloganuary\'den Ocak ayı boyunca blog istemleri alacaksınız.</string>
-    <string name="turn_off">Hayır, kapat</string>
-    <string name="leave_on">Evet, açık kalsın</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Bu nedenle, bloku web tarayıcınızı kullanarak düzenlemenizi öneririz.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Bu nedenle, bloku web düzenleyicinizi kullanarak düzenlemenizi öneririz.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternatif olarak bloku gruplamadan çıkararak içeriği düzleştirebilirsiniz.</string>
@@ -45,8 +45,6 @@ Language: tr
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%d seviyelerinden daha derin bir şekilde iç içe geçmiş bloklar, mobil düzenleyicide düzgün şekilde oluşmayabilir.</string>
     <string name="jp_migration_lets_go_button">Haydi başlayalım</string>
     <string name="jp_migration_done_no_sites_message">Jetpack uygulamasındaki WordPress yolculuğunuza devam etme vakti.</string>
-    <string name="image_optimization_popup_desc">Görsel iyileştirme özelliği, daha hızlı yüklenmeleri için görselleri küçültür.\n\nBu seçenek varsayılan olarak etkindir, ancak dilediğiniz zaman uygulama ayarlarından değiştirebilirsiniz.</string>
-    <string name="image_optimization_popup_title">Görseller iyileştirilmeye devam edilsin mi?</string>
     <string name="domain_management_clear_search">Aramayı temizle</string>
     <string name="media_encoder_quality_very_high">Çok Yüksek</string>
     <string name="notification_security_key_needed">Lütfen devam etmek için güvenlik anahtarınızı girin.</string>
@@ -408,6 +406,7 @@ Language: tr
     <string name="stats_timeframe_last_seven_days">Son 7 gün</string>
     <string name="weeks_quantity_other">%d hafta</string>
     <string name="weeks_quantity_one">1 hafta</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">&lt;b&gt;Day One&lt;/b&gt;\'dan</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Daha sonra hatırlat</string>
     <string name="jetpack_feature_card_content_phase_three">İstatistikler, Okuyucu, Bildirimler ve diğer özellikler yakında Jetpack mobil uygulamasına taşınacak.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Jetpack uygulamasına geçiş yapın</string>
@@ -1884,8 +1883,6 @@ Language: tr
     <string name="reader_my_likes_display_name">Beğeniler</string>
     <string name="reader_discover_display_name">Keşfet</string>
     <string name="reader_save_for_later_display_name">Kaydedildi</string>
-    <string name="reader_filter_tags_title">Konular</string>
-    <string name="reader_filter_sites_title">Siteler</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>

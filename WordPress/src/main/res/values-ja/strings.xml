@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-17 21:46:16+0000
+Translation-Revision-Date: 2024-01-24 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">接続を待機中</string>
+    <string name="stats_traffic">トラフィック</string>
     <string name="gutenberg_native_working_offline">オフラインで作業</string>
     <string name="gutenberg_native_network_connection_re_established">ネットワーク接続が再確立されました</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">ネットワーク接続が失われ、オフラインで作業しています</string>
@@ -29,8 +31,6 @@ Language: ja_JP
     <string name="bloganuary_dashboard_nudge_overlay_text_one">毎日インスピレーションを与える新しいプロンプトを受け取ることができます。</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">1か月間のライティングチャレンジにご参加ください</string>
     <string name="bloganuary_dashboard_nudge_title_december">まもなく Bloganuary が登場します !</string>
-    <string name="turn_off">オフにする</string>
-    <string name="leave_on">そのままにする</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">このため、Web ブラウザーでブロックを編集することをお勧めします。</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">このため、Web エディターでブロックを編集することをお勧めします。</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">あるいは、ブロックのグループ化を解除してコンテンツをフラットにすることもできます。</string>
@@ -45,7 +45,6 @@ Language: ja_JP
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">%dレベルよりも深くネストされたブロックは、モバイルエディターで適切にレンダリングされない場合があります。</string>
     <string name="jp_migration_lets_go_button">スタート</string>
     <string name="jp_migration_done_no_sites_message">Jetpack アプリで WordPress のジャーニーを続ける時が来ました。</string>
-    <string name="image_optimization_popup_title">画像の最適化を続けますか ?</string>
     <string name="domain_management_clear_search">検索をクリア</string>
     <string name="media_encoder_quality_very_high">非常に高い</string>
     <string name="notification_security_key_needed">続行するにはセキュリティキーを入力してください。</string>
@@ -404,6 +403,7 @@ Language: ja_JP
     <string name="stats_timeframe_last_seven_days">過去7日間</string>
     <string name="weeks_quantity_other">%d週</string>
     <string name="weeks_quantity_one">1週</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">&lt;b&gt;Day One&lt;/b&gt; から</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">後で再通知</string>
     <string name="jetpack_feature_card_content_phase_three">統計、Reader、通知などの機能は、まもなく Jetpack モバイルアプリに移動します。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Jetpack アプリに切り替える</string>
@@ -1879,8 +1879,6 @@ Language: ja_JP
     <string name="reader_my_likes_display_name">いいね</string>
     <string name="reader_discover_display_name">ディスカバー</string>
     <string name="reader_save_for_later_display_name">保存しました</string>
-    <string name="reader_filter_tags_title">トピック</string>
-    <string name="reader_filter_sites_title">サイト</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>

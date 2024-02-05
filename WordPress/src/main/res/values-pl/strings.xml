@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-08-08 09:40:32+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: pl
 -->
 <resources>
@@ -1364,13 +1364,11 @@ Language: pl
     <string name="suffix_1_000_000_000_000_000">%s bld</string>
     <string name="suffix_1_000_000_000_000">%s bln</string>
     <string name="suffix_1_000_000_000_000_000_000">%s tln</string>
-    <string name="reader_filter_sites_title">Witryny</string>
     <string name="reader_save_for_later_display_name">Zapisano</string>
     <string name="reader_discover_display_name">Odkrywaj</string>
     <string name="reader_my_likes_display_name">Polubienia</string>
     <string name="site_cannot_be_loaded">Nie możemy w tym momencie wyczytać danych dla twojej witryny. Proszę spróbować ponownie później.</string>
     <string name="posts_cannot_be_started">Nie możemy w tym momencie otworzyć wpisów. Proszę spróbować ponownie później</string>
-    <string name="reader_filter_tags_title">Tematy</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteka mediów WordPressa</string>
     <string name="gutenberg_native_unsupported">Niewspierane</string>
     <string name="gutenberg_native_ungroup">Rozgrupuj</string>

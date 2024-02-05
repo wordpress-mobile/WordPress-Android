@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2024-01-22 20:13:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: sv_SE
 -->
 <resources>
@@ -34,8 +34,6 @@ Language: sv_SE
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">För januari månad kommer bloggningsförslagen från Bloganuary – vår community-utmaning att bygga en bloggvana för det nya året.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Bloganuary är på väg!</string>
-    <string name="turn_off">Nej, stäng av</string>
-    <string name="leave_on">Ja, lämna på</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Av den här anledningen rekommenderar vi att du redigerar blocket i din webbläsare.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Av den här anledningen rekommenderar vi att du redigerar blocket med webbredigeraren.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternativt kan du platta ut innehållet genom att avgruppera blocket.</string>
@@ -50,8 +48,6 @@ Language: sv_SE
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Block som är inbäddade djupare än %d kanske inte renderas korrekt i den mobila redigeraren.</string>
     <string name="jp_migration_lets_go_button">Sätt igång</string>
     <string name="jp_migration_done_no_sites_message">Det är dags att fortsätta din WordPress-resa med Jetpack-appen.</string>
-    <string name="image_optimization_popup_desc">Bildoptimering förminskar bilder för snabbare uppladdning.\n\nDetta alternativ är aktiverat som standard, men du kan ändra det i appinställningarna när som helst.</string>
-    <string name="image_optimization_popup_title">Fortsätt optimera bilder?</string>
     <string name="domain_management_clear_search">Rensa sökning</string>
     <string name="media_encoder_quality_very_high">Mycket hög</string>
     <string name="notification_security_key_needed">Ange din säkerhetsnyckel för att fortsätta.</string>
@@ -1890,8 +1886,6 @@ Language: sv_SE
     <string name="reader_my_likes_display_name">Gillar</string>
     <string name="reader_discover_display_name">Upptäck</string>
     <string name="reader_save_for_later_display_name">Sparat</string>
-    <string name="reader_filter_tags_title">Ämnen</string>
-    <string name="reader_filter_sites_title">Webbplatser</string>
     <string name="suffix_1_000_000_000_000_000_000">%s triljoner</string>
     <string name="suffix_1_000_000_000_000_000">%s biljarder</string>
     <string name="suffix_1_000_000_000_000">%s biljoner</string>

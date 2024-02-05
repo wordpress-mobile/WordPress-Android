@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.models.containsFollowingTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper

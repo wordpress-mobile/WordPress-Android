@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-17 21:46:30+0000
+Translation-Revision-Date: 2024-01-31 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">正在等待连接</string>
+    <string name="stats_traffic">流量</string>
     <string name="gutenberg_native_working_offline">离线工作</string>
     <string name="gutenberg_native_network_connection_re_established">已重新建立网络连接</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">网络连接中断，正在离线工作</string>
@@ -28,8 +30,6 @@ Language: zh_CN
     <string name="bloganuary_dashboard_nudge_overlay_text_two">发表您的回复。</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">每天接收新的提示，以获取灵感。</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">加入我们为期一个月的写作挑战</string>
-    <string name="turn_off">不，停止优化</string>
-    <string name="leave_on">是，继续优化</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">因此，我们建议使用 Web 浏览器编辑该区块。</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">因此，我们建议使用 Web 编辑器编辑该区块。</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">或者，您也可以取消区块分组，以使内容扁平化。</string>
@@ -50,6 +50,7 @@ Language: zh_CN
     <string name="login_error_security_key">安全密钥登录出现问题</string>
     <string name="login_text_security_key">使用安全密钥</string>
     <string name="new_domain_search_screen_error_title">无法检索域名</string>
+    <string name="new_domain_search_screen_list_item_sale_price">第一年 %s</string>
     <string name="new_domain_search_screen_list_item_regular_price">%s/年</string>
     <string name="new_domain_search_screen_transfer_domain_button">转移域名</string>
     <string name="new_domain_search_screen_transfer_domain_description">想要转移已有的域名？</string>
@@ -401,6 +402,7 @@ Language: zh_CN
     <string name="stats_timeframe_last_seven_days">过去 7 天</string>
     <string name="weeks_quantity_other">%d 周</string>
     <string name="weeks_quantity_one">1 周</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">来自 &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">稍后提醒我</string>
     <string name="jetpack_feature_card_content_phase_three">统计信息、阅读器、通知和其他功能即将移至 Jetpack 移动应用。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">切换到 Jetpack 应用</string>
@@ -1873,8 +1875,6 @@ Language: zh_CN
     <string name="reader_my_likes_display_name">喜欢</string>
     <string name="reader_discover_display_name">发现</string>
     <string name="reader_save_for_later_display_name">已保存</string>
-    <string name="reader_filter_tags_title">主题</string>
-    <string name="reader_filter_sites_title">站点</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>

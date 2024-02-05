@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-08-22 17:29:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: es_VE
 -->
 <resources>
@@ -1369,8 +1369,6 @@ Language: es_VE
     <string name="reader_my_likes_display_name">Me gusta</string>
     <string name="reader_discover_display_name">Descubrir</string>
     <string name="reader_save_for_later_display_name">Guardado</string>
-    <string name="reader_filter_tags_title">Temas</string>
-    <string name="reader_filter_sites_title">Sitios</string>
     <string name="suffix_1_000_000_000_000_000_000">%sE</string>
     <string name="suffix_1_000_000_000_000_000">%sP</string>
     <string name="suffix_1_000_000_000_000">%sT</string>

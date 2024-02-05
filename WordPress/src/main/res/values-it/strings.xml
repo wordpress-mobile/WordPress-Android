@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-22 17:54:08+0000
+Translation-Revision-Date: 2024-01-24 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">In attesa della connessione</string>
+    <string name="stats_traffic">Traffico</string>
     <string name="gutenberg_native_working_offline">Lavorare offline</string>
     <string name="gutenberg_native_network_connection_re_established">Connessione di rete ristabilita</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">Connessione di rete persa, lavoro offline</string>
@@ -29,8 +31,6 @@ Language: it
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Ricevi un nuovo suggerimento per ottenere ispirazione ogni giorno.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Prendi parte alla nostra sfida di scrittura: dura un mese.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Bloganuary sta arrivando!</string>
-    <string name="turn_off">No, disattiva</string>
-    <string name="leave_on">Si, continua</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Per questo motivo consigliamo di modificare il blocco tramite il browser web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Per questo motivo consigliamo di modificare il blocco tramite l\'editor web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">In alternativa, puoi uniformare i contenuti separando il blocco.</string>
@@ -404,6 +404,7 @@ Language: it
     <string name="stats_timeframe_last_seven_days">Ultimi 7 giorni</string>
     <string name="weeks_quantity_other">%d settimane</string>
     <string name="weeks_quantity_one">1 settimana</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">Da &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Ricordamelo più tardi</string>
     <string name="jetpack_feature_card_content_phase_three">Statistiche, Reader, Notifiche e altre funzionalità passeranno presto all\'app mobile Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Passa all\'app Jetpack</string>
@@ -1878,8 +1879,6 @@ Language: it
     <string name="reader_my_likes_display_name">Mi piace</string>
     <string name="reader_discover_display_name">Scopri</string>
     <string name="reader_save_for_later_display_name">Salvataggio completato</string>
-    <string name="reader_filter_tags_title">Argomenti</string>
-    <string name="reader_filter_sites_title">Siti</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>

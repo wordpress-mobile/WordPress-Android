@@ -152,6 +152,7 @@ class MenuActivity : AppCompatActivity() {
                 this,
                 action.campaignListingPageSource
             )
+            is SiteNavigationAction.OpenSiteMonitoring -> activityNavigator.navigateToSiteMonitoring(this, action.site)
             else -> {}
         }
     }

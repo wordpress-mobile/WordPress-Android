@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-22 19:53:33+0000
+Translation-Revision-Date: 2024-01-24 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">正在等待連線</string>
+    <string name="stats_traffic">流量</string>
     <string name="gutenberg_native_working_offline">離線作業</string>
     <string name="gutenberg_native_network_connection_re_established">重新建立網路連線</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">網路連線中斷，離線作業</string>
@@ -29,8 +31,6 @@ Language: zh_TW
     <string name="bloganuary_dashboard_nudge_overlay_text_one">每天接收新提示，激發靈感。</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">參加為期一個月的寫作挑戰</string>
     <string name="bloganuary_dashboard_nudge_text">Bloganuary 會在 1 月送上網誌提示：這個社群挑戰的目的，是為了協助你在新的一年養成寫網誌的習慣。</string>
-    <string name="turn_off">否，關閉</string>
-    <string name="leave_on">是，保持開啟</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">因此，我們建議使用網頁瀏覽器來編輯區塊。</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">因此，我們建議使用網頁編輯器來編輯區塊。</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">或者，你可以取消區塊群組來簡化內容。</string>
@@ -45,8 +45,6 @@ Language: zh_TW
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">行動編輯器可能無法正確顯示內嵌超過 %d 層的區塊。</string>
     <string name="jp_migration_lets_go_button">我們開始吧</string>
     <string name="jp_migration_done_no_sites_message">現在就在 Jetpack 應用程式上繼續你的 WordPress 旅程。</string>
-    <string name="image_optimization_popup_desc">為加快上傳速度，圖片最佳化功能會壓縮圖片。\n\n系統預設啟用此選項，但你可以隨時在應用程式設定中變更。</string>
-    <string name="image_optimization_popup_title">是否要繼續將圖片最佳化？</string>
     <string name="domain_management_clear_search">清除搜尋</string>
     <string name="media_encoder_quality_very_high">超高</string>
     <string name="notification_security_key_needed">請提供安全性金鑰以繼續使用。</string>
@@ -405,6 +403,7 @@ Language: zh_TW
     <string name="stats_timeframe_last_seven_days">過去 7 天</string>
     <string name="weeks_quantity_other">%d 週</string>
     <string name="weeks_quantity_one">1 週</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">來自 &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">稍後再提醒我</string>
     <string name="jetpack_feature_card_content_phase_three">「統計資料」、「閱讀器」、「通知」及其他功能即將搬遷至 Jetpack 行動應用程式。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">切換至 Jetpack 應用程式</string>
@@ -1878,8 +1877,6 @@ Language: zh_TW
     <string name="reader_my_likes_display_name">按讚數</string>
     <string name="reader_discover_display_name">探索</string>
     <string name="reader_save_for_later_display_name">已儲存</string>
-    <string name="reader_filter_tags_title">主題</string>
-    <string name="reader_filter_sites_title">網站</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>

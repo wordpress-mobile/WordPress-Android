@@ -1,0 +1,7 @@
+24.1 :
+- Recevez une notification lorsque vous travaillez hors ligne.
+- La mise en ligne de blocs Image est suspendue / reprend en fonction de la connexion à Internet.
+- Les sélections de dégradé personnalisé sont visibles dans l’éditeur.
+- Résolution des problèmes de sens des flèches pour les lecteurs de langues RTL.
+- Les étiquettes Suggestion du jour fonctionnent normalement.
+- Appuyez sur les cartes Domaine du site pour gérer les domaines.

@@ -20,8 +20,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.mapNullable
+import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.throttle
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -31,14 +31,14 @@ class StatsViewAllViewModel(
     val bgDispatcher: CoroutineDispatcher,
     val useCase: BaseStatsUseCase<*, *>,
     private val statsSiteProvider: StatsSiteProvider,
-    private val dateSelector: StatsDateSelector,
+    private val dateSelector: StatsDateSelector?,
     @StringRes val title: Int
 ) : ScopedViewModel(mainDispatcher) {
-    val selectedDate = dateSelector.selectedDate
+    val selectedDate = dateSelector?.selectedDate
 
-    val dateSelectorData: LiveData<DateSelectorUiModel> = dateSelector.dateSelectorData.mapNullable {
+    val dateSelectorData: LiveData<DateSelectorUiModel> = dateSelector?.dateSelectorData?.mapNullable {
         it ?: DateSelectorUiModel(false)
-    }
+    } ?:  MutableLiveData(DateSelectorUiModel(false))
 
     val navigationTarget: LiveData<Event<NavigationTarget>> = useCase.navigationTarget
 
@@ -62,12 +62,12 @@ class StatsViewAllViewModel(
     fun start(startDate: SelectedDate?) {
         launch {
             startDate?.let {
-                dateSelector.start(startDate)
+                dateSelector?.start(startDate)
             }
             loadData(refresh = false, forced = false)
-            dateSelector.updateDateSelector()
+            dateSelector?.updateDateSelector()
         }
-        dateSelector.updateDateSelector()
+        dateSelector?.updateDateSelector()
     }
 
     @SuppressLint("NullSafeMutableLiveData")
@@ -109,13 +109,13 @@ class StatsViewAllViewModel(
 
     fun onNextDateSelected() {
         launch(mainDispatcher) {
-            dateSelector.onNextDateSelected()
+            dateSelector?.onNextDateSelected()
         }
     }
 
     fun onPreviousDateSelected() {
         launch(mainDispatcher) {
-            dateSelector.onPreviousDateSelected()
+            dateSelector?.onPreviousDateSelected()
         }
     }
 
@@ -131,7 +131,7 @@ class StatsViewAllViewModel(
         }
     }
 
-    fun getSelectedDate(): SelectedDate {
-        return dateSelector.getSelectedDate()
+    fun getSelectedDate(): SelectedDate? {
+        return dateSelector?.getSelectedDate()
     }
 }

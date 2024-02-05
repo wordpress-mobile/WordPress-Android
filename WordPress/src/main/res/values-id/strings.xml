@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-17 21:46:22+0000
+Translation-Revision-Date: 2024-01-24 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">Menunggu koneksi</string>
+    <string name="stats_traffic">Lalu lintas</string>
     <string name="gutenberg_native_working_offline">Bekerja secara Offline</string>
     <string name="gutenberg_native_network_connection_re_established">Koneksi internet terhubung lagi</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">Koneksi internet terputus, bekerja secara offline</string>
@@ -28,8 +30,6 @@ Language: id
     <string name="bloganuary_dashboard_nudge_overlay_text_two">Poskan tanggapan Anda.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Dapatkan prompt baru untuk menginspirasi Anda setiap hari.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Ikuti tantangan menulis sebulan penuh dari kami</string>
-    <string name="turn_off">Tidak, matikan</string>
-    <string name="leave_on">Ya, biarkan</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Karenanya, kami menyarankan Anda untuk mengedit blok melalui browser web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Karenanya, kami menyarankan Anda untuk mengedit blok melalui editor web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Atau, Anda dapat meratakan konten dengan membatalkan pengelompokan blok.</string>
@@ -44,7 +44,6 @@ Language: id
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blok bertingkat yang kedalamannya melebihi %d level mungkin tidak dapat ditampilkan dengan benar di editor seluler.</string>
     <string name="jp_migration_lets_go_button">Ayo</string>
     <string name="jp_migration_done_no_sites_message">Waktunya untuk melanjutkan perjalanan WordPress Anda di aplikasi Jetpack!</string>
-    <string name="image_optimization_popup_desc">Pengoptimalan gambar mengecilkan gambar agar bisa diunggah lebih cepat.\n\nPilihan ini diaktifkan secara default, tetapi Anda dapat mengubahnya di pengaturan aplikasi kapan saja.</string>
     <string name="domain_management_clear_search">Hapus pencarian</string>
     <string name="media_encoder_quality_very_high">Sangat Tinggi</string>
     <string name="notification_security_key_needed">Silakan berikan kunci keamanan Anda untuk melanjutkan.</string>
@@ -404,6 +403,7 @@ Language: id
     <string name="stats_timeframe_last_seven_days">7 hari terakhir</string>
     <string name="weeks_quantity_other">%d minggu</string>
     <string name="weeks_quantity_one">1 minggu</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">Dari &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Ingatkan saya nanti</string>
     <string name="jetpack_feature_card_content_phase_three">Statistik, Reader, Pemberitahuan, dan berbagai fitur lain akan segera berpindah ke aplikasi ponsel Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Ganti ke aplikasi Jetpack</string>
@@ -1880,8 +1880,6 @@ Language: id
     <string name="reader_my_likes_display_name">Suka</string>
     <string name="reader_discover_display_name">Temukan</string>
     <string name="reader_save_for_later_display_name">Disimpan</string>
-    <string name="reader_filter_tags_title">Topik</string>
-    <string name="reader_filter_sites_title">Situs</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>

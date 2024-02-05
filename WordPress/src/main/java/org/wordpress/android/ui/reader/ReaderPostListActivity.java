@@ -104,7 +104,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
             toolbar.setNavigationOnClickListener(view -> finish());
 
             if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-                setTitle(R.string.reader_title_blog_preview);
+                setTitle(R.string.reader_activity_title_blog_preview);
                 if (savedInstanceState == null) {
                     long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                     long feedId = getIntent().getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
@@ -119,7 +119,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                     mSiteId = savedInstanceState.getLong(ReaderConstants.KEY_SITE_ID);
                 }
             } else if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
-                setTitle(R.string.reader_title_tag_preview);
+                setTitle(R.string.reader_activity_title_tag_preview);
                 ReaderTag tag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
                 if (tag != null && savedInstanceState == null) {
                     showListFragmentForTag(tag, mPostListType);
@@ -290,7 +290,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
 
         String title = ReaderBlogTable.getFeedName(feedId);
         if (title.isEmpty()) {
-            title = getString(R.string.reader_title_blog_preview);
+            title = getString(R.string.reader_activity_title_blog_preview);
         }
         setTitle(title);
     }

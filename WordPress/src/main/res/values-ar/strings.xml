@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-17 21:46:01+0000
+Translation-Revision-Date: 2024-01-24 22:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">انتظار الاتصال</string>
+    <string name="stats_traffic">حركة المرور</string>
     <string name="gutenberg_native_working_offline">العمل من دون اتصال بالإنترنت</string>
     <string name="gutenberg_native_network_connection_re_established">أعيد إنشاء الاتصال بالشبكة</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">فقدان الاتصال بالشبكة، العمل من دون اتصال بالإنترنت</string>
@@ -27,8 +29,6 @@ Language: ar
     <string name="bloganuary_dashboard_nudge_overlay_text_two">انشر ردك.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">استقبل موجّهًا جديدًا لإلهامك في كل يوم.</string>
     <string name="bloganuary_dashboard_nudge_text">في شهر يناير، ستأتي موجّهات التدوين من Bloganuary - تحدٍّ مجتمعي لدينا لإنشاء عادة التدوين الخاصة بالعام الجديد.</string>
-    <string name="turn_off">لا، توقف عن الاستخدام</string>
-    <string name="leave_on">نعم، واصل الاستخدام</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">لهذا السبب، نوصي بتحرير المكوّن باستخدام متصفح الويب لديك.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">لهذا السبب، نوصي بتحرير المكوّن باستخدام محرر الويب.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">بدلاً من ذلك، يمكنك تمهيد المحتوى عن طريق فك تجميع المكوّن.</string>
@@ -197,6 +197,7 @@ Language: ar
     <string name="menu_close_editor">إغلاق المحرر</string>
     <string name="menu_redo_context">إعادة آخر تغيير</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">الاشتراك لمشاركة المزيد</string>
+    <string name="menu_undo_context">التراجع عن آخر تغيير</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">قم بزيادة حركة المرور لديك من حلال مشاركة تدويناتك تلقائيًا مع أصدقائك على شبكات التواصل الاجتماعي.</string>
     <string name="post_settings_jetpack_social_header">المشاركة عبر شبكات التواصل الاجتماعي</string>
     <string name="gutenberg_native_s_detached">تم فصل %s</string>
@@ -399,6 +400,7 @@ Language: ar
     <string name="stats_timeframe_last_seven_days">آخر 7 أيام</string>
     <string name="weeks_quantity_other">%d من الأسابيع</string>
     <string name="weeks_quantity_one">أسبوع واحد</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">من &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">ذكرني لاحقًا</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">التبديل إلى تطبيق Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">معرفة المزيد على jetpack.com</string>
@@ -1878,12 +1880,10 @@ Language: ar
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
-    <string name="reader_filter_sites_title">المواقع</string>
     <string name="reader_save_for_later_display_name">تم الحفظ</string>
     <string name="reader_discover_display_name">اكتشاف</string>
     <string name="reader_my_likes_display_name">الإعجابات</string>
     <string name="site_cannot_be_loaded">يتعذر علينا تحميل بيانات موقعك الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
-    <string name="reader_filter_tags_title">المواضيع</string>
     <string name="suffix_1_000">%sK</string>
     <string name="gutenberg_native_wordpress_media_library">مكتبة وسائط ووردبريس</string>
     <string name="gutenberg_native_start_writing">بدء الكتابة…</string>

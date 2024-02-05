@@ -88,6 +88,20 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
         }
 
     @Test
+    fun `getInterests invoked if only daily prompt user tag received from repo`() =
+        testWithDailyPromptUserTag {
+            // Given
+            val interests = getInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+
+            // When
+            initViewModel()
+
+            // Then
+            verify(readerTagRepository, times(1)).getInterests()
+        }
+
+    @Test
     fun `discover close reader screen triggered if non empty user tags are received from repo`() =
         testWithNonEmptyUserTags {
             // When
@@ -598,6 +612,25 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
     private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(ReaderTagList()))
+            block()
+        }
+    }
+
+    private fun <T> testWithDailyPromptUserTag(block: suspend CoroutineScope.() -> T) {
+        test {
+            val tagsWithDailyPrompt = ReaderTagList().apply {
+                add(
+                    ReaderTag(
+                        "dailyprompt",
+                        "dailyprompt",
+                        "dailyprompt",
+                        "https://public-api.wordpress.com/rest/v1.2/read/tags/dailyprompt/posts",
+                        ReaderTagType.DEFAULT
+                    )
+                )
+            }
+
+            whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(tagsWithDailyPrompt))
             block()
         }
     }
