@@ -271,7 +271,6 @@ class StatsModule {
      * @param useCasesFactories build the use cases for the DAYS granularity
      */
     @Provides
-    @Singleton
     @Named(TRAFFIC_USE_CASE)
     @Suppress("LongParameterList")
     fun provideTrafficUseCase(
