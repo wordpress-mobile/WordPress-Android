@@ -82,6 +82,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         } else {
             postLastState()
         }
+        refreshData(siteModel)
     }
 
     fun refreshData(
