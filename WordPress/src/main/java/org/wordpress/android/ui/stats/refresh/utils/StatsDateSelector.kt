@@ -22,10 +22,11 @@ constructor(
     private val _dateSelectorUiModel = MutableLiveData<DateSelectorUiModel>()
     val dateSelectorData: LiveData<DateSelectorUiModel> = _dateSelectorUiModel
 
-    val selectedDate = selectedDateProvider.granularSelectedDateChanged(statsGranularity)
-        .perform {
+    var selectedDate = selectedDateProvider.granularSelectedDateChanged().perform {
+        if (statsGranularity == it?.selectedGranularity) {
             updateDateSelector()
         }
+    }
 
     fun start(startDate: SelectedDate) {
         selectedDateProvider.updateSelectedDate(startDate, statsGranularity)
