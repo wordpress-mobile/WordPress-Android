@@ -238,8 +238,8 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     }
 
     private fun StatsListFragmentBinding.setupObservers(activity: FragmentActivity) {
-        viewModel.uiModel.observe(viewLifecycleOwner) {
-            showUiModel(it)
+        viewModel.uiSourceUpdated.observe(viewLifecycleOwner) {
+            observeUiChanges(activity)
         }
 
         viewModel.dateSelectorData.observe(viewLifecycleOwner) { dateSelectorUiModel ->
@@ -251,18 +251,10 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             }
         }
 
-        viewModel.navigationTarget.observeEvent(viewLifecycleOwner) { target ->
-            navigator.navigate(activity, target)
-        }
-
         viewModel.selectedDate?.observe(viewLifecycleOwner) { event ->
             if (event != null) {
                 viewModel.onDateChanged(event.selectedGranularity)
             }
-        }
-
-        viewModel.listSelected.observe(viewLifecycleOwner) {
-            viewModel.onListSelected()
         }
 
         viewModel.typesChanged.observeEvent(viewLifecycleOwner) {
@@ -274,6 +266,16 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
                 recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
             }
         }
+    }
+
+    private fun StatsListFragmentBinding.observeUiChanges(activity: FragmentActivity) {
+        viewModel.uiModel.observe(viewLifecycleOwner) {
+            showUiModel(it)
+        }
+
+        viewModel.navigationTarget.observeEvent(viewLifecycleOwner) { target -> navigator.navigate(activity, target) }
+
+        viewModel.listSelected.observe(viewLifecycleOwner) { viewModel.onListSelected() }
 
         viewModel.scrollToNewCard.observeEvent(viewLifecycleOwner) {
             (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
@@ -334,6 +336,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         val layoutManager = recyclerView.layoutManager
         val recyclerViewState = layoutManager?.onSaveInstanceState()
         adapter.update(statsState)
+        recyclerView.scrollToPosition(0)
         layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 }
