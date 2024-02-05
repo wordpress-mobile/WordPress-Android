@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn
 
 import com.android.volley.Response
 import com.android.volley.Response.ErrorListener
+import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.BaseWebauthnRequest.WebauthnRequestParameters.AUTH_TYPE
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.BaseWebauthnRequest.WebauthnRequestParameters.CLIENT_DATA
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.BaseWebauthnRequest.WebauthnRequestParameters.CLIENT_ID
@@ -54,3 +55,8 @@ class WebauthnTokenRequest(
     override fun serializeResponse(response: String): WebauthnToken =
         gson.fromJson(response, WebauthnToken::class.java)
 }
+
+class WebauthnToken(
+    @SerializedName("bearer_token")
+    val bearerToken: String
+)
