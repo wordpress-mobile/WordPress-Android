@@ -100,9 +100,6 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (!TextUtils.isEmpty(mLastAddedTagName)) {
-                    EventBus.getDefault().postSticky(new ReaderEvents.TagAdded(mLastAddedTagName));
-                }
                 mReaderTracker.track(Stat.READER_MANAGE_VIEW_DISMISSED);
                 setResult();
                 CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
