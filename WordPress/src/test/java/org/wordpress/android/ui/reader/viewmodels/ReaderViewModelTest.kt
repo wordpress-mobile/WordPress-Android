@@ -38,6 +38,7 @@ import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartReaderPrompt
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.TopBarUiState
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.viewmodel.Event
@@ -282,74 +283,30 @@ class ReaderViewModelTest : BaseUnitTest() {
     @Test
     fun `Search is disabled for self-hosted login`() = testWithNonEmptyTags {
         // Arrange
-        var state: ReaderUiState? = null
-        viewModel.uiState.observeForever {
+        var state: TopBarUiState? = null
+        viewModel.topBarUiState.observeForever {
             state = it
         }
         // Act
         triggerReaderTabContentDisplay(hasAccessToken = false)
 
         // Assert
-        assertThat(state!!.searchMenuItemUiState.isVisible).isFalse
+        assertThat(state!!.isSearchActionVisible).isFalse
     }
 
     @Test
     fun `Search is enabled for dot com login`() = testWithNonEmptyTags {
         // Arrange
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        var state: ReaderUiState? = null
-        viewModel.uiState.observeForever {
+        var state: TopBarUiState? = null
+        viewModel.topBarUiState.observeForever {
             state = it
         }
         // Act
         triggerReaderTabContentDisplay()
 
         // Assert
-        assertThat(state!!.searchMenuItemUiState.isVisible).isTrue
-    }
-
-    @Test
-    fun `OnSettingsActionClicked emits showSettings event`() {
-        // Arrange
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        var event: Event<Unit>? = null
-        viewModel.showSettings.observeForever {
-            event = it
-        }
-        // Act
-        viewModel.onSettingsActionClicked()
-
-        // Assert
-        assertThat(event).isNotNull
-    }
-
-    @Test
-    fun `Settings menu is disabled for self-hosted login`() = testWithNonEmptyTags {
-        // Arrange
-        var state: ReaderUiState? = null
-        viewModel.uiState.observeForever {
-            state = it
-        }
-        // Act
-        triggerReaderTabContentDisplay(hasAccessToken = false)
-
-        // Assert
-        assertThat(state!!.settingsMenuItemUiState.isVisible).isFalse
-    }
-
-    @Test
-    fun `Settings menu is enabled for dot com login`() = testWithNonEmptyTags {
-        // Arrange
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        var state: ReaderUiState? = null
-        viewModel.uiState.observeForever {
-            state = it
-        }
-        // Act
-        triggerReaderTabContentDisplay()
-
-        // Assert
-        assertThat(state!!.settingsMenuItemUiState.isVisible).isTrue
+        assertThat(state!!.isSearchActionVisible).isTrue
     }
 
     @Test
@@ -492,7 +449,7 @@ class ReaderViewModelTest : BaseUnitTest() {
 
             viewModel.onSettingsActionClicked()
 
-            assertQsFollowSiteTaskCompleted(observers)
+            assertQsFollowSiteTaskCompleted()
         }
     }
 
@@ -561,7 +518,6 @@ class ReaderViewModelTest : BaseUnitTest() {
                     R.string.quick_start_dialog_follow_sites_message_short_discover
                 }
             )
-            assertThat(uiStates.last().findSettingsMenuQsFocusPoint()).isEqualTo(isSettingsSupported)
         }
     }
 
@@ -570,19 +526,12 @@ class ReaderViewModelTest : BaseUnitTest() {
     ) {
         with(observers) {
             assertThat(quickStartReaderPrompts).isEmpty()
-            assertThat(uiStates.last().findSettingsMenuQsFocusPoint()).isEqualTo(false)
         }
     }
 
-    private fun assertQsFollowSiteTaskCompleted(
-        observers: Observers
-    ) {
+    private fun assertQsFollowSiteTaskCompleted() {
         verify(quickStartRepository).completeTask(QuickStartNewSiteTask.FOLLOW_SITE)
-        assertThat(observers.uiStates.last().findSettingsMenuQsFocusPoint()).isEqualTo(false)
     }
-
-    private fun ReaderUiState.findSettingsMenuQsFocusPoint() =
-        (this as? ContentUiState)?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
 
     private fun initObservers(): Observers {
         val uiStates = mutableListOf<ReaderUiState>()
