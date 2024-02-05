@@ -8,10 +8,11 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
+import android.widget.PopupWindow
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
@@ -280,8 +281,11 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     @Suppress("OVERRIDE_DEPRECATION")
     override fun onPrepareOptionsMenu(menu: Menu) {
-        val notificationSettings = menu.findItem(R.id.notifications_settings)
-        notificationSettings.isVisible = accountStore.hasAccessToken()
+        val notificationActions = menu.findItem(R.id.notifications_actions)
+        notificationActions.isVisible = accountStore.hasAccessToken()
+        notificationActions.actionView?.setOnClickListener {
+            showNotificationActionsPopup(it)
+        }
         super.onPrepareOptionsMenu(menu)
     }
 
@@ -291,13 +295,32 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.notifications_settings) {
-            ActivityLauncher.viewNotificationsSettings(activity)
-            return true
-        }
-        return super.onOptionsItemSelected(item)
+    /**
+     * For displaying the popup of notifications settings
+     */
+    private fun showNotificationActionsPopup(anchorView: View) {
+        val popupWindow = PopupWindow(requireContext(), null, R.style.WordPress)
+        popupWindow.isOutsideTouchable = true
+        popupWindow.elevation = resources.getDimension(R.dimen.popup_over_toolbar_elevation)
+        popupWindow.contentView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.notification_actions, null, false).apply {
+                findViewById<View>(R.id.text_mark_all_as_read).setOnClickListener {
+                    markAllAsRead()
+                    popupWindow.dismiss()
+                }
+                findViewById<View>(R.id.text_settings).setOnClickListener {
+                    ActivityLauncher.viewNotificationsSettings(activity)
+                    popupWindow.dismiss()
+                }
+            }
+        popupWindow.showAsDropDown(anchorView)
+    }
+
+    /**
+     * For marking the status of every notification as read
+     */
+    private fun markAllAsRead() {
+        // TODO("not yet implemented")
     }
 
     companion object {
