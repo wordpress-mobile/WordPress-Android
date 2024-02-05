@@ -177,11 +177,9 @@ class DashboardCardsViewModelSlice @Inject constructor(
         quickStartCardViewModelSlice.build(site)
     }
 
-    fun onResume() {
-        selectedSiteRepository.getSelectedSite()?.let {
-            if(showDashboardCards(it))buildCards(it)
-            else uiModel.postValue(emptyList())
-        }
+    fun onResume(site: SiteModel) {
+        if (showDashboardCards(site)) buildCards(site)
+        else uiModel.postValue(emptyList())
     }
 
     fun onSiteChanged() {
@@ -191,11 +189,9 @@ class DashboardCardsViewModelSlice @Inject constructor(
         }
     }
 
-    fun onRefresh() {
-        selectedSiteRepository.getSelectedSite()?.let {
-            if(showDashboardCards(it))buildCards(it)
-            else uiModel.postValue(emptyList())
-        }
+    fun onRefresh(site: SiteModel) {
+        if (showDashboardCards(site)) buildCards(site)
+        else uiModel.postValue(emptyList())
     }
 
     fun onCleared() {

@@ -257,9 +257,14 @@ class MySiteViewModel @Inject constructor(
 
     fun refresh(isPullToRefresh: Boolean = false) {
         if (isPullToRefresh) analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH)
-        dashboardCardsViewModelSlice.onRefresh()
-        dashboardItemsViewModelSlice.onRefresh()
-        accountDataViewModelSlice.onRefresh()
+        selectedSiteRepository.getSelectedSite()?.let {
+            if (shouldShowDashboard(it)) {
+                dashboardCardsViewModelSlice.onRefresh(it)
+                dashboardItemsViewModelSlice.onRefresh()
+            } else {
+                accountDataViewModelSlice.onRefresh()
+            }
+        }
     }
 
     fun onResume() {
@@ -270,7 +275,7 @@ class MySiteViewModel @Inject constructor(
 //        bloggingPromptCardViewModelSlice.onResume(uiModel.value as? SiteSelected)
 //        dashboardCardPlansUtils.onResume(uiModel.value as? SiteSelected)
         selectedSiteRepository.getSelectedSite()?.let {
-            dashboardCardsViewModelSlice.onResume()
+            dashboardCardsViewModelSlice.onResume(it)
             dashboardItemsViewModelSlice.onResume()
             siteInfoHeaderCardViewModelSlice.onResume()
         }?: run {
