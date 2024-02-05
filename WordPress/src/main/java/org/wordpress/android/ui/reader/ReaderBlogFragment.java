@@ -88,21 +88,6 @@ public class ReaderBlogFragment extends Fragment
         return view;
     }
 
-    public boolean hasChangedSelectedBlogs() {
-        final Set<String> initialBlogsUrls = new HashSet<>();
-        for (final ReaderBlog readerBlog : mInitialReaderBlogList) {
-            initialBlogsUrls.add(readerBlog.getUrl());
-        }
-        final List<ReaderBlog> currentReaderBlogList = mAdapter.getItems();
-        final Set<String> currentBlogsUrls = new HashSet<>();
-        if (currentReaderBlogList != null) {
-            for (final ReaderBlog readerBlog : currentReaderBlogList) {
-                currentBlogsUrls.add(readerBlog.getUrl());
-            }
-        }
-        return !(initialBlogsUrls.equals(currentBlogsUrls));
-    }
-
     private void checkEmptyView() {
         if (!isAdded() || getView() == null) {
             return;

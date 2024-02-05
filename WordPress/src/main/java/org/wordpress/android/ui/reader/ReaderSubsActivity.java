@@ -178,8 +178,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
             final ReaderTagFragment readerTagFragment = mPageAdapter.getReaderTagFragment();
             final ReaderBlogFragment readerBlogFragment = mPageAdapter.getReaderBlogFragment();
             if (readerTagFragment != null && readerBlogFragment != null) {
-                shouldRefreshSubscriptions = readerTagFragment.hasChangedSelectedTags()
-                                             || readerBlogFragment.hasChangedSelectedBlogs();
+                shouldRefreshSubscriptions = readerTagFragment.hasChangedSelectedTags();
             }
         }
         data.putExtra(RESULT_SHOULD_REFRESH_SUBSCRIPTIONS, shouldRefreshSubscriptions);
