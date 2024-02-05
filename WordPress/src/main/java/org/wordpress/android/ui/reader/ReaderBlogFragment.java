@@ -26,10 +26,6 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import javax.inject.Inject;
 
 /*
