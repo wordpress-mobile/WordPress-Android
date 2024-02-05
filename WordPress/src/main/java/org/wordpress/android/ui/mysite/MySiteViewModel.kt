@@ -260,7 +260,7 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let {
             if (shouldShowDashboard(it)) {
                 dashboardCardsViewModelSlice.onRefresh(it)
-                dashboardItemsViewModelSlice.onRefresh()
+                dashboardItemsViewModelSlice.onRefresh(it)
             } else {
                 accountDataViewModelSlice.onRefresh()
             }
@@ -276,7 +276,7 @@ class MySiteViewModel @Inject constructor(
 //        dashboardCardPlansUtils.onResume(uiModel.value as? SiteSelected)
         selectedSiteRepository.getSelectedSite()?.let {
             dashboardCardsViewModelSlice.onResume(it)
-            dashboardItemsViewModelSlice.onResume()
+            dashboardItemsViewModelSlice.onResume(it)
             siteInfoHeaderCardViewModelSlice.onResume()
         }?: run {
             accountDataViewModelSlice.onResume()

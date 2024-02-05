@@ -71,7 +71,7 @@ class DashboardItemsViewModelSlice @Inject constructor(
         siteItems: List<MySiteCardAndItem>?,
         sotw2023NudgeCard: MySiteCardAndItem.Card.WpSotw2023NudgeCardModel?
     ): List<MySiteCardAndItem> {
-        val dasbhboardSiteItems =  mutableListOf<MySiteCardAndItem>().apply {
+        val dasbhboardSiteItems = mutableListOf<MySiteCardAndItem>().apply {
             sotw2023NudgeCard?.let { add(it) }
             siteItems?.let { addAll(siteItems) }
             jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
@@ -83,18 +83,14 @@ class DashboardItemsViewModelSlice @Inject constructor(
         return dasbhboardSiteItems
     }
 
-    fun onResume() {
-        selectedSiteRepository.getSelectedSite()?.let { site ->
-            if(shouldShowSiteItems(site)) buildCards(site)
-            else uiModel.postValue(emptyList())
-        }
+    fun onResume(site: SiteModel) {
+        if (shouldShowSiteItems(site)) buildCards(site)
+        else uiModel.postValue(emptyList())
     }
 
-    fun onRefresh() {
-        selectedSiteRepository.getSelectedSite()?.let { site ->
-            if(shouldShowSiteItems(site)) buildCards(site)
-            else uiModel.postValue(emptyList())
-        }
+    fun onRefresh(site: SiteModel) {
+        if (shouldShowSiteItems(site)) buildCards(site)
+        else uiModel.postValue(emptyList())
     }
 
     private fun buildCards(site: SiteModel) {
