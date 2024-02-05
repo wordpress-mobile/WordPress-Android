@@ -76,7 +76,6 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
             siteItemsViewModelSlice,
             sotw2023NudgeCardViewModelSlice,
             jetpackFeatureCardHelper,
-            selectedSiteRepository,
             buildConfigWrapper
         )
 
@@ -110,10 +109,9 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
         val mockSite = mock<SiteModel>()
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSite)
 
         dashboardItemsViewModelSlice.initialize(testScope())
-        dashboardItemsViewModelSlice.onResume()
+        dashboardItemsViewModelSlice.onResume(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(siteItemsViewModelSlice, never()).buildSiteItems(any())
@@ -125,11 +123,10 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
         val mockSite = mock<SiteModel>()
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(mockSite.isUsingWpComRestApi).thenReturn(false)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSite)
 
         dashboardItemsViewModelSlice.initialize(testScope())
 
-        dashboardItemsViewModelSlice.onResume()
+        dashboardItemsViewModelSlice.onResume(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(siteItemsViewModelSlice, atLeastOnce()).buildSiteItems(any())
@@ -145,10 +142,9 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
         val mockSite = mock<SiteModel>()
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSite)
 
         dashboardItemsViewModelSlice.initialize(testScope())
-        dashboardItemsViewModelSlice.onRefresh()
+        dashboardItemsViewModelSlice.onRefresh(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(siteItemsViewModelSlice, never()).buildSiteItems(any())
@@ -160,11 +156,10 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
         val mockSite = mock<SiteModel>()
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(mockSite.isUsingWpComRestApi).thenReturn(false)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSite)
 
         dashboardItemsViewModelSlice.initialize(testScope())
 
-        dashboardItemsViewModelSlice.onRefresh()
+        dashboardItemsViewModelSlice.onRefresh(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(siteItemsViewModelSlice, atLeastOnce()).buildSiteItems(any())

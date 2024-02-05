@@ -3,12 +3,12 @@ package org.wordpress.android.ui.mysite
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.isActive
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.assertj.core.api.Assertions.assertThat
 import org.mockito.kotlin.atMost
 import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.mock
@@ -118,10 +118,9 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
         val mockSite = mock<SiteModel>()
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSite)
 
         dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.onResume()
+        dashboardCardsViewModelSlice.onResume(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(jpMigrationSuccessCardViewModelSlice, atMost(1)).buildCard()
@@ -141,10 +140,9 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
         val mockSite = mock<SiteModel>()
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSite)
 
         dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.onResume()
+        dashboardCardsViewModelSlice.onResume(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(jpMigrationSuccessCardViewModelSlice, never()).buildCard()
@@ -164,10 +162,9 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
         val mockSite = mock<SiteModel>()
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSite)
 
         dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.onRefresh()
+        dashboardCardsViewModelSlice.onRefresh(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(jpMigrationSuccessCardViewModelSlice, atMost(1)).buildCard()
@@ -187,10 +184,9 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
         val mockSite = mock<SiteModel>()
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSite)
 
         dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.onRefresh()
+        dashboardCardsViewModelSlice.onRefresh(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(jpMigrationSuccessCardViewModelSlice, never()).buildCard()
