@@ -48,6 +48,7 @@ import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
@@ -256,34 +257,16 @@ class ReaderViewModel @Inject constructor(
 
     fun onQuickStartPromptDismissed() {
         isQuickStartPromptShown = false
+        completeQuickStartFollowSiteTaskIfNeeded()
     }
 
     fun onQuickStartEventReceived(event: QuickStartEvent) {
-        if (event.task == getFollowSiteTask()) checkAndStartQuickStartFollowSiteTaskNextStep()
-    }
-
-    private fun checkAndStartQuickStartFollowSiteTaskNextStep() {
-        val isDiscover = appPrefsWrapper.getReaderTag()?.isDiscover == true
-        if (isDiscover) {
-            startQuickStartFollowSiteTask()
-        } else {
-            autoSwitchToDiscoverTab()
-        }
-    }
-
-    private fun autoSwitchToDiscoverTab() {
-        launch {
-            if (!initialized) delay(QUICK_START_DISCOVER_TAB_STEP_DELAY)
-            readerTagsList.find { it.isDiscover }?.let {
-                updateSelectedContent(it)
-            }
-            startQuickStartFollowSiteTask()
-        }
+        if (event.task == getFollowSiteTask()) startQuickStartFollowSiteTask()
     }
 
     private fun startQuickStartFollowSiteTask() {
         val shortMessagePrompt = if (isSettingsSupported()) {
-            R.string.quick_start_dialog_follow_sites_message_short_discover_and_settings
+            R.string.quick_start_dialog_follow_sites_message_short_discover_and_subscriptions
         } else {
             R.string.quick_start_dialog_follow_sites_message_short_discover
         }
@@ -292,12 +275,12 @@ class ReaderViewModel @Inject constructor(
             QuickStartReaderPrompt(
                 getFollowSiteTask(),
                 shortMessagePrompt,
-                R.drawable.ic_cog_white_24dp
+                QuickStartUtils.ICON_NOT_SET,
             )
         )
     }
 
-    fun completeQuickStartFollowSiteTaskIfNeeded() {
+    private fun completeQuickStartFollowSiteTaskIfNeeded() {
         if (quickStartRepository.isPendingTask(getFollowSiteTask())) {
             selectedSiteRepository.getSelectedSite()?.let {
                 quickStartRepository.completeTask(getFollowSiteTask())
@@ -540,7 +523,6 @@ class ReaderViewModel @Inject constructor(
     )
 
     companion object {
-        private const val QUICK_START_DISCOVER_TAB_STEP_DELAY = 2000L
         private const val QUICK_START_PROMPT_DURATION = 5000
         private const val FILTER_UPDATE_DELAY = 50L
 
