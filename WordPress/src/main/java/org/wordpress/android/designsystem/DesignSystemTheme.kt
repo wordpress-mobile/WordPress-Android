@@ -35,33 +35,33 @@ fun DesignSystemThemeWithoutBackground(
     } else {
         extraPaletteLight
     }
+
     CompositionLocalProvider (localColors provides extraColors) {
         MaterialTheme(
-            colorScheme = if (isDarkTheme) {
-                darkColorScheme(
-                    primary = DesignSystemAppColor.White,
-                    primaryContainer = DesignSystemAppColor.Black,
-                    secondary = DesignSystemAppColor.Gray20,
-                    secondaryContainer = DesignSystemAppColor.Gray70,
-                    tertiary = DesignSystemAppColor.Gray10,
-                    tertiaryContainer = DesignSystemAppColor.Gray80,
-                    error = DesignSystemAppColor.Red10,
-                )
-            } else {
-                lightColorScheme(
-                    primary = DesignSystemAppColor.Black,
-                    primaryContainer = DesignSystemAppColor.White,
-                    secondary = DesignSystemAppColor.Gray40,
-                    secondaryContainer = DesignSystemAppColor.Gray,
-                    tertiary = DesignSystemAppColor.Gray50,
-                    tertiaryContainer = DesignSystemAppColor.Gray10,
-                    error = DesignSystemAppColor.Red,
-                )
-            },
+            colorScheme = if (isDarkTheme) paletteDarkScheme else paletteLightScheme,
             content = content
         )
     }
 }
+private val paletteLightScheme = lightColorScheme(
+    primary = DesignSystemAppColor.Black,
+    primaryContainer = DesignSystemAppColor.White,
+    secondary = DesignSystemAppColor.Gray40,
+    secondaryContainer = DesignSystemAppColor.Gray,
+    tertiary = DesignSystemAppColor.Gray50,
+    tertiaryContainer = DesignSystemAppColor.Gray10,
+    error = DesignSystemAppColor.Red,
+    )
+
+private val paletteDarkScheme = darkColorScheme(
+    primary = DesignSystemAppColor.White,
+    primaryContainer = DesignSystemAppColor.Black,
+    secondary = DesignSystemAppColor.Gray20,
+    secondaryContainer = DesignSystemAppColor.Gray70,
+    tertiary = DesignSystemAppColor.Gray10,
+    tertiaryContainer = DesignSystemAppColor.Gray80,
+    error = DesignSystemAppColor.Red10,
+    )
 
 private val extraPaletteLight = ExtraColors(
     quartenaryContainer = DesignSystemAppColor.Gray30,
