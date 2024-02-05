@@ -43,9 +43,9 @@ const val SCROLL_EVENT_DELAY = 2000L
 
 abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
-    private val statsUseCase: BaseListUseCase,
+    protected var statsUseCase: BaseListUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    protected val dateSelector: StatsDateSelector?,
+    protected var dateSelector: StatsDateSelector?,
     popupMenuHandler: ItemPopupMenuHandler? = null,
     private val newsCardHandler: NewsCardHandler? = null,
     actionCardHandler: ActionCardHandler? = null
@@ -196,15 +196,40 @@ class InsightsListViewModel
 
 class TrafficListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Named(TRAFFIC_USE_CASE) statsUseCase: BaseListUseCase,
+    @Named(TRAFFIC_USE_CASE) private val trafficStatsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
+    dateSelectorFactory: StatsDateSelector.Factory,
+    @Named(GRANULAR_USE_CASE_FACTORIES)
+    private val useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
+    private val selectedTrafficGranularityManager: SelectedTrafficGranularityManager,
 ) : StatsListViewModel(
     mainDispatcher,
-    statsUseCase,
+    trafficStatsUseCase,
     analyticsTracker,
-    dateSelectorFactory.build(StatsGranularity.DAYS, isGranularitySpinnerVisible = true)
-)
+    dateSelectorFactory.build(
+        selectedTrafficGranularityManager.getSelectedTrafficGranularity(),
+        isGranularitySpinnerVisible = true
+    )
+) {
+    fun onGranularitySelected(statsGranularity: StatsGranularity) {
+        if (dateSelector?.statsGranularity != statsGranularity) {
+            dateSelector?.statsGranularity = statsGranularity
+            val newUseCases = useCasesFactories.map {
+                it.build(
+                    selectedTrafficGranularityManager.getSelectedTrafficGranularity(),
+                    BaseStatsUseCase.UseCaseMode.BLOCK
+                )
+            }
+            statsUseCase.onCleared()
+            statsUseCase = statsUseCase.clone(newUseCases) // Create new BaseListUseCase with updated useCases
+            launch {
+                statsUseCase.loadData()
+                dateSelector?.updateDateSelector()
+            }
+            setUiLiveData()
+        }
+    }
+}
 
 class YearsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,

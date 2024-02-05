@@ -62,6 +62,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase.TotalFollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import javax.inject.Named
 import javax.inject.Singleton
@@ -279,13 +280,16 @@ class StatsModule {
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
         statsSiteProvider: StatsSiteProvider,
         @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
+        selectedTrafficGranularityManager: SelectedTrafficGranularityManager,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
             bgDispatcher,
             mainDispatcher,
             statsSiteProvider,
-            useCasesFactories.map { it.build(DAYS, BLOCK) },
+            useCasesFactories.map {
+                it.build(selectedTrafficGranularityManager.getSelectedTrafficGranularity(), BLOCK)
+            },
             { statsStore.getTimeStatsTypes(it) },
             uiModelMapper::mapTimeStats
         )

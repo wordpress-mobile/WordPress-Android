@@ -15,7 +15,7 @@ constructor(
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val siteProvider: StatsSiteProvider,
-    private val statsGranularity: StatsGranularity,
+    var statsGranularity: StatsGranularity,
     private val isGranularitySpinnerVisible: Boolean,
     private val statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
 ) {

@@ -169,7 +169,10 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
 
             dateSelector.granularitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.entries[position])
+                    with(StatsGranularity.entries[position]) {
+                        selectedTrafficGranularityManager.setSelectedTrafficGranularity(this)
+                        (viewModel as TrafficListViewModel).onGranularitySelected(this)
+                    }
                 }
 
                 @Suppress("EmptyFunctionBlock")
