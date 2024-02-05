@@ -13,7 +13,7 @@ import org.wordpress.android.R
 
 @Composable
 fun DesignSystemStartScreen(
-    onNextButtonClicked: (String) -> Unit,
+    onButtonClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn (
@@ -27,7 +27,7 @@ fun DesignSystemStartScreen(
             DesignSystemDataSource.startScreenButtonOptions.forEach { item ->
                 SelectOptionButton(
                     labelResourceId = item.first,
-                    onClick = { onNextButtonClicked(item.second) }
+                    onClick = { onButtonClicked(item.second) }
                 )
             }
         }
@@ -38,7 +38,7 @@ fun DesignSystemStartScreen(
 @Composable
 fun StartDesignSystemStartScreenPreview(){
     DesignSystemStartScreen(
-        onNextButtonClicked = {},
+        onButtonClicked = {},
         modifier = Modifier
             .fillMaxSize()
             .padding(dimensionResource(R.dimen.button_container_shadow_height))
