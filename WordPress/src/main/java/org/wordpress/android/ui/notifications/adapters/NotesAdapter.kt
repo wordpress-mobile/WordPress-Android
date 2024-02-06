@@ -127,6 +127,7 @@ class NotesAdapter(
         return mFilteredNotes.size
     }
 
+    @Suppress("CyclomaticComplexMethod", "LongMethod")
     override fun onBindViewHolder(noteViewHolder: NoteViewHolder, position: Int) {
         val note = getNoteAtPosition(position) ?: return
         noteViewHolder.mContentView.tag = note.id
