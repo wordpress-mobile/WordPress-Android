@@ -312,9 +312,13 @@ public class ReaderActivityLauncher {
     }
 
     public static void showReaderSubs(Context context, int selectPosition) {
-        Intent intent = new Intent(context, ReaderSubsActivity.class);
+        context.startActivity(createIntentShowReaderSubs(context, selectPosition));
+    }
+
+    public static Intent createIntentShowReaderSubs(@NonNull final Context context, final int selectPosition) {
+        final Intent intent = new Intent(context, ReaderSubsActivity.class);
         intent.putExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, selectPosition);
-        context.startActivity(intent);
+        return intent;
     }
 
     public static void showReaderInterests(Activity activity) {

@@ -168,8 +168,6 @@ class ReaderInterestsViewModel @Inject constructor(
                     )
                 )
             )
-
-            parentViewModel?.completeQuickStartFollowSiteTaskIfNeeded()
         }
     }
 

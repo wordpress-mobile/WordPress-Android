@@ -42,13 +42,13 @@ import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.utils.ReaderTopBarMenuHelper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.MenuItemUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterSelectedItem
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.JetpackBrandingUtils
+import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
@@ -94,9 +94,6 @@ class ReaderViewModel @Inject constructor(
     private val _showSearch = MutableLiveData<Event<Unit>>()
     val showSearch: LiveData<Event<Unit>> = _showSearch
 
-    private val _showSettings = MutableLiveData<Event<Unit>>()
-    val showSettings: LiveData<Event<Unit>> = _showSettings
-
     private val _showReaderInterests = MutableLiveData<Event<Unit>>()
     val showReaderInterests: LiveData<Event<Unit>> = _showReaderInterests
 
@@ -138,7 +135,6 @@ class ReaderViewModel @Inject constructor(
 
     private fun loadTabs(savedInstanceState: Bundle? = null) {
         launch {
-            val currentContentUiState = _uiState.value as? ContentUiState
             val tagList = loadReaderTabsUseCase.loadTabs()
             if (tagList.isNotEmpty() && readerTagsList != tagList) {
                 updateReaderTagsList(tagList)
@@ -146,12 +142,6 @@ class ReaderViewModel @Inject constructor(
                 _uiState.value = ContentUiState(
                     tabUiStates = tagList.map { TabUiState(label = UiStringText(it.label)) },
                     selectedReaderTag = selectedReaderTag(),
-                    searchMenuItemUiState = MenuItemUiState(isVisible = isSearchSupported()),
-                    settingsMenuItemUiState = MenuItemUiState(
-                        isVisible = isSettingsSupported(),
-                        showQuickStartFocusPoint =
-                        currentContentUiState?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
-                    )
                 )
                 if (!initialized) {
                     initialized = true
@@ -221,16 +211,6 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
-    @Suppress("UseCheckOrError")
-    fun onSettingsActionClicked() {
-        if (isSettingsSupported()) {
-            completeQuickStartFollowSiteTaskIfNeeded()
-            _showSettings.value = Event(Unit)
-        } else if (BuildConfig.DEBUG) {
-            throw IllegalStateException("Settings should be hidden when isSettingsSupported returns false.")
-        }
-    }
-
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
@@ -253,7 +233,6 @@ class ReaderViewModel @Inject constructor(
         readerTracker.stop(MAIN_READER)
         wasPaused = true
         if (!isChangingConfigurations) {
-            hideQuickStartFocusPointIfNeeded()
             dismissQuickStartSnackbarIfNeeded()
             if (quickStartRepository.isPendingTask(getFollowSiteTask())) {
                 quickStartRepository.clearPendingTask()
@@ -281,31 +260,12 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun onQuickStartEventReceived(event: QuickStartEvent) {
-        if (event.task == getFollowSiteTask()) checkAndStartQuickStartFollowSiteTaskNextStep()
+        if (event.task == getFollowSiteTask()) startQuickStartFollowSiteTask()
     }
 
-    private fun checkAndStartQuickStartFollowSiteTaskNextStep() {
-        val isDiscover = appPrefsWrapper.getReaderTag()?.isDiscover == true
-        if (isDiscover) {
-            startQuickStartFollowSiteTaskDiscoverTabStep()
-        } else {
-            autoSwitchToDiscoverTab()
-        }
-    }
-
-    private fun autoSwitchToDiscoverTab() {
-        launch {
-            if (!initialized) delay(QUICK_START_DISCOVER_TAB_STEP_DELAY)
-            readerTagsList.find { it.isDiscover }?.let {
-                updateSelectedContent(it)
-            }
-            startQuickStartFollowSiteTaskDiscoverTabStep()
-        }
-    }
-
-    private fun startQuickStartFollowSiteTaskDiscoverTabStep() {
+    private fun startQuickStartFollowSiteTask() {
         val shortMessagePrompt = if (isSettingsSupported()) {
-            R.string.quick_start_dialog_follow_sites_message_short_discover_and_settings
+            R.string.quick_start_dialog_follow_sites_message_short_discover_and_subscriptions
         } else {
             R.string.quick_start_dialog_follow_sites_message_short_discover
         }
@@ -314,16 +274,15 @@ class ReaderViewModel @Inject constructor(
             QuickStartReaderPrompt(
                 getFollowSiteTask(),
                 shortMessagePrompt,
-                R.drawable.ic_cog_white_24dp
+                QuickStartUtils.ICON_NOT_SET,
             )
         )
-        updateContentUiState(showQuickStartFocusPoint = isSettingsSupported())
+        completeQuickStartFollowSiteTaskIfNeeded()
     }
 
-    fun completeQuickStartFollowSiteTaskIfNeeded() {
+    private fun completeQuickStartFollowSiteTaskIfNeeded() {
         if (quickStartRepository.isPendingTask(getFollowSiteTask())) {
             selectedSiteRepository.getSelectedSite()?.let {
-                hideQuickStartFocusPointIfNeeded()
                 quickStartRepository.completeTask(getFollowSiteTask())
             }
         }
@@ -334,29 +293,8 @@ class ReaderViewModel @Inject constructor(
         isQuickStartPromptShown = false
     }
 
-    private fun hideQuickStartFocusPointIfNeeded() {
-        val currentUiState = _uiState.value as? ContentUiState
-        if (currentUiState?.settingsMenuItemUiState?.showQuickStartFocusPoint == true) {
-            updateContentUiState(showQuickStartFocusPoint = false)
-        }
-    }
-
     private fun getFollowSiteTask() =
         quickStartRepository.quickStartType.getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL)
-
-    private fun updateContentUiState(
-        showQuickStartFocusPoint: Boolean
-    ) {
-        val currentUiState = _uiState.value as? ContentUiState
-        currentUiState?.let {
-            _uiState.value = currentUiState.copy(
-                settingsMenuItemUiState = it.settingsMenuItemUiState.copy(
-                    isVisible = isSettingsSupported(),
-                    showQuickStartFocusPoint = showQuickStartFocusPoint
-                ),
-            )
-        }
-    }
 
     private fun selectedReaderTag(): ReaderTag? =
         _topBarUiState.value?.let {
@@ -561,29 +499,18 @@ class ReaderViewModel @Inject constructor(
     }
 
     sealed class ReaderUiState(
-        open val searchMenuItemUiState: MenuItemUiState,
-        open val settingsMenuItemUiState: MenuItemUiState,
         val appBarExpanded: Boolean = false,
         val tabLayoutVisible: Boolean = false
     ) {
         data class ContentUiState(
             val tabUiStates: List<TabUiState>,
             val selectedReaderTag: ReaderTag?,
-            override val searchMenuItemUiState: MenuItemUiState,
-            override val settingsMenuItemUiState: MenuItemUiState,
         ) : ReaderUiState(
-            searchMenuItemUiState = searchMenuItemUiState,
-            settingsMenuItemUiState = settingsMenuItemUiState,
             appBarExpanded = true,
             tabLayoutVisible = true
         ) {
             data class TabUiState(
                 val label: UiString
-            )
-
-            data class MenuItemUiState(
-                val isVisible: Boolean,
-                val showQuickStartFocusPoint: Boolean = false
             )
         }
     }
@@ -596,7 +523,6 @@ class ReaderViewModel @Inject constructor(
     )
 
     companion object {
-        private const val QUICK_START_DISCOVER_TAB_STEP_DELAY = 2000L
         private const val QUICK_START_PROMPT_DURATION = 5000
         private const val FILTER_UPDATE_DELAY = 50L
 
