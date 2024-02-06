@@ -41,9 +41,6 @@ public class ReaderBlogFragment extends Fragment
 
     @Inject ReaderTracker mReaderTracker;
 
-    private boolean mIsFirstDataLoaded;
-    private final ReaderBlogList mInitialReaderBlogList = new ReaderBlogList();
-
     private static final String ARG_BLOG_TYPE = "blog_type";
     private static final String KEY_SEARCH_FILTER = "search_filter";
 
@@ -152,12 +149,6 @@ public class ReaderBlogFragment extends Fragment
         refresh();
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mIsFirstDataLoaded = true;
-    }
-
     /*
      * note this will only be called for followed blogs
      */
@@ -240,13 +231,6 @@ public class ReaderBlogFragment extends Fragment
             mAdapter.setBlogClickListener(this);
             mAdapter.setDataLoadedListener(isEmpty -> {
                 checkEmptyView();
-                if (mIsFirstDataLoaded) {
-                    mIsFirstDataLoaded = false;
-                    mInitialReaderBlogList.clear();
-                    if (mAdapter != null && mAdapter.getItems() != null) {
-                        mInitialReaderBlogList.addAll(mAdapter.getItems());
-                    }
-                }
             });
         }
         return mAdapter;
