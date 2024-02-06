@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorT
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetchedPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeTargetingRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.FakeBlazeTargetingRestClient
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
@@ -27,6 +28,7 @@ import javax.inject.Singleton
 class BlazeCampaignsStore @Inject constructor(
     private val restClient: BlazeCampaignsRestClient,
     private val fakeTargetingRestClient: FakeBlazeTargetingRestClient,
+    private val targetingRestClient: BlazeTargetingRestClient,
     private val campaignsDao: BlazeCampaignsDao,
     private val targetingDao: BlazeTargetingDao,
     private val coroutineEngine: CoroutineEngine
@@ -98,6 +100,7 @@ class BlazeCampaignsStore @Inject constructor(
             .map { it?.toDomainModel() }
 
     suspend fun fetchBlazeTargetingLocations(
+        site: SiteModel,
         query: String,
         locale: String = Locale.getDefault().language
     ) = coroutineEngine.withDefaultContext(
@@ -105,7 +108,7 @@ class BlazeCampaignsStore @Inject constructor(
         this,
         "fetch blaze locations"
     ) {
-        fakeTargetingRestClient.fetchBlazeLocations(query, locale).let { payload ->
+        targetingRestClient.fetchBlazeLocations(site, query, locale).let { payload ->
             when {
                 payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
                 else -> BlazeTargetingResult(payload.data)
