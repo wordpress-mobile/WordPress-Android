@@ -320,22 +320,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         });
     }
 
-    private int getPositionForNoteUnfiltered(String noteId) {
-        return getPositionForNoteInArray(noteId, mNotes);
-    }
-
-    private int getPositionForNoteInArray(String noteId, ArrayList<Note> notes) {
-        if (notes != null && noteId != null) {
-            for (int i = 0; i < notes.size(); i++) {
-                String noteKey = notes.get(i).getId();
-                if (noteKey != null && noteKey.equals(noteId)) {
-                    return i;
-                }
-            }
-        }
-        return RecyclerView.NO_POSITION;
-    }
-
     public void setOnNoteClickListener(OnNoteClickListener mNoteClickListener) {
         mOnNoteClickListener = mNoteClickListener;
     }
