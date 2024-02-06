@@ -203,12 +203,7 @@ class NotesAdapter(
         } else {
             noteViewHolder.textDetail.visibility = View.GONE
         }
-        val avatarUrl = GravatarUtils.fixGravatarUrl(note.iconURL, avatarSize)
-        imageManager!!.loadIntoCircle(
-            noteViewHolder.imageAvatar,
-            ImageType.AVATAR_WITH_BACKGROUND,
-            avatarUrl
-        )
+        noteViewHolder.loadAvatars(note)
         noteViewHolder.unreadNotificationView.isVisible = note.isUnread
 
         // request to load more comments when we near the end
@@ -228,6 +223,63 @@ class NotesAdapter(
         layoutParams.topMargin = headerMarginTop
         noteViewHolder.headerText.layoutParams = layoutParams
     }
+
+    private fun NoteViewHolder.loadAvatars(note: Note) {
+        if (note.canShowMultipleAvatars()) {
+            if(note.iconURLs!!.size == 2) {
+                imageAvatar.visibility = View.INVISIBLE
+                twoAvatarsView.visibility = View.VISIBLE
+                threeAvatarsView.visibility = View.INVISIBLE
+                val avatarUrl = GravatarUtils.fixGravatarUrl(note.iconURL, avatarSize)
+                val avatarUrl2 = GravatarUtils.fixGravatarUrl(note.iconURLs!![1], avatarSize)
+                imageManager?.loadIntoCircle(
+                    twoAvatars1,
+                    ImageType.AVATAR_WITH_BACKGROUND,
+                    avatarUrl2
+                )
+                imageManager?.loadIntoCircle(
+                    twoAvatars2,
+                    ImageType.AVATAR_WITH_BACKGROUND,
+                    avatarUrl
+                )
+            } else {
+                imageAvatar.visibility = View.INVISIBLE
+                twoAvatarsView.visibility = View.INVISIBLE
+                threeAvatarsView.visibility = View.VISIBLE
+                val avatarUrl = GravatarUtils.fixGravatarUrl(note.iconURL, avatarSize)
+                val avatarUrl2 = GravatarUtils.fixGravatarUrl(note.iconURLs!![1], avatarSize)
+                val avatarUrl3 = GravatarUtils.fixGravatarUrl(note.iconURLs!![2], avatarSize)
+                imageManager?.loadIntoCircle(
+                    threeAvatars1,
+                    ImageType.AVATAR_WITH_BACKGROUND,
+                    avatarUrl3
+                )
+                imageManager?.loadIntoCircle(
+                    threeAvatars2,
+                    ImageType.AVATAR_WITH_BACKGROUND,
+                    avatarUrl2
+                )
+                imageManager?.loadIntoCircle(
+                    threeAvatars3,
+                    ImageType.AVATAR_WITH_BACKGROUND,
+                    avatarUrl
+                )
+            }
+        } else {
+            imageAvatar.visibility = View.VISIBLE
+            twoAvatarsView.visibility = View.INVISIBLE
+            threeAvatarsView.visibility = View.INVISIBLE
+            val avatarUrl = GravatarUtils.fixGravatarUrl(note.iconURL, avatarSize)
+            imageManager?.loadIntoCircle(
+                imageAvatar,
+                ImageType.AVATAR_WITH_BACKGROUND,
+                avatarUrl
+            )
+        }
+    }
+
+    private fun Note.canShowMultipleAvatars() =
+        (isFollowType || isLikeType || isCommentLikeType) && iconURLs != null && iconURLs!!.size > 1
 
     private fun handleMaxLines(subject: TextView, detail: TextView) {
         subject.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
@@ -280,6 +332,13 @@ class NotesAdapter(
         val textSubjectNoticon: TextView
         val textDetail: TextView
         val imageAvatar: ImageView
+        val twoAvatarsView: View
+        val twoAvatars1: ImageView
+        val twoAvatars2: ImageView
+        val threeAvatarsView: View
+        val threeAvatars1: ImageView
+        val threeAvatars2: ImageView
+        val threeAvatars3: ImageView
         val unreadNotificationView: View
 
         init {
@@ -289,6 +348,13 @@ class NotesAdapter(
             textSubjectNoticon = checkNotNull(view.findViewById(R.id.note_subject_noticon))
             textDetail = checkNotNull(view.findViewById(R.id.note_detail))
             imageAvatar = checkNotNull(view.findViewById(R.id.note_avatar))
+            twoAvatars1 = checkNotNull(view.findViewById(R.id.two_avatars_1))
+            twoAvatars2 = checkNotNull(view.findViewById(R.id.two_avatars_2))
+            threeAvatars1 = checkNotNull(view.findViewById(R.id.three_avatars_1))
+            threeAvatars2 = checkNotNull(view.findViewById(R.id.three_avatars_2))
+            threeAvatars3 = checkNotNull(view.findViewById(R.id.three_avatars_3))
+            twoAvatarsView = checkNotNull(view.findViewById(R.id.two_avatars_view))
+            threeAvatarsView = checkNotNull(view.findViewById(R.id.three_avatars_view))
             unreadNotificationView = checkNotNull(view.findViewById(R.id.notification_unread))
             contentView.setOnClickListener(onClickListener)
         }
