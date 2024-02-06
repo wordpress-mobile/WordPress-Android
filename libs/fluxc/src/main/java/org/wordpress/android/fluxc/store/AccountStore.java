@@ -357,6 +357,7 @@ public class AccountStore extends Store {
 
     public static class WebauthnChallengeReceived extends OnChanged<AuthenticationError> {
         public String response;
+        public String mUserId;
     }
 
     public static class FinishWebauthnChallengePayload {
@@ -1412,6 +1413,7 @@ public class AccountStore extends Store {
         mAuthenticator.makeRequest(payload.mUserId, payload.mWebauthnNonce,
                 (Response.Listener<String>) response -> {
                     WebauthnChallengeReceived event = new WebauthnChallengeReceived();
+                    event.mUserId = payload.mUserId;
                     event.response = response;
                     emitChange(event);
                 },
