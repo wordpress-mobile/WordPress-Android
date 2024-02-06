@@ -31,6 +31,8 @@ import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_MARK_ALL_READ_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_MENU_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL
 import org.wordpress.android.databinding.NotificationsListFragmentBinding
 import org.wordpress.android.fluxc.store.AccountStore
@@ -64,6 +66,7 @@ import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPPermissionUtils.NOTIFICATIONS_PERMISSION_REQUEST_CODE
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -78,6 +81,9 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     @Inject
     lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private val viewModel: NotificationsListViewModel by viewModels()
 
@@ -284,6 +290,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         val notificationActions = menu.findItem(R.id.notifications_actions)
         notificationActions.isVisible = accountStore.hasAccessToken()
         notificationActions.actionView?.setOnClickListener {
+            analyticsTrackerWrapper.track(NOTIFICATION_MENU_TAPPED)
             showNotificationActionsPopup(it)
         }
         super.onPrepareOptionsMenu(menu)
@@ -320,6 +327,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
      * For marking the status of every notification as read
      */
     private fun markAllAsRead() {
+        analyticsTrackerWrapper.track(NOTIFICATIONS_MARK_ALL_READ_TAPPED)
         // TODO("not yet implemented")
     }
 
