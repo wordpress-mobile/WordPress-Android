@@ -357,8 +357,14 @@ public class AccountStore extends Store {
     }
 
     public static class WebauthnChallengeReceived extends OnChanged<AuthenticationError> {
+        private static final String TWO_STEP_NONCE_KEY = "two_step_nonce";
+
         public JSONObject mJsonResponse;
         public String mUserId;
+
+        public String getWebauthnNonce() {
+            return mJsonResponse.optString(TWO_STEP_NONCE_KEY);
+        }
     }
 
     public static class FinishWebauthnChallengePayload {
