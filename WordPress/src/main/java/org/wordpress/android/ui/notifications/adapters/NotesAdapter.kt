@@ -141,20 +141,20 @@ class NotesAdapter(
                 previousNote!!.timestamp
             )
         }
-        if (previousTimeGroup != null && previousTimeGroup == timeGroup) {
+        if (previousTimeGroup?.let { it == timeGroup } == true) {
             noteViewHolder.headerText.visibility = View.GONE
         } else {
             noteViewHolder.headerText.visibility = View.VISIBLE
-            if (timeGroup == NoteTimeGroup.GROUP_TODAY) {
-                noteViewHolder.headerText.setText(R.string.stats_timeframe_today)
-            } else if (timeGroup == NoteTimeGroup.GROUP_YESTERDAY) {
-                noteViewHolder.headerText.setText(R.string.stats_timeframe_yesterday)
-            } else if (timeGroup == NoteTimeGroup.GROUP_OLDER_TWO_DAYS) {
-                noteViewHolder.headerText.setText(R.string.older_two_days)
-            } else if (timeGroup == NoteTimeGroup.GROUP_OLDER_WEEK) {
-                noteViewHolder.headerText.setText(R.string.older_last_week)
-            } else {
-                noteViewHolder.headerText.setText(R.string.older_month)
+            timeGroup?.let {
+                noteViewHolder.headerText.setText(
+                    when (it) {
+                        NoteTimeGroup.GROUP_TODAY -> R.string.stats_timeframe_today
+                        NoteTimeGroup.GROUP_YESTERDAY -> R.string.stats_timeframe_yesterday
+                        NoteTimeGroup.GROUP_OLDER_TWO_DAYS -> R.string.older_two_days
+                        NoteTimeGroup.GROUP_OLDER_WEEK -> R.string.older_last_week
+                        NoteTimeGroup.GROUP_OLDER_MONTH -> R.string.older_month
+                    }
+                )
             }
         }
 
