@@ -257,7 +257,6 @@ class ReaderViewModel @Inject constructor(
 
     fun onQuickStartPromptDismissed() {
         isQuickStartPromptShown = false
-        completeQuickStartFollowSiteTaskIfNeeded()
     }
 
     fun onQuickStartEventReceived(event: QuickStartEvent) {
@@ -278,6 +277,7 @@ class ReaderViewModel @Inject constructor(
                 QuickStartUtils.ICON_NOT_SET,
             )
         )
+        completeQuickStartFollowSiteTaskIfNeeded()
     }
 
     private fun completeQuickStartFollowSiteTaskIfNeeded() {

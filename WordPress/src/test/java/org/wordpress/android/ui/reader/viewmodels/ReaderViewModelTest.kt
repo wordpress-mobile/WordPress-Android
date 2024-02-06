@@ -400,12 +400,16 @@ class ReaderViewModelTest : BaseUnitTest() {
     fun `given reader selected, when qs event follow site, then qs task started and completed`() {
         val tagList = createNonMockedNonEmptyReaderTagList()
         testWithNonMockedNonEmptyTags(tagList) {
+            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mock())
+            whenever(quickStartRepository.isPendingTask(QuickStartNewSiteTask.FOLLOW_SITE)).thenReturn(true)
+
             val observers = initObservers()
             triggerContentDisplay(hasAccessToken = true)
 
             viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartNewSiteTask.FOLLOW_SITE))
 
             assertQsFollowSiteTaskStarted(observers, isSettingsSupported = true)
+            assertQsFollowSiteTaskCompleted()
         }
     }
 
@@ -413,12 +417,16 @@ class ReaderViewModelTest : BaseUnitTest() {
     fun `given reader selected no settings available, when qs event follow site, then qs task started and completed`() {
         val tagList = createNonMockedNonEmptyReaderTagList()
         testWithNonMockedNonEmptyTags(tagList) {
+            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mock())
+            whenever(quickStartRepository.isPendingTask(QuickStartNewSiteTask.FOLLOW_SITE)).thenReturn(true)
+
             val observers = initObservers()
             triggerContentDisplay(hasAccessToken = false)
 
             viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartNewSiteTask.FOLLOW_SITE))
 
             assertQsFollowSiteTaskStarted(observers, isSettingsSupported = false)
+            assertQsFollowSiteTaskCompleted()
         }
     }
 
@@ -432,22 +440,6 @@ class ReaderViewModelTest : BaseUnitTest() {
             viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartNewSiteTask.CHECK_STATS))
 
             assertQsFollowSiteTaskNotStarted(observers)
-        }
-    }
-
-    @Test
-    fun `when onQuickStartPromptDismissed called, then qs task completes`() {
-        val tagList = createNonMockedNonEmptyReaderTagList()
-        testWithNonMockedNonEmptyTags(tagList) {
-            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mock())
-            whenever(quickStartRepository.isPendingTask(QuickStartNewSiteTask.FOLLOW_SITE)).thenReturn(true)
-
-            triggerContentDisplay(hasAccessToken = true)
-            viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartNewSiteTask.FOLLOW_SITE))
-
-            viewModel.onQuickStartPromptDismissed()
-
-            assertQsFollowSiteTaskCompleted()
         }
     }
 
