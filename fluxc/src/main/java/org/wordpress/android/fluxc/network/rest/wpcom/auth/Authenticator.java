@@ -128,7 +128,7 @@ public class Authenticator {
     }
 
     public void makeRequest(String userId, String webauthnNonce,
-                            Response.Listener<String> listener,
+                            Response.Listener<JSONObject> listener,
                             ErrorListener errorListener) {
         WebauthnChallengeRequest request = new WebauthnChallengeRequest(
                 userId,
