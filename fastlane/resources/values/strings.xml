@@ -2241,9 +2241,9 @@
     <string name="reader_empty_subscribed_tags_subtitle">Add tags here to find posts about your favorite topics</string>
     <string name="reader_no_followed_tags_title">No subscribed tags</string>
     <string name="reader_no_recommended_blogs_title">No recommended blogs</string>
-    <string name="reader_no_followed_blogs_title">@string/reader_filter_empty_blogs_list_title</string>
+    <string name="reader_no_followed_blogs_title" translatable="false">@string/reader_filter_empty_blogs_list_title</string>
     <string name="reader_no_followed_blogs_search_title">No blogs matching your search</string>
-    <string name="reader_no_followed_blogs_description">@string/reader_filter_empty_blogs_list_text</string>
+    <string name="reader_no_followed_blogs_description" translatable="false">@string/reader_filter_empty_blogs_list_text</string>
     <string name="reader_no_followed_blogs_description_subs">Subscribe to blogs in Discover or search for a blog that you like already.</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">The blogs you\'re subscribed to haven\'t posted anything recently</string>
