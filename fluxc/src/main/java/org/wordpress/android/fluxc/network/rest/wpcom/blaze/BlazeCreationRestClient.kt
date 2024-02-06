@@ -13,14 +13,14 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComNetwork
 import javax.inject.Inject
 
-class BlazeTargetingRestClient @Inject constructor(
+class BlazeCreationRestClient @Inject constructor(
     private val wpComNetwork: WPComNetwork
 ) {
-    suspend fun fetchBlazeLocations(
+    suspend fun fetchTargetingLocations(
         site: SiteModel,
         query: String,
         locale: String
-    ): BlazeTargetingPayload<List<BlazeTargetingLocation>> {
+    ): BlazePayload<List<BlazeTargetingLocation>> {
         val url = WPCOMV2.sites.site(site.siteId).wordads.dsp.api.v1_1.targeting.locations.url
 
         val response = wpComNetwork.executeGetGsonRequest(
@@ -33,18 +33,18 @@ class BlazeTargetingRestClient @Inject constructor(
         )
 
         return when (response) {
-            is WPComGsonRequestBuilder.Response.Success -> BlazeTargetingPayload(
+            is WPComGsonRequestBuilder.Response.Success -> BlazePayload(
                 response.data.locations.map { it.toDomainModel() }
             )
 
-            is WPComGsonRequestBuilder.Response.Error -> BlazeTargetingPayload(response.error)
+            is WPComGsonRequestBuilder.Response.Error -> BlazePayload(response.error)
         }
     }
 
-    suspend fun fetchBlazeTopics(
+    suspend fun fetchTargetingTopics(
         site: SiteModel,
         locale: String
-    ): BlazeTargetingPayload<List<BlazeTargetingTopic>> {
+    ): BlazePayload<List<BlazeTargetingTopic>> {
         val url = WPCOMV2.sites.site(site.siteId).wordads.dsp.api.v1_1.targeting.page_topics.url
 
         val response = wpComNetwork.executeGetGsonRequest(
@@ -54,18 +54,18 @@ class BlazeTargetingRestClient @Inject constructor(
         )
 
         return when (response) {
-            is WPComGsonRequestBuilder.Response.Success -> BlazeTargetingPayload(
+            is WPComGsonRequestBuilder.Response.Success -> BlazePayload(
                 response.data.topics.map { it.toDomainModel() }
             )
 
-            is WPComGsonRequestBuilder.Response.Error -> BlazeTargetingPayload(response.error)
+            is WPComGsonRequestBuilder.Response.Error -> BlazePayload(response.error)
         }
     }
 
-    suspend fun fetchBlazeDevices(
+    suspend fun fetchTargetingDevices(
         site: SiteModel,
         locale: String
-    ): BlazeTargetingPayload<List<BlazeTargetingDevice>> {
+    ): BlazePayload<List<BlazeTargetingDevice>> {
         val url = WPCOMV2.sites.site(site.siteId).wordads.dsp.api.v1_1.targeting.devices.url
 
         val response = wpComNetwork.executeGetGsonRequest(
@@ -75,18 +75,18 @@ class BlazeTargetingRestClient @Inject constructor(
         )
 
         return when (response) {
-            is WPComGsonRequestBuilder.Response.Success -> BlazeTargetingPayload(
+            is WPComGsonRequestBuilder.Response.Success -> BlazePayload(
                 response.data.devices.map { it.toDomainModel() }
             )
 
-            is WPComGsonRequestBuilder.Response.Error -> BlazeTargetingPayload(response.error)
+            is WPComGsonRequestBuilder.Response.Error -> BlazePayload(response.error)
         }
     }
 
-    suspend fun fetchBlazeLanguages(
+    suspend fun fetchTargetingLanguages(
         site: SiteModel,
         locale: String
-    ): BlazeTargetingPayload<List<BlazeTargetingLanguage>> {
+    ): BlazePayload<List<BlazeTargetingLanguage>> {
         val url = WPCOMV2.sites.site(site.siteId).wordads.dsp.api.v1_1.targeting.languages.url
 
         val response = wpComNetwork.executeGetGsonRequest(
@@ -96,15 +96,15 @@ class BlazeTargetingRestClient @Inject constructor(
         )
 
         return when (response) {
-            is WPComGsonRequestBuilder.Response.Success -> BlazeTargetingPayload(
+            is WPComGsonRequestBuilder.Response.Success -> BlazePayload(
                 response.data.languages.map { it.toDomainModel() }
             )
 
-            is WPComGsonRequestBuilder.Response.Error -> BlazeTargetingPayload(response.error)
+            is WPComGsonRequestBuilder.Response.Error -> BlazePayload(response.error)
         }
     }
 
-    data class BlazeTargetingPayload<T>(
+    data class BlazePayload<T>(
         val data: T?
     ) : Payload<WPComGsonNetworkError>() {
         constructor(error: WPComGsonNetworkError) : this(null) {

@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorT
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetchedPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeTargetingRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCreationRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.FakeBlazeTargetingRestClient
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
@@ -31,7 +31,7 @@ import javax.inject.Singleton
 class BlazeCampaignsStore @Inject constructor(
     private val restClient: BlazeCampaignsRestClient,
     private val fakeTargetingRestClient: FakeBlazeTargetingRestClient,
-    private val targetingRestClient: BlazeTargetingRestClient,
+    private val creationRestClient: BlazeCreationRestClient,
     private val campaignsDao: BlazeCampaignsDao,
     private val targetingDao: BlazeTargetingDao,
     private val coroutineEngine: CoroutineEngine
@@ -111,7 +111,7 @@ class BlazeCampaignsStore @Inject constructor(
         this,
         "fetch blaze locations"
     ) {
-        targetingRestClient.fetchBlazeLocations(site, query, locale).let { payload ->
+        creationRestClient.fetchTargetingLocations(site, query, locale).let { payload ->
             when {
                 payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
                 else -> BlazeTargetingResult(payload.data)
@@ -127,7 +127,7 @@ class BlazeCampaignsStore @Inject constructor(
         this,
         "fetch blaze topics"
     ) {
-        targetingRestClient.fetchBlazeTopics(site, locale).let { payload ->
+        creationRestClient.fetchTargetingTopics(site, locale).let { payload ->
             when {
                 payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
                 else -> {
@@ -156,7 +156,7 @@ class BlazeCampaignsStore @Inject constructor(
         this,
         "fetch blaze languages"
     ) {
-        targetingRestClient.fetchBlazeLanguages(site, locale).let { payload ->
+        creationRestClient.fetchTargetingLanguages(site, locale).let { payload ->
             when {
                 payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
                 else -> {
@@ -185,7 +185,7 @@ class BlazeCampaignsStore @Inject constructor(
         this,
         "fetch blaze devices"
     ) {
-        targetingRestClient.fetchBlazeDevices(site, locale).let { payload ->
+        creationRestClient.fetchTargetingDevices(site, locale).let { payload ->
             when {
                 payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
                 else -> {
