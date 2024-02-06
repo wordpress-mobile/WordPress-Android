@@ -36,7 +36,6 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -118,7 +117,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     public void addAll(@NonNull List<Note> notes, boolean clearBeforeAdding) {
-        Collections.sort(notes, new Note.TimeStampComparator());
+        notes.sort(new Note.TimeStampComparator());
         try {
             if (clearBeforeAdding) {
                 mNotes.clear();
