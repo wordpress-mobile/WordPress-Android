@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.notifications.adapters
 
 import android.annotation.SuppressLint
@@ -260,7 +262,6 @@ class NotesAdapter(
         mReloadNotesFromDBTask!!.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
-    @Suppress("deprecation")
     @SuppressLint("StaticFieldLeak")
     private inner class ReloadNotesFromDBTask : AsyncTask<Void?, Void?, ArrayList<Note>>() {
         override fun doInBackground(vararg voids: Void?): ArrayList<Note> {
