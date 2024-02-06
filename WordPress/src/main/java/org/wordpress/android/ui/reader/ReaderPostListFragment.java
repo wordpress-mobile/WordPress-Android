@@ -1724,9 +1724,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         // Ensure the default image is reset for empty views before applying logic
         mActionableEmptyView.image.setImageResource(R.drawable.illustration_reader_empty);
 
-        // TODO thomashortadev
-        //  try to quickly hack some way of making the button black
-
         if (shouldShowEmptyViewForSelfHostedCta()) {
             setEmptyTitleAndDescriptionForSelfHostedCta();
             return;
@@ -1940,7 +1937,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 .setCancelable(false)
                 .create();
         mBookmarksSavedLocallyDialog.show();
-    }    /*
+    }
+
+    /*
      * called by post adapter when data has been loaded
      */
     private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
