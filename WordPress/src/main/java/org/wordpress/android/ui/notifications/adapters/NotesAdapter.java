@@ -15,6 +15,8 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.text.BidiFormatter;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +38,7 @@ import org.wordpress.android.util.image.ImageType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -43,8 +46,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     private final int mAvatarSz;
     private final int mTextIndentSize;
 
-    private final DataLoadedListener mDataLoadedListener;
-    private final OnLoadMoreListener mOnLoadMoreListener;
+    @NonNull private final DataLoadedListener mDataLoadedListener;
+    @Nullable private final OnLoadMoreListener mOnLoadMoreListener;
     private final ArrayList<Note> mNotes = new ArrayList<>();
     private final ArrayList<Note> mFilteredNotes = new ArrayList<>();
     @Inject protected ImageManager mImageManager;
@@ -75,8 +78,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
     }
 
-    private FILTERS mCurrentFilter = FILTERS.FILTER_ALL;
-    private ReloadNotesFromDBTask mReloadNotesFromDBTask;
+    @NonNull private FILTERS mCurrentFilter = FILTERS.FILTER_ALL;
+    @Nullable private ReloadNotesFromDBTask mReloadNotesFromDBTask;
 
     public interface DataLoadedListener {
         void onDataLoaded(int itemsCount);
@@ -86,9 +89,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         void onLoadMore(long timestamp);
     }
 
-    private OnNoteClickListener mOnNoteClickListener;
+    @Nullable private OnNoteClickListener mOnNoteClickListener;
 
-    public NotesAdapter(Context context, DataLoadedListener dataLoadedListener, OnLoadMoreListener onLoadMoreListener) {
+    public NotesAdapter(@NonNull Context context, @NonNull DataLoadedListener dataLoadedListener,
+                        @Nullable OnLoadMoreListener onLoadMoreListener) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
         mDataLoadedListener = dataLoadedListener;
@@ -104,15 +108,16 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         mTextIndentSize = context.getResources().getDimensionPixelSize(R.dimen.notifications_text_indent_sz);
     }
 
-    public void setFilter(FILTERS newFilter) {
+    public void setFilter(@NonNull FILTERS newFilter) {
         mCurrentFilter = newFilter;
     }
 
+    @NonNull
     public FILTERS getCurrentFilter() {
         return mCurrentFilter;
     }
 
-    public void addAll(List<Note> notes, boolean clearBeforeAdding) {
+    public void addAll(@NonNull List<Note> notes, boolean clearBeforeAdding) {
         Collections.sort(notes, new Note.TimeStampComparator());
         try {
             if (clearBeforeAdding) {
@@ -124,16 +129,16 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void myNotifyDatasetChanged() {
         buildFilteredNotesList(mFilteredNotes, mNotes, mCurrentFilter);
         notifyDataSetChanged();
-        if (mDataLoadedListener != null) {
-            mDataLoadedListener.onDataLoaded(getItemCount());
-        }
+        mDataLoadedListener.onDataLoaded(getItemCount());
     }
 
+    @NonNull
     @Override
-    public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notifications_list_item, parent, false);
 
         return new NoteViewHolder(view);
@@ -173,6 +178,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
     }
 
+    @Nullable
     private Note getNoteAtPosition(int position) {
         if (isValidPosition(position)) {
             return mFilteredNotes.get(position);
@@ -191,7 +197,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     @Override
-    public void onBindViewHolder(NoteViewHolder noteViewHolder, int position) {
+    public void onBindViewHolder(@NonNull NoteViewHolder noteViewHolder, int position) {
         final Note note = getNoteAtPosition(position);
         if (note == null) {
             return;
@@ -306,7 +312,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         noteViewHolder.mHeaderText.setLayoutParams(layoutParams);
     }
 
-    private void handleMaxLines(final TextView subject, final TextView detail) {
+    private void handleMaxLines(@NonNull final TextView subject, @NonNull final TextView detail) {
         subject.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override public boolean onPreDraw() {
                 subject.getViewTreeObserver().removeOnPreDrawListener(this);
@@ -320,7 +326,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         });
     }
 
-    public void setOnNoteClickListener(OnNoteClickListener mNoteClickListener) {
+    public void setOnNoteClickListener(@Nullable OnNoteClickListener mNoteClickListener) {
         mOnNoteClickListener = mNoteClickListener;
     }
 
@@ -331,7 +337,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
     }
 
-    @SuppressWarnings("deprecation")
     public void reloadNotesFromDBAsync() {
         cancelReloadNotesTask();
         mReloadNotesFromDBTask = new ReloadNotesFromDBTask();
@@ -341,13 +346,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     private class ReloadNotesFromDBTask extends AsyncTask<Void, Void, ArrayList<Note>> {
+        @NonNull
         @Override
-        protected ArrayList<Note> doInBackground(Void... voids) {
+        protected ArrayList<Note> doInBackground(@Nullable Void... voids) {
             return NotificationsTable.getLatestNotes();
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Note> notes) {
+        protected void onPostExecute(@NonNull ArrayList<Note> notes) {
             mNotes.clear();
             mNotes.addAll(notes);
             myNotifyDatasetChanged();
@@ -355,23 +361,23 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     class NoteViewHolder extends RecyclerView.ViewHolder {
-        private final View mContentView;
-        private final TextView mHeaderText;
-        private final TextView mTxtSubject;
-        private final TextView mTxtSubjectNoticon;
-        private final TextView mTxtDetail;
-        private final ImageView mImgAvatar;
-        private final View mUnreadNotificationView;
+        @NonNull private final View mContentView;
+        @NonNull private final TextView mHeaderText;
+        @NonNull private final TextView mTxtSubject;
+        @NonNull private final TextView mTxtSubjectNoticon;
+        @NonNull private final TextView mTxtDetail;
+        @NonNull private final ImageView mImgAvatar;
+        @NonNull private final View mUnreadNotificationView;
 
-        NoteViewHolder(View view) {
+        NoteViewHolder(@NonNull View view) {
             super(view);
-            mContentView = view.findViewById(R.id.note_content_container);
-            mHeaderText = view.findViewById(R.id.header_text);
-            mTxtSubject = view.findViewById(R.id.note_subject);
-            mTxtSubjectNoticon = view.findViewById(R.id.note_subject_noticon);
-            mTxtDetail = view.findViewById(R.id.note_detail);
-            mImgAvatar = view.findViewById(R.id.note_avatar);
-            mUnreadNotificationView = view.findViewById(R.id.notification_unread);
+            mContentView = Objects.requireNonNull(view.findViewById(R.id.note_content_container));
+            mHeaderText = Objects.requireNonNull(view.findViewById(R.id.header_text));
+            mTxtSubject = Objects.requireNonNull(view.findViewById(R.id.note_subject));
+            mTxtSubjectNoticon = Objects.requireNonNull(view.findViewById(R.id.note_subject_noticon));
+            mTxtDetail = Objects.requireNonNull(view.findViewById(R.id.note_detail));
+            mImgAvatar = Objects.requireNonNull(view.findViewById(R.id.note_avatar));
+            mUnreadNotificationView = Objects.requireNonNull(view.findViewById(R.id.notification_unread));
 
             mContentView.setOnClickListener(mOnClickListener);
         }
@@ -379,7 +385,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(@NonNull View v) {
             if (mOnNoteClickListener != null && v.getTag() instanceof String) {
                 mOnNoteClickListener.onClickNote((String) v.getTag());
             }
