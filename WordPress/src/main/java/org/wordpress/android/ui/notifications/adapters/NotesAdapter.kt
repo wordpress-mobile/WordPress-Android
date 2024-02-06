@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.text.BidiFormatter
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -208,11 +209,7 @@ class NotesAdapter(
             ImageType.AVATAR_WITH_BACKGROUND,
             avatarUrl
         )
-        if (note.isUnread) {
-            noteViewHolder.unreadNotificationView.visibility = View.VISIBLE
-        } else {
-            noteViewHolder.unreadNotificationView.visibility = View.GONE
-        }
+        noteViewHolder.unreadNotificationView.isVisible = note.isUnread
 
         // request to load more comments when we near the end
         if (onLoadMoreListener != null && position >= itemCount - 1) {
