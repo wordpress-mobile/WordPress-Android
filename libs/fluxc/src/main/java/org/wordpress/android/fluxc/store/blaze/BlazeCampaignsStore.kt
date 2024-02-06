@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.FakeBlazeTargetingRe
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
+import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingLanguageEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingTopicEntity
 import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.store.Store.OnChangedError
@@ -148,17 +149,24 @@ class BlazeCampaignsStore @Inject constructor(
     ) = targetingDao.observeTopics(locale).map { topics -> topics.map { it.toDomainModel() } }
 
     suspend fun fetchBlazeTargetingLanguages(
+        site: SiteModel,
         locale: String = Locale.getDefault().language
     ) = coroutineEngine.withDefaultContext(
         AppLog.T.API,
         this,
         "fetch blaze languages"
     ) {
-        fakeTargetingRestClient.fetchBlazeLanguages(locale).let { payload ->
+        targetingRestClient.fetchBlazeLanguages(site, locale).let { payload ->
             when {
                 payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
                 else -> {
-                    targetingDao.replaceLanguages(payload.data)
+                    targetingDao.replaceLanguages(payload.data?.map {
+                        BlazeTargetingLanguageEntity(
+                            id = it.id,
+                            name = it.name,
+                            locale = locale
+                        )
+                    }.orEmpty())
                     BlazeTargetingResult(payload.data)
                 }
             }
@@ -167,7 +175,7 @@ class BlazeCampaignsStore @Inject constructor(
 
     fun observeBlazeTargetingLanguages(
         locale: String = Locale.getDefault().language
-    ) = targetingDao.observeLanguages(locale)
+    ) = targetingDao.observeLanguages(locale).map { languages -> languages.map { it.toDomainModel() } }
 
     suspend fun fetchBlazeTargetingDevices(
         site: SiteModel,
