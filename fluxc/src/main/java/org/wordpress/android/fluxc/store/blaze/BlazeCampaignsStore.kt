@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeTargetingRestCl
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.FakeBlazeTargetingRestClient
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
+import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingTopicEntity
 import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.store.Store.OnChangedError
@@ -169,17 +170,24 @@ class BlazeCampaignsStore @Inject constructor(
     ) = targetingDao.observeLanguages(locale)
 
     suspend fun fetchBlazeTargetingDevices(
+        site: SiteModel,
         locale: String = Locale.getDefault().language
     ) = coroutineEngine.withDefaultContext(
         AppLog.T.API,
         this,
         "fetch blaze devices"
     ) {
-        fakeTargetingRestClient.fetchBlazeDevices(locale).let { payload ->
+        targetingRestClient.fetchBlazeDevices(site, locale).let { payload ->
             when {
                 payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
                 else -> {
-                    targetingDao.replaceDevices(payload.data)
+                    targetingDao.replaceDevices(payload.data?.map { device ->
+                        BlazeTargetingDeviceEntity(
+                            id = device.id,
+                            name = device.name,
+                            locale = locale
+                        )
+                    }.orEmpty())
                     BlazeTargetingResult(payload.data)
                 }
             }
@@ -188,7 +196,7 @@ class BlazeCampaignsStore @Inject constructor(
 
     fun observeBlazeTargetingDevices(
         locale: String = Locale.getDefault().language
-    ) = targetingDao.observeDevices(locale)
+    ) = targetingDao.observeDevices(locale).map { devices -> devices.map { it.toDomainModel() } }
 
     suspend fun fetchBlazeAdSuggestions(
         siteModel: SiteModel,

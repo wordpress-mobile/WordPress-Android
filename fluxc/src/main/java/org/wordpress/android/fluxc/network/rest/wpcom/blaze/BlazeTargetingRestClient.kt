@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.blaze.BlazeTargetingDevice
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLocation
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingTopic
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
@@ -32,8 +33,7 @@ class BlazeTargetingRestClient @Inject constructor(
 
         return when (response) {
             is WPComGsonRequestBuilder.Response.Success -> BlazeTargetingPayload(
-                response.data.locations
-                    .map { it.toBlazeTargetingLocation() }
+                response.data.locations.map { it.toDomainModel() }
             )
 
             is WPComGsonRequestBuilder.Response.Error -> BlazeTargetingPayload(response.error)
@@ -54,8 +54,28 @@ class BlazeTargetingRestClient @Inject constructor(
 
         return when (response) {
             is WPComGsonRequestBuilder.Response.Success -> BlazeTargetingPayload(
-                response.data.topics
-                    .map { it.toBlazeTargetingTopic() }
+                response.data.topics.map { it.toDomainModel() }
+            )
+
+            is WPComGsonRequestBuilder.Response.Error -> BlazeTargetingPayload(response.error)
+        }
+    }
+
+    suspend fun fetchBlazeDevices(
+        site: SiteModel,
+        locale: String
+    ): BlazeTargetingPayload<List<BlazeTargetingDevice>> {
+        val url = WPCOMV2.sites.site(site.siteId).wordads.dsp.api.v1_1.targeting.devices.url
+
+        val response = wpComNetwork.executeGetGsonRequest(
+            url = url,
+            params = mapOf("locale" to locale),
+            clazz = BlazeTargetingDeviceListResponse::class.java
+        )
+
+        return when (response) {
+            is WPComGsonRequestBuilder.Response.Success -> BlazeTargetingPayload(
+                response.data.devices.map { it.toDomainModel() }
             )
 
             is WPComGsonRequestBuilder.Response.Error -> BlazeTargetingPayload(response.error)
@@ -81,12 +101,12 @@ private class BlazeTargetingLocationListResponse(
         @SerializedName("parent_location")
         val parent: BlazeTargetingLocationNetworkModel?
     ) {
-        fun toBlazeTargetingLocation(): BlazeTargetingLocation {
+        fun toDomainModel(): BlazeTargetingLocation {
             return BlazeTargetingLocation(
                 id = id,
                 name = name,
                 type = type,
-                parent = parent?.toBlazeTargetingLocation()
+                parent = parent?.toDomainModel()
             )
         }
     }
@@ -100,10 +120,26 @@ private class BlazeTargetingTopicListResponse(
         val id: String,
         val name: String
     ) {
-        fun toBlazeTargetingTopic(): BlazeTargetingTopic {
+        fun toDomainModel(): BlazeTargetingTopic {
             return BlazeTargetingTopic(
                 id = id,
                 description = name
+            )
+        }
+    }
+}
+
+private class BlazeTargetingDeviceListResponse(
+    val devices: List<BlazeTargetingDeviceNetworkModel>
+) {
+    class BlazeTargetingDeviceNetworkModel(
+        val id: String,
+        val name: String
+    ) {
+        fun toDomainModel(): BlazeTargetingDevice {
+            return BlazeTargetingDevice(
+                id = id,
+                name = name
             )
         }
     }
