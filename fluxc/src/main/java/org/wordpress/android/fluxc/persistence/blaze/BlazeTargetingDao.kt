@@ -9,6 +9,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingDevice
+import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLanguage
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingTopic
 
 @Dao
@@ -85,4 +86,6 @@ data class BlazeTargetingLanguageEntity(
      * The locale used to localize the name of the language.
      */
     val locale: String
-)
+) {
+    fun toDomainModel() = BlazeTargetingLanguage(id, name)
+}
