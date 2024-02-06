@@ -65,7 +65,6 @@ class NotesAdapter(
                 FILTER_FOLLOW -> "follow"
                 FILTER_LIKE -> "like"
                 FILTER_UNREAD -> "unread"
-                else -> "all"
             }
         }
     }
