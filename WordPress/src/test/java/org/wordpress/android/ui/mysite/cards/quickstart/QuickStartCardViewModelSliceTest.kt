@@ -8,11 +8,9 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.CREATE_SITE
@@ -22,16 +20,12 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.U
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
-import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
-import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.CREATE_SITE_TUTORIAL
-import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
-import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.SHARE_SITE_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -41,6 +35,8 @@ import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 @ExperimentalCoroutinesApi
 class QuickStartCardViewModelSliceTest : BaseUnitTest() {
@@ -93,7 +89,7 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
 
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var quickStartPrompts: MutableList<QuickStartMySitePrompts>
-    private lateinit var result: MutableList<QuickStartUpdate>
+    private lateinit var result: MutableList<MySiteCardAndItem.Card.QuickStartCard?>
     private val siteLocalId = 1
     private val quickStartType = NewSiteQuickStartType
 
@@ -104,7 +100,9 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
         site = SiteModel()
         site.id = siteLocalId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(appPrefsWrapper.getLastSelectedQuickStartTypeForSite(any())).thenReturn(NewSiteQuickStartType)
+        whenever(appPrefsWrapper.getLastSelectedQuickStartTypeForSite(any())).thenReturn(
+            NewSiteQuickStartType
+        )
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         quickStartRepository = QuickStartRepository(
             testDispatcher(),
@@ -144,15 +142,17 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
 
         isRefreshing = mutableListOf()
         mQuickStartCardViewModelSlice.isRefreshing.observeForever { isRefreshing.add(it) }
+
+        mQuickStartCardViewModelSlice.initialize(testScope())
     }
 
     @Test
     fun `refresh loads model`() = test {
         initStore()
 
-        mQuickStartCardViewModelSlice.refresh()
+        mQuickStartCardViewModelSlice.build(site)
 
-        assertModel()
+
     }
 
     @Test
@@ -162,27 +162,29 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
 
             triggerQSRefreshAfterSameTypeTasksAreComplete()
 
-            assertThat(result.last().categories.map { it.taskType }).isEqualTo(listOf(CUSTOMIZE, GROW))
+            assertThat(result.last()?.taskTypeItems?.map { it.quickStartTaskType }).contains(
+                CUSTOMIZE,
+                GROW
+            )
         }
 
     @Test
     fun `start marks CREATE_SITE as done and loads model`() = test {
         initStore()
 
-        mQuickStartCardViewModelSlice.build(testScope(), site.id)
-        mQuickStartCardViewModelSlice.refresh()
+        mQuickStartCardViewModelSlice.build(site)
 
-        assertModel()
+        assertThat(result.last()?.quickStartCardType).isEqualTo(QuickStartCardType.GET_TO_KNOW_THE_APP)
     }
 
     @Test
     fun `sets active task and shows stylized snackbar when not UPDATE_SITE_TITLE`() = test {
         initStore()
-        mQuickStartCardViewModelSlice.refresh()
 
         quickStartRepository.setActiveTask(PUBLISH_POST)
+        mQuickStartCardViewModelSlice.build(site)
 
-        assertThat(result.last().activeTask).isEqualTo(PUBLISH_POST)
+        assertThat(result.last()?.taskTypeItems?.last()).isEqualTo(PUBLISH_POST)
         assertThat(quickStartPrompts.last()).isEqualTo(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
     }
 
@@ -190,24 +192,21 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
     fun `completeTask marks current active task as done and refreshes model`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
-        mQuickStartCardViewModelSlice.refresh()
+        mQuickStartCardViewModelSlice.build(site)
         val task = PUBLISH_POST
 
         quickStartRepository.setActiveTask(task)
-
         quickStartRepository.completeTask(task)
 
         verify(quickStartStore).setDoneTask(siteLocalId.toLong(), task, true)
-        val update = result.last()
-        assertThat(update.activeTask).isNull()
-        assertThat(update.categories).isNotEmpty
+        assertNull(result.last())
     }
 
     @Test
     fun `completeTask marks current pending task as done and refreshes model`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
-        mQuickStartCardViewModelSlice.refresh()
+        mQuickStartCardViewModelSlice.build(site)
         val task = PUBLISH_POST
 
         quickStartRepository.setActiveTask(task)
@@ -215,101 +214,30 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
         quickStartRepository.completeTask(task)
 
         verify(quickStartStore).setDoneTask(siteLocalId.toLong(), task, true)
-        val update = result.last()
-        assertThat(update.activeTask).isNull()
-        assertThat(update.categories).isNotEmpty
+        assertNull(result.last())
     }
 
     @Test
-    fun `requestNextStepOfTask clears current active task`() = test {
-        initQuickStartInProgress()
-
-        quickStartRepository.setActiveTask(QuickStartStore.QuickStartNewSiteTask.FOLLOW_SITE)
-        quickStartRepository.requestNextStepOfTask(QuickStartStore.QuickStartNewSiteTask.FOLLOW_SITE)
-
-        val update = result.last()
-        assertThat(update.activeTask).isNull()
-    }
-
-    @Test
-    fun `requestNextStepOfTask does not proceed if the active task is different`() = test {
-        initQuickStartInProgress()
-
-        quickStartRepository.setActiveTask(PUBLISH_POST)
-        quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
-
-        verifyNoInteractions(eventBus)
-        val update = result.last()
-        assertThat(update.activeTask).isEqualTo(PUBLISH_POST)
-    }
-
-    @Test
-    fun `clearActiveTask clears current active task`() = test {
-        initQuickStartInProgress()
-
-        quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
-        quickStartRepository.clearActiveTask()
-
-        val update = result.last()
-        assertThat(update.activeTask).isNull()
-    }
-
-    @Test
-    fun `given uncompleted task, when quick start notice button action is clicked, then the task is marked active`() =
+    fun `given quick start available for site, when source is refreshed, then non empty categories returned`() =
         test {
-            initStore(nextUncompletedTask = PUBLISH_POST)
-            quickStartRepository.checkAndShowQuickStartNotice()
+            whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+            initStore()
 
-            snackbars.last().buttonAction.invoke()
+            mQuickStartCardViewModelSlice.build(site)
 
-            assertThat(result.last().activeTask).isEqualTo(PUBLISH_POST)
+            assertNotNull(result.last())
         }
 
     @Test
-    fun `when source is invoked, then refresh is false`() = test {
-        initBuild()
+    fun `given quick start not available for site, when source is refreshed, then empty categories returned`() =
+        test {
+            whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
+            initStore()
 
-        assertThat(isRefreshing.last()).isFalse
-    }
+            mQuickStartCardViewModelSlice.build(site)
 
-    @Test
-    fun `when data has been refreshed, then refresh is set to false`() = test {
-        initStore()
-
-        val updatedSiteId = 2
-        site.id = updatedSiteId
-        site.showOnFront = ShowOnFront.POSTS.value
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        mQuickStartCardViewModelSlice.refresh.observeForever { isRefreshing.add(it) }
-
-        mQuickStartCardViewModelSlice.build(testScope(), site.id)
-
-        mQuickStartCardViewModelSlice.refresh()
-
-        assertThat(isRefreshing.last()).isFalse
-    }
-
-    @Test
-    fun `given quick start available for site, when source is refreshed, then non empty categories returned`() = test {
-        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
-        initStore()
-
-        mQuickStartCardViewModelSlice.refresh()
-
-        val update = result.last()
-        assertThat(update.categories).isNotEmpty
-    }
-
-    @Test
-    fun `given quick start not available for site, when source is refreshed, then empty categories returned`() = test {
-        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
-        initStore()
-
-        mQuickStartCardViewModelSlice.refresh()
-
-        val update = result.last()
-        assertThat(update.categories).isEmpty()
-    }
+            assertNull(result.last())
+        }
 
     private fun triggerQSRefreshAfterSameTypeTasksAreComplete() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
@@ -317,26 +245,36 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
         val task = PUBLISH_POST
         quickStartRepository.setActiveTask(task)
         quickStartRepository.completeTask(task)
-        mQuickStartCardViewModelSlice.refresh()
-    }
-
-    private suspend fun initQuickStartInProgress() {
-        initStore()
-        mQuickStartCardViewModelSlice.refresh()
+        mQuickStartCardViewModelSlice.build(site)
     }
 
     private suspend fun initStore(
         nextUncompletedTask: QuickStartTask? = null
     ) {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartType.isQuickStartInProgress(quickStartStore, siteLocalId.toLong())).thenReturn(true)
+        whenever(
+            quickStartType.isQuickStartInProgress(
+                quickStartStore,
+                siteLocalId.toLong()
+            )
+        ).thenReturn(true)
         whenever(appPrefsWrapper.isQuickStartNoticeRequired()).thenReturn(true)
-        whenever(quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), CUSTOMIZE)).thenReturn(
+        whenever(
+            quickStartStore.getUncompletedTasksByType(
+                siteLocalId.toLong(),
+                CUSTOMIZE
+            )
+        ).thenReturn(
             listOf(
                 CREATE_SITE
             )
         )
-        whenever(quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), CUSTOMIZE)).thenReturn(
+        whenever(
+            quickStartStore.getCompletedTasksByType(
+                siteLocalId.toLong(),
+                CUSTOMIZE
+            )
+        ).thenReturn(
             listOf(
                 UPDATE_SITE_TITLE
             )
@@ -347,34 +285,19 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
                 GROW
             )
         ).thenReturn(listOf(ENABLE_POST_SHARING))
-        whenever(quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), GROW)).thenReturn(listOf(PUBLISH_POST))
-        whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(quickStartType, siteLocalId.toLong()))
+        whenever(quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), GROW)).thenReturn(
+            listOf(PUBLISH_POST)
+        )
+        whenever(
+            quickStartUtilsWrapper.getNextUncompletedQuickStartTask(
+                quickStartType,
+                siteLocalId.toLong()
+            )
+        )
             .thenReturn(nextUncompletedTask)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormat(anyOrNull())).thenReturn("")
         whenever(resourceProvider.getString(any())).thenReturn("")
         whenever(resourceProvider.getString(any(), any())).thenReturn("")
         whenever(htmlCompat.fromHtml(any(), any())).thenReturn(" ")
-        initBuild()
-    }
-
-    private fun initBuild() {
-        mQuickStartCardViewModelSlice.build(siteLocalId)
-    }
-
-    private fun assertModel() {
-        val quickStartUpdate = result.last()
-        quickStartUpdate.categories.let { categories ->
-            assertThat(categories).hasSize(2)
-            assertThat(categories[0].taskType).isEqualTo(CUSTOMIZE)
-            assertThat(categories[0].uncompletedTasks).containsExactly(CREATE_SITE_TUTORIAL)
-            assertThat(categories[0].completedTasks).containsExactly(QuickStartTaskDetails.UPDATE_SITE_TITLE)
-            assertThat(categories[1].taskType).isEqualTo(GROW)
-            assertThat(categories[1].uncompletedTasks).containsExactly(SHARE_SITE_TUTORIAL)
-            assertThat(categories[1].completedTasks).containsExactly(PUBLISH_POST_TUTORIAL)
-        }
-    }
-
-    companion object {
-        const val ALL_TASKS_COMPLETED_MESSAGE = "All tasks completed!"
     }
 }
