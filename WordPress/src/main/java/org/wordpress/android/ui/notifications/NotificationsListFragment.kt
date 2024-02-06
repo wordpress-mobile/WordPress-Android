@@ -305,12 +305,13 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     /**
      * For displaying the popup of notifications settings
      */
+    @SuppressLint("InflateParams")
     private fun showNotificationActionsPopup(anchorView: View) {
         val popupWindow = PopupWindow(requireContext(), null, R.style.WordPress)
         popupWindow.isOutsideTouchable = true
         popupWindow.elevation = resources.getDimension(R.dimen.popup_over_toolbar_elevation)
         popupWindow.contentView = LayoutInflater.from(requireContext())
-            .inflate(R.layout.notification_actions, null, false).apply {
+            .inflate(R.layout.notification_actions, null).apply {
                 findViewById<View>(R.id.text_mark_all_as_read).setOnClickListener {
                     markAllAsRead()
                     popupWindow.dismiss()
