@@ -30,7 +30,6 @@ import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
-import java.util.Objects
 import javax.inject.Inject
 
 class NotesAdapter(
@@ -286,15 +285,13 @@ class NotesAdapter(
         val mUnreadNotificationView: View
 
         init {
-            mContentView = Objects.requireNonNull(view.findViewById(R.id.note_content_container))
-            mHeaderText = Objects.requireNonNull(view.findViewById(R.id.header_text))
-            mTxtSubject = Objects.requireNonNull(view.findViewById(R.id.note_subject))
-            mTxtSubjectNoticon =
-                Objects.requireNonNull(view.findViewById(R.id.note_subject_noticon))
-            mTxtDetail = Objects.requireNonNull(view.findViewById(R.id.note_detail))
-            mImgAvatar = Objects.requireNonNull(view.findViewById(R.id.note_avatar))
-            mUnreadNotificationView =
-                Objects.requireNonNull(view.findViewById(R.id.notification_unread))
+            mContentView = checkNotNull(view.findViewById(R.id.note_content_container))
+            mHeaderText = checkNotNull(view.findViewById(R.id.header_text))
+            mTxtSubject = checkNotNull(view.findViewById(R.id.note_subject))
+            mTxtSubjectNoticon = checkNotNull(view.findViewById(R.id.note_subject_noticon))
+            mTxtDetail = checkNotNull(view.findViewById(R.id.note_detail))
+            mImgAvatar = checkNotNull(view.findViewById(R.id.note_avatar))
+            mUnreadNotificationView = checkNotNull(view.findViewById(R.id.notification_unread))
             mContentView.setOnClickListener(mOnClickListener)
         }
     }
