@@ -38,20 +38,20 @@ class NotesAdapter(
     context: Context, dataLoadedListener: DataLoadedListener,
     onLoadMoreListener: OnLoadMoreListener?
 ) : RecyclerView.Adapter<NoteViewHolder>() {
-    private val mAvatarSz: Int
-    private val mTextIndentSize: Int
-    private val mDataLoadedListener: DataLoadedListener
-    private val mOnLoadMoreListener: OnLoadMoreListener?
-    private val mNotes = ArrayList<Note>()
-    private val mFilteredNotes = ArrayList<Note>()
+    private val avatarSize: Int
+    private val textIndentSize: Int
+    private val dataLoadedListener: DataLoadedListener
+    private val onLoadMoreListener: OnLoadMoreListener?
+    private val notes = ArrayList<Note>()
+    private val filteredNotes = ArrayList<Note>()
 
     @JvmField
     @Inject
-    var mImageManager: ImageManager? = null
+    var imageManager: ImageManager? = null
 
     @JvmField
     @Inject
-    var mNotificationsUtilsWrapper: NotificationsUtilsWrapper? = null
+    var notificationsUtilsWrapper: NotificationsUtilsWrapper? = null
 
     enum class FILTERS {
         FILTER_ALL,
@@ -73,7 +73,7 @@ class NotesAdapter(
 
     var currentFilter = FILTERS.FILTER_ALL
         private set
-    private var mReloadNotesFromDBTask: ReloadNotesFromDBTask? = null
+    private var reloadNotesFromDBTask: ReloadNotesFromDBTask? = null
 
     interface DataLoadedListener {
         fun onDataLoaded(itemsCount: Int)
@@ -83,7 +83,7 @@ class NotesAdapter(
         fun onLoadMore(timestamp: Long)
     }
 
-    private var mOnNoteClickListener: OnNoteClickListener? = null
+    private var onNoteClickListener: OnNoteClickListener? = null
     fun setFilter(newFilter: FILTERS) {
         currentFilter = newFilter
     }
@@ -92,9 +92,9 @@ class NotesAdapter(
         notes.sortedWith(TimeStampComparator())
         try {
             if (clearBeforeAdding) {
-                mNotes.clear()
+                this.notes.clear()
             }
-            mNotes.addAll(notes)
+            this.notes.addAll(notes)
         } finally {
             myNotifyDatasetChanged()
         }
@@ -102,9 +102,9 @@ class NotesAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     private fun myNotifyDatasetChanged() {
-        buildFilteredNotesList(mFilteredNotes, mNotes, currentFilter)
+        buildFilteredNotesList(filteredNotes, notes, currentFilter)
         notifyDataSetChanged()
-        mDataLoadedListener.onDataLoaded(itemCount)
+        dataLoadedListener.onDataLoaded(itemCount)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -115,22 +115,22 @@ class NotesAdapter(
 
     private fun getNoteAtPosition(position: Int): Note? {
         return if (isValidPosition(position)) {
-            mFilteredNotes[position]
+            filteredNotes[position]
         } else null
     }
 
     private fun isValidPosition(position: Int): Boolean {
-        return position >= 0 && position < mFilteredNotes.size
+        return position >= 0 && position < filteredNotes.size
     }
 
     override fun getItemCount(): Int {
-        return mFilteredNotes.size
+        return filteredNotes.size
     }
 
     @Suppress("CyclomaticComplexMethod", "LongMethod")
     override fun onBindViewHolder(noteViewHolder: NoteViewHolder, position: Int) {
         val note = getNoteAtPosition(position) ?: return
-        noteViewHolder.mContentView.tag = note.id
+        noteViewHolder.contentView.tag = note.id
 
         // Display group header
         val timeGroup = Note.getTimeGroupForTimestamp(note.timestamp)
@@ -142,24 +142,24 @@ class NotesAdapter(
             )
         }
         if (previousTimeGroup != null && previousTimeGroup == timeGroup) {
-            noteViewHolder.mHeaderText.visibility = View.GONE
+            noteViewHolder.headerText.visibility = View.GONE
         } else {
-            noteViewHolder.mHeaderText.visibility = View.VISIBLE
+            noteViewHolder.headerText.visibility = View.VISIBLE
             if (timeGroup == NoteTimeGroup.GROUP_TODAY) {
-                noteViewHolder.mHeaderText.setText(R.string.stats_timeframe_today)
+                noteViewHolder.headerText.setText(R.string.stats_timeframe_today)
             } else if (timeGroup == NoteTimeGroup.GROUP_YESTERDAY) {
-                noteViewHolder.mHeaderText.setText(R.string.stats_timeframe_yesterday)
+                noteViewHolder.headerText.setText(R.string.stats_timeframe_yesterday)
             } else if (timeGroup == NoteTimeGroup.GROUP_OLDER_TWO_DAYS) {
-                noteViewHolder.mHeaderText.setText(R.string.older_two_days)
+                noteViewHolder.headerText.setText(R.string.older_two_days)
             } else if (timeGroup == NoteTimeGroup.GROUP_OLDER_WEEK) {
-                noteViewHolder.mHeaderText.setText(R.string.older_last_week)
+                noteViewHolder.headerText.setText(R.string.older_last_week)
             } else {
-                noteViewHolder.mHeaderText.setText(R.string.older_month)
+                noteViewHolder.headerText.setText(R.string.older_month)
             }
         }
 
         // Subject is stored in db as html to preserve text formatting
-        var noteSubjectSpanned: Spanned = note.getFormattedSubject(mNotificationsUtilsWrapper)
+        var noteSubjectSpanned: Spanned = note.getFormattedSubject(notificationsUtilsWrapper)
         // Trim the '\n\n' added by HtmlCompat.fromHtml(...)
         noteSubjectSpanned = noteSubjectSpanned.subSequence(
             0,
@@ -171,52 +171,52 @@ class NotesAdapter(
             NoteBlockClickableSpan::class.java
         )
         for (span in spans) {
-            span.enableColors(noteViewHolder.mContentView.context)
+            span.enableColors(noteViewHolder.contentView.context)
         }
-        noteViewHolder.mTxtSubject.text = noteSubjectSpanned
+        noteViewHolder.textSubject.text = noteSubjectSpanned
         val noteSubjectNoticon = note.commentSubjectNoticon
         if (!TextUtils.isEmpty(noteSubjectNoticon)) {
-            val parent = noteViewHolder.mTxtSubject.parent
+            val parent = noteViewHolder.textSubject.parent
             // Fix position of the subject noticon in the RtL mode
             if (parent is ViewGroup) {
                 val textDirection = if (BidiFormatter.getInstance()
-                        .isRtl(noteViewHolder.mTxtSubject.text)
+                        .isRtl(noteViewHolder.textSubject.text)
                 ) ViewCompat.LAYOUT_DIRECTION_RTL else ViewCompat.LAYOUT_DIRECTION_LTR
                 ViewCompat.setLayoutDirection(parent, textDirection)
             }
             // mirror noticon in the rtl mode
             if (RtlUtils.isRtl(noteViewHolder.itemView.context)) {
-                noteViewHolder.mTxtSubjectNoticon.scaleX = -1f
+                noteViewHolder.textSubjectNoticon.scaleX = -1f
             }
-            CommentUtils.indentTextViewFirstLine(noteViewHolder.mTxtSubject, mTextIndentSize)
-            noteViewHolder.mTxtSubjectNoticon.text = noteSubjectNoticon
-            noteViewHolder.mTxtSubjectNoticon.visibility = View.VISIBLE
+            CommentUtils.indentTextViewFirstLine(noteViewHolder.textSubject, textIndentSize)
+            noteViewHolder.textSubjectNoticon.text = noteSubjectNoticon
+            noteViewHolder.textSubjectNoticon.visibility = View.VISIBLE
         } else {
-            noteViewHolder.mTxtSubjectNoticon.visibility = View.GONE
+            noteViewHolder.textSubjectNoticon.visibility = View.GONE
         }
         val noteSnippet = note.commentSubject
         if (!TextUtils.isEmpty(noteSnippet)) {
-            handleMaxLines(noteViewHolder.mTxtSubject, noteViewHolder.mTxtDetail)
-            noteViewHolder.mTxtDetail.text = noteSnippet
-            noteViewHolder.mTxtDetail.visibility = View.VISIBLE
+            handleMaxLines(noteViewHolder.textSubject, noteViewHolder.textDetail)
+            noteViewHolder.textDetail.text = noteSnippet
+            noteViewHolder.textDetail.visibility = View.VISIBLE
         } else {
-            noteViewHolder.mTxtDetail.visibility = View.GONE
+            noteViewHolder.textDetail.visibility = View.GONE
         }
-        val avatarUrl = GravatarUtils.fixGravatarUrl(note.iconURL, mAvatarSz)
-        mImageManager!!.loadIntoCircle(
-            noteViewHolder.mImgAvatar,
+        val avatarUrl = GravatarUtils.fixGravatarUrl(note.iconURL, avatarSize)
+        imageManager!!.loadIntoCircle(
+            noteViewHolder.imageAvatar,
             ImageType.AVATAR_WITH_BACKGROUND,
             avatarUrl
         )
         if (note.isUnread) {
-            noteViewHolder.mUnreadNotificationView.visibility = View.VISIBLE
+            noteViewHolder.unreadNotificationView.visibility = View.VISIBLE
         } else {
-            noteViewHolder.mUnreadNotificationView.visibility = View.GONE
+            noteViewHolder.unreadNotificationView.visibility = View.GONE
         }
 
         // request to load more comments when we near the end
-        if (mOnLoadMoreListener != null && position >= itemCount - 1) {
-            mOnLoadMoreListener.onLoadMore(note.timestamp)
+        if (onLoadMoreListener != null && position >= itemCount - 1) {
+            onLoadMoreListener.onLoadMore(note.timestamp)
         }
         val headerMarginTop: Int
         val context = noteViewHolder.itemView.context
@@ -227,9 +227,9 @@ class NotesAdapter(
             context.resources
                 .getDimensionPixelSize(R.dimen.notifications_header_margin_top_position_n)
         }
-        val layoutParams = noteViewHolder.mHeaderText.layoutParams as MarginLayoutParams
+        val layoutParams = noteViewHolder.headerText.layoutParams as MarginLayoutParams
         layoutParams.topMargin = headerMarginTop
-        noteViewHolder.mHeaderText.layoutParams = layoutParams
+        noteViewHolder.headerText.layoutParams = layoutParams
     }
 
     private fun handleMaxLines(subject: TextView, detail: TextView) {
@@ -247,20 +247,20 @@ class NotesAdapter(
     }
 
     fun setOnNoteClickListener(mNoteClickListener: OnNoteClickListener?) {
-        mOnNoteClickListener = mNoteClickListener
+        onNoteClickListener = mNoteClickListener
     }
 
     fun cancelReloadNotesTask() {
-        if (mReloadNotesFromDBTask != null && mReloadNotesFromDBTask!!.status != AsyncTask.Status.FINISHED) {
-            mReloadNotesFromDBTask!!.cancel(true)
-            mReloadNotesFromDBTask = null
+        if (reloadNotesFromDBTask != null && reloadNotesFromDBTask!!.status != AsyncTask.Status.FINISHED) {
+            reloadNotesFromDBTask!!.cancel(true)
+            reloadNotesFromDBTask = null
         }
     }
 
     fun reloadNotesFromDBAsync() {
         cancelReloadNotesTask()
-        mReloadNotesFromDBTask = ReloadNotesFromDBTask()
-        mReloadNotesFromDBTask!!.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+        reloadNotesFromDBTask = ReloadNotesFromDBTask()
+        reloadNotesFromDBTask!!.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -270,51 +270,51 @@ class NotesAdapter(
         }
 
         override fun onPostExecute(notes: ArrayList<Note>) {
-            mNotes.clear()
-            mNotes.addAll(notes)
+            this@NotesAdapter.notes.clear()
+            this@NotesAdapter.notes.addAll(notes)
             myNotifyDatasetChanged()
         }
     }
 
     inner class NoteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val mContentView: View
-        val mHeaderText: TextView
-        val mTxtSubject: TextView
-        val mTxtSubjectNoticon: TextView
-        val mTxtDetail: TextView
-        val mImgAvatar: ImageView
-        val mUnreadNotificationView: View
+        val contentView: View
+        val headerText: TextView
+        val textSubject: TextView
+        val textSubjectNoticon: TextView
+        val textDetail: TextView
+        val imageAvatar: ImageView
+        val unreadNotificationView: View
 
         init {
-            mContentView = checkNotNull(view.findViewById(R.id.note_content_container))
-            mHeaderText = checkNotNull(view.findViewById(R.id.header_text))
-            mTxtSubject = checkNotNull(view.findViewById(R.id.note_subject))
-            mTxtSubjectNoticon = checkNotNull(view.findViewById(R.id.note_subject_noticon))
-            mTxtDetail = checkNotNull(view.findViewById(R.id.note_detail))
-            mImgAvatar = checkNotNull(view.findViewById(R.id.note_avatar))
-            mUnreadNotificationView = checkNotNull(view.findViewById(R.id.notification_unread))
-            mContentView.setOnClickListener(mOnClickListener)
+            contentView = checkNotNull(view.findViewById(R.id.note_content_container))
+            headerText = checkNotNull(view.findViewById(R.id.header_text))
+            textSubject = checkNotNull(view.findViewById(R.id.note_subject))
+            textSubjectNoticon = checkNotNull(view.findViewById(R.id.note_subject_noticon))
+            textDetail = checkNotNull(view.findViewById(R.id.note_detail))
+            imageAvatar = checkNotNull(view.findViewById(R.id.note_avatar))
+            unreadNotificationView = checkNotNull(view.findViewById(R.id.notification_unread))
+            contentView.setOnClickListener(onClickListener)
         }
     }
 
-    private val mOnClickListener = View.OnClickListener { v ->
-        if (mOnNoteClickListener != null && v.tag is String) {
-            mOnNoteClickListener!!.onClickNote(v.tag as String)
+    private val onClickListener = View.OnClickListener { view ->
+        if (onNoteClickListener != null && view.tag is String) {
+            onNoteClickListener!!.onClickNote(view.tag as String)
         }
     }
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
-        mDataLoadedListener = dataLoadedListener
-        mOnLoadMoreListener = onLoadMoreListener
+        this.dataLoadedListener = dataLoadedListener
+        this.onLoadMoreListener = onLoadMoreListener
 
         // this is on purpose - we don't show more than a hundred or so notifications at a time so no need to set
         // stable IDs. This helps prevent crashes in case a note comes with no ID (we've code checking for that
         // elsewhere, but telling the RecyclerView.Adapter the notes have stable Ids and then failing to provide them
         // will make things go south as in https://github.com/wordpress-mobile/WordPress-Android/issues/8741
         setHasStableIds(false)
-        mAvatarSz = context.resources.getDimension(R.dimen.notifications_avatar_sz).toInt()
-        mTextIndentSize =
+        avatarSize = context.resources.getDimension(R.dimen.notifications_avatar_sz).toInt()
+        textIndentSize =
             context.resources.getDimensionPixelSize(R.dimen.notifications_text_indent_sz)
     }
 
