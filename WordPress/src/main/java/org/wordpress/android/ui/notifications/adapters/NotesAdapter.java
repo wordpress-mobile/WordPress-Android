@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
-import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener;
@@ -228,15 +227,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             } else {
                 noteViewHolder.mHeaderText.setText(R.string.older_month);
             }
-        }
-
-        CommentStatus commentStatus = CommentStatus.ALL;
-        if (note.getCommentStatus() == CommentStatus.UNAPPROVED) {
-            commentStatus = CommentStatus.UNAPPROVED;
-        }
-
-        if (!TextUtils.isEmpty(note.getLocalStatus())) {
-            commentStatus = CommentStatus.fromString(note.getLocalStatus());
         }
 
         // Subject is stored in db as html to preserve text formatting
