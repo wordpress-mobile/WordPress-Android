@@ -338,18 +338,16 @@ class NotesAdapter(
                     FILTERS.FILTER_COMMENT -> if (currentNote.isCommentType) {
                         filteredNotes.add(currentNote)
                     }
-
                     FILTERS.FILTER_FOLLOW -> if (currentNote.isFollowType) {
                         filteredNotes.add(currentNote)
                     }
-
                     FILTERS.FILTER_UNREAD -> if (currentNote.isUnread) {
                         filteredNotes.add(currentNote)
                     }
-
                     FILTERS.FILTER_LIKE -> if (currentNote.isLikeType) {
                         filteredNotes.add(currentNote)
                     }
+                    else -> Unit
                 }
             }
         }
