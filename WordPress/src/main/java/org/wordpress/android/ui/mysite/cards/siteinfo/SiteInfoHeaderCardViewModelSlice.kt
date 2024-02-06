@@ -83,11 +83,12 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
         this.scope = viewModelScope
     }
 
-    fun onResume() {
-        val selectedSite = selectedSiteRepository.getSelectedSite()
-        if (selectedSite != null) {
-            buildCard(null, null, siteModel = selectedSite)
-        }
+    fun onResume(siteModel: SiteModel) {
+        buildCard(null, null, siteModel = siteModel)
+    }
+
+    fun onSiteChanged(siteModel: SiteModel) {
+        buildCard(null, null, siteModel = siteModel)
     }
 
     private fun buildCard(

@@ -86,6 +86,11 @@ class DashboardItemsViewModelSlice @Inject constructor(
         else uiModel.postValue(emptyList())
     }
 
+    fun onSiteChanged(site: SiteModel) {
+        if (shouldShowSiteItems(site)) buildCards(site)
+        else uiModel.postValue(emptyList())
+    }
+
     fun onRefresh(site: SiteModel) {
         if (shouldShowSiteItems(site)) buildCards(site)
         else uiModel.postValue(emptyList())

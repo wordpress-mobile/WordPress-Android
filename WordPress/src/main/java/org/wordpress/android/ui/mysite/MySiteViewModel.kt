@@ -163,7 +163,6 @@ class MySiteViewModel @Inject constructor(
     val state: LiveData<MySiteUiState> =
         selectedSiteRepository.siteSelected.switchMap { _ ->
             isSiteSelected = true
-            dashboardCardsViewModelSlice.onSiteChanged()
             resetShownTrackers()
             val result = MediatorLiveData<SiteIdToState>()
 
@@ -277,8 +276,8 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let {
             dashboardCardsViewModelSlice.onResume(it)
             dashboardItemsViewModelSlice.onResume(it)
-            siteInfoHeaderCardViewModelSlice.onResume()
-        }?: run {
+            siteInfoHeaderCardViewModelSlice.onResume(it)
+        } ?: run {
             accountDataViewModelSlice.onResume()
         }
     }
@@ -374,8 +373,14 @@ class MySiteViewModel @Inject constructor(
             val siteLocalId = it.id.toLong()
             val lastSelectedQuickStartType = appPrefsWrapper.getLastSelectedQuickStartTypeForSite(siteLocalId)
             quickStartRepository.checkAndSetQuickStartType(lastSelectedQuickStartType == NewSiteQuickStartType)
+            dashboardCardsViewModelSlice.onSiteChanged(it)
+            dashboardItemsViewModelSlice.onSiteChanged(it)
+            siteInfoHeaderCardViewModelSlice.onSiteChanged(it)
+        } ?: run {
+            accountDataViewModelSlice.onResume()
         }
     }
+
 
     fun performFirstStepAfterSiteCreation(
         isSiteTitleTaskCompleted: Boolean,

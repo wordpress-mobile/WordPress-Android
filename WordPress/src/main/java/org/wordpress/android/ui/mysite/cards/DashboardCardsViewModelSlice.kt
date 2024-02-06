@@ -182,11 +182,9 @@ class DashboardCardsViewModelSlice @Inject constructor(
         else uiModel.postValue(emptyList())
     }
 
-    fun onSiteChanged() {
-        selectedSiteRepository.getSelectedSite()?.let {
-            if(showDashboardCards(it))buildCards(it)
-            else uiModel.postValue(emptyList())
-        }
+    fun onSiteChanged(site: SiteModel) {
+        if (showDashboardCards(site)) buildCards(site)
+        else uiModel.postValue(emptyList())
     }
 
     fun onRefresh(site: SiteModel) {

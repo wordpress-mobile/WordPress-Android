@@ -209,7 +209,7 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSite)
 
         dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.onSiteChanged()
+        dashboardCardsViewModelSlice.onSiteChanged(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(jpMigrationSuccessCardViewModelSlice, atMost(1)).buildCard()
@@ -232,7 +232,7 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSite)
 
         dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.onSiteChanged()
+        dashboardCardsViewModelSlice.onSiteChanged(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(jpMigrationSuccessCardViewModelSlice, never()).buildCard()

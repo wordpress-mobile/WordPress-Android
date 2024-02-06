@@ -13,7 +13,6 @@ import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -467,17 +466,6 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when selectedSite is null, then card is not built`() {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
-
-        clearInvocations(siteInfoHeaderCardBuilder)
-
-        viewModelSlice.onResume()
-
-        verifyNoInteractions(siteInfoHeaderCardBuilder)
-    }
-
-    @Test
     fun `when selectedSite is not null, then card is built`() {
         val siteModel = mock<SiteModel>().apply {
             id = 1
@@ -485,11 +473,9 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
             url = "https://site.wordpress.com"
         }
 
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
-
         clearInvocations(siteInfoHeaderCardBuilder)
 
-        viewModelSlice.onResume()
+        viewModelSlice.onResume(siteModel)
 
         verify(siteInfoHeaderCardBuilder).buildSiteInfoCard(any())
     }
