@@ -1,12 +1,19 @@
 package org.wordpress.android.ui.notifications
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import org.greenrobot.eventbus.EventBus
+import org.wordpress.android.datasets.NotificationsTable
+import org.wordpress.android.models.Note
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NOTIFICATIONS
+import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsChanged
+import org.wordpress.android.ui.notifications.utils.NotificationsActions
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.viewmodel.Event
@@ -19,7 +26,8 @@ class NotificationsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
-    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
+    private val gcmMessageHandler: GCMMessageHandler
 
 ) : ScopedViewModel(mainDispatcher) {
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
@@ -54,5 +62,19 @@ class NotificationsListViewModel @Inject constructor(
 
     fun resetNotificationsPermissionWarningDismissState() {
         appPrefsWrapper.notificationPermissionsWarningDismissed = false
+    }
+
+    fun markNoteAsRead(vararg notes: Note, context: Context) {
+        notes.filter { it.isUnread }
+            .map {
+                gcmMessageHandler.removeNotificationWithNoteIdFromSystemBar(context, it.id)
+                NotificationsActions.markNoteAsRead(it)
+                it.setRead()
+                it
+            }
+            .let {
+                NotificationsTable.saveNotes(it, false)
+                EventBus.getDefault().post(NotificationsChanged())
+            }
     }
 }

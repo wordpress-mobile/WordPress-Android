@@ -15,6 +15,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -87,6 +88,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     private static final String ARG_TITLE = "activityTitle";
     private static final String DOMAIN_WPCOM = "wordpress.com";
 
+    private NotificationsListViewModel mViewModel;
+
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject GCMMessageHandler mGCMMessageHandler;
@@ -108,6 +111,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         ((WordPress) getApplication()).component().inject(this);
         AppLog.i(AppLog.T.NOTIFS, "Creating NotificationsDetailActivity");
 
+        mViewModel = new ViewModelProvider(this).get(NotificationsListViewModel.class);
         mBinding = NotificationsDetailActivityBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
@@ -332,15 +336,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         finish();
     }
 
-    private void markNoteAsRead(Note note) {
-        mGCMMessageHandler.removeNotificationWithNoteIdFromSystemBar(this, note.getId());
-        // mark the note as read if it's unread
-        if (note.isUnread()) {
-            NotificationsActions.markNoteAsRead(note);
-            note.setRead();
-            NotificationsTable.saveNote(note);
-            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-        }
+    private void markNoteAsRead(@NonNull Note... note) {
+        mViewModel.markNoteAsRead(note, this);
     }
 
     private void setActionBarTitleForNote(Note note) {
