@@ -11,6 +11,7 @@ import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.AccountAction;
@@ -356,7 +357,7 @@ public class AccountStore extends Store {
     }
 
     public static class WebauthnChallengeReceived extends OnChanged<AuthenticationError> {
-        public String response;
+        public JSONObject mJsonResponse;
         public String mUserId;
     }
 
@@ -1411,10 +1412,10 @@ public class AccountStore extends Store {
 
     private void requestWebauthnChallenge(final StartWebauthnChallengePayload payload) {
         mAuthenticator.makeRequest(payload.mUserId, payload.mWebauthnNonce,
-                (Response.Listener<String>) response -> {
+                (Response.Listener<JSONObject>) response -> {
                     WebauthnChallengeReceived event = new WebauthnChallengeReceived();
                     event.mUserId = payload.mUserId;
-                    event.response = response;
+                    event.mJsonResponse = response;
                     emitChange(event);
                 },
                 error -> {
