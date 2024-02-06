@@ -1,14 +1,10 @@
 package org.wordpress.android.ui.reader
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -48,12 +44,11 @@ import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.viewmodel.observeEvent
-import org.wordpress.android.widgets.QuickStartFocusPoint
 import java.util.EnumSet
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, ScrollableViewInitializedListener {
+class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableViewInitializedListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -70,14 +65,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: ReaderViewModel
 
-    private var searchMenuItem: MenuItem? = null
-    private var settingsMenuItem: MenuItem? = null
-    private var settingsMenuItemFocusPoint: QuickStartFocusPoint? = null
-
     private var binding: ReaderFragmentLayoutBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        requireActivity().addMenuProvider(this, viewLifecycleOwner)
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
             initTopAppBar()
             initViewModel(savedInstanceState)
@@ -86,9 +76,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
 
     override fun onDestroyView() {
         super.onDestroyView()
-        searchMenuItem = null
-        settingsMenuItem = null
-        settingsMenuItemFocusPoint = null
         binding = null
     }
 
@@ -100,36 +87,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
     override fun onPause() {
         super.onPause()
         activity?.let { viewModel.onScreenInBackground(it.isChangingConfigurations) }
-    }
-
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        menuInflater.inflate(R.menu.reader_home, menu)
-        menu.findItem(R.id.menu_search).apply {
-            searchMenuItem = this
-            this.isVisible = viewModel.uiState.value?.searchMenuItemUiState?.isVisible ?: false
-        }
-        menu.findItem(R.id.menu_settings).apply {
-            settingsMenuItem = this
-            settingsMenuItemFocusPoint = this.actionView?.findViewById(R.id.menu_quick_start_focus_point)
-            this.isVisible = viewModel.uiState.value?.settingsMenuItemUiState?.isVisible ?: false
-            settingsMenuItemFocusPoint?.isVisible =
-                viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
-            this.actionView?.setOnClickListener { viewModel.onSettingsActionClicked() }
-        }
-    }
-
-    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
-        R.id.menu_search -> {
-            viewModel.onSearchActionClicked()
-            true
-        }
-
-        R.id.menu_settings -> {
-            viewModel.onSettingsActionClicked()
-            true
-        }
-
-        else -> false
     }
 
     private fun ReaderFragmentLayoutBinding.initTopAppBar() {
@@ -169,10 +126,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
 
         viewModel.showSearch.observeEvent(viewLifecycleOwner) {
             ReaderActivityLauncher.showReaderSearch(context)
-        }
-
-        viewModel.showSettings.observeEvent(viewLifecycleOwner) {
-            ReaderActivityLauncher.showReaderSubs(context)
         }
 
         viewModel.showReaderInterests.observeEvent(viewLifecycleOwner) {
@@ -225,12 +178,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), MenuProvider, 
                 initContentContainer(uiState)
             }
         }
-        // TODO As part of Reader IA changes this view is going to be replaced
-        //                uiHelpers.updateVisibility(tabLayout, uiState.tabLayoutVisible)
-        searchMenuItem?.isVisible = uiState.searchMenuItemUiState.isVisible
-        settingsMenuItem?.isVisible = uiState.settingsMenuItemUiState.isVisible
-        settingsMenuItemFocusPoint?.isVisible =
-            viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
     }
 
     private fun initContentContainer(uiState: ContentUiState) {
