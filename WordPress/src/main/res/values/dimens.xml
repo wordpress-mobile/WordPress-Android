@@ -189,6 +189,7 @@
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="avatar_sz_extra_large">72dp</dimen>
     <dimen name="avatar_sz_login_epilogue">72dp</dimen>
+    <dimen name="avatar_sz_extra_medium_with_padding">28dp</dimen>
     <dimen name="avatar_sz_extra_small_with_padding">26dp</dimen>
     <dimen name="avatar_sz_extra_extra_small_with_padding">22dp</dimen>
     <dimen name="avatar_background_padding">1dp</dimen>
@@ -276,6 +277,7 @@
     <dimen name="notifications_content_margin">0dp</dimen>
     <dimen name="notifications_avatar_sz">48dp</dimen>
     <dimen name="notifications_avatar_margin_start">18dp</dimen>
+    <dimen name="notifications_avatar_size">28dp</dimen>
     <dimen name="notifications_text_indent_sz">22dp</dimen>
     <dimen name="notification_comment_padded_frame_bg_offset">14dp</dimen>  <!-- results in 6dp border -->
     <dimen name="notification_comment_frame_bg_border_width">6dp</dimen>

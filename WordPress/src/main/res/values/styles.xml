@@ -638,6 +638,14 @@
         <item name="android:textColor">?attr/wpColorTextSecondary</item>
     </style>
 
+    <style name="Notifications.Avatar.OvalSurfaceBackground" parent="ReaderImageView">
+        <item name="android:layout_width">@dimen/avatar_sz_extra_medium_with_padding</item>
+        <item name="android:layout_height">@dimen/avatar_sz_extra_medium_with_padding</item>
+        <item name="android:padding">@dimen/avatar_background_padding</item>
+        <item name="android:background">@drawable/bg_oval_surface</item>
+        <item name="android:foreground">@drawable/post_detail_avatar_internal_border</item>
+    </style>
+
     <style name="MyProfileRow">
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:layout_width">match_parent</item>
