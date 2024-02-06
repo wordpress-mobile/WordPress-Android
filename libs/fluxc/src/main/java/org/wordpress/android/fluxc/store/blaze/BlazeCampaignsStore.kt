@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeTargetingRestCl
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.FakeBlazeTargetingRestClient
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
+import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingTopicEntity
 import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.store.Store.OnChangedError
 import org.wordpress.android.fluxc.tools.CoroutineEngine
@@ -117,17 +118,24 @@ class BlazeCampaignsStore @Inject constructor(
     }
 
     suspend fun fetchBlazeTargetingTopics(
+        site: SiteModel,
         locale: String = Locale.getDefault().language
     ) = coroutineEngine.withDefaultContext(
         AppLog.T.API,
         this,
         "fetch blaze topics"
     ) {
-        fakeTargetingRestClient.fetchBlazeTopics(locale).let { payload ->
+        targetingRestClient.fetchBlazeTopics(site, locale).let { payload ->
             when {
                 payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
                 else -> {
-                    targetingDao.replaceTopics(payload.data)
+                    targetingDao.replaceTopics(payload.data?.map {
+                        BlazeTargetingTopicEntity(
+                            id = it.id,
+                            description = it.description,
+                            locale = locale
+                        )
+                    }.orEmpty())
                     BlazeTargetingResult(payload.data)
                 }
             }
@@ -136,7 +144,7 @@ class BlazeCampaignsStore @Inject constructor(
 
     fun observeBlazeTargetingTopics(
         locale: String = Locale.getDefault().language
-    ) = targetingDao.observeTopics(locale)
+    ) = targetingDao.observeTopics(locale).map { topics -> topics.map { it.toDomainModel() } }
 
     suspend fun fetchBlazeTargetingLanguages(
         locale: String = Locale.getDefault().language
@@ -190,15 +198,16 @@ class BlazeCampaignsStore @Inject constructor(
         this,
         "fetch blaze ad suggestions"
     ) {
-        fakeTargetingRestClient.fetchBlazeAdSuggestions(siteModel.siteId, productId).let { payload ->
-            when {
-                payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
-                else -> {
-                    campaignsDao.replaceAdSuggestions(payload.data)
-                    BlazeTargetingResult(payload.data)
+        fakeTargetingRestClient.fetchBlazeAdSuggestions(siteModel.siteId, productId)
+            .let { payload ->
+                when {
+                    payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
+                    else -> {
+                        campaignsDao.replaceAdSuggestions(payload.data)
+                        BlazeTargetingResult(payload.data)
+                    }
                 }
             }
-        }
     }
 
     suspend fun getBlazeAdSuggestions(
