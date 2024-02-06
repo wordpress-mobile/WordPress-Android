@@ -7,6 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
+        android:contentDescription="@string/more"
         android:padding="@dimen/notifications_item_action_padding"
         android:src="@drawable/more_vertical" />
 </FrameLayout>
