@@ -1,6 +1,7 @@
 GIT
   remote: https://github.com/Automattic/dangermattic
-  revision: 9ba0e5824e66e16526897a4583c9b900f9b8635c
+  revision: a05023fa2b877c0d778c14bfff891c1318dd9f63
+  ref: iangmaia/common-utils
   specs:
     danger-dangermattic (0.0.1)
       danger (~> 9.3)
