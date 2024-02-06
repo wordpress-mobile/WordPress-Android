@@ -28,6 +28,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -1261,7 +1262,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
+            public boolean onMenuItemActionCollapse(@NonNull final MenuItem item) {
+                if (getActivity() instanceof ReaderSearchActivity) {
+                    ((ReaderSearchActivity) requireActivity()).finishWithRefreshSubscriptionsResult();
+                }
                 requireActivity().finish();
                 return false;
             }
