@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
+import org.wordpress.android.fluxc.model.blaze.BlazeTargetingDevice
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingTopic
 
 @Dao
@@ -63,7 +64,9 @@ data class BlazeTargetingDeviceEntity(
     @PrimaryKey val id: String,
     val name: String,
     val locale: String
-)
+) {
+    fun toDomainModel() = BlazeTargetingDevice(id, name)
+}
 
 @Entity(tableName = "BlazeTargetingTopics")
 data class BlazeTargetingTopicEntity(
