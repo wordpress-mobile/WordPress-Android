@@ -227,11 +227,8 @@ public class ReaderBlogFragment extends Fragment
                     ReaderTracker.SOURCE_SETTINGS
             );
             mAdapter.setBlogClickListener(this);
-            mAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
-                @Override
-                public void onDataLoaded(boolean isEmpty) {
-                    checkEmptyView();
-                }
+            mAdapter.setDataLoadedListener(isEmpty -> {
+                checkEmptyView();
             });
         }
         return mAdapter;
