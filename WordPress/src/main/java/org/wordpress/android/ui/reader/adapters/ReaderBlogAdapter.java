@@ -100,11 +100,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         new LoadBlogsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    @Nullable
-    public ReaderBlogList getItems() {
-        return mFollowedBlogs;
-    }
-
     private ReaderBlogType getBlogType() {
         return mBlogType;
     }

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderBlog;
-import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
