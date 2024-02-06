@@ -89,7 +89,7 @@ class NotesAdapter(
     }
 
     fun addAll(notes: List<Note>, clearBeforeAdding: Boolean) {
-        notes.sort(TimeStampComparator())
+        notes.sortedWith(TimeStampComparator())
         try {
             if (clearBeforeAdding) {
                 mNotes.clear()
