@@ -1578,6 +1578,8 @@
     <string name="notifications_tab_dialog_main_off_title">To see notifications on notifications tab for this site, turn Notifications for this site on.</string>
     <string name="notifications_tab_dialog_main_off_message">Turning Notifications for this site off will disable notifications display on notifications tab for this site. You can fine-tune which kind of notification you see after turning Notifications for this site on.</string>
 
+    <string name="notifications_action_mark_all_as_read">Mark all as read</string>
+
     <string name="main_switch_default_title_on">On</string>
     <string name="main_switch_default_title_off">Off</string>
 
