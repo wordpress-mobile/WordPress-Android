@@ -38,4 +38,8 @@ class JetpackBadgeViewModelSlice @Inject constructor(
         jetpackBrandingUtils.trackBadgeTapped(screen)
         _onNavigation.value = Event(SiteNavigationAction.OpenJetpackPoweredBottomSheet)
     }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
+    }
 }

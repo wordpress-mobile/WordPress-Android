@@ -21,7 +21,6 @@ import org.wordpress.android.ui.mysite.cards.plans.PlansCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinksItemViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -39,8 +38,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
     private val quickLinksItemViewModelSlice: QuickLinksItemViewModelSlice,
     private val bloganuaryNudgeCardViewModelSlice: BloganuaryNudgeCardViewModelSlice,
     private val plansCardViewModelSlice: PlansCardViewModelSlice,
-    private val selectedSiteRepository: SelectedSiteRepository,
-    private val buildConfigWrapper: BuildConfigWrapper
+    private val selectedSiteRepository: SelectedSiteRepository
 ) {
     private lateinit var scope: CoroutineScope
 
@@ -53,6 +51,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
 
     val onOpenJetpackInstallFullPluginOnboarding =
         jetpackInstallFullPluginCardViewModelSlice.onOpenJetpackInstallFullPluginOnboarding
+
+    var shouldShowDashboard: Boolean = false
 
     val onNavigation = merge(
         blazeCardViewModelSlice.onNavigation,
@@ -133,23 +133,31 @@ class DashboardCardsViewModelSlice @Inject constructor(
         domainRegistrationCard: MySiteCardAndItem.Card.DomainRegistrationCard?,
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
-        quicklinks?.let { cards.add(it) }
-        quickStart?.let { cards.add(it) }
-        domainRegistrationCard?.let { cards.add(it) }
-        bloganuaryNudgeCard?.let { cards.add(it) }
-        bloggingPromptCard?.let { cards.add(it) }
-        blazeCard?.let { cards.add(it) }
-        cardsState?.let {
-            when (cardsState) {
-                is CardsState.Success -> cards.addAll(cardsState.cards)
-                is CardsState.ErrorState -> cards.add(cardsState.error)
+        if(shouldShowDashboard) {
+            quicklinks?.let { cards.add(it) }
+            quickStart?.let { cards.add(it) }
+            domainRegistrationCard?.let { cards.add(it) }
+            bloganuaryNudgeCard?.let { cards.add(it) }
+            bloggingPromptCard?.let { cards.add(it) }
+            blazeCard?.let { cards.add(it) }
+            cardsState?.let {
+                when (cardsState) {
+                    is CardsState.Success -> cards.addAll(cardsState.cards)
+                    is CardsState.ErrorState -> cards.add(cardsState.error)
+                }
+            }
+            migrationSuccessCard?.let { cards.add(it) }
+            plansCard?.let { cards.add(it) }
+            jpFullInstallFullPlugin?.let { cards.add(it) }
+            // when clearing the values of all child VM Slices,
+            // the no cards message will still be shown and hence we need to check if the personalize card
+            // is shown or not, if the personalize card is not shown, then it means that
+            // we are not showing dashboard at all
+            personalizeCard?.let {
+                noCardsMessageViewModelSlice.buildNoCardsMessage(cards)?.let { cards.add(it) }
+                cards.add(it)
             }
         }
-        migrationSuccessCard?.let { cards.add(it) }
-        plansCard?.let { cards.add(it) }
-        jpFullInstallFullPlugin?.let { cards.add(it) }
-        noCardsMessageViewModelSlice.buildNoCardsMessage(cards)?.let { cards.add(it) }
-        personalizeCard?.let { cards.add(it) }
         return cards.toList()
     }
 
@@ -164,7 +172,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
         quickStartCardViewModelSlice.initialize(scope)
     }
 
-    private fun buildCards(site: SiteModel) {
+    fun buildCards(site: SiteModel) {
+        shouldShowDashboard = true
         jpMigrationSuccessCardViewModelSlice.buildCard()
         jetpackInstallFullPluginCardViewModelSlice.buildCard(site)
         blazeCardViewModelSlice.buildCard(site)
@@ -177,19 +186,20 @@ class DashboardCardsViewModelSlice @Inject constructor(
         quickStartCardViewModelSlice.build(site)
     }
 
-    fun onResume(site: SiteModel) {
-        if (showDashboardCards(site)) buildCards(site)
-        else uiModel.postValue(emptyList())
-    }
 
-    fun onSiteChanged(site: SiteModel) {
-        if (showDashboardCards(site)) buildCards(site)
-        else uiModel.postValue(emptyList())
-    }
-
-    fun onRefresh(site: SiteModel) {
-        if (showDashboardCards(site)) buildCards(site)
-        else uiModel.postValue(emptyList())
+    fun clearValue() {
+        shouldShowDashboard = false
+        jpMigrationSuccessCardViewModelSlice.clearValue()
+        jetpackInstallFullPluginCardViewModelSlice.clearValue()
+        blazeCardViewModelSlice.clearValue()
+        bloggingPromptCardViewModelSlice.clearValue()
+        bloganuaryNudgeCardViewModelSlice.clearValue()
+        personalizeCardViewModelSlice.clearValue()
+        quickLinksItemViewModelSlice.clearValue()
+        plansCardViewModelSlice.clearValue()
+        cardViewModelSlice.clearValue()
+        quickStartCardViewModelSlice.clearValue()
+        uiModel.postValue(emptyList())
     }
 
     fun onCleared() {
@@ -211,6 +221,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
 //        quickStartTracker.resetShown()
     }
 
-    private fun showDashboardCards(site: SiteModel) =
-        site.isUsingWpComRestApi && buildConfigWrapper.isJetpackApp
+    fun startQuickStart(siteModel: SiteModel) {
+        quickStartCardViewModelSlice.build(siteModel)
+    }
 }

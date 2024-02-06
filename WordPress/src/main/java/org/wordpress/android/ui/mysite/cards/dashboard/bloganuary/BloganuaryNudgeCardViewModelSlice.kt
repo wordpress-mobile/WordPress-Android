@@ -95,4 +95,8 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
             _uiModel.postValue(null)
         }
     }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
+    }
 }

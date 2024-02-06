@@ -83,11 +83,7 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
         this.scope = viewModelScope
     }
 
-    fun onResume(siteModel: SiteModel) {
-        buildCard(null, null, siteModel = siteModel)
-    }
-
-    fun onSiteChanged(siteModel: SiteModel) {
+    fun buildCard(siteModel: SiteModel) {
         buildCard(null, null, siteModel = siteModel)
     }
 

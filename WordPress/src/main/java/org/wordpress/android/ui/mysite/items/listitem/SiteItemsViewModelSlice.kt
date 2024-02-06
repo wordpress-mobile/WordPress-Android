@@ -37,8 +37,8 @@ class SiteItemsViewModelSlice @Inject constructor(
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage
 
-    private val _uiModel = MutableLiveData<List<MySiteCardAndItem>>()
-    val uiModel: LiveData<List<MySiteCardAndItem>> = _uiModel.distinctUntilChanged()
+    private val _uiModel = MutableLiveData<List<MySiteCardAndItem>?>()
+    val uiModel: LiveData<List<MySiteCardAndItem>?> = _uiModel.distinctUntilChanged()
 
     // Quick start is disabled in all the cases where site items are built.
     suspend fun buildSiteItems(
@@ -110,4 +110,8 @@ class SiteItemsViewModelSlice @Inject constructor(
 
     private fun isSiteBlazeEligible(site: SiteModel) =
         blazeFeatureUtils.isSiteBlazeEligible(site)
+
+    fun clearValue() {
+        _uiModel.postValue(null)
+    }
 }

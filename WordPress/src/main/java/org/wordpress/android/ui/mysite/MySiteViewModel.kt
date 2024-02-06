@@ -258,8 +258,7 @@ class MySiteViewModel @Inject constructor(
         if (isPullToRefresh) analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH)
         selectedSiteRepository.getSelectedSite()?.let {
             if (shouldShowDashboard(it)) {
-                dashboardCardsViewModelSlice.onRefresh(it)
-                dashboardItemsViewModelSlice.onRefresh(it)
+                buildDashboardOrSiteItems(it)
             } else {
                 accountDataViewModelSlice.onRefresh()
             }
@@ -274,9 +273,7 @@ class MySiteViewModel @Inject constructor(
 //        bloggingPromptCardViewModelSlice.onResume(uiModel.value as? SiteSelected)
 //        dashboardCardPlansUtils.onResume(uiModel.value as? SiteSelected)
         selectedSiteRepository.getSelectedSite()?.let {
-            dashboardCardsViewModelSlice.onResume(it)
-            dashboardItemsViewModelSlice.onResume(it)
-            siteInfoHeaderCardViewModelSlice.onResume(it)
+            buildDashboardOrSiteItems(it)
         } ?: run {
             accountDataViewModelSlice.onResume()
         }
@@ -373,9 +370,7 @@ class MySiteViewModel @Inject constructor(
             val siteLocalId = it.id.toLong()
             val lastSelectedQuickStartType = appPrefsWrapper.getLastSelectedQuickStartTypeForSite(siteLocalId)
             quickStartRepository.checkAndSetQuickStartType(lastSelectedQuickStartType == NewSiteQuickStartType)
-            dashboardCardsViewModelSlice.onSiteChanged(it)
-            dashboardItemsViewModelSlice.onSiteChanged(it)
-            siteInfoHeaderCardViewModelSlice.onSiteChanged(it)
+            buildDashboardOrSiteItems(it)
         } ?: run {
             accountDataViewModelSlice.onResume()
         }
@@ -448,14 +443,28 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun startQuickStart() {
-        quickStartTracker.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
-        startQuickStart(selectedSiteRepository.getSelectedSiteLocalId(), shouldMarkUpdateSiteTitleTaskComplete)
-        shouldMarkUpdateSiteTitleTaskComplete = false
+        selectedSiteRepository.getSelectedSite()?.let {
+            dashboardCardsViewModelSlice.startQuickStart(it)
+            quickStartTracker.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
+            startQuickStart(selectedSiteRepository.getSelectedSiteLocalId(), shouldMarkUpdateSiteTitleTaskComplete)
+            shouldMarkUpdateSiteTitleTaskComplete = false
+        }
     }
 
     fun ignoreQuickStart() {
         shouldMarkUpdateSiteTitleTaskComplete = false
         quickStartTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+    }
+
+    fun buildDashboardOrSiteItems(site: SiteModel) {
+        siteInfoHeaderCardViewModelSlice.buildCard(site)
+        if(shouldShowDashboard(site)) {
+            dashboardCardsViewModelSlice.buildCards(site)
+            dashboardItemsViewModelSlice.clearValue()
+        } else {
+            dashboardItemsViewModelSlice.buildItems(site)
+            dashboardCardsViewModelSlice.clearValue()
+        }
     }
 
     private fun onDashboardErrorRetry() {

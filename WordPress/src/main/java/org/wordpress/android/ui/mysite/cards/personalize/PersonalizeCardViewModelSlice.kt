@@ -22,8 +22,8 @@ class PersonalizeCardViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
 
-    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.PersonalizeCardModel>()
-    val uiModel: LiveData<MySiteCardAndItem.Card.PersonalizeCardModel> = _uiModel
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.PersonalizeCardModel?>()
+    val uiModel: LiveData<MySiteCardAndItem.Card.PersonalizeCardModel?> = _uiModel
 
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
@@ -50,5 +50,9 @@ class PersonalizeCardViewModelSlice @Inject constructor(
 
     fun resetShown() {
         personalizeCardShownTracker.resetShown()
+    }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
     }
 }

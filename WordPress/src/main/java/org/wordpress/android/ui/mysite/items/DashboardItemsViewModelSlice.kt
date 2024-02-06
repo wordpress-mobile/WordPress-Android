@@ -13,7 +13,6 @@ import org.wordpress.android.ui.mysite.items.jetpackBadge.JetpackBadgeViewModelS
 import org.wordpress.android.ui.mysite.items.jetpackSwitchmenu.JetpackSwitchMenuViewModelSlice
 import org.wordpress.android.ui.mysite.items.jetpackfeaturecard.JetpackFeatureCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
-import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.merge
 import javax.inject.Inject
 
@@ -23,10 +22,11 @@ class DashboardItemsViewModelSlice @Inject constructor(
     private val jetpackBadgeViewModelSlice: JetpackBadgeViewModelSlice,
     private val siteItemsViewModelSlice: SiteItemsViewModelSlice,
     private val sotw2023NudgeCardViewModelSlice: WpSotw2023NudgeCardViewModelSlice,
-    private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
-    private val buildConfigWrapper: BuildConfigWrapper
+    private val jetpackFeatureCardHelper: JetpackFeatureCardHelper
 ) {
     private lateinit var scope: CoroutineScope
+
+    var shouldShowSiteItems: Boolean = false
 
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
@@ -47,8 +47,7 @@ class DashboardItemsViewModelSlice @Inject constructor(
         jetpackBadgeViewModelSlice.uiModel,
         siteItemsViewModelSlice.uiModel,
         sotw2023NudgeCardViewModelSlice.uiModel
-    ) {
-       jetpackFeatureCard, jetpackSwitchMenu, jetpackBadge, siteItems, sotw2023NudgeCard ->
+    ) { jetpackFeatureCard, jetpackSwitchMenu, jetpackBadge, siteItems, sotw2023NudgeCard ->
         mergeUiModels(
             jetpackFeatureCard,
             jetpackSwitchMenu,
@@ -69,34 +68,23 @@ class DashboardItemsViewModelSlice @Inject constructor(
         siteItems: List<MySiteCardAndItem>?,
         sotw2023NudgeCard: MySiteCardAndItem.Card.WpSotw2023NudgeCardModel?
     ): List<MySiteCardAndItem> {
-        val dasbhboardSiteItems = mutableListOf<MySiteCardAndItem>().apply {
-            sotw2023NudgeCard?.let { add(it) }
-            siteItems?.let { addAll(siteItems) }
-            jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
-            if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
-                jetpackFeatureCard?.let { add(0, jetpackFeatureCard) }
-            else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
-            jetpackBadge?.let { add(jetpackBadge) }
-        }.toList()
+        val dasbhboardSiteItems = mutableListOf<MySiteCardAndItem>()
+        if (shouldShowSiteItems) {
+            dasbhboardSiteItems.apply {
+                sotw2023NudgeCard?.let { add(it) }
+                siteItems?.let { addAll(siteItems) }
+                jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
+                if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
+                    jetpackFeatureCard?.let { add(0, jetpackFeatureCard) }
+                else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
+                jetpackBadge?.let { add(jetpackBadge) }
+            }.toList()
+        }
         return dasbhboardSiteItems
     }
 
-    fun onResume(site: SiteModel) {
-        if (shouldShowSiteItems(site)) buildCards(site)
-        else uiModel.postValue(emptyList())
-    }
-
-    fun onSiteChanged(site: SiteModel) {
-        if (shouldShowSiteItems(site)) buildCards(site)
-        else uiModel.postValue(emptyList())
-    }
-
-    fun onRefresh(site: SiteModel) {
-        if (shouldShowSiteItems(site)) buildCards(site)
-        else uiModel.postValue(emptyList())
-    }
-
-    private fun buildCards(site: SiteModel) {
+    fun buildItems(site: SiteModel) {
+        shouldShowSiteItems = true
         scope.launch {
             jetpackFeatureCardViewModelSlice.buildJetpackFeatureCard()
             jetpackSwitchMenuViewModelSlice.buildJetpackSwitchMenu()
@@ -106,9 +94,15 @@ class DashboardItemsViewModelSlice @Inject constructor(
         }
     }
 
-    private fun shouldShowSiteItems(site: SiteModel) =
-        (buildConfigWrapper.isJetpackApp && site.isUsingWpComRestApi).not()
-
+    fun clearValue() {
+        shouldShowSiteItems = false
+        jetpackFeatureCardViewModelSlice.clearValue()
+        jetpackSwitchMenuViewModelSlice.clearValue()
+        jetpackBadgeViewModelSlice.clearValue()
+        siteItemsViewModelSlice.clearValue()
+        sotw2023NudgeCardViewModelSlice.clearValue()
+        uiModel.postValue(emptyList())
+    }
 
     fun onCleared() {
         scope.cancel()

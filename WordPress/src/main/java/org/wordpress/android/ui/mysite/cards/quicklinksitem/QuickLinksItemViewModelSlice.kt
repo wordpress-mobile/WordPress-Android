@@ -59,7 +59,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage
 
-    private val _uiState = MutableLiveData<MySiteCardAndItem.Card.QuickLinksItem>()
+    private val _uiState = MutableLiveData<MySiteCardAndItem.Card.QuickLinksItem?>()
     val uiState: LiveData<MySiteCardAndItem.Card.QuickLinksItem> = merge(
         _uiState,
         quickStartRepository.quickStartMenuStep
@@ -266,6 +266,10 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                 activeTask == QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING ||
                 activeTask == QuickStartStore.QuickStartExistingSiteTask.UPLOAD_MEDIA ||
                 activeTask == QuickStartStore.QuickStartExistingSiteTask.CHECK_STATS
+    }
+
+    fun clearValue() {
+        _uiState.postValue(null)
     }
 
     data class MoreClickWithTask(

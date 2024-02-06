@@ -57,8 +57,8 @@ class CardViewModelSlice @Inject constructor(
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    private val _uiModel = MutableLiveData<CardsState>()
-    val uiModel: LiveData<CardsState> = _uiModel.distinctUntilChanged()
+    private val _uiModel = MutableLiveData<CardsState?>()
+    val uiModel: LiveData<CardsState?> = _uiModel.distinctUntilChanged()
 
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = merge(
@@ -241,6 +241,10 @@ class CardViewModelSlice @Inject constructor(
 
             _uiModel.postValue(CardsState.Success(result))
         }
+    }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
     }
 }
 

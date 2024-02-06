@@ -26,7 +26,7 @@ class QuickStartCardViewModelSlice @Inject constructor(
     private val cardsTracker: CardsTracker,
     private val quickStartTracker: QuickStartTracker,
     private val quickStartCardBuilder: QuickStartCardBuilder
-)  {
+) {
     private lateinit var scope: CoroutineScope
 
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -43,7 +43,6 @@ class QuickStartCardViewModelSlice @Inject constructor(
     }
 
     fun build(selectedSite: SiteModel) {
-        val siteLocalId = selectedSite.id
         scope.launch {
             _isRefreshing.postValue(true)
             if (!quickStartUtilsWrapper.isQuickStartAvailableForTheSite(selectedSite)) {
@@ -56,25 +55,29 @@ class QuickStartCardViewModelSlice @Inject constructor(
             if (selectedSite.showOnFront == ShowOnFront.POSTS.value) {
                 _isRefreshing.postValue(true)
             }
-            val quickStartTaskTypes = quickStartRepository.getQuickStartTaskTypes()
+            postQuickStartCard(selectedSite)
+        }
+    }
 
-            quickStartRepository.activeTask.value.let { _ ->
-                val categories =
-                    if(quickStartRepository.quickStartType
-                            .isQuickStartInProgress(quickStartStore, siteLocalId.toLong())
-                    ) {
-                        quickStartTaskTypes.map { quickStartRepository.buildQuickStartCategory(siteLocalId, it) }
-                            .filter { !isEmptyCategory(siteLocalId, it.taskType) }
-                    } else {
-                        listOf()
-                    }
-
-                if (shouldShowQuickStartCard(categories, selectedSite)) {
-                    postState(categories)
-                } else {
-                    postState(listOf())
-                }
+    private fun postQuickStartCard(
+        selectedSite: SiteModel
+    ) {
+        val siteLocalId = selectedSite.id
+        val quickStartTaskTypes = quickStartRepository.getQuickStartTaskTypes()
+        val categories =
+            if (quickStartRepository.quickStartType
+                    .isQuickStartInProgress(quickStartStore, siteLocalId.toLong())
+            ) {
+                quickStartTaskTypes.map { quickStartRepository.buildQuickStartCategory(siteLocalId, it) }
+                    .filter { !isEmptyCategory(siteLocalId, it.taskType) }
+            } else {
+                listOf()
             }
+
+        if (shouldShowQuickStartCard(categories, selectedSite)) {
+            postState(categories)
+        } else {
+            postState(listOf())
         }
     }
 
@@ -135,7 +138,7 @@ class QuickStartCardViewModelSlice @Inject constructor(
     private fun shouldShowQuickStartCard(
         categories: List<QuickStartRepository.QuickStartCategory>,
         selectedSite: SiteModel?
-    ) : Boolean {
+    ): Boolean {
         selectedSite?.let { site ->
             return if (categories.any { it.taskType == QuickStartTaskType.GET_TO_KNOW_APP }) {
                 quickStartRepository.shouldShowGetToKnowTheAppCard(site.siteId)
@@ -153,5 +156,9 @@ class QuickStartCardViewModelSlice @Inject constructor(
         val completedTasks = quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), taskType)
         val unCompletedTasks = quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), taskType)
         return (completedTasks + unCompletedTasks).isEmpty()
+    }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
     }
 }

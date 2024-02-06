@@ -19,7 +19,7 @@ class JetpackSwitchMenuViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.JetpackSwitchMenu>()
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.JetpackSwitchMenu?>()
     val uiModel = _uiModel.distinctUntilChanged()
 
     suspend fun buildJetpackSwitchMenu() {
@@ -58,5 +58,9 @@ class JetpackSwitchMenuViewModelSlice @Inject constructor(
 
     private fun onJetpackFeatureCardMoreMenuClick() {
         jetpackFeatureCardHelper.track(AnalyticsTracker.Stat.REMOVE_FEATURE_CARD_MENU_ACCESSED)
+    }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
     }
 }

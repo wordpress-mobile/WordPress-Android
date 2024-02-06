@@ -46,4 +46,8 @@ class JpMigrationSuccessCardViewModelSlice @Inject constructor(
         contentMigrationAnalyticsTracker.trackPleaseDeleteWordPressCardTapped()
         _onNavigation.value = Event(SiteNavigationAction.OpenJetpackMigrationDeleteWP)
     }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
+    }
 }

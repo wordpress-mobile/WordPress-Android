@@ -70,5 +70,9 @@ class JetpackFeatureCardViewModelSlice @Inject constructor(
     private fun onJetpackFeatureCardMoreMenuClick() {
         jetpackFeatureCardHelper.track(AnalyticsTracker.Stat.REMOVE_FEATURE_CARD_MENU_ACCESSED)
     }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
+    }
 }
 

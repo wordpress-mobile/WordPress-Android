@@ -245,6 +245,10 @@ class BlazeCardViewModelSlice @Inject constructor(
         _onNavigation.value =
             Event(SiteNavigationAction.OpenPromoteWithBlazeOverlay(source = BlazeFlowSource.DASHBOARD_CARD))
     }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
+    }
 }
 
 enum class CampaignCardMenuItem(val label: String) {

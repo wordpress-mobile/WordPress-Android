@@ -260,4 +260,8 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     fun onResume(state: MySiteViewModel.State.SiteSelected?) {
         bloggingPromptsCardTrackHelper.onResume(state)
     }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
+    }
 }

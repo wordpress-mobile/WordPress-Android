@@ -84,6 +84,10 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
                 isLanguageEligible
     }
 
+    fun clearValue() {
+        _uiModel.postValue(null)
+    }
+
     companion object {
         private const val URL = "https://wordpress.org/state-of-the-word/" +
                 "?utm_source=mobile&utm_medium=appnudge&utm_campaign=sotw2023"

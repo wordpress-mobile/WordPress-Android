@@ -69,4 +69,8 @@ class JetpackInstallFullPluginCardViewModelSlice @Inject constructor(
         return site.id != 0 && !appPrefsWrapper.getShouldHideJetpackInstallFullPluginCard(site.id) &&
                 site.isJetpackIndividualPluginConnectedWithoutFullPlugin()
     }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
+    }
 }
