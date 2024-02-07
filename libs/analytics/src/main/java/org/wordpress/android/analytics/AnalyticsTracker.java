@@ -1106,7 +1106,8 @@ public final class AnalyticsTracker {
         SITE_MONITORING_SCREEN_SHOWN,
         OPENED_SITE_MONITORING,
         SITE_MONITORING_TAB_SHOWN,
-        SITE_MONITORING_TAB_LOADING_ERROR
+        SITE_MONITORING_TAB_LOADING_ERROR,
+        WEBVIEW_TOO_LARGE_PAYLOAD_ERROR,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
