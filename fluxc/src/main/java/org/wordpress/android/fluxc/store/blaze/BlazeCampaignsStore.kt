@@ -214,22 +214,16 @@ class BlazeCampaignsStore @Inject constructor(
         this,
         "fetch blaze ad suggestions"
     ) {
-        fakeTargetingRestClient.fetchBlazeAdSuggestions(siteModel.siteId, productId)
+        creationRestClient.fetchAdSuggestions(siteModel, productId)
             .let { payload ->
                 when {
                     payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
                     else -> {
-                        campaignsDao.replaceAdSuggestions(payload.data)
                         BlazeTargetingResult(payload.data)
                     }
                 }
             }
     }
-
-    suspend fun getBlazeAdSuggestions(
-        siteModel: SiteModel,
-        productId: Long
-    ) = campaignsDao.getBlazeAdSuggestions(siteModel.siteId, productId)
 
     data class BlazeCampaignsResult<T>(
         val model: T? = null,
