@@ -19,9 +19,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
@@ -221,24 +225,24 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
         val uiState by remember(key1 = tabType) {
             siteMonitorParentViewModel.getUiState(tabType)
         }
-        LazyColumn  {
-            item {
-                when (uiState) {
-                    is SiteMonitorUiState.Preparing -> LoadingState(modifier)
-                    is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded ->
-                        SiteMonitorWebView(uiState, tabType, modifier)
-                    is SiteMonitorUiState.Error -> SiteMonitorError(uiState as SiteMonitorUiState.Error, modifier)
-                }
-            }
+        when (uiState) {
+            is SiteMonitorUiState.Preparing -> LoadingState(modifier)
+            is SiteMonitorUiState.Prepared, is SiteMonitorUiState.Loaded ->
+                SiteMonitorWebViewContent(uiState, tabType, modifier)
+
+            is SiteMonitorUiState.Error -> SiteMonitorError(uiState as SiteMonitorUiState.Error, modifier)
         }
     }
+
     @Composable
     fun LoadingState(modifier: Modifier = Modifier) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier.fillMaxSize()
         ) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(
+                color = MaterialTheme.colors.onSurface
+            )
         }
     }
 
@@ -276,37 +280,64 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
 
     @SuppressLint("SetJavaScriptEnabled")
     @Composable
-    private fun SiteMonitorWebView(
+    private fun SiteMonitorWebViewContent(
         uiState: SiteMonitorUiState,
         tabType: SiteMonitorType,
         modifier: Modifier = Modifier
     ) {
         // retrieve the webview from the actvity
-        var webView = when (tabType) {
+        val webView = when (tabType) {
             SiteMonitorType.METRICS -> metricsWebView
             SiteMonitorType.PHP_LOGS -> phpLogsWebView
             SiteMonitorType.WEB_SERVER_LOGS -> webServerLogsWebView
         }
 
-        if (uiState is SiteMonitorUiState.Prepared) {
-            webView.postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, uiState.model.addressToLoad.toByteArray())
+        when(uiState) {
+            is SiteMonitorUiState.Prepared -> {
+                webView.postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, uiState.model.addressToLoad.toByteArray())
+                LoadingState()
+            }
+            is SiteMonitorUiState.Loaded -> {
+                SiteMonitorWebView(webView, tabType, modifier)
+            }
+            else -> {}
         }
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    private fun SiteMonitorWebView(tabWebView: WebView, tabType: SiteMonitorType, modifier: Modifier = Modifier) {
+        // the webview is retrieved from the activity, so we need to use a mutable variable
+        // to assign to android view
+        var webView = tabWebView
+
+        val refreshState = siteMonitorParentViewModel.getRefreshState(tabType)
+
+        val pullRefreshState = rememberPullRefreshState(
+            refreshing = refreshState.value,
+            onRefresh = { siteMonitorParentViewModel.refreshData(tabType) }
+        )
 
         Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            modifier = modifier
+                .fillMaxSize()
+                .pullRefresh(pullRefreshState)
         ) {
-            if (uiState is SiteMonitorUiState.Prepared) {
-                LoadingState()
-            } else {
-                webView.let { theWebView ->
+            LazyColumn(modifier = Modifier.fillMaxHeight()) {
+                item {
                     AndroidView(
-                        factory = { theWebView },
+                        factory = { webView },
                         update = { webView = it },
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
+            PullRefreshIndicator(
+                refreshing = refreshState.value,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter),
+                contentColor = MaterialTheme.colors.primaryVariant,
+            )
         }
     }
 

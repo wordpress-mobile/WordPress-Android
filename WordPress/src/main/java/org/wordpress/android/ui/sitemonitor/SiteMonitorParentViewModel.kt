@@ -92,4 +92,36 @@ class SiteMonitorParentViewModel @Inject constructor(
         phpLogViewModel.onCleared()
         webServerViewModel.onCleared()
     }
+
+    fun getRefreshState(siteMonitorType: SiteMonitorType): State<Boolean> {
+        return when (siteMonitorType) {
+            SiteMonitorType.METRICS -> {
+                metricsViewModel.isRefreshing
+            }
+
+            SiteMonitorType.PHP_LOGS -> {
+                phpLogViewModel.isRefreshing
+            }
+
+            SiteMonitorType.WEB_SERVER_LOGS -> {
+                webServerViewModel.isRefreshing
+            }
+        }
+    }
+
+    fun refreshData(siteMonitorType: SiteMonitorType) {
+        when(siteMonitorType) {
+            SiteMonitorType.METRICS -> {
+                metricsViewModel.refreshData()
+            }
+
+            SiteMonitorType.PHP_LOGS -> {
+                phpLogViewModel.refreshData()
+            }
+
+            SiteMonitorType.WEB_SERVER_LOGS -> {
+                webServerViewModel.refreshData()
+            }
+        }
+    }
 }

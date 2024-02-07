@@ -35,6 +35,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.WPTextView
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -48,6 +49,9 @@ class SubfilterPageFragment : Fragment() {
     lateinit var uiHelpers: UiHelpers
 
     @Inject
+    lateinit var imageManager: ImageManager
+
+    @Inject
     lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
 
     @Inject
@@ -58,7 +62,9 @@ class SubfilterPageFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyStateContainer: LinearLayout
     private lateinit var title: WPTextView
-    private lateinit var actionButton: Button
+    private lateinit var text: WPTextView
+    private lateinit var primaryButton: Button
+    private lateinit var secondaryButton: Button
 
     companion object {
         const val CATEGORY_KEY = "category_key"
@@ -89,11 +95,14 @@ class SubfilterPageFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.content_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter = SubfilterListAdapter(uiHelpers, statsUtils, seenUnseenWithCounterFeatureConfig)
+        recyclerView.adapter =
+            SubfilterListAdapter(uiHelpers, statsUtils, imageManager, seenUnseenWithCounterFeatureConfig)
 
         emptyStateContainer = view.findViewById(R.id.empty_state_container)
         title = emptyStateContainer.findViewById(R.id.title)
-        actionButton = emptyStateContainer.findViewById(R.id.action_button)
+        text = emptyStateContainer.findViewById(R.id.text)
+        primaryButton = emptyStateContainer.findViewById(R.id.action_button_primary)
+        secondaryButton = emptyStateContainer.findViewById(R.id.action_button_secondary)
 
         subFilterViewModel = ViewModelProvider(
             requireParentFragment().parentFragment as ViewModelStoreOwner,
@@ -115,23 +124,54 @@ class SubfilterPageFragment : Fragment() {
 
                 viewModel.onSubFiltersChanged(items.isEmpty())
                 adapter.update(items)
-                subFilterViewModel.onSubfilterPageUpdated(category, items.size)
             }
         }
 
         viewModel.emptyState.observe(viewLifecycleOwner) { uiState ->
             if (isAdded) {
                 when (uiState) {
-                    HiddenEmptyUiState -> emptyStateContainer.visibility = View.GONE
-                    is VisibleEmptyUiState -> {
-                        emptyStateContainer.visibility = View.VISIBLE
-                        title.setText(uiState.title.stringRes)
-                        actionButton.setText(uiState.buttonText.stringRes)
-                        actionButton.setOnClickListener {
-                            subFilterViewModel.onBottomSheetActionClicked(uiState.action)
-                        }
-                    }
+                    HiddenEmptyUiState -> hideEmptyUi()
+                    is VisibleEmptyUiState -> showEmptyUi(uiState)
                 }
+            }
+        }
+    }
+
+    private fun hideEmptyUi() {
+        emptyStateContainer.visibility = View.GONE
+        subFilterViewModel.setTitleContainerVisibility(isVisible = true)
+    }
+
+    private fun showEmptyUi(uiState: VisibleEmptyUiState) {
+        emptyStateContainer.visibility = View.VISIBLE
+        subFilterViewModel.setTitleContainerVisibility(isVisible = false)
+
+        if (uiState.title == null) {
+            title.visibility = View.GONE
+        } else {
+            title.visibility = View.VISIBLE
+            title.text = uiHelpers.getTextOfUiString(requireContext(), uiState.title)
+        }
+
+        text.text = uiHelpers.getTextOfUiString(requireContext(), uiState.text)
+
+        if (uiState.primaryButton == null) {
+            primaryButton.visibility = View.GONE
+        } else {
+            primaryButton.visibility = View.VISIBLE
+            primaryButton.text = uiHelpers.getTextOfUiString(requireContext(), uiState.primaryButton.text)
+            primaryButton.setOnClickListener {
+                subFilterViewModel.onBottomSheetActionClicked(uiState.primaryButton.action)
+            }
+        }
+
+        if (uiState.secondaryButton == null) {
+            secondaryButton.visibility = View.GONE
+        } else {
+            secondaryButton.visibility = View.VISIBLE
+            secondaryButton.text = uiHelpers.getTextOfUiString(requireContext(), uiState.secondaryButton.text)
+            secondaryButton.setOnClickListener {
+                subFilterViewModel.onBottomSheetActionClicked(uiState.secondaryButton.action)
             }
         }
     }
@@ -176,8 +216,8 @@ class SubfilterPagerAdapter(
 }
 
 enum class SubfilterCategory(@StringRes val titleRes: Int, val type: ItemType) : Parcelable {
-    SITES(R.string.reader_filter_sites_title, SITE),
-    TAGS(R.string.reader_filter_tags_title, TAG);
+    SITES(R.string.reader_filter_by_blog_title, SITE),
+    TAGS(R.string.reader_filter_by_tag_title, TAG);
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(type.ordinal)

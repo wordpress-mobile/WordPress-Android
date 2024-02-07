@@ -91,8 +91,8 @@ class SiteItemsBuilder @Inject constructor(
     private fun getManageSiteItems(
         params: SiteItemsBuilderParams
     ): List<MySiteCardAndItem> {
-        val siteMonitoring = buildSiteMonitoringOptionsIfNeeded(params)
         val manageSiteItems = buildManageSiteItems(params)
+        val siteMonitoring = buildSiteMonitoringOptionsIfNeeded(params)
 
         val emptyHeaderItem1 = CategoryEmptyHeaderItem(UiString.UiStringText(""))
         val jetpackConfiguration = buildJetpackDependantConfigurationItemsIfNeeded(params)
@@ -102,8 +102,8 @@ class SiteItemsBuilder @Inject constructor(
         val emptyHeaderItem2 = CategoryEmptyHeaderItem(UiString.UiStringText(""))
         val admin = siteListItemBuilder.buildAdminItemIfAvailable(params.site, params.onClick)
         return listOf(manageHeader) +
-                siteMonitoring +
                 manageSiteItems +
+                siteMonitoring +
                 emptyHeaderItem1 +
                 jetpackConfiguration +
                 lookAndFeel +

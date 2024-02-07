@@ -125,7 +125,7 @@ public class ReaderUpdateLogic {
         for (ReaderTag tag : serverTopics) {
             String tagNameBefore = tag.getTagDisplayName();
             if (tag.isFollowedSites()) {
-                tag.setTagDisplayName(mContext.getString(R.string.reader_following_display_name));
+                tag.setTagDisplayName(mContext.getString(R.string.reader_subscribed_display_name));
                 if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             } else if (tag.isDiscover()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_discover_display_name));

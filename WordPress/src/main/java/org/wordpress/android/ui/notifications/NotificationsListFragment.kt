@@ -3,15 +3,17 @@
 package org.wordpress.android.ui.notifications
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
+import android.widget.PopupWindow
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
@@ -30,6 +32,8 @@ import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_MARK_ALL_READ_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_MENU_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL
 import org.wordpress.android.databinding.NotificationsListFragmentBinding
 import org.wordpress.android.fluxc.store.AccountStore
@@ -63,6 +67,7 @@ import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPPermissionUtils.NOTIFICATIONS_PERMISSION_REQUEST_CODE
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -77,6 +82,9 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     @Inject
     lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private val viewModel: NotificationsListViewModel by viewModels()
 
@@ -280,8 +288,12 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     @Suppress("OVERRIDE_DEPRECATION")
     override fun onPrepareOptionsMenu(menu: Menu) {
-        val notificationSettings = menu.findItem(R.id.notifications_settings)
-        notificationSettings.isVisible = accountStore.hasAccessToken()
+        val notificationActions = menu.findItem(R.id.notifications_actions)
+        notificationActions.isVisible = accountStore.hasAccessToken()
+        notificationActions.actionView?.setOnClickListener {
+            analyticsTrackerWrapper.track(NOTIFICATION_MENU_TAPPED)
+            showNotificationActionsPopup(it)
+        }
         super.onPrepareOptionsMenu(menu)
     }
 
@@ -291,13 +303,34 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.notifications_settings) {
-            ActivityLauncher.viewNotificationsSettings(activity)
-            return true
-        }
-        return super.onOptionsItemSelected(item)
+    /**
+     * For displaying the popup of notifications settings
+     */
+    @SuppressLint("InflateParams")
+    private fun showNotificationActionsPopup(anchorView: View) {
+        val popupWindow = PopupWindow(requireContext(), null, R.style.WordPress)
+        popupWindow.isOutsideTouchable = true
+        popupWindow.elevation = resources.getDimension(R.dimen.popup_over_toolbar_elevation)
+        popupWindow.contentView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.notification_actions, null).apply {
+                findViewById<View>(R.id.text_mark_all_as_read).setOnClickListener {
+                    markAllAsRead()
+                    popupWindow.dismiss()
+                }
+                findViewById<View>(R.id.text_settings).setOnClickListener {
+                    ActivityLauncher.viewNotificationsSettings(activity)
+                    popupWindow.dismiss()
+                }
+            }
+        popupWindow.showAsDropDown(anchorView)
+    }
+
+    /**
+     * For marking the status of every notification as read
+     */
+    private fun markAllAsRead() {
+        analyticsTrackerWrapper.track(NOTIFICATIONS_MARK_ALL_READ_TAPPED)
+        // TODO("not yet implemented")
     }
 
     companion object {

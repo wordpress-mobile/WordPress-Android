@@ -45,7 +45,7 @@ class ReaderFollowButton @JvmOverloads constructor(
 
     private fun updateFollowText() {
         if (showCaption) {
-            setText(if (isFollowed) R.string.reader_btn_unfollow else R.string.reader_btn_follow)
+            setText(if (isFollowed) R.string.reader_btn_subscribed else R.string.reader_btn_subscribe)
         }
         isSelected = isFollowed
     }

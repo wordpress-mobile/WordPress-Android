@@ -541,8 +541,6 @@ Language: sr_RS
     <string name="reader_save_for_later_display_name">Сачувано</string>
     <string name="reader_discover_display_name">Откриј</string>
     <string name="reader_my_likes_display_name">Свиђања</string>
-    <string name="reader_filter_tags_title">Ознаке</string>
-    <string name="reader_filter_sites_title">Веб места</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>

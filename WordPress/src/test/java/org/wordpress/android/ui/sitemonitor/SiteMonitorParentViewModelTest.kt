@@ -167,4 +167,25 @@ class SiteMonitorParentViewModelTest: BaseUnitTest(){
 
         verify(webServerViewModel).onWebViewError()
     }
+
+    @Test
+    fun `given metrics, when refresh is invoked, then metric vm slice refresh is invoked`() {
+        viewModel.refreshData(SiteMonitorType.METRICS)
+
+        verify(metricsViewModel).refreshData()
+    }
+
+    @Test
+    fun `given php logs, when refresh is invoked, then php logs vm slice refresh is invoked`() {
+        viewModel.refreshData(SiteMonitorType.PHP_LOGS)
+
+        verify(phpLogViewModel).refreshData()
+    }
+
+    @Test
+    fun `given webserver logs, when refresh is invoked, then webserver vm slice refresh is invoked`() {
+        viewModel.refreshData(SiteMonitorType.WEB_SERVER_LOGS)
+
+        verify(webServerViewModel).refreshData()
+    }
 }

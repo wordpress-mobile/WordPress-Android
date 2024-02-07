@@ -1,5 +1,0 @@
-Block Editor updates:
-- Device keyboard remains when editing text blocks
-- Screen auto-scrolls to newly inserted blocks
-- Unselect blocks by pressing your device’s back button
-- Share different media types to the app at once without crashing
