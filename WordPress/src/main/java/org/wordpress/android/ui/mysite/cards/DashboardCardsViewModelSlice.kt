@@ -52,8 +52,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
     val onOpenJetpackInstallFullPluginOnboarding =
         jetpackInstallFullPluginCardViewModelSlice.onOpenJetpackInstallFullPluginOnboarding
 
-    var shouldShowDashboard: Boolean = false
-
     val onNavigation = merge(
         blazeCardViewModelSlice.onNavigation,
         cardViewModelSlice.onNavigation,
@@ -133,30 +131,28 @@ class DashboardCardsViewModelSlice @Inject constructor(
         domainRegistrationCard: MySiteCardAndItem.Card.DomainRegistrationCard?,
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
-        if(shouldShowDashboard) {
-            quicklinks?.let { cards.add(it) }
-            quickStart?.let { cards.add(it) }
-            domainRegistrationCard?.let { cards.add(it) }
-            bloganuaryNudgeCard?.let { cards.add(it) }
-            bloggingPromptCard?.let { cards.add(it) }
-            blazeCard?.let { cards.add(it) }
-            cardsState?.let {
-                when (cardsState) {
-                    is CardsState.Success -> cards.addAll(cardsState.cards)
-                    is CardsState.ErrorState -> cards.add(cardsState.error)
-                }
+        quicklinks?.let { cards.add(it) }
+        quickStart?.let { cards.add(it) }
+        domainRegistrationCard?.let { cards.add(it) }
+        bloganuaryNudgeCard?.let { cards.add(it) }
+        bloggingPromptCard?.let { cards.add(it) }
+        blazeCard?.let { cards.add(it) }
+        cardsState?.let {
+            when (cardsState) {
+                is CardsState.Success -> cards.addAll(cardsState.cards)
+                is CardsState.ErrorState -> cards.add(cardsState.error)
             }
-            migrationSuccessCard?.let { cards.add(it) }
-            plansCard?.let { cards.add(it) }
-            jpFullInstallFullPlugin?.let { cards.add(it) }
-            // when clearing the values of all child VM Slices,
-            // the no cards message will still be shown and hence we need to check if the personalize card
-            // is shown or not, if the personalize card is not shown, then it means that
-            // we are not showing dashboard at all
-            personalizeCard?.let {
-                noCardsMessageViewModelSlice.buildNoCardsMessage(cards)?.let { cards.add(it) }
-                cards.add(it)
-            }
+        }
+        migrationSuccessCard?.let { cards.add(it) }
+        plansCard?.let { cards.add(it) }
+        jpFullInstallFullPlugin?.let { cards.add(it) }
+        // when clearing the values of all child VM Slices,
+        // the no cards message will still be shown and hence we need to check if the personalize card
+        // is shown or not, if the personalize card is not shown, then it means that
+        // we are not showing dashboard at all
+        personalizeCard?.let {
+            noCardsMessageViewModelSlice.buildNoCardsMessage(cards)?.let { cards.add(it) }
+            cards.add(it)
         }
         return cards.toList()
     }
@@ -173,7 +169,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
     }
 
     fun buildCards(site: SiteModel) {
-        shouldShowDashboard = true
         jpMigrationSuccessCardViewModelSlice.buildCard()
         jetpackInstallFullPluginCardViewModelSlice.buildCard(site)
         blazeCardViewModelSlice.buildCard(site)
@@ -188,7 +183,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
 
 
     fun clearValue() {
-        shouldShowDashboard = false
         jpMigrationSuccessCardViewModelSlice.clearValue()
         jetpackInstallFullPluginCardViewModelSlice.clearValue()
         blazeCardViewModelSlice.clearValue()
@@ -199,7 +193,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
         plansCardViewModelSlice.clearValue()
         cardViewModelSlice.clearValue()
         quickStartCardViewModelSlice.clearValue()
-        uiModel.postValue(emptyList())
     }
 
     fun onCleared() {

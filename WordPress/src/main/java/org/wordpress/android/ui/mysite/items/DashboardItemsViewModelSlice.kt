@@ -26,8 +26,6 @@ class DashboardItemsViewModelSlice @Inject constructor(
 ) {
     private lateinit var scope: CoroutineScope
 
-    var shouldShowSiteItems: Boolean = false
-
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
         sotw2023NudgeCardViewModelSlice.initialize(scope)
@@ -69,22 +67,19 @@ class DashboardItemsViewModelSlice @Inject constructor(
         sotw2023NudgeCard: MySiteCardAndItem.Card.WpSotw2023NudgeCardModel?
     ): List<MySiteCardAndItem> {
         val dasbhboardSiteItems = mutableListOf<MySiteCardAndItem>()
-        if (shouldShowSiteItems) {
-            dasbhboardSiteItems.apply {
-                sotw2023NudgeCard?.let { add(it) }
-                siteItems?.let { addAll(siteItems) }
-                jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
-                if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
-                    jetpackFeatureCard?.let { add(0, jetpackFeatureCard) }
-                else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
-                jetpackBadge?.let { add(jetpackBadge) }
-            }.toList()
-        }
+        dasbhboardSiteItems.apply {
+            sotw2023NudgeCard?.let { add(it) }
+            siteItems?.let { addAll(siteItems) }
+            jetpackSwitchMenu?.let { add(jetpackSwitchMenu) }
+            if (jetpackFeatureCardHelper.shouldShowFeatureCardAtTop())
+                jetpackFeatureCard?.let { add(0, jetpackFeatureCard) }
+            else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
+            jetpackBadge?.let { add(jetpackBadge) }
+        }.toList()
         return dasbhboardSiteItems
     }
 
     fun buildItems(site: SiteModel) {
-        shouldShowSiteItems = true
         scope.launch {
             jetpackFeatureCardViewModelSlice.buildJetpackFeatureCard()
             jetpackSwitchMenuViewModelSlice.buildJetpackSwitchMenu()
@@ -95,13 +90,11 @@ class DashboardItemsViewModelSlice @Inject constructor(
     }
 
     fun clearValue() {
-        shouldShowSiteItems = false
         jetpackFeatureCardViewModelSlice.clearValue()
         jetpackSwitchMenuViewModelSlice.clearValue()
         jetpackBadgeViewModelSlice.clearValue()
         siteItemsViewModelSlice.clearValue()
         sotw2023NudgeCardViewModelSlice.clearValue()
-        uiModel.postValue(emptyList())
     }
 
     fun onCleared() {

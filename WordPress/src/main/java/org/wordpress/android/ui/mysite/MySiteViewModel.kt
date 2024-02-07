@@ -370,7 +370,7 @@ class MySiteViewModel @Inject constructor(
             val siteLocalId = it.id.toLong()
             val lastSelectedQuickStartType = appPrefsWrapper.getLastSelectedQuickStartTypeForSite(siteLocalId)
             quickStartRepository.checkAndSetQuickStartType(lastSelectedQuickStartType == NewSiteQuickStartType)
-            buildDashboardOrSiteItems(it)
+            onSitePicked(it)
         } ?: run {
             accountDataViewModelSlice.onResume()
         }
@@ -465,6 +465,18 @@ class MySiteViewModel @Inject constructor(
             dashboardItemsViewModelSlice.buildItems(site)
             dashboardCardsViewModelSlice.clearValue()
         }
+    }
+
+    fun onSitePicked(site: SiteModel) {
+        siteInfoHeaderCardViewModelSlice.buildCard(site)
+        dashboardItemsViewModelSlice.clearValue()
+        dashboardCardsViewModelSlice.clearValue()
+        if(shouldShowDashboard(site)) {
+            dashboardCardsViewModelSlice.buildCards(site)
+        } else {
+            dashboardItemsViewModelSlice.buildItems(site)
+        }
+
     }
 
     private fun onDashboardErrorRetry() {
