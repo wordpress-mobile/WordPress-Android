@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetche
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCreationRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.FakeBlazeTargetingRestClient
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
@@ -30,7 +29,6 @@ import javax.inject.Singleton
 @Singleton
 class BlazeCampaignsStore @Inject constructor(
     private val restClient: BlazeCampaignsRestClient,
-    private val fakeTargetingRestClient: FakeBlazeTargetingRestClient,
     private val creationRestClient: BlazeCreationRestClient,
     private val campaignsDao: BlazeCampaignsDao,
     private val targetingDao: BlazeTargetingDao,
