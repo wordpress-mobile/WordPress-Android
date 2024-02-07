@@ -11,6 +11,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.TAG
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.UrlUtils
 
 sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = false) {
     open var isSelected: Boolean = false
@@ -68,7 +69,7 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
         override val label: UiString = if (blog.name.isNotEmpty()) {
             UiStringText(blog.name)
         } else {
-            UiStringRes(R.string.reader_untitled_post)
+            UiStringText(UrlUtils.getHost(blog.url))
         }
         val showUnseenCount: Boolean = blog.numUnseenPosts > 0
         val unseenCount: Int = blog.numUnseenPosts

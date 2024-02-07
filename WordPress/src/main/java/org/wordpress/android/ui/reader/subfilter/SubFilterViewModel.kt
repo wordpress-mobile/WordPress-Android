@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.subfilter
 
 import android.os.Bundle
 import androidx.annotation.VisibleForTesting
+import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -12,6 +13,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -32,9 +34,12 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.StringUtils
+import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import java.util.Comparator
 import java.util.EnumSet
 import javax.inject.Inject
 import javax.inject.Named
@@ -110,6 +115,17 @@ class SubFilterViewModel @Inject constructor(
         }
     }
 
+    private fun getBlogNameForComparison(blog: ReaderBlog?): String {
+        return if (blog == null) {
+            ""
+        } else if (blog.hasName()) {
+            blog.name
+        } else if (blog.hasUrl()) {
+            StringUtils.notNullStr(UrlUtils.getHost(blog.url))
+        } else {
+            ""
+        }
+    }
     fun loadSubFilters() {
         launch {
             val filterList = ArrayList<SubfilterListItem>()
@@ -124,7 +140,12 @@ class SubFilterViewModel @Inject constructor(
                             blog.organizationId == organization.orgId
                         } ?: false
                     }
-                }
+                }.sortedWith(Comparator { blog1, blog2 ->
+                    // sort followed blogs by name/domain to match display
+                    val blogOneName = getBlogNameForComparison(blog1)
+                    val blogNameTwo = getBlogNameForComparison(blog2)
+                    blogOneName.compareTo(blogNameTwo, true)
+                })
 
                 filterList.addAll(
                     followedBlogs.map { blog ->

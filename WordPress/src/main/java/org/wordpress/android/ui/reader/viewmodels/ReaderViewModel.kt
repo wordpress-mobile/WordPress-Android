@@ -50,6 +50,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -75,6 +76,7 @@ class ReaderViewModel @Inject constructor(
     private val snackbarSequencer: SnackbarSequencer,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val readerTopBarMenuHelper: ReaderTopBarMenuHelper,
+    private val urlUtilsWrapper: UrlUtilsWrapper,
     // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
@@ -447,7 +449,8 @@ class ReaderViewModel @Inject constructor(
     fun onSubFilterItemSelected(item: SubfilterListItem) {
         when (item) {
             is SubfilterListItem.SiteAll -> clearTopBarFilter()
-            is SubfilterListItem.Site -> updateTopBarFilter(item.blog.name, ReaderFilterType.BLOG)
+            is SubfilterListItem.Site -> updateTopBarFilter(item.blog.name
+                .ifEmpty { urlUtilsWrapper.removeScheme(item.blog.url.ifEmpty { "" }) }, ReaderFilterType.BLOG)
             is SubfilterListItem.Tag -> updateTopBarFilter(item.tag.tagDisplayName, ReaderFilterType.TAG)
             else -> Unit // do nothing
         }

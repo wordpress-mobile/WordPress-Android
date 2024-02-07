@@ -158,7 +158,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         if (blogInfo.hasName()) {
             txtBlogName.setText(blogInfo.getName());
         } else {
-            txtBlogName.setText(R.string.reader_untitled_post);
+            txtBlogName.setText(UrlUtils.getHost(blogInfo.getUrl()));
         }
 
         if (blogInfo.hasUrl()) {
