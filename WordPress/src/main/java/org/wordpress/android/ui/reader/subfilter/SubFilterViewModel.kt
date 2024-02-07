@@ -142,8 +142,8 @@ class SubFilterViewModel @Inject constructor(
                 }.sortedWith(Comparator { blog1, blog2 ->
                     // sort followed blogs by name/domain to match display
                     val blogOneName = getBlogNameForComparison(blog1)
-                    val blogNameTwo = getBlogNameForComparison(blog2)
-                    blogOneName.compareTo(blogNameTwo, true)
+                    val blogTwoName = getBlogNameForComparison(blog2)
+                    blogOneName.compareTo(blogTwoName, true)
                 })
 
                 filterList.addAll(
