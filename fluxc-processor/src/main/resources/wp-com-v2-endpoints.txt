@@ -41,6 +41,7 @@
 /sites/$site/wordads/dsp/api/v1.1/targeting/devices
 /sites/$site/wordads/dsp/api/v1.1/targeting/page-topics
 /sites/$site/wordads/dsp/api/v1.1/suggestions
+/sites/$site/wordads/dsp/api/v1.1/forecast
 
 /sites/$site/launch
 

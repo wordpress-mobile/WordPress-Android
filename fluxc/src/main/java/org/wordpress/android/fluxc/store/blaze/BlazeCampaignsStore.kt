@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.map
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
+import org.wordpress.android.fluxc.model.blaze.BlazeTargetingParameters
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsError
@@ -22,7 +23,9 @@ import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.store.Store.OnChangedError
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
+import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -221,6 +224,31 @@ class BlazeCampaignsStore @Inject constructor(
                     }
                 }
             }
+    }
+
+    suspend fun fetchBlazeAdForecast(
+        siteModel: SiteModel,
+        startDate: Date,
+        endDate: Date,
+        totalBudget: Double,
+        timeZoneId: String = TimeZone.getDefault().id,
+        targetingParameters: BlazeTargetingParameters? = null
+    ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch blaze ad forecast") {
+        creationRestClient.fetchAdForecast(
+            site = siteModel,
+            startDate = startDate,
+            endDate = endDate,
+            totalBudget = totalBudget,
+            timeZoneId = timeZoneId,
+            targetingParameters = targetingParameters
+        ).let { payload ->
+            when {
+                payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
+                else -> {
+                    BlazeTargetingResult(payload.data)
+                }
+            }
+        }
     }
 
     data class BlazeCampaignsResult<T>(

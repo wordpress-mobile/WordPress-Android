@@ -1,17 +1,23 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.blaze
 
+import android.annotation.SuppressLint
 import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.blaze.BlazeAdForecast
 import org.wordpress.android.fluxc.model.blaze.BlazeAdSuggestion
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingDevice
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLanguage
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLocation
+import org.wordpress.android.fluxc.model.blaze.BlazeTargetingParameters
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingTopic
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComNetwork
+import org.wordpress.android.fluxc.utils.extensions.filterNotNull
+import java.text.SimpleDateFormat
+import java.util.Date
 import javax.inject.Inject
 
 class BlazeCreationRestClient @Inject constructor(
@@ -128,6 +134,44 @@ class BlazeCreationRestClient @Inject constructor(
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
+    suspend fun fetchAdForecast(
+        site: SiteModel,
+        startDate: Date,
+        endDate: Date,
+        totalBudget: Double,
+        timeZoneId: String,
+        targetingParameters: BlazeTargetingParameters?
+    ): BlazePayload<BlazeAdForecast> {
+        val url = WPCOMV2.sites.site(site.siteId).wordads.dsp.api.v1_1.forecast.url
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
+
+        val response = wpComNetwork.executePostGsonRequest(
+            url = url,
+            body = mutableMapOf(
+                "start_date" to dateFormatter.format(startDate),
+                "end_date" to dateFormatter.format(endDate),
+                "time_zone" to timeZoneId,
+                "total_budget" to totalBudget.toString(),
+                "targeting" to targetingParameters?.let {
+                    mapOf(
+                        "locations" to targetingParameters.locations?.map { it.id },
+                        "languages" to targetingParameters.languages?.map { it.id },
+                        "devices" to targetingParameters.devices?.map { it.id },
+                        "page_topics" to targetingParameters.topics?.map { it.id }
+                    ).filterNotNull()
+                }
+            ).filterNotNull(),
+            clazz = BlazeAdForecastNetworkModel::class.java
+        )
+
+        return when (response) {
+            is WPComGsonRequestBuilder.Response.Success -> BlazePayload(response.data.toDomainModel())
+
+            is WPComGsonRequestBuilder.Response.Error -> BlazePayload(response.error)
+        }
+    }
+
     data class BlazePayload<T>(
         val data: T?
     ) : Payload<WPComGsonNetworkError>() {
@@ -223,4 +267,14 @@ private class BlazeAdSuggestionListResponse(
             )
         }
     }
+}
+
+private class BlazeAdForecastNetworkModel(
+    @SerializedName("total_impressions_min") val minImpressions: Int,
+    @SerializedName("total_impressions_max") val maxImpressions: Int,
+) {
+    fun toDomainModel(): BlazeAdForecast = BlazeAdForecast(
+        minImpressions = minImpressions,
+        maxImpressions = maxImpressions
+    )
 }
