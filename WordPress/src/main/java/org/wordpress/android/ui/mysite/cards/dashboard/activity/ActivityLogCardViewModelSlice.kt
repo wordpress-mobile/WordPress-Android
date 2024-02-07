@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.activity
 
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -21,14 +22,17 @@ class ActivityLogCardViewModelSlice @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val activityCardBuilder: ActivityCardBuilder
 ) {
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.ActivityCard?>()
+    val uiModel = _uiModel as LiveData<MySiteCardAndItem.Card.ActivityCard?>
+
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
     private val _refresh = MutableLiveData<Event<Boolean>>()
     val refresh = _refresh
 
-    fun buildCard(activityCardModel: CardModel.ActivityCardModel?): MySiteCardAndItem.Card.ActivityCard? {
-        return activityCardBuilder.build(getActivityLogCardBuilderParams(activityCardModel))
+    fun buildCard(activityCardModel: CardModel.ActivityCardModel?) {
+        _uiModel.postValue(activityCardBuilder.build(getActivityLogCardBuilderParams(activityCardModel)))
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -75,7 +79,12 @@ class ActivityLogCardViewModelSlice @Inject constructor(
         _onNavigation.value =
             Event(SiteNavigationAction.OpenActivityLog(requireNotNull(selectedSiteRepository.getSelectedSite())))
     }
+
     private fun onActivityCardMoreMenuClick() = cardsTracker.trackCardMoreMenuClicked(CardsTracker.Type.ACTIVITY.label)
+
+    fun clearValue() {
+        _uiModel.value = null
+    }
 
     enum class MenuItemType(val label: String) {
         ALL_ACTIVITY("all_activity"),

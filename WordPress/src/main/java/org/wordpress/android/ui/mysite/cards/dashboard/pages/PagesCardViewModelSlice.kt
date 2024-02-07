@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.pages
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -17,14 +18,19 @@ class PagesCardViewModelSlice @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val pagesCardBuilder: PagesCardBuilder
 ) {
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.PagesCard?>()
+    val uiModel: LiveData<MySiteCardAndItem.Card.PagesCard?> = _uiModel
+
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
     private val _refresh = MutableLiveData<Event<Boolean>>()
     val refresh = _refresh
 
-    fun buildCard(pagesCardModel: PagesCardModel?): MySiteCardAndItem.Card.PagesCard? {
-        return pagesCardBuilder.build(getPagesCardBuilderParams(pagesCardModel))
+    fun buildCard(pagesCardModel: PagesCardModel?) {
+        _uiModel.postValue(
+            pagesCardBuilder.build(getPagesCardBuilderParams(pagesCardModel))
+        )
     }
 
     fun getPagesCardBuilderParams(pagesCardModel: PagesCardModel?): PagesCardBuilderParams {
@@ -99,6 +105,10 @@ class PagesCardViewModelSlice @Inject constructor(
                     requireNotNull(selectedSiteRepository.getSelectedSite())
                 )
             )
+    }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
     }
 }
 

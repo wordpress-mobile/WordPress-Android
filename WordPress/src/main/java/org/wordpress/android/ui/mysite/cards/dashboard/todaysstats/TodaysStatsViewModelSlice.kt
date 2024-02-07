@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.todaysstats
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
@@ -19,6 +20,9 @@ class TodaysStatsViewModelSlice @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val todaysStatsCardBuilder: TodaysStatsCardBuilder
 ) {
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.TodaysStatsCard?>()
+    val uiModel = _uiModel as LiveData<MySiteCardAndItem.Card.TodaysStatsCard?>
+
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
@@ -26,8 +30,8 @@ class TodaysStatsViewModelSlice @Inject constructor(
     val refresh = _refresh
 
 
-    fun buildTodaysStatsCard(todaysStatsCardModel: TodaysStatsCardModel?): MySiteCardAndItem.Card.TodaysStatsCard? {
-        return todaysStatsCardBuilder.build(getTodaysStatsBuilderParams(todaysStatsCardModel))
+    fun buildTodaysStatsCard(todaysStatsCardModel: TodaysStatsCardModel?) {
+        _uiModel.postValue(todaysStatsCardBuilder.build(getTodaysStatsBuilderParams(todaysStatsCardModel)))
     }
 
     fun getTodaysStatsBuilderParams(todaysStatsCardModel: TodaysStatsCardModel?): TodaysStatsCardBuilderParams {
@@ -92,6 +96,10 @@ class TodaysStatsViewModelSlice @Inject constructor(
         } else {
             _onNavigation.value = Event(SiteNavigationAction.OpenStatsInsights(selectedSite))
         }
+    }
+
+    fun clearValue() {
+        _uiModel.value = null
     }
 }
 

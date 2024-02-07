@@ -3,7 +3,9 @@ package org.wordpress.android.ui.mysite.cards
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.BlazeCardViewModelSlice
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -41,6 +43,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository
 ) {
     private lateinit var scope: CoroutineScope
+
+    private var job: Job? = null
 
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = merge(
@@ -169,16 +173,19 @@ class DashboardCardsViewModelSlice @Inject constructor(
     }
 
     fun buildCards(site: SiteModel) {
-        jpMigrationSuccessCardViewModelSlice.buildCard()
-        jetpackInstallFullPluginCardViewModelSlice.buildCard(site)
-        blazeCardViewModelSlice.buildCard(site)
-        bloggingPromptCardViewModelSlice.buildCard(site)
-        bloganuaryNudgeCardViewModelSlice.buildCard()
-        personalizeCardViewModelSlice.buildCard()
-        quickLinksItemViewModelSlice.buildCard(site)
-        plansCardViewModelSlice.buildCard(site)
-        cardViewModelSlice.buildCard(site)
-        quickStartCardViewModelSlice.build(site)
+        job?.cancel()
+        job = scope.launch {
+            jpMigrationSuccessCardViewModelSlice.buildCard()
+            jetpackInstallFullPluginCardViewModelSlice.buildCard(site)
+            blazeCardViewModelSlice.buildCard(site)
+            bloggingPromptCardViewModelSlice.buildCard(site)
+            bloganuaryNudgeCardViewModelSlice.buildCard()
+            personalizeCardViewModelSlice.buildCard()
+            quickLinksItemViewModelSlice.buildCard(site)
+            plansCardViewModelSlice.buildCard(site)
+            cardViewModelSlice.buildCard(site)
+            quickStartCardViewModelSlice.build(site)
+        }
     }
 
 
@@ -197,6 +204,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
 
     fun onCleared() {
         quickLinksItemViewModelSlice.onCleared()
+        job?.cancel()
         scope.cancel()
     }
 

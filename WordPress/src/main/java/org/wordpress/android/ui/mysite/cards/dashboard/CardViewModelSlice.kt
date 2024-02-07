@@ -2,10 +2,9 @@ package org.wordpress.android.ui.mysite.cards.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -54,11 +53,48 @@ class CardViewModelSlice @Inject constructor(
 ) {
     private lateinit var scope: CoroutineScope
 
+    private var collectJob: Job? = null
+    private var fetchJob: Job? = null
+
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    private val _uiModel = MutableLiveData<CardsState?>()
-    val uiModel: LiveData<CardsState?> = _uiModel.distinctUntilChanged()
+    val uiModel: MutableLiveData<CardsState> = merge(
+        dynamicCardsViewModelSlice.topDynamicCards,
+        todaysStatsViewModelSlice.uiModel,
+        pagesCardViewModelSlice.uiModel,
+        postsCardViewModelSlice.uiModel,
+        activityLogCardViewModelSlice.uiModel,
+        dynamicCardsViewModelSlice.bottomDynamicCards
+    ) { topDynamicCards, todaysStatsCard, pagesCard, postsCard, activityCard, bottomDynamicCards ->
+        val state = mergeUiModels(
+            topDynamicCards,
+            todaysStatsCard,
+            pagesCard,
+            postsCard,
+            activityCard,
+            bottomDynamicCards
+        )
+        state
+    } as MutableLiveData<CardsState>
+
+    private fun mergeUiModels(
+        topDynamicCards: List<MySiteCardAndItem.Card>?,
+        todaysStatsCard: MySiteCardAndItem.Card.TodaysStatsCard?,
+        pagesCard: MySiteCardAndItem.Card.PagesCard?,
+        postsCard: List<MySiteCardAndItem.Card>?,
+        activityCard: MySiteCardAndItem.Card.ActivityCard?,
+        bottomDynamicCards: List<MySiteCardAndItem.Card>?
+    ): CardsState {
+        val cards = mutableListOf<MySiteCardAndItem.Card>()
+        topDynamicCards?.let { cards.addAll(topDynamicCards) }
+        todaysStatsCard?.let { cards.add(todaysStatsCard) }
+        pagesCard?.let { cards.add(pagesCard) }
+        postsCard?.let { cards.addAll(postsCard) }
+        activityCard?.let { cards.add(activityCard) }
+        bottomDynamicCards?.let { cards.addAll(bottomDynamicCards) }
+        return CardsState.Success(cards)
+    }
 
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = merge(
@@ -94,7 +130,8 @@ class CardViewModelSlice @Inject constructor(
     ) {
         _isRefreshing.postValue(true)
         // fetch data from store and then refresh the data from the server
-        scope.launch(bgDispatcher) {
+        collectJob?.cancel()
+        collectJob = scope.launch(bgDispatcher) {
             cardsStore.getCards(siteModel)
                 .map { it.model }
                 .map { cards -> cards?.filter { getCardTypes(siteModel).contains(it.type) } }
@@ -109,7 +146,8 @@ class CardViewModelSlice @Inject constructor(
         selectedSite: SiteModel
     ) {
         _isRefreshing.postValue(true)
-        scope.launch(bgDispatcher) {
+        fetchJob?.cancel()
+        fetchJob = scope.launch(bgDispatcher) {
             val payload = CardsRestClient.FetchCardsPayload(
                 selectedSite,
                 getCardTypes(selectedSite),
@@ -157,28 +195,28 @@ class CardViewModelSlice @Inject constructor(
     }
 
     private fun postErrorState() {
-        if ((_uiModel.value == null) || isUiModelEmpty()){
+        if ((uiModel.value == null) || isUiModelEmpty()) {
             // if the
-            _uiModel.postValue(
+            uiModel.postValue(
                 CardsState.ErrorState(
                     MySiteCardAndItem.Card.ErrorCard(
                         onRetryClick = ListItemInteraction.create(this::onDashboardErrorRetry)
                     )
                 )
             )
-        } else if (_uiModel.value is CardsState.ErrorState) {
+        } else if (uiModel.value is CardsState.ErrorState) {
             // if the error state is already posted, then post the snackbar message
-                _onSnackbarMessage.postValue(
-                    Event(
-                        SnackbarMessageHolder(UiString.UiStringRes(R.string.my_site_dashboard_update_error))
-                    )
+            _onSnackbarMessage.postValue(
+                Event(
+                    SnackbarMessageHolder(UiString.UiStringRes(R.string.my_site_dashboard_update_error))
                 )
-            }
+            )
+        }
         _isRefreshing.postValue(false)
     }
 
     private fun isUiModelEmpty(): Boolean {
-        return (_uiModel.value is CardsState.Success) && (_uiModel.value as CardsState.Success).cards.isEmpty()
+        return (uiModel.value is CardsState.Success) && (uiModel.value as CardsState.Success).cards.isEmpty()
     }
 
     private fun onDashboardErrorRetry() {
@@ -188,63 +226,46 @@ class CardViewModelSlice @Inject constructor(
     fun postState(cards: List<CardModel>?) {
         _isRefreshing.postValue(false)
         if (cards.isNullOrEmpty()) {
-            _uiModel.postValue(CardsState.Success(emptyList()))
+            uiModel.postValue(CardsState.Success(emptyList()))
             return
         }
         scope.launch {
-            val result = mutableListOf<MySiteCardAndItem.Card>()
+            dynamicCardsViewModelSlice.buildTopDynamicCards(
+                cards.firstOrNull { it is CardModel.DynamicCardsModel } as? CardModel.DynamicCardsModel
+            )
 
-            val topDynamicCards = async {
-                dynamicCardsViewModelSlice.buildTopDynamicCards(
-                    cards.firstOrNull { it is CardModel.DynamicCardsModel } as? CardModel.DynamicCardsModel
-                )
-            }
 
-            val todayStatsCard = async {
-                todaysStatsViewModelSlice.buildTodaysStatsCard(
-                    cards.firstOrNull { it is CardModel.TodaysStatsCardModel } as? CardModel.TodaysStatsCardModel
-                )
-            }
+            todaysStatsViewModelSlice.buildTodaysStatsCard(
+                cards.firstOrNull { it is CardModel.TodaysStatsCardModel } as? CardModel.TodaysStatsCardModel
+            )
 
-            val postCard = async {
-                postsCardViewModelSlice.buildPostCard(
-                    cards.firstOrNull { it is CardModel.PostsCardModel } as? CardModel.PostsCardModel
-                )
-            }
+            postsCardViewModelSlice.buildPostCard(
+                cards.firstOrNull { it is CardModel.PostsCardModel } as? CardModel.PostsCardModel
+            )
 
-            val pagesCard = async {
-                pagesCardViewModelSlice.buildCard(
-                    cards.firstOrNull { it is CardModel.PagesCardModel } as? CardModel.PagesCardModel
-                )
-            }
+            pagesCardViewModelSlice.buildCard(
+                cards.firstOrNull { it is CardModel.PagesCardModel } as? CardModel.PagesCardModel
+            )
 
-            val activityCard = async {
-                activityLogCardViewModelSlice.buildCard(
-                    cards.firstOrNull { it is CardModel.ActivityCardModel } as? CardModel.ActivityCardModel
-                )
-            }
+            activityLogCardViewModelSlice.buildCard(
+                cards.firstOrNull { it is CardModel.ActivityCardModel } as? CardModel.ActivityCardModel
+            )
 
-            val bottomDynamicCards = async {
-                dynamicCardsViewModelSlice.buildBottomDynamicCards(
-                    cards.firstOrNull { it is CardModel.DynamicCardsModel } as? CardModel.DynamicCardsModel
-                )
-            }
-
-            result.apply {
-                topDynamicCards.await()?.let { addAll(it) }
-                todayStatsCard.await()?.let { add(it) }
-                postCard.await().let { addAll(it) }
-                pagesCard.await()?.let { add(it) }
-                activityCard.await()?.let { add(it) }
-                bottomDynamicCards.await()?.let { addAll(it) }
-            }.toList()
-
-            _uiModel.postValue(CardsState.Success(result))
+            dynamicCardsViewModelSlice.buildBottomDynamicCards(
+                cards.firstOrNull { it is CardModel.DynamicCardsModel } as? CardModel.DynamicCardsModel
+            )
         }
     }
 
     fun clearValue() {
-        _uiModel.postValue(null)
+        uiModel.postValue(CardsState.Success(emptyList()))
+        collectJob?.cancel()
+        fetchJob?.cancel()
+        dynamicCardsViewModelSlice.clearValue()
+        todaysStatsViewModelSlice.clearValue()
+        pagesCardViewModelSlice.clearValue()
+        postsCardViewModelSlice.clearValue()
+        activityLogCardViewModelSlice.clearValue()
     }
 }
 
