@@ -111,7 +111,7 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
                 }
             }
         } catch (Exception e) {
-            AppLog.e(T.MEDIA, "ShareIntentReceiver failed ", e);
+            AppLog.e(T.MEDIA, "ShareIntentReceiver failed to download media ", e);
         }
     }
 
