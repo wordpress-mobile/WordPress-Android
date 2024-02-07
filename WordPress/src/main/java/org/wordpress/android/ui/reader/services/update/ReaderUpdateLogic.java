@@ -176,11 +176,9 @@ public class ReaderUpdateLogic {
                 localTopics.addAll(ReaderTagTable.getFollowedTags());
                 localTopics.addAll(ReaderTagTable.getBookmarkTags());
                 localTopics.addAll(ReaderTagTable.getCustomListTags());
+                localTopics.addAll(ReaderTagTable.getDiscoverPostCardsTags());
 
-                if (
-                        !localTopics.isSameList(serverTopics)
-                        || displayNameUpdateWasNeeded
-                ) {
+                if (!localTopics.isSameList(serverTopics)) {
                     AppLog.d(AppLog.T.READER, "reader service > followed topics changed "
                                               + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
 
