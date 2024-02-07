@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.blaze.BlazeAdSuggestion
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingDevice
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLanguage
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLocation
@@ -104,6 +105,29 @@ class BlazeCreationRestClient @Inject constructor(
         }
     }
 
+    suspend fun fetchAdSuggestions(
+        site: SiteModel,
+        productId: Long
+    ): BlazePayload<List<BlazeAdSuggestion>> {
+        val url = WPCOMV2.sites.site(site.siteId).wordads.dsp.api.v1_1.suggestions.url
+
+        val response = wpComNetwork.executePostGsonRequest(
+            url = url,
+            body = mapOf(
+                "urn" to "urn:wpcom:post:${site.siteId}:$productId"
+            ),
+            clazz = BlazeAdSuggestionListResponse::class.java
+        )
+
+        return when (response) {
+            is WPComGsonRequestBuilder.Response.Success -> BlazePayload(
+                response.data.creatives.map { it.toDomainModel() }
+            )
+
+            is WPComGsonRequestBuilder.Response.Error -> BlazePayload(response.error)
+        }
+    }
+
     data class BlazePayload<T>(
         val data: T?
     ) : Payload<WPComGsonNetworkError>() {
@@ -178,6 +202,24 @@ private class BlazeTargetingLanguageListResponse(
             return BlazeTargetingLanguage(
                 id = id,
                 name = name
+            )
+        }
+    }
+}
+
+private class BlazeAdSuggestionListResponse(
+    val creatives: List<BlazeAdSuggestionNetworkModel>
+) {
+    class BlazeAdSuggestionNetworkModel(
+        @SerializedName("site_name")
+        val siteName: String,
+        @SerializedName("text_snippet")
+        val textSnippet: String,
+    ) {
+        fun toDomainModel(): BlazeAdSuggestion {
+            return BlazeAdSuggestion(
+                tagLine = siteName,
+                description = textSnippet
             )
         }
     }
