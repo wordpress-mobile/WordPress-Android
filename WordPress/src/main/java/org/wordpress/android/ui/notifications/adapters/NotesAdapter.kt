@@ -225,61 +225,36 @@ class NotesAdapter(
     }
 
     private fun NoteViewHolder.loadAvatars(note: Note) {
-        if (note.canShowMultipleAvatars()) {
-            if(note.iconURLs!!.size == 2) {
+        if (note.shouldShowMultipleAvatars() && note.iconURLs != null && note.iconURLs!!.size > 1) {
+            val avatars = note.iconURLs!!.toList()
+            if (avatars.size == 2) {
                 imageAvatar.visibility = View.INVISIBLE
                 twoAvatarsView.visibility = View.VISIBLE
                 threeAvatarsView.visibility = View.INVISIBLE
-                val avatarUrl = GravatarUtils.fixGravatarUrl(note.iconURL, avatarSize)
-                val avatarUrl2 = GravatarUtils.fixGravatarUrl(note.iconURLs!![1], avatarSize)
-                imageManager?.loadIntoCircle(
-                    twoAvatars1,
-                    ImageType.AVATAR_WITH_BACKGROUND,
-                    avatarUrl2
-                )
-                imageManager?.loadIntoCircle(
-                    twoAvatars2,
-                    ImageType.AVATAR_WITH_BACKGROUND,
-                    avatarUrl
-                )
-            } else {
+                loadAvatar(twoAvatars1, avatars[1])
+                loadAvatar(twoAvatars2, avatars[0])
+            } else { // size > 3
                 imageAvatar.visibility = View.INVISIBLE
                 twoAvatarsView.visibility = View.INVISIBLE
                 threeAvatarsView.visibility = View.VISIBLE
-                val avatarUrl = GravatarUtils.fixGravatarUrl(note.iconURL, avatarSize)
-                val avatarUrl2 = GravatarUtils.fixGravatarUrl(note.iconURLs!![1], avatarSize)
-                val avatarUrl3 = GravatarUtils.fixGravatarUrl(note.iconURLs!![2], avatarSize)
-                imageManager?.loadIntoCircle(
-                    threeAvatars1,
-                    ImageType.AVATAR_WITH_BACKGROUND,
-                    avatarUrl3
-                )
-                imageManager?.loadIntoCircle(
-                    threeAvatars2,
-                    ImageType.AVATAR_WITH_BACKGROUND,
-                    avatarUrl2
-                )
-                imageManager?.loadIntoCircle(
-                    threeAvatars3,
-                    ImageType.AVATAR_WITH_BACKGROUND,
-                    avatarUrl
-                )
+                loadAvatar(threeAvatars1, avatars[2])
+                loadAvatar(threeAvatars2, avatars[1])
+                loadAvatar(threeAvatars3, avatars[0])
             }
-        } else {
+        } else { // single avatar
             imageAvatar.visibility = View.VISIBLE
             twoAvatarsView.visibility = View.INVISIBLE
             threeAvatarsView.visibility = View.INVISIBLE
-            val avatarUrl = GravatarUtils.fixGravatarUrl(note.iconURL, avatarSize)
-            imageManager?.loadIntoCircle(
-                imageAvatar,
-                ImageType.AVATAR_WITH_BACKGROUND,
-                avatarUrl
-            )
+            loadAvatar(imageAvatar, note.iconURL)
         }
     }
 
-    private fun Note.canShowMultipleAvatars() =
-        (isFollowType || isLikeType || isCommentLikeType) && iconURLs != null && iconURLs!!.size > 1
+    private fun loadAvatar(imageView: ImageView, avatarUrl: String) {
+        val url = GravatarUtils.fixGravatarUrl(avatarUrl, avatarSize)
+        imageManager?.loadIntoCircle(imageView, ImageType.AVATAR_WITH_BACKGROUND, url)
+    }
+
+    private fun Note.shouldShowMultipleAvatars() = isFollowType || isLikeType || isCommentLikeType
 
     private fun handleMaxLines(subject: TextView, detail: TextView) {
         subject.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
