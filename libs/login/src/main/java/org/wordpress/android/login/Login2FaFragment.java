@@ -606,6 +606,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         if (event.isError()) {
             endProgress();
             handleAuthError(event.error.type, getString(R.string.login_error_security_key));
+            getParentFragmentManager().popBackStack();
             return;
         }
 
@@ -635,6 +636,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         if (event.isError()) {
             endProgress();
             handleAuthError(event.error.type, getString(R.string.login_error_security_key));
+            getParentFragmentManager().popBackStack();
             return;
         }
         mAnalyticsListener.trackLoginSecurityKeySuccess();
