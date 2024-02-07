@@ -13,21 +13,23 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.blaze.BlazeAdSuggestion
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
+import org.wordpress.android.fluxc.model.blaze.BlazeTargetingDevice
+import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLanguage
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLocation
+import org.wordpress.android.fluxc.model.blaze.BlazeTargetingTopic
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsError
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetchedPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsUtils
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeTargetingPayload
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCreationRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.Campaign
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.CampaignStats
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.ContentConfig
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.FakeBlazeTargetingRestClient
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
-import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeAdSuggestionEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
@@ -110,7 +112,7 @@ private val NO_RESULTS_BLAZE_CAMPAIGNS_MODEL = BlazeCampaignsModel(
 
 class BlazeCampaignsStoreTest {
     private val restClient: BlazeCampaignsRestClient = mock()
-    private val targetingRestClient: FakeBlazeTargetingRestClient = mock()
+    private val creationRestClient: BlazeCreationRestClient = mock()
     private val blazeCampaignsDao: BlazeCampaignsDao = mock()
     private val blazeTargetingDao: BlazeTargetingDao = mock()
     private val siteModel = SiteModel().apply { siteId = SITE_ID }
@@ -124,7 +126,7 @@ class BlazeCampaignsStoreTest {
     fun setUp() {
         store = BlazeCampaignsStore(
             restClient = restClient,
-            fakeTargetingRestClient = targetingRestClient,
+            creationRestClient = creationRestClient,
             campaignsDao = blazeCampaignsDao,
             targetingDao = blazeTargetingDao,
             coroutineEngine = initCoroutineEngine()
@@ -203,8 +205,8 @@ class BlazeCampaignsStoreTest {
 
     @Test
     fun `when fetching targeting locations, then locations are returned`() = test {
-        whenever(targetingRestClient.fetchBlazeLocations(any(), any())).thenReturn(
-            BlazeTargetingPayload(
+        whenever(creationRestClient.fetchTargetingLocations(any(), any(), any())).thenReturn(
+            BlazeCreationRestClient.BlazePayload(
                 List(10) {
                     BlazeTargetingLocation(
                         id = it.toLong(),
@@ -216,7 +218,7 @@ class BlazeCampaignsStoreTest {
             )
         )
 
-        val locations = store.fetchBlazeTargetingLocations("query")
+        val locations = store.fetchBlazeTargetingLocations(siteModel, "query")
 
         assertThat(locations.isError).isFalse()
         assertThat(locations.model).isNotNull
@@ -225,19 +227,18 @@ class BlazeCampaignsStoreTest {
 
     @Test
     fun `when fetching targeting topics, then persist data in DB`() = test {
-        whenever(targetingRestClient.fetchBlazeTopics(any())).thenReturn(
-            BlazeTargetingPayload(
+        whenever(creationRestClient.fetchTargetingTopics(any(), any())).thenReturn(
+            BlazeCreationRestClient.BlazePayload(
                 List(10) {
-                    BlazeTargetingTopicEntity(
+                    BlazeTargetingTopic(
                         id = it.toString(),
-                        description = "Topic $it",
-                        locale = "en"
+                        description = "Topic $it"
                     )
                 }
             )
         )
 
-        store.fetchBlazeTargetingTopics()
+        store.fetchBlazeTargetingTopics(siteModel)
 
         verify(blazeTargetingDao).replaceTopics(any())
     }
@@ -264,19 +265,18 @@ class BlazeCampaignsStoreTest {
 
     @Test
     fun `when fetching targeting languages, then persist data in DB`() = test {
-        whenever(targetingRestClient.fetchBlazeLanguages(any())).thenReturn(
-            BlazeTargetingPayload(
+        whenever(creationRestClient.fetchTargetingLanguages(any(), any())).thenReturn(
+            BlazeCreationRestClient.BlazePayload(
                 List(10) {
-                    BlazeTargetingLanguageEntity(
+                    BlazeTargetingLanguage(
                         id = it.toString(),
-                        name = "Language $it",
-                        locale = "en"
+                        name = "Language $it"
                     )
                 }
             )
         )
 
-        store.fetchBlazeTargetingLanguages()
+        store.fetchBlazeTargetingLanguages(siteModel)
 
         verify(blazeTargetingDao).replaceLanguages(any())
     }
@@ -303,19 +303,18 @@ class BlazeCampaignsStoreTest {
 
     @Test
     fun `when fetching targeting devices, then persist data in DB`() = test {
-        whenever(targetingRestClient.fetchBlazeDevices(any())).thenReturn(
-            BlazeTargetingPayload(
+        whenever(creationRestClient.fetchTargetingDevices(any(), any())).thenReturn(
+            BlazeCreationRestClient.BlazePayload(
                 List(10) {
-                    BlazeTargetingDeviceEntity(
+                    BlazeTargetingDevice(
                         id = it.toString(),
-                        name = "Device $it",
-                        locale = "en"
+                        name = "Device $it"
                     )
                 }
             )
         )
 
-        store.fetchBlazeTargetingDevices()
+        store.fetchBlazeTargetingDevices(siteModel)
 
         verify(blazeTargetingDao).replaceDevices(any())
     }
@@ -341,37 +340,21 @@ class BlazeCampaignsStoreTest {
     }
 
     @Test
-    fun `when fetching targeting ad suggestions, then persist data in DB`() = test {
-        whenever(targetingRestClient.fetchBlazeAdSuggestions(any(), any())).thenReturn(
-            BlazeTargetingPayload(
-                generateAdSuggestions()
+    fun `when fetching targeting ad suggestions, then return data successfully`() = test {
+        val suggestions = List(10) {
+            BlazeAdSuggestion(
+                tagLine = it.toString(),
+                description = "Ad $it"
             )
+        }
+
+        whenever(creationRestClient.fetchAdSuggestions(any(), any())).thenReturn(
+            BlazeCreationRestClient.BlazePayload(suggestions)
         )
 
-        store.fetchBlazeAdSuggestions(siteModel, 1L)
+        val suggestionsResult = store.fetchBlazeAdSuggestions(siteModel, 1L)
 
-        verify(blazeCampaignsDao).replaceAdSuggestions(any())
-    }
-
-    @Test
-    fun `when getting ad suggestions, then return data from DB`() = test {
-        whenever(blazeCampaignsDao.getBlazeAdSuggestions(any(), any())).thenReturn(
-            generateAdSuggestions()
-        )
-
-        val adSuggestions = store.getBlazeAdSuggestions(siteModel, 1L)
-
-        assertThat(adSuggestions).isNotNull
-        assertThat(adSuggestions.size).isEqualTo(3)
-    }
-
-    private fun generateAdSuggestions() = List(3) {
-        BlazeAdSuggestionEntity(
-            id = it.toString(),
-            siteId = 1L,
-            productId = 1L,
-            tagLine = "Tag line $it",
-            description = "Description $it"
-        )
+        assertThat(suggestionsResult.isError).isFalse()
+        assertThat(suggestionsResult.model).isEqualTo(suggestions)
     }
 }
