@@ -201,7 +201,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        viewModel.onSaveInstanceState(outState)
+        if (::viewModel.isInitialized) {
+            viewModel.onSaveInstanceState(outState)
+        }
     }
 
     private fun updateUiState(uiState: ReaderViewModel.ReaderUiState) {
