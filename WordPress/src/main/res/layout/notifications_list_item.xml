@@ -43,8 +43,8 @@
 
         <ImageView
             android:id="@+id/note_avatar"
-            android:layout_width="@dimen/activity_log_icon_size"
-            android:layout_height="@dimen/activity_log_icon_size"
+            android:layout_width="@dimen/notifications_icon_size"
+            android:layout_height="@dimen/notifications_icon_size"
             android:layout_marginStart="@dimen/notifications_avatar_margin_start"
             android:contentDescription="@null"
             app:layout_constraintStart_toStartOf="parent"
