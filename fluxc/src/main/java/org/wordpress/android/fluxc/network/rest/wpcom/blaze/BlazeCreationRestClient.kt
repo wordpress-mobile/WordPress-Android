@@ -134,6 +134,7 @@ class BlazeCreationRestClient @Inject constructor(
         }
     }
 
+    @Suppress("LongParameterList")
     @SuppressLint("SimpleDateFormat")
     suspend fun fetchAdForecast(
         site: SiteModel,
