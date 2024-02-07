@@ -624,8 +624,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 },
                 error -> {
                     handleWebauthnError();
-                    mLoginListener.securityKey2FAFailed();
-                    getParentFragmentManager().popBackStack();
                     return null;
                 }
         );
@@ -647,6 +645,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         String errorMessage = getString(R.string.login_error_security_key);
         endProgress();
         handleAuthError(AuthenticationErrorType.WEBAUTHN_FAILED, errorMessage);
+        getParentFragmentManager().popBackStack();
     }
 
     @NonNull private ArrayList<SupportedAuthTypes> handleSupportedAuthTypesParameter(
