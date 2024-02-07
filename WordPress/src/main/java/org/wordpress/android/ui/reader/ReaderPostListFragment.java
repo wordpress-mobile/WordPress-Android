@@ -2332,7 +2332,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             mActionableEmptyView.button.setVisibility(View.GONE);
                             mActionableEmptyView.subtitle.setVisibility(View.GONE);
                             showEmptyView();
-                        } else {
+                        } else if (!isPostAdapterEmpty()) {
                             hideEmptyView();
                         }
                     });
