@@ -1261,7 +1261,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
+            public boolean onMenuItemActionCollapse(@NonNull final MenuItem item) {
+                if (getActivity() instanceof ReaderSearchActivity) {
+                    ((ReaderSearchActivity) requireActivity()).finishWithRefreshSubscriptionsResult();
+                }
                 requireActivity().finish();
                 return false;
             }

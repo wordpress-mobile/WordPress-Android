@@ -184,8 +184,11 @@ public class ReaderActivityLauncher {
     }
 
     public static void showReaderSearch(Context context) {
-        Intent intent = new Intent(context, ReaderSearchActivity.class);
-        context.startActivity(intent);
+        context.startActivity(createReaderSearchIntent(context));
+    }
+
+    public static Intent createReaderSearchIntent(@NonNull final Context context) {
+        return new Intent(context, ReaderSearchActivity.class);
     }
 
     /*
