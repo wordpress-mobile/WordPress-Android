@@ -410,8 +410,11 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
     }
 
+    /**
+     * Mark notifications as read in CURRENT tab, use filteredNotes instead of notes
+     */
     fun markAllNotesAsRead() {
-        viewModel.markNoteAsRead(requireContext(), createOrGetNotesAdapter().notes)
+        viewModel.markNoteAsRead(requireContext(), createOrGetNotesAdapter().filteredNotes)
     }
 
     @Subscribe(sticky = true, threadMode = MAIN)
@@ -474,7 +477,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     }
 
     companion object {
-        private const val KEY_TAB_POSITION = "tabPosition"
+        const val KEY_TAB_POSITION = "tabPosition"
         fun newInstance(position: Int): Fragment {
             val fragment = NotificationsListFragmentPage()
             val bundle = Bundle()
