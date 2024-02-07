@@ -8,11 +8,13 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.blaze.BlazeAdForecast
 import org.wordpress.android.fluxc.model.blaze.BlazeAdSuggestion
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingDevice
@@ -37,6 +39,8 @@ import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingLanguageEntit
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingTopicEntity
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
+import java.util.Date
+import kotlin.time.Duration.Companion.days
 
 const val SITE_ID = 1L
 
@@ -356,5 +360,36 @@ class BlazeCampaignsStoreTest {
 
         assertThat(suggestionsResult.isError).isFalse()
         assertThat(suggestionsResult.model).isEqualTo(suggestions)
+    }
+
+    @Test
+    fun `when fetching ad forecast, then return data successfully`() = test {
+        val forecast = BlazeAdForecast(
+            minImpressions = 100,
+            maxImpressions = 200
+        )
+
+        whenever(
+            creationRestClient.fetchAdForecast(
+                site = any(),
+                startDate = any(),
+                endDate = any(),
+                totalBudget = any(),
+                timeZoneId = any(),
+                targetingParameters = anyOrNull()
+            )
+        ).thenReturn(
+            BlazeCreationRestClient.BlazePayload(forecast)
+        )
+
+        val forecastResult = store.fetchBlazeAdForecast(
+            siteModel,
+            Date(),
+            Date(System.currentTimeMillis() + 7.days.inWholeMilliseconds),
+            100.0,
+        )
+
+        assertThat(forecastResult.isError).isFalse()
+        assertThat(forecastResult.model).isEqualTo(forecast)
     }
 }
