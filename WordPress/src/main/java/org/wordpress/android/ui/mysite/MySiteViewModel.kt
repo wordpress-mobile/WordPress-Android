@@ -444,10 +444,10 @@ class MySiteViewModel @Inject constructor(
 
     fun startQuickStart() {
         selectedSiteRepository.getSelectedSite()?.let {
-            dashboardCardsViewModelSlice.startQuickStart(it)
             quickStartTracker.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
             startQuickStart(selectedSiteRepository.getSelectedSiteLocalId(), shouldMarkUpdateSiteTitleTaskComplete)
             shouldMarkUpdateSiteTitleTaskComplete = false
+            dashboardCardsViewModelSlice.startQuickStart(it)
         }
     }
 
