@@ -15,6 +15,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -66,6 +67,7 @@ import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,6 +88,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         BasicFragmentDialog.BasicDialogPositiveClickInterface, ScrollableViewInitializedListener {
     private static final String ARG_TITLE = "activityTitle";
     private static final String DOMAIN_WPCOM = "wordpress.com";
+
+    private NotificationsListViewModel mViewModel;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -108,6 +112,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         ((WordPress) getApplication()).component().inject(this);
         AppLog.i(AppLog.T.NOTIFS, "Creating NotificationsDetailActivity");
 
+        mViewModel = new ViewModelProvider(this).get(NotificationsListViewModel.class);
         mBinding = NotificationsDetailActivityBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
@@ -210,7 +215,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
         // set title
         setActionBarTitleForNote(note);
-        markNoteAsRead(note);
+        mViewModel.markNoteAsRead(this, Collections.singletonList(note));
 
         // If `note.getTimestamp()` is not the most recent seen note, the server will discard the value.
         NotificationsActions.updateSeenTimestamp(note);
@@ -246,7 +251,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                         Note currentNote = mAdapter.getNoteAtPosition(position);
                         if (currentNote != null) {
                             setActionBarTitleForNote(currentNote);
-                            markNoteAsRead(currentNote);
+                            mViewModel.markNoteAsRead(NotificationsDetailActivity.this,
+                                    Collections.singletonList(currentNote));
                             NotificationsActions.updateSeenTimestamp(currentNote);
                             // track subsequent comment note views
                             trackCommentNote(currentNote);
@@ -330,17 +336,6 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
         ToastUtils.showToast(this, R.string.error_notification_open);
         finish();
-    }
-
-    private void markNoteAsRead(Note note) {
-        mGCMMessageHandler.removeNotificationWithNoteIdFromSystemBar(this, note.getId());
-        // mark the note as read if it's unread
-        if (note.isUnread()) {
-            NotificationsActions.markNoteAsRead(note);
-            note.setRead();
-            NotificationsTable.saveNote(note);
-            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-        }
     }
 
     private void setActionBarTitleForNote(Note note) {

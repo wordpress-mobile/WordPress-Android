@@ -9,9 +9,12 @@ import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -57,6 +60,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_list_fragment_page),
     OnScrollToTopListener,
     DataLoadedListener {
@@ -65,6 +69,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     private var isAnimatingOutNewNotificationsBar = false
     private var shouldRefreshNotifications = false
     private var tabPosition = 0
+    private val viewModel: NotificationsListViewModel by viewModels()
 
     @Inject
     lateinit var accountStore: AccountStore
@@ -405,6 +410,13 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
     }
 
+    /**
+     * Mark notifications as read in CURRENT tab, use filteredNotes instead of notes
+     */
+    fun markAllNotesAsRead() {
+        viewModel.markNoteAsRead(requireContext(), createOrGetNotesAdapter().filteredNotes)
+    }
+
     @Subscribe(sticky = true, threadMode = MAIN)
     fun onEventMainThread(event: NoteLikeOrModerationStatusChanged) {
         NotificationsActions.downloadNoteAndUpdateDB(
@@ -465,7 +477,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     }
 
     companion object {
-        private const val KEY_TAB_POSITION = "tabPosition"
+        const val KEY_TAB_POSITION = "tabPosition"
         fun newInstance(position: Int): Fragment {
             val fragment = NotificationsListFragmentPage()
             val bundle = Bundle()

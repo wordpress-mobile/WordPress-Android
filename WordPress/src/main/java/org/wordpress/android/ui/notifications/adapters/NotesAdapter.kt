@@ -44,7 +44,7 @@ class NotesAdapter(
     private val dataLoadedListener: DataLoadedListener
     private val onLoadMoreListener: OnLoadMoreListener?
     private val notes = ArrayList<Note>()
-    private val filteredNotes = ArrayList<Note>()
+    val filteredNotes = ArrayList<Note>()
 
     @JvmField
     @Inject
