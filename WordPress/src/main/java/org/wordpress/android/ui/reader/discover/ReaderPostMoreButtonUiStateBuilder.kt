@@ -103,7 +103,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         if (isNotificationsEnabled) {
             SecondaryAction(
                 type = SITE_NOTIFICATIONS,
-                label = UiStringRes(R.string.reader_btn_notifications_off),
+                label = UiStringRes(R.string.reader_btn_blog_notifications_off),
                 labelColor = R.attr.wpColorOnSurfaceMedium,
                 iconRes = R.drawable.ic_reader_bell_24dp,
                 isSelected = true,
@@ -112,7 +112,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         } else {
             SecondaryAction(
                 type = SITE_NOTIFICATIONS,
-                label = UiStringRes(R.string.reader_btn_notifications_on),
+                label = UiStringRes(R.string.reader_btn_blog_notifications_on),
                 labelColor = MaterialR.attr.colorOnSurface,
                 iconRes = R.drawable.ic_reader_bell_24dp,
                 iconColor = R.attr.wpColorOnSurfaceMedium,
@@ -196,7 +196,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         if (isPostFollowed) {
             SecondaryAction(
                 type = FOLLOW,
-                label = UiStringRes(R.string.reader_btn_unfollow),
+                label = UiStringRes(R.string.reader_btn_subscribed),
                 labelColor = R.attr.wpColorOnSurfaceMedium,
                 iconRes = R.drawable.ic_reader_following_white_24dp,
                 isSelected = true,
@@ -205,7 +205,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         } else {
             SecondaryAction(
                 type = FOLLOW,
-                label = UiStringRes(R.string.reader_btn_follow),
+                label = UiStringRes(R.string.reader_btn_subscribe),
                 labelColor = MaterialR.attr.colorSecondary,
                 iconRes = R.drawable.ic_reader_follow_white_24dp,
                 isSelected = false,
@@ -216,7 +216,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     private fun buildBlockSite(onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit) =
         SecondaryAction(
             type = BLOCK_SITE,
-            label = UiStringRes(R.string.reader_menu_block_blog),
+            label = UiStringRes(R.string.reader_menu_block_this_blog),
             labelColor = R.attr.wpColorError,
             iconRes = R.drawable.ic_block_white_24dp,
             iconColor = R.attr.wpColorError,

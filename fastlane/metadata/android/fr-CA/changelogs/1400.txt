@@ -1,6 +1,0 @@
-24.0 :
-Mises à jour de l'éditeur de blocs :
-- Le clavier de l’appareil reste visible lors de l’édition de blocs Paragraphe
-- L’écran défile automatiquement jusqu’aux blocs qui viennent d’être insérés
-- Désélectionner des blocs en appuyant sur le bouton Retour de votre appareil
-- Partager simultanément divers types de médias vers l’application sans incident

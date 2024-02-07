@@ -1,0 +1,5 @@
+24.1 :
+- Recevez une notification lorsque vous travaillez hors ligne.
+- Les mises en ligne de blocs Image sont suspendues en cas de perte de votre connexion Internet et reprennent dès reconnexion.
+- Sélectionnez un dégradé personnalisé dans l’éditeur, un indicateur de couleur apparaît.
+- Les flèches s’affichent dans le bon sens pour les lecteurs de langues RTL.

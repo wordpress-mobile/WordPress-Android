@@ -76,8 +76,8 @@ class SiteItemsBuilderTest {
     @Test
     fun `adds all the items in the correct order`() {
         setupHeaders(
-            addSiteMonitoringItem = true,
             addActivityLogItem = true,
+            addSiteMonitoringItem = true,
             addPlanItem = false,
             addPagesItem = true,
             addAdminItem = true,
@@ -107,10 +107,10 @@ class SiteItemsBuilderTest {
             TRAFFIC_HEADER,
             STATS_ITEM,
             MANAGE_HEADER,
-            SITE_MONITORING_ITEM,
             ACTIVITY_ITEM,
             BACKUP_ITEM,
             SCAN_ITEM,
+            SITE_MONITORING_ITEM,
             EMPTY_HEADER,
             PEOPLE_ITEM,
             PLUGINS_ITEM,
@@ -231,8 +231,8 @@ class SiteItemsBuilderTest {
 
     @Suppress("ComplexMethod", "LongMethod")
     private fun setupHeaders(
-        addSiteMonitoringItem: Boolean = false,
         addActivityLogItem: Boolean = false,
+        addSiteMonitoringItem: Boolean = false,
         addPlanItem: Boolean = false,
         addPagesItem: Boolean = false,
         addAdminItem: Boolean = false,
@@ -258,11 +258,6 @@ class SiteItemsBuilderTest {
                 PLAN_ITEM.copy(showFocusPoint = showPlansFocusPoint)
             )
         }
-        if (addSiteMonitoringItem) {
-            whenever(siteListItemBuilder.buildSiteMonitoringItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
-                SITE_MONITORING_ITEM
-            )
-        }
         if (addActivityLogItem) {
             whenever(siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
                 ACTIVITY_ITEM
@@ -276,6 +271,11 @@ class SiteItemsBuilderTest {
         if (addScanItem) {
             whenever(siteListItemBuilder.buildScanItemIfAvailable(SITE_ITEM_ACTION)).thenReturn(
                 SCAN_ITEM
+            )
+        }
+        if (addSiteMonitoringItem) {
+            whenever(siteListItemBuilder.buildSiteMonitoringItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                SITE_MONITORING_ITEM
             )
         }
         if (addPagesItem) {

@@ -606,12 +606,10 @@ Language: es_MX
     <string name="suffix_1_000_000_000_000_000">%sC</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQ</string>
-    <string name="reader_filter_sites_title">Sitios</string>
     <string name="reader_save_for_later_display_name">Guardado</string>
     <string name="reader_discover_display_name">Descubrir</string>
     <string name="reader_my_likes_display_name">Me gusta</string>
     <string name="site_cannot_be_loaded">No podemos cargar los datos para tu sitio en este momento. Por favor, inténtalo de nuevo más tarde</string>
-    <string name="reader_filter_tags_title">Temas</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
     <string name="gutenberg_native_unsupported">No compatible</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>

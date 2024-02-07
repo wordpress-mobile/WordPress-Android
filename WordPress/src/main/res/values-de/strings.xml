@@ -34,8 +34,6 @@ Language: de
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">Im Januar erhältst du Blog-Schreibanregungen vom Bloganuary, unserer Community-Challenge. Diese soll dir helfen, Bloggen im neuen Jahr zur Gewohnheit zu machen.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Der Bloganuary kommt!</string>
-    <string name="turn_off">Nein, deaktivieren</string>
-    <string name="leave_on">Ja, aktiviert lassen</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Aus diesem Grund empfehlen wir, den Block in deinem Webbrowser zu bearbeiten.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Aus diesem Grund empfehlen wir, den Block im Webeditor zu bearbeiten.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternativ kannst du die Tiefe des Inhalts reduzieren, indem du die Gruppierung des Blocks aufhebst.</string>
@@ -50,8 +48,6 @@ Language: de
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Blöcke, die tiefer als %d Ebenen verschachtelt sind, werden im mobilen Editor möglicherweise nicht richtig dargestellt.</string>
     <string name="jp_migration_lets_go_button">Los geht\'s</string>
     <string name="jp_migration_done_no_sites_message">Es ist an der Zeit, deine WordPress-Reise in der Jetpack-App fortzusetzen.</string>
-    <string name="image_optimization_popup_desc">Die Bildoptimierung schrumpft Bilder für schnelleres Hochladen.\n\nDiese Option ist standardmäßig aktiviert, aber du kannst jederzeit Änderungen in den App-Einstellungen vornehmen.</string>
-    <string name="image_optimization_popup_title">Sollen Bilder weiterhin optimiert werden?</string>
     <string name="domain_management_clear_search">Suche löschen</string>
     <string name="media_encoder_quality_very_high">Sehr hoch</string>
     <string name="notification_security_key_needed">Bitte gib deinen Sicherheitsschlüssel an, um fortzufahren.</string>
@@ -1890,8 +1886,6 @@ Language: de
     <string name="reader_my_likes_display_name">Likes</string>
     <string name="reader_discover_display_name">Entdecken</string>
     <string name="reader_save_for_later_display_name">Gespeichert</string>
-    <string name="reader_filter_tags_title">Themen</string>
-    <string name="reader_filter_sites_title">Websites</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>

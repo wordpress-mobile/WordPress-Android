@@ -1,0 +1,7 @@
+24.1:
+- Ricevi notifiche mentre lavori offline.
+- I caricamenti del blocco Immagine vengono messi in pausa o ripresi in presenza di una connessione internet.
+- Vedi selezioni con gradiente personalizzato nell'editor.
+- Sono state sistemate le frecce avanti/indietro per chi legge da destra verso sinistra.
+- I tag Impulso giornaliero funzionano correttamente.
+- Tocca le schede Dominio del sito per gestire i domini.
