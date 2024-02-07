@@ -6,7 +6,8 @@
     android:layout_height="@dimen/activity_log_icon_size"
     android:layout_marginStart="@dimen/notifications_avatar_margin_start"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    app:layout_constraintTop_toTopOf="parent"
+    tools:ignore="MergeRootFrame">
 
     <ImageView
         android:id="@+id/two_avatars_1"
