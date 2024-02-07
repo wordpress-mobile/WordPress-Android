@@ -67,6 +67,7 @@ import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -214,7 +215,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
         // set title
         setActionBarTitleForNote(note);
-        markNoteAsRead(note);
+        mViewModel.markNoteAsRead(this, Collections.singletonList(note));
 
         // If `note.getTimestamp()` is not the most recent seen note, the server will discard the value.
         NotificationsActions.updateSeenTimestamp(note);
@@ -250,7 +251,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                         Note currentNote = mAdapter.getNoteAtPosition(position);
                         if (currentNote != null) {
                             setActionBarTitleForNote(currentNote);
-                            markNoteAsRead(currentNote);
+                            mViewModel.markNoteAsRead(NotificationsDetailActivity.this,
+                                    Collections.singletonList(currentNote));
                             NotificationsActions.updateSeenTimestamp(currentNote);
                             // track subsequent comment note views
                             trackCommentNote(currentNote);
@@ -334,10 +336,6 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
         ToastUtils.showToast(this, R.string.error_notification_open);
         finish();
-    }
-
-    private void markNoteAsRead(@NonNull Note... note) {
-        mViewModel.markNoteAsRead(this, note);
     }
 
     private void setActionBarTitleForNote(Note note) {

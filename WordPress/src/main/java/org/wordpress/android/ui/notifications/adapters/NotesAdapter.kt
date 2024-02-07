@@ -43,8 +43,8 @@ class NotesAdapter(
     private val textIndentSize: Int
     private val dataLoadedListener: DataLoadedListener
     private val onLoadMoreListener: OnLoadMoreListener?
-    private val notes = ArrayList<Note>()
     private val filteredNotes = ArrayList<Note>()
+    val notes = ArrayList<Note>()
 
     @JvmField
     @Inject

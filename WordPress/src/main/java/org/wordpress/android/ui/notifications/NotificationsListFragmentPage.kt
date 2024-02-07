@@ -27,7 +27,6 @@ import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.models.Note
 import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_NOTIFS_EMPTY_VIEW
@@ -412,7 +411,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     }
 
     fun markAllNotesAsRead() {
-        viewModel.markNoteAsRead(requireContext(), notesAdapter.notes)
+        viewModel.markNoteAsRead(requireContext(), createOrGetNotesAdapter().notes)
     }
 
     @Subscribe(sticky = true, threadMode = MAIN)

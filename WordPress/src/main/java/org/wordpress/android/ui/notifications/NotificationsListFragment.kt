@@ -314,7 +314,9 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         popupWindow.contentView = LayoutInflater.from(requireContext())
             .inflate(R.layout.notification_actions, null).apply {
                 findViewById<View>(R.id.text_mark_all_as_read).setOnClickListener {
-                    markAllAsRead()
+                    analyticsTrackerWrapper.track(NOTIFICATIONS_MARK_ALL_READ_TAPPED)
+                    (childFragmentManager.fragments[binding!!.viewPager.currentItem] as NotificationsListFragmentPage)
+                        .markAllNotesAsRead()
                     popupWindow.dismiss()
                 }
                 findViewById<View>(R.id.text_settings).setOnClickListener {
@@ -323,16 +325,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 }
             }
         popupWindow.showAsDropDown(anchorView)
-    }
-
-    /**
-     * For marking the status of every notification as read
-     */
-    private fun markAllAsRead() {
-        analyticsTrackerWrapper.track(NOTIFICATIONS_MARK_ALL_READ_TAPPED)
-        viewModel.markNoteAsRead(requireContext(), * viewModel.notes.toTypedArray())
-        (childFragmentManager.fragments[binding!!.viewPager.currentItem - 1] as NotificationsListFragmentPage)
-            .markAllNotesAsRead()
     }
 
     companion object {
