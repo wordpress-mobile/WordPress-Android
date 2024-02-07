@@ -73,8 +73,8 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
                         .map { it.model?.filter { prompt -> isSameDay(prompt.date, Date()) } }
                         .collect { result ->
                             postState(result?.firstOrNull())
-                            refreshData(siteModel)
                         }
+                    refreshData(siteModel)
                 } else {
                     postEmptyState()
                 }
@@ -82,7 +82,6 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         } else {
             postLastState()
         }
-        refreshData(siteModel)
     }
 
     fun refreshData(
