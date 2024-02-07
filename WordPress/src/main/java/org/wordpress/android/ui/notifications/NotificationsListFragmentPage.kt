@@ -9,9 +9,12 @@ import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -24,6 +27,7 @@ import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.models.Note
 import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_NOTIFS_EMPTY_VIEW
@@ -57,6 +61,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_list_fragment_page),
     OnScrollToTopListener,
     DataLoadedListener {
@@ -65,6 +70,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     private var isAnimatingOutNewNotificationsBar = false
     private var shouldRefreshNotifications = false
     private var tabPosition = 0
+    private val viewModel: NotificationsListViewModel by viewModels()
 
     @Inject
     lateinit var accountStore: AccountStore
@@ -403,6 +409,10 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             notesAdapter = this
             this.setOnNoteClickListener(mOnNoteClickListener)
         }
+    }
+
+    fun markAllNotesAsRead() {
+        viewModel.markNoteAsRead(requireContext(), notesAdapter.notes)
     }
 
     @Subscribe(sticky = true, threadMode = MAIN)

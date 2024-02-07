@@ -330,7 +330,9 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
      */
     private fun markAllAsRead() {
         analyticsTrackerWrapper.track(NOTIFICATIONS_MARK_ALL_READ_TAPPED)
-        // TODO("not yet implemented")
+        viewModel.markNoteAsRead(requireContext(), * viewModel.notes.toTypedArray())
+        (childFragmentManager.fragments[binding!!.viewPager.currentItem - 1] as NotificationsListFragmentPage)
+            .markAllNotesAsRead()
     }
 
     companion object {

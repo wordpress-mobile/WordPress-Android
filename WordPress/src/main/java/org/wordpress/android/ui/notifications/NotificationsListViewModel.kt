@@ -64,7 +64,7 @@ class NotificationsListViewModel @Inject constructor(
         appPrefsWrapper.notificationPermissionsWarningDismissed = false
     }
 
-    fun markNoteAsRead(vararg notes: Note, context: Context) {
+    fun markNoteAsRead(context: Context, vararg notes: Note) {
         notes.filter { it.isUnread }
             .map {
                 gcmMessageHandler.removeNotificationWithNoteIdFromSystemBar(context, it.id)

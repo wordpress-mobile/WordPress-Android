@@ -337,7 +337,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     }
 
     private void markNoteAsRead(@NonNull Note... note) {
-        mViewModel.markNoteAsRead(note, this);
+        mViewModel.markNoteAsRead(this, note);
     }
 
     private void setActionBarTitleForNote(Note note) {
