@@ -46,7 +46,9 @@ import org.wordpress.android.fluxc.store.AccountStore.StartWebauthnChallengePayl
 import org.wordpress.android.fluxc.store.AccountStore.WebauthnChallengeReceived;
 import org.wordpress.android.fluxc.store.AccountStore.WebauthnPasskeyAuthenticated;
 import org.wordpress.android.login.util.SiteUtils;
-import org.wordpress.android.login.webauthn.PasskeyCredentialsHandler;
+import org.wordpress.android.login.webauthn.PasskeyRequest;
+import org.wordpress.android.login.webauthn.Fido2ClientHandler;
+import org.wordpress.android.login.webauthn.PasskeyRequest.PasskeyRequestData;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
 import org.wordpress.android.util.AppLog;
@@ -125,7 +127,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private boolean mIsSocialLoginConnect;
     private boolean mSentSmsCode;
     private List<SupportedAuthTypes> mSupportedAuthTypes;
-    @Nullable private PasskeyCredentialsHandler mPasskeyCredentialsHandler = null;
+    @Nullable private Fido2ClientHandler mFido2ClientHandler = null;
     @Nullable private ActivityResultLauncher<IntentSenderRequest> mResultLauncher = null;
 
     public static Login2FaFragment newInstance(String emailAddress, String password) {
@@ -620,7 +622,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 .newStartSecurityKeyChallengeAction(payload));
     }
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWebauthnChallengeReceived(WebauthnChallengeReceived event) {
         if (event.isError()) {
@@ -628,23 +629,33 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             handleAuthError(event.error.type, getString(R.string.login_error_security_key));
             return;
         }
-        mPasskeyCredentialsHandler = new PasskeyCredentialsHandler(
+
+        PasskeyRequestData passkeyRequestData = new PasskeyRequestData(
                 event.mUserId,
-                event.mChallengeInfo
+                event.mChallengeInfo.getTwoStepNonce(),
+                event.mRawChallengeInfoJson
         );
-        mPasskeyCredentialsHandler.createIntentSender(
+
+        PasskeyRequest.create(
                 requireContext(),
-                intent -> {
-                    if (mResultLauncher != null) {
-                        mResultLauncher.launch(intent);
-                    }
-                });
+                passkeyRequestData,
+                result -> {
+                    mDispatcher.dispatch(
+                            AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(
+                                    result));
+                    return null;
+                },
+                error -> {
+                    handleWebauthnError();
+                    return null;
+                }
+        );
     }
 
     private void onCredentialsResultAvailable(@NonNull Intent resultData) {
         if (resultData.hasExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA)) {
             byte[] credentialBytes = resultData.getByteArrayExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA);
-            if (credentialBytes == null || mPasskeyCredentialsHandler == null) {
+            if (credentialBytes == null || mFido2ClientHandler == null) {
                 handleWebauthnError();
                 return;
             }
@@ -652,7 +663,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             PublicKeyCredential credentials =
                     PublicKeyCredential.deserializeFromBytes(credentialBytes);
             FinishWebauthnChallengePayload payload =
-                    mPasskeyCredentialsHandler.onCredentialsAvailable(credentials);
+                    mFido2ClientHandler.onCredentialsAvailable(credentials);
             mDispatcher.dispatch(
                     AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(payload));
         }
