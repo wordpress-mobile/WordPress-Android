@@ -69,7 +69,7 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
         override val label: UiString = if (blog.name.isNotEmpty()) {
             UiStringText(blog.name)
         } else {
-            UiStringText(UrlUtils.getHost(blog.url))
+            UiStringText(if (blog.url.isNotEmpty()) UrlUtils.getHost(blog.url) else "")
         }
         val showUnseenCount: Boolean = blog.numUnseenPosts > 0
         val unseenCount: Int = blog.numUnseenPosts
