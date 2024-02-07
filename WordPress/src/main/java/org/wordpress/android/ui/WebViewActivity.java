@@ -28,6 +28,9 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
 
     private static final String URL = "url";
 
+    private static final String WEBVIEW_CHROMIUM_STATE = "WEBVIEW_CHROMIUM_STATE";
+    private static final int WEBVIEW_CHROMIUM_STATE_THRESHOLD = 300 * 1024; // 300 KB
+
     protected WebView mWebView;
 
     @Override
@@ -84,8 +87,17 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
      * save the webView state with the bundle so it can be restored
      */
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         mWebView.saveState(outState);
+
+        // If the WebView state is too large, remove it from the bundle. This workaround is
+        // necessary since the Android system cannot handle large states without a crash.
+        // Note that Chromium `WebViewBrowserFragment` uses a similar workaround for this issue:
+        // https://source.chromium.org/chromium/chromium/src/+/27a9bbd3dcd7005ac9f3862dc2e356b557023de9
+        byte[] webViewState = outState.getByteArray(WEBVIEW_CHROMIUM_STATE);
+        if (webViewState != null && webViewState.length > WEBVIEW_CHROMIUM_STATE_THRESHOLD) {
+            outState.remove(WEBVIEW_CHROMIUM_STATE);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -93,7 +105,7 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
      * restore the webView state saved above
      */
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mWebView.restoreState(savedInstanceState);
     }
