@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -116,7 +117,11 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
     }
 
     private boolean isAllowedMediaType(@NonNull Uri uri) {
-        String filePath = uri.getPath();
+        String filePath = MediaUtils.getRealPathFromURI(this, uri);
+        // For cases when getRealPathFromURI returns an empty string
+        if (TextUtils.isEmpty(filePath)) {
+            filePath = String.valueOf(uri);
+        }
         return MediaUtils.isValidImage(filePath) || MediaUtils.isVideo(filePath);
     }
 
