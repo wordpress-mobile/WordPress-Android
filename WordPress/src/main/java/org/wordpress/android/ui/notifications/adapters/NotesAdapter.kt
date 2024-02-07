@@ -46,13 +46,11 @@ class NotesAdapter(
     private val notes = ArrayList<Note>()
     private val filteredNotes = ArrayList<Note>()
 
-    @JvmField
     @Inject
-    var imageManager: ImageManager? = null
+    lateinit var imageManager: ImageManager
 
-    @JvmField
     @Inject
-    var notificationsUtilsWrapper: NotificationsUtilsWrapper? = null
+    lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
 
     enum class FILTERS {
         FILTER_ALL,
@@ -204,7 +202,7 @@ class NotesAdapter(
             noteViewHolder.textDetail.visibility = View.GONE
         }
         val avatarUrl = GravatarUtils.fixGravatarUrl(note.iconURL, avatarSize)
-        imageManager!!.loadIntoCircle(
+        imageManager.loadIntoCircle(
             noteViewHolder.imageAvatar,
             ImageType.AVATAR_WITH_BACKGROUND,
             avatarUrl
