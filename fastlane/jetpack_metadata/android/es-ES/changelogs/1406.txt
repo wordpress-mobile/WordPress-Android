@@ -1,0 +1,7 @@
+24.1:
+- Recibe una notificación cuando estés trabajando y se vaya la conexión.
+- Las cargas de bloques de imágenes se dejan en pausa/reanudan con la conexión a Internet.
+- Consulta selecciones de gradientes personalizados en el editor.
+- Flechas de avance/retroceso fijas para lectores de derecha a izquierda. 
+- Etiquetas de sugerencias diarias que funcionan correctamente.
+- Pulsa en tarjetas de dominio del sitio para gestionar los dominios.

@@ -29,11 +29,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.play.core.review.ReviewException;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
-import com.google.android.play.core.review.model.ReviewErrorCode;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -184,6 +182,7 @@ import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVari
 import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.EMAIL;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
+import static org.wordpress.android.util.extensions.InAppReviewExtensionsKt.logException;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -231,12 +230,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_STAT_TO_TRACK = "stat_to_track";
     public static final String ARG_EDITOR_ORIGIN = "editor_origin";
     public static final String ARG_CURRENT_FOCUS = "CURRENT_FOCUS";
+    public static final String ARG_IS_CHANGING_CONFIGURATION = "IS_CHANGING_CONFIGURATION";
     public static final String ARG_BYPASS_MIGRATION = "bypass_migration";
     public static final String ARG_MEDIA = "show_media";
-
-    // Track the first `onResume` event for the current session so we can use it for Analytics tracking
-    private static boolean mFirstResume = true;
-
+    private boolean mIsChangingConfiguration = false;
     private WPMainNavigationView mBottomNav;
 
     private TextView mConnectionBar;
@@ -504,6 +501,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         displayJetpackFeatureCollectionOverlayIfNeeded();
+
+        if (savedInstanceState != null) {
+            mIsChangingConfiguration = savedInstanceState.getBoolean(ARG_IS_CHANGING_CONFIGURATION, false);
+        }
     }
 
     private void initBackPressHandler() {
@@ -658,6 +659,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putSerializable(ARG_CURRENT_FOCUS, mCurrentActiveFocusPoint);
+        outState.putSerializable(ARG_IS_CHANGING_CONFIGURATION, isChangingConfigurations());
         super.onSaveInstanceState(outState);
     }
 
@@ -794,18 +796,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
-        mViewModel.getStartLoginFlow().observe(this, event -> {
-            event.applyIfNotHandled(unit -> {
-                ActivityLauncher.viewMeActivityForResult(this);
-
-                return null;
-            });
-        });
-
-        mViewModel.getSwitchToMySite().observe(this, event -> {
+        mViewModel.getSwitchToMeTab().observe(this, event -> {
             event.applyIfNotHandled(unit -> {
                 if (mBottomNav != null) {
-                    mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+                    mBottomNav.setCurrentSelectedPage(PageType.ME);
                 }
 
                 return null;
@@ -854,12 +848,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 Task<Void> flow = manager.launchReviewFlow(this, reviewInfo);
                 flow.addOnFailureListener(e -> AppLog.e(T.MAIN, "Error launching google review API flow.", e));
             } else {
-                @ReviewErrorCode int reviewErrorCode = ((ReviewException) task.getException()).getErrorCode();
-                AppLog.e(
-                        T.MAIN,
-                        "Error fetching ReviewInfo object from Review API to start in-app review process",
-                        reviewErrorCode
-                );
+                logException(task);
             }
         });
     }
@@ -1135,7 +1124,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         if (mBottomNav != null) {
             PageType currentPageType = mBottomNav.getCurrentSelectedPage();
-            trackLastVisiblePage(currentPageType, mFirstResume);
+            if (!mIsChangingConfiguration) {
+                // Don't track if onResume was called after a screen orientation change
+                trackLastVisiblePage(currentPageType);
+            }
 
             if (currentPageType == PageType.NOTIFS) {
                 // if we are presenting the notifications list, it's safe to clear any outstanding
@@ -1167,8 +1159,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 mSelectedSiteRepository.hasSelectedSite() && mBottomNav != null
                 && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
         );
-
-        mFirstResume = false;
+        mIsChangingConfiguration = false;
     }
 
     private void checkQuickStartNotificationStatus() {
@@ -1214,7 +1205,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public void onPageChanged(int position) {
         mReaderTracker.onBottomNavigationTabChanged();
         PageType pageType = WPMainNavigationView.getPageType(position);
-        trackLastVisiblePage(pageType, true);
+        trackLastVisiblePage(pageType);
         mCurrentActiveFocusPoint = null;
         if (pageType == PageType.READER) {
             // MySite fragment might not be attached to activity, so we need to remove focus point from here
@@ -1288,31 +1279,23 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void trackLastVisiblePage(PageType pageType, boolean trackAnalytics) {
+    private void trackLastVisiblePage(@NonNull final PageType pageType) {
         switch (pageType) {
             case MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
-                if (trackAnalytics) {
-                     mAnalyticsTrackerWrapper.track(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite());
-                }
+                mAnalyticsTrackerWrapper.track(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite());
                 break;
             case READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
-                if (trackAnalytics) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
-                }
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
                 break;
             case NOTIFS:
                 ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
-                if (trackAnalytics) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
-                }
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
                 break;
             case ME:
                 ActivityId.trackLastActivity(ActivityId.ME);
-                if (trackAnalytics) {
-                    AnalyticsTracker.track(Stat.ME_ACCESSED);
-                }
+                AnalyticsTracker.track(Stat.ME_ACCESSED);
                 break;
             default:
                 break;

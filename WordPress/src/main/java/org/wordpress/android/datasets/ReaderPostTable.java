@@ -658,14 +658,14 @@ public class ReaderPostTable {
     public static String getOldestPubDateInBlog(long blogId) {
         String sql = "SELECT date_published FROM tbl_posts"
                      + " WHERE blog_id=? AND tag_name='' AND tag_type=0"
-                     + " ORDER BY date_published LIMIT 1";
+                     + " ORDER BY datetime(date_published) LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(blogId)});
     }
 
     public static String getOldestPubDateInFeed(long feedId) {
         String sql = "SELECT date_published FROM tbl_posts"
                      + " WHERE feed_id=? AND tag_name='' AND tag_type=0"
-                     + " ORDER BY date_published LIMIT 1";
+                     + " ORDER BY datetime(date_published) LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(feedId)});
     }
 
@@ -743,15 +743,15 @@ public class ReaderPostTable {
      */
     private static String getSortColumnForTag(ReaderTag tag) {
         if (tag.isPostsILike()) {
-            return "date_liked";
+            return "datetime(date_liked)";
         } else if (tag.isFollowedSites()) {
-            return "date_published";
+            return "datetime(date_published)";
         } else if (tag.tagType == ReaderTagType.SEARCH) {
             return "score";
         } else if (tag.isTagTopic() || tag.isBookmarked()) {
-            return "date_tagged";
+            return "datetime(date_tagged)";
         } else {
-            return "date_published";
+            return "datetime(date_published)";
         }
     }
 
@@ -982,7 +982,7 @@ public class ReaderPostTable {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
         String sql =
                 "SELECT " + columns + " FROM tbl_posts WHERE blog_id=? AND tag_name='' AND tag_type=0"
-                + " ORDER BY date_published DESC";
+                + " ORDER BY datetime(date_published) DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + maxPosts;
@@ -1020,7 +1020,7 @@ public class ReaderPostTable {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
         String sql =
                 "SELECT " + columns + " FROM tbl_posts WHERE feed_id=? AND tag_name='' AND tag_type=0"
-                + " ORDER BY date_published DESC";
+                + " ORDER BY datetime(date_published) DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + maxPosts;
@@ -1097,7 +1097,7 @@ public class ReaderPostTable {
      */
     public static ReaderBlogIdPostIdList getBlogIdPostIdsInBlog(long blogId, int maxPosts) {
         String sql = "SELECT post_id FROM tbl_posts WHERE blog_id=? AND tag_name='' AND tag_type=0"
-                     + " ORDER BY date_published DESC";
+                     + " ORDER BY datetime(date_published) DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + maxPosts;

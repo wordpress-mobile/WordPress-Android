@@ -1,6 +1,0 @@
-24.0:
-- Sichere dir einen WordPress-Tarif mit einer kostenlosen Domain im Domain-Dashboard
-- Die Gerätetastatur bleibt beim Bearbeiten von Text-Blöcken erhalten
-- Der Editor-Bildschirm scrollt automatisch zu neu eingefügten Blöcken
-- Mit dem Zurück-Button des Geräts kannst du die Auswahl für Blöcke aufheben
-- Teile verschiedene Medientypen in der App gleichzeitig, ohne dass sie abstürzt

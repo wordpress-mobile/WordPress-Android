@@ -34,8 +34,6 @@ Language: ru
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">В январе подсказки по ведению блога будут рассылаться через Bloganuary — челлендж сообщества, призванный выработать привычку ежедневно вести блог в новом году.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Bloganuary уже на пороге!</string>
-    <string name="turn_off">Нет, отключить</string>
-    <string name="leave_on">Да, оставить</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">По этой причине мы рекомендуем редактировать блок с помощью веб-браузера.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">По этой причине мы рекомендуем редактировать блок с помощью веб-редактора.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Альтернативно вы можете сгладить содержимое, разгруппировав блок.</string>
@@ -50,8 +48,6 @@ Language: ru
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Блоки, вложенные глубже, чем %d уровней, могут отображаться неправильно в мобильном редакторе.</string>
     <string name="jp_migration_lets_go_button">Поехали!</string>
     <string name="jp_migration_done_no_sites_message">Пришло время продолжить путешествие по WordPress в приложении Jetpack!</string>
-    <string name="image_optimization_popup_desc">Оптимизация изображений сжимает изображения для более быстрой загрузки.\n\nЭта опция включена по умолчанию, но вы можете изменить ее в настройках приложения в любой момент.</string>
-    <string name="image_optimization_popup_title">Продолжать оптимизировать изображения?</string>
     <string name="domain_management_clear_search">Очистить поиск</string>
     <string name="media_encoder_quality_very_high">Очень высокое</string>
     <string name="notification_security_key_needed">Пожалуйста предоставьте ключ безопасности для продолжения.</string>
@@ -1890,8 +1886,6 @@ Language: ru
     <string name="reader_my_likes_display_name">Отметки \"Нравится\"</string>
     <string name="reader_discover_display_name">Найти</string>
     <string name="reader_save_for_later_display_name">Сохранено</string>
-    <string name="reader_filter_tags_title">Темы</string>
-    <string name="reader_filter_sites_title">Сайты</string>
     <string name="suffix_1_000_000_000_000_000_000">%sЭ</string>
     <string name="suffix_1_000_000_000_000_000">%sП</string>
     <string name="suffix_1_000_000_000_000">%sТ</string>
