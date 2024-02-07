@@ -100,9 +100,13 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
         if (webViewState != null && webViewState.length > WEBVIEW_CHROMIUM_STATE_THRESHOLD) {
             outState.remove(WEBVIEW_CHROMIUM_STATE);
 
+            // Save the URL so it can be restored later
+            String url = mWebView.getUrl();
+            outState.putString(URL, url);
+
             // Track the error to better understand the root of the issue
             Map<String, String> properties = new HashMap<>();
-            properties.put(URL, mWebView.getUrl());
+            properties.put(URL, url);
             AnalyticsTracker.track(AnalyticsTracker.Stat.WEBVIEW_TOO_LARGE_PAYLOAD_ERROR, properties);
         }
         super.onSaveInstanceState(outState);
@@ -114,7 +118,14 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mWebView.restoreState(savedInstanceState);
+        if (savedInstanceState.containsKey(WEBVIEW_CHROMIUM_STATE)) {
+            mWebView.restoreState(savedInstanceState);
+        } else {
+            String url = savedInstanceState.getString(URL);
+            if (url != null) {
+                mWebView.loadUrl(url);
+            }
+        }
     }
 
     @Override
