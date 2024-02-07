@@ -225,7 +225,9 @@ public class Note {
                 ArrayList<String> iconUrls = new ArrayList<>();
                 for (int i = 0; i < bodyArray.length(); i++) {
                     String iconUrl = JSONUtils.queryJSON(bodyArray, "body[" + i + "].media[0].url", "");
-                    iconUrls.add(iconUrl);
+                    if (iconUrl != null && !iconUrl.isEmpty()) {
+                        iconUrls.add(iconUrl);
+                    }
                 }
                 return iconUrls;
             }
