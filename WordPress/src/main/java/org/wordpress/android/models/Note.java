@@ -258,6 +258,7 @@ public class Note {
     /**
      * Compare note timestamp to now and return a time grouping
      */
+    @NonNull
     public static NoteTimeGroup getTimeGroupForTimestamp(long timestamp) {
         Date today = new Date();
         Date then = new Date(timestamp * 1000);
