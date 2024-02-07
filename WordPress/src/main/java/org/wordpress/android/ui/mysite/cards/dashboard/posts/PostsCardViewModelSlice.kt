@@ -25,9 +25,6 @@ class PostsCardViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _refresh = MutableLiveData<Event<Boolean>>()
-    val refresh = _refresh
-
     fun buildPostCard(postsCardModel: PostsCardModel?) {
         _uiModel.postValue(postCardBuilder.build(getPostsCardBuilderParams(postsCardModel)))
     }
@@ -58,7 +55,7 @@ class PostsCardViewModelSlice @Inject constructor(
             postCardType.name,
             true
         )
-        refresh.postValue(Event(true))
+        _uiModel.postValue(null)
     }
 
     private fun onViewPostsMenuItemClick(postCardType: PostCardType) {

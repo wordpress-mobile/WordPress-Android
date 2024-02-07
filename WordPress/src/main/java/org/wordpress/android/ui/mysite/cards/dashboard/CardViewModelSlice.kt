@@ -113,10 +113,6 @@ class CardViewModelSlice @Inject constructor(
     val refresh =
         merge(
             _refresh,
-            pagesCardViewModelSlice.refresh,
-            todaysStatsViewModelSlice.refresh,
-            postsCardViewModelSlice.refresh,
-            activityLogCardViewModelSlice.refresh,
             dynamicCardsViewModelSlice.refresh,
         )
 

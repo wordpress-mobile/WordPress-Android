@@ -24,9 +24,6 @@ class PagesCardViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _refresh = MutableLiveData<Event<Boolean>>()
-    val refresh = _refresh
-
     fun buildCard(pagesCardModel: PagesCardModel?) {
         _uiModel.postValue(
             pagesCardBuilder.build(getPagesCardBuilderParams(pagesCardModel))
@@ -61,7 +58,7 @@ class PagesCardViewModelSlice @Inject constructor(
     private fun onPagesCardHideThisCardClick() {
         cardsTracker.trackCardMoreMenuItemClicked(CardsTracker.Type.PAGES.label, PagesMenuItemType.HIDE_THIS.label)
         appPrefsWrapper.setShouldHidePagesDashboardCard(selectedSiteRepository.getSelectedSite()!!.siteId, true)
-        _refresh.postValue(Event(true))
+        _uiModel.value = null
     }
 
     private fun onPagesItemClick(params: PagesCardBuilderParams.PagesItemClickParams) {

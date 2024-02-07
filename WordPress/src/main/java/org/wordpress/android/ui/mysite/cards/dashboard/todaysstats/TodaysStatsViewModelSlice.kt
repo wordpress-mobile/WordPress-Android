@@ -26,10 +26,6 @@ class TodaysStatsViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _refresh = MutableLiveData<Event<Boolean>>()
-    val refresh = _refresh
-
-
     fun buildTodaysStatsCard(todaysStatsCardModel: TodaysStatsCardModel?) {
         _uiModel.postValue(todaysStatsCardBuilder.build(getTodaysStatsBuilderParams(todaysStatsCardModel)))
     }
@@ -78,7 +74,7 @@ class TodaysStatsViewModelSlice @Inject constructor(
             TodaysStatsMenuItemType.HIDE_THIS.label
         )
         appPrefsWrapper.setShouldHideTodaysStatsDashboardCard(selectedSiteRepository.getSelectedSite()!!.siteId, true)
-        _refresh.postValue(Event(true))
+        _uiModel.value = null
     }
 
     private fun onViewStatsMenuItemClick() {

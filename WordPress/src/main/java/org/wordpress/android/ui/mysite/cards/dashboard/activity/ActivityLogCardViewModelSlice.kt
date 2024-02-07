@@ -28,9 +28,6 @@ class ActivityLogCardViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _refresh = MutableLiveData<Event<Boolean>>()
-    val refresh = _refresh
-
     fun buildCard(activityCardModel: CardModel.ActivityCardModel?) {
         _uiModel.postValue(activityCardBuilder.build(getActivityLogCardBuilderParams(activityCardModel)))
     }
@@ -68,7 +65,7 @@ class ActivityLogCardViewModelSlice @Inject constructor(
         appPrefsWrapper.setShouldHideActivityDashboardCard(
             requireNotNull(selectedSiteRepository.getSelectedSite()).siteId, true
         )
-        _refresh.postValue(Event(true))
+        _uiModel.value = null
     }
 
     private fun onActivityCardAllActivityItemClick() {
