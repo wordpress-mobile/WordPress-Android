@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.subfilter
 
 import android.os.Bundle
 import androidx.annotation.VisibleForTesting
-import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
