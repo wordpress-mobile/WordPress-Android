@@ -14,6 +14,7 @@ import android.view.ViewGroup.MarginLayoutParams
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.core.text.BidiFormatter
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
@@ -126,35 +127,42 @@ class NotesAdapter(
         return filteredNotes.size
     }
 
+    private val Note.timeGroup
+        get() = Note.getTimeGroupForTimestamp(timestamp)
+
+    @StringRes
+    private fun timeGroupHeaderText(note: Note, previousNote: Note?) =
+        previousNote?.timeGroup.let { previousTimeGroup ->
+            val timeGroup = note.timeGroup
+            if (previousTimeGroup?.let { it == timeGroup } == true) {
+                // If the previous time group exists and is the same, we don't need a new one
+                null
+            } else {
+                // Otherwise, we create a new one
+                when (timeGroup) {
+                    NoteTimeGroup.GROUP_TODAY -> R.string.stats_timeframe_today
+                    NoteTimeGroup.GROUP_YESTERDAY -> R.string.stats_timeframe_yesterday
+                    NoteTimeGroup.GROUP_OLDER_TWO_DAYS -> R.string.older_two_days
+                    NoteTimeGroup.GROUP_OLDER_WEEK -> R.string.older_last_week
+                    NoteTimeGroup.GROUP_OLDER_MONTH -> R.string.older_month
+                }
+            }
+        }
+
     @Suppress("CyclomaticComplexMethod", "LongMethod")
     override fun onBindViewHolder(noteViewHolder: NoteViewHolder, position: Int) {
         val note = getNoteAtPosition(position) ?: return
+        val previousNote = getNoteAtPosition(position - 1)
         noteViewHolder.contentView.tag = note.id
 
-        // Display group header
-        val timeGroup = Note.getTimeGroupForTimestamp(note.timestamp)
-        var previousTimeGroup: NoteTimeGroup? = null
-        if (position > 0) {
-            val previousNote = getNoteAtPosition(position - 1)
-            previousTimeGroup = Note.getTimeGroupForTimestamp(
-                previousNote!!.timestamp
-            )
-        }
-        if (previousTimeGroup?.let { it == timeGroup } == true) {
-            noteViewHolder.headerText.visibility = View.GONE
-        } else {
-            noteViewHolder.headerText.visibility = View.VISIBLE
-            timeGroup?.let {
-                noteViewHolder.headerText.setText(
-                    when (it) {
-                        NoteTimeGroup.GROUP_TODAY -> R.string.stats_timeframe_today
-                        NoteTimeGroup.GROUP_YESTERDAY -> R.string.stats_timeframe_yesterday
-                        NoteTimeGroup.GROUP_OLDER_TWO_DAYS -> R.string.older_two_days
-                        NoteTimeGroup.GROUP_OLDER_WEEK -> R.string.older_last_week
-                        NoteTimeGroup.GROUP_OLDER_MONTH -> R.string.older_month
-                    }
-                )
+        // Display time group header
+        timeGroupHeaderText(note, previousNote)?.let { timeGroupText ->
+            with(noteViewHolder.headerText) {
+                visibility = View.VISIBLE
+                setText(timeGroupText)
             }
+        } ?: run {
+            noteViewHolder.headerText.visibility = View.GONE
         }
 
         // Subject is stored in db as html to preserve text formatting
