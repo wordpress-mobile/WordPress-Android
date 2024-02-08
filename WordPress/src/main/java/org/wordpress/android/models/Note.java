@@ -95,31 +95,33 @@ public class Note {
         return mKey;
     }
 
-    public String getType() {
+    @NonNull
+    public String getRawType() {
         return queryJSON("type", NOTE_UNKNOWN_TYPE);
     }
 
-    private Boolean isType(String type) {
-        return getType().equals(type);
+    @NonNull
+    private Boolean isTypeRaw(@NonNull String rawType) {
+        return getRawType().equals(rawType);
     }
 
     public Boolean isCommentType() {
         synchronized (mSyncLock) {
             return (isAutomattcherType() && JSONUtils.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1)
-                   || isType(NOTE_COMMENT_TYPE);
+                   || isTypeRaw(NOTE_COMMENT_TYPE);
         }
     }
 
     public Boolean isAutomattcherType() {
-        return isType(NOTE_MATCHER_TYPE);
+        return isTypeRaw(NOTE_MATCHER_TYPE);
     }
 
     public Boolean isNewPostType() {
-        return isType(NOTE_NEW_POST_TYPE);
+        return isTypeRaw(NOTE_NEW_POST_TYPE);
     }
 
     public Boolean isFollowType() {
-        return isType(NOTE_FOLLOW_TYPE);
+        return isTypeRaw(NOTE_FOLLOW_TYPE);
     }
 
     public Boolean isLikeType() {
@@ -127,19 +129,19 @@ public class Note {
     }
 
     public Boolean isPostLikeType() {
-        return isType(NOTE_LIKE_TYPE);
+        return isTypeRaw(NOTE_LIKE_TYPE);
     }
 
     public Boolean isCommentLikeType() {
-        return isType(NOTE_COMMENT_LIKE_TYPE);
+        return isTypeRaw(NOTE_COMMENT_LIKE_TYPE);
     }
 
     public Boolean isReblogType() {
-        return isType(NOTE_REBLOG_TYPE);
+        return isTypeRaw(NOTE_REBLOG_TYPE);
     }
 
     public Boolean isViewMilestoneType() {
-        return isType(NOTE_VIEW_MILESTONE);
+        return isTypeRaw(NOTE_VIEW_MILESTONE);
     }
 
     public Boolean isCommentReplyType() {
@@ -423,7 +425,8 @@ public class Note {
     /**
      * Rudimentary system for pulling an item out of a JSON object hierarchy
      */
-    private <U> U queryJSON(String query, U defaultObject) {
+    @NonNull
+    private <U> U queryJSON(@Nullable String query, @NonNull U defaultObject) {
         synchronized (mSyncLock) {
             if (mNoteJSON == null) {
                 return defaultObject;

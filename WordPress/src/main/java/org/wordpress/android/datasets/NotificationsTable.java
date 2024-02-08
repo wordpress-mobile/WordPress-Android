@@ -80,7 +80,7 @@ public class NotificationsTable {
         String rawNote = prepareNote(note.getId(), note.getJSON().toString());
 
         ContentValues values = new ContentValues();
-        values.put("type", note.getType());
+        values.put("type", note.getRawType());
         values.put("timestamp", note.getTimestamp());
         values.put("raw_note_data", rawNote);
 
