@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,9 +23,11 @@ import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
@@ -213,6 +216,23 @@ public class Note {
 
     public String getIconURL() {
         return queryJSON("icon", "");
+    }
+
+    public @Nullable List<String> getIconURLs() {
+        synchronized (mSyncLock) {
+            JSONArray bodyArray = mNoteJSON.optJSONArray("body");
+            if (bodyArray != null && bodyArray.length() > 0) {
+                ArrayList<String> iconUrls = new ArrayList<>();
+                for (int i = 0; i < bodyArray.length(); i++) {
+                    String iconUrl = JSONUtils.queryJSON(bodyArray, "body[" + i + "].media[0].url", "");
+                    if (iconUrl != null && !iconUrl.isEmpty()) {
+                        iconUrls.add(iconUrl);
+                    }
+                }
+                return iconUrls;
+            }
+        }
+        return null;
     }
 
     public String getCommentSubject() {
