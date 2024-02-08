@@ -17,6 +17,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeAdForecast
 import org.wordpress.android.fluxc.model.blaze.BlazeAdSuggestion
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
+import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethod
+import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethodUrls
+import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethods
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingDevice
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLanguage
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLocation
@@ -391,5 +394,53 @@ class BlazeCampaignsStoreTest {
 
         assertThat(forecastResult.isError).isFalse()
         assertThat(forecastResult.model).isEqualTo(forecast)
+    }
+
+    @Test
+    fun `when fetching payment methods, then return data successfully`() = test {
+        val paymentMethods = BlazePaymentMethods(
+            savedPaymentMethods = listOf(
+                BlazePaymentMethod(
+                    id = "payment-method-id",
+                    type = BlazePaymentMethod.PaymentMethodType.CREDIT_CARD,
+                    name = "Visa **** 4689",
+                    info = BlazePaymentMethod.PaymentMethodInfo.CreditCardInfo(
+                        lastDigits = "4689",
+                        expMonth = 12,
+                        expYear = 2025,
+                        type = "Visa",
+                        nickname = "",
+                        cardHolderName = "John Doe"
+                    )
+                ),
+                BlazePaymentMethod(
+                    id = "payment-method-id-2",
+                    type = BlazePaymentMethod.PaymentMethodType.CREDIT_CARD,
+                    name = "MasterCard **** 1234",
+                    info = BlazePaymentMethod.PaymentMethodInfo.CreditCardInfo(
+                        lastDigits = "1234",
+                        expMonth = 12,
+                        expYear = 2025,
+                        type = "MasterCard",
+                        nickname = "",
+                        cardHolderName = "John Doe"
+                    )
+                )
+            ),
+            addPaymentMethodUrls = BlazePaymentMethodUrls(
+                formUrl = "https://example.com/blaze-pm-add",
+                successUrl = "https://example.com/blaze-pm-success",
+                idUrlParameter = "pmid"
+            )
+        )
+
+        whenever(creationRestClient.fetchPaymentMethods(any())).thenReturn(
+            BlazeCreationRestClient.BlazePayload(paymentMethods)
+        )
+
+        val paymentMethodsResult = store.fetchBlazePaymentMethods(siteModel)
+
+        assertThat(paymentMethodsResult.isError).isFalse()
+        assertThat(paymentMethodsResult.model).isEqualTo(paymentMethods)
     }
 }
