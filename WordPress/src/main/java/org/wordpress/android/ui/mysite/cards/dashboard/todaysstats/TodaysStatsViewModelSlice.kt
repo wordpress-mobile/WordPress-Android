@@ -95,7 +95,7 @@ class TodaysStatsViewModelSlice @Inject constructor(
     }
 
     fun clearValue() {
-        _uiModel.value = null
+        _uiModel.postValue(null)
     }
 }
 

@@ -2,11 +2,13 @@ package org.wordpress.android.ui.mysite.cards
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.BlazeCardViewModelSlice
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -26,8 +28,10 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
+import javax.inject.Named
 
 class DashboardCardsViewModelSlice @Inject constructor(
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val jpMigrationSuccessCardViewModelSlice: JpMigrationSuccessCardViewModelSlice,
     private val jetpackInstallFullPluginCardViewModelSlice: JetpackInstallFullPluginCardViewModelSlice,
     private val domainRegistrationCardViewModelSlice: DomainRegistrationCardViewModelSlice,
@@ -174,7 +178,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
 
     fun buildCards(site: SiteModel) {
         job?.cancel()
-        job = scope.launch {
+        job = scope.launch(bgDispatcher) {
             jpMigrationSuccessCardViewModelSlice.buildCard()
             jetpackInstallFullPluginCardViewModelSlice.buildCard(site)
             blazeCardViewModelSlice.buildCard(site)

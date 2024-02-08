@@ -4,12 +4,14 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.Result
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
@@ -24,10 +26,12 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class BlazeCardViewModelSlice @Inject constructor(
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val cardsTracker: CardsTracker,
@@ -53,7 +57,7 @@ class BlazeCardViewModelSlice @Inject constructor(
 
     fun buildCard(site: SiteModel) {
         _isRefreshing.postValue(true)
-        scope.launch {
+        scope.launch(bgDispatcher){
             if (blazeFeatureUtils.shouldShowBlazeCardEntryPoint(site)) {
                 if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {
                     fetchCampaigns(site)

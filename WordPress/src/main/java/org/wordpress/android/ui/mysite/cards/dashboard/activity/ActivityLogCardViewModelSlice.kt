@@ -80,7 +80,7 @@ class ActivityLogCardViewModelSlice @Inject constructor(
     private fun onActivityCardMoreMenuClick() = cardsTracker.trackCardMoreMenuClicked(CardsTracker.Type.ACTIVITY.label)
 
     fun clearValue() {
-        _uiModel.value = null
+        _uiModel.postValue(null)
     }
 
     enum class MenuItemType(val label: String) {

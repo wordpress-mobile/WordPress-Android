@@ -225,7 +225,7 @@ class CardViewModelSlice @Inject constructor(
             uiModel.postValue(CardsState.Success(emptyList()))
             return
         }
-        scope.launch {
+        scope.launch(bgDispatcher) {
             dynamicCardsViewModelSlice.buildTopDynamicCards(
                 cards.firstOrNull { it is CardModel.DynamicCardsModel } as? CardModel.DynamicCardsModel
             )

@@ -92,7 +92,7 @@ class DynamicCardsViewModelSlice @Inject constructor(
     }
 
     fun clearValue() {
-        _topDynamicCards.value = null
-        _bottomDynamicCards.value = null
+        _topDynamicCards.postValue(null)
+        _bottomDynamicCards.postValue(null)
     }
 }

@@ -2,12 +2,14 @@ package org.wordpress.android.ui.mysite.cards.quickstart
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -17,8 +19,10 @@ import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
+import javax.inject.Named
 
 class QuickStartCardViewModelSlice @Inject constructor(
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartStore: QuickStartStore,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
@@ -43,7 +47,7 @@ class QuickStartCardViewModelSlice @Inject constructor(
     }
 
     fun build(selectedSite: SiteModel) {
-        scope.launch {
+        scope.launch(bgDispatcher) {
             _isRefreshing.postValue(true)
             if (!quickStartUtilsWrapper.isQuickStartAvailableForTheSite(selectedSite)) {
                 _uiModel.postValue(null)
