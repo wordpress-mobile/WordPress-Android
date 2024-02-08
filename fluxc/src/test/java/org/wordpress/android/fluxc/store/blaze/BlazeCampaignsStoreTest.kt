@@ -129,7 +129,7 @@ class BlazeCampaignsStoreTest {
     @Before
     fun setUp() {
         store = BlazeCampaignsStore(
-            restClient = restClient,
+            campaignsRestClient = restClient,
             creationRestClient = creationRestClient,
             campaignsDao = blazeCampaignsDao,
             targetingDao = blazeTargetingDao,

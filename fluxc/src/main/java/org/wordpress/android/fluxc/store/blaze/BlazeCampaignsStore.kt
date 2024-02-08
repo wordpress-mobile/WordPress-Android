@@ -31,7 +31,7 @@ import javax.inject.Singleton
 
 @Singleton
 class BlazeCampaignsStore @Inject constructor(
-    private val restClient: BlazeCampaignsRestClient,
+    private val campaignsRestClient: BlazeCampaignsRestClient,
     private val creationRestClient: BlazeCreationRestClient,
     private val campaignsDao: BlazeCampaignsDao,
     private val targetingDao: BlazeTargetingDao,
@@ -76,7 +76,7 @@ class BlazeCampaignsStore @Inject constructor(
         }
 
         return coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch blaze campaigns") {
-            val payload = restClient.fetchBlazeCampaigns(site, page)
+            val payload = campaignsRestClient.fetchBlazeCampaigns(site, page)
             storeBlazeCampaigns(site, payload)
         }
     }
