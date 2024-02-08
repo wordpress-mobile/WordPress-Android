@@ -265,7 +265,6 @@ class MySiteViewModel @Inject constructor(
         checkAndShowJetpackFullPluginInstallOnboarding()
         checkAndShowQuickStartNotice()
 //        bloggingPromptCardViewModelSlice.onResume(uiModel.value as? SiteSelected)
-//        dashboardCardPlansUtils.onResume(uiModel.value as? SiteSelected)
         selectedSiteRepository.getSelectedSite()?.let {
             buildDashboardOrSiteItems(it)
         } ?: run {
@@ -502,11 +501,8 @@ class MySiteViewModel @Inject constructor(
     private fun trackCardsAndItemsShownIfNeeded() {
 //        siteSelected.dashboardData.filterIsInstance<JetpackFeatureCard>()
 //            .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
-//        dashboardCardPlansUtils.trackCardShown(viewModelScope, siteSelected)
 ////        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.WpSotw2023NudgeCardModel>()
 ////            .forEach { _ -> sotw2023NudgeCardViewModelSlice.trackShown() }
-////        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.Dynamic>()
-////            .forEach { dynamicCardsViewModelSlice.trackShown(it.id) }
     }
 
     private fun resetShownTrackers() {

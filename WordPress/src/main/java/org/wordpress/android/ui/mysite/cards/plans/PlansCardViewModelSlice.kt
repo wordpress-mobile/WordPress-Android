@@ -59,4 +59,12 @@ class PlansCardViewModelSlice @Inject constructor(
     fun clearValue() {
         _uiModel.postValue(null)
     }
+
+    fun trackShown(position: Int) {
+        dashboardCardPlansUtils.trackCardShown(position)
+    }
+
+    fun resetShown() {
+        dashboardCardPlansUtils.resetShown()
+    }
 }

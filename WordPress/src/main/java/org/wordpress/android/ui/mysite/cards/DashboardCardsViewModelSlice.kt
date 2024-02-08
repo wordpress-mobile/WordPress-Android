@@ -239,6 +239,10 @@ class DashboardCardsViewModelSlice @Inject constructor(
         dashboardData.filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>().forEach {
             noCardsMessageViewModelSlice.trackShown(it.type)
         }
+
+        dashboardData.filterIsInstance< MySiteCardAndItem.Card.DashboardPlansCard>().forEachIndexed { index, _ ->
+            plansCardViewModelSlice.trackShown(index)
+        }
     }
 
     fun resetShownTracker() {
@@ -248,6 +252,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         personalizeCardViewModelSlice.resetShown()
         quickStartCardViewModelSlice.resetShown()
         noCardsMessageViewModelSlice.resetShown()
+        plansCardViewModelSlice.resetShown()
     }
 
     fun startQuickStart(siteModel: SiteModel) {
