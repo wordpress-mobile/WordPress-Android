@@ -24,7 +24,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.SubfilterPagerAdapter
-import org.wordpress.android.util.extensions.getParcelableArrayListCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
 import javax.inject.Inject
 import com.google.android.material.R as MaterialR
 
@@ -36,19 +36,19 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     companion object {
         const val SUBFILTER_VIEW_MODEL_KEY = "subfilter_view_model_key"
         const val SUBFILTER_TITLE_KEY = "subfilter_title_key"
-        const val SUBFILTER_CATEGORIES_KEY = "subfilter_categories_key"
+        const val SUBFILTER_CATEGORY_KEY = "subfilter_category_key"
 
         @JvmStatic
         fun newInstance(
             subfilterViewModelKey: String,
-            categories: List<SubfilterCategory>,
+            category: SubfilterCategory,
             title: CharSequence
         ): SubfilterBottomSheetFragment {
             val fragment = SubfilterBottomSheetFragment()
             val bundle = Bundle()
             bundle.putString(SUBFILTER_VIEW_MODEL_KEY, subfilterViewModelKey)
             bundle.putCharSequence(SUBFILTER_TITLE_KEY, title)
-            bundle.putParcelableArrayList(SUBFILTER_CATEGORIES_KEY, ArrayList(categories))
+            bundle.putSerializable(SUBFILTER_CATEGORY_KEY, category)
 
             fragment.arguments = bundle
             return fragment
@@ -68,9 +68,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
 
         val subfilterVmKey = requireArguments().getString(SUBFILTER_VIEW_MODEL_KEY)!!
         val bottomSheetTitle = requireArguments().getCharSequence(SUBFILTER_TITLE_KEY)!!
-        val categories = requireNotNull(
-            requireArguments().getParcelableArrayListCompat<SubfilterCategory>(SUBFILTER_CATEGORIES_KEY)
-        )
+        val category = requireArguments().getSerializableCompat<SubfilterCategory>(SUBFILTER_CATEGORY_KEY)!!
 
         viewModel = ViewModelProvider(
             parentFragment as ViewModelStoreOwner,
@@ -87,7 +85,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             requireActivity(),
             childFragmentManager,
             subfilterVmKey,
-            categories.toList()
+            listOf(category)
         )
         pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -110,7 +108,6 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         editSubscriptions.setOnClickListener {
-            val category = categories.firstOrNull() ?: return@setOnClickListener
             val subsPageIndex = when (category) {
                 SITES -> ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS
                 TAGS -> ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS

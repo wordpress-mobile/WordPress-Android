@@ -4,9 +4,6 @@ package org.wordpress.android.ui.reader.subfilter
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
-import android.os.Parcelable.Creator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -215,25 +212,7 @@ class SubfilterPagerAdapter(
     }
 }
 
-enum class SubfilterCategory(@StringRes val titleRes: Int, val type: ItemType) : Parcelable {
+enum class SubfilterCategory(@StringRes val titleRes: Int, val type: ItemType) {
     SITES(R.string.reader_filter_by_blog_title, SITE),
     TAGS(R.string.reader_filter_by_tag_title, TAG);
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(type.ordinal)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Creator<SubfilterCategory> {
-        override fun createFromParcel(parcel: Parcel): SubfilterCategory {
-            return values()[parcel.readInt()]
-        }
-
-        override fun newArray(size: Int): Array<SubfilterCategory?> {
-            return arrayOfNulls(size)
-        }
-    }
 }
