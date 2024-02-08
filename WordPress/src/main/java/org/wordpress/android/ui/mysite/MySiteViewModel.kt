@@ -36,7 +36,6 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.cards.DashboardCardsViewModelSlice
-import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -79,7 +78,6 @@ class MySiteViewModel @Inject constructor(
     private val snackbarSequencer: SnackbarSequencer,
     private val landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig,
     private val cardsTracker: CardsTracker,
-    private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val quickStartTracker: QuickStartTracker,
@@ -502,10 +500,6 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun trackCardsAndItemsShownIfNeeded() {
-//        siteSelected.dashboardData.filterIsInstance<DomainRegistrationCard>()
-//            .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
-//        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card>()
-//            .let { cardsTracker.trackShown(it) }
 //        siteSelected.dashboardData.filterIsInstance<QuickStartCard>()
 //            .firstOrNull()?.let { quickStartTracker.trackShown(it.type) }
 //        siteSelected.dashboardData.filterIsInstance<QuickStartCard>()
@@ -526,7 +520,6 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun resetShownTrackers() {
-        domainRegistrationCardShownTracker.resetShown()
         cardsTracker.resetShown()
         quickStartTracker.resetShown()
         jetpackFeatureCardShownTracker.resetShown()

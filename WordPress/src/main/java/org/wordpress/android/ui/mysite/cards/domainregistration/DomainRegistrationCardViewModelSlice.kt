@@ -20,6 +20,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
+import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
@@ -36,7 +37,8 @@ class DomainRegistrationCardViewModelSlice @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val appLogWrapper: AppLogWrapper,
     private val siteUtils: SiteUtilsWrapper,
-    private val domainRegistrationTracker: DomainRegistrationTracker
+    private val domainRegistrationTracker: DomainRegistrationTracker,
+    private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
 ) {
     private lateinit var scope: CoroutineScope
 
@@ -137,6 +139,14 @@ class DomainRegistrationCardViewModelSlice @Inject constructor(
     fun onPlansFetched(event: OnPlansFetched) {
         continuations[event.site.id]?.resume(event)
         continuations[event.site.id] = null
+    }
+
+    fun trackShown(card:  MySiteCardAndItem.Card.DomainRegistrationCard) {
+        domainRegistrationCardShownTracker.trackShown(card.type)
+    }
+
+    fun resetCardShown() {
+        domainRegistrationCardShownTracker.resetShown()
     }
 }
 

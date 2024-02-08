@@ -218,12 +218,22 @@ class DashboardCardsViewModelSlice @Inject constructor(
         }
     }
 
+    fun trackCardShown(dashboardData: List<MySiteCardAndItem>){
+        dashboardData.filterIsInstance<MySiteCardAndItem.Card>().let {
+            cardViewModelSlice.trackCardShown(it)
+        }
+        dashboardData.filterIsInstance<MySiteCardAndItem.Card.JetpackInstallFullPluginCard>()
+            .forEach { jetpackInstallFullPluginCardViewModelSlice.trackShown(it) }
+
+        dashboardData.filterIsInstance<MySiteCardAndItem.Card.DomainRegistrationCard>()
+            .forEach { domainRegistrationCardViewModelSlice.trackShown(it) }
+    }
+
     fun resetShownTracker() {
         personalizeCardViewModelSlice.resetShown()
-//        dynamicCardsViewModelSlice.resetShown()
-//        domainRegistrationCardShownTracker.resetShown()
-//        cardsTracker.resetShown()
-//        quickStartTracker.resetShown()
+        cardViewModelSlice.resetShownTracker()
+        jetpackInstallFullPluginCardViewModelSlice.resetShownTracker()
+        domainRegistrationCardViewModelSlice.resetCardShown()
     }
 
     fun startQuickStart(siteModel: SiteModel) {
