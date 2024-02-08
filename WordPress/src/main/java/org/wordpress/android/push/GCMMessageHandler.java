@@ -419,8 +419,8 @@ public class GCMMessageHandler {
 
         @NonNull
         protected String getNotificationTitle(@NonNull Bundle data,
-                                            @NonNull String noteType,
-                                            @NonNull String defaultTitle) {
+                                              @NonNull String noteType,
+                                              @NonNull String defaultTitle) {
             String title;
             if (noteType.equals(PUSH_TYPE_COMMENT)) {
                 title = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_MSG));
