@@ -120,13 +120,6 @@ public class GCMMessageHandler {
         }
     }
 
-    public synchronized void rebuildAndUpdateNotifsOnSystemBarForRemainingNote(Context context) {
-        if (mActiveNotificationsMap.size() > 0) {
-            Bundle remainingNote = mActiveNotificationsMap.values().iterator().next();
-            mNotificationHelper.rebuildAndUpdateNotificationsOnSystemBar(context, remainingNote);
-        }
-    }
-
     private synchronized Bundle getCurrentNoteBundleForNoteId(String noteId) {
         if (mActiveNotificationsMap.size() > 0) {
             // get the corresponding bundle for this noteId
