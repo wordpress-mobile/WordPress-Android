@@ -66,9 +66,14 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val subfilterVmKey = requireArguments().getString(SUBFILTER_VIEW_MODEL_KEY)!!
-        val bottomSheetTitle = requireArguments().getCharSequence(SUBFILTER_TITLE_KEY)!!
-        val category = requireArguments().getSerializableCompat<SubfilterCategory>(SUBFILTER_CATEGORY_KEY)!!
+        val subfilterVmKey = requireArguments().getString(SUBFILTER_VIEW_MODEL_KEY)
+        val bottomSheetTitle = requireArguments().getCharSequence(SUBFILTER_TITLE_KEY)
+        val category = requireArguments().getSerializableCompat<SubfilterCategory>(SUBFILTER_CATEGORY_KEY)
+
+        if (subfilterVmKey == null || category == null || bottomSheetTitle == null) {
+            dismiss()
+            return
+        }
 
         viewModel = ViewModelProvider(
             parentFragment as ViewModelStoreOwner,
