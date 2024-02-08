@@ -227,13 +227,17 @@ class DashboardCardsViewModelSlice @Inject constructor(
 
         dashboardData.filterIsInstance<MySiteCardAndItem.Card.DomainRegistrationCard>()
             .forEach { domainRegistrationCardViewModelSlice.trackShown(it) }
+
+        dashboardData.filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>().forEach {
+            personalizeCardViewModelSlice.trackShown(it)
+        }
     }
 
     fun resetShownTracker() {
-        personalizeCardViewModelSlice.resetShown()
         cardViewModelSlice.resetShownTracker()
         jetpackInstallFullPluginCardViewModelSlice.resetShownTracker()
         domainRegistrationCardViewModelSlice.resetCardShown()
+        personalizeCardViewModelSlice.resetShown()
     }
 
     fun startQuickStart(siteModel: SiteModel) {

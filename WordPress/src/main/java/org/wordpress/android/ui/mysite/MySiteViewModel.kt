@@ -506,11 +506,8 @@ class MySiteViewModel @Inject constructor(
 //            .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
 //        siteSelected.dashboardData.filterIsInstance<JetpackFeatureCard>()
 //            .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
-//        siteSelected.dashboardData.filterIsInstance<JetpackInstallFullPluginCard>()
-//            .forEach { jetpackInstallFullPluginShownTracker.trackShown(it.type) }
 //        dashboardCardPlansUtils.trackCardShown(viewModelScope, siteSelected)
-////        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>()
-////            .forEach { personalizeCardViewModelSlice.trackShown(it.type) }
+
 ////        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>()
 ////            .forEach { noCardsMessageViewModelSlice.trackShown(it.type) }
 ////        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.WpSotw2023NudgeCardModel>()
@@ -524,9 +521,7 @@ class MySiteViewModel @Inject constructor(
         quickStartTracker.resetShown()
         jetpackFeatureCardShownTracker.resetShown()
         dashboardCardsViewModelSlice.resetShownTracker()
-//        personalizeCardViewModelSlice.resetShown()
 //        sotw2023NudgeCardViewModelSlice.resetShown()
-//        dynamicCardsViewModelSlice.resetShown()
     }
 
     // FluxC events
