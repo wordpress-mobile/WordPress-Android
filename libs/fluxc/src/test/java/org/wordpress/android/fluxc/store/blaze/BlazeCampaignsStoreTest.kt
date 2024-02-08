@@ -402,7 +402,6 @@ class BlazeCampaignsStoreTest {
             savedPaymentMethods = listOf(
                 BlazePaymentMethod(
                     id = "payment-method-id",
-                    type = BlazePaymentMethod.PaymentMethodType.CREDIT_CARD,
                     name = "Visa **** 4689",
                     info = BlazePaymentMethod.PaymentMethodInfo.CreditCardInfo(
                         lastDigits = "4689",
@@ -415,7 +414,6 @@ class BlazeCampaignsStoreTest {
                 ),
                 BlazePaymentMethod(
                     id = "payment-method-id-2",
-                    type = BlazePaymentMethod.PaymentMethodType.CREDIT_CARD,
                     name = "MasterCard **** 1234",
                     info = BlazePaymentMethod.PaymentMethodInfo.CreditCardInfo(
                         lastDigits = "1234",
