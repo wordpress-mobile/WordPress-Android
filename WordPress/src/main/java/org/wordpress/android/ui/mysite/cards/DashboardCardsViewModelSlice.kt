@@ -50,6 +50,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
 
     private var job: Job? = null
 
+    private var trackingJob: Job? = null
+
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = merge(
         _onSnackbar,
@@ -160,9 +162,11 @@ class DashboardCardsViewModelSlice @Inject constructor(
         // the no cards message will still be shown and hence we need to check if the personalize card
         // is shown or not, if the personalize card is not shown, then it means that
         // we are not showing dashboard at all
-        personalizeCard?.let {
-            noCardsMessageViewModelSlice.buildNoCardsMessage(cards)?.let { cards.add(it) }
-            cards.add(it)
+        personalizeCard?.let { personalize ->
+            noCardsMessageViewModelSlice.buildNoCardsMessage(cards)?.let { noCardsMessage ->
+                cards.add(noCardsMessage)
+            }
+            cards.add(personalize)
         }
         if(cards.isNotEmpty()) trackCardShown(cards)
         return cards.toList()
@@ -212,6 +216,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
     fun onCleared() {
         quickLinksItemViewModelSlice.onCleared()
         job?.cancel()
+        trackingJob?.cancel()
         scope.cancel()
     }
 
@@ -222,7 +227,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
     }
 
     private fun trackCardShown(dashboardData: List<MySiteCardAndItem>) = with(dashboardData) {
-        scope.launch(bgDispatcher) {
+        trackingJob?.cancel()
+        trackingJob = scope.launch(bgDispatcher) {
             filterIsInstance<MySiteCardAndItem.Card>().let {
                 cardViewModelSlice.trackCardShown(it)
             }
