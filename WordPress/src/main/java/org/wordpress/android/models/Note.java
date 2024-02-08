@@ -105,6 +105,7 @@ public class Note {
         return getRawType().equals(rawType);
     }
 
+    @NonNull
     public Boolean isCommentType() {
         synchronized (mSyncLock) {
             return (isAutomattcherType() && JSONUtils.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1)
@@ -112,47 +113,58 @@ public class Note {
         }
     }
 
+    @NonNull
     public Boolean isAutomattcherType() {
         return isTypeRaw(NOTE_MATCHER_TYPE);
     }
 
+    @NonNull
     public Boolean isNewPostType() {
         return isTypeRaw(NOTE_NEW_POST_TYPE);
     }
 
+    @NonNull
     public Boolean isFollowType() {
         return isTypeRaw(NOTE_FOLLOW_TYPE);
     }
 
+    @NonNull
     public Boolean isLikeType() {
         return isPostLikeType() || isCommentLikeType();
     }
 
+    @NonNull
     public Boolean isPostLikeType() {
         return isTypeRaw(NOTE_LIKE_TYPE);
     }
 
+    @NonNull
     public Boolean isCommentLikeType() {
         return isTypeRaw(NOTE_COMMENT_LIKE_TYPE);
     }
 
+    @NonNull
     public Boolean isReblogType() {
         return isTypeRaw(NOTE_REBLOG_TYPE);
     }
 
+    @NonNull
     public Boolean isViewMilestoneType() {
         return isTypeRaw(NOTE_VIEW_MILESTONE);
     }
 
+    @NonNull
     public Boolean isCommentReplyType() {
         return isCommentType() && getParentCommentId() > 0;
     }
 
     // Returns true if the user has replied to this comment note
+    @NonNull
     public Boolean isCommentWithUserReply() {
         return isCommentType() && !TextUtils.isEmpty(getCommentSubjectNoticon());
     }
 
+    @NonNull
     public Boolean isUserList() {
         return isLikeType() || isFollowType() || isReblogType();
     }
