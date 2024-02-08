@@ -358,7 +358,7 @@ public class GCMMessageHandler {
             if (title == null) {
                 title = context.getString(R.string.app_name);
             }
-            String message = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_MSG));
+            String message = getNotificationMessage(data, noteType);
 
             /*
              * if this has the same note_id as the previous notification, and the previous notification
@@ -419,6 +419,25 @@ public class GCMMessageHandler {
                     success -> showNotificationForNoteData(context, data, builder),
                     error -> showNotificationForNoteData(context, data, builder)
             );
+        }
+
+        @NonNull
+        private String getNotificationMessage(@NonNull Bundle data, @NonNull String noteType) {
+            String message = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_MSG));
+            if (noteType.equals(PUSH_TYPE_COMMENT)) {
+                String noteId = data.getString(PUSH_ARG_NOTE_ID);
+                Note note = NotificationsUtils.getNoteById(noteId);
+                if (note != null) {
+                    String summary = note.getCommentSubject();
+                    if (!TextUtils.isEmpty(summary)) {
+                        return summary;
+                    }
+                }
+            }
+            if (message == null) {
+                message = "";
+            }
+            return message;
         }
 
         private void showNotificationForNoteData(Context context, Bundle noteData, NotificationCompat.Builder builder) {
