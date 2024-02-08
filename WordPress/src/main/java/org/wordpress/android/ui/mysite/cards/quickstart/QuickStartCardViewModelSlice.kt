@@ -165,4 +165,12 @@ class QuickStartCardViewModelSlice @Inject constructor(
     fun clearValue() {
         _uiModel.postValue(null)
     }
+
+    fun trackShown(it: MySiteCardAndItem.Card.QuickStartCard) {
+        quickStartTracker.trackShown(it.type)
+    }
+
+    fun resetShown() {
+        quickStartTracker.resetShown()
+    }
 }

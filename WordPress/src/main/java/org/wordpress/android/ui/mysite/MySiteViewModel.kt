@@ -500,10 +500,6 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun trackCardsAndItemsShownIfNeeded() {
-//        siteSelected.dashboardData.filterIsInstance<QuickStartCard>()
-//            .firstOrNull()?.let { quickStartTracker.trackShown(it.type) }
-//        siteSelected.dashboardData.filterIsInstance<QuickStartCard>()
-//            .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
 //        siteSelected.dashboardData.filterIsInstance<JetpackFeatureCard>()
 //            .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
 //        dashboardCardPlansUtils.trackCardShown(viewModelScope, siteSelected)
@@ -518,7 +514,6 @@ class MySiteViewModel @Inject constructor(
 
     private fun resetShownTrackers() {
         cardsTracker.resetShown()
-        quickStartTracker.resetShown()
         jetpackFeatureCardShownTracker.resetShown()
         dashboardCardsViewModelSlice.resetShownTracker()
 //        sotw2023NudgeCardViewModelSlice.resetShown()

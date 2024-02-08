@@ -231,6 +231,10 @@ class DashboardCardsViewModelSlice @Inject constructor(
         dashboardData.filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>().forEach {
             personalizeCardViewModelSlice.trackShown(it)
         }
+
+        dashboardData.filterIsInstance<MySiteCardAndItem.Card.QuickStartCard>().forEach {
+            quickStartCardViewModelSlice.trackShown(it)
+        }
     }
 
     fun resetShownTracker() {
@@ -238,6 +242,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         jetpackInstallFullPluginCardViewModelSlice.resetShownTracker()
         domainRegistrationCardViewModelSlice.resetCardShown()
         personalizeCardViewModelSlice.resetShown()
+        quickStartCardViewModelSlice.resetShown()
     }
 
     fun startQuickStart(siteModel: SiteModel) {
