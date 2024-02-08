@@ -104,7 +104,7 @@ class SubfilterPageFragment : Fragment() {
         subFilterViewModel = ViewModelProvider(
             requireParentFragment().parentFragment as ViewModelStoreOwner,
             viewModelFactory
-        ).get(subfilterVmKey, SubFilterViewModel::class.java)
+        )[subfilterVmKey, SubFilterViewModel::class.java]
 
         subFilterViewModel.subFilters.observe(viewLifecycleOwner) {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->
@@ -184,7 +184,7 @@ class SubfilterPageFragment : Fragment() {
 class SubfilterPagerAdapter(
     val context: Context,
     val fm: FragmentManager,
-    val subfilterViewModelKey: String,
+    private val subfilterViewModelKey: String,
     categories: List<SubfilterCategory>
 ) : FragmentPagerAdapter(fm) {
     private val filterCategory = categories
@@ -198,7 +198,7 @@ class SubfilterPagerAdapter(
         return fragment
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
+    override fun getPageTitle(position: Int): CharSequence {
         return context.getString(filterCategory[position].titleRes)
     }
 
