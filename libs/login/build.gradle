@@ -71,8 +71,6 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
 
-    implementation "com.google.android.gms:play-services-fido:$fidoVersion"
-
     implementation "androidx.credentials:credentials:$credentialManagerVersion"
     implementation "androidx.credentials:credentials-play-services-auth:$credentialManagerVersion"
 
