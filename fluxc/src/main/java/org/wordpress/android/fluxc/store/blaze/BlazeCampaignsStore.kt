@@ -114,7 +114,7 @@ class BlazeCampaignsStore @Inject constructor(
     ) {
         creationRestClient.fetchTargetingLocations(site, query, locale).let { payload ->
             when {
-                payload.isError -> BlazeResult(BlazeTargetingError(payload.error))
+                payload.isError -> BlazeResult(BlazeError(payload.error))
                 else -> BlazeResult(payload.data)
             }
         }
@@ -130,7 +130,7 @@ class BlazeCampaignsStore @Inject constructor(
     ) {
         creationRestClient.fetchTargetingTopics(site, locale).let { payload ->
             when {
-                payload.isError -> BlazeResult(BlazeTargetingError(payload.error))
+                payload.isError -> BlazeResult(BlazeError(payload.error))
                 else -> {
                     targetingDao.replaceTopics(payload.data?.map {
                         BlazeTargetingTopicEntity(
@@ -159,7 +159,7 @@ class BlazeCampaignsStore @Inject constructor(
     ) {
         creationRestClient.fetchTargetingLanguages(site, locale).let { payload ->
             when {
-                payload.isError -> BlazeResult(BlazeTargetingError(payload.error))
+                payload.isError -> BlazeResult(BlazeError(payload.error))
                 else -> {
                     targetingDao.replaceLanguages(payload.data?.map {
                         BlazeTargetingLanguageEntity(
@@ -188,7 +188,7 @@ class BlazeCampaignsStore @Inject constructor(
     ) {
         creationRestClient.fetchTargetingDevices(site, locale).let { payload ->
             when {
-                payload.isError -> BlazeResult(BlazeTargetingError(payload.error))
+                payload.isError -> BlazeResult(BlazeError(payload.error))
                 else -> {
                     targetingDao.replaceDevices(payload.data?.map { device ->
                         BlazeTargetingDeviceEntity(
@@ -218,7 +218,7 @@ class BlazeCampaignsStore @Inject constructor(
         creationRestClient.fetchAdSuggestions(siteModel, productId)
             .let { payload ->
                 when {
-                    payload.isError -> BlazeResult(BlazeTargetingError(payload.error))
+                    payload.isError -> BlazeResult(BlazeError(payload.error))
                     else -> {
                         BlazeResult(payload.data)
                     }
@@ -243,7 +243,7 @@ class BlazeCampaignsStore @Inject constructor(
             targetingParameters = targetingParameters
         ).let { payload ->
             when {
-                payload.isError -> BlazeResult(BlazeTargetingError(payload.error))
+                payload.isError -> BlazeResult(BlazeError(payload.error))
                 else -> {
                     BlazeResult(payload.data)
                 }
@@ -262,13 +262,13 @@ class BlazeCampaignsStore @Inject constructor(
 
     data class BlazeResult<T>(
         val model: T? = null,
-    ) : Store.OnChanged<BlazeTargetingError>() {
-        constructor(error: BlazeTargetingError) : this() {
+    ) : Store.OnChanged<BlazeError>() {
+        constructor(error: BlazeError) : this() {
             this.error = error
         }
     }
 
-    data class BlazeTargetingError(
+    data class BlazeError(
         val type: GenericErrorType,
         val apiError: String? = null,
         val message: String? = null
