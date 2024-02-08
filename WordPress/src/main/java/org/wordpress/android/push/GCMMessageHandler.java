@@ -354,10 +354,7 @@ public class GCMMessageHandler {
 
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
-            String title = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_TITLE));
-            if (title == null) {
-                title = context.getString(R.string.app_name);
-            }
+            String title = getNotificationTitle(data, noteType, context.getString(R.string.app_name));
             String message = getNotificationMessage(data, noteType);
 
             /*
@@ -419,6 +416,22 @@ public class GCMMessageHandler {
                     success -> showNotificationForNoteData(context, data, builder),
                     error -> showNotificationForNoteData(context, data, builder)
             );
+        }
+
+        @NonNull
+        private String getNotificationTitle(@NonNull Bundle data,
+                                            @NonNull String noteType,
+                                            @NonNull String defaultTitle) {
+            String title;
+            if (noteType.equals(PUSH_TYPE_COMMENT)) {
+                title = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_MSG));
+            } else {
+                title = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_TITLE));
+            }
+            if (title == null) {
+                return defaultTitle;
+            }
+            return title;
         }
 
         @NonNull
