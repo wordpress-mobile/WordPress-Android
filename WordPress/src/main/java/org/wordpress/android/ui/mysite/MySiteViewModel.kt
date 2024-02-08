@@ -503,9 +503,6 @@ class MySiteViewModel @Inject constructor(
 //        siteSelected.dashboardData.filterIsInstance<JetpackFeatureCard>()
 //            .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
 //        dashboardCardPlansUtils.trackCardShown(viewModelScope, siteSelected)
-
-////        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>()
-////            .forEach { noCardsMessageViewModelSlice.trackShown(it.type) }
 ////        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.WpSotw2023NudgeCardModel>()
 ////            .forEach { _ -> sotw2023NudgeCardViewModelSlice.trackShown() }
 ////        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.Dynamic>()

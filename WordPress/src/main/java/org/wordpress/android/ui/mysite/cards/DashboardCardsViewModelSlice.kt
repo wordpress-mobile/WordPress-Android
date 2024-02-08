@@ -235,6 +235,10 @@ class DashboardCardsViewModelSlice @Inject constructor(
         dashboardData.filterIsInstance<MySiteCardAndItem.Card.QuickStartCard>().forEach {
             quickStartCardViewModelSlice.trackShown(it)
         }
+
+        dashboardData.filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>().forEach {
+            noCardsMessageViewModelSlice.trackShown(it.type)
+        }
     }
 
     fun resetShownTracker() {
@@ -243,6 +247,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         domainRegistrationCardViewModelSlice.resetCardShown()
         personalizeCardViewModelSlice.resetShown()
         quickStartCardViewModelSlice.resetShown()
+        noCardsMessageViewModelSlice.resetShown()
     }
 
     fun startQuickStart(siteModel: SiteModel) {
