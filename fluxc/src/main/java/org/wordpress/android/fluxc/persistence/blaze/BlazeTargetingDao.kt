@@ -8,6 +8,9 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
+import org.wordpress.android.fluxc.model.blaze.BlazeTargetingDevice
+import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLanguage
+import org.wordpress.android.fluxc.model.blaze.BlazeTargetingTopic
 
 @Dao
 interface BlazeTargetingDao {
@@ -62,14 +65,18 @@ data class BlazeTargetingDeviceEntity(
     @PrimaryKey val id: String,
     val name: String,
     val locale: String
-)
+) {
+    fun toDomainModel() = BlazeTargetingDevice(id, name)
+}
 
 @Entity(tableName = "BlazeTargetingTopics")
 data class BlazeTargetingTopicEntity(
     @PrimaryKey val id: String,
     val description: String,
     val locale: String
-)
+) {
+    fun toDomainModel() = BlazeTargetingTopic(id, description)
+}
 
 @Entity(tableName = "BlazeTargetingLanguages")
 data class BlazeTargetingLanguageEntity(
@@ -79,4 +86,6 @@ data class BlazeTargetingLanguageEntity(
      * The locale used to localize the name of the language.
      */
     val locale: String
-)
+) {
+    fun toDomainModel() = BlazeTargetingLanguage(id, name)
+}
