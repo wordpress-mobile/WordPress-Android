@@ -32,6 +32,7 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -74,10 +75,10 @@ public class GCMMessageHandler {
 
     private static final String PUSH_ARG_TYPE = "type";
     private static final String PUSH_ARG_USER = "user";
-    private static final String PUSH_ARG_TITLE = "title";
-    private static final String PUSH_ARG_MSG = "msg";
+    protected static final String PUSH_ARG_TITLE = "title";
+    protected static final String PUSH_ARG_MSG = "msg";
 
-    private static final String PUSH_TYPE_COMMENT = "c";
+    protected static final String PUSH_TYPE_COMMENT = "c";
     private static final String PUSH_TYPE_LIKE = "like";
     private static final String PUSH_TYPE_COMMENT_LIKE = "comment_like";
     private static final String PUSH_TYPE_AUTOMATTCHER = "automattcher";
@@ -100,9 +101,10 @@ public class GCMMessageHandler {
     private final ArrayMap<Integer, Bundle> mActiveNotificationsMap;
     private final NotificationHelper mNotificationHelper;
 
-    @Inject GCMMessageHandler(SystemNotificationsTracker systemNotificationsTracker) {
+    @Inject GCMMessageHandler(SystemNotificationsTracker systemNotificationsTracker,
+                              NotificationsUtilsWrapper notificationsUtilsWrapper) {
         mActiveNotificationsMap = new ArrayMap<>();
-        mNotificationHelper = new NotificationHelper(this, systemNotificationsTracker);
+        mNotificationHelper = new NotificationHelper(this, systemNotificationsTracker, notificationsUtilsWrapper);
     }
 
     synchronized void rebuildAndUpdateNotificationsOnSystemBarForThisNote(Context context,
@@ -271,10 +273,14 @@ public class GCMMessageHandler {
         private GCMMessageHandler mGCMMessageHandler;
         private SystemNotificationsTracker mSystemNotificationsTracker;
 
+        private NotificationsUtilsWrapper mNotificationsUtilsWrapper;
+
         NotificationHelper(GCMMessageHandler gCMMessageHandler,
-                           SystemNotificationsTracker systemNotificationsTracker) {
+                           SystemNotificationsTracker systemNotificationsTracker,
+                           NotificationsUtilsWrapper notificationsUtilsWrapper) {
             mGCMMessageHandler = gCMMessageHandler;
             mSystemNotificationsTracker = systemNotificationsTracker;
+            mNotificationsUtilsWrapper = notificationsUtilsWrapper;
         }
 
         void handleDefaultPush(Context context, @NonNull Bundle data, long wpcomUserId) {
@@ -412,7 +418,7 @@ public class GCMMessageHandler {
         }
 
         @NonNull
-        private String getNotificationTitle(@NonNull Bundle data,
+        protected String getNotificationTitle(@NonNull Bundle data,
                                             @NonNull String noteType,
                                             @NonNull String defaultTitle) {
             String title;
@@ -428,20 +434,24 @@ public class GCMMessageHandler {
         }
 
         @NonNull
-        private String getNotificationMessage(@NonNull Bundle data, @NonNull String noteType) {
-            String message = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_MSG));
+        protected String getNotificationMessage(@NonNull Bundle data, @NonNull String noteType) {
             if (noteType.equals(PUSH_TYPE_COMMENT)) {
                 String noteId = data.getString(PUSH_ARG_NOTE_ID);
-                Note note = NotificationsUtils.getNoteById(noteId);
-                if (note != null) {
-                    String summary = note.getCommentSubject();
-                    if (!TextUtils.isEmpty(summary)) {
-                        return summary;
+                if (noteId != null) {
+                    Note note = mNotificationsUtilsWrapper.getNoteById(noteId);
+                    if (note != null) {
+                        String summary = note.getCommentSubject();
+                        if (!TextUtils.isEmpty(summary)) {
+                            return summary;
+                        }
                     }
                 }
             }
+
+            // Not a comment or the comment content was not retrieved
+            String message = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_MSG));
             if (message == null) {
-                message = "";
+                return "";
             }
             return message;
         }
