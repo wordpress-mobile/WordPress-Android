@@ -124,6 +124,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
         )
     }.distinctUntilChanged() as MutableLiveData<List<MySiteCardAndItem>>
 
+
+
     @SuppressWarnings("LongParameterList")
     private fun mergeUiModels(
         quicklinks: MySiteCardAndItem.Card.QuickLinksItem?,
@@ -162,6 +164,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
             noCardsMessageViewModelSlice.buildNoCardsMessage(cards)?.let { cards.add(it) }
             cards.add(it)
         }
+        if(cards.isNotEmpty()) trackCardShown(cards)
         return cards.toList()
     }
 
@@ -218,30 +221,32 @@ class DashboardCardsViewModelSlice @Inject constructor(
         }
     }
 
-    fun trackCardShown(dashboardData: List<MySiteCardAndItem>){
-        dashboardData.filterIsInstance<MySiteCardAndItem.Card>().let {
-            cardViewModelSlice.trackCardShown(it)
-        }
-        dashboardData.filterIsInstance<MySiteCardAndItem.Card.JetpackInstallFullPluginCard>()
-            .forEach { jetpackInstallFullPluginCardViewModelSlice.trackShown(it) }
+    private fun trackCardShown(dashboardData: List<MySiteCardAndItem>) = with(dashboardData) {
+        scope.launch(bgDispatcher) {
+            filterIsInstance<MySiteCardAndItem.Card>().let {
+                cardViewModelSlice.trackCardShown(it)
+            }
+            filterIsInstance<MySiteCardAndItem.Card.JetpackInstallFullPluginCard>()
+                .forEach { jetpackInstallFullPluginCardViewModelSlice.trackShown(it) }
 
-        dashboardData.filterIsInstance<MySiteCardAndItem.Card.DomainRegistrationCard>()
-            .forEach { domainRegistrationCardViewModelSlice.trackShown(it) }
+            filterIsInstance<MySiteCardAndItem.Card.DomainRegistrationCard>()
+                .forEach { domainRegistrationCardViewModelSlice.trackShown(it) }
 
-        dashboardData.filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>().forEach {
-            personalizeCardViewModelSlice.trackShown(it)
-        }
+            filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>().forEach {
+                personalizeCardViewModelSlice.trackShown(it)
+            }
 
-        dashboardData.filterIsInstance<MySiteCardAndItem.Card.QuickStartCard>().forEach {
-            quickStartCardViewModelSlice.trackShown(it)
-        }
+            filterIsInstance<MySiteCardAndItem.Card.QuickStartCard>().forEach {
+                quickStartCardViewModelSlice.trackShown(it)
+            }
 
-        dashboardData.filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>().forEach {
-            noCardsMessageViewModelSlice.trackShown(it.type)
-        }
+            filterIsInstance<MySiteCardAndItem.Card.NoCardsMessage>().forEach {
+                noCardsMessageViewModelSlice.trackShown(it.type)
+            }
 
-        dashboardData.filterIsInstance< MySiteCardAndItem.Card.DashboardPlansCard>().forEachIndexed { index, _ ->
-            plansCardViewModelSlice.trackShown(index)
+            filterIsInstance<MySiteCardAndItem.Card.DashboardPlansCard>().forEachIndexed { index, _ ->
+                plansCardViewModelSlice.trackShown(index)
+            }
         }
     }
 

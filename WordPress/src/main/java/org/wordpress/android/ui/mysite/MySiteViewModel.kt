@@ -159,7 +159,6 @@ class MySiteViewModel @Inject constructor(
     val state: LiveData<MySiteUiState> =
         selectedSiteRepository.siteSelected.switchMap { _ ->
             isSiteSelected = true
-            resetShownTrackers()
             val result = MediatorLiveData<SiteIdToState>()
 
             // We want to filter out the empty state where we have a site ID but site object is missing.
@@ -464,12 +463,12 @@ class MySiteViewModel @Inject constructor(
         siteInfoHeaderCardViewModelSlice.buildCard(site)
         dashboardItemsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.clearValue()
+        dashboardCardsViewModelSlice.resetShownTracker()
         if (shouldShowDashboard(site)) {
             dashboardCardsViewModelSlice.buildCards(site)
         } else {
             dashboardItemsViewModelSlice.buildItems(site)
         }
-
     }
 
     private fun onDashboardErrorRetry() {
