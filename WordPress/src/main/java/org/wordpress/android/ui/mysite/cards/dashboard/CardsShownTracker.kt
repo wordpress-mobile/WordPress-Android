@@ -11,8 +11,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.TodaysStatsCard.TodaysStatsCardWithData
-import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.StatsSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.BlazeSubtype
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.StatsSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -105,6 +105,13 @@ class CardsShownTracker @Inject constructor(
             Pair(
                 card.type.toTypeValue().label,
                 Type.ACTIVITY.label
+            )
+        )
+
+        is Card.QuickLinksItem -> trackCardShown(
+            Pair(
+                card.type.toTypeValue().label,
+                Type.QUICK_LINKS.label
             )
         )
 
