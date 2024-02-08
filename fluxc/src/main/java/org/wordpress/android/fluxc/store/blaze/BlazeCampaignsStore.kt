@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.map
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
+import org.wordpress.android.fluxc.model.blaze.BlazeTargetingParameters
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsError
@@ -12,21 +13,26 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorT
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetchedPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.FakeBlazeTargetingRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCreationRestClient
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
+import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
+import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingLanguageEntity
+import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingTopicEntity
 import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.store.Store.OnChangedError
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
+import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class BlazeCampaignsStore @Inject constructor(
-    private val restClient: BlazeCampaignsRestClient,
-    private val fakeTargetingRestClient: FakeBlazeTargetingRestClient,
+    private val campaignsRestClient: BlazeCampaignsRestClient,
+    private val creationRestClient: BlazeCreationRestClient,
     private val campaignsDao: BlazeCampaignsDao,
     private val targetingDao: BlazeTargetingDao,
     private val coroutineEngine: CoroutineEngine
@@ -70,7 +76,7 @@ class BlazeCampaignsStore @Inject constructor(
         }
 
         return coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch blaze campaigns") {
-            val payload = restClient.fetchBlazeCampaigns(site, page)
+            val payload = campaignsRestClient.fetchBlazeCampaigns(site, page)
             storeBlazeCampaigns(site, payload)
         }
     }
@@ -98,6 +104,7 @@ class BlazeCampaignsStore @Inject constructor(
             .map { it?.toDomainModel() }
 
     suspend fun fetchBlazeTargetingLocations(
+        site: SiteModel,
         query: String,
         locale: String = Locale.getDefault().language
     ) = coroutineEngine.withDefaultContext(
@@ -105,27 +112,34 @@ class BlazeCampaignsStore @Inject constructor(
         this,
         "fetch blaze locations"
     ) {
-        fakeTargetingRestClient.fetchBlazeLocations(query, locale).let { payload ->
+        creationRestClient.fetchTargetingLocations(site, query, locale).let { payload ->
             when {
-                payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
-                else -> BlazeTargetingResult(payload.data)
+                payload.isError -> BlazeResult(BlazeError(payload.error))
+                else -> BlazeResult(payload.data)
             }
         }
     }
 
     suspend fun fetchBlazeTargetingTopics(
+        site: SiteModel,
         locale: String = Locale.getDefault().language
     ) = coroutineEngine.withDefaultContext(
         AppLog.T.API,
         this,
         "fetch blaze topics"
     ) {
-        fakeTargetingRestClient.fetchBlazeTopics(locale).let { payload ->
+        creationRestClient.fetchTargetingTopics(site, locale).let { payload ->
             when {
-                payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
+                payload.isError -> BlazeResult(BlazeError(payload.error))
                 else -> {
-                    targetingDao.replaceTopics(payload.data)
-                    BlazeTargetingResult(payload.data)
+                    targetingDao.replaceTopics(payload.data?.map {
+                        BlazeTargetingTopicEntity(
+                            id = it.id,
+                            description = it.description,
+                            locale = locale
+                        )
+                    }.orEmpty())
+                    BlazeResult(payload.data)
                 }
             }
         }
@@ -133,21 +147,28 @@ class BlazeCampaignsStore @Inject constructor(
 
     fun observeBlazeTargetingTopics(
         locale: String = Locale.getDefault().language
-    ) = targetingDao.observeTopics(locale)
+    ) = targetingDao.observeTopics(locale).map { topics -> topics.map { it.toDomainModel() } }
 
     suspend fun fetchBlazeTargetingLanguages(
+        site: SiteModel,
         locale: String = Locale.getDefault().language
     ) = coroutineEngine.withDefaultContext(
         AppLog.T.API,
         this,
         "fetch blaze languages"
     ) {
-        fakeTargetingRestClient.fetchBlazeLanguages(locale).let { payload ->
+        creationRestClient.fetchTargetingLanguages(site, locale).let { payload ->
             when {
-                payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
+                payload.isError -> BlazeResult(BlazeError(payload.error))
                 else -> {
-                    targetingDao.replaceLanguages(payload.data)
-                    BlazeTargetingResult(payload.data)
+                    targetingDao.replaceLanguages(payload.data?.map {
+                        BlazeTargetingLanguageEntity(
+                            id = it.id,
+                            name = it.name,
+                            locale = locale
+                        )
+                    }.orEmpty())
+                    BlazeResult(payload.data)
                 }
             }
         }
@@ -155,21 +176,28 @@ class BlazeCampaignsStore @Inject constructor(
 
     fun observeBlazeTargetingLanguages(
         locale: String = Locale.getDefault().language
-    ) = targetingDao.observeLanguages(locale)
+    ) = targetingDao.observeLanguages(locale).map { languages -> languages.map { it.toDomainModel() } }
 
     suspend fun fetchBlazeTargetingDevices(
+        site: SiteModel,
         locale: String = Locale.getDefault().language
     ) = coroutineEngine.withDefaultContext(
         AppLog.T.API,
         this,
         "fetch blaze devices"
     ) {
-        fakeTargetingRestClient.fetchBlazeDevices(locale).let { payload ->
+        creationRestClient.fetchTargetingDevices(site, locale).let { payload ->
             when {
-                payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
+                payload.isError -> BlazeResult(BlazeError(payload.error))
                 else -> {
-                    targetingDao.replaceDevices(payload.data)
-                    BlazeTargetingResult(payload.data)
+                    targetingDao.replaceDevices(payload.data?.map { device ->
+                        BlazeTargetingDeviceEntity(
+                            id = device.id,
+                            name = device.name,
+                            locale = locale
+                        )
+                    }.orEmpty())
+                    BlazeResult(payload.data)
                 }
             }
         }
@@ -177,7 +205,7 @@ class BlazeCampaignsStore @Inject constructor(
 
     fun observeBlazeTargetingDevices(
         locale: String = Locale.getDefault().language
-    ) = targetingDao.observeDevices(locale)
+    ) = targetingDao.observeDevices(locale).map { devices -> devices.map { it.toDomainModel() } }
 
     suspend fun fetchBlazeAdSuggestions(
         siteModel: SiteModel,
@@ -187,21 +215,41 @@ class BlazeCampaignsStore @Inject constructor(
         this,
         "fetch blaze ad suggestions"
     ) {
-        fakeTargetingRestClient.fetchBlazeAdSuggestions(siteModel.siteId, productId).let { payload ->
+        creationRestClient.fetchAdSuggestions(siteModel, productId)
+            .let { payload ->
+                when {
+                    payload.isError -> BlazeResult(BlazeError(payload.error))
+                    else -> {
+                        BlazeResult(payload.data)
+                    }
+                }
+            }
+    }
+
+    suspend fun fetchBlazeAdForecast(
+        siteModel: SiteModel,
+        startDate: Date,
+        endDate: Date,
+        totalBudget: Double,
+        timeZoneId: String = TimeZone.getDefault().id,
+        targetingParameters: BlazeTargetingParameters? = null
+    ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch blaze ad forecast") {
+        creationRestClient.fetchAdForecast(
+            site = siteModel,
+            startDate = startDate,
+            endDate = endDate,
+            totalBudget = totalBudget,
+            timeZoneId = timeZoneId,
+            targetingParameters = targetingParameters
+        ).let { payload ->
             when {
-                payload.isError -> BlazeTargetingResult(BlazeTargetingError(payload.error))
+                payload.isError -> BlazeResult(BlazeError(payload.error))
                 else -> {
-                    campaignsDao.replaceAdSuggestions(payload.data)
-                    BlazeTargetingResult(payload.data)
+                    BlazeResult(payload.data)
                 }
             }
         }
     }
-
-    suspend fun getBlazeAdSuggestions(
-        siteModel: SiteModel,
-        productId: Long
-    ) = campaignsDao.getBlazeAdSuggestions(siteModel.siteId, productId)
 
     data class BlazeCampaignsResult<T>(
         val model: T? = null,
@@ -212,15 +260,15 @@ class BlazeCampaignsStore @Inject constructor(
         }
     }
 
-    data class BlazeTargetingResult<T>(
+    data class BlazeResult<T>(
         val model: T? = null,
-    ) : Store.OnChanged<BlazeTargetingError>() {
-        constructor(error: BlazeTargetingError) : this() {
+    ) : Store.OnChanged<BlazeError>() {
+        constructor(error: BlazeError) : this() {
             this.error = error
         }
     }
 
-    data class BlazeTargetingError(
+    data class BlazeError(
         val type: GenericErrorType,
         val apiError: String? = null,
         val message: String? = null

@@ -36,6 +36,13 @@
 
 /sites/$site/wordads/dsp/api/v1/search/campaigns/site
 
+/sites/$site/wordads/dsp/api/v1.1/targeting/languages
+/sites/$site/wordads/dsp/api/v1.1/targeting/locations
+/sites/$site/wordads/dsp/api/v1.1/targeting/devices
+/sites/$site/wordads/dsp/api/v1.1/targeting/page-topics
+/sites/$site/wordads/dsp/api/v1.1/suggestions
+/sites/$site/wordads/dsp/api/v1.1/forecast
+
 /sites/$site/launch
 
 /sites/$site/jetpack-ai/completions
