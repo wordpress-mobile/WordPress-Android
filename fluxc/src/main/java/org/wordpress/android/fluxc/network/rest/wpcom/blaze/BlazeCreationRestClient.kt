@@ -1,12 +1,17 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.blaze
 
 import android.annotation.SuppressLint
+import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
+import kotlinx.coroutines.delay
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeAdForecast
 import org.wordpress.android.fluxc.model.blaze.BlazeAdSuggestion
+import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethod
+import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethodUrls
+import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethods
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingDevice
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLanguage
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLocation
@@ -173,6 +178,61 @@ class BlazeCreationRestClient @Inject constructor(
         }
     }
 
+    @Suppress("KotlinConstantConditions", "MagicNumber", "UNUSED_PARAMETER")
+    suspend fun fetchPaymentMethods(site: SiteModel): BlazePayload<BlazePaymentMethods> {
+        // TODO Use real API when it becomes ready
+
+        fun generateFakePaymentMethods() = BlazePaymentMethodsResponse(
+            savedPaymentMethods = listOf(
+                BlazePaymentMethodsResponse.BlazePaymentMethodsNetworkModel(
+                    id = "payment-method-id",
+                    type = "credit_card",
+                    name = "Visa **** 4689",
+                    info = JsonObject().apply {
+                        addProperty("last_digits", "4689")
+                        add("expiring", JsonObject().apply {
+                            addProperty("month", 2)
+                            addProperty("year", 2025)
+                        })
+                        addProperty("type", "Visa")
+                        addProperty("nickname", "")
+                        addProperty("cardholder_name", "John Doe")
+                    }
+                ),
+                BlazePaymentMethodsResponse.BlazePaymentMethodsNetworkModel(
+                    id = "payment-method-id-2",
+                    type = "credit_card",
+                    name = "MasterCard **** 1234",
+                    info = JsonObject().apply {
+                        addProperty("last_digits", "1234")
+                        add("expiring", JsonObject().apply {
+                            addProperty("month", 3)
+                            addProperty("year", 2026)
+                        })
+                        addProperty("type", "MasterCard")
+                        addProperty("nickname", "")
+                        addProperty("cardholder_name", "John Doe")
+                    }
+                )
+            ),
+            addPaymentMethodUrls = BlazePaymentMethodsResponse.BlazeAddPaymentMethodUrlsNetworkModel(
+                formUrl = "https://example.com/blaze-pm-add",
+                successUrl = "https://example.com/blaze-pm-success",
+                idUrlParameter = "pmid"
+            )
+        )
+
+        delay(500)
+        val response: WPComGsonRequestBuilder.Response<BlazePaymentMethodsResponse> =
+            WPComGsonRequestBuilder.Response.Success(generateFakePaymentMethods())
+
+        return when (response) {
+            is WPComGsonRequestBuilder.Response.Success -> BlazePayload(response.data.toDomainModel())
+
+            is WPComGsonRequestBuilder.Response.Error -> BlazePayload(response.error)
+        }
+    }
+
     data class BlazePayload<T>(
         val data: T?
     ) : Payload<WPComGsonNetworkError>() {
@@ -278,4 +338,65 @@ private class BlazeAdForecastNetworkModel(
         minImpressions = minImpressions,
         maxImpressions = maxImpressions
     )
+}
+
+private class BlazePaymentMethodsResponse(
+    @SerializedName("saved_payment_methods")
+    val savedPaymentMethods: List<BlazePaymentMethodsNetworkModel>,
+    @SerializedName("add_payment_method")
+    val addPaymentMethodUrls: BlazeAddPaymentMethodUrlsNetworkModel
+) {
+    fun toDomainModel(): BlazePaymentMethods {
+        return BlazePaymentMethods(
+            savedPaymentMethods = savedPaymentMethods.map { it.toDomainModel() },
+            addPaymentMethodUrls = addPaymentMethodUrls.toDomainModel()
+        )
+    }
+
+    class BlazePaymentMethodsNetworkModel(
+        val id: String,
+        val type: String,
+        val name: String,
+        val info: JsonObject
+    ) {
+        fun toDomainModel(): BlazePaymentMethod {
+            return BlazePaymentMethod(
+                id = id,
+                type = when (type) {
+                    "credit_card" -> BlazePaymentMethod.PaymentMethodType.CREDIT_CARD
+                    else -> BlazePaymentMethod.PaymentMethodType.UNKNOWN
+                },
+                name = name,
+                info = when (type) {
+                    "credit_card" -> BlazePaymentMethod.PaymentMethodInfo.CreditCardInfo(
+                        lastDigits = info.get("last_digits").asString,
+                        expMonth = info.get("expiring").asJsonObject.get("month").asInt,
+                        expYear = info.get("expiring").asJsonObject.get("year").asInt,
+                        type = info.get("type").asString,
+                        nickname = info.get("nickname").asString,
+                        cardHolderName = info.get("cardholder_name").asString
+                    )
+
+                    else -> BlazePaymentMethod.PaymentMethodInfo.Unknown
+                }
+            )
+        }
+    }
+
+    class BlazeAddPaymentMethodUrlsNetworkModel(
+        @SerializedName("form_url")
+        val formUrl: String,
+        @SerializedName("success_url")
+        val successUrl: String,
+        @SerializedName("id_url_parameter")
+        val idUrlParameter: String
+    ) {
+        fun toDomainModel(): BlazePaymentMethodUrls {
+            return BlazePaymentMethodUrls(
+                formUrl = formUrl,
+                successUrl = successUrl,
+                idUrlParameter = idUrlParameter
+            )
+        }
+    }
 }
