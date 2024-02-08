@@ -7,15 +7,9 @@ data class BlazePaymentMethods(
 
 data class BlazePaymentMethod(
     val id: String,
-    val type: PaymentMethodType,
     val name: String,
     val info: PaymentMethodInfo
 ) {
-    enum class PaymentMethodType {
-        CREDIT_CARD,
-        UNKNOWN
-    }
-
     sealed interface PaymentMethodInfo {
         data class CreditCardInfo(
             val lastDigits: String,

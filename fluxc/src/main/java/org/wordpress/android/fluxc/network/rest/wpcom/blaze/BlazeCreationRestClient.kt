@@ -362,10 +362,6 @@ private class BlazePaymentMethodsResponse(
         fun toDomainModel(): BlazePaymentMethod {
             return BlazePaymentMethod(
                 id = id,
-                type = when (type) {
-                    "credit_card" -> BlazePaymentMethod.PaymentMethodType.CREDIT_CARD
-                    else -> BlazePaymentMethod.PaymentMethodType.UNKNOWN
-                },
                 name = name,
                 info = when (type) {
                     "credit_card" -> BlazePaymentMethod.PaymentMethodInfo.CreditCardInfo(
