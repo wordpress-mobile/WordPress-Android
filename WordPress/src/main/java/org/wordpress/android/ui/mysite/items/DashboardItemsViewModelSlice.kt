@@ -2,10 +2,12 @@ package org.wordpress.android.ui.mysite.items
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
 import org.wordpress.android.ui.mysite.cards.sotw2023.WpSotw2023NudgeCardViewModelSlice
@@ -15,8 +17,10 @@ import org.wordpress.android.ui.mysite.items.jetpackfeaturecard.JetpackFeatureCa
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsViewModelSlice
 import org.wordpress.android.util.merge
 import javax.inject.Inject
+import javax.inject.Named
 
 class DashboardItemsViewModelSlice @Inject constructor(
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val jetpackFeatureCardViewModelSlice: JetpackFeatureCardViewModelSlice,
     private val jetpackSwitchMenuViewModelSlice: JetpackSwitchMenuViewModelSlice,
     private val jetpackBadgeViewModelSlice: JetpackBadgeViewModelSlice,
@@ -80,7 +84,7 @@ class DashboardItemsViewModelSlice @Inject constructor(
     }
 
     fun buildItems(site: SiteModel) {
-        scope.launch {
+        scope.launch(bgDispatcher) {
             jetpackFeatureCardViewModelSlice.buildJetpackFeatureCard()
             jetpackSwitchMenuViewModelSlice.buildJetpackSwitchMenu()
             jetpackBadgeViewModelSlice.buildJetpackBadge()
