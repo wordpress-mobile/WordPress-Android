@@ -50,6 +50,7 @@ class CardViewModelSlice @Inject constructor(
     private val activityLogCardViewModelSlice: ActivityLogCardViewModelSlice,
     private val preferences: PreferenceUtils.PreferenceUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
+    private val cardsTracker: CardsTracker
 ) {
     private lateinit var scope: CoroutineScope
 
@@ -262,6 +263,18 @@ class CardViewModelSlice @Inject constructor(
         pagesCardViewModelSlice.clearValue()
         postsCardViewModelSlice.clearValue()
         activityLogCardViewModelSlice.clearValue()
+    }
+
+    fun trackCardShown(cards: List<MySiteCardAndItem.Card>) {
+        cards.filterIsInstance<MySiteCardAndItem.Card.Dynamic>().forEach {
+            dynamicCardsViewModelSlice.trackShown(it.id)
+        }
+        cardsTracker.trackShown(cards)
+    }
+
+    fun resetShownTracker() {
+        dynamicCardsViewModelSlice.resetShown()
+        cardsTracker.resetShown()
     }
 }
 
