@@ -39,7 +39,6 @@ import org.wordpress.android.ui.mysite.cards.DashboardCardsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
-import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
@@ -88,7 +87,6 @@ class MySiteViewModel @Inject constructor(
     private val jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker,
     private val jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
-    private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper,
     private val siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice,
@@ -532,7 +530,6 @@ class MySiteViewModel @Inject constructor(
         cardsTracker.resetShown()
         quickStartTracker.resetShown()
         jetpackFeatureCardShownTracker.resetShown()
-        jetpackInstallFullPluginShownTracker.resetShown()
         dashboardCardsViewModelSlice.resetShownTracker()
 //        personalizeCardViewModelSlice.resetShown()
 //        sotw2023NudgeCardViewModelSlice.resetShown()

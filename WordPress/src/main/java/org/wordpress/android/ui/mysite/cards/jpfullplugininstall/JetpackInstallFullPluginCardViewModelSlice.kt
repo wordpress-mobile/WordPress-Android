@@ -19,7 +19,8 @@ import javax.inject.Inject
 class JetpackInstallFullPluginCardViewModelSlice @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val jetpackInstallFullPluginShownTracker: JetpackInstallFullPluginShownTracker
 ) {
     private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
     val onOpenJetpackInstallFullPluginOnboarding = _onOpenJetpackInstallFullPluginOnboarding
@@ -72,5 +73,13 @@ class JetpackInstallFullPluginCardViewModelSlice @Inject constructor(
 
     fun clearValue() {
         _uiModel.postValue(null)
+    }
+
+    fun trackShown(card: JetpackInstallFullPluginCard) {
+        jetpackInstallFullPluginShownTracker.trackShown(card.type)
+    }
+
+    fun resetShownTracker() {
+        jetpackInstallFullPluginShownTracker.resetShown()
     }
 }
