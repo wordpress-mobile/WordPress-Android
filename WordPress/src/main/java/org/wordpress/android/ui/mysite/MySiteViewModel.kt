@@ -257,11 +257,9 @@ class MySiteViewModel @Inject constructor(
     fun refresh(isPullToRefresh: Boolean = false) {
         if (isPullToRefresh) analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH)
         selectedSiteRepository.getSelectedSite()?.let {
-            if (shouldShowDashboard(it)) {
-                buildDashboardOrSiteItems(it)
-            } else {
-                accountDataViewModelSlice.onRefresh()
-            }
+            buildDashboardOrSiteItems(it)
+        } ?: run {
+            accountDataViewModelSlice.onRefresh()
         }
     }
 
@@ -458,7 +456,7 @@ class MySiteViewModel @Inject constructor(
 
     fun buildDashboardOrSiteItems(site: SiteModel) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
-        if(shouldShowDashboard(site)) {
+        if (shouldShowDashboard(site)) {
             dashboardCardsViewModelSlice.buildCards(site)
             dashboardItemsViewModelSlice.clearValue()
         } else {
@@ -471,7 +469,7 @@ class MySiteViewModel @Inject constructor(
         siteInfoHeaderCardViewModelSlice.buildCard(site)
         dashboardItemsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.clearValue()
-        if(shouldShowDashboard(site)) {
+        if (shouldShowDashboard(site)) {
             dashboardCardsViewModelSlice.buildCards(site)
         } else {
             dashboardItemsViewModelSlice.buildItems(site)
