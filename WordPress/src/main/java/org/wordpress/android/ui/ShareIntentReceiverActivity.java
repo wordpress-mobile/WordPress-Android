@@ -112,6 +112,7 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
                 }
             }
         } catch (Exception e) {
+            ToastUtils.showToast(this, R.string.error_media_load, ToastUtils.Duration.LONG);
             AppLog.e(T.MEDIA, "ShareIntentReceiver failed to download media ", e);
         }
     }
