@@ -251,6 +251,19 @@ class BlazeCampaignsStore @Inject constructor(
         }
     }
 
+    suspend fun fetchBlazePaymentMethods(
+        site: SiteModel
+    ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch blaze payment methods") {
+        creationRestClient.fetchPaymentMethods(site).let { payload ->
+            when {
+                payload.isError -> BlazeResult(BlazeError(payload.error))
+                else -> {
+                    BlazeResult(payload.data)
+                }
+            }
+        }
+    }
+
     data class BlazeCampaignsResult<T>(
         val model: T? = null,
         val cached: Boolean = false
