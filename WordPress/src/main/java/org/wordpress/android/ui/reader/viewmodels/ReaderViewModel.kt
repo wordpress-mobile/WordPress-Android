@@ -135,7 +135,8 @@ class ReaderViewModel @Inject constructor(
 //        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
-    private fun loadTabs(savedInstanceState: Bundle? = null) {
+    @JvmOverloads
+    fun loadTabs(savedInstanceState: Bundle? = null) {
         launch {
             val tagList = loadReaderTabsUseCase.loadTabs()
             if (tagList.isNotEmpty() && readerTagsList != tagList) {

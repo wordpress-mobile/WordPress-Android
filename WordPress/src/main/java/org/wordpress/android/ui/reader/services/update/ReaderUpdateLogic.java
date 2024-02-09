@@ -193,6 +193,7 @@ public class ReaderUpdateLogic {
                         ReaderTagTable.replaceTags(serverTopics);
                     }
                     // broadcast the fact that there are changes
+                    // TODO thomashortadev this was being sent EVERY time
                     EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
                 }
                 AppPrefs.setReaderTagsUpdatedTimestamp(new Date().getTime());

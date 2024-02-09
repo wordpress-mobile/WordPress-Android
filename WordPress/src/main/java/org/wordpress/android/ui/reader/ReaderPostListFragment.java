@@ -1945,9 +1945,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
-            if (!isAdded() || !mHasUpdatedPosts) {
+            if (!isAdded()) return;
+
+            if (!mHasUpdatedPosts) {
+                fetchInitialData();
                 return;
             }
+
             if (isEmpty) {
                 if (getPostListType() != ReaderPostListType.SEARCH_RESULTS
                     || getSearchTabsPosition() == TAB_SITES && getSiteSearchAdapter().isEmpty()
@@ -1971,6 +1975,21 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mRestorePosition = 0;
         }
     };
+
+    private void fetchInitialData() {
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+            reloadTags();
+
+            // update the current tag if the list fragment is empty - this will happen if
+            // the tag table was previously empty (ie: first run)
+            if (isPostAdapterEmpty()) {
+                updateCurrentTag();
+            }
+        }
+
+        if (mReaderViewModel != null) mReaderViewModel.loadTabs();
+        if (mSubFilterViewModel != null) mSubFilterViewModel.loadSubFilters();
+    }
 
     private boolean isBookmarksList() {
         return getPostListType() == ReaderPostListType.TAG_FOLLOWED
