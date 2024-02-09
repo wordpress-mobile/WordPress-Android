@@ -49,10 +49,10 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
         for (final ReaderTag readerTag : mInitialReaderTagList) {
             initialTagsSlugs.add(readerTag.getTagSlug());
         }
-        final List<ReaderTag> currentReaderTagList = getTagAdapter().getItems();
+        final List<ReaderTag> currentlySubscribedReaderTagList = getTagAdapter().getSubscribedItems();
         final Set<String> currentTagsSlugs = new HashSet<>();
-        if (currentReaderTagList != null) {
-            for (final ReaderTag readerTag : currentReaderTagList) {
+        if (currentlySubscribedReaderTagList != null) {
+            for (final ReaderTag readerTag : currentlySubscribedReaderTagList) {
                 currentTagsSlugs.add(readerTag.getTagSlug());
             }
         }

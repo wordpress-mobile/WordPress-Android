@@ -102,6 +102,17 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
         return mTags;
     }
 
+    @Nullable
+    public ReaderTagList getSubscribedItems() {
+        final ReaderTagList readerSubscribedTagsList = new ReaderTagList();
+        for (final ReaderTag readerTag : mTags) {
+            if (Boolean.TRUE.equals(mBlogIdIsFollowedMap.get(readerTag.getTagSlug()))) {
+                readerSubscribedTagsList.add(readerTag);
+            }
+        }
+        return readerSubscribedTagsList;
+    }
+
     @Override
     public void onBindViewHolder(TagViewHolder holder, int position) {
         final ReaderTag tag = mTags.get(position);

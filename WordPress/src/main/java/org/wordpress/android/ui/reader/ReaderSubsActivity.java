@@ -176,8 +176,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         boolean shouldRefreshSubscriptions = false;
         if (mPageAdapter != null) {
             final ReaderTagFragment readerTagFragment = mPageAdapter.getReaderTagFragment();
-            final ReaderBlogFragment readerBlogFragment = mPageAdapter.getReaderBlogFragment();
-            if (readerTagFragment != null && readerBlogFragment != null) {
+            if (readerTagFragment != null) {
                 shouldRefreshSubscriptions = readerTagFragment.hasChangedSelectedTags();
             }
         }
