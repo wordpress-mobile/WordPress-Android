@@ -28,6 +28,8 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -41,6 +43,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     private final ReaderTagList mTags = new ReaderTagList();
     private TagDeletedListener mTagDeletedListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
+    private final Map<String, Boolean> mBlogIdIsFollowedMap = new HashMap<>();
 
     public ReaderTagAdapter(Context context) {
         super();
@@ -103,7 +106,13 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     public void onBindViewHolder(TagViewHolder holder, int position) {
         final ReaderTag tag = mTags.get(position);
         holder.mTxtTagName.setText(tag.getLabel());
-        holder.mRemoveFollowButton.setOnClickListener(v -> performDeleteTag(tag));
+        holder.mRemoveFollowButton.setOnClickListener(view -> {
+            final boolean currentValue = Boolean.TRUE.equals(mBlogIdIsFollowedMap.get(tag.getTagSlug()));
+            final boolean newValue = !currentValue;
+            mBlogIdIsFollowedMap.put(tag.getTagSlug(), newValue);
+            holder.mRemoveFollowButton.setIsFollowed(newValue);
+            performDeleteTag(tag);
+        });
     }
 
     private void performDeleteTag(@NonNull ReaderTag tag) {
@@ -124,11 +133,6 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
         boolean success = ReaderTagActions.deleteTag(tag, actionListener, mAccountStore.hasAccessToken());
 
         if (success) {
-            int index = mTags.indexOfTagName(tag.getTagSlug());
-            if (index > -1) {
-                mTags.remove(index);
-                notifyItemRemoved(index);
-            }
             if (mTagDeletedListener != null) {
                 mTagDeletedListener.onTagDeleted(tag);
             }
@@ -175,6 +179,12 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             if (tagList != null && !tagList.isSameList(mTags)) {
                 mTags.clear();
                 mTags.addAll(tagList);
+                mBlogIdIsFollowedMap.clear();
+                for (final ReaderTag tag : mTags) {
+                    if (!mBlogIdIsFollowedMap.containsKey(tag.getTagSlug())) {
+                        mBlogIdIsFollowedMap.put(tag.getTagSlug(), true);
+                    }
+                }
                 notifyDataSetChanged();
             }
             mIsTaskRunning = false;
