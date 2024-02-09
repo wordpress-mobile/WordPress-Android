@@ -993,10 +993,19 @@ class AppInitializer @Inject constructor(
     }
 
     private fun updateNotificationSettings() {
-        if(!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications())
+        if (!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()) {
             NotificationsUtils.cancelAllNotifications(application)
-        else
+            // Only create the transient notification channel to handle upload notifications
+            createNotificationChannelsOnSdk26(
+                normal = false,
+                important = false,
+                reminder = false,
+                transient = true,
+                weeklyRoundup = false,
+            )
+        } else {
             createNotificationChannelsOnSdk26()
+        }
     }
 
     companion object {
