@@ -70,7 +70,7 @@ import javax.inject.Inject;
  * followed tags and followed blogs
  */
 public class ReaderSubsActivity extends LocaleAwareActivity
-        implements ReaderTagAdapter.TagDeletedListener {
+        implements ReaderTagAdapter.TagDeletedListener, ReaderTagAdapter.TagAddedListener {
     private EditText mEditAdd;
     private FloatingActionButton mFabButton;
     private ReaderFollowButton mBtnAdd;
@@ -496,6 +496,14 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagSlug())) {
             mLastAddedTagName = null;
         }
+    }
+
+    @Override public void onTagAdded(@NonNull ReaderTag readerTag) {
+        mReaderTracker.trackTag(
+                AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
+                readerTag.getTagSlug(),
+                ReaderTracker.SOURCE_SETTINGS
+        );
     }
 
     /*

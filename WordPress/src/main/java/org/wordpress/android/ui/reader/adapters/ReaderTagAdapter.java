@@ -38,12 +38,17 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
         void onTagDeleted(ReaderTag tag);
     }
 
+    public interface TagAddedListener {
+        void onTagAdded(@NonNull ReaderTag readerTag);
+    }
+
     @Inject AccountStore mAccountStore;
     private final WeakReference<Context> mWeakContext;
     private final ReaderTagList mTags = new ReaderTagList();
     private TagDeletedListener mTagDeletedListener;
+    private TagAddedListener mTagAddedListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
-    private final Map<String, Boolean> mBlogIdIsFollowedMap = new HashMap<>();
+    private final Map<String, Boolean> mTagSlugIsFollowedMap = new HashMap<>();
 
     public ReaderTagAdapter(Context context) {
         super();
@@ -54,6 +59,10 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
 
     public void setTagDeletedListener(TagDeletedListener listener) {
         mTagDeletedListener = listener;
+    }
+
+    public void setTagAddedListener(@NonNull final TagAddedListener listener) {
+        mTagAddedListener = listener;
     }
 
     public void setDataLoadedListener(ReaderInterfaces.DataLoadedListener listener) {
@@ -106,7 +115,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     public ReaderTagList getSubscribedItems() {
         final ReaderTagList readerSubscribedTagsList = new ReaderTagList();
         for (final ReaderTag readerTag : mTags) {
-            if (Boolean.TRUE.equals(mBlogIdIsFollowedMap.get(readerTag.getTagSlug()))) {
+            if (Boolean.TRUE.equals(mTagSlugIsFollowedMap.get(readerTag.getTagSlug()))) {
                 readerSubscribedTagsList.add(readerTag);
             }
         }
@@ -125,15 +134,15 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             return;
         }
 
-        final boolean currentFollowValue = Boolean.TRUE.equals(mBlogIdIsFollowedMap.get(tag.getTagSlug()));
-        final boolean newFollowValue = !currentFollowValue;
-        readerFollowButton.setIsFollowed(newFollowValue);
+        final boolean isFollowingCurrent = Boolean.TRUE.equals(mTagSlugIsFollowedMap.get(tag.getTagSlug()));
+        final boolean isFollowingNew = !isFollowingCurrent;
+        readerFollowButton.setIsFollowed(isFollowingNew);
 
         // Disable follow button until API call returns
         readerFollowButton.setEnabled(false);
 
         ReaderActions.ActionListener actionListener = succeeded -> {
-            mBlogIdIsFollowedMap.put(tag.getTagSlug(), newFollowValue);
+            mTagSlugIsFollowedMap.put(tag.getTagSlug(), isFollowingNew);
             readerFollowButton.setEnabled(true);
             if (!succeeded && hasContext()) {
                 ToastUtils.showToast(getContext(), R.string.reader_toast_err_removing_tag);
@@ -141,11 +150,15 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             }
         };
 
-        boolean success = ReaderTagActions.deleteTag(tag, actionListener, mAccountStore.hasAccessToken());
-
-        if (success) {
-            if (mTagDeletedListener != null) {
+        if (isFollowingCurrent) {
+            boolean success = ReaderTagActions.deleteTag(tag, actionListener, mAccountStore.hasAccessToken());
+            if (success && mTagDeletedListener != null) {
                 mTagDeletedListener.onTagDeleted(tag);
+            }
+        } else {
+            boolean success = ReaderTagActions.addTag(tag, actionListener, mAccountStore.hasAccessToken());
+            if (success && mTagAddedListener != null) {
+                mTagAddedListener.onTagAdded(tag);
             }
         }
     }
@@ -190,11 +203,9 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             if (tagList != null && !tagList.isSameList(mTags)) {
                 mTags.clear();
                 mTags.addAll(tagList);
-                mBlogIdIsFollowedMap.clear();
+                mTagSlugIsFollowedMap.clear();
                 for (final ReaderTag tag : mTags) {
-                    if (!mBlogIdIsFollowedMap.containsKey(tag.getTagSlug())) {
-                        mBlogIdIsFollowedMap.put(tag.getTagSlug(), true);
-                    }
+                    mTagSlugIsFollowedMap.put(tag.getTagSlug(), true);
                 }
                 notifyDataSetChanged();
             }
