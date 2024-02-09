@@ -2707,6 +2707,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_monitoring_tab_shown";
             case SITE_MONITORING_TAB_LOADING_ERROR:
                 return "site_monitoring_tab_loading_error";
+            case WEBVIEW_TOO_LARGE_PAYLOAD_ERROR:
+                return "webview_too_large_payload_error";
         }
         return null;
     }
