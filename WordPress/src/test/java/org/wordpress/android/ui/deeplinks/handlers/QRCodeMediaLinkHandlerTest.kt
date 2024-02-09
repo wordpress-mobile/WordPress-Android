@@ -8,6 +8,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
@@ -76,7 +77,7 @@ class QRCodeMediaLinkHandlerTest {
     }
 
     @Test
-    fun `given unrecognized siteId, when deep linked, then opens my site view`() {
+    fun `given unrecognized siteId, when deep linked, then opens my site view with message`() {
         val mediaUri = buildUri(host = "apps.wordpress.com",
             queryParams = mapOf("campaign" to "qr-code-media"),
             path = arrayOf("get"), )
@@ -85,7 +86,7 @@ class QRCodeMediaLinkHandlerTest {
 
         val navigateAction = qrCodeMediaLinkHandler.buildNavigateAction(mediaUri)
 
-        assertThat(navigateAction).isEqualTo(NavigateAction.OpenMySite)
+        assertThat(navigateAction).isEqualTo(NavigateAction.OpenMySiteWithMessage(R.string.qrcode_media_deeplink_error))
     }
 
     @Test
