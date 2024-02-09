@@ -257,7 +257,7 @@ class NotesAdapter(
 
     private fun loadAvatar(imageView: ImageView, avatarUrl: String) {
         val url = GravatarUtils.fixGravatarUrl(avatarUrl, avatarSize)
-        imageManager?.loadIntoCircle(imageView, ImageType.AVATAR_WITH_BACKGROUND, url)
+        imageManager.loadIntoCircle(imageView, ImageType.AVATAR_WITH_BACKGROUND, url)
     }
 
     private fun Note.shouldShowMultipleAvatars() = isFollowType || isLikeType || isCommentLikeType
