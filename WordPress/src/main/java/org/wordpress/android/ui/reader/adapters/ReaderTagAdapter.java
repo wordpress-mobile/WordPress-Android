@@ -106,27 +106,27 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     public void onBindViewHolder(TagViewHolder holder, int position) {
         final ReaderTag tag = mTags.get(position);
         holder.mTxtTagName.setText(tag.getLabel());
-        holder.mRemoveFollowButton.setOnClickListener(view -> {
-            final boolean currentValue = Boolean.TRUE.equals(mBlogIdIsFollowedMap.get(tag.getTagSlug()));
-            final boolean newValue = !currentValue;
-            mBlogIdIsFollowedMap.put(tag.getTagSlug(), newValue);
-            holder.mRemoveFollowButton.setIsFollowed(newValue);
-            performDeleteTag(tag);
-        });
+        holder.mRemoveFollowButton.setOnClickListener(view -> performDeleteTag(tag, holder.mRemoveFollowButton));
     }
 
-    private void performDeleteTag(@NonNull ReaderTag tag) {
+    private void performDeleteTag(@NonNull ReaderTag tag, @NonNull final ReaderFollowButton readerFollowButton) {
         if (!NetworkUtils.checkConnection(getContext())) {
             return;
         }
 
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (!succeeded && hasContext()) {
-                    ToastUtils.showToast(getContext(), R.string.reader_toast_err_removing_tag);
-                    refresh();
-                }
+        final boolean currentFollowValue = Boolean.TRUE.equals(mBlogIdIsFollowedMap.get(tag.getTagSlug()));
+        final boolean newFollowValue = !currentFollowValue;
+        mBlogIdIsFollowedMap.put(tag.getTagSlug(), newFollowValue);
+        readerFollowButton.setIsFollowed(newFollowValue);
+
+        // Disable follow button until API call returns
+        readerFollowButton.setEnabled(false);
+
+        ReaderActions.ActionListener actionListener = succeeded -> {
+            readerFollowButton.setEnabled(true);
+            if (!succeeded && hasContext()) {
+                ToastUtils.showToast(getContext(), R.string.reader_toast_err_removing_tag);
+                refresh();
             }
         };
 

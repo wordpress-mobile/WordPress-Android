@@ -497,8 +497,6 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagSlug())) {
             mLastAddedTagName = null;
         }
-        String labelRemovedTag = getString(R.string.reader_label_removed_tag);
-        showInfoSnackbar(String.format(labelRemovedTag, tag.getLabel()));
     }
 
     /*
