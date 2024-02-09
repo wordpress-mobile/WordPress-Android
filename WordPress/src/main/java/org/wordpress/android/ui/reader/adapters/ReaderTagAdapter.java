@@ -127,13 +127,13 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
 
         final boolean currentFollowValue = Boolean.TRUE.equals(mBlogIdIsFollowedMap.get(tag.getTagSlug()));
         final boolean newFollowValue = !currentFollowValue;
-        mBlogIdIsFollowedMap.put(tag.getTagSlug(), newFollowValue);
         readerFollowButton.setIsFollowed(newFollowValue);
 
         // Disable follow button until API call returns
         readerFollowButton.setEnabled(false);
 
         ReaderActions.ActionListener actionListener = succeeded -> {
+            mBlogIdIsFollowedMap.put(tag.getTagSlug(), newFollowValue);
             readerFollowButton.setEnabled(true);
             if (!succeeded && hasContext()) {
                 ToastUtils.showToast(getContext(), R.string.reader_toast_err_removing_tag);
