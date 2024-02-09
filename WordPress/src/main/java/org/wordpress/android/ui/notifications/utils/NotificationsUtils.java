@@ -17,6 +17,7 @@ import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
@@ -467,6 +468,11 @@ public class NotificationsUtils {
         }
 
         return false;
+    }
+
+    @Nullable
+    public static Note getNoteById(@Nullable String noteID) {
+        return NotificationsTable.getNoteById(noteID);
     }
 
     public static Note buildNoteObjectFromBundle(Bundle data) {
