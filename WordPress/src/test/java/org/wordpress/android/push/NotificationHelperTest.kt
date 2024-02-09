@@ -16,7 +16,7 @@ import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import kotlin.test.assertEquals
 
-private const val PUSH_TYPE_NOTE_A_COMMENT = "NotAComment"
+private const val PUSH_TYPE_NOT_A_COMMENT = "NotAComment"
 
 @ExperimentalCoroutinesApi
 class NotificationHelperTest : BaseUnitTest() {
@@ -42,7 +42,7 @@ class NotificationHelperTest : BaseUnitTest() {
         val defaultTitle = "defaultTitle"
         val mockedBundle = mock<Bundle>()
         whenever(mockedBundle.getString(PUSH_ARG_TITLE)).thenReturn(StringEscapeUtils.escapeHtml4(expectedTitle))
-        val title = notificationHelper.getNotificationTitle(mockedBundle, PUSH_TYPE_NOTE_A_COMMENT, defaultTitle)
+        val title = notificationHelper.getNotificationTitle(mockedBundle, PUSH_TYPE_NOT_A_COMMENT, defaultTitle)
         assertEquals(expectedTitle, title)
     }
 
@@ -51,7 +51,7 @@ class NotificationHelperTest : BaseUnitTest() {
         val defaultTitle = "defaultTitle"
         val mockedBundle = mock<Bundle>()
         whenever(mockedBundle.getString(PUSH_ARG_TITLE)).thenReturn(null)
-        val title = notificationHelper.getNotificationTitle(mockedBundle, PUSH_TYPE_NOTE_A_COMMENT, defaultTitle)
+        val title = notificationHelper.getNotificationTitle(mockedBundle, PUSH_TYPE_NOT_A_COMMENT, defaultTitle)
         assertEquals(defaultTitle, title)
     }
 
@@ -60,7 +60,7 @@ class NotificationHelperTest : BaseUnitTest() {
         val expectedMessage = "expectedMessage"
         val mockedBundle = mock<Bundle>()
         whenever(mockedBundle.getString(PUSH_ARG_MSG)).thenReturn(StringEscapeUtils.escapeHtml4(expectedMessage))
-        val message = notificationHelper.getNotificationMessage(mockedBundle, PUSH_TYPE_NOTE_A_COMMENT)
+        val message = notificationHelper.getNotificationMessage(mockedBundle, PUSH_TYPE_NOT_A_COMMENT)
         assertEquals(expectedMessage, message)
     }
 
@@ -68,7 +68,7 @@ class NotificationHelperTest : BaseUnitTest() {
     fun `WHEN a PN that is not a comment does not contain a message argument THEN an empty message is used`() {
         val mockedBundle = mock<Bundle>()
         whenever(mockedBundle.getString(PUSH_ARG_MSG)).thenReturn(null)
-        val message = notificationHelper.getNotificationMessage(mockedBundle, PUSH_TYPE_NOTE_A_COMMENT)
+        val message = notificationHelper.getNotificationMessage(mockedBundle, PUSH_TYPE_NOT_A_COMMENT)
         assertEquals("", message)
     }
 
