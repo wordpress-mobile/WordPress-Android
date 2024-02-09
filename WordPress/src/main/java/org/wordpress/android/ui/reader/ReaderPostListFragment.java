@@ -640,7 +640,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         BottomSheetVisible visibleState = (BottomSheetVisible) uiState;
                         bottomSheet = SubfilterBottomSheetFragment.newInstance(
                                 SubFilterViewModel.getViewModelKeyForTag(mTagFragmentStartedWith),
-                                visibleState.getCategories(),
+                                visibleState.getCategory(),
                                 mUiHelpers.getTextOfUiString(requireContext(), visibleState.getTitle())
                         );
                         bottomSheet.show(getChildFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
