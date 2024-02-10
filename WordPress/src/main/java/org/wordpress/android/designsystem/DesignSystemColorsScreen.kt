@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,7 +22,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.designsystem.DesignSystemDataSource.list
 
 @Composable
 fun DesignSystemColorsScreen(
@@ -35,14 +35,30 @@ fun DesignSystemColorsScreen(
         )
     ) {
         item {
+            val list: List<ColorOption> = listOf(
+                ColorOption("Primary Foreground", MaterialTheme.colorScheme.primary),
+                ColorOption("Primary Background", MaterialTheme.colorScheme.primaryContainer),
+                ColorOption("Secondary Foreground", MaterialTheme.colorScheme.secondary),
+                ColorOption("Secondary Background", MaterialTheme.colorScheme.secondaryContainer),
+                ColorOption("Tertiary Foreground", MaterialTheme.colorScheme.tertiary),
+                ColorOption("Tertiary Background", MaterialTheme.colorScheme.tertiaryContainer),
+                ColorOption("Quartenary", MaterialTheme.colorScheme.quartenary),
+                ColorOption("Brand", MaterialTheme.colorScheme.brand),
+                ColorOption("Brand Background", MaterialTheme.colorScheme.brandContainer),
+                ColorOption("Error", MaterialTheme.colorScheme.error),
+                ColorOption("Warning", MaterialTheme.colorScheme.warning),
+                ColorOption("WP Foreground", MaterialTheme.colorScheme.wp),
+                ColorOption("WP Background", MaterialTheme.colorScheme.wpContainer),
+                )
             ColorCardList(list)
         }
     }
 }
+@OptIn(ExperimentalStdlibApi::class)
 @Composable
-fun ColorCard (colorName: String, colorHex: String) {
+fun ColorCard (colorName: String, color: Color) {
     Row (modifier = Modifier.padding(all = 8.dp)) {
-        Box (Modifier.background(DesignSystemTheme.colors.tertiaryBackground)) {
+        Box (Modifier.background(MaterialTheme.colorScheme.tertiaryContainer)) {
             Column(
                 modifier = Modifier
                     .padding(30.dp)
@@ -56,12 +72,12 @@ fun ColorCard (colorName: String, colorHex: String) {
                     modifier = Modifier
                         .padding(start = 36.dp, end = 64.dp),
                     text = colorName,
-                    color = DesignSystemTheme.colors.primaryForeground,
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 Text(
                     modifier = Modifier.padding(start = 36.dp, end = 64.dp),
-                    text = colorHex,
-                    color = DesignSystemTheme.colors.primaryForeground
+                    text = color.value.toHexString(),
+                    color = MaterialTheme.colorScheme.primaryContainer
                 )
             }
             Column(
@@ -77,7 +93,7 @@ fun ColorCard (colorName: String, colorHex: String) {
                     modifier = Modifier
                         .size(75.dp)
                         .clip(CardDefaults.shape)
-                        .background(Color.Red)
+                        .background(color)
                 )
             }
         }
@@ -86,12 +102,12 @@ fun ColorCard (colorName: String, colorHex: String) {
 @Composable
 fun ColorCardList(colorOptions: List<ColorOption>) {
     colorOptions.forEach { colorOption ->
-        ColorCard(colorOption.title, colorOption.hex)
+        ColorCard(colorOption.title, colorOption.color)
     }
 }
-    class ColorOption(var title: String, var hex: String) {
+    class ColorOption(var title: String, var color: Color) {
         fun getInfo(): String {
-            return "$title $hex"
+            return "$title ${color.value}"
         }
     }
 
@@ -99,8 +115,8 @@ fun ColorCardList(colorOptions: List<ColorOption>) {
 @Composable
 fun DesignSystemColorsScreenPreview() {
     val list: List<ColorOption> = listOf(
-        ColorOption("Primary Foreground", "#000000"),
-        ColorOption("Primary Background", "#FFFFFF")
+        ColorOption("Primary Foreground", MaterialTheme.colorScheme.primary),
+        ColorOption("Primary Background", MaterialTheme.colorScheme.primaryContainer)
     )
 
     DesignSystemTheme {
