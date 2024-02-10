@@ -25,7 +25,8 @@ import org.wordpress.android.ui.compose.components.NavigationIcons
 enum class DesignSystemScreen {
     Start,
     Foundation,
-    Components
+    Components,
+    Colors
 }
 
 @Composable
@@ -82,6 +83,9 @@ fun DesignSystem(
             }
             composable(route = DesignSystemScreen.Foundation.name) {
                 DesignSystemFoundationScreen(
+                    onButtonClicked = {
+                        navController.navigate(it)
+                    },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
@@ -89,6 +93,13 @@ fun DesignSystem(
             }
             composable(route = DesignSystemScreen.Components.name) {
                 DesignSystemComponentsScreen(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                )
+            }
+            composable(route = DesignSystemScreen.Colors.name) {
+                DesignSystemColorsScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
