@@ -9,7 +9,6 @@ import org.wordpress.android.util.helpers.MediaFile
 interface EditorMediaListener {
     fun appendMediaFiles(mediaFiles: Map<String, MediaFile>)
     fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener? = null)
-    fun advertiseImageOptimization(listener: () -> Unit)
     fun onMediaModelsCreatedFromOptimizedUris(oldUriToMediaFiles: Map<Uri, MediaModel>)
     fun getImmutablePost(): PostImmutableModel
     fun showVideoDurationLimitWarning(fileName: String)

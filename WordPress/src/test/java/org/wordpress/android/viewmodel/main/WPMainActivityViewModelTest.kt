@@ -14,7 +14,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -70,7 +69,6 @@ import java.util.Date
 class WPMainActivityViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: WPMainActivityViewModel
 
-    private var loginFlowTriggered: Boolean = false
     private var switchTabTriggered: Boolean = false
 
     @Mock
@@ -198,7 +196,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.fabUiState.observeForever { fabUiState = it }
         viewModel.openBloggingPromptsOnboarding.observeForever(openBloggingPromptsOnboardingObserver)
 
-        loginFlowTriggered = false
         switchTabTriggered = false
     }
 
@@ -451,34 +448,12 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when user taps to open the login page from the bottom sheet empty view cta the login page flow is started`() {
-        setupObservers()
-
-        startViewModelWithDefaultParameters()
-
-        viewModel.onOpenLoginPage(0)
-
-        assertThat(loginFlowTriggered).isTrue
-    }
-
-    @Test
-    fun `when user taps to open the login page from the bottom sheet empty view cta default page is set to My Site`() {
-        setupObservers()
-
-        startViewModelWithDefaultParameters()
-
-        viewModel.onOpenLoginPage(0)
-
-        verify(appPrefsWrapper, times(1)).setMainPageIndex(eq(0))
-    }
-
-    @Test
     fun `when user taps to open the login page from the bottom sheet empty view cta main page switches to My Site`() {
         setupObservers()
 
         startViewModelWithDefaultParameters()
 
-        viewModel.onOpenLoginPage(0)
+        viewModel.onOpenLoginPage()
 
         assertThat(switchTabTriggered).isTrue
     }
@@ -810,13 +785,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     private fun setupObservers() {
-        viewModel.startLoginFlow.observeForever { event ->
-            event.applyIfNotHandled {
-                loginFlowTriggered = true
-            }
-        }
-
-        viewModel.switchToMySite.observeForever { event ->
+        viewModel.switchToMeTab.observeForever { event ->
             event.applyIfNotHandled {
                 switchTabTriggered = true
             }

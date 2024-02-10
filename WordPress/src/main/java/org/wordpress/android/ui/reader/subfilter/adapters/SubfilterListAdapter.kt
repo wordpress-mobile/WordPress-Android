@@ -24,10 +24,12 @@ import org.wordpress.android.ui.reader.subfilter.viewholders.TagViewHolder
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
+import org.wordpress.android.util.image.ImageManager
 
 class SubfilterListAdapter(
     val uiHelpers: UiHelpers,
     val statsUtils: StatsUtils,
+    val imageManager: ImageManager,
     val seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
 ) : Adapter<SubfilterListItemViewHolder>() {
     private var items: List<SubfilterListItem> = listOf()
@@ -52,6 +54,7 @@ class SubfilterListAdapter(
             is SiteViewHolder -> holder.bind(
                 item as Site,
                 uiHelpers,
+                imageManager,
                 statsUtils,
                 seenUnseenWithCounterFeatureConfig.isEnabled()
             )

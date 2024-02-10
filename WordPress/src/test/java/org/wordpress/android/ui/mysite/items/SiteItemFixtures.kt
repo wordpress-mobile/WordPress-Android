@@ -115,3 +115,9 @@ val DOMAINS_ITEM = ListItem(
     onClick = ListItemInteraction.create(DOMAINS, SITE_ITEM_ACTION),
     listItemAction = DOMAINS
 )
+val SITE_MONITORING_ITEM = ListItem(
+    R.drawable.gb_ic_tool,
+    UiStringRes(R.string.site_monitoring),
+    onClick = ListItemInteraction.create(ListItemAction.SITE_MONITORING, SITE_ITEM_ACTION),
+    listItemAction = ListItemAction.SITE_MONITORING
+)

@@ -8,16 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.lifecycle.Observer
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.tabs.TabLayout
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.reader.subfilter.ActionType
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
@@ -77,9 +77,11 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             viewModelFactory
         )[subfilterVmKey, SubFilterViewModel::class.java]
 
+        // TODO remove the pager and support only one category
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
-        val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
+        val titleContainer = view.findViewById<View>(R.id.title_container)
         val title = view.findViewById<TextView>(R.id.title)
+        val editSubscriptions = view.findViewById<View>(R.id.edit_subscriptions)
         title.text = bottomSheetTitle
         pager.adapter = SubfilterPagerAdapter(
             requireActivity(),
@@ -87,7 +89,6 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             subfilterVmKey,
             categories.toList()
         )
-        tabLayout.setupWithViewPager(pager)
         pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 // NO OP
@@ -108,14 +109,14 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             else -> SITES.ordinal
         }
 
-        viewModel.filtersMatchCount.observe(this, Observer {
-            for (category in it.keys) {
-                val tab = tabLayout.getTabAt(category.ordinal)
-                tab?.let { sectionTab ->
-                    sectionTab.text = "${view.context.getString(category.titleRes)} (${it[category]})"
-                }
+        editSubscriptions.setOnClickListener {
+            val category = categories.firstOrNull() ?: return@setOnClickListener
+            val subsPageIndex = when (category) {
+                SITES -> ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS
+                TAGS -> ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS
             }
-        })
+            viewModel.onBottomSheetActionClicked(ActionType.OpenSubsAtPage(subsPageIndex))
+        }
 
         dialog?.setOnShowListener { dialogInterface ->
             val sheetDialog = dialogInterface as? BottomSheetDialog
@@ -126,9 +127,15 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
 
             bottomSheet?.let {
                 val behavior = BottomSheetBehavior.from(it)
-                val metrics = resources.displayMetrics
+                val metrics = it.context.resources.displayMetrics
                 behavior.peekHeight = metrics.heightPixels / 2
             }
+
+            dialog?.setOnShowListener(null)
+        }
+
+        viewModel.isTitleContainerVisible.observe(viewLifecycleOwner) { isVisible ->
+            titleContainer.isVisible = isVisible
         }
     }
 

@@ -12,8 +12,7 @@ class DesignSystemActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
             setContent {
-                val colors = if (isSystemInDarkTheme()) darkColors() else lightColors()
-                DesignSystemTheme(colors) {
+                DesignSystemTheme(isSystemInDarkTheme()) {
                     DesignSystem(onBackPressedDispatcher::onBackPressed)
             }
         }
@@ -27,8 +26,7 @@ class DesignSystemActivity : LocaleAwareActivity() {
     )
     @Composable
     fun PreviewDesignSystemActivity() {
-        val colors = if (isSystemInDarkTheme()) darkColors() else lightColors()
-        DesignSystemTheme(colors) {
+        DesignSystemTheme(isSystemInDarkTheme()) {
             DesignSystem(onBackPressedDispatcher::onBackPressed)
         }
     }

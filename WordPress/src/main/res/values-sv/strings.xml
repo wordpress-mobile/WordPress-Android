@@ -1,11 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-16 11:54:08+0000
+Translation-Revision-Date: 2024-02-07 16:33:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: sv_SE
 -->
 <resources>
+    <string name="site_monitoring_tab_title_php_logs">PHP-loggar</string>
+    <string name="site_monitoring">Webbplatsövervakning</string>
+    <string name="reader_empty_followed_blogs_button_subscriptions">Gå till prenumerationer</string>
+    <string name="reader_no_recommended_blogs_title">Inga rekommenderade bloggar</string>
+    <string name="reader_no_posts_with_this_tag">Inga inlägg med denna etikett</string>
+    <string name="reader_toast_err_unable_to_block_blog">Kan inte blockera denna blogg</string>
+    <string name="reader_toast_posts_from_this_blog_blocked">Inlägg från denna blogg kommer inte längre att visas</string>
+    <string name="reader_toast_err_unable_to_follow_blog">Kan inte prenumerera på denna blogg</string>
+    <string name="reader_toast_err_already_follow_this_blog">Du prenumererar redan på denna blogg</string>
+    <string name="reader_toast_err_show_blog">Kan inte visa denna blogg</string>
+    <string name="reader_toast_err_tag_already_subscribed">Du prenumererar redan på denna etikett</string>
+    <string name="reader_label_choose_interests">Välj dina intressen</string>
+    <string name="reader_label_subscribers_count_single">1 prenumerant</string>
+    <string name="reader_label_subscribers_count">%s prenumeranter</string>
+    <string name="reader_hint_add_tag_or_url_subscribe">Ange en URL eller etikett att prenumerera på</string>
+    <string name="reader_btn_subscribed">Prenumererad</string>
+    <string name="reader_btn_subscribe">Prenumerera</string>
+    <string name="reader_menu_block_this_blog">Blockera denna blogg</string>
+    <string name="reader_menu_tags_and_blogs">Redigera etiketter och bloggar</string>
+    <string name="reader_activity_title_manage_tags_blogs">Hantera etiketter och bloggar</string>
+    <string name="reader_activity_title_tag_preview">Etikett</string>
+    <string name="reader_filter_chip_tag_other">%d etiketter</string>
+    <string name="reader_filter_chip_tag_one">1 etikett</string>
+    <string name="reader_filter_chip_tag_zero">0 etiketter</string>
+    <string name="reader_filter_chip_blog_other">%d bloggar</string>
+    <string name="reader_filter_chip_blog_one">1 blogg</string>
+    <string name="reader_filter_chip_blog_zero">0 bloggar</string>
+    <string name="reader_dropdown_menu_lists">Listor</string>
+    <string name="reader_dropdown_menu_automattic">Automattic</string>
+    <string name="reader_dropdown_menu_subscriptions">Prenumerationer</string>
+    <string name="reader_dropdown_menu_discover">Upptäck</string>
+    <string name="reader_search_content_description">Sök</string>
+    <string name="reader_discover_no_posts_button_tags_text">Prenumerera på etiketter</string>
+    <string name="reader_discover_empty_subtitle_subscribe">Prenumerera på etiketter för att upptäcka nya bloggar</string>
+    <string name="reader_discover_recommended_blogs_to_subscribe_header">Bloggar att prenumerera på</string>
+    <string name="reader_filter_empty_tags_action_subscribe">Prenumerera på en etikett</string>
+    <string name="reader_filter_empty_tags_action_suggested">Föreslagna etiketter</string>
+    <string name="reader_filter_empty_blogs_action_search">Sök efter en blogg</string>
+    <string name="reader_filter_empty_tags_list_text">Prenumerera på en etikett så kommer du att se de bästa inläggen från den här.</string>
+    <string name="reader_filter_empty_tags_list_title">Inga etiketter</string>
+    <string name="reader_filter_empty_blogs_list_title">Inga bloggprenumerationer</string>
+    <string name="reader_filter_empty_blogs_action">Prenumerera på en blogg</string>
+    <string name="reader_filter_empty_blogs_list">Se de nyaste inläggen från bloggar du prenumererar på</string>
+    <string name="reader_filter_by_tag_title">Filtrera efter etikett</string>
+    <string name="reader_filter_by_blog_title">Filtrera efter blogg</string>
+    <string name="stats_timeframe_by_year">Efter år</string>
+    <string name="stats_timeframe_by_month">Efter månad</string>
+    <string name="stats_timeframe_by_week">Efter vecka</string>
+    <string name="stats_timeframe_by_day">Efter dag</string>
+    <string name="gutenberg_native_waiting_for_connection">Väntar på anslutning</string>
+    <string name="stats_traffic">Trafik</string>
     <string name="gutenberg_native_working_offline">Arbetar offline</string>
     <string name="gutenberg_native_network_connection_re_established">Nätverksanslutningen har återupprättats</string>
     <string name="gutenberg_native_network_connection_lost_working_offline">Nätverksanslutning förlorad, arbetar offline</string>
@@ -32,8 +83,6 @@ Language: sv_SE
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">För januari månad kommer bloggningsförslagen från Bloganuary – vår community-utmaning att bygga en bloggvana för det nya året.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Bloganuary är på väg!</string>
-    <string name="turn_off">Nej, stäng av</string>
-    <string name="leave_on">Ja, lämna på</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Av den här anledningen rekommenderar vi att du redigerar blocket i din webbläsare.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Av den här anledningen rekommenderar vi att du redigerar blocket med webbredigeraren.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Alternativt kan du platta ut innehållet genom att avgruppera blocket.</string>
@@ -48,8 +97,6 @@ Language: sv_SE
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Block som är inbäddade djupare än %d kanske inte renderas korrekt i den mobila redigeraren.</string>
     <string name="jp_migration_lets_go_button">Sätt igång</string>
     <string name="jp_migration_done_no_sites_message">Det är dags att fortsätta din WordPress-resa med Jetpack-appen.</string>
-    <string name="image_optimization_popup_desc">Bildoptimering förminskar bilder för snabbare uppladdning.\n\nDetta alternativ är aktiverat som standard, men du kan ändra det i appinställningarna när som helst.</string>
-    <string name="image_optimization_popup_title">Fortsätt optimera bilder?</string>
     <string name="domain_management_clear_search">Rensa sökning</string>
     <string name="media_encoder_quality_very_high">Mycket hög</string>
     <string name="notification_security_key_needed">Ange din säkerhetsnyckel för att fortsätta.</string>
@@ -101,7 +148,6 @@ Language: sv_SE
     <string name="account_and_settings">Konto och inställningar</string>
     <string name="site_creation_plans_selection_title">Välj ett paket</string>
     <string name="site_creation_domain_free_with_annual_plan">Gratis första året med årliga betalpaket</string>
-    <string name="reader_label_followers_count_single">1 följare</string>
     <string name="reader_secondary_bookmarked">Sparat</string>
     <string name="reader_secondary_bookmark">Spara</string>
     <string name="reader_discover_recommended_header_new">Du kanske gillar</string>
@@ -411,7 +457,7 @@ Language: sv_SE
     <string name="stats_timeframe_last_seven_days">Senaste 7 dagarna</string>
     <string name="weeks_quantity_other">%d veckor</string>
     <string name="weeks_quantity_one">1 vecka</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Från &lt;b&gt;dag ett&lt;/b&gt;</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">Från &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Påminn mig senare</string>
     <string name="jetpack_feature_card_content_phase_three">Statistik, läsare, aviseringar och andra funktioner kommer snart att flyttas till Jetpacks mobilapp.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Byt till Jetpack-appen</string>
@@ -603,7 +649,6 @@ Language: sv_SE
     <string name="quick_start_dialog_check_notifications_message_short">Välj fliken %1$sNotiser%2$s för att få uppdateringar i farten.</string>
     <string name="quick_start_dialog_upload_media_message_short_plus">Välj %1$splustecknet%2$s för att ladda upp media Du kan lägga till det i dina inlägg/på dina sidor från valfri enhet.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Använd &lt;b&gt;Upptäck&lt;/b&gt; för att hitta webbplatser och etiketter.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Använd &lt;b&gt;Upptäck&lt;/b&gt; för att hitta webbplatser och etiketter. Prova att välja %1$sInställningar%2$s för att lägga till ämnen som du gillar.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatyrbild för videoklipp</string>
     <string name="stats_details_top_commentators">Toppkommenterare</string>
     <string name="stats_published_years_ago">Publicerades för %1$d år sedan</string>
@@ -1100,7 +1145,6 @@ Language: sv_SE
     <string name="jetpack_brute_force_allowlist_title">IP-adresser som alltid tillåts</string>
     <string name="site_settings_denylist_title">Kommentering avstängd</string>
     <string name="gutenberg_native_add_button_text">Lägg till knapptext</string>
-    <string name="reader_title_interests">Följ ämnen</string>
     <string name="stories_intro_main_subtitle">Ett nytt sätt att skapa och publicera engagerande innehåll på din webbplats.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Avfärda</string>
     <string name="activity_log_backup_download_notice_download_action">Ladda ner</string>
@@ -1412,8 +1456,6 @@ Language: sv_SE
     <string name="hpp_error_title">Layouter är inte tillgängliga när du saknar internetförbindelse</string>
     <string name="continue_site_credentials">Fortsätt med butiksautentiseringsuppgifter</string>
     <string name="login_find_your_connected_email">Hitta din anslutna e-postadress</string>
-    <string name="reader_discover_no_posts_button_text">Följ ämnen</string>
-    <string name="reader_discover_no_posts_subtitle">Försök att följa fler ämnen för att söka bredare</string>
     <string name="reader_discover_no_posts_title">Inga nya inlägg</string>
     <string name="reader_discover_empty_title">Välkommen!</string>
     <string name="scan">Skanna</string>
@@ -1452,7 +1494,6 @@ Language: sv_SE
     <string name="login_prologue_title_second">Med den kraftfulla redigeringsmiljön kan du skapa inlägg på rörlig fot.</string>
     <string name="login_prologue_title_first">Välkommen till världens populäraste webbplatsbyggare.</string>
     <string name="media_loading_failed">Hämtningen av mediafiler misslyckades</string>
-    <string name="reader_discover_recommended_blogs_header">Webbplatser att följa</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Vi arbetar för fullt med att lägga till fler block i varje utgåva.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">”%s” stöds inte fullt ut</string>
     <string name="gutenberg_native_help_button">Hjälpknapp</string>
@@ -1473,7 +1514,6 @@ Language: sv_SE
     <string name="photo_picker_wordpress_media_library">Välj ur mediabiblioteket i WordPress</string>
     <string name="reader_label_toolbar_back">Tillbaka</string>
     <string name="reader_discover_empty_button_text">Kom igång</string>
-    <string name="reader_discover_empty_subtitle">Följ ämnen för att upptäcka nya bloggar</string>
     <string name="reader_post_details_header_by_author_name">Av</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Denna hänvisande webbplats går inte att avmarkera som skräp</string>
     <string name="stats_referrer_popup_unmark_as_spam">Ta bort markering som skräppost</string>
@@ -1631,7 +1671,6 @@ Language: sv_SE
     <string name="gutenberg_native_block_copied">Blocket kopierat</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Webbplatsrubriken kan bara ändras av en användare med rollen administratör.</string>
     <string name="my_site_title_changer_dialog_hint">Webbplatsrubriken syns webbläsarens titelrad och de flesta teman visar den också i sidhuvudet.</string>
-    <string name="reader_title_tag_preview">Ämne</string>
     <string name="error_update_site_title_network">Det gick inte att uppdatera webbplatsens rubrik. Kontrollera din nätverksanslutning och försök igen.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ej sparade ändringar</string>
     <string name="gutenberg_native_open_link_in_a_browser">Öppna länken i en webbläsare</string>
@@ -1663,8 +1702,7 @@ Language: sv_SE
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Flytta till utkast</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Kastade inlägg kan inte redigeras. Vill du ändra statusen för detta inlägg till “utkast“ så att du kan arbeta med det?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Flytta inlägget till utkast?</string>
-    <string name="reader_label_choose_your_interests">Välj dina ämnen</string>
-    <string name="reader_choose_interests_content_description">Välj dina ämnen</string>
+    <string name="reader_choose_interests_tags_content_description">Välj dina etiketter</string>
     <string name="reader_btn_done">Klar</string>
     <string name="reader_btn_select_few_interests">Välj några för att fortsätta</string>
     <string name="post_status_post_published">Publicerat</string>
@@ -1707,7 +1745,6 @@ Language: sv_SE
     <string name="page_cannot_set_homepage">För att ange startsida behöver du aktivera ”Statisk startsida” under webbplatsinställningar</string>
     <string name="gutenberg_native_select_a_color">Välj en färg</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dubbeltryck för att gå till färginställningarna</string>
-    <string name="reader_empty_followed_blogs_description">Om du följer några webbplatser kan du se deras innehåll här</string>
     <string name="feature_announcement_find_out_mode">Ta reda på mer</string>
     <string name="feature_announcement_dialog_label">Vad som är nytt i %s</string>
     <string name="insert_label_with_count">Infoga %d</string>
@@ -1721,9 +1758,8 @@ Language: sv_SE
     <string name="site_picker_ask_site_select">Kunde inte välja webbplats. Försök igen.</string>
     <string name="sitepicker_continue_flow">Fortsätt</string>
     <string name="reader_reblog_error">Reblogg misslyckades</string>
-    <string name="reader_no_site_to_reblog_action">Hantera webbplatser</string>
-    <string name="reader_no_site_to_reblog_detail">När du har skapat en webbplats på WordPress.com kan du reblogga innehåll du tycker om till din egen webbplats.</string>
-    <string name="reader_no_site_to_reblog_title">Inga webbplatser på WordPress.com tillgängliga</string>
+    <string name="reader_no_blog_to_reblog_action">Hantera bloggar</string>
+    <string name="reader_no_blog_to_reblog_title">Inga tillgängliga WordPress.com-bloggar</string>
     <string name="whats_new_in_version_title">Nyheter</string>
     <string name="comment_q_action_copied_url">Länkadress kopierad</string>
     <string name="copy_link_address">Kopiera länkadress</string>
@@ -1823,23 +1859,16 @@ Language: sv_SE
     <string name="stats_management_screen_title">Lägg till nytt kort</string>
     <string name="stats_management_add_new_stats_card">Lägg till nytt kort med statistik</string>
     <string name="reader_self_hosted_select_filter">Använd filtreringsknappen för att hitta inlägg om specifika ämnen</string>
-    <string name="reader_bottom_sheet_content_description">Välj en etikett eller en webbplats, popup-fönster</string>
-    <string name="reader_btn_select_filter_content_description">Välj en webbplats eller etikett för att filtrera inläggen</string>
+    <string name="reader_bottom_sheet_select_content_description">Välj en etikett eller en blogg, popup-fönster</string>
     <string name="reader_btn_remove_filter_content_description">Ta bort befintligt filter</string>
-    <string name="reader_title_subs">Hantera ämnen och webbplatser</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Logga in på WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Logga in på WordPress.com för att se de senaste inläggen från de ämnen du följer</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Logga in på WordPress.com för att se de senaste inläggen från de webbplatser du följer</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">Logga in på WordPress.com för att se de senaste inläggen från etiketterna du prenumererar på</string>
     <string name="gutenberg_native_replace_current_block">Ersätt aktuellt block</string>
     <string name="gutenberg_native_add_to_end">Lägg till sist</string>
     <string name="gutenberg_native_add_to_beginning">Lägg till först</string>
     <string name="gutenberg_native_add_block_before">Lägg till block före</string>
     <string name="gutenberg_native_add_block_after">Lägg till block efter</string>
-    <string name="reader_filter_empty_tags_action">Lägg till ett ämne</string>
-    <string name="reader_filter_empty_sites_action">Följ en webbplats</string>
-    <string name="reader_filter_empty_tags_list">Du kan följa inlägg om ett specifikt ämne genom att lägga till ett ämne</string>
-    <string name="reader_filter_empty_sites_list">Se de senaste inläggen från webbplatserna du följer</string>
-    <string name="reader_filter_main_title">Följer</string>
+    <string name="reader_filter_empty_tags_add_action">Lägg till en etikett</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_video_caption_s">Beskrivning för video. %s</string>
     <string name="gutenberg_native_edit_video">Redigera video</string>
@@ -1884,12 +1913,9 @@ Language: sv_SE
     <string name="login_site_credentials_magic_link_label">Nästan klart! Vi behöver bara bekräfta den e-postadress du har registrerad hos Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Logga in med dina inloggningsuppgifter för webbplatsen %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Webbplatssida</string>
-    <string name="reader_following_display_name">Följer</string>
     <string name="reader_my_likes_display_name">Gillar</string>
     <string name="reader_discover_display_name">Upptäck</string>
     <string name="reader_save_for_later_display_name">Sparat</string>
-    <string name="reader_filter_tags_title">Ämnen</string>
-    <string name="reader_filter_sites_title">Webbplatser</string>
     <string name="suffix_1_000_000_000_000_000_000">%s triljoner</string>
     <string name="suffix_1_000_000_000_000_000">%s biljarder</string>
     <string name="suffix_1_000_000_000_000">%s biljoner</string>
@@ -2380,7 +2406,7 @@ Language: sv_SE
     <string name="login_error_sms_throttled">Vi har gjort för många försök att leverera en verifieringskod via SMS – Vänta lite och be om en ny om en minut.</string>
     <string name="login_error_email_not_found_v2">Det finns inget WordPress.com-konto som stämmer mot detta Google-konto.</string>
     <string name="site_picker_remove_site_empty">Inga webbplatser motsvarar din sökning</string>
-    <string name="reader_empty_followed_blogs_search_title">Inga webbplatser motsvarar din sökning</string>
+    <string name="reader_no_followed_blogs_search_title">Inga bloggar matchar din sökning</string>
     <string name="page_parent_changed">Överordnad sida har uppdaterats</string>
     <string name="page_permanently_deleted">Sidan har raderats permanent</string>
     <string name="page_moved_to_scheduled">Sidan har schemalagts</string>
@@ -2413,8 +2439,7 @@ Language: sv_SE
     <string name="quick_start_button_negative">Inte nu</string>
     <string name="content_description_more">Mera</string>
     <string name="my_site_create_new_site_title">Du har inga webbplatser</string>
-    <string name="reader_empty_followed_tags_title">Inga följda ämnen</string>
-    <string name="reader_empty_followed_tags_subtitle">Lägg till ämnen här för att hitta inlägg om dina favoritämnen</string>
+    <string name="reader_empty_subscribed_tags_subtitle">Lägg till etiketter här för att hitta inlägg om dina favoritämnen</string>
     <string name="login_to_to_connect_jetpack">Logga in på WordPress.com-kontot du använde för att ansluta Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
@@ -2434,9 +2459,7 @@ Language: sv_SE
     <string name="people_empty_list_filtered_users">Inga användare än</string>
     <string name="reader_empty_posts_liked_description">Inlägg som du gillar kommer att visas här</string>
     <string name="reader_empty_posts_liked_title">Ingenting gillat än</string>
-    <string name="reader_empty_followed_blogs_button_followed">Gå till följda webbplatser</string>
-    <string name="reader_empty_followed_blogs_button_discover">Hitta webbplatser</string>
-    <string name="reader_empty_followed_blogs_title">Inga följda webbplatser</string>
+    <string name="reader_no_followed_blogs_button_discover">Upptäck bloggar</string>
     <string name="notifications_empty_likes">Inga gillamarkeringar än</string>
     <string name="notifications_empty_followers">Inga följare än</string>
     <string name="activity_log_limited_content_on_free_plan">Eftersom du har ett gratispaket visar din aktivitetslogg begränsade händelser.</string>
@@ -2501,8 +2524,8 @@ Language: sv_SE
     <string name="reader_followed_blog_notifications_this">denna webbplats</string>
     <string name="reader_followed_blog_notifications_action">Aktivera</string>
     <string name="reader_followed_blog_notifications">Aktivera aviseringar för %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Slå på webbplatsaviseringar</string>
-    <string name="reader_btn_notifications_off">Stäng av webbplatsaviseringar</string>
+    <string name="reader_btn_blog_notifications_on">Slå på bloggaviseringar</string>
+    <string name="reader_btn_blog_notifications_off">Stäng av bloggaviseringar</string>
     <string name="activity_log_jetpack_icon">Jetpack-ikon</string>
     <string name="activity_log_event">Händelse</string>
     <string name="activity_log_icon">Aktivitetsikon</string>
@@ -3084,7 +3107,6 @@ Language: sv_SE
     <string name="confirm">Bekräfta</string>
     <string name="xmlrpc_endpoint_forbidden_error">Det gick inte att ansluta. Vi får fel 403 (förbjudet) när vi anropar XMLRPC-ändpunkten för din webbplats. Appen behöver detta för att kunna kommunicera med din webbplats. Kontakta webbhotellet för att lösa detta problem.</string>
     <string name="xmlrpc_post_blocked_error">Det gick inte att ansluta. Din webbserver blockerar POST-anrop, som appen behöver för att kommunicera med din webbplats. Kontakta ditt webbhotell för att lösa detta problem.</string>
-    <string name="reader_hint_search_followed_sites">Sök följda webbplatser</string>
     <string name="pending_draft_one_generic">Dröj inte längre, \'%1$s\' vill bli publicerad!</string>
     <string name="pending_draft_one_month">Dröj inte längre, \'%1$s\' vill bli publicerad!</string>
     <string name="pending_draft_one_week_2">\'%1$s\' är fortfarande ett utkast. Kom ihåg att publicera!</string>
@@ -3186,7 +3208,6 @@ Language: sv_SE
     <string name="person_remove_confirmation_title">Ta bort %1$s</string>
     <string name="role">Roll</string>
     <string name="people">Människor</string>
-    <string name="reader_empty_posts_in_custom_list">Webbplatserna i denna lista har inte publicerat några inlägg på senare tid</string>
     <string name="error_remove_user">Kunde inte ta bort användare</string>
     <string name="error_update_role">Kunde inte uppdatera användarroll</string>
     <string name="error_fetch_viewers_list">Kunde inte hämta webbplatsens läsare</string>
@@ -3399,7 +3420,6 @@ Language: sv_SE
     <string name="reader_err_get_post_not_found">Detta inlägg finns inte längre</string>
     <string name="reader_err_get_post_not_authorized">Du har inte behörighet att se detta inlägg</string>
     <string name="reader_err_get_post_generic">Kunde inte hämta detta inlägg</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">De webbplatser du följer har inte publicerat något nyligen</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Inga nya inlägg</string>
     <string name="media_edit_copy_url_toast">URL kopierad till urklipp</string>
     <string name="selected_theme">Valt tema</string>
@@ -3444,8 +3464,6 @@ Language: sv_SE
     <string name="reader_short_like_count_multi">%s gillar</string>
     <string name="reader_short_like_count_one">1 gillar</string>
     <string name="reader_short_like_count_none">Gilla</string>
-    <string name="reader_label_follow_count">%,d följare</string>
-    <string name="reader_menu_tags">Redigera ämnen och webbplatser</string>
     <string name="reader_title_post_detail">Läsare-inlägg</string>
     <string name="notifications_push_summary">Inställningar för aviseringar som visas på din enhet.</string>
     <string name="notifications_email_summary">Inställningar för aviseringar som skickas till den e-postadress som är knuten till ditt konto.</string>
@@ -3467,8 +3485,7 @@ Language: sv_SE
     <string name="button_view">Visa</string>
     <string name="button_publish">Publicera</string>
     <string name="button_edit">Redigera</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Du har inte behörighet för att komma åt denna blogg</string>
-    <string name="reader_toast_err_follow_blog_not_found">Denna webbplats kunde inte hittas</string>
+    <string name="reader_toast_err_follow_blog_could_not_be_found">Denna blogg kunde inte hittas</string>
     <string name="undo">Ångra</string>
     <string name="push_auth_expired">Begäran har löpt ut. Logga in på WordPress.com för att försöka igen.</string>
     <string name="ignore">Ignorera </string>
@@ -3512,7 +3529,7 @@ Language: sv_SE
     <string name="posts_fetching">Hämtar inlägg…</string>
     <string name="media_fetching">Hämtar media…</string>
     <string name="logs_copied_to_clipboard">App-loggar har kopierats till urklipp</string>
-    <string name="reader_empty_posts_in_blog">Denna webbplats är tom</string>
+    <string name="reader_no_posts_in_blog">Denna blogg är tom</string>
     <string name="reader_label_new_posts">Nya inlägg</string>
     <string name="error_copy_to_clipboard">Ett fel uppstod när text skulle kopieras till urklipp</string>
     <string name="post_uploading">Laddar upp inlägg</string>
@@ -3540,7 +3557,6 @@ Language: sv_SE
     <string name="cab_selected">%d valda</string>
     <string name="browse_our_faq_button">Bläddra bland vanliga frågor</string>
     <string name="reader_empty_comments">Inga kommentarer än</string>
-    <string name="reader_empty_posts_in_tag">Inga inlägg med detta ämne</string>
     <string name="reader_label_like">Gilla</string>
     <string name="reader_label_view_original">Visa originalartikel</string>
     <string name="reader_label_comments_closed">Kommentarer inaktiverade</string>
@@ -3560,22 +3576,8 @@ Language: sv_SE
     <string name="posts_empty_list">Inga inlägg än. Varför inte skapa ett?</string>
     <string name="signing_out">Loggar ut…</string>
     <string name="reader_toast_err_generic">Kunde inte genomföra denna åtgärd</string>
-    <string name="reader_toast_err_block_blog">Kunde inte blockera denna webbplats</string>
-    <string name="reader_toast_blog_blocked">Inlägg från denna webbplats kommer inte längre att visas</string>
-    <string name="reader_menu_block_blog">Blockera denna webbplats</string>
     <string name="schedule_verb">Tidinställ</string>
     <string name="update_verb">Uppdatera</string>
-    <string name="reader_empty_recommended_blogs">Inga rekommenderade webbplatser</string>
-    <string name="reader_toast_err_unfollow_blog">Kunde inte sluta följa denna webbplats</string>
-    <string name="reader_toast_err_follow_blog">Kunde inte följa denna webbplats</string>
-    <string name="reader_toast_err_already_follow_blog">Du följer redan denna webbplats</string>
-    <string name="reader_toast_err_get_blog_info">Kunde inte visa denna webbplats</string>
-    <string name="reader_label_followed_blog">Webbplatsen följs</string>
-    <string name="reader_label_followers_count">%s följare</string>
-    <string name="reader_hint_add_tag_or_url">Ange en URL eller ämne att följa</string>
-    <string name="reader_page_followed_blogs">Följda webbplatser</string>
-    <string name="reader_page_followed_tags">Följda ämnen</string>
-    <string name="reader_title_blog_preview">Läsarwebbplats</string>
     <string name="ssl_certificate_ask_trust">Om du vanligtvis kan nå denna webbplats utan problem kan felet betyda att någon försöker efterlikna webbplatsen och du borde inte fortsätta. Vill du lita på certifikatet ändå?</string>
     <string name="ssl_certificate_error">Ogiltigt SSL-ceritfikat</string>
     <string name="help">Hjälp</string>
@@ -3601,8 +3603,8 @@ Language: sv_SE
     <string name="blog_not_found">Ett fel uppstod vid anslutning till bloggen</string>
     <string name="gallery_error">Medieobjektet kunde inte hämtas</string>
     <string name="no_network_message">Inget nätverk tillgängligt</string>
-    <string name="reader_toast_err_remove_tag">Kan inte ta bort detta ämne</string>
-    <string name="reader_toast_err_add_tag">Kan inte lägga till detta ämne</string>
+    <string name="reader_toast_err_removing_tag">Kan inte ta bort denna etikett</string>
+    <string name="reader_toast_err_adding_tag">Kan inte lägga till denna etikett</string>
     <string name="reader_title_applog">Programlogg</string>
     <string name="fatal_db_error">Ett fel uppstod vid skapandet av app-databasen. Försök återinstallera appen.</string>
     <string name="error_blog_hidden">Den här bloggen är dold och kunde inte laddas. Aktivera den igen i inställningarna och försök igen.</string>
@@ -3664,15 +3666,13 @@ Language: sv_SE
     <string name="reader_toast_err_url_intent">Kunde inte öppna %s</string>
     <string name="reader_toast_err_view_image">Kunde inte visa bild</string>
     <string name="reader_toast_err_share_intent">Kunde inte dela</string>
-    <string name="reader_toast_err_tag_invalid">Det är inte ett giltigt ämne</string>
-    <string name="reader_toast_err_tag_exists">Du följer redan detta ämne</string>
+    <string name="reader_toast_err_tag_not_valid">Det är inte en giltig etikett</string>
     <string name="reader_toast_err_comment_failed">Kunde inte kommentera</string>
     <string name="reader_likes_only_you">Du gillar detta</string>
     <string name="reader_likes_one">En person gillar detta</string>
     <string name="reader_label_removed_tag">Tog bort %s</string>
     <string name="reader_label_added_tag">Lade till %s</string>
     <string name="reader_hint_comment_on_comment">Svara kommentaren…</string>
-    <string name="reader_btn_unfollow">Följer</string>
     <string name="reader_btn_follow">Följ</string>
     <string name="reader_btn_share">Dela</string>
     <string name="reader_view_reblog">Reblogga</string>

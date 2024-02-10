@@ -139,7 +139,7 @@ class ReaderDiscoverLogic @Inject constructor(
             insertBlogsIntoDb(cards.filterIsInstance<ReaderRecommendedBlogsCard>().map { it.blogs }.flatten())
 
             // Simplify the json. The simplified version is used in the upper layers to load the data from the db.
-            val simplifiedCardsJson = createSimplifiedJson(fullCardsJson)
+            val simplifiedCardsJson = createSimplifiedJson(fullCardsJson, taskType)
             insertCardsJsonIntoDb(simplifiedCardsJson)
 
             val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
@@ -198,7 +198,7 @@ class ReaderDiscoverLogic @Inject constructor(
      * as it's already stored in the db.
      */
     @Suppress("NestedBlockDepth")
-    private fun createSimplifiedJson(cardsJsonArray: JSONArray): JSONArray {
+    private fun createSimplifiedJson(cardsJsonArray: JSONArray, discoverTasks: DiscoverTasks): JSONArray {
         var index = 0
         val simplifiedJson = JSONArray()
         for (i in 0 until cardsJsonArray.length()) {
@@ -212,6 +212,10 @@ class ReaderDiscoverLogic @Inject constructor(
                     }
                 }
                 JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
+                    // We should not have an interests/tags card as the first element on Discover feed.
+                    if (i == 0 && discoverTasks == REQUEST_FIRST_PAGE) {
+                        continue
+                    }
                     simplifiedJson.put(index++, cardJson)
                 }
                 JSON_CARD_POST -> {

@@ -1,0 +1,7 @@
+24.1:
+- Dapatkan pemberitahuan ketika Anda bekerja secara offline.
+- Pengunggahan ke blok gambar dijeda/dilanjutkan tergantung koneksi internet.
+- Lihat pilihan gradien kustom di editor.
+- Panah maju/mundur sudah diperbaiki untuk pembaca tulisan dari kanan ke kiri.
+- Tag Prompt Harian berfungsi dengan baik.
+- Ketuk kartu Domain Situs untuk mengelola domain.

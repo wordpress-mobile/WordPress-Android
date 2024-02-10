@@ -1,6 +1,0 @@
-24.0:
-Actualizaciones del Editor de bloques:
-- El teclado del dispositivo se mantiene al editar bloques de texto.
-- La pantalla se desplaza automáticamente a los bloques recién insertados.
-- Deselecciona los bloques pulsando el botón Atrás de tu dispositivo.
-- Comparte diferentes tipos de medios en la aplicación a la vez sin que se bloquee.
