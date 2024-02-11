@@ -81,8 +81,11 @@ abstract class StatsListViewModel(
 
     lateinit var listSelected: LiveData<Unit?>
 
-    private val mutableUiSourceUpdated = SingleLiveEvent<Unit?>()
-    val uiSourceUpdated: LiveData<Unit?> = mutableUiSourceUpdated
+    private val mutableUiSourceAdded = SingleLiveEvent<Unit?>()
+    val uiSourceAdded: LiveData<Unit?> = mutableUiSourceAdded
+
+    protected val mutableUiSourceRemoved = SingleLiveEvent<Unit?>()
+    val uiSourceRemoved: LiveData<Unit?> = mutableUiSourceRemoved
 
     lateinit var uiModel: LiveData<UiModel?>
 
@@ -169,7 +172,7 @@ abstract class StatsListViewModel(
         listSelected = statsUseCase.listSelected
         navigationTarget = mergeNotNull(statsUseCase.navigationTarget, mutableNavigationTarget)
         scrollToNewCard = statsUseCase.scrollTo
-        mutableUiSourceUpdated.call()
+        mutableUiSourceAdded.call()
     }
 
     sealed class UiModel {
@@ -227,6 +230,10 @@ class TrafficListViewModel @Inject constructor(
 ) {
     fun onGranularitySelected(statsGranularity: StatsGranularity) {
         if (dateSelector?.statsGranularity != statsGranularity) {
+            // Remove observers from the UI before changing the statsUseCase. This prevents removed use cases from
+            // affecting the UI.
+            mutableUiSourceRemoved.call()
+
             dateSelector?.statsGranularity = statsGranularity
             val newUseCases = useCasesFactories.map {
                 it.build(
@@ -240,7 +247,7 @@ class TrafficListViewModel @Inject constructor(
                 statsUseCase.loadData()
                 dateSelector?.updateDateSelector()
             }
-            setUiLiveData()
+            setUiLiveData() // Set UI live data and observers again
         }
     }
 }

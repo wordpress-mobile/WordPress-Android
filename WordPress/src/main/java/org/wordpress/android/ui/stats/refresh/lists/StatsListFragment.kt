@@ -238,7 +238,14 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     }
 
     private fun StatsListFragmentBinding.setupObservers(activity: FragmentActivity) {
-        viewModel.uiSourceUpdated.observe(viewLifecycleOwner) {
+        viewModel.uiSourceRemoved.observe(viewLifecycleOwner) {
+            viewModel.uiModel.removeObservers(viewLifecycleOwner)
+            viewModel.navigationTarget.removeObservers(viewLifecycleOwner)
+            viewModel.listSelected.removeObservers(viewLifecycleOwner)
+            viewModel.scrollToNewCard.removeObservers(viewLifecycleOwner)
+        }
+
+        viewModel.uiSourceAdded.observe(viewLifecycleOwner) {
             observeUiChanges(activity)
         }
 
