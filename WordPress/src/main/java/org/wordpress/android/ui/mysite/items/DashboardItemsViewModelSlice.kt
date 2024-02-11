@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
@@ -29,6 +30,8 @@ class DashboardItemsViewModelSlice @Inject constructor(
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper
 ) {
     private lateinit var scope: CoroutineScope
+
+    private var trackingJob : Job? = null
 
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
@@ -80,6 +83,7 @@ class DashboardItemsViewModelSlice @Inject constructor(
             else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
             jetpackBadge?.let { add(jetpackBadge) }
         }.toList()
+        trackShown(dasbhboardSiteItems)
         return dasbhboardSiteItems
     }
 
@@ -101,7 +105,26 @@ class DashboardItemsViewModelSlice @Inject constructor(
         sotw2023NudgeCardViewModelSlice.clearValue()
     }
 
+    fun resetShownTracker() {
+        trackingJob?.cancel()
+        sotw2023NudgeCardViewModelSlice.resetShown()
+        jetpackFeatureCardViewModelSlice.resetShown()
+    }
+
+    fun trackShown(dasbhboardSiteItems: MutableList<MySiteCardAndItem>) = with(dasbhboardSiteItems) {
+        trackingJob?.cancel()
+        trackingJob = scope.launch {
+            filterIsInstance<MySiteCardAndItem.Card.JetpackFeatureCard>().forEach {
+                jetpackFeatureCardViewModelSlice.trackShown(it.type)
+            }
+            filterIsInstance<MySiteCardAndItem.Card.WpSotw2023NudgeCardModel>().forEach {
+                sotw2023NudgeCardViewModelSlice.trackShown()
+            }
+        }
+    }
+
     fun onCleared() {
+        trackingJob?.cancel()
         scope.cancel()
     }
 }

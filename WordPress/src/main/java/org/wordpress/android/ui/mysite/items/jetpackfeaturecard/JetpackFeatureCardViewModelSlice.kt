@@ -7,12 +7,14 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
+import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class JetpackFeatureCardViewModelSlice @Inject constructor(
     private val jetpackFeatureCardHelper: JetpackFeatureCardHelper,
+    private val jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
@@ -73,6 +75,14 @@ class JetpackFeatureCardViewModelSlice @Inject constructor(
 
     fun clearValue() {
         _uiModel.postValue(null)
+    }
+
+    fun trackShown(itemType: MySiteCardAndItem.Type) {
+        jetpackFeatureCardShownTracker.trackShown(itemType)
+    }
+
+    fun resetShown() {
+        jetpackFeatureCardShownTracker.resetShown()
     }
 }
 

@@ -36,8 +36,6 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.cards.DashboardCardsViewModelSlice
-import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
-import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardShownTracker
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
@@ -77,12 +75,10 @@ class MySiteViewModel @Inject constructor(
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
     private val snackbarSequencer: SnackbarSequencer,
     private val landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig,
-    private val cardsTracker: CardsTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val quickStartTracker: QuickStartTracker,
     private val dispatcher: Dispatcher,
-    private val jetpackFeatureCardShownTracker: JetpackFeatureCardShownTracker,
     private val jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil,
     private val getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
@@ -259,7 +255,6 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onResume() {
-//        mySiteSourceManager.onResume(isSiteSelected)
         isSiteSelected = false
         checkAndShowJetpackFullPluginInstallOnboarding()
         checkAndShowQuickStartNotice()
@@ -471,10 +466,6 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun onDashboardErrorRetry() {
-//        mySiteSourceManager.refresh()
-    }
-
     fun onActionableEmptyViewVisible() {
         analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
         checkJetpackIndividualPluginOverlayShouldShow()
@@ -497,19 +488,6 @@ class MySiteViewModel @Inject constructor(
         _onNavigation.postValue(Event(BloggingPromptCardNavigationAction.LearnMore))
     }
 
-    private fun trackCardsAndItemsShownIfNeeded() {
-//        siteSelected.dashboardData.filterIsInstance<JetpackFeatureCard>()
-//            .forEach { jetpackFeatureCardShownTracker.trackShown(it.type) }
-////        siteSelected.dashboardData.filterIsInstance<MySiteCardAndItem.Card.WpSotw2023NudgeCardModel>()
-////            .forEach { _ -> sotw2023NudgeCardViewModelSlice.trackShown() }
-    }
-
-    private fun resetShownTrackers() {
-        cardsTracker.resetShown()
-        jetpackFeatureCardShownTracker.resetShown()
-        dashboardCardsViewModelSlice.resetShownTracker()
-//        sotw2023NudgeCardViewModelSlice.resetShown()
-    }
 
     // FluxC events
     @Subscribe(threadMode = MAIN)
