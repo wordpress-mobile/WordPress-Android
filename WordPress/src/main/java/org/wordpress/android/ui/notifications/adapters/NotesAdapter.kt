@@ -14,26 +14,40 @@ import android.view.ViewGroup.MarginLayoutParams
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.text.BidiFormatter
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.NotificationsTable
+import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.fluxc.generated.CommentActionBuilder
+import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Note.NoteTimeGroup
 import org.wordpress.android.models.Note.TimeStampComparator
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.comments.CommentUtils
+import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter
+import org.wordpress.android.ui.notifications.NotificationEvents.NoteLikeOrModerationStatusChanged
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.NoteViewHolder
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
+import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
+
 
 class NotesAdapter(
     context: Context, dataLoadedListener: DataLoadedListener,
@@ -53,6 +67,13 @@ class NotesAdapter(
     @JvmField
     @Inject
     var notificationsUtilsWrapper: NotificationsUtilsWrapper? = null
+
+    @Inject
+    lateinit var siteStore: SiteStore
+    @Inject
+    lateinit var commentStoreAdapter: CommentsStoreAdapter
+    @Inject
+    lateinit var postLikeUseCase: PostLikeUseCase
 
     enum class FILTERS {
         FILTER_ALL,
@@ -222,6 +243,43 @@ class NotesAdapter(
         val layoutParams = noteViewHolder.headerText.layoutParams as MarginLayoutParams
         layoutParams.topMargin = headerMarginTop
         noteViewHolder.headerText.layoutParams = layoutParams
+
+        // handle inline actions
+        when {
+            note.isCommentType || note.isNewPostType -> {
+                handlePostLikeAction(note, noteViewHolder)
+            }
+        }
+    }
+
+    private fun handlePostLikeAction(note: Note, holder: NoteViewHolder) {
+        val post = ReaderPostTable.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true) ?: return
+        if(post.canLikePost().not()) return
+
+        val icon = if (post.isLikedByCurrentUser) R.drawable.star_filled else R.drawable.star_empty
+        GlobalScope.launch { postLikeUseCase.perform(post, !post.isLikedByCurrentUser, "notification") }
+    }
+
+    private fun handleCommentLikeAction(note: Note, holder: NoteViewHolder) {
+        val canLike = note.canLike()
+        if (canLike.not()) return
+
+        val site = siteStore.getSiteBySiteId(note.siteId.toLong())!!
+        val comment = commentStoreAdapter.getCommentBySiteAndRemoteId(site, note.commentId)!!
+        val icon = if (comment.iLike) R.drawable.star_filled else R.drawable.star_empty
+        holder.action.isVisible = true
+        holder.action.setImageDrawable(AppCompatResources.getDrawable(holder.contentView.context, icon))
+        holder.action.setOnClickListener {
+            commentStoreAdapter.dispatch(
+                CommentActionBuilder.newLikeCommentAction(
+                    RemoteLikeCommentPayload(site, comment, comment.iLike.not())
+                )
+            )
+            comment.iLike = comment.iLike.not()
+            val iconId = if (comment.iLike) R.drawable.star_filled else R.drawable.star_empty
+            holder.action.setImageDrawable(AppCompatResources.getDrawable(holder.contentView.context, iconId))
+            EventBus.getDefault().postSticky(NoteLikeOrModerationStatusChanged(note.id))
+        }
     }
 
     private fun NoteViewHolder.loadAvatars(note: Note) {
@@ -315,6 +373,7 @@ class NotesAdapter(
         val threeAvatars2: ImageView
         val threeAvatars3: ImageView
         val unreadNotificationView: View
+        val action: ImageView
 
         init {
             contentView = checkNotNull(view.findViewById(R.id.note_content_container))
@@ -331,6 +390,7 @@ class NotesAdapter(
             twoAvatarsView = checkNotNull(view.findViewById(R.id.two_avatars_view))
             threeAvatarsView = checkNotNull(view.findViewById(R.id.three_avatars_view))
             unreadNotificationView = checkNotNull(view.findViewById(R.id.notification_unread))
+            action = checkNotNull(view.findViewById(R.id.action))
             contentView.setOnClickListener(onClickListener)
         }
     }
