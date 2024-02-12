@@ -40,6 +40,8 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
     private WPTextView mDisplayName;
     private WPTextView mAboutMe;
     private Button mLearMoreAtGravatar;
+    private Button mGravatarSyncButton;
+    private View mGravatarSyncContainer;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -90,6 +92,8 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
         mDisplayName = rootView.findViewById(R.id.display_name);
         mAboutMe = rootView.findViewById(R.id.about_me);
         mLearMoreAtGravatar = rootView.findViewById(R.id.learn_more_at_gravatar);
+        mGravatarSyncButton = rootView.findViewById(R.id.gravatar_sync_button);
+        mGravatarSyncContainer = rootView.findViewById(R.id.gravatar_sync_container);
 
         rootView.findViewById(R.id.first_name_row).setOnClickListener(
                 createOnClickListener(
@@ -116,6 +120,7 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
                         mAboutMe,
                         true));
         mLearMoreAtGravatar.setOnClickListener(v -> ActivityLauncher.openUrlExternal(getActivity(), GRAVATAR_URL));
+        mGravatarSyncButton.setOnClickListener(v -> mGravatarSyncContainer.setVisibility(View.GONE));
 
         return rootView;
     }
@@ -180,6 +185,7 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
         payload.params.put(restParamForTextView(textView), textView.getText().toString());
         mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
         trackSettingsDidChange(restParamForTextView(textView));
+        mGravatarSyncContainer.setVisibility(View.VISIBLE);
     }
 
     private void trackSettingsDidChange(String fieldName) {
