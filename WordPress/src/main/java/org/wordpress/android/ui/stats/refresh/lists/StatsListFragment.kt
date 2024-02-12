@@ -169,7 +169,10 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
 
             dateSelector.granularitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.entries[position])
+                    with(StatsGranularity.entries[position]) {
+                        selectedTrafficGranularityManager.setSelectedTrafficGranularity(this)
+                        (viewModel as TrafficListViewModel).onGranularitySelected(this)
+                    }
                 }
 
                 @Suppress("EmptyFunctionBlock")
@@ -235,8 +238,15 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     }
 
     private fun StatsListFragmentBinding.setupObservers(activity: FragmentActivity) {
-        viewModel.uiModel.observe(viewLifecycleOwner) {
-            showUiModel(it)
+        viewModel.uiSourceRemoved.observe(viewLifecycleOwner) {
+            viewModel.uiModel.removeObservers(viewLifecycleOwner)
+            viewModel.navigationTarget.removeObservers(viewLifecycleOwner)
+            viewModel.listSelected.removeObservers(viewLifecycleOwner)
+            viewModel.scrollToNewCard.removeObservers(viewLifecycleOwner)
+        }
+
+        viewModel.uiSourceAdded.observe(viewLifecycleOwner) {
+            observeUiChanges(activity)
         }
 
         viewModel.dateSelectorData.observe(viewLifecycleOwner) { dateSelectorUiModel ->
@@ -248,18 +258,10 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             }
         }
 
-        viewModel.navigationTarget.observeEvent(viewLifecycleOwner) { target ->
-            navigator.navigate(activity, target)
-        }
-
         viewModel.selectedDate?.observe(viewLifecycleOwner) { event ->
             if (event != null) {
                 viewModel.onDateChanged(event.selectedGranularity)
             }
-        }
-
-        viewModel.listSelected.observe(viewLifecycleOwner) {
-            viewModel.onListSelected()
         }
 
         viewModel.typesChanged.observeEvent(viewLifecycleOwner) {
@@ -271,6 +273,16 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
                 recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
             }
         }
+    }
+
+    private fun StatsListFragmentBinding.observeUiChanges(activity: FragmentActivity) {
+        viewModel.uiModel.observe(viewLifecycleOwner) {
+            showUiModel(it)
+        }
+
+        viewModel.navigationTarget.observeEvent(viewLifecycleOwner) { target -> navigator.navigate(activity, target) }
+
+        viewModel.listSelected.observe(viewLifecycleOwner) { viewModel.onListSelected() }
 
         viewModel.scrollToNewCard.observeEvent(viewLifecycleOwner) {
             (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
@@ -331,6 +343,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         val layoutManager = recyclerView.layoutManager
         val recyclerViewState = layoutManager?.onSaveInstanceState()
         adapter.update(statsState)
+        recyclerView.scrollToPosition(0)
         layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 }

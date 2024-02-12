@@ -16,7 +16,6 @@ import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.readListCompat
-import org.wordpress.android.util.filter
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,9 +37,7 @@ class SelectedDateProvider
 
     private val selectedDateChanged = MutableLiveData<GranularityChange?>()
 
-    fun granularSelectedDateChanged(statsGranularity: StatsGranularity): LiveData<GranularityChange?> {
-        return selectedDateChanged.filter { it?.selectedGranularity == statsGranularity }
-    }
+    fun granularSelectedDateChanged(): LiveData<GranularityChange?> = selectedDateChanged
 
     fun selectDate(date: Date, statsGranularity: StatsGranularity) {
         val selectedDate = getSelectedDateState(statsGranularity)
