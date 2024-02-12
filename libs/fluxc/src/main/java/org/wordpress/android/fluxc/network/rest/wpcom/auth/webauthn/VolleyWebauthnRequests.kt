@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn
 
 import com.android.volley.Response
 import com.android.volley.Response.ErrorListener
+import com.google.gson.annotations.SerializedName
+import org.json.JSONObject
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.BaseWebauthnRequest.WebauthnRequestParameters.AUTH_TYPE
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.BaseWebauthnRequest.WebauthnRequestParameters.CLIENT_DATA
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.BaseWebauthnRequest.WebauthnRequestParameters.CLIENT_ID
@@ -16,9 +18,9 @@ class WebauthnChallengeRequest(
     twoStepNonce: String,
     clientId: String,
     clientSecret: String,
-    listener: Response.Listener<WebauthnChallengeInfo>,
+    listener: Response.Listener<JSONObject>,
     errorListener: ErrorListener
-): BaseWebauthnRequest<WebauthnChallengeInfo>(webauthnChallengeEndpointUrl, errorListener, listener) {
+): BaseWebauthnRequest<JSONObject>(webauthnChallengeEndpointUrl, errorListener, listener) {
     override val parameters: Map<String, String> = mapOf(
         CLIENT_ID.value to clientId,
         CLIENT_SECRET.value to clientSecret,
@@ -27,8 +29,7 @@ class WebauthnChallengeRequest(
         TWO_STEP_NONCE.value to twoStepNonce
     )
 
-    override fun serializeResponse(response: String): WebauthnChallengeInfo =
-        gson.fromJson(response, WebauthnChallengeInfo::class.java)
+    override fun serializeResponse(response: String) = JSONObject(response)
 }
 
 @SuppressWarnings("LongParameterList")
@@ -55,3 +56,8 @@ class WebauthnTokenRequest(
     override fun serializeResponse(response: String): WebauthnToken =
         gson.fromJson(response, WebauthnToken::class.java)
 }
+
+class WebauthnToken(
+    @SerializedName("bearer_token")
+    val bearerToken: String
+)
