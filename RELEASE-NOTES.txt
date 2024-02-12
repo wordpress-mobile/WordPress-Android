@@ -2,7 +2,7 @@
 
 24.3
 -----
-
+* [*] [Jetpack-only] Fix the visibility issue with the menu button on the stats [https://github.com/wordpress-mobile/WordPress-Android/pull/20175]
 
 24.2
 -----
