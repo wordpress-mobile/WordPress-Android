@@ -604,8 +604,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWebauthnChallengeReceived(WebauthnChallengeReceived event) {
         if (event.isError()) {
-            endProgress();
-            handleAuthError(event.error.type, getString(R.string.login_error_security_key));
+            handleWebauthnError(event.error.type, getString(R.string.login_error_security_key));
             return;
         }
 
@@ -619,13 +618,12 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 requireContext(),
                 passkeyRequestData,
                 result -> {
-                    mDispatcher.dispatch(
-                            AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(
-                                    result));
+                    mDispatcher.dispatch(result);
                     return null;
                 },
                 error -> {
-                    handleWebauthnError();
+                    String errorMessage = getString(R.string.login_error_security_key);
+                    handleWebauthnError(AuthenticationErrorType.WEBAUTHN_FAILED, errorMessage);
                     return null;
                 }
         );
@@ -635,18 +633,17 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSecurityKeyCheckFinished(WebauthnPasskeyAuthenticated event) {
         if (event.isError()) {
-            endProgress();
-            handleAuthError(event.error.type, getString(R.string.login_error_security_key));
+            handleWebauthnError(event.error.type, getString(R.string.login_error_security_key));
             return;
         }
         mAnalyticsListener.trackLoginSecurityKeySuccess();
         doFinishLogin();
     }
 
-    private void handleWebauthnError() {
-        String errorMessage = getString(R.string.login_error_security_key);
+    private void handleWebauthnError(AuthenticationErrorType errorType, String errorMessage) {
         endProgress();
-        handleAuthError(AuthenticationErrorType.WEBAUTHN_FAILED, errorMessage);
+        handleAuthError(errorType, errorMessage);
+        getParentFragmentManager().popBackStack();
     }
 
     @NonNull private ArrayList<SupportedAuthTypes> handleSupportedAuthTypesParameter(
