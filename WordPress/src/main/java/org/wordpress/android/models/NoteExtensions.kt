@@ -16,6 +16,6 @@ enum class NoteType(val rawType: String) {
 
     companion object {
         private val map = entries.associateBy(NoteType::rawType)
-        fun from(rawType: String) = map.get(rawType) ?: Unknown
+        fun from(rawType: String) = map[rawType] ?: Unknown
     }
 }
