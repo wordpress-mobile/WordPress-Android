@@ -25,6 +25,8 @@ import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Note.NoteTimeGroup
 import org.wordpress.android.models.Note.TimeStampComparator
+import org.wordpress.android.models.NoteType
+import org.wordpress.android.models.type
 import org.wordpress.android.ui.comments.CommentUtils
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.NoteViewHolder
@@ -210,6 +212,7 @@ class NotesAdapter(
             noteViewHolder.textDetail.visibility = View.GONE
         }
         noteViewHolder.loadAvatars(note)
+        noteViewHolder.bindInlineActionIconsForNote(note)
         noteViewHolder.unreadNotificationView.isVisible = note.isUnread
 
         // request to load more comments when we near the end
@@ -261,6 +264,31 @@ class NotesAdapter(
     }
 
     private fun Note.shouldShowMultipleAvatars() = isFollowType || isLikeType || isCommentLikeType
+
+    private fun NoteViewHolder.bindInlineActionIconsForNote(note: Note) {
+        when (note.type) {
+            NoteType.Comment -> {
+                actionIcon.setImageResource(R.drawable.star_empty)
+                actionIcon.isVisible = true
+                actionIcon.setOnClickListener {
+                    // TODO: handle tap on comment's inline action icon (the star)
+                }
+            }
+            NoteType.NewPost,
+            NoteType.Reblog,
+            NoteType.Like -> {
+                // TODO: Use the icon from the Figma design
+                actionIcon.setImageResource(R.drawable.gb_ic_share)
+                actionIcon.isVisible = true
+                actionIcon.setOnClickListener {
+                    // TODO: handle tap on comment's inline action icon (the share icon)
+                }
+            }
+            else -> {
+                actionIcon.isVisible = false
+            }
+        }
+    }
 
     private fun handleMaxLines(subject: TextView, detail: TextView) {
         subject.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
@@ -321,6 +349,7 @@ class NotesAdapter(
         val threeAvatars2: ImageView
         val threeAvatars3: ImageView
         val unreadNotificationView: View
+        val actionIcon: ImageView
 
         init {
             contentView = checkNotNull(view.findViewById(R.id.note_content_container))
@@ -337,6 +366,7 @@ class NotesAdapter(
             twoAvatarsView = checkNotNull(view.findViewById(R.id.two_avatars_view))
             threeAvatarsView = checkNotNull(view.findViewById(R.id.three_avatars_view))
             unreadNotificationView = checkNotNull(view.findViewById(R.id.notification_unread))
+            actionIcon = checkNotNull(view.findViewById(R.id.action))
             contentView.setOnClickListener(onClickListener)
         }
     }
