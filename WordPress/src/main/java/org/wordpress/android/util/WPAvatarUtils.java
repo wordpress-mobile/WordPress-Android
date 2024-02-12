@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.gravatar.DefaultAvatarImage;
+import com.gravatar.DefaultAvatarImage.MysteryPerson;
 
 import static com.gravatar.GravatarUtilsKt.rewriteGravatarImageUrlQueryParams;
 
@@ -15,7 +16,7 @@ import static com.gravatar.GravatarUtilsKt.rewriteGravatarImageUrlQueryParams;
  * see https://docs.gravatar.com/general/images/
  */
 public class WPAvatarUtils {
-    public static final DefaultAvatarImage DEFAULT_AVATAR = DefaultAvatarImage.MYSTERY_PERSON;
+    public static final DefaultAvatarImage DEFAULT_AVATAR = MysteryPerson.INSTANCE;
 
     /**
      * Remove all query params from a gravatar url and set them to the given size and

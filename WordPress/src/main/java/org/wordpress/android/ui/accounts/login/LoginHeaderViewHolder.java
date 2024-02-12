@@ -16,8 +16,8 @@ import com.gravatar.GravatarUtilsKt;
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.image.ImageManager;
 
 import static org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND;
@@ -100,11 +100,11 @@ class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
 
     private String constructGravatarUrl(Context context, AccountModel account) {
         return WPAvatarUtils.rewriteAvatarUrl(account.getAvatarUrl(), getAvatarSize(context),
-                DefaultAvatarImage.STATUS_404);
+                DefaultAvatarImage.Status404.INSTANCE);
     }
 
     private String constructGravatarUrl(Context context, SiteModel site) {
         return GravatarUtilsKt.emailAddressToGravatarUrl(site.getEmail(), getAvatarSize(context),
-                DefaultAvatarImage.STATUS_404, null, null);
+                DefaultAvatarImage.Status404.INSTANCE, null, null);
     }
 }
