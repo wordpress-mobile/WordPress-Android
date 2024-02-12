@@ -1108,7 +1108,8 @@ public final class AnalyticsTracker {
         SITE_MONITORING_TAB_SHOWN,
         SITE_MONITORING_TAB_LOADING_ERROR,
         NOTIFICATION_MENU_TAPPED,
-        NOTIFICATIONS_MARK_ALL_READ_TAPPED
+        NOTIFICATIONS_MARK_ALL_READ_TAPPED,
+        WEBVIEW_TOO_LARGE_PAYLOAD_ERROR,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

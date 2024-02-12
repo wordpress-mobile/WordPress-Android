@@ -1,11 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-23 16:55:56+0000
+Translation-Revision-Date: 2024-02-07 07:29:33+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-beta.2
 Language: ro
 -->
 <resources>
+    <string name="site_monitoring_cannot_be_started">Pentru moment, nu putem să deschidem monitorizare site. Te rog să reîncerci mai târziu</string>
+    <string name="site_monitoring_tab_title_web_server_logs">Jurnale server web</string>
+    <string name="site_monitoring_tab_title_php_logs">Jurnale PHP</string>
+    <string name="site_monitoring_tab_title_metrics">Valori metrice</string>
+    <string name="site_monitoring">Monitorizare site</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Folosește &lt;b&gt;Descoperă&lt;/b&gt; ca să găsești site-uri și etichete. Încearcă să selectezi &lt;b&gt;Abonamente&lt;/b&gt; ca să vezi conținutul la care te-ai abonat și să-ți administrezi abonamentele.</string>
+    <string name="reader_empty_followed_blogs_button_subscriptions">Mergi la Abonamente</string>
+    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Blogurile la care te-ai abonat nu au publicat nimic recent</string>
+    <string name="reader_no_followed_blogs_description_subs">Abonează-te la bloguri în Descoperă sau caută un blog care ți-a plăcut.</string>
+    <string name="reader_no_recommended_blogs_title">Niciun blog recomandat</string>
+    <string name="reader_no_followed_tags_title">Nu te-ai abonat la nicio etichetă</string>
+    <string name="reader_no_posts_with_this_tag">Nu există articole cu această etichetă</string>
+    <string name="reader_toast_err_unable_to_block_blog">Nu pot să blochez acest blog</string>
+    <string name="reader_toast_posts_from_this_blog_blocked">Articolele din acest blog nu vor mai fi arătate</string>
+    <string name="reader_toast_err_unable_to_unfollow_blog">Nu pot face dezabonarea la blog</string>
+    <string name="reader_toast_err_follow_not_authorized_to_access_blog">Nu ești autorizat să accesezi acest blog</string>
+    <string name="reader_toast_err_unable_to_follow_blog">Nu pot face abonarea la acest blog</string>
+    <string name="reader_toast_err_already_follow_this_blog">Te-ai abonat deja la acest blog</string>
+    <string name="reader_toast_err_show_blog">Nu pot să arăt acest blog</string>
+    <string name="reader_toast_err_tag_already_subscribed">Te-ai abonat deja la această etichetă</string>
+    <string name="reader_label_choose_interests">Alege ce te interesează</string>
+    <string name="reader_label_subscribers_count_single">1 abonat</string>
+    <string name="reader_label_subscribers_count">%s abonați</string>
+    <string name="reader_label_subscribe_count">%d abonați</string>
+    <string name="reader_label_blog_subscribed">Blog la care te-ai abonat</string>
+    <string name="reader_hint_search_subscribed_blogs">Caută bloguri la care te-ai abonat</string>
+    <string name="reader_hint_add_tag_or_url_subscribe">Introdu un URL-ul sau o etichetă la care să te abonezi</string>
+    <string name="reader_btn_subscribed">Te-ai abonat</string>
+    <string name="reader_btn_subscribe">Abonează-te</string>
+    <string name="reader_menu_block_this_blog">Blochează acest blog</string>
+    <string name="reader_menu_tags_and_blogs">Editează etichetele și blogurile</string>
+    <string name="reader_page_followed_blogs_title">Bloguri la care te-ai abonat</string>
+    <string name="reader_page_followed_tags_title">Etichete la care te-ai abonat</string>
+    <string name="reader_title_tags">Urmărește etichetele</string>
+    <string name="reader_activity_title_manage_tags_blogs">Administrează etichetele și blogurile</string>
+    <string name="reader_activity_title_tag_preview">Etichetă</string>
+    <string name="reader_activity_title_blog_preview">Bloguri în Cititor</string>
+    <string name="reader_subscribed_display_name">Te-ai abonat</string>
+    <string name="reader_filter_chip_tag_other">%d etichete</string>
+    <string name="reader_filter_chip_tag_one">O etichetă</string>
+    <string name="reader_filter_chip_tag_zero">Nicio etichetă</string>
+    <string name="reader_filter_chip_blog_other">%d bloguri</string>
+    <string name="reader_filter_chip_blog_one">1 blog</string>
+    <string name="reader_filter_chip_blog_zero">Niciun blog</string>
+    <string name="reader_dropdown_menu_lists">Liste</string>
+    <string name="reader_dropdown_menu_automattic">Automattic</string>
+    <string name="reader_dropdown_menu_liked">Apreciate</string>
+    <string name="reader_dropdown_menu_saved">Salvate</string>
+    <string name="reader_dropdown_menu_subscriptions">Abonamente</string>
+    <string name="reader_dropdown_menu_discover">Descoperă</string>
+    <string name="reader_search_content_description">Caută</string>
+    <string name="reader_discover_no_posts_button_tags_text">Abonează-te la etichete</string>
+    <string name="reader_discover_no_posts_subscribe_subtitle">Încearcă să te abonezi la mai multe etichete ca să extinzi căutarea</string>
+    <string name="reader_discover_empty_subtitle_subscribe">Abonează-te la etichete ca să descoperi bloguri noi</string>
+    <string name="reader_discover_recommended_blogs_to_subscribe_header">Bloguri la care să te abonezi</string>
+    <string name="reader_filter_empty_tags_action_subscribe">Abonează-te la o etichetă</string>
+    <string name="reader_filter_empty_tags_action_suggested">Etichete sugerate</string>
+    <string name="reader_filter_empty_blogs_action_search">Caută un blog</string>
+    <string name="reader_filter_empty_tags_list_text">Abonează-te la o etichetă și vei putea să vezi aici cele mai bune articole cu această etichetă.</string>
+    <string name="reader_filter_empty_tags_list_title">Nicio etichetă</string>
+    <string name="reader_filter_empty_blogs_list_text">Abonează-te la bloguri în Descoperă și vei vedea aici ultimele articole publicate pe ele. Sau caută un blog care ți-a plăcut.</string>
+    <string name="reader_filter_empty_blogs_list_title">Niciun abonament la bloguri</string>
+    <string name="reader_filter_empty_blogs_action">Abonează-te la un blog</string>
+    <string name="reader_filter_empty_tags_list_subscribe">Poți să te abonezi la articole despre un anumit subiect prin adăugarea unei etichete</string>
+    <string name="reader_filter_empty_blogs_list">Vezi cele mai noi articole pe blogurile la care te-ai abonat</string>
+    <string name="reader_filter_by_tag_title">Filtrează după etichetă</string>
+    <string name="reader_filter_by_blog_title">Filtrează după blog</string>
+    <string name="stats_timeframe_by_year">După an</string>
+    <string name="stats_timeframe_by_month">După lună</string>
+    <string name="stats_timeframe_by_week">După săptămână</string>
+    <string name="stats_timeframe_by_day">După zi</string>
     <string name="gutenberg_native_waiting_for_connection">Aștept conexiunea</string>
     <string name="stats_traffic">Trafic</string>
     <string name="gutenberg_native_working_offline">Lucrează offline</string>
@@ -99,7 +170,6 @@ Language: ro
     <string name="account_and_settings">Cont și setări</string>
     <string name="site_creation_plans_selection_title">Selectează un plan</string>
     <string name="site_creation_domain_free_with_annual_plan">Gratuit în primul an, cu orice plan cu plată anuală</string>
-    <string name="reader_label_followers_count_single">Un urmăritor</string>
     <string name="reader_secondary_bookmarked">Salvat</string>
     <string name="reader_secondary_bookmark">Salvează</string>
     <string name="reader_discover_recommended_header_new">S-ar putea să-ți placă</string>
@@ -601,7 +671,6 @@ Language: ro
     <string name="quick_start_dialog_check_notifications_message_short">Selectează %1$s fila Notificări %2$s pentru a primi actualizări din mers.</string>
     <string name="quick_start_dialog_upload_media_message_short_plus">Selectează %1$s și %2$s pentru a încărca elemente media. Le poți adăuga în articole/pagini de pe orice dispozitiv.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Folosește &lt;b&gt; Descoperă &lt;/b&gt; pentru a găsi site-uri și etichete.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Folosește &lt;b&gt; Descoperă &lt;/b&gt; pentru a găsi site-uri și etichete. Încearcă să selectezi %1$s Setări %2$s pentru a adăuga subiecte care îți plac.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatură video</string>
     <string name="stats_details_top_commentators">Cei mai activi comentatori</string>
     <string name="stats_published_years_ago">Publicat acum %1$d ani</string>
@@ -1098,7 +1167,6 @@ Language: ro
     <string name="jetpack_brute_force_allowlist_title">Adrese IP mereu permise</string>
     <string name="site_settings_denylist_title">Comentarii neaprobate</string>
     <string name="gutenberg_native_add_button_text">Adaugă text în buton</string>
-    <string name="reader_title_interests">Urmărește subiecte</string>
     <string name="stories_intro_main_subtitle">Un mod nou de a crea și publica conținut captivant pe site-ul tău.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Refuză</string>
     <string name="activity_log_backup_download_notice_download_action">Descarcă</string>
@@ -1410,8 +1478,6 @@ Language: ro
     <string name="hpp_error_title">Aranjamentele nu sunt disponibile când ești offline</string>
     <string name="continue_site_credentials">Continuă cu datele de conectare la magazin</string>
     <string name="login_find_your_connected_email">Găsește emailul conectat</string>
-    <string name="reader_discover_no_posts_button_text">Urmărește subiecte</string>
-    <string name="reader_discover_no_posts_subtitle">Încearcă să urmărești mai multe subiecte pentru a extinde căutarea</string>
     <string name="reader_discover_no_posts_title">Niciun articol recent</string>
     <string name="reader_discover_empty_title">Bine ai venit!</string>
     <string name="scan">Scanează</string>
@@ -1450,7 +1516,6 @@ Language: ro
     <string name="login_prologue_title_second">Cu acest editor puternic poți publica din mers.</string>
     <string name="login_prologue_title_first">Bine ai venit la cel mai popular constructor de site-uri web din lume.</string>
     <string name="media_loading_failed">Încărcarea media a eșuat</string>
-    <string name="reader_discover_recommended_blogs_header">Site-uri de urmărit</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Lucrăm continuu pentru a adăuga mai multe blocuri la fiecare lansare.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">„%s” nu este acceptat în totalitate</string>
     <string name="gutenberg_native_help_button">Buton pentru ajutor</string>
@@ -1471,7 +1536,6 @@ Language: ro
     <string name="photo_picker_wordpress_media_library">Alege din biblioteca Media din WordPress</string>
     <string name="reader_label_toolbar_back">Înapoi</string>
     <string name="reader_discover_empty_button_text">Începe</string>
-    <string name="reader_discover_empty_subtitle">Urmărește niște subiecte pentru a descoperi bloguri noi</string>
     <string name="reader_post_details_header_by_author_name">De</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Acest referent nu poate fi marcat ca spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Anulează marcarea ca spam</string>
@@ -1629,7 +1693,6 @@ Language: ro
     <string name="gutenberg_native_block_copied">Bloc copiat</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Titlul site-ului poate fi modificat numai de un utilizator cu rolul de administrator.</string>
     <string name="my_site_title_changer_dialog_hint">Titlul site-ului este afișat în bara de titluri a unui navigator web și, pentru majoritatea temelor, este afișat în antet.</string>
-    <string name="reader_title_tag_preview">Subiect</string>
     <string name="error_update_site_title_network">Nu am putut actualiza titlul site-ului. Verifică conexiunea la rețea și încearcă din nou.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Modificări nesalvate</string>
     <string name="gutenberg_native_open_link_in_a_browser">Deschide legătura într-un navigator</string>
@@ -1661,8 +1724,7 @@ Language: ro
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Mută în ciorne</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Articolele aruncate la gunoi nu pot fi editate. Vrei să modifici starea acestui articol în „ciornă” pentru a-l putea edita?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Muți articolul în Ciorne?</string>
-    <string name="reader_label_choose_your_interests">Alege subiecte</string>
-    <string name="reader_choose_interests_content_description">Alege subiecte</string>
+    <string name="reader_choose_interests_tags_content_description">Alege etichetele</string>
     <string name="reader_btn_done">Gata</string>
     <string name="reader_btn_select_few_interests">Selectează câteva pentru a continua</string>
     <string name="post_status_post_published">Publicat</string>
@@ -1705,7 +1767,6 @@ Language: ro
     <string name="page_cannot_set_homepage">Pentru a seta Prima pagină activează „Prima pagină statică” în Setări site</string>
     <string name="gutenberg_native_select_a_color">Selectează o culoare</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Atinge de două ori pentru a merge la setări culori</string>
-    <string name="reader_empty_followed_blogs_description">Când urmărești site-uri, vei vedea conținutul lor aici</string>
     <string name="feature_announcement_find_out_mode">Află mai mult</string>
     <string name="feature_announcement_dialog_label">Care sunt noutățile în %s</string>
     <string name="insert_label_with_count">Inserează %d</string>
@@ -1719,9 +1780,9 @@ Language: ro
     <string name="site_picker_ask_site_select">Nu am putut selecta site-ul. Te rog reîncearcă.</string>
     <string name="sitepicker_continue_flow">Continuă</string>
     <string name="reader_reblog_error">Republicarea a eșuat</string>
-    <string name="reader_no_site_to_reblog_action">Administrează site-urile</string>
-    <string name="reader_no_site_to_reblog_detail">După ce ai creat un site WordPress.com, poți republica un conținut care îți place pe propriul site.</string>
-    <string name="reader_no_site_to_reblog_title">Indisponibilă pentru site-urile WordPress.com</string>
+    <string name="reader_no_blog_to_reblog_action">Administrează blogurile</string>
+    <string name="reader_no_blog_to_reblog_detail">După ce ai creat un blog WordPress.com, poți să republici un conținut care îți place pe propriul site.</string>
+    <string name="reader_no_blog_to_reblog_title">Nu este disponibil niciun blog WordPress.com</string>
     <string name="whats_new_in_version_title">Ce este nou</string>
     <string name="comment_q_action_copied_url">Adresa legăturii a fost copiată</string>
     <string name="copy_link_address">Copiază adresa legăturii</string>
@@ -1821,23 +1882,17 @@ Language: ro
     <string name="stats_management_screen_title">Adaugă cartuș nou</string>
     <string name="stats_management_add_new_stats_card">Adaugă un cartuș nou pentru statistici</string>
     <string name="reader_self_hosted_select_filter">Folosește butonul de filtrare pentru a găsi articole pentru anumite subiecte</string>
-    <string name="reader_bottom_sheet_content_description">Selectează o etichetă sau un site, o fereastră popup</string>
-    <string name="reader_btn_select_filter_content_description">Selectează un site sau o etichetă pentru a filtra articolele</string>
+    <string name="reader_bottom_sheet_select_content_description">Selectează o etichetă sau un blog, o fereastră popup</string>
     <string name="reader_btn_remove_filter_content_description">Înlătură filtrul curent</string>
-    <string name="reader_title_subs">Administrează subiectele și site-urile</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Autentifică-te în WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Autentifică-te în WordPress.com pentru a vedea ultimele articole cu subiectele pe care le urmărești</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Autentifică-te în WordPress.com pentru a vedea ultimele din site-urile pe care le urmărești</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">Autentifică-te în WordPress.com pentru a vedea ultimele articole cu etichetele la care te-ai abonat</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">Autentifică-te în WordPress.com pentru a vedea ultimele articole din blogurile la care te-ai abonat</string>
     <string name="gutenberg_native_replace_current_block">Înlocuiește blocul curent</string>
     <string name="gutenberg_native_add_to_end">Adaugă la sfârșit</string>
     <string name="gutenberg_native_add_to_beginning">Adaugă la început</string>
     <string name="gutenberg_native_add_block_before">Adaugă bloc înainte</string>
     <string name="gutenberg_native_add_block_after">Adaugă bloc după</string>
-    <string name="reader_filter_empty_tags_action">Adaugă un subiect</string>
-    <string name="reader_filter_empty_sites_action">Urmărește un site</string>
-    <string name="reader_filter_empty_tags_list">Poți urmări articole despre un anumit subiect prin adăugarea unei subiect</string>
-    <string name="reader_filter_empty_sites_list">Vezi ultimele articole de pe site-urile pe care le urmărești</string>
-    <string name="reader_filter_main_title">Urmăresc</string>
+    <string name="reader_filter_empty_tags_add_action">Adaugă o etichetă</string>
     <string name="reader_filter_cta">Filtrează</string>
     <string name="gutenberg_native_video_caption_s">Subtitrare video. %s</string>
     <string name="gutenberg_native_edit_video">Editează videoul</string>
@@ -1882,7 +1937,6 @@ Language: ro
     <string name="login_site_credentials_magic_link_label">Aproape gata! Trebuie doar să-ți verificăm adresa de email conectată la Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Autentifică-te cu datele de conectare ale site-ului %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Pagină site</string>
-    <string name="reader_following_display_name">Urmăresc</string>
     <string name="reader_my_likes_display_name">Aprecieri</string>
     <string name="reader_discover_display_name">Descoperă</string>
     <string name="reader_save_for_later_display_name">Salvate</string>
@@ -2376,7 +2430,7 @@ Language: ro
     <string name="login_error_sms_throttled">Am făcut prea multe încercări de a trimite un cod de verificare prin SMS — ia o pauză și cere altul nou peste un minut.</string>
     <string name="login_error_email_not_found_v2">Nu există niciun cont WordPress.com care să se potrivească cu acest cont Google.</string>
     <string name="site_picker_remove_site_empty">Nu se potrivește niciun site cu căutarea ta</string>
-    <string name="reader_empty_followed_blogs_search_title">Nu se potrivește niciun site cu căutarea ta</string>
+    <string name="reader_no_followed_blogs_search_title">Nu se potrivește niciun blog cu căutarea ta</string>
     <string name="page_parent_changed">Părintele paginii a fost schimbat</string>
     <string name="page_permanently_deleted">Pagina a fost ștearsă definitiv</string>
     <string name="page_moved_to_scheduled">Pagina a fost programată</string>
@@ -2409,8 +2463,7 @@ Language: ro
     <string name="quick_start_button_negative">Nu acum</string>
     <string name="content_description_more">Mai mult</string>
     <string name="my_site_create_new_site_title">Nu ai niciun site</string>
-    <string name="reader_empty_followed_tags_title">Nu urmărești niciun subiect</string>
-    <string name="reader_empty_followed_tags_subtitle">Adaugă subiecte aici pentru a găsi articole cu subiectele tale preferate</string>
+    <string name="reader_empty_subscribed_tags_subtitle">Adaugă etichete aici ca să găsești articole despre subiectele tale preferate</string>
     <string name="login_to_to_connect_jetpack">Autentifică-te în contul WordPress.com pe care l-ai folosit pentru a conecta Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Întrebări frecvente Jetpack</string>
@@ -2430,9 +2483,7 @@ Language: ro
     <string name="people_empty_list_filtered_users">Niciun utilizator până acum</string>
     <string name="reader_empty_posts_liked_description">Articolele pe care le apreciezi vor apărea aici</string>
     <string name="reader_empty_posts_liked_title">Nu ai apreciat nimic până acum</string>
-    <string name="reader_empty_followed_blogs_button_followed">Du-te la urmărire</string>
-    <string name="reader_empty_followed_blogs_button_discover">Descoperă site-uri</string>
-    <string name="reader_empty_followed_blogs_title">Niciun site urmărit</string>
+    <string name="reader_no_followed_blogs_button_discover">Descoperă bloguri</string>
     <string name="notifications_empty_likes">Nicio apreciere până acum</string>
     <string name="notifications_empty_followers">Niciun urmăritor până acum</string>
     <string name="activity_log_limited_content_on_free_plan">Deoarece ai un plan gratuit, vei vedea numai anumite evenimente în activitatea ta.</string>
@@ -2497,8 +2548,8 @@ Language: ro
     <string name="reader_followed_blog_notifications_this">acest site</string>
     <string name="reader_followed_blog_notifications_action">Activează</string>
     <string name="reader_followed_blog_notifications">Activezi notificările pentru %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Activează notificările pe site</string>
-    <string name="reader_btn_notifications_off">Dezactivează notificările pe site</string>
+    <string name="reader_btn_blog_notifications_on">Activează notificările pe blog</string>
+    <string name="reader_btn_blog_notifications_off">Dezactivează notificările pe blog</string>
     <string name="activity_log_jetpack_icon">Icon Jetpack</string>
     <string name="activity_log_event">Eveniment</string>
     <string name="activity_log_icon">Icon activități</string>
@@ -2695,7 +2746,7 @@ Language: ro
     <string name="plugin_installed_failed">Eroare la instalarea %s</string>
     <string name="plugin_installed_successfully">%s instalat cu succes</string>
     <string name="plugin_install">Instalează</string>
-    <string name="site_settings_like_header">Apreciere</string>
+    <string name="site_settings_like_header">Apreciază</string>
     <string name="my_site_add_new_site">Adaugă site nou</string>
     <string name="my_site_create_new_site">Creează un site nou pentru afacerea, revista ta sau blogul personal; sau conectează o instalare WordPress existentă.</string>
     <string name="notifications_jetpack_connection_setup_info">Pentru a primi notificări utile pe dispozitivul tău de la site-ul propriu WordPress, va trebui să instalezi modulul Jetpack. Vrei să inițializezi Jetpack?</string>
@@ -3080,7 +3131,6 @@ Language: ro
     <string name="confirm">Confirmă</string>
     <string name="xmlrpc_endpoint_forbidden_error">N-am putut conecta. Am primit o eroare 403 la încercarea de a accesa\n        punctul-final XMLRPC pentru site-ul tău. Aplicația are nevoie de el pentru a comunica cu site-ul tău. Contactează-ți gazda pentru a rezolva\n        această problemă.</string>
     <string name="xmlrpc_post_blocked_error">Nu m-am putut conecta. Gazda ta blochează cererile POST și aplicația trebuie\n        să comunice cu site-ul tău. Contactează-ți gazda pentru a rezolva această problemă.</string>
-    <string name="reader_hint_search_followed_sites">Caută site-uri urmărite</string>
     <string name="pending_draft_one_generic">Nu-l lăsa atârnat! \'%1$s\' așteaptă să fie publicat.</string>
     <string name="pending_draft_one_month">Nu-l lăsa atârnat! \'%1$s\' așteaptă să fie publicat.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' rămâne o ciornă. Nu uita să-l publici!</string>
@@ -3118,7 +3168,7 @@ Language: ro
     <string name="invite_already_a_member">%s: deja un membru</string>
     <string name="invite_username_not_found">%s: utilizator negăsit</string>
     <string name="comment_moderated_approved">Comentariu aprobat!</string>
-    <string name="like">Apreciere</string>
+    <string name="like">Apreciază</string>
     <string name="timespan_now">acum</string>
     <string name="role_viewer">Vizitator</string>
     <string name="role_follower">Urmăritor</string>
@@ -3182,7 +3232,7 @@ Language: ro
     <string name="person_remove_confirmation_title">Înlătură %1$s</string>
     <string name="role">Rol</string>
     <string name="people">Oameni</string>
-    <string name="reader_empty_posts_in_custom_list">Site-urile din această listă nu au publicat nimic recent</string>
+    <string name="reader_empty_blogs_posts_in_custom_list">Blogurile din această listă nu au publicat nimic recent</string>
     <string name="error_remove_user">Nu s-a putut înlătura utilizatorul</string>
     <string name="error_update_role">Nu s-a putut actualiza rolul utilizatorului</string>
     <string name="error_fetch_viewers_list">N-am putut aduce vizitatorii site-ului</string>
@@ -3395,7 +3445,6 @@ Language: ro
     <string name="reader_err_get_post_not_found">Acest articol nu mai există</string>
     <string name="reader_err_get_post_not_authorized">Nu ești autorizat să vezi acest articol</string>
     <string name="reader_err_get_post_generic">Acest articol nu poate fi regăsit</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Site-urile pe care le urmărești n-au publicat nimic recent</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Niciun articol recent</string>
     <string name="media_edit_copy_url_toast">URL copiat în clipboard</string>
     <string name="selected_theme">Tema selectată</string>
@@ -3440,8 +3489,6 @@ Language: ro
     <string name="reader_short_like_count_multi">%s aprecieri</string>
     <string name="reader_short_like_count_one">1 apreciere</string>
     <string name="reader_short_like_count_none">Aprecieri</string>
-    <string name="reader_label_follow_count">%,d urmăritori</string>
-    <string name="reader_menu_tags">Editează subiectele și site-urile</string>
     <string name="reader_title_post_detail">Cititor articol</string>
     <string name="notifications_push_summary">Setări pentru notificările ce apar pe dispozitivul tău mobil.</string>
     <string name="notifications_email_summary">Setări pentru notificările ce sunt trimise la emailul atașat contului tău.</string>
@@ -3463,8 +3510,7 @@ Language: ro
     <string name="button_view">Vizualizare</string>
     <string name="button_publish">Publică</string>
     <string name="button_edit">Editare</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Nu ești autorizat să accesezi acest site</string>
-    <string name="reader_toast_err_follow_blog_not_found">Acest site nu a putut fi găsit</string>
+    <string name="reader_toast_err_follow_blog_could_not_be_found">Acest blog nu a putut fi găsit</string>
     <string name="undo">Anulează</string>
     <string name="push_auth_expired">Cererea a expirat. Autentifică-te pe WordPress.com pentru a încerca din nou.</string>
     <string name="ignore">Ignoră</string>
@@ -3508,7 +3554,7 @@ Language: ro
     <string name="posts_fetching">Se aduc articole…</string>
     <string name="media_fetching">Se aduc media…</string>
     <string name="logs_copied_to_clipboard">Jurnalele aplicației au fost copiate în clipbord</string>
-    <string name="reader_empty_posts_in_blog">Acest site este gol</string>
+    <string name="reader_no_posts_in_blog">Acest blog este gol</string>
     <string name="reader_label_new_posts">Articole noi</string>
     <string name="error_copy_to_clipboard">A apărut o eroare în timp ce copiam textul în clipbord</string>
     <string name="post_uploading">Încarc articolul</string>
@@ -3536,8 +3582,7 @@ Language: ro
     <string name="cab_selected">%d selectate</string>
     <string name="browse_our_faq_button">Răsfoiește întrebările noastre frecvente</string>
     <string name="reader_empty_comments">Niciun comentariu încă</string>
-    <string name="reader_empty_posts_in_tag">Niciun articol cu acest subiect</string>
-    <string name="reader_label_like">Apreciere</string>
+    <string name="reader_label_like">Apreciază</string>
     <string name="reader_label_view_original">Vezi articolul original</string>
     <string name="reader_label_comments_closed">Comentariile sunt închise</string>
     <string name="reader_title_photo_viewer">%1$d din %2$d</string>
@@ -3556,22 +3601,8 @@ Language: ro
     <string name="posts_empty_list">Niciun articol încă. De ce să nu creezi unul?</string>
     <string name="signing_out">Deautentificare….</string>
     <string name="reader_toast_err_generic">Nu pot face acestă acțiune</string>
-    <string name="reader_toast_err_block_blog">Nu pot bloca acest site</string>
-    <string name="reader_toast_blog_blocked">Articolele din acest site nu vor mai fi arătate</string>
-    <string name="reader_menu_block_blog">Blochează acest site</string>
     <string name="schedule_verb">Programează</string>
     <string name="update_verb">Actualizează</string>
-    <string name="reader_empty_recommended_blogs">Niciun site recomandat</string>
-    <string name="reader_toast_err_unfollow_blog">Nu pot anula urmărirea acest site</string>
-    <string name="reader_toast_err_follow_blog">Nu pot urmări acest site</string>
-    <string name="reader_toast_err_already_follow_blog">Deja urmărești acest site</string>
-    <string name="reader_toast_err_get_blog_info">Nu pot să arăt acest site</string>
-    <string name="reader_label_followed_blog">Site urmărit</string>
-    <string name="reader_label_followers_count">%s urmăritori</string>
-    <string name="reader_hint_add_tag_or_url">Introdu un URL sau un subiect pentru a-l urmări</string>
-    <string name="reader_page_followed_blogs">Site-uri urmărite</string>
-    <string name="reader_page_followed_tags">Subiecte urmărite</string>
-    <string name="reader_title_blog_preview">Site Cititor</string>
     <string name="ssl_certificate_ask_trust">Dacă în mod uzual te conectezi fără probleme la acest site, această eroare poate să însemne că cineva încearcă să se substituie site-ului și n-ar trebui să mai continui. Preferi să te încrezi în certificat oricum?</string>
     <string name="ssl_certificate_error">Certificat SSL invalid</string>
     <string name="help">Ajutor</string>
@@ -3597,8 +3628,8 @@ Language: ro
     <string name="blog_not_found">A apărut o eroare la accesarea blogului</string>
     <string name="gallery_error">Elementul media nu a putut fi readus</string>
     <string name="no_network_message">Nu e nicio rețea disponibilă</string>
-    <string name="reader_toast_err_remove_tag">Nu pot să înlătur acest subiect</string>
-    <string name="reader_toast_err_add_tag">Nu pot să adaug acest subiect</string>
+    <string name="reader_toast_err_removing_tag">Nu pot să înlătur această etichetă</string>
+    <string name="reader_toast_err_adding_tag">Nu pot să adaug această etichetă</string>
     <string name="reader_title_applog">Jurnal aplicații</string>
     <string name="fatal_db_error">A apărut o eroare în timp ce se creea baza de date a aplicației. Încearcă reinstalarea ei.</string>
     <string name="error_blog_hidden">Acest blog este ascuns și nu poate fi încărcat. Validează-l din nou din setări și încearcă din nou.</string>
@@ -3660,15 +3691,13 @@ Language: ro
     <string name="reader_toast_err_url_intent">Nu pot deschide %s</string>
     <string name="reader_toast_err_view_image">Nu pot vedea imaginea</string>
     <string name="reader_toast_err_share_intent">Nu pot partaja</string>
-    <string name="reader_toast_err_tag_invalid">Acela nu este un subiect valid</string>
-    <string name="reader_toast_err_tag_exists">Urmărești deja subiectul acesta</string>
+    <string name="reader_toast_err_tag_not_valid">Aceea nu este o etichetă validă</string>
     <string name="reader_toast_err_comment_failed">Nu s-a putut publica comentariul tău</string>
     <string name="reader_likes_only_you">Îți place acesta</string>
     <string name="reader_likes_one">O persoană apreciază asta</string>
     <string name="reader_label_removed_tag">%s înlăturat</string>
     <string name="reader_label_added_tag">%s adăugat</string>
     <string name="reader_hint_comment_on_comment">Răspunde la comentariu…</string>
-    <string name="reader_btn_unfollow">Urmăresc</string>
     <string name="reader_btn_follow">Urmărește</string>
     <string name="reader_btn_share">Partajează</string>
     <string name="reader_view_reblog">Republicare</string>

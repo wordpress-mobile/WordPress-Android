@@ -4881,4 +4881,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="site_monitoring_tab_title_php_logs">PHP Logs</string>
     <string name="site_monitoring_tab_title_web_server_logs">Web Server Logs</string>
     <string name="site_monitoring_cannot_be_started">We cannot open site monitoring at the moment. Please try again later</string>
+
+    <!-- Super Fast Media Upload QRCodeMediaLink -->
+    <string name="qrcode_media_deeplink_error">Site not found. Check that you are logged into the correct account.</string>
 </resources>

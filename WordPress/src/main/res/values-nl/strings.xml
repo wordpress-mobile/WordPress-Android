@@ -537,7 +537,6 @@ Language: nl
     <string name="quick_start_dialog_check_notifications_message_short">Selecteer het %1$s tabblad Meldingen %2$s om onderweg updates te ontvangen.</string>
     <string name="quick_start_dialog_upload_media_message_short_plus">Selecteer het %1$s plusje %2$s om media te uploaden. Je kan vanuit elk apparaat media aan je berichten/pagina\'s toevoegen.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Gebruik &lt;b&gt;Ontdekken&lt;/b&gt; om sites en tags te zoeken.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Gebruik &lt;b&gt;Discover&lt;/b&gt; om sites en tags te zoeken. Probeer eens %1$s Instellingen %2$s te selecteren om onderwerpen toe te voegen die je leuk vindt.</string>
     <string name="photo_picker_video_thumbnail_content_description">Video thumbnail</string>
     <string name="stats_details_top_commentators">Top commentators</string>
     <string name="stats_published_years_ago">%1$d jaar geleden gepubliceerd</string>
@@ -1034,7 +1033,6 @@ Language: nl
     <string name="jetpack_brute_force_allowlist_title">Altijd toegestane IP-adressen</string>
     <string name="site_settings_denylist_title">Niet toegelaten reacties</string>
     <string name="gutenberg_native_add_button_text">Voeg knoptekst toe</string>
-    <string name="reader_title_interests">Volg onderwerpen</string>
     <string name="stories_intro_main_subtitle">Een nieuwe manier om boeiende inhoud op je site te maken en te publiceren.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Negeren</string>
     <string name="activity_log_backup_download_notice_download_action">Download</string>
@@ -1346,8 +1344,6 @@ Language: nl
     <string name="hpp_error_title">Lay-outs zijn niet beschikbaar indien offline</string>
     <string name="continue_site_credentials">Ga verder met winkel-referenties</string>
     <string name="login_find_your_connected_email">Vind je verbonden e-mail</string>
-    <string name="reader_discover_no_posts_button_text">Volg onderwerpen</string>
-    <string name="reader_discover_no_posts_subtitle">Probeer meer onderwerpen te volgen om de zoekopdracht uit te breiden</string>
     <string name="reader_discover_no_posts_title">Geen recente berichten</string>
     <string name="reader_discover_empty_title">Welkom!</string>
     <string name="scan">Scan</string>
@@ -1386,7 +1382,6 @@ Language: nl
     <string name="login_prologue_title_second">Met deze krachtige editor kun je onderweg publiceren.</string>
     <string name="login_prologue_title_first">Welkom bij de wereld\'s meest populaire sitebouwer.</string>
     <string name="media_loading_failed">Media laden is mislukt</string>
-    <string name="reader_discover_recommended_blogs_header">Sites om te volgen</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">We werken hard om meer blokken toe te voegen bij elke release.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' wordt niet volledig ondersteund</string>
     <string name="gutenberg_native_help_button">Help knop</string>
@@ -1407,7 +1402,6 @@ Language: nl
     <string name="photo_picker_wordpress_media_library">Kies uit WordPress mediabibliotheek</string>
     <string name="reader_label_toolbar_back">Terug</string>
     <string name="reader_discover_empty_button_text">Aan de slag</string>
-    <string name="reader_discover_empty_subtitle">Volg onderwerpen om nieuwe blogs te ontdekken</string>
     <string name="reader_post_details_header_by_author_name">Door</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Deze verwijzer kan niet gemarkeerd worden als spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Markering als spam ongedaan maken</string>
@@ -1565,7 +1559,6 @@ Language: nl
     <string name="gutenberg_native_block_copied">Blok gekopieerd</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">De site titel kan alleen gewijzigd worden door een gebruiker met de beheerder rol.</string>
     <string name="my_site_title_changer_dialog_hint">De site titel wordt getoont in de titelbalk van een webbrowser en wordt getoont in de header van de meeste thema\'s.</string>
-    <string name="reader_title_tag_preview">Onderwerp</string>
     <string name="error_update_site_title_network">Kon de site titel niet updaten. Controleer je netwerkverbinding en probeer het dan opnieuw.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Niet opgeslagen wijzigingen</string>
     <string name="gutenberg_native_open_link_in_a_browser">Open link in een browser</string>
@@ -1597,8 +1590,6 @@ Language: nl
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Verplaatsen naar concept</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Berichten in prullenbak kunnen niet bewerkt worden. Wil je de status van dit bericht wijzigen naar \"concept\" zodat je er aan kan werken?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Verplaats bericht naar concept?</string>
-    <string name="reader_label_choose_your_interests">Kies je onderwerpen</string>
-    <string name="reader_choose_interests_content_description">Kies je onderwerpen</string>
     <string name="reader_btn_done">Klaar</string>
     <string name="reader_btn_select_few_interests">Selecteer een paar om verder te gaan</string>
     <string name="post_status_post_published">Gepubliceerd</string>
@@ -1641,7 +1632,6 @@ Language: nl
     <string name="page_cannot_set_homepage">Instellingen</string>
     <string name="gutenberg_native_select_a_color">Selecteer een kleur</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Twee keer tikken om naar de kleurinstellingen te gaan</string>
-    <string name="reader_empty_followed_blogs_description">Wanneer je sites volgt, zie je hier de inhoud ervan</string>
     <string name="feature_announcement_find_out_mode">Meer informatie</string>
     <string name="feature_announcement_dialog_label">Nieuw in %s</string>
     <string name="insert_label_with_count">Invoegen %d</string>
@@ -1655,9 +1645,6 @@ Language: nl
     <string name="site_picker_ask_site_select">Kan site niet selecteren. Probeer het opnieuw.</string>
     <string name="sitepicker_continue_flow">Doorgaan</string>
     <string name="reader_reblog_error">Reblog mislukt</string>
-    <string name="reader_no_site_to_reblog_action">Beheer sites</string>
-    <string name="reader_no_site_to_reblog_detail">Zodra je een WordPress.com site maakt, kun je inhoud die je leuk vindt rebloggen op je eigen site.</string>
-    <string name="reader_no_site_to_reblog_title">Geen beschikbare WordPress.com sites</string>
     <string name="whats_new_in_version_title">Wat is er nieuw</string>
     <string name="comment_q_action_copied_url">Link adres gekopieerd</string>
     <string name="copy_link_address">Link adres kopiëren</string>
@@ -1756,23 +1743,13 @@ Language: nl
     <string name="stats_management_screen_title">Nieuwe kaart toevoegen</string>
     <string name="stats_management_add_new_stats_card">Nieuwe statistiekenkaart toevoegen</string>
     <string name="reader_self_hosted_select_filter">Gebruik de filterknop om berichten over specifieke onderwerpen te vinden</string>
-    <string name="reader_bottom_sheet_content_description">Selecteer een tag of site, pop-upvenster</string>
-    <string name="reader_btn_select_filter_content_description">Selecteer een site of tag om berichten te filteren</string>
     <string name="reader_btn_remove_filter_content_description">Verwijder het huidige filter</string>
-    <string name="reader_title_subs">Beheer onderwerpen &amp; sites</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Inloggen op WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Log in op WordPress.com om de laatste berichten van door jou gevolgde onderwerpen te zien</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Log in op WordPress.com om de laatste berichten van gevolgde sites te bekijken</string>
     <string name="gutenberg_native_replace_current_block">Huidig blok vervangen</string>
     <string name="gutenberg_native_add_to_end">Toevoegen aan einde</string>
     <string name="gutenberg_native_add_to_beginning">Toevoegen aan begin</string>
     <string name="gutenberg_native_add_block_before">Blok toevoegen voor</string>
     <string name="gutenberg_native_add_block_after">Blok toevoegen na</string>
-    <string name="reader_filter_empty_tags_action">Voeg een onderwerp toe</string>
-    <string name="reader_filter_empty_sites_action">Een site volgen</string>
-    <string name="reader_filter_empty_tags_list">Je kunt berichten over een bepaald onderwerp volgen door een onderwerp toe te voegen</string>
-    <string name="reader_filter_empty_sites_list">Bekijk de nieuwste berichten van sites die je volgt</string>
-    <string name="reader_filter_main_title">Volgen</string>
     <string name="reader_filter_cta">Filteren</string>
     <string name="gutenberg_native_video_caption_s">Videobijschrift. %s</string>
     <string name="gutenberg_native_edit_video">Video bewerken</string>
@@ -1817,7 +1794,6 @@ Language: nl
     <string name="login_site_credentials_magic_link_label">Bijna klaar! We hoeven nu alleen nog het e-mailadres (&lt;b&gt;%1$s&lt;/b&gt;) te verifiëren dat aan je Jetpack-account is gekoppeld</string>
     <string name="enter_credentials_for_site">Inloggen met je site-referenties voor %1$s.</string>
     <string name="my_site_bottom_sheet_add_page">Site-pagina</string>
-    <string name="reader_following_display_name">Volgen</string>
     <string name="reader_my_likes_display_name">Vind-ik-leuks</string>
     <string name="reader_discover_display_name">Ontdek</string>
     <string name="reader_save_for_later_display_name">Opgeslagen</string>
@@ -2311,7 +2287,6 @@ Language: nl
     <string name="login_error_sms_throttled">We hebben te vaak geprobeerd om een sms-verificatiecode te versturen. Even geduld en vraag er over een minuut nog een aan.</string>
     <string name="login_error_email_not_found_v2">Er is geen WordPress.com-account gekoppeld aan dit Google-account.</string>
     <string name="site_picker_remove_site_empty">Er komen geen sites overeen met je zoekopdracht</string>
-    <string name="reader_empty_followed_blogs_search_title">Er komen geen sites overeen met je zoekopdracht</string>
     <string name="page_parent_changed">Bovenliggend item van pagina gewijzigd</string>
     <string name="page_permanently_deleted">Pagina is permanent verwijderd</string>
     <string name="page_moved_to_scheduled">Pagina is ingepland</string>
@@ -2344,8 +2319,6 @@ Language: nl
     <string name="quick_start_button_negative">Niet nu</string>
     <string name="content_description_more">Meer</string>
     <string name="my_site_create_new_site_title">Je hebt geen sites</string>
-    <string name="reader_empty_followed_tags_title">Geen gevolgde onderwerpen</string>
-    <string name="reader_empty_followed_tags_subtitle">Voeg hier onderwerpen toe om berichten te vinden over je favoriete onderwerpen</string>
     <string name="login_to_to_connect_jetpack">Log in op het WordPress.com-account dat je gebruikte om verbinding te maken met Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Veelgestelde vragen Jetpack</string>
@@ -2365,9 +2338,6 @@ Language: nl
     <string name="people_empty_list_filtered_users">Nog geen gebruikers</string>
     <string name="reader_empty_posts_liked_description">Berichten die je liked, verschijnen hier</string>
     <string name="reader_empty_posts_liked_title">Nog niets leuk gevonden</string>
-    <string name="reader_empty_followed_blogs_button_followed">Ga naar volgen</string>
-    <string name="reader_empty_followed_blogs_button_discover">Sites ontdekken</string>
-    <string name="reader_empty_followed_blogs_title">Geen gevolgde sites</string>
     <string name="notifications_empty_likes">Nog geen vind-ik-leuks</string>
     <string name="notifications_empty_followers">Nog geen volgers</string>
     <string name="activity_log_limited_content_on_free_plan">Aangezien je een gratis abonnement gebruikt, zie je een beperkt aantal gebeurtenissen in je activiteit.</string>
@@ -2432,8 +2402,6 @@ Language: nl
     <string name="reader_followed_blog_notifications_this">deze site</string>
     <string name="reader_followed_blog_notifications_action">Inschakelen</string>
     <string name="reader_followed_blog_notifications">Meldingen voor %1$s%2$s%3$s inschakelen?</string>
-    <string name="reader_btn_notifications_on">Site meldingen inschakelen</string>
-    <string name="reader_btn_notifications_off">Site meldingen uitschakelen</string>
     <string name="activity_log_jetpack_icon">Jetpack pictogram</string>
     <string name="activity_log_event">Gebeurtenis</string>
     <string name="activity_log_icon">Activiteitenpictogram</string>
@@ -3011,7 +2979,6 @@ Language: nl
     <string name="confirm">Bevestigen</string>
     <string name="xmlrpc_endpoint_forbidden_error">Kan geen verbinding maken. Er is een 403-fout opgetreden tijdens onze poging om het XMLRPC-eindpunt van je\n site te openen. De app heeft dat nodig om met je site te communiceren. Neem contact op met je host voor een oplossing voor\n dit probleem.</string>
     <string name="xmlrpc_post_blocked_error">Kan geen verbinding maken. Je host blokkeert POST-aanvragen en de app heeft\n dat nodig om met je site te communiceren. Neem contact op met je host om dit probleem op te lossen.</string>
-    <string name="reader_hint_search_followed_sites">Zoek gevolgde sites</string>
     <string name="pending_draft_one_generic">Niet weggaan! \'%1$s\' moet nog gepubliceerd worden.</string>
     <string name="pending_draft_one_month">Niet weggaan! \'%1$s\' moet nog gepubliceerd worden.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' blijft een concept. Vergeet niet deze te publiceren!</string>
@@ -3113,7 +3080,6 @@ Language: nl
     <string name="person_remove_confirmation_title">Verwijder %1$s</string>
     <string name="role">Rol</string>
     <string name="people">Mensen</string>
-    <string name="reader_empty_posts_in_custom_list">De sites in deze lijst hebben recent niets geplaatst</string>
     <string name="error_remove_user">Gebruiker verwijderen mislukt</string>
     <string name="error_update_role">Gebruikersrol updaten mislukt</string>
     <string name="error_fetch_viewers_list">Site-gebruikers ophalen mislukt</string>
@@ -3326,7 +3292,6 @@ Language: nl
     <string name="reader_err_get_post_not_found">Dit bericht bestaat niet meer</string>
     <string name="reader_err_get_post_not_authorized">Je hebt geen rechten om dit bericht te lezen</string>
     <string name="reader_err_get_post_generic">Kan dit bericht niet ophalen</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">De sites die je volgt hebben recent niets geplaatst</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Geen recente berichten</string>
     <string name="media_edit_copy_url_toast">URL gekopieerd naar klembord</string>
     <string name="selected_theme">Geselecteerd thema</string>
@@ -3371,8 +3336,6 @@ Language: nl
     <string name="reader_short_like_count_multi">%s vind-ik-leuks</string>
     <string name="reader_short_like_count_one">1 vind-ik-leuk</string>
     <string name="reader_short_like_count_none">Vind-ik-leuk</string>
-    <string name="reader_label_follow_count">%,d volgers</string>
-    <string name="reader_menu_tags">Bewerk onderwerpen en sites</string>
     <string name="reader_title_post_detail">Reader-bericht</string>
     <string name="notifications_push_summary">Instellingen voor meldingen die op je apparaat verschijnen.</string>
     <string name="notifications_email_summary">Instellingen voor meldingen die worden verstuurd naar het e-mailadres dat bij je account hoort.</string>
@@ -3394,8 +3357,6 @@ Language: nl
     <string name="button_view">Bekijk</string>
     <string name="button_publish">Publiceren</string>
     <string name="button_edit">Bewerken</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Je hebt geen rechten om deze site te bezoeken</string>
-    <string name="reader_toast_err_follow_blog_not_found">Deze site kon niet gevonden worden</string>
     <string name="undo">Ongedaan maken</string>
     <string name="push_auth_expired">Je verzoek is verlopen. Log in bij WordPress.com probeer opnieuw.</string>
     <string name="ignore">Negeren</string>
@@ -3439,7 +3400,6 @@ Language: nl
     <string name="posts_fetching">Berichten ophalen…</string>
     <string name="media_fetching">Media ophalen…</string>
     <string name="logs_copied_to_clipboard">Applicatielogs zijn gekopieerd naar het klembord</string>
-    <string name="reader_empty_posts_in_blog">Deze site is leeg</string>
     <string name="reader_label_new_posts">Nieuwe berichten</string>
     <string name="error_copy_to_clipboard">Er is een fout opgetreden tijdens het kopiëren van de tekst naar het klembord</string>
     <string name="post_uploading">Bericht wordt geüpload</string>
@@ -3467,7 +3427,6 @@ Language: nl
     <string name="cab_selected">%d geselecteerd</string>
     <string name="browse_our_faq_button">Bekijk onze FAQ</string>
     <string name="reader_empty_comments">Nog geen reacties</string>
-    <string name="reader_empty_posts_in_tag">Geen berichten met dit onderwerp</string>
     <string name="reader_label_like">Vind-ik-leuk</string>
     <string name="reader_label_view_original">Bekijk oorspronkelijk artikel</string>
     <string name="reader_label_comments_closed">Reacties zijn gesloten</string>
@@ -3487,21 +3446,8 @@ Language: nl
     <string name="posts_empty_list">Nog geen berichten. Waarom maak je er niet een?</string>
     <string name="signing_out">Uitloggen…</string>
     <string name="reader_toast_err_generic">Deze actie kan niet uitgevoerd worden</string>
-    <string name="reader_toast_err_block_blog">Blokkeren van deze site is mislukt</string>
-    <string name="reader_toast_blog_blocked">Berichten van deze site zullen niet meer getoond worden</string>
-    <string name="reader_menu_block_blog">Blokkeer deze site</string>
     <string name="schedule_verb">Inplannen</string>
     <string name="update_verb">Update</string>
-    <string name="reader_empty_recommended_blogs">Geen aanbevolen sites</string>
-    <string name="reader_toast_err_unfollow_blog">Kan deze site niet ontvolgen</string>
-    <string name="reader_toast_err_follow_blog">Kan deze site niet volgen</string>
-    <string name="reader_toast_err_already_follow_blog">Je volgt deze site al</string>
-    <string name="reader_toast_err_get_blog_info">Kan deze site niet tonen</string>
-    <string name="reader_label_followed_blog">Site gevolgd</string>
-    <string name="reader_hint_add_tag_or_url">Voer een URL of onderwerp in om te volgen</string>
-    <string name="reader_page_followed_blogs">Gevolgde sites</string>
-    <string name="reader_page_followed_tags">Gevolgde onderwerpen</string>
-    <string name="reader_title_blog_preview">Reader site</string>
     <string name="ssl_certificate_ask_trust">Als je normaal gesproken zonder problemen verbinding maakt met deze site kan deze fout betekenen dat iemand zich probeert voor te doen als deze site. Ga niet verder als dat zo is. Wil je het certificaat toch vertrouwen?</string>
     <string name="ssl_certificate_error">Ongeldig SSL-certificaat</string>
     <string name="help">Help</string>
@@ -3527,8 +3473,6 @@ Language: nl
     <string name="blog_not_found">Er heeft zich een fout voorgedaan tijdens het openen van dit blog</string>
     <string name="gallery_error">Media-item kan niet worden opgehaald</string>
     <string name="no_network_message">Er is geen netwerk beschikbaar</string>
-    <string name="reader_toast_err_remove_tag">Niet mogelijk om dit onderwerp te verwijderen</string>
-    <string name="reader_toast_err_add_tag">Niet mogelijk om dit onderwerp toe te voegen</string>
     <string name="reader_title_applog">Applicatie log</string>
     <string name="fatal_db_error">Er heeft zich een fout voorgedaan bij het aanmaken van de database van de app. Probeer de app opnieuw te installeren.</string>
     <string name="error_blog_hidden">Dit blog is verborgen en kan niet worden geladen. Schakel het blog in instellingen in en probeer het opnieuw.</string>
@@ -3590,15 +3534,12 @@ Language: nl
     <string name="reader_toast_err_url_intent">Onmogelijk %s te openen</string>
     <string name="reader_toast_err_view_image">Onmogelijk afbeelding te bekijken</string>
     <string name="reader_toast_err_share_intent">Onmogelijk te delen</string>
-    <string name="reader_toast_err_tag_invalid">Dat is geen geldig onderwerp</string>
-    <string name="reader_toast_err_tag_exists">Je volgt dit onderwerp al</string>
     <string name="reader_toast_err_comment_failed">Je reactie kon niet geplaatst worden</string>
     <string name="reader_likes_only_you">Je vindt dit leuk</string>
     <string name="reader_likes_one">1 persoon vindt dit leuk</string>
     <string name="reader_label_removed_tag">%s verwijderd</string>
     <string name="reader_label_added_tag">%s toegevoegd</string>
     <string name="reader_hint_comment_on_comment">Beantwoord reactie…</string>
-    <string name="reader_btn_unfollow">Volgend</string>
     <string name="reader_btn_follow">Volg</string>
     <string name="reader_btn_share">Delen</string>
     <string name="reader_view_reblog">Rebloggen</string>

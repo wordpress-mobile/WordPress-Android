@@ -222,7 +222,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
         // analytics tracking
         Map<String, String> properties = new HashMap<>();
-        properties.put("notification_type", note.getType());
+        properties.put("notification_type", note.getRawType());
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
 
         setProgressVisible(false);
@@ -343,7 +343,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             String title = note.getTitle();
             if (TextUtils.isEmpty(title)) {
                 // set a default title if title is not set within the note
-                switch (note.getType()) {
+                switch (note.getRawType()) {
                     case NOTE_FOLLOW_TYPE:
                         title = getString(R.string.follows);
                         break;
