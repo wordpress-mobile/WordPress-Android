@@ -3,6 +3,17 @@ package org.wordpress.android.models
 val Note.type
     get() = NoteType.from(rawType)
 
+sealed class Notification {
+    data class Like(val url: String, val title: String): Notification()
+    data object Unknown: Notification()
+
+    companion object {
+        fun from(rawNote: Note) = when(rawNote.type) {
+            NoteType.Like -> Like(url= rawNote.url, title = rawNote.title)
+            else -> Unknown
+        }
+    }
+}
 enum class NoteType(val rawType: String) {
     Follow(Note.NOTE_FOLLOW_TYPE),
     Like(Note.NOTE_LIKE_TYPE),
