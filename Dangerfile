@@ -21,12 +21,6 @@ common_release_checker.check_internal_release_notes_changed(report_type: :messag
 
 android_release_checker.check_modified_strings_on_release
 
-labels_checker.check(
-  do_not_merge_labels: ['Do Not Merge'],
-  required_labels: [//],
-  required_labels_error: 'PR requires at least one label.'
-)
-
 view_changes_checker.check
 
 pr_size_checker.check_diff_size(
@@ -36,7 +30,14 @@ pr_size_checker.check_diff_size(
 
 android_unit_test_checker.check_missing_tests
 
+# skip remaining checks if we have a Draft PR
+return if github.pr_draft?
+
+labels_checker.check(
+  do_not_merge_labels: ['Do Not Merge'],
+  required_labels: [//],
+  required_labels_error: 'PR requires at least one label.'
+)
+
 # skip check for draft PRs and for WIP features unless the PR is against the main branch or release branch
-unless github.pr_draft? || (github_utils.wip_feature? && !(github_utils.release_branch? || github_utils.main_branch?))
-  milestone_checker.check_milestone_due_date(days_before_due: 4)
-end
+milestone_checker.check_milestone_due_date(days_before_due: 4) unless github_utils.wip_feature? && !(github_utils.release_branch? || github_utils.main_branch?)
