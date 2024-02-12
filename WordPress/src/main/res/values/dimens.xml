@@ -763,4 +763,8 @@
     <dimen name="switch_vertical_padding">4dp</dimen>
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
     <dimen name="navbar_me_icon_padding">4dp</dimen>
+
+    <!-- My Profile Fragment -->
+    <dimen name="my_profile_gravatar_info_avatar_size">30dp</dimen>
+    <dimen name="my_profile_gravatar_info_avatars_overlap">-10dp</dimen>
 </resources>

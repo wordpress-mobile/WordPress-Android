@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -22,6 +23,7 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.TextInputDialogFragment;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -37,6 +39,7 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
     private WPTextView mLastName;
     private WPTextView mDisplayName;
     private WPTextView mAboutMe;
+    private Button mLearMoreAtGravatar;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -44,6 +47,7 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
     private static final String TRACK_PROPERTY_FIELD_NAME = "field_name";
     private static final String TRACK_PROPERTY_PAGE = "page";
     private static final String TRACK_PROPERTY_PAGE_MY_PROFILE = "my_profile";
+    private static final String GRAVATAR_URL = "https://www.gravatar.com";
 
     public static MyProfileFragment newInstance() {
         return new MyProfileFragment();
@@ -85,6 +89,7 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
         mLastName = rootView.findViewById(R.id.last_name);
         mDisplayName = rootView.findViewById(R.id.display_name);
         mAboutMe = rootView.findViewById(R.id.about_me);
+        mLearMoreAtGravatar = rootView.findViewById(R.id.learn_more_at_gravatar);
 
         rootView.findViewById(R.id.first_name_row).setOnClickListener(
                 createOnClickListener(
@@ -110,6 +115,7 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
                         getString(R.string.about_me_hint),
                         mAboutMe,
                         true));
+        mLearMoreAtGravatar.setOnClickListener(v -> ActivityLauncher.openUrlExternal(getActivity(), GRAVATAR_URL));
 
         return rootView;
     }

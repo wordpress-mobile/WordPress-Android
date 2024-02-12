@@ -1,79 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/nested_scroll_view">
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/first_name_row"
+                style="@style/MyProfileRow"
+                android:layout_marginTop="@dimen/margin_medium">
+
+                <org.wordpress.android.widgets.WPTextView
+                    style="@style/MyProfileLabel"
+                    android:text="@string/first_name" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/first_name"
+                    style="@style/MyProfileText"
+                    android:text="@string/first_name" />
+
+            </LinearLayout>
+
+            <View style="@style/MyProfileDividerView" />
+
+            <LinearLayout
+                android:id="@+id/last_name_row"
+                style="@style/MyProfileRow">
+
+                <org.wordpress.android.widgets.WPTextView
+                    style="@style/MyProfileLabel"
+                    android:text="@string/last_name" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/last_name"
+                    style="@style/MyProfileText" />
+
+            </LinearLayout>
+
+            <View style="@style/MyProfileDividerView" />
+
+            <LinearLayout
+                android:id="@+id/display_name_row"
+                style="@style/MyProfileRow">
+
+                <org.wordpress.android.widgets.WPTextView
+                    style="@style/MyProfileLabel"
+                    android:text="@string/public_display_name" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/display_name"
+                    style="@style/MyProfileText" />
+
+            </LinearLayout>
+
+            <View style="@style/MyProfileDividerView" />
+
+            <LinearLayout
+                android:id="@+id/about_me_row"
+                style="@style/MyProfileRow">
+
+                <org.wordpress.android.widgets.WPTextView
+                    style="@style/MyProfileLabel"
+                    android:text="@string/about_me" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/about_me"
+                    style="@style/MyProfileText" />
+
+            </LinearLayout>
+
+            <View style="@style/MyProfileDividerView" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/margin_extra_small_large"
+        android:layout_margin="@dimen/margin_extra_large"
+        android:background="@drawable/bg_wordpress_gravatar_info"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
-            android:id="@+id/first_name_row"
-            style="@style/MyProfileRow"
-            android:layout_marginTop="@dimen/margin_medium">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="@dimen/my_profile_gravatar_info_avatar_size"
+                android:layout_height="@dimen/my_profile_gravatar_info_avatar_size"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_logo" />
 
-            <org.wordpress.android.widgets.WPTextView
-                style="@style/MyProfileLabel"
-                android:text="@string/first_name" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/first_name"
-                style="@style/MyProfileText"
-                android:text="@string/first_name" />
-
+            <ImageView
+                android:layout_width="@dimen/my_profile_gravatar_info_avatar_size"
+                android:layout_height="@dimen/my_profile_gravatar_info_avatar_size"
+                android:layout_marginStart="@dimen/my_profile_gravatar_info_avatars_overlap"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_logo_gravatar" />
         </LinearLayout>
 
-        <View style="@style/MyProfileDividerView" />
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/gravatar_description"
+            style="@style/MyProfileLabel"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:text="@string/gravatar_info_description" />
 
-        <LinearLayout
-            android:id="@+id/last_name_row"
-            style="@style/MyProfileRow">
-
-            <org.wordpress.android.widgets.WPTextView
-                style="@style/MyProfileLabel"
-                android:text="@string/last_name" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/last_name"
-                style="@style/MyProfileText" />
-
-        </LinearLayout>
-
-        <View style="@style/MyProfileDividerView" />
-
-        <LinearLayout
-            android:id="@+id/display_name_row"
-            style="@style/MyProfileRow">
-
-            <org.wordpress.android.widgets.WPTextView
-                style="@style/MyProfileLabel"
-                android:text="@string/public_display_name" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/display_name"
-                style="@style/MyProfileText" />
-
-        </LinearLayout>
-
-        <View style="@style/MyProfileDividerView" />
-
-        <LinearLayout
-            android:id="@+id/about_me_row"
-            style="@style/MyProfileRow">
-
-            <org.wordpress.android.widgets.WPTextView
-                style="@style/MyProfileLabel"
-                android:text="@string/about_me" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/about_me"
-                style="@style/MyProfileText" />
-
-        </LinearLayout>
-
-        <View style="@style/MyProfileDividerView" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/learn_more_at_gravatar"
+            style="@style/OverlayMigrationHelperText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:text="@string/gravatar_info_learn_more_link"
+            android:textColor="@color/jetpack_green_50"
+            app:drawableEndCompat="@drawable/ic_external_white_24dp"
+            app:icon="@drawable/ic_external_white_24dp" />
 
     </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
