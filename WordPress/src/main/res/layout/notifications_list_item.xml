@@ -43,13 +43,21 @@
 
         <ImageView
             android:id="@+id/note_avatar"
-            android:layout_width="@dimen/activity_log_icon_size"
-            android:layout_height="@dimen/activity_log_icon_size"
+            android:layout_width="@dimen/notifications_icon_size"
+            android:layout_height="@dimen/notifications_icon_size"
             android:layout_marginStart="@dimen/notifications_avatar_margin_start"
             android:contentDescription="@null"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/bg_oval_placeholder_user_32dp" />
+
+        <include
+            android:id="@+id/two_avatars_view"
+            layout="@layout/notifications_list_double_avatar" />
+
+        <include
+            android:id="@+id/three_avatars_view"
+            layout="@layout/notifications_list_triple_avatar" />
 
         <ImageView
             android:id="@+id/action"

@@ -51,6 +51,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUnseenStatus
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.All
+import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.Companion.KEY_TAB_POSITION
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_ALL
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_COMMENT
@@ -330,7 +331,10 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
      */
     private fun markAllAsRead() {
         analyticsTrackerWrapper.track(NOTIFICATIONS_MARK_ALL_READ_TAPPED)
-        // TODO("not yet implemented")
+        (childFragmentManager.fragments.firstOrNull {
+            // use -1 to make sure that the (null == null) will not happen
+            (it.arguments?.getInt(KEY_TAB_POSITION) ?: -1) == binding?.viewPager?.currentItem
+        } as? NotificationsListFragmentPage)?.markAllNotesAsRead()
     }
 
     companion object {
