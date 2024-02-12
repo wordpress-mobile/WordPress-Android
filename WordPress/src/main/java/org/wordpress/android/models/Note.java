@@ -95,62 +95,76 @@ public class Note {
         return mKey;
     }
 
-    public String getType() {
+    @NonNull
+    public String getRawType() {
         return queryJSON("type", NOTE_UNKNOWN_TYPE);
     }
 
-    private Boolean isType(String type) {
-        return getType().equals(type);
+    @NonNull
+    private Boolean isTypeRaw(@NonNull String rawType) {
+        return getRawType().equals(rawType);
     }
 
+    @NonNull
     public Boolean isCommentType() {
         synchronized (mSyncLock) {
             return (isAutomattcherType() && JSONUtils.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1)
-                   || isType(NOTE_COMMENT_TYPE);
+                   || isTypeRaw(NOTE_COMMENT_TYPE);
         }
     }
 
+    @NonNull
     public Boolean isAutomattcherType() {
-        return isType(NOTE_MATCHER_TYPE);
+        return isTypeRaw(NOTE_MATCHER_TYPE);
     }
 
+    @NonNull
     public Boolean isNewPostType() {
-        return isType(NOTE_NEW_POST_TYPE);
+        return isTypeRaw(NOTE_NEW_POST_TYPE);
     }
 
+    @NonNull
     public Boolean isFollowType() {
-        return isType(NOTE_FOLLOW_TYPE);
+        return isTypeRaw(NOTE_FOLLOW_TYPE);
     }
 
+    @NonNull
     public Boolean isLikeType() {
         return isPostLikeType() || isCommentLikeType();
     }
 
+    @NonNull
     public Boolean isPostLikeType() {
-        return isType(NOTE_LIKE_TYPE);
+        return isTypeRaw(NOTE_LIKE_TYPE);
     }
 
+    @NonNull
     public Boolean isCommentLikeType() {
-        return isType(NOTE_COMMENT_LIKE_TYPE);
+        return isTypeRaw(NOTE_COMMENT_LIKE_TYPE);
     }
 
+    @NonNull
     public Boolean isReblogType() {
-        return isType(NOTE_REBLOG_TYPE);
+        return isTypeRaw(NOTE_REBLOG_TYPE);
     }
 
+    @NonNull
     public Boolean isViewMilestoneType() {
-        return isType(NOTE_VIEW_MILESTONE);
+        return isTypeRaw(NOTE_VIEW_MILESTONE);
     }
 
+    @NonNull
     public Boolean isCommentReplyType() {
         return isCommentType() && getParentCommentId() > 0;
     }
 
     // Returns true if the user has replied to this comment note
+    @NonNull
     public Boolean isCommentWithUserReply() {
         return isCommentType() && !TextUtils.isEmpty(getCommentSubjectNoticon());
     }
 
+    @NonNull
     public Boolean isUserList() {
         return isLikeType() || isFollowType() || isReblogType();
     }
@@ -278,6 +292,7 @@ public class Note {
     /**
      * Compare note timestamp to now and return a time grouping
      */
+    @NonNull
     public static NoteTimeGroup getTimeGroupForTimestamp(long timestamp) {
         Date today = new Date();
         Date then = new Date(timestamp * 1000);
@@ -422,7 +437,8 @@ public class Note {
     /**
      * Rudimentary system for pulling an item out of a JSON object hierarchy
      */
-    private <U> U queryJSON(String query, U defaultObject) {
+    @NonNull
+    private <U> U queryJSON(@Nullable String query, @NonNull U defaultObject) {
         synchronized (mSyncLock) {
             if (mNoteJSON == null) {
                 return defaultObject;

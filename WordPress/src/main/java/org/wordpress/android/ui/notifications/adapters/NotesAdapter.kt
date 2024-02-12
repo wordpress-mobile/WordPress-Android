@@ -14,6 +14,7 @@ import android.view.ViewGroup.MarginLayoutParams
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.core.text.BidiFormatter
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
@@ -24,6 +25,8 @@ import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Note.NoteTimeGroup
 import org.wordpress.android.models.Note.TimeStampComparator
+import org.wordpress.android.models.NoteType
+import org.wordpress.android.models.type
 import org.wordpress.android.ui.comments.CommentUtils
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.NoteViewHolder
@@ -46,13 +49,11 @@ class NotesAdapter(
     private val notes = ArrayList<Note>()
     val filteredNotes = ArrayList<Note>()
 
-    @JvmField
     @Inject
-    var imageManager: ImageManager? = null
+    lateinit var imageManager: ImageManager
 
-    @JvmField
     @Inject
-    var notificationsUtilsWrapper: NotificationsUtilsWrapper? = null
+    lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
 
     enum class FILTERS {
         FILTER_ALL,
@@ -128,35 +129,42 @@ class NotesAdapter(
         return filteredNotes.size
     }
 
+    private val Note.timeGroup
+        get() = Note.getTimeGroupForTimestamp(timestamp)
+
+    @StringRes
+    private fun timeGroupHeaderText(note: Note, previousNote: Note?) =
+        previousNote?.timeGroup.let { previousTimeGroup ->
+            val timeGroup = note.timeGroup
+            if (previousTimeGroup?.let { it == timeGroup } == true) {
+                // If the previous time group exists and is the same, we don't need a new one
+                null
+            } else {
+                // Otherwise, we create a new one
+                when (timeGroup) {
+                    NoteTimeGroup.GROUP_TODAY -> R.string.stats_timeframe_today
+                    NoteTimeGroup.GROUP_YESTERDAY -> R.string.stats_timeframe_yesterday
+                    NoteTimeGroup.GROUP_OLDER_TWO_DAYS -> R.string.older_two_days
+                    NoteTimeGroup.GROUP_OLDER_WEEK -> R.string.older_last_week
+                    NoteTimeGroup.GROUP_OLDER_MONTH -> R.string.older_month
+                }
+            }
+        }
+
     @Suppress("CyclomaticComplexMethod", "LongMethod")
     override fun onBindViewHolder(noteViewHolder: NoteViewHolder, position: Int) {
         val note = getNoteAtPosition(position) ?: return
+        val previousNote = getNoteAtPosition(position - 1)
         noteViewHolder.contentView.tag = note.id
 
-        // Display group header
-        val timeGroup = Note.getTimeGroupForTimestamp(note.timestamp)
-        var previousTimeGroup: NoteTimeGroup? = null
-        if (position > 0) {
-            val previousNote = getNoteAtPosition(position - 1)
-            previousTimeGroup = Note.getTimeGroupForTimestamp(
-                previousNote!!.timestamp
-            )
-        }
-        if (previousTimeGroup?.let { it == timeGroup } == true) {
-            noteViewHolder.headerText.visibility = View.GONE
-        } else {
-            noteViewHolder.headerText.visibility = View.VISIBLE
-            timeGroup?.let {
-                noteViewHolder.headerText.setText(
-                    when (it) {
-                        NoteTimeGroup.GROUP_TODAY -> R.string.stats_timeframe_today
-                        NoteTimeGroup.GROUP_YESTERDAY -> R.string.stats_timeframe_yesterday
-                        NoteTimeGroup.GROUP_OLDER_TWO_DAYS -> R.string.older_two_days
-                        NoteTimeGroup.GROUP_OLDER_WEEK -> R.string.older_last_week
-                        NoteTimeGroup.GROUP_OLDER_MONTH -> R.string.older_month
-                    }
-                )
+        // Display time group header
+        timeGroupHeaderText(note, previousNote)?.let { timeGroupText ->
+            with(noteViewHolder.headerText) {
+                visibility = View.VISIBLE
+                setText(timeGroupText)
             }
+        } ?: run {
+            noteViewHolder.headerText.visibility = View.GONE
         }
 
         // Subject is stored in db as html to preserve text formatting
@@ -204,6 +212,7 @@ class NotesAdapter(
             noteViewHolder.textDetail.visibility = View.GONE
         }
         noteViewHolder.loadAvatars(note)
+        noteViewHolder.bindInlineActionIconsForNote(note)
         noteViewHolder.unreadNotificationView.isVisible = note.isUnread
 
         // request to load more comments when we near the end
@@ -251,10 +260,36 @@ class NotesAdapter(
 
     private fun loadAvatar(imageView: ImageView, avatarUrl: String) {
         val url = GravatarUtils.fixGravatarUrl(avatarUrl, avatarSize)
-        imageManager?.loadIntoCircle(imageView, ImageType.AVATAR_WITH_BACKGROUND, url)
+        imageManager.loadIntoCircle(imageView, ImageType.AVATAR_WITH_BACKGROUND, url)
     }
 
     private fun Note.shouldShowMultipleAvatars() = isFollowType || isLikeType || isCommentLikeType
+
+    @Suppress("ForbiddenComment")
+    private fun NoteViewHolder.bindInlineActionIconsForNote(note: Note) {
+        when (note.type) {
+            NoteType.Comment -> {
+                actionIcon.setImageResource(R.drawable.star_empty)
+                actionIcon.isVisible = true
+                actionIcon.setOnClickListener {
+                    // TODO: handle tap on comment's inline action icon (the star)
+                }
+            }
+            NoteType.NewPost,
+            NoteType.Reblog,
+            NoteType.Like -> {
+                // TODO: Use the icon from the Figma design
+                actionIcon.setImageResource(R.drawable.gb_ic_share)
+                actionIcon.isVisible = true
+                actionIcon.setOnClickListener {
+                    // TODO: handle tap on comment's inline action icon (the share icon)
+                }
+            }
+            else -> {
+                actionIcon.isVisible = false
+            }
+        }
+    }
 
     private fun handleMaxLines(subject: TextView, detail: TextView) {
         subject.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
@@ -315,6 +350,7 @@ class NotesAdapter(
         val threeAvatars2: ImageView
         val threeAvatars3: ImageView
         val unreadNotificationView: View
+        val actionIcon: ImageView
 
         init {
             contentView = checkNotNull(view.findViewById(R.id.note_content_container))
@@ -331,6 +367,7 @@ class NotesAdapter(
             twoAvatarsView = checkNotNull(view.findViewById(R.id.two_avatars_view))
             threeAvatarsView = checkNotNull(view.findViewById(R.id.three_avatars_view))
             unreadNotificationView = checkNotNull(view.findViewById(R.id.notification_unread))
+            actionIcon = checkNotNull(view.findViewById(R.id.action))
             contentView.setOnClickListener(onClickListener)
         }
     }

@@ -420,7 +420,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                         ).also {
                             if (noteObject.ranges != null && noteObject.ranges!!.isNotEmpty()) {
                                 val range = noteObject.ranges!![noteObject.ranges!!.size - 1]
-                                it.setClickableSpan(range, note.type)
+                                it.setClickableSpan(range, note.rawType)
                             }
                         }
                     } else {
