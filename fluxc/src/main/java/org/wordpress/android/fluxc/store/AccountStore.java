@@ -11,6 +11,7 @@ import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.AccountAction;
@@ -42,7 +43,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEma
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.OauthResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.TwoFactorResponse;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnChallengeInfo;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.webauthn.WebauthnToken;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
 import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
@@ -357,8 +357,14 @@ public class AccountStore extends Store {
     }
 
     public static class WebauthnChallengeReceived extends OnChanged<AuthenticationError> {
-        public WebauthnChallengeInfo mChallengeInfo;
+        private static final String TWO_STEP_NONCE_KEY = "two_step_nonce";
+
+        public JSONObject mJsonResponse;
         public String mUserId;
+
+        public String getWebauthnNonce() {
+            return mJsonResponse.optString(TWO_STEP_NONCE_KEY);
+        }
     }
 
     public static class FinishWebauthnChallengePayload {
@@ -1412,10 +1418,10 @@ public class AccountStore extends Store {
 
     private void requestWebauthnChallenge(final StartWebauthnChallengePayload payload) {
         mAuthenticator.makeRequest(payload.mUserId, payload.mWebauthnNonce,
-                (Response.Listener<WebauthnChallengeInfo>) info -> {
+                (Response.Listener<JSONObject>) response -> {
                     WebauthnChallengeReceived event = new WebauthnChallengeReceived();
-                    event.mChallengeInfo = info;
                     event.mUserId = payload.mUserId;
+                    event.mJsonResponse = response;
                     emitChange(event);
                 },
                 error -> {
