@@ -265,6 +265,7 @@ class NotesAdapter(
 
     private fun Note.shouldShowMultipleAvatars() = isFollowType || isLikeType || isCommentLikeType
 
+    @Suppress("ForbiddenComment")
     private fun NoteViewHolder.bindInlineActionIconsForNote(note: Note) {
         when (note.type) {
             NoteType.Comment -> {
