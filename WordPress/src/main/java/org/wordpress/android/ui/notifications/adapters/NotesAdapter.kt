@@ -19,16 +19,23 @@ import androidx.core.text.BidiFormatter
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Note.NoteTimeGroup
 import org.wordpress.android.models.Note.TimeStampComparator
-import org.wordpress.android.models.NoteType
-import org.wordpress.android.models.type
+import org.wordpress.android.models.Notification
+import org.wordpress.android.models.Notification.Comment
+import org.wordpress.android.models.Notification.PostNotification
+import org.wordpress.android.models.Notification.Unknown
 import org.wordpress.android.ui.comments.CommentUtils
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener
+import org.wordpress.android.ui.notifications.NotificationsListViewModel.InlineActionEvent
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.NoteViewHolder
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
@@ -40,7 +47,8 @@ import javax.inject.Inject
 
 class NotesAdapter(
     context: Context, dataLoadedListener: DataLoadedListener,
-    onLoadMoreListener: OnLoadMoreListener?
+    onLoadMoreListener: OnLoadMoreListener?,
+    private val inlineActionEvents: MutableSharedFlow<InlineActionEvent>,
 ) : RecyclerView.Adapter<NoteViewHolder>() {
     private val avatarSize: Int
     private val textIndentSize: Int
@@ -265,30 +273,6 @@ class NotesAdapter(
 
     private fun Note.shouldShowMultipleAvatars() = isFollowType || isLikeType || isCommentLikeType
 
-    @Suppress("ForbiddenComment")
-    private fun NoteViewHolder.bindInlineActionIconsForNote(note: Note) {
-        when (note.type) {
-            NoteType.Comment -> {
-                actionIcon.setImageResource(R.drawable.star_empty)
-                actionIcon.isVisible = true
-                actionIcon.setOnClickListener {
-                    // TODO: handle tap on comment's inline action icon (the star)
-                }
-            }
-            NoteType.NewPost,
-            NoteType.Reblog,
-            NoteType.Like -> {
-                actionIcon.setImageResource(R.drawable.block_share)
-                actionIcon.isVisible = true
-                actionIcon.setOnClickListener {
-                    // TODO: handle tap on comment's inline action icon (the share icon)
-                }
-            }
-            else -> {
-                actionIcon.isVisible = false
-            }
-        }
-    }
 
     private fun handleMaxLines(subject: TextView, detail: TextView) {
         subject.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
@@ -351,6 +335,8 @@ class NotesAdapter(
         val unreadNotificationView: View
         val actionIcon: ImageView
 
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+
         init {
             contentView = checkNotNull(view.findViewById(R.id.note_content_container))
             headerText = checkNotNull(view.findViewById(R.id.header_text))
@@ -368,6 +354,33 @@ class NotesAdapter(
             unreadNotificationView = checkNotNull(view.findViewById(R.id.notification_unread))
             actionIcon = checkNotNull(view.findViewById(R.id.action))
             contentView.setOnClickListener(onClickListener)
+        }
+
+        @Suppress("ForbiddenComment")
+        fun bindInlineActionIconsForNote(note: Note) = Notification.from(note).let { notification ->
+            when (notification) {
+                Comment -> {
+                    actionIcon.setImageResource(R.drawable.star_empty)
+                    actionIcon.isVisible = true
+                    actionIcon.setOnClickListener {
+                        // TODO: handle tap on comment's inline action icon (the star)
+                    }
+                }
+                is PostNotification -> {
+                    actionIcon.setImageResource(R.drawable.block_share)
+                    actionIcon.isVisible = true
+                    actionIcon.setOnClickListener {
+                        coroutineScope.launch {
+                            inlineActionEvents.emit(
+                                InlineActionEvent.SharePostButtonTapped(notification)
+                            )
+                        }
+                    }
+                }
+                is Unknown -> {
+                    actionIcon.isVisible = false
+                }
+            }
         }
     }
 
