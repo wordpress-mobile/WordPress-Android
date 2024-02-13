@@ -16,6 +16,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeAdForecast
 import org.wordpress.android.fluxc.model.blaze.BlazeAdSuggestion
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethod
 import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethodUrls
@@ -440,5 +441,30 @@ class BlazeCampaignsStoreTest {
 
         assertThat(paymentMethodsResult.isError).isFalse()
         assertThat(paymentMethodsResult.model).isEqualTo(paymentMethods)
+    }
+
+    @Test
+    fun `when creating a campaign, then persist it to the DB and return result`() = test {
+        val campaign = BlazeCampaignModel(
+            campaignId = CAMPAIGN_ID,
+            title = TITLE,
+            imageUrl = IMAGE_URL,
+            createdAt = BlazeCampaignsUtils.stringToDate(CREATED_AT),
+            endDate = BlazeCampaignsUtils.stringToDate(END_DATE),
+            uiStatus = UI_STATUS,
+            budgetCents = BUDGET_CENTS,
+            impressions = IMPRESSIONS,
+            clicks = CLICKS,
+            targetUrn = "urn:wpcom:post:199247490:9"
+        )
+
+        whenever(creationRestClient.createCampaign(any(), any())).thenReturn(
+            BlazeCreationRestClient.BlazePayload(campaign)
+        )
+
+        val result = store.createCampaign(siteModel, mock())
+
+        assertThat(result.isError).isFalse()
+        assertThat(result.model).isEqualTo(campaign)
     }
 }
