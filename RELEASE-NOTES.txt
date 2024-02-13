@@ -2,6 +2,7 @@
 
 24.3
 -----
+- [**] Added support to use third-party passkey providers and other devices passkeys as a WordPress.com login option [https://github.com/wordpress-mobile/WordPress-Android/pull/20174]
 
 
 24.2
