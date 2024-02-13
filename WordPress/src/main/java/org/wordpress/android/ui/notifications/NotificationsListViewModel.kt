@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.models.Note
@@ -36,6 +37,8 @@ class NotificationsListViewModel @Inject constructor(
 
     private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
     val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
+
+    val inlineActionEvents = MutableSharedFlow<InlineActionEvent>()
 
     val isNotificationsPermissionsWarningDismissed
         get() = appPrefsWrapper.notificationPermissionsWarningDismissed
