@@ -70,7 +70,7 @@ import javax.inject.Inject;
  * followed tags and followed blogs
  */
 public class ReaderSubsActivity extends LocaleAwareActivity
-        implements ReaderTagAdapter.TagDeletedListener {
+        implements ReaderTagAdapter.TagDeletedListener, ReaderTagAdapter.TagAddedListener {
     private EditText mEditAdd;
     private FloatingActionButton mFabButton;
     private ReaderFollowButton mBtnAdd;
@@ -176,8 +176,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         boolean shouldRefreshSubscriptions = false;
         if (mPageAdapter != null) {
             final ReaderTagFragment readerTagFragment = mPageAdapter.getReaderTagFragment();
-            final ReaderBlogFragment readerBlogFragment = mPageAdapter.getReaderBlogFragment();
-            if (readerTagFragment != null && readerBlogFragment != null) {
+            if (readerTagFragment != null) {
                 shouldRefreshSubscriptions = readerTagFragment.hasChangedSelectedTags();
             }
         }
@@ -497,8 +496,14 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagSlug())) {
             mLastAddedTagName = null;
         }
-        String labelRemovedTag = getString(R.string.reader_label_removed_tag);
-        showInfoSnackbar(String.format(labelRemovedTag, tag.getLabel()));
+    }
+
+    @Override public void onTagAdded(@NonNull ReaderTag readerTag) {
+        mReaderTracker.trackTag(
+                AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
+                readerTag.getTagSlug(),
+                ReaderTracker.SOURCE_SETTINGS
+        );
     }
 
     /*
