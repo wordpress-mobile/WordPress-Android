@@ -97,6 +97,10 @@ class DeepLinkNavigator
                 navigateAction.site,
                 navigateAction.siteMonitorType
             )
+            is NavigateAction.OpenMySiteWithMessage -> activityNavigator.openMySiteWithMessageInNewStack(
+                activity,
+                navigateAction.message
+            )
         }
         if (navigateAction != LoginForResult) {
             activity.finish()
@@ -134,5 +138,6 @@ class DeepLinkNavigator
         object DomainManagement : NavigateAction()
         data class OpenSiteMonitoringForSite(val site: SiteModel?, val siteMonitorType: SiteMonitorType) :
             NavigateAction()
+        data class OpenMySiteWithMessage(val message: Int) : NavigateAction()
     }
 }

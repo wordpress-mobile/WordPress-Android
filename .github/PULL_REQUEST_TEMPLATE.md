@@ -32,8 +32,9 @@ Fixes #
 
 -----
 
-## UI Changes Testing Checklist:
+## Testing Checklist:
 
+- [ ] WordPress.com sites and self-hosted Jetpack sites.
 - [ ] Portrait and landscape orientations.
 - [ ] Light and dark modes.
 - [ ] Fonts: Larger, smaller and bold text.

@@ -2006,6 +2006,8 @@
     <string name="error_media_file_type_not_allowed">This file type is not allowed</string>
     <string name="error_media_unexpected_empty_media_file_path">Unexpected empty file path for Media</string>
     <string name="error_media_could_not_find_media_in_path">Could not find media file in path</string>
+    <string name="error_media_could_not_share_media_from_device">Unable to load the media for sharing. Please check the app\'s permissions
+        or use the app\'s media library.</string>
     <string name="error_media_path_is_directory">The specified path is a directory instead of a Media file</string>
     <string name="error_media_upload_failed_for_reason">Media upload failed.\n%1$s</string>
     <string name="error_media_xmlrpc_not_allowed">Your action is not allowed</string>
@@ -2241,9 +2243,9 @@
     <string name="reader_empty_subscribed_tags_subtitle">Add tags here to find posts about your favorite topics</string>
     <string name="reader_no_followed_tags_title">No subscribed tags</string>
     <string name="reader_no_recommended_blogs_title">No recommended blogs</string>
-    <string name="reader_no_followed_blogs_title">@string/reader_filter_empty_blogs_list_title</string>
+    <string name="reader_no_followed_blogs_title" translatable="false">@string/reader_filter_empty_blogs_list_title</string>
     <string name="reader_no_followed_blogs_search_title">No blogs matching your search</string>
-    <string name="reader_no_followed_blogs_description">@string/reader_filter_empty_blogs_list_text</string>
+    <string name="reader_no_followed_blogs_description" translatable="false">@string/reader_filter_empty_blogs_list_text</string>
     <string name="reader_no_followed_blogs_description_subs">Subscribe to blogs in Discover or search for a blog that you like already.</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">The blogs you\'re subscribed to haven\'t posted anything recently</string>
@@ -3287,7 +3289,7 @@
     <string name="quick_start_dialog_enable_sharing_title" tools:ignore="UnusedResources">Enable post sharing</string>
     <string name="quick_start_dialog_follow_sites_message" translatable="false">@string/quick_start_list_follow_site_subtitle</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Select %1$s Reader %2$s to find other sites.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Use &lt;b&gt; Discover &lt;/b&gt; to find sites and tags. Try selecting %1$s Settings %2$s to add topics you like.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Use &lt;b&gt;Discover&lt;/b&gt; to find sites and tags. Try selecting &lt;b&gt;Subscriptions&lt;/b&gt; to view subscribed content and manage your subscriptions.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Use &lt;b&gt; Discover &lt;/b&gt; to find sites and tags.</string>
     <string name="quick_start_dialog_upload_media_message_short_plus" tools:ignore="UnusedResources">Select %1$s plus %2$s to upload media. You can add it to your posts/ pages from any device.</string>
     <string name="quick_start_dialog_follow_sites_title">Connect with other sites</string>
@@ -4878,4 +4880,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="site_monitoring_tab_title_php_logs">PHP Logs</string>
     <string name="site_monitoring_tab_title_web_server_logs">Web Server Logs</string>
     <string name="site_monitoring_cannot_be_started">We cannot open site monitoring at the moment. Please try again later</string>
+
+    <!-- Super Fast Media Upload QRCodeMediaLink -->
+    <string name="qrcode_media_deeplink_error">Site not found. Check that you are logged into the correct account.</string>
 </resources>
