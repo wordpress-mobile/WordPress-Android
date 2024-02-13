@@ -69,6 +69,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/note_avatar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/note_avatar"
+            app:tint="?attr/wpColorOnSurfaceMedium"
             tools:src="@drawable/star_empty" />
 
         <FrameLayout
