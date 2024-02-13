@@ -403,13 +403,7 @@ public class ReaderActivityLauncher {
 
     public static void sharePost(Context context, ReaderPost post) throws ActivityNotFoundException {
         String url = (post.hasShortUrl() ? post.getShortUrl() : post.getUrl());
-
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, url);
-        intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
-
-        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_link)));
+        ActivityLauncher.openShareIntent(context, url, post.getTitle());
     }
 
     public static void openUrl(Context context, String url, OpenUrlType openUrlType) {
