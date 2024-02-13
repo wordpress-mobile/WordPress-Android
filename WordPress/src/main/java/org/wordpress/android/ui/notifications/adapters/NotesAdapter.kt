@@ -278,8 +278,7 @@ class NotesAdapter(
             NoteType.NewPost,
             NoteType.Reblog,
             NoteType.Like -> {
-                // TODO: Use the icon from the Figma design
-                actionIcon.setImageResource(R.drawable.gb_ic_share)
+                actionIcon.setImageResource(R.drawable.block_share)
                 actionIcon.isVisible = true
                 actionIcon.setOnClickListener {
                     // TODO: handle tap on comment's inline action icon (the share icon)
