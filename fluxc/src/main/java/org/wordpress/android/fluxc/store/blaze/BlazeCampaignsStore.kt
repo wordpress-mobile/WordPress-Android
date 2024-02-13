@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store.blaze
 
 import kotlinx.coroutines.flow.map
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignCreationRequest
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingParameters
@@ -15,6 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRespon
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCreationRestClient
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
+import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingLanguageEntity
@@ -258,6 +260,22 @@ class BlazeCampaignsStore @Inject constructor(
             when {
                 payload.isError -> BlazeResult(BlazeError(payload.error))
                 else -> {
+                    BlazeResult(payload.data)
+                }
+            }
+        }
+    }
+
+    suspend fun createCampaign(
+        site: SiteModel,
+        request: BlazeCampaignCreationRequest
+    ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "create blaze campaign") {
+        creationRestClient.createCampaign(site, request).let { payload ->
+            when {
+                payload.isError -> BlazeResult(BlazeError(payload.error))
+                payload.data == null -> BlazeResult(BlazeError(type = GenericErrorType.UNKNOWN))
+                else -> {
+                    campaignsDao.insert(listOf(BlazeCampaignEntity.fromDomainModel(site.siteId, payload.data)))
                     BlazeResult(payload.data)
                 }
             }
