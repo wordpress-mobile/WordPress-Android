@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.models.Note
+import org.wordpress.android.models.Notification.PostNotification
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -75,5 +76,9 @@ class NotificationsListViewModel @Inject constructor(
                 NotificationsTable.saveNotes(it, false)
                 EventBus.getDefault().post(NotificationsChanged())
             }
+    }
+
+    sealed class InlineActionEvent {
+        data class SharePostButtonTapped(val notification: PostNotification): InlineActionEvent()
     }
 }
