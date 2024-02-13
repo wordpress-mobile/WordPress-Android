@@ -21,6 +21,15 @@ repositories {
 }
 
 android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlin {
+        jvmToolchain(17)
+    }
+
     namespace "org.wordpress.android.login"
 
     compileSdkVersion rootProject.compileSdkVersion
@@ -62,7 +71,8 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
 
-    implementation "com.google.android.gms:play-services-fido:$fidoVersion"
+    implementation "androidx.credentials:credentials:$credentialManagerVersion"
+    implementation "androidx.credentials:credentials-play-services-auth:$credentialManagerVersion"
 
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"

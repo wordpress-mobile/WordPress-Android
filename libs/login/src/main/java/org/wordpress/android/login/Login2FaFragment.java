@@ -2,7 +2,6 @@ package org.wordpress.android.login;
 
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -15,9 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.IntentSenderRequest;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,8 +22,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.fido.Fido;
-import com.google.android.gms.fido.fido2.api.common.PublicKeyCredential;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -36,7 +30,6 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateTwoFactorPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
-import org.wordpress.android.fluxc.store.AccountStore.FinishWebauthnChallengePayload;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialAuthPayload;
@@ -46,7 +39,8 @@ import org.wordpress.android.fluxc.store.AccountStore.StartWebauthnChallengePayl
 import org.wordpress.android.fluxc.store.AccountStore.WebauthnChallengeReceived;
 import org.wordpress.android.fluxc.store.AccountStore.WebauthnPasskeyAuthenticated;
 import org.wordpress.android.login.util.SiteUtils;
-import org.wordpress.android.login.webauthn.PasskeyCredentialsHandler;
+import org.wordpress.android.login.webauthn.PasskeyRequest;
+import org.wordpress.android.login.webauthn.PasskeyRequest.PasskeyRequestData;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
 import org.wordpress.android.util.AppLog;
@@ -59,7 +53,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static android.app.Activity.RESULT_OK;
 import static android.content.Context.CLIPBOARD_SERVICE;
 
 import dagger.android.support.AndroidSupportInjection;
@@ -125,8 +118,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     private boolean mIsSocialLoginConnect;
     private boolean mSentSmsCode;
     private List<SupportedAuthTypes> mSupportedAuthTypes;
-    @Nullable private PasskeyCredentialsHandler mPasskeyCredentialsHandler = null;
-    @Nullable private ActivityResultLauncher<IntentSenderRequest> mResultLauncher = null;
 
     public static Login2FaFragment newInstance(String emailAddress, String password) {
         Login2FaFragment fragment = new Login2FaFragment();
@@ -297,16 +288,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             mPhoneNumber = savedInstanceState.getString(KEY_SMS_NUMBER);
             mSentSmsCode = savedInstanceState.getBoolean(KEY_SMS_SENT);
         }
-
-        mResultLauncher =
-                registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        onCredentialsResultAvailable(result.getData());
-                    } else {
-                        handleWebauthnError();
-                    }
-                });
     }
 
     @Override
@@ -620,60 +601,49 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 .newStartSecurityKeyChallengeAction(payload));
     }
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWebauthnChallengeReceived(WebauthnChallengeReceived event) {
         if (event.isError()) {
-            endProgress();
-            handleAuthError(event.error.type, getString(R.string.login_error_security_key));
+            handleWebauthnError(event.error.type, getString(R.string.login_error_security_key));
             return;
         }
-        mPasskeyCredentialsHandler = new PasskeyCredentialsHandler(
+
+        PasskeyRequestData passkeyRequestData = new PasskeyRequestData(
                 event.mUserId,
-                event.mChallengeInfo
+                event.getWebauthnNonce(),
+                event.mJsonResponse.toString()
         );
-        mPasskeyCredentialsHandler.createIntentSender(
+
+        PasskeyRequest.create(
                 requireContext(),
-                intent -> {
-                    if (mResultLauncher != null) {
-                        mResultLauncher.launch(intent);
-                    }
-                });
-    }
-
-    private void onCredentialsResultAvailable(@NonNull Intent resultData) {
-        if (resultData.hasExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA)) {
-            byte[] credentialBytes = resultData.getByteArrayExtra(Fido.FIDO2_KEY_CREDENTIAL_EXTRA);
-            if (credentialBytes == null || mPasskeyCredentialsHandler == null) {
-                handleWebauthnError();
-                return;
-            }
-
-            PublicKeyCredential credentials =
-                    PublicKeyCredential.deserializeFromBytes(credentialBytes);
-            FinishWebauthnChallengePayload payload =
-                    mPasskeyCredentialsHandler.onCredentialsAvailable(credentials);
-            mDispatcher.dispatch(
-                    AuthenticationActionBuilder.newFinishSecurityKeyChallengeAction(payload));
-        }
+                passkeyRequestData,
+                result -> {
+                    mDispatcher.dispatch(result);
+                    return null;
+                },
+                error -> {
+                    String errorMessage = getString(R.string.login_error_security_key);
+                    handleWebauthnError(AuthenticationErrorType.WEBAUTHN_FAILED, errorMessage);
+                    return null;
+                }
+        );
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSecurityKeyCheckFinished(WebauthnPasskeyAuthenticated event) {
         if (event.isError()) {
-            endProgress();
-            handleAuthError(event.error.type, getString(R.string.login_error_security_key));
+            handleWebauthnError(event.error.type, getString(R.string.login_error_security_key));
             return;
         }
         mAnalyticsListener.trackLoginSecurityKeySuccess();
         doFinishLogin();
     }
 
-    private void handleWebauthnError() {
-        String errorMessage = getString(R.string.login_error_security_key);
+    private void handleWebauthnError(AuthenticationErrorType errorType, String errorMessage) {
         endProgress();
-        handleAuthError(AuthenticationErrorType.WEBAUTHN_FAILED, errorMessage);
+        handleAuthError(errorType, errorMessage);
+        getParentFragmentManager().popBackStack();
     }
 
     @NonNull private ArrayList<SupportedAuthTypes> handleSupportedAuthTypesParameter(
