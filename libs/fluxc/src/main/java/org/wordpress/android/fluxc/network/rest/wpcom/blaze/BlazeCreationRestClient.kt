@@ -236,7 +236,7 @@ class BlazeCreationRestClient @Inject constructor(
         }
     }
 
-    @Suppress("UNREACHABLE_CODE")
+    @Suppress("UNREACHABLE_CODE", "MagicNumber")
     @SuppressLint("SimpleDateFormat")
     suspend fun createCampaign(
         site: SiteModel,
@@ -490,6 +490,7 @@ private data class BlazeCampaignCreationNetworkResponse(
         val url: String
     )
 
+    @Suppress("MagicNumber")
     fun toDomainModel(): BlazeCampaignModel = BlazeCampaignModel(
         targetUrn = targetUrn,
         createdAt = Date(), // Set to current date, as the API does not return the actual creation date
