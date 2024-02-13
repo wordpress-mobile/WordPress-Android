@@ -5,9 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.models.Note
+import org.wordpress.android.models.Notification.PostNotification
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -35,6 +37,8 @@ class NotificationsListViewModel @Inject constructor(
 
     private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
     val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
+
+    val inlineActionEvents = MutableSharedFlow<InlineActionEvent>()
 
     val isNotificationsPermissionsWarningDismissed
         get() = appPrefsWrapper.notificationPermissionsWarningDismissed
@@ -75,5 +79,9 @@ class NotificationsListViewModel @Inject constructor(
                 NotificationsTable.saveNotes(it, false)
                 EventBus.getDefault().post(NotificationsChanged())
             }
+    }
+
+    sealed class InlineActionEvent {
+        data class SharePostButtonTapped(val notification: PostNotification): InlineActionEvent()
     }
 }

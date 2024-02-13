@@ -10,11 +10,15 @@ import android.view.animation.Animation.AnimationListener
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -45,6 +49,8 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment.Companio
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Follow
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Like
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Unread
+import org.wordpress.android.ui.notifications.NotificationsListViewModel.InlineActionEvent
+import org.wordpress.android.ui.notifications.NotificationsListViewModel.InlineActionEvent.SharePostButtonTapped
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.DataLoadedListener
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
@@ -404,11 +410,26 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     }
 
     private fun createOrGetNotesAdapter(): NotesAdapter {
-        return notesAdapter ?: NotesAdapter(requireActivity(), this, null).apply {
+        return notesAdapter ?: NotesAdapter( requireActivity(), this, null,
+            inlineActionEvents = viewModel.inlineActionEvents).apply {
             notesAdapter = this
             this.setOnNoteClickListener(mOnNoteClickListener)
+            viewModel.inlineActionEvents.flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .onEach(::handleInlineActionEvent)
+                .launchIn(viewLifecycleOwner.lifecycleScope)
         }
     }
+
+    private fun handleInlineActionEvent(actionEvent: InlineActionEvent) {
+        when (actionEvent) {
+            is SharePostButtonTapped -> actionEvent.notification.let { postNotification ->
+                context?.let {
+                    ActivityLauncher.openShareIntent(it, postNotification.url, postNotification.title)
+                }
+            }
+        }
+    }
+
 
     /**
      * Mark notifications as read in CURRENT tab, use filteredNotes instead of notes
