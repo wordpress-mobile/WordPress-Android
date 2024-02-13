@@ -9,6 +9,8 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeAdForecast
 import org.wordpress.android.fluxc.model.blaze.BlazeAdSuggestion
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignCreationRequest
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethod
 import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethodUrls
 import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethods
@@ -24,6 +26,7 @@ import org.wordpress.android.fluxc.utils.extensions.filterNotNull
 import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.days
 
 class BlazeCreationRestClient @Inject constructor(
     private val wpComNetwork: WPComNetwork
@@ -161,10 +164,10 @@ class BlazeCreationRestClient @Inject constructor(
                 "total_budget" to totalBudget.toString(),
                 "targeting" to targetingParameters?.let {
                     mapOf(
-                        "locations" to targetingParameters.locations?.map { it.id },
-                        "languages" to targetingParameters.languages?.map { it.id },
-                        "devices" to targetingParameters.devices?.map { it.id },
-                        "page_topics" to targetingParameters.topics?.map { it.id }
+                        "locations" to targetingParameters.locations,
+                        "languages" to targetingParameters.languages,
+                        "devices" to targetingParameters.devices,
+                        "page_topics" to targetingParameters.topics
                     ).filterNotNull()
                 }
             ).filterNotNull(),
@@ -225,6 +228,72 @@ class BlazeCreationRestClient @Inject constructor(
         delay(500)
         val response: WPComGsonRequestBuilder.Response<BlazePaymentMethodsResponse> =
             WPComGsonRequestBuilder.Response.Success(generateFakePaymentMethods())
+
+        return when (response) {
+            is WPComGsonRequestBuilder.Response.Success -> BlazePayload(response.data.toDomainModel())
+
+            is WPComGsonRequestBuilder.Response.Error -> BlazePayload(response.error)
+        }
+    }
+
+    @Suppress("UNREACHABLE_CODE")
+    @SuppressLint("SimpleDateFormat")
+    suspend fun createCampaign(
+        site: SiteModel,
+        request: BlazeCampaignCreationRequest
+    ): BlazePayload<BlazeCampaignModel> {
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
+
+        delay(500)
+        return BlazePayload(BlazeCampaignCreationNetworkResponse(
+            id = "campaign-0",
+            status = "pending",
+            targetUrn = "urn:wpcom:post:${site.siteId}:${request.targetResourceId}",
+            startTime = dateFormatter.format(request.startDate),
+            durationDays = (request.endDate.time - request.startDate.time) / 1.days.inWholeMilliseconds,
+            totalBudget = request.budget,
+            siteName = request.tagLine,
+            textSnippet = request.description,
+            targetURL = request.targetUrl,
+            mainImage = BlazeCampaignCreationNetworkResponse.BlazeImageNetworkModel(
+                url = request.mainImage.url
+            )
+        ).toDomainModel())
+
+        // TODO Use real API when it becomes ready
+        val body = mutableMapOf(
+            "origin" to request.origin,
+            "origin_version" to request.originVersion,
+            "target_urn" to "urn:wpcom:post:${site.siteId}:${request.targetResourceId}",
+            "type" to request.type.value,
+            "payment_method_id" to request.paymentMethodId,
+            "start_date" to dateFormatter.format(request.startDate),
+            "end_date" to dateFormatter.format(request.endDate),
+            "time_zone" to request.timeZoneId,
+            "total_budget" to request.budget,
+            "site_name" to request.tagLine,
+            "text_snippet" to request.description,
+            "target_url" to request.targetUrl,
+            "url_params" to request.urlParams.entries.joinToString(separator = "&") { "${it.key}=${it.value}" },
+            "main_image" to JsonObject().apply {
+                addProperty("url", request.mainImage.url)
+                addProperty("mime_type", request.mainImage.mimeType)
+            },
+            "targeting" to request.targetingParameters?.let {
+                mapOf(
+                    "locations" to it.locations,
+                    "languages" to it.languages,
+                    "devices" to it.devices,
+                    "page_topics" to it.topics
+                ).filterNotNull()
+            }
+        ).filterNotNull()
+
+        val response = wpComNetwork.executePostGsonRequest(
+            url = WPCOMV2.sites.site(site.siteId).wordads.dsp.api.v1_1.campaigns.url,
+            body = body,
+            clazz = BlazeCampaignCreationNetworkResponse::class.java
+        )
 
         return when (response) {
             is WPComGsonRequestBuilder.Response.Success -> BlazePayload(response.data.toDomainModel())
@@ -396,3 +465,43 @@ private class BlazePaymentMethodsResponse(
         }
     }
 }
+
+private data class BlazeCampaignCreationNetworkResponse(
+    val id: String,
+    val status: String,
+    @SerializedName("target_urn")
+    val targetUrn: String,
+    @SerializedName("start_time")
+    val startTime: String,
+    @SerializedName("duration_days")
+    val durationDays: Long,
+    @SerializedName("total_budget")
+    val totalBudget: Double,
+    @SerializedName("site_name")
+    val siteName: String,
+    @SerializedName("text_snippet")
+    val textSnippet: String,
+    @SerializedName("target_url")
+    val targetURL: String,
+    @SerializedName("main_image")
+    val mainImage: BlazeImageNetworkModel
+) {
+    data class BlazeImageNetworkModel(
+        val url: String
+    )
+
+    fun toDomainModel(): BlazeCampaignModel = BlazeCampaignModel(
+        targetUrn = targetUrn,
+        createdAt = Date(), // Set to current date, as the API does not return the actual creation date
+        endDate = Date(BlazeCampaignsUtils.stringToDate(startTime).time + durationDays.days.inWholeMilliseconds),
+        imageUrl = mainImage.url,
+        budgetCents = (totalBudget * 100).toLong(),
+        uiStatus = status,
+        // TODO revisit this when the API returns the actual values to confirm the format of IDs
+        campaignId = id.substringAfter("campaign-").toIntOrNull() ?: 0,
+        clicks = 0L,
+        impressions = 0L,
+        title = siteName
+    )
+}
+
