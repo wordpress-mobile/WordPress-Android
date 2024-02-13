@@ -1109,10 +1109,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_period_accessed";
             case STATS_VIEW_ALL_ACCESSED:
                 return "stats_view_all_accessed";
-            case STATS_NEXT_DATE_TAPPED:
-                return "stats_next_date_tapped";
             case STATS_DATE_TAPPED_BACKWARD:
                 return "stats_date_tapped_backward";
+            case STATS_DATE_TAPPED_FORWARD:
+                return "stats_date_tapped_forward";
             case STATS_INSIGHTS_TOTAL_LIKES_GUIDE_TAPPED:
                 return "stats_insights_total_likes_guide_tapped";
             case STATS_INSIGHTS_ACTION_BLOGGING_REMINDERS_CONFIRMED:

@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_NEXT_DATE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_DATE_TAPPED_FORWARD
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_DATE_TAPPED_BACKWARD
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
@@ -101,7 +101,7 @@ class SelectedDateProvider
     fun selectNextDate(statsGranularity: StatsGranularity) {
         val selectedDateState = getSelectedDateState(statsGranularity)
         if (selectedDateState.hasData()) {
-            analyticsTrackerWrapper.trackWithGranularity(STATS_NEXT_DATE_TAPPED, statsGranularity)
+            analyticsTrackerWrapper.trackWithGranularity(STATS_DATE_TAPPED_FORWARD, statsGranularity)
             updateSelectedDate(selectedDateState.copy(dateValue = selectedDateState.getNextDate()), statsGranularity)
         }
     }
