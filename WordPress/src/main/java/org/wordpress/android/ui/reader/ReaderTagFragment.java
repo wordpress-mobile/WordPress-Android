@@ -25,7 +25,8 @@ import java.util.Set;
 /*
  * fragment hosted by ReaderSubsActivity which shows followed tags
  */
-public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagDeletedListener {
+public class ReaderTagFragment extends Fragment
+        implements ReaderTagAdapter.TagDeletedListener, ReaderTagAdapter.TagAddedListener {
     private ReaderRecyclerView mRecyclerView;
     private ReaderTagAdapter mTagAdapter;
 
@@ -49,10 +50,10 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
         for (final ReaderTag readerTag : mInitialReaderTagList) {
             initialTagsSlugs.add(readerTag.getTagSlug());
         }
-        final List<ReaderTag> currentReaderTagList = getTagAdapter().getItems();
+        final List<ReaderTag> currentlySubscribedReaderTagList = getTagAdapter().getSubscribedItems();
         final Set<String> currentTagsSlugs = new HashSet<>();
-        if (currentReaderTagList != null) {
-            for (final ReaderTag readerTag : currentReaderTagList) {
+        if (currentlySubscribedReaderTagList != null) {
+            for (final ReaderTag readerTag : currentlySubscribedReaderTagList) {
                 currentTagsSlugs.add(readerTag.getTagSlug());
             }
         }
@@ -103,6 +104,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mTagAdapter = new ReaderTagAdapter(context);
             mTagAdapter.setTagDeletedListener(this);
+            mTagAdapter.setTagAddedListener(this);
             mTagAdapter.setDataLoadedListener(isEmpty -> {
                 checkEmptyView();
                 if (mIsFirstDataLoaded) {
@@ -131,6 +133,12 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
         // let the host activity know about the change
         if (getActivity() instanceof ReaderTagAdapter.TagDeletedListener) {
             ((ReaderTagAdapter.TagDeletedListener) getActivity()).onTagDeleted(tag);
+        }
+    }
+
+    @Override public void onTagAdded(@NonNull ReaderTag readerTag) {
+        if (getActivity() instanceof ReaderTagAdapter.TagDeletedListener) {
+            ((ReaderTagAdapter.TagAddedListener) getActivity()).onTagAdded(readerTag);
         }
     }
 }
