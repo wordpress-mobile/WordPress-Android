@@ -81,15 +81,12 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         }
     }
 
-    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         statsSection = arguments?.getSerializableCompat(LIST_TYPE)
             ?: activity?.intent?.getSerializableExtraCompat(LIST_TYPE)
                     ?: StatsSection.INSIGHTS
-
-        setHasOptionsMenu(statsSection == StatsSection.INSIGHTS)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -208,6 +205,12 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             initializeViews(savedInstanceState)
             initializeViewModels(nonNullActivity)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        @Suppress("DEPRECATION")
+        setHasOptionsMenu(statsSection == StatsSection.INSIGHTS)
     }
 
     override fun onDestroyView() {
