@@ -2869,7 +2869,7 @@
     <string name="premium_upgrades_message">You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.</string>
     <string name="show_purchases">Show purchases</string>
     <string name="checking_purchases">Checking purchases</string>
-    <string name="gravatar_info_description">"Gravatar keeps your profile information safe and up to date, automatically syncing any updates made here with your Gravatar profile."</string>
+    <string name="gravatar_info_description">Gravatar keeps your profile information safe and up to date, automatically syncing any updates made here with your Gravatar profile.</string>
     <string name="gravatar_info_learn_more_link">Learn more on Gravatar.com</string>
     <string name="gravatar_info_sync_message">Updates might take some time to sync with your Gravatar profile.</string>
     <string name="gravatar_info_sync_done_button">Done</string>
