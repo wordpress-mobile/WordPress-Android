@@ -164,7 +164,7 @@ class StatsViewModel
             analyticsTracker.track(stat = AnalyticsTracker.Stat.STATS_ACCESSED, site = statsSiteProvider.siteModel)
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
-            trackSectionSelected(initialSection ?: StatsSection.INSIGHTS)
+            trackSectionSelected(statsSectionManager.getSelectedSection())
 
             val initialGranularity = initialSection?.toStatsGranularity()
             if (initialGranularity != null && initialSelectedPeriod != null) {
