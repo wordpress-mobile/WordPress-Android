@@ -43,6 +43,7 @@
 /sites/$site/wordads/dsp/api/v1.1/suggestions
 /sites/$site/wordads/dsp/api/v1.1/forecast
 /sites/$site/wordads/dsp/api/v1.1/payment-methods
+/sites/$site/wordads/dsp/api/v1.1/campaigns
 
 /sites/$site/launch
 
