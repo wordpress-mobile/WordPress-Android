@@ -14,19 +14,17 @@ import android.view.ViewGroup.MarginLayoutParams
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.annotation.StringRes
 import androidx.core.text.BidiFormatter
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.NotificationsTable
@@ -37,7 +35,6 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Note.NoteTimeGroup
 import org.wordpress.android.models.Note.TimeStampComparator
-import org.wordpress.android.models.NoteType
 import org.wordpress.android.models.Notification
 import org.wordpress.android.models.Notification.Comment
 import org.wordpress.android.models.Notification.PostNotification
@@ -78,8 +75,10 @@ class NotesAdapter(
 
     @Inject
     lateinit var siteStore: SiteStore
+
     @Inject
     lateinit var commentStoreAdapter: CommentsStoreAdapter
+
     @Inject
     lateinit var postLikeUseCase: PostLikeUseCase
 
@@ -292,35 +291,6 @@ class NotesAdapter(
     }
 
     private fun Note.shouldShowMultipleAvatars() = isFollowType || isLikeType || isCommentLikeType
-    private fun handlePostLikeAction(note: Note, holder: NoteViewHolder) {
-        val post = ReaderPostTable.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true) ?: return
-        if(post.canLikePost().not()) return
-
-        val icon = if (post.isLikedByCurrentUser) R.drawable.star_filled else R.drawable.star_empty
-        GlobalScope.launch { postLikeUseCase.perform(post, !post.isLikedByCurrentUser, "notification") }
-    }
-
-    private fun handleCommentLikeAction(note: Note, holder: NoteViewHolder) {
-        val canLike = note.canLike()
-        if (canLike.not()) return
-
-        val site = siteStore.getSiteBySiteId(note.siteId.toLong())!!
-        val comment = commentStoreAdapter.getCommentBySiteAndRemoteId(site, note.commentId)!!
-        val icon = if (comment.iLike) R.drawable.star_filled else R.drawable.star_empty
-        holder.actionIcon.isVisible = true
-        holder.actionIcon.setImageDrawable(AppCompatResources.getDrawable(holder.contentView.context, icon))
-        holder.actionIcon.setOnClickListener {
-            commentStoreAdapter.dispatch(
-                CommentActionBuilder.newLikeCommentAction(
-                    RemoteLikeCommentPayload(site, comment, comment.iLike.not())
-                )
-            )
-            comment.iLike = comment.iLike.not()
-            val iconId = if (comment.iLike) R.drawable.star_filled else R.drawable.star_empty
-            holder.actionIcon.setImageDrawable(AppCompatResources.getDrawable(holder.contentView.context, iconId))
-            EventBus.getDefault().postSticky(NoteLikeOrModerationStatusChanged(note.id))
-        }
-    }
 
     private fun handleMaxLines(subject: TextView, detail: TextView) {
         subject.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
@@ -407,27 +377,53 @@ class NotesAdapter(
         @Suppress("ForbiddenComment")
         fun bindInlineActionIconsForNote(note: Note) = Notification.from(note).let { notification ->
             when (notification) {
-                Comment -> {
-                    actionIcon.setImageResource(R.drawable.star_empty)
-                    actionIcon.isVisible = true
-                    actionIcon.setOnClickListener {
-                        // TODO: handle tap on comment's inline action icon (the star)
-                    }
-                }
-                is PostNotification -> {
-                    actionIcon.setImageResource(R.drawable.block_share)
-                    actionIcon.isVisible = true
-                    actionIcon.setOnClickListener {
-                        coroutineScope.launch {
-                            inlineActionEvents.emit(
-                                InlineActionEvent.SharePostButtonTapped(notification)
-                            )
-                        }
-                    }
-                }
+                Comment -> bindLikeCommentAction(note)
+                is PostNotification.NewPost -> bindLikePostAction(note)
+                is PostNotification -> bindShareAction(notification)
                 is Unknown -> {
                     actionIcon.isVisible = false
                 }
+            }
+        }
+
+        private fun bindShareAction(notification: PostNotification) {
+            actionIcon.setImageResource(R.drawable.block_share)
+            actionIcon.isVisible = true
+            actionIcon.setOnClickListener {
+                coroutineScope.launch {
+                    inlineActionEvents.emit(
+                        InlineActionEvent.SharePostButtonTapped(notification)
+                    )
+                }
+            }
+        }
+
+        private fun bindLikePostAction(note: Note) {
+            val post = ReaderPostTable.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true) ?: return
+            if (post.canLikePost().not()) return
+            actionIcon.isVisible = true
+            val icon = if (post.isLikedByCurrentUser) R.drawable.star_filled else R.drawable.star_empty
+            actionIcon.setImageResource(icon)
+//            GlobalScope.launch { postLikeUseCase.perform(post, !post.isLikedByCurrentUser, "notification") }
+        }
+
+        private fun bindLikeCommentAction(note: Note) {
+            if (note.canLike().not()) return
+            val site = siteStore.getSiteBySiteId(note.siteId.toLong()) ?: return
+            actionIcon.isVisible = true
+            actionIcon.setImageResource(if (note.hasLikedComment()) R.drawable.star_filled else R.drawable.star_empty)
+            ImageViewCompat.setImageTintList(actionIcon, null)
+
+            actionIcon.setOnClickListener {
+                val liked = note.hasLikedComment().not()
+                commentStoreAdapter.dispatch(
+                    CommentActionBuilder.newLikeCommentAction(
+                        RemoteLikeCommentPayload(site, note.commentId, liked)
+                    )
+                )
+                note.setLikedComment(liked)
+                actionIcon.setImageResource(if (liked) R.drawable.star_filled else R.drawable.star_empty)
+                EventBus.getDefault().postSticky(NoteLikeOrModerationStatusChanged(note.id))
             }
         }
     }
@@ -471,15 +467,19 @@ class NotesAdapter(
                     FILTERS.FILTER_COMMENT -> if (currentNote.isCommentType) {
                         filteredNotes.add(currentNote)
                     }
+
                     FILTERS.FILTER_FOLLOW -> if (currentNote.isFollowType) {
                         filteredNotes.add(currentNote)
                     }
+
                     FILTERS.FILTER_UNREAD -> if (currentNote.isUnread) {
                         filteredNotes.add(currentNote)
                     }
+
                     FILTERS.FILTER_LIKE -> if (currentNote.isLikeType) {
                         filteredNotes.add(currentNote)
                     }
+
                     else -> Unit
                 }
             }
