@@ -10,7 +10,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -33,11 +32,13 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TRAFFIC
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
+import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -57,6 +58,9 @@ class StatsViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var statsSectionManager: SelectedSectionManager
+
+    @Mock
+    lateinit var selectedTrafficGranularityManager: SelectedTrafficGranularityManager
 
     @Mock
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
@@ -97,6 +101,8 @@ class StatsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         whenever(baseListUseCase.snackbarMessage).thenReturn(MutableLiveData())
+        whenever(statsSectionManager.getSelectedSection()).thenReturn(TRAFFIC)
+        whenever(selectedTrafficGranularityManager.getSelectedTrafficGranularity()).thenReturn(StatsGranularity.DAYS)
         whenever(statsSectionManager.liveSelectedSection).thenReturn(liveSelectedSection)
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         viewModel = StatsViewModel(
@@ -105,6 +111,7 @@ class StatsViewModelTest : BaseUnitTest() {
             testDispatcher(),
             selectedDateProvider,
             statsSectionManager,
+            selectedTrafficGranularityManager,
             analyticsTracker,
             networkUtilsWrapper,
             statsSiteProvider,
@@ -126,9 +133,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(INSIGHTS)
 
         verify(statsSectionManager).setSelectedSection(INSIGHTS)
-        /* First one is default insights section selection which is set when no value is passed to vm for
-           initial section */
-        verify(analyticsTracker, times(2)).track(STATS_INSIGHTS_ACCESSED)
+        verify(analyticsTracker).track(STATS_INSIGHTS_ACCESSED)
     }
 
     @Test
