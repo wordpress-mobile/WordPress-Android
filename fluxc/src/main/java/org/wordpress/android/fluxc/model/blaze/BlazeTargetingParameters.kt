@@ -1,8 +1,8 @@
 package org.wordpress.android.fluxc.model.blaze
 
 data class BlazeTargetingParameters(
-    val locations: List<BlazeTargetingLocation>? = null,
-    val languages: List<BlazeTargetingLanguage>? = null,
-    val devices: List<BlazeTargetingDevice>? = null,
-    val topics: List<BlazeTargetingTopic>? = null
+    val locations: List<Long>? = null,
+    val languages: List<String>? = null,
+    val devices: List<String>? = null,
+    val topics: List<String>? = null
 )
