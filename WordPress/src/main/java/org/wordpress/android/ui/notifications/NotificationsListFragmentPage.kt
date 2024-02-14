@@ -28,6 +28,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION
 import org.wordpress.android.databinding.NotificationsListFragmentPageBinding
 import org.wordpress.android.datasets.NotificationsTable
+import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -56,6 +57,10 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter.DataLoadedLi
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.utils.NotificationsActions
+import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.actions.ReaderActions
+import org.wordpress.android.ui.reader.actions.ReaderPostActions
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -525,21 +530,63 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             if (noteId == null || activity == null || activity.isFinishing) {
                 return
             }
-            val detailIntent = getOpenNoteIntent(activity, noteId)
-            detailIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard)
-            if (!TextUtils.isEmpty(replyText)) {
-                detailIntent.putExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA, replyText)
-            }
-            detailIntent.putExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA, filter)
-            detailIntent.putExtra(
-                NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION,
-                isTappedFromPushNotification
+            canOpenInTheReader(noteId,
+                openInTheReader = { siteId, postId, commentId ->
+                    ReaderActivityLauncher.showReaderComments(
+                        activity,
+                        siteId,
+                        postId,
+                        commentId,
+                        ThreadedCommentsActionSource.COMMENT_NOTIFICATION.sourceDescription
+                    )
+                },
+                openDetailView = {
+                    val detailIntent = getOpenNoteIntent(activity, noteId)
+                    detailIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard)
+                    if (!TextUtils.isEmpty(replyText)) {
+                        detailIntent.putExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA, replyText)
+                    }
+                    detailIntent.putExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA, filter)
+                    detailIntent.putExtra(
+                        NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION,
+                        isTappedFromPushNotification
+                    )
+                    openNoteForReplyWithParams(detailIntent, activity)
+                }
             )
-            openNoteForReplyWithParams(detailIntent, activity)
         }
 
         private fun openNoteForReplyWithParams(detailIntent: Intent, activity: Activity) {
             activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL)
+        }
+
+        private fun canOpenInTheReader(
+            noteId: String,
+            openInTheReader: (siteId: Long, postId: Long, commentId: Long) -> Unit,
+            openDetailView: () -> Unit
+        ) {
+            val note = NotificationsTable.getNoteById(noteId)
+            if (note != null && note.isCommentType && !note.canModerate()) {
+                val readerPost = ReaderPostTable.getBlogPost(note.siteId.toLong(), note.postId.toLong(), false)
+                if (readerPost != null) {
+                    openInTheReader(note.siteId.toLong(), note.postId.toLong(), note.commentId)
+                } else {
+                    ReaderPostActions.requestBlogPost(
+                        note.siteId.toLong(),
+                        note.postId.toLong(),
+                        object : ReaderActions.OnRequestListener<String> {
+                            override fun onSuccess(result: String?) {
+                                openInTheReader(note.siteId.toLong(), note.postId.toLong(), note.commentId)
+                            }
+
+                            override fun onFailure(statusCode: Int) {
+                                openDetailView()
+                            }
+                        })
+                }
+            } else {
+                openDetailView()
+            }
         }
     }
 }
