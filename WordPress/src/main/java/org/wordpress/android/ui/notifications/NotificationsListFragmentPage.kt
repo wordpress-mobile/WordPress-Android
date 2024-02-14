@@ -26,6 +26,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_INLINE_ACTION_TAPPED
 import org.wordpress.android.databinding.NotificationsListFragmentPageBinding
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.fluxc.model.CommentStatus
@@ -62,6 +63,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
@@ -82,6 +84,9 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
 
     @Inject
     lateinit var gcmMessageHandler: GCMMessageHandler
+
+    @Inject
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private val showNewUnseenNotificationsRunnable = Runnable {
         if (isAdded) {
@@ -421,6 +426,9 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     }
 
     private fun handleInlineActionEvent(actionEvent: InlineActionEvent) {
+        analyticsTrackerWrapper.track(NOTIFICATIONS_INLINE_ACTION_TAPPED, mapOf(
+            InlineActionEvent.KEY_INLINE_ACTION to actionEvent::class.simpleName
+        ))
         when (actionEvent) {
             is SharePostButtonTapped -> actionEvent.notification.let { postNotification ->
                 context?.let {

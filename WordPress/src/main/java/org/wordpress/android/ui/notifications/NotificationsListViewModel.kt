@@ -83,5 +83,9 @@ class NotificationsListViewModel @Inject constructor(
 
     sealed class InlineActionEvent {
         data class SharePostButtonTapped(val notification: PostNotification): InlineActionEvent()
+
+        companion object {
+            val KEY_INLINE_ACTION = "inline_action"
+        }
     }
 }
