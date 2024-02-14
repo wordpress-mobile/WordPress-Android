@@ -1073,8 +1073,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_accessed";
             case STATS_ACCESS_ERROR:
                 return "stats_access_error";
-            case STATS_TRAFFIC_ACCESSED:
-                return "stats_traffic_accessed";
             case STATS_INSIGHTS_ACCESSED:
                 return "stats_insights_accessed";
             case STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED:
@@ -1099,6 +1097,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_insights_management_type_removed";
             case STATS_INSIGHTS_MANAGEMENT_TYPE_REORDERED:
                 return "stats_insights_management_type_reordered";
+            case STATS_PERIOD_ACCESSED:
+                return "stats_period_accessed";
             case STATS_PERIOD_DAYS_ACCESSED:
                 return "stats_period_accessed";
             case STATS_PERIOD_WEEKS_ACCESSED:

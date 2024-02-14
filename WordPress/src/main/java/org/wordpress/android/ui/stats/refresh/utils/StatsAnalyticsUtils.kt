@@ -14,6 +14,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 private const val TAP_SOURCE_PROPERTY = "tap_source"
 private const val GRANULARITY_PROPERTY = "granularity"
+private const val PERIOD_PROPERTY = "period"
 private const val DAYS_PROPERTY = "days"
 private const val WEEKS_PROPERTY = "weeks"
 private const val MONTHS_PROPERTY = "months"
@@ -32,15 +33,8 @@ private const val CHIP_VISITORS__PROPERTY = "visitors"
 fun AnalyticsTrackerWrapper.trackStatsAccessed(site: SiteModel, tapSource: String) =
     track(stat = Stat.STATS_ACCESSED, site = site, properties = mutableMapOf(TAP_SOURCE_PROPERTY to tapSource))
 
-fun AnalyticsTrackerWrapper.trackGranular(stat: Stat, granularity: StatsGranularity) {
-    val property = when (granularity) {
-        StatsGranularity.DAYS -> DAYS_PROPERTY
-        StatsGranularity.WEEKS -> WEEKS_PROPERTY
-        StatsGranularity.MONTHS -> MONTHS_PROPERTY
-        StatsGranularity.YEARS -> YEARS_PROPERTY
-    }
-    this.track(stat, mapOf(GRANULARITY_PROPERTY to property))
-}
+fun AnalyticsTrackerWrapper.trackGranular(stat: Stat, granularity: StatsGranularity) =
+    track(stat, mapOf(GRANULARITY_PROPERTY to getPropertyByGranularity(granularity)))
 
 fun AnalyticsTrackerWrapper.trackViewsVisitorsChips(position: Int) {
     val property = when (position) {
@@ -50,8 +44,14 @@ fun AnalyticsTrackerWrapper.trackViewsVisitorsChips(position: Int) {
     this.track(STATS_INSIGHTS_VIEWS_VISITORS_TOGGLED, mapOf(TYPE to property))
 }
 
-fun AnalyticsTrackerWrapper.trackWithGranularity(stat: Stat, granularity: StatsGranularity) {
-    this.track(stat, mapOf(GRANULARITY_PROPERTY to granularity))
+fun AnalyticsTrackerWrapper.trackWithGranularity(stat: Stat, granularity: StatsGranularity) =
+    track(stat, mapOf(PERIOD_PROPERTY to getPropertyByGranularity(granularity)))
+
+private fun getPropertyByGranularity(granularity: StatsGranularity) = when (granularity) {
+    StatsGranularity.DAYS -> DAYS_PROPERTY
+    StatsGranularity.WEEKS -> WEEKS_PROPERTY
+    StatsGranularity.MONTHS -> MONTHS_PROPERTY
+    StatsGranularity.YEARS -> YEARS_PROPERTY
 }
 
 fun AnalyticsTrackerWrapper.trackWithType(stat: Stat, insightType: InsightType) {

@@ -15,6 +15,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
@@ -124,6 +125,15 @@ class StatsViewModelTest : BaseUnitTest() {
         )
 
         viewModel.start(1, StatsActivity.StatsLaunchedFrom.QUICK_ACTIONS, TRAFFIC, null, false, null)
+    }
+
+    @Test
+    fun `tracks tab traffic selection`() {
+        startViewModel()
+
+        // The TRAFFIC tab is already the initial tab.
+
+        verify(analyticsTracker).trackGranular(STATS_PERIOD_ACCESSED, StatsGranularity.DAYS)
     }
 
     @Test
