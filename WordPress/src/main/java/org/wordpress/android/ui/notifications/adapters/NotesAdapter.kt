@@ -1,4 +1,5 @@
 @file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.notifications.adapters
 
 import android.annotation.SuppressLint
@@ -404,20 +405,24 @@ class NotesAdapter(
 
         private fun bindLikeCommentAction(note: Note) {
             if (note.canLike().not()) return
-
-            actionIcon.isVisible = true
-            actionIcon.setImageResource(if (note.hasLikedComment()) R.drawable.star_filled else R.drawable.star_empty)
-            ImageViewCompat.setImageTintList(actionIcon, null)
-
+            setupLikeIcon(note.hasLikedComment())
             actionIcon.setOnClickListener {
                 val liked = note.hasLikedComment().not()
-                actionIcon.setImageResource(if (liked) R.drawable.star_filled else R.drawable.star_empty)
+                setupLikeIcon(liked)
                 coroutineScope.launch {
                     inlineActionEvents.emit(
                         InlineActionEvent.LikeCommentButtonTapped(note, liked)
                     )
                 }
             }
+        }
+
+        private fun setupLikeIcon(liked: Boolean) {
+            actionIcon.isVisible = true
+            actionIcon.setImageResource(if (liked) R.drawable.star_filled else R.drawable.star_empty)
+            val color = if (liked) contentView.context.getColor(R.color.inline_action_filled)
+            else contentView.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
+            ImageViewCompat.setImageTintList(actionIcon, ColorStateList.valueOf(color))
         }
     }
 
