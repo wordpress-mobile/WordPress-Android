@@ -14,9 +14,12 @@ import android.text.TextUtils
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -50,8 +53,10 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.about.UnifiedAboutActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
+import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.debug.DebugSettingsActivity
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
+import org.wordpress.android.ui.gravatar.GravatarBottomSheet
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
@@ -147,8 +152,11 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     private val viewModel: MeViewModel by viewModels()
 
+    private var bottomSheetIsVisible = MutableLiveData(false)
+
     private val shouldShowDomainButton
         get() = BuildConfig.IS_JETPACK_APP && domainManagementFeatureConfig.isEnabled() && accountStore.hasAccessToken()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
@@ -162,8 +170,30 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         binding = MeFragmentBinding.bind(view).apply {
             setupViews()
             setupObservers(savedInstanceState)
+            setupGravatarBottomSheet()
         }
     }
+
+    private fun MeFragmentBinding.setupGravatarBottomSheet() {
+        composeView.setContent {
+            AppTheme {
+                val openBottomSheet by bottomSheetIsVisible.observeAsState(false)
+                GravatarBottomSheet(
+                    openBottomSheet = openBottomSheet,
+                    onBottomSheetDismiss = { bottomSheetIsVisible.postValue(false) },
+                    onContinueClicked = {
+                        bottomSheetIsVisible.postValue(false)
+                        AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
+                        showPhotoPickerForGravatar()
+                    },
+                    onLearnMoreClicked = {
+                        ActivityLauncher.openUrlExternal(activity, GRAVATAR_URL)
+                    },
+                )
+            }
+        }
+    }
+
 
     @Suppress("LongMethod")
     private fun MeFragmentBinding.setupViews() {
@@ -184,8 +214,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         addJetpackBadgeIfNeeded()
 
         val showPickerListener = OnClickListener {
-            AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
-            showPhotoPickerForGravatar()
+            bottomSheetIsVisible.postValue(true)
         }
         avatarContainer.setOnClickListener(showPickerListener)
         rowMyProfile.setOnClickListener {
@@ -709,6 +738,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     companion object {
         private const val IS_DISCONNECTING = "IS_DISCONNECTING"
         private const val IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR"
+        private const val GRAVATAR_URL = "https://www.gravatar.com"
+
         fun newInstance(): MeFragment {
             return MeFragment()
         }

@@ -238,7 +238,7 @@
                     android:id="@+id/me_design_system_settings"
                     style="@style/MeListRowTextView"
                     android:text="@string/preference_design_system" />
-                
+
             </LinearLayout>
 
             <View
@@ -398,4 +398,9 @@
                 tools:visibility="visible" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
