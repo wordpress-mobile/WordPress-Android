@@ -673,8 +673,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
         is SiteNavigationAction.EditScheduledPost ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
-        is SiteNavigationAction.OpenStatsInsights ->
-            ActivityLauncher.viewBlogStatsForTimeframe(requireActivity(), action.site, StatsTimeframe.INSIGHTS)
+
+        is SiteNavigationAction.OpenStatsInsights -> ActivityLauncher.viewBlogStatsForTimeframe(
+            requireActivity(),
+            action.site,
+            StatsTimeframe.INSIGHTS,
+            StatsActivity.StatsLaunchedFrom.TODAY_STATS_CARD
+        )
+
         is SiteNavigationAction.OpenExternalUrl ->
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
         is SiteNavigationAction.OpenUrlInWebView ->
