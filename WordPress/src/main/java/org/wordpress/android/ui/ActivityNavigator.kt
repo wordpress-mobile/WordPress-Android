@@ -186,5 +186,19 @@ class ActivityNavigator @Inject constructor() {
             .addNextIntent(intent)
             .startActivities()
     }
-}
 
+    fun openMySiteWithMessageInNewStack(
+        context: Context,
+        message: Int
+    ) {
+        val taskStackBuilder = TaskStackBuilder.create(context)
+        val mainActivityIntent = getMainActivityInNewStack(context)
+        val intent = Intent(context, WPMainActivity::class.java)
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_MY_SITE)
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE_MESSAGE, message)
+        taskStackBuilder
+            .addNextIntent(mainActivityIntent)
+            .addNextIntent(intent)
+            .startActivities()
+    }
+}
