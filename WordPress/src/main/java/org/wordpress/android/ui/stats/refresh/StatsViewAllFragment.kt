@@ -35,6 +35,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getParcelableExtraCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
@@ -61,6 +62,10 @@ class StatsViewAllFragment : Fragment(R.layout.stats_view_all_fragment) {
 
     @Inject
     lateinit var uiHelpers: UiHelpers
+
+    @Inject
+    lateinit var trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+
     private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private var binding: StatsViewAllFragmentBinding? = null
@@ -283,7 +288,7 @@ class StatsViewAllFragment : Fragment(R.layout.stats_view_all_fragment) {
     private fun loadData(recyclerView: RecyclerView, data: List<BlockListItem>) {
         val adapter: BlockListAdapter
         if (recyclerView.adapter == null) {
-            adapter = BlockListAdapter(imageManager)
+            adapter = BlockListAdapter(imageManager, trafficTabFeatureConfig.isEnabled())
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as BlockListAdapter
