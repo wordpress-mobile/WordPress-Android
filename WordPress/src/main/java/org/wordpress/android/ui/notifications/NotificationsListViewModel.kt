@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.datasets.NotificationsTable
+import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Notification.PostNotification
 import org.wordpress.android.modules.UI_THREAD
@@ -17,6 +18,8 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NO
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsChanged
 import org.wordpress.android.ui.notifications.utils.NotificationsActions
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.actions.ReaderActions
+import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -79,6 +82,35 @@ class NotificationsListViewModel @Inject constructor(
                 NotificationsTable.saveNotes(it, false)
                 EventBus.getDefault().post(NotificationsChanged())
             }
+    }
+
+    fun openNote(
+        noteId: String?,
+        openInTheReader: (siteId: Long, postId: Long, commentId: Long) -> Unit,
+        openDetailView: () -> Unit
+    ) {
+        val note = NotificationsTable.getNoteById(noteId)
+        if (note != null && note.isCommentType && !note.canModerate()) {
+            val readerPost = ReaderPostTable.getBlogPost(note.siteId.toLong(), note.postId.toLong(), false)
+            if (readerPost != null) {
+                openInTheReader(note.siteId.toLong(), note.postId.toLong(), note.commentId)
+            } else {
+                ReaderPostActions.requestBlogPost(
+                    note.siteId.toLong(),
+                    note.postId.toLong(),
+                    object : ReaderActions.OnRequestListener<String> {
+                        override fun onSuccess(result: String?) {
+                            openInTheReader(note.siteId.toLong(), note.postId.toLong(), note.commentId)
+                        }
+
+                        override fun onFailure(statusCode: Int) {
+                            openDetailView()
+                        }
+                    })
+            }
+        } else {
+            openDetailView()
+        }
     }
 
     sealed class InlineActionEvent {
