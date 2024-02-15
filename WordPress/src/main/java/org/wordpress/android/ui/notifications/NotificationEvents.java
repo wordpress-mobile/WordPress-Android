@@ -27,16 +27,6 @@ public class NotificationEvents {
         }
     }
 
-    /**
-     * Event fired when a note is liked or unliked from the Like comment inline action
-     */
-    public static class NoteLikeCommentActionPerformed {
-        public final Note note;
-        public NoteLikeCommentActionPerformed(@NonNull final Note note) {
-            this.note = note;
-        }
-    }
-
     public static class NotificationsSettingsStatusChanged {
         final String mMessage;
 

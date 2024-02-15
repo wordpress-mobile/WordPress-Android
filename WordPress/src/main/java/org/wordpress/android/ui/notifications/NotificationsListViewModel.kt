@@ -18,7 +18,6 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NOTIFICATIONS
-import org.wordpress.android.ui.notifications.NotificationEvents.NoteLikeCommentActionPerformed
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsChanged
 import org.wordpress.android.ui.notifications.utils.NotificationsActions
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -42,6 +41,9 @@ class NotificationsListViewModel @Inject constructor(
 
     private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
     val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
+
+    private val _updatedNote = MutableLiveData<Note>()
+    val updatedNote: LiveData<Note> = _updatedNote
 
     val inlineActionEvents = MutableSharedFlow<InlineActionEvent>()
 
@@ -81,7 +83,7 @@ class NotificationsListViewModel @Inject constructor(
     fun likeComment(note: Note, liked: Boolean) {
         val site = siteStore.getSiteBySiteId(note.siteId.toLong()) ?: return
         note.setLikedComment(liked)
-        EventBus.getDefault().post(NoteLikeCommentActionPerformed(note))
+        _updatedNote.postValue(note)
         viewModelScope.launch {
             val result = commentStore.likeComment(site, note.commentId, null, liked)
             if (result.isError.not()) {

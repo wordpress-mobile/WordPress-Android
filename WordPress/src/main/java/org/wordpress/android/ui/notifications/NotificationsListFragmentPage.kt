@@ -140,6 +140,9 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             layoutNewNotificatons.visibility = View.GONE
             layoutNewNotificatons.setOnClickListener { onScrollToTop() }
         }
+        viewModel.updatedNote.observe(viewLifecycleOwner) {
+            createOrGetNotesAdapter().updateNote(it)
+        }
     }
 
     override fun onDestroyView() {
@@ -454,14 +457,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                 NoteLikeOrModerationStatusChanged::class.java
             )
         }
-    }
-
-    @Subscribe(threadMode = MAIN)
-    fun onEventMainThread(event: NotificationEvents.NoteLikeCommentActionPerformed) {
-        if (!isAdded) {
-            return
-        }
-        notesAdapter!!.updateNote(event.note)
     }
 
     @Subscribe(threadMode = MAIN)
