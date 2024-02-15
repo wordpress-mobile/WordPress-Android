@@ -41,6 +41,7 @@ class ListItemActionHandler @Inject constructor(
             ListItemAction.COMMENTS -> SiteNavigationAction.OpenUnifiedComments(selectedSite)
             ListItemAction.BLAZE -> onBlazeMenuItemClick()
             ListItemAction.MORE -> SiteNavigationAction.OpenMore(selectedSite, quickStartEvent)
+            ListItemAction.SITE_MONITORING -> SiteNavigationAction.OpenSiteMonitoring(selectedSite)
         }
     }
 

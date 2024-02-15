@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
@@ -27,6 +28,8 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -35,11 +38,17 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
         void onTagDeleted(ReaderTag tag);
     }
 
+    public interface TagAddedListener {
+        void onTagAdded(@NonNull ReaderTag readerTag);
+    }
+
     @Inject AccountStore mAccountStore;
     private final WeakReference<Context> mWeakContext;
     private final ReaderTagList mTags = new ReaderTagList();
     private TagDeletedListener mTagDeletedListener;
+    private TagAddedListener mTagAddedListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
+    private final Map<String, Boolean> mTagSlugIsFollowedMap = new HashMap<>();
 
     public ReaderTagAdapter(Context context) {
         super();
@@ -50,6 +59,10 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
 
     public void setTagDeletedListener(TagDeletedListener listener) {
         mTagDeletedListener = listener;
+    }
+
+    public void setTagAddedListener(@NonNull final TagAddedListener listener) {
+        mTagAddedListener = listener;
     }
 
     public void setDataLoadedListener(ReaderInterfaces.DataLoadedListener listener) {
@@ -93,38 +106,59 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
         return new TagViewHolder(view);
     }
 
+    @Nullable
+    public ReaderTagList getItems() {
+        return mTags;
+    }
+
+    @Nullable
+    public ReaderTagList getSubscribedItems() {
+        final ReaderTagList readerSubscribedTagsList = new ReaderTagList();
+        for (final ReaderTag readerTag : mTags) {
+            if (Boolean.TRUE.equals(mTagSlugIsFollowedMap.get(readerTag.getTagSlug()))) {
+                readerSubscribedTagsList.add(readerTag);
+            }
+        }
+        return readerSubscribedTagsList;
+    }
+
     @Override
     public void onBindViewHolder(TagViewHolder holder, int position) {
         final ReaderTag tag = mTags.get(position);
         holder.mTxtTagName.setText(tag.getLabel());
-        holder.mRemoveFollowButton.setOnClickListener(v -> performDeleteTag(tag));
+        holder.mRemoveFollowButton.setOnClickListener(view -> performDeleteTag(tag, holder.mRemoveFollowButton));
     }
 
-    private void performDeleteTag(@NonNull ReaderTag tag) {
+    private void performDeleteTag(@NonNull ReaderTag tag, @NonNull final ReaderFollowButton readerFollowButton) {
         if (!NetworkUtils.checkConnection(getContext())) {
             return;
         }
 
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (!succeeded && hasContext()) {
-                    ToastUtils.showToast(getContext(), R.string.reader_toast_err_remove_tag);
-                    refresh();
-                }
+        final boolean isFollowingCurrent = Boolean.TRUE.equals(mTagSlugIsFollowedMap.get(tag.getTagSlug()));
+        final boolean isFollowingNew = !isFollowingCurrent;
+        readerFollowButton.setIsFollowed(isFollowingNew);
+
+        // Disable follow button until API call returns
+        readerFollowButton.setEnabled(false);
+
+        ReaderActions.ActionListener actionListener = succeeded -> {
+            mTagSlugIsFollowedMap.put(tag.getTagSlug(), isFollowingNew);
+            readerFollowButton.setEnabled(true);
+            if (!succeeded && hasContext()) {
+                ToastUtils.showToast(getContext(), R.string.reader_toast_err_removing_tag);
+                refresh();
             }
         };
 
-        boolean success = ReaderTagActions.deleteTag(tag, actionListener, mAccountStore.hasAccessToken());
-
-        if (success) {
-            int index = mTags.indexOfTagName(tag.getTagSlug());
-            if (index > -1) {
-                mTags.remove(index);
-                notifyItemRemoved(index);
-            }
-            if (mTagDeletedListener != null) {
+        if (isFollowingCurrent) {
+            boolean success = ReaderTagActions.deleteTag(tag, actionListener, mAccountStore.hasAccessToken());
+            if (success && mTagDeletedListener != null) {
                 mTagDeletedListener.onTagDeleted(tag);
+            }
+        } else {
+            boolean success = ReaderTagActions.addTag(tag, actionListener, mAccountStore.hasAccessToken());
+            if (success && mTagAddedListener != null) {
+                mTagAddedListener.onTagAdded(tag);
             }
         }
     }
@@ -169,6 +203,10 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             if (tagList != null && !tagList.isSameList(mTags)) {
                 mTags.clear();
                 mTags.addAll(tagList);
+                mTagSlugIsFollowedMap.clear();
+                for (final ReaderTag tag : mTags) {
+                    mTagSlugIsFollowedMap.put(tag.getTagSlug(), true);
+                }
                 notifyDataSetChanged();
             }
             mIsTaskRunning = false;

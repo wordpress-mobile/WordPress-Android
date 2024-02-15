@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2018-12-10 19:56:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: bg
 -->
 <resources>
@@ -45,7 +45,6 @@ Language: bg
     <string name="pages_published">Публикувана</string>
     <string name="login_error_sms_throttled">Направихте прекалено много опити да изпратите SMS кода за потвърждение - спрете за кратко и подайте нова заявка след минута.</string>
     <string name="login_error_email_not_found_v2">Няма профил в WordPress.com, съответстващ на този профил в Google.</string>
-    <string name="reader_empty_followed_blogs_search_title">Няма сайтове, съответстващи на търсенето ви</string>
     <string name="site_picker_remove_site_empty">Няма сайтове, съответстващи на търсенето ви</string>
     <string name="page_parent_changed">Родителската страница е сменена</string>
     <string name="page_permanently_deleted">Страницата е изтрита за постоянно</string>
@@ -326,7 +325,6 @@ Language: bg
     <string name="person_remove_confirmation_title">Премахване на %1$s</string>
     <string name="role">Роля</string>
     <string name="people">Хора</string>
-    <string name="reader_empty_posts_in_custom_list">Няма нови публикации в сайтовете от този списък</string>
     <string name="error_remove_user">Потребителят не може да бъде премахнат</string>
     <string name="error_update_role">Грешка при обновяване на потребителската роля</string>
     <string name="error_fetch_viewers_list">Грешка при зареждане на потребителите на сайта</string>
@@ -526,7 +524,6 @@ Language: bg
     <string name="reader_err_get_post_not_found">Тази публикация вече не съществува</string>
     <string name="reader_err_get_post_not_authorized">Нямате права да четете тази публикация</string>
     <string name="reader_err_get_post_generic">Неуспешно отваряне на публикацията</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Сайтовете, които следвате, нямат нови публикации</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Няма скорошни публикации</string>
     <string name="media_edit_copy_url_toast">Адресът е копиран </string>
     <string name="selected_theme">Избрана тема</string>
@@ -671,7 +668,6 @@ Language: bg
     <string name="reader_toast_err_generic">Действието беше неуспешно</string>
     <string name="update_verb">Актуализиране</string>
     <string name="schedule_verb">Планиране</string>
-    <string name="reader_page_followed_blogs">Следени сайтове</string>
     <string name="help">Помощ</string>
     <string name="ssl_certificate_error">Невалиден SSL сертификат</string>
     <string name="ssl_certificate_ask_trust">Ако обикновено се свързвате с този сайт без проблеми, тази грешка може да означава, че някой се опитва да имитира този сайт и не трябва да продължавате. Искате ли да се доверите на този сертификат въпреки това?</string>
@@ -756,7 +752,6 @@ Language: bg
     <string name="empty_list_default">Списъкът е празен</string>
     <string name="reader_btn_share">Споделяне</string>
     <string name="reader_btn_follow">Последване</string>
-    <string name="reader_btn_unfollow">Следва</string>
     <string name="reader_label_added_tag">%s е добавен</string>
     <string name="reader_label_removed_tag">%s е премахнат</string>
     <string name="reader_toast_err_comment_failed">Коментарът не беше публикуван</string>

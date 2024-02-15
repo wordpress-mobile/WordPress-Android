@@ -13,10 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/toolbar_height"
-        app:aevButton="@string/reader_no_site_to_reblog_action"
-        app:aevImage="@drawable/img_illustration_empty_results_216dp"
+        app:aevButton="@string/reader_no_blog_to_reblog_action"
+        app:aevButtonStyle="reader"
+        app:aevImage="@drawable/illustration_reader_empty"
         app:aevImageHiddenInLandscape="true"
-        app:aevSubtitle="@string/reader_no_site_to_reblog_detail"
-        app:aevTitle="@string/reader_no_site_to_reblog_title" />
+        app:aevSubtitle="@string/reader_no_blog_to_reblog_detail"
+        app:aevTitle="@string/reader_no_blog_to_reblog_title" />
 
 </RelativeLayout>

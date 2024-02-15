@@ -110,6 +110,7 @@ sealed class SiteNavigationAction {
     object OpenDashboardPersonalization : SiteNavigationAction()
 
     data class OpenBloganuaryNudgeOverlay(val isPromptsEnabled: Boolean): SiteNavigationAction()
+    data class OpenSiteMonitoring(val site: SiteModel) : SiteNavigationAction()
 }
 
 sealed class BloggingPromptCardNavigationAction: SiteNavigationAction() {

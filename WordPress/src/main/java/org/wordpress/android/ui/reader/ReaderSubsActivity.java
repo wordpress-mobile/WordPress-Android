@@ -70,7 +70,7 @@ import javax.inject.Inject;
  * followed tags and followed blogs
  */
 public class ReaderSubsActivity extends LocaleAwareActivity
-        implements ReaderTagAdapter.TagDeletedListener {
+        implements ReaderTagAdapter.TagDeletedListener, ReaderTagAdapter.TagAddedListener {
     private EditText mEditAdd;
     private FloatingActionButton mFabButton;
     private ReaderFollowButton mBtnAdd;
@@ -87,6 +87,8 @@ public class ReaderSubsActivity extends LocaleAwareActivity
     public static final int TAB_IDX_FOLLOWED_TAGS = 0;
     public static final int TAB_IDX_FOLLOWED_BLOGS = 1;
 
+    public static final String RESULT_SHOULD_REFRESH_SUBSCRIPTIONS = "should_refresh_subscriptions";
+
     @Inject AccountStore mAccountStore;
     @Inject ReaderTracker mReaderTracker;
 
@@ -98,10 +100,8 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (!TextUtils.isEmpty(mLastAddedTagName)) {
-                    EventBus.getDefault().postSticky(new ReaderEvents.TagAdded(mLastAddedTagName));
-                }
                 mReaderTracker.track(Stat.READER_MANAGE_VIEW_DISMISSED);
+                setResult();
                 CompatExtensionsKt.onBackPressedCompat(getOnBackPressedDispatcher(), this);
             }
         };
@@ -169,6 +169,19 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         });
 
         mReaderTracker.track(Stat.READER_MANAGE_VIEW_DISPLAYED);
+    }
+
+    private void setResult() {
+        final Intent data = new Intent();
+        boolean shouldRefreshSubscriptions = false;
+        if (mPageAdapter != null) {
+            final ReaderTagFragment readerTagFragment = mPageAdapter.getReaderTagFragment();
+            if (readerTagFragment != null) {
+                shouldRefreshSubscriptions = readerTagFragment.hasChangedSelectedTags();
+            }
+        }
+        data.putExtra(RESULT_SHOULD_REFRESH_SUBSCRIPTIONS, shouldRefreshSubscriptions);
+        setResult(RESULT_OK, data);
     }
 
     @Override
@@ -278,12 +291,12 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         }
 
         if (!ReaderTag.isValidTagName(entry)) {
-            showInfoSnackbar(getString(R.string.reader_toast_err_tag_invalid));
+            showInfoSnackbar(getString(R.string.reader_toast_err_tag_not_valid));
             return;
         }
 
         if (ReaderTagTable.isFollowedTagName(entry)) {
-            showInfoSnackbar(getString(R.string.reader_toast_err_tag_exists));
+            showInfoSnackbar(getString(R.string.reader_toast_err_tag_already_subscribed));
             return;
         }
 
@@ -317,7 +330,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
         // make sure it isn't already followed
         if (ReaderBlogTable.isFollowedBlogUrl(normUrl) || ReaderBlogTable.isFollowedFeedUrl(normUrl)) {
-            showInfoSnackbar(getString(R.string.reader_toast_err_already_follow_blog));
+            showInfoSnackbar(getString(R.string.reader_toast_err_already_follow_this_blog));
             return;
         }
 
@@ -353,7 +366,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                         ReaderTracker.SOURCE_SETTINGS
                 );
             } else {
-                showInfoSnackbar(getString(R.string.reader_toast_err_add_tag));
+                showInfoSnackbar(getString(R.string.reader_toast_err_adding_tag));
                 mLastAddedTagName = null;
             }
         };
@@ -389,14 +402,15 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                     String errMsg;
                     switch (statusCode) {
                         case 401:
-                            errMsg = getString(R.string.reader_toast_err_follow_blog_not_authorized);
+                            errMsg = getString(R.string.reader_toast_err_follow_not_authorized_to_access_blog);
                             break;
                         case 0: // can happen when host name not found
                         case 404:
-                            errMsg = getString(R.string.reader_toast_err_follow_blog_not_found);
+                            errMsg = getString(R.string.reader_toast_err_follow_blog_could_not_be_found);
                             break;
                         default:
-                            errMsg = getString(R.string.reader_toast_err_follow_blog) + " (" + statusCode + ")";
+                            errMsg = getString(R.string.reader_toast_err_unable_to_follow_blog) + " (" + statusCode
+                                     + ")";
                             break;
                     }
                     showInfoSnackbar(errMsg);
@@ -416,14 +430,14 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                 // clear the edit text and hide the soft keyboard
                 mEditAdd.setText(null);
                 EditTextUtils.hideSoftInput(mEditAdd);
-                showInfoSnackbar(getString(R.string.reader_label_followed_blog));
+                showInfoSnackbar(getString(R.string.reader_label_blog_subscribed));
                 getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                 // update tags if the site we added belongs to a tag we don't yet have
                 // also update followed blogs so lists are ready in case we need to present them
                 // in bottom sheet reader filtering
                 performUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
             } else {
-                showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
+                showInfoSnackbar(getString(R.string.reader_toast_err_unable_to_follow_blog));
             }
         };
         // note that this uses the endpoint to follow as a feed since typed URLs are more
@@ -482,8 +496,14 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagSlug())) {
             mLastAddedTagName = null;
         }
-        String labelRemovedTag = getString(R.string.reader_label_removed_tag);
-        showInfoSnackbar(String.format(labelRemovedTag, tag.getLabel()));
+    }
+
+    @Override public void onTagAdded(@NonNull ReaderTag readerTag) {
+        mReaderTracker.trackTag(
+                AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
+                readerTag.getTagSlug(),
+                ReaderTracker.SOURCE_SETTINGS
+        );
     }
 
     /*
@@ -537,9 +557,9 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case TAB_IDX_FOLLOWED_TAGS:
-                    return getString(R.string.reader_page_followed_tags);
+                    return getString(R.string.reader_page_followed_tags_title);
                 case TAB_IDX_FOLLOWED_BLOGS:
-                    return getString(R.string.reader_page_followed_blogs);
+                    return getString(R.string.reader_page_followed_blogs_title);
                 default:
                     return super.getPageTitle(position);
             }
@@ -563,12 +583,30 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         }
 
         private void refreshFollowedTagFragment() {
-            for (Fragment fragment : mFragments) {
+            final ReaderTagFragment fragment = getReaderTagFragment();
+            if (fragment != null) {
+                fragment.refresh();
+            }
+        }
+
+        @Nullable
+        private ReaderTagFragment getReaderTagFragment() {
+            for (final Fragment fragment : mFragments) {
                 if (fragment instanceof ReaderTagFragment) {
-                    ReaderTagFragment tagFragment = (ReaderTagFragment) fragment;
-                    tagFragment.refresh();
+                    return (ReaderTagFragment) fragment;
                 }
             }
+            return null;
+        }
+
+        @Nullable
+        private ReaderBlogFragment getReaderBlogFragment() {
+            for (final Fragment fragment : mFragments) {
+                if (fragment instanceof ReaderBlogFragment) {
+                    return (ReaderBlogFragment) fragment;
+                }
+            }
+            return null;
         }
 
         private void refreshBlogFragments(ReaderBlogType blogType) {

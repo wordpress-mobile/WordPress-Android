@@ -13,12 +13,12 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.YearsInsightsModel
 import org.wordpress.android.fluxc.model.stats.YearsInsightsModel.YearInsights
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
@@ -107,7 +107,11 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
         selectedDate.set(Calendar.YEAR, 2019)
         selectedDate.set(Calendar.MONTH, Calendar.DECEMBER)
         selectedDate.set(Calendar.DAY_OF_MONTH, 31)
-        verify(selectedDateProvider, times(1)).selectDate(selectedDate.time, listOf(selectedDate.time), ANNUAL_STATS)
+        verify(selectedDateProvider, times(1)).selectDate(
+            selectedDate.time,
+            listOf(selectedDate.time),
+            StatsGranularity.YEARS
+        )
     }
 
     @Test

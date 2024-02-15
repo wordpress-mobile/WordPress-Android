@@ -1,6 +1,0 @@
-24.0:
-- Koop op het domeinendashboard een WordPress-abonnement met een gratis domein
-- Toetsenbord van apparaat blijft in beeld wanneer tekstblokken bewerkt worden
-- Editor-scherm scrolt automatisch naar nieuw ingevoegde blokken
-- Deselecteer blokken door op de terugknop op het apparaat te klikken
-- Deel tegelijkertijd verschillende typen media met de app zonder crashen
