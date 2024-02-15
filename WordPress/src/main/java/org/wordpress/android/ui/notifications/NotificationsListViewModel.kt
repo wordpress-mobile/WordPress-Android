@@ -8,7 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.datasets.NotificationsTable
-import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Notification.PostNotification
 import org.wordpress.android.modules.UI_THREAD
@@ -17,9 +17,10 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NOTIFICATIONS
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsChanged
 import org.wordpress.android.ui.notifications.utils.NotificationsActions
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions
-import org.wordpress.android.ui.reader.actions.ReaderPostActions
+import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -32,9 +33,11 @@ class NotificationsListViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
-    private val gcmMessageHandler: GCMMessageHandler
-
-) : ScopedViewModel(mainDispatcher) {
+    private val gcmMessageHandler: GCMMessageHandler,
+    private val notificationsUtilsWrapper: NotificationsUtilsWrapper,
+    private val readerPostTableWrapper: ReaderPostTableWrapper,
+    private val readerPostActionsWrapper: ReaderPostActionsWrapper,
+    ) : ScopedViewModel(mainDispatcher) {
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
@@ -89,13 +92,13 @@ class NotificationsListViewModel @Inject constructor(
         openInTheReader: (siteId: Long, postId: Long, commentId: Long) -> Unit,
         openDetailView: () -> Unit
     ) {
-        val note = NotificationsTable.getNoteById(noteId)
+        val note = noteId?.let { notificationsUtilsWrapper.getNoteById(noteId) }
         if (note != null && note.isCommentType && !note.canModerate()) {
-            val readerPost = ReaderPostTable.getBlogPost(note.siteId.toLong(), note.postId.toLong(), false)
+            val readerPost = readerPostTableWrapper.getBlogPost(note.siteId.toLong(), note.postId.toLong(), false)
             if (readerPost != null) {
                 openInTheReader(note.siteId.toLong(), note.postId.toLong(), note.commentId)
             } else {
-                ReaderPostActions.requestBlogPost(
+                readerPostActionsWrapper.requestBlogPost(
                     note.siteId.toLong(),
                     note.postId.toLong(),
                     object : ReaderActions.OnRequestListener<String> {
