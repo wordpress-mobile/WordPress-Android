@@ -64,51 +64,51 @@ class ActionableEmptyView : LinearLayout {
         bottomImage = layout.findViewById(R.id.bottom_image)
         progressBar = layout.findViewById(R.id.actionable_empty_view_progress_bar)
 
-        attrs.let {
-            val typedArray = context.obtainStyledAttributes(
-                it,
-                R.styleable.ActionableEmptyView,
-                0,
-                0
-            )
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ActionableEmptyView, 0, 0)
+        val imageResource = typedArray.getResourceId(
+            R.styleable.ActionableEmptyView_aevImage,
+            0
+        )
+        val hideImageInLandscape = typedArray.getBoolean(
+            R.styleable.ActionableEmptyView_aevImageHiddenInLandscape,
+            false
+        )
+        val titleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevTitle)
+        val subtitleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevSubtitle)
+        val buttonAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevButton)
+        val buttonStyleAttribute = typedArray.getInt(
+            R.styleable.ActionableEmptyView_aevButtonStyle,
+            BUTTON_STYLE_PRIMARY
+        )
 
-            val imageResource = typedArray.getResourceId(
-                R.styleable.ActionableEmptyView_aevImage,
-                0
-            )
-            val hideImageInLandscape = typedArray.getBoolean(
-                R.styleable.ActionableEmptyView_aevImageHiddenInLandscape,
-                false
-            )
-            val titleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevTitle)
-            val subtitleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevSubtitle)
-            val buttonAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevButton)
-
-            if (imageResource != 0) {
-                image.setImageResource(imageResource)
-                if (!hideImageInLandscape || !DisplayUtils.isLandscape(context)) {
-                    image.visibility = View.VISIBLE
-                }
+        if (imageResource != 0) {
+            image.setImageResource(imageResource)
+            if (!hideImageInLandscape || !DisplayUtils.isLandscape(context)) {
+                image.visibility = View.VISIBLE
             }
-
-            if (!titleAttribute.isNullOrEmpty()) {
-                title.text = titleAttribute
-            } else {
-                throw RuntimeException("$context: ActionableEmptyView must have a title (aevTitle)")
-            }
-
-            if (!subtitleAttribute.isNullOrEmpty()) {
-                subtitle.text = subtitleAttribute
-                subtitle.visibility = View.VISIBLE
-            }
-
-            if (!buttonAttribute.isNullOrEmpty()) {
-                button.text = buttonAttribute
-                button.visibility = View.VISIBLE
-            }
-
-            typedArray.recycle()
         }
+
+        if (!titleAttribute.isNullOrEmpty()) {
+            title.text = titleAttribute
+        } else {
+            throw RuntimeException("$context: ActionableEmptyView must have a title (aevTitle)")
+        }
+
+        if (!subtitleAttribute.isNullOrEmpty()) {
+            subtitle.text = subtitleAttribute
+            subtitle.visibility = View.VISIBLE
+        }
+
+        if (!buttonAttribute.isNullOrEmpty()) {
+            button.text = buttonAttribute
+            button.visibility = View.VISIBLE
+        }
+
+        if (buttonStyleAttribute == BUTTON_STYLE_READER) {
+            button.backgroundTintList = context.getColorStateList(R.color.reader_button_primary_background_selector)
+            button.setTextColor(context.getColorStateList(R.color.reader_button_primary_text))
+        }
+        typedArray.recycle()
     }
 
     /**
@@ -162,5 +162,10 @@ class ActionableEmptyView : LinearLayout {
         } ?: ""
 
         announceForAccessibility("${title.text}.$subTitle")
+    }
+
+    companion object {
+        private const val BUTTON_STYLE_PRIMARY = 0
+        private const val BUTTON_STYLE_READER = 1
     }
 }

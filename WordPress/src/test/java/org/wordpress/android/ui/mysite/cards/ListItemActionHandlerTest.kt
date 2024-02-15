@@ -190,7 +190,14 @@ class ListItemActionHandlerTest: BaseUnitTest() {
         )
     }
 
-    private fun invokeItemClickAction(action: ListItemAction, ): SiteNavigationAction {
+    @Test
+    fun `when site monitoring item click, then emits OpenSiteMonitoring navigation event`() {
+        val navigationAction = invokeItemClickAction(action = ListItemAction.SITE_MONITORING)
+
+        assertEquals(navigationAction, SiteNavigationAction.OpenSiteMonitoring(site))
+    }
+
+    private fun invokeItemClickAction(action: ListItemAction): SiteNavigationAction {
         return listItemActionHandler.handleAction(action, site)
     }
 }

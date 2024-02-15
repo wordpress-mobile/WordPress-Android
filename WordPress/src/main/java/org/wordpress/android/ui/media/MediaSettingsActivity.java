@@ -470,7 +470,11 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     public void onStart() {
         super.onStart();
         if (Build.VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            registerReceiver(mDownloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), ContextWrapper.RECEIVER_NOT_EXPORTED);
+            registerReceiver(
+                mDownloadReceiver,
+                new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+                ContextWrapper.RECEIVER_NOT_EXPORTED
+            );
         } else {
             registerReceiver(mDownloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         }

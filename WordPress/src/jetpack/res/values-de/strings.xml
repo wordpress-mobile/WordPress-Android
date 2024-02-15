@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-09 14:54:03+0000
+Translation-Revision-Date: 2024-01-15 15:54:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="login_prologue_revamped_jetpack_feature_text_13">Baue eine Zielgruppe auf</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">Lies andere Blogs</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_16">Verwalte deine Domains</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_15">Schreibe von überall aus</string>
     <string name="missing_splits_dialog_message">Der Jetpack-App fehlen erforderliche Komponenten. Die App muss erneut aus dem Google Play Store installiert werden.</string>
     <string name="me_btn_share">Jetpack mit einem Freund teilen</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_12">Einen Autor hinzufügen</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_14">Veröffentliche ein Foto</string>
     <string name="login_prologue_revamped_jetpack_feature_text_11">Ein Foto veröffentlichen</string>
     <string name="login_prologue_revamped_jetpack_feature_text_10">Ein Sicherheitsproblem beheben</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_9">Auf Facebook teilen</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">Teile Inhalte in sozialen Medien</string>
     <string name="login_prologue_revamped_jetpack_feature_text_8">Plugins suchen</string>
     <string name="login_prologue_revamped_jetpack_feature_text_7">Ein Backup wiederherstellen</string>
     <string name="login_prologue_revamped_jetpack_feature_text_6">Kommentare beantworten</string>

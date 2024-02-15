@@ -1,0 +1,7 @@
+24.1:
+- Saiba quando estiver trabalhando offline.
+- Pause/retome uploads em blocos de imagem conforme a conexão com a Internet.
+- Veja seleções de gradientes personalizados no editor.
+- Corrigimos as setas de avançar/voltar para idiomas RTL.
+- Corrigimos o funcionamento das tags da Sugestão diária.
+- Toque nos cartões de domínio do site para gerenciar os domínios.

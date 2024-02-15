@@ -8,8 +8,8 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/toolbar_height"
     android:visibility="gone"
-    app:aevButton="@string/reader_empty_followed_blogs_button_discover"
-    app:aevImage="@drawable/img_illustration_following_empty_results_196dp"
-    app:aevSubtitle="@string/reader_empty_followed_blogs_description"
-    app:aevTitle="@string/reader_empty_followed_blogs_title"
+    app:aevButton="@string/reader_no_followed_blogs_button_discover"
+    app:aevButtonStyle="reader"
+    app:aevSubtitle="@string/reader_no_followed_blogs_description"
+    app:aevTitle="@string/reader_no_followed_blogs_title"
     tools:visibility="visible" />

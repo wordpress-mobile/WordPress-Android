@@ -8,23 +8,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.lifecycle.Observer
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.tabs.TabLayout
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.reader.subfilter.ActionType
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.SubfilterPagerAdapter
-import org.wordpress.android.util.extensions.getParcelableArrayListCompat
+import org.wordpress.android.util.extensions.getSerializableCompat
 import javax.inject.Inject
 import com.google.android.material.R as MaterialR
 
@@ -36,19 +36,19 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     companion object {
         const val SUBFILTER_VIEW_MODEL_KEY = "subfilter_view_model_key"
         const val SUBFILTER_TITLE_KEY = "subfilter_title_key"
-        const val SUBFILTER_CATEGORIES_KEY = "subfilter_categories_key"
+        const val SUBFILTER_CATEGORY_KEY = "subfilter_category_key"
 
         @JvmStatic
         fun newInstance(
             subfilterViewModelKey: String,
-            categories: List<SubfilterCategory>,
+            category: SubfilterCategory,
             title: CharSequence
         ): SubfilterBottomSheetFragment {
             val fragment = SubfilterBottomSheetFragment()
             val bundle = Bundle()
             bundle.putString(SUBFILTER_VIEW_MODEL_KEY, subfilterViewModelKey)
             bundle.putCharSequence(SUBFILTER_TITLE_KEY, title)
-            bundle.putParcelableArrayList(SUBFILTER_CATEGORIES_KEY, ArrayList(categories))
+            bundle.putSerializable(SUBFILTER_CATEGORY_KEY, category)
 
             fragment.arguments = bundle
             return fragment
@@ -66,28 +66,32 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val subfilterVmKey = requireArguments().getString(SUBFILTER_VIEW_MODEL_KEY)!!
-        val bottomSheetTitle = requireArguments().getCharSequence(SUBFILTER_TITLE_KEY)!!
-        val categories = requireNotNull(
-            requireArguments().getParcelableArrayListCompat<SubfilterCategory>(SUBFILTER_CATEGORIES_KEY)
-        )
+        val subfilterVmKey = requireArguments().getString(SUBFILTER_VIEW_MODEL_KEY)
+        val bottomSheetTitle = requireArguments().getCharSequence(SUBFILTER_TITLE_KEY)
+        val category = requireArguments().getSerializableCompat<SubfilterCategory>(SUBFILTER_CATEGORY_KEY)
+
+        if (subfilterVmKey == null || category == null || bottomSheetTitle == null) {
+            dismiss()
+            return
+        }
 
         viewModel = ViewModelProvider(
             parentFragment as ViewModelStoreOwner,
             viewModelFactory
         )[subfilterVmKey, SubFilterViewModel::class.java]
 
+        // TODO remove the pager and support only one category
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
-        val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
+        val titleContainer = view.findViewById<View>(R.id.title_container)
         val title = view.findViewById<TextView>(R.id.title)
+        val editSubscriptions = view.findViewById<View>(R.id.edit_subscriptions)
         title.text = bottomSheetTitle
         pager.adapter = SubfilterPagerAdapter(
             requireActivity(),
             childFragmentManager,
             subfilterVmKey,
-            categories.toList()
+            listOf(category)
         )
-        tabLayout.setupWithViewPager(pager)
         pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 // NO OP
@@ -108,14 +112,13 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             else -> SITES.ordinal
         }
 
-        viewModel.filtersMatchCount.observe(this, Observer {
-            for (category in it.keys) {
-                val tab = tabLayout.getTabAt(category.ordinal)
-                tab?.let { sectionTab ->
-                    sectionTab.text = "${view.context.getString(category.titleRes)} (${it[category]})"
-                }
+        editSubscriptions.setOnClickListener {
+            val subsPageIndex = when (category) {
+                SITES -> ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS
+                TAGS -> ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS
             }
-        })
+            viewModel.onBottomSheetActionClicked(ActionType.OpenSubsAtPage(subsPageIndex))
+        }
 
         dialog?.setOnShowListener { dialogInterface ->
             val sheetDialog = dialogInterface as? BottomSheetDialog
@@ -126,9 +129,15 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
 
             bottomSheet?.let {
                 val behavior = BottomSheetBehavior.from(it)
-                val metrics = resources.displayMetrics
+                val metrics = it.context.resources.displayMetrics
                 behavior.peekHeight = metrics.heightPixels / 2
             }
+
+            dialog?.setOnShowListener(null)
+        }
+
+        viewModel.isTitleContainerVisible.observe(viewLifecycleOwner) { isVisible ->
+            titleContainer.isVisible = isVisible
         }
     }
 

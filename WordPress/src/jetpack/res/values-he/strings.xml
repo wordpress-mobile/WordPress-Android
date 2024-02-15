@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-09 14:54:03+0000
+Translation-Revision-Date: 2024-01-16 17:54:02+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="login_prologue_revamped_jetpack_feature_text_13">ליצור קהל לאתר</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">לקרוא בלוגים אחרים</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_16">לנהל את הדומיינים שלך</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_15">לכתוב מכל מקום</string>
     <string name="missing_splits_dialog_message">באפליקציה של Jetpack חסרים רכיבים חיוניים ועליך להתקין אותה מחדש מהחנות Google Play.</string>
     <string name="me_btn_share">לשתף את Jetpack עם חברים</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_12">להוסיף מחבר</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_14">לפרסם תמונה</string>
     <string name="login_prologue_revamped_jetpack_feature_text_11">לפרסם תמונה</string>
     <string name="login_prologue_revamped_jetpack_feature_text_10">לתקן בעיית אבטחה</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_9">Share on Facebook</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">לשתף ברשתות החברתיות</string>
     <string name="login_prologue_revamped_jetpack_feature_text_8">לחפש תוספים</string>
     <string name="login_prologue_revamped_jetpack_feature_text_7">לשחזר גיבוי</string>
     <string name="login_prologue_revamped_jetpack_feature_text_6">לענות לתגובות</string>

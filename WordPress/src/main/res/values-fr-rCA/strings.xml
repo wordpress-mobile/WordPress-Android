@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-03 18:54:09+0000
+Translation-Revision-Date: 2024-02-06 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">En attente de connexion</string>
+    <string name="stats_traffic">Trafic</string>
+    <string name="gutenberg_native_working_offline">Travail hors ligne</string>
+    <string name="gutenberg_native_network_connection_re_established">Connexion réseau rétablie</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">Perte de la connexion réseau, travail hors ligne</string>
+    <string name="gutenberg_native_font_size_1_s">Taille de la police, %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">Type de fichier non pris en charge comme fichier média.</string>
+    <string name="media_cannot_be_started">Nous ne sommes pas en mesure d’ouvrir le média actuellement. Veuillez réessayer plus tard</string>
+    <string name="domains_just_search_for_a_domain_button">Chercher simplement un domaine</string>
+    <string name="domains_upgrade_to_a_plan_button">Mettre à niveau vers un plan</string>
+    <string name="domains_upgrade_to_plan_caption">Bénéficiez d’un enregistrement ou d’un transfert de domaine gratuit d’un an avec un plan payant annuel.</string>
+    <string name="domains_site_domain_never_expires">N’expire jamais</string>
+    <string name="domains_free_domain">Votre domaine WordPress.com gratuit</string>
+    <string name="domains_site_other_domains">Autres domaines pour %s</string>
+    <string name="domains_primary_site_domain_chip">Domaine principal</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary, c’est parti !</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">C’est parti !</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Activer les invites à bloguer</string>
@@ -16,8 +31,6 @@ Language: fr
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Recevez chaque jour une invite pour vous inspirer.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Participer à notre défi d’écriture d’un mois</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">De Bloganuary</string>
-    <string name="turn_off">Non, désactiver</string>
-    <string name="leave_on">Oui, laisser activé</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Pour cette raison, nous vous recommandons de modifier le bloc à l’aide de votre navigateur web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Pour cette raison, nous vous recommandons de modifier le bloc à l’aide de l’éditeur web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Sinon, vous pouvez aplatir le contenu en dégroupant le bloc.</string>
@@ -82,7 +95,6 @@ Language: fr
     <string name="account_and_settings">Compte et réglages</string>
     <string name="site_creation_plans_selection_title">Sélectionner un plan</string>
     <string name="site_creation_domain_free_with_annual_plan">Gratuit la première année avec n’importe quel plan annuel payant</string>
-    <string name="reader_label_followers_count_single">1 abonné</string>
     <string name="reader_secondary_bookmarked">Enregistré</string>
     <string name="reader_secondary_bookmark">Enregistrer</string>
     <string name="reader_discover_recommended_header_new">Vous pourriez aimer</string>
@@ -149,10 +161,6 @@ Language: fr
     <string name="campaign_detail_error_title">Un problème est survenu</string>
     <string name="campaign_listing_page_error_title">Un problème est survenu</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Un problème est survenu. Impossible d’extraire les campagnes.</string>
-    <string name="domain_transfer_card_cta">Transférer vos domaines</string>
-    <string name="domain_transfer_card_caption">Comme vous le savez peut-être, Google Domains a été vendu à Squarespace. Transférez gratuitement vos domaines vers WordPress.com dès maintenant et bénéficiez gratuitement d’une année supplémentaire d’enregistrement de domaine.</string>
-    <string name="domain_transfer_card_sub_title">Récupérer vos domaines Google</string>
-    <string name="domain_transfer_card_title">Actualités</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Connecter des comptes</string>
     <string name="prepublishing_nudges_toolbar_title_social">Partage sur les réseaux sociaux</string>
     <string name="prepublishing_nudges_social_action">Partage sur les réseaux sociaux</string>
@@ -393,7 +401,7 @@ Language: fr
     <string name="stats_timeframe_last_seven_days">7 derniers jours</string>
     <string name="weeks_quantity_other">%d semaines</string>
     <string name="weeks_quantity_one">1 semaine</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">Depuis le &lt;b&gt;jour 1&lt;/b&gt;</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">De &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Me rappeler ultérieurement</string>
     <string name="jetpack_feature_card_content_phase_three">Les statistiques, le lecteur, les notifications et d’autres fonctionnalités seront bientôt transférées vers l’application mobile Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Passer à l’application Jetpack</string>
@@ -585,7 +593,6 @@ Language: fr
     <string name="quick_start_dialog_check_notifications_message_short">Sélectionnez %1$s l’onglet Notifications %2$s pour suivre l’activité en déplacement.</string>
     <string name="quick_start_dialog_upload_media_message_short_plus">Sélectionnez %1$s plus %2$s pour charger un média. Vous pouvez l’ajouter à vos articles/pages depuis n’importe quel appareil.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Utilisez &lt;b&gt; Découvrir &lt;/b&gt; pour rechercher des sites et des étiquettes.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Utilisez &lt;b&gt; Découvrir &lt;/b&gt; pour rechercher des sites et des étiquettes. Sélectionnez %1$s Réglages %2$s pour ajouter les thèmes de votre choix.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniature vidéo</string>
     <string name="stats_details_top_commentators">Les meilleurs commentateurs</string>
     <string name="stats_published_years_ago">Publié il y a %1$d ans</string>
@@ -816,7 +823,6 @@ Language: fr
     <string name="my_site_post_card_scheduled_title">Articles planifiés à venir</string>
     <string name="my_site_post_card_draft_title">Travailler sur un brouillon d’article</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratuit la 1ère année &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /an&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Vos domaines renverront vers votre site à %s</string>
     <string name="gutenberg_native_create_link">Créer un lien</string>
     <string name="domains_suggestions_select_domain">Sélectionnez un domaine</string>
     <string name="domains_title">Domaines</string>
@@ -837,14 +843,9 @@ Language: fr
     <string name="domains_free_plan_get_your_domain_caption">Les domaines achetés sur ce site redirigeront les visiteurs vers &lt;b&gt;%s.&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">Avec votre plan, vous disposez de l’enregistrement gratuit d’un domaine pendant un an.</string>
     <string name="domains_paid_plan_claim_your_domain_title">Demander votre domaine gratuit</string>
-    <string name="domains_manage_domains">Gérer les domaines</string>
     <string name="domains_add_a_domain">Ajouter un domaine</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Expire le %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Expire le %s</string>
-    <string name="domains_site_domains">Les domaines de votre site</string>
-    <string name="domains_primary_site_address_chip">Adresse principale du site</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Modifier l’adresse du site</string>
-    <string name="domains_primary_site_caption">Votre adresse WordPress.com gratuite est</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s la première année &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s /an&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt;/an&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Voulez-vous les annuler ?</string>
@@ -870,7 +871,6 @@ Language: fr
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Vous&lt;/a&gt; aimez ceci.</string>
     <string name="gutenberg_native_line_height">hauteur de ligne</string>
     <string name="domains_free_plan_get_your_domain_title">Obtenir votre domaine</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Erreur inconnue lors de la récupération du modèle de recommandation d’application</string>
     <string name="recommend_app_bad_format_response">Réponse reçue non valide</string>
     <string name="recommend_app_null_response">Aucune réponse reçue</string>
@@ -1088,7 +1088,6 @@ Language: fr
     <string name="jetpack_brute_force_allowlist_title">Adresses IP toujours autorisées</string>
     <string name="site_settings_denylist_title">Commentaires rejetés</string>
     <string name="gutenberg_native_add_button_text">Ajouter le libellé du bouton</string>
-    <string name="reader_title_interests">Suivre des sujets</string>
     <string name="stories_intro_main_subtitle">Une nouvelle façon de publier du contenu attrayant sur votre site.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Ignorer</string>
     <string name="activity_log_backup_download_notice_download_action">Téléchargement</string>
@@ -1400,8 +1399,6 @@ Language: fr
     <string name="hpp_error_title">Mises en page non disponibles hors connexion</string>
     <string name="continue_site_credentials">Continuer avec les identifiants de connexion de la boutique</string>
     <string name="login_find_your_connected_email">Trouver votre e-mail connecté</string>
-    <string name="reader_discover_no_posts_button_text">Suivre des sujets</string>
-    <string name="reader_discover_no_posts_subtitle">Essayez de suivre plus de sujets pour élargir la recherche</string>
     <string name="reader_discover_no_posts_title">Pas d’articles récents.</string>
     <string name="reader_discover_empty_title">Bienvenue !</string>
     <string name="scan">Analyser</string>
@@ -1440,7 +1437,6 @@ Language: fr
     <string name="login_prologue_title_second">Avec cet éditeur puissant, vous pouvez publier de n’importe où.</string>
     <string name="login_prologue_title_first">Bienvenue sur le constructeur de site le plus populaire au monde.</string>
     <string name="media_loading_failed">Échec du chargement du média</string>
-    <string name="reader_discover_recommended_blogs_header">Sites à suivre</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Nous travaillons dur pour ajouter plus de blocs à chaque version.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">« %s » n’est pas entièrement pris en charge</string>
     <string name="gutenberg_native_help_button">Bouton d’aide</string>
@@ -1461,7 +1457,6 @@ Language: fr
     <string name="photo_picker_wordpress_media_library">Choisir dans la bibliothèque des médias WordPress</string>
     <string name="reader_label_toolbar_back">Retour</string>
     <string name="reader_discover_empty_button_text">Premiers pas</string>
-    <string name="reader_discover_empty_subtitle">Suivre les sujets pour découvrir de nouveaux blogs</string>
     <string name="reader_post_details_header_by_author_name">Par</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Ce référent ne peut pas être marqué comme indésirable</string>
     <string name="stats_referrer_popup_unmark_as_spam">Marquer comme sain</string>
@@ -1619,7 +1614,6 @@ Language: fr
     <string name="gutenberg_native_block_copied">Bloc copié</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Le titre du site peut seulement être changé par une personne avec un rôle d’administrateur.</string>
     <string name="my_site_title_changer_dialog_hint">Le titre du site est affiché dans la barre de titre du navigateur et est affiché dans l’en-tête de la plupart des thèmes.</string>
-    <string name="reader_title_tag_preview">Sujet</string>
     <string name="error_update_site_title_network">Impossible de mettre à jour le titre du site. Vérifier votre connexion réseau et réessayez.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Modifications non enregistrées</string>
     <string name="gutenberg_native_open_link_in_a_browser">Ouvrir le lien dans un navigateur</string>
@@ -1640,7 +1634,7 @@ Language: fr
     <string name="prepublishing_tags_description">Les étiquettes indiquent aux lecteurs de quoi traite l’article.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Date de publication</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Ajouter des étiquettes</string>
-    <string name="prepublishing_nudges_back_button">Précédent</string>
+    <string name="prepublishing_nudges_back_button">Retour</string>
     <string name="prepublishing_nudges_home_save_button">Enregistrer maintenant</string>
     <string name="prepublishing_nudges_home_submit_button">Soumettre maintenant</string>
     <string name="prepublishing_nudges_home_schedule_button">Planifier maintenant</string>
@@ -1651,8 +1645,6 @@ Language: fr
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Passer en brouillon</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Les articles dans la corbeille ne peuvent pas être modifier. Voulez-vous changer le statut de cet article vers « brouillon » pour pouvoir travailler dessus ?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Déplacer l’article vers Brouillons ?</string>
-    <string name="reader_label_choose_your_interests">Choisir vos thèmes</string>
-    <string name="reader_choose_interests_content_description">Choisir vos thèmes</string>
     <string name="reader_btn_done">Terminé</string>
     <string name="reader_btn_select_few_interests">Sélectionnez-en quelques-uns pour continuer.</string>
     <string name="post_status_post_published">Publié</string>
@@ -1694,7 +1686,6 @@ Language: fr
     <string name="page_cannot_set_homepage">Pour régler la page d’accueil, activez « Page d’accueil statique » dans les réglages du site</string>
     <string name="gutenberg_native_select_a_color">Sélectionnez une couleur</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toucher deux fois pour aller aux réglages de couleur</string>
-    <string name="reader_empty_followed_blogs_description">Lorsque vous suivez des sites, vous verrez leur contenu ici</string>
     <string name="feature_announcement_find_out_mode">En savoir plus</string>
     <string name="feature_announcement_dialog_label">Quelles sont les nouveautés %s ?</string>
     <string name="insert_label_with_count">Insérer %d</string>
@@ -1708,9 +1699,6 @@ Language: fr
     <string name="site_picker_ask_site_select">Impossible de sélectionner le site. Veuillez réessayer.</string>
     <string name="sitepicker_continue_flow">Continuer</string>
     <string name="reader_reblog_error">Échec du reblogue</string>
-    <string name="reader_no_site_to_reblog_action">Gérer les sites</string>
-    <string name="reader_no_site_to_reblog_detail">Une fois que vous avez créé un site WordPress.com, vous pouvez rebloguer un contenu que vous avez aimé sur votre propre site.</string>
-    <string name="reader_no_site_to_reblog_title">Aucun site WordPress.com disponible</string>
     <string name="whats_new_in_version_title">Quoi de neuf ?</string>
     <string name="comment_q_action_copied_url">Adresse du lien copiée</string>
     <string name="copy_link_address">Copier l’adresse du lien</string>
@@ -1809,23 +1797,13 @@ Language: fr
     <string name="stats_management_screen_title">Ajouter une nouvelle carte</string>
     <string name="stats_management_add_new_stats_card">Ajouter une nouvelle carte de statistiques</string>
     <string name="reader_self_hosted_select_filter">Utiliser le bouton de filtre pour trouver des articles sur des sujets spécifiques</string>
-    <string name="reader_bottom_sheet_content_description">Sélectionner une étiquette ou un site, fenêtre contextuelle</string>
-    <string name="reader_btn_select_filter_content_description">Sélectionner un site ou une étiquette pour filtrer des articles</string>
     <string name="reader_btn_remove_filter_content_description">Supprimer le filtre actuel</string>
-    <string name="reader_title_subs">Gérer les sujets et les sites</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Se connecter à WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Se connecter à WordPress.com pour voir les derniers articles à partir des sujets que vous suivez.</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Se connecter à WordPress.com pour voir les derniers articles à partir des sites que vous suivez</string>
     <string name="gutenberg_native_replace_current_block">Remplacer le bloc actuel</string>
     <string name="gutenberg_native_add_to_end">Ajouter à la fin</string>
     <string name="gutenberg_native_add_to_beginning">Ajouter au début</string>
     <string name="gutenberg_native_add_block_before">Ajouter le bloc avant</string>
     <string name="gutenberg_native_add_block_after">Ajouter le bloc après</string>
-    <string name="reader_filter_empty_tags_action">Ajouter un sujet</string>
-    <string name="reader_filter_empty_sites_action">S’abonner au site</string>
-    <string name="reader_filter_empty_tags_list">Vous pouvez suivre les articles relatifs à un thème particulier en ajoutant un sujet.</string>
-    <string name="reader_filter_empty_sites_list">Découvrir les derniers articles des sites que vous suivez</string>
-    <string name="reader_filter_main_title">Abonné</string>
     <string name="reader_filter_cta">Filtrer</string>
     <string name="gutenberg_native_video_caption_s">Sous-titre vidéo. %s</string>
     <string name="gutenberg_native_edit_video">Modifier la vidéo</string>
@@ -1870,12 +1848,9 @@ Language: fr
     <string name="login_site_credentials_magic_link_label">Vous y êtes presque ! Nous devons juste vérifier votre adresse e-mail connectée à Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Connexion avec vos identifiants au site %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Page du site</string>
-    <string name="reader_following_display_name">Abonné</string>
     <string name="reader_my_likes_display_name">J’aime</string>
     <string name="reader_discover_display_name">Découvrez</string>
     <string name="reader_save_for_later_display_name">Enregistré</string>
-    <string name="reader_filter_tags_title">Sujets</string>
-    <string name="reader_filter_sites_title">Sites</string>
     <string name="suffix_1_000_000_000_000_000_000">%s trillion</string>
     <string name="suffix_1_000_000_000_000_000">%s billiard</string>
     <string name="suffix_1_000_000_000_000">%s billion</string>
@@ -2066,8 +2041,8 @@ Language: fr
     <string name="post_list_search_nothing_found">Aucun article ne correspond à votre recherche</string>
     <string name="post_list_search_prompt">Rechercher dans les articles</string>
     <string name="domains_suggestions_intro_description">C\'est ici que les internautes vous trouveront sur Internet.</string>
-    <string name="domains_suggestions_intro_title">Choisissez un nom de domaine Premium</string>
-    <string name="my_site_custom_domain_name">Tous les plans de WordPress.com comprennent un nom de domaine. Vous pouvez enregistrer votre nom de domaine Premium gratuit dès maintenant.</string>
+    <string name="domains_suggestions_intro_title">Choisir un nom de domaine personnalisé</string>
+    <string name="my_site_custom_domain_name">Tous les plans annuels WordPress.com incluent un nom de domaine personnalisé. Enregistrez votre domaine gratuit dès maintenant.</string>
     <string name="stats_widget_minified_name">D’un coup d’œil</string>
     <string name="stats_widget_today_insights_name">Aujourd\'hui</string>
     <string name="stats_widget_all_time_insights_name">Depuis le début</string>
@@ -2359,14 +2334,13 @@ Language: fr
     <string name="pages_move_to_draft">Passer en brouillon</string>
     <string name="pages_set_parent">Configurer le parent</string>
     <string name="pages_view">Afficher</string>
-    <string name="pages_trashed">Mises à la Corbeille</string>
+    <string name="pages_trashed">Mis à la corbeille</string>
     <string name="pages_scheduled">Planifiées</string>
     <string name="pages_drafts">Brouillons</string>
     <string name="pages_published">Publiées</string>
     <string name="login_error_sms_throttled">Le nombre de tentatives d\'envoi d\'un code de vérification par SMS a été dépassé – faites une pause et redemandez-en un dans une minute.</string>
     <string name="login_error_email_not_found_v2">Aucun compte WordPress.com ne correspond à ce compte Google.</string>
     <string name="site_picker_remove_site_empty">Aucun site ne correspond à votre recherche</string>
-    <string name="reader_empty_followed_blogs_search_title">Aucun site ne correspond à votre recherche</string>
     <string name="page_parent_changed">Le parent de la page a été modifié</string>
     <string name="page_permanently_deleted">La page a été supprimée définitivement</string>
     <string name="page_moved_to_scheduled">La page a été planifiée</string>
@@ -2399,8 +2373,6 @@ Language: fr
     <string name="quick_start_button_negative">Pas maintenant</string>
     <string name="content_description_more">Plus</string>
     <string name="my_site_create_new_site_title">Vous n\'avez pas de sites.</string>
-    <string name="reader_empty_followed_tags_title">Aucun sujet suivi</string>
-    <string name="reader_empty_followed_tags_subtitle">Ajoutez des sujets ici pour rechercher des articles sur vos rubriques préférées</string>
     <string name="login_to_to_connect_jetpack">Connectez-vous au compte WordPress.com que vous utilisez pour connecter Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
@@ -2420,9 +2392,6 @@ Language: fr
     <string name="people_empty_list_filtered_users">Pas encore d\'utilisateurs</string>
     <string name="reader_empty_posts_liked_description">Les articles que vous aimez apparaîtront ici</string>
     <string name="reader_empty_posts_liked_title">Aucune mention J\'aime</string>
-    <string name="reader_empty_followed_blogs_button_followed">Accéder à la page des abonnés</string>
-    <string name="reader_empty_followed_blogs_button_discover">Découvrir des sites</string>
-    <string name="reader_empty_followed_blogs_title">Aucun site suivi</string>
     <string name="notifications_empty_likes">Pas encore de mentions J\'aime</string>
     <string name="notifications_empty_followers">Pas encore d\'abonnés</string>
     <string name="activity_log_limited_content_on_free_plan">Comme vous disposez d\'un plan gratuit, vous ne verrez qu\'un nombre limité d\'événements dans vos activités.</string>
@@ -2487,8 +2456,6 @@ Language: fr
     <string name="reader_followed_blog_notifications_this">ce site</string>
     <string name="reader_followed_blog_notifications_action">Activer</string>
     <string name="reader_followed_blog_notifications">Activer les notifications pour %1$s%2$s%3$s ?</string>
-    <string name="reader_btn_notifications_on">Activer les notifications de site</string>
-    <string name="reader_btn_notifications_off">Désactiver les notifications de site</string>
     <string name="activity_log_jetpack_icon">Icône Jetpack</string>
     <string name="activity_log_event">Événement</string>
     <string name="activity_log_icon">Icône d\'activité</string>
@@ -3044,6 +3011,7 @@ Language: fr
     <string name="media_encoder_quality_maximum">Maximale</string>
     <string name="media_encoder_quality_high">Élevée</string>
     <string name="media_encoder_quality_medium">Moyenne</string>
+    <string name="media_encoder_quality_low">Faible</string>
     <string name="media_upload_state_uploaded">Téléversé</string>
     <string name="media_upload_state_failed">Téléversement échoué</string>
     <string name="media_upload_state_deleted">Supprimé</string>
@@ -3069,7 +3037,6 @@ Language: fr
     <string name="confirm">Confirmer</string>
     <string name="xmlrpc_endpoint_forbidden_error">Connexion impossible. Nous avons reçu une erreur 403 lors de \nnotre tentative d\'accès au point de terminaison XML-RPC de votre site. \nL’application en a besoin pour communiquer avec votre site. \nContactez votre hébergeur pour résoudre ce problème.</string>
     <string name="xmlrpc_post_blocked_error">Connexion impossible. Votre hébergeur bloque les requêtes POST\ndont votre application a besoin pour communiquer avec votre site. \nContactez-le pour résoudre ce problème.</string>
-    <string name="reader_hint_search_followed_sites">Rechercher parmi les sites suivis</string>
     <string name="pending_draft_one_generic">Ne le laissez pas sur la touche&amp;nbsp;! «&amp;nbsp;%1$s&amp;nbsp;» attendre d’être publié.</string>
     <string name="pending_draft_one_month">Ne le laissez pas sur la touche&amp;nbsp;! «&amp;nbsp;%1$s&amp;nbsp;» attendre d’être publié.</string>
     <string name="pending_draft_one_week_2">«&amp;nbsp;%1$s&amp;nbsp;» est toujours un brouillon. N\'oubliez pas de le publier&amp;nbsp;!</string>
@@ -3171,7 +3138,6 @@ Language: fr
     <string name="person_remove_confirmation_title">Supprimer %1$s</string>
     <string name="role">Rôle</string>
     <string name="people">Personnes</string>
-    <string name="reader_empty_posts_in_custom_list">Les sites dans cette liste n’ont rien publié récemment</string>
     <string name="error_remove_user">Impossible de supprimer l’utilisateur</string>
     <string name="error_update_role">Impossible de mettre à jour le rôle utilisateur</string>
     <string name="error_fetch_viewers_list">Impossible de récupérer les utilisateurs du site</string>
@@ -3384,7 +3350,6 @@ Language: fr
     <string name="reader_err_get_post_not_found">Cet article n’existe plus</string>
     <string name="reader_err_get_post_not_authorized">Vous n’avez pas les droits nécessaires pour voir cet article</string>
     <string name="reader_err_get_post_generic">Impossible de retrouver cet article</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Les sites que vous suivez n\'ont rien publié récemment.</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Pas d\'articles récents.</string>
     <string name="media_edit_copy_url_toast">URL copiée dans le presse-papiers.</string>
     <string name="selected_theme">Thème sélectionné</string>
@@ -3429,8 +3394,6 @@ Language: fr
     <string name="reader_short_like_count_multi">%s Likes</string>
     <string name="reader_short_like_count_one">1 Like</string>
     <string name="reader_short_like_count_none">Like</string>
-    <string name="reader_label_follow_count">%,d abonnés</string>
-    <string name="reader_menu_tags">Modifier les sujets et les sites</string>
     <string name="reader_title_post_detail">Article du Reader</string>
     <string name="notifications_push_summary">Paramètres de notifications qui apparaissent sur votre appareil.</string>
     <string name="notifications_email_summary">Paramètres de notifications qui vous sont envoyé par email.</string>
@@ -3452,8 +3415,6 @@ Language: fr
     <string name="button_view">Vue</string>
     <string name="button_publish">Publier</string>
     <string name="button_edit">Editer</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Vous n\'êtes pas autorisé à accéder à ce site</string>
-    <string name="reader_toast_err_follow_blog_not_found">Ce site est introuvable</string>
     <string name="undo">Annuler</string>
     <string name="push_auth_expired">La requête a expiré. Connectez-vous à WordPress.com et réessayez.</string>
     <string name="ignore">Ignorer</string>
@@ -3497,7 +3458,6 @@ Language: fr
     <string name="posts_fetching">Récupération des articles…</string>
     <string name="media_fetching">Récupération des médias…</string>
     <string name="logs_copied_to_clipboard">Les logs de l\'application ont été copiés dans le presse papier</string>
-    <string name="reader_empty_posts_in_blog">Ce site est vide</string>
     <string name="reader_label_new_posts">Nouveaux articles</string>
     <string name="error_copy_to_clipboard">Une erreur s\'est produite lors de la copie dans le presse papier</string>
     <string name="post_uploading">Article en cours de téléversement</string>
@@ -3525,7 +3485,6 @@ Language: fr
     <string name="cab_selected">%d sélectionnés</string>
     <string name="browse_our_faq_button">Feuilleter notre FAQ</string>
     <string name="reader_empty_comments">Pas encore de commentaires</string>
-    <string name="reader_empty_posts_in_tag">Pas d\'article avec ce sujet</string>
     <string name="reader_label_like">Aime</string>
     <string name="reader_label_view_original">Voir l\'article original</string>
     <string name="reader_label_comments_closed">Les commentaires sont fermés</string>
@@ -3545,22 +3504,8 @@ Language: fr
     <string name="posts_empty_list">Pas encore d\'article. Pourquoi ne pas en créer un?</string>
     <string name="signing_out">Déconnexion…</string>
     <string name="reader_toast_err_generic">Impossible d\'effectuer cette action</string>
-    <string name="reader_toast_err_block_blog">Impossible de bloquer ce site</string>
-    <string name="reader_toast_blog_blocked">Les articles de ce site ne seront plus affichés</string>
-    <string name="reader_menu_block_blog">Bloquer ce site</string>
     <string name="schedule_verb">Programmer</string>
     <string name="update_verb">Mettre à jour</string>
-    <string name="reader_empty_recommended_blogs">Aucun site recommandé</string>
-    <string name="reader_toast_err_unfollow_blog">Impossible de se désabonner de ce site</string>
-    <string name="reader_toast_err_follow_blog">Impossible de suivre ce site</string>
-    <string name="reader_toast_err_already_follow_blog">Vous suivez déjà ce site</string>
-    <string name="reader_toast_err_get_blog_info">Impossible d’afficher ce site</string>
-    <string name="reader_label_followed_blog">Site suivi</string>
-    <string name="reader_label_followers_count">%s abonnés</string>
-    <string name="reader_hint_add_tag_or_url">Saisissez une URL ou un sujet à suivre</string>
-    <string name="reader_page_followed_blogs">Sites suivis</string>
-    <string name="reader_page_followed_tags">Sujets suivis</string>
-    <string name="reader_title_blog_preview">Blog du Lecteur</string>
     <string name="ssl_certificate_ask_trust">Si vous vous connectez habituellement à ce site sans problème, cette erreur peut signifier que quelqu\'un essai de se faire passer pour vous et vous ne devriez pas continuer. Souhaitez-vous faire confiance à ce certificat ?</string>
     <string name="ssl_certificate_error">Certificat SSL invalide</string>
     <string name="help">Aide</string>
@@ -3586,8 +3531,6 @@ Language: fr
     <string name="blog_not_found">Une erreur s\'est produite en accédant à ce blog</string>
     <string name="gallery_error">Le média ne peut pas être récupéré</string>
     <string name="no_network_message">Aucun réseau disponible</string>
-    <string name="reader_toast_err_remove_tag">Impossible de supprimer ce sujet</string>
-    <string name="reader_toast_err_add_tag">Impossible d\'ajouter ce sujet</string>
     <string name="reader_title_applog">Journal de l\'application</string>
     <string name="fatal_db_error">Une erreur s\'est produite lors de la création de la base de données de l\'app. Essayez de réinstaller l\'app.</string>
     <string name="error_blog_hidden">Ce blog est caché et ne peut être chargé. Activez-le dans les paramètres et réessayez.</string>
@@ -3613,7 +3556,7 @@ Language: fr
     <string name="mnu_comment_unapprove">Désapprouver</string>
     <string name="mnu_comment_approve">Approuver</string>
     <string name="edit_comment">Modifier le commentaire</string>
-    <string name="comment_status_trash">À la Corbeille</string>
+    <string name="comment_status_trash">Mis à la corbeille</string>
     <string name="comment_status_spam">Indésirable</string>
     <string name="comment_status_unapproved">En attente</string>
     <string name="comment_status_approved">Approuvé</string>
@@ -3649,15 +3592,12 @@ Language: fr
     <string name="reader_toast_err_url_intent">Impossible d\'ouvrir %s</string>
     <string name="reader_toast_err_view_image">Impossible de voir l\'image</string>
     <string name="reader_toast_err_share_intent">Impossible de partager</string>
-    <string name="reader_toast_err_tag_invalid">Ce n’est pas un sujet valide</string>
-    <string name="reader_toast_err_tag_exists">Vous suivez déjà ce sujet</string>
     <string name="reader_toast_err_comment_failed">Impossible d\'envoyer votre commentaire</string>
     <string name="reader_likes_only_you">Vous aimez ça</string>
     <string name="reader_likes_one">Une personne aime ça</string>
     <string name="reader_label_removed_tag">%s Retiré</string>
     <string name="reader_label_added_tag">%s Ajouté</string>
     <string name="reader_hint_comment_on_comment">Répondre au commentaire…</string>
-    <string name="reader_btn_unfollow">Abonné</string>
     <string name="reader_btn_follow">Suivre</string>
     <string name="reader_btn_share">Partager</string>
     <string name="reader_view_reblog">Rebloguer</string>

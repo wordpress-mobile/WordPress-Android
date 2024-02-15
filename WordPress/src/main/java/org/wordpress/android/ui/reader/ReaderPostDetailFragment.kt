@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -11,6 +12,7 @@ import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.Gravity
@@ -1160,10 +1162,18 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         super.onStart()
         dispatcher.register(this)
         EventBus.getDefault().register(this)
-        activity?.registerReceiver(
-            readerFileDownloadManager,
-            IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            activity?.registerReceiver(
+                readerFileDownloadManager,
+                IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+                ContextWrapper.RECEIVER_NOT_EXPORTED
+            )
+        } else {
+            activity?.registerReceiver(
+                readerFileDownloadManager,
+                IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+            )
+        }
     }
 
     override fun onStop() {

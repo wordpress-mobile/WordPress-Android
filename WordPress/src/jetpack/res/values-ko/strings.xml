@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-09 12:54:03+0000
+Translation-Revision-Date: 2024-01-16 09:54:02+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="login_prologue_revamped_jetpack_feature_text_13">잠재 고객 형성</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_12">다른 블로그 읽기</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_16">도메인 관리</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_15">어디서나 작성</string>
     <string name="missing_splits_dialog_message">필수 구성 요소가 젯팩 앱에 없습니다. Google Play 스토어에서 다시 설치해야 합니다.</string>
     <string name="me_btn_share">친구와 젯팩 공유</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_12">글쓴이 추가</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_14">사진 게시</string>
     <string name="login_prologue_revamped_jetpack_feature_text_11">사진 게시</string>
     <string name="login_prologue_revamped_jetpack_feature_text_10">보안 문제 해결</string>
-    <string name="login_prologue_revamped_jetpack_feature_text_9">페이스북에서 공유</string>
+    <string name="login_prologue_revamped_jetpack_feature_text_9">소셜에서 공유</string>
     <string name="login_prologue_revamped_jetpack_feature_text_8">플러그인 검색</string>
     <string name="login_prologue_revamped_jetpack_feature_text_7">백업 복원</string>
     <string name="login_prologue_revamped_jetpack_feature_text_6">댓글 응답</string>

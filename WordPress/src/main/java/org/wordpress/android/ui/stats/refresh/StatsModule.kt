@@ -62,11 +62,14 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase.TotalFollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import javax.inject.Named
 import javax.inject.Singleton
 
 const val INSIGHTS_USE_CASE = "InsightsUseCase"
+const val TRAFFIC_USE_CASE = "TrafficStatsUseCase"
 const val DAY_STATS_USE_CASE = "DayStatsUseCase"
 const val WEEK_STATS_USE_CASE = "WeekStatsUseCase"
 const val MONTH_STATS_USE_CASE = "MonthStatsUseCase"
@@ -266,6 +269,34 @@ class StatsModule {
     }
 
     /**
+     * Provides a singleton usecase that represents the TRAFFIC stats screen.
+     * @param useCasesFactories build the use cases for the DAYS granularity
+     */
+    @Provides
+    @Named(TRAFFIC_USE_CASE)
+    @Suppress("LongParameterList")
+    fun provideTrafficUseCase(
+        statsStore: StatsStore,
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        statsSiteProvider: StatsSiteProvider,
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
+        selectedTrafficGranularityManager: SelectedTrafficGranularityManager,
+        uiModelMapper: UiModelMapper
+    ): BaseListUseCase {
+        return BaseListUseCase(
+            bgDispatcher,
+            mainDispatcher,
+            statsSiteProvider,
+            useCasesFactories.map {
+                it.build(selectedTrafficGranularityManager.getSelectedTrafficGranularity(), BLOCK)
+            },
+            { statsStore.getTimeStatsTypes(it) },
+            uiModelMapper::mapTimeStats
+        )
+    }
+
+    /**
      * Provides a singleton usecase that represents the Day stats screen.
      * @param useCasesFactories build the use cases for the DAYS granularity
      */
@@ -374,20 +405,27 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(LIST_STATS_USE_CASES)
+    @Suppress("LongParameterList")
     fun provideListStatsUseCases(
         @Named(INSIGHTS_USE_CASE) insightsUseCase: BaseListUseCase,
+        @Named(TRAFFIC_USE_CASE) trafficUseCase: BaseListUseCase,
         @Named(DAY_STATS_USE_CASE) dayStatsUseCase: BaseListUseCase,
         @Named(WEEK_STATS_USE_CASE) weekStatsUseCase: BaseListUseCase,
         @Named(MONTH_STATS_USE_CASE) monthStatsUseCase: BaseListUseCase,
-        @Named(YEAR_STATS_USE_CASE) yearStatsUseCase: BaseListUseCase
+        @Named(YEAR_STATS_USE_CASE) yearStatsUseCase: BaseListUseCase,
+        trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
     ): Map<StatsSection, BaseListUseCase> {
-        return mapOf(
-            StatsSection.INSIGHTS to insightsUseCase,
-            StatsSection.DAYS to dayStatsUseCase,
-            StatsSection.WEEKS to weekStatsUseCase,
-            StatsSection.MONTHS to monthStatsUseCase,
-            StatsSection.YEARS to yearStatsUseCase
-        )
+        return if (trafficTabFeatureConfig.isEnabled()) {
+            mapOf(StatsSection.TRAFFIC to trafficUseCase, StatsSection.INSIGHTS to insightsUseCase)
+        } else {
+            mapOf(
+                StatsSection.INSIGHTS to insightsUseCase,
+                StatsSection.DAYS to dayStatsUseCase,
+                StatsSection.WEEKS to weekStatsUseCase,
+                StatsSection.MONTHS to monthStatsUseCase,
+                StatsSection.YEARS to yearStatsUseCase
+            )
+        }
     }
 
     /**

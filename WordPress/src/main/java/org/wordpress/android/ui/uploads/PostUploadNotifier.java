@@ -135,7 +135,11 @@ class PostUploadNotifier {
         updateNotificationBuilder(post);
         if (sNotificationData.mNotificationId == 0) {
             sNotificationData.mNotificationId = (new Random()).nextInt();
-            mService.startForeground(sNotificationData.mNotificationId, mNotificationBuilder.build());
+            try {
+                mService.startForeground(sNotificationData.mNotificationId, mNotificationBuilder.build());
+            } catch (RuntimeException exception) {
+                AppLog.e(T.POSTS, "startOrUpdateForegroundNotification failed; See issue #18714", exception);
+            }
         } else {
             // service was already started, let's just modify the notification
             doNotify(sNotificationData.mNotificationId, mNotificationBuilder.build(), null);

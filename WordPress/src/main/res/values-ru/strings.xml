@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-08 10:30:27+0000
+Translation-Revision-Date: 2024-01-23 04:14:20+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_waiting_for_connection">Ожидание подключения</string>
+    <string name="stats_traffic">Посещаемость</string>
+    <string name="gutenberg_native_working_offline">Автономная работа</string>
+    <string name="gutenberg_native_network_connection_re_established">Сетевое соединение восстановлено</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">Сетевое соединение потеряно, работа в автономном режиме</string>
+    <string name="gutenberg_native_font_size_1_s">Размер шрифта: %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">Тип файла не поддерживается в качестве медиафайла.</string>
+    <string name="media_cannot_be_started">Невозможно открыть медиафайл в данный момент. Пожалуйста, попробуйте позже</string>
+    <string name="domains_just_search_for_a_domain_button">Просто найти домен</string>
+    <string name="domains_upgrade_to_a_plan_button">Улучшение тарифа</string>
+    <string name="domains_upgrade_to_plan_caption">Получите бесплатную регистрацию домена на один год или перенесите его с любым годовым платным тарифом.</string>
+    <string name="domains_site_domain_never_expires">Бессрочно</string>
+    <string name="domains_free_domain">Бесплатный домен WordPress.com</string>
+    <string name="domains_site_other_domains">Другие домены для %s</string>
+    <string name="domains_primary_site_domain_chip">Основной домен</string>
+    <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary уже идёт!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Поехали!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Включить подсказки по ведению блога</string>
@@ -18,8 +34,6 @@ Language: ru
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">В январе подсказки по ведению блога будут рассылаться через Bloganuary — челлендж сообщества, призванный выработать привычку ежедневно вести блог в новом году.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Bloganuary уже на пороге!</string>
-    <string name="turn_off">Нет, отключить</string>
-    <string name="leave_on">Да, оставить</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">По этой причине мы рекомендуем редактировать блок с помощью веб-браузера.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">По этой причине мы рекомендуем редактировать блок с помощью веб-редактора.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Альтернативно вы можете сгладить содержимое, разгруппировав блок.</string>
@@ -34,8 +48,6 @@ Language: ru
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the">Блоки, вложенные глубже, чем %d уровней, могут отображаться неправильно в мобильном редакторе.</string>
     <string name="jp_migration_lets_go_button">Поехали!</string>
     <string name="jp_migration_done_no_sites_message">Пришло время продолжить путешествие по WordPress в приложении Jetpack!</string>
-    <string name="image_optimization_popup_desc">Оптимизация изображений сжимает изображения для более быстрой загрузки.\n\nЭта опция включена по умолчанию, но вы можете изменить ее в настройках приложения в любой момент.</string>
-    <string name="image_optimization_popup_title">Продолжать оптимизировать изображения?</string>
     <string name="domain_management_clear_search">Очистить поиск</string>
     <string name="media_encoder_quality_very_high">Очень высокое</string>
     <string name="notification_security_key_needed">Пожалуйста предоставьте ключ безопасности для продолжения.</string>
@@ -87,7 +99,6 @@ Language: ru
     <string name="account_and_settings">Учетная запись и настройки</string>
     <string name="site_creation_plans_selection_title">Выберите тарифный план</string>
     <string name="site_creation_domain_free_with_annual_plan">Бесплатно на первый год при покупке любого годового тарифного плана</string>
-    <string name="reader_label_followers_count_single">1 подписчик</string>
     <string name="reader_secondary_bookmarked">Сохранено</string>
     <string name="reader_secondary_bookmark">Сохранить</string>
     <string name="reader_discover_recommended_header_new">Вам может понравиться</string>
@@ -156,10 +167,6 @@ Language: ru
     <string name="campaign_detail_error_title">Что-то пошло не так</string>
     <string name="campaign_listing_page_error_title">Что-то пошло не так</string>
     <string name="campaign_listing_page_error_refresh_could_not_fetch_campaigns"> Что-то пошло не так, не удалось загрузить кампании</string>
-    <string name="domain_transfer_card_cta">Перенести домены</string>
-    <string name="domain_transfer_card_caption">Как вы, возможно, знаете, домены Google были проданы компании Squarespace. Перенесите свои домены на WordPress.com сейчас, и мы оплатим все сборы за перенос плюс дополнительный год регистрации вашего домена.</string>
-    <string name="domain_transfer_card_sub_title">Заберите ваши домены Google</string>
-    <string name="domain_transfer_card_title">Новости</string>
     <string name="prepublishing_nudges_social_new_connection_cta">Подключить учётные записи</string>
     <string name="prepublishing_nudges_toolbar_title_social">Поделиться в социальных сетях</string>
     <string name="prepublishing_nudges_social_action">Поделиться в социальных сетях</string>
@@ -401,7 +408,7 @@ Language: ru
     <string name="stats_timeframe_last_seven_days">Последние 7 дней</string>
     <string name="weeks_quantity_other">%d нед.</string>
     <string name="weeks_quantity_one">1 неделя</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">От &lt;b&gt;В Первый День&lt;/b&gt;</string>
+    <string name="my_site_blogging_prompt_card_attribution_day_one">От &lt;b&gt;В Первый День&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Напомнить мне позже</string>
     <string name="jetpack_feature_card_content_phase_three">Статистика, Чтиво, Уведомления и другие функции скоро переедут в мобильное приложение Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Перейти в новое приложение Jetpack</string>
@@ -593,7 +600,6 @@ Language: ru
     <string name="quick_start_dialog_check_notifications_message_short">Перейдите на вкладку %1$sУведомления%2$s, чтобы получать изменения на ходу.</string>
     <string name="quick_start_dialog_upload_media_message_short_plus">Нажмите %1$s и %2$s, чтобы загрузить медиафайл. Можете добавить его в записи или на страницы с любого устройства.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Используйте раздел &lt;b&gt;Поиск&lt;/b&gt;, чтобы искать сайты и метки.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Используйте раздел &lt;b&gt;Поиск&lt;/b&gt;, чтобы искать сайты и метки. Перейдите в %1$sНастройки%2$s, чтобы добавить интересные вам темы.</string>
     <string name="photo_picker_video_thumbnail_content_description">Миниатюра видео</string>
     <string name="stats_details_top_commentators">Топ комментаторов</string>
     <string name="stats_published_years_ago">Опубликовано %1$d г./лет назад</string>
@@ -824,7 +830,6 @@ Language: ru
     <string name="my_site_post_card_scheduled_title">Запланированные к публикации записи</string>
     <string name="my_site_post_card_draft_title">Работа над черновой записью</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Первый год - бесплатно &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s в год&lt;/s&gt;&lt;/span&gt;</string>
-    <string name="domains_redirected_domains_blurb">Ваши домены направят на ваш сайт по адресу %s</string>
     <string name="gutenberg_native_create_link">Создать ссылку</string>
     <string name="domains_suggestions_select_domain">Выберите домен</string>
     <string name="domains_title">Домены</string>
@@ -845,14 +850,9 @@ Language: ru
     <string name="domains_free_plan_get_your_domain_caption">Домены, купленные для этого сайта, направят пользователей на &lt;b&gt;%s&lt;/b&gt;</string>
     <string name="domains_paid_plan_claim_your_domain_caption">На вашем тарифе возможно зарегистрировать бесплатно домен сроком на 1 год</string>
     <string name="domains_paid_plan_claim_your_domain_title">Получите бесплатный домен</string>
-    <string name="domains_manage_domains">Управление доменами</string>
     <string name="domains_add_a_domain">Добавить домен</string>
     <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Истекает %s&lt;/span&gt;</string>
     <string name="domains_site_domain_expires">Истекает %s</string>
-    <string name="domains_site_domains">Домены вашего сайта</string>
-    <string name="domains_primary_site_address_chip">Основной адрес сайта</string>
-    <string name="domains_primary_site_more_menu_change_site_address">Изменить адрес сайта</string>
-    <string name="domains_primary_site_caption">Адрес вашего сайта (бесплатный) на WordPress.com -</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s за первый год &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s в год&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /в год&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Хотите отменить их?</string>
@@ -878,7 +878,6 @@ Language: ru
     <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Вам&lt;/a&gt; это нравится.</string>
     <string name="gutenberg_native_line_height">Высота строки</string>
     <string name="domains_free_plan_get_your_domain_title">Получите собственный домен</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Возникла неизвестная ошибка получания шаблона приложения рекомендаций</string>
     <string name="recommend_app_bad_format_response">Получен неверный ответ</string>
     <string name="recommend_app_null_response">Ответ не получен</string>
@@ -1097,7 +1096,6 @@ Language: ru
     <string name="jetpack_brute_force_allowlist_title">Белый список IP</string>
     <string name="site_settings_denylist_title">Запрещённые комментарии</string>
     <string name="gutenberg_native_add_button_text">Добавить текст кнопки</string>
-    <string name="reader_title_interests">Подписаться на темы</string>
     <string name="stories_intro_main_subtitle">Новый способ создавать и публиковать захватывающее содержимое на вашем сайте.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Скрыть</string>
     <string name="activity_log_backup_download_notice_download_action">Скачать</string>
@@ -1409,8 +1407,6 @@ Language: ru
     <string name="hpp_error_title">Макеты недоступны при отсутствии подключения к сети</string>
     <string name="continue_site_credentials">Продолжить с учетными данными магазина</string>
     <string name="login_find_your_connected_email">Узнать адрес привязанной эл. почты</string>
-    <string name="reader_discover_no_posts_button_text">Подписаться на темы</string>
-    <string name="reader_discover_no_posts_subtitle">Для расширения поиска попробуйте подписаться на больше тем</string>
     <string name="reader_discover_no_posts_title">Нет свежих записей</string>
     <string name="reader_discover_empty_title">Добро пожаловать!</string>
     <string name="scan">Сканировать</string>
@@ -1449,7 +1445,6 @@ Language: ru
     <string name="login_prologue_title_second">С настолько мощным редактором вы можете создавать публикации на ходу.</string>
     <string name="login_prologue_title_first">Добро пожаловать в самый популярный в мире конструктор сайтов.</string>
     <string name="media_loading_failed">Загрузка медиафайла неудалась</string>
-    <string name="reader_discover_recommended_blogs_header">Сайты для подписки</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Мы стараемся добавить как можно больше блоков в каждом выпуске.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' полностью не поддерживается</string>
     <string name="gutenberg_native_help_button">Кнопка помощи</string>
@@ -1470,7 +1465,6 @@ Language: ru
     <string name="photo_picker_wordpress_media_library">Выберите из медиатеки WordPress</string>
     <string name="reader_label_toolbar_back">Назад</string>
     <string name="reader_discover_empty_button_text">Начните</string>
-    <string name="reader_discover_empty_subtitle">Подписывайтесь на темы для того, чтобы найти новые блоги</string>
     <string name="reader_post_details_header_by_author_name">От автора</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Этот реферер не может быть отмечен как спам</string>
     <string name="stats_referrer_popup_unmark_as_spam">Убрать отметку спам</string>
@@ -1628,7 +1622,6 @@ Language: ru
     <string name="gutenberg_native_block_copied">Блок скопирован</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Название сайта может быть изменено только администратором.</string>
     <string name="my_site_title_changer_dialog_hint">Название сайта отображается в заголовке браузера и отображается большинством тем в заголовке сайта.</string>
-    <string name="reader_title_tag_preview">Тема</string>
     <string name="error_update_site_title_network">Невозможно обновить название сайта. Проверьте подключение к сети и попробуйте снова.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Несохранённые изменения</string>
     <string name="gutenberg_native_open_link_in_a_browser">Открыть ссылку в браузере</string>
@@ -1660,8 +1653,6 @@ Language: ru
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Переместить в черновики</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Записи из корзины не могут быть отредактированы. Хотите изменить статус на \"черновик\", чтобы получить возможность редактирования?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Переместить записи в черновики</string>
-    <string name="reader_label_choose_your_interests">Выберите ваши интересы</string>
-    <string name="reader_choose_interests_content_description">Выберите ваши интересы</string>
     <string name="reader_btn_done">Готово</string>
     <string name="reader_btn_select_few_interests">Выберите несколько для продолжения</string>
     <string name="post_status_post_published">Опубликована</string>
@@ -1704,7 +1695,6 @@ Language: ru
     <string name="page_cannot_set_homepage">Для установки главной страницы включите \"Статическую главную страницу\" в настройках сайта</string>
     <string name="gutenberg_native_select_a_color">Выберите цвет</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Нажмите дважды для перехода в настройки цветов</string>
-    <string name="reader_empty_followed_blogs_description">При подписке на сайты вы увидите их содержимое здесь</string>
     <string name="feature_announcement_find_out_mode">Подробнее</string>
     <string name="feature_announcement_dialog_label">Что нового в %s?</string>
     <string name="insert_label_with_count">Вставить %d</string>
@@ -1718,9 +1708,6 @@ Language: ru
     <string name="site_picker_ask_site_select">Не удалось выбрать сайт. Повторите попытку.</string>
     <string name="sitepicker_continue_flow">Продолжить</string>
     <string name="reader_reblog_error">Перепубликация не удалась</string>
-    <string name="reader_no_site_to_reblog_action">Управление сайтами</string>
-    <string name="reader_no_site_to_reblog_detail">После создания сайта на WordPress.com вы сможете сделать перепубликацию понравившегося содержимого на своем сайте.</string>
-    <string name="reader_no_site_to_reblog_title">Нет доступных сайтов на WordPress.com</string>
     <string name="whats_new_in_version_title">Что нового</string>
     <string name="comment_q_action_copied_url">Адрес ссылки скопирован</string>
     <string name="copy_link_address">Скопировать адрес ссылки</string>
@@ -1820,23 +1807,13 @@ Language: ru
     <string name="stats_management_screen_title">Добавить новую карточку</string>
     <string name="stats_management_add_new_stats_card">Добавить новую карточку статистики</string>
     <string name="reader_self_hosted_select_filter">Используйте кнопку фильтра для поиска записей по интересующим темам</string>
-    <string name="reader_bottom_sheet_content_description">Выберите метку или сайт, всплывающее окно</string>
-    <string name="reader_btn_select_filter_content_description">Выберите сайт или метку для фильтрации записей</string>
     <string name="reader_btn_remove_filter_content_description">Убрать текущий фильтр</string>
-    <string name="reader_title_subs">Управление темами и сайтами</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Войти на WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Войдите на WordPress.com, чтобы увидеть последние записи по темам, на которые вы подписаны</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Войдите на WordPress.com, чтобы увидеть последние записи с сайтов, на которые вы подписаны</string>
     <string name="gutenberg_native_replace_current_block">Заменить текущий блок</string>
     <string name="gutenberg_native_add_to_end">Добавить в конце</string>
     <string name="gutenberg_native_add_to_beginning">Добавить в начале</string>
     <string name="gutenberg_native_add_block_before">Добавить блок перед</string>
     <string name="gutenberg_native_add_block_after">Добавить блок после</string>
-    <string name="reader_filter_empty_tags_action">Добавить тему</string>
-    <string name="reader_filter_empty_sites_action">Подписаться на сайт</string>
-    <string name="reader_filter_empty_tags_list">Вы можете подписаться на определенную тему добавив её</string>
-    <string name="reader_filter_empty_sites_list">Читайте свежие записи с сайтов, на которые вы подписаны</string>
-    <string name="reader_filter_main_title">Подписки</string>
     <string name="reader_filter_cta">Фильтр</string>
     <string name="gutenberg_native_video_caption_s">Подпись к видео. %s</string>
     <string name="gutenberg_native_edit_video">Изменить видео</string>
@@ -1881,12 +1858,9 @@ Language: ru
     <string name="login_site_credentials_magic_link_label">Почти готово! Нужно только проверить адрес эл.почты подключения Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Войдите с именем пользователя и паролем для сайта %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Страница сайта</string>
-    <string name="reader_following_display_name">Подписчик</string>
     <string name="reader_my_likes_display_name">Отметки \"Нравится\"</string>
     <string name="reader_discover_display_name">Найти</string>
     <string name="reader_save_for_later_display_name">Сохранено</string>
-    <string name="reader_filter_tags_title">Темы</string>
-    <string name="reader_filter_sites_title">Сайты</string>
     <string name="suffix_1_000_000_000_000_000_000">%sЭ</string>
     <string name="suffix_1_000_000_000_000_000">%sП</string>
     <string name="suffix_1_000_000_000_000">%sТ</string>
@@ -2377,7 +2351,6 @@ Language: ru
     <string name="login_error_sms_throttled">Слишком много попыток отправить СМС-код проверки, отдохните и запросите снова через пару минут.</string>
     <string name="login_error_email_not_found_v2">Ни одна учетная запись WordPress.com не совпадает с этой записью в Google.</string>
     <string name="site_picker_remove_site_empty">Нет сайтов по критериям поиска</string>
-    <string name="reader_empty_followed_blogs_search_title">Нет сайтов по критериям поиска</string>
     <string name="page_parent_changed">Родитель для страницы сменен</string>
     <string name="page_permanently_deleted">Страница удалена навсегда</string>
     <string name="page_moved_to_scheduled">Страница запланирована к публикации</string>
@@ -2410,8 +2383,6 @@ Language: ru
     <string name="quick_start_button_negative">Не сейчас</string>
     <string name="content_description_more">Больше</string>
     <string name="my_site_create_new_site_title">У вас нет сайтов</string>
-    <string name="reader_empty_followed_tags_title">Нет подписок на темы</string>
-    <string name="reader_empty_followed_tags_subtitle">Добавьте любимые темы здесь, чтобы найти по ним записи</string>
     <string name="login_to_to_connect_jetpack">Войдите в учетную запись WordPress.com, с которой был подключен Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
@@ -2431,9 +2402,6 @@ Language: ru
     <string name="people_empty_list_filtered_users">Ещё нет пользователей</string>
     <string name="reader_empty_posts_liked_description">Записи, которые вам понравились будут здесь</string>
     <string name="reader_empty_posts_liked_title">Нет отметок \"нравится\"</string>
-    <string name="reader_empty_followed_blogs_button_followed">Перейти к подпискам</string>
-    <string name="reader_empty_followed_blogs_button_discover">Найти сайты</string>
-    <string name="reader_empty_followed_blogs_title">Нет подписок на сайты</string>
     <string name="notifications_empty_likes">Ещё нет отметок \"нравится\"</string>
     <string name="notifications_empty_followers">Ещё нет подписчиков</string>
     <string name="activity_log_limited_content_on_free_plan">Для бесплатных тарифов число событий в истории ограничено.</string>
@@ -2498,8 +2466,6 @@ Language: ru
     <string name="reader_followed_blog_notifications_this">этот сайт</string>
     <string name="reader_followed_blog_notifications_action">Включить</string>
     <string name="reader_followed_blog_notifications">Включить уведомления для %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Включить уведомления сайта</string>
-    <string name="reader_btn_notifications_off">Отключить уведомления сайта</string>
     <string name="activity_log_jetpack_icon">Значок Jetpack</string>
     <string name="activity_log_event">Событие</string>
     <string name="activity_log_icon">Значок активности</string>
@@ -3081,7 +3047,6 @@ Language: ru
     <string name="confirm">Подтвердить</string>
     <string name="xmlrpc_endpoint_forbidden_error">Не удалось подключиться. При попытке подключиться к конечной точке XMLRPC вашего сайта мы получили\n ошибку 403. Это необходимо для обмена данными между приложением и вашим сайтом. Свяжитесь с хостинг-провайдером, чтобы решить\n эту проблему.</string>
     <string name="xmlrpc_post_blocked_error">Не удалось подключиться. Ваш хостинг-провайдер блокирует запросы POST, которые нужны приложению\n для обмена данными с вашим сайтом. Свяжитесь с хостинг-провайдером, чтобы решить эту проблему.</string>
-    <string name="reader_hint_search_followed_sites">Искать на веб-сайтах, на которые вы подписаны</string>
     <string name="pending_draft_one_generic">Не бросайте эту запись! Запись «%1$s» должна увидеть свет.</string>
     <string name="pending_draft_one_month">Не бросайте эту запись! Запись «%1$s» должна увидеть свет.</string>
     <string name="pending_draft_one_week_2">Запись «%1$s» остаётся в черновиках. Не забудьте опубликовать её!</string>
@@ -3183,7 +3148,6 @@ Language: ru
     <string name="person_remove_confirmation_title">Удалить %1$s</string>
     <string name="role">Роль</string>
     <string name="people">Люди</string>
-    <string name="reader_empty_posts_in_custom_list">На сайтах из этого списка за последнее время не было ничего опубликовано</string>
     <string name="error_remove_user">Не удалось удалить пользователя</string>
     <string name="error_update_role">Не удалось обновить роль пользователя</string>
     <string name="error_fetch_viewers_list">Не получить список пользователей сайта</string>
@@ -3396,7 +3360,6 @@ Language: ru
     <string name="reader_err_get_post_not_found">Эта запись больше не существует</string>
     <string name="reader_err_get_post_not_authorized">У вас нет прав на просмотр этой записи</string>
     <string name="reader_err_get_post_generic">Не удается загрузить эту запись</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">На сайтах, на которые вы подписаны, в последнее время не публиковались новые записи</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Нет свежих записей</string>
     <string name="media_edit_copy_url_toast">URL-адрес скопирован в буфер обмена</string>
     <string name="selected_theme">Выбранная тема</string>
@@ -3441,8 +3404,6 @@ Language: ru
     <string name="reader_short_like_count_multi">%s оценок</string>
     <string name="reader_short_like_count_one">1 оценка</string>
     <string name="reader_short_like_count_none">Оценить</string>
-    <string name="reader_label_follow_count">%,d подписчиков</string>
-    <string name="reader_menu_tags">Редактировать темы и сайты</string>
     <string name="reader_title_post_detail">Запись из Чтива</string>
     <string name="notifications_push_summary">Настройки уведомлений, отображаемых на вашем устройстве.</string>
     <string name="notifications_email_summary">Настройки уведомлений, отправляемых на e-mail из вашей учётной записи.</string>
@@ -3464,8 +3425,6 @@ Language: ru
     <string name="button_view">Просмотреть</string>
     <string name="button_publish">Опубликовать</string>
     <string name="button_edit">Изменить</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">У вас нет разрешения на доступ к этому сайту.</string>
-    <string name="reader_toast_err_follow_blog_not_found">Не удаётся найти этот сайт.</string>
     <string name="undo">Назад</string>
     <string name="push_auth_expired">Время запроса истекло. Авторизуйтесь на WordPress.com и попробуйте еще раз.</string>
     <string name="ignore">Пропустить</string>
@@ -3509,7 +3468,6 @@ Language: ru
     <string name="posts_fetching">Загрузка записей…</string>
     <string name="media_fetching">Загрузка медиафайлов…</string>
     <string name="logs_copied_to_clipboard">Журналы приложения скопированы в буфер обмена.</string>
-    <string name="reader_empty_posts_in_blog">Этот сайт пуст.</string>
     <string name="reader_label_new_posts">Новые записи</string>
     <string name="error_copy_to_clipboard">Произошла ошибка при копировании текста в буфер обмена.</string>
     <string name="post_uploading">Идет отправка на сервер.</string>
@@ -3537,7 +3495,6 @@ Language: ru
     <string name="cab_selected">Выбрано: %d</string>
     <string name="browse_our_faq_button">Поиск в списке часто задаваемых вопросов</string>
     <string name="reader_empty_comments">Пока нет комментариев</string>
-    <string name="reader_empty_posts_in_tag">Нет записей по этой теме</string>
     <string name="reader_label_like">Нравится</string>
     <string name="reader_label_view_original">Просмотреть исходную публикацию</string>
     <string name="reader_label_comments_closed">Комментарии закрыты</string>
@@ -3557,22 +3514,8 @@ Language: ru
     <string name="posts_empty_list">Пока нет записей. Создайте первую!</string>
     <string name="signing_out">Выход из системы…</string>
     <string name="reader_toast_err_generic">Не удалось совершить это действие</string>
-    <string name="reader_toast_err_block_blog">Не удалось заблокировать этот сайт</string>
-    <string name="reader_toast_blog_blocked">Записи с этого сайта больше не будут отображаться</string>
-    <string name="reader_menu_block_blog">Заблокировать этот сайт</string>
     <string name="schedule_verb">Запланировать</string>
     <string name="update_verb">Обновить</string>
-    <string name="reader_empty_recommended_blogs">Нет рекомендованных сайтов</string>
-    <string name="reader_toast_err_unfollow_blog">Не удалось отписаться</string>
-    <string name="reader_toast_err_follow_blog">Не удалось подписаться на этот сайт</string>
-    <string name="reader_toast_err_already_follow_blog">Вы уже подписаны на этот сайт</string>
-    <string name="reader_toast_err_get_blog_info">Не удалось отобразить сайт</string>
-    <string name="reader_label_followed_blog">Вы подписаны на этот сайт</string>
-    <string name="reader_label_followers_count">%s подписчиков</string>
-    <string name="reader_hint_add_tag_or_url">Введите URL или тему для подписки</string>
-    <string name="reader_page_followed_blogs">Отслеживаемые сайты</string>
-    <string name="reader_page_followed_tags">Подписанные темы</string>
-    <string name="reader_title_blog_preview">Сайт из Чтива</string>
     <string name="ssl_certificate_ask_trust">Если вы обычно заходите на этот сайт без проблем, эта ошибка может означать, что кто-то пытается подделать сайт и вам не стоит сюда заходить. Хотите ли вы доверять ssl сертификату?</string>
     <string name="ssl_certificate_error">Недействительный сертификат SSL</string>
     <string name="help">Помощь</string>
@@ -3598,8 +3541,6 @@ Language: ru
     <string name="blog_not_found">Ошибка при попытке подключиться к блогу</string>
     <string name="gallery_error">Медиа-файл не может быть восстановлен</string>
     <string name="no_network_message">Нет доступной сети.</string>
-    <string name="reader_toast_err_remove_tag">Не удается удалить эту тему</string>
-    <string name="reader_toast_err_add_tag">Не удается подписаться на эту тему</string>
     <string name="reader_title_applog">Лог приложения</string>
     <string name="fatal_db_error">Произошла ошибка при создании базы данных приложения- попробуйте его переустановить.</string>
     <string name="error_blog_hidden">Этот блог является скрытым и не может быть загружен. Откройте его через настройки и попробуйте снова.</string>
@@ -3661,15 +3602,12 @@ Language: ru
     <string name="reader_toast_err_url_intent">Не удаётся открыть %s</string>
     <string name="reader_toast_err_view_image">Не удаётся просмотреть изображение</string>
     <string name="reader_toast_err_share_intent">Не в состоянии поделиться</string>
-    <string name="reader_toast_err_tag_invalid">Это неверная тема</string>
-    <string name="reader_toast_err_tag_exists">Вы уже подписаны на эту тему</string>
     <string name="reader_toast_err_comment_failed">Не удалось оставить комментарий</string>
     <string name="reader_likes_only_you">Вам нравится это</string>
     <string name="reader_likes_one">Одному человеку нравится это</string>
     <string name="reader_label_removed_tag">Метка %s удалена</string>
     <string name="reader_label_added_tag">Метка %s добавлена</string>
     <string name="reader_hint_comment_on_comment">Ответить на комментарий…</string>
-    <string name="reader_btn_unfollow">Отписаться</string>
     <string name="reader_btn_follow">Подписаться</string>
     <string name="reader_btn_share">Поделиться</string>
     <string name="reader_view_reblog">Перепубликация</string>

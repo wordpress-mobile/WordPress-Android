@@ -1,0 +1,5 @@
+24.1:
+- Få notiser när du arbetar offline.
+- Bildblocksuppladdningar pausas när din internetanslutning försvinner och återupptas när du återansluter.
+- Välj en anpassad gradient i redigeraren och en färgindikator.
+- Framåt- och bakåtpilarna är korrekta för höger-till-vänster-läsare.

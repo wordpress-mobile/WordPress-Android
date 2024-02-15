@@ -6,10 +6,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.ViewConfiguration;
@@ -19,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -46,7 +43,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class WPMediaUtils {
@@ -102,75 +98,6 @@ public class WPMediaUtils {
 
     public static boolean isVideoOptimizationEnabled() {
         return AppPrefs.isVideoOptimize();
-    }
-
-    /**
-     * Check if we should advertise image optimization feature for the current site.
-     * <p>
-     * The following condition need to be all true:
-     * 1) Image optimization is ON on the site.
-     * 2) Didn't already ask to keep or disable the feature.
-     * 3) The user has granted storage access to the app.
-     * This is because we don't want to ask so much things to users the first time they try to add a picture to the app.
-     *
-     * @param context The context
-     * @return true if we should advertise the feature, false otherwise.
-     */
-    public static boolean shouldAdvertiseImageOptimization(final Context context) {
-        boolean isPromoRequired = AppPrefs.isImageOptimizePromoRequired();
-        if (!isPromoRequired) {
-            return false;
-        }
-
-        // Check we can access storage before asking for optimizing image
-        boolean hasStoreAccess = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
-                                 || ContextCompat.checkSelfPermission(context,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-        if (!hasStoreAccess) {
-            return false;
-        }
-
-        // Check whether image optimization is enabled for the site
-        return AppPrefs.isImageOptimize();
-    }
-
-    public interface OnAdvertiseImageOptimizationListener {
-        void done();
-    }
-
-    public static void advertiseImageOptimization(final Context context,
-                                                  final OnAdvertiseImageOptimizationListener listener) {
-        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String propertyValue = (which == DialogInterface.BUTTON_POSITIVE) ? "on" : "off";
-                AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_OPTIMIZE_IMAGES_POPUP_TAPPED,
-                        Collections.singletonMap("option", propertyValue));
-
-                if (which == DialogInterface.BUTTON_NEGATIVE && AppPrefs.isImageOptimize()) {
-                    AppPrefs.setImageOptimize(false);
-                }
-
-                listener.done();
-            }
-        };
-
-        DialogInterface.OnCancelListener onCancelListener = new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                listener.done();
-            }
-        };
-
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(context);
-        builder.setTitle(R.string.image_optimization_popup_title);
-        builder.setMessage(R.string.image_optimization_popup_desc);
-        builder.setPositiveButton(R.string.leave_on, onClickListener);
-        builder.setNegativeButton(R.string.turn_off, onClickListener);
-        builder.setOnCancelListener(onCancelListener);
-        builder.show();
-        // Do not ask again
-        AppPrefs.setImageOptimizePromoRequired(false);
     }
 
     /**

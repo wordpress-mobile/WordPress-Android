@@ -21,7 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        app:aevTitle="@string/reader_empty_recommended_blogs"
+        app:aevTitle="@string/reader_no_recommended_blogs_title"
+        app:aevButtonStyle="reader"
         tools:visibility="visible" />
 
 </RelativeLayout>

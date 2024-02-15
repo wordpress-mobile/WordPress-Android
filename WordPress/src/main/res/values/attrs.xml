@@ -197,6 +197,11 @@
         <attr name="aevSubtitle" format="string"/>
         <!-- Required: string text of title -->
         <attr name="aevTitle" format="string"/>
+        <!-- Optional: style to set the button UI attributes -->
+        <attr name="aevButtonStyle" format="enum">
+            <enum name="primary" value="0"/>
+            <enum name="reader" value="1"/>
+        </attr>
     </declare-styleable>
 
     <!--

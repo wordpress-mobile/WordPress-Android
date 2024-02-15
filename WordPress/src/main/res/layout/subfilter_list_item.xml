@@ -5,15 +5,29 @@
     style="@style/SubfilterSiteTagItem"
     android:layout_width="match_parent">
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/item_avatar"
+        style="@style/ReaderImageView.Avatar.OvalSurfaceBackground"
+        android:visibility="gone"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintTop_toTopOf="@id/item_title"
+        app:layout_constraintBottom_toBottomOf="@id/item_url"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:src="@drawable/bg_oval_placeholder_globe_no_border_24dp"
+        tools:visibility="visible" />
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/item_title"
         style="@style/SiteTagFilteredTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_large"
         app:layout_constraintEnd_toStartOf="@+id/unseen_count"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_avatar"
         app:layout_constraintBottom_toTopOf="@+id/item_url"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginStart="0dp"
         app:layout_goneMarginBottom="@dimen/margin_large"
         app:layout_goneMarginEnd="0dp"
         tools:text="Unknown" />
@@ -23,11 +37,13 @@
         style="@style/SiteTagFilteredUrl"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/unseen_count"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_avatar"
         app:layout_constraintTop_toBottomOf="@+id/item_title"
         android:visibility="visible"
+        app:layout_goneMarginStart="0dp"
         app:layout_goneMarginEnd="0dp"
         tools:text="www.unknown.com" />
 

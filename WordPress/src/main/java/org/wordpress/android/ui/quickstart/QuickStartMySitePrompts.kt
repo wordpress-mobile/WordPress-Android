@@ -50,7 +50,7 @@ enum class QuickStartMySitePrompts constructor(
         R.id.root_view_main,
         R.id.bottom_nav_reader_button,
         R.string.quick_start_dialog_follow_sites_message_short_reader,
-        R.drawable.ic_reader_white_24dp
+        R.drawable.ic_reader_selected
     ),
     UPLOAD_SITE_ICON(
         QuickStartStore.QUICK_START_UPLOAD_SITE_ICON_LABEL,

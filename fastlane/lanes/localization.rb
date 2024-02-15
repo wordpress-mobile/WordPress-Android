@@ -120,7 +120,7 @@ platform :android do
       }
       # Add entries for `screenshot_*.txt` files as well
       Dir.glob('screenshot_*.txt', base: metadata_folder).sort.each do |screenshot_file|
-        key = "play_store_#{File.basename(screenshot_file, '.txt')}".to_sym
+        key = :"play_store_#{File.basename(screenshot_file, '.txt')}"
         files[key] = File.join(metadata_folder, screenshot_file)
       end
 
