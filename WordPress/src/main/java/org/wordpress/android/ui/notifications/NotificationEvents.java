@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.notifications;
 
-import androidx.annotation.NonNull;
-
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.models.Note;
