@@ -427,6 +427,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                     ActivityLauncher.openShareIntent(it, postNotification.url, postNotification.title)
                 }
             }
+            is InlineActionEvent.LikeCommentButtonTapped -> viewModel.likeComment(actionEvent.note, actionEvent.liked)
         }
     }
 

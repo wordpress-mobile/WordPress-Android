@@ -4,6 +4,7 @@ package org.wordpress.android.ui.notifications.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.AsyncTask
 import android.text.Spanned
 import android.text.TextUtils
@@ -20,18 +21,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.NotificationsTable
-import org.wordpress.android.datasets.ReaderPostTable
-import org.wordpress.android.fluxc.generated.CommentActionBuilder
-import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Note.NoteTimeGroup
 import org.wordpress.android.models.Note.TimeStampComparator
@@ -40,16 +36,14 @@ import org.wordpress.android.models.Notification.Comment
 import org.wordpress.android.models.Notification.PostNotification
 import org.wordpress.android.models.Notification.Unknown
 import org.wordpress.android.ui.comments.CommentUtils
-import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter
-import org.wordpress.android.ui.notifications.NotificationEvents.NoteLikeOrModerationStatusChanged
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener
 import org.wordpress.android.ui.notifications.NotificationsListViewModel.InlineActionEvent
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.NoteViewHolder
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
-import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.RtlUtils
+import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
@@ -72,15 +66,6 @@ class NotesAdapter(
 
     @Inject
     lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
-
-    @Inject
-    lateinit var siteStore: SiteStore
-
-    @Inject
-    lateinit var commentStoreAdapter: CommentsStoreAdapter
-
-    @Inject
-    lateinit var postLikeUseCase: PostLikeUseCase
 
     enum class FILTERS {
         FILTER_ALL,
@@ -378,7 +363,7 @@ class NotesAdapter(
         fun bindInlineActionIconsForNote(note: Note) = Notification.from(note).let { notification ->
             when (notification) {
                 Comment -> bindLikeCommentAction(note)
-                is PostNotification.NewPost -> bindLikePostAction(note)
+                is PostNotification.NewPost -> bindLikePostAction()
                 is PostNotification -> bindShareAction(notification)
                 is Unknown -> {
                     actionIcon.isVisible = false
@@ -388,6 +373,8 @@ class NotesAdapter(
 
         private fun bindShareAction(notification: PostNotification) {
             actionIcon.setImageResource(R.drawable.block_share)
+            val color = contentView.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
+            ImageViewCompat.setImageTintList(actionIcon, ColorStateList.valueOf(color))
             actionIcon.isVisible = true
             actionIcon.setOnClickListener {
                 coroutineScope.launch {
@@ -398,32 +385,25 @@ class NotesAdapter(
             }
         }
 
-        private fun bindLikePostAction(note: Note) {
-            val post = ReaderPostTable.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true) ?: return
-            if (post.canLikePost().not()) return
-            actionIcon.isVisible = true
-            val icon = if (post.isLikedByCurrentUser) R.drawable.star_filled else R.drawable.star_empty
-            actionIcon.setImageResource(icon)
-//            GlobalScope.launch { postLikeUseCase.perform(post, !post.isLikedByCurrentUser, "notification") }
+        private fun bindLikePostAction() {
+            // TODO: implement like post action
         }
 
         private fun bindLikeCommentAction(note: Note) {
             if (note.canLike().not()) return
-            val site = siteStore.getSiteBySiteId(note.siteId.toLong()) ?: return
+
             actionIcon.isVisible = true
             actionIcon.setImageResource(if (note.hasLikedComment()) R.drawable.star_filled else R.drawable.star_empty)
             ImageViewCompat.setImageTintList(actionIcon, null)
 
             actionIcon.setOnClickListener {
                 val liked = note.hasLikedComment().not()
-                commentStoreAdapter.dispatch(
-                    CommentActionBuilder.newLikeCommentAction(
-                        RemoteLikeCommentPayload(site, note.commentId, liked)
-                    )
-                )
-                note.setLikedComment(liked)
                 actionIcon.setImageResource(if (liked) R.drawable.star_filled else R.drawable.star_empty)
-                EventBus.getDefault().postSticky(NoteLikeOrModerationStatusChanged(note.id))
+                coroutineScope.launch {
+                    inlineActionEvents.emit(
+                        InlineActionEvent.LikeCommentButtonTapped(note, liked)
+                    )
+                }
             }
         }
     }

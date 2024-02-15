@@ -3,11 +3,15 @@ package org.wordpress.android.ui.notifications
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.datasets.NotificationsTable
+import org.wordpress.android.fluxc.store.CommentsStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Notification.PostNotification
 import org.wordpress.android.modules.UI_THREAD
@@ -29,9 +33,11 @@ class NotificationsListViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
-    private val gcmMessageHandler: GCMMessageHandler
+    private val gcmMessageHandler: GCMMessageHandler,
+    private val siteStore: SiteStore,
+    private val commentStore: CommentsStore,
 
-) : ScopedViewModel(mainDispatcher) {
+    ) : ScopedViewModel(mainDispatcher) {
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
@@ -81,7 +87,19 @@ class NotificationsListViewModel @Inject constructor(
             }
     }
 
+    fun likeComment(note: Note, liked: Boolean) {
+        val site = siteStore.getSiteBySiteId(note.siteId.toLong()) ?: return
+        viewModelScope.launch {
+            val result = commentStore.likeComment(site, note.commentId, null, liked)
+            if (result.isError.not()) {
+                note.setLikedComment(liked)
+                NotificationsTable.saveNote(note)
+            }
+        }
+    }
+
     sealed class InlineActionEvent {
-        data class SharePostButtonTapped(val notification: PostNotification): InlineActionEvent()
+        data class SharePostButtonTapped(val notification: PostNotification) : InlineActionEvent()
+        class LikeCommentButtonTapped(val note: Note, val liked: Boolean) : InlineActionEvent()
     }
 }
